@@ -6,252 +6,140 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA52C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA27DC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D91C2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C618F2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:45:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfHMJpa (ORCPT
+        id S1728244AbfHMJpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:45:30 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45917 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbfHMJpa (ORCPT
+        Tue, 13 Aug 2019 05:45:36 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:51732 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726650AbfHMJpg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:45:30 -0400
-Received: from [208.54.80.146] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1hxTMa-0006Fr-Gl; Tue, 13 Aug 2019 09:45:09 +0000
-Date:   Tue, 13 Aug 2019 11:45:01 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v6 1/2] fork: extend clone3() to support setting a PID
-Message-ID: <20190813094500.wavkt3vd2rnk2oow@wittgenstein>
-References: <20190812200939.23784-1-areber@redhat.com>
+        Tue, 13 Aug 2019 05:45:36 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id A0346634C88;
+        Tue, 13 Aug 2019 12:45:27 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1hxTMt-0000eI-0b; Tue, 13 Aug 2019 12:45:27 +0300
+Date:   Tue, 13 Aug 2019 12:45:26 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com
+Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
+ binding
+Message-ID: <20190813094526.GG835@valkosipuli.retiisi.org.uk>
+References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
+ <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190812200939.23784-1-areber@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 10:09:38PM +0200, Adrian Reber wrote:
-> The main motivation to add set_tid to clone3() is CRIU.
-> 
-> To restore a process with the same PID/TID CRIU currently uses
-> /proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
-> ns_last_pid and then (quickly) does a clone(). This works most of the
-> time, but it is racy. It is also slow as it requires multiple syscalls.
-> 
-> Extending clone3() to support set_tid makes it possible restore a
-> process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
-> race free (as long as the desired PID/TID is available).
-> 
-> This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
-> on clone3() with set_tid as they are currently in place for ns_last_pid.
-> 
-> Signed-off-by: Adrian Reber <areber@redhat.com>
+Hi Manivannan,
 
-I'm fine with this version. Oleg, how do you feel about it now? :)
-
-Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
-
+On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
+> Add devicetree binding for IMX290 CMOS image sensor.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
-> v2:
->  - Removed (size < sizeof(struct clone_args)) as discussed with
->    Christian and Dmitry
->  - Added comment to ((set_tid != 1) && idr_get_cursor() <= 1) (Oleg)
->  - Use idr_alloc() instead of idr_alloc_cyclic() (Oleg)
+>  .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
 > 
-> v3:
->  - Return EEXIST if PID is already in use (Christian)
->  - Drop CLONE_SET_TID (Christian and Oleg)
->  - Use idr_is_empty() instead of idr_get_cursor() (Oleg)
->  - Handle different `struct clone_args` sizes (Dmitry)
-> 
-> v4:
->  - Rework struct size check with defines (Christian)
->  - Reduce number of set_tid checks (Oleg)
->  - Less parentheses and more robust code (Oleg)
->  - Do ns_capable() on correct user_ns (Oleg, Christian)
-> 
-> v5:
->  - make set_tid checks earlier in alloc_pid() (Christian)
->  - remove unnecessary comment and struct size check (Christian)
-> 
-> v6:
->  - remove CLONE_SET_TID from description (Christian)
->  - add clone3() tests for different clone_args sizes (Christian)
->  - move more set_tid checks to alloc_pid() (Oleg)
->  - make all set_tid checks lockless (Oleg)
-> ---
->  include/linux/pid.h        |  2 +-
->  include/linux/sched/task.h |  1 +
->  include/uapi/linux/sched.h |  1 +
->  kernel/fork.c              | 14 ++++++++++++--
->  kernel/pid.c               | 37 ++++++++++++++++++++++++++++++-------
->  5 files changed, 45 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/linux/pid.h b/include/linux/pid.h
-> index 2a83e434db9d..052000db0ced 100644
-> --- a/include/linux/pid.h
-> +++ b/include/linux/pid.h
-> @@ -116,7 +116,7 @@ extern struct pid *find_vpid(int nr);
->  extern struct pid *find_get_pid(int nr);
->  extern struct pid *find_ge_pid(int nr, struct pid_namespace *);
->  
-> -extern struct pid *alloc_pid(struct pid_namespace *ns);
-> +extern struct pid *alloc_pid(struct pid_namespace *ns, pid_t set_tid);
->  extern void free_pid(struct pid *pid);
->  extern void disable_pid_allocation(struct pid_namespace *ns);
->  
-> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-> index 0497091e40c1..4f2a80564332 100644
-> --- a/include/linux/sched/task.h
-> +++ b/include/linux/sched/task.h
-> @@ -26,6 +26,7 @@ struct kernel_clone_args {
->  	unsigned long stack;
->  	unsigned long stack_size;
->  	unsigned long tls;
-> +	pid_t set_tid;
->  };
->  
->  /*
-> diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-> index b3105ac1381a..e1ce103a2c47 100644
-> --- a/include/uapi/linux/sched.h
-> +++ b/include/uapi/linux/sched.h
-> @@ -45,6 +45,7 @@ struct clone_args {
->  	__aligned_u64 stack;
->  	__aligned_u64 stack_size;
->  	__aligned_u64 tls;
-> +	__aligned_u64 set_tid;
->  };
->  
->  /*
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 2852d0e76ea3..8317d408a8d6 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -117,6 +117,11 @@
->   */
->  #define MAX_THREADS FUTEX_TID_MASK
->  
-> +/*
-> + * For different sizes of struct clone_args
-> + */
-> +#define CLONE3_ARGS_SIZE_V0 64
+> diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
+> new file mode 100644
+> index 000000000000..7535b5b5b24b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/imx290.txt
+> @@ -0,0 +1,51 @@
+> +* Sony IMX290 1/2.8-Inch CMOS Image Sensor
 > +
->  /*
->   * Protected counters by write_lock_irq(&tasklist_lock)
->   */
-> @@ -2031,7 +2036,7 @@ static __latent_entropy struct task_struct *copy_process(
->  	stackleak_task_init(p);
->  
->  	if (pid != &init_struct_pid) {
-> -		pid = alloc_pid(p->nsproxy->pid_ns_for_children);
-> +		pid = alloc_pid(p->nsproxy->pid_ns_for_children, args->set_tid);
->  		if (IS_ERR(pid)) {
->  			retval = PTR_ERR(pid);
->  			goto bad_fork_cleanup_thread;
-> @@ -2535,9 +2540,13 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
->  	if (unlikely(size > PAGE_SIZE))
->  		return -E2BIG;
->  
-> -	if (unlikely(size < sizeof(struct clone_args)))
-> +	if (unlikely(size < CLONE3_ARGS_SIZE_V0))
->  		return -EINVAL;
->  
-> +	if (size < sizeof(struct clone_args))
-> +		memset((void *)&args + size, 0,
-> +				sizeof(struct clone_args) - size);
+> +The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
+> +Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
+> +interfaces. The sensor output is available via CMOS logic parallel SDR output,
+> +Low voltage LVDS DDR output and CSI-2 serial data output.
+
+If there are three to choose from, then you should specify which one is in
+use. Given that I think chances remain slim we'd add support for the other
+two (it's certainly not ruled out though), CSI-2 could be the default. But
+this needs to be documented.
+
 > +
->  	if (unlikely(!access_ok(uargs, size)))
->  		return -EFAULT;
->  
-> @@ -2571,6 +2580,7 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
->  		.stack		= args.stack,
->  		.stack_size	= args.stack_size,
->  		.tls		= args.tls,
-> +		.set_tid	= args.set_tid,
->  	};
->  
->  	return 0;
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index 0a9f2e437217..5cdab73b9094 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -157,7 +157,7 @@ void free_pid(struct pid *pid)
->  	call_rcu(&pid->rcu, delayed_put_pid);
->  }
->  
-> -struct pid *alloc_pid(struct pid_namespace *ns)
-> +struct pid *alloc_pid(struct pid_namespace *ns, int set_tid)
->  {
->  	struct pid *pid;
->  	enum pid_type type;
-> @@ -166,6 +166,16 @@ struct pid *alloc_pid(struct pid_namespace *ns)
->  	struct upid *upid;
->  	int retval = -ENOMEM;
->  
-> +	if (set_tid) {
-> +		if (set_tid < 0 || set_tid >= pid_max)
-> +			return ERR_PTR(-EINVAL);
-> +		/* Also fail if a PID != 1 is requested and no PID 1 exists */
-> +		if (set_tid != 1 && !ns->child_reaper)
-> +			return ERR_PTR(-EINVAL);
-> +		if (!ns_capable(ns->user_ns, CAP_SYS_ADMIN))
-> +			return ERR_PTR(-EPERM);
-> +	}
+> +Required Properties:
+> +- compatible: Should be "sony,imx290"
+> +- reg: I2C bus address of the device
+> +- clocks: Reference to the xclk clock.
+> +- clock-names: Should be "xclk".
+> +- clock-frequency: Frequency of the xclk clock.
+
+...in Hz.
+
+> +- vdddo-supply: Sensor digital IO regulator.
+> +- vdda-supply: Sensor analog regulator.
+> +- vddd-supply: Sensor digital core regulator.
 > +
->  	pid = kmem_cache_alloc(ns->pid_cachep, GFP_KERNEL);
->  	if (!pid)
->  		return ERR_PTR(retval);
-> @@ -186,12 +196,25 @@ struct pid *alloc_pid(struct pid_namespace *ns)
->  		if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
->  			pid_min = RESERVED_PIDS;
->  
-> -		/*
-> -		 * Store a null pointer so find_pid_ns does not find
-> -		 * a partially initialized PID (see below).
-> -		 */
-> -		nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
-> -				      pid_max, GFP_ATOMIC);
-> +		if (set_tid) {
-> +			nr = idr_alloc(&tmp->idr, NULL, set_tid,
-> +					set_tid + 1, GFP_ATOMIC);
-> +			/*
-> +			 * If ENOSPC is returned it means that the PID is
-> +			 * alreay in use. Return EEXIST in that case.
-> +			 */
-> +			if (nr == -ENOSPC)
-> +				nr = -EEXIST;
-> +			/* Only use set_tid for one PID namespace. */
-> +			set_tid = 0;
-> +		} else {
-> +			/*
-> +			 * Store a null pointer so find_pid_ns does not find
-> +			 * a partially initialized PID (see below).
-> +			 */
-> +			nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
-> +					      pid_max, GFP_ATOMIC);
-> +		}
->  		spin_unlock_irq(&pidmap_lock);
->  		idr_preload_end();
->  
-> -- 
-> 2.21.0
-> 
+> +Optional Properties:
+> +- reset-gpios: Sensor reset GPIO
+> +
+> +The imx290 device node should contain one 'port' child node with
+> +an 'endpoint' subnode. For further reading on port node refer to
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+
+Which other properties are relevant for the device? I suppose you can't
+change the lane order, so clock-lanes is redundant (don't use it in the
+example) and data-lanes should be monotonically incrementing series from 1
+to 4.
+
+> +
+> +Example:
+> +	&i2c1 {
+> +		...
+> +		imx290: imx290@1a {
+
+imx290: camera-sensor@1a {
+
+> +			compatible = "sony,imx290";
+> +			reg = <0x1a>;
+> +
+> +			reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&camera_rear_default>;
+> +
+> +			clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
+> +			clock-names = "xclk";
+> +			clock-frequency = <37125000>;
+> +
+> +			vdddo-supply = <&camera_vdddo_1v8>;
+> +			vdda-supply = <&camera_vdda_2v8>;
+> +			vddd-supply = <&camera_vddd_1v5>;
+> +
+> +			port {
+> +				imx290_ep: endpoint {
+> +					clock-lanes = <1>;
+> +					data-lanes = <0 2 3 4>;
+> +					remote-endpoint = <&csiphy0_ep>;
+> +				};
+> +			};
+> +		};
+
+-- 
+Regards,
+
+Sakari Ailus
