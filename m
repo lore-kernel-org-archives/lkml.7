@@ -2,209 +2,123 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289ADC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AC1C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A4520578
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0559D2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565700324;
-	bh=IQ2ZvwcrHev5R9TGavDHeGoLR3ZmmBztsimoK5G+UW0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U4gsugNtl+Etw4HGDaP4lC1as+v3IpVbevTOQ15MZP8rNnsXKKOWNQgMEIUjY1H8J
-	 IGf4Y2t0p/5AsI6bhYIZcLTY+imthWFSLHV8zlkrkIYQe5E3/aYi+yJah+/BwsvfUb
-	 xGiFkoNOlJDXQQmMD6FeCUglu9bnLSoFap4D0tak=
+	s=default; t=1565700342;
+	bh=Iq/q6d5EveJM9EUD3E8Rf9SvcCHMy071F099+FRroh0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hIEfoKOeS06HJOt4FfDWLr6MPGXUl4x3YBBxGcedCGsQiySN/gyGS/LFkZZo0UDXU
+	 DLjO5ERYqO4Yrh9bmCsv37SBn/8HDyDRuwvcPaQ/FHAp9Y1/4NwyfGB66mXH20DxLv
+	 rru50L2xFUQFNqtEAji83w7AoafXUhpIPincioGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbfHMMpW (ORCPT
+        id S1728742AbfHMMpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:45:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51832 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 08:45:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727837AbfHMMpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:45:21 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        id S1727837AbfHMMpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 08:45:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 031CB2085A;
-        Tue, 13 Aug 2019 12:45:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E2F520578;
+        Tue, 13 Aug 2019 12:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565700320;
-        bh=IQ2ZvwcrHev5R9TGavDHeGoLR3ZmmBztsimoK5G+UW0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F6qOHgWniQ9trNvM5vundial+AQplk5yhZSBV/Viqc9iNGf3sh+NBtkTrlSu9dt1Q
-         70NW2r6EwkzR4XdcyxAYl3D1OhMCl7Wog6Nt7qXfFu2bSRpZZ2wzZISfXjRq+0NBXM
-         TdwZ836cZhGHL6zeb15qt251K6snqkRBan376aqg=
-From:   Maxime Ripard <mripard@kernel.org>
-To:     mchehab@kernel.org, sean@mess.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 2/2] dt-bindings: media: Convert Allwinner A10 IR to a schema
-Date:   Tue, 13 Aug 2019 14:45:13 +0200
-Message-Id: <20190813124513.31413-2-mripard@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190813124513.31413-1-mripard@kernel.org>
-References: <20190813124513.31413-1-mripard@kernel.org>
+        s=default; t=1565700339;
+        bh=Iq/q6d5EveJM9EUD3E8Rf9SvcCHMy071F099+FRroh0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NH+JQhYuZ7QImgVM06ymo9Hjam1Y9Vcl21Ti3Ch+tnd8yUuf9/+IqblrYOyK8iDsD
+         1vajJN5Bxp/sxonANyJmwqjDmLFlw0imrlFG4xeG5IFYoj42MUd0DHJvyLN7DpB6PU
+         m/WN66dZAyy9zR7GnHGVXIEowx5d4DG/HTU54Rg0=
+Date:   Tue, 13 Aug 2019 14:45:37 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     linux-kernel@vger.kernel.org, maco@android.com,
+        kernel-team@android.com, arnd@arndb.de, geert@linux-m68k.org,
+        hpa@zytor.com, jeyu@kernel.org, joel@joelfernandes.org,
+        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
+        maco@google.com, michal.lkml@markovi.net, mingo@redhat.com,
+        oneukum@suse.com, pombredanne@nexb.com, sam@ravnborg.org,
+        sboyd@codeaurora.org, sspatil@google.com,
+        stern@rowland.harvard.edu, tglx@linutronix.de,
+        usb-storage@lists.one-eyed-alien.net, x86@kernel.org,
+        yamada.masahiro@socionext.com
+Subject: Re: [PATCH v2 10/10] RFC: usb-storage: export symbols in USB_STORAGE
+ namespace
+Message-ID: <20190813124537.GB12475@kroah.com>
+References: <20180716122125.175792-1-maco@android.com>
+ <20190813121733.52480-1-maennich@google.com>
+ <20190813121733.52480-11-maennich@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813121733.52480-11-maennich@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+On Tue, Aug 13, 2019 at 01:17:07PM +0100, Matthias Maennich wrote:
+> Modules using these symbols are required to explicitly import the
+> namespace. This patch was generated with the following steps and serves
+> as a reference to use the symbol namespace feature:
+> 
+>  1) Define DDEFAULT_SYMBOL_NAMESPACE in the corresponding Makefile
+>  2) make  (see warnings during modpost about missing imports)
+>  3) make nsdeps
+> 
+> Instead of a DEFAULT_SYMBOL_NAMESPACE definition, the EXPORT_SYMBOL_NS
+> variants can be used to explicitly specify the namespace. The advantage
+> of the method used here is that newly added symbols are automatically
+> exported and existing ones are exported without touching their
+> respective EXPORT_SYMBOL macro expansion.
+> 
+> Signed-off-by: Matthias Maennich <maennich@google.com>
+> ---
+>  drivers/usb/storage/Makefile        | 2 ++
+>  drivers/usb/storage/alauda.c        | 1 +
+>  drivers/usb/storage/cypress_atacb.c | 1 +
+>  drivers/usb/storage/datafab.c       | 1 +
+>  drivers/usb/storage/ene_ub6250.c    | 1 +
+>  drivers/usb/storage/freecom.c       | 1 +
+>  drivers/usb/storage/isd200.c        | 1 +
+>  drivers/usb/storage/jumpshot.c      | 1 +
+>  drivers/usb/storage/karma.c         | 1 +
+>  drivers/usb/storage/onetouch.c      | 1 +
+>  drivers/usb/storage/realtek_cr.c    | 1 +
+>  drivers/usb/storage/sddr09.c        | 1 +
+>  drivers/usb/storage/sddr55.c        | 1 +
+>  drivers/usb/storage/shuttle_usbat.c | 1 +
+>  drivers/usb/storage/uas.c           | 1 +
+>  15 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/usb/storage/Makefile b/drivers/usb/storage/Makefile
+> index a67ddcbb4e24..46635fa4a340 100644
+> --- a/drivers/usb/storage/Makefile
+> +++ b/drivers/usb/storage/Makefile
+> @@ -8,6 +8,8 @@
+>  
+>  ccflags-y := -I $(srctree)/drivers/scsi
+>  
+> +ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=USB_STORAGE
 
-The older Allwinner SoCs have a IR receiver supported in Linux, with a
-matching Device Tree binding.
+Wait, we have to do this for every subsystem?  I thought there was a
+macro we could use in the code itself for this.  What changed from
+earlier versions, or was this always here?
 
-Now that we have the DT validation in place, let's convert the device tree
-bindings for that controller over to a YAML schemas.
+thanks,
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- .../media/allwinner,sun4i-a10-ir.yaml         | 80 +++++++++++++++++++
- .../devicetree/bindings/media/sunxi-ir.txt    | 35 --------
- 2 files changed, 80 insertions(+), 35 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
- delete mode 100644 Documentation/devicetree/bindings/media/sunxi-ir.txt
-
-diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
-new file mode 100644
-index 000000000000..98c1bdde9a86
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/allwinner,sun4i-a10-ir.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Infrared Controller Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
-+
-+allOf:
-+  - $ref: "rc.yaml#"
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: allwinner,sun4i-a10-ir
-+      - const: allwinner,sun5i-a13-ir
-+      - items:
-+          - const: allwinner,sun8i-a83t-ir
-+          - const: allwinner,sun6i-a31-ir
-+      - const: allwinner,sun6i-a31-ir
-+      - items:
-+          - const: allwinner,sun50i-a64-ir
-+          - const: allwinner,sun6i-a31-ir
-+      - items:
-+          - const: allwinner,sun50i-h6-ir
-+          - const: allwinner,sun6i-a31-ir
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Bus Clock
-+      - description: Module Clock
-+
-+  clock-names:
-+    items:
-+      - const: apb
-+      - const: ir
-+
-+  resets:
-+    maxItems: 1
-+
-+  clock-frequency:
-+    default: 8000000
-+    description:
-+      IR Receiver clock frequency, in Hertz.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+# FIXME: We should set it, but it would report all the generic
-+# properties as additional properties.
-+# additionalProperties: false
-+
-+examples:
-+  - |
-+      ir0: ir@1c21800 {
-+          compatible = "allwinner,sun4i-a10-ir";
-+          clocks = <&apb0_gates 6>, <&ir0_clk>;
-+          clock-names = "apb", "ir";
-+          clock-frequency = <3000000>;
-+          resets = <&apb0_rst 1>;
-+          interrupts = <0 5 1>;
-+          reg = <0x01C21800 0x40>;
-+          linux,rc-map-name = "rc-rc6-mce";
-+      };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt b/Documentation/devicetree/bindings/media/sunxi-ir.txt
-deleted file mode 100644
-index 81eaf95fb764..000000000000
---- a/Documentation/devicetree/bindings/media/sunxi-ir.txt
-+++ /dev/null
-@@ -1,35 +0,0 @@
--Device-Tree bindings for SUNXI IR controller found in sunXi SoC family
--
--Required properties:
--- compatible	    :
--	"allwinner,sun4i-a10-ir"
--	"allwinner,sun5i-a13-ir"
--	"allwinner,sun6i-a31-ir"
--	"allwinner,sun50i-a64-ir", "allwinner,sun6i-a31-ir"
--	"allwinner,sun50i-h6-ir", "allwinner,sun6i-a31-ir"
--- clocks	    : list of clock specifiers, corresponding to
--		      entries in clock-names property;
--- clock-names	    : should contain "apb" and "ir" entries;
--- interrupts	    : should contain IR IRQ number;
--- reg		    : should contain IO map address for IR.
--
--Required properties since A31:
--- resets	    : phandle + reset specifier pair
--
--Optional properties:
--- linux,rc-map-name: see rc.txt file in the same directory.
--- clock-frequency  : IR Receiver clock frequency, in Hertz. Defaults to 8 MHz
--		     if missing.
--
--Example:
--
--ir0: ir@1c21800 {
--	compatible = "allwinner,sun4i-a10-ir";
--	clocks = <&apb0_gates 6>, <&ir0_clk>;
--	clock-names = "apb", "ir";
--	clock-frequency = <3000000>;
--	resets = <&apb0_rst 1>;
--	interrupts = <0 5 1>;
--	reg = <0x01C21800 0x40>;
--	linux,rc-map-name = "rc-rc6-mce";
--};
--- 
-2.21.0
-
+greg k-h
