@@ -2,73 +2,111 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E15C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C33C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D9220665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565690509;
-	bh=LjLLfJvuHbYFq+3AfjI5u+pE3eh+1T/xNr8JNcS1wwo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tSkyHkChm5FDhEMDd586Dgzl+qNm6jMoth543Ax2FszwRzjDtQ8+ELjjaXE7qYJaK
-	 ND3vvtLEDt9gru6OhPle7qLqfh6j7C+fIGmon9a5Vc/esiPq0QJuVp4iLiegAVWIZx
-	 hD1N5AAhDDeZAdeRS/RA7pKgh9Wf0M8RytPi0wH0=
+	by mail.kernel.org (Postfix) with ESMTP id 0BBBE20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:02:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="pFFfezQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbfHMKBs (ORCPT
+        id S1728778AbfHMKCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 06:01:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728318AbfHMKBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 06:01:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AE6420663;
-        Tue, 13 Aug 2019 10:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565690507;
-        bh=LjLLfJvuHbYFq+3AfjI5u+pE3eh+1T/xNr8JNcS1wwo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fki4XlS+UixZpTQ06877Ms7xM+tkV4R4jID2hM2EsOfxojdI15TNBS0gj6l4CfxYD
-         JP6lSEPhT/IxFF/B6cW7h3hjOnoEsH36wS85DQ+Izya19MTAcWiJ70ythLf7zUPmaz
-         vWIB+200qPm0Qq4TXkLYVoCKp+NaM0kgZ48l6jH8=
-Date:   Tue, 13 Aug 2019 12:01:44 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Alessio Balsini <balsini@android.com>
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        "hange-folder>?" <toggle-mailboxes@google.com>
-Subject: Re: [PATCH 4.9.y 4.14.y] IB/mlx5: Fix leaking stack memory to
- userspace
-Message-ID: <20190813100144.GB16112@kroah.com>
-References: <20190812105136.151840-1-balsini@android.com>
- <20190812105503.153253-1-balsini@android.com>
- <20190812142316.GA12869@kroah.com>
- <20190812160714.GA246269@google.com>
+        Tue, 13 Aug 2019 06:02:01 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:59160 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728761AbfHMKCA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 06:02:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1565690517; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZbzHVM6ENaR4P/6+oOoubZ60cH5LA2N4J6V2DJChuP0=;
+        b=pFFfezQjKuJRCyCrZ9/ijjroaefD35Husngjhtv0sS9eRbULkJZieHwFjjUUwZHaOSMVhv
+        Jym9DJW3vwQNxQw4SI21TSkg5AYgp4PLMnIjtp7Fi2rteFN9o2S3rSBW+rrUXddKsUjfoL
+        iN4pdyxvhjsec4lYAWRoFxESQB5CuEc=
+Date:   Tue, 13 Aug 2019 12:01:48 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 10/11] mfd: Drop obsolete JZ4740 driver
+To:     Philippe =?iso-8859-1?q?Mathieu-Daud=E9?= <f4bug@amsat.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sebastian Reichel <sre@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, od@zcrc.me,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        Artur Rojek <contact@artur-rojek.eu>
+Message-Id: <1565690508.1856.0@crapouillou.net>
+In-Reply-To: <4b48e597-951e-45fd-dfb2-4a1292a8b067@amsat.org>
+References: <20190725220215.460-1-paul@crapouillou.net>
+        <20190725220215.460-11-paul@crapouillou.net> <20190812081640.GA26727@dell>
+        <4b48e597-951e-45fd-dfb2-4a1292a8b067@amsat.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812160714.GA246269@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 10:27:28AM +0100, Alessio Balsini wrote:
-> Oops, you are totally right, I was still looking at the latest
-> mlx5_ib_create_qp_resp struct while backporting these patches :)
-> 
-> Sorry for that,
+Hi Philippe,
 
-Not a problem, it's good to have a second pair of eyes on these things
-:)
 
-greg k-h
+Le mar. 13 ao=FBt 2019 =E0 10:44, Philippe=20
+=3D?iso-8859-1?q?Mathieu-Daud=3DE9?=3D <f4bug@amsat.org> a =E9crit :
+> Hi Lee,
+>=20
+> On 8/12/19 10:16 AM, Lee Jones wrote:
+>>  On Thu, 25 Jul 2019, Paul Cercueil wrote:
+>>=20
+>>>  It has been replaced with the ingenic-iio driver for the ADC.
+>>>=20
+>>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>>  Tested-by: Artur Rojek <contact@artur-rojek.eu>
+>>>  ---
+>>>   drivers/mfd/Kconfig      |   9 --
+>>>   drivers/mfd/Makefile     |   1 -
+>>>   drivers/mfd/jz4740-adc.c | 324=20
+>>> ---------------------------------------
+>>>   3 files changed, 334 deletions(-)
+>>>   delete mode 100644 drivers/mfd/jz4740-adc.c
+>>=20
+>>  Applied, thanks.
+>=20
+> It seems the replacement is done in "MIPS: qi_lb60: Migrate to
+> devicetree" which is not yet merged.
+
+It's merged in the MIPS tree, though, so it'll blend together just
+fine in linux-next.
+
+>=20
+> Probably easier if this patch goes thru the MIPS tree as part of the
+> "JZ4740 SoC cleanup" series.
+>=20
+> Regards,
+>=20
+> Phil.
+
+=
+
