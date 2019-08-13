@@ -2,66 +2,153 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB529C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471A3C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A60020644
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B43320840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:44:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727373AbfHMLnA (ORCPT
+        id S1727404AbfHMLos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:43:00 -0400
-Received: from muru.com ([72.249.23.125]:57192 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbfHMLnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:43:00 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id AC96E805C;
-        Tue, 13 Aug 2019 11:43:27 +0000 (UTC)
-Date:   Tue, 13 Aug 2019 04:42:56 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] bus: ti-sysc: sysc_check_children(): Change
- return type to void
-Message-ID: <20190813114256.GR52127@atomide.com>
-References: <20190813071714.27970-1-nishkadg.linux@gmail.com>
- <20190813075553.2354-1-nishkadg.linux@gmail.com>
- <20190813075553.2354-2-nishkadg.linux@gmail.com>
- <dd6f47c8-13bc-f20e-90ce-208bd10c3bc0@ti.com>
+        Tue, 13 Aug 2019 07:44:48 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:48383 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725953AbfHMLos (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 07:44:48 -0400
+Received: from [IPv6:2001:420:44c1:2579:155e:93d7:78eb:5531] ([IPv6:2001:420:44c1:2579:155e:93d7:78eb:5531])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id xVE4hL1bvqTdhxVE7h9SYk; Tue, 13 Aug 2019 13:44:46 +0200
+Subject: Re: [PATCH v6 3/8] tda9950: use cec_notifier_cec_adap_(un)register
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Dariusz Marcinkiewicz <darekm@google.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190813110300.83025-1-darekm@google.com>
+ <20190813110300.83025-4-darekm@google.com>
+ <20190813113209.GF13294@shell.armlinux.org.uk>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <49f41f61-2094-f372-5ae8-c923e03d055f@xs4all.nl>
+Date:   Tue, 13 Aug 2019 13:44:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dd6f47c8-13bc-f20e-90ce-208bd10c3bc0@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190813113209.GF13294@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfPgxnnsf4H4jmOgOUipcBW3rPmtlY2lHvQZ7sJK+FTC5QUHRPe7Z4toqC9rDKmV+UtbETpTrgTRAzdX+EfgcUcc59f+i9XLi+uyGhspj8SpzmcN+JFQI
+ ByrJlAEefHMYdx9LLPklpP95A7D9q0hpWmgFccn7lFxXTu0mEsRqaA7vQCugRSz3DT9OuG8wxzDFGW/cSpzO6IbgZFKBQsVVHLvPL1w+OrE+0hzJ9Ns66ydw
+ Et71agSIpUWaSMr+/cq+DKASLQPufmxgGvpKmYeKCLcS5Q7rhDL6qVAOT+h6DgSvz8xN+2qsQuHa+fF66u5PpvzwjWwoW/8JkAivwfn1rlZ9m50uUTlaJc/1
+ Yv9AGi6D0HatL2sXyb7Iml8kdzKI4YcR6t5A1WQGIf4+MFppfxATZOVZ0RYRDwcBySFu/GnNhQ8nsUZL6CMCDX+4hA3EQO9lAyb+uM0qPKk4KIkauA6NvYUn
+ wv7NhVbltiN4RRg5cG1n2q8f9LdOgAwGMACeBbfgnmKRf43lo/ctZWdGyoI0N/X8BkJjZQTTJb+y6xsJFNmNoVYjrm+DmzRGt8CaoOlBPQLsDfaUAmiRVAUM
+ xazaMOLmFnuHJBgL8HZH+XRrc9td9fTY0dnzfBKK7xq5FaAgyY8EM5sIZCLy+WG8nBvNQZLDl6eAe+g0BRE/NlcAUqAMCI+00V3U6C6cOGe5lg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [190813 11:14]:
+On 8/13/19 1:32 PM, Russell King - ARM Linux admin wrote:
+> On Tue, Aug 13, 2019 at 01:02:35PM +0200, Dariusz Marcinkiewicz wrote:
+>> Use the new cec_notifier_cec_adap_(un)register() functions to
+>> (un)register the notifier for the CEC adapter.
+>>
+>> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+>> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+>> Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+>> ---
+>>  drivers/gpu/drm/i2c/tda9950.c | 12 ++++++------
+>>  1 file changed, 6 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/i2c/tda9950.c b/drivers/gpu/drm/i2c/tda9950.c
+>> index 8039fc0d83db4..a5a75bdeb7a5f 100644
+>> --- a/drivers/gpu/drm/i2c/tda9950.c
+>> +++ b/drivers/gpu/drm/i2c/tda9950.c
+>> @@ -420,7 +420,8 @@ static int tda9950_probe(struct i2c_client *client,
+>>  		priv->hdmi = glue->parent;
+>>  
+>>  	priv->adap = cec_allocate_adapter(&tda9950_cec_ops, priv, "tda9950",
+>> -					  CEC_CAP_DEFAULTS,
+>> +					  CEC_CAP_DEFAULTS |
+>> +					  CEC_CAP_CONNECTOR_INFO,
+>>  					  CEC_MAX_LOG_ADDRS);
+>>  	if (IS_ERR(priv->adap))
+>>  		return PTR_ERR(priv->adap);
+>> @@ -457,13 +458,14 @@ static int tda9950_probe(struct i2c_client *client,
+>>  	if (ret < 0)
+>>  		return ret;
+>>  
+>> -	priv->notify = cec_notifier_get(priv->hdmi);
+>> +	priv->notify = cec_notifier_cec_adap_register(priv->hdmi, NULL,
+>> +						      priv->adap);
+>>  	if (!priv->notify)
+>>  		return -ENOMEM;
+>>  
+>>  	ret = cec_register_adapter(priv->adap, priv->hdmi);
+>>  	if (ret < 0) {
+>> -		cec_notifier_put(priv->notify);
+>> +		cec_notifier_cec_adap_unregister(priv->notify);
+>>  		return ret;
+>>  	}
+>>  
+>> @@ -473,8 +475,6 @@ static int tda9950_probe(struct i2c_client *client,
+>>  	 */
+>>  	devm_remove_action(dev, tda9950_cec_del, priv);
+>>  
+>> -	cec_register_cec_notifier(priv->adap, priv->notify);
+>> -
+>>  	return 0;
+>>  }
+>>  
+>> @@ -482,8 +482,8 @@ static int tda9950_remove(struct i2c_client *client)
+>>  {
+>>  	struct tda9950_priv *priv = i2c_get_clientdata(client);
+>>  
+>> +	cec_notifier_cec_adap_unregister(priv->notify);
+>>  	cec_unregister_adapter(priv->adap);
+>> -	cec_notifier_put(priv->notify);
 > 
-> On 13/08/2019 10:55, Nishka Dasgupta wrote:
-> > Change return type of function sysc_check_children() from int to void as
-> > it always returns 0. Remove its return statement as well.
-> > At call site, remove the variable that was used to store the return
-> > value, as well as the check on the return value.
-> > 
+> It looks weird to have an unexpectedly different ordering of
+> unregistration from the registration path - normally, unregistration
+> is the reverse order of initialisation.
 > 
-> You don't need to describe each and everything as it is obvious
-> from code. How about?
-> "Change return type of sysc_check_children() to "void"
-> as it never returns error"
-> 
-> Should both patches can be squashed into one patch?
+> In the initialisation path, it seems that we register the notifier
+> and _then_ the adapter.  Here, we unregister the notifier and then
+> the adapter rather than what would normally be expected.  Why is
+> this?  I suspect there will be drivers created that do this the
+> "normal" way round, so if this is a requirement, it needs to be made
+> plainly obvious.
 
-Sure why not, makes it easier to follow :)
+It's not a requirement, it just feels better to do it in this order
+since cec_unregister_adapter will in general also delete the adapter
+(unless an application keeps the cec device open).
+
+So the order is actually: allocate_adapter, then register notifier
+and: unregister notifier, then unregister (and typically delete) adapter
 
 Regards,
 
-Tony
+	Hans
+
+> 
+>>  
+>>  	return 0;
+>>  }
+>> -- 
+>> 2.23.0.rc1.153.gdeed80330f-goog
+>>
+>>
+> 
+
