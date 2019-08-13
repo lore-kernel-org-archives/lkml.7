@@ -4,87 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6F3C32753
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB9DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9A62064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEAA5206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfHMGgT (ORCPT
+        id S1727259AbfHMGio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 02:36:19 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38991 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfHMGgS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:36:18 -0400
-Received: by mail-wr1-f68.google.com with SMTP id t16so16542235wra.6;
-        Mon, 12 Aug 2019 23:36:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ie9Rb39uo73LLfEZw6hnNpJOlbAByYR2bYHJOHwVGT4=;
-        b=PrDlhu4Tx7zsRCfOXZOsnL1TJFuXNGHrh16hPwLDqfX87N7eCnStElYnmqq6kUY317
-         eZhawYFQNFhY361FIZVhqJGS4t3Tq5/YEZfG+hfxnwj8ZfRoN9gbRAzXUt1MrgCUl32N
-         kLB8f0h2WUV9bSyf9G3ePleAFIJz2kPW9X7kaAsxbhECDmu/aRUcJJC4atpvu4WmWSDu
-         yI0L56vcYp6SAoqRNGVFMpBQOfAgKR5Tc+EdPYqz8U4Dk0UgcIwH7W4ZsZcESKIXnWdV
-         VszWgugrHuxLGqUGoWLHacz+ZcG+DMuuYkcHw96jkWy6k03+731g7kI+P8EZ+ur767Ny
-         vm7A==
-X-Gm-Message-State: APjAAAWlYfdk/JFMBHk9jihKRsBNyInrdZk5fuUQ6ZjcCaSxumHVSgKT
-        vSvc0hH0kbLPe03eCAtyoCHYxQCr53w=
-X-Google-Smtp-Source: APXvYqxYnRe7RYbzul5+gXRnf0USBcbQpm4WXxEuqRbLFKP2XLbynxueCIAILTHcZaFcUEXdg2ZGbQ==
-X-Received: by 2002:adf:f507:: with SMTP id q7mr21370026wro.210.1565678176672;
-        Mon, 12 Aug 2019 23:36:16 -0700 (PDT)
-Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id q20sm57578075wrc.79.2019.08.12.23.36.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 23:36:16 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Subject: [RESEND PATCH] MAINTAINERS: dw axi dmac: Fix typo in a path
-Date:   Tue, 13 Aug 2019 09:36:05 +0300
-Message-Id: <20190813063605.23102-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190813060004.10594-1-efremov@linux.com>
-References: <20190813060004.10594-1-efremov@linux.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 13 Aug 2019 02:38:44 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:52700 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbfHMGio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 02:38:44 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B561D20074D;
+        Tue, 13 Aug 2019 08:38:41 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6CDF220075A;
+        Tue, 13 Aug 2019 08:38:33 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 16C55402EC;
+        Tue, 13 Aug 2019 14:38:23 +0800 (SGT)
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        l.stach@pengutronix.de, kishon@ti.com, tpiepho@impinj.com,
+        leonard.crestez@nxp.com, andrew.smirnov@gmail.com,
+        yue.wang@amlogic.com, hayashi.kunihiko@socionext.com,
+        dwmw@amazon.co.uk, jonnyc@amazon.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCHv5 1/2] PCI: layerscape: Add the bar_fixed_64bit property in EP driver.
+Date:   Tue, 13 Aug 2019 14:28:39 +0800
+Message-Id: <20190813062840.2733-1-xiaowei.bao@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix typo (s/dwi-/dw-/) in the directory path.
+The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1
+is 32bit, BAR2 and BAR4 is 64bit, this is determined by hardware,
+so set the bar_fixed_64bit with 0x14.
 
-Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org
-Fixes: 1fe20f1b8454 ("dmaengine: Introduce DW AXI DMAC driver")
-Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2:
+ - Replace value 0x14 with a macro.
+v3:
+ - No change.
+v4:
+ - send the patch again with '--to'.
+v5:
+ - fix the commit message.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5ec418d8c386..eeeb4097d5bd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15482,7 +15482,7 @@ F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
- SYNOPSYS DESIGNWARE AXI DMAC DRIVER
- M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
- S:	Maintained
--F:	drivers/dma/dwi-axi-dmac/
-+F:	drivers/dma/dw-axi-dmac/
- F:	Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+ drivers/pci/controller/dwc/pci-layerscape-ep.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index be61d96..ca9aa45 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -44,6 +44,7 @@ static const struct pci_epc_features ls_pcie_epc_features = {
+ 	.linkup_notifier = false,
+ 	.msi_capable = true,
+ 	.msix_capable = false,
++	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+ };
  
- SYNOPSYS DESIGNWARE DMAC DRIVER
+ static const struct pci_epc_features*
 -- 
-2.21.0
+2.9.5
 
