@@ -2,100 +2,221 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5217EC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCF6C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F8320665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E56214C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:06:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="E3Pt3KdL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfHMUEX (ORCPT
+        id S1726672AbfHMUG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 16:04:23 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33696 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfHMUEX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 16:04:23 -0400
-Received: by mail-qk1-f193.google.com with SMTP id r6so80760095qkc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 13:04:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ama7Tg2aWhvE0NVoH4vqvv98NhGbGAzz1NVcfkHyItw=;
-        b=BtogfYE6Ncz2eGiF/ANLEa9gwfZ3l20rrTX8/NSCjpuO837TMUkPGv05AZEUAw6dxW
-         ZPUSDc4ZLLlYM4jm73lOM5wAHNScOnYPD6C24ySXIYH1+5dYBjp3GvyaWs6tTNJWxtmJ
-         hB7u3qiISfF81oz0ZLCPbFYpIEhWn8x0ln4YdX7QBoDcjAWEnW7D9mYLjbM/P404i033
-         szsSXg22IwJNj24BBaOlxHVTkOO57AqUsRgHKhAHnW7Jf+HyQYU2z8mXK+IO6K2DHUx1
-         shR03fHkHMj8Elh8zp8lIDdBhtAsBGhDZL2Z8LNk1gmHEEnGfeeUjmbpWe2zQjhzW+8g
-         OWkw==
-X-Gm-Message-State: APjAAAVKiZMBgdCFfNc+58BPz0PgnIo7JxsEZaEAFmxuwUeK7wTyNHy0
-        xmFatBwo4AbWa5AtoW6X5sAQ+BCOVj01D0Iiav8=
-X-Google-Smtp-Source: APXvYqyrynY29BAMTciUypf5U8XfdwgfGM9arQl7rLqLL5xFK4w21YbUT/3AyNemkegtSRMaw64BooYqgX3gvHzdagQ=
-X-Received: by 2002:a37:76c5:: with SMTP id r188mr35052600qkc.394.1565726662513;
- Tue, 13 Aug 2019 13:04:22 -0700 (PDT)
+        Tue, 13 Aug 2019 16:06:27 -0400
+Received: from vps.xff.cz ([195.181.215.36]:57938 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726126AbfHMUG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 16:06:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1565726784; bh=BJj4IKkIVoRjnCmUwYtLOi3KBn/hCwT44LH7rC3kdoM=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=E3Pt3KdLd9W8HHq139AvIwYXOeG0lTAHVvI2JcIzZ1HZ915O+TzrXrcXhszIYQiUf
+         uL64qv/She2OnBWhhScfJWgnm/L6Rbj4BNLcLnR4AaHzhUkA3fdth+dcQo2e0fJFGh
+         BH/DXYmITMyqoSUb2Ghke0tTeWnHpqBU6p6VzpZk=
+Date:   Tue, 13 Aug 2019 22:06:23 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Frank Lee <tiny.windzz@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan.Cameron@huawei.com,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        rui.zhang@intel.com, "David S. Miller" <davem@davemloft.net>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v5 08/18] thermal: sun8i: support mod clocks
+Message-ID: <20190813200623.2dmxcwibuyolnuhh@core.my.home>
+Mail-Followup-To: Vasily Khoruzhick <anarsoul@gmail.com>,
+        Frank Lee <tiny.windzz@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan.Cameron@huawei.com,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        rui.zhang@intel.com, "David S. Miller" <davem@davemloft.net>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>
+References: <20190810052829.6032-1-tiny.windzz@gmail.com>
+ <20190810052829.6032-9-tiny.windzz@gmail.com>
+ <CA+E=qVfp-rProxOwX__J6jM-pZ9g_SmeuOCOgvC_5DJVQw4OGw@mail.gmail.com>
+ <CAEExFWubLqtPZ=ZKJTCb6x2-PeYebXb3sr-t-XvtrLJTRiUU1A@mail.gmail.com>
+ <CA+E=qVf9V9iTvCfXXyjqKeviCJOvYpKUO8qw6cQsKqoaRmdKYQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
- <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
- <ecf2742a-6cab-cc00-16ab-589fad07b8db@cs.ucla.edu> <87tvakuak6.fsf@mid.deneb.enyo.de>
-In-Reply-To: <87tvakuak6.fsf@mid.deneb.enyo.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 13 Aug 2019 22:04:05 +0200
-Message-ID: <CAK8P3a13f7an3xkQcP7qcSR-yhp=wYMT_cJ9h7gEdB3Qk8chBw@mail.gmail.com>
-Subject: Re: New kernel interface for sys_tz and timewarp?
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     Paul Eggert <eggert@cs.ucla.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        Karel Zak <kzak@redhat.com>,
-        Lennart Poettering <lennart@poettering.net>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+E=qVf9V9iTvCfXXyjqKeviCJOvYpKUO8qw6cQsKqoaRmdKYQ@mail.gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 9:31 PM Florian Weimer <fw@deneb.enyo.de> wrote:
-> * Paul Eggert:
-> > Linus Torvalds wrote:
-> >> I assume/think that glibc uses (a) environment
-> >> variables and (b) a filesystem-set default (per-user file with a
-> >> system-wide default? I don't know what people do).
->
-> > glibc relies on the TZ environment variable, with a system-wide
-> > default specified in /etc/localtime or suchlike (there is no
-> > per-user default). glibc ignores the kernel's 'struct timezone'
-> > settings for of this, as 'struct timezone' is obsolete/vestigial and
-> > doesn't contain enough info to do proper conversions anyway.
->
-> I think the configuration value that settimeofday changes is not
-> actually a time zone, but an time offset used to interpret various
-> things, mostly in a dual-boot environment with Windows, apparently
-> (Like the default time offset for extracting timetamps from FAT
-> volumes.)
->
-> This data has to come from *somewhere*.  The TZ variable and
-> /etc/localtime cover something else entirely.
+On Mon, Aug 12, 2019 at 04:54:15PM -0700, Vasily Khoruzhick wrote:
+> On Mon, Aug 12, 2019 at 4:46 PM Frank Lee <tiny.windzz@gmail.com> wrote:
+> >
+> > HI Vasily,
+> >
+> > On Sat, Aug 10, 2019 at 2:17 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+> > >
+> > > On Fri, Aug 9, 2019 at 10:31 PM Yangtao Li <tiny.windzz@gmail.com> wrote:
+> > > >
+> > > > H3 has extra clock, so introduce something in ths_thermal_chip/ths_device
+> > > > and adds the process of the clock.
+> > > >
+> > > > This is pre-work for supprt it.
+> > > >
+> > > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > > > ---
+> > > >  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
+> > > >  1 file changed, 16 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> > > > index b934bc81eba7..6f4294c2aba7 100644
+> > > > --- a/drivers/thermal/sun8i_thermal.c
+> > > > +++ b/drivers/thermal/sun8i_thermal.c
+> > > > @@ -54,6 +54,7 @@ struct tsensor {
+> > > >  };
+> > > >
+> > > >  struct ths_thermal_chip {
+> > > > +       bool            has_mod_clk;
+> > > >         int             sensor_num;
+> > > >         int             offset;
+> > > >         int             scale;
+> > > > @@ -69,6 +70,7 @@ struct ths_device {
+> > > >         struct regmap                           *regmap;
+> > > >         struct reset_control                    *reset;
+> > > >         struct clk                              *bus_clk;
+> > > > +       struct clk                              *mod_clk;
+> > > >         struct tsensor                          sensor[MAX_SENSOR_NUM];
+> > > >  };
+> > > >
+> > > > @@ -274,6 +276,12 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+> > > >         if (IS_ERR(tmdev->bus_clk))
+> > > >                 return PTR_ERR(tmdev->bus_clk);
+> > > >
+> > > > +       if (tmdev->chip->has_mod_clk) {
+> > > > +               tmdev->mod_clk = devm_clk_get(&pdev->dev, "mod");
+> > > > +               if (IS_ERR(tmdev->mod_clk))
+> > > > +                       return PTR_ERR(tmdev->mod_clk);
+> > > > +       }
+> > > > +
+> > > >         ret = reset_control_deassert(tmdev->reset);
+> > > >         if (ret)
+> > > >                 return ret;
+> > > > @@ -282,12 +290,18 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+> > > >         if (ret)
+> > > >                 goto assert_reset;
+> > > >
+> > > > -       ret = sun50i_ths_calibrate(tmdev);
+> > > > +       ret = clk_prepare_enable(tmdev->mod_clk);
+> > >
+> > > You have to set rate of modclk before enabling it since you can't rely
+> > > on whatever bootloader left for you.
+> > >
+> > > Also I found that parameters you're using for PC_TEMP_PERIOD, ACQ0 and
+> > > ACQ1 are too aggressive and may result in high interrupt rate to the
+> > > point when it may stall RCU. I changed driver a bit to use params from
+> > > Philipp Rossak's work (modclk set to 4MHz, PC_TEMP_PERIOD is 7, ACQ0
+> > > is 255, ACQ1 is 63) and it fixed RCU stalls for me, see [1] for
+> > > details.
+> >
+> > Why is the RCU stall happening, is it caused by a deadlock?
+> > Can you provide log information and your configuration?
+> > I am a bit curious.
+> 
+> It's not deadlock, I believe it just can't handle that many interrupts
+> when running at lowest CPU frequency. Even with Philipp's settings
+> there's ~20 interrupts a second from ths. I don't remember how many
+> interrupts were there with your settings.
+> 
+> Unfortunately there's nothing interesting in backtraces, I'm using
+> Pine64-LTS board.
 
-systemd and hwclock call localtime_r() when setting initial
-system time an tz information at boot time, so that information
-comes from /etc/localtime.
+Recently there was a similar issue, with buggy CCU driver that caused
+CIR interrupts being fired constantly, and it also resulted in RCU
+stalls. Looks like a comon cause of RCU stalls.
 
-/etc/adjtime is used to determine whether to set warp the
-time at boot and rtc update or not warp it.
+THS timing settings probably need to be made specific to the SoC, because
+I noticed that the same settings lead to wildly different timings on
+different SoCs.
 
-      Arnd
+It would be good to measure how often ths interrupt fires with this driver
+on various SoCs.
+
+20 times a second and more sounds like overkill. I'd expect a useful
+range to be at most 5-10 times a second. That should be enough to stop
+overheating the SoC due to suddenly increased load, even without a
+heatsink.
+
+regards,
+	o.
+
+> > Thx,
+> > Yangtao
+> >
+> > >
+> > > [1] https://github.com/anarsoul/linux-2.6/commit/46b8bb0fe2ccd1cd88fa9181a2ecbf79e8d513b2
+> > >
+> > >
+> > > >         if (ret)
+> > > >                 goto bus_disable;
+> > > >
+> > > > +       ret = sun50i_ths_calibrate(tmdev);
+> > > > +       if (ret)
+> > > > +               goto mod_disable;
+> > > > +
+> > > >         return 0;
+> > > >
+> > > > +mod_disable:
+> > > > +       clk_disable_unprepare(tmdev->mod_clk);
+> > > >  bus_disable:
+> > > >         clk_disable_unprepare(tmdev->bus_clk);
+> > > >  assert_reset:
+> > > > @@ -395,6 +409,7 @@ static int sun8i_ths_remove(struct platform_device *pdev)
+> > > >  {
+> > > >         struct ths_device *tmdev = platform_get_drvdata(pdev);
+> > > >
+> > > > +       clk_disable_unprepare(tmdev->mod_clk);
+> > > >         clk_disable_unprepare(tmdev->bus_clk);
+> > > >         reset_control_assert(tmdev->reset);
+> > > >
+> > > > --
+> > > > 2.17.1
+> > > >
+> > > >
+> > > > _______________________________________________
+> > > > linux-arm-kernel mailing list
+> > > > linux-arm-kernel@lists.infradead.org
+> > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
