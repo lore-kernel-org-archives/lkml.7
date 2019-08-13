@@ -2,94 +2,115 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D957C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15903C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 044E32067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD37A20840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:02:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K8XRlY7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfHMRBP (ORCPT
+        id S1727923AbfHMRCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:01:15 -0400
-Received: from mga12.intel.com ([192.55.52.136]:24701 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbfHMRBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:01:14 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 10:01:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="194233254"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 13 Aug 2019 10:01:10 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 13 Aug 2019 20:01:09 +0300
-Date:   Tue, 13 Aug 2019 20:01:09 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Raanan Avargil <raanan.avargil@intel.com>,
-        David Laight <David.Laight@aculab.com>,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 7/8] thunderbolt: Add support for Intel Ice Lake
-Message-ID: <20190813170109.GB18281@lahna.fi.intel.com>
-References: <20190812123847.50802-1-mika.westerberg@linux.intel.com>
- <20190812123847.50802-8-mika.westerberg@linux.intel.com>
- <20190813161038.tip2u2z22xqnmfjl@wunner.de>
- <20190813164930.GA18281@lahna.fi.intel.com>
+        Tue, 13 Aug 2019 13:02:31 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36274 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfHMRCb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 13:02:31 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w2so1130315pfi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:02:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BG31IdTtyicCDPh3vXx1nhiittmwUB0Yq2rcUYCbYUo=;
+        b=K8XRlY7JDJXLNNvGqHfdVZJQ9a5VNjCkjwZANDUW9TuuB1ZEzYERq3mQwjA8BJ9Y4s
+         6XJQTwJpGEgBRyf8UaDjL5hrQiCF2jXaT3Pvmh8bbF9bFBcB6C+4UHT8SpOLWJSHDzrD
+         mlDFiQwDwmY3oYYVCIbumbAWcbokEXIT+zEgaWsug4nYa6isFt3sH8TYHWYCPi0m9IPA
+         XElwL6x+27qM3o+3I+oxteDi0nbA4Uo/Uk+dz7ss+8bCoHNYg6vG++6KRWD0JEefIpaL
+         qfYFRveEQPkczl1IiwPGtk6E4NYNbK4FWlm87eXuk8Ui9uwOfgH1pdPq3nnModSdZ2NK
+         Ex/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BG31IdTtyicCDPh3vXx1nhiittmwUB0Yq2rcUYCbYUo=;
+        b=RLGc55vuAzHxBiZ8q4OgIoi1oGeGRUScL3QKekUzRcpgCIIpjJ/6wPdkBRCQAThsWp
+         HL4mZs2A/i0Wb/1+5XynAE4xu6NC3vho6zyCZM4VWPUYNjZIeQ8loGTNxnljnPJRTqAZ
+         U35fOF2WTPkG+WvsbX4Wqj8xooybNyXGPcLpfrWja5R7Wrf9uC14NxMbO5OQnm9ykSlj
+         juTkSlfGZv6Gj+I73AqemCO2/nq86CJ8DH4jnNPMFIiItG5bOeVF69wRznC4ysddxXTm
+         WixADFWszSu9NI0XPKy5z8IEl+wz32fqhRy7s8UWrnWne2hXjNEQ2AdrBePPe9Jzf4fU
+         ts5A==
+X-Gm-Message-State: APjAAAVIAMBM5K1qKgtFodBtnPqAcrRG0jQEyzsdSSAJArAqfPWHVNyl
+        vC2Gn4tVoUce6O7bwy0NyyA0rT247/AGmyUOMWjujQ==
+X-Google-Smtp-Source: APXvYqwySabXHotNvQRy/UUN/EhAL08CmISGwSZKsEXDa2DGE+8KsL0EhT8WGXmfoKi4f5IrGA753TLXzw9BhWqTRdA=
+X-Received: by 2002:aa7:8f2e:: with SMTP id y14mr12687349pfr.113.1565715749878;
+ Tue, 13 Aug 2019 10:02:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813164930.GA18281@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
+ <20190813082336.GB17627@kroah.com> <f0e1a6efa8f21ab93935c4c19e13b904d4a71f98.camel@oracle.com>
+In-Reply-To: <f0e1a6efa8f21ab93935c4c19e13b904d4a71f98.camel@oracle.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 13 Aug 2019 10:02:18 -0700
+Message-ID: <CAFd5g45eK8LRgXj0vnY4ONB70+EeR2gjk+Dv9+b6Lgf+ykJu-Q@mail.gmail.com>
+Subject: Re: [RFC 00/19] Integration of Kernel Test Framework (KTF) into the
+ kernel tree
+To:     Knut Omang <knut.omang@oracle.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Shreyans Devendra Doshi <0xinfosect0r@gmail.com>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Hidenori Yamaji <hidenori.yamaji@sony.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Timothy Bird <Tim.Bird@sony.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
+        Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 07:49:35PM +0300, Mika Westerberg wrote:
-> > If so, I'd suggest:
-> > 
-> > 	/* Keep the domain powered while veto is in effect */
-> > 	if (cmpxchg(&icm->veto, false, true))
-> > 		pm_runtime_get(&tb->dev);
-> > 
-> > You'll have to declare icm->veto unsigned int instead of bool
-> > because thunderbolt.ko is compiled if CONFIG_COMPILE_TEST is
-> > enabled and there are arches which do not support cmpxchg for
-> > a size of 1 byte.
-> > 
-> > The other bools in struct icm should likewise be unsigned int
-> > per Linus' dictum:
-> > https://lkml.org/lkml/2017/11/21/384
-> 
-> Yeah, it probably wastes some space but I like them because IMHO they
-> are more readable than bitfields. We have a bunch of other bools in the
-> driver structures so if we are going to convert struct icm we should do
-> the same for others to keep things consistent. Probably should be a
-> separate cleanup patch.
+On Tue, Aug 13, 2019 at 2:51 AM Knut Omang <knut.omang@oracle.com> wrote:
+>
+> On Tue, 2019-08-13 at 10:23 +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Aug 13, 2019 at 08:09:15AM +0200, Knut Omang wrote:
+> > > and in the making::
+> > >
+> > > kunit/                        (kernel only (UML))
+> >
+> > You are going to have to integrate this with kunit, to come up with a
+> > superset of both in the end.
+>
+> Yes, I agree - getting to a unified approach has been my intention since I first brought this
+> up at LPC'17.
+>
+> > And I do not think that kunit is only UML, it's just that seems to be
+> > what Brendan tests with, but should work with other arches as well.
+>
+> If I get Brendan right, it is UML only now but can be extended to also support
+> kernels running on real hardware. Still it is kernel only, while KTF also has the
+> hybrid mode, where a test can have code and assertions both in user mode and kernel mode.
+> This is made easier and more streamlined by letting all reporting happen from user mode.
 
-Then again assigning to bool looks more "correct" than with bitfield:
+Nope, the KUnit patchset currently under review *does* support any
+architecture; we have tested it on x86, ARM, and UML, but it should
+work on any architecture.
 
-   icm->veto = false;
-
-vs.
-
-   icm->veto = 0;
-
-It is possible to use false/true with bitfield but it does not feel
-right. Maybe it's just me ;-)
+I added support for that a while ago due to popular demand.
