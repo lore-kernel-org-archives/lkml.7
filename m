@@ -2,193 +2,70 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4AFC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51054C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1DD120840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:52:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jm8wdiOc"
+	by mail.kernel.org (Postfix) with ESMTP id 3081E20840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbfHMNwU (ORCPT
+        id S1729337AbfHMNwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:52:20 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:47018 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729190AbfHMNwU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:52:20 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w3so14094875pgt.13
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:52:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4omLmk4w6GxhJ6Ep/AGChVMuZmOFfkXmdaJYpOvWVdk=;
-        b=Jm8wdiOchfcFJ0gRIk1GejkC9wyb0VHkwgGVXz8gKdqL7fzLdNe4X+BSaGG9GuV7hq
-         7sD0rsng093Rsmzie0SdLHRA90thFE9fYj9WOv0ACjtbPytWctwLPNobjvwDlDrUm4jM
-         +RiB/SkxEIKpmhyQWtb2ylSHLydV8aBHuQApwmN8zntmaCpdalFNBJkSWHshpYyVFOaE
-         Qxc6xffuXBWRbS4E3gyJNLpoMCzlVb7s7hqB5moABRoHMHcPlrO7/sTM4WZowUZ3rGWX
-         ZoYV4s/si/3dn7P9hJev1D9DePTX2DxnvqcyFilWTIfI+RaWWt2/x4YIohOqR7cPbIrn
-         sc4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4omLmk4w6GxhJ6Ep/AGChVMuZmOFfkXmdaJYpOvWVdk=;
-        b=W/BEAWuLPcoWDlMC4NJMJ6R29drIe9XZYMnZ27t339H82KE2UHS7zdFi67oF/ISGXE
-         GxKne/b3iC6C9wpowt1NVV5J7cxPsrrO1f5SBDTmxn5YQv+ZWvXjR2bDDzYq7a8N/xqF
-         J+YddqEoXU19sOM6n3UNVUGclrWasxRnTx/ZTQM1R6Nd7ENvAEugXnEzIn7WWJ049qg1
-         WcHFiURTP5UMjiatk+U7tsSjeOdLOieOV6mcbhawz9mjQ/zmdn0hWUfvtE7tEWFtXnrr
-         VkEI5JoA1/8U2JxnQULPcG0VvQFv9Y4PhXhN3Ru4HyEoBxpUAdZnoKVSgyhaMDxdbhwV
-         hLCg==
-X-Gm-Message-State: APjAAAW8gxHzI6srS6Z4jcMH6y0omkAP1Dm/eY0jXUOkOCAznHkyooYP
-        e2f1ZKry1hepsBFsVgUUdycg
-X-Google-Smtp-Source: APXvYqwav0H6AVbnE2BwPov0OYBYEHoA+VkHR9bqs+s/y71GBF2NtI/p4j6/PJKhz+s8rgdAUXLynw==
-X-Received: by 2002:aa7:8b52:: with SMTP id i18mr41768736pfd.194.1565704339044;
-        Tue, 13 Aug 2019 06:52:19 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:649c:6ce0:9d44:669c:5d6c:bc5f])
-        by smtp.gmail.com with ESMTPSA id j9sm16595539pfe.103.2019.08.13.06.52.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 13 Aug 2019 06:52:18 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 19:22:09 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com
-Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
- binding
-Message-ID: <20190813135209.GA30945@Mani-XPS-13-9360>
-References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
- <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
- <20190813094526.GG835@valkosipuli.retiisi.org.uk>
- <20190813113358.GA28877@Mani-XPS-13-9360>
- <20190813114643.GA2527@valkosipuli.retiisi.org.uk>
- <20190813121400.GA29378@Mani-XPS-13-9360>
- <20190813122212.GE2527@valkosipuli.retiisi.org.uk>
+        Tue, 13 Aug 2019 09:52:25 -0400
+Received: from mga03.intel.com ([134.134.136.65]:22654 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729190AbfHMNwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 09:52:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 06:52:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,381,1559545200"; 
+   d="scan'208";a="178675665"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 13 Aug 2019 06:52:23 -0700
+Received: from dalyrusx-mobl.amr.corp.intel.com (unknown [10.251.3.205])
+        by linux.intel.com (Postfix) with ESMTP id 893B65800FE;
+        Tue, 13 Aug 2019 06:52:22 -0700 (PDT)
+Subject: Re: linux-next: build failure after merge of the sound-asoc tree
+To:     Mark Brown <broonie@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>
+References: <20190809130811.58eb1d78@canb.auug.org.au>
+ <20190813131611.6d2b8710@canb.auug.org.au>
+ <20190813112115.GA5093@sirena.co.uk>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <adf98b7e-56ed-e715-012d-db0228b35085@linux.intel.com>
+Date:   Tue, 13 Aug 2019 08:52:41 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813122212.GE2527@valkosipuli.retiisi.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190813112115.GA5093@sirena.co.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
 
-On Tue, Aug 13, 2019 at 03:22:12PM +0300, Sakari Ailus wrote:
-> Hi Manivannan,
+>>> Looks like the merge resolution is not quite right.
+>>>
+>>> I have used the sound-asoc tree from next-20190808 for today.
 > 
-> On Tue, Aug 13, 2019 at 05:44:00PM +0530, Manivannan Sadhasivam wrote:
-> > Hi Sakari,
-> > 
-> > On Tue, Aug 13, 2019 at 02:46:43PM +0300, Sakari Ailus wrote:
-> > > Hi Manivannan,
-> > > 
-> > > On Tue, Aug 13, 2019 at 05:03:58PM +0530, Manivannan Sadhasivam wrote:
-> > > > Hi Sakari,
-> > > > 
-> > > > Thanks for the review!
-> > > > 
-> > > > On Tue, Aug 13, 2019 at 12:45:26PM +0300, Sakari Ailus wrote:
-> > > > > Hi Manivannan,
-> > > > > 
-> > > > > On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > Add devicetree binding for IMX290 CMOS image sensor.
-> > > > > > 
-> > > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > > > > ---
-> > > > > >  .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
-> > > > > >  1 file changed, 51 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > > > > 
-> > > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..7535b5b5b24b
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > > > > @@ -0,0 +1,51 @@
-> > > > > > +* Sony IMX290 1/2.8-Inch CMOS Image Sensor
-> > > > > > +
-> > > > > > +The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
-> > > > > > +Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
-> > > > > > +interfaces. The sensor output is available via CMOS logic parallel SDR output,
-> > > > > > +Low voltage LVDS DDR output and CSI-2 serial data output.
-> > > > > 
-> > > > > If there are three to choose from, then you should specify which one is in
-> > > > > use. Given that I think chances remain slim we'd add support for the other
-> > > > > two (it's certainly not ruled out though), CSI-2 could be the default. But
-> > > > > this needs to be documented.
-> > > > > 
-> > > > 
-> > > > Hmm... I'm not sure here. Bindings should describe the hardware and not the
-> > > > limitations of the driver. Here as you said, the sensor can output frames
-> > > > in 3 different modes/formats but the driver only supports CSI2. I can add a
-> > > > note in the driver but not sure whether dt-binding is the right place or not!
-> > > 
-> > > I guess alternatively you could document the necessary bindings for the
-> > > other two busses.
-> > > 
-> > > But what I'm saying here is that it's highly unlikely they'll be ever
-> > > needed, and it'd be mostly a waste of time to implement that. (That said, I
-> > > have nothing against the use of these busses, but I've never seen anyone
-> > > using them.) Many other devices use defaults for more contentious settings.
-> > > 
-> > 
-> > Agree with you but my question was, whether I could document the supported
-> > mode in bindings or not! I have seen comments from Rob in the past that the
-> > binding should not document the limitations of the driver. But anyway, one
-> > can infer from the current binding that only CSI2 is supported for now, it's
-> > just stating it explicitly makes me doubtful!
+>> I am still getting this failure ...
 > 
-> I think it could be e.g.:
-> 
-> The CSI-2 bus is the default. No bindings have been defined for the other
-> busses.
-> 
+> Intel people, any thoughts?
 
-Ack.
+I provided a solution on alsa-devel yesterday, see 'ASoC: SOF: fix HDA 
+direct MMIO access'
 
-> ...
-> 
-> > > > > I suppose you can't change the lane order, so clock-lanes is redundant
-> > > > > (don't use it in the example) and data-lanes should be monotonically
-> > > > > incrementing series from 1 to 4.
-> > > > > 
-> > > > 
-> > > > We can change the order and the example here illustrates how it has been
-> > > > wired in FRAMOS module. If I change the lane order like you said, it won't
-> > > > work.
-> > > 
-> > > I highly doubt that. Neither the driver nor the sensor uses the lane
-> > > ordering information.
-> > > 
-> > 
-> > Agree but CSI2 host will need this informtion, right? Please correct me if
-> > I'm wrong!
-> 
-> The CSI-2 receiver may need that configuration, but it's not addressed by a
-> sensor's binding documentation (it's configured in the endpoint on the
-> receiver's side).
-> 
 
-Yes but I thought that documenting the sensor lane configuration based on one
-example implementation might help interfacing w/ different hosts. Anyway, to be
-host agnostic, I can drop the clock lane and make data lane start from 1 as you
-suggested.
-
-Thanks,
-Mani
-
-> -- 
-> Sakari Ailus
