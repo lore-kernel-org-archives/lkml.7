@@ -2,95 +2,225 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80402C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA52C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A1E20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4BFF2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:59:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adgbz1vo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfHMP7C convert rfc822-to-8bit (ORCPT
+        id S1728699AbfHMP75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:59:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35317 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727577AbfHMP7C (ORCPT
+        Tue, 13 Aug 2019 11:59:57 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45516 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfHMP75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:59:02 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hxZCM-0001z8-BK; Tue, 13 Aug 2019 17:58:58 +0200
-Date:   Tue, 13 Aug 2019 17:58:58 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     rostedt@goodmis.org, tglx@linutronix.de,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        williams@redhat.com
-Subject: Re: [PATCH] net/xfrm/xfrm_ipcomp: Use {get,put}_cpu_light
-Message-ID: <20190813155858.e4bcbkom2vsiafhh@linutronix.de>
-References: <20190717072019.13681-1-juri.lelli@redhat.com>
+        Tue, 13 Aug 2019 11:59:57 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m2so6213327qki.12;
+        Tue, 13 Aug 2019 08:59:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5wYbeJt062YGni4JJRrpw5Er0ip3eb9YlimfJPWTmeY=;
+        b=adgbz1vohNtcXb218auKPIEJMAA4N/AhL+EgCkoIrZTw4sJjkmuk6yITXcyaAjlHGw
+         QYOYISgAtqVQixxeBPadxlyzgMpyeEPsuR8kJwvdRnfD45cB1MuXD1OEJisG6QWMPOSM
+         yvtMTES6gK4c0TbvpJvooOZiXhLo2EzMXVlEXafTmZ0biTJfI9ngTmFRxSj57OEbWpCX
+         l3wuA8gr7t5CLHPM90fc362Exw0vmfxq2tYr7PSRghSq+ayFEqpBI2aOl6f4nIHWAIlx
+         kb9mwCTQRoPazUD9WX/3aKbiOvUVKLSPn0NMp0tCvKTkw3/Guhy52q1lbEfqKtIEBd3F
+         /NYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5wYbeJt062YGni4JJRrpw5Er0ip3eb9YlimfJPWTmeY=;
+        b=Qq8v0DI9zs2ZhKqcTOB1tEzssMBs5Ws+FBWF4lqr9J3qTo7j1Y0RhGOnVReFROEHSV
+         Ru4R5SvT5L3QYDdJwiT4t47vClJafrFpWdJV3kdayNKai9rordjplMvtKGasUymW5Lrm
+         vBRddCPu6Y8JucC1vK/6LMs5JuBQ7AT/HjxnGaDEnYlnEhuy2DzFEsWFsKdlPpDJAzJT
+         14zIrJYMmS2z7ABp2Ej2r2JOk+dj82AdBjHpZcu5Ts6FI6aCEdHbaxARNTQtn7qyRXue
+         2+1IlMcFPsUOBeZ4CjtFYvSQd5/tb457HjpvdZQDmGZa1kuM8gq4CBNU78xVHhEVI+FT
+         EmBg==
+X-Gm-Message-State: APjAAAVWMETKRtgienDalLCeSaZbR+8fgfWGiACmenATyiYhNFLiL1Y7
+        HgcNK2voKx0eSQOm8MIDKKJv1oq6JlNx4MhXql4=
+X-Google-Smtp-Source: APXvYqwedf7ItGfvmp28v2dVpPWQXYz4bLyvLzDni/9I/2kDnDxkLY1j9Sty4jAaWxCMpgXPjNhgwikLK39hOOpxNtE=
+X-Received: by 2002:a37:9d94:: with SMTP id g142mr33317931qke.209.1565711995789;
+ Tue, 13 Aug 2019 08:59:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190717072019.13681-1-juri.lelli@redhat.com>
-User-Agent: NeoMutt/20180716
+References: <20190812192316.13615-1-hannes@cmpxchg.org> <20190813132938.GJ17933@dhcp22.suse.cz>
+In-Reply-To: <20190813132938.GJ17933@dhcp22.suse.cz>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Tue, 13 Aug 2019 08:59:38 -0700
+Message-ID: <CAHbLzkrRvoVLH16Cxq-f6hn-CLJjh=tJnYnF8P0xNiZ9=eEg8A@mail.gmail.com>
+Subject: Re: [PATCH] mm: vmscan: do not share cgroup iteration between reclaimers
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>, cgroups@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-team@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-17 09:20:19 [+0200], Juri Lelli wrote:
-> The following BUG has been reported while running ipsec tests.
-…
-> Hi,
-> 
-> This has been found on a 4.19.x-rt kernel, but 5.x-rt(s) are affected as
-> well.
-> 
-> Best,
-> 
-> Juri
-> ---
->  net/xfrm/xfrm_ipcomp.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/xfrm/xfrm_ipcomp.c b/net/xfrm/xfrm_ipcomp.c
-> index a00ec715aa46..39d9e663384f 100644
-> --- a/net/xfrm/xfrm_ipcomp.c
-> +++ b/net/xfrm/xfrm_ipcomp.c
-> @@ -45,7 +45,7 @@ static int ipcomp_decompress(struct xfrm_state *x, struct sk_buff *skb)
->  	const int plen = skb->len;
->  	int dlen = IPCOMP_SCRATCH_SIZE;
->  	const u8 *start = skb->data;
-> -	const int cpu = get_cpu();
-> +	const int cpu = get_cpu_light();
+On Tue, Aug 13, 2019 at 6:29 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Mon 12-08-19 15:23:16, Johannes Weiner wrote:
+> > One of our services observed a high rate of cgroup OOM kills in the
+> > presence of large amounts of clean cache. Debugging showed that the
+> > culprit is the shared cgroup iteration in page reclaim.
+> >
+> > Under high allocation concurrency, multiple threads enter reclaim at
+> > the same time. Fearing overreclaim when we first switched from the
+> > single global LRU to cgrouped LRU lists, we introduced a shared
+> > iteration state for reclaim invocations - whether 1 or 20 reclaimers
+> > are active concurrently, we only walk the cgroup tree once: the 1st
+> > reclaimer reclaims the first cgroup, the second the second one etc.
+> > With more reclaimers than cgroups, we start another walk from the top.
+> >
+> > This sounded reasonable at the time, but the problem is that reclaim
+> > concurrency doesn't scale with allocation concurrency. As reclaim
+> > concurrency increases, the amount of memory individual reclaimers get
+> > to scan gets smaller and smaller. Individual reclaimers may only see
+> > one cgroup per cycle, and that may not have much reclaimable
+> > memory. We see individual reclaimers declare OOM when there is plenty
+> > of reclaimable memory available in cgroups they didn't visit.
+> >
+> > This patch does away with the shared iterator, and every reclaimer is
+> > allowed to scan the full cgroup tree and see all of reclaimable
+> > memory, just like it would on a non-cgrouped system. This way, when
+> > OOM is declared, we know that the reclaimer actually had a chance.
+> >
+> > To still maintain fairness in reclaim pressure, disallow cgroup
+> > reclaim from bailing out of the tree walk early. Kswapd and regular
+> > direct reclaim already don't bail, so it's not clear why limit reclaim
+> > would have to, especially since it only walks subtrees to begin with.
+>
+> The code does bail out on any direct reclaim - be it limit or page
+> allocator triggered. Check the !current_is_kswapd part of the condition.
 
-By using get_cpu_light() you don't forbid another function to invoke
-ipcomp_decompress() on the same CPU. That means that
+Yes, please see commit 2bb0f34fe3c1 ("mm: vmscan: do not iterate all
+mem cgroups for global direct reclaim")
 
->  	u8 *scratch = *per_cpu_ptr(ipcomp_scratches, cpu);
+>
+> > This change completely eliminates the OOM kills on our service, while
+> > showing no signs of overreclaim - no increased scan rates, %sys time,
+> > or abrupt free memory spikes. I tested across 100 machines that have
+> > 64G of RAM and host about 300 cgroups each.
+>
+> What is the usual direct reclaim involvement on those machines?
+>
+> > [ It's possible overreclaim never was a *practical* issue to begin
+> >   with - it was simply a concern we had on the mailing lists at the
+> >   time, with no real data to back it up. But we have also added more
+> >   bail-out conditions deeper inside reclaim (e.g. the proportional
+> >   exit in shrink_node_memcg) since. Regardless, now we have data that
+> >   suggests full walks are more reliable and scale just fine. ]
+>
+> I do not see how shrink_node_memcg bail out helps here. We do scan up-to
+> SWAP_CLUSTER_MAX pages for each LRU at least once. So we are getting to
+> nr_memcgs_with_pages multiplier with the patch applied in the worst case.
+>
+> How much that matters is another question and it depends on the
+> number of cgroups and the rate the direct reclaim happens. I do not
+> remember exact numbers but even walking a very large memcg tree was
+> noticeable.
 
-scratch buffer here could be used by two tasks on the same CPU. You are
-aware of that right?
-According to your backtrace you get here from NAPI which means BH which
-means it is enough to use smp_processor_id() in such a case.
+I'm concerned by this too. It might be ok to cgroup v2, but v1 still
+dominates. And, considering offline memcgs it might be not unusual to
+have quite large memcg tree.
 
-ipcomp_compress() is using the very same buffer while invoking
-local_bh_disable() before using the buffer to ensure nothing else is
-using the buffer on this CPU. This will work in v5.2-RT because the new
-softirq code uses a local_lock() as part of local_bh_disable(). This
-does not work on v4.19-RT and earlier. 
-
-For v4.19 and earlier I suggest to use a local_lock().
-For v5.2 and later I suggest to replace get_cpu() with
-smp_processor_id(). Ideally a with a lockdep annotation to ensure that
-BH is disabled (which we don't have).
-
->  	struct crypto_comp *tfm = *per_cpu_ptr(ipcd->tfms, cpu);
->  	int err = crypto_comp_decompress(tfm, start, plen, scratch, &dlen);
-
-Sebastian
+>
+> For the over reclaim part SWAP_CLUSTER_MAX is a relatively small number
+> so even hundreds of memcgs on a "reasonably" sized system shouldn't be
+> really observable (we are talking about 7MB per reclaim per reclaimer on
+> 1k memcgs with pages). This would get worse with many reclaimers. Maybe
+> we will need something like the regular direct reclaim throttling of
+> mmemcg limit reclaim as well in the future.
+>
+> That being said, I do agree that the oom side of the coin is causing
+> real troubles and it is a real problem to be addressed first. Especially with
+> cgroup v2 where we have likely more memcgs without any pages because
+> inner nodes do not have any tasks and direct charges which makes some
+> reclaimers hit memcgs without pages more likely.
+>
+> Let's see whether we see regression due to over-reclaim.
+>
+> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+>
+> With the direct reclaim bail out reference fixed - unless I am wrong
+> there of course
+>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+>
+> It is sad to see this piece of fun not being used after that many years
+> of bugs here and there and all the lockless fun but this is the life
+> ;)
+>
+> > ---
+> >  mm/vmscan.c | 22 ++--------------------
+> >  1 file changed, 2 insertions(+), 20 deletions(-)
+> >
+> > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > index dbdc46a84f63..b2f10fa49c88 100644
+> > --- a/mm/vmscan.c
+> > +++ b/mm/vmscan.c
+> > @@ -2667,10 +2667,6 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+> >
+> >       do {
+> >               struct mem_cgroup *root = sc->target_mem_cgroup;
+> > -             struct mem_cgroup_reclaim_cookie reclaim = {
+> > -                     .pgdat = pgdat,
+> > -                     .priority = sc->priority,
+> > -             };
+> >               unsigned long node_lru_pages = 0;
+> >               struct mem_cgroup *memcg;
+> >
+> > @@ -2679,7 +2675,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+> >               nr_reclaimed = sc->nr_reclaimed;
+> >               nr_scanned = sc->nr_scanned;
+> >
+> > -             memcg = mem_cgroup_iter(root, NULL, &reclaim);
+> > +             memcg = mem_cgroup_iter(root, NULL, NULL);
+> >               do {
+> >                       unsigned long lru_pages;
+> >                       unsigned long reclaimed;
+> > @@ -2724,21 +2720,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+> >                                  sc->nr_scanned - scanned,
+> >                                  sc->nr_reclaimed - reclaimed);
+> >
+> > -                     /*
+> > -                      * Kswapd have to scan all memory cgroups to fulfill
+> > -                      * the overall scan target for the node.
+> > -                      *
+> > -                      * Limit reclaim, on the other hand, only cares about
+> > -                      * nr_to_reclaim pages to be reclaimed and it will
+> > -                      * retry with decreasing priority if one round over the
+> > -                      * whole hierarchy is not sufficient.
+> > -                      */
+> > -                     if (!current_is_kswapd() &&
+> > -                                     sc->nr_reclaimed >= sc->nr_to_reclaim) {
+> > -                             mem_cgroup_iter_break(root, memcg);
+> > -                             break;
+> > -                     }
+> > -             } while ((memcg = mem_cgroup_iter(root, memcg, &reclaim)));
+> > +             } while ((memcg = mem_cgroup_iter(root, memcg, NULL)));
+> >
+> >               if (reclaim_state) {
+> >                       sc->nr_reclaimed += reclaim_state->reclaimed_slab;
+> > --
+> > 2.22.0
+>
+> --
+> Michal Hocko
+> SUSE Labs
+>
