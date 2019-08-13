@@ -2,143 +2,142 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD07C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AF7C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D96BC20840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4086220663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfHMJGM (ORCPT
+        id S1727298AbfHMJLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:06:12 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35566 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbfHMJGM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:06:12 -0400
-Received: by mail-qt1-f193.google.com with SMTP id u34so6325279qte.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 02:06:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=HmnZPn2FcohHX2LZev8Ik/BDZ6JSYuIxE8Se4rqqNSM=;
-        b=rBg9Ybu5rRrZ256ieMYg5dExWYf4lK60OEJinea14cTDUJHKQEL3atsvxFLcBVDp6/
-         ya5AtsflVsGkk8Boxfbn5nMOo5DYlRWXMEzsqxhl37Sn0x30TX1GhPWbMU6Y2geUNUqZ
-         0/LNi4SHugaImEWlO01ZKXlbNrD/CzirGUD4uarlFc0JC7bc4c17cHuxTyuip3LxMI9J
-         QJq1rccaek2X/c8mqoqa96bjvfjbfjmmsJdck4az+HBZtRm5sc5Cf88lE1XfOJKY8H5s
-         gH7M3QAgdxiEyI9aLN0jAdkvRcYGEfSSq7ZXDVQz0lmcCskNkdZ2Qquz9foUSOMGfdEQ
-         xTtw==
-X-Gm-Message-State: APjAAAVlJlqfwcMClYeThiHzgmpIx7x43V5ZuheAq++uMy13INI6k3wE
-        x3kLnpzwX8Kw+dRJ7Dl26oYb170YdV+KQSF8m3YXDnZDCD0=
-X-Google-Smtp-Source: APXvYqyNuf2Ns1GMH2+Pz/ISPN3UtH8c0jEwPKZ+81G9STAOaVmAjhYlrrCHKcO2ETs6wDE3k0elpxkKiubN/Q9g1lY=
-X-Received: by 2002:ac8:2955:: with SMTP id z21mr7561640qtz.204.1565687171045;
- Tue, 13 Aug 2019 02:06:11 -0700 (PDT)
+        Tue, 13 Aug 2019 05:11:02 -0400
+Received: from gofer.mess.org ([88.97.38.141]:49753 "EHLO gofer.mess.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726298AbfHMJLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 05:11:02 -0400
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id CCABA603E8; Tue, 13 Aug 2019 10:10:59 +0100 (BST)
+Date:   Tue, 13 Aug 2019 10:10:59 +0100
+From:   Sean Young <sean@mess.org>
+To:     Brad Love <brad@nextdimension.cc>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        syzbot <syzbot+b7f57261c521087d89bb@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] media: em28xx: modules workqueue not inited for 2nd
+ device
+Message-ID: <20190813091059.6ec46psv67y7msef@gofer.mess.org>
+References: <0000000000004bcc0d058faf01c4@google.com>
+ <20190811051110.hsdwmjrbvqgrmssc@gofer.mess.org>
+ <614221186ed37383778d8890d39e829a0e924796.camel@collabora.com>
 MIME-Version: 1.0
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 13 Aug 2019 11:05:54 +0200
-Message-ID: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
-Subject: New kernel interface for sys_tz and timewarp?
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        Karel Zak <kzak@redhat.com>,
-        Lennart Poettering <lennart@poettering.net>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <614221186ed37383778d8890d39e829a0e924796.camel@collabora.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The riscv32 kernel port uses the new time64 syscall interface that has no
-'settimeofday', only 'clock_settime64'. During the review of the glibc port,
-the question arose how to deal with the (old, horrible, deprecated) timezone
-portion of the settimeofday() libc API.
+Hi Brad,
 
-Typical uses of timezones in gettimeofday() are broken and should use
-the normal user space timezone handling built into localtime() instead,
-so the initial idea was to just not bother on new architectures and
-break any application at build time that tries to access the struct timezone
-members to ensure they are finally fixed, and also do the same thing
-across all architectures for consistency.
+On Mon, Aug 12, 2019 at 10:21:39AM -0300, Ezequiel Garcia wrote:
+> On Sun, 2019-08-11 at 06:11 +0100, Sean Young wrote:
+> > syzbot reports an error on flush_request_modules() for the second device.
+> > This workqueue was never initialised so simply remove the offending line.
+> > 
+> > usb 1-1: USB disconnect, device number 2
+> > em28xx 1-1:1.153: Disconnecting em28xx #1
+> > ------------[ cut here ]------------
+> > WARNING: CPU: 0 PID: 12 at kernel/workqueue.c:3031
+> > __flush_work.cold+0x2c/0x36 kernel/workqueue.c:3031
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc2+ #25
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: usb_hub_wq hub_event
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
+> >   panic+0x2a3/0x6da kernel/panic.c:219
+> >   __warn.cold+0x20/0x4a kernel/panic.c:576
+> >   report_bug+0x262/0x2a0 lib/bug.c:186
+> >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+> >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+> >   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+> >   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+> >   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
+> > RIP: 0010:__flush_work.cold+0x2c/0x36 kernel/workqueue.c:3031
+> > Code: 9a 22 00 48 c7 c7 20 e4 c5 85 e8 d9 3a 0d 00 0f 0b 45 31 e4 e9 98 86
+> > ff ff e8 51 9a 22 00 48 c7 c7 20 e4 c5 85 e8 be 3a 0d 00 <0f> 0b 45 31 e4
+> > e9 7d 86 ff ff e8 36 9a 22 00 48 c7 c7 20 e4 c5 85
+> > RSP: 0018:ffff8881da20f720 EFLAGS: 00010286
+> > RAX: 0000000000000024 RBX: dffffc0000000000 RCX: 0000000000000000
+> > RDX: 0000000000000000 RSI: ffffffff8128a0fd RDI: ffffed103b441ed6
+> > RBP: ffff8881da20f888 R08: 0000000000000024 R09: fffffbfff11acd9a
+> > R10: fffffbfff11acd99 R11: ffffffff88d66ccf R12: 0000000000000000
+> > R13: 0000000000000001 R14: ffff8881c6685df8 R15: ffff8881d2a85b78
+> >   flush_request_modules drivers/media/usb/em28xx/em28xx-cards.c:3325 [inline]
+> >   em28xx_usb_disconnect.cold+0x280/0x2a6
+> > drivers/media/usb/em28xx/em28xx-cards.c:4023
+> >   usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+> >   __device_release_driver drivers/base/dd.c:1120 [inline]
+> >   device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1151
+> >   bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+> >   device_del+0x420/0xb10 drivers/base/core.c:2288
+> >   usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+> >   usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
+> >   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
+> >   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+> >   port_event drivers/usb/core/hub.c:5359 [inline]
+> >   hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
+> >   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+> >   process_scheduled_works kernel/workqueue.c:2331 [inline]
+> >   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+> >   kthread+0x318/0x420 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> > Kernel Offset: disabled
+> > Rebooting in 86400 seconds..
+> > 
+> > Reported-by: syzbot+b7f57261c521087d89bb@syzkaller.appspotmail.com
+> > Signed-off-by: Sean Young <sean@mess.org>
+> 
+> I reviewed the syzbot report, but was left head-scratching and
+> failing to see how the module-loading worker was supposed to be used :-)
+> 
+> Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+> 
+> Also, this seems a bug, so how about this tag?
+> 
+> Fixes: be7fd3c3a8c5e ("media: em28xx: Hauppauge DualHD second tuner functionality)
 
-As it turns out, both util-linux/hwclock and systemd make use of the
-timezone field in settimeofday purely for the purpose of setting the
-kernel itself into a known state, for three traditional uses:
+Would you mind reviewing this change please Brad? You added the dual_ts
+feature to the driver so it would be good to have your view on this.
 
-- gettimeofday reports the timezone that was last set with settimeofday,
-  something that is highly discouraged relying on but that has always
-  worked.
+Thanks
+Sean
 
-- a few device drivers and file systems (e.g. fs/fat, full list below) are
-  documented as storing timestamps in local time, so the global sys_tz variable
-  is used to decide the offset, in addition to a in-superblock offset in most
-  cases.
-
-- on x86, windows dual-boot has traditionally (since linux-0.12) allowed the
-  hack that the first settimeofday() call after boot decides whether the RTC
-  is interpreted as localtime or UTC. This is particularly important because
-  with NTP enabled, the time warped mode also updates the RTC with
-  the kernel time every 11 minutes. See kernel/time/ntp.c:sync_hw_clock()
-  and timekeeping_warp_clock() .
-
-The relevant discussion on libc-alpha and on for systemd is archived at:
-https://patchwork.ozlabs.org/patch/1121610/
-https://github.com/systemd/systemd/issues/13305
-
-Now, to the actual questions:
-
-* Should we allow setting the sys_tz on new architectures that use only
-  time64 interfaces at all, or should we try to get away from that anyway?
-
-* Should the NTP timewarp setting ("int persistent_clock_is_local" and
-  its offset) be controllable separately from the timezone used in other
-  drivers?
-
-* If we want keep having a way to set the sys_tz, what interface
-should that use?
-
-  Suggestions so far include
-   - adding a clock_settimeofday_time64() syscall on all 32-bit architectures to
-     maintain the traditional behavior,
-   - adding a sysctl interface for accessing sys_tz.tz_tminuteswest,
-   - using a new field in 'struct timex' for the timewarp offset, and
-   - adding an ioctl command on /dev/rtc/ to control the timewarp
-     offset of that particular device.
-
-         Arnd
----
-Appendix A: full list of kernel code using sys_tz
-
-$ git grep -wl sys_tz drivers/ fs/ net/
-drivers/media/platform/vivid/vivid-rds-gen.c
-drivers/media/platform/vivid/vivid-vbi-gen.c
-drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-drivers/scsi/3w-9xxx.c
-drivers/scsi/3w-sas.c
-drivers/scsi/aacraid/commsup.c
-drivers/scsi/arcmsr/arcmsr_hba.c
-drivers/scsi/mvumi.c
-drivers/scsi/mvumi.h
-drivers/scsi/smartpqi/smartpqi_init.c
-fs/affs/amigaffs.c
-fs/affs/inode.c
-fs/fat/misc.c
-fs/hfs/hfs_fs.h
-fs/hfs/inode.c
-fs/hfs/sysdep.c
-fs/hpfs/hpfs_fn.h
-fs/udf/udftime.c
-net/netfilter/xt_time.c
+> 
+> > ---
+> >  drivers/media/usb/em28xx/em28xx-cards.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/em28xx-cards.c
+> > index 6e33782c3ca6..5983e72a0622 100644
+> > --- a/drivers/media/usb/em28xx/em28xx-cards.c
+> > +++ b/drivers/media/usb/em28xx/em28xx-cards.c
+> > @@ -4019,7 +4019,6 @@ static void em28xx_usb_disconnect(struct usb_interface *intf)
+> >  		dev->dev_next->disconnected = 1;
+> >  		dev_info(&dev->intf->dev, "Disconnecting %s\n",
+> >  			 dev->dev_next->name);
+> > -		flush_request_modules(dev->dev_next);
+> >  	}
+> >  
+> >  	dev->disconnected = 1;
+> 
