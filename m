@@ -2,27 +2,27 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB606C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5A8C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A9D2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5A52067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbfHMRmY (ORCPT
+        id S1728057AbfHMRn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:42:24 -0400
-Received: from smtp8.emailarray.com ([65.39.216.67]:29414 "EHLO
-        smtp8.emailarray.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727679AbfHMRmY (ORCPT
+        Tue, 13 Aug 2019 13:43:28 -0400
+Received: from smtp3.emailarray.com ([65.39.216.17]:54536 "EHLO
+        smtp3.emailarray.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfHMRn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:42:24 -0400
-Received: (qmail 31791 invoked by uid 89); 13 Aug 2019 17:42:23 -0000
+        Tue, 13 Aug 2019 13:43:27 -0400
+Received: (qmail 98191 invoked by uid 89); 13 Aug 2019 17:36:47 -0000
 Received: from unknown (HELO ?172.20.41.143?) (amxlbW9uQGZsdWdzdmFtcC5jb21AMTk5LjIwMS42NC4xMzc=) (POLARISLOCAL)  
-  by smtp8.emailarray.com with (AES256-GCM-SHA384 encrypted) SMTP; 13 Aug 2019 17:42:23 -0000
+  by smtp3.emailarray.com with (AES256-GCM-SHA384 encrypted) SMTP; 13 Aug 2019 17:36:47 -0000
 From:   "Jonathan Lemon" <jlemon@flugsvamp.com>
 To:     "Ivan Khoronzhuk" <ivan.khoronzhuk@linaro.org>
 Cc:     magnus.karlsson@intel.com, bjorn.topel@intel.com,
@@ -30,16 +30,16 @@ Cc:     magnus.karlsson@intel.com, bjorn.topel@intel.com,
         jakub.kicinski@netronome.com, daniel@iogearbox.net,
         netdev@vger.kernel.org, bpf@vger.kernel.org,
         xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 2/3] xdp: xdp_umem: replace kmap on vmap for umem
- map
-Date:   Tue, 13 Aug 2019 10:42:18 -0700
+Subject: Re: [PATCH bpf-next 1/3] libbpf: add asm/unistd.h to xsk to get
+ __NR_mmap2
+Date:   Tue, 13 Aug 2019 10:36:42 -0700
 X-Mailer: MailMate (1.12.5r5635)
-Message-ID: <9F98648A-8654-4767-97B5-CF4BC939393C@flugsvamp.com>
-In-Reply-To: <20190813102318.5521-3-ivan.khoronzhuk@linaro.org>
+Message-ID: <12D743F3-6BA0-4D9D-A80D-613EB0F86816@flugsvamp.com>
+In-Reply-To: <20190813102318.5521-2-ivan.khoronzhuk@linaro.org>
 References: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
- <20190813102318.5521-3-ivan.khoronzhuk@linaro.org>
+ <20190813102318.5521-2-ivan.khoronzhuk@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -49,68 +49,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 13 Aug 2019, at 3:23, Ivan Khoronzhuk wrote:
 
-> For 64-bit there is no reason to use vmap/vunmap, so use page_address
-> as it was initially. For 32 bits, in some apps, like in samples
-> xdpsock_user.c when number of pgs in use is quite big, the kmap
-> memory can be not enough, despite on this, kmap looks like is
-> deprecated in such cases as it can block and should be used rather
-> for dynamic mm.
+> That's needed to get __NR_mmap2 when mmap2 syscall is used.
 >
 > Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 
-Seems a bit overkill - if not high memory, kmap() falls back
-to just page_address(), unlike vmap().
--- 
-Jonathan
-
-> ---
->  net/xdp/xdp_umem.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-> index a0607969f8c0..907c9019fe21 100644
-> --- a/net/xdp/xdp_umem.c
-> +++ b/net/xdp/xdp_umem.c
-> @@ -14,7 +14,7 @@
->  #include <linux/netdevice.h>
->  #include <linux/rtnetlink.h>
->  #include <linux/idr.h>
-> -#include <linux/highmem.h>
-> +#include <linux/vmalloc.h>
->
->  #include "xdp_umem.h"
->  #include "xsk_queue.h"
-> @@ -167,10 +167,12 @@ void xdp_umem_clear_dev(struct xdp_umem *umem)
->
->  static void xdp_umem_unmap_pages(struct xdp_umem *umem)
->  {
-> +#if BITS_PER_LONG == 32
->  	unsigned int i;
->
->  	for (i = 0; i < umem->npgs; i++)
-> -		kunmap(umem->pgs[i]);
-> +		vunmap(umem->pages[i].addr);
-> +#endif
->  }
->
->  static void xdp_umem_unpin_pages(struct xdp_umem *umem)
-> @@ -378,8 +380,14 @@ static int xdp_umem_reg(struct xdp_umem *umem, 
-> struct xdp_umem_reg *mr)
->  		goto out_account;
->  	}
->
-> -	for (i = 0; i < umem->npgs; i++)
-> -		umem->pages[i].addr = kmap(umem->pgs[i]);
-> +	for (i = 0; i < umem->npgs; i++) {
-> +#if BITS_PER_LONG == 32
-> +		umem->pages[i].addr = vmap(&umem->pgs[i], 1, VM_MAP,
-> +					   PAGE_KERNEL);
-> +#else
-> +		umem->pages[i].addr = page_address(umem->pgs[i]);
-> +#endif
-> +	}
->
->  	return 0;
->
-> -- 
-> 2.17.1
+Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
