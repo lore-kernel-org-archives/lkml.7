@@ -2,101 +2,148 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9563C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13603C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94AA8206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:48:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="X0vPxBRB"
+	by mail.kernel.org (Postfix) with ESMTP id CBE79206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565733012;
+	bh=qZlws6v+N8kI1UKOVdpEHH2UF31aMI5gwG/rOfFqHzw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tvC3pNpvH9KJTKCz0zR/QA486CZjLCfR/kQZpXq4e+JCDqgb94Gz9PNnBK/gE23T2
+	 wBeyMsgTDdPD8R8DGvPqz8UdPvZXssWjQILPzQtjMsY1sgpmToSDs2yNFrT9GNz1Bw
+	 NTcJlSF2chW1IlNiSO9iuqrgRxfiRd5D3fB3cxqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfHMVrv (ORCPT
+        id S1726822AbfHMVuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:47:51 -0400
-Received: from ozlabs.org ([203.11.71.1]:42753 "EHLO ozlabs.org"
+        Tue, 13 Aug 2019 17:50:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726565AbfHMVrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:47:51 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726066AbfHMVuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 17:50:11 -0400
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 467RCR1CFYz9sN1;
-        Wed, 14 Aug 2019 07:47:46 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565732868;
-        bh=QNIv9/6eYXhe8lrjk0V6PjDA+j0hqVyK+NifzMBwZ9g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=X0vPxBRBVx4GZvtdeNIBS5TwRzUE9VdY8PakxLLs9DQTof5g2UE0Yawy1UgZOW/+1
-         co6oKswBUEvNqNhRe+vv02dphHV9rzKOVZQVL8rig0SjxVNnkONihrvd7Ezi9JJxdu
-         KvnQvc3jSzA703grE1UvbcoBHeAYDRVT+DIXd2N31GrcGggT6rrLvaumz3k8JosDY7
-         I+L6DuJRnlkuX1VjUFuvQCR97PkzlA2fYjz6C7heDoboivM5WNRhqSUU0/Q9gxQtRc
-         wlrURbPLykVPUkNDHQd6q41Ky62hdqUNRkW/hgiQZdKo0ebvpe4IEdim9x3pG/+MdD
-         z3CRHMUNqkyWA==
-Date:   Wed, 14 Aug 2019 07:47:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Olof Johansson <olof@lixom.net>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: linux-next: Fixes tags need some work in the arm-soc tree
-Message-ID: <20190814074730.402ec3ec@canb.auug.org.au>
-In-Reply-To: <CAK8P3a2q1mShg-EQhiAFUOAET8UEMHfLJV-+HoLTaSQY+M7yBQ@mail.gmail.com>
-References: <20190814002836.4b6aa14b@canb.auug.org.au>
-        <CAK8P3a2q1mShg-EQhiAFUOAET8UEMHfLJV-+HoLTaSQY+M7yBQ@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 03A8A20842;
+        Tue, 13 Aug 2019 21:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565733010;
+        bh=qZlws6v+N8kI1UKOVdpEHH2UF31aMI5gwG/rOfFqHzw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sqrnJ/m/lZjwrQjDTqlrzGi1anuWpCof3q1L4UIhTXIXaYkQySPbMoiC5CnzVwWWc
+         9148vWRJwV4fBbIZRDHWDqWS4brABGhBzsHkksdoqSgu5KWedwbYeyOfL7UBBRyoJR
+         Bz5WUcSlul2NfHeUcZ1jzK8ApAkBqsJYaJLA/Zfo=
+Received: by mail-qk1-f177.google.com with SMTP id s145so80982484qke.7;
+        Tue, 13 Aug 2019 14:50:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAU5X3DWyr5I4q02Mjg0VEzG1I5wYL4UzGnYxWx3SnylrQ+6hVUW
+        BS2B8dVgUTWTDJsdvhL+A7ev9Hy3z6pqQbicnQ==
+X-Google-Smtp-Source: APXvYqzMYP4+7zj4XfcIegLbEaqHi41gyoiH8MyCXiN9EIcjrt64BloYhGN0yKxe/9u4lsm4KPn2KKl8nfimpDdfVJk=
+X-Received: by 2002:a37:a44a:: with SMTP id n71mr34676994qke.393.1565733009197;
+ Tue, 13 Aug 2019 14:50:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1D3ZSLx=5BUi2IVapoKt=A=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190808140153.9156-1-dinguyen@kernel.org>
+In-Reply-To: <20190808140153.9156-1-dinguyen@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 13 Aug 2019 15:49:58 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLJN3n6A3NWX=pEYSPfnvQFsdBYwqr9iREHWGFwL2wHYQ@mail.gmail.com>
+Message-ID: <CAL_JsqLJN3n6A3NWX=pEYSPfnvQFsdBYwqr9iREHWGFwL2wHYQ@mail.gmail.com>
+Subject: Re: [PATCHv3] drivers/amba: add reset control to amba bus probe
+To:     Dinh Nguyen <dinguyen@kernel.org>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1D3ZSLx=5BUi2IVapoKt=A=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
++Russell
 
-Hi Arnd,
-
-On Tue, 13 Aug 2019 21:35:58 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+On Thu, Aug 8, 2019 at 8:02 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
 >
-> On Tue, Aug 13, 2019 at 4:28 PM Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->=20
-> >
-> > Please do not split Fixes tags over more than one line.  Also, please
-> > keep them with the rest of the other tags. =20
->=20
-> Thanks for the report. How bad is this? Should I undo the merge and
-> wait for an updated pull request?
+> The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
+> default. Until recently, the DMA controller was brought out of reset by the
+> bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals that
+> are not used are held in reset and are left to Linux to bring them out of
+> reset.
+>
+> Add a mechanism for getting the reset property and de-assert the primecell
+> module from reset if found. This is a not a hard fail if the reset property
+> is not present in the device tree node, so the driver will continue to probe.
+>
+> Because there are different variants of the controller that may have multiple
+> reset signals, the code will find all reset(s) specified and de-assert them.
+>
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+> ---
+> v3: add a reset_control_put()
+>     add error handling for -EPROBE_DEFER
+> v2: move reset control to bus code
+>     find all reset properties and de-assert them
+> ---
+>  drivers/amba/bus.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>
+> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+> index 100e798a5c82..00e68ea416ca 100644
+> --- a/drivers/amba/bus.c
+> +++ b/drivers/amba/bus.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/limits.h>
+>  #include <linux/clk/clk-conf.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/reset.h>
+>
+>  #include <asm/irq.h>
+>
+> @@ -401,6 +402,28 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+>         ret = amba_get_enable_pclk(dev);
+>         if (ret == 0) {
+>                 u32 pid, cid;
+> +               int count;
+> +               struct reset_control *rstc;
+> +
+> +               /*
+> +                * Find reset control(s) of the amba bus and de-assert them.
+> +                */
+> +               count = reset_control_get_count(&dev->dev);
+> +               while (count > 0) {
+> +                       rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
+> +                       if (IS_ERR(rstc)) {
+> +                               if (PTR_ERR(rstc) == -EPROBE_DEFER) {
+> +                                       ret = -EPROBE_DEFER;
+> +                               } else {
+> +                                       dev_err(&dev->dev, "Can't get amba reset!\n");
+> +                               }
+> +                               break;
+> +                       } else {
 
-Its probably ok to leave as long as lessons are learnt :-)
+You can remove the else here and save some indentation on the rest.
 
---=20
-Cheers,
-Stephen Rothwell
+Otherwise,
 
---Sig_/1D3ZSLx=5BUi2IVapoKt=A=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Reviewed-by: Rob Herring <robh@kernel.org>
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1TL/IACgkQAVBC80lX
-0GwzZwf/ZHu3Y/RLybUWFbYGivFgC09NytPbhm8+y9llOajMYD7Al1Pasg+kI1Mo
-yhH9K1vQRjXybFR7l2M9F/ikcraK8C12qj1TmAMTJ6fFleMlXn6fEKhNqw1O8VMz
-KcM8IY1Z23Lom8fMBhjjyGz9Wkv7r1b3mZugCUoZhsIeXKCYfcOW00RVm13RU/MP
-3/uEKFHqWTSHMncKKkMPIgKCHckdiNQhS/mzck3P8aSapCBviOWg1NqJ2o18xg17
-E8oglbj5WZVXZW8R6Uvf4Vo2ntaDjCVSX523je0ymMJvDju98pTURVZft20NlPPw
-Vdnj8KVJ0QuSlWptoEGzS2Lt2K/rwA==
-=0beZ
------END PGP SIGNATURE-----
-
---Sig_/1D3ZSLx=5BUi2IVapoKt=A=--
+> +                               reset_control_deassert(rstc);
+> +                               reset_control_put(rstc);
+> +                               count--;
+> +                       }
+> +               }
+>
+>                 /*
+>                  * Read pid and cid based on size of resource
+> --
+> 2.20.0
+>
