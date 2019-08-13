@@ -2,60 +2,60 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3CFC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C233C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 457ED205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F1E2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:54:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jXTzuTFE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JinqJSom"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729851AbfHMOxz (ORCPT
+        id S1729861AbfHMOyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:53:55 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33727 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729752AbfHMOxu (ORCPT
+        Tue, 13 Aug 2019 10:54:00 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38648 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729822AbfHMOxx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:53:50 -0400
-Received: by mail-lj1-f193.google.com with SMTP id z17so13389282ljz.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 07:53:48 -0700 (PDT)
+        Tue, 13 Aug 2019 10:53:53 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r9so101829249ljg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 07:53:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=y81htq0qWga2/VQdP2NnxV1AFdEaOoqWk/i4jXZklUs=;
-        b=jXTzuTFEFDiZV2QAxMYNPLSt8fvMT7nuiiwiLWUveK8qo34SZTRX5ronDf5drNmVmJ
-         gaXgeh5svX208l/ojeW4DHZRfOnpDUJP1xeLrPJNGVi0XsodrlGdlpMewGmxys+NH9lb
-         m+UKtBufS5TsYHmNXgCphkAaqT2xJZbPqHyir9w1hvcOfhjXuR7/oY2lmasooVPK8BRi
-         G2PWJ2dh5/ZPn1sdDKyr8Fq/XgHwNPm1cBsXvZar7nL6L5DIZtmBliz0vaDq4mUuhEPV
-         X11mXrV5pHK2YlvZM56V6yRbLPl+K/YMF/OGWEbi86OPdZ3zT26y8dC0TATmPVEzrkyE
-         0E9Q==
+        bh=Gzz+ec+CQ/JmfDyh3zryc1RUlCYNkhZA/jLenY/9FBY=;
+        b=JinqJSomS137wvecn5MBycFgmWUud91UGX1KFeRUACPtFtnuMCoa61SyIPfAFLjNlp
+         ZfuT3KplnGEkwWi+rWnqswK07W3bCma3zOQiec5bGpmq4PlVDQGn4yRfc/HgcFTEWSUm
+         EjyyIPo78KLvpn22HFXyavf/HPeY04dicPsE/65H1gxlql+Q4QgmuRBFqYGqbXf9XNe5
+         e/g7qtPXIgoaCpT9X+LtTACZ4ztwPmZsSx1iGs5pDr6JyjmE0wzxEEiFeYXeYORGdC3w
+         ntbDTmtKZkxrVTjDAsGDvoUf7yva4yCLbEropkBV8nHWzfT+GoGSOzXWHYfWUgds876u
+         WRmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=y81htq0qWga2/VQdP2NnxV1AFdEaOoqWk/i4jXZklUs=;
-        b=DEGlS3WI2dISeszhnvOlgGHu7jUUAccmyaFyAHso1qLsFQSgfHOK2S/5t5acC4aZEE
-         Z8q4MLqRCJBjBjWCZABQ0vj6qwo4wBzFHs+pWJe/S9UHi9zQpFkZMznT6zqKxvIT+FYE
-         dw0f8MkO0ZurF64scyUbFSi5oGPdRIf4e/GQa/hbFQMPIyUmhJYwSoj5/TqfSRfcwJf3
-         pQUOGjwfn+7NPOL6nit/2xfk8P1GFTwP08MPVzbG7cEE5sEtMbrX009C3ik2BtwCOwTM
-         0nYORw1Ax2VjeaFA7cO0ZRrRWgpnWvq+ug14kSOKIaARLYJSntl3vDTf7BLHlN9/m/tm
-         5WMQ==
-X-Gm-Message-State: APjAAAVUgTY8Tk4Jm1pfN8hLHnTBlfVYxWx4qQwanjkLYjvhSflbia/V
-        s2oE/I/Nih3BH15Q2+2snGGM7g==
-X-Google-Smtp-Source: APXvYqxrn54bNkxbTxOvMSXY4AaWq7/wup5YqNr3G36g5D7q0jr2XqfZzPL4m5lhoijit1CZcVqHvg==
-X-Received: by 2002:a05:651c:29b:: with SMTP id b27mr13462823ljo.74.1565708027750;
-        Tue, 13 Aug 2019 07:53:47 -0700 (PDT)
+        bh=Gzz+ec+CQ/JmfDyh3zryc1RUlCYNkhZA/jLenY/9FBY=;
+        b=Mf3RwRzVMkjauUtUgR2rXIgLfkxr964gUaXOKgtHbit11aZPEM/m4GQrIHVjb230yf
+         GEVjsRbEg73+/R6T5//y6JN0yh5HUK9DJEAEinfGDwSlzIdgkz1K63YaqEpr6S5RacrA
+         KzYitcCE+ZT/kthPyt0P6yYKZjeDaG13Evusu7djpIVFsawc5GRcwh+OAb0JuMv/HiVt
+         GYsSor+McyFRCQfYFISWTu+/kJBVxIKh5dd9ddpmN7I6VHHUfS0MyTT6Eao/J6z2WTYK
+         xS3B19TG2poPxlFNSE8BddNL0areqI1ntHf9ugvcq7OT6ZxIAfNchkHOJ4HNuWwaEhF9
+         81Ug==
+X-Gm-Message-State: APjAAAUGfkx7pB+0A/f+X5jhqqPB3irIyTzoVrZmAI3HFivEv30+9ATh
+        pYSETSUT1qiHjs75MalwRjUl/w==
+X-Google-Smtp-Source: APXvYqywXgesvLBRphbRdAtiIfErF4a7WtDYN4D4kA+x58uxGeWKphlR/Rl7Yu69KPNItZj6rTIohA==
+X-Received: by 2002:a2e:4b12:: with SMTP id y18mr21169249lja.238.1565708031019;
+        Tue, 13 Aug 2019 07:53:51 -0700 (PDT)
 Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id r68sm19628100lff.52.2019.08.13.07.53.46
+        by smtp.googlemail.com with ESMTPSA id r68sm19628100lff.52.2019.08.13.07.53.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 13 Aug 2019 07:53:47 -0700 (PDT)
+        Tue, 13 Aug 2019 07:53:50 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     linux-pm@vger.kernel.org, evgreen@chromium.org
 Cc:     daidavid1@codeaurora.org, vincent.guittot@linaro.org,
@@ -63,9 +63,9 @@ Cc:     daidavid1@codeaurora.org, vincent.guittot@linaro.org,
         dianders@chromium.org, seansw@qti.qualcomm.com,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org
-Subject: [PATCH v4 1/3] interconnect: Add support for path tags
-Date:   Tue, 13 Aug 2019 17:53:39 +0300
-Message-Id: <20190813145341.28530-2-georgi.djakov@linaro.org>
+Subject: [PATCH v4 3/3] interconnect: qcom: Add tagging and wake/sleep support for sdm845
+Date:   Tue, 13 Aug 2019 17:53:41 +0300
+Message-Id: <20190813145341.28530-4-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190813145341.28530-1-georgi.djakov@linaro.org>
 References: <20190813145341.28530-1-georgi.djakov@linaro.org>
@@ -76,128 +76,242 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Consumers may have use cases with different bandwidth requirements based
-on the system or driver state. The consumer driver can append a specific
-tag to the path and pass this information to the interconnect platform
-driver to do the aggregation based on this state.
+From: David Dai <daidavid1@codeaurora.org>
 
-Introduce icc_set_tag() function that will allow the consumers to append
-an optional tag to each path. The aggregation of these tagged paths is
-platform specific.
+Add support for wake and sleep commands by using a tag to indicate
+whether or not the aggregate and set requests fall into execution
+state specific bucket.
 
-Reviewed-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: David Dai <daidavid1@codeaurora.org>
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
- drivers/interconnect/core.c           | 24 +++++++++++++++++++++++-
- drivers/interconnect/qcom/sdm845.c    |  2 +-
- include/linux/interconnect-provider.h |  4 ++--
- include/linux/interconnect.h          |  5 +++++
- 4 files changed, 31 insertions(+), 4 deletions(-)
+ drivers/interconnect/qcom/sdm845.c | 139 ++++++++++++++++++++++-------
+ 1 file changed, 108 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 871eb4bc4efc..251354bb7fdc 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -29,6 +29,7 @@ static struct dentry *icc_debugfs_dir;
-  * @req_node: entry in list of requests for the particular @node
-  * @node: the interconnect node to which this constraint applies
-  * @dev: reference to the device that sets the constraints
-+ * @tag: path tag (optional)
-  * @avg_bw: an integer describing the average bandwidth in kBps
-  * @peak_bw: an integer describing the peak bandwidth in kBps
-  */
-@@ -36,6 +37,7 @@ struct icc_req {
- 	struct hlist_node req_node;
- 	struct icc_node *node;
- 	struct device *dev;
-+	u32 tag;
- 	u32 avg_bw;
- 	u32 peak_bw;
- };
-@@ -204,7 +206,7 @@ static int aggregate_requests(struct icc_node *node)
- 	node->peak_bw = 0;
- 
- 	hlist_for_each_entry(r, &node->req_list, req_node)
--		p->aggregate(node, r->avg_bw, r->peak_bw,
-+		p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
- 			     &node->avg_bw, &node->peak_bw);
- 
- 	return 0;
-@@ -385,6 +387,26 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
- }
- EXPORT_SYMBOL_GPL(of_icc_get);
- 
-+/**
-+ * icc_set_tag() - set an optional tag on a path
-+ * @path: the path we want to tag
-+ * @tag: the tag value
-+ *
-+ * This function allows consumers to append a tag to the requests associated
-+ * with a path, so that a different aggregation could be done based on this tag.
-+ */
-+void icc_set_tag(struct icc_path *path, u32 tag)
-+{
-+	int i;
-+
-+	if (!path)
-+		return;
-+
-+	for (i = 0; i < path->num_nodes; i++)
-+		path->reqs[i].tag = tag;
-+}
-+EXPORT_SYMBOL_GPL(icc_set_tag);
-+
- /**
-  * icc_set_bw() - set bandwidth constraints on an interconnect path
-  * @path: reference to the path returned by icc_get()
 diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
-index 4915b78da673..fb526004c82e 100644
+index fb526004c82e..93df67345b39 100644
 --- a/drivers/interconnect/qcom/sdm845.c
 +++ b/drivers/interconnect/qcom/sdm845.c
-@@ -626,7 +626,7 @@ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
+@@ -66,6 +66,22 @@ struct bcm_db {
+ #define SDM845_MAX_BCM_PER_NODE	2
+ #define SDM845_MAX_VCD		10
+ 
++/*
++ * The AMC bucket denotes constraints that are applied to hardware when
++ * icc_set_bw() completes, whereas the WAKE and SLEEP constraints are applied
++ * when the execution environment transitions between active and low power mode.
++ */
++#define QCOM_ICC_BUCKET_AMC		0
++#define QCOM_ICC_BUCKET_WAKE		1
++#define QCOM_ICC_BUCKET_SLEEP		2
++#define QCOM_ICC_NUM_BUCKETS		3
++#define QCOM_ICC_TAG_AMC		BIT(QCOM_ICC_BUCKET_AMC)
++#define QCOM_ICC_TAG_WAKE		BIT(QCOM_ICC_BUCKET_WAKE)
++#define QCOM_ICC_TAG_SLEEP		BIT(QCOM_ICC_BUCKET_SLEEP)
++#define QCOM_ICC_TAG_ACTIVE_ONLY	(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE)
++#define QCOM_ICC_TAG_ALWAYS		(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE |\
++					 QCOM_ICC_TAG_SLEEP)
++
+ /**
+  * struct qcom_icc_node - Qualcomm specific interconnect nodes
+  * @name: the node name used in debugfs
+@@ -86,8 +102,8 @@ struct qcom_icc_node {
+ 	u16 num_links;
+ 	u16 channels;
+ 	u16 buswidth;
+-	u64 sum_avg;
+-	u64 max_peak;
++	u64 sum_avg[QCOM_ICC_NUM_BUCKETS];
++	u64 max_peak[QCOM_ICC_NUM_BUCKETS];
+ 	struct qcom_icc_bcm *bcms[SDM845_MAX_BCM_PER_NODE];
+ 	size_t num_bcms;
+ };
+@@ -112,8 +128,8 @@ struct qcom_icc_bcm {
+ 	const char *name;
+ 	u32 type;
+ 	u32 addr;
+-	u64 vote_x;
+-	u64 vote_y;
++	u64 vote_x[QCOM_ICC_NUM_BUCKETS];
++	u64 vote_y[QCOM_ICC_NUM_BUCKETS];
+ 	bool dirty;
+ 	bool keepalive;
+ 	struct bcm_db aux_data;
+@@ -555,7 +571,7 @@ inline void tcs_cmd_gen(struct tcs_cmd *cmd, u64 vote_x, u64 vote_y,
+ 		cmd->wait = true;
+ }
+ 
+-static void tcs_list_gen(struct list_head *bcm_list,
++static void tcs_list_gen(struct list_head *bcm_list, int bucket,
+ 			 struct tcs_cmd tcs_list[SDM845_MAX_VCD],
+ 			 int n[SDM845_MAX_VCD])
+ {
+@@ -573,8 +589,8 @@ static void tcs_list_gen(struct list_head *bcm_list,
+ 			commit = true;
+ 			cur_vcd_size = 0;
+ 		}
+-		tcs_cmd_gen(&tcs_list[idx], bcm->vote_x, bcm->vote_y,
+-			    bcm->addr, commit);
++		tcs_cmd_gen(&tcs_list[idx], bcm->vote_x[bucket],
++			    bcm->vote_y[bucket], bcm->addr, commit);
+ 		idx++;
+ 		n[batch]++;
+ 		/*
+@@ -595,37 +611,55 @@ static void tcs_list_gen(struct list_head *bcm_list,
+ 
+ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
+ {
+-	size_t i;
+-	u64 agg_avg = 0;
+-	u64 agg_peak = 0;
++	size_t i, bucket;
++	u64 agg_avg[QCOM_ICC_NUM_BUCKETS] = {0};
++	u64 agg_peak[QCOM_ICC_NUM_BUCKETS] = {0};
+ 	u64 temp;
+ 
+-	for (i = 0; i < bcm->num_nodes; i++) {
+-		temp = bcm->nodes[i]->sum_avg * bcm->aux_data.width;
+-		do_div(temp, bcm->nodes[i]->buswidth * bcm->nodes[i]->channels);
+-		agg_avg = max(agg_avg, temp);
++	for (bucket = 0; bucket < QCOM_ICC_NUM_BUCKETS; bucket++) {
++		for (i = 0; i < bcm->num_nodes; i++) {
++			temp = bcm->nodes[i]->sum_avg[bucket] * bcm->aux_data.width;
++			do_div(temp, bcm->nodes[i]->buswidth * bcm->nodes[i]->channels);
++			agg_avg[bucket] = max(agg_avg[bucket], temp);
+ 
+-		temp = bcm->nodes[i]->max_peak * bcm->aux_data.width;
+-		do_div(temp, bcm->nodes[i]->buswidth);
+-		agg_peak = max(agg_peak, temp);
+-	}
++			temp = bcm->nodes[i]->max_peak[bucket] * bcm->aux_data.width;
++			do_div(temp, bcm->nodes[i]->buswidth);
++			agg_peak[bucket] = max(agg_peak[bucket], temp);
++		}
+ 
+-	temp = agg_avg * 1000ULL;
+-	do_div(temp, bcm->aux_data.unit);
+-	bcm->vote_x = temp;
++		temp = agg_avg[bucket] * 1000ULL;
++		do_div(temp, bcm->aux_data.unit);
++		bcm->vote_x[bucket] = temp;
+ 
+-	temp = agg_peak * 1000ULL;
+-	do_div(temp, bcm->aux_data.unit);
+-	bcm->vote_y = temp;
++		temp = agg_peak[bucket] * 1000ULL;
++		do_div(temp, bcm->aux_data.unit);
++		bcm->vote_y[bucket] = temp;
++	}
+ 
+-	if (bcm->keepalive && bcm->vote_x == 0 && bcm->vote_y == 0) {
+-		bcm->vote_x = 1;
+-		bcm->vote_y = 1;
++	if (bcm->keepalive && bcm->vote_x[QCOM_ICC_BUCKET_AMC] == 0 &&
++	    bcm->vote_y[QCOM_ICC_BUCKET_AMC] == 0) {
++		bcm->vote_x[QCOM_ICC_BUCKET_AMC] = 1;
++		bcm->vote_x[QCOM_ICC_BUCKET_WAKE] = 1;
++		bcm->vote_y[QCOM_ICC_BUCKET_AMC] = 1;
++		bcm->vote_y[QCOM_ICC_BUCKET_WAKE] = 1;
+ 	}
+ 
  	bcm->dirty = false;
  }
  
--static int qcom_icc_aggregate(struct icc_node *node, u32 avg_bw,
-+static int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
- 			      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
- {
- 	size_t i;
-diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
-index 63caccadc2db..4ee19fd41568 100644
---- a/include/linux/interconnect-provider.h
-+++ b/include/linux/interconnect-provider.h
-@@ -45,8 +45,8 @@ struct icc_provider {
- 	struct list_head	provider_list;
- 	struct list_head	nodes;
- 	int (*set)(struct icc_node *src, struct icc_node *dst);
--	int (*aggregate)(struct icc_node *node, u32 avg_bw, u32 peak_bw,
--			 u32 *agg_avg, u32 *agg_peak);
-+	int (*aggregate)(struct icc_node *node, u32 tag, u32 avg_bw,
-+			 u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
- 	struct icc_node* (*xlate)(struct of_phandle_args *spec, void *data);
- 	struct device		*dev;
- 	int			users;
-diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-index dc25864755ba..d70a914cba11 100644
---- a/include/linux/interconnect.h
-+++ b/include/linux/interconnect.h
-@@ -30,6 +30,7 @@ struct icc_path *icc_get(struct device *dev, const int src_id,
- struct icc_path *of_icc_get(struct device *dev, const char *name);
- void icc_put(struct icc_path *path);
- int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
-+void icc_set_tag(struct icc_path *path, u32 tag);
- 
- #else
- 
-@@ -54,6 +55,10 @@ static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
- 	return 0;
- }
- 
-+static inline void icc_set_tag(struct icc_path *path, u32 tag)
++static void qcom_icc_pre_aggregate(struct icc_node *node)
 +{
++	size_t i;
++	struct qcom_icc_node *qn;
++
++	qn = node->data;
++
++	for (i = 0; i < QCOM_ICC_NUM_BUCKETS; i++) {
++		qn->sum_avg[i] = 0;
++		qn->max_peak[i] = 0;
++	}
 +}
 +
- #endif /* CONFIG_INTERCONNECT */
+ static int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
+ 			      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
+ {
+@@ -634,12 +668,19 @@ static int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
  
- #endif /* __LINUX_INTERCONNECT_H */
+ 	qn = node->data;
+ 
++	if (!tag)
++		tag = QCOM_ICC_TAG_ALWAYS;
++
++	for (i = 0; i < QCOM_ICC_NUM_BUCKETS; i++) {
++		if (tag & BIT(i)) {
++			qn->sum_avg[i] += avg_bw;
++			qn->max_peak[i] = max_t(u32, qn->max_peak[i], peak_bw);
++		}
++	}
++
+ 	*agg_avg += avg_bw;
+ 	*agg_peak = max_t(u32, *agg_peak, peak_bw);
+ 
+-	qn->sum_avg = *agg_avg;
+-	qn->max_peak = *agg_peak;
+-
+ 	for (i = 0; i < qn->num_bcms; i++)
+ 		qn->bcms[i]->dirty = true;
+ 
+@@ -675,7 +716,7 @@ static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
+ 	 * Construct the command list based on a pre ordered list of BCMs
+ 	 * based on VCD.
+ 	 */
+-	tcs_list_gen(&commit_list, cmds, commit_idx);
++	tcs_list_gen(&commit_list, QCOM_ICC_BUCKET_AMC, cmds, commit_idx);
+ 
+ 	if (!commit_idx[0])
+ 		return ret;
+@@ -693,6 +734,41 @@ static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
+ 		return ret;
+ 	}
+ 
++	INIT_LIST_HEAD(&commit_list);
++
++	for (i = 0; i < qp->num_bcms; i++) {
++		/*
++		 * Only generate WAKE and SLEEP commands if a resource's
++		 * requirements change as the execution environment transitions
++		 * between different power states.
++		 */
++		if (qp->bcms[i]->vote_x[QCOM_ICC_BUCKET_WAKE] !=
++		    qp->bcms[i]->vote_x[QCOM_ICC_BUCKET_SLEEP] ||
++		    qp->bcms[i]->vote_y[QCOM_ICC_BUCKET_WAKE] !=
++		    qp->bcms[i]->vote_y[QCOM_ICC_BUCKET_SLEEP]) {
++			list_add_tail(&qp->bcms[i]->list, &commit_list);
++		}
++	}
++
++	if (list_empty(&commit_list))
++		return ret;
++
++	tcs_list_gen(&commit_list, QCOM_ICC_BUCKET_WAKE, cmds, commit_idx);
++
++	ret = rpmh_write_batch(qp->dev, RPMH_WAKE_ONLY_STATE, cmds, commit_idx);
++	if (ret) {
++		pr_err("Error sending WAKE RPMH requests (%d)\n", ret);
++		return ret;
++	}
++
++	tcs_list_gen(&commit_list, QCOM_ICC_BUCKET_SLEEP, cmds, commit_idx);
++
++	ret = rpmh_write_batch(qp->dev, RPMH_SLEEP_STATE, cmds, commit_idx);
++	if (ret) {
++		pr_err("Error sending SLEEP RPMH requests (%d)\n", ret);
++		return ret;
++	}
++
+ 	return ret;
+ }
+ 
+@@ -738,6 +814,7 @@ static int qnoc_probe(struct platform_device *pdev)
+ 	provider = &qp->provider;
+ 	provider->dev = &pdev->dev;
+ 	provider->set = qcom_icc_set;
++	provider->pre_aggregate = qcom_icc_pre_aggregate;
+ 	provider->aggregate = qcom_icc_aggregate;
+ 	provider->xlate = of_icc_xlate_onecell;
+ 	INIT_LIST_HEAD(&provider->nodes);
