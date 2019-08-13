@@ -2,84 +2,108 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A82C32757
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6219CC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C91722067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565727002;
-	bh=IiCD7IsT67JhzKzMH/tdAui5BDrSXtu3NUCLmNQc6n0=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=ePYQm9wFuij6coth71TaR3UNTU4lxgf8Psp30XWqJzVS3JCO2mjHRYn1ramiWJSwy
-	 64JmBCm8D6V0dWUOunyLfeVQ5MB1FYSfZPsuP4NwTD/rgol66d9FNATh9ofUhvZLAt
-	 WcOug/er0/2zzWVQ880Ly44t20xgag8Tq3OYdo9Q=
+	by mail.kernel.org (Postfix) with ESMTP id 3003D2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:11:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="N8DH5uKB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfHMUKB (ORCPT
+        id S1726759AbfHMULg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 16:10:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38246 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 16:11:36 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:48044 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbfHMUKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 16:10:01 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D5692067D;
-        Tue, 13 Aug 2019 20:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565727000;
-        bh=IiCD7IsT67JhzKzMH/tdAui5BDrSXtu3NUCLmNQc6n0=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=XXoWIRKlGSg9iDPpwqt+n7qPov9+Y81AxhP2IGS5o4ds4+Pf25nRy0LFC8t3z1klw
-         Xk+fVp92/JUXpkJShUwE+FrauPx8Ah4KPjQujcJPjhTERhCnnj5oePyrsVsgBbIi/O
-         OY6wc0S+N7ESGb6XRuu1kcS5gQF7Jl3V8D8lsqeY=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190813184717.GA28465@jcrouse1-lnx.qualcomm.com>
-References: <1565037226-1684-1-git-send-email-jcrouse@codeaurora.org> <20190807234232.27AA720880@mail.kernel.org> <20190813184717.GA28465@jcrouse1-lnx.qualcomm.com>
-Subject: Re: [PATCH v2] drivers: qcom: Add BCM vote macro to header
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 13 Aug 2019 13:09:59 -0700
-Message-Id: <20190813201000.6D5692067D@mail.kernel.org>
+        id S1726613AbfHMULf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 16:11:35 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 467P4Q2Cbcz9v05m;
+        Tue, 13 Aug 2019 22:11:34 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=N8DH5uKB; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id DA5yvn1_sNFL; Tue, 13 Aug 2019 22:11:34 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 467P4Q177nz9v05l;
+        Tue, 13 Aug 2019 22:11:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1565727094; bh=8VOS6jgi9G0MdN7ay7ZQc6ZBTXk/FFs3ZElp2pFbNEk=;
+        h=From:Subject:To:Cc:Date:From;
+        b=N8DH5uKB8beVphdbroaduEpp/guIyO0EAvvyLdze381Jt/FJPQathFCyQgRmPUCXl
+         4ZfB17QG3NKRwsvnh7jXrUeKgzXh+Z+RTNz4MBWZRxw1SrTnjboammLYaq8yb50a/v
+         4OjuLUJ4Ls5yxPXsfNs1wgpEeu4c/OIr4HxeToD0=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 51A708B7F2;
+        Tue, 13 Aug 2019 22:11:34 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id YkZcs1CXmGYI; Tue, 13 Aug 2019 22:11:34 +0200 (CEST)
+Received: from pc17473vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1DCE68B7F0;
+        Tue, 13 Aug 2019 22:11:34 +0200 (CEST)
+Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id DA37569632; Tue, 13 Aug 2019 20:11:33 +0000 (UTC)
+Message-Id: <6bc35eca507359075528bc0e55938bc1ce8ee485.1565726867.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v1 01/10] powerpc/mm: drop ppc_md.iounmap()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 13 Aug 2019 20:11:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jordan Crouse (2019-08-13 11:47:17)
-> On Wed, Aug 07, 2019 at 04:42:31PM -0700, Stephen Boyd wrote:
-> > Quoting Jordan Crouse (2019-08-05 13:33:46)
-> > > The macro to generate a Bus Controller Manager (BCM) TCS command is u=
-sed
-> > > by the interconnect driver but might also be interesting to other
-> > > drivers that need to construct TCS commands for sub processors so move
-> > > it out of the sdm845 specific file and into the header.
-> > >=20
-> > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > > ---
-> >=20
-> > Acked-by: Stephen Boyd <sboyd@kernel.org>
-> >=20
-> > Unless this is supposed to be applied by me?
->=20
-> I figured this landed in Bjorn's domain, but you guys can fight it out if=
- you
-> want.
->=20
+ppc_md.iounmap() is never set, drop it.
 
-Ok. I'm happy to avoid the fight!
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/include/asm/machdep.h | 2 --
+ arch/powerpc/mm/pgtable_64.c       | 5 +----
+ 2 files changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/machdep.h b/arch/powerpc/include/asm/machdep.h
+index c43d6eca9edd..3370df4bdaa0 100644
+--- a/arch/powerpc/include/asm/machdep.h
++++ b/arch/powerpc/include/asm/machdep.h
+@@ -33,8 +33,6 @@ struct machdep_calls {
+ #ifdef CONFIG_PPC64
+ 	void __iomem *	(*ioremap)(phys_addr_t addr, unsigned long size,
+ 				   pgprot_t prot, void *caller);
+-	void		(*iounmap)(volatile void __iomem *token);
+-
+ #ifdef CONFIG_PM
+ 	void		(*iommu_save)(void);
+ 	void		(*iommu_restore)(void);
+diff --git a/arch/powerpc/mm/pgtable_64.c b/arch/powerpc/mm/pgtable_64.c
+index 9ad59b733984..11eb90ea2d4f 100644
+--- a/arch/powerpc/mm/pgtable_64.c
++++ b/arch/powerpc/mm/pgtable_64.c
+@@ -285,10 +285,7 @@ void __iounmap(volatile void __iomem *token)
+ 
+ void iounmap(volatile void __iomem *token)
+ {
+-	if (ppc_md.iounmap)
+-		ppc_md.iounmap(token);
+-	else
+-		__iounmap(token);
++	__iounmap(token);
+ }
+ 
+ EXPORT_SYMBOL(ioremap);
+-- 
+2.13.3
 
