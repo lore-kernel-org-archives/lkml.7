@@ -2,192 +2,145 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE89C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAA4C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2226220578
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:29:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565702983;
-	bh=KbXwbvfDyxPortbynicqAX31QoCJGz8DLcoW5bYu9FA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vv5eeMh5l4W4Gib+pFJh+RcReE6htKVXTiLAXiY0cCmPcQ+0mAzZXLZHHJDnLg9gM
-	 le056vHh7isz+hDuw+NYvQ5lA5OK+r95uDrn5YEPbdhQsR98GccsUNt1fEpQmHYW8T
-	 cu0XurrvfCXA7RX9aajm9BEUsMu10tEBVR7nRe2g=
+	by mail.kernel.org (Postfix) with ESMTP id AC0A82084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:30:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="O8D9k3hO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbfHMN3l (ORCPT
+        id S1729093AbfHMNaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:29:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54654 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728526AbfHMN3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:29:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 118D9AEF1;
-        Tue, 13 Aug 2019 13:29:39 +0000 (UTC)
-Date:   Tue, 13 Aug 2019 15:29:38 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm: vmscan: do not share cgroup iteration between
- reclaimers
-Message-ID: <20190813132938.GJ17933@dhcp22.suse.cz>
-References: <20190812192316.13615-1-hannes@cmpxchg.org>
+        Tue, 13 Aug 2019 09:30:35 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:42658 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728526AbfHMNaf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 09:30:35 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190813133033euoutp016faeeb82d19aa37a0dd8f0742c2837ac~6fpz05_7s2029820298euoutp01c
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 13:30:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190813133033euoutp016faeeb82d19aa37a0dd8f0742c2837ac~6fpz05_7s2029820298euoutp01c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1565703033;
+        bh=jHLfqOUF0tHmhW0YtJIRsW8aaDK4tyJuMECOn3sKdck=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=O8D9k3hOLGAhh5eQS3fY6v1csmE52fobX7YmVh+WH5nwLMOCV86OINI0dmj0w2T0X
+         9RhR4V8ZG3q4WHdi94kyvTjwF9X8fDt02a/Acd0/JDHNLcWI1tLH/yu+v+XD6J4SAJ
+         2LKcke0f/YOxsWkSLudDpWkO6joMX89a7YTdQl1M=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190813133032eucas1p23eec325b72a4db20801126d9312b19fb~6fpzGl_3S1030310303eucas1p2g;
+        Tue, 13 Aug 2019 13:30:32 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id F0.DF.04469.77BB25D5; Tue, 13
+        Aug 2019 14:30:31 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190813133031eucas1p18e366022ea9fffdfcbf46ef861e32042~6fpyR-aZ63121731217eucas1p1q;
+        Tue, 13 Aug 2019 13:30:31 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190813133031eusmtrp2177d46a66897df044aae036871f2f4ec~6fpyCfj2i1093610936eusmtrp2K;
+        Tue, 13 Aug 2019 13:30:31 +0000 (GMT)
+X-AuditID: cbfec7f2-569ff70000001175-5b-5d52bb77c772
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id E3.37.04166.77BB25D5; Tue, 13
+        Aug 2019 14:30:31 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190813133030eusmtip189c92098638cc37e3935c84922b8c942~6fpxxPojJ2926929269eusmtip1d;
+        Tue, 13 Aug 2019 13:30:30 +0000 (GMT)
+Subject: Re: [PATCH 09/16] fbdev: remove w90x900/nuc900 platform drivers
+To:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <cc732000-a147-bec2-1082-7bf58ee8f309@samsung.com>
+Date:   Tue, 13 Aug 2019 15:30:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812192316.13615-1-hannes@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190809202749.742267-10-arnd@arndb.de>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBKsWRmVeSWpSXmKPExsWy7djPc7rlu4NiDY48tbL4O+kYu8WVr+/Z
+        LE70fWC1uLxrDpvF4+t/2BxYPX7/msTosWlVJ5vH/e7jTB6fN8kFsERx2aSk5mSWpRbp2yVw
+        Zfxa18xaMI+rYtbExWwNjD/Zuxg5OSQETCSmbLnHCGILCaxglLi1Q7SLkQvI/sIoMf3KaTYI
+        5zOjxM79L1hgOr5faWaESCxnlFh+YiorhPOWUWLyr1tAGQ4OYQEPifal4iCmiIChROdMfhCT
+        WSBBYvciM5AxbAJWEhPbV4Et5hWwk3i8+iLYQSwCqhLTfp4Hs0UFIiTuH9vAClEjKHFy5hMW
+        kDGcAqYSk8+Ig4SZBcQlbj2ZzwRhy0tsfzuHGeQYCYF57BKLlh5hhjjZRaLp2XEmCFtY4tXx
+        LVDPy0j83wnSDNKwjlHib8cLqO7tQH9N/scGUWUtcfj4RVaIBzQl1u/Shwg7Stz8NJkZJCwh
+        wCdx460gxBF8EpO2TYcK80p0tAlBVKtJbFi2gQ1mbdfOlcwTGJVmIflsFpJ3ZiF5ZxbC3gWM
+        LKsYxVNLi3PTU4sN81LL9YoTc4tL89L1kvNzNzEC08vpf8c/7WD8einpEKMAB6MSD2/AlqBY
+        IdbEsuLK3EOMEhzMSiK8l0yAQrwpiZVVqUX58UWlOanFhxilOViUxHmrGR5ECwmkJ5akZqem
+        FqQWwWSZODilGhidcsWdNy5nTVD5lX19KuOGLxVbZouvWtt5afaRpMDiplNK5f3HPn5cNWvP
+        sbKDMy7/vPpOa8KzY7IOv5Y2lRzZ/Y8vaeY06zP7Q7JS3yYflVnwea1FXt5Z3UgBkVdPpy1W
+        WRZc5CIas+Dmw20rlz2dmze7W/RS1aX6HNtTl72PbPvTOsH//eWSWUosxRmJhlrMRcWJAN+u
+        PQ8rAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNIsWRmVeSWpSXmKPExsVy+t/xu7rlu4NiDdpesVr8nXSM3eLK1/ds
+        Fif6PrBaXN41h83i8fU/bA6sHr9/TWL02LSqk83jfvdxJo/Pm+QCWKL0bIryS0tSFTLyi0ts
+        laINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0Mn6ta2YtmMdVMWviYrYGxp/s
+        XYycHBICJhLfrzQzdjFycQgJLGWUuHBgNnMXIwdQQkbi+PoyiBphiT/Xutggal4zSuy6NY8F
+        pEZYwEOifak4iCkiYCjROZMfpJxZIEFixdt2VojyTYwS9ycuZwFJsAlYSUxsX8UIYvMK2Ek8
+        Xn0R7AYWAVWJaT/Pg9miAhESZ96vYIGoEZQ4OfMJ2CpOAVOJyWfEIearS/yZd4kZwhaXuPVk
+        PhOELS+x/e0c5gmMQrOQdM9C0jILScssJC0LGFlWMYqklhbnpucWG+oVJ+YWl+al6yXn525i
+        BEbUtmM/N+9gvLQx+BCjAAejEg9vwJagWCHWxLLiytxDjBIczEoivJdMgEK8KYmVValF+fFF
+        pTmpxYcYTYF+m8gsJZqcD4z2vJJ4Q1NDcwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUw
+        fUwcnFINjJzuv1KPlL8PVCjzXn/2a8/nNUenWud/ebXr/Y3FBfPS3RQDH/xNianMMeQNe9H5
+        18rlBtNNMb/0nwdMp300yQx4tVja/kxTS4TRhF1ds55cWjXDyXj3zL9pV4zln8pPiyr7caDv
+        9/MP19ljG6/tzWoVzNCdpHJskYb7N4HzPj4SUuEyNn3rriqxFGckGmoxFxUnAgDaMNmZvgIA
+        AA==
+X-CMS-MailID: 20190813133031eucas1p18e366022ea9fffdfcbf46ef861e32042
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190809202857epcas2p14ab10d8ce2e50647671ab8c0ded385a8
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190809202857epcas2p14ab10d8ce2e50647671ab8c0ded385a8
+References: <20190809202749.742267-1-arnd@arndb.de>
+        <CGME20190809202857epcas2p14ab10d8ce2e50647671ab8c0ded385a8@epcas2p1.samsung.com>
+        <20190809202749.742267-10-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 12-08-19 15:23:16, Johannes Weiner wrote:
-> One of our services observed a high rate of cgroup OOM kills in the
-> presence of large amounts of clean cache. Debugging showed that the
-> culprit is the shared cgroup iteration in page reclaim.
+
+On 8/9/19 10:27 PM, Arnd Bergmann wrote:
+> The ARM w90x900 platform is getting removed, so this driver is obsolete.
 > 
-> Under high allocation concurrency, multiple threads enter reclaim at
-> the same time. Fearing overreclaim when we first switched from the
-> single global LRU to cgrouped LRU lists, we introduced a shared
-> iteration state for reclaim invocations - whether 1 or 20 reclaimers
-> are active concurrently, we only walk the cgroup tree once: the 1st
-> reclaimer reclaims the first cgroup, the second the second one etc.
-> With more reclaimers than cgroups, we start another walk from the top.
-> 
-> This sounded reasonable at the time, but the problem is that reclaim
-> concurrency doesn't scale with allocation concurrency. As reclaim
-> concurrency increases, the amount of memory individual reclaimers get
-> to scan gets smaller and smaller. Individual reclaimers may only see
-> one cgroup per cycle, and that may not have much reclaimable
-> memory. We see individual reclaimers declare OOM when there is plenty
-> of reclaimable memory available in cgroups they didn't visit.
-> 
-> This patch does away with the shared iterator, and every reclaimer is
-> allowed to scan the full cgroup tree and see all of reclaimable
-> memory, just like it would on a non-cgrouped system. This way, when
-> OOM is declared, we know that the reclaimer actually had a chance.
-> 
-> To still maintain fairness in reclaim pressure, disallow cgroup
-> reclaim from bailing out of the tree walk early. Kswapd and regular
-> direct reclaim already don't bail, so it's not clear why limit reclaim
-> would have to, especially since it only walks subtrees to begin with.
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-The code does bail out on any direct reclaim - be it limit or page
-allocator triggered. Check the !current_is_kswapd part of the condition.
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-> This change completely eliminates the OOM kills on our service, while
-> showing no signs of overreclaim - no increased scan rates, %sys time,
-> or abrupt free memory spikes. I tested across 100 machines that have
-> 64G of RAM and host about 300 cgroups each.
+BTW there is a very minor issue with internal bisectability of
+this patch series (non-issue in reality because it affects only
+configs with ARCH_W90X900=y and such are now gone, just FYI):
 
-What is the usual direct reclaim involvement on those machines?
+arch/arm/mach-w90x900/dev.c (which stays in tree until patch #16
+("ARM: remove w90x900 platform") uses include/linux/platform_data/
+files removed in patches #7 (spi), #9 (fbdev) and #10 (keyboard).
 
-> [ It's possible overreclaim never was a *practical* issue to begin
->   with - it was simply a concern we had on the mailing lists at the
->   time, with no real data to back it up. But we have also added more
->   bail-out conditions deeper inside reclaim (e.g. the proportional
->   exit in shrink_node_memcg) since. Regardless, now we have data that
->   suggests full walks are more reliable and scale just fine. ]
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
-I do not see how shrink_node_memcg bail out helps here. We do scan up-to
-SWAP_CLUSTER_MAX pages for each LRU at least once. So we are getting to
-nr_memcgs_with_pages multiplier with the patch applied in the worst case.
-
-How much that matters is another question and it depends on the
-number of cgroups and the rate the direct reclaim happens. I do not
-remember exact numbers but even walking a very large memcg tree was
-noticeable.
-
-For the over reclaim part SWAP_CLUSTER_MAX is a relatively small number
-so even hundreds of memcgs on a "reasonably" sized system shouldn't be
-really observable (we are talking about 7MB per reclaim per reclaimer on
-1k memcgs with pages). This would get worse with many reclaimers. Maybe
-we will need something like the regular direct reclaim throttling of
-mmemcg limit reclaim as well in the future.
-
-That being said, I do agree that the oom side of the coin is causing
-real troubles and it is a real problem to be addressed first. Especially with
-cgroup v2 where we have likely more memcgs without any pages because
-inner nodes do not have any tasks and direct charges which makes some
-reclaimers hit memcgs without pages more likely.
-
-Let's see whether we see regression due to over-reclaim. 
-
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-
-With the direct reclaim bail out reference fixed - unless I am wrong
-there of course
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-It is sad to see this piece of fun not being used after that many years
-of bugs here and there and all the lockless fun but this is the life
-;)
-
-> ---
->  mm/vmscan.c | 22 ++--------------------
->  1 file changed, 2 insertions(+), 20 deletions(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index dbdc46a84f63..b2f10fa49c88 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2667,10 +2667,6 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
->  
->  	do {
->  		struct mem_cgroup *root = sc->target_mem_cgroup;
-> -		struct mem_cgroup_reclaim_cookie reclaim = {
-> -			.pgdat = pgdat,
-> -			.priority = sc->priority,
-> -		};
->  		unsigned long node_lru_pages = 0;
->  		struct mem_cgroup *memcg;
->  
-> @@ -2679,7 +2675,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
->  		nr_reclaimed = sc->nr_reclaimed;
->  		nr_scanned = sc->nr_scanned;
->  
-> -		memcg = mem_cgroup_iter(root, NULL, &reclaim);
-> +		memcg = mem_cgroup_iter(root, NULL, NULL);
->  		do {
->  			unsigned long lru_pages;
->  			unsigned long reclaimed;
-> @@ -2724,21 +2720,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
->  				   sc->nr_scanned - scanned,
->  				   sc->nr_reclaimed - reclaimed);
->  
-> -			/*
-> -			 * Kswapd have to scan all memory cgroups to fulfill
-> -			 * the overall scan target for the node.
-> -			 *
-> -			 * Limit reclaim, on the other hand, only cares about
-> -			 * nr_to_reclaim pages to be reclaimed and it will
-> -			 * retry with decreasing priority if one round over the
-> -			 * whole hierarchy is not sufficient.
-> -			 */
-> -			if (!current_is_kswapd() &&
-> -					sc->nr_reclaimed >= sc->nr_to_reclaim) {
-> -				mem_cgroup_iter_break(root, memcg);
-> -				break;
-> -			}
-> -		} while ((memcg = mem_cgroup_iter(root, memcg, &reclaim)));
-> +		} while ((memcg = mem_cgroup_iter(root, memcg, NULL)));
->  
->  		if (reclaim_state) {
->  			sc->nr_reclaimed += reclaim_state->reclaimed_slab;
-> -- 
-> 2.22.0
-
--- 
-Michal Hocko
-SUSE Labs
+>  drivers/video/fbdev/Kconfig                  |  14 -
+>  drivers/video/fbdev/Makefile                 |   1 -
+>  drivers/video/fbdev/nuc900fb.c               | 760 -------------------
+>  drivers/video/fbdev/nuc900fb.h               |  51 --
+>  include/Kbuild                               |   1 -
+>  include/linux/platform_data/video-nuc900fb.h |  79 --
+>  6 files changed, 906 deletions(-)
+>  delete mode 100644 drivers/video/fbdev/nuc900fb.c
+>  delete mode 100644 drivers/video/fbdev/nuc900fb.h
+>  delete mode 100644 include/linux/platform_data/video-nuc900fb.h
