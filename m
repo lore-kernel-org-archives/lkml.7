@@ -2,108 +2,118 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A555C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91393C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F033D2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C6E20844
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:13:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eukH0ZvA"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K2vUekbo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbfHMPMj (ORCPT
+        id S1729950AbfHMPN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:12:39 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33287 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729539AbfHMPMi (ORCPT
+        Tue, 13 Aug 2019 11:13:29 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46094 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729060AbfHMPN3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:12:38 -0400
-Received: by mail-ot1-f67.google.com with SMTP id q20so20894325otl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 08:12:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wiTJg1mLp3QjrILHchoTxtvBRp92tUbdtvUgIPj4jZI=;
-        b=eukH0ZvAq0Z/wJukiPnGAveU4NqGN1rOLpWgo59UNQr2Kr3dsmvnVkS9hGSvWc9x84
-         N4hPSFfAKSFJphg75rQK0bSD6ettvyg9qOyHvnH5VFJ2btgjz2L87NdVDLMzZnmakp1/
-         3b9Wynyv4B4mDETv6tOYQCJ0oT0oYoAXzMYw/qnF7p1kUGCcOeAomfb/Vth/Vt4ciThG
-         QJviy4mF6oIeCFe68NI8ZMXgx4LQx82MPY3vs8UdACABMW76uLAFN2icAiuZLzK2c7K8
-         FKTkfl8gJsFlFSyQ7YgiF/3wVqnBfEaMLNKh3uYO87kKci2ljCu7aqorE9s8SCvvljlg
-         D8Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wiTJg1mLp3QjrILHchoTxtvBRp92tUbdtvUgIPj4jZI=;
-        b=YAnnqVQev/8MD1q1MYJvw6wf/Nzd57//hzEQmh/qEwwu47g4tKqrlfbrRMHa46yeS5
-         r3y8NQXwYyRa2ix39i/QzIDaIv6eUdq9wcqvnJitPhYt/PWdCFsowQSPIFUW2N5upjCN
-         f6x3dbYLAFudPY9bYQsclskkUf53khO/rYliE5n+P1FNxvS2OGPZpwxZ8iZDI+kHNIhb
-         D5AqlZ5Ai8+dP01khkF8oRuO1RzL6sWTNbZ7Jh8Qo7Km6wogSgTjBUJgQ/Lh5TBm6NFY
-         E7fqGulDwMIoahK5DdVgcYCumgtvMtifwMUlzTbxtRui7JtP8bK4BO+XMBx39STcwbVv
-         EvXQ==
-X-Gm-Message-State: APjAAAWOJya2FVzOfE6n/G2gEpuGoAXJpn/Qy4rKGpmEeI/qO9UVFQam
-        wv9m6/M9wOKev9/5lx//fyyB3nWayq98hsJBmyD0Ag==
-X-Google-Smtp-Source: APXvYqzQnZJK6locyARjrnTPWygMC68+xT/2wddNBsIcOxIE2NHQLBxjLMW4a7ENxNYUO+uupEP5Jx85MgzUb73QrME=
-X-Received: by 2002:a5e:de0d:: with SMTP id e13mr3368687iok.144.1565709156970;
- Tue, 13 Aug 2019 08:12:36 -0700 (PDT)
+        Tue, 13 Aug 2019 11:13:29 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DEvHkt127647;
+        Tue, 13 Aug 2019 15:13:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=8ljovUa1ZWVSdLTaaLgVhhH70qiIcz0sPkBcLPXYzvQ=;
+ b=K2vUekboN9OB3wWTJ27oaIVXXiLbAJx9dLq7givn49sPYn7yku2ZeKgM0ZcYaPH1Vqzj
+ C4UYADEPLhqBlI9e9BO7IbU+VlA0ZceQeWui4qUJw9ElcOKvmIMPpaS2NnixMFPpxj57
+ fEBdIplCEsy0c3ph+oaZrfqgLnJU0Y60jxZwbe8oEdvOACvj8Wi+rgT2YmN2yZtQWhdH
+ EeNo9A20s8PWWRHXT7z1JCSOP6ojtQZyzF6RvVOOETAXnEamdlDgTofd2XrL4Ry/pGxc
+ xhNbrUNU/Jlg++J+uRmbNaKCvyAggH/sfZFe3XXvR+M69CN04h4FPQxEWdrq9VpjrUMA Nw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2u9nvp728f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 15:13:19 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DErGKH190147;
+        Tue, 13 Aug 2019 15:13:18 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2ubwcww4hc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 15:13:18 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7DFDGdY027570;
+        Tue, 13 Aug 2019 15:13:16 GMT
+Received: from localhost (/10.159.254.26)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 13 Aug 2019 08:13:15 -0700
+Date:   Tue, 13 Aug 2019 08:13:14 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     linux-kernel@vger.kernel.org, joe@perches.com,
+        Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: iomap: Remove fs/iomap.c record
+Message-ID: <20190813151314.GC3440173@magnolia>
+References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
+ <20190813061325.16904-1-efremov@linux.com>
 MIME-Version: 1.0
-References: <0000000000004c2416058c594b30@google.com> <24282.1562074644@warthog.procyon.org.uk>
- <CACT4Y+YjdV8CqX5=PzKsHnLsJOzsydqiq3igYDm_=nSdmFo2YQ@mail.gmail.com>
- <20330.1564583454@warthog.procyon.org.uk> <CACT4Y+Y4cRgaRPJ_gz_53k85inDKq+X+bWmOTv1gPLo=Yod1=A@mail.gmail.com>
- <22318.1564586386@warthog.procyon.org.uk> <CACT4Y+bjLBwVK_6fz2H8fXm0baAVX+vRJ4UbVWG_7yNUO-SOUg@mail.gmail.com>
- <3135.1565706180@warthog.procyon.org.uk> <CACT4Y+YCB3o5Ps9RNq9KpMcmGCwBM4R9DeX67prQ9Q3UppGowQ@mail.gmail.com>
- <8013.1565708810@warthog.procyon.org.uk>
-In-Reply-To: <8013.1565708810@warthog.procyon.org.uk>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 13 Aug 2019 17:12:24 +0200
-Message-ID: <CACT4Y+YVyaTrwpaZfpfi9LKA=5TOdKSL60pjAH04dMPNCZTMSQ@mail.gmail.com>
-Subject: Re: kernel BUG at net/rxrpc/local_object.c:LINE!
-To:     David Howells <dhowells@redhat.com>
-Cc:     syzbot <syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        linux-afs@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813061325.16904-1-efremov@linux.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908130157
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908130157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 5:06 PM David Howells <dhowells@redhat.com> wrote:
->
-> Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> > > I meant that I don't know how to turn a tracepoint on from inside the kernel.
-> >
-> > This /sys/kernel/debug/tracing/events/rxrpc/rxrpc_local/enable in:
-> >         echo 1 > /sys/kernel/debug/tracing/events/rxrpc/rxrpc_local/enable
-> > should map to some global variable, right? If so, it should be
-> > possible to initialize that var to 1 statically. Or that won't work
-> > for some reason?
->
-> As I understand it, it's all hidden inside of tracing macros and ftrace
-> infrastructure and involves runtime patching the code to enable tracepoints
-> (they're effectively NOP'ed out when not in use).
->
-> So, no, it's not that simple.
->
-> I asked Steven and he says:
->
->         trace_set_clr_event("sched", "sched_switch", 1);
->
-> is the same as
->
->         echo 1 > events/sched/sched_switch/enable
->
-> So it can be done.  Will syzbot actually collect the trace log?
+On Tue, Aug 13, 2019 at 09:13:25AM +0300, Denis Efremov wrote:
+> Update MAINTAINERS to reflect that fs/iomap.c file
+> was splitted into separate files in fs/iomap/
+> 
+> Cc: Darrick J. Wong <darrick.wong@oracle.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: linux-fsdevel@vger.kernel.org
+> Fixes: cb7181ff4b1c ("iomap: move the main iteration code into a separate file")
+> Signed-off-by: Denis Efremov <efremov@linux.com>
 
-It only collects console output. I don't know what is trace log. If
-the trace log is not console output, then it won't.
+Looks ok,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+--D
+
+> ---
+>  MAINTAINERS | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3ec8154e4630..29514fc19b01 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8415,7 +8415,6 @@ L:	linux-xfs@vger.kernel.org
+>  L:	linux-fsdevel@vger.kernel.org
+>  T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+>  S:	Supported
+> -F:	fs/iomap.c
+>  F:	fs/iomap/
+>  F:	include/linux/iomap.h
+>  
+> -- 
+> 2.21.0
+> 
