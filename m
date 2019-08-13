@@ -2,122 +2,186 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3471AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83767C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0251F2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A0D42067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuB9zeV+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fk1Dc/CH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbfHMPTi (ORCPT
+        id S1729992AbfHMPT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:19:38 -0400
-Received: from mail-ot1-f51.google.com ([209.85.210.51]:45864 "EHLO
-        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729499AbfHMPTi (ORCPT
+        Tue, 13 Aug 2019 11:19:56 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38772 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729901AbfHMPTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:19:38 -0400
-Received: by mail-ot1-f51.google.com with SMTP id m24so20889187otp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 08:19:37 -0700 (PDT)
+        Tue, 13 Aug 2019 11:19:55 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r20so24041390ota.5
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 08:19:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hOnoMgXqKq1vs4vu/W8CjnF2zZaw37NzLE5+L/kr/6I=;
-        b=MuB9zeV+1J3fDJG7l8B1bO1dN9X2BD86LiswQC9q5uVLDqEavCxZAwtBR/VHbYRxts
-         LkWVBlc2c4QvUYH0QmDe+kkuB0p9pgxpnBc5LwAi0Z8otemdM3mWZ1/SaA3skSoiMdoU
-         I5b+H8wFI4JCAKTKpi0n2R3XLK8OfrtmIa/cuUWCqWVoSPf3vESgsfRgLzEfzur182oF
-         7b+BAhWhBCA3uQuvBFmp717DVdMrBrldjC1DM8sxZkM9iKzgSag9D+6RgXJgFvbHbgnb
-         XW+RuGLDBvP7yDT6ngTOVLqrZgaN6xFItwjapZp3Q+j7G6KzBCnHFZmJTlNreeiQJQ1D
-         R9hw==
+        bh=Xuo82W680vfMqA0vjhlKyKy1WIhwCKADAN98TM3xDdg=;
+        b=Fk1Dc/CHcXCvYiOTomqNv0zmBWlrR9D+HqfO1gKyIHgLJslb1kPNyTxNdjV/YBUBJl
+         VFi0gheINDE48llBE2R/v8PcAapA7TsC2L+tCszHNHE8BMiAnBfyvQ3BeTgrrG7hYJgx
+         iOSqRSx60Yi9S8YNoRsU2dXtmT+3WKOrOLCBZVm2uGQjNhhfdJmo6IhY7kn+guA1GqKN
+         P/52/JmahNx9K5WuoSrr7/eJLCbdpHYrCDZ9QSF668dGyyLDrs9fygFj+BF+S3srrQam
+         srUSgjROBxIq/WxIap+N60Qa6mvdP78oyd3ewOyWuiQkmhYhuq3HD/pCdrVZCjxmnkl7
+         u1Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hOnoMgXqKq1vs4vu/W8CjnF2zZaw37NzLE5+L/kr/6I=;
-        b=CSuyJ8GwNlwifzuO2tFiI3P4mBxIr81881O775Yg8uHn92LUUEDRZmrLio/NduXR2v
-         kTkkzNVcfLsHZYVu53+XXvXNbTQeSwCO38EfN+PQb1f3g+VKZxCF+kH4/99JNTNuxVk2
-         2OLTLQduRkFcEhOHYWABotkM8T3VWRonyvcWmaN3mNNnPlcWT7tNZoQAHXb2hsBEYLLj
-         NBDffThE13g744jcwfpThiW2S/SmBE2wMEPdFRYQnKq59Dt2hA1Z/GFp8weCOgjxyXNJ
-         vU4QINtPVI2q9IcqoueEt+k71fW8lnlZhnbjxS1GbjOQpScpnUE7ATxrIHQPzI0/cn93
-         oEGw==
-X-Gm-Message-State: APjAAAU6J6EF+L1E/J6bPOmILIbTTCmHvfsExdA2hWlRuO6ghQuJD71k
-        UMprmA/9Z9khf491qtxPr1FMypTmLTrtZEB5JQ==
-X-Google-Smtp-Source: APXvYqxv9ykEk/dLEC0deju1RJRlzc6Md7QXRbADTdgBo6/NAYHbLOHiW4/U50/RP2TN9PAbr2xkORrqr7YrHrP8Beg=
-X-Received: by 2002:a5d:8997:: with SMTP id m23mr36028965iol.198.1565709577258;
- Tue, 13 Aug 2019 08:19:37 -0700 (PDT)
+        bh=Xuo82W680vfMqA0vjhlKyKy1WIhwCKADAN98TM3xDdg=;
+        b=J1RWNcqn/dNiUxmqmjatjrD1lSH722UTxs9H1eZRc0X198PBfo527qeXXo4AmfMEkE
+         3xprMGyLqMC8bBayZmWgmG2TMhfy8QPlYHn2RL+ZPa/CGsPdkHJmeZDYrodJFBk0C/B3
+         tTSEDr/yjEx2KbF5NapCWirj2W5fdaXPlxhbQG8j798SP4tR+k6ATOEcrq1tCnKNP2DW
+         elpC/tnJCZ/FkX9NnGOI/YM441+pykPaOILzg6/RYF/7yuzYDInzAmwRbJqkktrTIenL
+         mjNfUHd1mDJgpvIrj7EZ26+pT6MyQKxxsIsv/F8yqzNq6j+sdmOTO0Buq6fHZxp+ejRt
+         KCgw==
+X-Gm-Message-State: APjAAAWoA926v4bDZAunxCvotyjcgDS8+8jMk9MKxR0sx6d9v+WBZBhD
+        m8OKjtWv1Vb05/IfUlcWXVmS83/D2b1ykdl3gFtwxA==
+X-Google-Smtp-Source: APXvYqxcZF4gU1ub1LLFg/qKp1ZrFgTQMzOSzMW6cWHW1kLXjABD4Sai5Y205ckHfgZ5NHx4tWUFsQyWBTGBmxzQkL4=
+X-Received: by 2002:aca:3dd7:: with SMTP id k206mr1661128oia.47.1565709594369;
+ Tue, 13 Aug 2019 08:19:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <2e70a6e2-23a6-dbf2-4911-1e382469c9cb@gmail.com>
- <CAM6Zs0WqdfCv=EGi5qU5w6Dqh2NHQF2y_uF4i57Z9v=NoHHwPA@mail.gmail.com>
- <CAM6Zs0X_TpRPSR9XRikkYxHSA4vZsFr7WH_pEyq6npNjobdRVw@mail.gmail.com>
- <11dc5f68-b253-913a-4219-f6780c8967a0@intel.com> <594c424c-2474-5e2c-9ede-7e7dc68282d5@gmail.com>
- <CAM6Zs0XzBvoNFa5CSAaEEBBJHcxvguZFRqVOVdr5+JDE=PVGVw@mail.gmail.com>
- <alpine.DEB.2.21.1908100811160.7324@nanos.tec.linutronix.de>
- <fbcf3c93-3868-2b0e-b831-43fa68c48d6c@gmail.com> <CAM6Zs0WLQG90EQ+38NE1Nv8bcnbxW8wO4oEfxSuu4dLhfT1YZA@mail.gmail.com>
- <alpine.DEB.2.21.1908121917460.7324@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1908121917460.7324@nanos.tec.linutronix.de>
-From:   Woody Suwalski <terraluna977@gmail.com>
-Date:   Tue, 13 Aug 2019 11:19:18 -0400
-Message-ID: <CAM6Zs0UoHZyBkY9-RLdO-W+u09RZPbzq-A-K01sHyRkfoEiYTA@mail.gmail.com>
-Subject: Re: Kernel 5.3.x, 5.2.2+: VMware player suspend on 64/32 bit guests
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+References: <20190807171559.182301-1-joel@joelfernandes.org>
+ <CAG48ez0ysprvRiENhBkLeV9YPTN_MB18rbu2HDa2jsWo5FYR8g@mail.gmail.com>
+ <20190813100856.GF17933@dhcp22.suse.cz> <20190813142527.GD258732@google.com>
+In-Reply-To: <20190813142527.GD258732@google.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 13 Aug 2019 17:19:27 +0200
+Message-ID: <CAG48ez2shpP+WMRRJxM_za-701aoc5+i6ZrdpQ8CzjsjEzEsOA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] mm/page_idle: Add per-pid idle page tracking using
+ virtual index
+To:     Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Gruss <daniel.gruss@iaik.tugraz.at>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hansen <chansen3@cisco.com>,
+        Daniel Colascione <dancol@google.com>, fmayer@google.com,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        kernel-team <kernel-team@android.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>, namhyung@google.com,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Todd Kjos <tkjos@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 1:24 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> On Mon, 12 Aug 2019, Woody Suwalski wrote:
->
-> > I have added a timeout counter in __synchronize_hardirq().
-> > At the bottom I have converted while(inprogress); to while(inprogress
-> > && timeout++ < 100);
+On Tue, Aug 13, 2019 at 4:25 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> On Tue, Aug 13, 2019 at 12:08:56PM +0200, Michal Hocko wrote:
+> > On Mon 12-08-19 20:14:38, Jann Horn wrote:
+> > > On Wed, Aug 7, 2019 at 7:16 PM Joel Fernandes (Google)
+> > > <joel@joelfernandes.org> wrote:
+> > > > The page_idle tracking feature currently requires looking up the pagemap
+> > > > for a process followed by interacting with /sys/kernel/mm/page_idle.
+> > > > Looking up PFN from pagemap in Android devices is not supported by
+> > > > unprivileged process and requires SYS_ADMIN and gives 0 for the PFN.
+> > > >
+> > > > This patch adds support to directly interact with page_idle tracking at
+> > > > the PID level by introducing a /proc/<pid>/page_idle file.  It follows
+> > > > the exact same semantics as the global /sys/kernel/mm/page_idle, but now
+> > > > looking up PFN through pagemap is not needed since the interface uses
+> > > > virtual frame numbers, and at the same time also does not require
+> > > > SYS_ADMIN.
+> > > >
+> > > > In Android, we are using this for the heap profiler (heapprofd) which
+> > > > profiles and pin points code paths which allocates and leaves memory
+> > > > idle for long periods of time. This method solves the security issue
+> > > > with userspace learning the PFN, and while at it is also shown to yield
+> > > > better results than the pagemap lookup, the theory being that the window
+> > > > where the address space can change is reduced by eliminating the
+> > > > intermediate pagemap look up stage. In virtual address indexing, the
+> > > > process's mmap_sem is held for the duration of the access.
+> > >
+> > > What happens when you use this interface on shared pages, like memory
+> > > inherited from the zygote, library file mappings and so on? If two
+> > > profilers ran concurrently for two different processes that both map
+> > > the same libraries, would they end up messing up each other's data?
 > >
-> > That is bypassing the suspend lockup problem. On both 32-bit and
-> > 64-bit VMs the countdown is triggered by sync of irq9.
+> > Yup PageIdle state is shared. That is the page_idle semantic even now
+> > IIRC.
 >
-> So ACPI triggered an interrupt, which got already forwarded to a CPU, but
-> it is not handled. That's more than strange.
+> Yes, that's right. This patch doesn't change that semantic. Idle page
+> tracking at the core is a global procedure which is based on pages that can
+> be shared.
 >
-> > Which probably means that there is some issue in ACPI handler and
-> > synchronize_hardirq() is stuck on it?
+> One of the usecases of the heap profiler is to enable profiling of pages that
+> are shared between zygote and any processes that are forked. In this case,
+> I am told by our team working on the heap profiler, that the monitoring of
+> shared pages will help.
 >
-> The ACPI handler is not the culprit. This is either an emulation bug or
-> something really strange. Can you please use a WARN_ON() if the loop is
-> exited via the timeout so we can see in which context this happens?
+> > > Can this be used to observe which library pages other processes are
+> > > accessing, even if you don't have access to those processes, as long
+> > > as you can map the same libraries? I realize that there are already a
+> > > bunch of ways to do that with side channels and such; but if you're
+> > > adding an interface that allows this by design, it seems to me like
+> > > something that should be gated behind some sort of privilege check.
+> >
+> > Hmm, you need to be priviledged to get the pfn now and without that you
+> > cannot get to any page so the new interface is weakening the rules.
+> > Maybe we should limit setting the idle state to processes with the write
+> > status. Or do you think that even observing idle status is useful for
+> > practical side channel attacks? If yes, is that a problem of the
+> > profiler which does potentially dangerous things?
 >
-Thomas, Rafael
+> The heap profiler is currently unprivileged. Would it help the concern Jann
+> raised, if the new interface was limited to only anonymous private/shared
+> pages and not to file pages? Or, is this even a real concern?
 
-A. Learning the Wonderfull World of Gmail Web Interface. Maybe w/o top
-posting this time....
-B. On 5.3-rc4 problem is gone. I guess it is overall good sign.
-C. To recreate problem I went back to 5.2.4. The WARN_ON trace shows
-(in reverse):
-entry_SYSCALL_64_after_hwframe
-do_syscall_64
-ksys_write
-vfs_write
-kernfs_fop_write
-state_store
-pm_suspend.cold.3
-suspend_devices_and_enter
-dpm_suspend_noirq
-suspend_device_irqs
-?ktime_get
-?synchronize
-synchronize_irq
-__synchronize_hardirq.cold.9
++Daniel Gruss in case he wants to provide some more detail; he has
+been involved in a lot of the public research around this topic.
 
-Comm: systemd-sleep
+It is a bit of a concern when code that wasn't hardened as rigorously
+as cryptographic library code operates on secret values.
+A paper was published this year that abused mincore() in combination
+with tricks for flushing the page cache to obtain information about
+when shared read-only memory was accessed:
+<https://arxiv.org/pdf/1901.01161.pdf>. In response to that, the
+semantics of mincore() were changed to prevent that information from
+leaking (see commit 134fca9063ad4851de767d1768180e5dede9a881).
 
-Would that help?
-Thanks, Woody
+On the other hand, an attacker could also use things like cache timing
+attacks instead of abusing operating system features; that is more
+hardware-specific, but it has a higher spatial granularity (typically
+64 bytes instead of 4096 bytes). Timing-granularity-wise, I'm not sure
+whether the proposed interface would be more or less bad than existing
+cache side-channels on common architectures. There are papers that
+demonstrate things like being able to distinguish some classes of
+keyboard keys from others on an Android phone:
+<https://www.usenix.org/system/files/conference/usenixsecurity16/sec16_paper_lipp.pdf>
+
+I don't think limiting it to anonymous pages is necessarily enough to
+completely solve this; in a normal Linux environment, it might be good
+enough, but on Android, I'm worried about the CoW private memory from
+the zygote.
