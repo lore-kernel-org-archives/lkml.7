@@ -2,143 +2,119 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6B0C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D3CC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 131582070C
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE722070C
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:43:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jtHRbV2j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fuNZybKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfHMAlT (ORCPT
+        id S1726789AbfHMAnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 20:41:19 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33017 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbfHMAlS (ORCPT
+        Mon, 12 Aug 2019 20:43:05 -0400
+Received: from mail-ed1-f42.google.com ([209.85.208.42]:39895 "EHLO
+        mail-ed1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726498AbfHMAnF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 20:41:18 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c14so48443403plo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 17:41:18 -0700 (PDT)
+        Mon, 12 Aug 2019 20:43:05 -0400
+Received: by mail-ed1-f42.google.com with SMTP id e16so12172062edv.6;
+        Mon, 12 Aug 2019 17:43:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
          :cc;
-        bh=o2YhU7ZI7zRBNkSqHEOZBShLAkxc14NOfVdnGmm5fKU=;
-        b=jtHRbV2jvCMOrug1VL8DlniNesFQqe4mwKTZ3VzgssQ3VQs6b5LtUaNMVZsc5CuJDp
-         Iw8whkhdXJ7rcwjGwBhO6bOb4R9HDy3aGxnSkB24MJ9hY0F8GUX42o4R2L5RbO1mHvNQ
-         fgfZIIuryuM6MsMlE2FCQsFy9Ko0MwXC35YX0zFHFknsYf9vPZZbgUGmBgAsRIvp4Uqd
-         60LKpvXh51SGPv9+hzg4POm9qQcvjpOv0jvCdTcXtAwCmnYW+REf4ctA9Xh3nN2C0Pk2
-         Dfg6a9VXk1PXwpLh/pQidSNRP79rt83WW1lNCqDZaP/t4ID/ZKf6fmlxyUwdKcQccRx2
-         iAHA==
+        bh=o6t6FqBYVqnLLllbUNCZj5Tf6QnbJNhZyMYRoftP8l0=;
+        b=fuNZybKF6mAIvCzeTazqIU4c6p7SNRQmtm4QmVAfPYzOVtbE9zvdtuCqHf3Sq84TPA
+         8kqfTec8Oiclke0WpW0mb0/6bAvTqf4MgZ/kSUuWmUX6wHmxznpQIjJMhGo3CwhvHXae
+         Vc++4as1F++Ujtzh8deNRA8IIipuUGWcNLGElc3yiSlKNf8BR0HHG5toz44OIuhQDgUd
+         baRyR8M9hYkabTrEzpTEZ/EqM8GalvmIdbPcpMCML0QX93AkZ/H5I9pU8ZynalytQZ5h
+         Pk7dN/YmbiYcWiKGwMyMRuUDpC4ASu93ynQF567pt5+j5CkrPPdkt24B47WjTEF+NsgX
+         m/QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
          :message-id:subject:to:cc;
-        bh=o2YhU7ZI7zRBNkSqHEOZBShLAkxc14NOfVdnGmm5fKU=;
-        b=RE/bgFd2CWhQg2g+z+gAUfgAerQLjdRWwMQ8hlaCy6FPAlQnJKdgCPb8rVNrziSwdj
-         KSsvFAYWxjhm/5npFqJDHXwCEIfJqHFCHN//Wp8KLiBr4l0FGFyErBzdmWsOSTIrhmwB
-         gQi98/5Btu0W3wHIkESuwpK5bYymlFPmDW049aWVxALfE/NnOdKVpGrHiJTPPfJQvme8
-         mUa3dFyQgSaHMt9a2WGdbsToD7qh6T2QVEZ2lGUuDuLoyntlghgwUU+UJnLSnVkkljGB
-         R53+rE4utqvUAu26P6zx8x5xElqjZre/5gZDH4nGOORaRZHGOA4Qlof/uxXSSfuf3du/
-         QWRw==
-X-Gm-Message-State: APjAAAV9psQlhDlrOztSamwUoCXgVmd+JJd6ixf21lHTN3gq3wkKLQdM
-        ji4C0r7L1es40IENv4OP69H9C3x2SQw5B9wWj4PRxg==
-X-Google-Smtp-Source: APXvYqwMN7m1oxhncwRThnueyB+Cpwr7fkWXdNKhV0HMwJO6gvgJeykiY4kuCkE7DaZ3nG+H6w12tIuXT7ijhEgDApc=
-X-Received: by 2002:a17:902:5983:: with SMTP id p3mr25962931pli.232.1565656877406;
- Mon, 12 Aug 2019 17:41:17 -0700 (PDT)
+        bh=o6t6FqBYVqnLLllbUNCZj5Tf6QnbJNhZyMYRoftP8l0=;
+        b=Ebr4yQ3I5sxrV2waOepGqOS/tQ8szXY7sPgRomuz6TASa6CEC5aqepPhMRp9hlj0AE
+         ObEIxOnqIPHmr3aJw6swVzgoR7DlegbzqbmWBG9rP70hHfSG5v26BN4FmgUCbhLSOKxv
+         MI1GQv9M8Ym4i5uGB0DvLZDOaGp6f0NANVWqHm/xMj/JeIna115hKWxvmCH94qBez+jo
+         voSyE+ufD1lCu3DYWLadJRbhEiBCQhlGswv/SbccUzmTHATO05wjuYi8qYaq3KzinMXw
+         Ex9vv2q4BiQ870El/ueppLsyLNyNAdAH+G04YxCRX06iQh/haJAwazdop/8gyTOzS/LG
+         hhkQ==
+X-Gm-Message-State: APjAAAWbRDS/Irudd5GC3Z2Ek11aUow/1q/txI9n/8wPxhMQBBttjp9h
+        Y45mD8uQJiiSd4wwYk4yP2WxCxgIZh47JQr70iDT2gQ6t5s=
+X-Google-Smtp-Source: APXvYqxfJWqIxZF0nElIiuBKf7I9Bt1XmPgprpxcCH+lWECSjhQtefsY3/LVjDc860ovI9L7S5hiuMaUME6LilOjAqg=
+X-Received: by 2002:a17:906:4ed8:: with SMTP id i24mr1341883ejv.312.1565656983444;
+ Mon, 12 Aug 2019 17:43:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190812182421.141150-1-brendanhiggins@google.com>
- <20190812182421.141150-4-brendanhiggins@google.com> <20190812225520.5A67C206A2@mail.kernel.org>
- <20190812233336.GA224410@google.com> <20190812235940.100842063F@mail.kernel.org>
-In-Reply-To: <20190812235940.100842063F@mail.kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 12 Aug 2019 17:41:05 -0700
-Message-ID: <CAFd5g44xciLPBhH_J3zUcY3TedWTijdnWgF055qffF+dAguhPQ@mail.gmail.com>
-Subject: Re: [PATCH v12 03/18] kunit: test: add string_stream a std::stream
- like string builder
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Received: by 2002:a17:906:2001:0:0:0:0 with HTTP; Mon, 12 Aug 2019 17:43:02
+ -0700 (PDT)
+In-Reply-To: <f7de98001849bc98a0a084d2ffc369f4d9772d52.camel@sipsolutions.net>
+References: <CABVa4NgWMkJuyB1P5fwQEYHwqBRiySE+fGQpMKt8zbp+xJ8+rw@mail.gmail.com>
+ <CABVa4NhutjvHPbyaxNeVpJjf-RMJdwEX-Yjk4bkqLC1DN3oXPA@mail.gmail.com> <f7de98001849bc98a0a084d2ffc369f4d9772d52.camel@sipsolutions.net>
+From:   James Nylen <jnylen@gmail.com>
+Date:   Tue, 13 Aug 2019 00:43:02 +0000
+Message-ID: <CABVa4Nga1vyvyWNpTTJLa44rZo8wu4-bE=mXX1nZgvzktbSq6A@mail.gmail.com>
+Subject: Re: [PATCH] `iwlist scan` fails with many networks available
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 4:59 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Brendan Higgins (2019-08-12 16:33:36)
-> > On Mon, Aug 12, 2019 at 03:55:19PM -0700, Stephen Boyd wrote:
-> > > Quoting Brendan Higgins (2019-08-12 11:24:06)
-> > > > +void string_stream_clear(struct string_stream *stream)
-> > > > +{
-> > > > +       struct string_stream_fragment *frag_container, *frag_container_safe;
-> > > > +
-> > > > +       spin_lock(&stream->lock);
-> > > > +       list_for_each_entry_safe(frag_container,
-> > > > +                                frag_container_safe,
-> > > > +                                &stream->fragments,
-> > > > +                                node) {
-> > > > +               list_del(&frag_container->node);
-> > >
-> > > Shouldn't we free the allocation here? Otherwise, if some test is going
-> > > to add, add, clear, add, it's going to leak until the test is over?
-> >
-> > So basically this means I should add a kunit_kfree and
-> > kunit_resource_destroy (respective equivalents to devm_kfree, and
-> > devres_destroy) and use kunit_kfree here?
-> >
->
-> Yes, or drop the API entirely? Does anything need this functionality?
+>I suppose we could consider applying a workaround like this if it has a
+>condition checking that the buffer passed in is the maximum possible
+>buffer (65535 bytes, due to iw_point::length being u16)
 
-Drop the kunit_resource API? I would strongly prefer not to.
-string_stream uses it; the expectation stuff uses it via string
-stream; some of the tests in this patchset allocate memory as part of
-the test setup that uses it. The intention is that we would provide a
-kunit_res_* version of many (hopefully eventually most) common
-resources required by tests and it would be used in the same way that
-the devm_* stuff is.
+This is what the latest patch does (attached to my email from
+yesterday / https://lkml.org/lkml/2019/8/10/452 ).
 
-Nevertheless, I am fine adding the kunit_resource_destroy, etc. I just
-wanted to make sure I understood what you were asking.
+If you'd like to apply it, I'm happy to make any needed revisions.
+Otherwise I'm going to have to keep patching my kernels for this
+issue, unfortunately I don't have the time to try to get wicd to
+migrate to a better solution.
+
+On 8/11/19, Johannes Berg <johannes@sipsolutions.net> wrote:
+> On Sun, 2019-08-11 at 02:08 +0000, James Nylen wrote:
+>> In 5.x it's still possible for `ieee80211_scan_results` (`iwlist
+>> scan`) to fail when too many wireless networks are available.  This
+>> code path is used by `wicd`.
+>>
+>> Previously: https://lkml.org/lkml/2017/4/2/192
+>
+> This has been known for probably a decade or longer. I don't know why
+> 'wicd' still insists on using wext, unless it's no longer maintained at
+> all. nl80211 doesn't have this problem at all, and I think gives more
+> details about the networks found too.
+>
+>> I've been applying this updated patch to my own kernels since 2017 with
+>> no issues.  I am sure it is not the ideal way to solve this problem, but
+>> I'm making my fix available in case it helps others.
+>
+> I don't think silently dropping data is a good solution.
+>
+> I suppose we could consider applying a workaround like this if it has a
+> condition checking that the buffer passed in is the maximum possible
+> buffer (65535 bytes, due to iw_point::length being u16), but below that
+> -E2BIG serves well-written implementations as an indicator that they
+> need to retry with a bigger buffer.
+>
+>> Please advise on next steps or if this is a dead end.
+>
+> I think wireless extensions are in fact a dead end and all software
+> (even 'wicd', which seems to be the lone holdout) should migrate to
+> nl80211 instead.
+>
+> johannes
+>
+>
