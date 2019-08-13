@@ -2,105 +2,155 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6EDC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9F2C32753
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39BCB2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C242067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:04:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="q1RMRmhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbfHMLDv (ORCPT
+        id S1728659AbfHMLEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:03:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:34028 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbfHMLDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:03:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CAEB344;
-        Tue, 13 Aug 2019 04:03:49 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E76203F694;
-        Tue, 13 Aug 2019 04:03:47 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 12:03:45 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Ganapatrao Kulkarni <gklkml16@gmail.com>
-Cc:     Ganapatrao Kulkarni <gkulkarni@marvell.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tue, 13 Aug 2019 07:04:07 -0400
+Received: from mail-eopbgr40049.outbound.protection.outlook.com ([40.107.4.49]:15278
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726900AbfHMLEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 07:04:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NiHZT9Havqbz6zSgAH4GYj4Dl1oALb0Bix95sQk9+ZDuQohFFrXMfEalRnCS0bgmFJybLSgW5Mnpg8sI7MrQMdwaSt5Lnz0V9ZBxbIt0VkYSCpJjBI2/nzLQhOuZrAsDw5I+sdXWgS/h4uRVJnKsh61+edokuXRwRTLh3PZlA7Xmrxv4/R84XGsXoO+UG7dhcErrEldRvX7RNrVRkUmjBqmGsBGjYSC8VQ8cyMPgo8JixCCZyfAjmi54+ATsCHSwvFlFKb3DuDL4vNvhsnlUzHhk16njEIXf1mutAfEaHQou3qsiJt8qStKcRoPTecP0Xv7gNi615AQQAcFCXUJtaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IGhzlyqr6MtqehMhjE1QfN0NB3hi1B4TkoBBqTFyADU=;
+ b=mkCUOC4OhiiSyO5jSatlSstwZZYaYnSysVLPDbHmmlGMcHZXJNZwt5aSwgcBsu8LBpl3y1E9RX3o8Ryh3xsFMYQJVxgS03XQ0W6DmxJ5lCEzHlJ2uAW8jGMPeZcYaGIkBguAEbjrxl2WTVyOWCFjKDkbPYz9h0/29dfIQvEbmoKPFYD9Z7zDc3rxeySmgUdnUixjfvj1GLXTogtgATBC/uUFiRIXrfdQeT8bwvVNOwSSJ6scTU/hJ7tiZrjlD5Snj8ngtRavOg3fC6odbtUta5mfa/WdLjkD3gUB4QQSlnbUn34mOCqQodMbuKaBI9DZleTAU8wSKshCpPc49kiFvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IGhzlyqr6MtqehMhjE1QfN0NB3hi1B4TkoBBqTFyADU=;
+ b=q1RMRmhh7ZzZ462r1PJnqxCtU5/mp+yuf6/atYNTQzh+usARyfJvparOkGzKxHwa1WyD0PXVMxB4n948tbHMv4yKJr58wQjSIMsMB7EtmFFp+0JsII430o6QAPS+HI2E6i/xLXVMalZ6PKgAqzBHIX1hqsD06BFPlrrF+/EjcFk=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB7035.eurprd04.prod.outlook.com (52.135.61.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.13; Tue, 13 Aug 2019 11:03:50 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::19ec:cddf:5e07:37eb]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::19ec:cddf:5e07:37eb%3]) with mapi id 15.20.2157.015; Tue, 13 Aug 2019
+ 11:03:50 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Jan Glauber <jglauber@marvell.com>
-Subject: Re: [PATCH v3 2/2] drivers/perf: Add CCPI2 PMU support in ThunderX2
- UNCORE driver.
-Message-ID: <20190813110345.GD866@lakrids.cambridge.arm.com>
-References: <1563873380-2003-1-git-send-email-gkulkarni@marvell.com>
- <1563873380-2003-3-git-send-email-gkulkarni@marvell.com>
- <20190812120125.GA50712@lakrids.cambridge.arm.com>
- <CAKTKpr7juHd9Bgam28LESadihFadEAevRAhc-7w3PTMYY7HLNw@mail.gmail.com>
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>
+CC:     Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: [PATCHv8 0/7] PCI: refactor Mobiveil driver and add PCIe Gen4 driver
+ for NXP Layerscape SoCs
+Thread-Topic: [PATCHv8 0/7] PCI: refactor Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Thread-Index: AQHVUcbJ5capTJ/u1EuWlo1+5KWo6Q==
+Date:   Tue, 13 Aug 2019 11:03:50 +0000
+Message-ID: <20190813110557.45643-1-Zhiqiang.Hou@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK2PR02CA0199.apcprd02.prod.outlook.com
+ (2603:1096:201:20::11) To DB8PR04MB6747.eurprd04.prod.outlook.com
+ (2603:10a6:10:10b::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5be5874f-95b4-4438-a5ec-08d71fddebec
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB7035;
+x-ms-traffictypediagnostic: DB8PR04MB7035:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB70352E2CF50437F70DF9584784D20@DB8PR04MB7035.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 01283822F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(4636009)(366004)(136003)(396003)(376002)(346002)(39860400002)(189003)(199004)(14454004)(36756003)(66446008)(5660300002)(81156014)(966005)(6512007)(6306002)(3846002)(7416002)(25786009)(6116002)(81166006)(102836004)(478600001)(6436002)(2201001)(2616005)(476003)(8676002)(8936002)(99286004)(2906002)(86362001)(66946007)(66556008)(186003)(64756008)(1076003)(66066001)(50226002)(256004)(4326008)(316002)(53936002)(486006)(2501003)(305945005)(52116002)(54906003)(26005)(6486002)(71190400001)(386003)(6506007)(110136005)(66476007)(7736002)(71200400001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB7035;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Y8Igjs1xLxL/1RnX0P1XWm9myP37uuP9/INYux6n30H+aD7eFNl1Jt9aDZZIZLV0a0BlB9wBHtM6bJ1Gh9/JqROqsTog2df0GZH0bapRJjZYO+akCGHVrbccJty/GStyzhtSUGgDw/FZFDrw/bZPf7j6NZGy2+ZNW2vLiz/uW2WlKGD8eZNonVCFg+CJQogYKMT0SOoP/CeISyWDYlDBKl1Pcw02YYZpdXELxZEY9jQB6JtnVmwrr/BukLls14ATMDAzV4orQNuNDc6IGns1ReIGww/+Pzw6OLLJlXsyAhSxUxLGfNjUCsAwLO1KdjqQxlMweV3QJ8FOqjIQKVFL/9wiZHNd65MZuaR6ci6Xsn3dQHop9qux10kcqli3UHavX6wBuvCUIUTJ3MfuQmeiI0Yw3qeUq8fHzB6Vv0QulAQ=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FE2EEE528A575247960F28F6A8D1026A@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKTKpr7juHd9Bgam28LESadihFadEAevRAhc-7w3PTMYY7HLNw@mail.gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5be5874f-95b4-4438-a5ec-08d71fddebec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 11:03:50.4361
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cyvllMcwW08KqYheiCkxn1MCWEnmR9RItGo5HSx8Yk8nftZYAYrnufE9tXf00RcCjgHWgdfTPnOt/N8TvwiYEA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 04:25:15PM +0530, Ganapatrao Kulkarni wrote:
-> Hi Mark,
-> 
-> On Mon, Aug 12, 2019 at 5:31 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> >
-> > On Tue, Jul 23, 2019 at 09:16:28AM +0000, Ganapatrao Kulkarni wrote:
-> > > CCPI2 is a low-latency high-bandwidth serial interface for connecting
-> > > ThunderX2 processors. This patch adds support to capture CCPI2 perf events.
-> >
-> > It would be worth pointing out in the commit message how the CCPI2
-> > counters differ from the others. I realise you have that in the body of
-> > patch 1, but it's critical information when reviewing this patch...
-> 
-> Ok, I will add in next version.
-> >
-> > >
-> > > Signed-off-by: Ganapatrao Kulkarni <gkulkarni@marvell.com>
-> > > ---
-> > >  drivers/perf/thunderx2_pmu.c | 248 ++++++++++++++++++++++++++++++-----
-> > >  1 file changed, 214 insertions(+), 34 deletions(-)
-> > >
-> > > diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
-> > > index 43d76c85da56..a4e1273eafa3 100644
-> > > --- a/drivers/perf/thunderx2_pmu.c
-> > > +++ b/drivers/perf/thunderx2_pmu.c
-> > > @@ -17,22 +17,31 @@
-> > >   */
-> > >
-> > >  #define TX2_PMU_MAX_COUNTERS         4
-> >
-> > Shouldn't this be 8 now?
-> 
-> It is kept unchanged to 4(as suggested by Will), which is same for
-> both L3 and DMC.
-> For CCPI2 this macro is not used.
-
-Hmmm....
-
-I disagree with that suggestion given that this also affects the
-active_counters bitmap size (and thus it is not correctly sized as of
-this patch), and it doesn't really save us much.
-
-I think it would be better to bump this to 8 and always update the
-events array, even though it will be unused for CCPI2. That's less
-surprising, needs fewer special-cases, and we can use the hrtimer
-function pointer alone to determine if we need to do any hrtimer work.
-
-Thanks,
-Mark.
+RnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCg0KVGhpcyBwYXRjaCBz
+ZXQgaXMgYWltIHRvIHJlZmFjdG9yIHRoZSBNb2JpdmVpbCBkcml2ZXIgYW5kIGFkZA0KUENJZSBz
+dXBwb3J0IGZvciBOWFAgTGF5ZXJzY2FwZSBzZXJpZXMgU29DcyBpbnRlZ3JhdGVkIE1vYml2ZWls
+J3MNClBDSWUgR2VuNCBjb250cm9sbGVyLg0KDQpUaGlzIHBhdGNoIHNldCBkZXBlbmRzIG9uOg0K
+aHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzExMzE2MjQvDQoNCkhvdSBaaGlxaWFu
+ZyAoNyk6DQogIFBDSTogbW9iaXZlaWw6IFJlZmFjdG9yIE1vYml2ZWlsIFBDSWUgSG9zdCBCcmlk
+Z2UgSVAgZHJpdmVyDQogIFBDSTogbW9iaXZlaWw6IE1ha2UgbW9iaXZlaWxfaG9zdF9pbml0KCkg
+Y2FuIGJlIHVzZWQgdG8gcmUtaW5pdCBob3N0DQogIGR0LWJpbmRpbmdzOiBQQ0k6IEFkZCBOWFAg
+TGF5ZXJzY2FwZSBTb0NzIFBDSWUgR2VuNCBjb250cm9sbGVyDQogIFBDSTogbW9iaXZlaWw6IEFk
+ZCA4LWJpdCBhbmQgMTYtYml0IENTUiByZWdpc3RlciBhY2Nlc3NvcnMNCiAgUENJOiBtb2JpdmVp
+bDogQWRkIFBDSWUgR2VuNCBSQyBkcml2ZXIgZm9yIE5YUCBMYXllcnNjYXBlIFNvQ3MNCiAgYXJt
+NjQ6IGR0czogbHgyMTYwYTogQWRkIFBDSWUgY29udHJvbGxlciBEVCBub2Rlcw0KICBhcm02NDog
+ZGVmY29uZmlnOiBFbmFibGUgQ09ORklHX1BDSUVfTEFZRVJTQ0FQRV9HRU40DQoNCiBNQUlOVEFJ
+TkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTAgKy0NCiAuLi4vYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1seDIxNjBhLmR0c2kgfCAxNjMgKysrKysNCiBhcmNo
+L2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KIGRyaXZl
+cnMvcGNpL2NvbnRyb2xsZXIvS2NvbmZpZyAgICAgICAgICAgICAgICB8ICAxMSArLQ0KIGRyaXZl
+cnMvcGNpL2NvbnRyb2xsZXIvTWFrZWZpbGUgICAgICAgICAgICAgICB8ICAgMiArLQ0KIGRyaXZl
+cnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvS2NvbmZpZyAgICAgICB8ICAzNCArKw0KIGRyaXZl
+cnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvTWFrZWZpbGUgICAgICB8ICAgNSArDQogLi4uL21v
+Yml2ZWlsL3BjaWUtbGF5ZXJzY2FwZS1nZW40LmMgICAgICAgICAgIHwgMjc0ICsrKysrKysrKw0K
+IC4uLi9wY2llLW1vYml2ZWlsLWhvc3QuY30gICAgICAgICAgICAgICAgICAgICB8IDU2NiArKysr
+LS0tLS0tLS0tLS0tLS0NCiAuLi4vY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLXBs
+YXQuYyAgfCAgNTkgKysNCiAuLi4vcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVp
+bC5jICAgfCAyMjcgKysrKysrKw0KIC4uLi9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1v
+Yml2ZWlsLmggICB8IDIyMiArKysrKysrDQogMTIgZmlsZXMgY2hhbmdlZCwgMTEwMyBpbnNlcnRp
+b25zKCspLCA0NzEgZGVsZXRpb25zKC0pDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNp
+L2NvbnRyb2xsZXIvbW9iaXZlaWwvS2NvbmZpZw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L3BjaS9jb250cm9sbGVyL21vYml2ZWlsL01ha2VmaWxlDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
+aXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1sYXllcnNjYXBlLWdlbjQuYw0KIHJl
+bmFtZSBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3twY2llLW1vYml2ZWlsLmMgPT4gbW9iaXZlaWwv
+cGNpZS1tb2JpdmVpbC1ob3N0LmN9ICg1MiUpDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+cGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC1wbGF0LmMNCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmMN
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2ll
+LW1vYml2ZWlsLmgNCg0KLS0gDQoyLjE3LjENCg0K
