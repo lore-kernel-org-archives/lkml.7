@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A50C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B651C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150492070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2D920874
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfHMVDr (ORCPT
+        id S1727345AbfHMVDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:03:47 -0400
-Received: from mga09.intel.com ([134.134.136.24]:18661 "EHLO mga09.intel.com"
+        Tue, 13 Aug 2019 17:03:53 -0400
+Received: from mga09.intel.com ([134.134.136.24]:18658 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727202AbfHMVDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:03:41 -0400
+        id S1727248AbfHMVDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 17:03:43 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:03:39 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:03:41 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="194275965"
+   d="scan'208";a="194275993"
 Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2019 14:03:39 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2019 14:03:41 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -54,9 +54,9 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
         Dave Martin <Dave.Martin@arm.com>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v8 02/14] x86/cet/ibt: User-mode indirect branch tracking support
-Date:   Tue, 13 Aug 2019 13:53:47 -0700
-Message-Id: <20190813205359.12196-3-yu-cheng.yu@intel.com>
+Subject: [PATCH v8 10/14] x86/vsyscall/64: Add ENDBR64 to vsyscall entry points
+Date:   Tue, 13 Aug 2019 13:53:55 -0700
+Message-Id: <20190813205359.12196-11-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190813205359.12196-1-yu-cheng.yu@intel.com>
 References: <20190813205359.12196-1-yu-cheng.yu@intel.com>
@@ -65,180 +65,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add user-mode indirect branch tracking enabling/disabling and
-supporting routines.
+From: "H.J. Lu" <hjl.tools@gmail.com>
 
+Add ENDBR64 to vsyscall entry points.
+
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 ---
- arch/x86/include/asm/cet.h                    |  6 ++++
- arch/x86/include/asm/disabled-features.h      |  8 ++++-
- arch/x86/kernel/cet.c                         | 36 +++++++++++++++++++
- arch/x86/kernel/cpu/common.c                  | 17 +++++++++
- .../arch/x86/include/asm/disabled-features.h  |  8 ++++-
- 5 files changed, 73 insertions(+), 2 deletions(-)
+ arch/x86/entry/vsyscall/vsyscall_emu_64.S | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/x86/include/asm/cet.h b/arch/x86/include/asm/cet.h
-index 2df357dffd24..2561efe081ad 100644
---- a/arch/x86/include/asm/cet.h
-+++ b/arch/x86/include/asm/cet.h
-@@ -16,6 +16,8 @@ struct cet_status {
- 	unsigned long	shstk_size;
- 	unsigned int	locked:1;
- 	unsigned int	shstk_enabled:1;
-+	unsigned int	ibt_enabled:1;
-+	unsigned int	ibt_bitmap_used:1;
- };
- 
- #ifdef CONFIG_X86_INTEL_CET
-@@ -27,6 +29,8 @@ void cet_disable_shstk(void);
- void cet_disable_free_shstk(struct task_struct *p);
- int cet_restore_signal(bool ia32, struct sc_ext *sc);
- int cet_setup_signal(bool ia32, unsigned long rstor, struct sc_ext *sc);
-+int cet_setup_ibt(void);
-+void cet_disable_ibt(void);
- #else
- static inline int prctl_cet(int option, unsigned long arg2) { return -EINVAL; }
- static inline int cet_setup_shstk(void) { return -EINVAL; }
-@@ -37,6 +41,8 @@ static inline void cet_disable_free_shstk(struct task_struct *p) {}
- static inline int cet_restore_signal(bool ia32, struct sc_ext *sc) { return -EINVAL; }
- static inline int cet_setup_signal(bool ia32, unsigned long rstor,
- 				   struct sc_ext *sc) { return -EINVAL; }
-+static inline int cet_setup_ibt(void) { return -EINVAL; }
-+static inline void cet_disable_ibt(void) {}
- #endif
- 
- #define cpu_x86_cet_enabled() \
-diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
-index 06323ebed643..fc7d3d5a1bf4 100644
---- a/arch/x86/include/asm/disabled-features.h
-+++ b/arch/x86/include/asm/disabled-features.h
-@@ -68,6 +68,12 @@
- #define DISABLE_SHSTK	(1<<(X86_FEATURE_SHSTK & 31))
- #endif
+diff --git a/arch/x86/entry/vsyscall/vsyscall_emu_64.S b/arch/x86/entry/vsyscall/vsyscall_emu_64.S
+index 2e203f3a25a7..040696333457 100644
+--- a/arch/x86/entry/vsyscall/vsyscall_emu_64.S
++++ b/arch/x86/entry/vsyscall/vsyscall_emu_64.S
+@@ -17,16 +17,25 @@ __PAGE_ALIGNED_DATA
+ 	.type __vsyscall_page, @object
+ __vsyscall_page:
  
 +#ifdef CONFIG_X86_INTEL_BRANCH_TRACKING_USER
-+#define DISABLE_IBT	0
-+#else
-+#define DISABLE_IBT	(1<<(X86_FEATURE_IBT & 31))
++	endbr64
 +#endif
-+
- /*
-  * Make sure to add features to the correct mask
-  */
-@@ -89,7 +95,7 @@
- #define DISABLED_MASK15	0
- #define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP|DISABLE_SHSTK)
- #define DISABLED_MASK17	0
--#define DISABLED_MASK18	0
-+#define DISABLED_MASK18	(DISABLE_IBT)
- #define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 19)
+ 	mov $__NR_gettimeofday, %rax
+ 	syscall
+ 	ret
  
- #endif /* _ASM_X86_DISABLED_FEATURES_H */
-diff --git a/arch/x86/kernel/cet.c b/arch/x86/kernel/cet.c
-index e4e20d6ab07b..505a69f476e1 100644
---- a/arch/x86/kernel/cet.c
-+++ b/arch/x86/kernel/cet.c
-@@ -13,6 +13,8 @@
- #include <linux/uaccess.h>
- #include <linux/sched/signal.h>
- #include <linux/compat.h>
-+#include <linux/vmalloc.h>
-+#include <linux/bitops.h>
- #include <asm/msr.h>
- #include <asm/user.h>
- #include <asm/fpu/internal.h>
-@@ -325,3 +327,37 @@ int cet_setup_signal(bool ia32, unsigned long rstor_addr, struct sc_ext *sc_ext)
- 	modify_fpu_regs_end();
- 	return 0;
- }
-+
-+int cet_setup_ibt(void)
-+{
-+	u64 r;
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_IBT))
-+		return -EOPNOTSUPP;
-+
-+	modify_fpu_regs_begin();
-+	rdmsrl(MSR_IA32_U_CET, r);
-+	r |= (MSR_IA32_CET_ENDBR_EN | MSR_IA32_CET_NO_TRACK_EN);
-+	wrmsrl(MSR_IA32_U_CET, r);
-+	modify_fpu_regs_end();
-+
-+	current->thread.cet.ibt_enabled = 1;
-+	return 0;
-+}
-+
-+void cet_disable_ibt(void)
-+{
-+	u64 r;
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_IBT))
-+		return;
-+
-+	modify_fpu_regs_begin();
-+	rdmsrl(MSR_IA32_U_CET, r);
-+	r &= ~(MSR_IA32_CET_ENDBR_EN | MSR_IA32_CET_LEG_IW_EN |
-+	       MSR_IA32_CET_NO_TRACK_EN | MSR_IA32_CET_BITMAP_MASK);
-+	wrmsrl(MSR_IA32_U_CET, r);
-+	modify_fpu_regs_end();
-+
-+	current->thread.cet.ibt_enabled = 0;
-+}
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index d3addbd3f4d4..092979715d16 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -512,6 +512,23 @@ static __init int setup_disable_shstk(char *s)
- __setup("no_cet_shstk", setup_disable_shstk);
- #endif
- 
+ 	.balign 1024, 0xcc
 +#ifdef CONFIG_X86_INTEL_BRANCH_TRACKING_USER
-+static __init int setup_disable_ibt(char *s)
-+{
-+	/* require an exact match without trailing characters */
-+	if (s[0] != '\0')
-+		return 0;
-+
-+	if (!boot_cpu_has(X86_FEATURE_IBT))
-+		return 1;
-+
-+	setup_clear_cpu_cap(X86_FEATURE_IBT);
-+	pr_info("x86: 'no_cet_ibt' specified, disabling Branch Tracking\n");
-+	return 1;
-+}
-+__setup("no_cet_ibt", setup_disable_ibt);
++	endbr64
 +#endif
-+
- /*
-  * Some CPU features depend on higher CPUID levels, which may not always
-  * be available due to CPUID level capping or broken virtualization
-diff --git a/tools/arch/x86/include/asm/disabled-features.h b/tools/arch/x86/include/asm/disabled-features.h
-index 06323ebed643..fc7d3d5a1bf4 100644
---- a/tools/arch/x86/include/asm/disabled-features.h
-+++ b/tools/arch/x86/include/asm/disabled-features.h
-@@ -68,6 +68,12 @@
- #define DISABLE_SHSTK	(1<<(X86_FEATURE_SHSTK & 31))
- #endif
+ 	mov $__NR_time, %rax
+ 	syscall
+ 	ret
  
+ 	.balign 1024, 0xcc
 +#ifdef CONFIG_X86_INTEL_BRANCH_TRACKING_USER
-+#define DISABLE_IBT	0
-+#else
-+#define DISABLE_IBT	(1<<(X86_FEATURE_IBT & 31))
++	endbr64
 +#endif
-+
- /*
-  * Make sure to add features to the correct mask
-  */
-@@ -89,7 +95,7 @@
- #define DISABLED_MASK15	0
- #define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP|DISABLE_SHSTK)
- #define DISABLED_MASK17	0
--#define DISABLED_MASK18	0
-+#define DISABLED_MASK18	(DISABLE_IBT)
- #define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 19)
- 
- #endif /* _ASM_X86_DISABLED_FEATURES_H */
+ 	mov $__NR_getcpu, %rax
+ 	syscall
+ 	ret
 -- 
 2.17.1
 
