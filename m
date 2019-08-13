@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D408C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3F2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48EB920665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E318C20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:12:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W2aKmxcS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mDnp/9Im"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfHMTME (ORCPT
+        id S1726829AbfHMTML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 15:12:04 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34887 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfHMTL6 (ORCPT
+        Tue, 13 Aug 2019 15:12:11 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35277 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbfHMTMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 15:11:58 -0400
-Received: by mail-pl1-f194.google.com with SMTP id gn20so410636plb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 12:11:58 -0700 (PDT)
+        Tue, 13 Aug 2019 15:12:01 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n4so10014547pgv.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 12:12:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Xf+xGPCkE88V8f+N3LFOWyEFFd8oY99DHKFNSz59Vzc=;
-        b=W2aKmxcSCRDgnJ5yif0VeFy5UM0A2nMLW8Ww4W+za6uQAEK6a6ecgN6WtgatGIHIuK
-         fS0RqyQOCTSKVi3s01NkESYy5JI/R/drXDnVwVHmONwTD/jRtYjmHd4dP3ZrxZzy6T8z
-         ui5KNy/2buIYOx4CJm1A2CPuWWpJKlLcIDmW0=
+        bh=kx7hXRRKFHX0BuedwQZzNXNcuv3a7cFx9ZeS3n0LxTk=;
+        b=mDnp/9ImreJem/DrAUC6vZR7sY5twl97eb3aIFbCe7gHNvE6cr3+oYO9MQLf9GTQG6
+         VF5dZeGYH1ifQL3L9/O80vK/i8cBDleeSzjkHm/lfoe1TanfayBU+isCuOxCLkCN2JO2
+         zKtKsKSPv+l8C8h7x+tB8KAK8vp7huycnHXt8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Xf+xGPCkE88V8f+N3LFOWyEFFd8oY99DHKFNSz59Vzc=;
-        b=YJ07r6okxNXYlK2mhH6jrG9O9X3rzaP5fmSRksNU7vPQ744BuACXxB6FK8gPm0GG1w
-         dW9YHcCCaiGJzoi6rVmiiwsolZqPEptAEZiwOm61FmimZgs0TToMg4YLcTiiYcCMb/rE
-         WTGWZc9P/GHKG1d9eWZmUel+T9sLEeEd+HCca5MC8ofbY9o786ExYF402qVk9cDTr1MZ
-         iwyOStkLFWUSYa81FvgL+F1xm+KfSJyc70dtNagPgsaj/HPOQsdRpOYV4CxQkY4TpqmX
-         TfHkGKmkkJCey79TvT/DsDNntvo/dE/TTw+7McXYpYe1Ldxz8OLAvZ+fr0WxOSO5IAvA
-         0Whw==
-X-Gm-Message-State: APjAAAXeXxtx0hTgU7+BLtXcz04O4e27fhLGLtrxS3fmf5IS8n8UiJIl
-        qCLdAZlGI3w+F7kKuxh9vdgD8g==
-X-Google-Smtp-Source: APXvYqyV3re8AhD0pKkRI8gLv84rBCbOMKsMXNv3ANRPsZAt47VPftjglh04U0u15HLfgoW5U0dIUw==
-X-Received: by 2002:a17:902:b090:: with SMTP id p16mr17834984plr.93.1565723518007;
-        Tue, 13 Aug 2019 12:11:58 -0700 (PDT)
+        bh=kx7hXRRKFHX0BuedwQZzNXNcuv3a7cFx9ZeS3n0LxTk=;
+        b=c82+3pPneAS/+CY8tanhR5MH9thiiNVQnwQkRP/1uAToGgxsyv5efctPQCKnpfPsui
+         9sQ4Vy1lNK4GrwUleZ/ZBFysI3eZ7RsZSsyYKHY/X47jO2NdyddWbETf8sAOtfJlbEHu
+         dUMERyxlgAnFvPAN8tnE4hNiMs5THzTf+r+vVQtNWhvjrYmaXQNahx5UJTEdpcMCuK1U
+         pFO+n4rCSEn+ii/ZyIVI4bqbTVPHcKD+Y1OZGKGz8WJjOm2gkJziqywiWWUwT/HmC/oY
+         SLIM4+HpSY4MpT9VC9twaBghDCd8nUDuVohBE+nuNnlrqCgvxCgcE6r65qU8rTgb6AIN
+         ZFCQ==
+X-Gm-Message-State: APjAAAVt20/zQrC4oQHbu9M880Ym4gm11ptsJc65s4xB8i+7EbW9drll
+        I9a/1+THcGTBxFDLe3RrI3inzA==
+X-Google-Smtp-Source: APXvYqw7qIZJ5iHbSUcNoDmoCgiwtG+7dNb/PeZ/XL9Sbk5C42ZSFE1/DUtV8id/CG0U/tJ3UC5fpg==
+X-Received: by 2002:a62:1bd5:: with SMTP id b204mr3752057pfb.14.1565723520778;
+        Tue, 13 Aug 2019 12:12:00 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id p8sm10245846pfq.129.2019.08.13.12.11.57
+        by smtp.gmail.com with ESMTPSA id t7sm4408176pgp.68.2019.08.13.12.11.59
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 13 Aug 2019 12:11:57 -0700 (PDT)
+        Tue, 13 Aug 2019 12:12:00 -0700 (PDT)
 From:   Matthias Kaehlcke <mka@chromium.org>
 To:     "David S . Miller" <davem@davemloft.net>,
         Rob Herring <robh+dt@kernel.org>,
@@ -64,9 +64,9 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>,
         Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v6 2/4] net: phy: Add support for generic LED configuration through the DT
-Date:   Tue, 13 Aug 2019 12:11:45 -0700
-Message-Id: <20190813191147.19936-3-mka@chromium.org>
+Subject: [PATCH v6 4/4] net: phy: realtek: Add LED configuration support for RTL8211E
+Date:   Tue, 13 Aug 2019 12:11:47 -0700
+Message-Id: <20190813191147.19936-5-mka@chromium.org>
 X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
 In-Reply-To: <20190813191147.19936-1-mka@chromium.org>
 References: <20190813191147.19936-1-mka@chromium.org>
@@ -77,175 +77,182 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For PHYs with a device tree node look for LED trigger configuration
-using the generic binding, if it exists try to apply it via the new
-driver hook .config_led.
+Add a .config_led hook which is called by the PHY core when
+configuration data for a PHY LED is available. Each LED can be
+configured to be solid 'off, solid 'on' for certain (or all)
+link speeds or to blink on RX/TX activity.
 
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
 Changes in v6:
-- delete unnecessary of_node_put() inside for_each_child_of_node()
-  loop
-- use continue instead of goto in of_phy_config_leds()
-- check return value of ->config_led() and print a warning if !0
+- return -EOPNOTSUPP if trigger is not supported, don't log warning
+- don't log errors if MDIO ops fail, this is rare and the phy_device
+  will log a warning
+- added parentheses around macro argument used in arithmetics to
+  avoid possible operator precedence issues
+- minor formatting changes
 
 Changes in v5:
-- add callback to configure a LED to the PHY driver, instead of
-  having the driver retrieve the DT data
-- use new trigger names
+- use 'config_leds' driver callback instead of requesting the DT
+  configuration
 - added support for trigger 'none'
-- release DT nodes after use
-- renamed 'PHY_LED_LINK_*' to 'PHY_LED_TRIGGER_LINK_*'
-- added anonymous struct to struct phy_led_config to track
-  'activity' in a separate flag. this could be changed to 'flags' if
-  needed/desired.
-- updated commit message (previous subject was 'net: phy: Add
-  function to retrieve LED configuration from the DT')
+- always disable EEE LED mode when a LED is configured. We have no
+  device data struct to keep track of its state, the number of LEDs
+  is limited, so the overhead of disabling it multiple times (once for
+  each LED that is configured) during initialization is negligible
+- print warning when disabling EEE LED mode fails
+- updated commit message (previous subject was 'net: phy: realtek:
+  configure RTL8211E LEDs')
 
 Changes in v4:
+- use the generic PHY LED binding
+- keep default/current configuration if none is specified
+- added rtl8211e_disable_eee_led_mode()
+  - was previously in separate patch, however since we always want to
+    disable EEE LED mode when a LED configuration is specified it makes
+    sense to just add the function here.
+- don't call phy_restore_page() in rtl8211e_config_leds() if
+  selection of the extended page failed.
+- use phydev_warn() instead of phydev_err() if LED configuration
+  fails since we don't bail out
+- use hex number to specify page for consistency
+- add hex number to comment about ext page 44 to facilitate searching
+
+Changes in v3:
+- sanity check led-modes values
+- set LACR bits in a more readable way
+- use phydev_err() instead of dev_err()
+- log an error if LED configuration fails
+
+Changes in v2:
 - patch added to the series
 ---
- drivers/net/phy/phy_device.c | 72 ++++++++++++++++++++++++++++++++++++
- include/linux/phy.h          | 22 +++++++++++
- 2 files changed, 94 insertions(+)
+ drivers/net/phy/realtek.c | 90 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 89 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 6b5cb87f3866..80315777ae67 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -29,6 +29,7 @@
- #include <linux/phy_led_triggers.h>
- #include <linux/mdio.h>
- #include <linux/io.h>
-+#include <linux/of.h>
- #include <linux/uaccess.h>
+diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+index a5b3708dc4d8..2bca3b91d43d 100644
+--- a/drivers/net/phy/realtek.c
++++ b/drivers/net/phy/realtek.c
+@@ -9,8 +9,9 @@
+  * Copyright (c) 2004 Freescale Semiconductor, Inc.
+  */
+ #include <linux/bitops.h>
+-#include <linux/phy.h>
++#include <linux/bits.h>
+ #include <linux/module.h>
++#include <linux/phy.h>
  
- MODULE_DESCRIPTION("PHY library");
-@@ -1064,6 +1065,75 @@ static int phy_poll_reset(struct phy_device *phydev)
- 	return 0;
+ #define RTL821x_PHYSR				0x11
+ #define RTL821x_PHYSR_DUPLEX			BIT(13)
+@@ -26,6 +27,19 @@
+ #define RTL821x_EXT_PAGE_SELECT			0x1e
+ #define RTL821x_PAGE_SELECT			0x1f
+ 
++/* RTL8211E page 5 */
++#define RTL8211E_EEE_LED_MODE1			0x05
++#define RTL8211E_EEE_LED_MODE2			0x06
++
++/* RTL8211E extension page 44 (0x2c) */
++#define RTL8211E_LACR				0x1a
++#define RLT8211E_LACR_LEDACTCTRL_SHIFT		4
++#define RTL8211E_LCR				0x1c
++
++#define LACR_MASK(led)				BIT(4 + (led))
++#define LCR_MASK(led)				GENMASK(((led) * 4) + 2,\
++							(led) * 4)
++
+ #define RTL8211F_INSR				0x1d
+ 
+ #define RTL8211F_TX_DELAY			BIT(8)
+@@ -83,6 +97,79 @@ static int rtl8211x_modify_ext_paged(struct phy_device *phydev, int page,
+ 	return phy_restore_page(phydev, oldpage, ret);
  }
  
-+static void of_phy_config_leds(struct phy_device *phydev)
++static void rtl8211e_disable_eee_led_mode(struct phy_device *phydev)
 +{
-+	struct device_node *np, *child;
-+	struct phy_led_config cfg;
-+	const char *trigger;
-+	int ret;
++	int oldpage;
++	int err = 0;
 +
-+	if (!IS_ENABLED(CONFIG_OF_MDIO) || !phydev->drv->config_led)
-+		return;
++	oldpage = phy_select_page(phydev, 5);
++	if (oldpage < 0)
++		goto out;
 +
-+	np = of_find_node_by_name(phydev->mdio.dev.of_node, "leds");
-+	if (!np)
-+		return;
++	/* write magic values to disable EEE LED mode */
++	err = __phy_write(phydev, RTL8211E_EEE_LED_MODE1, 0x8b82);
++	if (err)
++		goto out;
 +
-+	for_each_child_of_node(np, child) {
-+		u32 led;
++	err = __phy_write(phydev, RTL8211E_EEE_LED_MODE2, 0x052b);
 +
-+		if (of_property_read_u32(child, "reg", &led))
-+			continue;
++out:
++	if (err)
++		phydev_warn(phydev, "failed to disable EEE LED mode: %d\n",
++			    err);
 +
-+		ret = of_property_read_string(child, "linux,default-trigger",
-+					      &trigger);
-+		if (ret)
-+			trigger = "none";
-+
-+		memset(&cfg, 0, sizeof(cfg));
-+
-+		if (!strcmp(trigger, "none")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_NONE;
-+		} else if (!strcmp(trigger, "phy-link")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK;
-+		} else if (!strcmp(trigger, "phy-link-10m")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10M;
-+		} else if (!strcmp(trigger, "phy-link-100m")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_100M;
-+		} else if (!strcmp(trigger, "phy-link-1g")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_1G;
-+		} else if (!strcmp(trigger, "phy-link-10g")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10G;
-+		} else if (!strcmp(trigger, "phy-link-activity")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK;
-+			cfg.trigger.activity = true;
-+		} else if (!strcmp(trigger, "phy-link-10m-activity")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10M;
-+			cfg.trigger.activity = true;
-+		} else if (!strcmp(trigger, "phy-link-100m-activity")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_100M;
-+			cfg.trigger.activity = true;
-+		} else if (!strcmp(trigger, "phy-link-1g-activity")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_1G;
-+			cfg.trigger.activity = true;
-+		} else if (!strcmp(trigger, "phy-link-10g-activity")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10G;
-+			cfg.trigger.activity = true;
-+		} else {
-+			phydev_warn(phydev, "trigger '%s' for LED%d is invalid\n",
-+				    trigger, led);
-+			continue;
-+		}
-+
-+		ret = phydev->drv->config_led(phydev, led, &cfg);
-+		if (ret)
-+			phydev_warn(phydev, "trigger '%s' for LED%d not supported\n",
-+				    trigger, led);
-+	}
-+
-+	of_node_put(np);
++	phy_restore_page(phydev, oldpage, err);
 +}
 +
- int phy_init_hw(struct phy_device *phydev)
++static int rtl8211e_config_led(struct phy_device *phydev, int led,
++			       struct phy_led_config *cfg)
++{
++	u16 lacr_bits = 0, lcr_bits = 0;
++	int oldpage, ret;
++
++	switch (cfg->trigger.t) {
++	case PHY_LED_TRIGGER_LINK:
++		lcr_bits = 7 << (led * 4);
++		break;
++
++	case PHY_LED_TRIGGER_LINK_10M:
++		lcr_bits = 1 << (led * 4);
++		break;
++
++	case PHY_LED_TRIGGER_LINK_100M:
++		lcr_bits = 2 << (led * 4);
++		break;
++
++	case PHY_LED_TRIGGER_LINK_1G:
++		lcr_bits |= 4 << (led * 4);
++		break;
++
++	case PHY_LED_TRIGGER_NONE:
++		break;
++
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	if (cfg->trigger.activity)
++		lacr_bits = BIT(RLT8211E_LACR_LEDACTCTRL_SHIFT + led);
++
++	rtl8211e_disable_eee_led_mode(phydev);
++
++	oldpage = rtl8211x_select_ext_page(phydev, 0x2c);
++	if (oldpage < 0)
++		return oldpage;
++
++	ret = __phy_modify(phydev, RTL8211E_LACR, LACR_MASK(led), lacr_bits);
++	if (ret)
++		goto err;
++
++	ret = __phy_modify(phydev, RTL8211E_LCR, LCR_MASK(led), lcr_bits);
++
++err:
++	return phy_restore_page(phydev, oldpage, ret);
++}
++
+ static int rtl8201_ack_interrupt(struct phy_device *phydev)
  {
- 	int ret = 0;
-@@ -1087,6 +1157,8 @@ int phy_init_hw(struct phy_device *phydev)
- 	if (phydev->drv->config_init)
- 		ret = phydev->drv->config_init(phydev);
- 
-+	of_phy_config_leds(phydev);
-+
- 	return ret;
- }
- EXPORT_SYMBOL(phy_init_hw);
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 462b90b73f93..3a07390fc5e9 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -325,6 +325,24 @@ struct phy_c45_device_ids {
- 	u32 device_ids[8];
- };
- 
-+/* Triggers for PHY LEDs */
-+enum phy_led_trigger {
-+	PHY_LED_TRIGGER_NONE,
-+	PHY_LED_TRIGGER_LINK,
-+	PHY_LED_TRIGGER_LINK_10M,
-+	PHY_LED_TRIGGER_LINK_100M,
-+	PHY_LED_TRIGGER_LINK_1G,
-+	PHY_LED_TRIGGER_LINK_10G,
-+};
-+
-+/* Configuration of a single PHY LED */
-+struct phy_led_config {
-+	struct {
-+		enum phy_led_trigger t;
-+		bool activity;
-+	} trigger;
-+};
-+
- /* phy_device: An instance of a PHY
-  *
-  * drv: Pointer to the driver for this PHY instance
-@@ -626,6 +644,10 @@ struct phy_driver {
- 			    struct ethtool_tunable *tuna,
- 			    const void *data);
- 	int (*set_loopback)(struct phy_device *dev, bool enable);
-+
-+	/* Configure a PHY LED */
-+	int (*config_led)(struct phy_device *dev, int led,
-+			  struct phy_led_config *cfg);
- };
- #define to_phy_driver(d) container_of(to_mdio_common_driver(d),		\
- 				      struct phy_driver, mdiodrv)
+ 	int err;
+@@ -330,6 +417,7 @@ static struct phy_driver realtek_drvs[] = {
+ 		.config_init	= &rtl8211e_config_init,
+ 		.ack_interrupt	= &rtl821x_ack_interrupt,
+ 		.config_intr	= &rtl8211e_config_intr,
++		.config_led	= &rtl8211e_config_led,
+ 		.suspend	= genphy_suspend,
+ 		.resume		= genphy_resume,
+ 		.read_page	= rtl821x_read_page,
 -- 
 2.23.0.rc1.153.gdeed80330f-goog
 
