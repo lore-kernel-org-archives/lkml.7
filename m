@@ -2,93 +2,88 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF29C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440B2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9014020842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:20:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="X5QM0mr9"
+	by mail.kernel.org (Postfix) with ESMTP id 0C04020842
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbfHMVUb (ORCPT
+        id S1726823AbfHMVUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:20:31 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:51852 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfHMVUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:20:31 -0400
-Received: from zn.tnic (p200300EC2F0D24001434546E6F7AC9DD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:2400:1434:546e:6f7a:c9dd])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B02FC1EC09A0;
-        Tue, 13 Aug 2019 23:20:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565731229;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=2yTRFcfoQAJUotojrKw6EZh+Y8eKJ3yXx+6PAGXWMgg=;
-        b=X5QM0mr9JTQP4ZnEJ04D8BqJ1yHp5EX8vWX8ENk92UuCs/bHE3vG6Q3SmSkHQEaM9aUkPn
-        GmR8Q9NC2vm3Ej/fISqATF8PebO5YXnlqSeNDCaW+AJVn84IMMQEXUjiGXMF95FScPAb1R
-        URwaO/CVUZrPD9vdwYqqqUZj75q2QIU=
-Date:   Tue, 13 Aug 2019 23:21:15 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Kernel User <linux-kernel@riseup.net>
-Cc:     linux-kernel@vger.kernel.org, mhocko@suse.com, x86@kernel.org
-Subject: Re: /sys/devices/system/cpu/vulnerabilities/ doesn't show all known
- CPU vulnerabilities
-Message-ID: <20190813212115.GO16770@zn.tnic>
-References: <20190813232829.3a1962cc@localhost>
+        Tue, 13 Aug 2019 17:20:42 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38642 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfHMVUm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 17:20:42 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x4so9889713qts.5
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 14:20:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0y+xA4yq9k1MfUYROc/R4ymqEbAd0mXn2MH3goPeuIk=;
+        b=spGI6IyA+KlaTio+zh3z8WjPksQj/SQtCiIhVUZF1mJoxJIyZChMqIRIMpZeYv1t1K
+         GSHDjWfSakJmyTJOPntsr6OOERPLD1M37ujkmijjqMbe2w69cRtomO6qtviIaMs7wkbA
+         3BmR8Mpn1bUTDCT7DxJneOT9/4F3AMEC4ftFmNV3Afm1f72XEbEVIaAiVoePheJwJTfT
+         u4JTprG7JPjtBHasSrXBtcHAKiFVSY+3P8cJdICp2wdL2vV9jL4UN4ApjtHusnGoK8za
+         fAiKJXPZTwFRHNFc0fVdxx33Fwl9a5hrvJiG+lX4eJ66VXTRaYCZfS/L8im7+tBn3Kin
+         we1g==
+X-Gm-Message-State: APjAAAV6IOj1Zzv6A2Z1u5Kl0Pea3rdkvvnExTmkNHbEvV/boZlYsrLC
+        INDXe/3O90sZHc29PMiztHg=
+X-Google-Smtp-Source: APXvYqyW2z3U2drQntXGk1OXXbAuNi4yvbuF8dvDKv04BFli2qxyjK3BWTjJkRISMZgumOIjY3fDfg==
+X-Received: by 2002:ac8:7593:: with SMTP id s19mr27841639qtq.136.1565731241516;
+        Tue, 13 Aug 2019 14:20:41 -0700 (PDT)
+Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.gmail.com with ESMTPSA id r15sm6983815qkm.27.2019.08.13.14.20.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Aug 2019 14:20:40 -0700 (PDT)
+Subject: Re: [PATCH] MAINTAINERS: Remove FMC subsystem
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>,
+        Federico Vaga <federico.vaga@cern.ch>,
+        Pat Riehecky <riehecky@fnal.gov>
+References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
+ <20190813061547.17847-1-efremov@linux.com>
+ <CACRpkdaAE6RA1iQ-iqK3GGHOovTkuDDqi8vcoFnmG8UBwuim8w@mail.gmail.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <e52ce7fa-c4fc-04b4-36fb-a89222024d2e@linux.com>
+Date:   Wed, 14 Aug 2019 00:20:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <CACRpkdaAE6RA1iQ-iqK3GGHOovTkuDDqi8vcoFnmG8UBwuim8w@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190813232829.3a1962cc@localhost>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 11:28:29PM +0300, Kernel User wrote:
-> Hi,
+On 13.08.2019 11:54, Linus Walleij wrote:
+> On Tue, Aug 13, 2019 at 8:15 AM Denis Efremov <efremov@linux.com> wrote:
 > 
-> 'ls /sys/devices/system/cpu/vulnerabilities/' doesn't show all known
-> CPU vulnerabilities and their variants. Only some of them:
+>> Cleanup MAINTAINERS from FMC record since the subsystem was removed.
+>>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Federico Vaga <federico.vaga@cern.ch>
+>> Cc: Pat Riehecky <riehecky@fnal.gov>
+>> Fixes: 6a80b30086b8 ("fmc: Delete the FMC subsystem")
+>> Signed-off-by: Denis Efremov <efremov@linux.com>
 > 
-> l1tf  mds  meltdown  spec_store_bypass  spectre_v1  spectre_v2
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 > 
-> Wikipedia shows more variants:
-> 
-> https://en.wikipedia.org/wiki/Meltdown_(security_vulnerability)#Speculative_execution_security_vulnerabilities
-> 
-> It would be good to have a full list with statuses. Then one won't need to use external (potentially non-safe) tools like https://github.com/speed47/spectre-meltdown-checker to find out the vulnerabilities of a system.
-> 
+> Do you need help to merge the patch? I can take it in the
+> GPIO tree since the subsystem was removed there.
 
-You have to consider that some of those are addressed by a single
-mitigation like MDS; the mitigation for others like lazy FPU restore
-is not even present in /sys/devices/system/cpu/vulnerabilities/. Also,
-depending on the CPU, some are not even affected.
+Yes, please. I kindly ask you to take this patch in your tree.
 
-So maintaining this in the kernel is unnecessary to say the least.
-
-We could use a writeup somewhere which maps each vulnerability name -
-and they're a gazillion by now - to the respective mitigation and what
-is required but I'm not aware of such a writeup.
-
-Documentation/admin-guide/hw-vuln/ could be a good start and
-Documentation/admin-guide/hw-vuln/mds.rst could be a good example how
-one should document the vulnerabilities and their mitigation. But that
-would need to be exhaustive.
-
-IMHO of course.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Thanks,
+Denis
