@@ -2,118 +2,108 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91393C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE72C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66C6E20844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:13:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K2vUekbo"
+	by mail.kernel.org (Postfix) with ESMTP id 3BC222067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbfHMPN3 (ORCPT
+        id S1729985AbfHMPNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:13:29 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:46094 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729060AbfHMPN3 (ORCPT
+        Tue, 13 Aug 2019 11:13:33 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:33215 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729060AbfHMPNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:13:29 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DEvHkt127647;
-        Tue, 13 Aug 2019 15:13:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=8ljovUa1ZWVSdLTaaLgVhhH70qiIcz0sPkBcLPXYzvQ=;
- b=K2vUekboN9OB3wWTJ27oaIVXXiLbAJx9dLq7givn49sPYn7yku2ZeKgM0ZcYaPH1Vqzj
- C4UYADEPLhqBlI9e9BO7IbU+VlA0ZceQeWui4qUJw9ElcOKvmIMPpaS2NnixMFPpxj57
- fEBdIplCEsy0c3ph+oaZrfqgLnJU0Y60jxZwbe8oEdvOACvj8Wi+rgT2YmN2yZtQWhdH
- EeNo9A20s8PWWRHXT7z1JCSOP6ojtQZyzF6RvVOOETAXnEamdlDgTofd2XrL4Ry/pGxc
- xhNbrUNU/Jlg++J+uRmbNaKCvyAggH/sfZFe3XXvR+M69CN04h4FPQxEWdrq9VpjrUMA Nw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2u9nvp728f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 15:13:19 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DErGKH190147;
-        Tue, 13 Aug 2019 15:13:18 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2ubwcww4hc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 15:13:18 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7DFDGdY027570;
-        Tue, 13 Aug 2019 15:13:16 GMT
-Received: from localhost (/10.159.254.26)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 13 Aug 2019 08:13:15 -0700
-Date:   Tue, 13 Aug 2019 08:13:14 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     linux-kernel@vger.kernel.org, joe@perches.com,
-        Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: iomap: Remove fs/iomap.c record
-Message-ID: <20190813151314.GC3440173@magnolia>
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
- <20190813061325.16904-1-efremov@linux.com>
+        Tue, 13 Aug 2019 11:13:32 -0400
+Received: by mail-yw1-f65.google.com with SMTP id e65so2578221ywh.0;
+        Tue, 13 Aug 2019 08:13:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FTYkGKgYhTTZj8By3iaUad49bD86jov+/Fpt329FbJ0=;
+        b=Kh/7+mAR0mIyZVcBOyeEfuaaFS1jIRa1wObt9SR0D+czgvWCV3YJefbtDS6k55wvbc
+         4jEW7X5qmo/vq21NfelMYHknugBC0wLCO8v7xHGAjcCREdwtp//aRed6xOBKDbFzmkUM
+         ygg3Vg6Js0qzww4kttodWXUq1hAVqJugFe9FtgvcfzwXK7oEyQtQcYjqC7hjZyYDySkG
+         HIp3+PfvC9jmrcxekz6cfwc8qf/PQM2DkS2F54dDWpsIJfjh/gabW2yc/Skv9FvytMUe
+         ImgJWWhcLj5pSA42pLlZwZLLY1txc8ljUmW4EOeyCdftC/Wcj1vyPPb6B+3YnCj9W5V8
+         7dSA==
+X-Gm-Message-State: APjAAAXxKNT+MPe9hlhOVVsmbreY3noQuz+xZn+3bqHJ8BGOifi36CSM
+        RkOk2iwZ/Qig5iocPJUYsaVXyz7F+9dP2/9TDSg=
+X-Google-Smtp-Source: APXvYqy1sMez9DxbNJVSH5PIRFadr0u7kJ0Tz2PDNYCQtLnwDiuIswKmK8DTC1SGMEQtgrGSsENSvwLCDiZUp/KH0pI=
+X-Received: by 2002:a81:83c3:: with SMTP id t186mr23040734ywf.372.1565709211239;
+ Tue, 13 Aug 2019 08:13:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813061325.16904-1-efremov@linux.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908130157
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908130157
+References: <1564565779-29537-1-git-send-email-harini.katakam@xilinx.com>
+ <1564565779-29537-3-git-send-email-harini.katakam@xilinx.com>
+ <20190801040648.GJ2713@lunn.ch> <CAFcVEC+DyVhLzbMdSDsadivbnZJxSEg-0kUF5_Q+mtSbBnmhSA@mail.gmail.com>
+ <20190813132321.GF15047@lunn.ch>
+In-Reply-To: <20190813132321.GF15047@lunn.ch>
+From:   Harini Katakam <harinik@xilinx.com>
+Date:   Tue, 13 Aug 2019 20:43:19 +0530
+Message-ID: <CAFcVECKipjD9atgEJSf8j78q_1aOAX77nD6vVeytZ-M00qBt6A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] net: gmii2rgmii: Switch priv field in mdio device structure
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Harini Katakam <harini.katakam@xilinx.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        radhey.shyam.pandey@xilinx.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 09:13:25AM +0300, Denis Efremov wrote:
-> Update MAINTAINERS to reflect that fs/iomap.c file
-> was splitted into separate files in fs/iomap/
-> 
-> Cc: Darrick J. Wong <darrick.wong@oracle.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: linux-fsdevel@vger.kernel.org
-> Fixes: cb7181ff4b1c ("iomap: move the main iteration code into a separate file")
-> Signed-off-by: Denis Efremov <efremov@linux.com>
+Hi Andrew,
 
-Looks ok,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+On Tue, Aug 13, 2019 at 6:54 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Tue, Aug 13, 2019 at 04:46:40PM +0530, Harini Katakam wrote:
+> > Hi Andrew,
+> >
+> > On Thu, Aug 1, 2019 at 9:36 AM Andrew Lunn <andrew@lunn.ch> wrote:
+> > >
+> > > On Wed, Jul 31, 2019 at 03:06:19PM +0530, Harini Katakam wrote:
+> > > > Use the priv field in mdio device structure instead of the one in
+> > > > phy device structure. The phy device priv field may be used by the
+> > > > external phy driver and should not be overwritten.
+> > >
+> > > Hi Harini
+> > >
+> > > I _think_ you could use dev_set_drvdata(&mdiodev->dev) in xgmiitorgmii_probe() and
+> > > dev_get_drvdata(&phydev->mdiomdio.dev) in _read_status()
+> >
+> > Thanks for the review. This works if I do:
+> > dev_set_drvdata(&priv->phy_dev->mdio.dev->dev) in probe
+> > and then
+> > dev_get_drvdata(&phydev->mdio.dev) in _read_status()
+> >
+> > i.e mdiodev in gmii2rgmii probe and priv->phy_dev->mdio are not the same.
+> >
+> > If this is acceptable, I can send a v2.
+>
+> Hi Harini
+>
+> I think this is better, making use of the central driver
+> infrastructure, rather than inventing something new.
 
---D
+Ok sure.
 
-> ---
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3ec8154e4630..29514fc19b01 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8415,7 +8415,6 @@ L:	linux-xfs@vger.kernel.org
->  L:	linux-fsdevel@vger.kernel.org
->  T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
->  S:	Supported
-> -F:	fs/iomap.c
->  F:	fs/iomap/
->  F:	include/linux/iomap.h
->  
-> -- 
-> 2.21.0
-> 
+>
+> The kernel does have a few helper, spi_get_drvdata, pci_get_drvdata,
+> hci_get_drvdata. So maybe had add phydev_get_drvdata(struct phy_device
+> *phydev)?
+
+Maybe phydev_mdio_get_drvdata? Because the driver data member available is
+phydev->mdio.dev.driver_data.
+
+Regards,
+Harini
