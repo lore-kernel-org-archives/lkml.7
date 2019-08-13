@@ -2,77 +2,104 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49062C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF059C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256A520578
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A133E214C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:44:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565700276;
+	bh=4lux6yzclVlNzDLsmndEIT6hVCOxBFLTgWTeazzHxYM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FllBEAts2eU5EaE9y+5wLFAS0rBXvS32RfEaRWvz9y+9MNLXPgXkUDZLEGBCcq4RQ
+	 QpTHQTvYeqzL2sPaaCEuthDhQh8nZriA/eFRtMkuuukWIn3V6c4Ihanjb2/xnjvHtH
+	 Riqio3TJpUnRBAflIx1nKtbJ2w1Tr0xvHpNg43pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbfHMMoV (ORCPT
+        id S1728730AbfHMMof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:44:21 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4250 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728232AbfHMMoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:44:20 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A84FF4474F2B5D4DD674;
-        Tue, 13 Aug 2019 20:44:18 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Tue, 13 Aug 2019
- 20:44:09 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <mark@fasheh.com>, <jlbec@evilplan.org>,
-        <ocfs2-devel@oss.oracle.com>, <linux-kernel@vger.kernel.org>
-CC:     <yi.zhang@huawei.com>, <yukuai3@huawei.com>
-Subject: [PATCH] ocfs2: need to check return value from kobject_set_name()
-Date:   Tue, 13 Aug 2019 20:50:38 +0800
-Message-ID: <1565700638-67200-1-git-send-email-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 13 Aug 2019 08:44:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728290AbfHMMof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 08:44:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 350A720578;
+        Tue, 13 Aug 2019 12:44:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565700274;
+        bh=4lux6yzclVlNzDLsmndEIT6hVCOxBFLTgWTeazzHxYM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XP2ar++xOgoTzbdf3R0qY7+PRC7JV/s1rpD5lsEk2BH7d8XouLHwH1qwwkysDnxTp
+         BCdvvqDfNMCxqqvVkA7kRt1FMSuFaaeCvQmI0E8RHZJTcbPrhFgRZD6SAnE1Xb0qWx
+         tHxPXYbnoM/KJ5ZCx0APTUWSC/Z5ckgIjnIrYXUc=
+Date:   Tue, 13 Aug 2019 14:44:32 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     linux-kernel@vger.kernel.org, maco@android.com,
+        kernel-team@android.com, arnd@arndb.de, geert@linux-m68k.org,
+        hpa@zytor.com, jeyu@kernel.org, joel@joelfernandes.org,
+        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
+        maco@google.com, michal.lkml@markovi.net, mingo@redhat.com,
+        oneukum@suse.com, pombredanne@nexb.com, sam@ravnborg.org,
+        sboyd@codeaurora.org, sspatil@google.com,
+        stern@rowland.harvard.edu, tglx@linutronix.de,
+        usb-storage@lists.one-eyed-alien.net, x86@kernel.org,
+        yamada.masahiro@socionext.com, Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        cocci@systeme.lip6.fr
+Subject: Re: [PATCH v2 08/10] scripts: Coccinelle script for namespace
+ dependencies.
+Message-ID: <20190813124432.GA12475@kroah.com>
+References: <20180716122125.175792-1-maco@android.com>
+ <20190813121733.52480-1-maennich@google.com>
+ <20190813121733.52480-9-maennich@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813121733.52480-9-maennich@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since kobject_set_name() might return an error, the return value need to 
-be checked, otherwise there will be a warn:
+On Tue, Aug 13, 2019 at 01:17:05PM +0100, Matthias Maennich wrote:
+> A script that uses the '<module>.ns_deps' file generated by modpost to
+> automatically add the required symbol namespace dependencies to each
+> module.
+> 
+> Usage:
+> 1) Move some symbols to a namespace with EXPORT_SYMBOL_NS() or define
+>    DEFAULT_SYMBOL_NAMESPACE
+> 2) Run 'make' (or 'make modules') and get warnings about modules not
+>    importing that namespace.
+> 3) Run 'make nsdeps' to automatically add required import statements
+>    to said modules.
+> 
+> This makes it easer for subsystem maintainers to introduce and maintain
+> symbol namespaces into their codebase.
+> 
+> Co-developed-by: Martijn Coenen <maco@android.com>
+> Signed-off-by: Martijn Coenen <maco@android.com>
+> Signed-off-by: Matthias Maennich <maennich@google.com>
+> ---
 
-mlog_sys_init
-  kset_register
-    kobject_add_internal
-	  if (!kobj->name || !kobj->name[0]) {
-        WARN(...);
-        return -EINVAL;
-	  }
+I really can't express just how cool this patch is.  I was amazed when I
+first saw it in action a long time ago, and still am.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: yu kuai <yukuai3@huawei.com>
----
- fs/ocfs2/cluster/masklog.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/ocfs2/cluster/masklog.c b/fs/ocfs2/cluster/masklog.c
-index d331c23..4fcef46 100644
---- a/fs/ocfs2/cluster/masklog.c
-+++ b/fs/ocfs2/cluster/masklog.c
-@@ -178,7 +178,8 @@ int mlog_sys_init(struct kset *o2cb_kset)
- 	}
- 	mlog_attr_ptrs[i] = NULL;
- 
--	kobject_set_name(&mlog_kset.kobj, "logmask");
-+	if (!kobject_set_name(&mlog_kset.kobj, "logmask"))
-+		return -EINVAL;
- 	mlog_kset.kobj.kset = o2cb_kset;
- 	return kset_register(&mlog_kset);
- }
--- 
-2.7.4
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
