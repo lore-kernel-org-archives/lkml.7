@@ -2,122 +2,97 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1592C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B326C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9538420840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:05:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565676345;
-	bh=3uzo3mQSzc78ZoKZlKPkT2B9slgeag95jiTjsCYmpaA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oC69x+TJixWxSLjqwJk6pNwOSsBEK7OJ/ZWYPXUnlgejvX2CnKX/dXfngNyrAq8zS
-	 isxj3qq27bRe22ODaKUN5Zl6K3UgwVwWoaMW+365zEhdpP9CCaL+dqZ5JuOSeg8rBd
-	 YmEm5xaE7PNjujT5V/Ztl/6A75Znuls06gMk88bk=
+	by mail.kernel.org (Postfix) with ESMTP id 788C2206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:06:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727371AbfHMGFo (ORCPT
+        id S1727393AbfHMGGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 02:05:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfHMGFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:05:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D64AE206C2;
-        Tue, 13 Aug 2019 06:05:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565676342;
-        bh=3uzo3mQSzc78ZoKZlKPkT2B9slgeag95jiTjsCYmpaA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BY1UtaM6n6FcoS/iA1XdjC21fMDu+9Wxt4sbmhraEEStUVvaFlmnfinXcD0BEoy8b
-         pFQgZoiO82x5vt5JeCA5OLDzgJ8Rn8MgRIeCoFTNbrReVvZCAtCPRUeRufmmvXZ1oi
-         xariAfItaUFM41pVrfLpgveD55w1synbGRWF2ctc=
-Date:   Tue, 13 Aug 2019 08:05:40 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        kbuild test robot <lkp@intel.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2] driver/core: Fix build error when SRCU and lockdep
- disabled
-Message-ID: <20190813060540.GE6670@kroah.com>
-References: <20190812214918.101756-1-joel@joelfernandes.org>
+        Tue, 13 Aug 2019 02:06:22 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33284 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfHMGGV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 02:06:21 -0400
+Received: by mail-lj1-f194.google.com with SMTP id z17so12001213ljz.0;
+        Mon, 12 Aug 2019 23:06:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Gu8MBA8Z3R+Xt1ucvEfHABWXwqxMeH0K0P1m+jy5GAA=;
+        b=O4r1Fygbb97mUrO9+2hqV4rrSAatLqPLnlOBDgKCTwrbTnpivDqQLYHGcEvA9P53dK
+         JIkQQcYvSg7zUhcCUby5LtcV0vVGddeALVQb8vDnwR2W+dIIyb3OyN9YYFrR+wlyyiAA
+         gJRigEvyaWxD9fezi4TJaBxkM1Loi6lp9WG+1+VwhPc2QTBqx+M/Sdq5Je6I6qv2ICIJ
+         v+rZK14H7Me1wFX4AIoSlKxb5p9xxI677drUbPBX0BI1UM3aL8Z2IAeSszuug+EBtyMs
+         YN8Qs8sge64Vh/EOFVuwgCkkMSlHDVL++WzBTRrw02LfgpviBo5w7zl+sltScmlrRYyy
+         EODQ==
+X-Gm-Message-State: APjAAAUYtr3Zw30vbvuO/cPDRu9eSOiq0vpg5lwkRT7pto8it499jGSE
+        JNXK5Q3838WlSJ2lyAUMxu1xn4gCvuQ=
+X-Google-Smtp-Source: APXvYqyGFaNVnt6vPgCE0R1pH1FkyAyoGQ177vk+qiG7LOsDWnidsXZvFbIZ4pH+8Qyfe6BccMbRfA==
+X-Received: by 2002:a2e:9149:: with SMTP id q9mr3564051ljg.228.1565676379401;
+        Mon, 12 Aug 2019 23:06:19 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id p15sm21740564lji.80.2019.08.12.23.06.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 23:06:18 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
+        =?UTF-8?q?Breno=20Leit=C3=A3o?= <leitao@debian.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Paulo Flabiano Smorigo <pfsmorigo@gmail.com>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: nx crypto: Fix typo in a filepath
+Date:   Tue, 13 Aug 2019 09:06:10 +0300
+Message-Id: <20190813060610.13550-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190325212654.26627-1-joe@perches.com>
+References: <20190325212654.26627-1-joe@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812214918.101756-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 05:49:17PM -0400, Joel Fernandes (Google) wrote:
-> Check if lockdep lock checking is disabled. If so, then do not define
-> device_links_read_lock_held(). It is used only from places where lockdep
-> checking is enabled.
-> 
-> Also fix a bug where I was not checking dep_map. Previously, I did not
-> test !SRCU configs so this got missed. Now it is sorted.
-> 
-> Link: https://lore.kernel.org/lkml/201908080026.WSAFx14k%25lkp@intel.com/
-> Fixes: c9e4d3a2fee8 ("acpi: Use built-in RCU list checking for acpi_ioremaps list")
->  (Based on RCU's dev branch)
-> 
-> Cc: kernel-team@android.com
-> Cc: kbuild test robot <lkp@intel.com>,
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-> Cc: Josh Triplett <josh@joshtriplett.org>,
-> Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
-> Cc: linux-doc@vger.kernel.org,
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>,
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-> Cc: rcu@vger.kernel.org,
-> Cc: Steven Rostedt <rostedt@goodmis.org>,
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Fix typo in nx_debugfs.c filepath. File extension changed from .h to .c
+The file nx_debugfs.h never existed.
 
-Nit, drop those blank lines above, should all be in one big "block">
+Cc: Breno Leitão <leitao@debian.org>
+Cc: Nayna Jain <nayna@linux.ibm.com>
+Cc: Paulo Flabiano Smorigo <pfsmorigo@gmail.com>
+Cc: Dan Streetman <ddstreet@ieee.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-crypto@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  drivers/base/core.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 32cf83d1c744..c22271577c84 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -97,10 +97,12 @@ void device_links_read_unlock(int not_used)
->  	up_read(&device_links_lock);
->  }
->  
-> +#ifdef CONFIG_DEBUG_LOCK_ALLOC
->  int device_links_read_lock_held(void)
->  {
-> -	return lock_is_held(&device_links_lock);
-> +	return lock_is_held(&(device_links_lock.dep_map));
->  }
-> +#endif
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c2117e5f4ff8..99a7392ad6bc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7658,7 +7658,7 @@ F:	drivers/crypto/nx/nx-aes*
+ F:	drivers/crypto/nx/nx-sha*
+ F:	drivers/crypto/nx/nx.*
+ F:	drivers/crypto/nx/nx_csbcpb.h
+-F:	drivers/crypto/nx/nx_debugfs.h
++F:	drivers/crypto/nx/nx_debugfs.c
+ 
+ IBM Power Linux RAID adapter
+ M:	Brian King <brking@us.ibm.com>
+-- 
+2.21.0
 
-I don't know what the original code looks like here, but I'm guessing
-that some .h file will need to be fixed up as you are just preventing
-this function from ever being present without that option enabled?
-
-thanks,
-
-greg k-h
