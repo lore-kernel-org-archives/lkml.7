@@ -2,546 +2,206 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D7AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1A5C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1EBD20840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 106DF206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:05:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="irMxefLC";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="irMxefLC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbfHMOFF convert rfc822-to-8bit (ORCPT
+        id S1729465AbfHMOFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:05:05 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44050 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727768AbfHMOFF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:05:05 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 44so75353006qtg.11
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 07:05:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NZs9ZlPwSqkK9CIibNynEwwQaN7GJc80Mu5ueqUE/cI=;
-        b=mepFv6zFzpcls1O6SooK+cKJbgatddHWVn0wy+tcBg3IMqLCdOpRIZick5B5rs5j9l
-         yPR0WoBGWusIvPAg8QagWAqZZ8AFKId4erbKIvblkZueICAexEeeo3pmflGdCibl3ejh
-         Zeg68MhxJsBi5j5G0TjpzRZFLi5FdO+2+bz2neB09yY6YPIDh0zKdZa5/uIkMJViCvqu
-         YnQay8S2D/OdAkZZZzi09UlN7in+Msy8NI0mHd9RMIJjRinWKI8YcEXuG/6m7Dj0rxpA
-         YmGXZu01h3hQY2JN0AMCR9tb3GZATzF6Y8TuQXhhpv4DsX4CiJtNPwVHQHveJzbWkr+8
-         fCCg==
-X-Gm-Message-State: APjAAAUbNYMEBkj6r2BROYuFN5au6zql3QcsZp9lEEp7FHNBjmDGomSb
-        lZnASF8eGCVIT5ROWtEY8X2vAap9eR5KQZPKLDKMcw==
-X-Google-Smtp-Source: APXvYqzY9cxNhi2scqwJcs6sRWTKmFUpssDZlKaGp+JBohFI9g69vJziRX6bp1tmvKW+eJMJR53IVWTDjvE54T1At6I=
-X-Received: by 2002:ad4:4866:: with SMTP id u6mr9703583qvy.192.1565705103871;
- Tue, 13 Aug 2019 07:05:03 -0700 (PDT)
+        Tue, 13 Aug 2019 10:05:12 -0400
+Received: from mail-eopbgr80053.outbound.protection.outlook.com ([40.107.8.53]:25420
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729435AbfHMOFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 10:05:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2vLk9AtWwNFzBHxzwhCrC14Lwh9uUx56lA5pGpSAJVI=;
+ b=irMxefLC7OUYqynZGpd2zRGlmpce3XIVFVvaQKlOb77epgsasYfhSxWoUvLPBC7rWc7QEvioZ2jr9z1ADHK73iZmBj1ZuvINyjDSoaMo9r6KZkvxssIjOHDaZRIQiBPRuROLaBFbSLxQcBrbLwmEBbtcTS0mfqMUiNck3Eg3AlQ=
+Received: from VI1PR08CA0176.eurprd08.prod.outlook.com (2603:10a6:800:d1::30)
+ by AM6PR08MB4952.eurprd08.prod.outlook.com (2603:10a6:20b:e1::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.20; Tue, 13 Aug
+ 2019 14:05:05 +0000
+Received: from VE1EUR03FT028.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::206) by VI1PR08CA0176.outlook.office365.com
+ (2603:10a6:800:d1::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.14 via Frontend
+ Transport; Tue, 13 Aug 2019 14:05:05 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=temperror action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT028.mail.protection.outlook.com (10.152.18.88) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.18 via Frontend Transport; Tue, 13 Aug 2019 14:05:03 +0000
+Received: ("Tessian outbound a1fd2c3cfdb0:v26"); Tue, 13 Aug 2019 14:05:00 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: bd824af295dc71e5
+X-CR-MTA-TID: 64aa7808
+Received: from bd4cb8a1f8c9.2 (cr-mta-lb-1.cr-mta-net [104.47.8.55])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id A377E8B0-1233-454E-95A0-12427C3ABE1E.1;
+        Tue, 13 Aug 2019 14:04:55 +0000
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-am5eur03lp2055.outbound.protection.outlook.com [104.47.8.55])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id bd4cb8a1f8c9.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
+    Tue, 13 Aug 2019 14:04:55 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mMeye8J69U4GWfr7Vhk78tUAVnOnK3bep/oTkbe6DQ4klDmmhYsf6mBiFkwnsUDIvfkTSvYiw+65m8H4BSIzG/qQOfNwRP7agKIms8JDYDNi/aB9I0bxxBBLeg99jkg6y2iwrMqRZvMaVntQblgSbCfXAeqHKxDz/V3YVctffkucmtU8e0Mw5xOF/MO2ADnQ8DVyMD9dhMFAequGGUyg1O2VBzaA0S/R7ZDZSmYZQJ69cayT0eEasp67mrd0DzPHPhlgmt5EknFU/V+4RreMwhxa8aIoRvTYV+LRVD2Zca8QLc7IWfJIoEJXuqqJbB/QMomRlYUvfmBMW5IqzswsJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2vLk9AtWwNFzBHxzwhCrC14Lwh9uUx56lA5pGpSAJVI=;
+ b=FCLnL+1fTT8wrEkJJNqN/Krd8n9MWDRSn1S8O2/pCUu4AQGxf+cnWs+OSV09CDbjVIHLzVskoqcvouFFvbkAYAnbGSL+NgAzAk2G9hFUXzLKGa0QgaBCFgWFGCL4mCf5m9LS9ns/NSbwj+y1D4JUZRkXEwjKBC3AXdoE3UjcOyhiP87Z1lgkpQdQCG4jzRV/vevBH1LFvPd0d48zQSKA0RzYBFdibb3Rx0sloT1CipWZxfeVi1/FnTC5ASI26c6D8i4KQ9oSDNAM+ISKy+M2UMWbdnOLT4MQCk7y1hO1pGY3yOz9FV2yKTQHFdmqVLNW3dWNp8u8WKkpSA3QL65roQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2vLk9AtWwNFzBHxzwhCrC14Lwh9uUx56lA5pGpSAJVI=;
+ b=irMxefLC7OUYqynZGpd2zRGlmpce3XIVFVvaQKlOb77epgsasYfhSxWoUvLPBC7rWc7QEvioZ2jr9z1ADHK73iZmBj1ZuvINyjDSoaMo9r6KZkvxssIjOHDaZRIQiBPRuROLaBFbSLxQcBrbLwmEBbtcTS0mfqMUiNck3Eg3AlQ=
+Received: from DB8PR08MB4105.eurprd08.prod.outlook.com (20.179.12.12) by
+ DB8PR08MB5323.eurprd08.prod.outlook.com (10.255.185.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.18; Tue, 13 Aug 2019 14:04:54 +0000
+Received: from DB8PR08MB4105.eurprd08.prod.outlook.com
+ ([fe80::f558:a6c5:f71c:491]) by DB8PR08MB4105.eurprd08.prod.outlook.com
+ ([fe80::f558:a6c5:f71c:491%5]) with mapi id 15.20.2157.022; Tue, 13 Aug 2019
+ 14:04:54 +0000
+From:   Steve Capper <Steve.Capper@arm.com>
+To:     Will Deacon <will@kernel.org>
+CC:     Qian Cai <cai@lca.pw>, Catalin Marinas <Catalin.Marinas@arm.com>,
+        "Andrey Konovalov" <andreyknvl@google.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: "arm64/for-next/core" causes boot panic
+Thread-Topic: "arm64/for-next/core" causes boot panic
+Thread-Index: AQHVUVgl/V1eSqMRPUyufGDCtItMGqb4yNmAgAAgpgCAABL2AIAAIQEA
+Date:   Tue, 13 Aug 2019 14:04:54 +0000
+Message-ID: <20190813140451.GA24579@capper-ampere.manchester.arm.com>
+References: <1565646695.8572.6.camel@lca.pw>
+ <20190813090200.h2rz4xphgnb5j5bc@willie-the-truck>
+ <20190813105852.ovk5gtzddwlsm4ly@willie-the-truck>
+ <20190813120643.25y5px4andu6cfwp@willie-the-truck>
+In-Reply-To: <20190813120643.25y5px4andu6cfwp@willie-the-truck>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.10.1 (2018-07-13)
+x-originating-ip: [217.140.106.32]
+x-clientproxiedby: LO2P265CA0384.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a3::36) To DB8PR08MB4105.eurprd08.prod.outlook.com
+ (2603:10a6:10:b0::12)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Steve.Capper@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: 774b6f02-0f9d-4789-94f4-08d71ff73d36
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR08MB5323;
+X-MS-TrafficTypeDiagnostic: DB8PR08MB5323:|AM6PR08MB4952:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR08MB4952CF1A0A0A6C954BD34DCC81D20@AM6PR08MB4952.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:9508;OLM:9508;
+x-forefront-prvs: 01283822F8
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(136003)(346002)(39860400002)(396003)(189003)(199004)(229853002)(6246003)(26005)(76176011)(102836004)(11346002)(53936002)(446003)(6916009)(52116002)(386003)(6506007)(486006)(44832011)(14454004)(476003)(66066001)(81166006)(81156014)(478600001)(8676002)(4326008)(6436002)(6486002)(256004)(6116002)(316002)(2906002)(71200400001)(1076003)(58126008)(71190400001)(5660300002)(6512007)(8936002)(305945005)(54906003)(186003)(33656002)(86362001)(64756008)(66446008)(66946007)(66476007)(99286004)(7736002)(25786009)(3846002)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR08MB5323;H:DB8PR08MB4105.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: BzASKppWwbJh0SqsW25L0/ttEAd2UWBoMkk/hlENXjtbM7IydycQyVUitq9q0ev6O612jD5DRWYTi6K5wxIyYpNN4WBLvUCDCdQsEOb2G1m9GuKyVFoJ8d1stVXTJJyDrEThRMBuPvayeSZ6fxqwJBHO7ldAZfW3Elmcq585s+KP6AD5uFyFpclXdvoP9FvMxBjO3NSYKs1AmWuq76dG83R7cS9UOiIEZjylIqaWly0Gnauh33t5F61XdSbRYSSp+lfrhuHR2wZRoRY7Do7yBJz2EAnrcD9I5bM/nAIcKdHk1OQTCkpatK2qgLLFd55OICGKGVaizPYAm1X/YjGpWlhPabq+5Km3Lj5SkF1CDA72+POzt2l3yegegzDvlhjNH0hR16KU6DEISSl7KhaTq/wifZcVgogVGKDOiaYm8sY=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <0AEF819D177F3A4E9D18A324B2CFC708@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190809173548.GA32693@dtor-ws> <CAO-hwJL1Jq5XjqV32fD7+_nMpi3PhUbrB5QQ+EEs3N6=mBy-1g@mail.gmail.com>
- <20190812171135.GA178933@dtor-ws>
-In-Reply-To: <20190812171135.GA178933@dtor-ws>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 13 Aug 2019 16:04:52 +0200
-Message-ID: <CAO-hwJKfHCwLkEDWrzJHejjaB+vY=0RsfY-=xfdRUSQPpeUVAg@mail.gmail.com>
-Subject: Re: [PATCH] Input: add support for polling to input devices
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB5323
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Steve.Capper@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT028.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(39860400002)(396003)(136003)(2980300002)(199004)(189003)(36906005)(356004)(305945005)(1076003)(5660300002)(76130400001)(33656002)(86362001)(99286004)(6512007)(316002)(97756001)(54906003)(58126008)(7736002)(8746002)(6486002)(8936002)(126002)(25786009)(46406003)(8676002)(2906002)(4326008)(6862004)(70206006)(186003)(336012)(81156014)(63350400001)(446003)(11346002)(63370400001)(50466002)(476003)(486006)(26005)(76176011)(6506007)(102836004)(14454004)(386003)(6116002)(229853002)(81166006)(70586007)(3846002)(6246003)(478600001)(26826003)(47776003)(66066001)(22756006)(23726003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR08MB4952;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 5d9165b1-339e-4f82-eaef-08d71ff73729
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(710020)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM6PR08MB4952;
+NoDisclaimer: True
+X-Forefront-PRVS: 01283822F8
+X-Microsoft-Antispam-Message-Info: VOTlmhTKHm8niILG4lh09LewromLjpuaGkYSZME2/nA6cheGJLq9cIGiNLcxBO4pX9p5sSNwtecwqb9ryPLWuAjyIBCjNW9eUYhkfUNevfEEsFj5EkrgTJl2YhfTNJPiOxB9uP+wHOzb25eGWWq9wOg1wyvbKpsr3fnnkMSNfFCaIzX6vQlwOozkAyOfnOtZpAwPBkQhP2L+fSTrod3BLPFGRmEsMq1aZprpa/vNVzrPxEdv3yKB79JlHUs+8D4sfExIMmWsx8qyKG685Ju7cns09hwdJvA92c4ftrOmmFgGy61oWWwpf7r0UZDe0s+7Pzr6iNYFKfdFtoBir0h5ssZ65uOYujHJ5Ll/KIQkwrjIiAZ1OmEeroMK0esiN5jMo9fnhowPYD+tea/D3Gw7pscySY/7s/HW6O7M1qfI/MU=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Aug 2019 14:05:03.9253
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 774b6f02-0f9d-4789-94f4-08d71ff73d36
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4952
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 7:11 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Benjamin,
->
-> On Mon, Aug 12, 2019 at 06:50:38PM +0200, Benjamin Tissoires wrote:
-> > Hi Dmitry,
-> >
-> > On Fri, Aug 9, 2019 at 7:35 PM Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> wrote:
-> > >
-> > > Separating "normal" and "polled" input devices was a mistake, as often we
-> > > want to allow the very same device work on both interrupt-driven and
-> > > polled mode, depending on the board on which the device is used.
-> > >
-> > > This introduces new APIs:
-> > >
-> > > - input_setup_polling
-> > > - input_set_poll_interval
-> > > - input_set_min_poll_interval
-> > > - input_set_max_poll_interval
-> > >
-> > > These new APIs allow switching an input device into polled mode with sysfs
-> > > attributes matching drivers using input_polled_dev APIs that will be
-> > > eventually removed.
-> >
-> > Are you sure that using sysfs is the correct way here?
-> > I would think using generic properties that can be overwritten by the
-> > DSDT or by the device tree would make things easier from a driver
-> > point of view.
->
-> Couple of points: I wanted it to be compatible with input-polldev.c so
-> the sysfs attributes must match (so that we can convert existing drivers
-> and zap input-polldev).
+Hi Will,
 
-Oh, I missed that. Good point.
+On Tue, Aug 13, 2019 at 01:06:44PM +0100, Will Deacon wrote:
+> [+Steve]
+>=20
+> On Tue, Aug 13, 2019 at 11:58:52AM +0100, Will Deacon wrote:
+> > On Tue, Aug 13, 2019 at 10:02:01AM +0100, Will Deacon wrote:
+> > > On Mon, Aug 12, 2019 at 05:51:35PM -0400, Qian Cai wrote:
+> > > > Booting today's linux-next on an arm64 server triggers a panic with
+> > > > CONFIG_KASAN_SW_TAGS=3Dy pointing to this line,
+> > >=20
+> > > Is this the only change on top of defconfig? If not, please can you s=
+hare
+> > > your full .config?
+> > >=20
+> > > > kfree()->virt_to_head_page()->compound_head()
+> > > >=20
+> > > > unsigned long head =3D READ_ONCE(page->compound_head);
+> > > >=20
+> > > > The bisect so far indicates one of those could be bad,
+> > >=20
+> > > I guess that means the issue is reproducible on the arm64 for-next/co=
+re
+> > > branch. Once I have your .config, I'll give it a go.
+> >=20
+> > FWIW, I've managed to reproduce this using defconfig + SW_TAGS on
+> > for-next/core, so I'll keep investigating.
 
-> I also am not sure if polling parameters are
-> property of board, or it is either fundamental hardware limitation or
-> simply desired system behavior.
+I've installed clang-8 and enabled CONFIG_KASAN_SW_TAGS and was able to
+reproduce the problem quite rapidly. Many apologies for missing this
+before in my testing.
 
-I think it's a combination of everything: sometimes the board misses
-the capability to not do IRQs for that device, and using properties
-would be better here: you can define them where you need (board,
-platform or device level), and have a working platfrom from the kernel
-description entirely.
-However, it doesn't solve the issue of input-polldev, so maybe
-properties should be added on top of this sysfs.
-
-> If Rob is OK with adding device
-> properties I'd be fine adding them as a followup, otherwise we can have
-> udev adjust the behavior as needed for given box shortly after boot.
-
-Fair enough.
-
->
-> >
-> > Also, checkpatch complains about a few octal permissions that are
-> > preferred over symbolic ones, and there is a possible 'out of memory'
-> > nessage at drivers/input/input-poller.c:75.
->
-> Yes, there is. It is there so we would know what device we were trying
-> to set up when OOM happened. You can probable decipher the driver from
-> the stack trace, but figuring particular device instance is harder.
-
-Could you add a comment there explaining this choice? I have a feeling
-you'll have to refuse a few patches of people running coccinelle
-scripts and be too happy to send a kernel patch.
-
-Other than that:
-Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>=20
+> Right, hacky diff below seems to resolve this, so I'll split this up into
+> some proper patches as there is more than one bug here.
+>=20
+> Thanks,
+>=20
+> Will
+>=20
+> --->8
+>=20
+> diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/mem=
+ory.h
+FWIW, this fixed the crashes I experienced, I'll run some additional
+tests.
 
 Cheers,
-Benjamin
-
->
-> Thanks.
->
-> >
-> > Cheers,
-> > Benjamin
-> >
-> > >
-> > > Tested-by: Michal Vokáč <michal.vokac@ysoft.com>
-> > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > ---
-> > >  drivers/input/Makefile       |   2 +-
-> > >  drivers/input/input-poller.c | 208 +++++++++++++++++++++++++++++++++++
-> > >  drivers/input/input-poller.h |  18 +++
-> > >  drivers/input/input.c        |  36 ++++--
-> > >  include/linux/input.h        |  12 ++
-> > >  5 files changed, 268 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/drivers/input/Makefile b/drivers/input/Makefile
-> > > index 40de6a7be641..e35650930371 100644
-> > > --- a/drivers/input/Makefile
-> > > +++ b/drivers/input/Makefile
-> > > @@ -6,7 +6,7 @@
-> > >  # Each configuration option enables a list of files.
-> > >
-> > >  obj-$(CONFIG_INPUT)            += input-core.o
-> > > -input-core-y := input.o input-compat.o input-mt.o ff-core.o
-> > > +input-core-y := input.o input-compat.o input-mt.o input-poller.o ff-core.o
-> > >
-> > >  obj-$(CONFIG_INPUT_FF_MEMLESS) += ff-memless.o
-> > >  obj-$(CONFIG_INPUT_POLLDEV)    += input-polldev.o
-> > > diff --git a/drivers/input/input-poller.c b/drivers/input/input-poller.c
-> > > new file mode 100644
-> > > index 000000000000..e041adb04f5a
-> > > --- /dev/null
-> > > +++ b/drivers/input/input-poller.c
-> > > @@ -0,0 +1,208 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * Support for polling mode for input devices.
-> > > + */
-> > > +
-> > > +#include <linux/device.h>
-> > > +#include <linux/input.h>
-> > > +#include <linux/jiffies.h>
-> > > +#include <linux/mutex.h>
-> > > +#include <linux/slab.h>
-> > > +#include <linux/types.h>
-> > > +#include <linux/workqueue.h>
-> > > +#include "input-poller.h"
-> > > +
-> > > +struct input_dev_poller {
-> > > +       void (*poll)(struct input_dev *dev);
-> > > +
-> > > +       unsigned int poll_interval; /* msec */
-> > > +       unsigned int poll_interval_max; /* msec */
-> > > +       unsigned int poll_interval_min; /* msec */
-> > > +
-> > > +       struct input_dev *input;
-> > > +       struct delayed_work work;
-> > > +};
-> > > +
-> > > +static void input_dev_poller_queue_work(struct input_dev_poller *poller)
-> > > +{
-> > > +       unsigned long delay;
-> > > +
-> > > +       delay = msecs_to_jiffies(poller->poll_interval);
-> > > +       if (delay >= HZ)
-> > > +               delay = round_jiffies_relative(delay);
-> > > +
-> > > +       queue_delayed_work(system_freezable_wq, &poller->work, delay);
-> > > +}
-> > > +
-> > > +static void input_dev_poller_work(struct work_struct *work)
-> > > +{
-> > > +       struct input_dev_poller *poller =
-> > > +               container_of(work, struct input_dev_poller, work.work);
-> > > +
-> > > +       poller->poll(poller->input);
-> > > +       input_dev_poller_queue_work(poller);
-> > > +}
-> > > +
-> > > +void input_dev_poller_finalize(struct input_dev_poller *poller)
-> > > +{
-> > > +       if (!poller->poll_interval)
-> > > +               poller->poll_interval = 500;
-> > > +       if (!poller->poll_interval_max)
-> > > +               poller->poll_interval_max = poller->poll_interval;
-> > > +}
-> > > +
-> > > +void input_dev_poller_start(struct input_dev_poller *poller)
-> > > +{
-> > > +       /* Only start polling if polling is enabled */
-> > > +       if (poller->poll_interval > 0) {
-> > > +               poller->poll(poller->input);
-> > > +               input_dev_poller_queue_work(poller);
-> > > +       }
-> > > +}
-> > > +
-> > > +void input_dev_poller_stop(struct input_dev_poller *poller)
-> > > +{
-> > > +       cancel_delayed_work_sync(&poller->work);
-> > > +}
-> > > +
-> > > +int input_setup_polling(struct input_dev *dev,
-> > > +                       void (*poll_fn)(struct input_dev *dev))
-> > > +{
-> > > +       struct input_dev_poller *poller;
-> > > +
-> > > +       poller = kzalloc(sizeof(*poller), GFP_KERNEL);
-> > > +       if (!poller) {
-> > > +               dev_err(dev->dev.parent ?: &dev->dev,
-> > > +                       "%s: unable to allocate poller structure\n", __func__);
-> > > +               return -ENOMEM;
-> > > +       }
-> > > +
-> > > +       INIT_DELAYED_WORK(&poller->work, input_dev_poller_work);
-> > > +       poller->input = dev;
-> > > +       poller->poll = poll_fn;
-> > > +
-> > > +       dev->poller = poller;
-> > > +       return 0;
-> > > +}
-> > > +EXPORT_SYMBOL(input_setup_polling);
-> > > +
-> > > +static bool input_dev_ensure_poller(struct input_dev *dev)
-> > > +{
-> > > +       if (!dev->poller) {
-> > > +               dev_err(dev->dev.parent ?: &dev->dev,
-> > > +                       "poller structure has not been set up\n");
-> > > +               return false;
-> > > +       }
-> > > +
-> > > +       return true;
-> > > +}
-> > > +
-> > > +void input_set_poll_interval(struct input_dev *dev, unsigned int interval)
-> > > +{
-> > > +       if (input_dev_ensure_poller(dev))
-> > > +               dev->poller->poll_interval = interval;
-> > > +}
-> > > +EXPORT_SYMBOL(input_set_poll_interval);
-> > > +
-> > > +void input_set_min_poll_interval(struct input_dev *dev, unsigned int interval)
-> > > +{
-> > > +       if (input_dev_ensure_poller(dev))
-> > > +               dev->poller->poll_interval_min = interval;
-> > > +}
-> > > +EXPORT_SYMBOL(input_set_min_poll_interval);
-> > > +
-> > > +void input_set_max_poll_interval(struct input_dev *dev, unsigned int interval)
-> > > +{
-> > > +       if (input_dev_ensure_poller(dev))
-> > > +               dev->poller->poll_interval_max = interval;
-> > > +}
-> > > +EXPORT_SYMBOL(input_set_max_poll_interval);
-> > > +
-> > > +/* SYSFS interface */
-> > > +
-> > > +static ssize_t input_dev_get_poll_interval(struct device *dev,
-> > > +                                          struct device_attribute *attr,
-> > > +                                          char *buf)
-> > > +{
-> > > +       struct input_dev *input = to_input_dev(dev);
-> > > +
-> > > +       return sprintf(buf, "%d\n", input->poller->poll_interval);
-> > > +}
-> > > +
-> > > +static ssize_t input_dev_set_poll_interval(struct device *dev,
-> > > +                                          struct device_attribute *attr,
-> > > +                                          const char *buf, size_t count)
-> > > +{
-> > > +       struct input_dev *input = to_input_dev(dev);
-> > > +       struct input_dev_poller *poller = input->poller;
-> > > +       unsigned int interval;
-> > > +       int err;
-> > > +
-> > > +       err = kstrtouint(buf, 0, &interval);
-> > > +       if (err)
-> > > +               return err;
-> > > +
-> > > +       if (interval < poller->poll_interval_min)
-> > > +               return -EINVAL;
-> > > +
-> > > +       if (interval > poller->poll_interval_max)
-> > > +               return -EINVAL;
-> > > +
-> > > +       mutex_lock(&input->mutex);
-> > > +
-> > > +       poller->poll_interval = interval;
-> > > +
-> > > +       if (input->users) {
-> > > +               cancel_delayed_work_sync(&poller->work);
-> > > +               if (poller->poll_interval > 0)
-> > > +                       input_dev_poller_queue_work(poller);
-> > > +       }
-> > > +
-> > > +       mutex_unlock(&input->mutex);
-> > > +
-> > > +       return count;
-> > > +}
-> > > +
-> > > +static DEVICE_ATTR(poll, S_IRUGO | S_IWUSR,
-> > > +                  input_dev_get_poll_interval, input_dev_set_poll_interval);
-> > > +
-> > > +static ssize_t input_dev_get_poll_max(struct device *dev,
-> > > +                                     struct device_attribute *attr, char *buf)
-> > > +{
-> > > +       struct input_dev *input = to_input_dev(dev);
-> > > +
-> > > +       return sprintf(buf, "%d\n", input->poller->poll_interval_max);
-> > > +}
-> > > +
-> > > +static DEVICE_ATTR(max, S_IRUGO, input_dev_get_poll_max, NULL);
-> > > +
-> > > +static ssize_t input_dev_get_poll_min(struct device *dev,
-> > > +                                    struct device_attribute *attr, char *buf)
-> > > +{
-> > > +       struct input_dev *input = to_input_dev(dev);
-> > > +
-> > > +       return sprintf(buf, "%d\n", input->poller->poll_interval_min);
-> > > +}
-> > > +
-> > > +static DEVICE_ATTR(min, S_IRUGO, input_dev_get_poll_min, NULL);
-> > > +
-> > > +static umode_t input_poller_attrs_visible(struct kobject *kobj,
-> > > +                                         struct attribute *attr, int n)
-> > > +{
-> > > +       struct device *dev = kobj_to_dev(kobj);
-> > > +       struct input_dev *input = to_input_dev(dev);
-> > > +
-> > > +       return input->poller ? attr->mode : 0;
-> > > +}
-> > > +
-> > > +static struct attribute *input_poller_attrs[] = {
-> > > +       &dev_attr_poll.attr,
-> > > +       &dev_attr_max.attr,
-> > > +       &dev_attr_min.attr,
-> > > +       NULL
-> > > +};
-> > > +
-> > > +struct attribute_group input_poller_attribute_group = {
-> > > +       .is_visible     = input_poller_attrs_visible,
-> > > +       .attrs          = input_poller_attrs,
-> > > +};
-> > > diff --git a/drivers/input/input-poller.h b/drivers/input/input-poller.h
-> > > new file mode 100644
-> > > index 000000000000..e3fca0be1d32
-> > > --- /dev/null
-> > > +++ b/drivers/input/input-poller.h
-> > > @@ -0,0 +1,18 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > > +#ifndef _INPUT_POLLER_H
-> > > +#define _INPUT_POLLER_H
-> > > +
-> > > +/*
-> > > + * Support for polling mode for input devices.
-> > > + */
-> > > +#include <linux/sysfs.h>
-> > > +
-> > > +struct input_dev_poller;
-> > > +
-> > > +void input_dev_poller_finalize(struct input_dev_poller *poller);
-> > > +void input_dev_poller_start(struct input_dev_poller *poller);
-> > > +void input_dev_poller_stop(struct input_dev_poller *poller);
-> > > +
-> > > +extern struct attribute_group input_poller_attribute_group;
-> > > +
-> > > +#endif /* _INPUT_POLLER_H */
-> > > diff --git a/drivers/input/input.c b/drivers/input/input.c
-> > > index 7494a0dede79..c08aa3596144 100644
-> > > --- a/drivers/input/input.c
-> > > +++ b/drivers/input/input.c
-> > > @@ -24,6 +24,7 @@
-> > >  #include <linux/mutex.h>
-> > >  #include <linux/rcupdate.h>
-> > >  #include "input-compat.h"
-> > > +#include "input-poller.h"
-> > >
-> > >  MODULE_AUTHOR("Vojtech Pavlik <vojtech@suse.cz>");
-> > >  MODULE_DESCRIPTION("Input core");
-> > > @@ -603,20 +604,31 @@ int input_open_device(struct input_handle *handle)
-> > >
-> > >         handle->open++;
-> > >
-> > > -       if (!dev->users++ && dev->open)
-> > > -               retval = dev->open(dev);
-> > > +       if (dev->users++) {
-> > > +               /*
-> > > +                * Device is already opened, so we can exit immediately and
-> > > +                * report success.
-> > > +                */
-> > > +               goto out;
-> > > +       }
-> > >
-> > > -       if (retval) {
-> > > -               dev->users--;
-> > > -               if (!--handle->open) {
-> > > +       if (dev->open) {
-> > > +               retval = dev->open(dev);
-> > > +               if (retval) {
-> > > +                       dev->users--;
-> > > +                       handle->open--;
-> > >                         /*
-> > >                          * Make sure we are not delivering any more events
-> > >                          * through this handle
-> > >                          */
-> > >                         synchronize_rcu();
-> > > +                       goto out;
-> > >                 }
-> > >         }
-> > >
-> > > +       if (dev->poller)
-> > > +               input_dev_poller_start(dev->poller);
-> > > +
-> > >   out:
-> > >         mutex_unlock(&dev->mutex);
-> > >         return retval;
-> > > @@ -655,8 +667,13 @@ void input_close_device(struct input_handle *handle)
-> > >
-> > >         __input_release_device(handle);
-> > >
-> > > -       if (!--dev->users && dev->close)
-> > > -               dev->close(dev);
-> > > +       if (!--dev->users) {
-> > > +               if (dev->poller)
-> > > +                       input_dev_poller_stop(dev->poller);
-> > > +
-> > > +               if (dev->close)
-> > > +                       dev->close(dev);
-> > > +       }
-> > >
-> > >         if (!--handle->open) {
-> > >                 /*
-> > > @@ -1502,6 +1519,7 @@ static const struct attribute_group *input_dev_attr_groups[] = {
-> > >         &input_dev_attr_group,
-> > >         &input_dev_id_attr_group,
-> > >         &input_dev_caps_attr_group,
-> > > +       &input_poller_attribute_group,
-> > >         NULL
-> > >  };
-> > >
-> > > @@ -1511,6 +1529,7 @@ static void input_dev_release(struct device *device)
-> > >
-> > >         input_ff_destroy(dev);
-> > >         input_mt_destroy_slots(dev);
-> > > +       kfree(dev->poller);
-> > >         kfree(dev->absinfo);
-> > >         kfree(dev->vals);
-> > >         kfree(dev);
-> > > @@ -2175,6 +2194,9 @@ int input_register_device(struct input_dev *dev)
-> > >         if (!dev->setkeycode)
-> > >                 dev->setkeycode = input_default_setkeycode;
-> > >
-> > > +       if (dev->poller)
-> > > +               input_dev_poller_finalize(dev->poller);
-> > > +
-> > >         error = device_add(&dev->dev);
-> > >         if (error)
-> > >                 goto err_free_vals;
-> > > diff --git a/include/linux/input.h b/include/linux/input.h
-> > > index e95a439d8bd5..94f277cd806a 100644
-> > > --- a/include/linux/input.h
-> > > +++ b/include/linux/input.h
-> > > @@ -21,6 +21,8 @@
-> > >  #include <linux/timer.h>
-> > >  #include <linux/mod_devicetable.h>
-> > >
-> > > +struct input_dev_poller;
-> > > +
-> > >  /**
-> > >   * struct input_value - input value representation
-> > >   * @type: type of value (EV_KEY, EV_ABS, etc)
-> > > @@ -71,6 +73,8 @@ enum input_clock_type {
-> > >   *     not sleep
-> > >   * @ff: force feedback structure associated with the device if device
-> > >   *     supports force feedback effects
-> > > + * @poller: poller structure associated with the device if device is
-> > > + *     set up to use polling mode
-> > >   * @repeat_key: stores key code of the last key pressed; used to implement
-> > >   *     software autorepeat
-> > >   * @timer: timer for software autorepeat
-> > > @@ -156,6 +160,8 @@ struct input_dev {
-> > >
-> > >         struct ff_device *ff;
-> > >
-> > > +       struct input_dev_poller *poller;
-> > > +
-> > >         unsigned int repeat_key;
-> > >         struct timer_list timer;
-> > >
-> > > @@ -372,6 +378,12 @@ void input_unregister_device(struct input_dev *);
-> > >
-> > >  void input_reset_device(struct input_dev *);
-> > >
-> > > +int input_setup_polling(struct input_dev *dev,
-> > > +                       void (*poll_fn)(struct input_dev *dev));
-> > > +void input_set_poll_interval(struct input_dev *dev, unsigned int interval);
-> > > +void input_set_min_poll_interval(struct input_dev *dev, unsigned int interval);
-> > > +void input_set_max_poll_interval(struct input_dev *dev, unsigned int interval);
-> > > +
-> > >  int __must_check input_register_handler(struct input_handler *);
-> > >  void input_unregister_handler(struct input_handler *);
-> > >
-> > > --
-> > > 2.23.0.rc1.153.gdeed80330f-goog
-> > >
-> > >
-> > > --
-> > > Dmitry
->
-> --
-> Dmitry
+--=20
+Steve
