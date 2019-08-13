@@ -2,148 +2,189 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0194BC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D800BC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C844E20840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C13D20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:17:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="E1iZdgGc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gJBMgCy7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfHMRMl (ORCPT
+        id S1726837AbfHMRRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:12:41 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39341 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfHMRMk (ORCPT
+        Tue, 13 Aug 2019 13:17:17 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35547 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfHMRRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:12:40 -0400
-Received: by mail-pf1-f193.google.com with SMTP id f17so47970887pfn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:12:40 -0700 (PDT)
+        Tue, 13 Aug 2019 13:17:17 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g17so24457126otl.2;
+        Tue, 13 Aug 2019 10:17:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t4C71UdUds8mfeMVRJziN4Jin8vpYyBJxbMwjur/Fro=;
-        b=E1iZdgGcDwOWZSz781OrghxIVDmdCFm/suaSubJzTX/RHIbSaauz/rqQaBTA0IIlsL
-         ydLOykhXrF+BbCHfIKE5mcgxzUEXo+PkcOgawkYtiX3+3AN4lhBdptyVnBxbBpA5SQXJ
-         GMaBMMmi0Aalp71NI78fm9cmBwwalj4xPOlkmfYte/mAgArodwEk1IQ2PMUv/ieeXbqD
-         sHI2Xz5mXapGE7E2yjTie/8Ppgw6QPrH6kJ/xwPFrT1AJpfKQfkFoti660ZyDwnXdNWw
-         agLiZdR0qMRFDwIIW6+vs4K8D76uIqsU0rr5ImMJwWYfvhXTkyxLF49I7mCMwdUZ/wNa
-         sWDQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=NGLe9R6TH0gA90LodsbIsArKREL2u+B16+/2nJh97c0=;
+        b=gJBMgCy7nt3IeZMNu2hBgVLvhtgwuryD2slw94jAVFQLR855zVUPI3SVTD8vdegQq3
+         lJASni0EAd20uPZVN+s8xhTXSXySFAeklSClTk9oIfAwS+KhP7ak88rCFMtgkoavI9JV
+         G/rU/KBnKpnYWUZkyEK/tzlbMYFUXZwilL9E40y9EXjIeTNsPMI3TCf2RkIdvzDxxDpO
+         yIC69Ng2VVeEd2BqIpIxeGIfyKk/gTWJiVANzgTe9e0Vh2V9zH9vlwRuwEWCzBo/Pr33
+         hamiGZWdiYbSb0hdRKsnI66yLBLExsWnPZRpLIfcUc3X8HMmG63rBnta3X5UqGwwgm8U
+         tciA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t4C71UdUds8mfeMVRJziN4Jin8vpYyBJxbMwjur/Fro=;
-        b=PeT4zQkXFxAV0KJbPzMNJu78npL0acGmjqI8PMIHG3mUPyAutIDLbzU5YJtwh4FaSq
-         TVjUiNo++8/VLj3BTEKvXzwD+YSd3kEFBGOaYXri3J9T+UcI5mqpWwOSz/CTl/O97kQ7
-         b322XkI7vDrTbqi78fHEmexhZnuD02gp7Kzn7ZpfOH4TulyQ2CqoF6aToAjHu0LMN5nV
-         ThmayIyKlTxEwF3IxsM2ubrI/P43kmMQCJ/iEma8BRcNKpjwX3bcxQMn7vE3wYv6SxMR
-         yuHROyIW4UX5sRhNdpcxBkyhIgh0NM9A4vU79yqNs/nXJ9aZ8DMdUntVgUI9D5u36hI7
-         X7Ew==
-X-Gm-Message-State: APjAAAVnQTYNgxom5uTeVi1WPxI+CnaggnZ4dbB0KiN3T6oL1ko1fatF
-        Ri4tZa3BTwRfylCtEA11QSSeNA==
-X-Google-Smtp-Source: APXvYqytMHDCmOCDQLztxZo9Q0q6CYXm6Ps9ifpdxmbaJm6efzYlYKpW6H6YHY45ud4Opdoz/tMqFA==
-X-Received: by 2002:a63:1341:: with SMTP id 1mr35984347pgt.48.1565716359879;
-        Tue, 13 Aug 2019 10:12:39 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:674])
-        by smtp.gmail.com with ESMTPSA id q7sm124462102pff.2.2019.08.13.10.12.38
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=NGLe9R6TH0gA90LodsbIsArKREL2u+B16+/2nJh97c0=;
+        b=HzOSfrpRb7imUkLPozFA4cluauHUBP0aJPxjyUqoPCUYcxUoCej6pVC4+/yLozWEBw
+         YgU7b+X+9kIPj85jTgHQ7zL7mJka/uqv6IZyB6QcE58ROou2t1y2sDUPk5h8JWI7jnM0
+         lxlKU1MVVCWhg28K+Ze2YWYaHBoujkLOITCT9nMspaqDWyLCl3peBzzMh/Z2yXMwLo8U
+         Ge8I73zpFYENpkN/47vl6hcwUANvsLYxl7m3PtruxPwYQV+C0+n4D+jIKVk/CdO6JFyC
+         nATFfY+DmOVRMQ3FfQcYplErRgyPzGC3eWdaZYp08/lJn0ON+nEZ3Ta0xSAl2G30Y2i+
+         LpKQ==
+X-Gm-Message-State: APjAAAX8fEcUk1eZ9s7513Y0R33rapdkjh2KMLhKRl7M3U0nMhwPBCpH
+        rTw3JYpmnDtqDnqsavmX+YI=
+X-Google-Smtp-Source: APXvYqy1K9u54o25aGY1RYmHvPMcG4xIhnKq66m5aq1oMVKhWqOfdXnCWA7rxZGNCZ9U3vrrmsIXBg==
+X-Received: by 2002:a6b:5a0b:: with SMTP id o11mr3445697iob.98.1565716635498;
+        Tue, 13 Aug 2019 10:17:15 -0700 (PDT)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id v10sm101031303iob.43.2019.08.13.10.17.13
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 10:12:39 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 13:12:37 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm: vmscan: do not share cgroup iteration between
- reclaimers
-Message-ID: <20190813171237.GA21743@cmpxchg.org>
-References: <20190812192316.13615-1-hannes@cmpxchg.org>
- <20190813132938.GJ17933@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813132938.GJ17933@dhcp22.suse.cz>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        Tue, 13 Aug 2019 10:17:14 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 10:17:06 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+dcdc9deefaec44785f32@syzkaller.appspotmail.com>
+Cc:     aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
+        davejwatson@fb.com, davem@davemloft.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        oss-drivers@netronome.com, syzkaller-bugs@googlegroups.com,
+        willemb@google.com
+Message-ID: <5d52f09299e91_40c72adb748b25c0d3@john-XPS-13-9370.notmuch>
+In-Reply-To: <20190810135900.2820-1-hdanton@sina.com>
+References: <000000000000f5d619058faea744@google.com>
+ <20190810135900.2820-1-hdanton@sina.com>
+Subject: Re: general protection fault in tls_write_space
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 03:29:38PM +0200, Michal Hocko wrote:
-> On Mon 12-08-19 15:23:16, Johannes Weiner wrote:
-> > One of our services observed a high rate of cgroup OOM kills in the
-> > presence of large amounts of clean cache. Debugging showed that the
-> > culprit is the shared cgroup iteration in page reclaim.
+Hillf Danton wrote:
+> 
+> On Sat, 10 Aug 2019 01:23:06 -0700
 > > 
-> > Under high allocation concurrency, multiple threads enter reclaim at
-> > the same time. Fearing overreclaim when we first switched from the
-> > single global LRU to cgrouped LRU lists, we introduced a shared
-> > iteration state for reclaim invocations - whether 1 or 20 reclaimers
-> > are active concurrently, we only walk the cgroup tree once: the 1st
-> > reclaimer reclaims the first cgroup, the second the second one etc.
-> > With more reclaimers than cgroups, we start another walk from the top.
+> > syzbot has found a reproducer for the following crash on:
 > > 
-> > This sounded reasonable at the time, but the problem is that reclaim
-> > concurrency doesn't scale with allocation concurrency. As reclaim
-> > concurrency increases, the amount of memory individual reclaimers get
-> > to scan gets smaller and smaller. Individual reclaimers may only see
-> > one cgroup per cycle, and that may not have much reclaimable
-> > memory. We see individual reclaimers declare OOM when there is plenty
-> > of reclaimable memory available in cgroups they didn't visit.
+> > HEAD commit:    ca497fb6 taprio: remove unused variable 'entry_list_policy'
+> > git tree:       net-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=109f3802600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d4cf1ffb87d590d7
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=dcdc9deefaec44785f32
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c78cd2600000
 > > 
-> > This patch does away with the shared iterator, and every reclaimer is
-> > allowed to scan the full cgroup tree and see all of reclaimable
-> > memory, just like it would on a non-cgrouped system. This way, when
-> > OOM is declared, we know that the reclaimer actually had a chance.
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+dcdc9deefaec44785f32@syzkaller.appspotmail.com
 > > 
-> > To still maintain fairness in reclaim pressure, disallow cgroup
-> > reclaim from bailing out of the tree walk early. Kswapd and regular
-> > direct reclaim already don't bail, so it's not clear why limit reclaim
-> > would have to, especially since it only walks subtrees to begin with.
+> > kasan: CONFIG_KASAN_INLINE enabled
+> > kasan: GPF could be caused by NULL-ptr deref or user memory access
+> > general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> > CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.3.0-rc3+ #125
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> > Google 01/01/2011
+> > RIP: 0010:tls_write_space+0x51/0x170 net/tls/tls_main.c:239
+> > Code: c1 ea 03 80 3c 02 00 0f 85 26 01 00 00 49 8b 9c 24 b0 06 00 00 48 b8  
+> > 00 00 00 00 00 fc ff df 48 8d 7b 6a 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48  
+> > 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 df 00 00 00
+> > RSP: 0018:ffff8880a98b74c8 EFLAGS: 00010202
+> > RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff860a27a2
+> > RDX: 000000000000000d RSI: ffffffff862c86c1 RDI: 000000000000006a
+> > RBP: ffff8880a98b74e0 R08: ffff8880a98a2240 R09: fffffbfff167c289
+> > R10: fffffbfff167c288 R11: ffffffff8b3e1447 R12: ffff8880a4de41c0
+> > R13: ffff8880a4de45b8 R14: 000000000000000a R15: 0000000000000000
+> > FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 0000000000000000 CR3: 000000008c9d1000 CR4: 00000000001406f0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Call Trace:
+> >   tcp_new_space net/ipv4/tcp_input.c:5151 [inline]
+> >   tcp_check_space+0x191/0x760 net/ipv4/tcp_input.c:5162
+> >   tcp_data_snd_check net/ipv4/tcp_input.c:5172 [inline]
+> >   tcp_rcv_state_process+0xe24/0x4e48 net/ipv4/tcp_input.c:6303
+> >   tcp_v6_do_rcv+0x7d7/0x12c0 net/ipv6/tcp_ipv6.c:1381
+> >   tcp_v6_rcv+0x31f1/0x3500 net/ipv6/tcp_ipv6.c:1588
+> >   ip6_protocol_deliver_rcu+0x2fe/0x1660 net/ipv6/ip6_input.c:397
+> >   ip6_input_finish+0x84/0x170 net/ipv6/ip6_input.c:438
+> >   NF_HOOK include/linux/netfilter.h:305 [inline]
+> >   NF_HOOK include/linux/netfilter.h:299 [inline]
+> >   ip6_input+0xe4/0x3f0 net/ipv6/ip6_input.c:447
+> >   dst_input include/net/dst.h:442 [inline]
+> >   ip6_rcv_finish+0x1de/0x2f0 net/ipv6/ip6_input.c:76
+> >   NF_HOOK include/linux/netfilter.h:305 [inline]
+> >   NF_HOOK include/linux/netfilter.h:299 [inline]
+> >   ipv6_rcv+0x10e/0x420 net/ipv6/ip6_input.c:272
+> >   __netif_receive_skb_one_core+0x113/0x1a0 net/core/dev.c:5006
+> >   __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5120
+> >   process_backlog+0x206/0x750 net/core/dev.c:5951
+> >   napi_poll net/core/dev.c:6388 [inline]
+> >   net_rx_action+0x4d6/0x1080 net/core/dev.c:6456
+> >   __do_softirq+0x262/0x98c kernel/softirq.c:292
+> >   run_ksoftirqd kernel/softirq.c:603 [inline]
+> >   run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
+> >   smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
+> >   kthread+0x361/0x430 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> > Modules linked in:
+> > ---[ end trace c21a83505707bb9d ]---
 > 
-> The code does bail out on any direct reclaim - be it limit or page
-> allocator triggered. Check the !current_is_kswapd part of the condition.
-
-Ah you're right. In practice I doubt it makes much of a difference,
-though, because...
-
-> > This change completely eliminates the OOM kills on our service, while
-> > showing no signs of overreclaim - no increased scan rates, %sys time,
-> > or abrupt free memory spikes. I tested across 100 machines that have
-> > 64G of RAM and host about 300 cgroups each.
+> Followup of commit 95fa145479fb
+> ("bpf: sockmap/tls, close can race with map free")
 > 
-> What is the usual direct reclaim involvement on those machines?
+> --- a/net/tls/tls_main.c
+> +++ b/net/tls/tls_main.c
+> @@ -308,6 +308,9 @@ static void tls_sk_proto_close(struct so
+>  	if (free_ctx)
+>  		icsk->icsk_ulp_data = NULL;
+>  	sk->sk_prot = ctx->sk_proto;
+> +	/* tls will go; restore sock callback before enabling bh */
+> +	if (sk->sk_write_space == tls_write_space)
+> +		sk->sk_write_space = ctx->sk_write_space;
+>  	write_unlock_bh(&sk->sk_callback_lock);
+>  	release_sock(sk);
+>  	if (ctx->tx_conf == TLS_SW)
 
-80-200 kb/s. In general we try to keep this low to non-existent on our
-hosts due to the latency implications. So it's fair to say that kswapd
-does page reclaim, and direct reclaim is a sign of overload.
+Hi Hillf,
 
-> That being said, I do agree that the oom side of the coin is causing
-> real troubles and it is a real problem to be addressed first. Especially with
-> cgroup v2 where we have likely more memcgs without any pages because
-> inner nodes do not have any tasks and direct charges which makes some
-> reclaimers hit memcgs without pages more likely.
-> 
-> Let's see whether we see regression due to over-reclaim. 
-> 
-> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> 
-> With the direct reclaim bail out reference fixed - unless I am wrong
-> there of course
-> 
-> Acked-by: Michal Hocko <mhocko@suse.com>
+We need this patch (although slightly updated for bpf tree) do
+you want to send it? Otherwise I can. We should only set this if
+TX path was enabled otherwise we null it. Checking against
+tls_write_space seems best to me as well.
 
-Thanks! I'll send an updated changelog.
+Against bpf this patch should fix it.
 
-> It is sad to see this piece of fun not being used after that many years
-> of bugs here and there and all the lockless fun but this is the life
-
-Haha, agreed.
+diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
+index ce6ef56a65ef..43252a801c3f 100644
+--- a/net/tls/tls_main.c
++++ b/net/tls/tls_main.c
+@@ -308,7 +308,8 @@ static void tls_sk_proto_close(struct sock *sk, long timeout)
+        if (free_ctx)
+                icsk->icsk_ulp_data = NULL;
+        sk->sk_prot = ctx->sk_proto;
+-       sk->sk_write_space = ctx->sk_write_space;
++       if (sk->sk_write_space == tls_write_space)
++               sk->sk_write_space = ctx->sk_write_space;
+        write_unlock_bh(&sk->sk_callback_lock);
+        release_sock(sk);
+        if (ctx->tx_conf == TLS_SW)
