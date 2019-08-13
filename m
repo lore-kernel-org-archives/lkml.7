@@ -2,141 +2,183 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0ADAC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E271C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C50620663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE76208C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbfHMNcr convert rfc822-to-8bit (ORCPT
+        id S1729123AbfHMNdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:32:47 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43557 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728095AbfHMNcq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:32:46 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e12so28153236otp.10;
-        Tue, 13 Aug 2019 06:32:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=blr8hsC4CXt5RNI7OKh20qzgOazZxlZ6gz4Viaw7hE8=;
-        b=gMr9413Mr9yWh+2KgM0ENm2pyeUZKi5dv3iogP35LfeuRUmV0TksGtP+Rsz5yS4cHE
-         p+OrhTYtNlpkudxdmFVeGVTATMT9x2dprxMhRluvvMip7tQPYGWRfckBqdEh+vRFRcLA
-         aQj64LS3eMed5e++Y6+TjEHJYm5USpjckP9PLFH4MIEjd98lkxfSPlC2l6mOEWD7MD4h
-         KAFa2lNomOsMvRhEeOmg5EJp0+5tx/pbfD63Y1pASX06wTvQ6qZZ29HrQS+Putx/Om3a
-         spnfFmKfHroRgauP3Moz2t4ePdhbsaskvFT9t/lCUPrD/lYz+dbuiXQwq6bWaLkR3mtJ
-         8WoQ==
-X-Gm-Message-State: APjAAAVDTdBBfwsoz9YlYkmrYnjwbry8SzTkmAPh3JXJS8UcmE2JklMv
-        SzPamhsvHS1puPkQqASGNwrYJMCOJ8zzfR6qmdqiUjyf
-X-Google-Smtp-Source: APXvYqzTRJDeIg0uN8q7lkpd/rdMToHfZRcHOugp+hBk6YJ0KdGcT/SckeR77TGSk+J/QXvFEhleLVWaw8dfFVql0Tw=
-X-Received: by 2002:a05:6808:3c5:: with SMTP id o5mr1532758oie.102.1565703164877;
- Tue, 13 Aug 2019 06:32:44 -0700 (PDT)
+        Tue, 13 Aug 2019 09:33:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56010 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728229AbfHMNdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 09:33:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8C063B009;
+        Tue, 13 Aug 2019 13:33:33 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 15:33:28 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Petr Mladek <pmladek@suse.com>
+cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] livepatch: Basic API to track system state
+ changes
+In-Reply-To: <20190719074034.29761-3-pmladek@suse.com>
+Message-ID: <alpine.LSU.2.21.1908131525480.10477@pobox.suse.cz>
+References: <20190719074034.29761-1-pmladek@suse.com> <20190719074034.29761-3-pmladek@suse.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190812235237.21797-1-max@enpas.org> <20190812235237.21797-3-max@enpas.org>
- <20190813080237.GA29986@roeck-us.net> <CAMuHMdXHbjfrdusGB3qvcu1a=W65Ef1-NrvcCv1h9E9uicknLg@mail.gmail.com>
- <1aff162f-f548-954c-b9d4-c6207a6c5875@roeck-us.net>
-In-Reply-To: <1aff162f-f548-954c-b9d4-c6207a6c5875@roeck-us.net>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 13 Aug 2019 15:32:33 +0200
-Message-ID: <CAMuHMdVf0VnVkvSnuneBnjQNoexWPS-Un70-F3hc2ev4mkF8TQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] hwmon/ltc2990: Add platform_data support
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Max Staudt <max@enpas.org>, Linux I2C <linux-i2c@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Günter,
+On Fri, 19 Jul 2019, Petr Mladek wrote:
 
-On Tue, Aug 13, 2019 at 3:27 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> On 8/13/19 1:27 AM, Geert Uytterhoeven wrote:
-> > On Tue, Aug 13, 2019 at 10:02 AM Guenter Roeck <linux@roeck-us.net> wrote:
-> >> On Tue, Aug 13, 2019 at 01:52:36AM +0200, Max Staudt wrote:
-> >>> This allows code using i2c_new_device() to specify a measurement mode.
-> >>>
-> >>> Signed-off-by: Max Staudt <max@enpas.org>
-> >>> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> >>> ---
-> >>>   drivers/hwmon/ltc2990.c               |  9 +++++++++
-> >>>   include/linux/platform_data/ltc2990.h | 11 +++++++++++
-> >>>   2 files changed, 20 insertions(+)
-> >>>   create mode 100644 include/linux/platform_data/ltc2990.h
-> >>>
-> >>> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
-> >>> index f9431ad43..f19b9c50c 100644
-> >>> --- a/drivers/hwmon/ltc2990.c
-> >>> +++ b/drivers/hwmon/ltc2990.c
-> >>> @@ -14,6 +14,7 @@
-> >>>   #include <linux/kernel.h>
-> >>>   #include <linux/module.h>
-> >>>   #include <linux/of.h>
-> >>> +#include <linux/platform_data/ltc2990.h>
-> >>>
-> >>>   #define LTC2990_STATUS       0x00
-> >>>   #define LTC2990_CONTROL      0x01
-> >>> @@ -206,6 +207,7 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
-> >>>        int ret;
-> >>>        struct device *hwmon_dev;
-> >>>        struct ltc2990_data *data;
-> >>> +     struct ltc2990_platform_data *pdata = dev_get_platdata(&i2c->dev);
-> >>>        struct device_node *of_node = i2c->dev.of_node;
-> >>>
-> >>>        if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_SMBUS_BYTE_DATA |
-> >>> @@ -227,6 +229,13 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
-> >>>                if (data->mode[0] & ~LTC2990_MODE0_MASK ||
-> >>>                    data->mode[1] & ~LTC2990_MODE1_MASK)
-> >>>                        return -EINVAL;
-> >>> +     } else if (pdata) {
-> >>> +             data->mode[0] = pdata->meas_mode[0];
-> >>> +             data->mode[1] = pdata->meas_mode[1];
-> >>> +
-> >>> +             if (data->mode[0] & ~LTC2990_MODE0_MASK ||
-> >>> +                 data->mode[1] & ~LTC2990_MODE1_MASK)
-> >>> +                     return -EINVAL;
-> >>
-> >> I would prefer if the driver was modified to accept device
-> >> properties, and if those were set using the appropriate
-> >> fwnode function. Any reason for not doing that ?
-> >
-> > That was my first thought as well, but isn't that limited to DT and ACPI
-> > properties (for now)?
->
-> tcpm and, for example, the wcove driver don't seem to have a problem using
-> it, I don't see acpi involved there. Also, the code resides in the core driver
+> This is another step how to help maintaining more livepatches.
+> 
+> One big help was the atomic replace and cumulative livepatches. These
+> livepatches replace the already installed ones. Therefore it should
+> be enough when each cumulative livepatch is consistent.
+> 
+> The problems might come with shadow variables and callbacks. They might
+> change the system behavior or state so that it is no longer safe to
+> go back and use an older livepatch or the original kernel code. Also
+> any new livepatch must be able to detect what changes have already been
+> done by the already installed livepatches.
 
-Cool, just discovered that, following your other fwnode_create_software_node()
-pointer...
+"Also, a new livepatch must be able to detect changes which were made 
+by the already installed livepatches." would sound better to me.
+ 
+> This is where the livepatch system state tracking gets useful. It
+> allows to:
+> 
+>   - find whether a system state has already been modified by
+>     previous livepatches
+> 
+>   - store data needed to manipulate and restore the system state
+> 
+> The information about the manipulated system states is stored in an
+> array of struct klp_state. It can be searched by two new functions
+> klp_get_state() and klp_get_prev_state().
+> 
+> The dependencies are going to be solved by a version field added later.
+> The only important information is that it will be allowed to modify
+> the same state by more non-cumulative livepatches. It is the same logic
+> as that it is allowed to modify the same function several times.
 
-> code and is always enabled unless I am missing something. What am I missing ?
+Wouldn't something like "It is similar to allowing to modify the same 
+function several times." be better to parse?
 
-You're missing that I'm not up-to-date w.r.t. the latest fwnode properties
-development ;-)
+> The livepatch author is responsible for preventing incompatible
+> changes.
+> 
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  include/linux/livepatch.h | 15 +++++++++
+>  kernel/livepatch/Makefile |  2 +-
+>  kernel/livepatch/state.c  | 85 +++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 101 insertions(+), 1 deletion(-)
+>  create mode 100644 kernel/livepatch/state.c
+> 
+> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
+> index 273400814020..9c8b637f17cd 100644
+> --- a/include/linux/livepatch.h
+> +++ b/include/linux/livepatch.h
+> @@ -130,10 +130,21 @@ struct klp_object {
+>  	bool patched;
+>  };
+>  
+> +/**
+> + * struct klp_state - state of the system modified by the livepatch
+> + * @id:		system state identifier (non zero)
+> + * @data:	custom data
+> + */
+> +struct klp_state {
+> +	unsigned long id;
+> +	void *data;
+> +};
+> +
+>  /**
+>   * struct klp_patch - patch structure for live patching
+>   * @mod:	reference to the live patch module
+>   * @objs:	object entries for kernel objects to be patched
+> + * @states:	system states that can get modified
+>   * @replace:	replace all actively used patches
+>   * @list:	list node for global list of actively used patches
+>   * @kobj:	kobject for sysfs resources
+> @@ -147,6 +158,7 @@ struct klp_patch {
+>  	/* external */
+>  	struct module *mod;
+>  	struct klp_object *objs;
+> +	struct klp_state *states;
+>  	bool replace;
+>  
+>  	/* internal */
+> @@ -217,6 +229,9 @@ void *klp_shadow_get_or_alloc(void *obj, unsigned long id,
+>  void klp_shadow_free(void *obj, unsigned long id, klp_shadow_dtor_t dtor);
+>  void klp_shadow_free_all(unsigned long id, klp_shadow_dtor_t dtor);
+>  
+> +struct klp_state *klp_get_state(struct klp_patch *patch, unsigned long id);
+> +struct klp_state *klp_get_prev_state(unsigned long id);
+> +
+>  #else /* !CONFIG_LIVEPATCH */
+>  
+>  static inline int klp_module_coming(struct module *mod) { return 0; }
+> diff --git a/kernel/livepatch/Makefile b/kernel/livepatch/Makefile
+> index cf9b5bcdb952..cf03d4bdfc66 100644
+> --- a/kernel/livepatch/Makefile
+> +++ b/kernel/livepatch/Makefile
+> @@ -1,4 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  obj-$(CONFIG_LIVEPATCH) += livepatch.o
+>  
+> -livepatch-objs := core.o patch.o shadow.o transition.o
+> +livepatch-objs := core.o patch.o shadow.o state.o transition.o
+> diff --git a/kernel/livepatch/state.c b/kernel/livepatch/state.c
+> new file mode 100644
+> index 000000000000..f76d90e856b1
+> --- /dev/null
+> +++ b/kernel/livepatch/state.c
+> @@ -0,0 +1,85 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * system_state.c - State of the system modified by livepatches
+> + *
+> + * Copyright (C) 2019 SUSE
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/livepatch.h>
+> +#include "core.h"
+> +#include "transition.h"
+> +
+> +#define klp_for_each_state(patch, state)		\
+> +	for (state = patch->states;			\
+> +	     state && state->id;			\
+> +	     state++)
+> +
+> +/**
+> + * klp_get_state() - get information about system state modified by
+> + *	the given patch
+> + * @patch:	livepatch that modifies the given system state
+> + * @id:		custom identifier of the modified system state
+> + *
+> + * Checks whether the given patch modifies to given system state.
 
-Thanks a lot!
+s/to given/the given/ ?
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Miroslav
