@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C65C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35374C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44FF420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0215720679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:09:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfHMGIN (ORCPT
+        id S1727311AbfHMGJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 02:08:13 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33894 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfHMGIM (ORCPT
+        Tue, 13 Aug 2019 02:09:28 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34763 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfHMGJ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:08:12 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x18so3994248ljh.1;
-        Mon, 12 Aug 2019 23:08:11 -0700 (PDT)
+        Tue, 13 Aug 2019 02:09:27 -0400
+Received: by mail-wr1-f65.google.com with SMTP id 31so106641214wrm.1;
+        Mon, 12 Aug 2019 23:09:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MDG29oqYq4nVVn3hrh+2fbdajMYYSsCGEYHbdqYGlcU=;
-        b=Fii6LhkROVK1fv2x+QlUx3ocjhOAx8AZABefif/L3FQ9Asa7zaM2/eFQbsl0CV1RNP
-         W6ziaaEUHX5Mz/rYkTNUlAwrL2urFru8WcBUVvocokGodkGVCIdHv2lzq8KnKt93PkvV
-         CNPCgnMu+OFJ+3DjeRNjB+S4J3My5Ebk+5YxHwiLHyqJlYvA97TzTd4NueUtxAX881v8
-         xh6AOYzd+llTO2B8wmqe7gO/3VRzxt86506nnnWMip5jA03Xoi3agPSHZn6YXBPvh/wp
-         F1sB0kOxAqkZlqDMk2eld+7dKhA1cr3HVoQUb71Wb2gTiuSUUgcX+wMrVzLBk7bjcNyF
-         auiQ==
-X-Gm-Message-State: APjAAAVAG3IE6rDdul9mgX1xRlLFqCqH33UtHCCHZeyHRtgQZ7NfN7IT
-        gAgLRQz7j1o7vdF6RLDS8P3v/XnK9Ng=
-X-Google-Smtp-Source: APXvYqwknx9v52tbRVWqkgQLlNMXeAKBWlf1KxDvXLFEh77Q/kJsDqd8VeP0tsogWsWN2uEhLh+ofg==
-X-Received: by 2002:a2e:7614:: with SMTP id r20mr21213708ljc.42.1565676490536;
-        Mon, 12 Aug 2019 23:08:10 -0700 (PDT)
+        bh=YA4Nao3CX1fWeDuXBXZMsed4Ax1EKZZZUUVFq21RxTM=;
+        b=hiH/090lKXhju5H9ZeZecTQynxMpdTMz0lJu5AlIhZ87gs0K6O+OvWwhnM9oeviv2C
+         DuimiTTMhhPSSGttC6aLtKWejLHEK4Z0iOw3zV5McHoSBVJUv4+x1fA+LxuCQ5Fn9FOo
+         8FVBshsyYZ3yPIyuOJVUopNRDiLOQZO7KvX1Dud/Kwbw+v7ZDdQnP/V/pXIqnFu/ZmLH
+         jOaPA+GXR4pUkjIjg5qWyVsgHyemCaBb0EnxlBwtAyMwEUss9RGGdq2svVwOmdHsXmCd
+         j8CIEZNEjW5Hu258/MK3cGOjb1JPtHs76h5KR3QfaH1zfruuXRoBfJlzrDJZqVzEgDUA
+         oKfQ==
+X-Gm-Message-State: APjAAAVVcaCUaDwdLEsCoGd2Mbndemjy5HZ9XDIAX7tBKy3W0PIC1Edq
+        hi82LfuNu6b0YRDm223GbmViWfx4/Uk=
+X-Google-Smtp-Source: APXvYqx7zH9PZV/EvHIbsrWE76a0PabiDf+8U6bwPZ9R+2tDhRRIGsxkhp7PZnrVNmDoQ1WJU/iU4g==
+X-Received: by 2002:adf:8bd8:: with SMTP id w24mr19789685wra.273.1565676565372;
+        Mon, 12 Aug 2019 23:09:25 -0700 (PDT)
 Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id 25sm5791605lft.71.2019.08.12.23.08.09
+        by smtp.googlemail.com with ESMTPSA id m7sm491793wmi.18.2019.08.12.23.09.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 23:08:09 -0700 (PDT)
+        Mon, 12 Aug 2019 23:09:24 -0700 (PDT)
 From:   Denis Efremov <efremov@linux.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
-        Heiner Kallweit <hkallweit1@gmail.com>, nic_swsd@realtek.com,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: r8169: Update path to the driver
-Date:   Tue, 13 Aug 2019 09:07:59 +0300
-Message-Id: <20190813060759.14256-1-efremov@linux.com>
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-i2c@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: i2c mv64xxx: Update documentation path
+Date:   Tue, 13 Aug 2019 09:09:13 +0300
+Message-Id: <20190813060913.14722-1-efremov@linux.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
@@ -60,32 +61,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update MAINTAINERS record to reflect the filename change
-from r8169.c to r8169_main.c
+Update MAINTAINERS record to reflect the file move
+from i2c-mv64xxx.txt to marvell,mv64xxx-i2c.yaml.
 
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: nic_swsd@realtek.com
-Cc: David S. Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Fixes: 25e992a4603c ("r8169: rename r8169.c to r8169_main.c")
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: linux-i2c@vger.kernel.org
+Fixes: f8bbde72ef44 ("dt-bindings: i2c: mv64xxx: Add YAML schemas")
 Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
  MAINTAINERS | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 99a7392ad6bc..25eb86f3261e 100644
+index 87ac0378186c..590dcebe627f 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -183,7 +183,7 @@ M:	Realtek linux nic maintainers <nic_swsd@realtek.com>
- M:	Heiner Kallweit <hkallweit1@gmail.com>
- L:	netdev@vger.kernel.org
+@@ -7505,7 +7505,7 @@ I2C MV64XXX MARVELL AND ALLWINNER DRIVER
+ M:	Gregory CLEMENT <gregory.clement@bootlin.com>
+ L:	linux-i2c@vger.kernel.org
  S:	Maintained
--F:	drivers/net/ethernet/realtek/r8169.c
-+F:	drivers/net/ethernet/realtek/r8169_main.c
+-F:	Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
++F:	Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
+ F:	drivers/i2c/busses/i2c-mv64xxx.c
  
- 8250/16?50 (AND CLONE UARTS) SERIAL DRIVER
- M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ I2C OVER PARALLEL PORT
 -- 
 2.21.0
 
