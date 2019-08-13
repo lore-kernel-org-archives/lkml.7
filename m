@@ -2,102 +2,198 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A08CC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CD6C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF94F206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:22:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565695320;
-	bh=mr7MTTp2S1783D3IUPJoGwtr5P40BgpMglJUrsbxxbo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CUjSwRHotWvvkJEb6DDCy58F0ly16NUKQZsQKnwr7OT3a+FSNK7VfJZ4UZmGXWNCt
-	 /2ycmyhDUZZ9/00UaO1LH2RN+TM+mYvEFAT/kfloxPx0fciS5pn4/Nte4eHQSlLFNr
-	 IuaclXZR9soob07XKOYNQ0gftFQ0b/+f1q+MLV5Y=
+	by mail.kernel.org (Postfix) with ESMTP id A816120673
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:27:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbfHMLV7 (ORCPT
+        id S1727150AbfHML12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:21:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47410 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfHMLV7 (ORCPT
+        Tue, 13 Aug 2019 07:27:28 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:59572 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726086AbfHML12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:21:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=S+haXQ31VwOR8EScuk4xDAXQAIpZXE7S84bl3ZEQmCQ=; b=NTsX4G4wMZAiM1T6uwsNNHYh/
-        7uxBSIEamuTn69Q/hCmek2SL7IvsauP/Oj/O1Q3zDAEVxVD4OzyQEkTMiHI+932ww8kb/beAo3DzN
-        3q6FnV55oTm4AOn+ux7mByv/tFAzlnCc1TrqdTX0H3spfnFJJkTk83fIVJR/drvNwIoBc=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hxUsH-0007l0-HC; Tue, 13 Aug 2019 11:21:57 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id AF8EC2742B44; Tue, 13 Aug 2019 12:21:56 +0100 (BST)
-Date:   Tue, 13 Aug 2019 12:21:56 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     lgirdwood@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] regulator: core: Add of_node_put() before return
-Message-ID: <20190813112156.GB5093@sirena.co.uk>
-References: <20190808070553.13097-1-nishkadg.linux@gmail.com>
- <20190808122740.GB3795@sirena.co.uk>
- <106177ee-d6e0-5825-83f0-ca199b05ac20@gmail.com>
+        Tue, 13 Aug 2019 07:27:28 -0400
+X-UUID: d5466bd576b049c9a1375d6769e8e4b9-20190813
+X-UUID: d5466bd576b049c9a1375d6769e8e4b9-20190813
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1944081045; Tue, 13 Aug 2019 19:27:20 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 13 Aug 2019 19:27:14 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 13 Aug 2019 19:27:17 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Biju Das <biju.das@bp.renesas.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [PATCH next v9 00/11] add USB GPIO based connection detection driver
+Date:   Tue, 13 Aug 2019 19:27:03 +0800
+Message-ID: <1565695634-9711-1-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TakKZr9L6Hm6aLOc"
-Content-Disposition: inline
-In-Reply-To: <106177ee-d6e0-5825-83f0-ca199b05ac20@gmail.com>
-X-Cookie: Poverty begins at home.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 60EE3475727C8F8EA180652F2BC9E94AE75F43462F5133011D73E92E678602342000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Because the USB Connector is introduced and the requirement of
+usb-connector.txt binding, the old way using extcon to support
+USB Dual-Role switch is now deprecated, meanwhile there is no
+available common driver when use Type-B connector, typically
+using an input GPIO to detect USB ID pin.
+This patch series introduce a USB GPIO based connection detection
+driver and try to replace the function provided by extcon-usb-gpio
+driver.
 
---TakKZr9L6Hm6aLOc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+v9 changes:
+  1. replace signed-off-by by suggested-by Heikki
+  2. add reviewed-by Linus
+  3. use class_find_device_by_fwnode() introduced by series [1]
 
-On Tue, Aug 13, 2019 at 09:57:47AM +0530, Nishka Dasgupta wrote:
-> On 08/08/19 5:57 PM, Mark Brown wrote:
+[1]:
+ https://lore.kernel.org/patchwork/patch/1103630/
+ [v3,1/7] drivers: Introduce device lookup variants by name
 
-> > Please do not submit new versions of already applied patches, please
-> > submit incremental updates to the existing code.  Modifying existing
-> > commits creates problems for other users building on top of those
-> > commits so it's best practice to only change pubished git commits if
-> > absolutely essential.
+ they are already in:
+ https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/log/drivers/base/core.c?h=driver-core-next
 
-> I am very sorry about this; I wasn't sure whether this particular commit had
-> been applied. Should I split the commit and resend only the change to the
-> old commit, or should I leave it as it is?
+v8 changes:
+  1. rename the driver's name suggested by Heikki
+  2. move the driver from usb/roles/ into usb/common/ suggested by Heikki
+  3. introduce Kconfig for usb common core to add the new driver
+  4. modify binding of the driver 
+  5. rename the subject title
 
-If there's any changes you think are a good idea please send a new patch
-for them.
+v7 changes:
+  1. [5/10]: add signed-off-by Chunfeng
+  2. [6/10]: add signed-off-by Chunfeng
+  3. [6/10]: depends on linux-next of Rafael's tree [1]
+  4. [7/10]: add signed-off-by Chunfeng and tested-by Biju
+  5. [9/10]: add tested-by Nagarjuna, and remove DEV_PMS_OPS suggested by Andy
 
---TakKZr9L6Hm6aLOc
-Content-Type: application/pgp-signature; name="signature.asc"
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=linux-next
 
------BEGIN PGP SIGNATURE-----
+v6 changes:
+  1. merge [1] and [2] into this series
+  2. don't use graph anymore to find usb-role-switch
+  3. abandon [3] and introduce three patches (6, 7, 8 in this series)
+     to rebuild APIs getting usb-role-switch
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1SnVMACgkQJNaLcl1U
-h9Cimgf9Eex8ZpWx60ww9ZeOCtXNnH6VRaLEs5gLgCE1r+7wdh7sK0qRBDyRUlBY
-za6XFJSxW086pma5Td2h2e73KHa3hYZ1QlsYcwCkCU10ZQYJxCQdThuOpmxnGSlX
-J3aQDmggq1XGB4XJvkrOQZrdiU9+ioSCNvQuvBVph+ETk0c6xxI0ZEk1aDdM9Qk7
-mPpHuCLFY7nk29JKvIAgHRwzkTGgGLCPLUET8qnPZTX7lRMvS3/RFYrCQ3g9nk9Q
-D9ojCmTF0DMkEqVznlpIQHRE8kfSe1E+fIxxe6+ed0rZamOBqMU834QBp6CkU2N9
-SZ6p40Y7cPOXrDYEt2eK9KZTXAxUhA==
-=LpVL
------END PGP SIGNATURE-----
+  [1]: [v3] dt-binding: usb: add usb-role-switch property
+       https://patchwork.kernel.org/patch/10934835/
+  [2]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+       https://patchwork.kernel.org/patch/10909971/
 
---TakKZr9L6Hm6aLOc--
+  [3]: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
+
+v5 changes:
+  1. remove linux/of.h and put usb_role_switch when error happens,
+     suggested by Biju
+  2. treat Type-B connector as USB controller's child, but not as
+     a virtual device, suggested by Rob
+  3. provide and use generic property "usb-role-switch", see [1],
+     suggested by Rob
+
+  Note: this series still depends on [2]
+
+  [1]: [v3] dt-binding: usb: add usb-role-switch property
+       https://patchwork.kernel.org/patch/10934835/
+  [2]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+       https://patchwork.kernel.org/patch/10909971/
+
+v4 changes:
+  1. use switch_fwnode_match() to find fwnode suggested by Heikki
+  2. assign fwnode member of usb_role_switch struct suggested by Heikki
+  3. make [4/6] depend on [2]
+  3. remove linux/gpio.h suggested by Linus
+  4. put node when error happens
+
+  [4/6] usb: roles: add API to get usb_role_switch by node
+  [2] [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+    https://patchwork.kernel.org/patch/10909971/
+
+v3 changes:
+  1. add GPIO direction, and use fixed-regulator for GPIO controlled
+    VBUS regulator suggested by Rob;
+  2. rebuild fwnode_usb_role_switch_get() suggested by Andy and Heikki
+  3. treat the type-B connector as a virtual device;
+  4. change file name of driver again
+  5. select USB_ROLE_SWITCH in mtu3/Kconfig suggested by Heikki
+  6. rename ssusb_mode_manual_switch() to ssusb_mode_switch()
+
+v2 changes:
+ 1. make binding clear, and add a extra compatible suggested by Hans
+
+Chunfeng Yun (8):
+  dt-binding: usb: add usb-role-switch property
+  dt-bindings: connector: add optional properties for Type-B
+  dt-bindings: usb: add binding for USB GPIO based connection detection
+    driver
+  dt-bindings: usb: mtu3: add properties about USB Role Switch
+  usb: roles: get usb-role-switch from parent
+  usb: common: create Kconfig file
+  usb: common: add USB GPIO based connection detection driver
+  usb: mtu3: register a USB Role Switch for dual role mode
+
+Heikki Krogerus (2):
+  device connection: Add fwnode_connection_find_match()
+  usb: roles: Add fwnode_usb_role_switch_get() function
+
+Yu Chen (1):
+  usb: roles: Introduce stubs for the exiting functions in role.h
+
+ .../bindings/connector/usb-connector.txt      |  14 +
+ .../devicetree/bindings/usb/generic.txt       |   4 +
+ .../devicetree/bindings/usb/mediatek,mtu3.txt |  10 +
+ .../devicetree/bindings/usb/usb-conn-gpio.txt |  31 ++
+ drivers/base/devcon.c                         |  43 ++-
+ drivers/usb/Kconfig                           |  35 +--
+ drivers/usb/common/Kconfig                    |  51 ++++
+ drivers/usb/common/Makefile                   |   1 +
+ drivers/usb/common/usb-conn-gpio.c            | 284 ++++++++++++++++++
+ drivers/usb/mtu3/Kconfig                      |   1 +
+ drivers/usb/mtu3/mtu3.h                       |   5 +
+ drivers/usb/mtu3/mtu3_debugfs.c               |   4 +-
+ drivers/usb/mtu3/mtu3_dr.c                    |  48 ++-
+ drivers/usb/mtu3/mtu3_dr.h                    |   6 +-
+ drivers/usb/mtu3/mtu3_plat.c                  |   3 +-
+ drivers/usb/roles/class.c                     |  41 ++-
+ include/linux/device.h                        |  10 +-
+ include/linux/usb/role.h                      |  37 +++
+ 18 files changed, 570 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
+ create mode 100644 drivers/usb/common/Kconfig
+ create mode 100644 drivers/usb/common/usb-conn-gpio.c
+
+-- 
+2.22.0
+
