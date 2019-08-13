@@ -2,321 +2,81 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2707AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8114CC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEFCC20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3EE20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbfHMJPs (ORCPT
+        id S1728712AbfHMJPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:15:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4244 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728289AbfHMJOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:14:22 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D6F5E3FBE442E72AABD2;
-        Tue, 13 Aug 2019 17:14:19 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 13 Aug
- 2019 17:14:11 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        "Dave Chinner" <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Richard Weinberger <richard@nod.at>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
-        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v7 09/24] erofs: support tracepoint
-Date:   Tue, 13 Aug 2019 17:13:11 +0800
-Message-ID: <20190813091326.84652-10-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190813091326.84652-1-gaoxiang25@huawei.com>
-References: <20190813091326.84652-1-gaoxiang25@huawei.com>
+        Tue, 13 Aug 2019 05:15:54 -0400
+Received: from mga06.intel.com ([134.134.136.31]:30997 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727559AbfHMJPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 05:15:44 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 01:50:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,380,1559545200"; 
+   d="scan'208";a="200414319"
+Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.129.248]) ([10.249.129.248])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Aug 2019 01:50:06 -0700
+Subject: Re: linux-next: manual merge of the driver-core tree with the rcu
+ tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>, Greg KH <greg@kroah.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+References: <20190813155048.59dd9bdf@canb.auug.org.au>
+From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
+ 173, 80-298 Gdansk
+Message-ID: <0d7ff624-dce3-3961-b9a6-7de8eba2bdee@intel.com>
+Date:   Tue, 13 Aug 2019 10:50:05 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190813155048.59dd9bdf@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add basic tracepoints for ->readpage{,s}, ->lookup,
-->destroy_inode, fill_inode and map_blocks.
+On 8/13/2019 7:50 AM, Stephen Rothwell wrote:
+> Hi all,
+>
+> Today's linux-next merge of the driver-core tree got a conflict in:
+>
+>    drivers/base/power/runtime.c
+>
+> between commit:
+>
+>    4a3a5474b4c1 ("driver/core: Convert to use built-in RCU list checking")
+>
+> from the rcu tree and commit:
+>
+>    515db266a9da ("driver core: Remove device link creation limitation")
+>
+> from the driver-core tree.
+>
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>
+The fix looks good to me, thanks!
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- include/trace/events/erofs.h | 241 +++++++++++++++++++++++++++++++++++
- 1 file changed, 241 insertions(+)
- create mode 100644 include/trace/events/erofs.h
-
-diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
-new file mode 100644
-index 000000000000..0c5847c54b60
---- /dev/null
-+++ b/include/trace/events/erofs.h
-@@ -0,0 +1,241 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM erofs
-+
-+#if !defined(_TRACE_EROFS_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_EROFS_H
-+
-+#include <linux/tracepoint.h>
-+
-+#define show_dev(dev)		MAJOR(dev), MINOR(dev)
-+#define show_dev_nid(entry)	show_dev(entry->dev), entry->nid
-+
-+#define show_file_type(type)						\
-+	__print_symbolic(type,						\
-+		{ 0,		"FILE" },				\
-+		{ 1,		"DIR" })
-+
-+#define show_map_flags(flags) __print_flags(flags, "|",	\
-+	{ EROFS_GET_BLOCKS_RAW,	"RAW" })
-+
-+#define show_mflags(flags) __print_flags(flags, "",	\
-+	{ EROFS_MAP_MAPPED,	"M" },			\
-+	{ EROFS_MAP_META,	"I" })
-+
-+TRACE_EVENT(erofs_lookup,
-+
-+	TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
-+
-+	TP_ARGS(dir, dentry, flags),
-+
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,	nid	)
-+		__field(const char *,	name	)
-+		__field(unsigned int,	flags	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev	= dir->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(dir)->nid;
-+		__entry->name	= dentry->d_name.name;
-+		__entry->flags	= flags;
-+	),
-+
-+	TP_printk("dev = (%d,%d), pnid = %llu, name:%s, flags:%x",
-+		show_dev_nid(__entry),
-+		__entry->name,
-+		__entry->flags)
-+);
-+
-+TRACE_EVENT(erofs_fill_inode,
-+	TP_PROTO(struct inode *inode, int isdir),
-+	TP_ARGS(inode, isdir),
-+
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,	nid	)
-+		__field(erofs_blk_t,	blkaddr )
-+		__field(unsigned int,	ofs	)
-+		__field(int,		isdir	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev		= inode->i_sb->s_dev;
-+		__entry->nid		= EROFS_V(inode)->nid;
-+		__entry->blkaddr	= erofs_blknr(iloc(EROFS_I_SB(inode), __entry->nid));
-+		__entry->ofs		= erofs_blkoff(iloc(EROFS_I_SB(inode), __entry->nid));
-+		__entry->isdir		= isdir;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu, blkaddr %u ofs %u, isdir %d",
-+		  show_dev_nid(__entry),
-+		  __entry->blkaddr, __entry->ofs,
-+		  __entry->isdir)
-+);
-+
-+TRACE_EVENT(erofs_readpage,
-+
-+	TP_PROTO(struct page *page, bool raw),
-+
-+	TP_ARGS(page, raw),
-+
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,    nid     )
-+		__field(int,		dir	)
-+		__field(pgoff_t,	index	)
-+		__field(int,		uptodate)
-+		__field(bool,		raw	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev	= page->mapping->host->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(page->mapping->host)->nid;
-+		__entry->dir	= S_ISDIR(page->mapping->host->i_mode);
-+		__entry->index	= page->index;
-+		__entry->uptodate = PageUptodate(page);
-+		__entry->raw = raw;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu, %s, index = %lu, uptodate = %d "
-+		"raw = %d",
-+		show_dev_nid(__entry),
-+		show_file_type(__entry->dir),
-+		(unsigned long)__entry->index,
-+		__entry->uptodate,
-+		__entry->raw)
-+);
-+
-+TRACE_EVENT(erofs_readpages,
-+
-+	TP_PROTO(struct inode *inode, struct page *page, unsigned int nrpage,
-+		bool raw),
-+
-+	TP_ARGS(inode, page, nrpage, raw),
-+
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,	nid	)
-+		__field(pgoff_t,	start	)
-+		__field(unsigned int,	nrpage	)
-+		__field(bool,		raw	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev	= inode->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(inode)->nid;
-+		__entry->start	= page->index;
-+		__entry->nrpage	= nrpage;
-+		__entry->raw	= raw;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu, start = %lu nrpage = %u raw = %d",
-+		show_dev_nid(__entry),
-+		(unsigned long)__entry->start,
-+		__entry->nrpage,
-+		__entry->raw)
-+);
-+
-+DECLARE_EVENT_CLASS(erofs__map_blocks_enter,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned int flags),
-+
-+	TP_ARGS(inode, map, flags),
-+
-+	TP_STRUCT__entry(
-+		__field(	dev_t,		dev		)
-+		__field(	erofs_nid_t,	nid		)
-+		__field(	erofs_off_t,	la		)
-+		__field(	u64,		llen		)
-+		__field(	unsigned int,	flags		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev    = inode->i_sb->s_dev;
-+		__entry->nid    = EROFS_V(inode)->nid;
-+		__entry->la	= map->m_la;
-+		__entry->llen	= map->m_llen;
-+		__entry->flags	= flags;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu, la %llu llen %llu flags %s",
-+		  show_dev_nid(__entry),
-+		  __entry->la, __entry->llen,
-+		  __entry->flags ? show_map_flags(__entry->flags) : "NULL")
-+);
-+
-+DEFINE_EVENT(erofs__map_blocks_enter, erofs_map_blocks_flatmode_enter,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned flags),
-+
-+	TP_ARGS(inode, map, flags)
-+);
-+
-+DECLARE_EVENT_CLASS(erofs__map_blocks_exit,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned int flags, int ret),
-+
-+	TP_ARGS(inode, map, flags, ret),
-+
-+	TP_STRUCT__entry(
-+		__field(	dev_t,		dev		)
-+		__field(	erofs_nid_t,	nid		)
-+		__field(        unsigned int,   flags           )
-+		__field(	erofs_off_t,	la		)
-+		__field(	erofs_off_t,	pa		)
-+		__field(	u64,		llen		)
-+		__field(	u64,		plen		)
-+		__field(        unsigned int,	mflags		)
-+		__field(	int,		ret		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev    = inode->i_sb->s_dev;
-+		__entry->nid    = EROFS_V(inode)->nid;
-+		__entry->flags	= flags;
-+		__entry->la	= map->m_la;
-+		__entry->pa	= map->m_pa;
-+		__entry->llen	= map->m_llen;
-+		__entry->plen	= map->m_plen;
-+		__entry->mflags	= map->m_flags;
-+		__entry->ret	= ret;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu, flags %s "
-+		  "la %llu pa %llu llen %llu plen %llu mflags %s ret %d",
-+		  show_dev_nid(__entry),
-+		  __entry->flags ? show_map_flags(__entry->flags) : "NULL",
-+		  __entry->la, __entry->pa, __entry->llen, __entry->plen,
-+		  show_mflags(__entry->mflags), __entry->ret)
-+);
-+
-+DEFINE_EVENT(erofs__map_blocks_exit, erofs_map_blocks_flatmode_exit,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned flags, int ret),
-+
-+	TP_ARGS(inode, map, flags, ret)
-+);
-+
-+TRACE_EVENT(erofs_destroy_inode,
-+	TP_PROTO(struct inode *inode),
-+
-+	TP_ARGS(inode),
-+
-+	TP_STRUCT__entry(
-+		__field(	dev_t,		dev		)
-+		__field(	erofs_nid_t,	nid		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev	= inode->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(inode)->nid;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu", show_dev_nid(__entry))
-+);
-+
-+#endif /* _TRACE_EROFS_H */
-+
-+ /* This part must be outside protection */
-+#include <trace/define_trace.h>
--- 
-2.17.1
 
