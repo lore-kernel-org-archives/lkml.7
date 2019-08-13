@@ -2,106 +2,141 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914BBC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B17C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67C4820679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3990E206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:26:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KH04mm5j";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="l9rcLFDk"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="LoW/iMar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfHMIZz (ORCPT
+        id S1728127AbfHMI0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 04:25:55 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48824 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727868AbfHMIZz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 04:25:55 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0071F60ACA; Tue, 13 Aug 2019 08:25:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565684754;
-        bh=gplh7GQjZcJ4EgN1MsaY6C3S+turay46CIinA1xbsdk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KH04mm5jCee/ft+dDToqSFzRkIdhL4iQY1VlTSPJVQqGRpoUGUqrF6P8mWoSu9ScW
-         bkyEiNhZB2LCz73uFWVhp/mjleaUJLpi6TrVn4x18rfRfzs2RMYnNDJ9ch/8HIJ7vB
-         M1Wa+JX5SBRThbdwYT22N8vq/NUGznGIbly1gejE=
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Tue, 13 Aug 2019 04:26:08 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:52086 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727793AbfHMI0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 04:26:07 -0400
+Received: from zn.tnic (p200300EC2F0D240075AA4C13F769B7E7.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:2400:75aa:4c13:f769:b7e7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mkshah@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC7AE60909;
-        Tue, 13 Aug 2019 08:25:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565684753;
-        bh=gplh7GQjZcJ4EgN1MsaY6C3S+turay46CIinA1xbsdk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l9rcLFDkReVMk2Rfk/4oqQ22ECUuq1zccBas1XrxNl6s1mdjjoyfAEEoiYzE8dUNU
-         +b3Uu21KScb7xSji6WqpjqQtfMIftqSIzPbwoGyW7+X9r6EagXCI/7WSFiekNB50LY
-         fsMldO9tF/AzpDiy2ed15xlUmfdc16nz9K9QAJas=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC7AE60909
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     agross@kernel.org, david.brown@linaro.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        dianders@chromium.org, swboyd@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH 1/4] drivers: qcom: rpmh: fix macro to accept NULL argument
-Date:   Tue, 13 Aug 2019 13:54:39 +0530
-Message-Id: <20190813082442.25796-2-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190813082442.25796-1-mkshah@codeaurora.org>
-References: <20190813082442.25796-1-mkshah@codeaurora.org>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4C8A01EC04CD;
+        Tue, 13 Aug 2019 10:26:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565684766;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=kMHQqLdJXGlWXDypDhXFGkicG1MjfC0RcqBNXKxeJyw=;
+        b=LoW/iMar3Wlq4ekq1oG1U/IP9qMzb9DTVQdgQ8q16OBILecjuGaswbzJnRbbCViXEKCbNY
+        1VbZUGF2/ejKyz2T7heBR6H/71Rgc6IbIBo5tEbP6edOIuMXNB6howRTl8i/guemt10w37
+        5ye2vqyukGIi3zUjSDv1vtEUdhKtlcg=
+Date:   Tue, 13 Aug 2019 10:26:55 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 05/24] EDAC, mc: Fix and improve sysfs init functions
+Message-ID: <20190813082655.GD16770@zn.tnic>
+References: <20190624150758.6695-1-rrichter@marvell.com>
+ <20190624150758.6695-6-rrichter@marvell.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190624150758.6695-6-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Device argument matches with dev variable declared in RPMH message.
-Compiler reports error when the argument is NULL since the argument
-matches the name of the property. Rename dev argument to device to
-fix this.
+On Mon, Jun 24, 2019 at 03:09:02PM +0000, Robert Richter wrote:
+> Remove gotos as they just create overhead.
 
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/soc/qcom/rpmh.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Overhead?
 
-diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-index 035091fd44b8..3a4579d056a4 100644
---- a/drivers/soc/qcom/rpmh.c
-+++ b/drivers/soc/qcom/rpmh.c
-@@ -23,7 +23,7 @@
- 
- #define RPMH_TIMEOUT_MS			msecs_to_jiffies(10000)
- 
--#define DEFINE_RPMH_MSG_ONSTACK(dev, s, q, name)	\
-+#define DEFINE_RPMH_MSG_ONSTACK(device, s, q, name)	\
- 	struct rpmh_request name = {			\
- 		.msg = {				\
- 			.state = s,			\
-@@ -33,7 +33,7 @@
- 		},					\
- 		.cmd = { { 0 } },			\
- 		.completion = q,			\
--		.dev = dev,				\
-+		.dev = device,				\
- 		.needs_free = false,				\
- 	}
- 
+> Also, fix debug message for
+> the case edac_create_dimm_object() is failing.
+> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+>  drivers/edac/edac_mc_sysfs.c | 25 +++++++++----------------
+>  1 file changed, 9 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
+> index 7c01e1cc030c..29dd9719f82f 100644
+> --- a/drivers/edac/edac_mc_sysfs.c
+> +++ b/drivers/edac/edac_mc_sysfs.c
+> @@ -655,8 +655,9 @@ static int edac_create_dimm_object(struct mem_ctl_info *mci,
+>  	err = device_add(&dimm->dev);
+>  	if (err)
+>  		put_device(&dimm->dev);
+> -
+> -	edac_dbg(0, "created rank/dimm device %s\n", dev_name(&dimm->dev));
+> +	else
+> +		edac_dbg(0, "created rank/dimm device %s\n",
+> +			dev_name(&dimm->dev));
+
+Please add a message to the error case too.
+
+>  	return err;
+>  }
+> @@ -938,7 +939,7 @@ int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
+>  	if (err < 0) {
+>  		edac_dbg(1, "failure: create device %s\n", dev_name(&mci->dev));
+>  		put_device(&mci->dev);
+> -		goto out;
+> +		return err;
+>  	}
+>  
+>  	/*
+> @@ -987,7 +988,6 @@ int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
+>  	}
+>  	device_unregister(&mci->dev);
+>  
+> -out:
+>  	return err;
+>  }
+>  
+> @@ -1044,10 +1044,8 @@ int __init edac_mc_sysfs_init(void)
+>  	int err;
+>  
+>  	mci_pdev = kzalloc(sizeof(*mci_pdev), GFP_KERNEL);
+> -	if (!mci_pdev) {
+> -		err = -ENOMEM;
+> -		goto out;
+> -	}
+> +	if (!mci_pdev)
+> +		return -ENOMEM;
+>  
+>  	mci_pdev->bus = edac_get_sysfs_subsys();
+>  	mci_pdev->type = &mc_attr_type;
+> @@ -1056,15 +1054,10 @@ int __init edac_mc_sysfs_init(void)
+>  
+>  	err = device_add(mci_pdev);
+>  	if (err < 0)
+> -		goto out_put_device;
+> -
+> -	edac_dbg(0, "device %s created\n", dev_name(mci_pdev));
+> -
+> -	return 0;
+> +		put_device(mci_pdev);
+> +	else
+> +		edac_dbg(0, "device %s created\n", dev_name(mci_pdev));
+
+Ditto.
+
+Thx.
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
