@@ -2,192 +2,111 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2865C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32314C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA1420578
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F92205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XJP8Xmhw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jrl2rgKg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfHMWft (ORCPT
+        id S1727332AbfHMWgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 18:35:49 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41267 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfHMWft (ORCPT
+        Tue, 13 Aug 2019 18:36:53 -0400
+Received: from mail-pf1-f178.google.com ([209.85.210.178]:44731 "EHLO
+        mail-pf1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfHMWgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 18:35:49 -0400
-Received: by mail-pg1-f195.google.com with SMTP id x15so41654653pgg.8
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 15:35:48 -0700 (PDT)
+        Tue, 13 Aug 2019 18:36:52 -0400
+Received: by mail-pf1-f178.google.com with SMTP id c81so3399571pfc.11;
+        Tue, 13 Aug 2019 15:36:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=mAGeWIXe6MQJuIUiTRMUvfwygGGoJcMf2QyhITXHXtg=;
-        b=XJP8Xmhw7g0F4QLB73GBqerBE9NZmQRPXhIggC8smBOoGVgOJvr2tTSVGEUip/CQkg
-         rI3XfMrRbRfDJwjHO9Jbhy3rShDvoIkjcC9BGB+vZ1aIwzn0/vlOWN4JjpV7FyKW1DSI
-         y+5qBySuwVD/w4FyVJwvTZvOnuaZKKM1TxKa0=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=mJjg+agyQMMusNhpHfXdEcabVsvoypkfvaemt2NLQGo=;
+        b=Jrl2rgKgWlJkS1vJk1OKALCLNOonNZJAxKeI7jdn7W98mdiqekpWrA0+CnqN5MYMb5
+         4D8Hza7sYoH1Idnp5AOdNC2Q1D5nU6Zn6nKG0sPbDvgsF3VN0YIb2fFD7eDOeo8fY867
+         Wz3hkxO6OEoMX0yZk1hkas9zqBYJUrHL/ohCEQvcucWxcCHIQs824sPJRl4i2jxFYxmF
+         Ypi7KJwhR2JkLFTlaySF4VEiS/wLvO98ppIiPHcJWIrhKUPV1m0TDnjzPUMiMtzPtLNH
+         MojPvZbUSchxQ40Fabr4+HfMhusGXL33bTvzkEnN8eUV93ilAKweREBcoNdhbuUksaG0
+         aNZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=mAGeWIXe6MQJuIUiTRMUvfwygGGoJcMf2QyhITXHXtg=;
-        b=mxDfrsVbSvfsMndpr4DIo2Y0S4vMJTxQ+QUZEI3XnWOE4rIqkYMNeEzP2pFlJlSW42
-         uW4EApq4njhoIy0FLHpJOt/Iz2B2MQYFLREIdxT7ZssTLidvxRsqstHqe/fFyhPO6JkW
-         K9F5EzA97JAYP5/oOyNSlq05+Nca3LEiz9VTju5Ab15L4DPCdjwZ1NqG9btecyUlGNSS
-         ho2zYZi//VGHx0pHUF3O09FllhwuCah33Td3+2/NORQDxDDNjgDbIeAmwWHFA+nfdjWy
-         KBSV21aqwuYeU7UjH9GDhoFOZeZnrLIKwMPpHImW5ofSxvFigxyl8U/WQB7H1S1YmCM5
-         muAQ==
-X-Gm-Message-State: APjAAAUjWQd/kWnU4I6GS80xp7sSbE7vA/wnVwWSlLwKQgSyj9ubBit0
-        lzoMtrl34Y1zQsPW8lvIEZ9XKYkzf6VNjA==
-X-Google-Smtp-Source: APXvYqzFvOWfUI7+1gDQANt2POJD2JCIPU+hftPOMda1R/K0iQXkeO8xTlGExJT8ZY8lMB0Ep4Ef4g==
-X-Received: by 2002:a17:90a:d593:: with SMTP id v19mr4275052pju.1.1565735747820;
-        Tue, 13 Aug 2019 15:35:47 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id r13sm194208501pfr.25.2019.08.13.15.35.47
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mJjg+agyQMMusNhpHfXdEcabVsvoypkfvaemt2NLQGo=;
+        b=ckjqPjUHUMj57MzbfoxAacL1bcZsUkMaYjftAe2OlOZlqo0oiXXW+5/H3V8ieN0Mbu
+         PtIyzjp48ulFVUdoVIopNUIxkc7ynQigPaJ2DLFISJtre+fuPKZljCdCbLXLyw7A51am
+         B/2kAjy/C3/FyOJ0J2fG24vPjcj8wtmXYsznX9xpu4sjayP+VxNqzbTcVgaQ4w12hq1z
+         eq1EJkWlFoxA3R3Dahd/GcY3UdndNWrxoA31Q9X6A2SgnYNFKrSE3TIUK/mERmVbu+O+
+         ivJqpWa7L7aRRiC1tJpe9foelUcmFFYabNBVezhkSqtgRPuZ8sj6ML7H/zaHONP5j1Ql
+         ilzg==
+X-Gm-Message-State: APjAAAVLndN9X8qGOZ6K05YFv6OMGdIHw967uJzn53TVoodhuiq/PNWu
+        sdH/OOJ7UCFrsAS1uzPXxhzqlRv8
+X-Google-Smtp-Source: APXvYqzJTQ/17lMvJG2ROjPMrO073k+f6FbvHqChuE9J9oEWUWFCstj/Q+SWMtGdrJnovHv7T3r1Jw==
+X-Received: by 2002:a63:e10:: with SMTP id d16mr36605007pgl.444.1565735811417;
+        Tue, 13 Aug 2019 15:36:51 -0700 (PDT)
+Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
+        by smtp.googlemail.com with ESMTPSA id 16sm48393441pfc.66.2019.08.13.15.36.50
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 15:35:47 -0700 (PDT)
-Message-ID: <5d533b43.1c69fb81.5729.a6bc@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1565731976.8572.16.camel@lca.pw>
-References: <1565731976.8572.16.camel@lca.pw>
-Subject: Re: "PM / wakeup: Show wakeup sources stats in sysfs" causes boot warnings
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rafael@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Qian Cai <cai@lca.pw>, Tri Vo <trong@android.com>
-User-Agent: alot/0.8.1
-Date:   Tue, 13 Aug 2019 15:35:46 -0700
+        Tue, 13 Aug 2019 15:36:50 -0700 (PDT)
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+X-Google-Original-From: Steve Longerbeam <steve_longerbeam@mentor.com>
+To:     linux-media@vger.kernel.org
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] media: docs-rst: Clarify duration of LP-11 mode
+Date:   Tue, 13 Aug 2019 15:36:44 -0700
+Message-Id: <20190813223645.13720-1-steve_longerbeam@mentor.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Qian Cai (2019-08-13 14:32:56)
-> The linux-next commit "PM / wakeup: Show wakeup sources stats in sysfs" [=
-1]
-> introduced some baddies during boot on several x86 servers. Reverted the =
-commit
-> fixed the issue.
->=20
-> [1] https://lore.kernel.org/lkml/20190807014846.143949-4-trong@android.co=
-m/
->=20
-> [=C2=A0=C2=A0=C2=A039.195053][=C2=A0=C2=A0=C2=A0=C2=A0T1] serio: i8042 KB=
-D port at 0x60,0x64 irq 1
-> [=C2=A0=C2=A0=C2=A039.197347][=C2=A0=C2=A0=C2=A0=C2=A0T1] kobject_add_int=
-ernal failed for wakeup (error: -2 parent:
-> serio0)
-> [=C2=A0=C2=A0=C2=A039.199845][=C2=A0=C2=A0=C2=A0=C2=A0T1] INFO: trying to=
- register non-static key.
-> [=C2=A0=C2=A0=C2=A039.201582][=C2=A0=C2=A0=C2=A0=C2=A0T1] the code is fin=
-e but needs lockdep annotation.
-> [=C2=A0=C2=A0=C2=A039.203477][=C2=A0=C2=A0=C2=A0=C2=A0T1] turning off the=
- locking correctness validator.
-> [=C2=A0=C2=A0=C2=A039.205399][=C2=A0=C2=A0=C2=A0=C2=A0T1] CPU: 12 PID: 1 =
-Comm: swapper/0 Not tainted 5.3.0-rc4-
-> next-20190813 #3
-> [=C2=A0=C2=A0=C2=A039.207938][=C2=A0=C2=A0=C2=A0=C2=A0T1] Hardware name: =
-HP ProLiant XL420 Gen9/ProLiant XL420
-> Gen9, BIOS U19 12/27/2015
-> [=C2=A0=C2=A0=C2=A039.210606][=C2=A0=C2=A0=C2=A0=C2=A0T1] Call Trace:
-> [=C2=A0=C2=A0=C2=A039.210606][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0dump=
-_stack+0x62/0x9a
-> [=C2=A0=C2=A0=C2=A039.210606][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0regi=
-ster_lock_class+0x95a/0x960
-> [=C2=A0=C2=A0=C2=A039.210606][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0? __=
-platform_driver_probe+0xcd/0x230
-> [=C2=A0=C2=A0=C2=A039.210606][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0? __=
-platform_create_bundle+0xc0/0xe0
-> [=C2=A0=C2=A0=C2=A039.210606][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0? i8=
-042_init+0x4ec/0x578
-> [=C2=A0=C2=A0=C2=A039.210606][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0? do=
-_one_initcall+0xfe/0x45a
-> [=C2=A0=C2=A0=C2=A039.219571][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0? ke=
-rnel_init_freeable+0x614/0x6a7
-> [=C2=A0=C2=A0=C2=A039.219571][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0? ke=
-rnel_init+0x11/0x138
-> [=C2=A0=C2=A0=C2=A039.219571][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0? re=
-t_from_fork+0x35/0x40
-> [=C2=A0=C2=A0=C2=A039.219571][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0? is=
-_dynamic_key+0xf0/0xf0
-> [=C2=A0=C2=A0=C2=A039.219571][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0? rw=
-lock_bug.part.0+0x60/0x60
-> [=C2=A0=C2=A0=C2=A039.219571][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0? __=
-debug_check_no_obj_freed+0x8e/0x250
-> [=C2=A0=C2=A0=C2=A039.219571][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0__lo=
-ck_acquire.isra.13+0x5f/0x830
-> [=C2=A0=C2=A0=C2=A039.229491][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0? __=
-debug_check_no_obj_freed+0x152/0x250
-> [=C2=A0=C2=A0=C2=A039.229491][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0lock=
-_acquire+0x107/0x220
-> [=C2=A0=C2=A0=C2=A039.229491][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0? __=
-pm_relax.part.2+0x21/0xa0
-> [=C2=A0=C2=A0=C2=A039.229491][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0_raw=
-_spin_lock_irqsave+0x35/0x50
-> [=C2=A0=C2=A0=C2=A039.229491][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0? __=
-pm_relax.part.2+0x21/0xa0
-> [=C2=A0=C2=A0=C2=A039.229491][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0__pm=
-_relax.part.2+0x21/0xa0
-> [=C2=A0=C2=A0=C2=A039.239588][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0wake=
-up_source_destroy.part.3+0x18/0x190
-> [=C2=A0=C2=A0=C2=A039.239588][=C2=A0=C2=A0=C2=A0=C2=A0T1]=C2=A0=C2=A0wake=
-up_source_register+0x43/0x50
+From: Steve Longerbeam <slongerbeam@gmail.com>
 
-We shouldn't call wakeup_source_destroy() from the error path in
-wakeup_source_register() because that calls __pm_relax() and that takes
-a lock that isn't initialized until wakeup_source_add() is called. Can
-you try this patch?
+Add a sentence that makes it more clear when the CSI-2 transmitter
+must, if possible, exit LP-11 mode. That is, maintain LP-11 mode
+until stream on, at which point the transmitter activates the clock
+lane and transition to HS mode.
 
-----8<----
-diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-index 3a7f5803aa81..f7925820b5ca 100644
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -137,6 +137,13 @@ static void wakeup_source_record(struct wakeup_source =
-*ws)
- 	spin_unlock_irqrestore(&deleted_ws.lock, flags);
- }
-=20
-+static void wakeup_source_free(struct wakeup_source *ws)
-+{
-+	ida_free(&wakeup_ida, ws->id);
-+	kfree_const(ws->name);
-+	kfree(ws);
-+}
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+---
+Changes in v2:
+- change wording "Only until stream on ..." to "Only at stream on ..."
+---
+ Documentation/media/kapi/csi2.rst | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/media/kapi/csi2.rst b/Documentation/media/kapi/csi2.rst
+index a7e75e2eba85..f87c413cd433 100644
+--- a/Documentation/media/kapi/csi2.rst
++++ b/Documentation/media/kapi/csi2.rst
+@@ -49,9 +49,13 @@ where
+ 
+ The transmitter drivers must, if possible, configure the CSI-2
+ transmitter to *LP-11 mode* whenever the transmitter is powered on but
+-not active. Some transmitters do this automatically but some have to
+-be explicitly programmed to do so, and some are unable to do so
+-altogether due to hardware constraints.
++not active, and maintain *LP-11 mode* until stream on. Only at stream
++on should the transmitter activate the clock on the clock lane and
++transition to *HS mode*.
 +
- /**
-  * wakeup_source_destroy - Destroy a struct wakeup_source object.
-  * @ws: Wakeup source to destroy.
-@@ -150,9 +157,7 @@ void wakeup_source_destroy(struct wakeup_source *ws)
-=20
- 	__pm_relax(ws);
- 	wakeup_source_record(ws);
--	ida_free(&wakeup_ida, ws->id);
--	kfree_const(ws->name);
--	kfree(ws);
-+	wakeup_source_free(ws);
- }
- EXPORT_SYMBOL_GPL(wakeup_source_destroy);
-=20
-@@ -217,7 +222,7 @@ struct wakeup_source *wakeup_source_register(struct dev=
-ice *dev,
- 	if (ws) {
- 		ret =3D wakeup_source_sysfs_add(dev, ws);
- 		if (ret) {
--			wakeup_source_destroy(ws);
-+			wakeup_source_free(ws);
- 			return NULL;
- 		}
- 		wakeup_source_add(ws);
++Some transmitters do this automatically but some have to be explicitly
++programmed to do so, and some are unable to do so altogether due to
++hardware constraints.
+ 
+ Stopping the transmitter
+ ^^^^^^^^^^^^^^^^^^^^^^^^
+-- 
+2.17.1
+
