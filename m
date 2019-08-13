@@ -2,463 +2,108 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59484C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A555C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169DC20844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F033D2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:12:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SvKOy3G5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eukH0ZvA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbfHMPLX (ORCPT
+        id S1729964AbfHMPMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:11:23 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35765 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbfHMPLW (ORCPT
+        Tue, 13 Aug 2019 11:12:39 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33287 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729539AbfHMPMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:11:22 -0400
-Received: by mail-wm1-f66.google.com with SMTP id l2so1777754wmg.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 08:11:19 -0700 (PDT)
+        Tue, 13 Aug 2019 11:12:38 -0400
+Received: by mail-ot1-f67.google.com with SMTP id q20so20894325otl.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 08:12:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Tp5uld9lfHh18m7fY/6QUhAxi+QJxhfd3CiVIG0MbmA=;
-        b=SvKOy3G5pJS3mk1jeffqIzNAczI/Ay18RBtKMOh1OQQzWPahTziS+4cY+C3TooFhli
-         TCP9ULVfdPyKrndaF23rY7fIsC/hZFzlfxXEIe2YjD1Hlik1x4I7oG9Z59wd6otHTKEo
-         nzsrLUK8egIfMI4RKMePtWuA+vkZTG7MfDPCgOWj+oYAla2TGgx1BlCtKqAn8jXVX4Zq
-         JpPL1gFVVB2XiavP8k5O9G7wUyihZcDTKAaeo2jPQVeW83UnNxNXJjq0VN4Eb3Bd1WrK
-         LXoCC1+9rSTyCI+6BF961bkiwsX/On9jTyJ8Fg19e8RPfTtMweR84vbba4/XR3cjYF2d
-         /IUA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wiTJg1mLp3QjrILHchoTxtvBRp92tUbdtvUgIPj4jZI=;
+        b=eukH0ZvAq0Z/wJukiPnGAveU4NqGN1rOLpWgo59UNQr2Kr3dsmvnVkS9hGSvWc9x84
+         N4hPSFfAKSFJphg75rQK0bSD6ettvyg9qOyHvnH5VFJ2btgjz2L87NdVDLMzZnmakp1/
+         3b9Wynyv4B4mDETv6tOYQCJ0oT0oYoAXzMYw/qnF7p1kUGCcOeAomfb/Vth/Vt4ciThG
+         QJviy4mF6oIeCFe68NI8ZMXgx4LQx82MPY3vs8UdACABMW76uLAFN2icAiuZLzK2c7K8
+         FKTkfl8gJsFlFSyQ7YgiF/3wVqnBfEaMLNKh3uYO87kKci2ljCu7aqorE9s8SCvvljlg
+         D8Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Tp5uld9lfHh18m7fY/6QUhAxi+QJxhfd3CiVIG0MbmA=;
-        b=b+tChWcwejT2sssHCx0OK3Lqr6wf39xc6GQfa4+vrOzZaCqDQUvRqQ0bQ66a7cTzAI
-         +dcuKCHtHatT7olPLB0VLwDSUNlqk3f0BFEsssdG+BLfMfPK0mXdsdogyTHFALU1fPzC
-         LbFZgpOSHchxmov+g4AWdPJhJqiuREP0CJdQMdGKSOjSGNbH/o5x299MhLV1H4TMcdOI
-         ld7X+D6rfNg91CMO4E/0965I6cHKNc2jrK5ZFNaGHIcVpcjkETQJrn817LTfSHo9B39Z
-         7h7IUaUoy0+3n1gYozSyD3J8stYEQb1UVbiPhnkrUt9XUgrO5glE97qDt0Eba7E44Hp+
-         5Bqg==
-X-Gm-Message-State: APjAAAVR/dNR5kBMCJP5qV8xAPaafUQGxOBkeo9R1gXwGIMJByzxRqY8
-        VU4r3xmzSVe+CbiBK5CQY64=
-X-Google-Smtp-Source: APXvYqy/KouDtl6mZwDMbXzYElgl7L4QUaHFAyZlbCtmk8uXlg3ZDrDK6TRLbbn4BMnSxDY6fwWAEQ==
-X-Received: by 2002:a7b:c310:: with SMTP id k16mr3491360wmj.133.1565709078621;
-        Tue, 13 Aug 2019 08:11:18 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id k124sm3839100wmk.47.2019.08.13.08.11.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 08:11:16 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 17:11:15 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        Huang Rui <ray.huang@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        bskeggs@redhat.com, Dave Airlie <airlied@redhat.com>,
-        thomas@shipmail.org, tzimmermann@suse.de,
-        ckoenig.leichtzumerken@gmail.com, intel-gfx@lists.freedesktop.org,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <spice-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Subject: Re: [Intel-gfx] [PATCH v6 08/17] drm/ttm: use gem vma_node
-Message-ID: <20190813151115.GA29955@ulmo>
-References: <20190805140119.7337-1-kraxel@redhat.com>
- <20190805140119.7337-9-kraxel@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wiTJg1mLp3QjrILHchoTxtvBRp92tUbdtvUgIPj4jZI=;
+        b=YAnnqVQev/8MD1q1MYJvw6wf/Nzd57//hzEQmh/qEwwu47g4tKqrlfbrRMHa46yeS5
+         r3y8NQXwYyRa2ix39i/QzIDaIv6eUdq9wcqvnJitPhYt/PWdCFsowQSPIFUW2N5upjCN
+         f6x3dbYLAFudPY9bYQsclskkUf53khO/rYliE5n+P1FNxvS2OGPZpwxZ8iZDI+kHNIhb
+         D5AqlZ5Ai8+dP01khkF8oRuO1RzL6sWTNbZ7Jh8Qo7Km6wogSgTjBUJgQ/Lh5TBm6NFY
+         E7fqGulDwMIoahK5DdVgcYCumgtvMtifwMUlzTbxtRui7JtP8bK4BO+XMBx39STcwbVv
+         EvXQ==
+X-Gm-Message-State: APjAAAWOJya2FVzOfE6n/G2gEpuGoAXJpn/Qy4rKGpmEeI/qO9UVFQam
+        wv9m6/M9wOKev9/5lx//fyyB3nWayq98hsJBmyD0Ag==
+X-Google-Smtp-Source: APXvYqzQnZJK6locyARjrnTPWygMC68+xT/2wddNBsIcOxIE2NHQLBxjLMW4a7ENxNYUO+uupEP5Jx85MgzUb73QrME=
+X-Received: by 2002:a5e:de0d:: with SMTP id e13mr3368687iok.144.1565709156970;
+ Tue, 13 Aug 2019 08:12:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tKW2IUtsqtDRztdT"
-Content-Disposition: inline
-In-Reply-To: <20190805140119.7337-9-kraxel@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <0000000000004c2416058c594b30@google.com> <24282.1562074644@warthog.procyon.org.uk>
+ <CACT4Y+YjdV8CqX5=PzKsHnLsJOzsydqiq3igYDm_=nSdmFo2YQ@mail.gmail.com>
+ <20330.1564583454@warthog.procyon.org.uk> <CACT4Y+Y4cRgaRPJ_gz_53k85inDKq+X+bWmOTv1gPLo=Yod1=A@mail.gmail.com>
+ <22318.1564586386@warthog.procyon.org.uk> <CACT4Y+bjLBwVK_6fz2H8fXm0baAVX+vRJ4UbVWG_7yNUO-SOUg@mail.gmail.com>
+ <3135.1565706180@warthog.procyon.org.uk> <CACT4Y+YCB3o5Ps9RNq9KpMcmGCwBM4R9DeX67prQ9Q3UppGowQ@mail.gmail.com>
+ <8013.1565708810@warthog.procyon.org.uk>
+In-Reply-To: <8013.1565708810@warthog.procyon.org.uk>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 13 Aug 2019 17:12:24 +0200
+Message-ID: <CACT4Y+YVyaTrwpaZfpfi9LKA=5TOdKSL60pjAH04dMPNCZTMSQ@mail.gmail.com>
+Subject: Re: kernel BUG at net/rxrpc/local_object.c:LINE!
+To:     David Howells <dhowells@redhat.com>
+Cc:     syzbot <syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        linux-afs@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 13, 2019 at 5:06 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> > > I meant that I don't know how to turn a tracepoint on from inside the kernel.
+> >
+> > This /sys/kernel/debug/tracing/events/rxrpc/rxrpc_local/enable in:
+> >         echo 1 > /sys/kernel/debug/tracing/events/rxrpc/rxrpc_local/enable
+> > should map to some global variable, right? If so, it should be
+> > possible to initialize that var to 1 statically. Or that won't work
+> > for some reason?
+>
+> As I understand it, it's all hidden inside of tracing macros and ftrace
+> infrastructure and involves runtime patching the code to enable tracepoints
+> (they're effectively NOP'ed out when not in use).
+>
+> So, no, it's not that simple.
+>
+> I asked Steven and he says:
+>
+>         trace_set_clr_event("sched", "sched_switch", 1);
+>
+> is the same as
+>
+>         echo 1 > events/sched/sched_switch/enable
+>
+> So it can be done.  Will syzbot actually collect the trace log?
 
---tKW2IUtsqtDRztdT
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Aug 05, 2019 at 04:01:10PM +0200, Gerd Hoffmann wrote:
-> Drop vma_node from ttm_buffer_object, use the gem struct
-> (base.vma_node) instead.
->=20
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_object.h | 2 +-
->  drivers/gpu/drm/qxl/qxl_object.h           | 2 +-
->  drivers/gpu/drm/radeon/radeon_object.h     | 2 +-
->  drivers/gpu/drm/virtio/virtgpu_drv.h       | 2 +-
->  include/drm/ttm/ttm_bo_api.h               | 4 ----
->  drivers/gpu/drm/drm_gem_vram_helper.c      | 2 +-
->  drivers/gpu/drm/nouveau/nouveau_display.c  | 2 +-
->  drivers/gpu/drm/nouveau/nouveau_gem.c      | 2 +-
->  drivers/gpu/drm/ttm/ttm_bo.c               | 8 ++++----
->  drivers/gpu/drm/ttm/ttm_bo_util.c          | 2 +-
->  drivers/gpu/drm/ttm/ttm_bo_vm.c            | 9 +++++----
->  drivers/gpu/drm/virtio/virtgpu_prime.c     | 3 ---
->  drivers/gpu/drm/vmwgfx/vmwgfx_bo.c         | 4 ++--
->  drivers/gpu/drm/vmwgfx/vmwgfx_surface.c    | 4 ++--
->  14 files changed, 21 insertions(+), 27 deletions(-)
-
-Hi Gerd,
-
-I've been seeing a regression on Nouveau with recent linux-next releases
-and git bisect points at this commit as the first bad one. If I revert
-it (there's a tiny conflict with a patch that was merged subsequently),
-things are back to normal.
-
-I think the reason for this issue is that Nouveau doesn't use GEM
-objects for all buffer objects, and even when it uses GEM objects, the
-code will not initialize the GEM object until after the buffer objects
-and the backing TTM objects have been created.
-
-I tried to fix that by making sure drm_gem_object_init() gets called by
-Nouveau before ttm_bo_init(), but the changes are fairly involved and I
-was unable to get the GEM reference counting right. I can look into the
-proper fix some more, but it might be worth reverting this patch for
-now to get Nouveau working again.
-
-Thierry
-
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h b/drivers/gpu/drm=
-/amd/amdgpu/amdgpu_object.h
-> index 645a189d365c..113fb2feb437 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
-> @@ -191,7 +191,7 @@ static inline unsigned amdgpu_bo_gpu_page_alignment(s=
-truct amdgpu_bo *bo)
->   */
->  static inline u64 amdgpu_bo_mmap_offset(struct amdgpu_bo *bo)
->  {
-> -	return drm_vma_node_offset_addr(&bo->tbo.vma_node);
-> +	return drm_vma_node_offset_addr(&bo->tbo.base.vma_node);
->  }
-> =20
->  /**
-> diff --git a/drivers/gpu/drm/qxl/qxl_object.h b/drivers/gpu/drm/qxl/qxl_o=
-bject.h
-> index b812d4ae9d0d..8ae54ba7857c 100644
-> --- a/drivers/gpu/drm/qxl/qxl_object.h
-> +++ b/drivers/gpu/drm/qxl/qxl_object.h
-> @@ -60,7 +60,7 @@ static inline unsigned long qxl_bo_size(struct qxl_bo *=
-bo)
-> =20
->  static inline u64 qxl_bo_mmap_offset(struct qxl_bo *bo)
->  {
-> -	return drm_vma_node_offset_addr(&bo->tbo.vma_node);
-> +	return drm_vma_node_offset_addr(&bo->tbo.base.vma_node);
->  }
-> =20
->  static inline int qxl_bo_wait(struct qxl_bo *bo, u32 *mem_type,
-> diff --git a/drivers/gpu/drm/radeon/radeon_object.h b/drivers/gpu/drm/rad=
-eon/radeon_object.h
-> index 9ffd8215d38a..e5554bf9140e 100644
-> --- a/drivers/gpu/drm/radeon/radeon_object.h
-> +++ b/drivers/gpu/drm/radeon/radeon_object.h
-> @@ -116,7 +116,7 @@ static inline unsigned radeon_bo_gpu_page_alignment(s=
-truct radeon_bo *bo)
->   */
->  static inline u64 radeon_bo_mmap_offset(struct radeon_bo *bo)
->  {
-> -	return drm_vma_node_offset_addr(&bo->tbo.vma_node);
-> +	return drm_vma_node_offset_addr(&bo->tbo.base.vma_node);
->  }
-> =20
->  extern int radeon_bo_wait(struct radeon_bo *bo, u32 *mem_type,
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virti=
-o/virtgpu_drv.h
-> index f4ecea6054ba..e28829661724 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-> @@ -396,7 +396,7 @@ static inline void virtio_gpu_object_unref(struct vir=
-tio_gpu_object **bo)
-> =20
->  static inline u64 virtio_gpu_object_mmap_offset(struct virtio_gpu_object=
- *bo)
->  {
-> -	return drm_vma_node_offset_addr(&bo->tbo.vma_node);
-> +	return drm_vma_node_offset_addr(&bo->tbo.base.vma_node);
->  }
-> =20
->  static inline int virtio_gpu_object_reserve(struct virtio_gpu_object *bo,
-> diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
-> index fa050f0328ab..7ffc50a3303d 100644
-> --- a/include/drm/ttm/ttm_bo_api.h
-> +++ b/include/drm/ttm/ttm_bo_api.h
-> @@ -152,7 +152,6 @@ struct ttm_tt;
->   * @ddestroy: List head for the delayed destroy list.
->   * @swap: List head for swap LRU list.
->   * @moving: Fence set when BO is moving
-> - * @vma_node: Address space manager node.
->   * @offset: The current GPU offset, which can have different meanings
->   * depending on the memory type. For SYSTEM type memory, it should be 0.
->   * @cur_placement: Hint of current placement.
-> @@ -219,9 +218,6 @@ struct ttm_buffer_object {
->  	 */
-> =20
->  	struct dma_fence *moving;
-> -
-> -	struct drm_vma_offset_node vma_node;
-> -
->  	unsigned priority;
-> =20
->  	/**
-> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_=
-gem_vram_helper.c
-> index fc13920b3cb4..fd751078bae1 100644
-> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
-> @@ -168,7 +168,7 @@ EXPORT_SYMBOL(drm_gem_vram_put);
->   */
->  u64 drm_gem_vram_mmap_offset(struct drm_gem_vram_object *gbo)
->  {
-> -	return drm_vma_node_offset_addr(&gbo->bo.vma_node);
-> +	return drm_vma_node_offset_addr(&gbo->bo.base.vma_node);
->  }
->  EXPORT_SYMBOL(drm_gem_vram_mmap_offset);
-> =20
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_display.c b/drivers/gpu/drm/=
-nouveau/nouveau_display.c
-> index fc8f5bb73ca8..98afc50162e9 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_display.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_display.c
-> @@ -675,7 +675,7 @@ nouveau_display_dumb_map_offset(struct drm_file *file=
-_priv,
->  	gem =3D drm_gem_object_lookup(file_priv, handle);
->  	if (gem) {
->  		struct nouveau_bo *bo =3D nouveau_gem_object(gem);
-> -		*poffset =3D drm_vma_node_offset_addr(&bo->bo.vma_node);
-> +		*poffset =3D drm_vma_node_offset_addr(&bo->bo.base.vma_node);
->  		drm_gem_object_put_unlocked(gem);
->  		return 0;
->  	}
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouv=
-eau/nouveau_gem.c
-> index 2f484ab7dbca..b1e4852810ed 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_gem.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
-> @@ -240,7 +240,7 @@ nouveau_gem_info(struct drm_file *file_priv, struct d=
-rm_gem_object *gem,
->  	}
-> =20
->  	rep->size =3D nvbo->bo.mem.num_pages << PAGE_SHIFT;
-> -	rep->map_handle =3D drm_vma_node_offset_addr(&nvbo->bo.vma_node);
-> +	rep->map_handle =3D drm_vma_node_offset_addr(&nvbo->bo.base.vma_node);
->  	rep->tile_mode =3D nvbo->mode;
->  	rep->tile_flags =3D nvbo->contig ? 0 : NOUVEAU_GEM_TILE_NONCONTIG;
->  	if (cli->device.info.family >=3D NV_DEVICE_INFO_V0_FERMI)
-> diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
-> index ceff153f7e68..3e0a0cbc410e 100644
-> --- a/drivers/gpu/drm/ttm/ttm_bo.c
-> +++ b/drivers/gpu/drm/ttm/ttm_bo.c
-> @@ -672,7 +672,7 @@ static void ttm_bo_release(struct kref *kref)
->  	struct ttm_bo_device *bdev =3D bo->bdev;
->  	struct ttm_mem_type_manager *man =3D &bdev->man[bo->mem.mem_type];
-> =20
-> -	drm_vma_offset_remove(&bdev->vma_manager, &bo->vma_node);
-> +	drm_vma_offset_remove(&bdev->vma_manager, &bo->base.vma_node);
->  	ttm_mem_io_lock(man, false);
->  	ttm_mem_io_free_vm(bo);
->  	ttm_mem_io_unlock(man);
-> @@ -1343,9 +1343,9 @@ int ttm_bo_init_reserved(struct ttm_bo_device *bdev,
->  		 * struct elements we want use regardless.
->  		 */
->  		reservation_object_init(&bo->base._resv);
-> +		drm_vma_node_reset(&bo->base.vma_node);
->  	}
->  	atomic_inc(&bo->bdev->glob->bo_count);
-> -	drm_vma_node_reset(&bo->vma_node);
-> =20
->  	/*
->  	 * For ttm_bo_type_device buffers, allocate
-> @@ -1353,7 +1353,7 @@ int ttm_bo_init_reserved(struct ttm_bo_device *bdev,
->  	 */
->  	if (bo->type =3D=3D ttm_bo_type_device ||
->  	    bo->type =3D=3D ttm_bo_type_sg)
-> -		ret =3D drm_vma_offset_add(&bdev->vma_manager, &bo->vma_node,
-> +		ret =3D drm_vma_offset_add(&bdev->vma_manager, &bo->base.vma_node,
->  					 bo->mem.num_pages);
-> =20
->  	/* passed reservation objects should already be locked,
-> @@ -1781,7 +1781,7 @@ void ttm_bo_unmap_virtual_locked(struct ttm_buffer_=
-object *bo)
->  {
->  	struct ttm_bo_device *bdev =3D bo->bdev;
-> =20
-> -	drm_vma_node_unmap(&bo->vma_node, bdev->dev_mapping);
-> +	drm_vma_node_unmap(&bo->base.vma_node, bdev->dev_mapping);
->  	ttm_mem_io_free_vm(bo);
->  }
-> =20
-> diff --git a/drivers/gpu/drm/ttm/ttm_bo_util.c b/drivers/gpu/drm/ttm/ttm_=
-bo_util.c
-> index 05fbcaf6a3f2..f5009c1b6a9c 100644
-> --- a/drivers/gpu/drm/ttm/ttm_bo_util.c
-> +++ b/drivers/gpu/drm/ttm/ttm_bo_util.c
-> @@ -510,7 +510,7 @@ static int ttm_buffer_object_transfer(struct ttm_buff=
-er_object *bo,
->  	INIT_LIST_HEAD(&fbo->base.io_reserve_lru);
->  	mutex_init(&fbo->base.wu_mutex);
->  	fbo->base.moving =3D NULL;
-> -	drm_vma_node_reset(&fbo->base.vma_node);
-> +	drm_vma_node_reset(&fbo->base.base.vma_node);
->  	atomic_set(&fbo->base.cpu_writers, 0);
-> =20
->  	kref_init(&fbo->base.list_kref);
-> diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo=
-_vm.c
-> index 6dacff49c1cc..fb6875a789b7 100644
-> --- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> +++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> @@ -211,9 +211,9 @@ static vm_fault_t ttm_bo_vm_fault(struct vm_fault *vm=
-f)
->  	}
-> =20
->  	page_offset =3D ((address - vma->vm_start) >> PAGE_SHIFT) +
-> -		vma->vm_pgoff - drm_vma_node_start(&bo->vma_node);
-> +		vma->vm_pgoff - drm_vma_node_start(&bo->base.vma_node);
->  	page_last =3D vma_pages(vma) + vma->vm_pgoff -
-> -		drm_vma_node_start(&bo->vma_node);
-> +		drm_vma_node_start(&bo->base.vma_node);
-> =20
->  	if (unlikely(page_offset >=3D bo->num_pages)) {
->  		ret =3D VM_FAULT_SIGBUS;
-> @@ -267,7 +267,7 @@ static vm_fault_t ttm_bo_vm_fault(struct vm_fault *vm=
-f)
->  			} else if (unlikely(!page)) {
->  				break;
->  			}
-> -			page->index =3D drm_vma_node_start(&bo->vma_node) +
-> +			page->index =3D drm_vma_node_start(&bo->base.vma_node) +
->  				page_offset;
->  			pfn =3D page_to_pfn(page);
->  		}
-> @@ -413,7 +413,8 @@ static struct ttm_buffer_object *ttm_bo_vm_lookup(str=
-uct ttm_bo_device *bdev,
-> =20
->  	node =3D drm_vma_offset_lookup_locked(&bdev->vma_manager, offset, pages=
-);
->  	if (likely(node)) {
-> -		bo =3D container_of(node, struct ttm_buffer_object, vma_node);
-> +		bo =3D container_of(node, struct ttm_buffer_object,
-> +				  base.vma_node);
->  		bo =3D ttm_bo_get_unless_zero(bo);
->  	}
-> =20
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_prime.c b/drivers/gpu/drm/vir=
-tio/virtgpu_prime.c
-> index 8b3b2caf3364..dc642a884b88 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_prime.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_prime.c
-> @@ -68,8 +68,5 @@ void virtgpu_gem_prime_vunmap(struct drm_gem_object *ob=
-j, void *vaddr)
->  int virtgpu_gem_prime_mmap(struct drm_gem_object *obj,
->  			   struct vm_area_struct *vma)
->  {
-> -	struct virtio_gpu_object *bo =3D gem_to_virtio_gpu_obj(obj);
-> -
-> -	bo->gem_base.vma_node.vm_node.start =3D bo->tbo.vma_node.vm_node.start;
->  	return drm_gem_prime_mmap(obj, vma);
->  }
-> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c b/drivers/gpu/drm/vmwgfx/=
-vmwgfx_bo.c
-> index 315da41a18b4..5739c6c49c99 100644
-> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
-> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
-> @@ -835,7 +835,7 @@ int vmw_bo_alloc_ioctl(struct drm_device *dev, void *=
-data,
->  		goto out_no_bo;
-> =20
->  	rep->handle =3D handle;
-> -	rep->map_handle =3D drm_vma_node_offset_addr(&vbo->base.vma_node);
-> +	rep->map_handle =3D drm_vma_node_offset_addr(&vbo->base.base.vma_node);
->  	rep->cur_gmr_id =3D handle;
->  	rep->cur_gmr_offset =3D 0;
-> =20
-> @@ -1077,7 +1077,7 @@ int vmw_dumb_map_offset(struct drm_file *file_priv,
->  	if (ret !=3D 0)
->  		return -EINVAL;
-> =20
-> -	*offset =3D drm_vma_node_offset_addr(&out_buf->base.vma_node);
-> +	*offset =3D drm_vma_node_offset_addr(&out_buf->base.base.vma_node);
->  	vmw_bo_unreference(&out_buf);
->  	return 0;
->  }
-> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c b/drivers/gpu/drm/vm=
-wgfx/vmwgfx_surface.c
-> index 219471903bc1..3a6da3b66484 100644
-> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
-> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
-> @@ -1669,7 +1669,7 @@ vmw_gb_surface_define_internal(struct drm_device *d=
-ev,
->  	rep->backup_size =3D res->backup_size;
->  	if (res->backup) {
->  		rep->buffer_map_handle =3D
-> -			drm_vma_node_offset_addr(&res->backup->base.vma_node);
-> +			drm_vma_node_offset_addr(&res->backup->base.base.vma_node);
->  		rep->buffer_size =3D res->backup->base.num_pages * PAGE_SIZE;
->  		rep->buffer_handle =3D backup_handle;
->  	} else {
-> @@ -1745,7 +1745,7 @@ vmw_gb_surface_reference_internal(struct drm_device=
- *dev,
->  	rep->crep.backup_size =3D srf->res.backup_size;
->  	rep->crep.buffer_handle =3D backup_handle;
->  	rep->crep.buffer_map_handle =3D
-> -		drm_vma_node_offset_addr(&srf->res.backup->base.vma_node);
-> +		drm_vma_node_offset_addr(&srf->res.backup->base.base.vma_node);
->  	rep->crep.buffer_size =3D srf->res.backup->base.num_pages * PAGE_SIZE;
-> =20
->  	rep->creq.version =3D drm_vmw_gb_surface_v1;
-> --=20
-> 2.18.1
->=20
-> _______________________________________________
-> Intel-gfx mailing list
-> Intel-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/intel-gfx
-
---tKW2IUtsqtDRztdT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1S0xAACgkQ3SOs138+
-s6EgVA//UpqDE4LMXsS9tr5P4hW4aXeIuY1uiNEyYx+15t1vb6jY5soPOlosXy6j
-qA4qYVBczFCycwulg3rzITwZo1YpWKgCQGDzwrt9rHLYOH0rGIRkWezlYkiB3TKb
-FKTcOioHEuR61wq940Ug9d4mYorSn3APRGh73ftKdsouskrqlBPr17wthobs5cGT
-nq4DyEZEQ1ugM+PNbM2Xir8cdoIGvGo4Yx/Se1J3ua357xO3seRsKlW4N9PYqF8y
-FyWExIed7iHjSbA4CqHiyD3bswHnyKcPlEcezEWAXdFMfgF2/WwTRzQrG/DjlySp
-+FCGq1/S/cPX70ky81OPrO0UOw9Vd/jSy69H37MORQwpmEDFkb3vGxbg9cM1zZEK
-URIls38z/VzvGza3ivvs0bkAk0fNvP6vOKFMpV+m0v+y2jS/J85Uqa05ankuYsdL
-yBDI54eheOIyMvq3T9MPOpFy4wTz4Ud04PLiEdGJEdwXE2oTYrNyy5v/Ap2PE/Wx
-OWzYKa335H4ECZMl/mA2wh47LPiX+W5s3w98q31qbrQm/r3+9/qNQGrdLbUGjFOu
-iF7q0E+051KFoW7msmpmsI2puRAiZHIiv2qwP87svcpSa3AYu1JTenxbrwZ6AvlI
-5rOgC37SnHumsivOjxMxmlr4NtcEsr4uOETcJRBU8Q4nzA4u4xQ=
-=7v7k
------END PGP SIGNATURE-----
-
---tKW2IUtsqtDRztdT--
+It only collects console output. I don't know what is trace log. If
+the trace log is not console output, then it won't.
