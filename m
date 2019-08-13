@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232C0C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48076C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D2D20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24F2C2063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbfHMIy7 (ORCPT
+        id S1728337AbfHMIzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 04:54:59 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:56152 "EHLO inva020.nxp.com"
+        Tue, 13 Aug 2019 04:55:06 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:56134 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728303AbfHMIyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728294AbfHMIyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 13 Aug 2019 04:54:55 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 60FC41A0766;
-        Tue, 13 Aug 2019 10:54:54 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8DB321A02B4;
+        Tue, 13 Aug 2019 10:54:53 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 550041A075F;
-        Tue, 13 Aug 2019 10:54:54 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8179C1A009F;
+        Tue, 13 Aug 2019 10:54:53 +0200 (CEST)
 Received: from fsr-ub1464-137.ea.freescale.net (fsr-ub1464-137.ea.freescale.net [10.171.82.114])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id F30792060E;
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2E9542060E;
         Tue, 13 Aug 2019 10:54:53 +0200 (CEST)
 From:   Ioana Ciornei <ioana.ciornei@nxp.com>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     joe@perches.com, andrew@lunn.ch, ruxandra.radulescu@nxp.com,
         Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH v2 10/10] staging: fsl-dpaa2/ethsw: do not force user to bring interface down
-Date:   Tue, 13 Aug 2019 11:54:39 +0300
-Message-Id: <1565686479-32577-11-git-send-email-ioana.ciornei@nxp.com>
+Subject: [PATCH v2 08/10] staging: fsl-dpaa2/ethsw: reword error message
+Date:   Tue, 13 Aug 2019 11:54:37 +0300
+Message-Id: <1565686479-32577-9-git-send-email-ioana.ciornei@nxp.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1565686479-32577-1-git-send-email-ioana.ciornei@nxp.com>
 References: <1565686479-32577-1-git-send-email-ioana.ciornei@nxp.com>
@@ -45,69 +45,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Link settings can be changed only when the interface is down. Disable
-and re-enable the interface, if necessary, behind the scenes so that we do
-not force users to an if down/up sequence.
+In the current state, the dpaa2-ethsw driver supports only one bridge
+per DPSW object. Reword the error message so that this information is
+much more clear.
 
-Reported-by: Andrew Lunn <andrew@lunn.ch>
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 ---
 Changes in v2:
- - added Reported-by tag
+ - added Suggested-by tag
 
- drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c | 32 ++++++++++++++++++-------
- 1 file changed, 23 insertions(+), 9 deletions(-)
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c
-index 0f9f8345e534..99d658fefa14 100644
---- a/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c
-+++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c
-@@ -88,16 +88,21 @@ static void ethsw_get_drvinfo(struct net_device *netdev,
- 			 const struct ethtool_link_ksettings *link_ksettings)
- {
- 	struct ethsw_port_priv *port_priv = netdev_priv(netdev);
-+	struct ethsw_core *ethsw = port_priv->ethsw_data;
- 	struct dpsw_link_cfg cfg = {0};
--	int err = 0;
--
--	/* Due to a temporary MC limitation, the DPSW port must be down
--	 * in order to be able to change link settings. Taking steps to let
--	 * the user know that.
--	 */
--	if (netif_running(netdev)) {
--		netdev_info(netdev, "Sorry, interface must be brought down first.\n");
--		return -EACCES;
-+	bool if_running;
-+	int err = 0, ret;
-+
-+	/* Interface needs to be down to change link settings */
-+	if_running = netif_running(netdev);
-+	if (if_running) {
-+		err = dpsw_if_disable(ethsw->mc_io, 0,
-+				      ethsw->dpsw_handle,
-+				      port_priv->idx);
-+		if (err) {
-+			netdev_err(netdev, "dpsw_if_disable err %d\n", err);
-+			return err;
-+		}
- 	}
- 
- 	cfg.rate = link_ksettings->base.speed;
-@@ -115,6 +120,15 @@ static void ethsw_get_drvinfo(struct net_device *netdev,
- 				   port_priv->idx,
- 				   &cfg);
- 
-+	if (if_running) {
-+		ret = dpsw_if_enable(ethsw->mc_io, 0,
-+				     ethsw->dpsw_handle,
-+				     port_priv->idx);
-+		if (ret) {
-+			return ret;
-+			netdev_err(netdev, "dpsw_if_enable err %d\n", ret);
-+		}
-+	}
- 	return err;
- }
+diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
+index b69b2b7be972..28da109aef5e 100644
+--- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
++++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
+@@ -1119,8 +1119,7 @@ static int port_bridge_join(struct net_device *netdev,
+ 		if (ethsw->ports[i]->bridge_dev &&
+ 		    (ethsw->ports[i]->bridge_dev != upper_dev)) {
+ 			netdev_err(netdev,
+-				   "Another switch port is connected to %s\n",
+-				   ethsw->ports[i]->bridge_dev->name);
++				   "Only one bridge supported per DPSW object!\n");
+ 			return -EINVAL;
+ 		}
  
 -- 
 1.9.1
