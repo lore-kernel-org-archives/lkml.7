@@ -2,171 +2,451 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C36BC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3667C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 198222067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:15:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a6R7vnNQ"
+	by mail.kernel.org (Postfix) with ESMTP id AE20020844
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:15:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565709350;
+	bh=WV1ntbFhplspN01sFBGSysaq96qOQafEi8FIDapNBKs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=bRDvvd5cp9BwV0ksux2FTyrLqEkoRJPDJdQPJzV9QN0AnzBOMJW4+/y6DrGqSH2OV
+	 wzAwWBVB5vqJPxgGqdHRe46wY+yRGZInjbr0BvrpbRC1t3CBXY7e5Bp9D9xD6DTt63
+	 /J5tnMFxh8mb33QK8WvBJnzMv0ye3kPRsaaFVQ9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729935AbfHMPPf (ORCPT
+        id S1729990AbfHMPPt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:15:35 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37714 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729612AbfHMPPe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:15:34 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d1so18600129pgp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 08:15:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=CppQ5IfTrKtF8sLkKBQgACp32D76faL1vkHtpdC3L4M=;
-        b=a6R7vnNQi5dWDfgU8yUl1087AWgjtUHZQ2oTOBFO+joiOf9XtEiIhtftHRjZThPQSv
-         /gFnrtiO5yg6bk2ukBl9exaIcqPEmTFEk0gMs8nl3+uC11ogEcby+HEOql1RpQtHktcF
-         a4mi/OtI4wEbHCh4es8+HaHtMjELmA2YChznA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=CppQ5IfTrKtF8sLkKBQgACp32D76faL1vkHtpdC3L4M=;
-        b=Yv9xtAOm2ZLiVynLZ814wsH5c6D3RxXYwok69PRzLZV+Vndig+DYC+7OBYjeIM2/cj
-         pfJfjtM386z4QvJWKaPvOuilfBtFmUMdneHCQ6lPxjMQcpeqoVamPot3ktBVQNwZ0U/l
-         aWUOf10Frn5cI0flpOPwuT9yqDh7HLK5RvftfNMWenPANfoFqJpXL9CwPtsd0gMIFDzI
-         nhoAg568pCcMnmxN50GUfZf9QfgtvGKWrkHUJsFeoCEymXScumM58RhQhPESdAPh2gCt
-         KL3RVrtKXRXim6Z+3ny7T8clNOdBYrN8G/2NjIBjM/0QjQ2g0ZJ7+SGprGCB6lbWl0yQ
-         Ncqg==
-X-Gm-Message-State: APjAAAXU3yzgpobBq5K0OFKuGc7eLOTsgkUK+SBCVbvPOlYwE5pQut9F
-        57j0tUlOtZd/epIqXhI6V5RMhg==
-X-Google-Smtp-Source: APXvYqzTdD59gxrJllUxXkjBAVUbS3mMr5XMvs0oAIJcCOS8YHYuHc2S8SEwslFz8M9zKSUTvnzRBQ==
-X-Received: by 2002:a65:60d3:: with SMTP id r19mr35217368pgv.91.1565709333960;
-        Tue, 13 Aug 2019 08:15:33 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p1sm15310991pff.44.2019.08.13.08.15.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 13 Aug 2019 08:15:33 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 08:15:32 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Subject: [PATCH v2] kbuild: Parameterize kallsyms generation and correct
- reporting
-Message-ID: <201908130812.45DE9AE8@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Tue, 13 Aug 2019 11:15:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:38976 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729676AbfHMPPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 11:15:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80C3528;
+        Tue, 13 Aug 2019 08:15:47 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A3B93F706;
+        Tue, 13 Aug 2019 08:15:41 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 16:15:35 +0100
+Message-ID: <868srxnlk8.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Aleix Roca Nonell <kernelrocks@gmail.com>
+Cc:     Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] irqchip: Add Realtek RTD129x intc driver
+In-Reply-To: <20190812082648.GA3694@rocks>
+References: <20190707132256.GC13340@arks.localdomain>
+        <5efa2ccb-9659-443c-7986-8ceb01aa64b9@arm.com>
+        <20190812082648.GA3694@rocks>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When kallsyms generation happens, temporary vmlinux outputs are linked
-but the quiet make output didn't report it, giving the impression that
-the prior command is taking longer than expected.
+On Mon, 12 Aug 2019 09:26:48 +0100,
+Aleix Roca Nonell <kernelrocks@gmail.com> wrote:
+> 
+> Hi Mark and everyone! Sorry for the large delay, I'm doing this in my
+> free time, which is not that abundant. In this mail, I'm focusing only
+> on the largest change mentioned by Mark. I will answer the rest later.
+> 
+> On Mon, Jul 08, 2019 at 10:36:14AM +0100, Marc Zyngier wrote:
+> > On 07/07/2019 14:22, Aleix Roca Nonell wrote:
+> > > This driver adds support for the RTD1296 and RTD1295 interrupt
+> > > controller (intc). It is based on both the BPI-SINOVOIP project and
+> > > Andreas Färber's previous attempt to submit a similar driver.
+> > > 
+> > > There is currently no publicly available datasheet on this SoC and the
+> > > exact behaviour of the registers controlling the intc remain uncertain.
+> > > 
+> > > This driver controls two intcs: "iso" and "misc". Each intc has its own
+> > > Interrupt Enable Register (IER) and Interrupt Status Resgister (ISR).
+> > 
+> > Register
+> > 
+> > > However, not all "misc" intc irqs have the same offsets for both ISR and
+> > > IER. For this reason an ISR to IER offsets table is defined.
+> > > 
+> > > The driver catches the IER value to reduce accesses to the table inside the
+> > > interrupt handler. Actually, the driver stores the ISR offsets of currently
+> > > enabled interrupts in a variable.
+> > > 
+> > > Signed-off-by: Aleix Roca Nonell <kernelrocks@gmail.com>
+> > 
+> > I expect Andreas and you to sort the attribution issue. I'm certainly
+> > not going to take this in if things are unclear.
+> > 
+> > > ---
+> > >  drivers/irqchip/Makefile      |   1 +
+> > >  drivers/irqchip/irq-rtd129x.c | 371 ++++++++++++++++++++++++++++++++++
+> > >  2 files changed, 372 insertions(+)
+> > >  create mode 100644 drivers/irqchip/irq-rtd129x.c
+> > > 
+> > > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> > > index 606a003a0000..0689c3956250 100644
+> > > --- a/drivers/irqchip/Makefile
+> > > +++ b/drivers/irqchip/Makefile
+> > > @@ -100,3 +100,4 @@ obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
+> > >  obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
+> > >  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
+> > >  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
+> > > +obj-$(CONFIG_ARCH_REALTEK)		+= irq-rtd129x.o
+> > > diff --git a/drivers/irqchip/irq-rtd129x.c b/drivers/irqchip/irq-rtd129x.c
+> > > new file mode 100644
+> > > index 000000000000..76358ca50f10
+> > > --- /dev/null
+> > > +++ b/drivers/irqchip/irq-rtd129x.c
+> > > @@ -0,0 +1,371 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +
+> > > +#include <linux/irqchip.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/of_address.h>
+> > > +#include <linux/of_irq.h>
+> > > +#include <linux/irqdomain.h>
+> > > +#include <linux/io.h>
+> > > +#include <linux/spinlock.h>
+> > > +#include <linux/irqchip.h>
+> > > +#include <linux/bits.h>
+> > > +#include <linux/irqchip/chained_irq.h>
+> > > +
+> > > +#define RTD129X_INTC_NR_IRQS 32
+> > > +#define DEV_NAME "RTD1296_INTC"
+> > > +
+> > > +/*
+> > > + * This interrupt controller (hereinafter intc) driver controls two intcs: "iso"
+> > > + * and "misc". Each intc has its own Interrupt Enable Register (IER) and
+> > > + * Interrupt Status Resgister (ISR). However, not all "misc" intc irqs have the
+> > > + * same offsets for both ISR and IER. For this reason an ISR to IER offsets
+> > > + * table is defined. Also, to reduce accesses to this table in the interrupt
+> > > + * handler, the driver stores the ISR offsets of currently enabled interrupts in
+> > > + * a variable.
+> > > + */
+> > > +
+> > > +enum misc_int_en {
+> > > +	MISC_INT_FAIL		= 0xFF,
+> > > +	MISC_INT_RVD		= 0xFE,
+> > > +	MISC_INT_EN_FAN		= 29,
+> > > +	MISC_INT_EN_I2C3	= 28,
+> > > +	MISC_INT_EN_GSPI	= 27,
+> > > +	MISC_INT_EN_I2C2	= 26,
+> > > +	MISC_INT_EN_SC0		= 24,
+> > > +	MISC_INT_EN_LSADC1	= 22,
+> > > +	MISC_INT_EN_LSADC0	= 21,
+> > > +	MISC_INT_EN_GPIODA	= 20,
+> > > +	MISC_INT_EN_GPIOA	= 19,
+> > > +	MISC_INT_EN_I2C4	= 15,
+> > > +	MISC_INT_EN_I2C5	= 14,
+> > > +	MISC_INT_EN_RTC_DATA	= 12,
+> > > +	MISC_INT_EN_RTC_HOUR	= 11,
+> > > +	MISC_INT_EN_RTC_MIN	= 10,
+> > > +	MISC_INT_EN_UR2		= 7,
+> > > +	MISC_INT_EN_UR2_TO	= 6,
+> > > +	MISC_INT_EN_UR1_TO	= 5,
+> > > +	MISC_INT_EN_UR1		= 3,
+> > > +};
+> > > +
+> > > +enum iso_int_en {
+> > > +	ISO_INT_FAIL		= 0xFF,
+> > > +	ISO_INT_RVD		= 0xFE,
+> > > +	ISO_INT_EN_I2C1_REQ	= 31,
+> > > +	ISO_INT_EN_GPHY_AV	= 30,
+> > > +	ISO_INT_EN_GPHY_DV	= 29,
+> > > +	ISO_INT_EN_GPIODA	= 20,
+> > > +	ISO_INT_EN_GPIOA	= 19,
+> > > +	ISO_INT_EN_RTC_ALARM	= 13,
+> > > +	ISO_INT_EN_RTC_HSEC	= 12,
+> > > +	ISO_INT_EN_I2C1		= 11,
+> > > +	ISO_INT_EN_I2C0		= 8,
+> > > +	ISO_INT_EN_IRDA		= 5,
+> > > +	ISO_INT_EN_UR0		= 2,
+> > > +};
+> > > +
+> > > +unsigned char rtd129x_intc_enable_map_misc[RTD129X_INTC_NR_IRQS] = {
+> > > +	MISC_INT_FAIL,		/* Bit0 */
+> > > +	MISC_INT_FAIL,		/* Bit1 */
+> > > +	MISC_INT_RVD,		/* Bit2 */
+> > > +	MISC_INT_EN_UR1,	/* Bit3 */
+> > > +	MISC_INT_FAIL,		/* Bit4 */
+> > > +	MISC_INT_EN_UR1_TO,	/* Bit5 */
+> > > +	MISC_INT_RVD,		/* Bit6 */
+> > > +	MISC_INT_RVD,		/* Bit7 */
+> > > +	MISC_INT_EN_UR2,	/* Bit8 */
+> > > +	MISC_INT_RVD,		/* Bit9 */
+> > > +	MISC_INT_EN_RTC_MIN,	/* Bit10 */
+> > > +	MISC_INT_EN_RTC_HOUR,	/* Bit11 */
+> > > +	MISC_INT_EN_RTC_DATA,	/* Bit12 */
+> > > +	MISC_INT_EN_UR2_TO,	/* Bit13 */
+> > > +	MISC_INT_EN_I2C5,	/* Bit14 */
+> > > +	MISC_INT_EN_I2C4,	/* Bit15 */
+> > > +	MISC_INT_FAIL,		/* Bit16 */
+> > > +	MISC_INT_FAIL,		/* Bit17 */
+> > > +	MISC_INT_FAIL,		/* Bit18 */
+> > > +	MISC_INT_EN_GPIOA,	/* Bit19 */
+> > > +	MISC_INT_EN_GPIODA,	/* Bit20 */
+> > > +	MISC_INT_EN_LSADC0,	/* Bit21 */
+> > > +	MISC_INT_EN_LSADC1,	/* Bit22 */
+> > > +	MISC_INT_EN_I2C3,	/* Bit23 */
+> > > +	MISC_INT_EN_SC0,	/* Bit24 */
+> > > +	MISC_INT_FAIL,		/* Bit25 */
+> > > +	MISC_INT_EN_I2C2,	/* Bit26 */
+> > > +	MISC_INT_EN_GSPI,	/* Bit27 */
+> > > +	MISC_INT_FAIL,		/* Bit28 */
+> > > +	MISC_INT_EN_FAN,	/* Bit29 */
+> > > +	MISC_INT_FAIL,		/* Bit30 */
+> > > +	MISC_INT_FAIL		/* Bit31 */
+> > > +};
+> > > +
+> > > +unsigned char rtd129x_intc_enable_map_iso[RTD129X_INTC_NR_IRQS] = {
+> > > +	ISO_INT_FAIL,		/* Bit0 */
+> > > +	ISO_INT_RVD,		/* Bit1 */
+> > > +	ISO_INT_EN_UR0,		/* Bit2 */
+> > > +	ISO_INT_FAIL,		/* Bit3 */
+> > > +	ISO_INT_FAIL,		/* Bit4 */
+> > > +	ISO_INT_EN_IRDA,	/* Bit5 */
+> > > +	ISO_INT_FAIL,		/* Bit6 */
+> > > +	ISO_INT_RVD,		/* Bit7 */
+> > > +	ISO_INT_EN_I2C0,	/* Bit8 */
+> > > +	ISO_INT_RVD,		/* Bit9 */
+> > > +	ISO_INT_FAIL,		/* Bit10 */
+> > > +	ISO_INT_EN_I2C1,	/* Bit11 */
+> > > +	ISO_INT_EN_RTC_HSEC,	/* Bit12 */
+> > > +	ISO_INT_EN_RTC_ALARM,	/* Bit13 */
+> > > +	ISO_INT_FAIL,		/* Bit14 */
+> > > +	ISO_INT_FAIL,		/* Bit15 */
+> > > +	ISO_INT_FAIL,		/* Bit16 */
+> > > +	ISO_INT_FAIL,		/* Bit17 */
+> > > +	ISO_INT_FAIL,		/* Bit18 */
+> > > +	ISO_INT_EN_GPIOA,	/* Bit19 */
+> > > +	ISO_INT_EN_GPIODA,	/* Bit20 */
+> > > +	ISO_INT_RVD,		/* Bit21 */
+> > > +	ISO_INT_RVD,		/* Bit22 */
+> > > +	ISO_INT_RVD,		/* Bit23 */
+> > > +	ISO_INT_RVD,		/* Bit24 */
+> > > +	ISO_INT_FAIL,		/* Bit25 */
+> > > +	ISO_INT_FAIL,		/* Bit26 */
+> > > +	ISO_INT_FAIL,		/* Bit27 */
+> > > +	ISO_INT_FAIL,		/* Bit28 */
+> > > +	ISO_INT_EN_GPHY_DV,	/* Bit29 */
+> > > +	ISO_INT_EN_GPHY_AV,	/* Bit30 */
+> > > +	ISO_INT_EN_I2C1_REQ	/* Bit31 */
+> > > +};
+> > > +
+> > > +struct rtd129x_intc_data {
+> > > +	void __iomem		*unmask;
+> > > +	void __iomem		*isr;
+> > > +	void __iomem		*ier;
+> > > +	u32			ier_cached;
+> > > +	u32			isr_en;
+> > > +	raw_spinlock_t		lock;
+> > > +	unsigned int		parent_irq;
+> > > +	const unsigned char	*en_map;
+> > > +};
+> > > +
+> > > +static struct irq_domain *rtd129x_intc_domain;
+> > > +
+> > > +static void rtd129x_intc_irq_handle(struct irq_desc *desc)
+> > > +{
+> > > +	struct rtd129x_intc_data *priv = irq_desc_get_handler_data(desc);
+> > > +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> > > +	unsigned int local_irq;
+> > > +	u32 status;
+> > > +	int i;
+> > > +
+> > > +	chained_irq_enter(chip, desc);
+> > > +
+> > > +	raw_spin_lock(&priv->lock);
+> > > +	status = readl_relaxed(priv->isr);
+> > > +	status &= priv->isr_en;
+> > > +	raw_spin_unlock(&priv->lock);
+> > 
+> > What is this lock protecting? isr_en?
+> > 
+> > > +
+> > > +	while (status) {
+> > > +		i = __ffs(status);
+> > > +		status &= ~BIT(i);
+> > > +
+> > > +		local_irq = irq_find_mapping(rtd129x_intc_domain, i);
+> > > +		if (likely(local_irq)) {
+> > > +			if (!generic_handle_irq(local_irq))
+> > > +				writel_relaxed(BIT(i), priv->isr);
+> > 
+> > What are the write semantics of the ISR register? Hot bit clear? How
+> > does it work since mask() does the same thing? Clearly, something is
+> > wrong here.
+> 
+> Sorry but I have not been able to found the definition of "hot bit
+> clear", could you explain it? Anyways, you were right, apparently the
+> mask/unmask code were doing nothing useful. More on this below.
 
-Instead, report the linking step explicitly. While at it, this
-consolidates the repeated "kallsyms generation step" into a single
-function and removes the existing copy/pasting.
+A hot-bit clear (or set) is a register where to write the bits that
+you want to clear (or set), leaving alone the bits that are written as
+zero. For example:
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v2:
-- rename $kallsymso_previous to $kallsymso_prev (Masahiro)
-- move location of kallsyms_step() (Masahiro)
-- report linking step instead of folding it into KSYM (Masahiro)
----
- scripts/link-vmlinux.sh | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+REG = 0xFFFF
+clear_reg(0x1001)
+REG = 0x7FFE
+set_reg(0x1000)
+REG = 0xFFFE
 
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index a7124f895b24..0b08bfb88f74 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -60,6 +60,7 @@ modpost_link()
- # ${2} - output file
- vmlinux_link()
- {
-+	info LD ${2}
- 	local lds="${objtree}/${KBUILD_LDS}"
- 	local objects
- 
-@@ -138,6 +139,18 @@ kallsyms()
- 	${CC} ${aflags} -c -o ${2} ${afile}
- }
- 
-+# Perform one step in kallsyms generation, including temporary linking of
-+# vmlinux.
-+kallsyms_step()
-+{
-+	kallsymso_prev=${kallsymso}
-+	kallsymso=.tmp_kallsyms${1}.o
-+	kallsyms_vmlinux=.tmp_vmlinux${1}
-+
-+	vmlinux_link "${kallsymso_prev}" ${kallsyms_vmlinux}
-+	kallsyms ${kallsyms_vmlinux} ${kallsymso}
-+}
-+
- # Create map file with all symbols from ${1}
- # See mksymap for additional details
- mksysmap()
-@@ -216,6 +229,7 @@ info MODINFO modules.builtin.modinfo
- ${OBJCOPY} -j .modinfo -O binary vmlinux.o modules.builtin.modinfo
- 
- kallsymso=""
-+kallsymso_prev=""
- kallsyms_vmlinux=""
- if [ -n "${CONFIG_KALLSYMS}" ]; then
- 
-@@ -242,32 +256,18 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
- 	# a)  Verify that the System.map from vmlinux matches the map from
- 	#     ${kallsymso}.
- 
--	kallsymso=.tmp_kallsyms2.o
--	kallsyms_vmlinux=.tmp_vmlinux2
--
--	# step 1
--	vmlinux_link "" .tmp_vmlinux1
--	kallsyms .tmp_vmlinux1 .tmp_kallsyms1.o
--
--	# step 2
--	vmlinux_link .tmp_kallsyms1.o .tmp_vmlinux2
--	kallsyms .tmp_vmlinux2 .tmp_kallsyms2.o
-+	kallsyms_step 1
-+	kallsyms_step 2
- 
- 	# step 3
--	size1=$(${CONFIG_SHELL} "${srctree}/scripts/file-size.sh" .tmp_kallsyms1.o)
--	size2=$(${CONFIG_SHELL} "${srctree}/scripts/file-size.sh" .tmp_kallsyms2.o)
-+	size1=$(${CONFIG_SHELL} "${srctree}/scripts/file-size.sh" ${kallsymso_prev})
-+	size2=$(${CONFIG_SHELL} "${srctree}/scripts/file-size.sh" ${kallsymso})
- 
- 	if [ $size1 -ne $size2 ] || [ -n "${KALLSYMS_EXTRA_PASS}" ]; then
--		kallsymso=.tmp_kallsyms3.o
--		kallsyms_vmlinux=.tmp_vmlinux3
--
--		vmlinux_link .tmp_kallsyms2.o .tmp_vmlinux3
--
--		kallsyms .tmp_vmlinux3 .tmp_kallsyms3.o
-+		kallsyms_step 3
- 	fi
- fi
- 
--info LD vmlinux
- vmlinux_link "${kallsymso}" vmlinux
- 
- if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
+It is extremely useful for registers that need to be accessed
+concurrently (the GIC uses that a lot, for example).
+
+> 
+> > 
+> > > +		} else {
+> > > +			handle_bad_irq(desc);
+> > > +		}
+> > > +	}
+> > > +
+> > > +	chained_irq_exit(chip, desc);
+> > > +}
+> > > +
+> > > +static void rtd129x_intc_mask(struct irq_data *data)
+> > > +{
+> > > +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
+> > > +
+> > > +	writel_relaxed(BIT(data->hwirq), priv->isr);
+> > > +}
+> > > +
+> > > +static void rtd129x_intc_unmask(struct irq_data *data)
+> > > +{
+> > > +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
+> > > +
+> > > +	writel_relaxed(BIT(data->hwirq), priv->unmask);
+> > 
+> > What effect does this have on the isr register? The whole mask/unmask
+> > thing seems to be pretty dodgy...
+> > 
+> > > +}
+> > > +
+> > > +static void rtd129x_intc_enable(struct irq_data *data)
+> > > +{
+> > > +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
+> > > +	unsigned long flags;
+> > > +	u8 en_offset;
+> > > +
+> > > +	en_offset = priv->en_map[data->hwirq];
+> > > +
+> > > +	if ((en_offset != MISC_INT_RVD) && (en_offset != MISC_INT_FAIL)) {
+> > > +		raw_spin_lock_irqsave(&priv->lock, flags);
+> > > +
+> > > +		priv->isr_en |= BIT(data->hwirq);
+> > > +		priv->ier_cached |= BIT(en_offset);
+> > > +		writel_relaxed(priv->ier_cached, priv->ier);
+> > > +
+> > > +		raw_spin_unlock_irqrestore(&priv->lock, flags);
+> > > +	} else if (en_offset == MISC_INT_FAIL) {
+> > > +		pr_err("[%s] Enable irq(%lu) failed\n", DEV_NAME, data->hwirq);
+> > > +	}
+> > > +}
+> > > +
+> > > +static void rtd129x_intc_disable(struct irq_data *data)
+> > > +{
+> > > +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
+> > > +	unsigned long flags;
+> > > +	u8 en_offset;
+> > > +
+> > > +	en_offset = priv->en_map[data->hwirq];
+> > > +
+> > > +	if ((en_offset != MISC_INT_RVD) && (en_offset != MISC_INT_FAIL)) {
+> > > +		raw_spin_lock_irqsave(&priv->lock, flags);
+> > > +
+> > > +		priv->isr_en &= ~BIT(data->hwirq);
+> > > +		priv->ier_cached &= ~BIT(en_offset);
+> > > +		writel_relaxed(priv->ier_cached, priv->ier);
+> > > +
+> > > +		raw_spin_unlock_irqrestore(&priv->lock, flags);
+> > > +	} else if (en_offset == MISC_INT_FAIL) {
+> > > +		pr_err("[%s] Disable irq(%lu) failed\n", DEV_NAME, data->hwirq);
+> > > +	}
+> > > +}
+> > 
+> > So here's a thought: Why do we need all of this? If mask/unmask do their
+> > job correctly, we could just enable all interrupts in one go (just a
+> > 32bit write) at probe time, and leave all interrupts masked until they
+> > are in use. You could then drop all these silly tables that don't bring
+> > much...
+> 
+> The idea of dropping all those tables look really good to me, that
+> would greatly simplify the code! I have been trying to mask all
+> interrupts on the probe function using the ISR register but while
+> doing so, I realized that it does not work. Writing to ISR does not
+> mask interrupts, apparently it only acknowledges them once they have
+> been triggered. On the scarse available documentation of this Soc I
+> cannot find a mask-like register. It seems interrupts are managed with
+> an ISR and an IER register. So it should be posible to use the enable
+> register to maks/unmask instead. These do work. However, that would
+> mean that we have to keep those ugly tables.
+> 
+> Nonetheless we might still be able to do something else. Please,
+> correct me if I'm wrong, but do we really need to mask/unamsk in this
+> scenario? This is the devised board layout:
+> 
+>            +------+       +----------+       +---------+
+>            |      |       |          |       |         |
+>            | UART |-------|2  INTC   |-------|c  GIC   |
+>            |      |  +----|1         |  +----|b        |
+>            +------+  | +--|0         |  | +--|a        |
+>                      | |  |          |  | |  |         |
+>                      | |  +----------+  | |  +---------+
+>                      |                  |
+> 
+> Once the UART generates an interrupt it passes through the line 2 of
+> the custom realtek interrupt contoller before reaching the GIC's line
+> "c". On the INTC interrupt handler, we call chained_irq_enter/exit
+> to mask/unmask the GIC's "c" line. Because all of this realtek INTC
+> interrupt lines (2,1,0,...) are muxed on the GIC's line "c", this
+> means that while on the INTC interrupt handler it is not possible to
+> send further interrupts on the CPU. Given that interrupts are masked
+> on the GIC, it seems safe to just remove INTC's mask/unmask functions.
+
+No, that's not true. If you cannot mask an individual interrupt at the
+INTC level, it means that the only way to stop a screaming interrupt
+(because the endpoint has crashed or that the kernel doesn't have a
+driver for it) is to disable the interrupt at the GIC level, killing
+all users of the INTC. Also, because the core code doesn't really know
+that the INTC is behind the GIC, it cannot do that automatically.
+
+So if you get into that situation, your system is dead. Believe it or
+not, that's not something I want to see. An irqchip driver without a
+mask callback is a lose grenade, and the pin is in your pocket.
+
+> Therefore, the only work that this INTC handler would needs to do is
+> to acknowledge the interrupt by writing to the ISR, which it could be
+> done in the respective irq_ack callback of struct irq_chip instead of
+> in the handler body.
+> 
+> I have implemented this solution and it seems to work. What do you
+> think? I'm missing something crucial?
+
+See above. Your system is terribly unsafe. Now, I'm pretty sure the
+Realtek folks could help you there. Or you could start trying to
+reverse engineer the thing, which shouldn't really hard (try poking at
+the registers next to the ones you already have).
+
+Thanks,
+
+	M.
+
 -- 
-2.17.1
-
-
--- 
-Kees Cook
+Jazz is not dead, it just smells funny.
