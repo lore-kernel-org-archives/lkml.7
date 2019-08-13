@@ -2,147 +2,218 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3502C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC3BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94FEC20840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:11:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M3QsG5uB"
+	by mail.kernel.org (Postfix) with ESMTP id 0FF6120578
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfHMRLH (ORCPT
+        id S1727270AbfHMRLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:11:07 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36360 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfHMRLG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:11:06 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r3so14718611wrt.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:11:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=21RkXx6R3GQDrR2TjCOw5Y6zUcvqwwn5X36NDyY9IGA=;
-        b=M3QsG5uBdUAuYCJmjgUqL7PLM8GNt0QTYmfqU57XtJrC/nyx8IrUHSdvTi4iexA1sX
-         loPorAFak91PNqBo4JqbP4kg1cs7x3HL3YJtyO8ty8l155jnxA2ujDYhS9RmlwLlrWEv
-         5mh9EnmZ6cYx3cbAXsaPxhn2SJlsMJCHhVcEOvnyCkloSyEEW2GRtwZDolkmECBpTwlY
-         KbDnIJvcADo9kBpTIvHAmzm0H/qEPnY/eGLXJDK09WQuEba0D3uIPUAz3/Frp6zGxrSZ
-         8FZDGh4xZvJAQDZCBB0+f+gUPK8y+2z19tEOLMjciOIK2wUns1qcj/cf8NnB/THInnun
-         8WWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=21RkXx6R3GQDrR2TjCOw5Y6zUcvqwwn5X36NDyY9IGA=;
-        b=TZpDOtAxQIj3GxUm4Od1gu1/QgUdmWpj73OQ6SN/wDtM2kMTcan3Ci0illbX8LUenJ
-         1gr7gWZ7UcU+I72SzwCIAWuLdMdWQ2iNHxVHQnZa91E/i4F6bVVcwa534b+zjO6KtcjY
-         JqlNnbU4ojwXZWS1IJWmfx/DRk9bm6Brx7BVG6sdunhfIRra2MIWdtyAEpfl5gQJKiP4
-         9UjIU0FJ/wVO6aLlOBf5OuRifrSoTbUl7otUHTUMef8bxcHVlSy17EMZ95fFQrN+2D2M
-         jhZfAORp5QabTTSU1m6KaS2XU0CFP/PJ3/sZKxuBvyMLFot4sAy9tlZqwg9YOOjgihuM
-         PotQ==
-X-Gm-Message-State: APjAAAVu6Qo1vmnoriifIQ2TRBqEapOSmFR2iRhsJPvxvucCPcOQPPXw
-        oMaS0/5CG0GZs5r9rHDsH4uLlEdswk1FvW7V7/S7mA==
-X-Google-Smtp-Source: APXvYqzjDFccoFO2mqXij8jWkci8wYnJ1b/+SDrh1fyGfofH/xTWjFwC9cQZ90IWHFUAEUa2hu1TFIDjWrGaX7esF8c=
-X-Received: by 2002:adf:ed4a:: with SMTP id u10mr50841803wro.284.1565716264841;
- Tue, 13 Aug 2019 10:11:04 -0700 (PDT)
+        Tue, 13 Aug 2019 13:11:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50222 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726188AbfHMRLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 13:11:51 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 66E5E30D201A;
+        Tue, 13 Aug 2019 17:11:50 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DEC9C100EBA4;
+        Tue, 13 Aug 2019 17:11:49 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 11:11:49 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     Kirti Wankhede <kwankhede@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>
+Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+Message-ID: <20190813111149.027c6a3c@x1.home>
+In-Reply-To: <AM0PR05MB48663579A340E6597B3D01BCD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190802065905.45239-1-parav@mellanox.com>
+        <20190808141255.45236-1-parav@mellanox.com>
+        <20190808170247.1fc2c4c4@x1.home>
+        <77ffb1f8-e050-fdf5-e306-0a81614f7a88@nvidia.com>
+        <AM0PR05MB4866993536C0C8ACEA2F92DBD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190813085246.1d642ae5@x1.home>
+        <AM0PR05MB48663579A340E6597B3D01BCD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
-In-Reply-To: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 13 Aug 2019 10:10:53 -0700
-Message-ID: <CALAqxLUde4OTEm3Kik0Fvydhp+i-Xo-axS2wRKEBJyT9hY=wCg@mail.gmail.com>
-Subject: Re: New kernel interface for sys_tz and timewarp?
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        Karel Zak <kzak@redhat.com>,
-        Lennart Poettering <lennart@poettering.net>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 13 Aug 2019 17:11:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 2:06 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> Now, to the actual questions:
->
-> * Should we allow setting the sys_tz on new architectures that use only
->   time64 interfaces at all, or should we try to get away from that anyway?
+On Tue, 13 Aug 2019 16:28:53 +0000
+Parav Pandit <parav@mellanox.com> wrote:
 
-So I'd probably cut this question a bit differently:
+> > -----Original Message-----
+> > From: Alex Williamson <alex.williamson@redhat.com>
+> > Sent: Tuesday, August 13, 2019 8:23 PM
+> > To: Parav Pandit <parav@mellanox.com>
+> > Cc: Kirti Wankhede <kwankhede@nvidia.com>; kvm@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; cohuck@redhat.com; cjia@nvidia.com
+> > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+> > 
+> > On Tue, 13 Aug 2019 14:40:02 +0000
+> > Parav Pandit <parav@mellanox.com> wrote:
+> >   
+> > > > -----Original Message-----
+> > > > From: Kirti Wankhede <kwankhede@nvidia.com>
+> > > > Sent: Monday, August 12, 2019 5:06 PM
+> > > > To: Alex Williamson <alex.williamson@redhat.com>; Parav Pandit
+> > > > <parav@mellanox.com>
+> > > > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > > cohuck@redhat.com; cjia@nvidia.com
+> > > > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+> > > >
+> > > >
+> > > >
+> > > > On 8/9/2019 4:32 AM, Alex Williamson wrote:  
+> > > > > On Thu,  8 Aug 2019 09:12:53 -0500 Parav Pandit
+> > > > > <parav@mellanox.com> wrote:
+> > > > >  
+> > > > >> Currently mtty sample driver uses mdev state and UUID in
+> > > > >> convoluated way to generate an interrupt.
+> > > > >> It uses several translations from mdev_state to mdev_device to mdev  
+> > uuid.  
+> > > > >> After which it does linear search of long uuid comparision to
+> > > > >> find out mdev_state in mtty_trigger_interrupt().
+> > > > >> mdev_state is already available while generating interrupt from
+> > > > >> which all such translations are done to reach back to mdev_state.
+> > > > >>
+> > > > >> This translations are done during interrupt generation path.
+> > > > >> This is unnecessary and reduandant.  
+> > > > >
+> > > > > Is the interrupt handling efficiency of this particular sample
+> > > > > driver really relevant, or is its purpose more to illustrate the
+> > > > > API and provide a proof of concept?  If we go to the trouble to
+> > > > > optimize the sample driver and remove this interface from the API, what  
+> > do we lose?  
+> > > > >
+> > > > > This interface was added via commit:
+> > > > >
+> > > > > 99e3123e3d72 vfio-mdev: Make mdev_device private and abstract
+> > > > > interfaces
+> > > > >
+> > > > > Where the goal was to create a more formal interface and abstract
+> > > > > driver access to the struct mdev_device.  In part this served to
+> > > > > make out-of-tree mdev vendor drivers more supportable; the object
+> > > > > is considered opaque and access is provided via an API rather than
+> > > > > through direct structure fields.
+> > > > >
+> > > > > I believe that the NVIDIA GRID mdev driver does make use of this
+> > > > > interface and it's likely included in the sample driver
+> > > > > specifically so that there is an in-kernel user for it (ie.
+> > > > > specifically to avoid it being removed so casually).  An
+> > > > > interesting feature of the NVIDIA mdev driver is that I believe it has  
+> > portions that run in userspace.  
+> > > > > As we know, mdevs are named with a UUID, so I can imagine there
+> > > > > are some efficiencies to be gained in having direct access to the
+> > > > > UUID for a device when interacting with userspace, rather than
+> > > > > repeatedly parsing it from a device name.  
+> > > >
+> > > > That's right.
+> > > >  
+> > > > >  Is that really something we want to make more difficult in order
+> > > > > to optimize a sample driver?  Knowing that an mdev device uses a
+> > > > > UUID for it's name, as tools like libvirt and mdevctl expect, is
+> > > > > it really worthwhile to remove such a trivial API?
+> > > > >  
+> > > > >> Hence,
+> > > > >> Patch-1 simplifies mtty sample driver to directly use mdev_state.
+> > > > >>
+> > > > >> Patch-2, Since no production driver uses mdev_uuid(), simplifies
+> > > > >> and removes redandant mdev_uuid() exported symbol.  
+> > > > >
+> > > > > s/no production driver/no in-kernel production driver/
+> > > > >
+> > > > > I'd be interested to hear how the NVIDIA folks make use of this
+> > > > > API interface.  Thanks,
+> > > > >  
+> > > >
+> > > > Yes, NVIDIA mdev driver do use this interface. I don't agree on
+> > > > removing
+> > > > mdev_uuid() interface.
+> > > >  
+> > > We need to ask Greg or Linus on the kernel policy on whether an API
+> > > should exist without in-kernel driver. We don't add such API in
+> > > netdev, rdma and possibly other subsystem. Where can we find this mdev
+> > > driver in-tree?  
+> > 
+> > We probably would not have added the API only for an out of tree driver, but
+> > we do have a sample driver that uses it, even if it's rather convoluted.  The
+> > sample driver is showing an example of using the API, which is rather its
+> > purpose more so than absolutely efficient interrupt handling.    
+> For showing API use, it doesn't have to convoluted that too in interrupt handling code.
+> It could be just dev_info(" UUID print..)
 
-1) Do we want to deprecate sys_tz tracking in the kernel? If new
-architectures don't have ways to set it, for consistency we should
-probably deprecate in-kernel tracking of that value (start returning
-an error when folks try to set it and always return 0 when its
-accessed).
+I was thinking we could have the mtty driver expose a vendor sysfs
+attribute providing the UUID if you insist on cleaning up the
+interrupt path.
 
-2) If we deprecate the sys_tz tracking in the kernel, how do we
-address the in-kernel systohc syncing with local-time (non-UTC) RTCs
-on x86 systems (I'm not aware of other arches that utilize non-UTC
-RTCs)
+> But the whole point is to have useful API that non sample driver need to use.
+> And there is none.
 
+Kirti has already indicated this API was useful and it's not a burden
+to maintain it.  The trouble is that we don't have any in-kernel mdev
+drivers sophisticated enough to have the same kernel/user split as the
+NVIDIA driver, but that's a feature that I believe we wish to continue
+to support.  The kernel exposes the device by UUID, userspace
+references the device by UUID, so it seems intuitive to provide a core
+API to retrieve the UUID for a device without parsing it from a device
+name string.  We can continue to add trivial sample driver use cases or
+we can just agree that this is a useful interface for UUID based device.
 
-> * Should the NTP timewarp setting ("int persistent_clock_is_local" and
->   its offset) be controllable separately from the timezone used in other
->   drivers?
+> In bigger objective, I wanted to discuss post this cleanup patch, is
+> to expand mdev to have more user friendly device names.
 
-For the discussion, I'm not sure I'd call this NTP timewarp, but maybe
-systohc rtc offset is more clear?
+"Friendly" is a matter of opinion.  UUIDs provide us with consistent
+names, effectively avoids name collisions which in turn effectively
+avoids races in device creation, they're easy to deal with, and they're
+well known.  Naming things is hard. Dealing with arbitrary user
+generated names or defining a policy around acceptable naming is hard.
 
-Its really not connected to NTP, except that we only want to
-automatically sync the RTC to the system clock when we know the system
-clock is right (and that signal comes from NTP).
+> Before we reach there, I should include a patch that eliminates
+> storing UUID itself in the mdev_device.
+> 
+> > Also, let's not
+> > overstate what this particular API callback provides, it's simply
+> > access to the uuid of the device, which is a fundamental property
+> > of a mediated device.  
+> This fundamental property is available in form of device name already.
 
+So you're wanting to optimize a sample driver interrupt handler in
+order to eliminate an API which makes the UUID available without
+parsing it from a string?  And the complexity grows when you later
+propose that the string is now arbitrary?  It doesn't seem like a good
+replacement.
 
-> * If we want keep having a way to set the sys_tz, what interface
-> should that use?
->
->   Suggestions so far include
->    - adding a clock_settimeofday_time64() syscall on all 32-bit architectures to
->      maintain the traditional behavior,
+> > API was added simply to provide data abstraction, allowing the
+> > struct mdev_device to be opaque to vendor drivers.  Thanks,
+> >   
+> I get that part. I prefer to remove the UUID itself from the
+> structure and therefore removing this API makes lot more sense?
 
-If the answer to #1 above is no, we want to preserve the
-functionality, then I think this is probably the best solution.
-Alternatively one could add a new syscall/sysctrl that just sets the
-timezone, but most 64 bit architectures already have
-clock_settimeofday_time64() equiv call, so this is probably the least
-duplicative.
+Mdev and support tools around mdev are based on UUIDs because it's
+defined in the documentation.  I don't think it's as simple as saying
+"voila, UUID dependencies are removed, users are free to use arbitrary
+strings".  We'd need to create some kind of naming policy, what
+characters are allows so that we can potentially expand the creation
+parameters as has been proposed a couple times, how do we deal with
+collisions and races, and why should we make such a change when a UUID
+is a perfectly reasonable devices name.  Thanks,
 
->    - adding a sysctl interface for accessing sys_tz.tz_tminuteswest,
->    - using a new field in 'struct timex' for the timewarp offset, and
-
-I'd push back on this one. The timewarp offset is really a RTC offset,
-and has nothing to do with ntp, so we shoudn't be adding things to
-adjtimex about it.
-
->    - adding an ioctl command on /dev/rtc/ to control the timewarp
->      offset of that particular device.
-
-If the answer to #1 above is yes, then I think this makes more sense
-to me, since the offset is a property of how we interpret the RTC (ie:
-is it UTC or local time).
-
-Getting more aggressive, from irc discussions, it sounded like
-Alexandre would like to deprecate the in-kernel systohc and hctosys
-logic, so if that were the case, and the answer to #1 above was yes,
-then we could probably skip all of this and just drop systohc work and
-keep the UTC/local logic to userland.
-
-thanks
--john
+Alex
