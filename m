@@ -2,64 +2,66 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6813BC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5979FC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2706E2070C
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1767320842
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:53:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FBebnP+/";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kuQHYJf9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jjo4/Ieh";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TQBfQYNU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfHMAxY (ORCPT
+        id S1726973AbfHMAxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 20:53:24 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57686 "EHLO
+        Mon, 12 Aug 2019 20:53:21 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57708 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfHMAxJ (ORCPT
+        with ESMTP id S1726296AbfHMAxJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 12 Aug 2019 20:53:09 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D0nMiu169580;
-        Tue, 13 Aug 2019 00:52:44 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D0nI2C169513;
+        Tue, 13 Aug 2019 00:52:48 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2019-08-05; bh=nDF8j2V783xQlVgIBQP+OzlKRUQHIDuBqsKy0wuVa48=;
- b=FBebnP+/i+J3vALvO4/lo4XYFiJDG3f6FYXO52tibu4rAFZhBt/5X65rhoPdIq+mgx0j
- TdtAo3QgUECffGkBZ0Iv/AP2XmYd4/USX9RWq27PgZdUOI26snTpkYQKZJVSysaLy6Gw
- h8mGxDRqhPo8PSYCpcOxDKBcZlb+Tz8HjDDdyo+9QwEOSLzXB5d9us/K02Lu8SRHfv4q
- 6eaf6wSdHn9hi4z/E3t/Lotz88JOjGba0UEm0oE74+jlbPulymo8VGBZALPN6wR8WXXw
- odd8TelEjruWBO1z6D4d0BN62rNvJ+ETmbo9d0Si7mFJBV/Fc7F0kjlUFm0Pbw1Nuxru wA== 
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=BT3Qu5ImazUq0glEJ/38QFS1wg4jo/CdGADNQX8MmGI=;
+ b=jjo4/IehyhWwOy5LkPz1sCxrez0G3zFYFWaf9wcnH0Ved17AfCHNWTiDMBtmmGO1pHuE
+ pOAsnqgj7/7GG7e8BgC8vxLKDpRVnQNv31j4dPvtAwbbKkoMABgg5ylEVSRS8TcJ2jds
+ ZXDG1a3nxMwP0VXjWJyWAyFMHR1fVfjT6kI1oScYgcdvPR1NZyux8l3L+/IIN4WL+vW4
+ IpP0MPHh7snzHSoUUepg1+nvIfb5d5d6k5zg16Cp62CTmDNchgMiy73+GvjiHyxmNEYx
+ hoMFYqD8LU+QWDG/URjaYSQpYhmmz0wKcaJa7YeQ37Bf1DUJH04opn/fVFLz8d/oBqYn jQ== 
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2018-07-02; bh=nDF8j2V783xQlVgIBQP+OzlKRUQHIDuBqsKy0wuVa48=;
- b=kuQHYJf9W0ceBWylai8myHQBWmr1Tz7fwAmA6KNcoVIPqxJyF9HXVwGpGUoLvxhU5Nkm
- 7xyjoCpnM3In7bkiIUa20TRMAvsKJFGrFaJMewy1huCHa73+KtWKlhaSsUxZDCkICTnG
- X5eleFO2rAhtf816gwNDyS5QL+OIWTNbLQZXtbom3RtAwWT1Cyr9DYbFfoliPxDDTbua
- ebKZp2c2TQiNCLlWb+ON41HuKYBnijgp4UeMI48Tz/hG3UR+8yZ0pl9tzZi5XHiQvb1R
- HivvIpiYBN502PMYW9+LE9QIM3besL9Z7kuK2/Jhl3k/9wDu4TGfkGSR6tx9OMImySNj qw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2u9pjqarhm-1
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=BT3Qu5ImazUq0glEJ/38QFS1wg4jo/CdGADNQX8MmGI=;
+ b=TQBfQYNURzIGHKTm7VbWez+aWkeS4kYjIPDwJPAzAKEqK7eJ5w1aRmHpNHZxlcanJwuP
+ pGg2j9ntsNAFerIOCerCOuhCHDOM75JL4C6gx/srxW4fLLga/f8+3a4im3sWcCLbHma5
+ cW2G0KCfdu9wcAw5k3DL38mdMQQf1NJRG2wBQmFZ6cQ96HmYt3L3G8k8gYNR/I0v28Od
+ 6mDo7mZ6/BUFzN6gYUTbcZ0/mS1lCTfkk+1rJ4WgQI1aG7etfiXITekeafIfhXBbc8uH
+ 8dWzL2Z6OFIMkK2IefttOLGBOvst3xOaC7PftXunu71qWCILKrbiKmaJiKME+Ljapyy7 Kw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2u9pjqarj0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 00:52:44 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D0mw4g039041;
-        Tue, 13 Aug 2019 00:52:43 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2u9m0ar7k3-1
+        Tue, 13 Aug 2019 00:52:47 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D0nIqY152549;
+        Tue, 13 Aug 2019 00:52:47 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2u9k1vuuyh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 00:52:43 +0000
+        Tue, 13 Aug 2019 00:52:47 +0000
 Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7D0qcp7003216;
-        Tue, 13 Aug 2019 00:52:38 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7D0qkG0007372;
+        Tue, 13 Aug 2019 00:52:46 GMT
 Received: from parnassus.us.oracle.com (/10.39.240.231)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 12 Aug 2019 17:52:37 -0700
+        with ESMTP ; Mon, 12 Aug 2019 17:52:46 -0700
 From:   Daniel Jordan <daniel.m.jordan@oracle.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         Steffen Klassert <steffen.klassert@secunet.com>
@@ -68,20 +70,22 @@ Cc:     Lai Jiangshan <jiangshanlai@gmail.com>,
         Tejun Heo <tj@kernel.org>,
         Daniel Jordan <daniel.m.jordan@oracle.com>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/9] padata: use unbound workqueues for parallel jobs
-Date:   Mon, 12 Aug 2019 20:52:15 -0400
-Message-Id: <20190813005224.30779-1-daniel.m.jordan@oracle.com>
+Subject: [PATCH 8/9] padata: unbind parallel jobs from specific CPUs
+Date:   Mon, 12 Aug 2019 20:52:23 -0400
+Message-Id: <20190813005224.30779-9-daniel.m.jordan@oracle.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190813005224.30779-1-daniel.m.jordan@oracle.com>
+References: <20190813005224.30779-1-daniel.m.jordan@oracle.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1906280000 definitions=main-1908130005
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
  definitions=main-1908130005
@@ -90,217 +94,264 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Padata binds the parallel part of a job to a single CPU.  Though the
+serial parts rely on per-CPU queues, it's not necessary for the parallel
+part, and it's beneficial to run the job locally on NUMA machines
+and let the scheduler pick the CPU within a node on a busy system.
 
-No objections the first time around[*], so this series is no longer RFC.
-The code is the same other than being rebased on recent padata fixes.
-Any feedback or testing welcome.
+So, make the parallel workqueue unbound.
 
-Thanks,
-Daniel
+Update the parallel workqueue's cpumask when the instance's parallel
+cpumask changes.
 
-RFC -> v1:
- - Included Tejun's acks.
- - Added testing section to cover letter.
+Now that parallel jobs no longer run on max_active=1 workqueues, two or
+more parallel works that hash to the same CPU may run simultaneously,
+finish out of order, and so be serialized out of order.  Prevent this by
+keeping the works sorted on the reorder list by sequence number and
+teaching padata_get_next about it.
 
-Padata binds the parallel part of a job to a single CPU and round-robins
-over all CPUs in the system for each successive job.  Though the serial
-parts rely on per-CPU queues for correct ordering, they're not necessary
-for parallel work, and it improves performance to run the job locally on
-NUMA machines and let the scheduler pick the CPU within a node on a busy
-system.
-  
-This series makes parallel padata jobs run on unbound workqueues.
+The ENODATA case in padata_get_next no longer makes sense because
+parallel jobs aren't bound to specific CPUs.  The EINPROGRESS case takes
+care of the scenario where a parallel job is potentially running on the
+same CPU as padata_get_next.
 
-Patch    Description
------    -----------
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ include/linux/padata.h |  4 +-
+ kernel/padata.c        | 97 +++++++++++++++++++++++-------------------
+ 2 files changed, 57 insertions(+), 44 deletions(-)
 
-    1    Make a padata instance allocate its workqueue internally.
-
-    2    Unconfine some recently-confined workqueue interfaces.
-
-  3-6    Address recursive CPU hotplug locking issue.
-
-         padata_alloc* requires its callers to hold this lock, but allocating
-         an unbound workqueue and calling apply_workqueue_attrs also take it.
-         Fix by removing the requirement for callers of padata_alloc*.
-
-  7-8    Add a second workqueue for each padata instance that's dedicated to
-         parallel jobs.
-
-    9    Small cleanup.
-
-Performance
------------
-
-Measurements are from a 2-socket, 20-core, 40-CPU Xeon server.
-
-For repeatability, modprobe was bound to a CPU and the serial cpumasks
-for both pencrypt and pdecrypt were also restricted to a CPU different
-from modprobe's.
-
-  # modprobe tcrypt alg="pcrypt(rfc4106(gcm(aes)))" type=3
-  # modprobe tcrypt mode=211 sec=1
-  # modprobe tcrypt mode=215 sec=1
-
-Busy system (tcrypt run while 10 stress-ng tasks were burning 100% CPU)
-
-                             base                test
-                             ----------------    ---------------
-speedup    key_sz  blk_sz    ops/sec    stdev    ops/sec   stdev
-
-(pcrypt(rfc4106-gcm-aesni)) encryption (tcrypt mode=211)
-
- 117.2x       160      16        960       30     112555   24775
- 135.1x       160      64        845      246     114145   25124
- 113.2x       160     256        993       17     112395   24714
- 111.3x       160     512       1000        0     111252   23755
- 110.0x       160    1024        983       16     108153   22374
- 104.2x       160    2048        985       22     102563   20530
-  98.5x       160    4096        998        3      98346   18777
-  86.2x       160    8192       1000        0      86173   14480
-
-(pcrypt(rfc4106-gcm-aesni)) decryption (tcrypt mode=211)
-
- 127.2x       160      16        997        5     126834   24244
- 128.4x       160      64       1000        0     128438   23261
- 127.6x       160     256        992        7     126627   23493
- 124.0x       160     512       1000        0     123958   22746
- 122.8x       160    1024        989       20     121372   22632
- 112.8x       160    2048        998        3     112602   18287
- 106.9x       160    4096        994       10     106255   16111
-  91.7x       160    8192       1000        0      91742   11670
-
-multibuffer (pcrypt(rfc4106-gcm-aesni)) encryption (tcrypt mode=215)
-
- 242.2x       160      16       2363      141     572189   16846
- 242.1x       160      64       2397      151     580424   11923
- 231.1x       160     256       2472       21     571387   16364
- 237.6x       160     512       2429       24     577264    8692
- 238.3x       160    1024       2384       97     568155    6621
- 216.3x       160    2048       2453       74     530627    3480
- 209.2x       160    4096       2381      206     498192   19177
- 176.5x       160    8192       2323      157     410013    9903
-
-multibuffer (pcrypt(rfc4106-gcm-aesni)) decryption (tcrypt mode=215)
-
- 220.3x       160      16       2341      228     515733   91317
- 216.6x       160      64       2467       33     534381  101262
- 217.7x       160     256       2451       45     533443   85418
- 213.8x       160     512       2485       26     531293   83767
- 211.0x       160    1024       2472       28     521677   80339
- 200.8x       160    2048       2459       67     493808   63587
- 188.8x       160    4096       2491        9     470325   58055
- 159.9x       160    8192       2459       51     393147   25756
-
-Idle system (tcrypt run by itself)
-
-                             base                test
-                             ----------------    ---------------
-speedup    key_sz  blk_sz    ops/sec    stdev    ops/sec   stdev
-
-(pcrypt(rfc4106-gcm-aesni)) encryption (tcrypt mode=211)
-
-   2.5x       160      16      63412    43075     161615    1034
-   4.1x       160      64      39554    24006     161653     981
-   6.0x       160     256      26504     1436     160110    1158
-   6.2x       160     512      25500       40     157018     951
-   5.9x       160    1024      25777     1094     151852     915
-   5.8x       160    2048      24653      218     143756     508
-   5.6x       160    4096      24333       20     136752     548
-   5.0x       160    8192      23310       15     117660     481
-
-(pcrypt(rfc4106-gcm-aesni)) decryption (tcrypt mode=211)
-
-   2.4x       160      16      53471    48279     128047   31328
-   3.4x       160      64      37712    20855     128187   31074
-   4.5x       160     256      27911     4378     126430   31084
-   4.9x       160     512      25346      175     123870   29099
-   3.1x       160    1024      38452    23118     120817   26846
-   4.7x       160    2048      24612      187     115036   23942
-   4.5x       160    4096      24217      114     109583   21559
-   4.2x       160    8192      23144      108      96850   16686
-
-multibuffer (pcrypt(rfc4106-gcm-aesni)) encryption (tcrypt mode=215)
-
-   1.0x       160      16     412157     3855     426973    1591
-   1.0x       160      64     412600     4410     431920    4224
-   1.1x       160     256     410352     3254     453691   17831
-   1.2x       160     512     406293     4948     473491   39818
-   1.2x       160    1024     395123     7804     478539   27660
-   1.2x       160    2048     385144     7601     453720   17579
-   1.2x       160    4096     371989     3631     449923   15331
-   1.2x       160    8192     346723     1617     399824   18559
-
-multibuffer (pcrypt(rfc4106-gcm-aesni)) decryption (tcrypt mode=215)
-
-   1.1x       160      16     407317     1487     452619   14404
-   1.1x       160      64     411821     4261     464059   23541
-   1.2x       160     256     408941     4945     477483   36576
-   1.2x       160     512     406451      611     472661   11038
-   1.2x       160    1024     394813     2667     456357   11452
-   1.2x       160    2048     390291     4175     448928    8957
-   1.2x       160    4096     371904     1068     449344   14225
-   1.2x       160    8192     344227     1973     404397   19540
-
-Testing
--------
-
-In addition to the bare metal performance runs above, this series was
-tested in a kvm guest with the tcrypt module (mode=215).  All
-combinations of CPUs among parallel_cpumask, serial_cpumask, and CPU
-hotplug online/offline were run with 4 possible CPUs, and over 1000
-random combinations of these were run with 8 possible CPUs.  Workqueue
-events were used throughout to verify that all parallel and serial
-workers executed on only the CPUs allowed by the cpumask sysfs files.
-
-Finally, tcrypt mode=211 and mode=215 were run at each patch in the
-series when built with and without CONFIG_PADATA/CONFIG_CRYPTO_PCRYPT.
-
-Dependencies
-------------
-
-Series based on 5.2 plus recent workqueue and padata changes.  A branch
-with all prerequisite patches available at
-
-    git://oss.oracle.com/git/linux-dmjordan.git padata-unbound-wq
-
-
-* https://lore.kernel.org/lkml/20190725212505.15055-1-daniel.m.jordan@oracle.com/
-
-Daniel Jordan (9):
-  padata: allocate workqueue internally
-  workqueue: unconfine alloc/apply/free_workqueue_attrs()
-  workqueue: require CPU hotplug read exclusion for
-    apply_workqueue_attrs
-  padata: make padata_do_parallel find alternate callback CPU
-  pcrypt: remove padata cpumask notifier
-  padata, pcrypt: take CPU hotplug lock internally in
-    padata_alloc_possible
-  padata: use separate workqueues for parallel and serial work
-  padata: unbind parallel jobs from specific CPUs
-  padata: remove cpu_index from the parallel_queue
-
- Documentation/padata.txt  |  12 +--
- crypto/pcrypt.c           | 167 ++++-------------------------------
- include/linux/padata.h    |  17 ++--
- include/linux/workqueue.h |   4 +
- kernel/padata.c           | 180 ++++++++++++++++++++++----------------
- kernel/workqueue.c        |  25 ++++--
- 6 files changed, 159 insertions(+), 246 deletions(-)
-
-
-base-commit: 0ecfebd2b52404ae0c54a878c872bb93363ada36
-prerequisite-patch-id: a5bfed8ea60d5a784b8b3e21ccb5657ced2aa1e3
-prerequisite-patch-id: 2253fd446f550ba17dcd29e2ab819eec080882b7
-prerequisite-patch-id: 5b54f4083ca2f1f36726fe9453ee333966506ba3
-prerequisite-patch-id: 73cefa748271f8d7417f21f4277efe13bbfaa8a2
-prerequisite-patch-id: 99803e56a3016db4555f27b12a19d3504fd1b6b7
-prerequisite-patch-id: 965d8a63c1461f00219aec2d817f2ca85d49cfb3
-prerequisite-patch-id: 8e6c2988331b46c9467ac568157c6c575cbe6578
-prerequisite-patch-id: 39df88ce1e07d318cf51f5c16fba03ff477c945e
-prerequisite-patch-id: 90b1e5bac841672d405f8f649aac7952eddd6f43
-prerequisite-patch-id: 69d3bd9cdda2ba00c5c2d16d0757d8c16eabcd54
+diff --git a/include/linux/padata.h b/include/linux/padata.h
+index e7978f8942ca..cc420064186f 100644
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -35,6 +35,7 @@ struct padata_priv {
+ 	struct parallel_data	*pd;
+ 	int			cb_cpu;
+ 	int			cpu;
++	unsigned int		seq_nr;
+ 	int			info;
+ 	void                    (*parallel)(struct padata_priv *padata);
+ 	void                    (*serial)(struct padata_priv *padata);
+@@ -104,7 +105,7 @@ struct padata_cpumask {
+  * @squeue: percpu padata queues used for serialuzation.
+  * @reorder_objects: Number of objects waiting in the reorder queues.
+  * @refcnt: Number of objects holding a reference on this parallel_data.
+- * @max_seq_nr:  Maximal used sequence number.
++ * @processed: Number of already processed objects.
+  * @cpu: Next CPU to be processed.
+  * @cpumask: The cpumasks in use for parallel and serial workers.
+  * @reorder_work: work struct for reordering.
+@@ -117,6 +118,7 @@ struct parallel_data {
+ 	atomic_t			reorder_objects;
+ 	atomic_t			refcnt;
+ 	atomic_t			seq_nr;
++	unsigned int			processed;
+ 	int				cpu;
+ 	struct padata_cpumask		cpumask;
+ 	struct work_struct		reorder_work;
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 1465f094640c..5615f6b60dab 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -46,18 +46,13 @@ static int padata_index_to_cpu(struct parallel_data *pd, int cpu_index)
+ 	return target_cpu;
+ }
+ 
+-static int padata_cpu_hash(struct parallel_data *pd)
++static int padata_cpu_hash(struct parallel_data *pd, unsigned int seq_nr)
+ {
+-	unsigned int seq_nr;
+-	int cpu_index;
+-
+ 	/*
+ 	 * Hash the sequence numbers to the cpus by taking
+ 	 * seq_nr mod. number of cpus in use.
+ 	 */
+-
+-	seq_nr = atomic_inc_return(&pd->seq_nr);
+-	cpu_index = seq_nr % cpumask_weight(pd->cpumask.pcpu);
++	int cpu_index = seq_nr % cpumask_weight(pd->cpumask.pcpu);
+ 
+ 	return padata_index_to_cpu(pd, cpu_index);
+ }
+@@ -144,7 +139,8 @@ int padata_do_parallel(struct padata_instance *pinst,
+ 	padata->pd = pd;
+ 	padata->cb_cpu = *cb_cpu;
+ 
+-	target_cpu = padata_cpu_hash(pd);
++	padata->seq_nr = atomic_inc_return(&pd->seq_nr);
++	target_cpu = padata_cpu_hash(pd, padata->seq_nr);
+ 	padata->cpu = target_cpu;
+ 	queue = per_cpu_ptr(pd->pqueue, target_cpu);
+ 
+@@ -152,7 +148,7 @@ int padata_do_parallel(struct padata_instance *pinst,
+ 	list_add_tail(&padata->list, &queue->parallel.list);
+ 	spin_unlock(&queue->parallel.lock);
+ 
+-	queue_work_on(target_cpu, pinst->parallel_wq, &queue->work);
++	queue_work(pinst->parallel_wq, &queue->work);
+ 
+ out:
+ 	rcu_read_unlock_bh();
+@@ -172,9 +168,6 @@ EXPORT_SYMBOL(padata_do_parallel);
+  * -EINPROGRESS, if the next object that needs serialization will
+  *  be parallel processed by another cpu and is not yet present in
+  *  the cpu's reorder queue.
+- *
+- * -ENODATA, if this cpu has to do the parallel processing for
+- *  the next object.
+  */
+ static struct padata_priv *padata_get_next(struct parallel_data *pd)
+ {
+@@ -191,22 +184,25 @@ static struct padata_priv *padata_get_next(struct parallel_data *pd)
+ 		padata = list_entry(reorder->list.next,
+ 				    struct padata_priv, list);
+ 
+-		list_del_init(&padata->list);
+-		atomic_dec(&pd->reorder_objects);
++		/*
++		 * The check fails in the unlikely event that two or more
++		 * parallel jobs have hashed to the same CPU and one of the
++		 * later ones finishes first.
++		 */
++		if (padata->seq_nr == pd->processed) {
++			list_del_init(&padata->list);
++			atomic_dec(&pd->reorder_objects);
+ 
+-		pd->cpu = cpumask_next_wrap(cpu, pd->cpumask.pcpu, -1,
+-					    false);
++			++pd->processed;
++			pd->cpu = cpumask_next_wrap(cpu, pd->cpumask.pcpu, -1,
++						    false);
+ 
+-		spin_unlock(&reorder->lock);
+-		goto out;
++			spin_unlock(&reorder->lock);
++			goto out;
++		}
+ 	}
+ 	spin_unlock(&reorder->lock);
+ 
+-	if (__this_cpu_read(pd->pqueue->cpu_index) == next_queue->cpu_index) {
+-		padata = ERR_PTR(-ENODATA);
+-		goto out;
+-	}
+-
+ 	padata = ERR_PTR(-EINPROGRESS);
+ out:
+ 	return padata;
+@@ -244,16 +240,6 @@ static void padata_reorder(struct parallel_data *pd)
+ 		if (PTR_ERR(padata) == -EINPROGRESS)
+ 			break;
+ 
+-		/*
+-		 * This cpu has to do the parallel processing of the next
+-		 * object. It's waiting in the cpu's parallelization queue,
+-		 * so exit immediately.
+-		 */
+-		if (PTR_ERR(padata) == -ENODATA) {
+-			spin_unlock_bh(&pd->lock);
+-			return;
+-		}
+-
+ 		cb_cpu = padata->cb_cpu;
+ 		squeue = per_cpu_ptr(pd->squeue, cb_cpu);
+ 
+@@ -332,9 +318,14 @@ void padata_do_serial(struct padata_priv *padata)
+ 	struct parallel_data *pd = padata->pd;
+ 	struct padata_parallel_queue *pqueue = per_cpu_ptr(pd->pqueue,
+ 							   padata->cpu);
++	struct padata_priv *cur;
+ 
+ 	spin_lock(&pqueue->reorder.lock);
+-	list_add_tail(&padata->list, &pqueue->reorder.list);
++	/* Sort in ascending order of sequence number. */
++	list_for_each_entry_reverse(cur, &pqueue->reorder.list, list)
++		if (cur->seq_nr < padata->seq_nr)
++			break;
++	list_add(&padata->list, &cur->list);
+ 	atomic_inc(&pd->reorder_objects);
+ 	spin_unlock(&pqueue->reorder.lock);
+ 
+@@ -353,17 +344,36 @@ static int padata_setup_cpumasks(struct parallel_data *pd,
+ 				 const struct cpumask *pcpumask,
+ 				 const struct cpumask *cbcpumask)
+ {
+-	if (!alloc_cpumask_var(&pd->cpumask.pcpu, GFP_KERNEL))
+-		return -ENOMEM;
++	struct workqueue_attrs *attrs;
++	int err = -ENOMEM;
+ 
++	if (!alloc_cpumask_var(&pd->cpumask.pcpu, GFP_KERNEL))
++		goto out;
+ 	cpumask_and(pd->cpumask.pcpu, pcpumask, cpu_online_mask);
+-	if (!alloc_cpumask_var(&pd->cpumask.cbcpu, GFP_KERNEL)) {
+-		free_cpumask_var(pd->cpumask.pcpu);
+-		return -ENOMEM;
+-	}
+ 
++	if (!alloc_cpumask_var(&pd->cpumask.cbcpu, GFP_KERNEL))
++		goto free_pcpu_mask;
+ 	cpumask_and(pd->cpumask.cbcpu, cbcpumask, cpu_online_mask);
++
++	attrs = alloc_workqueue_attrs();
++	if (!attrs)
++		goto free_cbcpu_mask;
++
++	/* Restrict parallel_wq workers to pd->cpumask.pcpu. */
++	cpumask_copy(attrs->cpumask, pd->cpumask.pcpu);
++	err = apply_workqueue_attrs(pd->pinst->parallel_wq, attrs);
++	free_workqueue_attrs(attrs);
++	if (err < 0)
++		goto free_cbcpu_mask;
++
+ 	return 0;
++
++free_cbcpu_mask:
++	free_cpumask_var(pd->cpumask.cbcpu);
++free_pcpu_mask:
++	free_cpumask_var(pd->cpumask.pcpu);
++out:
++	return err;
+ }
+ 
+ static void __padata_list_init(struct padata_list *pd_list)
+@@ -429,6 +439,8 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
+ 	pd->squeue = alloc_percpu(struct padata_serial_queue);
+ 	if (!pd->squeue)
+ 		goto err_free_pqueue;
++
++	pd->pinst = pinst;
+ 	if (padata_setup_cpumasks(pd, pcpumask, cbcpumask) < 0)
+ 		goto err_free_squeue;
+ 
+@@ -437,7 +449,6 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
+ 	atomic_set(&pd->seq_nr, -1);
+ 	atomic_set(&pd->reorder_objects, 0);
+ 	atomic_set(&pd->refcnt, 0);
+-	pd->pinst = pinst;
+ 	spin_lock_init(&pd->lock);
+ 	pd->cpu = cpumask_first(pd->cpumask.pcpu);
+ 	INIT_WORK(&pd->reorder_work, invoke_padata_reorder);
+@@ -978,8 +989,8 @@ static struct padata_instance *padata_alloc(const char *name,
+ 	if (!pinst)
+ 		goto err;
+ 
+-	pinst->parallel_wq = alloc_workqueue("%s_parallel", WQ_MEM_RECLAIM |
+-					     WQ_CPU_INTENSIVE, 1, name);
++	pinst->parallel_wq = alloc_workqueue("%s_parallel", WQ_UNBOUND, 0,
++					     name);
+ 	if (!pinst->parallel_wq)
+ 		goto err_free_inst;
+ 
 -- 
 2.22.0
 
