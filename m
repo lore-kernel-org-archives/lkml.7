@@ -4,23 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812FDC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C31C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FEB020844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E29420663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfHMP2R (ORCPT
+        id S1729939AbfHMP2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:28:17 -0400
-Received: from 8bytes.org ([81.169.241.247]:48944 "EHLO theia.8bytes.org"
+        Tue, 13 Aug 2019 11:28:21 -0400
+Received: from 8bytes.org ([81.169.241.247]:49012 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbfHMP2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:28:12 -0400
+        id S1728106AbfHMP2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 11:28:18 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id E17EC1D3; Tue, 13 Aug 2019 17:28:09 +0200 (CEST)
+        id A5B7B45B; Tue, 13 Aug 2019 17:28:17 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org
@@ -31,11 +32,11 @@ Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
 Subject: [PATCH 1/3] x86/mm: Check for pfn instead of page in vmalloc_sync_one()
-Date:   Tue, 13 Aug 2019 17:28:03 +0200
-Message-Id: <20190813152805.5251-2-joro@8bytes.org>
+Date:   Tue, 13 Aug 2019 17:28:12 +0200
+Message-Id: <20190813152814.5354-2-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190813152805.5251-1-joro@8bytes.org>
-References: <20190813152805.5251-1-joro@8bytes.org>
+In-Reply-To: <20190813152814.5354-1-joro@8bytes.org>
+References: <20190813152814.5354-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,10 +60,10 @@ Link: https://lkml.kernel.org/r/20190719184652.11391-2-joro@8bytes.org
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 9d9765e4d1ef..4d12176a470e 100644
+index 46df4c6aae46..499331be9bfe 100644
 --- a/arch/x86/mm/fault.c
 +++ b/arch/x86/mm/fault.c
-@@ -267,7 +267,7 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
+@@ -200,7 +200,7 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
  	if (!pmd_present(*pmd))
  		set_pmd(pmd, *pmd_k);
  	else
