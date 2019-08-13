@@ -4,205 +4,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA53C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12424C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1EEE2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA751206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="quDyGfVg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hEFcVJVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfHMHSU (ORCPT
+        id S1727500AbfHMHUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:18:20 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40554 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727299AbfHMHSU (ORCPT
+        Tue, 13 Aug 2019 03:20:23 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33170 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfHMHUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:18:20 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v19so494646wmj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 00:18:17 -0700 (PDT)
+        Tue, 13 Aug 2019 03:20:23 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n9so106870311wru.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 00:20:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=E5kLOsNd1JoC/tKYPvjF5AM6FnpgT5H8QJRpzp0JJDo=;
-        b=quDyGfVg17WZgsvg84lAvoSBSSAaK7/qCT9HoIg0NOW/nqt+fq7VXq5V+Ll8BTn49W
-         +W5HfbUwZnv4kN/XOFhFYLlvvG/+iio5q31Dsq7fbTXUXwCGQFKMpbuERXq/krJT3PAs
-         IKq/pfChBU0Bah64rtHB4i1kQ0cINrKriwIaWiCbO+JpFFlGC/KnXfisx9biSstSHQR1
-         lrlQbioJbsGwPwXX2yrL4MD0flN4zMkmgLLKm9Y1+Tf5ALrAwaCbgm8+Gf3E01I6OdEr
-         XSnGxirb4N7rdIN2CVsLkFH79FpFcgM9pJkPPwnb7pNLSCs8l8cuk83YSIrH5bdasYue
-         SDfA==
+        bh=jh+u0/5C9sC+jh4TIlKIxaJHuXDdftZDgr4L90RCuIA=;
+        b=hEFcVJVzbO+JRAcIntpp/zkyNlS7/GvdeEjrweS18w0t6brHWY49x4M06TnFdZSwxW
+         GGaQNP7MUgT/naNeXacrDjPlReBWjvfVLRj+jwnfOSnzi0OUNk5l34AoZpS5DnvuLpDl
+         7cNl0BEt+sVJKtQ+LT++mw33Dm284lEGuMdRBBrFKcyC4hjm0k0kVy/4G26aCy6Fo+oY
+         uRsQzWvgL5XujoH7taBtmR3FwWDy8klSb77UV1u2YiYIN/RaktD6HE0sLCjVhZ3gWcxT
+         6MHB9kBjCkdbPzg7uohM0ruCkgjKBGkq74L2O7ondbwMC4ypfOyxsU8N6t9D74MVit5m
+         sEVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=E5kLOsNd1JoC/tKYPvjF5AM6FnpgT5H8QJRpzp0JJDo=;
-        b=rDyCzenbU8b70YxWHRfGSYg4PiX4Irxjhxl01vfDgBZt1FYL5YjKDZs/5YvbhnBkjc
-         0O8Y08T+qnaiVpbe2XopL0Vrvyed6eXiHfkquwW8RHPpc+yxL0qJbztCrLNp9gn9751m
-         pRtXBn0Lh+8AS6xjOT8KP+T7nN0DbPgE50e/uJsL2Riklv/2ueh3pvW514xflz70+mIz
-         wiKVqTxhUV7m/WDPGA2nYWUXkQrfdhPc8NsqQiszwihBysT8gjdgbM0jeWBMbl+4JUGY
-         CIbjWcjqJ62dakPcaE9EABXNOptPo7CYRWnfkHnnvojvUUv3XcVaPomUchPEHO58lj3A
-         gRbQ==
-X-Gm-Message-State: APjAAAXckq5D9nw8Y0G+EiGkl2mbDSnUo4xKNcMV+1EzFqrJTutE091i
-        KZH26+bum8GeGrTFBqxXaSCFAQ==
-X-Google-Smtp-Source: APXvYqxGG3JbfgborY+YIpwmjK4Y2TbKpsdVmQdDEsDRXsBTsyOxNr+gLpuglnv0VYJ/MYFIWlB5/g==
-X-Received: by 2002:a1c:be11:: with SMTP id o17mr1344165wmf.115.1565680696953;
-        Tue, 13 Aug 2019 00:18:16 -0700 (PDT)
+        bh=jh+u0/5C9sC+jh4TIlKIxaJHuXDdftZDgr4L90RCuIA=;
+        b=C6QsPWobioSu0cTX/oFtZPjCl0DFfN9WTkmTd4IxOsvVZK2ed0Wnkg4wVZDQtf0iBQ
+         p6B8OBjS+7/xF0t+4dIrj76bHgOkV2OEUIhI46eOaWr6AzNWS/R9zAqXsIKH6OVw8TZV
+         Bq2wb2NIiNGei9BKgNJA97YvMqL7GHkuQkbfGht6LSIgIfEtWXk9yPiMZCSTsAA/3D/i
+         qBJvYh77lKNzM7HriclsCjZs3w11wE7tLiA8CFVHSokE3jlEOnuV/Xqu/9izs8hoh+1U
+         Qf3vtRYOlQvaHqjEo5C9FeJpGcAqxCJIIeStz9bOLPfxlG5ibw60YhuFKEK3OB1Qje64
+         spng==
+X-Gm-Message-State: APjAAAUAtsmPTMS9npCgr+9xnzqFv4cCtY+UTOgWo6mqlaHXR51Nv5X2
+        lYcL59az8CMJFgh3+OTeGtTYsw==
+X-Google-Smtp-Source: APXvYqwQjf7fTO6Udq8hrYKQOuwTwlMrSM8lymQq+3WwhEOVys4N9qu95PdOanYcKCvd51L3ufdJRQ==
+X-Received: by 2002:adf:fe12:: with SMTP id n18mr38762652wrr.105.1565680821103;
+        Tue, 13 Aug 2019 00:20:21 -0700 (PDT)
 Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id r11sm170287114wre.14.2019.08.13.00.18.15
+        by smtp.gmail.com with ESMTPSA id k1sm14475486wru.49.2019.08.13.00.20.19
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 13 Aug 2019 00:18:15 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 08:18:14 +0100
+        Tue, 13 Aug 2019 00:20:20 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 08:20:18 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH 2/2] mfd: madera: Add support for requesting the supply
- clocks
-Message-ID: <20190813071814.GY26727@dell>
-References: <20190806151321.31137-1-ckeepax@opensource.cirrus.com>
- <20190806151321.31137-2-ckeepax@opensource.cirrus.com>
- <20190812103853.GM26727@dell>
- <20190812160937.GM54126@ediswmail.ad.cirrus.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Allison Randal <allison@lohutok.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Tianping . Fang" <tianping.fang@mediatek.com>,
+        Josef Friedl <josef.friedl@speed.at>
+Subject: Re: [PATCH v5 03/10] rtc: mt6397: move some common definitions into
+ rtc.h
+Message-ID: <20190813072018.GZ26727@dell>
+References: <20190812121511.4169-1-frank-w@public-files.de>
+ <20190812121511.4169-4-frank-w@public-files.de>
+ <20190812151128.GV26727@dell>
+ <20190812153856.GR3600@piout.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190812160937.GM54126@ediswmail.ad.cirrus.com>
+In-Reply-To: <20190812153856.GR3600@piout.net>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019, Charles Keepax wrote:
+On Mon, 12 Aug 2019, Alexandre Belloni wrote:
 
-> On Mon, Aug 12, 2019 at 11:38:53AM +0100, Lee Jones wrote:
-> > On Tue, 06 Aug 2019, Charles Keepax wrote:
+> On 12/08/2019 16:11:29+0100, Lee Jones wrote:
+> > On Mon, 12 Aug 2019, Frank Wunderlich wrote:
 > > 
-> > > Add the ability to get the clock for each clock input pin of the chip
-> > > and enable MCLK2 since that is expected to be a permanently enabled
-> > > 32kHz clock.
+> > > From: Josef Friedl <josef.friedl@speed.at>
 > > > 
-> > > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> > > move code to separate header-file to reuse definitions later
+> > > in poweroff-driver (drivers/power/reset/mt6323-poweroff.c)
+> > > 
+> > > Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+> > > Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+> > > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 > > > ---
-> > >  int madera_dev_init(struct madera *madera)
-> > >  {
-> > > +	static const char * const mclk_name[] = { "mclk1", "mclk2", "mclk3" };
-> > >  	struct device *dev = madera->dev;
-> > >  	unsigned int hwid;
-> > >  	int (*patch_fn)(struct madera *) = NULL;
-> > > @@ -450,6 +451,17 @@ int madera_dev_init(struct madera *madera)
-> > >  		       sizeof(madera->pdata));
-> > >  	}
-> > >  
-> > > +	BUILD_BUG_ON(ARRAY_SIZE(madera->mclk) != ARRAY_SIZE(mclk_name));
+> > > changes since v4: none
+> > > changes since v3: none
+> > > changes since v2: add missing commit-message
+> > > ---
+> > >  drivers/rtc/rtc-mt6397.c       | 55 +-------------------------
+> > >  include/linux/mfd/mt6397/rtc.h | 71 ++++++++++++++++++++++++++++++++++
 > > 
-> > Not sure how this could happen.  Surely we don't need it.
+> > include/linux/rtc/mt6397.h?
 > > 
 > 
-> mclk_name is defined locally in this function and the mclk array in
-> include/linux/mfd/madera/core.h. This is to guard against one of
-> them being updated but not the other. It is by no means essential
-> but it feels like a good trade off given there is really limited
-> downside.
+> It's just a bunch of registers and bit definitions so it may as well
+> stay close to include/linux/mfd/mt6397/registers.h
 
-It's fine in general I guess.  How likely would it be for anyone to
-update either of the definitions?  Can there be more/less clocks on a
-supported platform?
-
-> > > +	for (i = 0; i < ARRAY_SIZE(madera->mclk); i++) {
-> > > +		madera->mclk[i] = devm_clk_get_optional(madera->dev,
-> > > +							mclk_name[i]);
-> > > +		if (IS_ERR(madera->mclk[i])) {
-> > > +			dev_warn(madera->dev, "Failed to get %s: %ld\n",
-> > > +				 mclk_name[i], PTR_ERR(madera->mclk[i]));
-> > 
-> > Do we even want to warn on the non-acquisition of an optional clock?
-> > 
-> > Especially with a message that looks like something actually failed.
-> > 
-> 
-> devm_clk_get_optional will return NULL if the clock was not
-> specified, so this is silent in that case. A warning in the case
-> something actually went wrong seems reasonable even if the clock
-> is optional as the user tried to do something and it didn't
-> behave as they intended.
-
-If something actually went wrong, then doesn't then become and error
-and should be reported (returned)?
-
-> > > +			madera->mclk[i] = NULL;
-> > > +		}
-> > > +	}
-> > > +
-> > >  	ret = madera_get_reset_gpio(madera);
-> > >  	if (ret)
-> > >  		return ret;
-> > > @@ -660,13 +672,19 @@ int madera_dev_init(struct madera *madera)
-> > >  	}
-> > >  
-> > >  	/* Init 32k clock sourced from MCLK2 */
-> > > +	ret = clk_prepare_enable(madera->mclk[MADERA_MCLK2]);
-> > > +	if (ret != 0) {
-> > > +		dev_err(madera->dev, "Failed to enable 32k clock: %d\n", ret);
-> > > +		goto err_reset;
-> > > +	}
-> > 
-> > What happened to this being optional?
-> > 
-> 
-> The device needs the clock but specifying it through DT is
-> optional (the clock framework functions are no-ops and return
-> success if the clock pointer is NULL). Normally the 32kHz
-> clock is always on, and more importantly no existing users of
-> the driver will be specifying one.
-> 
-> We could remove the optional status for MCLK2, but it could break
-> existing users who don't yet specify the clock until they update
-> their DT and it will complicate the code as the other clocks are
-> definitely optional, so MCLK2 will need special handling.
-
-I'd prefer the code to reflect the actual situation.  If the clock is
-not optional it doesn't sound correct to specify it as such.  Maybe as
-an intermediary step we attempt to obtain it, but ignore missing
-clocks (with a message and comment) if it is not yet specified.  We
-can look to change the behaviour once users have had the chance to
-update their DTs.
-
-> > >  	ret = regmap_update_bits(madera->regmap,
-> > >  			MADERA_CLOCK_32K_1,
-> > >  			MADERA_CLK_32K_ENA_MASK | MADERA_CLK_32K_SRC_MASK,
-> > >  			MADERA_CLK_32K_ENA | MADERA_32KZ_MCLK2);
-> > >  	if (ret) {
-> > >  		dev_err(madera->dev, "Failed to init 32k clock: %d\n", ret);
-> > > -		goto err_reset;
-> > > +		goto err_clock;
-> > >  	}
-> > >  
-> > >  	pm_runtime_set_active(madera->dev);
-> > > @@ -687,6 +705,8 @@ int madera_dev_init(struct madera *madera)
-> > >  
-> > >  err_pm_runtime:
-> > >  	pm_runtime_disable(madera->dev);
-> > > +err_clock:
-> > > +	clk_disable_unprepare(madera->mclk[MADERA_MCLK2]);
-> > 
-> > Where are the other clocks consumed?
-> 
-> Other clocks will be consumed by the ASoC part of the driver for
-> clocking the audio functionality and running the FLLs. I haven't
-> sent those patches yet, but was planning on doing so once this
-> was merged.
-
-Okay.
+Sure.  It was a weak preference.
 
 -- 
 Lee Jones [李琼斯]
