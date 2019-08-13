@@ -2,153 +2,106 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2A8C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AC3C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A112084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565720259;
-	bh=ODQ3g1b+4WWI1Y+sTyjeEEkmXSZ1vLnLLfxKPgIj4TM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yv96MaRUb1ObtNoMoC0bwTGkkaTOptqXDvtVlV2ih2DDs8TJMiloDPJBsXR8yPrsR
-	 mAtNcOythTIps4C7W9x62yDZ6LIUEnoJuf99YBBxylsyI+OoFR6zvO0Bp9lpvus1CO
-	 VQJG7U7Mxm9hO4MXyr1u/94ys7oURqCdl+ub/BWc=
+	by mail.kernel.org (Postfix) with ESMTP id A4A1820665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:18:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="SfQg2MPc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728545AbfHMSRi (ORCPT
+        id S1728552AbfHMSSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 14:17:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60570 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 14:18:46 -0400
+Received: from mout.gmx.net ([212.227.17.22]:56417 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728284AbfHMSRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 14:17:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0162120665;
-        Tue, 13 Aug 2019 18:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565720256;
-        bh=ODQ3g1b+4WWI1Y+sTyjeEEkmXSZ1vLnLLfxKPgIj4TM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BRGQXroQxcAhJdNbVGc99NxIL4lFjPcDg7ibmGCnDdWLTD7m1RB9aSseD0XA2LN2J
-         42UcYahiZr8oXQoCdQPAaxGef5rdIp2ctdXDRxPTaQg/yRhxbHnE3uYBISvvSAfvki
-         0po/OvyYWIG3OJdzzVccC86G+t2vsNwWD7yaNH2Q=
-Date:   Tue, 13 Aug 2019 20:17:34 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Matthias Maennich <maennich@google.com>
-Cc:     linux-kernel@vger.kernel.org, maco@android.com,
-        kernel-team@android.com, arnd@arndb.de, geert@linux-m68k.org,
-        hpa@zytor.com, jeyu@kernel.org, joel@joelfernandes.org,
-        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
-        maco@google.com, michal.lkml@markovi.net, mingo@redhat.com,
-        oneukum@suse.com, pombredanne@nexb.com, sam@ravnborg.org,
-        sboyd@codeaurora.org, sspatil@google.com,
-        stern@rowland.harvard.edu, tglx@linutronix.de,
-        usb-storage@lists.one-eyed-alien.net, x86@kernel.org,
-        yamada.masahiro@socionext.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Richard Guy Briggs <rgb@redhat.com>
-Subject: Re: [PATCH v2 05/10] module: add config option
- MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
-Message-ID: <20190813181734.GE2378@kroah.com>
-References: <20180716122125.175792-1-maco@android.com>
- <20190813121733.52480-1-maennich@google.com>
- <20190813121733.52480-6-maennich@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813121733.52480-6-maennich@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1725923AbfHMSSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 14:18:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1565720284;
+        bh=lZH/3cVeaUb9OXxddaCLC0IsqhjFEEIHEnwVfzYD8tQ=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=SfQg2MPccFvlDMrx8pHleM90moiWyx41DCHMDNPjBpBCz9zTKnmVMPT6Y496718eX
+         qQZme9gc2VY8vcI0qOey5XL1Czf638kGvaDxdYlcD8KGiWRUQ3NeWxbw7G/8AtmaWj
+         N62x1BGlyoEX3sm0gTkxlJkaXrxmbGZK89oCVp4U=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([37.4.249.106]) by mail.gmx.com
+ (mrgmx102 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 0MNw0t-1hv6G72DOd-007T0n; Tue, 13 Aug 2019 20:18:04 +0200
+From:   Stefan Wahren <wahrenst@gmx.net>
+To:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH 2/3] hwmon: raspberrypi: update MODULE_AUTHOR() email address
+Date:   Tue, 13 Aug 2019 20:17:28 +0200
+Message-Id: <1565720249-6549-2-git-send-email-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1565720249-6549-1-git-send-email-wahrenst@gmx.net>
+References: <1565720249-6549-1-git-send-email-wahrenst@gmx.net>
+X-Provags-ID: V03:K1:7yZvEc7GmzP66uxj7l9eM+pvVpf2kE2LqR9JkhAGhQ8FAkXCe4h
+ FSlkHG22eiVlYhTkceEI5pAHZAQwKNVuX9v2fVAAN9C+nV7dfx03Bvfp2gvI/tYloYz+l2v
+ 0grezM76Z5HbDd4bc8EIN6gmxrSmaQwcIF4gT7LNaIzAcNUwjiye3UqMIRpKLVfnCQDxuvE
+ wEkfrIDgHMpl2HGpzjzig==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AFshXHr2JQ8=:CaMeoh40NvhqLtdhnhorhJ
+ OH52UqZkWgZG1vqjK1yqO74lz5iEL2SFtsp/hBSNfh9aXAfa0N8Ki4tAsJJH7/bezJ4+Yudiw
+ 8PAOjqlRg+5wVEKPR7qjwVTarF5ehP7QZw99cob9xn1mzobM2UQyA0k5W5d0HHQ/A5BGFZqob
+ RBUv5EisKGL+h+P8dywUuwos3xUtrbnOlXukU8NaPnqPVnMhdeNb9TCzsyR+RsKjS8Uw5sTBN
+ 2RlXtrTWZDnU8oEUjLSlYw12gIlEaRy/BdU5aBCnJzAqu3os9sjKRaDTVVthTrD6lm+5OObUd
+ U2i0x/X/6WKvWNqka8Ikxh0QnZ9HQTx+5GGPJxcDnSVci/Uz1kYL+6aKo93mAE3Z3TmUxMVCV
+ 5VB5RLmdfdPvFU4noxsg2VX9WuRXmxsCjUpuU5SoI6O1HPUUA4B+j+qHY0xUrX/lpyKAcLosf
+ nTheIb/29elFm5s1hweM00ff9TmNxKC4nt34DPJjiE/i+ff038CLYQzTC9A1+Ec3golKK2AB2
+ N0Ir7BZJHOAMfdVHHM/p8WXWMsdBjyfdOkOeLVa5P5hARtXIAD585NRLrl7tRQ9iuuCaMobW7
+ A9pnPbY/pqcAXNSoH4BobHSwVMlpptMsMfwTGibTf43uvico8mTy7Bg/hspM01X7HMddJIlau
+ 9Wr1aSDAgke6pgtMr7yh2gyL1v7GGfRvQFgJABjm7wgkzNTjZCMIIDylHNxL0XYpVHFU8zV1A
+ wxqw6YnQVDbDc8w4k8hQMJb7g9uhv/578U4A8FFG/Y47PjevdJtlZNhqwSYFJ+yi+Ui7wcCLy
+ cidwkVmCeaR5rfqTOvIr7oZKBQtq/dgX05ySNF2Fq0fU+Nq9mu2ydkpa9QEH8x5BqP9pFbNKB
+ y3gHfWcb8bPFC6E90oFYojHuuikfF5mIK8JVR896RMwf8UBeXwIH9khREtEvj15Gj/DHhFFB5
+ krKHXYfLVmEdeUNisRc8Q0jxVjtlj00TP6IjT9762iRKQZ6LTb3BsVvXZ0zfGmi7oxcALWk4i
+ aSczRwtv7iG7Vlzr3uJYdBnAcSZWP7+bxQZ7Z95NcF8ot81uFsNWmumZrbgjuQTRVM7vZ408N
+ 6CDwzACRrwMWM8vxTs0Zo2CUQsUGbAKaXh8a2OAl2qO7WKqrb96ee4QVw==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 01:17:02PM +0100, Matthias Maennich wrote:
-> If MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS is enabled (default=n), the
-> requirement for modules to import all namespaces that are used by
-> the module is relaxed.
-> 
-> Enabling this option effectively allows (invalid) modules to be loaded
-> while only a warning is emitted.
-> 
-> Disabling this option keeps the enforcement at module loading time and
-> loading is denied if the module's imports are not satisfactory.
-> 
-> Reviewed-by: Martijn Coenen <maco@android.com>
-> Signed-off-by: Matthias Maennich <maennich@google.com>
-> ---
->  init/Kconfig    | 14 ++++++++++++++
->  kernel/module.c | 11 +++++++++--
->  2 files changed, 23 insertions(+), 2 deletions(-)
-> 
-> diff --git a/init/Kconfig b/init/Kconfig
-> index bd7d650d4a99..b3373334cdf1 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -2119,6 +2119,20 @@ config MODULE_COMPRESS_XZ
->  
->  endchoice
->  
-> +config MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
-> +	bool "Allow loading of modules with missing namespace imports"
-> +	default n
+The email address listed in MODULE_AUTHOR() will be disabled in the
+near future. Replace it with my private one.
 
-the default for config options is always N, no need to list it here.
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+=2D--
+ drivers/hwmon/raspberrypi-hwmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +	help
-> +	  Symbols exported with EXPORT_SYMBOL_NS*() are considered exported in
-> +	  a namespace. A module that makes use of a symbol exported with such a
-> +	  namespace is required to import the namespace via MODULE_IMPORT_NS().
-> +	  This option relaxes this requirement when loading a module. While
-> +	  technically there is no reason to enforce correct namespace imports,
-> +	  it creates consistency between symbols defining namespaces and users
-> +	  importing namespaces they make use of.
-> +
-> +	  If unsure, say N.
-> +
->  config TRIM_UNUSED_KSYMS
->  	bool "Trim unused exported kernel symbols"
->  	depends on MODULES && !UNUSED_SYMBOLS
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 57e8253f2251..7c934aaae2d3 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -1408,9 +1408,16 @@ static int verify_namespace_is_imported(const struct load_info *info,
->  			imported_namespace = get_next_modinfo(
->  				info, "import_ns", imported_namespace);
->  		}
-> -		pr_err("%s: module uses symbol (%s) from namespace %s, but does not import it.\n",
-> -		       mod->name, kernel_symbol_name(sym), namespace);
-> +#ifdef CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
-> +		pr_warn(
-> +#else
-> +		pr_err(
-> +#endif
-> +			"%s: module uses symbol (%s) from namespace %s, but does not import it.\n",
-> +			mod->name, kernel_symbol_name(sym), namespace);
-> +#ifndef CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
->  		return -EINVAL;
-> +#endif
+diff --git a/drivers/hwmon/raspberrypi-hwmon.c b/drivers/hwmon/raspberrypi=
+-hwmon.c
+index efe4bb1..d3a64a3 100644
+=2D-- a/drivers/hwmon/raspberrypi-hwmon.c
++++ b/drivers/hwmon/raspberrypi-hwmon.c
+@@ -146,7 +146,7 @@ static struct platform_driver rpi_hwmon_driver =3D {
+ };
+ module_platform_driver(rpi_hwmon_driver);
 
-This #ifdef mess is a hack, but oh well :)
+-MODULE_AUTHOR("Stefan Wahren <stefan.wahren@i2se.com>");
++MODULE_AUTHOR("Stefan Wahren <wahrenst@gmx.net>");
+ MODULE_DESCRIPTION("Raspberry Pi voltage sensor driver");
+ MODULE_LICENSE("GPL v2");
+ MODULE_ALIAS("platform:raspberrypi-hwmon");
+=2D-
+2.7.4
 
-If you drop the above default line, feel free to add:
-
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
