@@ -2,128 +2,99 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6BEC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D10FC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B98F0206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C491206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:58:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UnYXjBso";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IaI8Q6n2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbfHMN6S (ORCPT
+        id S1729367AbfHMN6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:58:18 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33175 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727427AbfHMN6S (ORCPT
+        Tue, 13 Aug 2019 09:58:45 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52166 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727407AbfHMN6o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:58:18 -0400
-Received: by mail-qt1-f193.google.com with SMTP id v38so14010887qtb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:58:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UPqVMYRKgPny4jLiI9xhCyK5fHo3cjEgQkb61xfTW14=;
-        b=Ht/wlkQ3/o7iL/GMhB7+8huXacIDzH6/udFZQ/tuB6daV1LqAt6+UyB5aEPHl1M1fy
-         zYE3Xf3qfo4kK6n/Ml3RsncFshlE9HIg+Kaju6MKxcFK8y+gRmh3oJ4045zz6jhLpl7e
-         vs1Gzi6+CtMRhsa6R5cNCaoKmksiFG83CMT8A1Q6GKZBsbzfbgGR8hGCt1INOiVwICLH
-         54+UhFkbDzCED8W+APXwN5IEsM+LT00YT45h9ZjnOrAQvcCz0UmJqTrxHiRiGEeIPyXF
-         +IXkNw7nnuhLLT5TeB8Elqnw2zxhDlTF8Mc0Vmab+g20sjhaRsRW23SLekhm4vigRJvC
-         /qIA==
-X-Gm-Message-State: APjAAAVoTyv/Es6fIFAYghTb51fsv3Z05nZXwLpjMOjS+dUbyP3A5baI
-        oklH69ENBFwj5mlUeBdCprFxMnfE4obZtOOtokVnIA==
-X-Google-Smtp-Source: APXvYqxy/SPlI+Cs61J60nUWTgxDhSCy4ll/DIFc9AjaGYIslLEaCx/268hAHASOAYIHZAC4N3artjmCpjkrdYYGjIA=
-X-Received: by 2002:ac8:33c7:: with SMTP id d7mr20342902qtb.294.1565704696825;
- Tue, 13 Aug 2019 06:58:16 -0700 (PDT)
+        Tue, 13 Aug 2019 09:58:44 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7880F608FF; Tue, 13 Aug 2019 13:58:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565704723;
+        bh=M8oAe1f6maG+IxzSwYrxoIVVdKazq93Sv32mx1kHDTk=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=UnYXjBsohipGcIhOiU7MbVsbLEx9berNqc16y6AT7dc/+7gM6zxDlknkaGartFwBs
+         wTmVznRdzrY7vbtfaxJW34Ni3lRNUiHaW/8eEfkCugzi5yqEM6ZWHdysjhRjB3oQgt
+         VkLtVzoHaMUKupIMsrs2eneH48+uRPOHZlasrHwI=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA5A560734;
+        Tue, 13 Aug 2019 13:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565704722;
+        bh=M8oAe1f6maG+IxzSwYrxoIVVdKazq93Sv32mx1kHDTk=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=IaI8Q6n2wPeQJAHwk4P9fPwbfo0nHJdPoiRlNZit9WBgBvAj3zU2/5X/WCuv732RX
+         vZFSpNsdsZs39QlwnnytW2C2fIDI61aQ+3GkJUV7EJzbTGFvac0y/PwRTQQFfQ5+Jl
+         a0EinvMjNaLJuO2Kne/S5kgkz5Rrrf8sqfsWTFiY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AA5A560734
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Ganapathi Bhat <gbhat@marvell.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>,
+        "amitkarwar\@gmail.com" <amitkarwar@gmail.com>,
+        "davem\@davemloft.net" <davem@davemloft.net>,
+        "huxinming820\@gmail.com" <huxinming820@gmail.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-wireless\@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        "nishants\@marvell.com" <nishants@marvell.com>,
+        "syzkaller-bugs\@googlegroups.com" <syzkaller-bugs@googlegroups.com>
+Subject: Re: [EXT] INFO: trying to register non-static key in del_timer_sync (2)
+References: <000000000000927a7b0586561537@google.com>
+        <MN2PR18MB263783F52CAD4A335FD8BB34A01A0@MN2PR18MB2637.namprd18.prod.outlook.com>
+        <CACT4Y+aQzBkAq86Hx4jNFnAUzjXnq8cS2NZKfeCaFrZa__g-cg@mail.gmail.com>
+        <MN2PR18MB26372D98386D79736A7947EEA0140@MN2PR18MB2637.namprd18.prod.outlook.com>
+        <MN2PR18MB263710E8F1F8FFA06B2EDB3CA0EC0@MN2PR18MB2637.namprd18.prod.outlook.com>
+        <CAAeHK+z8MBNikw_x50Crf8ZhOhcF=uvPHakvBx44K77xHRUNfg@mail.gmail.com>
+Date:   Tue, 13 Aug 2019 16:58:36 +0300
+In-Reply-To: <CAAeHK+z8MBNikw_x50Crf8ZhOhcF=uvPHakvBx44K77xHRUNfg@mail.gmail.com>
+        (Andrey Konovalov's message of "Tue, 13 Aug 2019 15:36:33 +0200")
+Message-ID: <87k1bhb20j.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-References: <20190812162105.13428-1-benjamin.tissoires@redhat.com> <CADyDSO4x49GWdRVkW=cytvMc7rM3NJkJ4-Sj-FjM9Gday7C-iw@mail.gmail.com>
-In-Reply-To: <CADyDSO4x49GWdRVkW=cytvMc7rM3NJkJ4-Sj-FjM9Gday7C-iw@mail.gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 13 Aug 2019 15:58:05 +0200
-Message-ID: <CAO-hwJ+z0szwuQrUxpQhii2z_jwxMX91df0ynK5QbZpMhg79-g@mail.gmail.com>
-Subject: Re: [PATCH] HID: uhid: actually use the err number from userspace
-To:     David Rheinsberg <david.rheinsberg@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 12:50 PM David Rheinsberg
-<david.rheinsberg@gmail.com> wrote:
->
-> Hey
->
-> On Mon, Aug 12, 2019 at 6:21 PM Benjamin Tissoires
-> <benjamin.tissoires@redhat.com> wrote:
-> >
-> > This can help debugging the situation
-> >
-> > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > ---
-> >
-> > Hi,
-> >
-> > not entirely sure if we can use this in a such simple way.
-> >
-> > However, this is useful to mimic device behaviour from userspace.
-> >
-> > Cheers,
-> > Benjamin
-> >
-> >  drivers/hid/uhid.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/hid/uhid.c b/drivers/hid/uhid.c
-> > index fa0cc0899827..2fa32e7fc733 100644
-> > --- a/drivers/hid/uhid.c
-> > +++ b/drivers/hid/uhid.c
-> > @@ -284,7 +284,7 @@ static int uhid_hid_set_report(struct hid_device *hid, unsigned char rnum,
-> >                 goto unlock;
-> >
-> >         if (uhid->report_buf.u.set_report_reply.err)
-> > -               ret = -EIO;
-> > +               ret = -uhid->report_buf.u.set_report_reply.err;
->
-> I am generally in favor of this. But:
->
-> 1) can you do this for both set_report *and* get_report?
+Andrey Konovalov <andreyknvl@google.com> writes:
 
-right :)
-
+> On Wed, Jun 12, 2019 at 6:03 PM Ganapathi Bhat <gbhat@marvell.com> wrote:
+>>
+>> Hi Dmitry,
+>>
+>> We have a patch to fix this: https://patchwork.kernel.org/patch/10990275/
 >
-> 2) I think you have to filter some of the error codes. For instance,
-> if you return one of the -ERESTARTSYS codes, this might cause the
-> syscall to restart (if auto-restart is enabled on this context). At
-> the same time, this is not *that* bad. It might even be useful for the
-> userspace driver to trigger an EINTR. At least we should be aware of
-> this. So maybe filters are not necessary.. Mhhh. Comments?
-
-I haven't thought at all of the side effects of letting the user
-return a random error code.
-I have the impression that anything below EHWPOISON (133) is
-relatively safe. So maybe we should just make sure the error code is
-below 134?
-
-The ERESTARTSYS has a few warnings in the include file, so I guess the
-side effects might be too much for what we want to deal with.
-
-Cheers,
-Benjamin
-
+> Hi Ganapathi,
 >
-> Thanks
-> David
->
-> >         else
-> >                 ret = count;
-> >
-> > --
-> > 2.19.2
-> >
+> Has this patch been accepted anywhere? This bug is still open on syzbot.
+
+The patch is in "Changes Requested" state which means that the author is
+supposed to send a new version based on the review comments.
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
