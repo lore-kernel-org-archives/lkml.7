@@ -2,111 +2,104 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C33C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF83C32753
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BBBE20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:02:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="pFFfezQj"
+	by mail.kernel.org (Postfix) with ESMTP id 7F14A206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:04:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbfHMKCB (ORCPT
+        id S1728733AbfHMKED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 06:02:01 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:59160 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728761AbfHMKCA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 06:02:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1565690517; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZbzHVM6ENaR4P/6+oOoubZ60cH5LA2N4J6V2DJChuP0=;
-        b=pFFfezQjKuJRCyCrZ9/ijjroaefD35Husngjhtv0sS9eRbULkJZieHwFjjUUwZHaOSMVhv
-        Jym9DJW3vwQNxQw4SI21TSkg5AYgp4PLMnIjtp7Fi2rteFN9o2S3rSBW+rrUXddKsUjfoL
-        iN4pdyxvhjsec4lYAWRoFxESQB5CuEc=
-Date:   Tue, 13 Aug 2019 12:01:48 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 10/11] mfd: Drop obsolete JZ4740 driver
-To:     Philippe =?iso-8859-1?q?Mathieu-Daud=E9?= <f4bug@amsat.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sebastian Reichel <sre@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, od@zcrc.me,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        Artur Rojek <contact@artur-rojek.eu>
-Message-Id: <1565690508.1856.0@crapouillou.net>
-In-Reply-To: <4b48e597-951e-45fd-dfb2-4a1292a8b067@amsat.org>
-References: <20190725220215.460-1-paul@crapouillou.net>
-        <20190725220215.460-11-paul@crapouillou.net> <20190812081640.GA26727@dell>
-        <4b48e597-951e-45fd-dfb2-4a1292a8b067@amsat.org>
+        Tue, 13 Aug 2019 06:04:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:33110 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728559AbfHMKEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 06:04:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A0511570;
+        Tue, 13 Aug 2019 03:04:02 -0700 (PDT)
+Received: from red-moon (red-moon.cambridge.arm.com [10.1.197.39])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CCC683F774;
+        Tue, 13 Aug 2019 03:03:59 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 11:04:09 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     bhelgaas@google.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+        roy.zang@nxp.com, l.stach@pengutronix.de, kishon@ti.com,
+        tpiepho@impinj.com, leonard.crestez@nxp.com,
+        andrew.smirnov@gmail.com, yue.wang@amlogic.com,
+        hayashi.kunihiko@socionext.com, dwmw@amazon.co.uk,
+        jonnyc@amazon.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCHv5 1/2] PCI: layerscape: Add the bar_fixed_64bit property
+ in EP driver.
+Message-ID: <20190813100409.GB10070@red-moon>
+References: <20190813062840.2733-1-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813062840.2733-1-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philippe,
+git log --oneline --follow drivers/pci/controller/dwc/pci-layerscape.c
 
+Do you see any commit with a $SUBJECT ending with a period ?
 
-Le mar. 13 ao=FBt 2019 =E0 10:44, Philippe=20
-=3D?iso-8859-1?q?Mathieu-Daud=3DE9?=3D <f4bug@amsat.org> a =E9crit :
-> Hi Lee,
->=20
-> On 8/12/19 10:16 AM, Lee Jones wrote:
->>  On Thu, 25 Jul 2019, Paul Cercueil wrote:
->>=20
->>>  It has been replaced with the ingenic-iio driver for the ADC.
->>>=20
->>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>>  Tested-by: Artur Rojek <contact@artur-rojek.eu>
->>>  ---
->>>   drivers/mfd/Kconfig      |   9 --
->>>   drivers/mfd/Makefile     |   1 -
->>>   drivers/mfd/jz4740-adc.c | 324=20
->>> ---------------------------------------
->>>   3 files changed, 334 deletions(-)
->>>   delete mode 100644 drivers/mfd/jz4740-adc.c
->>=20
->>  Applied, thanks.
->=20
-> It seems the replacement is done in "MIPS: qi_lb60: Migrate to
-> devicetree" which is not yet merged.
+There is not. So remove it from yours too.
 
-It's merged in the MIPS tree, though, so it'll blend together just
-fine in linux-next.
+On Tue, Aug 13, 2019 at 02:28:39PM +0800, Xiaowei Bao wrote:
+> The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1
+> is 32bit, BAR2 and BAR4 is 64bit, this is determined by hardware,
+> so set the bar_fixed_64bit with 0x14.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+> v2:
+>  - Replace value 0x14 with a macro.
+> v3:
+>  - No change.
+> v4:
+>  - send the patch again with '--to'.
+> v5:
+>  - fix the commit message.
+> 
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c | 1 +
+>  1 file changed, 1 insertion(+)
 
->=20
-> Probably easier if this patch goes thru the MIPS tree as part of the
-> "JZ4740 SoC cleanup" series.
->=20
-> Regards,
->=20
-> Phil.
+scripts/get_maintainer.pl -f drivers/pci/controller/dwc/pci-layerscape-ep.c
+Now, with the output you get justify all the people you send this email
+to.
 
-=
+So, again, trim the CC list and it is the last time I tell you.
 
+Before sending patches on mailing lists use git --dry-run to check
+the emails you are sending.
+
+Thanks,
+Lorenzo
+
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index be61d96..ca9aa45 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -44,6 +44,7 @@ static const struct pci_epc_features ls_pcie_epc_features = {
+>  	.linkup_notifier = false,
+>  	.msi_capable = true,
+>  	.msix_capable = false,
+> +	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+>  };
+>  
+>  static const struct pci_epc_features*
+> -- 
+> 2.9.5
+> 
