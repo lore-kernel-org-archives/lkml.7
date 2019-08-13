@@ -2,95 +2,53 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E051DC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B07BC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBEB20840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:38:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hR9C8Sdb"
+	by mail.kernel.org (Postfix) with ESMTP id 759E8204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbfHMLix (ORCPT
+        id S1727327AbfHMLko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:38:53 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:35580 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfHMLix (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:38:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OhLDQQN+hbiEAG1TpQP8a/y4fpxqsnBJK9G3iQ2C2s4=; b=hR9C8SdbOHH8WqJOQWEwqSr9I
-        lwLZSuUVnKR8i72bzk8GJ87wf6D5jPsRm8eA88Skhp56CD9oCqXvvC7ed9eX0kBjNeOR52PaU749P
-        oofDaSOufoispmGRH8UprhrwSFfOakR0EJWiCgwg9BgNEsGKIWUmv0CHxNqsPu2ixQ+wuA7aQDJCf
-        AZ8EhtXC/8XV9OGEHWNz5tSohTsDaYmGbvTJIJPxr7cb7u7e8DWbvk8ciX5NR8wnxebry9pwuv7W3
-        ruzfmL+qbDeCKTpXkC9O8p1A0oyTqaS9KvxNRNwcoD28dpo7fOdWlXIyca66wqUQLDqglMufmZmut
-        pNT+hXJkg==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:44432)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hxV8a-0008Tv-Jc; Tue, 13 Aug 2019 12:38:48 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hxV8Y-0007T9-Pj; Tue, 13 Aug 2019 12:38:46 +0100
-Date:   Tue, 13 Aug 2019 12:38:46 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        c.barrett@framos.com, linux-kernel@vger.kernel.org,
-        a.brela@framos.com, linux-arm-kernel@lists.infradead.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
- binding
-Message-ID: <20190813113846.GG13294@shell.armlinux.org.uk>
-References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
- <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
+        Tue, 13 Aug 2019 07:40:44 -0400
+Received: from muru.com ([72.249.23.125]:57182 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbfHMLko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 07:40:44 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id BB8928179;
+        Tue, 13 Aug 2019 11:41:11 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 04:40:41 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     rogerq@ti.com, faiz_abbas@ti.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] bus: ti-sysc: remove set but not used variable
+ 'quirks'
+Message-ID: <20190813114041.GQ52127@atomide.com>
+References: <20190628041054.46216-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190628041054.46216-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
-> +Required Properties:
-> +- compatible: Should be "sony,imx290"
-> +- reg: I2C bus address of the device
-> +- clocks: Reference to the xclk clock.
-> +- clock-names: Should be "xclk".
-> +- clock-frequency: Frequency of the xclk clock.
+* YueHaibing <yuehaibing@huawei.com> [190627 21:17]:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/bus/ti-sysc.c: In function sysc_reset:
+> drivers/bus/ti-sysc.c:1452:50: warning: variable quirks set but not used [-Wunused-but-set-variable]
+> 
+> It is never used since commit e0db94fe87da ("bus: ti-sysc: Make
+> OCP reset work for sysstatus and sysconfig reset bits")
 
-Driver code:
+Applying into omap-for-v5.4/ti-sysc thanks.
 
-+       ret = of_property_read_u32(dev->of_node, "clock-frequency", &xclk_freq);+       if (ret) {
-+               dev_err(dev, "Could not get xclk frequency\n");
-+               return ret;
-+       }
-+
-+       /* external clock must be 37.125 MHz */
-+       if (xclk_freq != 37125000) {
-+               dev_err(dev, "External clock frequency %u is not supported\n",
-+                       xclk_freq);
-+               return -EINVAL;
-+       }
-
-So, only 37125000 is supported - is that not worth mentioning in this
-description?  Is this a hard requirement of the sensor?  If so, why
-does it need to be mentioned in the DT binding?
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Tony
