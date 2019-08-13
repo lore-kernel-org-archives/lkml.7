@@ -2,298 +2,428 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37059C32753
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62425C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA157206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2172A20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:11:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QE+pgJSl"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sTnVvPWP";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HSshzBTH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfHMGLA (ORCPT
+        id S1727594AbfHMGL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 02:11:00 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:40411 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727561AbfHMGK5 (ORCPT
+        Tue, 13 Aug 2019 02:11:26 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:58758 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbfHMGLZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:10:57 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190813061055euoutp01c69e88d2edee2b598a39507e49e19331~6Zp9pWQL92087420874euoutp01M
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:10:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190813061055euoutp01c69e88d2edee2b598a39507e49e19331~6Zp9pWQL92087420874euoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1565676655;
-        bh=Ouf2d6oH+wfg0RpGCYzzieijSZGWquinOBWw3nWjNy0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=QE+pgJSlzkZNw9sP+vghOf8Ktz9oearU2RHA5QsvgrqR0HwB3jl9rVOs7WZ7NysXJ
-         s2fmW22lBewB9J9dgOsoKq16PWI0NT2jrn43sTxKr+JDmpHObmQGIQvd5l8sUORrwE
-         z/DfUM5k8rG6e5gSWL+QanHtuxMLcQoKSdHQlN20=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190813061054eucas1p163e140f33e91ef27f2b2d69fd85e5600~6Zp8iVmjs0307803078eucas1p1-;
-        Tue, 13 Aug 2019 06:10:54 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id C1.00.04309.D64525D5; Tue, 13
-        Aug 2019 07:10:53 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190813061053eucas1p1b6945259d9663b743e7cb32521d041e7~6Zp71YGPa0207202072eucas1p1F;
-        Tue, 13 Aug 2019 06:10:53 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190813061053eusmtrp2b4de50bbc680b89fe6fbcde4e3e39d02~6Zp7nQs-i1461014610eusmtrp2a;
-        Tue, 13 Aug 2019 06:10:53 +0000 (GMT)
-X-AuditID: cbfec7f4-afbff700000010d5-8f-5d52546dfb95
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id F8.18.04117.D64525D5; Tue, 13
-        Aug 2019 07:10:53 +0100 (BST)
-Received: from [106.120.50.63] (unknown [106.120.50.63]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190813061052eusmtip2c732d81f8fdf476543006a8a87ba53f1~6Zp7LCuR62679326793eusmtip2X;
-        Tue, 13 Aug 2019 06:10:52 +0000 (GMT)
-Subject: Re: [PATCH V37 27/29] tracefs: Restrict tracefs when the kernel is
- locked down
-To:     Matthew Garrett <matthewgarrett@google.com>, jmorris@namei.org
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Matthew Garrett <mjg59@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <a3caa6d3-e3f9-ae41-d87e-253d9dc53d81@samsung.com>
-Date:   Tue, 13 Aug 2019 08:10:51 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Tue, 13 Aug 2019 02:11:25 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D68qlk039282;
+        Tue, 13 Aug 2019 06:10:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2019-08-05; bh=diseXHpX8dtT9/GAoXhKTt8Q+OXoOvFSdw7KaXv5xJc=;
+ b=sTnVvPWPYmwU+L+op8jGwhJlHHwBT9g8tYUy9fbnm8yjze7HRLw92g7VrQTIqC8gB2kS
+ 9/ujgw2M2SfhH4W/vRcL/5QdjLj7Hu7YxfMcIhJLpxkMXNEecwKra/ghuXXDLlhGFCEa
+ fJx6YtJ06sxvK3nfrc3fgXrNdxCYzyKcKfh2K57CFyc9phEfiQbFpD5HyO2hC8oRlAWQ
+ s2c5u3FhUw+cmwySigu5CzLYHLKF6zE+3iZlCdd2VodHo2c5k3BE2N8BpjMvZHdiQjAu
+ S/u70qdqkOiG1ruxuoZgbR760BNVTzEe317r9bDRPIVOdnyUzAkO5NTmEhUZfT4bG+3b JA== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2018-07-02; bh=diseXHpX8dtT9/GAoXhKTt8Q+OXoOvFSdw7KaXv5xJc=;
+ b=HSshzBTHrCbhcZvGAkrQO1eewbvj8mZQhSOiMzNUwXrjGaueRILkd+nNdJRNvar7NA9d
+ giGYMWweCPMOIXSbkpG/8giTi+O6AJTAwpdUaqnRy2KYRc2HtjLn4HoqiEZhLutBurXO
+ oXo8yZuQwDfYbFQFkvUNy3yyEu562T2OTjLnjA6FBkIXx0hJKA2bKeboU+3m9GyjYxDe
+ Vl9+Y/aa0cXzuZpmarcmzetuL9fPodJ1yFugUr4+imVcmsh2C5PCQvH9EoAEznQpIwzI
+ yYxeK3qljydDiSaKvSR05U3wOa89fpntvOTODP4Ms7wy0z8mHZzm97/OOwvW482bRHJl BA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2u9nvp4178-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 06:10:56 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D68Q1m056371;
+        Tue, 13 Aug 2019 06:10:55 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2u9n9hs1pf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 06:10:55 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7D6ApwT013132;
+        Tue, 13 Aug 2019 06:10:51 GMT
+Received: from abi.no.oracle.com (/10.172.144.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 12 Aug 2019 23:10:50 -0700
+From:   Knut Omang <knut.omang@oracle.com>
+To:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shreyans Devendra Doshi <0xinfosect0r@gmail.com>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Hidenori Yamaji <hidenori.yamaji@sony.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Timothy Bird <Tim.Bird@sony.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Knut Omang <knut.omang@oracle.com>
+Subject: [RFC 00/19] Integration of Kernel Test Framework (KTF) into the kernel tree
+Date:   Tue, 13 Aug 2019 08:09:15 +0200
+Message-Id: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190731221617.234725-28-matthewgarrett@google.com>
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRmVeSWpSXmKPExsWy7djP87q5IUGxBodeGVmsW7+YyeL8+Q3s
-        Fpu/d7BZXN41h83iQ88jNotXL7Qs/m14w2Kxr+MBkwOHR8u+W+weCzaVemxa1cnm0fM92ePz
-        JrkA1igum5TUnMyy1CJ9uwSujFttO1kK1hhXdE+bwd7A+EWzi5GTQ0LAROLHhalsXYxcHEIC
-        KxglNj/sZ4FwvjBKHNp+hxnC+cwocf5ACxtMy5FZK1ghEssZJRr+foWqessosffZInaQKmGB
-        SImlGx6xgNgiAk4Sp/bfZAQpYha4ziixe9ELsFFsAoYSXW+7wGxeATuJi0tvs4LYLAKqEnNf
-        PGUCsUUFYiR2vulhhqgRlDg58wnYUE4BR4m1j1rBapgF5CWat85mhrDFJW49mc8EskxCYBO7
-        RPfsO+wQd7tIHN3cAfWDsMSr41ug4jIS/3fCNDQzSjw8t5YdwulhlLjcNIMRospa4vDxi0Dn
-        cQCt0JRYv0sfIuwo8fH3TTaQsIQAn8SNt4IQR/BJTNo2nRkizCvR0SYEUa0mMev4Ori1By9c
-        Yp7AqDQLyWuzkLwzC8k7sxD2LmBkWcUonlpanJueWmyUl1quV5yYW1yal66XnJ+7iRGYjE7/
-        O/5lB+OuP0mHGAU4GJV4eCsSAmOFWBPLiitzDzFKcDArifBeMgmKFeJNSaysSi3Kjy8qzUkt
-        PsQozcGiJM5bzfAgWkggPbEkNTs1tSC1CCbLxMEp1cBYITD/Nbt0xNqZF1KdbQq7o1PK5I3T
-        ymW6bF2jQswz5ENEhSf1Hn+u/HRTccVJ7dgdhZNk3ZX8Sx6fvXDnp/tCB9nzrUz/nzk+EufI
-        s1I/f7p1Zk25YDqrhmdT7vX/eqYdgiGTl81xOds96fHJpE0X//k+PLNS22DyLIVdjpML1Rz8
-        T0zgqlBiKc5INNRiLipOBACWF/XcQgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPIsWRmVeSWpSXmKPExsVy+t/xe7q5IUGxBi2LWC3WrV/MZHH+/AZ2
-        i83fO9gsLu+aw2bxoecRm8WrF1oW/za8YbHY1/GAyYHDo2XfLXaPBZtKPTat6mTz6Pme7PF5
-        k1wAa5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJe
-        xq22nSwFa4wruqfNYG9g/KLZxcjJISFgInFk1grWLkYuDiGBpYwSV69eYoNIyEicnNbACmEL
-        S/y51gUWFxJ4zShxt7ESxBYWiJRYuuERC4gtIuAkcWr/TUaQQcwC1xklumZsYIJoKJPY+fQY
-        mM0mYCjR9RZiEK+AncTFpbfBFrAIqErMffEUrEZUIEZi35nt7BA1ghInZz4BW8Ap4Cix9lEr
-        WA2zgJnEvM0PmSFseYnmrbOhbHGJW0/mM01gFJqFpH0WkpZZSFpmIWlZwMiyilEktbQ4Nz23
-        2EivODG3uDQvXS85P3cTIzDyth37uWUHY9e74EOMAhyMSjy8FQmBsUKsiWXFlbmHGCU4mJVE
-        eC+ZBMUK8aYkVlalFuXHF5XmpBYfYjQFem4is5Rocj4wKeSVxBuaGppbWBqaG5sbm1koifN2
-        CByMERJITyxJzU5NLUgtgulj4uCUamDc4BgXsW7Ll1mKV99ev/XtscCTpM0pNx9rXk89zer8
-        b2Klz2GZqhY21WV6R5XO5dx7LZafVfjux8rL5lEm+2Vi2Zxs+tIVmbfFROt8nTrd6fjjjwqf
-        G6cLcmkbxdqqO7MsMkraIhuWLHgq8MGLiyW6Eap7p3du3TM3ge3aSWaGzk2Xv+/kelKlxFKc
-        kWioxVxUnAgASEfwm9ICAAA=
-X-CMS-MailID: 20190813061053eucas1p1b6945259d9663b743e7cb32521d041e7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190813061053eucas1p1b6945259d9663b743e7cb32521d041e7
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190813061053eucas1p1b6945259d9663b743e7cb32521d041e7
-References: <20190731221617.234725-1-matthewgarrett@google.com>
-        <20190731221617.234725-28-matthewgarrett@google.com>
-        <CGME20190813061053eucas1p1b6945259d9663b743e7cb32521d041e7@eucas1p1.samsung.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908130067
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908130067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+KTF has already been available for a while as a separate git repository with
+means to facilitate use with any kernel version.
 
-On 2019-08-01 00:16, Matthew Garrett wrote:
-> Tracefs may release more information about the kernel than desirable, so
-> restrict it when the kernel is locked down in confidentiality mode by
-> preventing open().
->
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
-> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+KTF can be used both for "pure" unit testing and for more pragmatic
+approaches to component testing. Apart from some useful features that
+KTF uses from the kernel toolbox (such as kallsyms, kprobes),
+KTF does not depend on any special environment such as UML or on a
+large set of mocked up APIs to be useful. KTF basically allows test
+code to be inserted and managed as separate kernel modules, while
+providing the tests convenient access to almost the full range of kernel
+APIs, both exposed and private. And once a KTF test set exists, it
+should be fairly easy to compile and run it against older versions of
+the kernel as well.
 
-This patch causes the following regression on various Samsung Exynos SoC 
-based boards (ARM 32bit):
+This series proposes a non-intrusive integration of KTF into the kernel
+hopefully presented in digestable pieces.
+For convenience, the patch set is also available on top of v5.2
+at https://github.com/knuto/linux/pull/new/ktf_v1 .
 
-[   15.364422] Unable to handle kernel NULL pointer dereference at 
-virtual address 00000000
-[   15.368775] pgd = a530ddbe
-[   15.371447] [00000000] *pgd=bcd7c831
-[   15.374993] Internal error: Oops: 80000007 [#1] PREEMPT SMP ARM
-[   15.380890] Modules linked in:
-[   15.383929] CPU: 0 PID: 1393 Comm: perf Not tainted 
-5.2.0-00027-g757ff7244358-dirty #6459
-[   15.392086] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-[   15.398164] PC is at 0x0
-[   15.400687] LR is at do_dentry_open+0x22c/0x3b0
-[   15.405193] pc : [<00000000>]    lr : [<c02977c4>]    psr: 60000053
-[   15.411442] sp : e7317dd8  ip : 00000000  fp : 00000000
-[   15.416650] r10: c0187e6c  r9 : c041f8cc  r8 : e72123c8
-[   15.421858] r7 : e7317ec0  r6 : e7d89630  r5 : 00000000  r4 : e72123c0
-[   15.428368] r3 : 00000000  r2 : 5ba370f3  r1 : e72123c0  r0 : e7d89630
-[   15.434880] Flags: nZCv  IRQs on  FIQs off  Mode SVC_32  ISA ARM  
-Segment none
-[   15.442083] Control: 10c5387d  Table: 6726404a  DAC: 00000051
-[   15.447812] Process perf (pid: 1393, stack limit = 0x17621431)
-[   15.453628] Stack: (0xe7317dd8 to 0xe7318000)
+The high level structure of the KTF code is as follows:
+
+External dependencies for the user land side:
+* libnl3 for netlink communication
+* googletest for test runner, reporting and test selection support.
+
+Kernel components:
+* Simple core test and test suite related abstractions:
+  core data structures ktf_case, ktf_test, an assertion macro "infrastructure"
+  with ASSERT_* and EXPECT_* macros and helper functions
+* Bookkeeping data structures:
+  - ktf_map - a (key, value) mapping container used to implement management
+    of instances of the higher level abstraction needs, such as ktf_handle and ktf_context.
+  - ktf_handle: A global environment that a test runs within.
+  - ktf_context: a test suite specific abstraction to allow a test to execute within
+	one or more contexts. An example use of context can be a device
+	instance: A test can be instantiated to run on all available such
+	devices, according to test suite defined criteria.
+* A generic netlink protocol (ktf_nl, ktf_unlproto) which defines operations to
+  allow a user space part of a test to query the kernel for test information,
+  invoke tests and get feedback reports about results.
+* An alternative debugfs interface to allow examining and executing kernel-only tests
+  without a user level program.
+* Support for overriding and modifying behaviour of kernel calls.
+
+User mode components:
+* A test executor based on and integrated with Googletest.
+  Googletest is one of several mature user land unit test suites for
+  C/C++. The choice allowed us to focus on kernel specific
+  functionality rather than having to reinvent too many wheels.
+* Tools to aid in creating new test modules (suites):
+  To facilitate a developer friendly way of testing internals of a module or the
+  kernel itself, one of the important features of KTF, we often need to access
+  symbols deliberately not exposed from a module.
+  KTF contains a script used to create definitions based on kallsyms
+  lookup for easy access to symbols not exposed by a module or the kernel.
+  The user just provides a simple text file with a list of the symbols by
+  module.
+
+This series is an attempt to address feedback from several people
+that having the functionality readily available within the kernel repository
+is desired.
+
+An in-tree KTF allows test suites to be provided with the kernel, which makes
+it easy to use KTF based suites as part of the kernel selftests and driver
+test suites. Having the ability to still build and run the latest versions of
+test suites against older kernels should be of great value to stable maintainers,
+distributions and driver maintainers, who would want to have an easy path,
+with minimal backporting efforts to make sure that criterias implemented by
+new test logic is also valid for these kernels.
+
+Our definite goal moving forward is to try to satisfy both needs in a
+transparent way. The plan is to let the standalone KTF repository follow the
+in-kernel one, and to allow test suites to be maintained similarly,
+and to support maintenance by proper tooling.
+
+Mode of integration into the kernel
+===================================
+
+One feature of KTF is that it allows tests to work, look and feel similar
+whether they execute entirely in user mode, entirely in kernel mode,
+or half and half (hybrid tests). KTF consist of both user space
+and kernel code. Unlike e.g. kselftest, KTF in the Github version
+does not attempt to address the test runner aspects of testing.
+
+Due to the need for building modules, KTF requires access to kernel module
+build facilities (obj-m). But KTF also has nontrivial needs for user
+land building, and we think it is good to keep the build structure in a way that
+allows KTF to be built both in-tree and out-of-tree without
+necessarily having to reconfigure the kernel.
+
+This first version of kernel integration of KTF solves this challenge
+by co-locating everything associated with KTF under ktf/ as in the
+github version, but use the little used hostprogs-y and hostlibs-y
+features to build the user space side. The first patch in the series is
+fixes to make it work in a natural way to suit our needs.
+
+Positioning for natural building within the kernel tree
+=======================================================
+
+Currently we find significant amount of C level tests within the following paths:
+
+tools/testing/selftests/  (kselftests, almost entirely user space so far)
+lib/  			  (various kernel level mostly unit tests)
+
+and in the making::
+
+kunit/			  (kernel only (UML))
+
+So all kernel code are currently located directly within the kernel
+build paths, accessed from the top level Makefile, to allow everything
+to be controlled by config and from the main build targets for the
+kernel. But this also poses challenges, in that .config has to be
+modified to build tests. And once a .config is changed, we no longer
+in principle logically operate on the same kernel.
+
+A better approach seems to be to follow the principle
+taken by kselftest: To have all the logic associated with the test
+inside the test tree, and make it available for building separately
+from the kernel itself. This require us to have a means to build
+kernel modules from within the test tree, separately from the main
+kernel paths. Currently this seems to only by supported via the M=
+option used to build out-of-tree modules. This was also easy to get to work
+for the kernel parts, based on the Github version of KTF, where we
+already do this. With the additional need to compile user land code,
+using the corresponding hostprogs-y and hostNNlibs-y seemed natural,
+but this has been challenging: The build macros does not really
+support hostprogs-y etc as "first class citizens" so some amount of
+hacking is in there in this first draft version.
+Using hostprogs-y etc is also a different approach that what is used
+for C code in kselftest today, but we imagine that there's room for
+unification here to get the best of both worlds, with the help of
+the wider Kbuild community.
+
+As an initial proposal, we have positioned ktf as an additional
+kselftest target, under tools/testing/selftests/ktf, and the recommended:
+
+make TARGETS="ktf" kselftest
+
+way of building and running should work, even from normal user accounts,
+if the user running it has sudo rights (for the kernel module insertion
+and removal). This will run the selftests for KTF itself, and should
+be a good starting point for adding more test cases. We also have had
+activities going to take some of the existing test suites under lib/
+and convert them into KTF based test suites, and will get back to this
+later.
+
+A trimmed down output from the above make target would look like this:
+
+  ...
+  CC [M]  tools/testing/selftests/ktf/kernel/ktf_override.o
+  LD [M]  tools/testing/selftests/ktf/kernel/ktf.o
+  HOSTCC  -fPIC tools/testing/selftests/ktf/lib/ktf_unlproto.o
+  HOSTCXX -fPIC tools/testing/selftests/ktf/lib/ktf_int.o
+  KTFSYMS tools/testing/selftests/ktf/selftest/ktf_syms.h
+  CC [M]  tools/testing/selftests/ktf/selftest/self.o
+  LD [M]  tools/testing/selftests/ktf/selftest/selftest.o
+  HOSTCXX tools/testing/selftests/ktf/user/ktftest.o
+  HOSTCXX tools/testing/selftests/ktf/user/hybrid.o
+  HOSTLD  tools/testing/selftests/ktf/user/ktftest
+  Building modules, stage 2.
+  MODPOST 7 modules
+  LD [M]  tools/testing/selftests/ktf/kernel/ktf.ko
+  LD [M]  tools/testing/selftests/ktf/selftest/selftest.ko
+  running tests
+make BUILD=/net/abi/local/abi/build/kernel/ktf/tools/testing/selftests -f scripts/runtests.mk run_tests
+TAP version 13
+1..1
 ...
-[   15.604842] [<c02977c4>] (do_dentry_open) from [<c02aafc8>] 
-(path_openat+0x5a0/0x1004)
-[   15.612735] [<c02aafc8>] (path_openat) from [<c02acce8>] 
-(do_filp_open+0x6c/0xd8)
-[   15.620200] [<c02acce8>] (do_filp_open) from [<c0298cc4>] 
-(do_sys_open+0x130/0x1f4)
-[   15.627839] [<c0298cc4>] (do_sys_open) from [<c0101000>] 
-(ret_fast_syscall+0x0/0x28)
-[   15.635560] Exception stack(0xe7317fa8 to 0xe7317ff0)
-[   15.640596] 7fa0:                   0022dc0b 001deee0 ffffff9c 
-beb6d764 00020000 00000000
-[   15.648756] 7fc0: 0022dc0b 001deee0 0022dba8 00000142 001ba044 
-00241d68 001a13d8 beb6e78c
-[   15.656913] 7fe0: b6f7e000 beb6c6f8 9a27c600 b6f69504
-[   15.661952] Code: bad PC value
-[   15.665105] ---[ end trace 7e8b864582108f4a ]---
+ok 1 selftests: ktf: runtests.sh
 
-This is standard ARM 32bit kernel with 
-arch/arm/configs/exynos_defconfig. It is enough to run "perf list" command.
+We're looking forward to feedback on this, and also to more discussion
+around unit testing at the testing & fuzzing workshop at LPC!
 
-> ---
->   fs/tracefs/inode.c           | 40 +++++++++++++++++++++++++++++++++++-
->   include/linux/security.h     |  1 +
->   security/lockdown/lockdown.c |  1 +
->   3 files changed, 41 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-> index 1387bcd96a79..12a325fb4cbd 100644
-> --- a/fs/tracefs/inode.c
-> +++ b/fs/tracefs/inode.c
-> @@ -21,6 +21,7 @@
->   #include <linux/seq_file.h>
->   #include <linux/magic.h>
->   #include <linux/slab.h>
-> +#include <linux/security.h>
->   
->   #define TRACEFS_DEFAULT_MODE	0700
->   
-> @@ -28,6 +29,23 @@ static struct vfsmount *tracefs_mount;
->   static int tracefs_mount_count;
->   static bool tracefs_registered;
->   
-> +static int default_open_file(struct inode *inode, struct file *filp)
-> +{
-> +	struct dentry *dentry = filp->f_path.dentry;
-> +	struct file_operations *real_fops;
-> +	int ret;
-> +
-> +	if (!dentry)
-> +		return -EINVAL;
-> +
-> +	ret = security_locked_down(LOCKDOWN_TRACEFS);
-> +	if (ret)
-> +		return ret;
-> +
-> +	real_fops = dentry->d_fsdata;
+Alan Maguire (3):
+  ktf: Implementation of ktf support for overriding function entry and return.
+  ktf: A simple debugfs interface to test results
+  ktf: Simple coverage support
 
-real_fops are NULL in my test case.
+Knut Omang (16):
+  kbuild: Fixes to rules for host-cshlib and host-cxxshlib
+  ktf: Introduce the main part of the kernel side of ktf
+  ktf: Introduce a generic netlink protocol for test result communication
+  ktf: An implementation of a generic associative array container
+  ktf: Configurable context support for network info setup
+  ktf: resolve: A helper utility to aid in exposing private kernel symbols to KTF tests.
+  ktf: Add documentation for Kernel Test Framework (KTF)
+  ktf: Add a small test suite with a few tests to test KTF itself
+  ktf: Main part of user land library for executing tests
+  ktf: Integration logic for running ktf tests from googletest
+  ktf: Internal debugging facilities
+  ktf: Some simple examples
+  ktf: Some user applications to run tests
+  ktf: Toplevel ktf Makefile/makefile includes and scripts to run from kselftest
+  kselftests: Enable building ktf
+  Documentation/dev-tools: Add index entry for KTF documentation
 
-> +	return real_fops->open(inode, filp);
-> +}
-> +
->   static ssize_t default_read_file(struct file *file, char __user *buf,
->   				 size_t count, loff_t *ppos)
->   {
-> @@ -210,6 +228,12 @@ static int tracefs_apply_options(struct super_block *sb)
->   	return 0;
->   }
->   
-> +static void tracefs_destroy_inode(struct inode *inode)
-> +{
-> +	if (S_ISREG(inode->i_mode))
-> +		kfree(inode->i_fop);
-> +}
-> +
->   static int tracefs_reconfigure(struct fs_context *fc)
->   {
->   	struct super_block *sb = fc->root->d_sb;
-> @@ -236,6 +260,7 @@ static int tracefs_show_options(struct seq_file *m, struct dentry *root)
->   
->   static const struct super_operations tracefs_super_operations = {
->   	.statfs		= simple_statfs,
-> +	.destroy_inode  = tracefs_destroy_inode,
->   	.show_options	= tracefs_show_options,
->   };
->   
-> @@ -372,6 +397,7 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
->   				   struct dentry *parent, void *data,
->   				   const struct file_operations *fops)
->   {
-> +	struct file_operations *proxy_fops;
->   	struct dentry *dentry;
->   	struct inode *inode;
->   
-> @@ -387,8 +413,20 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
->   	if (unlikely(!inode))
->   		return failed_creating(dentry);
->   
-> +	proxy_fops = kzalloc(sizeof(struct file_operations), GFP_KERNEL);
-> +	if (unlikely(!proxy_fops)) {
-> +		iput(inode);
-> +		return failed_creating(dentry);
-> +	}
-> +
-> +	if (!fops)
-> +		fops = &tracefs_file_operations;
-> +
-> +	dentry->d_fsdata = (void *)fops;
-> +	memcpy(proxy_fops, fops, sizeof(*proxy_fops));
-> +	proxy_fops->open = default_open_file;
->   	inode->i_mode = mode;
-> -	inode->i_fop = fops ? fops : &tracefs_file_operations;
-> +	inode->i_fop = proxy_fops;
->   	inode->i_private = data;
->   	d_instantiate(dentry, inode);
->   	fsnotify_create(dentry->d_parent->d_inode, dentry);
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index d92323b44a3f..807dc0d24982 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -121,6 +121,7 @@ enum lockdown_reason {
->   	LOCKDOWN_KPROBES,
->   	LOCKDOWN_BPF_READ,
->   	LOCKDOWN_PERF,
-> +	LOCKDOWN_TRACEFS,
->   	LOCKDOWN_CONFIDENTIALITY_MAX,
->   };
->   
-> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-> index 88064ce1c844..173191562047 100644
-> --- a/security/lockdown/lockdown.c
-> +++ b/security/lockdown/lockdown.c
-> @@ -36,6 +36,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
->   	[LOCKDOWN_KPROBES] = "use of kprobes",
->   	[LOCKDOWN_BPF_READ] = "use of bpf to read kernel RAM",
->   	[LOCKDOWN_PERF] = "unsafe use of perf",
-> +	[LOCKDOWN_TRACEFS] = "use of tracefs",
->   	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
->   };
->   
+ Documentation/dev-tools/index.rst                   |    1 +-
+ Documentation/dev-tools/ktf/concepts.rst            |  242 +++-
+ Documentation/dev-tools/ktf/debugging.rst           |  248 +++-
+ Documentation/dev-tools/ktf/examples.rst            |   26 +-
+ Documentation/dev-tools/ktf/features.rst            |  307 ++++-
+ Documentation/dev-tools/ktf/implementation.rst      |   70 +-
+ Documentation/dev-tools/ktf/index.rst               |   14 +-
+ Documentation/dev-tools/ktf/installation.rst        |   73 +-
+ Documentation/dev-tools/ktf/introduction.rst        |  134 ++-
+ Documentation/dev-tools/ktf/progref.rst             |  144 ++-
+ scripts/Makefile.host                               |   17 +-
+ tools/testing/selftests/Makefile                    |    1 +-
+ tools/testing/selftests/ktf/Makefile                |   21 +-
+ tools/testing/selftests/ktf/examples/Makefile       |   17 +-
+ tools/testing/selftests/ktf/examples/h2.c           |   45 +-
+ tools/testing/selftests/ktf/examples/h3.c           |   84 +-
+ tools/testing/selftests/ktf/examples/h4.c           |   62 +-
+ tools/testing/selftests/ktf/examples/hello.c        |   38 +-
+ tools/testing/selftests/ktf/examples/kgdemo.c       |   61 +-
+ tools/testing/selftests/ktf/kernel/Makefile         |   15 +-
+ tools/testing/selftests/ktf/kernel/ktf.h            |  604 +++++++-
+ tools/testing/selftests/ktf/kernel/ktf_context.c    |  409 +++++-
+ tools/testing/selftests/ktf/kernel/ktf_cov.c        |  690 ++++++++-
+ tools/testing/selftests/ktf/kernel/ktf_cov.h        |   94 +-
+ tools/testing/selftests/ktf/kernel/ktf_debugfs.c    |  356 ++++-
+ tools/testing/selftests/ktf/kernel/ktf_debugfs.h    |   34 +-
+ tools/testing/selftests/ktf/kernel/ktf_map.c        |  261 +++-
+ tools/testing/selftests/ktf/kernel/ktf_map.h        |  154 ++-
+ tools/testing/selftests/ktf/kernel/ktf_netctx.c     |  132 ++-
+ tools/testing/selftests/ktf/kernel/ktf_netctx.h     |   64 +-
+ tools/testing/selftests/ktf/kernel/ktf_nl.c         |  516 ++++++-
+ tools/testing/selftests/ktf/kernel/ktf_nl.h         |   15 +-
+ tools/testing/selftests/ktf/kernel/ktf_override.c   |   45 +-
+ tools/testing/selftests/ktf/kernel/ktf_override.h   |   15 +-
+ tools/testing/selftests/ktf/kernel/ktf_test.c       |  397 +++++-
+ tools/testing/selftests/ktf/kernel/ktf_test.h       |  381 ++++-
+ tools/testing/selftests/ktf/kernel/ktf_unlproto.h   |  105 +-
+ tools/testing/selftests/ktf/lib/Makefile            |   21 +-
+ tools/testing/selftests/ktf/lib/ktf.h               |  114 +-
+ tools/testing/selftests/ktf/lib/ktf_debug.cc        |   20 +-
+ tools/testing/selftests/ktf/lib/ktf_debug.h         |   59 +-
+ tools/testing/selftests/ktf/lib/ktf_int.cc          | 1031 ++++++++++++-
+ tools/testing/selftests/ktf/lib/ktf_int.h           |   84 +-
+ tools/testing/selftests/ktf/lib/ktf_run.cc          |  177 ++-
+ tools/testing/selftests/ktf/lib/ktf_unlproto.c      |   21 +-
+ tools/testing/selftests/ktf/scripts/ktf_syms.mk     |   16 +-
+ tools/testing/selftests/ktf/scripts/resolve         |  188 ++-
+ tools/testing/selftests/ktf/scripts/runtests.mk     |    3 +-
+ tools/testing/selftests/ktf/scripts/runtests.sh     |  100 +-
+ tools/testing/selftests/ktf/scripts/top_make.mk     |   14 +-
+ tools/testing/selftests/ktf/selftest/Makefile       |   17 +-
+ tools/testing/selftests/ktf/selftest/context.c      |  149 ++-
+ tools/testing/selftests/ktf/selftest/context.h      |   15 +-
+ tools/testing/selftests/ktf/selftest/context_self.h |   34 +-
+ tools/testing/selftests/ktf/selftest/hybrid.c       |   35 +-
+ tools/testing/selftests/ktf/selftest/hybrid.h       |   24 +-
+ tools/testing/selftests/ktf/selftest/hybrid_self.h  |   27 +-
+ tools/testing/selftests/ktf/selftest/ktf_syms.txt   |   17 +-
+ tools/testing/selftests/ktf/selftest/self.c         |  661 ++++++++-
+ tools/testing/selftests/ktf/user/Makefile           |   26 +-
+ tools/testing/selftests/ktf/user/hybrid.cc          |   39 +-
+ tools/testing/selftests/ktf/user/ktfcov.cc          |   68 +-
+ tools/testing/selftests/ktf/user/ktfrun.cc          |   20 +-
+ tools/testing/selftests/ktf/user/ktftest.cc         |   46 +-
+ 64 files changed, 8909 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/dev-tools/ktf/concepts.rst
+ create mode 100644 Documentation/dev-tools/ktf/debugging.rst
+ create mode 100644 Documentation/dev-tools/ktf/examples.rst
+ create mode 100644 Documentation/dev-tools/ktf/features.rst
+ create mode 100644 Documentation/dev-tools/ktf/implementation.rst
+ create mode 100644 Documentation/dev-tools/ktf/index.rst
+ create mode 100644 Documentation/dev-tools/ktf/installation.rst
+ create mode 100644 Documentation/dev-tools/ktf/introduction.rst
+ create mode 100644 Documentation/dev-tools/ktf/progref.rst
+ create mode 100644 tools/testing/selftests/ktf/Makefile
+ create mode 100644 tools/testing/selftests/ktf/examples/Makefile
+ create mode 100644 tools/testing/selftests/ktf/examples/h2.c
+ create mode 100644 tools/testing/selftests/ktf/examples/h3.c
+ create mode 100644 tools/testing/selftests/ktf/examples/h4.c
+ create mode 100644 tools/testing/selftests/ktf/examples/hello.c
+ create mode 100644 tools/testing/selftests/ktf/examples/kgdemo.c
+ create mode 100644 tools/testing/selftests/ktf/kernel/Makefile
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf.h
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_context.c
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_cov.c
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_cov.h
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_debugfs.c
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_debugfs.h
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_map.c
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_map.h
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_netctx.c
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_netctx.h
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_nl.c
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_nl.h
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_override.c
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_override.h
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_test.c
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_test.h
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_unlproto.h
+ create mode 100644 tools/testing/selftests/ktf/lib/Makefile
+ create mode 100644 tools/testing/selftests/ktf/lib/ktf.h
+ create mode 100644 tools/testing/selftests/ktf/lib/ktf_debug.cc
+ create mode 100644 tools/testing/selftests/ktf/lib/ktf_debug.h
+ create mode 100644 tools/testing/selftests/ktf/lib/ktf_int.cc
+ create mode 100644 tools/testing/selftests/ktf/lib/ktf_int.h
+ create mode 100644 tools/testing/selftests/ktf/lib/ktf_run.cc
+ create mode 100644 tools/testing/selftests/ktf/lib/ktf_unlproto.c
+ create mode 100644 tools/testing/selftests/ktf/scripts/ktf_syms.mk
+ create mode 100755 tools/testing/selftests/ktf/scripts/resolve
+ create mode 100644 tools/testing/selftests/ktf/scripts/runtests.mk
+ create mode 100755 tools/testing/selftests/ktf/scripts/runtests.sh
+ create mode 100644 tools/testing/selftests/ktf/scripts/top_make.mk
+ create mode 100644 tools/testing/selftests/ktf/selftest/Makefile
+ create mode 100644 tools/testing/selftests/ktf/selftest/context.c
+ create mode 100644 tools/testing/selftests/ktf/selftest/context.h
+ create mode 100644 tools/testing/selftests/ktf/selftest/context_self.h
+ create mode 100644 tools/testing/selftests/ktf/selftest/hybrid.c
+ create mode 100644 tools/testing/selftests/ktf/selftest/hybrid.h
+ create mode 100644 tools/testing/selftests/ktf/selftest/hybrid_self.h
+ create mode 100644 tools/testing/selftests/ktf/selftest/ktf_syms.txt
+ create mode 100644 tools/testing/selftests/ktf/selftest/self.c
+ create mode 100644 tools/testing/selftests/ktf/user/Makefile
+ create mode 100644 tools/testing/selftests/ktf/user/hybrid.cc
+ create mode 100644 tools/testing/selftests/ktf/user/ktfcov.cc
+ create mode 100644 tools/testing/selftests/ktf/user/ktfrun.cc
+ create mode 100644 tools/testing/selftests/ktf/user/ktftest.cc
 
-Best regards
+base-commit: 0ecfebd2b52404ae0c54a878c872bb93363ada36
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+git-series 0.9.1
