@@ -2,123 +2,140 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D95C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B4AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B737F20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:10:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565737835;
-	bh=ZZSRDBhJQGuomt+jJX9sRNPgB6Fi1Mm5Fv9eznBh+Ng=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hd7iPGKSIi50UtaoNK4cEsuRoEGhMYnUrn7oBy7cNqxrH80WWBwRIovB3MBssCnBv
-	 aMBVP2haswBx3wF9+/FbDDV5P1yIpaIPqB7UpK0AGwbfuVgGjoK+kHePTwi3DoiWUV
-	 zYEYJ29VaG4MWWejKRsgy8aoQ/zKGgrOXeJmTmwE=
+	by mail.kernel.org (Postfix) with ESMTP id 32FE3206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:14:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCRnu82X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbfHMXKf (ORCPT
+        id S1726457AbfHMXOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 19:10:35 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39421 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbfHMXKe (ORCPT
+        Tue, 13 Aug 2019 19:14:49 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43986 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725923AbfHMXOs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 19:10:34 -0400
-Received: by mail-ot1-f66.google.com with SMTP id b1so9943258otp.6;
-        Tue, 13 Aug 2019 16:10:34 -0700 (PDT)
+        Tue, 13 Aug 2019 19:14:48 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e12so33817928otp.10;
+        Tue, 13 Aug 2019 16:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JfCDYzsbmylRyo21gErMd6dmJhyO/WKByIVYuR2+KCQ=;
+        b=YCRnu82XB51HlJE2bJ2ABN473mPpLvpS1+D+gsZKtfSqkAJWl3J2febSoofC9HVlXv
+         4UpKKuTsjLtc1nCxNACdSMt3GbSMoAADzqfWfvprYprmroYb2/7aES+50BLjnvqQfy84
+         tIvgdL3DxiC5tA9xy1j6FgdZO36ONJYh3B0dzA6NruPx7pfaxtmyeYfORBHPPG5qaY7Y
+         V6FScNDv12Fk33JzrJibueWFzllWA54+7utXKTBA7N9RDlGjTyJv+y/gRE3jLlJ2bAsj
+         UoBEEIKUHtdsSUrYob4u0uXuKBOduX1bCx+nWrKKzk+d/qLtb/KPiIHuG5azLupljFK5
+         YB2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Pszrb8barvQGWyNWoJ+Fs3dzWTSZn768LKHzdqrBxsI=;
-        b=RdE+eiW75xd6Pz8SZBgjaG6z4a5SLgZbeZcH/9LeOFAASzEVs5x/cbjdYDEQ3Jbk2g
-         mqmUQftPt1qyxI5OqfpgiNmEsk+nrdUrPg7Pjd548fjpZLJAoQed7vukhoQrRJdR6ZKA
-         /qC0odcOUYbXnwiUp50gCwKnBEhDgiieReOjtWO6JfuwGjErLI+DPlnAykfwILqMAnGX
-         9DIy+XLOKI8pbW2fOufmEmiJlkxyviVhkTnEpKedcytOqKsPqrH704CxEe5VUXGkARTy
-         R8hAwnE9r3dJn3/9A8+yzmwhflne3zoV8OtIZ7U6lkBy1Y5cKIxkr3GwdjkBQSD6aFtr
-         6xgQ==
-X-Gm-Message-State: APjAAAVIW19XywA9GG5zCo+eC06IDkDP/naSp+qbB9rcDJXDJq2FJGQC
-        vnwsv5rNIpwJk9qrj7sT1sUyUuB6UwH4PIzQxFs=
-X-Google-Smtp-Source: APXvYqxSK1J7GeyFaCbHx6IjCdOS/0bPhigFihM/kYU6JSSFXu9VRXgTwpzeTMGmUfuB0Td3+52GkJadzuSdlyrrCj0=
-X-Received: by 2002:a9d:65ca:: with SMTP id z10mr5607770oth.167.1565737833554;
- Tue, 13 Aug 2019 16:10:33 -0700 (PDT)
+        bh=JfCDYzsbmylRyo21gErMd6dmJhyO/WKByIVYuR2+KCQ=;
+        b=n8AU4RBQUQxtfvxfpFCMQvanblXIsi6ryMtcKyLPgULpHuELGTJF9hzmfNz1u3QsGL
+         rz+SETy1KmFbChK+uHUz8AWCarmUJi0Qukm8RrmtNa5gkw3udfOw6+XDzQb9GAvx7HFt
+         PyXP70DQiClSw1bydV0Sz+yea9/Ag2CG0V0UuPdKCANyzklmPwlZkdQgsxQRh3f+drin
+         0dTtrXCWWOPmF+HIT4/avv9T4Vi8k9N8I6yuEO386qRN0Lkfp/3cDvPpDFEjVe5mQxXf
+         XLtwzs+irAnlE/1f9oG9Xs/N336QIYvnjK3Z1IZqwASXu3tYPTUqTYNXxfEKX+5CXyic
+         0/yg==
+X-Gm-Message-State: APjAAAW0wncSOFw8J1/IsaYR6vwZ4AZzmyzlBxW6TZ8zua5sea8XSrAn
+        ErVPKGrRhoTaEE05u7ihH9r37o0GeWt65wUcNxg=
+X-Google-Smtp-Source: APXvYqwLI2Fib9qI+Djp/FJahaxKBV2uh7K8EoSHkO2am5+Zd+BprsaBzWmlkQ135bmDf66SvtJqCocH0IsUZ14QZ88=
+X-Received: by 2002:a5e:8c11:: with SMTP id n17mr5577226ioj.64.1565738087631;
+ Tue, 13 Aug 2019 16:14:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <1565731976.8572.16.camel@lca.pw> <5d533b43.1c69fb81.5729.a6bc@mx.google.com>
- <CANA+-vAXzHTSZa4Oq4osOOWJkme43cP8Cv2JySU--QCv-A0U_A@mail.gmail.com>
-In-Reply-To: <CANA+-vAXzHTSZa4Oq4osOOWJkme43cP8Cv2JySU--QCv-A0U_A@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 14 Aug 2019 01:10:22 +0200
-Message-ID: <CAJZ5v0g0p+P7JF0Q_cmch7PbHXgQG-KQAZHyhfq7sCAkgH1rmg@mail.gmail.com>
-Subject: Re: "PM / wakeup: Show wakeup sources stats in sysfs" causes boot warnings
-To:     Tri Vo <trong@android.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>, Qian Cai <cai@lca.pw>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190812131235.27244-1-nitesh@redhat.com> <20190812131235.27244-2-nitesh@redhat.com>
+ <CAKgT0UcSabyrO=jUwq10KpJKLSuzorHDnKAGrtWVigKVgvD-6Q@mail.gmail.com>
+ <ca362045-9668-18ff-39b0-de91fa72e73c@redhat.com> <d39504c9-93bd-b8f7-e119-84baac5a42d4@redhat.com>
+ <32f61f87-6205-5001-866c-a84e20fc9d85@redhat.com>
+In-Reply-To: <32f61f87-6205-5001-866c-a84e20fc9d85@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 13 Aug 2019 16:14:36 -0700
+Message-ID: <CAKgT0UfaaHrEaS2wsbdTuzCdCtSrM4Tx79w=dP8HPEnq+T7rtQ@mail.gmail.com>
+Subject: Re: [RFC][Patch v12 1/2] mm: page_reporting: core infrastructure
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        Pankaj Gupta <pagupta@redhat.com>,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
+        john.starks@microsoft.com, Dave Hansen <dave.hansen@intel.com>,
+        Michal Hocko <mhocko@suse.com>, cohuck@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 1:04 AM Tri Vo <trong@android.com> wrote:
+On Tue, Aug 13, 2019 at 3:34 AM David Hildenbrand <david@redhat.com> wrote:
 >
-> On Tue, Aug 13, 2019 at 3:35 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> >>>> +static int process_free_page(struct page *page,
+> >>>> +                            struct page_reporting_config *phconf, int count)
+> >>>> +{
+> >>>> +       int mt, order, ret = 0;
+> >>>> +
+> >>>> +       mt = get_pageblock_migratetype(page);
+> >>>> +       order = page_private(page);
+> >>>> +       ret = __isolate_free_page(page, order);
+> >>>> +
+> >> I just started looking into the wonderful world of
+> >> isolation/compaction/migration.
+> >>
+> >> I don't think saving/restoring the migratetype is correct here. AFAIK,
+> >> MOVABLE/UNMOVABLE/RECLAIMABLE is just a hint, doesn't mean that e.g.,
+> >> movable pages and up in UNMOVABLE or ordinary kernel allocations on
+> >> MOVABLE. So that shouldn't be an issue - I guess.
+> >>
+> >> 1. You should never allocate something that is no
+> >> MOVABLE/UNMOVABLE/RECLAIMABLE. Especially not, if you have ISOLATE or
+> >> CMA here. There should at least be a !is_migrate_isolate_page() check
+> >> somewhere
+> >>
+> >> 2. set_migratetype_isolate() takes the zone lock, so to avoid racing
+> >> with isolation code, you have to hold the zone lock. Your code seems to
+> >> do that, so at least you cannot race against isolation.
+> >>
+> >> 3. You could end up temporarily allocating something in the
+> >> ZONE_MOVABLE. The pages you allocate are, however, not movable. There
+> >> would have to be a way to make alloc_contig_range()/offlining code
+> >> properly wait until the pages have been processed. Not sure about the
+> >> real implications, though - too many details in the code (I wonder if
+> >> Alex' series has a way of dealing with that)
+> >>
+> >> When you restore the migratetype, you could suddenly overwrite e.g.,
+> >> ISOLATE, which feels wrong.
 > >
-> > Quoting Qian Cai (2019-08-13 14:32:56)
-> > > The linux-next commit "PM / wakeup: Show wakeup sources stats in sysfs" [1]
-> > > introduced some baddies during boot on several x86 servers. Reverted the commit
-> > > fixed the issue.
-> > >
-> > > [1] https://lore.kernel.org/lkml/20190807014846.143949-4-trong@android.com/
-> > >
-> > > [   39.195053][    T1] serio: i8042 KBD port at 0x60,0x64 irq 1
-> > > [   39.197347][    T1] kobject_add_internal failed for wakeup (error: -2 parent:
-> > > serio0)
-> > > [   39.199845][    T1] INFO: trying to register non-static key.
-> > > [   39.201582][    T1] the code is fine but needs lockdep annotation.
-> > > [   39.203477][    T1] turning off the locking correctness validator.
-> > > [   39.205399][    T1] CPU: 12 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc4-
-> > > next-20190813 #3
-> > > [   39.207938][    T1] Hardware name: HP ProLiant XL420 Gen9/ProLiant XL420
-> > > Gen9, BIOS U19 12/27/2015
-> > > [   39.210606][    T1] Call Trace:
-> > > [   39.210606][    T1]  dump_stack+0x62/0x9a
-> > > [   39.210606][    T1]  register_lock_class+0x95a/0x960
-> > > [   39.210606][    T1]  ? __platform_driver_probe+0xcd/0x230
-> > > [   39.210606][    T1]  ? __platform_create_bundle+0xc0/0xe0
-> > > [   39.210606][    T1]  ? i8042_init+0x4ec/0x578
-> > > [   39.210606][    T1]  ? do_one_initcall+0xfe/0x45a
-> > > [   39.219571][    T1]  ? kernel_init_freeable+0x614/0x6a7
-> > > [   39.219571][    T1]  ? kernel_init+0x11/0x138
-> > > [   39.219571][    T1]  ? ret_from_fork+0x35/0x40
-> > > [   39.219571][    T1]  ? is_dynamic_key+0xf0/0xf0
-> > > [   39.219571][    T1]  ? rwlock_bug.part.0+0x60/0x60
-> > > [   39.219571][    T1]  ? __debug_check_no_obj_freed+0x8e/0x250
-> > > [   39.219571][    T1]  __lock_acquire.isra.13+0x5f/0x830
-> > > [   39.229491][    T1]  ? __debug_check_no_obj_freed+0x152/0x250
-> > > [   39.229491][    T1]  lock_acquire+0x107/0x220
-> > > [   39.229491][    T1]  ? __pm_relax.part.2+0x21/0xa0
-> > > [   39.229491][    T1]  _raw_spin_lock_irqsave+0x35/0x50
-> > > [   39.229491][    T1]  ? __pm_relax.part.2+0x21/0xa0
-> > > [   39.229491][    T1]  __pm_relax.part.2+0x21/0xa0
-> > > [   39.239588][    T1]  wakeup_source_destroy.part.3+0x18/0x190
-> > > [   39.239588][    T1]  wakeup_source_register+0x43/0x50
 > >
-> > We shouldn't call wakeup_source_destroy() from the error path in
-> > wakeup_source_register() because that calls __pm_relax() and that takes
-> > a lock that isn't initialized until wakeup_source_add() is called. Can
-> > you try this patch?
+> > I was triggering an occasional CPU stall bug earlier, with saving and restoring
+> > the migratetype I was able to fix it.
+> > But I will further look into this to figure out if it is really required.
+> >
 >
-> Right, that makes sense. Thanks for sending a fix, Stephen!
->
-> What's the preferred procedure for merging this fix? Should we apply
-> this commit on top of pm tree? Or should I resend a new version of the
-> offending patch? Sorry, I'm still new to this.
+> You should especially look into handling isolated/cma pages. Maybe that
+> was the original issue. Alex seems to have added that in his latest
+> series (skipping isolated/cma pageblocks completely) as well.
 
-I can apply this patch as a fix if it is resent with a proper changelog.
+So as far as skipping isolated pageblocks, I get the reason for
+skipping isolated, but why would we need to skip CMA? I had made the
+change I did based on comments you had made earlier. But while working
+on some of the changes to address isolation better and looking over
+several spots in the code it seems like CMA is already being used as
+an allocation fallback for MIGRATE_MOVABLE. If that is the case
+wouldn't it make sense to allow pulling pages and reporting them while
+they are in the free_list?
