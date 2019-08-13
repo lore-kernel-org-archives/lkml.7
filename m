@@ -2,122 +2,83 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A53D6C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648E3C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF7120651
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3576720840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565673984;
+	bh=lPRZcsZMxeDRskHBYpCls/sLZwp4I2kKLlM8NAZFiKs=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=P2dv6UfBjltKQXIF2BQRWZWwE/9ojCGJVvsyTUIkm5lbnu7lvqi4unBivV67vXAdx
+	 fNa9LZicIdOPhmCI2IYTwahAL1p6lw+UhiPZeaVXpX1A0bj4X6I4yJT/LmZ/I+xV16
+	 ZWS1K2PN+KY0BamZCRmuxCX1uH8CHLNDq8byCEi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfHMF0R (ORCPT
+        id S1727010AbfHMF0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 01:26:17 -0400
-Received: from mga07.intel.com ([134.134.136.100]:18045 "EHLO mga07.intel.com"
+        Tue, 13 Aug 2019 01:26:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfHMF0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 01:26:16 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 22:25:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,380,1559545200"; 
-   d="scan'208";a="176105661"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by fmsmga008.fm.intel.com with ESMTP; 12 Aug 2019 22:25:49 -0700
-Date:   Tue, 13 Aug 2019 13:27:33 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com, mst@redhat.com,
-        rkrcmar@redhat.com, jmattson@google.com
-Subject: Re: [PATCH v6 3/8] KVM: x86: Implement CET CPUID enumeration for
- Guest
-Message-ID: <20190813052733.GA2037@local-michael-cet-test>
-References: <20190725031246.8296-1-weijiang.yang@intel.com>
- <20190725031246.8296-4-weijiang.yang@intel.com>
- <20190813000604.GI4996@linux.intel.com>
+        id S1726819AbfHMF0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 01:26:21 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3343520651;
+        Tue, 13 Aug 2019 05:26:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565673980;
+        bh=lPRZcsZMxeDRskHBYpCls/sLZwp4I2kKLlM8NAZFiKs=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=xn4OU3Vfrh5XaaxwHEg2nAYmcPQN4J/TifXTCMJ5o7krieQoEGIJGod054h5ECObD
+         CkclJzEUNF9+0geiUzt4z12AoPF3hn4t9CqzxfzzBaQXO5GQpk28SuZ+cbZpVymscf
+         9Ei8ih0lW6E9cRj9dyak9H2XXgXNOez/5Hi5pqtg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813000604.GI4996@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190812182421.141150-17-brendanhiggins@google.com>
+References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-17-brendanhiggins@google.com>
+Subject: Re: [PATCH v12 16/18] MAINTAINERS: add entry for KUnit the unit testing framework
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com
+User-Agent: alot/0.8.1
+Date:   Mon, 12 Aug 2019 22:26:19 -0700
+Message-Id: <20190813052620.3343520651@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 05:06:04PM -0700, Sean Christopherson wrote:
-> On Thu, Jul 25, 2019 at 11:12:41AM +0800, Yang Weijiang wrote:
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 652b3876ea5c..ce1d6fe21780 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -1637,6 +1637,11 @@ static inline bool vmx_feature_control_msr_valid(struct kvm_vcpu *vcpu,
-> >  	return !(val & ~valid_bits);
-> >  }
-> >  
-> > +static inline u64 vmx_supported_xss(void)
-> > +{
-> > +	return host_xss;
-> 
-> Do you know if the kernel will ever enable CET_USER but not CET_KERNEL,
-> and vice versa?  I tried hunting down the logic in the main CET enabling
-> series but couldn't find the relevant code.
-> 
-> If the kernel does enable USER vs. KERNEL independently, are we sure that
-> KVM can correctly virtualize that state and that the guest OS won't die
-> due to expecting all CET features or no CET features?
-> 
-> In other words, do we want to return host_xss as is, or do we want to
-> make CET_USER and CET_KERNEL a bundle deal and avoid the headache, e.g.:
-> 
-> 	if (!(host_xss & XFEATURE_MASK_CET_USER) ||
-> 	    !(host_xss & XFEATURE_MASK_CET_KERNEL))
-> 		return host_xss & ~(XFEATURE_MASK_CET_USER |
-> 				    XFEATURE_MASK_CET_KERNEL);
-> 	return host_xss; 
->
-Hi, Sean,
-Thanks for review! CET_USER and CET_KERNEL are two independent parts of
-CET, but CET_KERNEL part has not been fully implemented yet, the final target
-is to enable CET_USER + CET_KERNEL in kernel. In the VMM patch, it's supposed
-to enable both CET_USER and CET_KERNEL mode at one time, so the patches expose
-all the features of CET to guest OS as long as platform and host kernel
-support so.
+Quoting Brendan Higgins (2019-08-12 11:24:19)
+> Add myself as maintainer of KUnit, the Linux kernel's unit testing
+> framework.
+>=20
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
 
-> > +}
-> > +
-> >  static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
-> >  {
-> >  	switch (msr->index) {
-> > @@ -7724,6 +7729,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
-> >  	.get_vmcs12_pages = NULL,
-> >  	.nested_enable_evmcs = NULL,
-> >  	.need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
-> > +	.supported_xss = vmx_supported_xss,
-> >  };
-> >  
-> >  static void vmx_cleanup_l1d_flush(void)
-> > diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> > index a470ff0868c5..6a1870044752 100644
-> > --- a/arch/x86/kvm/x86.h
-> > +++ b/arch/x86/kvm/x86.h
-> > @@ -288,6 +288,10 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, unsigned long cr2,
-> >  				| XFEATURE_MASK_YMM | XFEATURE_MASK_BNDREGS \
-> >  				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
-> >  				| XFEATURE_MASK_PKRU)
-> > +
-> > +#define KVM_SUPPORTED_XSS	(XFEATURE_MASK_CET_USER \
-> > +				| XFEATURE_MASK_CET_KERNEL)
-> > +
-> >  extern u64 host_xcr0;
-> >  
-> >  extern u64 kvm_supported_xcr0(void);
-> > -- 
-> > 2.17.2
-> > 
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+
