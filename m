@@ -2,76 +2,88 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BFBC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B863C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD1C42067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07C020844
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:30:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qLqSPm9h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729539AbfHMOa1 (ORCPT
+        id S1729608AbfHMOac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:30:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50711 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729304AbfHMOa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:30:27 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 35F5C30605EF;
-        Tue, 13 Aug 2019 14:30:27 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 04EA56092F;
-        Tue, 13 Aug 2019 14:30:24 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 13 Aug 2019 16:30:26 +0200 (CEST)
-Date:   Tue, 13 Aug 2019 16:30:24 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v6 1/2] fork: extend clone3() to support setting a PID
-Message-ID: <20190813143023.GC6971@redhat.com>
-References: <20190812200939.23784-1-areber@redhat.com>
+        Tue, 13 Aug 2019 10:30:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43712 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729304AbfHMOac (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 10:30:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KSaal6YlN7wPFno+cbdIpqACxfsSyDYqcjwHpJgXWLQ=; b=qLqSPm9h565BOHuhfNAhNZ3T6
+        8IbwVyae2EnRhi7GEy8egxUKyDgVc8w1jOX6WqZ46CNH+Vjl8iRVm4hMON6gAnvCVgfezsmNE0ZHG
+        p6LgsnWqlZQf+i533xf6fVWyifJmAYGsODHrN7FSgn3KpDzdu4BhWAd9F/Kvrte/59YiBOHq5FGIC
+        hdfn1tuPP1fTro5E5XzXIw+XdrD2vxJjhmchCHDYn2lmKJm4ORX0FRGeToXq7AvX/qd+zc4kLZamB
+        IAZ+EVO0J7iPW3BfCneMF+jPaUbB/buUStYWhqbdFjsBfb/jSMQsk+WAY9v1Mz8u6rDW9dbn9rETU
+        zFXHShNJA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hxXoh-0003B5-FW; Tue, 13 Aug 2019 14:30:27 +0000
+Date:   Tue, 13 Aug 2019 07:30:27 -0700
+From:   "hch@infradead.org" <hch@infradead.org>
+To:     Atish Patra <Atish.Patra@wdc.com>
+Cc:     "hch@infradead.org" <hch@infradead.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "allison@lohutok.net" <allison@lohutok.net>
+Subject: Re: [PATCH] RISC-V: Issue a local tlb flush if possible.
+Message-ID: <20190813143027.GA31668@infradead.org>
+References: <20190810014309.20838-1-atish.patra@wdc.com>
+ <20190812145631.GC26897@infradead.org>
+ <f58814e156b918531f058acfac944abef34f5fb1.camel@wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190812200939.23784-1-areber@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 13 Aug 2019 14:30:27 +0000 (UTC)
+In-Reply-To: <f58814e156b918531f058acfac944abef34f5fb1.camel@wdc.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/12, Adrian Reber wrote:
->
-> The main motivation to add set_tid to clone3() is CRIU.
->
-> To restore a process with the same PID/TID CRIU currently uses
-> /proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
-> ns_last_pid and then (quickly) does a clone(). This works most of the
-> time, but it is racy. It is also slow as it requires multiple syscalls.
->
-> Extending clone3() to support set_tid makes it possible restore a
-> process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
-> race free (as long as the desired PID/TID is available).
->
-> This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
-> on clone3() with set_tid as they are currently in place for ns_last_pid.
->
-> Signed-off-by: Adrian Reber <areber@redhat.com>
+On Tue, Aug 13, 2019 at 12:15:15AM +0000, Atish Patra wrote:
+> I thought if it recieves an empty cpumask, then it should at least do a
+> local flush is the expected behavior. Are you saying that we should
+> just skip all and return ? 
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+How could we ever receive an empty cpu mask?  I think it could only
+be empty without the current cpu.  At least that is my reading of
+the callers and a few other implementations.
 
+> > 	if (!cpumask || cpumask_test_cpu(cpu, cpumask) {
+> > 		if ((start == 0 && size == -1) || size > PAGE_SIZE)
+> > 			local_flush_tlb_all();
+> > 		else if (size == PAGE_SIZE)
+> > 			local_flush_tlb_page(start);
+> > 		cpumask_clear_cpu(cpuid, cpumask);
+> 
+> This will modify the original cpumask which is not correct. clear part
+> has to be done on hmask to avoid a copy.
+
+Indeed.  But looking at the x86 tlbflush implementation it seems like we
+could use cpumask_any_but() to avoid having to modify the passed in
+cpumask.
