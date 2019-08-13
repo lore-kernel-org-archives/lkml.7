@@ -2,129 +2,141 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51C4C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 392A4C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A57532067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E3EA2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:36:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="agR9AvYO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbfHMMeF (ORCPT
+        id S1728061AbfHMMf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:34:05 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51904 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727738AbfHMMeF (ORCPT
+        Tue, 13 Aug 2019 08:35:59 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43140 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726993AbfHMMf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:34:05 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hxW02-0001WY-Jh; Tue, 13 Aug 2019 12:34:02 +0000
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Cc:     linux-kernel@vger.kernel.org
-Subject: re: rcu/nocb: Add bypass callback queueing, bug report
-Message-ID: <e89f5af3-dcf3-986f-828f-14e10cef9915@canonical.com>
-Date:   Tue, 13 Aug 2019 13:34:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Tue, 13 Aug 2019 08:35:58 -0400
+Received: by mail-qt1-f193.google.com with SMTP id b11so6331754qtp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 05:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=S54lLa6bgYl50xMneQkBqoB3M0F5v0sM817U2bzthXY=;
+        b=agR9AvYOrhFisIq3zyRg4IM/ZRdhZf5/0lqKd2pNTQa5RoGvsDs5PPhxDI9RK9Ol3C
+         qf5Mt7bSLQVchVswI/LpN3Hdt+DjL7mwdWm1lQsCA1Hvf5dhov2H0jnYUWm8AOBJwhaD
+         aQy2Y5h7zApILOwcTVb/pK5XYc+Y03KG7nbm7a6wJjzBgu5tk4jTHz8a5qyha8hJ8yhJ
+         k38Z2rz1wQNMBxKbrr1vwAZyySgH7XW6ZSSj3keFjJ2+8Cw/Nc5nKW9dF0YTcWM8Y8GI
+         uCH4ArZP7E+cApAfFDOTSvvER6PZp4dC8dQQhKcwStWa123KCF/qCHrhqTDnceK27Sm7
+         YhoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=S54lLa6bgYl50xMneQkBqoB3M0F5v0sM817U2bzthXY=;
+        b=rvsOqQ1M6FZE4mrXdBkkwMkT7Qcf+UGc1wdFufndXItdNmh84zJKJlbg8rI++xnv9L
+         jpWTY90Gua2vLqAHu4AzgPhrz6MHd1SB07VuC4yx+FZEIXCJQeYGXaNGhHijyuJ4uEQ7
+         behXfuX/d25YVUkryESDwvl6nTkLRHjmHzgX/Gt0pD5+EYk24iVYtxZFFlLTybSpj/gw
+         qkCh1BkA70uSsRxHyi4O9cNGfLJ1r9saVlWZeci6wPFswqmExzyUd+uXvtTvCA3GmKC1
+         5gs4rfp/G0K+maszWgELoHE5dPVqZ6kICY4Bv/xr9NiUdH5b0GFZhhyk3skd7TANIvte
+         1Q+Q==
+X-Gm-Message-State: APjAAAWIS4Pd1lJ03mQvDIm/pFPiVg4Thnn3mPKXtv/U+SRB0196Xv2P
+        fxPZIaCRofbofhSiOvb6oVsf/g==
+X-Google-Smtp-Source: APXvYqxtXmnf0GGchCLA6EVm/YadIfQw8wWVCxKFsbu+A1RacfwS39mJeDS31/OUgGDLvtQ1S4X/rQ==
+X-Received: by 2002:a0c:fa02:: with SMTP id q2mr5488260qvn.28.1565699757517;
+        Tue, 13 Aug 2019 05:35:57 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id y25sm10208095qkj.35.2019.08.13.05.35.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 05:35:56 -0700 (PDT)
+Message-ID: <1565699754.8572.8.camel@lca.pw>
+Subject: Re: [PATCH v3 3/3] mm: kmemleak: Use the memory pool for early
+ allocations
+From:   Qian Cai <cai@lca.pw>
+To:     Catalin Marinas <catalin.marinas@arm.com>, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+Date:   Tue, 13 Aug 2019 08:35:54 -0400
+In-Reply-To: <20190812160642.52134-4-catalin.marinas@arm.com>
+References: <20190812160642.52134-1-catalin.marinas@arm.com>
+         <20190812160642.52134-4-catalin.marinas@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, 2019-08-12 at 17:06 +0100, Catalin Marinas wrote:
+> Currently kmemleak uses a static early_log buffer to trace all memory
+> allocation/freeing before the slab allocator is initialised. Such early
+> log is replayed during kmemleak_init() to properly initialise the
+> kmemleak metadata for objects allocated up that point. With a memory
+> pool that does not rely on the slab allocator, it is possible to skip
+> this early log entirely.
+> 
+> In order to remove the early logging, consider kmemleak_enabled == 1 by
+> default while the kmem_cache availability is checked directly on the
+> object_cache and scan_area_cache variables. The RCU callback is only
+> invoked after object_cache has been initialised as we wouldn't have any
+> concurrent list traversal before this.
+> 
+> In order to reduce the number of callbacks before kmemleak is fully
+> initialised, move the kmemleak_init() call to mm_init().
+> 
+> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+> ---
+>  init/main.c       |   2 +-
+>  lib/Kconfig.debug |  11 +-
+>  mm/kmemleak.c     | 267 +++++-----------------------------------------
+>  3 files changed, 35 insertions(+), 245 deletions(-)
+> 
+> diff --git a/init/main.c b/init/main.c
+> index 96f8d5af52d6..ca05e3cd7ef7 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -556,6 +556,7 @@ static void __init mm_init(void)
+>  	report_meminit();
+>  	mem_init();
+>  	kmem_cache_init();
+> +	kmemleak_init();
+>  	pgtable_init();
+>  	debug_objects_mem_init();
+>  	vmalloc_init();
+> @@ -740,7 +741,6 @@ asmlinkage __visible void __init start_kernel(void)
+>  		initrd_start = 0;
+>  	}
+>  #endif
+> -	kmemleak_init();
+>  	setup_per_cpu_pageset();
+>  	numa_policy_init();
+>  	acpi_early_init();
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 4d39540011e2..39df06ffd9f4 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -592,17 +592,18 @@ config DEBUG_KMEMLEAK
+>  	  In order to access the kmemleak file, debugfs needs to be
+>  	  mounted (usually at /sys/kernel/debug).
+>  
+> -config DEBUG_KMEMLEAK_EARLY_LOG_SIZE
+> -	int "Maximum kmemleak early log entries"
+> +config DEBUG_KMEMLEAK_MEM_POOL_SIZE
+> +	int "Kmemleak memory pool size"
+>  	depends on DEBUG_KMEMLEAK
+>  	range 200 40000
+>  	default 16000
 
-Static analysis on linux-next today found an issue in the following commit:
-
-commit 1afc4b18724f8f7b7a21fdf66cd43cc4a932812d
-Author: Paul E. McKenney <paulmck@linux.ibm.com>
-Date:   Tue Jul 2 16:03:33 2019 -0700
-
-    rcu/nocb: Add bypass callback queueing
-
-
-The coverity report is as follows:
-
-1783        // If we have advanced to a new jiffy, reset counts to allow
-1784        // moving back from ->nocb_bypass to ->cblist.
-1785        if (j == rdp->nocb_nobypass_last) {
-1786                c = rdp->nocb_nobypass_count + 1;
-1787        } else {
-1788                WRITE_ONCE(rdp->nocb_nobypass_last, j);
-1789                c = rdp->nocb_nobypass_count -
-nocb_nobypass_lim_per_jiffy;
-1790                if (c > nocb_nobypass_lim_per_jiffy)
-1791                        c = nocb_nobypass_lim_per_jiffy;
-
-CID 85141 (#1 of 1): Unsigned compared against 0
-unsigned_compare: This less-than-zero comparison of an unsigned value is
-never true. c < 0UL.
-
-1792                else if (c < 0)
-1793                        c = 0;
-
-Variable c is an unsigned long so the c < 0 check is never true. I'm not
-sure what the ramifications are if c is made a signed long instead, so
-I'm not fixing this and reporting this issue.
-
-Regards,
-
-Colin
+Hmm, this seems way too small. My previous round of testing with
+kmemleak.mempool=524288 works quite well on all architectures.
