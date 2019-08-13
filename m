@@ -6,89 +6,147 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AFCC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D281C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A76E3206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27459206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:45:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfHMVo7 (ORCPT
+        id S1726996AbfHMVp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:44:59 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38302 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfHMVo7 (ORCPT
+        Tue, 13 Aug 2019 17:45:58 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:43141 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbfHMVp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:44:59 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g17so109139144wrr.5;
-        Tue, 13 Aug 2019 14:44:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GHzSLD8380XO5cvMJ3boVjrnEElPkNe5Hv186h7Ab/g=;
-        b=G/X6BEZPF1P/ObINDdtQfHHnqvj2I6+e2szLLAh5NqiYJ8o4cJYLHEVpNP8q8db1h7
-         ZTpfgrkT7tFL1n+r9MzA6JfSAMvGZf6TE+trSCwjzdmv0Qf+GnxkO4izV4HGyROTbXpB
-         sotgsRWFTrYepFAWsGS0AkSWfcGXC/Eg4qUmfAlv3Vl6mNXxgMiYMd1Vr23TZbKkfqFi
-         5CIuVjxqiA+dFiOm9/z5hmNKPBfiVsMXIkLV5rqJA/v1TO3Ts+rj7gTaCLldA7cdPN+5
-         BMJYK0HrY9vetU65Cr5buUjTOcA6MZ5EASPyUayd7DjoZBsjNLjFlnQrEyrHt3XTZDU+
-         M2iQ==
-X-Gm-Message-State: APjAAAUkNuW2vj7xhogCEaa4nm2ZAZWhpSRoehW0jIaoT6Mu7tLxCwpP
-        ej4ynFT+XPb1bz9b1TTWDf0=
-X-Google-Smtp-Source: APXvYqz6c4gFO3wb0bC1PSubSlMD0NZJFOM2QauOX0Mff41FyyTyiF7KorOO0PDEPQkLvl+kXwPzIg==
-X-Received: by 2002:a5d:494d:: with SMTP id r13mr41032995wrs.82.1565732697294;
-        Tue, 13 Aug 2019 14:44:57 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id u186sm5034219wmu.26.2019.08.13.14.44.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Aug 2019 14:44:56 -0700 (PDT)
-Subject: Re: [PATCH] ahci: Remove the exporting of ahci_em_messages
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     "Liu, Chuansheng" <chuansheng.liu@intel.com>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-References: <20190710152923.25562-1-efremov@linux.com>
- <27240C0AC20F114CBF8149A2696CBE4A60BCAAEE@SHSMSX106.ccr.corp.intel.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <340001e6-1750-b6b5-9482-3843679acb63@linux.com>
-Date:   Wed, 14 Aug 2019 00:44:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 13 Aug 2019 17:45:57 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id C9F8E60003;
+        Tue, 13 Aug 2019 21:45:52 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 23:45:52 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Karel Zak <kzak@redhat.com>,
+        Lennart Poettering <lennart@poettering.net>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: New kernel interface for sys_tz and timewarp?
+Message-ID: <20190813214552.GD3600@piout.net>
+References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
+ <CALAqxLUde4OTEm3Kik0Fvydhp+i-Xo-axS2wRKEBJyT9hY=wCg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <27240C0AC20F114CBF8149A2696CBE4A60BCAAEE@SHSMSX106.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALAqxLUde4OTEm3Kik0Fvydhp+i-Xo-axS2wRKEBJyT9hY=wCg@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
-
-On 11.07.2019 04:03, Liu, Chuansheng wrote:
->> -----Original Message-----
->> From: Denis Efremov [mailto:efremov@linux.com]
->> Sent: Wednesday, July 10, 2019 11:29 PM
->> To: Liu, Chuansheng <chuansheng.liu@intel.com>
->> Cc: Denis Efremov <efremov@linux.com>; Jens Axboe <axboe@kernel.dk>;
->> linux-ide@vger.kernel.org; linux-kernel@vger.kernel.org
->> Subject: [PATCH] ahci: Remove the exporting of ahci_em_messages
->>
->> The variable ahci_em_messages is declared static and marked
->> EXPORT_SYMBOL_GPL, which is at best an odd combination. Because the
->> variable is not used outside of the drivers/ata/libahci.c file it is
->> defined in, this commit removes the EXPORT_SYMBOL_GPL() marking.
+On 13/08/2019 10:10:53-0700, John Stultz wrote:
+> On Tue, Aug 13, 2019 at 2:06 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > Now, to the actual questions:
+> >
+> > * Should we allow setting the sys_tz on new architectures that use only
+> >   time64 interfaces at all, or should we try to get away from that anyway?
 > 
-> Sounds good to me, thanks.
-> Reviewed-by: Chuansheng Liu <chuansheng.liu@linux.intel.com>
+> So I'd probably cut this question a bit differently:
+> 
+> 1) Do we want to deprecate sys_tz tracking in the kernel? If new
+> architectures don't have ways to set it, for consistency we should
+> probably deprecate in-kernel tracking of that value (start returning
+> an error when folks try to set it and always return 0 when its
+> accessed).
+> 
+> 2) If we deprecate the sys_tz tracking in the kernel, how do we
+> address the in-kernel systohc syncing with local-time (non-UTC) RTCs
+> on x86 systems (I'm not aware of other arches that utilize non-UTC
+> RTCs)
+> 
+> 
+> > * Should the NTP timewarp setting ("int persistent_clock_is_local" and
+> >   its offset) be controllable separately from the timezone used in other
+> >   drivers?
+> 
+> For the discussion, I'm not sure I'd call this NTP timewarp, but maybe
+> systohc rtc offset is more clear?
+> 
+> Its really not connected to NTP, except that we only want to
+> automatically sync the RTC to the system clock when we know the system
+> clock is right (and that signal comes from NTP).
 > 
 
-Could you please look at this patch once again and accept it if it's ok?
-static ahci_em_messages will trigger a warning after this check
-will be in tree https://lkml.org/lkml/2019/7/14/118
+Well, the only function in systohc.c is rtc_set_ntp_time and its only
+user is kernel/time/ntp.c. That why I suggested on IRC to move it to the
+kernel timekeeping instead of having it in the rtc subsystem. Also, this
+function only works properly on systems with an MC146818 compatible RTC.
 
-Thanks,
-Denis
+> 
+> > * If we want keep having a way to set the sys_tz, what interface
+> > should that use?
+> >
+> >   Suggestions so far include
+> >    - adding a clock_settimeofday_time64() syscall on all 32-bit architectures to
+> >      maintain the traditional behavior,
+> 
+> If the answer to #1 above is no, we want to preserve the
+> functionality, then I think this is probably the best solution.
+> Alternatively one could add a new syscall/sysctrl that just sets the
+> timezone, but most 64 bit architectures already have
+> clock_settimeofday_time64() equiv call, so this is probably the least
+> duplicative.
+> 
+> >    - adding a sysctl interface for accessing sys_tz.tz_tminuteswest,
+> >    - using a new field in 'struct timex' for the timewarp offset, and
+> 
+> I'd push back on this one. The timewarp offset is really a RTC offset,
+> and has nothing to do with ntp, so we shoudn't be adding things to
+> adjtimex about it.
+> 
+> >    - adding an ioctl command on /dev/rtc/ to control the timewarp
+> >      offset of that particular device.
+> 
+> If the answer to #1 above is yes, then I think this makes more sense
+> to me, since the offset is a property of how we interpret the RTC (ie:
+> is it UTC or local time).
+> 
+
+The main issue I have with that is that while the offset is possibly
+specific to an RTC, it is something that is not used by the rtc
+subsystem as this offset handling is done by the caller. i.e. hwclock
+handles local time vs UTC time. That is why sync_rtc_clock also had to
+do it. It would be awkward to have different paths in the rtc core
+depending on whether the set_time call is coming from userspace or the
+kernel.
+
+> Getting more aggressive, from irc discussions, it sounded like
+> Alexandre would like to deprecate the in-kernel systohc and hctosys
+> logic, so if that were the case, and the answer to #1 above was yes,
+> then we could probably skip all of this and just drop systohc work and
+> keep the UTC/local logic to userland.
+> 
+
+My point is that userspace has all the necessary info to do a correct
+job. It is even more flexible because currently the kernel is limited
+to the rtc selected at compile time (this often ends up being rtc0 which
+may or may not be functional or battery backed) and the 11 minute
+interval is fixed.
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
