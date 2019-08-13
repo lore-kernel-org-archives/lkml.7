@@ -2,144 +2,203 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA27DC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20D3C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C618F2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78EB22064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:46:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rYVuKFPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbfHMJpg (ORCPT
+        id S1728285AbfHMJqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:45:36 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:51732 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726650AbfHMJpg (ORCPT
+        Tue, 13 Aug 2019 05:46:02 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40483 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbfHMJqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:45:36 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id A0346634C88;
-        Tue, 13 Aug 2019 12:45:27 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1hxTMt-0000eI-0b; Tue, 13 Aug 2019 12:45:27 +0300
-Date:   Tue, 13 Aug 2019 12:45:26 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com
-Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
- binding
-Message-ID: <20190813094526.GG835@valkosipuli.retiisi.org.uk>
-References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
- <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
+        Tue, 13 Aug 2019 05:46:02 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v19so870899wmj.5;
+        Tue, 13 Aug 2019 02:45:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pGE6nIvpaiVVUhX7DZmNiG2nOp+x8acceL+iSBstYcM=;
+        b=rYVuKFPNGEkiAI4mAdwIrZAqYYlRg74LGzP/FqfN3KRAl04BgU2LDT0ooN+gBehQmj
+         /l555e8cWWNK2goT9sBbT5EqhMP1gLF7vgQ/M6fIb9cC3HPE3TRJm/ml/knktUZ40/N3
+         4h9ky+wG42pMu6BBsQhqdCLFA+gh4ntX24glERcmofvadd05+p7ov7/qT5d/nL6c1DFS
+         oARFLO3fyE74qLu2zOIDbaxWz9FlS1JHWV5vZCYFaM2Ix9/shAInEsAiEInAWGxfTtIF
+         u7J1EG5iz8GpIPvHdCtROpkX+htWW2BRqgVVqpHCWYYkNm1MmE7BldGOm6R/YeyadjEs
+         HmMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pGE6nIvpaiVVUhX7DZmNiG2nOp+x8acceL+iSBstYcM=;
+        b=nLsbpxTkwzlU5L+pZXPvj6leXl9eCj3kGZCpoU0fOQuf59JXzF/vHNfeYm9dhI0ZHF
+         GzP1dEEXarSnMPC1geeFI3CL0Ue/MYFccCVzFc6afsveMnALQxikIUUCKRH3joGa6KXc
+         GUOa2w+g8MvH6QhoS6bsOdcz/3aKio2nL0qBWhWPfYZvk3d8USl0RrUGOjGOYZcwSjNt
+         RWAVVmULdC79sIyft6pkTofc9IUYk4xM5vAAGt7GxAdZBrK3nC4Nmry97AF0eWPw5fsd
+         afM09cEHs0/CY8Yfs6zRaEkX9D6e0Vcy0Y3nOF5jxj+FXvgg0FxlWeopnoK/z5+Q8Vn3
+         2hPg==
+X-Gm-Message-State: APjAAAXvQzJRfT1YXRzZc51DDzMDd0a7GRtJtb/YdldfbNPb1SXF63W2
+        ZGdkI2d4GxB+HSu4zoncX3s=
+X-Google-Smtp-Source: APXvYqzhJJDCDXaJoe7rhIv2x2LqEgsTUkJsLp0JppFAlMb3kN6r7l0DIjFcWeNZxnkdZJ02PqNuRQ==
+X-Received: by 2002:a1c:ed0a:: with SMTP id l10mr2131266wmh.156.1565689558447;
+        Tue, 13 Aug 2019 02:45:58 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id 6sm867244wmf.23.2019.08.13.02.45.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 13 Aug 2019 02:45:57 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 11:45:56 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, ldewangan@nvidia.com,
+        jslaby@suse.com, linux-serial@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ahung Cheng <ahcheng@nvidia.com>,
+        Shardar Mohammed <smohammed@nvidia.com>
+Subject: Re: [PATCH 03/14] serial: tegra: avoid reg access when clk disabled
+Message-ID: <20190813094556.GH1137@ulmo>
+References: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
+ <1565609303-27000-4-git-send-email-kyarlagadda@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="SdvjNjn6lL3tIsv0"
 Content-Disposition: inline
-In-Reply-To: <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1565609303-27000-4-git-send-email-kyarlagadda@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manivannan,
 
-On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
-> Add devicetree binding for IMX290 CMOS image sensor.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+--SdvjNjn6lL3tIsv0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Aug 12, 2019 at 04:58:12PM +0530, Krishna Yarlagadda wrote:
+> From: Ahung Cheng <ahcheng@nvidia.com>
+>=20
+> This avoids two race conditions from the UART shutdown sequence both
+> leading to 'Machine check error in AXI2APB' and kernel oops.
+>=20
+> One was that the clock was disabled before the DMA was terminated making
+> it possible for the DMA callbacks to be called after the clock was
+> disabled. These callbacks could write to the UART registers causing
+> timeout.
+>=20
+> The second was that the clock was disabled before the UART was
+> completely flagged as closed. This is done after the shutdown is called
+> and a new write could be started after the clock was disabled.
+> tegra_uart_start_pio_tx could be called causing timeout.
+>=20
+> Given that the baud rate is reset at the end of shutdown sequence, this
+> fix is to examine the baud rate to avoid register access from both race
+> conditions.
+>=20
+> Besides, terminate the DMA before disabling the clock.
+>=20
+> Signed-off-by: Ahung Cheng <ahcheng@nvidia.com>
+> Signed-off-by: Shardar Mohammed <smohammed@nvidia.com>
+> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
 > ---
->  .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
-> new file mode 100644
-> index 000000000000..7535b5b5b24b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/imx290.txt
-> @@ -0,0 +1,51 @@
-> +* Sony IMX290 1/2.8-Inch CMOS Image Sensor
-> +
-> +The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
-> +Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
-> +interfaces. The sensor output is available via CMOS logic parallel SDR output,
-> +Low voltage LVDS DDR output and CSI-2 serial data output.
+>  drivers/tty/serial/serial-tegra.c | 17 +++++++++++------
+>  1 file changed, 11 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/seria=
+l-tegra.c
+> index 93d299e..d908465 100644
+> --- a/drivers/tty/serial/serial-tegra.c
+> +++ b/drivers/tty/serial/serial-tegra.c
+> @@ -126,6 +126,8 @@ struct tegra_uart_port {
+> =20
+>  static void tegra_uart_start_next_tx(struct tegra_uart_port *tup);
+>  static int tegra_uart_start_rx_dma(struct tegra_uart_port *tup);
+> +static void tegra_uart_dma_channel_free(struct tegra_uart_port *tup,
+> +					bool dma_to_memory);
+> =20
+>  static inline unsigned long tegra_uart_read(struct tegra_uart_port *tup,
+>  		unsigned long reg)
+> @@ -458,6 +460,9 @@ static void tegra_uart_start_next_tx(struct tegra_uar=
+t_port *tup)
+>  	unsigned long count;
+>  	struct circ_buf *xmit =3D &tup->uport.state->xmit;
+> =20
+> +	if (WARN_ON(!tup->current_baud))
+> +		return;
 
-If there are three to choose from, then you should specify which one is in
-use. Given that I think chances remain slim we'd add support for the other
-two (it's certainly not ruled out though), CSI-2 could be the default. But
-this needs to be documented.
+Are the race conditions that you are describing something which can be
+triggered by the user? If so, it's not a good idea to use a WARN_ON,
+because that could lead to some userspace spamming the log with these,
+potentially on purpose.
 
-> +
-> +Required Properties:
-> +- compatible: Should be "sony,imx290"
-> +- reg: I2C bus address of the device
-> +- clocks: Reference to the xclk clock.
-> +- clock-names: Should be "xclk".
-> +- clock-frequency: Frequency of the xclk clock.
-
-...in Hz.
-
-> +- vdddo-supply: Sensor digital IO regulator.
-> +- vdda-supply: Sensor analog regulator.
-> +- vddd-supply: Sensor digital core regulator.
-> +
-> +Optional Properties:
-> +- reset-gpios: Sensor reset GPIO
-> +
-> +The imx290 device node should contain one 'port' child node with
-> +an 'endpoint' subnode. For further reading on port node refer to
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-
-Which other properties are relevant for the device? I suppose you can't
-change the lane order, so clock-lanes is redundant (don't use it in the
-example) and data-lanes should be monotonically incrementing series from 1
-to 4.
+Thierry
 
 > +
-> +Example:
-> +	&i2c1 {
-> +		...
-> +		imx290: imx290@1a {
-
-imx290: camera-sensor@1a {
-
-> +			compatible = "sony,imx290";
-> +			reg = <0x1a>;
+>  	tail =3D (unsigned long)&xmit->buf[xmit->tail];
+>  	count =3D CIRC_CNT_TO_END(xmit->head, xmit->tail, UART_XMIT_SIZE);
+>  	if (!count)
+> @@ -829,6 +834,12 @@ static void tegra_uart_hw_deinit(struct tegra_uart_p=
+ort *tup)
+>  	tup->current_baud =3D 0;
+>  	spin_unlock_irqrestore(&tup->uport.lock, flags);
+> =20
+> +	tup->rx_in_progress =3D 0;
+> +	tup->tx_in_progress =3D 0;
 > +
-> +			reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&camera_rear_default>;
+> +	tegra_uart_dma_channel_free(tup, true);
+> +	tegra_uart_dma_channel_free(tup, false);
 > +
-> +			clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
-> +			clock-names = "xclk";
-> +			clock-frequency = <37125000>;
-> +
-> +			vdddo-supply = <&camera_vdddo_1v8>;
-> +			vdda-supply = <&camera_vdda_2v8>;
-> +			vddd-supply = <&camera_vddd_1v5>;
-> +
-> +			port {
-> +				imx290_ep: endpoint {
-> +					clock-lanes = <1>;
-> +					data-lanes = <0 2 3 4>;
-> +					remote-endpoint = <&csiphy0_ep>;
-> +				};
-> +			};
-> +		};
+>  	clk_disable_unprepare(tup->uart_clk);
+>  }
+> =20
+> @@ -1066,12 +1077,6 @@ static void tegra_uart_shutdown(struct uart_port *=
+u)
+>  	struct tegra_uart_port *tup =3D to_tegra_uport(u);
+> =20
+>  	tegra_uart_hw_deinit(tup);
+> -
+> -	tup->rx_in_progress =3D 0;
+> -	tup->tx_in_progress =3D 0;
+> -
+> -	tegra_uart_dma_channel_free(tup, true);
+> -	tegra_uart_dma_channel_free(tup, false);
+>  	free_irq(u->irq, tup);
+>  }
+> =20
+> --=20
+> 2.7.4
+>=20
 
--- 
-Regards,
+--SdvjNjn6lL3tIsv0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Sakari Ailus
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1ShtQACgkQ3SOs138+
+s6GjFQ/+LK+5YJjV2isYgf+/bdshv1sa/XjzklRGk/Dq00ZXUlB6lCF01Ajx6wkG
+UEqJL37x8g8/qYI955SLMnppmTYgp8d/te7PAsAjjQ43fWpo/rrmdceeAldVTJwi
+C3BAuz/vy2lfZZSuqrQoo9Q6YaT7k/fBnDYARHPn2iVaAPygcRdy87D/cTJJE9OA
+L/RYQI/lYVrxh6G+mSTv+AqmRV7HytQ9EZqCYOXP9Vbzj83s4i88z0DB6SkTOOjb
+xXCzqJ9xN7hN6COzjVrx2j1Kh7x+FJoj/LcETaxfFbTEKJSQxUaQN9SWOW7khp2V
+dnbRogc+Ic1TsTZj3J4+ckmbjz0kDzRhFzw1W2x+6R+dwfLzRtNAxEXD9QH9F3e2
+u+vixUfT7ysEpxZ1LSVDga78kSd6N81WHcxiuwwry5T6pSLVEVf0WF7lkf2gPhNC
+qnCTVCYjYlaWbTSIgINmKn6By/gmSfOTEJ+98SSaomBSBh/NkiD75WO8YNyqRdMd
+17eNRiMeztA+h4yjxky/yq9ip7Jd2mq2s0GyikwfcIULBU6FE80LDKJgT5x5lh8J
+j0bNWRHIlJLICgAEPfJ0wYG/m9Pdx8YcBubjwudYbIKUkV5zeXOSYqITxMV/tieC
+ppmhsxevWB0gQ2ZhI3ZgJ4kyrqSZq9zo4Gs/+yV0MJTGSNcxw8Y=
+=vzYG
+-----END PGP SIGNATURE-----
+
+--SdvjNjn6lL3tIsv0--
