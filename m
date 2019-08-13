@@ -2,149 +2,96 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604AFC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BD2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA1520840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:08:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Ifzgnu4q"
+	by mail.kernel.org (Postfix) with ESMTP id 9B7E820840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbfHMQIO (ORCPT
+        id S1727440AbfHMQKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 12:08:14 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:37661 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbfHMQIN (ORCPT
+        Tue, 13 Aug 2019 12:10:41 -0400
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:47169 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfHMQKl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 12:08:13 -0400
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x7DG86ST022285;
-        Wed, 14 Aug 2019 01:08:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x7DG86ST022285
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1565712487;
-        bh=Ar5zZrilnIKaGgbQNOjYkvjVK8SX0y87/8hCxPlqu44=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ifzgnu4qIkB0sZmh730mCjEsome2vjOjMmk4IeE5MjyD/SHDLgGDX1hD0ElFi+o5W
-         s1Xp6OL/3sbu2IIMKDvWa/Su3y00c/qF5M3iX6vrXH3Mcohld2O+757txcBl2aIAsF
-         MHtM30uVWiTijjPlUW04xj/wKKG5xFVOtM6pT+G3EPmT5ielW8SPzGbAkOc8/Umh7g
-         gZPmEqoA7sqNIAJCvR5BTsgjvJo3LajpId7ldDnD0G1l9/ubVlciKX5DLSpZQ9FptL
-         A/TyLXzfgfe42htcyzhHhlB78oGIMTZa928RYa6BA/y9w6Z0i9T3iqlQWZPECk8tBX
-         /Z2fa//Q74g6g==
-X-Nifty-SrcIP: [209.85.217.51]
-Received: by mail-vs1-f51.google.com with SMTP id c7so4850928vse.11;
-        Tue, 13 Aug 2019 09:08:06 -0700 (PDT)
-X-Gm-Message-State: APjAAAVPe+5qtIlIu2jPp4x+bErFxEhjbK9TIOe/94SalfI8JaSh8a/j
-        +B+w4EYMTGX3pN6/2TqlmX1oHyavse2JRGc1brk=
-X-Google-Smtp-Source: APXvYqyGHuGT4FGgIw/8Re1yT6KFIhc80eZT6+JqnPzZy02iMR3jDUy318sIXDBF1R2/MmlgzKpqSTwxGMgF9Xfn1aE=
-X-Received: by 2002:a05:6102:20c3:: with SMTP id i3mr17942056vsr.155.1565712485466;
- Tue, 13 Aug 2019 09:08:05 -0700 (PDT)
+        Tue, 13 Aug 2019 12:10:41 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id EDF5C102F35CC;
+        Tue, 13 Aug 2019 18:10:38 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id B05271359A; Tue, 13 Aug 2019 18:10:38 +0200 (CEST)
+Date:   Tue, 13 Aug 2019 18:10:38 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Raanan Avargil <raanan.avargil@intel.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 7/8] thunderbolt: Add support for Intel Ice Lake
+Message-ID: <20190813161038.tip2u2z22xqnmfjl@wunner.de>
+References: <20190812123847.50802-1-mika.westerberg@linux.intel.com>
+ <20190812123847.50802-8-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-References: <20190714152817.24693-1-efremov@linux.com> <20190801060657.5932-1-efremov@linux.com>
- <CAK7LNASdhyhhqyf1wcga7UDYoo=2t-0ZaqTmQdcsFOfAR580sw@mail.gmail.com>
-In-Reply-To: <CAK7LNASdhyhhqyf1wcga7UDYoo=2t-0ZaqTmQdcsFOfAR580sw@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 14 Aug 2019 01:07:28 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQG7DM_2+JJ+bJdre12HcbZY7zGfHk3AU66S0ESjxMbnA@mail.gmail.com>
-Message-ID: <CAK7LNAQG7DM_2+JJ+bJdre12HcbZY7zGfHk3AU66S0ESjxMbnA@mail.gmail.com>
-Subject: Re: [PATCH v5] modpost: check for static EXPORT_SYMBOL* functions
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812123847.50802-8-mika.westerberg@linux.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Denis,
+On Mon, Aug 12, 2019 at 03:38:46PM +0300, Mika Westerberg wrote:
+> +static void icm_veto_begin(struct tb *tb)
+> +{
+> +	struct icm *icm = tb_priv(tb);
+> +
+> +	if (!icm->veto) {
+> +		icm->veto = true;
+> +		/* Keep the domain powered while veto is in effect */
+> +		pm_runtime_get(&tb->dev);
+> +	}
+> +}
+
+Hm, don't you need memory barriers when accessing icm->veto?
+
+If so, I'd suggest:
+
+	/* Keep the domain powered while veto is in effect */
+	if (cmpxchg(&icm->veto, false, true))
+		pm_runtime_get(&tb->dev);
+
+You'll have to declare icm->veto unsigned int instead of bool
+because thunderbolt.ko is compiled if CONFIG_COMPILE_TEST is
+enabled and there are arches which do not support cmpxchg for
+a size of 1 byte.
+
+The other bools in struct icm should likewise be unsigned int
+per Linus' dictum:
+https://lkml.org/lkml/2017/11/21/384
 
 
-On Thu, Aug 8, 2019 at 12:12 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Thu, Aug 1, 2019 at 3:07 PM Denis Efremov <efremov@linux.com> wrote:
-> >
-> > This patch adds a check to warn about static EXPORT_SYMBOL* functions
-> > during the modpost. In most of the cases, a static symbol marked for
-> > exporting is an odd combination that should be fixed either by deleting
-> > the exporting mark or by removing the static attribute and adding the
-> > appropriate declaration to headers.
-> >
-> > This check could help to detect the following problems:
-> > 1. 550113d4e9f5 ("i2c: add newly exported functions to the header, too")
-> > 2. 54638c6eaf44 ("net: phy: make exported variables non-static")
-> > 3. 98ef2046f28b ("mm: remove the exporting of totalram_pages")
-> > 4. 73df167c819e ("s390/zcrypt: remove the exporting of ap_query_configuration")
-> > 5. a57caf8c527f ("sunrpc/cache: remove the exporting of cache_seq_next")
-> > 6. e4e4730698c9 ("crypto: skcipher - remove the exporting of skcipher_walk_next")
-> > 7. 14b4c48bb1ce ("gve: Remove the exporting of gve_probe")
-> > 8. 9b79ee9773a8 ("scsi: libsas: remove the exporting of sas_wait_eh")
-> > 9. ...
-> >
-> > The build time impact is very limited and is almost at the unnoticeable
-> > level (< 1 sec).
-> >
-> > Acked-by: Emil Velikov <emil.l.velikov@gmail.com>
-> > Signed-off-by: Denis Efremov <efremov@linux.com>
-> > ---
->
-> Applied to linux-kbuild. Thanks.
+> --- a/drivers/thunderbolt/nhi.c
+> +++ b/drivers/thunderbolt/nhi.c
+> +/* Ice Lake specific NHI operations */
+> +
 
+Again, can't this be moved to a separate file for maintainability?
 
-I noticed this patch produces false-positive warnings
-for external module build.
+Thanks,
 
-
-When I built my external module, it showed the following,
-the last five are false positives.
-
-make[1]: Entering directory '/home/masahiro/workspace/linux-kbuild'
-  Building modules, stage 2.
-  MODPOST 2 modules
-WARNING: "drm_client_close" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "ahci_em_messages" [vmlinux] is a static EXPORT_SYMBOL_GPL
-WARNING: "ftrace_set_clr_event" [vmlinux] is a static EXPORT_SYMBOL_GPL
-WARNING: "nf_log_dump_packet_common" [net/netfilter/nf_log_common] is
-a static EXPORT_SYMBOL_GPL
-WARNING: "nf_log_l2packet" [net/netfilter/nf_log_common] is a static
-EXPORT_SYMBOL_GPL
-WARNING: "nf_log_dump_sk_uid_gid" [net/netfilter/nf_log_common] is a
-static EXPORT_SYMBOL_GPL
-WARNING: "nf_log_dump_udp_header" [net/netfilter/nf_log_common] is a
-static EXPORT_SYMBOL_GPL
-WARNING: "nf_log_dump_tcp_header" [net/netfilter/nf_log_common] is a
-static EXPORT_SYMBOL_GPL
-make[1]: Leaving directory '/home/masahiro/workspace/linux-kbuild'
-
-
-I squashed the following fix-up.
-
-
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 3e6d36ddfcdf..2773f9f9bae2 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -2386,6 +2386,7 @@ static void read_dump(const char *fname,
-unsigned int kernel)
-                s = sym_add_exported(symname, mod, export_no(export));
-                s->kernel    = kernel;
-                s->preloaded = 1;
-+               s->is_static = 0;
-                sym_update_crc(symname, mod, crc, export_no(export));
-        }
-        release_file(file, size);
-
-
--- 
-Best Regards
-Masahiro Yamada
+Lukas
