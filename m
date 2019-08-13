@@ -2,103 +2,132 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2429AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93BFC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07102067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:18:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="WTj/ir7E"
+	by mail.kernel.org (Postfix) with ESMTP id CCFF22067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:18:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbfHMSSt (ORCPT
+        id S1728668AbfHMSSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 14:18:49 -0400
-Received: from mout.gmx.net ([212.227.17.20]:59139 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727491AbfHMSSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 14:18:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565720284;
-        bh=Vq2Rwn6ZpDvdbJzC++Agdo9RfM34OqXBHgokRaHCjmc=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=WTj/ir7EWEPBhjOfci3nIob7y7Q1LoWiIMlCuv24p4jOapHe13C8kQP1MU3RQP9xU
-         vVQ+vqLusWjOoEXRPfVS9EXx7wyyJTTjfgTSEPwe9oZdokO58Uz1A2VYizXKlaN7Dg
-         x2cv1Dd1xOY0LA4dMH2gYzdZ2M9ztOBzoOuXZECc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([37.4.249.106]) by mail.gmx.com
- (mrgmx102 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 0MSY2q-1hpnKh3mBI-00Ragk; Tue, 13 Aug 2019 20:18:04 +0200
-From:   Stefan Wahren <wahrenst@gmx.net>
-To:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH 1/3] nvmem: mxs-ocotp: update MODULE_AUTHOR() email address
-Date:   Tue, 13 Aug 2019 20:17:27 +0200
-Message-Id: <1565720249-6549-1-git-send-email-wahrenst@gmx.net>
-X-Mailer: git-send-email 2.7.4
-X-Provags-ID: V03:K1:ggoDPxD3GY7PepSw+ctdpLrl9Y0S1aRCjm4mFCxJFfmatdyhLMv
- gQKCUttMR8MgugL3SYZ2iq96h7Lf+bYGIB4yBaRwN5Vk8ECnW/3ra/jpu88CzXnkGskboOV
- tt1BYCRwY4h5TfJGVwZObZWKs/kHuVwwLogYL8GQRhwOnNMB7WBC2c04E8ZGgxUXDpSBYJE
- inPKHKeIaVdlIIdO493Hw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FquO+c5eQAc=:oWHph4cQRWLnygCC2s+DAJ
- KzLKi4uLouuuF8GVsW+JuZf+JT8qOhhX+M8HHg4ISWTwTggQ/88i4v1z1L8rOqtpjr8FzQbqn
- tVzN8dsDs0Qs0INEuJB9JoAjZZgABQJ/8GoLzf4fkrHSHchjM8tZscYGdedU5Hcz82pMq2x3B
- LhnwImhLhZauw1zbCReTPhleCxPzUvHj7Slg4Jy8Hr03QA5s0W/YdOuU8xtVe5Y0EHxC7LsT7
- Dn22kRzsngfOIV3iP93/WslGLrF57bApI+gdn9AlsKkaWWG8mMuD3Lu7HGumX1ld5zTgWhJc1
- Ml/bU6gCCn3RaAz3tWW8UGL1qjNHfJRpLVA3Ig3vVsdQX2UKQFQK2jTWL80Qo+3JNq8HWAbDA
- Ow9zEBqHmFVMn3k4x6DRCwL+kDFl+CZQKTjJ1Q085MPNb2Qrvu0/3u2MZEEADTdQpDIdmkT3I
- eemDTG7WQOEaqgSxTJXGrrez3WVBTQzA/lbFulhiyM9uygyRxNx0L75EydKZB/qSwqjZKaS5z
- JgSgoHIiUZeFPADSUKUNpoyhSHcZsJc6lIGRqbH4HfO7/SZzPc4d6KhPBdWgZtizGC+IQL3NO
- yViNAEzK0E3o05spkTh6ShkHhlyXt1gGNePwvNo1Ie42g7VzJ0GmVaLpesQJJjYlRi013xGH/
- uZ7PVe6J0JTGLL5yq8EyOkhn8A1dJxm13EUijNTtX8LT5lYCJ9yQaTcnE6OpkKQO4DzPDzqpC
- QakBF27rkY1YIq0r1xBTS12aspTRWi2q7ac/0QZHYZypPKXU8Oyr5jAMDJw/o7rL4NrP3/3qR
- vxaU+UMgImqd69i65UMH+jNhNXgsXWVGBV2J7HpEXN/oOI0kg8NeWCLWiX/UXFmRtLRQX43Ax
- Vxz6RqcJvqQ6JtmBQycSd5/iplhipnsShUUbvTn0wM5ImSI8qSJ+83ksDxUw5p+cyQJbq8YQ1
- SvG1+vMhd2hlk/LujgOnultEYTWu2V7UlrcdGYBOAsKmFC0C1SKDoIKV+FoKtcaNHsdSFoy3E
- 2wqSi6pmgWoKFmF/UqpSLXe6ZbE0XaOweQ0V0CHPz+RRziCNhCeEzkxPjHBB5O4vt9v+TXJaA
- AJZAdQDsOtgICLm8SCTzJimj0pkZVXbbQL077tNPeQ8zAomIyHyv0bs1tOY7lqrEahzfNvBSP
- EAa1T7vDowUaDmVZ+SJ49fZkOmfm+aagWgAslo6bf+tAFP+g==
-Content-Transfer-Encoding: quoted-printable
+        Tue, 13 Aug 2019 14:18:54 -0400
+Received: from emh06.mail.saunalahti.fi ([62.142.5.116]:57504 "EHLO
+        emh06.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728575AbfHMSSv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 14:18:51 -0400
+X-Greylist: delayed 407 seconds by postgrey-1.27 at vger.kernel.org; Tue, 13 Aug 2019 14:18:49 EDT
+Received: from darkstar.musicnaut.iki.fi (85-76-96-82-nat.elisa-mobile.fi [85.76.96.82])
+        by emh06.mail.saunalahti.fi (Postfix) with ESMTP id 3918430016;
+        Tue, 13 Aug 2019 21:11:59 +0300 (EEST)
+Date:   Tue, 13 Aug 2019 21:11:58 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 14/22] ARM: omap1: use pci_ioremap_io() for omap_cf
+Message-ID: <20190813181158.GA26798@darkstar.musicnaut.iki.fi>
+References: <20190808212234.2213262-1-arnd@arndb.de>
+ <20190808212234.2213262-15-arnd@arndb.de>
+ <20190813103605.GL52127@atomide.com>
+ <CAK8P3a0E+QUn9wcP5Obv-FitWyXCFwcp+oPConeO2p-NV1rqsw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0E+QUn9wcP5Obv-FitWyXCFwcp+oPConeO2p-NV1rqsw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The email address listed in MODULE_AUTHOR() will be disabled in the
-near future. Replace it with my private one.
+Hi,
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-=2D--
- drivers/nvmem/mxs-ocotp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Aug 13, 2019 at 01:02:16PM +0200, Arnd Bergmann wrote:
+> On Tue, Aug 13, 2019 at 12:36 PM Tony Lindgren <tony@atomide.com> wrote:
+> > * Arnd Bergmann <arnd@arndb.de> [190808 21:34]:
+> > > The ISA I/O space handling in omap_cf is incompatible with
+> > > PCI drivers in a multiplatform kernel, and requires a custom
+> > > mach/io.h.
+> > >
+> > > Change the driver to use pci_ioremap_io() like PCI drivers do,
+> > > so the generic ioport access can work across platforms.
+> > >
+> > > To actually use that code, we have to select CONFIG_PCI
+> > > here.
+> > >
+> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> >
+> > Looks like this series boots for me on 5912osk up to this
+> > patch
+> 
+> Ok, that's something. Thanks for testing!
+> 
+> >, but this patch breaks booting somehow.
+> >
+> > Any ideas for fixes?
+> 
+> I can think of multiple possible issues:
+> 
+> - I force CONFIG_PCI to be enabled here in order to keep the
+>   asm/io.h logic unchanged. If PCI support in itself is an issue,
+>   then turning on CONFIG_PCI without the rest of this patch
+>   should also break.
 
-diff --git a/drivers/nvmem/mxs-ocotp.c b/drivers/nvmem/mxs-ocotp.c
-index c34d9fe..8e4898d 100644
-=2D-- a/drivers/nvmem/mxs-ocotp.c
-+++ b/drivers/nvmem/mxs-ocotp.c
-@@ -200,6 +200,6 @@ static struct platform_driver mxs_ocotp_driver =3D {
- };
+The board dies early, probably in pci_reserve_io():
 
- module_platform_driver(mxs_ocotp_driver);
--MODULE_AUTHOR("Stefan Wahren <stefan.wahren@i2se.com>");
-+MODULE_AUTHOR("Stefan Wahren <wahrenst@gmx.net");
- MODULE_DESCRIPTION("driver for OCOTP in i.MX23/i.MX28");
- MODULE_LICENSE("GPL v2");
-=2D-
-2.7.4
+Starting kernel ...
 
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 5.3.0-rc4-osk-los_80efa+-00028-g09f6f22a63e9 (aaro@amd-fx-6350) (gcc version 8.3.0 (GCC)) #1 Tue Aug 13 20:50:11 EEST 2019
+[    0.000000] CPU: ARM926EJ-S [41069263] revision 3 (ARMv5TEJ), cr=0005317f
+[    0.000000] CPU: VIVT data cache, VIVT instruction cache
+[    0.000000] Machine: TI-OSK
+[    0.000000] Ignoring tag cmdline (using the default kernel command line)
+[    0.000000] printk: bootconsole [earlycon0] enabled
+[    0.000000] Memory policy: Data cache writeback
+[    0.000000] Internal error: Oops - undefined instruction: 0 [#1] ARM
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 5.3.0-rc4-osk-los_80efa+-00028-g09f6f22a63e9 #1
+[    0.000000] Hardware name: TI-OSK
+[    0.000000] PC is at vm_area_add_early+0x1c/0x74
+[    0.000000] LR is at 0x200000
+[    0.000000] pc : [<c0419310>]    lr : [<00200000>]    psr: 800000d3
+[    0.000000] sp : c05b5f14  ip : ff000000  fp : c05bad68
+[    0.000000] r10: fefb0000  r9 : ffe00000  r8 : 001fffff
+[    0.000000] r7 : c05bad88  r6 : c05db3d4  r5 : c05ca678  r4 : c1ffcf60
+[    0.000000] r3 : c1ffcfd8  r2 : c1ffcfb0  r1 : fefb0000  r0 : c1ffcf60
+[    0.000000] Flags: Nzcv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment none
+[    0.000000] Control: 0005317f  Table: 10004000  DAC: 00000053
+[    0.000000] Process swapper (pid: 0, stack limit = 0x(ptrval))
+[    0.000000] Stack: (0xc05b5f14 to 0xc05b6000)
+[    0.000000] 5f00:                                              c0411724 ff000000 c041260c
+[    0.000000] 5f20: 00010000 00010600 c0428794 c05b7008 c042b000 00600000 00000000 ffff1000
+[    0.000000] 5f40: 00011fff 00001000 00000007 00000000 00000000 c0428794 c0008000 c060ba7c
+[    0.000000] 5f60: c0429a38 c05b5fc4 c05ca818 00053177 00000001 c04101fc 0000006c 0005317f
+[    0.000000] 5f80: 00000000 00000000 00000053 00003135 c05b7008 c05b7000 41069263 00053177
+[    0.000000] 5fa0: 00000001 c040da10 00000000 00000000 00000000 00000000 00000000 00000000
+[    0.000000] 5fc0: 00000000 c0429a38 00000000 00000000 00000000 c040d330 00000053 00003135
+[    0.000000] 5fe0: 00000203 10000100 41069263 00053177 00000000 00000000 00000000 00000000
+[    0.000000] [<c0419310>] (vm_area_add_early) from [<c0411724>] (add_static_vm_early+0xc/0x5c)
+[    0.000000] [<c0411724>] (add_static_vm_early) from [<c041260c>] (paging_init+0x2e0/0x5b4)
+[    0.000000] [<c041260c>] (paging_init) from [<c04101fc>] (setup_arch+0x4c8/0x7cc)
+[    0.000000] [<c04101fc>] (setup_arch) from [<c040da10>] (start_kernel+0x58/0x478)
+[    0.000000] [<c040da10>] (start_kernel) from [<00000000>] (0x0)
+[    0.000000] Code: e3530000 059f2058 05923000 0a000006 (e7f001f2) 
+[    0.000000] random: get_random_bytes called from init_oops_id+0x20/0x3c with crng_init=0
+[    0.000000] ---[ end trace 0000000000000000 ]---
+[    0.000000] Kernel panic - not syncing: Attempted to kill the idle task!
+[    0.000000] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
+
+A.
