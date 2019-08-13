@@ -2,130 +2,129 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79794C32753
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC775C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC4420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A667D20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nVz7SRzw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EUdHy4gM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfHMHxm (ORCPT
+        id S1727838AbfHMHxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:53:42 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39387 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbfHMHxl (ORCPT
+        Tue, 13 Aug 2019 03:53:48 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42386 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727781AbfHMHxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:53:41 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u17so50826163pgi.6
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 00:53:41 -0700 (PDT)
+        Tue, 13 Aug 2019 03:53:46 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i30so2415668pfk.9
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 00:53:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1w6tEv+UsY5F/hdJoPjOc+8EZA8fHnLVH5Ee68+K+14=;
-        b=nVz7SRzwhp+sIStWQOhdw7+eMounsWwWY4b9W+H2splMtvxXWG/v8uX0oyrPhi9Pc/
-         DbYNbNpkCoegNiTUpPMiXg34BXPrPJrAjoIA7DyPnMkZHZfSastxpDXvu6zpEH76cIXz
-         2ipKiw0wJIDxWMLZyrA5y40OVaB5InZkV31euGDTlfUD9NGVPd2AdaFiZI2HUpl+1Z71
-         eZE6OVlRYXpa7v0Ieb0+s2HPAU8hcA299XGRboiSsBb0Wz4QiBbaFXHTBKHp4dwxoDYm
-         Lyn/gNUB2QMFaYgVWF7lBw/U70QsznbaxSpwZOVQK35ds3v4ks7lmHH71KHdUCsOoz7q
-         RS4A==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=BkX27APDVJ4zeW7H5E4Qx7Yc0d0xGm41vKaV5VvGjbc=;
+        b=EUdHy4gMsfvnN4CUa0oecjGACMAqEVtxiUGdmUM3Ngncip9f6n/2Rw3ZJn3X3l9sZS
+         ny7AGcTCFJ27zwjOfnJYgheFkweH5FQbRnDxSUbatFM1XzLPKIrQ0NsauE3UI+Pn2wN4
+         UE/C03Zfv4d623FqJOP5vQnECBcvuG6mCHsddHNdxCQiCpjZsrsiXlkRAF4EwV8bKEuE
+         eDubrM7GZHn2mlNSjuQ8nRtqxC1F6z4Zpxp6mFZ46jTNGRrarGKsv3ypYdN2n9ojSJNd
+         Ysgt6PpD7gEePDOcIc4ocX6twitoDfuOom2ZT+6tneIx2mXRrQjm58Ql21kdt6VTnIo6
+         YyQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1w6tEv+UsY5F/hdJoPjOc+8EZA8fHnLVH5Ee68+K+14=;
-        b=HgcrlIQVRRvnIBqS1c6A70nI76KYBkEHhUW3S/7N8dCcAoLGcHPPCW4NbLkQZEwuFB
-         9LqcK82wMpS9x9ginIvJi0Cr09d2ROT5bFn8vycN4RERy/b5NdCKACJ4spk03ghd6wyx
-         DC9j0g2V14YRiB5LF/tJUEbkXiMQ5GCS5Wahimq+13y2mWBQ1w775krsOZ+b+PFscPz7
-         i5IlVjOv0LRI+JpzXSXVepmxe7iaaccIhGue8IyRVv3EILiE7HobM4WgdOSgVcMRzAC6
-         dwkZC1zS7qCLv/tAzF7GbCs/+yzGdE5B8hIyQJiElkFx8xtjanqO6Akxas9CpGRYAzDC
-         Pbsw==
-X-Gm-Message-State: APjAAAWKWyEYqSymKGvGl4nGNISfQq70RXDGV0Zl0o1B1IXku4DFtfv2
-        Yky/PVvES05G82TOSXaxebJqDvJHNlkuFrfe/TeF0A==
-X-Google-Smtp-Source: APXvYqwRt249N6Nnc3lDOtyH2RE286o2POCGTN4Y9Dd+KQhTUzxvnzvxmCpITQmOohY+Myh1tvYfqlbmJVebyc0CKlY=
-X-Received: by 2002:a63:b919:: with SMTP id z25mr33087981pge.201.1565682820534;
- Tue, 13 Aug 2019 00:53:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190812182421.141150-1-brendanhiggins@google.com>
- <20190812182421.141150-11-brendanhiggins@google.com> <20190813042455.4A04320644@mail.kernel.org>
- <CAFd5g46LHq1sQaio2Vj5jt54YN-Y2HuCT8FbALQhJoekkYJ-uQ@mail.gmail.com> <20190813055707.8B2BB206C2@mail.kernel.org>
-In-Reply-To: <20190813055707.8B2BB206C2@mail.kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 13 Aug 2019 00:53:28 -0700
-Message-ID: <CAFd5g45rLTB965BX24DKFauumbdbn=m4kxtzgwr_4uj66Vmzmw@mail.gmail.com>
-Subject: Re: [PATCH v12 10/18] kunit: test: add tests for kunit test abort
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=BkX27APDVJ4zeW7H5E4Qx7Yc0d0xGm41vKaV5VvGjbc=;
+        b=csR1GkT68bU5ehLrRi30ka5RluOC+z10lJiURvJcNqaRK/0yxcmjDkIegmF8tncyZX
+         p1/V0bfWADRFOchK9qX/agwLE+ffMneOnrU2b9PQ6G7AAB5bgAK+t1fMbFyohCgk60cW
+         Rt6gcflkL8aiYSvwYnTZSMiSEXhh5rS2//sQIj9gPEK8GMsitVLbHw35tPZsPXs1qsf8
+         t/1sPt/7spVzhEU1zxBKgYNmHITXBEFwodCzXGiJQxKBHTFA3bER1UeSPbon6oddoJI6
+         7roLXsnMww51bdiwqVYQTyijbo3uhwnb0QU7EJXaoi7apZ2aGQ8Hti81G90glns1c40X
+         r1lQ==
+X-Gm-Message-State: APjAAAVzff/YRCaqNphSk9XTaVtHjMzKXDqG9HNwXKCJBKWqc6cLAOTo
+        mM98+z8Z3o4HyczuFMUyyWhIXw==
+X-Google-Smtp-Source: APXvYqxRe3kDEnRmKsgK98qrW7tpR2Jo5TKYlmK35RYqch6gNYKDeSUOOqqDMefeWOISDFFAHhX7kQ==
+X-Received: by 2002:a17:90b:8c1:: with SMTP id ds1mr1040437pjb.114.1565682826009;
+        Tue, 13 Aug 2019 00:53:46 -0700 (PDT)
+Received: from localhost.localdomain ([45.114.72.100])
+        by smtp.gmail.com with ESMTPSA id l25sm131462563pff.143.2019.08.13.00.53.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 13 Aug 2019 00:53:45 -0700 (PDT)
+From:   Sumit Garg <sumit.garg@linaro.org>
+To:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org
+Cc:     dhowells@redhat.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net, peterhuewe@gmx.de, jgg@ziepe.ca,
+        jejb@linux.ibm.com, jarkko.sakkinen@linux.intel.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, zohar@linux.ibm.com, jmorris@namei.org,
+        serge@hallyn.com, casey@schaufler-ca.com,
+        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
+        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org,
+        Sumit Garg <sumit.garg@linaro.org>
+Subject: [RFC/RFT v4 0/5] Add generic trusted keys framework/subsystem
+Date:   Tue, 13 Aug 2019 13:22:59 +0530
+Message-Id: <1565682784-10234-1-git-send-email-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 10:57 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Brendan Higgins (2019-08-12 22:06:04)
-> > On Mon, Aug 12, 2019 at 9:24 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > >
-> > > Quoting Brendan Higgins (2019-08-12 11:24:13)
-> > > > +
-> > > > +static int kunit_try_catch_test_init(struct kunit *test)
-> > > > +{
-> > > > +       struct kunit_try_catch_test_context *ctx;
-> > > > +
-> > > > +       ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-> > >
-> > > Can this fail? Should return -ENOMEM in that case?
-> >
-> > Yes, I should do that.
->
-> Looks like it's asserted to not be an error. If it's pushed into the API
-> then there's nothing to do here, and you can have my reviewed-by on this
-> patch.
->
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+This patch-set is an outcome of discussion here [1]. It has evolved very
+much since v1 to create, consolidate and generalize trusted keys
+subsystem.
 
-Cool, thanks!
+This framework has been tested with trusted keys support provided via TEE
+but I wasn't able to test it with a TPM device as I don't possess one. It
+would be really helpful if others could test this patch-set using a TPM
+device.
+
+[1] https://www.mail-archive.com/linux-doc@vger.kernel.org/msg30591.html
+
+Changes in v4:
+1. Separate patch for export of tpm_buf code to include/linux/tpm.h
+2. Change TPM1.x trusted keys code to use common tpm_buf
+3. Keep module name as trusted.ko only
+
+Changes in v3:
+
+Move TPM2 trusted keys code to trusted keys subsystem.
+
+Changes in v2:
+
+Split trusted keys abstraction patch for ease of review.
+
+Sumit Garg (5):
+  tpm: move tpm_buf code to include/linux/
+  KEYS: trusted: use common tpm_buf for TPM1.x code
+  KEYS: trusted: create trusted keys subsystem
+  KEYS: trusted: move tpm2 trusted keys code
+  KEYS: trusted: Add generic trusted keys framework
+
+ crypto/asymmetric_keys/asym_tpm.c                  |   2 +-
+ drivers/char/tpm/tpm-chip.c                        |   1 +
+ drivers/char/tpm/tpm-interface.c                   |  56 ---
+ drivers/char/tpm/tpm.h                             | 230 -----------
+ drivers/char/tpm/tpm2-cmd.c                        | 308 +--------------
+ include/keys/trusted-type.h                        |  45 +++
+ include/keys/{trusted.h => trusted_tpm.h}          |  61 +--
+ include/linux/tpm.h                                | 270 ++++++++++++-
+ security/keys/Makefile                             |   2 +-
+ security/keys/trusted-keys/Makefile                |   9 +
+ security/keys/trusted-keys/trusted-common.c        | 343 ++++++++++++++++
+ .../keys/{trusted.c => trusted-keys/trusted-tpm.c} | 437 +++++----------------
+ security/keys/trusted-keys/trusted-tpm2.c          | 378 ++++++++++++++++++
+ 13 files changed, 1141 insertions(+), 1001 deletions(-)
+ rename include/keys/{trusted.h => trusted_tpm.h} (64%)
+ create mode 100644 security/keys/trusted-keys/Makefile
+ create mode 100644 security/keys/trusted-keys/trusted-common.c
+ rename security/keys/{trusted.c => trusted-keys/trusted-tpm.c} (72%)
+ create mode 100644 security/keys/trusted-keys/trusted-tpm2.c
+
+-- 
+2.7.4
+
