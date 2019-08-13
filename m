@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CB2C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B18C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 281A520578
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BBD6214C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:11:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lBowMwvd";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HUSyqWGU"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kgiwVKgP";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1RfCiHk2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbfHMGLe (ORCPT
+        id S1727668AbfHMGLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 02:11:34 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59996 "EHLO
+        Tue, 13 Aug 2019 02:11:39 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60092 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727160AbfHMGLc (ORCPT
+        with ESMTP id S1727633AbfHMGLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:11:32 -0400
+        Tue, 13 Aug 2019 02:11:35 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D68vbv010941;
-        Tue, 13 Aug 2019 06:11:09 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D68wPH010973;
+        Tue, 13 Aug 2019 06:11:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2019-08-05;
- bh=riCWR7mvkEEzB8Hnj6RmL24fxUl4FVMwMdqKUi2IlJM=;
- b=lBowMwvd4Th1sxDn2mY448tzEh9z8fZLB8EUVAfCdsRgsIKFD1l1ymj09aDhjn565vce
- YD6C7V01vBJZ755ZL47x97n7Zk9VSkudLUHni9ZL7sOFXoTZq0vEgKtJP2EQfCf+0O0f
- L5Wa6ZT+mN1CvdhUXK8aJMAzorCZX+0QFeG4hO8bsGKPFCDdMaYGW/wdsrAS/nYvs0jk
- 8e2VDoveEexSyO5u6d499mFMw4+YAxTUk6Ydn4opVZSSVZJWhbCXNwwa2ibHheOQqS+H
- vvd5viRkBpgD9a4pfqA09v2ndAk7rDJUR7HlFLqhTli6i0GItqSaaOk2Xn5Qdormuuh4 +g== 
+ bh=pxWQMkeXEo6VK4H0xnGRztYzh1TzSktDwlYf6T9k180=;
+ b=kgiwVKgPjPDCglibAMRFBnvyiQK3Q4CLKUGpGS/t+UUoombTyEKmaSlicV9y40Nk/gVK
+ deAVKRl55c4l6FKW15TWhNfS6XGl3m1Q3taJHr/bzbh8n4qbwOgULIkO5oGrwkkBKORS
+ NYRQm62C4BOcJZu00baRgZNpMnJRgdR6/yNJkToMXgtVFhLvEEuPl29BLhmXrjKvEqGj
+ 7trPciy6yqU9mizDXrM1fVgPCAsXK56VAY0dEubzfNdqWNaSxMdIn003bnlJWv/DmCBp
+ gXPB6+LPyNfJoDg6GC3HXNPoNBrtZW3u64V32lhqFa66AbABesBmU993BR26cP43CYgH Vw== 
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2018-07-02;
- bh=riCWR7mvkEEzB8Hnj6RmL24fxUl4FVMwMdqKUi2IlJM=;
- b=HUSyqWGUtptLjrwDWbKzdyJDj3ruplWKeJG5C6nFLNuSM8JQTs4BLCzqgmNV58zz8YBh
- WwoVDzMm2weNVIdE+aMNSYupgqLxUuhDcrC6pkZd01S4K+R6ObWv2r6NQ7EmQac0Z8z9
- RaDdH1ETlvmHqaqVWRVEzv78wA606u/gTm1euv/MxgLTPdSHiX9KUf2O+ytoCTdG1owC
- I3Hb/Zu6iD1l4GWwLRFCq1Eqn4BSoIwB19+o5b3d5jHiy06+ALfcNSSZoJ6UcBjsTMOb
- vZ1I4ZfTp1QX9rN8c9CLSsQ+oUM2pFHU69Gqb3BF++zU3pIqYNc662VWvnbFdZsylyYo rA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2u9nbtc0t5-1
+ bh=pxWQMkeXEo6VK4H0xnGRztYzh1TzSktDwlYf6T9k180=;
+ b=1RfCiHk2eZTGIi7RCgPiHW4m5uUwcs0myIWjsNnlWqxacHVFmQ+JqwcFvdu1nPnLZaQh
+ 9U5hSVYuwPMr/SdxzVynnxQZHgVjyHc4D3cI+DvkjNL+04+XkteABuAblsCpAKqAlX0W
+ GoxFTZtwQecm+PRgfif0KrXD8ALt1qTnCpYsYD40/6xLzNVQiajB4tDNNyvh7MEpjepJ
+ vN9cmpVK7115D5H006GBN3rWcW78nz8ZoBYcRKL2qw28Ar7tZ0SDPwT0ilEW8dBW5GNW
+ mEGeRa8KhYuDSD8XwQy7GQK7Er9C4UrzvjpF7zgTCekJZhNlCpq5pcpaNRE9ULNb2FEZ Dw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2u9nbtc0vy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 06:11:09 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D67QcY096480;
-        Tue, 13 Aug 2019 06:11:08 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2u9m0aydjp-1
+        Tue, 13 Aug 2019 06:11:16 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D68TeZ056702;
+        Tue, 13 Aug 2019 06:11:15 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2u9n9hs2cq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 06:11:07 +0000
+        Tue, 13 Aug 2019 06:11:15 +0000
 Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7D6B6P9010982;
-        Tue, 13 Aug 2019 06:11:06 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7D6BEPf013396;
+        Tue, 13 Aug 2019 06:11:14 GMT
 Received: from abi.no.oracle.com (/10.172.144.123)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 12 Aug 2019 23:11:05 -0700
+        with ESMTP ; Mon, 12 Aug 2019 23:11:13 -0700
 From:   Knut Omang <knut.omang@oracle.com>
 To:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
@@ -81,9 +81,9 @@ Cc:     linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
         "Theodore Ts'o" <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
         Stephen Boyd <sboyd@kernel.org>,
         Knut Omang <knut.omang@oracle.com>
-Subject: [RFC 04/19] ktf: An implementation of a generic associative array container
-Date:   Tue, 13 Aug 2019 08:09:19 +0200
-Message-Id: <6fb12b13002454d5bcba407cbd51c1ee9ecf3ec6.1565676440.git-series.knut.omang@oracle.com>
+Subject: [RFC 06/19] ktf: A simple debugfs interface to test results
+Date:   Tue, 13 Aug 2019 08:09:21 +0200
+Message-Id: <ae6c38384e2338aa3cfb8a4e4dd1002833789253.1565676440.git-series.knut.omang@oracle.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
 References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
@@ -105,447 +105,423 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This container is mapping from an index datatype to a "value"
-datatatype, using rbtree for the implementation.
-This datatype is used for various purposes by ktf to
-store and find data related to the actual test cases.
+From: Alan Maguire <alan.maguire@oracle.com>
 
-ktf_map.c:       Implementation of a kernel version independent std::map like API
-ktf_map.h:       simple objects with key lookup to be inlined into a
+While test results is available via netlink from user space, sometimes
+it may be useful to be able to access the results from the kernel as well,
+for instance due to a crash. Make that possible via debugfs.
 
+ktf_debugfs.h:   Support for creating a debugfs representation of test
+
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 Signed-off-by: Knut Omang <knut.omang@oracle.com>
 ---
- tools/testing/selftests/ktf/kernel/ktf_map.c | 261 ++++++++++++++++++++-
- tools/testing/selftests/ktf/kernel/ktf_map.h | 154 ++++++++++++-
- 2 files changed, 415 insertions(+)
- create mode 100644 tools/testing/selftests/ktf/kernel/ktf_map.c
- create mode 100644 tools/testing/selftests/ktf/kernel/ktf_map.h
+ tools/testing/selftests/ktf/kernel/ktf_debugfs.c | 356 ++++++++++++++++-
+ tools/testing/selftests/ktf/kernel/ktf_debugfs.h |  34 ++-
+ 2 files changed, 390 insertions(+)
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_debugfs.c
+ create mode 100644 tools/testing/selftests/ktf/kernel/ktf_debugfs.h
 
-diff --git a/tools/testing/selftests/ktf/kernel/ktf_map.c b/tools/testing/selftests/ktf/kernel/ktf_map.c
+diff --git a/tools/testing/selftests/ktf/kernel/ktf_debugfs.c b/tools/testing/selftests/ktf/kernel/ktf_debugfs.c
 new file mode 100644
-index 0000000..78ae5fb
+index 0000000..a20fbd2
 --- /dev/null
-+++ b/tools/testing/selftests/ktf/kernel/ktf_map.c
-@@ -0,0 +1,261 @@
++++ b/tools/testing/selftests/ktf/kernel/ktf_debugfs.c
+@@ -0,0 +1,356 @@
 +/*
-+ * Copyright (c) 2017, Oracle and/or its affiliates. All rights reserved.
-+ *    Author: Knut Omang <knut.omang@oracle.com>
++ * Copyright (c) 2009, 2017, Oracle and/or its affiliates. All rights reserved.
++ *    Author: Alan Maguire <alan.maguire@oracle.com>
 + *
 + * SPDX-License-Identifier: GPL-2.0
 + *
-+ * ktf_map.c: Implementation of a kernel version independent std::map like API
-+ *   (made abstract to allow impl to change)
 + */
-+
-+#include "ktf_map.h"
++#include <asm/unistd.h>
++#include <linux/module.h>
++#include <linux/time.h>
++#include "ktf_debugfs.h"
 +#include "ktf.h"
++#include "ktf_test.h"
++#include "ktf_cov.h"
 +
-+void ktf_map_init(struct ktf_map *map, ktf_map_elem_comparefn elem_comparefn,
-+		  ktf_map_elem_freefn elem_freefn)
++/* Create a debugfs representation of test sets/tests.  Hierarchy looks like
++ * this:
++ *
++ * Path					Semantics
++ * /sys/kernel/debug/ktf/run/<testset>		Run all tests in testset
++ * /sys/kernel/debug/ktf/run/<testset>/<test>	Run specific test in testset
++ * /sys/kernel/debug/ktf/results/<testset>	Show results of last run for
++ *						testset
++ *
++ * /sys/kernel/debug/ktf/results/<testset>/<test>
++ *						Show results of last run for
++ *						test
++ *
++ */
++
++static struct dentry *ktf_debugfs_rootdir;
++static struct dentry *ktf_debugfs_rundir;
++static struct dentry *ktf_debugfs_resultsdir;
++static struct dentry *ktf_debugfs_cov_file;
++
++static void ktf_debugfs_print_result(struct seq_file *seq, struct ktf_test *t)
 +{
-+	map->root = RB_ROOT;
-+	map->size = 0;
-+	map->elem_comparefn = elem_comparefn;
-+	map->elem_freefn = elem_freefn;
-+	spin_lock_init(&map->lock);
++	struct timespec now;
++
++	if (t && strlen(t->log) > 0) {
++		getnstimeofday(&now);
++		seq_printf(seq, "[%s/%s, %ld seconds ago] %s\n",
++			   t->tclass, t->name,
++			   now.tv_sec - t->lastrun.tv_sec, t->log);
++	}
 +}
 +
-+int ktf_map_elem_init(struct ktf_map_elem *elem, const char *key)
++/* /sys/kernel/debug/ktf/results/<testset>-tests/<test> shows specific result */
++static int ktf_debugfs_result(struct seq_file *seq, void *v)
 +{
-+	memcpy(elem->key, key, KTF_MAX_KEY);
-+	/* For strings that are too long, ensure truncation at
-+	 * KTF_MAX_NAME == KTF_MAX_KEY - 1 length:
-+	 */
-+	elem->key[KTF_MAX_NAME] = '\0';
-+	elem->map = NULL;
-+	kref_init(&elem->refcount);
++	struct ktf_test *t = (struct ktf_test *)seq->private;
++
++	ktf_debugfs_print_result(seq, t);
++
 +	return 0;
 +}
 +
-+/* A convenience unsigned int compare function as an alternative
-+ * to the string compare:
-+ */
-+int ktf_uint_compare(const char *ac, const char *bc)
++/* /sys/kernel/debug/ktf/results/<testset> shows all results for testset. */
++static int ktf_debugfs_results_all(struct seq_file *seq, void *v)
 +{
-+	unsigned int a = *((unsigned int *)ac);
-+	unsigned int b = *((unsigned int *)bc);
++	struct ktf_case *testset = (struct ktf_case *)seq->private;
++	struct ktf_test *t;
 +
-+	return a > b ? 1 : (a < b ? -1 : 0);
-+}
-+EXPORT_SYMBOL(ktf_uint_compare);
++	if (!testset)
++		return 0;
 +
-+/* Copy "elem"s key representation into "name".  For cases where no
-+ * compare function is defined - i.e. string keys - just copy string,
-+ * otherwise name is hexascii of first 8 bytes of key.
-+ */
-+char *
-+ktf_map_elem_name(struct ktf_map_elem *elem, char *name)
-+{
-+	if (!name)
-+		return NULL;
++	seq_printf(seq, "%s results:\n", ktf_case_name(testset));
++	ktf_testcase_for_each_test(t, testset)
++		ktf_debugfs_print_result(seq, t);
 +
-+	if (!elem || !elem->map)
-+		(void)strlcpy(name, "<none>", KTF_MAX_NAME);
-+	else if (!elem->map->elem_comparefn)
-+		(void)strlcpy(name, elem->key, KTF_MAX_NAME);
-+	else
-+		(void)snprintf(name, KTF_MAX_NAME, "'%*ph'", 8, elem->key);
-+
-+	return name;
-+}
-+
-+/* Called when refcount of elem is 0. */
-+static void ktf_map_elem_release(struct kref *kref)
-+{
-+	struct ktf_map_elem *elem = container_of(kref, struct ktf_map_elem,
-+						 refcount);
-+	struct ktf_map *map = elem->map;
-+	char name[KTF_MAX_KEY];
-+
-+	tlog(T_DEBUG_V, "Releasing %s, %s free function",
-+	     ktf_map_elem_name(elem, name),
-+	     map && map->elem_freefn ? "calling" : "no");
-+	if (map && map->elem_freefn)
-+		map->elem_freefn(elem);
-+}
-+
-+void ktf_map_elem_put(struct ktf_map_elem *elem)
-+{
-+	char name[KTF_MAX_KEY];
-+
-+	tlog(T_DEBUG_V, "Decreasing refcount for %s to %d",
-+	     ktf_map_elem_name(elem, name),
-+	     refcount_read(&elem->refcount.refcount) - 1);
-+	kref_put(&elem->refcount, ktf_map_elem_release);
-+}
-+
-+void ktf_map_elem_get(struct ktf_map_elem *elem)
-+{
-+	char name[KTF_MAX_KEY];
-+
-+	tlog(T_DEBUG_V, "Increasing refcount for %s to %d",
-+	     ktf_map_elem_name(elem, name),
-+	     refcount_read(&elem->refcount.refcount) + 1);
-+	kref_get(&elem->refcount);
-+}
-+
-+struct ktf_map_elem *ktf_map_find(struct ktf_map *map, const char *key)
-+{
-+	struct rb_node *node;
-+	unsigned long flags;
-+
-+	/* may be called in interrupt context */
-+	spin_lock_irqsave(&map->lock, flags);
-+	node = map->root.rb_node;
-+
-+	while (node) {
-+		struct ktf_map_elem *elem = container_of(node, struct ktf_map_elem, node);
-+		int result;
-+
-+		if (map->elem_comparefn)
-+			result = map->elem_comparefn(key, elem->key);
-+		else
-+			result = strncmp(key, elem->key, KTF_MAX_KEY);
-+
-+		if (result < 0) {
-+			node = node->rb_left;
-+		} else if (result > 0) {
-+			node = node->rb_right;
-+		} else {
-+			ktf_map_elem_get(elem);
-+			spin_unlock_irqrestore(&map->lock, flags);
-+			return elem;
-+		}
-+	}
-+	spin_unlock_irqrestore(&map->lock, flags);
-+	return NULL;
-+}
-+
-+/* Find the first map elem in 'map' */
-+struct ktf_map_elem *ktf_map_find_first(struct ktf_map *map)
-+{
-+	struct ktf_map_elem *elem = NULL;
-+	struct rb_node *node;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&map->lock, flags);
-+	node = rb_first(&map->root);
-+	if (node) {
-+		elem = container_of(node, struct ktf_map_elem, node);
-+		ktf_map_elem_get(elem);
-+	}
-+	spin_unlock_irqrestore(&map->lock, flags);
-+	return elem;
-+}
-+
-+/* Find the next element in the map after 'elem' if any */
-+struct ktf_map_elem *ktf_map_find_next(struct ktf_map_elem *elem)
-+{
-+	struct ktf_map_elem *next = NULL;
-+	struct ktf_map *map = elem->map;
-+	struct rb_node *node;
-+	unsigned long flags;
-+
-+	if (!elem->map)
-+		return NULL;
-+	spin_lock_irqsave(&map->lock, flags);
-+	node = rb_next(&elem->node);
-+
-+	/* Assumption here - we don't need ref to elem any more.
-+	 * Common usage pattern is
-+	 *
-+	 * for (elem = ktf_map_elem_first(map); elem != NULL;
-+	 *      elem = ktf_map_find_next(elem))
-+	 *
-+	 * but if other use cases occur we may need to revisit.
-+	 * This assumption allows us to define our _for_each macros
-+	 * and still manage refcounts.
-+	 */
-+	ktf_map_elem_put(elem);
-+
-+	if (node) {
-+		next = container_of(node, struct ktf_map_elem, node);
-+		ktf_map_elem_get(next);
-+	}
-+	spin_unlock_irqrestore(&map->lock, flags);
-+	return next;
-+}
-+
-+int ktf_map_insert(struct ktf_map *map, struct ktf_map_elem *elem)
-+{
-+	struct rb_node **newobj, *parent = NULL;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&map->lock, flags);
-+	newobj = &map->root.rb_node;
-+	while (*newobj) {
-+		struct ktf_map_elem *this = container_of(*newobj, struct ktf_map_elem, node);
-+		int result;
-+
-+		if (map->elem_comparefn)
-+			result = map->elem_comparefn(elem->key, this->key);
-+		else
-+			result = strncmp(elem->key, this->key, KTF_MAX_KEY);
-+
-+		parent = *newobj;
-+		if (result < 0) {
-+			newobj = &((*newobj)->rb_left);
-+		} else if (result > 0) {
-+			newobj = &((*newobj)->rb_right);
-+		} else {
-+			spin_unlock_irqrestore(&map->lock, flags);
-+			return -EEXIST;
-+		}
-+	}
-+
-+	/* Add newobj node and rebalance tree. */
-+	rb_link_node(&elem->node, parent, newobj);
-+	rb_insert_color(&elem->node, &map->root);
-+	elem->map = map;
-+	map->size++;
-+	/* Bump reference count for map reference */
-+	ktf_map_elem_get(elem);
-+	spin_unlock_irqrestore(&map->lock, flags);
 +	return 0;
 +}
 +
-+void ktf_map_remove_elem(struct ktf_map *map, struct ktf_map_elem *elem)
++/* /sys/kernel/debug/ktf/run/<testset>-tests/<test> runs specific test. */
++static int ktf_debugfs_run(struct seq_file *seq, void *v)
 +{
-+	if (elem) {
-+		rb_erase(&elem->node, &map->root);
-+		map->size--;
-+		ktf_map_elem_put(elem);
++	struct ktf_test *t = (struct ktf_test *)seq->private;
++
++	if (!t)
++		return 0;
++
++	ktf_run_hook(NULL, NULL, t, 0, NULL, 0);
++	ktf_debugfs_print_result(seq, t);
++
++	return 0;
++}
++
++/* /sys/kernel/debug/ktf/run/<testset> runs all tests in testset. */
++static int ktf_debugfs_run_all(struct seq_file *seq, void *v)
++{
++	struct ktf_case *testset = (struct ktf_case *)seq->private;
++	struct ktf_test *t;
++
++	if (!testset)
++		return 0;
++
++	seq_printf(seq, "Running %s\n", ktf_case_name(testset));
++	ktf_testcase_for_each_test(t, testset) {
++		ktf_run_hook(NULL, NULL, t, 0, NULL, 0);
++		ktf_debugfs_print_result(seq, t);
 +	}
++
++	return 0;
 +}
 +
-+struct ktf_map_elem *ktf_map_remove(struct ktf_map *map, const char *key)
++static int ktf_run_test_open(struct inode *inode, struct file *file)
 +{
-+	struct ktf_map_elem *elem;
-+	unsigned long flags;
++	struct ktf_test *t;
 +
-+	elem = ktf_map_find(map, key);
-+	spin_lock_irqsave(&map->lock, flags);
-+	ktf_map_remove_elem(map, elem);
-+	spin_unlock_irqrestore(&map->lock, flags);
-+	return elem;
++	if (!try_module_get(THIS_MODULE))
++		return -EIO;
++
++	t = (struct ktf_test *)inode->i_private;
++
++	return single_open(file, ktf_debugfs_run, t);
 +}
 +
-+void ktf_map_delete_all(struct ktf_map *map)
++static int ktf_debugfs_release(struct inode *inode, struct file *file)
 +{
-+	struct ktf_map_elem *elem;
-+	struct rb_node *node;
-+	unsigned long flags;
++	module_put(THIS_MODULE);
++	return single_release(inode, file);
++}
 +
-+	spin_lock_irqsave(&map->lock, flags);
-+	do {
-+		node = rb_first(&(map)->root);
-+		if (node) {
-+			rb_erase(node, &(map)->root);
-+			map->size--;
-+			elem = container_of(node, struct ktf_map_elem, node);
-+			ktf_map_elem_put(elem);
++static const struct file_operations ktf_run_test_fops = {
++	.open = ktf_run_test_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = ktf_debugfs_release,
++};
++
++static int ktf_results_test_open(struct inode *inode, struct file *file)
++{
++	struct ktf_test *t;
++
++	if (!try_module_get(THIS_MODULE))
++		return -EIO;
++
++	t = (struct ktf_test *)inode->i_private;
++
++	return single_open(file, ktf_debugfs_result, t);
++}
++
++static const struct file_operations ktf_results_test_fops = {
++	.open = ktf_results_test_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = ktf_debugfs_release,
++};
++
++static void _ktf_debugfs_destroy_test(struct ktf_test *t)
++{
++	if (!t)
++		return;
++
++	tlog(T_DEBUG, "Destroying debugfs test %s", t->name);
++	debugfs_remove(t->debugfs.debugfs_results_test);
++	debugfs_remove(t->debugfs.debugfs_run_test);
++	memset(&t->debugfs, 0, sizeof(t->debugfs));
++}
++
++void ktf_debugfs_create_test(struct ktf_test *t)
++{
++	struct ktf_case *testset = ktf_case_find(t->tclass);
++
++	if (!testset)
++		return;
++
++	memset(&t->debugfs, 0, sizeof(t->debugfs));
++
++	t->debugfs.debugfs_results_test =
++		debugfs_create_file(t->name, S_IFREG | 0444,
++				    testset->debugfs.debugfs_results_test,
++				 t, &ktf_results_test_fops);
++
++	if (t->debugfs.debugfs_results_test) {
++		t->debugfs.debugfs_run_test =
++			debugfs_create_file(t->name, S_IFREG | 0444,
++					    testset->debugfs.debugfs_run_test,
++				 t, &ktf_run_test_fops);
++		if (!t->debugfs.debugfs_run_test) {
++			_ktf_debugfs_destroy_test(t);
++		} else {
++			/* Take reference for test for debugfs */
++			ktf_test_get(t);
 +		}
-+	} while (node);
-+	spin_unlock_irqrestore(&map->lock, flags);
++	}
++	/* Drop reference to testset from ktf_case_find(). */
++	ktf_case_put(testset);
 +}
-diff --git a/tools/testing/selftests/ktf/kernel/ktf_map.h b/tools/testing/selftests/ktf/kernel/ktf_map.h
++
++void ktf_debugfs_destroy_test(struct ktf_test *t)
++{
++	_ktf_debugfs_destroy_test(t);
++	/* Release reference now debugfs files are gone. */
++	ktf_test_put(t);
++}
++
++static int ktf_results_testset_open(struct inode *inode, struct file *file)
++{
++	struct ktf_case *testset;
++
++	if (!try_module_get(THIS_MODULE))
++		return -EIO;
++
++	testset = (struct ktf_case *)inode->i_private;
++
++	return single_open(file, ktf_debugfs_results_all, testset);
++}
++
++static const struct file_operations ktf_results_testset_fops = {
++	.open = ktf_results_testset_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = ktf_debugfs_release,
++};
++
++static int ktf_run_testset_open(struct inode *inode, struct file *file)
++{
++	struct ktf_case *testset;
++
++	if (!try_module_get(THIS_MODULE))
++		return -EIO;
++
++	testset = (struct ktf_case *)inode->i_private;
++
++	return single_open(file, ktf_debugfs_run_all, testset);
++}
++
++static const struct file_operations ktf_run_testset_fops = {
++	.open = ktf_run_testset_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = ktf_debugfs_release,
++};
++
++static void _ktf_debugfs_destroy_testset(struct ktf_case *testset)
++{
++	debugfs_remove(testset->debugfs.debugfs_run_testset);
++	debugfs_remove(testset->debugfs.debugfs_run_test);
++	debugfs_remove(testset->debugfs.debugfs_results_testset);
++	debugfs_remove(testset->debugfs.debugfs_results_test);
++}
++
++void ktf_debugfs_create_testset(struct ktf_case *testset)
++{
++	char tests_subdir[KTF_DEBUGFS_NAMESZ];
++	const char *name = ktf_case_name(testset);
++
++	memset(&testset->debugfs, 0, sizeof(testset->debugfs));
++
++	/* First add /sys/kernel/debug/ktf/[results|run]/<testset> */
++	testset->debugfs.debugfs_results_testset =
++		debugfs_create_file(name, S_IFREG | 0444,
++				    ktf_debugfs_resultsdir,
++				 testset, &ktf_results_testset_fops);
++	if (!testset->debugfs.debugfs_results_testset)
++		goto err;
++
++	testset->debugfs.debugfs_run_testset =
++		debugfs_create_file(name, S_IFREG | 0444,
++				    ktf_debugfs_rundir,
++				    testset, &ktf_run_testset_fops);
++	if (!testset->debugfs.debugfs_run_testset)
++		goto err;
++
++	/* Now add parent directories for individual test result/run tests
++	 * which live in
++	 * /sys/kernel/debug/ktf/[results|run]/<testset>-tests/<testname>
++	 */
++	(void)snprintf(tests_subdir, sizeof(tests_subdir), "%s%s",
++			name, KTF_DEBUGFS_TESTS_SUFFIX);
++
++	testset->debugfs.debugfs_results_test =
++		debugfs_create_dir(tests_subdir, ktf_debugfs_resultsdir);
++	if (!testset->debugfs.debugfs_results_test)
++		goto err;
++
++	testset->debugfs.debugfs_run_test =
++		debugfs_create_dir(tests_subdir, ktf_debugfs_rundir);
++	if (!testset->debugfs.debugfs_run_test)
++		goto err;
++
++	/* Take reference count for testset.  One will do as we will always
++	 * free testset debugfs resources together.
++	 */
++	ktf_case_get(testset);
++	return;
++err:
++	_ktf_debugfs_destroy_testset(testset);
++}
++
++void ktf_debugfs_destroy_testset(struct ktf_case *testset)
++{
++	tlog(T_DEBUG, "Destroying debugfs testset %s", ktf_case_name(testset));
++	_ktf_debugfs_destroy_testset(testset);
++	/* Remove our debugfs reference cout to testset */
++	ktf_case_put(testset);
++}
++
++/* /sys/kernel/debug/ktf/coverage shows coverage statistics. */
++static int ktf_debugfs_cov(struct seq_file *seq, void *v)
++{
++	ktf_cov_seq_print(seq);
++
++	return 0;
++}
++
++static int ktf_cov_open(struct inode *inode, struct file *file)
++{
++	if (!try_module_get(THIS_MODULE))
++		return -EIO;
++
++	return single_open(file, ktf_debugfs_cov, NULL);
++}
++
++static const struct file_operations ktf_cov_fops = {
++	.open = ktf_cov_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = ktf_debugfs_release,
++};
++
++void ktf_debugfs_cleanup(void)
++{
++	tlog(T_DEBUG, "Removing ktf debugfs dirs...");
++	debugfs_remove(ktf_debugfs_cov_file);
++	debugfs_remove(ktf_debugfs_rundir);
++	debugfs_remove(ktf_debugfs_resultsdir);
++	debugfs_remove(ktf_debugfs_rootdir);
++}
++
++void ktf_debugfs_init(void)
++{
++	ktf_debugfs_rootdir = debugfs_create_dir(KTF_DEBUGFS_ROOT, NULL);
++	if (!ktf_debugfs_rootdir)
++		goto err;
++	ktf_debugfs_rundir = debugfs_create_dir(KTF_DEBUGFS_RUN,
++						ktf_debugfs_rootdir);
++	if (!ktf_debugfs_rundir)
++		goto err;
++	ktf_debugfs_resultsdir = debugfs_create_dir(KTF_DEBUGFS_RESULTS,
++						    ktf_debugfs_rootdir);
++	if (!ktf_debugfs_resultsdir)
++		goto err;
++
++	ktf_debugfs_cov_file = debugfs_create_file(KTF_DEBUGFS_COV,
++						   S_IFREG | 0444,
++						   ktf_debugfs_rootdir,
++						   NULL,
++						   &ktf_cov_fops);
++	if (ktf_debugfs_cov_file)
++		return;
++err:
++	terr("Could not init %s\n", KTF_DEBUGFS_ROOT);
++	ktf_debugfs_cleanup();
++}
+diff --git a/tools/testing/selftests/ktf/kernel/ktf_debugfs.h b/tools/testing/selftests/ktf/kernel/ktf_debugfs.h
 new file mode 100644
-index 0000000..1c8ae9b
+index 0000000..4dab1ea
 --- /dev/null
-+++ b/tools/testing/selftests/ktf/kernel/ktf_map.h
-@@ -0,0 +1,154 @@
++++ b/tools/testing/selftests/ktf/kernel/ktf_debugfs.h
+@@ -0,0 +1,34 @@
 +/*
-+ * Copyright (c) 2017, Oracle and/or its affiliates. All rights reserved.
-+ *    Author: Knut Omang <knut.omang@oracle.com>
++ * Copyright (c) 2009, 2017, Oracle and/or its affiliates. All rights reserved.
++ *    Author: Alan Maguire <alan.maguire@oracle.com>
 + *
 + * SPDX-License-Identifier: GPL-2.0
 + *
-+ * ktf_map.h: simple objects with key lookup to be inlined into a
-+ *    larger object
++ * ktf_debugfs.h: Support for creating a debugfs representation of test
++ * sets/tests.
 + */
 +
-+#ifndef _KTF_MAP_H
-+#define _KTF_MAP_H
-+#include <linux/kref.h>
-+#include <linux/version.h>
-+#include <linux/rbtree.h>
++#ifndef KTF_DEBUGFS_H
++#define KTF_DEBUGFS_H
++#include <linux/debugfs.h>
 +
-+#define	KTF_MAX_KEY 64
-+#define KTF_MAX_NAME (KTF_MAX_KEY - 1)
++#define KTF_DEBUGFS_ROOT                        "ktf"
++#define KTF_DEBUGFS_RUN                         "run"
++#define KTF_DEBUGFS_RESULTS                     "results"
++#define KTF_DEBUGFS_COV				"coverage"
++#define KTF_DEBUGFS_TESTS_SUFFIX                "-tests"
 +
-+struct ktf_map_elem;
++#define KTF_DEBUGFS_NAMESZ                      256
 +
-+/* Compare function called to compare element keys - optional and if
-+ * not specified we revert to string comparison.  Should return < 0
-+ * if first key < second, > 0 if first key > second, and 0 if they are
-+ * identical.
-+ */
-+typedef int (*ktf_map_elem_comparefn)(const char *, const char *);
++struct ktf_test;
++struct ktf_case;
 +
-+/* A convenience unsigned int compare function as an alternative
-+ * to the string compare:
-+ */
-+int ktf_uint_compare(const char *a, const char *b);
++void ktf_debugfs_create_test(struct ktf_test *);
++void ktf_debugfs_destroy_test(struct ktf_test *);
++void ktf_debugfs_create_testset(struct ktf_case *);
++void ktf_debugfs_destroy_testset(struct ktf_case *);
++void ktf_debugfs_init(void);
++void ktf_debugfs_cleanup(void);
 +
-+/* Free function called when elem refcnt is 0 - optional and of course for
-+ * dynamically-allocated elems only.
-+ */
-+typedef void (*ktf_map_elem_freefn)(struct ktf_map_elem *);
-+
-+struct ktf_map {
-+	struct rb_root root; /* The rb tree holding the map */
-+	size_t size;	     /* Current size (number of elements) of the map */
-+	spinlock_t lock;     /* held for map lookup etc */
-+	ktf_map_elem_comparefn elem_comparefn; /* Key comparison function */
-+	ktf_map_elem_freefn elem_freefn; /* Free function */
-+};
-+
-+struct ktf_map_elem {
-+	struct rb_node node;	      /* Linkage for the map */
-+	char key[KTF_MAX_KEY+1] __aligned(8);
-+		/* Key of the element - must be unique within the same map */
-+	struct ktf_map *map;  /* owning map */
-+	struct kref refcount; /* reference count for element */
-+};
-+
-+#define __KTF_MAP_INITIALIZER(_mapname, _elem_comparefn, _elem_freefn) \
-+        { \
-+		.root = RB_ROOT, \
-+		.size = 0, \
-+		.lock = __SPIN_LOCK_UNLOCKED(_mapname), \
-+		.elem_comparefn = _elem_comparefn, \
-+		.elem_freefn = _elem_freefn, \
-+	}
-+
-+#define DEFINE_KTF_MAP(_mapname, _elem_comparefn, _elem_freefn) \
-+	struct ktf_map _mapname = __KTF_MAP_INITIALIZER(_mapname, _elem_comparefn, _elem_freefn)
-+
-+void ktf_map_init(struct ktf_map *map, ktf_map_elem_comparefn elem_comparefn,
-+	ktf_map_elem_freefn elem_freefn);
-+
-+/* returns 0 upon success or -errno upon error */
-+int ktf_map_elem_init(struct ktf_map_elem *elem, const char *key);
-+
-+/* increase/reduce reference count to element.  If count reaches 0, the
-+ * free function associated with map (if any) is called.
-+ */
-+void ktf_map_elem_get(struct ktf_map_elem *elem);
-+void ktf_map_elem_put(struct ktf_map_elem *elem);
-+
-+char *ktf_map_elem_name(struct ktf_map_elem *elem, char *name);
-+
-+/* Insert a new element in map - return 0 iff 'elem' was inserted or -1 if
-+ * the key already existed - duplicates are not insterted.
-+ */
-+int ktf_map_insert(struct ktf_map *map, struct ktf_map_elem *elem);
-+
-+/* Find and return the element with 'key' */
-+struct ktf_map_elem *ktf_map_find(struct ktf_map *map, const char *key);
-+
-+/* Find the first map elem in 'map' with reference count increased. */
-+struct ktf_map_elem *ktf_map_find_first(struct ktf_map *map);
-+
-+/* Find the next element in the map after 'elem' if any.  Decreases refcount
-+ * for "elem" and increases it for returned map element - this helps manage
-+ * reference counts when iterating over map elements.
-+ */
-+struct ktf_map_elem *ktf_map_find_next(struct ktf_map_elem *elem);
-+
-+/* Remove the element 'key' from the map and return a pointer to it with
-+ * refcount increased.
-+ */
-+struct ktf_map_elem *ktf_map_remove(struct ktf_map *map, const char *key);
-+
-+/* Remove specific element elem from the map. Refcount is not increased
-+ * as caller must already have had a reference.
-+ */
-+void ktf_map_remove_elem(struct ktf_map *map, struct ktf_map_elem *elem);
-+
-+void ktf_map_delete_all(struct ktf_map *map);
-+
-+static inline size_t ktf_map_size(struct ktf_map *map) {
-+	return map->size;
-+}
-+
-+static inline bool ktf_map_empty(struct ktf_map *map) {
-+	return map->size == 0;
-+}
-+
-+/* Gets first entry with refcount of entry increased for caller. */
-+#define ktf_map_first_entry(_map, _type, _member) \
-+	ktf_map_empty(_map) ? NULL : \
-+	container_of(ktf_map_find_first(_map), _type, _member)
-+
-+/* Gets next elem after "pos", decreasing refcount for pos and increasing
-+ * it for returned entry.
-+ */
-+#define ktf_map_next_entry(_pos, _member) ({ \
-+	struct ktf_map_elem *_e = ktf_map_find_next(&(_pos)->_member); \
-+        _e ? container_of(_e, typeof(*_pos), _member) : NULL; \
-+})
-+
-+/* Iterates over map elements, incrementing refcount for current element and
-+ * decreasing it when we iterate to the next element.  Important - if you
-+ * break out of the loop via break/return, ensure ktf_map_elem_put(pos)
-+ * is called for current element since we have a reference to it for the
-+ * current loop body iteration.
-+ */
-+#define ktf_map_for_each(pos, map)	\
-+	for (pos = ktf_map_find_first(map); pos != NULL; pos = ktf_map_find_next(pos))
-+
-+/* Iterate over map elements in similar manner as above but using
-+ * container_of() wrappers to work with the type embedding a
-+ * "struct ktf_map_elem".
-+ */
-+#define ktf_map_for_each_entry(_pos, _map, _member) \
-+	for (_pos = ktf_map_first_entry(_map, typeof(*_pos), _member);	\
-+	     _pos != NULL; \
-+	     _pos = ktf_map_next_entry(_pos, _member))
-+
-+#define ktf_map_find_entry(_map, _key, _type, _member) ({	\
-+	struct ktf_map_elem *_entry = ktf_map_find(_map, _key);	\
-+        _entry ? container_of(_entry, _type, _member) : NULL; \
-+})
 +
 +#endif
 -- 
