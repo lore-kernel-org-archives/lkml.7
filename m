@@ -2,131 +2,99 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B51C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB4CC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5FD2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:16:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565720205;
-	bh=ppbLRbeVVjSaqCpvUMKl5GQoiS9vv/44Sdhkt7yQd3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CYwf4FLPj1lkXSstvb7cnqFy8NfBDr1d2oOiRiCX/ZqUp9zCwu5cpw+vYGUorIhkc
-	 oPWBcf3PfhrCbEq5RoDgwSyCFlnU55vSnTP7h2QjiJLfefFNXjTirr9o/YDuKM5acp
-	 b+d+OWofLqhMuSD+aw/eO/ESULkX4zmd1guF8Do4=
+	by mail.kernel.org (Postfix) with ESMTP id 2561D2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:17:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IZr+C1Iz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbfHMSQo (ORCPT
+        id S1728308AbfHMSRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 14:16:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727517AbfHMSQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 14:16:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4810C20665;
-        Tue, 13 Aug 2019 18:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565720202;
-        bh=ppbLRbeVVjSaqCpvUMKl5GQoiS9vv/44Sdhkt7yQd3w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LvP+S7VM9MT3Wrjtlkc5hTQ6vK5t0nvysuWbLQoHGxlVTugb2KvsmurkwoAGoA41R
-         jH6Eb6sVSpJF70TGAZaAaQ38Dt6KuD6oyWcDMpzW8pJ3He2oTfQAHviZzt3V6DNvg4
-         2LZQbZbzZqm1mkIZMCps2U4Vfi7zYnp3GZzI+Uko=
-Date:   Tue, 13 Aug 2019 20:16:40 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Matthias Maennich <maennich@google.com>
-Cc:     linux-kernel@vger.kernel.org, maco@android.com,
-        kernel-team@android.com, arnd@arndb.de, geert@linux-m68k.org,
-        hpa@zytor.com, jeyu@kernel.org, joel@joelfernandes.org,
-        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
-        maco@google.com, michal.lkml@markovi.net, mingo@redhat.com,
-        oneukum@suse.com, pombredanne@nexb.com, sam@ravnborg.org,
-        sboyd@codeaurora.org, sspatil@google.com,
-        stern@rowland.harvard.edu, tglx@linutronix.de,
-        usb-storage@lists.one-eyed-alien.net, x86@kernel.org,
-        yamada.masahiro@socionext.com,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v2 06/10] export: allow definition default namespaces in
- Makefiles or sources
-Message-ID: <20190813181640.GD2378@kroah.com>
-References: <20180716122125.175792-1-maco@android.com>
- <20190813121733.52480-1-maennich@google.com>
- <20190813121733.52480-7-maennich@google.com>
+        Tue, 13 Aug 2019 14:17:15 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40777 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728284AbfHMSRO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 14:17:14 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c3so373146wrd.7
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 11:17:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EPkqHFTT1KvxgsaHnKLv7VXPezcT4eKkPTs4jCtFfDM=;
+        b=IZr+C1IzDl55t6GTa2m5J043jUJjCECxfdNp4mzjhSWfxcBwii/qZ0rxBDRHviGetc
+         vPhWnCIpy/GOrFojZXDQB4CEG5UAaUJubJCrynkow/sMK/FSUC0SKDxJeTvazGezY5Z6
+         aCVmUkUD36h5qNQJ+sXABBJHsUBLceges1UNXbeURj4Uc9Oy3P5JmU/xwk3uQENa7RIj
+         AiAsBOefbWNRoty29pYp8bRktkiCUo0UnmLxt/k+qHLys8iXeUqIDB46oo3tSaLNpnru
+         SOa4UVLzZJ1tMC6Lu0LocylCkVpSt+tPuAe3qhWPBHv30A4V45nnQ1t7Bch8JVPdzT0X
+         C9UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EPkqHFTT1KvxgsaHnKLv7VXPezcT4eKkPTs4jCtFfDM=;
+        b=mu01J6ehrOOo0x5DS4Q8ufjcuKR1ebY1M+ocgbwn9KPYj5P3EWeeoX1tMeDC8v7tg/
+         2ydEIbQdLzIZtr6JBdl4ZXYdhRRrF8qSZZ7V/K/mOKMikvvsNnF5G8LmrnTog4UxC9v4
+         1WlsrYFOCv9A8cS7QWmjy03n9wU1iCIjr11++YRRxnlWd/ckwIva5O7bth56+t70aOZe
+         QcmJxgqP3Yfx9mztkqJkpCM4enKS28uufzqPPep2ALxJvknpHKiRdp+osALsMvx6ix1Y
+         1YpnS8s/rERYoxIIDJWoIIkOkfzBhD8pQndculswrLap3WkbRJxGwdoZ6Sv5i0o6Klgy
+         zf8w==
+X-Gm-Message-State: APjAAAVJIx49/TYtfVur4GqvBReAi2a3bU6M5BzaOU+6b1l4Jn9OCLAs
+        /LgaMliLh27z6RCBp/Ntfuz/yw==
+X-Google-Smtp-Source: APXvYqxmRERDkAw8Vs6MjMd4K+FOgvlYItlA7RSbC053dvmaYrmvTDCtWuRg32Fud5EUiR4kYm0DYw==
+X-Received: by 2002:a05:6000:118a:: with SMTP id g10mr47193038wrx.175.1565720232097;
+        Tue, 13 Aug 2019 11:17:12 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id c6sm3191349wma.25.2019.08.13.11.17.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 11:17:11 -0700 (PDT)
+Subject: Re: [PATCH v2 1/5] soundwire: Add compute_params callback
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        vkoul@kernel.org, broonie@kernel.org
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, linux-kernel@vger.kernel.org,
+        plai@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org,
+        spapothi@codeaurora.org
+References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
+ <20190813083550.5877-2-srinivas.kandagatla@linaro.org>
+ <7e462330-a357-698a-b259-5ff136963a57@linux.intel.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <1a02f190-0aab-d512-ceb0-4a21014705e8@linaro.org>
+Date:   Tue, 13 Aug 2019 19:17:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813121733.52480-7-maennich@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <7e462330-a357-698a-b259-5ff136963a57@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 01:17:03PM +0100, Matthias Maennich wrote:
-> To avoid excessive usage of EXPORT_SYMBOL_NS(sym, MY_NAMESPACE), where
-> MY_NAMESPACE will always be the namespace we are exporting to, allow
-> exporting all definitions of EXPORT_SYMBOL() and friends by defining
-> DEFAULT_SYMBOL_NAMESPACE.
+
+
+On 13/08/2019 15:34, Pierre-Louis Bossart wrote:
+> On 8/13/19 3:35 AM, Srinivas Kandagatla wrote:
+>> From: Vinod Koul <vkoul@kernel.org>
+>>
+>> This callback allows masters to compute the bus parameters required.
 > 
-> For example, to export all symbols defined in usb-common into the
-> namespace USB_COMMON, add a line like this to drivers/usb/common/Makefile:
-> 
->   ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=USB_COMMON
-> 
-> That is equivalent to changing all EXPORT_SYMBOL(sym) definitions to
-> EXPORT_SYMBOL_NS(sym, USB_COMMON). Subsequently all symbol namespaces
-> functionality will apply.
-> 
-> Another way of making use of this feature is to define the namespace
-> within source or header files similar to how TRACE_SYSTEM defines are
-> used:
->   #undef DEFAULT_SYMBOL_NAMESPACE
->   #define DEFAULT_SYMBOL_NAMESPACE USB_COMMON
-> 
-> Please note that, as opposed to TRACE_SYSTEM, DEFAULT_SYMBOL_NAMESPACE
-> has to be defined before including include/linux/export.h.
-> 
-> If DEFAULT_SYMBOL_NAMESPACE is defined, a symbol can still be exported
-> to another namespace by using EXPORT_SYMBOL_NS() and friends with
-> explicitly specifying the namespace.
-> 
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Reviewed-by: Martijn Coenen <maco@android.com>
-> Signed-off-by: Matthias Maennich <maennich@google.com>
-> ---
->  include/linux/export.h | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/include/linux/export.h b/include/linux/export.h
-> index 8e12e05444d1..1fb243abdbc4 100644
-> --- a/include/linux/export.h
-> +++ b/include/linux/export.h
-> @@ -166,6 +166,12 @@ struct kernel_symbol {
->  #define __EXPORT_SYMBOL ___EXPORT_SYMBOL
->  #endif
->  
-> +#ifdef DEFAULT_SYMBOL_NAMESPACE
-> +#undef __EXPORT_SYMBOL
-> +#define __EXPORT_SYMBOL(sym, sec)				\
-> +	__EXPORT_SYMBOL_NS(sym, sec, DEFAULT_SYMBOL_NAMESPACE)
-> +#endif
-> +
->  #define EXPORT_SYMBOL(sym) __EXPORT_SYMBOL(sym, "")
->  #define EXPORT_SYMBOL_GPL(sym) __EXPORT_SYMBOL(sym, "_gpl")
->  #define EXPORT_SYMBOL_GPL_FUTURE(sym) __EXPORT_SYMBOL(sym, "_gpl_future")
-> -- 
-> 2.23.0.rc1.153.gdeed80330f-goog
+> This looks like a partial use of the patch ('soundwire: Add Intel 
+> resource management algorithm')? see comments below
 > 
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Yes it duplicate indeed!
+
+I will use that patch!
+
+--srini
