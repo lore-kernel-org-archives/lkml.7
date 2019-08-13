@@ -2,385 +2,600 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27C1C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7015C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A9320644
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A56A20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565738573;
-	bh=sfIdahqwLpoHBVU4s1R10Ng8jSapzEvpO/VEjOubQMo=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=oXZZ46n35n1RWoojnKex0q8B20qzslUx4xPv2p5fgZn1vqlV+4H5h5FsZaMgO0ODS
-	 y0hyIThxcZ+NOtNEGzS7VYcSkJ0m67XGXO9ybTeYYHSf3uAQ2epmk4Prphqy8w8AIA
-	 /XBaXjKxbZLc1+59DXydGYTtbJetOa1YIlpqPjTs=
+	s=default; t=1565738711;
+	bh=AtRfGR3tplXBLWCU8CX7tVAN3Yox1Ydml3AtXmEmvVE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=w+aKRmskWwcb5OIqmFbRqFTEiQ3pA50/oaYGBKX32BITkaiakm+mhSxzk9DAmrpI8
+	 jIb9E4RRVZW/JFFMMNXVyTgBeURcNUKEhlMYfvGhFqRuOQCwMVLdIkaPk0DSI/NbtB
+	 U+j9yozkuF0pYX+7rmeyqr5El0YIisja7MyDMT2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfHMXWw (ORCPT
+        id S1726675AbfHMXZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 19:22:52 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34015 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbfHMXWw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 19:22:52 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c7so5537357otp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 16:22:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UM0Pz44YAAEyYRbCR/ec4Cbc1z9VnVqmgqSjPYUB/jI=;
-        b=NmzrmoUwbIxePwXm/ljimLS/0qx5aDku2EBKnxhF6eeExqLQpTDjSKXS8fkPvqbLo4
-         rytyWqgj3dxnFl8bANGV0GUP8wDMuje3k/nFJmHb/DdgPkbdGFvEDFnep99t45BED+Oa
-         3uJ//y3ww5bX+unnC4j5bcSa3U3wR+HxR9tio=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UM0Pz44YAAEyYRbCR/ec4Cbc1z9VnVqmgqSjPYUB/jI=;
-        b=NislbSpHtfl66zB20ITx/FJemJHMEWZEkY+cpZsozGxj/V6YRIIgfjRjyAu3NFNKjg
-         PPFVo35UQkoT/J+dn6+/V/2qGf3BJb44vkb8HuoNHh6OBhVvMwbGe9gdouIISE5AAApO
-         lC8UGcsjfJaYbH3yxlgYe2zyr+WNlxS00dtRbwko8ZLyOFEKMKIZ+PzYoX630KgGlMaz
-         YlTrsdzzrq1HCI5Le6qfFHjiAHwTyxE3x3e687zZbXrn8TKby5jE6zHy/6Xl4LpxEudw
-         YlKC5fLwHAGZGlgaGeUswkYyAO7upHdW0oPgbh7ca23GjcIXa56vBjFPewz0y30rRvEh
-         CRyw==
-X-Gm-Message-State: APjAAAW9JKlvGg0e1UnOGgHPwAjJ4WOsjGLMtUqJK1eFFv3v19iP6wHD
-        2HUUD5IVzmNdLaHaQQjJ1Z411Q==
-X-Google-Smtp-Source: APXvYqz5wOGhJzw4mkJlsUZtSSIhAecQjjx+vjRR+G9YSKQLDkwOJrAQ1xf00mnjDAp5+BwcSQ8VHg==
-X-Received: by 2002:a5e:c802:: with SMTP id y2mr11342167iol.134.1565738570350;
-        Tue, 13 Aug 2019 16:22:50 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id e22sm16387028iog.2.2019.08.13.16.22.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 13 Aug 2019 16:22:49 -0700 (PDT)
-Subject: Re: [PATCH 0/3] Collapse vimc into single monolithic driver
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Helen Koike <helen.koike@collabora.com>
-Cc:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        mchehab@kernel.org, hverkuil@xs4all.nl,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        kernel@collabora.com, Shuah Khan <skhan@linuxfoundation.org>
-References: <4e9b8eb3-23c5-62ea-07dc-b51acb238dee@linuxfoundation.org>
- <15badf5e-49fa-7fbe-de6b-296e9a7f5cd9@collabora.com>
- <e21d38a5-4fcd-7b02-f5f2-e445c280f769@collabora.com>
- <2ee23903-8e99-a0a0-619a-be5bdaa71802@linuxfoundation.org>
- <374574f2-0ecd-723a-4a66-c190332aaa04@collabora.com>
- <737dbfd4-8e86-289b-1827-736e3d6ffff5@linuxfoundation.org>
- <03b51b1e-3d78-72e6-3b3e-210b4411c897@linuxfoundation.org>
- <e81df4a5-2393-e341-258c-abf55babe519@collabora.com>
- <20190813095654.GA5009@pendragon.ideasonboard.com>
- <a0fa05d7-5fc2-071a-f5ab-788662ecc6b2@collabora.com>
- <20190813123653.GE5009@pendragon.ideasonboard.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <f19ed1d5-76f5-0261-d857-94e08385aeea@linuxfoundation.org>
-Date:   Tue, 13 Aug 2019 17:22:48 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 13 Aug 2019 19:25:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbfHMXZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 19:25:10 -0400
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AC37206C2;
+        Tue, 13 Aug 2019 23:25:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565738706;
+        bh=AtRfGR3tplXBLWCU8CX7tVAN3Yox1Ydml3AtXmEmvVE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Loiq/oGwzQfOBg9gQ4H4vlt2XBOD2zu4m55bKnJvWZxSl0NSiUaAOckkl+wzsTldh
+         OyiUWBD1D8p12a7GVw8SDa8UPmpoCRa1JPt4Eo8t+nEp9e9CFVyLUSfEpU9MT4ho6C
+         DjZn0GdBMBF/aiwXz8Gc9JhGcx1pm7WD7f04wcWo=
+Received: by mail-wr1-f48.google.com with SMTP id q12so19040749wrj.12;
+        Tue, 13 Aug 2019 16:25:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAX2daClMtthqLBSwvfeVsssdjFJ2m2XkeJn9wwYa+MnYNgO7mit
+        WolyPxQ5jXNhbhjhF1ZQQugDDOgFUfnRg4ku+UU=
+X-Google-Smtp-Source: APXvYqzBMDSk7YPXFQwo3MMCHjd5migUSCScCjNcRp7n8K4wDB+zl2AGsCAr2wvif+NnIBHH5bajkAER/dLCGp/lu0Q=
+X-Received: by 2002:adf:dd01:: with SMTP id a1mr4310524wrm.12.1565738704566;
+ Tue, 13 Aug 2019 16:25:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190813123653.GE5009@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1565686400-5711-1-git-send-email-light.hsieh@mediatek.com> <1565686400-5711-5-git-send-email-light.hsieh@mediatek.com>
+In-Reply-To: <1565686400-5711-5-git-send-email-light.hsieh@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Tue, 13 Aug 2019 16:24:53 -0700
+X-Gmail-Original-Message-ID: <CAGp9LzqBw5qr4Cf4MvUDxjNNu_EN8kmm245gA_-SzYJt11tU0g@mail.gmail.com>
+Message-ID: <CAGp9LzqBw5qr4Cf4MvUDxjNNu_EN8kmm245gA_-SzYJt11tU0g@mail.gmail.com>
+Subject: Re: [PATCH v1 4/5] pinctrl: mediatek: Backward compatible to previous
+ Mediatek's bias-pull usage
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/19 6:36 AM, Laurent Pinchart wrote:
-> Hi Helen,
-> 
-> On Tue, Aug 13, 2019 at 09:25:01AM -0300, Helen Koike wrote:
->> On 8/13/19 6:56 AM, Laurent Pinchart wrote:
->>> On Mon, Aug 12, 2019 at 08:41:33PM -0300, Helen Koike wrote:
->>>> On 8/12/19 7:14 PM, Shuah Khan wrote:
->>>>> On 8/12/19 1:10 PM, Shuah Khan wrote:
->>>>>> On 8/12/19 12:52 PM, André Almeida wrote:
->>>>>>> On 8/12/19 11:08 AM, Shuah Khan wrote:
->>>>>>>> On 8/9/19 9:51 PM, Helen Koike wrote:
->>>>>>>>> On 8/9/19 9:24 PM, André Almeida wrote:
->>>>>>>>>> On 8/9/19 9:17 PM, Shuah Khan wrote:
->>>>>>>>>>> On 8/9/19 5:52 PM, André Almeida wrote:
->>>>>>>>>>>> On 8/9/19 6:45 PM, Shuah Khan wrote:
->>>>>>>>>>>>> vimc uses Component API to split the driver into functional
->>>>>>>>>>>>> components.
->>>>>>>>>>>>> The real hardware resembles a monolith structure than component and
->>>>>>>>>>>>> component structure added a level of complexity making it hard to
->>>>>>>>>>>>> maintain without adding any real benefit.
->>>>>>>>>>>>>         The sensor is one vimc component that would makes sense to be a
->>>>>>>>>>>>> separate
->>>>>>>>>>>>> module to closely align with the real hardware. It would be easier to
->>>>>>>>>>>>> collapse vimc into single monolithic driver first and then split the
->>>>>>>>>>>>> sensor off as a separate module.
->>>>>>>>>>>>>
->>>>>>>>>>>>> This patch series emoves the component API and makes minimal
->>>>>>>>>>>>> changes to
->>>>>>>>>>>>> the code base preserving the functional division of the code
->>>>>>>>>>>>> structure.
->>>>>>>>>>>>> Preserving the functional structure allows us to split the sensor off
->>>>>>>>>>>>> as a separate module in the future.
->>>>>>>>>>>>>
->>>>>>>>>>>>> Major design elements in this change are:
->>>>>>>>>>>>>         - Use existing struct vimc_ent_config and struct
->>>>>>>>>>>>> vimc_pipeline_config
->>>>>>>>>>>>>           to drive the initialization of the functional components.
->>>>>>>>>>>>>         - Make vimc_ent_config global by moving it to vimc.h
->>>>>>>>>>>>>         - Add two new hooks add and rm to initialize and register,
->>>>>>>>>>>>> unregister
->>>>>>>>>>>>>           and free subdevs.
->>>>>>>>>>>>>         - All component API is now gone and bind and unbind hooks are
->>>>>>>>>>>>> modified
->>>>>>>>>>>>>           to do "add" and "rm" with minimal changes to just add and rm
->>>>>>>>>>>>> subdevs.
->>>>>>>>>>>>>         - vimc-core's bind and unbind are now register and unregister.
->>>>>>>>>>>>>         - vimc-core invokes "add" hooks from its
->>>>>>>>>>>>> vimc_register_devices().
->>>>>>>>>>>>>           The "add" hooks remain the same and register subdevs. They
->>>>>>>>>>>>> don't
->>>>>>>>>>>>>           create platform devices of their own and use vimc's
->>>>>>>>>>>>> pdev.dev as
->>>>>>>>>>>>>           their reference device. The "add" hooks save their
->>>>>>>>>>>>> vimc_ent_device(s)
->>>>>>>>>>>>>           in the corresponding vimc_ent_config.
->>>>>>>>>>>>>         - vimc-core invokes "rm" hooks from its unregister to
->>>>>>>>>>>>> unregister
->>>>>>>>>>>>> subdevs
->>>>>>>>>>>>>           and cleanup.
->>>>>>>>>>>>>         - vimc-core invokes "add" and "rm" hooks with pointer to struct
->>>>>>>>>>>>> vimc_device
->>>>>>>>>>>>>           and the corresponding struct vimc_ent_config pointer.
->>>>>>>>>>>>>         The following configure and stream test works on all devices.
->>>>>>>>>>>>>              media-ctl -d platform:vimc -V '"Sensor
->>>>>>>>>>>>> A":0[fmt:SBGGR8_1X8/640x480]'
->>>>>>>>>>>>>         media-ctl -d platform:vimc -V '"Debayer
->>>>>>>>>>>>> A":0[fmt:SBGGR8_1X8/640x480]'
->>>>>>>>>>>>>         media-ctl -d platform:vimc -V '"Sensor
->>>>>>>>>>>>> B":0[fmt:SBGGR8_1X8/640x480]'
->>>>>>>>>>>>>         media-ctl -d platform:vimc -V '"Debayer
->>>>>>>>>>>>> B":0[fmt:SBGGR8_1X8/640x480]'
->>>>>>>>>>>>>              v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v
->>>>>>>>>>>>> width=1920,height=1440
->>>>>>>>>>>>>         v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v
->>>>>>>>>>>>> pixelformat=BA81
->>>>>>>>>>>>>         v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v
->>>>>>>>>>>>> pixelformat=BA81
->>>>>>>>>>>>>              v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video1
->>>>>>>>>>>>>         v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
->>>>>>>>>>>>>         v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
->>>>>>>>>>>>>
->>>>>>>>>>>>> The third patch in the series fixes a general protection fault found
->>>>>>>>>>>>> when rmmod is done while stream is active.
->>>>>>>>>>>>
->>>>>>>>>>>> I applied your patch on top of media_tree/master and I did some
->>>>>>>>>>>> testing.
->>>>>>>>>>>> Not sure if I did something wrong, but just adding and removing the
->>>>>>>>>>>> module generated a kernel panic:
->>>>>>>>>>>
->>>>>>>>>>> Thanks for testing.
->>>>>>>>>>>
->>>>>>>>>>> Odd. I tested modprobe and rmmod both.I was working on Linux 5.3-rc2.
->>>>>>>>>>> I will apply these to media latest and work from there. I have to
->>>>>>>>>>> rebase these on top of the reverts from Lucas and Helen
->>>>>>>>>>
->>>>>>>>>> Ok, please let me know if I succeeded to reproduce.
->>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> ~# modprobe vimc
->>>>>>>>>>>> ~# rmmod vimc
->>>>>>>>>>>> [   16.452974] stack segment: 0000 [#1] SMP PTI
->>>>>>>>>>>> [   16.453688] CPU: 0 PID: 2038 Comm: rmmod Not tainted 5.3.0-rc2+ #36
->>>>>>>>>>>> [   16.454678] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
->>>>>>>>>>>> BIOS 1.12.0-20181126_142135-anatol 04/01/2014
->>>>>>>>>>>> [   16.456191] RIP: 0010:kfree+0x4d/0x240
->>>>>>>>>>>>
->>>>>>>>>>>> <registers values...>
->>>>>>>>>>>>
->>>>>>>>>>>> [   16.469188] Call Trace:
->>>>>>>>>>>> [   16.469666]  vimc_remove+0x35/0x90 [vimc]
->>>>>>>>>>>> [   16.470436]  platform_drv_remove+0x1f/0x40
->>>>>>>>>>>> [   16.471233]  device_release_driver_internal+0xd3/0x1b0
->>>>>>>>>>>> [   16.472184]  driver_detach+0x37/0x6b
->>>>>>>>>>>> [   16.472882]  bus_remove_driver+0x50/0xc1
->>>>>>>>>>>> [   16.473569]  vimc_exit+0xc/0xca0 [vimc]
->>>>>>>>>>>> [   16.474231]  __x64_sys_delete_module+0x18d/0x240
->>>>>>>>>>>> [   16.475036]  do_syscall_64+0x43/0x110
->>>>>>>>>>>> [   16.475656]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>>>>>>>>>>> [   16.476504] RIP: 0033:0x7fceb8dafa4b
->>>>>>>>>>>>
->>>>>>>>>>>> <registers values...>
->>>>>>>>>>>>
->>>>>>>>>>>> [   16.484853] Modules linked in: vimc(-) videobuf2_vmalloc
->>>>>>>>>>>> videobuf2_memops v4l2_tpg videobuf2_v4l2 videobuf2_common
->>>>>>>>>>>> [   16.486187] ---[ end trace 91e5e0894e254d49 ]---
->>>>>>>>>>>> [   16.486758] RIP: 0010:kfree+0x4d/0x240
->>>>>>>>>>>>
->>>>>>>>>>>> <registers values...>
->>>>>>>>>>>>
->>>>>>>>>>>> fish: “rmmod vimc” terminated by signal SIGSEGV (Address boundary
->>>>>>>>>>>> error)
->>>>>>>>>>>>
->>>>>>>>>>>> I just added the module after booting, no other action was made.
->>>>>>>>>>>> Here is
->>>>>>>>>>>> how my `git log --oneline` looks like:
->>>>>>>>>>>>
->>>>>>>>>>>> 897d708e922b media: vimc: Fix gpf in rmmod path when stream is active
->>>>>>>>>>>> 2e4a5ad8ad6d media: vimc: Collapse component structure into a single
->>>>>>>>>>>> monolithic driver
->>>>>>>>>>>> 7c8da1687e92 media: vimc: move private defines to a common header
->>>>>>>>>>>> 97299a303532 media: Remove dev_err() usage after platform_get_irq()
->>>>>>>>>>>> 25a3d6bac6b9 media: adv7511/cobalt: rename driver name to adv7511-v4l2
->>>>>>>>>
->>>>>>>>> I couldn't reproduce the error, my tree looks the same:
->>>>>>>>>
->>>>>>>>> [I] koike@floko ~/m/o/linux> git log --oneline
->>>>>>>>> e3345155c8ed (HEAD) media: vimc: Fix gpf in rmmod path when stream is
->>>>>>>>> active
->>>>>>>>> 43e9e2fe761f media: vimc: Collapse component structure into a single
->>>>>>>>> monolithic driver
->>>>>>>>> 8a6d0b9adde0 media: vimc: move private defines to a common header
->>>>>>>>> 97299a303532 (media/master) media: Remove dev_err() usage after
->>>>>>>>> platform_get_irq()
->>>>>>>>> 25a3d6bac6b9 media: adv7511/cobalt: rename driver name to adv7511-v4l2
->>>>>>>>
->>>>>>>> Thanks Helen for trying to reproduce and sharing the result.
->>>>>>>
->>>>>>> Me and Helen found out what is the problem. If you follow this call trace:
->>>>>>>
->>>>>>> vimc_ent_sd_unregister()
->>>>>>> v4l2_device_unregister_subdev()
->>>>>>> v4l2_subdev_release()
->>>>>>>
->>>>>>> You'll notice that this last function calls the `release` callback
->>>>>>> implementation of the subdevice. For instance, the `release` of
->>>>>>> vimc-sensor is this one:
->>>>>>>
->>>>>>> static void vimc_sen_release(struct v4l2_subdev *sd)
->>>>>>> {
->>>>>>>      struct vimc_sen_device *vsen =
->>>>>>>                  container_of(sd, struct vimc_sen_device, sd);
->>>>>>>
->>>>>>>      v4l2_ctrl_handler_free(&vsen->hdl);
->>>>>>>      tpg_free(&vsen->tpg);
->>>>>>>      kfree(vsen);
->>>>>>> }
->>>>>>>
->>>>>>> And then you can see that `vsen` has been freed. Back to
->>>>>>> vimc_ent_sd_unregister(), after v4l2_device_unregister_subdev(), the
->>>>>>> function will call vimc_pads_cleanup(). This is basically a
->>>>>>> kfree(ved->pads), but `ved` has just been freed at
->>>>>>> v4l2_subdev_release(), producing a memory fault.
->>>>>>>
->>>>>>> To fix that, we found two options:
->>>>>>>
->>>>>>> - place the kfree(ved->pads) inside the release callback of each
->>>>>>> subdevice and removing vimc_pads_cleanup() from
->>>>>>> vimc_ent_sd_unregister()
->>>>>>> - use a auxiliary variable to hold the address of the pads, for instance:
->>>>>>>
->>>>>>> void vimc_ent_sd_unregister(...)
->>>>>>> {
->>>>>>>       struct media_pad *pads = ved->pads;
->>>>>>>       ...
->>>>>>>       vimc_pads_cleanup(pads);
->>>>>>> }
->>>>>>>
->>>>>>>
->>>>>>
->>>>>> I fixed a problem in the thirds patch. vimc-capture uses the first
->>>>>> approach - placing the kfree(ved->pads) inside the release callback.
->>>>>>
->>>>>> I am debugging another such problem in unbind path while streaming.
->>>>>> I am working on v2 and I will look for the rmmod problem and fix it.
->>>>>>
->>>>>> thanks again for testing and finding the root cause.
->>>>>> -- Shuah
->>>>>
->>>>> Hi Andre,
->>>>>
->>>>> Here is what's happening.
->>>>>
->>>>> Before this change, you can't really do rmmod vimc, because vimc is in
->>>>> use by other component drivers. With the collapse, now you can actually
->>>>> do rmmod on vimc and this problem in vimc_ent_sd_unregister() that frees
->>>>> pads first and the does v4l2_device_unregister_subdev().
->>>>>
->>>>> I fixed this in the 3/3 patch. I can reproduce the problem with patches 1 and 2, and patch 3 fixes it.
->>>>>
->>>>> Did you test with the third patch in this series?
->>>>
->>>> yes, we tested with 3/3, but the new problem now is when doing the following
->>>> in this order:
->>>>
->>>>      v4l2_device_unregister_subdev(sd);
->>>>      vimc_pads_cleanup(ved->pads);
->>>>
->>>>
->>>> v4l2_device_unregister_subdev() calls the release function of the subdevice that
->>>> frees the ved object, so ved->pads is not valid anymore. That is why André suggested
->>>> a temporary variable to hold ved->pads and to be able to free it later:
->>>>
->>>>      struct media_pad *pads = ved->pads;
->>>>
->>>>      v4l2_device_unregister_subdev(sd);
->>>>      vimc_pads_cleanup(pads); // So we don't use the ved object here anymore.
->>>
->>> Can't you simply call vimc_pads_cleanup() in the release function of the
->>> subdevice before freeing the ved object ?
->>
->> Yes we can, that is the other option Andre suggested.
->> The  advantage of doing it inside vimc_ent_sd_unregister() is that
->> who allocated the memory in the first place was vimc_ent_sd_register(), and also,
->> this is a common code to all subdevs, so letting it in vimc_ent_sd_unregister()
->> will make sure no subdevs ever forget to free this memory.
->> But saving the pointer to a variable to free it later is not that pretty
->> either.
-> 
-> The release function of a subdevice is meant to be used as a destructor,
-> it should free all the resources allocated for the subdevice. Your
-> subdevices (such as vimc_sca_device) are essentially objects derived
-> from a common vimc subdevice object (vimc_ent_device), I thus suggest
-> providing four functions to deal with vimc_ent_device:
-> 
-> - vimc_ent_sd_init() to initialise the base vimc_ent_device object (most
->    of the code is currently in vimc_ent_sd_register()), to be called by
->    the init function of each subdevice type (the bind functions in the
->    current code)
-> 
-> - vimc_ent_sd_register() to only register the vimc_ent_device once it
->    has been fully initialised
-> 
-> - vimc_end_sd_unregister() to unregister the vimc_ent_device
-> 
-> - vimc_end_sd_cleanup() to free the resources allocated by
->    vimc_ent_sd_init() (including calling vimc_pads_cleanup()), to be
->    called by the subdevice release handler
-> 
-
-We kind of mostly there. We have release handlers free'ing resources
-with an exception of pads. I changed the release handlers to release
-pads and with a comment where pads_init is called to say that pads
-should be released from the release handler.
-
-vimc-capture does this already. I changed the rest. rmmod works with
-no issues now. rmmod when streaming comes back with in use.
-
-There is one outstanding issue remaining in unbind path. I will fix
-that in a separate patch. I decided to collapse the first two patches
-into one and added common defines (vimc_device and vimc_ent_config) to
-vimc-common.h based on our discussion.
-
-I will send the patch series out soon.
-
-thanks,
--- Shuah
+Hi,  Light
 
 
+On Tue, Aug 13, 2019 at 1:53 AM Light Hsieh <light.hsieh@mediatek.com> wrote:
+>
+> From: Light Hsieh <light.hsieh@mediatek.com>
+>
+> Refine mtk_pinconf_set()/mtk_pinconf_get() for backward compatibility to
+> previous Mediatek's bias-pull usage.
+> In PINCTRL_MTK that use pinctrl-mtk-common.c, bias-pull setting for pins
+> with 2 pull resistors can be specified as value for bias-pull-up and
+> bias-pull-down. For example:
+>     bias-pull-up = <MTK_PUPD_SET_R1R0_00>;
+>     bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
+>     bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
+>     bias-pull-up = <MTK_PUPD_SET_R1R0_11>;
+>     bias-pull-down = <MTK_PUPD_SET_R1R0_00>;
+>     bias-pull-down = <MTK_PUPD_SET_R1R0_01>;
+>     bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
+>     bias-pull-down = <MTK_PUPD_SET_R1R0_11>;
+>
+> On the other hand, PINCTRL_MTK_PARIS use customized properties
+> "mediatek,pull-up-adv" and "mediatek,pull-down-adv" to specify bias-pull
+> setting for pins with 2 pull resistors.
+> This introduce in-compatibility in device tree and increatse porting
+> effort to Mediatek's customer that had already used PINCTRL_MTK version.
+> Besides, if customers are not awared of this change and still write devicetree
+> for PINCTRL_MTK version, they may encounter runtime failure with pinctrl and
+> spent time to debug.
+>
+> This patch add backward compatible to previous Mediatek's bias-pull usage
+> so that Mediatek's customer need not use a new devicetree property name.
+> The rationale is that: changing driver implemenation had better leave
+> interface unchanged.
+>
+> Change-Id: I8ea8f09278acc492ba04771826eaadb70224cd51
 
-thanks,
--- Shuah
+remove Change-Id
 
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-mt6765.c        |   4 +-
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 285 +++++++++++++++++++++++
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |  11 +
+>  drivers/pinctrl/mediatek/pinctrl-paris.c         |  49 ++--
+>  4 files changed, 327 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6765.c b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> index bada37f..315aebd 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> @@ -1074,8 +1074,8 @@
+>         .nbase_names = ARRAY_SIZE(mt6765_pinctrl_register_base_names),
+>         .bias_disable_set = mtk_pinconf_bias_disable_set,
+>         .bias_disable_get = mtk_pinconf_bias_disable_get,
+> -       .bias_set = mtk_pinconf_bias_set,
+> -       .bias_get = mtk_pinconf_bias_get,
+> +       .bias_set = mtk_pinconf_bias_set_combo,
+> +       .bias_get = mtk_pinconf_bias_get_combo,
+
+base on the below context, I guess you should mean  .bias_set_combo =
+mtk_pinconf_bias_set_combo and  .bias_get_combo =
+mtk_pinconf_bias_get_combo.
+
+>         .drive_set = mtk_pinconf_drive_set_direct_val,
+>         .drive_get = mtk_pinconf_drive_get_direct_val,
+>         .adv_pull_get = mtk_pinconf_adv_pull_get,
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> index 23a9529..dab8418 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> @@ -13,6 +13,8 @@
+>  #include <linux/io.h>
+>  #include <linux/of_irq.h>
+>
+> +#include <dt-bindings/pinctrl/mt65xx.h>
+
+include #include <dt-bindings/pinctrl/mt65xx.h> in pinctrl-paris.c,
+common-v2.c is supposed dt-binding and chip independence.
+
+> +
+>  #include "mtk-eint.h"
+>  #include "pinctrl-mtk-common-v2.h"
+>
+> @@ -205,6 +207,20 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
+>         return 0;
+>  }
+>
+> +void mtk_hw_set_value_no_lookup(struct mtk_pinctrl *hw,
+> +                               const struct mtk_pin_desc *desc,
+> +                               int value, struct mtk_pin_field *pf)
+> +{
+> +       if (value < 0 || value > pf->mask)
+> +               return;
+> +
+> +       if (!pf->next)
+> +               mtk_rmw(hw, pf->index, pf->offset, pf->mask << pf->bitpos,
+> +                       (value & pf->mask) << pf->bitpos);
+> +       else
+> +               mtk_hw_write_cross_field(hw, pf, value);
+> +}
+> +
+>  int mtk_hw_get_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
+>                      int field, int *value)
+>  {
+> @@ -224,6 +240,17 @@ int mtk_hw_get_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
+>         return 0;
+>  }
+>
+> +void mtk_hw_get_value_no_lookup(struct mtk_pinctrl *hw,
+> +                               const struct mtk_pin_desc *desc,
+> +                               int *value, struct mtk_pin_field *pf)
+> +{
+> +       if (!pf->next)
+> +               *value = (mtk_r32(hw, pf->index, pf->offset)
+> +                         >> pf->bitpos) & pf->mask;
+> +       else
+> +               mtk_hw_read_cross_field(hw, pf, value);
+> +}
+> +
+>  static int mtk_xt_find_eint_num(struct mtk_pinctrl *hw, unsigned long eint_n)
+>  {
+>         const struct mtk_pin_desc *desc;
+> @@ -516,6 +543,264 @@ int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
+>         return 0;
+>  }
+>
+> +/* Combo for the following pull register type:
+> + * 1. PU + PD
+> + * 2. PULLSEL + PULLEN
+> + * 3. PUPD + R0 + R1
+> + */
+> +int mtk_pinconf_bias_set_pu_pd(struct mtk_pinctrl *hw,
+> +                               const struct mtk_pin_desc *desc,
+> +                               u32 pullup, u32 arg)
+> +{
+> +       struct mtk_pin_field pf;
+> +       int err = -EINVAL;
+
+Initialization of err is not needed because mtk_hw_pin_field_lookup would do it.
+
+> +       int pu, pd;
+> +
+> +       err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PU, &pf);
+> +       if (err)
+> +               goto out;
+> +
+> +       if (arg == MTK_DISABLE) {
+> +               pu = 0;
+> +               pd = 0;
+> +       } else if ((arg == MTK_ENABLE) && pullup) {
+> +               pu = 1;
+> +               pd = 0;
+> +       } else if ((arg == MTK_ENABLE) && !pullup) {
+> +               pu = 0;
+> +               pd = 1;
+> +       } else {
+> +               goto out;
+> +       }
+> +
+> +       mtk_hw_set_value_no_lookup(hw, desc, pu, &pf);
+> +
+> +       err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PD, &pf);
+> +       if (err)
+> +               goto out;
+> +
+> +       mtk_hw_set_value_no_lookup(hw, desc, pd, &pf);
+> +
+I think we always can merge merge both mtk_hw_pin_field_lookup and
+mtk_hw_set_value_no_lookup into mtk_hw_set_value, or is there
+something I am missing out?
+
+> +out:
+> +       return err;
+> +}
+> +
+> +int mtk_pinconf_bias_set_pullsel_pullen(struct mtk_pinctrl *hw,
+> +                               const struct mtk_pin_desc *desc,
+> +                               u32 pullup, u32 arg)
+> +{
+> +       struct mtk_pin_field pf;
+> +       int err = -EINVAL, enable;
+ditto
+
+> +
+> +       err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PULLEN, &pf);
+> +       if (err)
+> +               goto out;
+> +
+> +       if (arg == MTK_DISABLE)
+> +               enable = 0;
+> +       else if (arg == MTK_ENABLE)
+> +               enable = 1;
+> +       else
+> +               goto out;
+> +
+> +       mtk_hw_set_value_no_lookup(hw, desc, enable, &pf);
+> +
+> +       err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PULLSEL, &pf);
+> +       if (err)
+> +               goto out;
+> +       mtk_hw_set_value_no_lookup(hw, desc, pullup, &pf);
+> +
+> +out:
+> +       return err;
+> +}
+> +
+> +int mtk_pinconf_bias_set_pupd_r1_r0(struct mtk_pinctrl *hw,
+> +                               const struct mtk_pin_desc *desc,
+> +                               u32 pullup, u32 arg)
+> +{
+> +       struct mtk_pin_field pf;
+> +       int err = -EINVAL;
+ditto
+
+> +       int r0, r1;
+> +
+> +       err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PUPD, &pf);
+> +       if (err)
+> +               goto out;
+> +
+> +       if ((arg == MTK_DISABLE) || (arg == MTK_PUPD_SET_R1R0_00)) {
+> +               pullup = 0;
+> +               r0 = 0;
+> +               r1 = 0;
+> +       } else if (arg == MTK_PUPD_SET_R1R0_01) {
+> +               r0 = 1;
+> +               r1 = 0;
+> +       } else if (arg == MTK_PUPD_SET_R1R0_10) {
+> +               r0 = 0;
+> +               r1 = 1;
+> +       } else if (arg == MTK_PUPD_SET_R1R0_11) {
+> +               r0 = 1;
+> +               r1 = 1;
+> +       } else
+> +               goto out;
+> +
+> +       /* MTK HW PUPD bit: 1 for pull-down, 0 for pull-up */
+> +       mtk_hw_set_value_no_lookup(hw, desc, !pullup, &pf);
+> +
+> +       err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_R0, &pf);
+> +       if (err)
+> +               goto out;
+> +       mtk_hw_set_value_no_lookup(hw, desc, r0, &pf);
+> +
+> +       err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_R1, &pf);
+> +       if (err)
+> +               goto out;
+> +       mtk_hw_set_value_no_lookup(hw, desc, r1, &pf);
+> +
+> +out:
+> +       return err;
+> +}
+> +
+> +int mtk_pinconf_bias_get_pu_pd(struct mtk_pinctrl *hw,
+> +                               const struct mtk_pin_desc *desc,
+> +                               u32 *pullup, u32 *enable)
+> +{
+> +       struct mtk_pin_field pf;
+> +       int err = -EINVAL;
+ditto
+
+> +       int pu, pd;
+> +
+> +       err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PU, &pf);
+> +       if (err)
+> +               goto out;
+> +
+> +       mtk_hw_get_value_no_lookup(hw, desc, &pu, &pf);
+> +
+> +       err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PD, &pf);
+> +       if (err)
+> +               goto out;
+> +
+> +       mtk_hw_get_value_no_lookup(hw, desc, &pd, &pf);
+> +
+> +       if (pu == 0 && pd == 0) {
+> +               *pullup = 0;
+> +               *enable = MTK_DISABLE;
+> +       } else if (pu == 1 && pd == 0) {
+> +               *pullup = 1;
+> +               *enable = MTK_ENABLE;
+> +       } else if (pu == 0 && pd == 1) {
+> +               *pullup = 0;
+> +               *enable = MTK_ENABLE;
+> +       } else {
+> +               err = -EINVAL;
+> +               goto out;
+> +       }
+> +
+> +out:
+> +       return err;
+> +}
+> +
+> +int mtk_pinconf_bias_get_pullsel_pullen(struct mtk_pinctrl *hw,
+> +                               const struct mtk_pin_desc *desc,
+> +                               u32 *pullup, u32 *enable)
+> +{
+> +       struct mtk_pin_field pf;
+> +       int err = -EINVAL;
+ditto
+
+> +
+> +       err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PULLSEL, &pf);
+> +       if (err)
+> +               goto out;
+> +
+> +       mtk_hw_get_value_no_lookup(hw, desc, pullup, &pf);
+> +
+> +       err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PULLEN, &pf);
+> +       if (err)
+> +               goto out;
+> +
+> +       mtk_hw_get_value_no_lookup(hw, desc, enable, &pf);
+> +
+> +out:
+> +       return err;
+> +}
+> +
+> +int mtk_pinconf_bias_get_pupd_r1_r0(struct mtk_pinctrl *hw,
+> +                               const struct mtk_pin_desc *desc,
+> +                               u32 *pullup, u32 *enable)
+> +{
+> +       struct mtk_pin_field pf;
+> +       int err = -EINVAL;
+ditto
+
+> +       int r0, r1;
+> +
+> +       err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PUPD, &pf);
+> +       if (err)
+> +               goto out;
+> +
+> +       /* MTK HW PUPD bit: 1 for pull-down, 0 for pull-up */
+> +       mtk_hw_get_value_no_lookup(hw, desc, pullup, &pf);
+> +       *pullup = !(*pullup);
+> +
+> +       err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_R0, &pf);
+> +       if (err)
+> +               goto out;
+> +       mtk_hw_get_value_no_lookup(hw, desc, &r0, &pf);
+> +
+> +       err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_R1, &pf);
+> +       if (err)
+> +               goto out;
+> +       mtk_hw_get_value_no_lookup(hw, desc, &r1, &pf);
+> +
+> +       if ((r1 == 0) && (r0 == 0))
+> +               *enable = MTK_PUPD_SET_R1R0_00;
+> +       else if ((r1 == 0) && (r0 == 1))
+> +               *enable = MTK_PUPD_SET_R1R0_01;
+> +       else if ((r1 == 1) && (r0 == 0))
+> +               *enable = MTK_PUPD_SET_R1R0_10;
+> +       else if ((r1 == 1) && (r0 == 1))
+> +               *enable = MTK_PUPD_SET_R1R0_11;
+> +       else
+> +               goto out;
+> +
+> +out:
+> +       return err;
+> +}
+> +
+> +int mtk_pinconf_bias_set_combo(struct mtk_pinctrl *hw,
+> +                               const struct mtk_pin_desc *desc,
+> +                               u32 pullup, u32 arg)
+> +{
+> +       int err;
+> +
+> +       err = mtk_pinconf_bias_set_pu_pd(hw, desc, pullup, arg);
+> +       if (!err)
+> +               goto out;
+> +
+> +       err = mtk_pinconf_bias_set_pullsel_pullen(hw, desc, pullup, arg);
+> +       if (!err)
+> +               goto out;
+> +
+> +       err = mtk_pinconf_bias_set_pupd_r1_r0(hw, desc, pullup, arg);
+> +
+> +out:
+> +       return err;
+> +}
+> +
+> +int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
+> +                             const struct mtk_pin_desc *desc,
+> +                             u32 *pullup, u32 *enable)
+> +{
+> +       int err;
+> +
+> +       err = mtk_pinconf_bias_get_pu_pd(hw, desc, pullup, enable);
+> +       if (!err)
+> +               goto out;
+> +
+> +       err = mtk_pinconf_bias_get_pullsel_pullen(hw, desc, pullup, enable);
+> +       if (!err)
+> +               goto out;
+> +
+> +       err = mtk_pinconf_bias_get_pupd_r1_r0(hw, desc, pullup, enable);
+> +
+> +out:
+> +       return err;
+> +}
+> +
+>  /* Revision 0 */
+>  int mtk_pinconf_drive_set(struct mtk_pinctrl *hw,
+>                           const struct mtk_pin_desc *desc, u32 arg)
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> index b3bada0..a13dcae 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> @@ -216,6 +216,11 @@ struct mtk_pin_soc {
+>         int (*bias_get)(struct mtk_pinctrl *hw,
+>                         const struct mtk_pin_desc *desc, bool pullup, int *res);
+>
+> +       int (*bias_set_combo)(struct mtk_pinctrl *hw,
+> +                       const struct mtk_pin_desc *desc, u32 pullup, u32 arg);
+> +       int (*bias_get_combo)(struct mtk_pinctrl *hw,
+> +                       const struct mtk_pin_desc *desc, u32 *pullup, u32 *arg);
+> +
+>         int (*drive_set)(struct mtk_pinctrl *hw,
+>                          const struct mtk_pin_desc *desc, u32 arg);
+>         int (*drive_get)(struct mtk_pinctrl *hw,
+> @@ -277,6 +282,12 @@ int mtk_pinconf_bias_set_rev1(struct mtk_pinctrl *hw,
+>  int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
+>                               const struct mtk_pin_desc *desc, bool pullup,
+>                               int *res);
+> +int mtk_pinconf_bias_set_combo(struct mtk_pinctrl *hw,
+> +                               const struct mtk_pin_desc *desc,
+> +                               u32 pullup, u32 enable);
+> +int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
+> +                             const struct mtk_pin_desc *desc,
+> +                             u32 *pullup, u32 *enable);
+>
+>  int mtk_pinconf_drive_set(struct mtk_pinctrl *hw,
+>                           const struct mtk_pin_desc *desc, u32 arg);
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> index bbe3f8a..0a9440a 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> @@ -79,28 +79,38 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
+>         struct mtk_pinctrl *hw = pinctrl_dev_get_drvdata(pctldev);
+>         u32 param = pinconf_to_config_param(*config);
+>         int err, reg, ret = 1;
+> +       int pullup;
+>         const struct mtk_pin_desc *desc;
+>
+>         desc = (const struct mtk_pin_desc *)&hw->soc->pins[pin];
+>
+>         switch (param) {
+>         case PIN_CONFIG_BIAS_DISABLE:
+> -               if (hw->soc->bias_disable_get)
+> -                       err = hw->soc->bias_disable_get(hw, desc, &ret);
+> -               else
+> -                       err = -ENOTSUPP;
+> -               break;
+>         case PIN_CONFIG_BIAS_PULL_UP:
+> -               if (hw->soc->bias_get)
+> -                       err = hw->soc->bias_get(hw, desc, 1, &ret);
+> -               else
+> -                       err = -ENOTSUPP;
+> -               break;
+>         case PIN_CONFIG_BIAS_PULL_DOWN:
+> -               if (hw->soc->bias_get)
+> -                       err = hw->soc->bias_get(hw, desc, 0, &ret);
+> -               else
+
+The above changes would break MT8183 driver, so we need to consider
+them along with MT8183 pinctrl and then move the patchset forward.
+
+> +               if (hw->soc->bias_get_combo) {
+> +                       err = hw->soc->bias_get_combo(hw, desc, &pullup, &ret);
+> +                       if (err)
+> +                               goto out;
+> +                       if (param == PIN_CONFIG_BIAS_DISABLE) {
+> +                               if (ret == MTK_PUPD_SET_R1R0_00)
+> +                                       ret = MTK_DISABLE;
+> +                       } else if (param == PIN_CONFIG_BIAS_PULL_UP) {
+> +                               /* When desire to get pull-up value,
+> +                                * return error if current setting is pull-down
+> +                                */
+> +                               if (!pullup)
+> +                                       err = -EINVAL;
+> +                       } else if (param == PIN_CONFIG_BIAS_PULL_DOWN) {
+> +                               /* When desire to get pull-down value,
+> +                                * return error if current setting is pull-up
+> +                                */
+> +                               if (pullup)
+> +                                       err = -EINVAL;
+> +                       }
+> +               } else {
+>                         err = -ENOTSUPP;
+> +               }
+>                 break;
+>         case PIN_CONFIG_SLEW_RATE:
+>                 err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_SR, &ret);
+> @@ -188,20 +198,20 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+>
+>         switch ((u32)param) {
+>         case PIN_CONFIG_BIAS_DISABLE:
+> -               if (hw->soc->bias_disable_set)
+> -                       err = hw->soc->bias_disable_set(hw, desc);
+> +               if (hw->soc->bias_set_combo)
+> +                       err = hw->soc->bias_set_combo(hw, desc, 0, MTK_DISABLE);
+>                 else
+>                         err = -ENOTSUPP;
+>                 break;
+>         case PIN_CONFIG_BIAS_PULL_UP:
+> -               if (hw->soc->bias_set)
+> -                       err = hw->soc->bias_set(hw, desc, 1);
+> +               if (hw->soc->bias_set_combo)
+> +                       err = hw->soc->bias_set_combo(hw, desc, 1, arg);
+>                 else
+>                         err = -ENOTSUPP;
+>                 break;
+>         case PIN_CONFIG_BIAS_PULL_DOWN:
+> -               if (hw->soc->bias_set)
+> -                       err = hw->soc->bias_set(hw, desc, 0);
+> +               if (hw->soc->bias_set_combo)
+> +                       err = hw->soc->bias_set_combo(hw, desc, 0, arg);
+>                 else
+>                         err = -ENOTSUPP;
+>                 break;
+> @@ -892,7 +902,6 @@ int mtk_paris_pinctrl_probe(struct platform_device *pdev,
+>         return 0;
+>  }
+>
+> -
+remove the nunessary empty line
+
+>  static int mtk_paris_pinctrl_suspend(struct device *device)
+>  {
+>         struct mtk_pinctrl *pctl = dev_get_drvdata(device);
+> --
+> 1.8.1.1.dirty
+>
