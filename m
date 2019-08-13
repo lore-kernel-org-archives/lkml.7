@@ -2,74 +2,108 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A419C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7D9C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 044E920843
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED1A52064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565721408;
-	bh=5dAs59udVWVmSxeGs4RyVGtbQHZxy6EDnItvs6BkeKI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nB64FrPVtC9aLqNWjvQBiD4wasH449m2fCgtTNGe8xRm5JuX/pBGPappSYsr3NeXA
-	 kZX+nXH1nekHLfWNzLjvotssg6bIi72nMnuiWrD/+m4g/k+KbjMJZU5G4wM/J8xZa9
-	 0HLv/GwJKIienoQ2ETka9PfmqDTQRq1hkkyRaT/k=
+	s=default; t=1565721510;
+	bh=e5qRrT3DFaqR3AvlWF6Q+ezhwd04lesrdhcTIbRJY0o=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=YjxjuDxl/4CRAZoZhmtaspQlhOHfj3f70IvmG1DRwoQRys8RKfqaf6Nu1N01JtSho
+	 8Bjd+PcKJlZf2duwMwOvBfajzK734PK3BmxX4+F2rXDoE1zIIEpfRcYxvU5hIS2hlT
+	 GysJmZ6HsU3QYuqo/tsckrse4INKyPsaAPNK98Ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfHMSgq (ORCPT
+        id S1727103AbfHMSi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 14:36:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35444 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 14:38:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725923AbfHMSgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 14:36:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726295AbfHMSi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 14:38:26 -0400
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDAB820665;
-        Tue, 13 Aug 2019 18:36:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B10212064A;
+        Tue, 13 Aug 2019 18:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565721405;
-        bh=5dAs59udVWVmSxeGs4RyVGtbQHZxy6EDnItvs6BkeKI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ktAMofz2S1VxEEisTpYIz0zNxtCRwBDsA20vw8yuok6dP/2gNsz/irtBWkmfYAvpW
-         CHeBuzl/C2nUDC+D0qqmr3XV6V7j4+VkPBp2JAbFhEfhU3wLlKNnM4Au9XKpd/DGil
-         sNZfZF3KB02r0QKdoJRfMamJdpLvycLk4SOvbDmY=
-Date:   Tue, 13 Aug 2019 20:36:42 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     stable@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 0/3 5.2-stable] Sync mappings in vmalloc/ioremap areas
-Message-ID: <20190813183642.GC6582@kroah.com>
-References: <20190813152814.5354-1-joro@8bytes.org>
+        s=default; t=1565721505;
+        bh=e5qRrT3DFaqR3AvlWF6Q+ezhwd04lesrdhcTIbRJY0o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KImMVCTm2AafHdnUNYJ9siC/jp8uJ3nl6xtNWuAcx3qwrDXhHPrUKAYS3Y++0+PfF
+         b5S6pI9hyiwv6eJEPMeBMCCBhk/kwqKpTTAZHbbxH2n0ml4sVH8r66xTRX3cUg2fCf
+         c7IDpUYEDrPDCtDUjgDlw2rQNcMPROOsWqaqPX+M=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: [PATCH] devicetree: Expose dtbs_check and dt_binding_check some more
+Date:   Tue, 13 Aug 2019 11:38:25 -0700
+Message-Id: <20190813183825.9605-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813152814.5354-1-joro@8bytes.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 05:28:11PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> Backport commits from upstream to fix a data corruption
-> issue that gets exposed when using PTI on x86-32.
-> 
-> Please consider them for inclusion into stable-5.2.
+It wasn't obvious that this was a command to run based on 'make help',
+so add it to the top-level help for devicetree builds. Also, add an
+example to the documentation to show that db_binding_check can be run
+with DT_SCHEMA_FILES= to only check one schema file instead of all of
+them.
 
-Thanks for these.  Based on the Fixes: tags on the commits, I've taken
-them all the way back to 4.4.y.
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: <linux-kbuild@vger.kernel.org>
+Cc: <devicetree@vger.kernel.org>
+Cc: <linux-doc@vger.kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
 
-greg k-h
+I didn't find this sent, so sending again!
+
+ Documentation/devicetree/writing-schema.md | 1 +
+ Makefile                                   | 6 ++++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/writing-schema.md b/Documentation/devicetree/writing-schema.md
+index dc032db36262..17ad67887fde 100644
+--- a/Documentation/devicetree/writing-schema.md
++++ b/Documentation/devicetree/writing-schema.md
+@@ -120,6 +120,7 @@ This will first run the `dt_binding_check` which generates the processed schema.
+ It is also possible to run checks with a single schema file by setting the
+ 'DT_SCHEMA_FILES' variable to a specific schema file.
+ 
++`make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/trivial-devices.yaml`
+ `make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/trivial-devices.yaml`
+ 
+ 
+diff --git a/Makefile b/Makefile
+index 9be5834073f8..96bb28aa1c46 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1503,8 +1503,10 @@ help:
+ 	@echo  ''
+ 	@$(if $(dtstree), \
+ 		echo 'Devicetree:'; \
+-		echo '* dtbs            - Build device tree blobs for enabled boards'; \
+-		echo '  dtbs_install    - Install dtbs to $(INSTALL_DTBS_PATH)'; \
++		echo '* dtbs             - Build device tree blobs for enabled boards'; \
++		echo '  dtbs_install     - Install dtbs to $(INSTALL_DTBS_PATH)'; \
++		echo '  dt_binding_check - Validate device tree binding documents'; \
++		echo '  dtbs_check       - Validate device tree source files';\
+ 		echo '')
+ 
+ 	@echo 'Userspace tools targets:'
+-- 
+Sent by a computer through tubes
+
