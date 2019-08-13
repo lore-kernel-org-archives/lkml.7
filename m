@@ -6,37 +6,36 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D19C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83283C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7FFE206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F45420842
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfHMItg (ORCPT
+        id S1727427AbfHMIuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 04:49:36 -0400
-Received: from mail02.asahi-net.or.jp ([202.224.55.14]:49533 "EHLO
-        mail02.asahi-net.or.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfHMItg (ORCPT
+        Tue, 13 Aug 2019 04:50:11 -0400
+Received: from mail03.asahi-net.or.jp ([202.224.55.15]:44730 "EHLO
+        mail03.asahi-net.or.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727307AbfHMIuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 04:49:36 -0400
+        Tue, 13 Aug 2019 04:50:11 -0400
 Received: from h61-195-96-97.vps.ablenet.jp (h61-195-96-97.ablenetvps.ne.jp [61.195.96.97])
         (Authenticated sender: PQ4Y-STU)
-        by mail02.asahi-net.or.jp (Postfix) with ESMTPA id 42D065864E;
-        Tue, 13 Aug 2019 17:49:33 +0900 (JST)
+        by mail03.asahi-net.or.jp (Postfix) with ESMTPA id 103A856329;
+        Tue, 13 Aug 2019 17:50:09 +0900 (JST)
 Received: from yo-satoh-debian.ysato.ml (ZM005235.ppp.dion.ne.jp [222.8.5.235])
-        by h61-195-96-97.vps.ablenet.jp (Postfix) with ESMTPSA id 9F5AA240085;
-        Tue, 13 Aug 2019 17:49:32 +0900 (JST)
-Date:   Tue, 13 Aug 2019 17:49:29 +0900
-Message-ID: <87a7cdpi06.wl-ysato@users.sourceforge.jp>
+        by h61-195-96-97.vps.ablenet.jp (Postfix) with ESMTPSA id 52B14240085;
+        Tue, 13 Aug 2019 17:50:09 +0900 (JST)
+Date:   Tue, 13 Aug 2019 17:50:08 +0900
+Message-ID: <878srxphz3.wl-ysato@users.sourceforge.jp>
 From:   Yoshinori Sato <ysato@users.sourceforge.jp>
-To:     Guenter Roeck <linux@roeck-us.net>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Cc:     Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] sh: Drop -Werror from kernel Makefile
-In-Reply-To: <1564971263-21562-1-git-send-email-linux@roeck-us.net>
-References: <1564971263-21562-1-git-send-email-linux@roeck-us.net>
+        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] sh: kernel: hw_breakpoint: Fix missing break in switch statement
+In-Reply-To: <20190810045944.GA13815@embeddedor>
+References: <20190810045944.GA13815@embeddedor>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL/10.8 EasyPG/1.0.0 Emacs/25.1
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -47,41 +46,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 05 Aug 2019 11:14:23 +0900,
-Guenter Roeck wrote:
+On Sat, 10 Aug 2019 13:59:44 +0900,
+Gustavo A. R. Silva wrote:
 > 
-> Since commit a035d552a93b ("Makefile: Globally enable fall-through
-> warning"), all sh builds fail with errors such as
+> Add missing break statement in order to prevent the code from
+> erroneously falling through to case SH_BREAKPOINT_WRITE.
 > 
-> arch/sh/kernel/disassemble.c: In function 'print_sh_insn':
-> arch/sh/kernel/disassemble.c:478:8: error: this statement may fall through
-> 
-> Since this effectively disables all build and boot tests for the
-> architecture, let's drop -Werror from the sh kernel Makefile until
-> the problems are fixed.
-> 
-> Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> Fixes: 09a072947791 ("sh: hw-breakpoints: Add preliminary support for SH-4A UBC.")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->  arch/sh/kernel/Makefile | 2 --
->  1 file changed, 2 deletions(-)
 > 
-> diff --git a/arch/sh/kernel/Makefile b/arch/sh/kernel/Makefile
-> index 59673f8a3379..ef65f0625c6c 100644
-> --- a/arch/sh/kernel/Makefile
-> +++ b/arch/sh/kernel/Makefile
-> @@ -47,5 +47,3 @@ obj-$(CONFIG_DWARF_UNWINDER)	+= dwarf.o
->  obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_callchain.o
->  obj-$(CONFIG_DMA_NONCOHERENT)	+= dma-coherent.o
->  obj-$(CONFIG_HAVE_HW_BREAKPOINT)		+= hw_breakpoint.o
-> -
-> -ccflags-y := -Werror
+> If no one cares, I'll apply this to my tree and queue it up for 5.3-rc4.
+> 
+>  arch/sh/kernel/hw_breakpoint.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/sh/kernel/hw_breakpoint.c b/arch/sh/kernel/hw_breakpoint.c
+> index 3bd010b4c55f..f10d64311127 100644
+> --- a/arch/sh/kernel/hw_breakpoint.c
+> +++ b/arch/sh/kernel/hw_breakpoint.c
+> @@ -157,6 +157,7 @@ int arch_bp_generic_fields(int sh_len, int sh_type,
+>  	switch (sh_type) {
+>  	case SH_BREAKPOINT_READ:
+>  		*gen_type = HW_BREAKPOINT_R;
+> +		break;
+>  	case SH_BREAKPOINT_WRITE:
+>  		*gen_type = HW_BREAKPOINT_W;
+>  		break;
 > -- 
-> 2.7.4
+> 2.22.0
 > 
 
 Applied sh-next.
-Sorry too late replay.
+Thanks.
 
 -- 
 Yosinori Sato
