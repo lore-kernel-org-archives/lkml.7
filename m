@@ -6,60 +6,67 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4937C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE65C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D6B20840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27BCD20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfHMJea (ORCPT
+        id S1727851AbfHMJfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:34:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36650 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727305AbfHMJea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:34:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D1578ABD0;
-        Tue, 13 Aug 2019 09:34:28 +0000 (UTC)
-Subject: Re: [PATCH V3 3/3] genirq/affinity: Spread vectors on node according
- to nr_cpu ratio
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Jon Derrick <jonathan.derrick@intel.com>
-References: <20190813081447.1396-1-ming.lei@redhat.com>
- <20190813081447.1396-4-ming.lei@redhat.com>
-From:   Daniel Wagner <dwagner@suse.de>
-Message-ID: <7579c5b8-3992-e685-d559-98e9b0f7baad@suse.de>
-Date:   Tue, 13 Aug 2019 11:34:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 13 Aug 2019 05:35:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:60794 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727107AbfHMJfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 05:35:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6E7C337;
+        Tue, 13 Aug 2019 02:35:15 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D48873F706;
+        Tue, 13 Aug 2019 02:35:14 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 10:35:12 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH v3 3/3] mm: kmemleak: Use the memory pool for early
+ allocations
+Message-ID: <20190813093512.GE62772@arrakis.emea.arm.com>
+References: <20190812160642.52134-1-catalin.marinas@arm.com>
+ <20190812160642.52134-4-catalin.marinas@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190813081447.1396-4-ming.lei@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812160642.52134-4-catalin.marinas@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Aug 12, 2019 at 05:06:42PM +0100, Catalin Marinas wrote:
+> @@ -466,9 +419,13 @@ static struct kmemleak_object *mem_pool_alloc(gfp_t gfp)
+>  	struct kmemleak_object *object;
+>  
+>  	/* try the slab allocator first */
+> -	object = kmem_cache_alloc(object_cache, gfp_kmemleak_mask(gfp));
+> -	if (object)
+> -		return object;
+> +	if (object_cache) {
+> +		object = kmem_cache_alloc(object_cache, gfp_kmemleak_mask(gfp));
+> +		if (object)
+> +			return object;
+> +		else
+> +			WARN_ON_ONCE(1);
 
-On 8/13/19 10:14 AM, Ming Lei wrote:
-> Now __irq_build_affinity_masks() spreads vectors evenly per node, and
-> all vectors may not be spread in case that each numa node has different
-> CPU number, then the following warning in irq_build_affinity_masks() can
-> be triggered:
-> 
-> 	if (nr_present < numvecs)
-> 		WARN_ON(nr_present + nr_others < numvecs);
+Oops, this was actually my debug warning just to make sure it triggered
+(tested with failslab). The WARN_ON_ONCE(1) should be removed (I changed
+it locally in case I post an update).
 
-Is this the warning which is changed in patch #1?
+I noticed it in Andrew's subsequent checkpatch fix.
 
-Thanks,
-Daniel
+-- 
+Catalin
