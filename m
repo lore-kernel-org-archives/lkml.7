@@ -2,237 +2,109 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F239C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC406C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5988720840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB9D20840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:19:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="evSR8//j"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kKYKcwkW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbfHMNTM (ORCPT
+        id S1729038AbfHMNT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:19:12 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35329 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729003AbfHMNTM (ORCPT
+        Tue, 13 Aug 2019 09:19:26 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:39030 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728416AbfHMNTZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:19:12 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d85so1108001pfd.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:19:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uemjYFdEavebUhJ0GnBokqufqwKQ33FBu/l/dF+LEI0=;
-        b=evSR8//jkv4lh38FHcIvPUs+vf6YgyDKYqB+w9LuRCeFO5POAJJ7GS9E6ChvQS7RNT
-         8w7SpU/u0XqSHkOk4E8iFHBsk8KN+lrfw/d3IktH2HPC+EGJ6sjA7bV6Vwtpo+T9rht9
-         ZsvPr84KY/jBfXo099RxMIJ6V6HB1kDzK94OCAoCVs/lUn8DfAR6Cc+pXFJPbWgbkmmL
-         vo0eLBBp+DllyrgqyGix3qKRjCFAnq5TmJPCCJ/LdYt/S4g6BV7KLukFYopY8fGPbpAl
-         JeuyZACyOK8y/9otuexUGK2bf4m4TgJKk719OVP4Kg6lKpDFPwJ6fVEg7/tGybQO2Yal
-         8XoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uemjYFdEavebUhJ0GnBokqufqwKQ33FBu/l/dF+LEI0=;
-        b=rS3Pl+fVyKtrUKpBdlkaFpgb3sjtbWO8nwHynyB8qvXhKyN/32ijNcGRU81unRC8Yd
-         zAGhTrdajrl8BDE/OG38C03RNtVXn1KIaAVfhHUHqBT9jmoEDCtQylcDOoyas2aTN+AF
-         fLROrZWCOcM0pXuWtYicmgh3FPhJXO121TO7K/e6AFXZxnjrVSZvTuqLaMn28NQvAD3V
-         Pq3J+ojRe9cW54sG65pocslP4NRwXUWl2GMGsDsVKsHDTLjJNy2ZuaHFEkhX1EDSbTwk
-         L7TFfppYdIHkUiooRV47jdzhIacWcpLcGm7D92HwXpDYSp13Vu5QQJ4nW9qLoJuIHW3x
-         EMEg==
-X-Gm-Message-State: APjAAAXM3P1Nvt+O0XYpXCixIpiT1K1t4XWas8aQWW4FN2mqpyr6SJDb
-        s7pNH7eBxKxQFICeUiovDYvM4Sslmjtv6TMqSsv0iep3EF+XWA==
-X-Google-Smtp-Source: APXvYqwZtj5tYeZMHKa6hclTPlvzQlfXEebFzx4k80bKtFWSwOYcrQTPEwu0jntuYYbj/vWDYwba+Ws6peFvq3n0cl0=
-X-Received: by 2002:a63:c442:: with SMTP id m2mr35220963pgg.286.1565702350668;
- Tue, 13 Aug 2019 06:19:10 -0700 (PDT)
+        Tue, 13 Aug 2019 09:19:25 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DDEOUi005488;
+        Tue, 13 Aug 2019 13:19:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=k7TTtVj2NunJ0RECYPXm4Q9yMluI1ySqxRPbjTuFfSc=;
+ b=kKYKcwkW7vRoJWzTqTE/HiDcA+NQYIkHTejMTDgTCnISFmhFK/t4tSol6FFQmo4qqv4F
+ NGitYrBuvjUaiwUi9RWsMsyy5FOZy5ysLIeSV5swOx+CIm7e31aOHOYspxjv8bKWCNKc
+ g67Rxs94k1V3hy7+zdKbtjSrlSlW1KLCgx+hSPoRsliA4kXdwIN35A8kP5S/KjGq4sOb
+ 4kcLf2OXVfzNICwg+LdTviaY1eapQfriPFbbqTQosSs261JvqeaEeyLjTBO7WmSdW/6V
+ VtZhR2bTppwEqnw1hX88/okPc8+hSOxjH5iKE8Vo60ZhEvlartkxZ9mRYppn/p042Uay Sw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2u9pjqe5c9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 13:19:11 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DDHqcK090516;
+        Tue, 13 Aug 2019 13:19:10 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2ubwcwscwd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 13:19:10 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7DDJ7Oa004970;
+        Tue, 13 Aug 2019 13:19:07 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 13 Aug 2019 06:19:07 -0700
+Date:   Tue, 13 Aug 2019 16:14:20 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Colin King <colin.king@canonical.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: sym53c8xx_2: remove redundant assignment to retv
+Message-ID: <20190813131420.GS1974@kadam>
+References: <20190809175932.10197-1-colin.king@canonical.com>
+ <20190809181733.GQ5482@bombadil.infradead.org>
 MIME-Version: 1.0
-References: <CAAeHK+waUUNpGp1b2WqXQHkbBcQT_MonG62-bK-aEj2dvYr-gA@mail.gmail.com>
- <000000000000199b6c058fff71c8@google.com>
-In-Reply-To: <000000000000199b6c058fff71c8@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 13 Aug 2019 15:18:59 +0200
-Message-ID: <CAAeHK+wa8zgfstvHSwHTHJANW=s_aJYQ3qc_aUDMpMHTtveFGg@mail.gmail.com>
-Subject: Re: general protection fault in cdev_del
-To:     syzbot <syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com>,
-        Oliver Neukum <oneukum@suse.com>
-Cc:     linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809181733.GQ5482@bombadil.infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908130142
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908130142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 3:16 PM syzbot
-<syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot has tested the proposed patch but the reproducer still triggered
-> crash:
-> KASAN: use-after-free Read in hso_free_interface
->
-> ==================================================================
-> BUG: KASAN: use-after-free in hso_free_interface+0x3f2/0x4f0
-> drivers/net/usb/hso.c:3108
-> Read of size 8 at addr ffff8881d112d998 by task kworker/0:1/12
->
-> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc1+ #1
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x67/0x231 mm/kasan/report.c:188
->   __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
->   kasan_report+0xe/0x20 mm/kasan/common.c:614
->   hso_free_interface+0x3f2/0x4f0 drivers/net/usb/hso.c:3108
->   hso_probe+0x362/0x1a50 drivers/net/usb/hso.c:2963
->   usb_probe_interface+0x30b/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x287/0x660 drivers/base/dd.c:509
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
->   __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
->   bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:843
->   bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x1700 drivers/base/core.c:2111
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0xa2/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x287/0x660 drivers/base/dd.c:509
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
->   __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
->   bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:843
->   bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x1700 drivers/base/core.c:2111
->   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
->   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
->   port_event drivers/usb/core/hub.c:5350 [inline]
->   hub_event+0x1adc/0x35a0 drivers/usb/core/hub.c:5432
->   process_one_work+0x90a/0x1580 kernel/workqueue.c:2268
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2414
->   kthread+0x30e/0x420 kernel/kthread.c:254
->   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
->
-> Allocated by task 12:
->   save_stack+0x1b/0x80 mm/kasan/common.c:71
->   set_track mm/kasan/common.c:79 [inline]
->   __kasan_kmalloc mm/kasan/common.c:489 [inline]
->   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:462
->   kmalloc include/linux/slab.h:547 [inline]
->   kzalloc include/linux/slab.h:742 [inline]
->   hso_create_device+0x43/0x390 drivers/net/usb/hso.c:2336
->   hso_create_bulk_serial_device drivers/net/usb/hso.c:2617 [inline]
->   hso_probe+0xbb0/0x1a50 drivers/net/usb/hso.c:2948
->   usb_probe_interface+0x30b/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x287/0x660 drivers/base/dd.c:509
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
->   __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
->   bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:843
->   bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x1700 drivers/base/core.c:2111
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0xa2/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x287/0x660 drivers/base/dd.c:509
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
->   __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
->   bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:843
->   bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x1700 drivers/base/core.c:2111
->   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
->   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
->   port_event drivers/usb/core/hub.c:5350 [inline]
->   hub_event+0x1adc/0x35a0 drivers/usb/core/hub.c:5432
->   process_one_work+0x90a/0x1580 kernel/workqueue.c:2268
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2414
->   kthread+0x30e/0x420 kernel/kthread.c:254
->   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
->
-> Freed by task 12:
->   save_stack+0x1b/0x80 mm/kasan/common.c:71
->   set_track mm/kasan/common.c:79 [inline]
->   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
->   slab_free_hook mm/slub.c:1421 [inline]
->   slab_free_freelist_hook mm/slub.c:1448 [inline]
->   slab_free mm/slub.c:2994 [inline]
->   kfree+0xd7/0x290 mm/slub.c:3949
->   hso_create_bulk_serial_device drivers/net/usb/hso.c:2687 [inline]
->   hso_probe+0x13c6/0x1a50 drivers/net/usb/hso.c:2948
->   usb_probe_interface+0x30b/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x287/0x660 drivers/base/dd.c:509
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
->   __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
->   bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:843
->   bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x1700 drivers/base/core.c:2111
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0xa2/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x287/0x660 drivers/base/dd.c:509
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
->   __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
->   bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:843
->   bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x1700 drivers/base/core.c:2111
->   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
->   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
->   port_event drivers/usb/core/hub.c:5350 [inline]
->   hub_event+0x1adc/0x35a0 drivers/usb/core/hub.c:5432
->   process_one_work+0x90a/0x1580 kernel/workqueue.c:2268
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2414
->   kthread+0x30e/0x420 kernel/kthread.c:254
->   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
->
-> The buggy address belongs to the object at ffff8881d112d900
->   which belongs to the cache kmalloc-512 of size 512
-> The buggy address is located 152 bytes inside of
->   512-byte region [ffff8881d112d900, ffff8881d112db00)
-> The buggy address belongs to the page:
-> page:ffffea0007444b00 refcount:1 mapcount:0 mapping:ffff8881dac02c00
-> index:0x0 compound_mapcount: 0
-> flags: 0x200000000010200(slab|head)
-> raw: 0200000000010200 ffffea000744ea80 0000000400000004 ffff8881dac02c00
-> raw: 0000000000000000 00000000000c000c 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff8881d112d880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->   ffff8881d112d900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > ffff8881d112d980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                              ^
->   ffff8881d112da00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff8881d112da80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ==================================================================
->
->
-> Tested on:
->
-> commit:         69bbe8c7 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14e6156a600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c309d28e15db39c5
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=1715ad4a600000
->
+On Fri, Aug 09, 2019 at 11:17:33AM -0700, Matthew Wilcox wrote:
+> On Fri, Aug 09, 2019 at 06:59:32PM +0100, Colin King wrote:
+> > Variable retv is initialized to a value that is never read and it
+> > is re-assigned later. The initialization is redundant and can be
+> > removed.
+> 
+> Acked-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> 
+> Seems like a bit of a pointless class of warnings, given that gcc now
+> initialises all locals.  But I'm happy for James or Martin to pick it up.
 
-This bug looks very similar to the "KASAN: use-after-free Read in
-device_del" one, but the fix from that thread doesn't work here.
+GCC doesn't initialize all locals.  Just some depending on the
+optimization level.  It's related to a bug that's several years old.
+
+This warning does find some bugs.  The common one is where people forget
+to check the return.
+
+	ret = something();
+	// blank line here indicates that ret is never checked again.
+
+regards,
+dan carpenter
+
