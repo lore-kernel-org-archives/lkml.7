@@ -2,226 +2,162 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A477C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7074EC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3AC520842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4214520844
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:12:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JrpWH2mS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvp7xvUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbfHMSMP (ORCPT
+        id S1728501AbfHMSMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 14:12:15 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53536 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728389AbfHMSML (ORCPT
+        Tue, 13 Aug 2019 14:12:18 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44592 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728453AbfHMSMO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 14:12:11 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7DIBxGC093394;
-        Tue, 13 Aug 2019 13:11:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565719919;
-        bh=6IElY7mu7NaowaOQQQSPP6rPLthYZQitAQKvQcMKjKE=;
-        h=From:To:CC:Subject:Date;
-        b=JrpWH2mS9kUG9vn0WkYsW2nxuloDCDK1QZkLLHB6wFi3wPsC3mVQUc2/Dh2M22QA5
-         qf9tF+9/dgkJpl94W7LpuahhxBumzbUwhJgiMh/gZIu6pabhuJqKR+cGiov0o6yR/z
-         Cq3pRGKcjslAiwb/ZujyVwnk4l689bsuju1uDTNs=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7DIBxw8004227
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 13 Aug 2019 13:11:59 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 13
- Aug 2019 13:11:59 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 13 Aug 2019 13:11:59 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7DIBwNM051016;
-        Tue, 13 Aug 2019 13:11:59 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <tony@atomide.com>,
-        <sre@kernel.org>, <nekit1000@gmail.com>, <mpartap@gmx.net>,
-        <merlijn@wizzup.org>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v2 1/4] leds: lm3532: Fix brightness control for i2c mode
-Date:   Tue, 13 Aug 2019 13:11:51 -0500
-Message-ID: <20190813181154.6614-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+        Tue, 13 Aug 2019 14:12:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p17so108601760wrf.11
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 11:12:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=H+HyNYqumhgzAfb6RQPcG1woV31dCtkzQNv0Z0BtjIQ=;
+        b=fvp7xvUoAEO8LLtyrZs5Yi0BBIa9cTCA3g44OvUxFc8MB6V7gtoyk8ZX6aCCatQpyq
+         IF3Iw296V6/hMXs8TSlQCGQ3WwORhSHmTbSmSi6ZHuSsok3Uybyi82sl93cdtM22rKIN
+         vASlEhBGHPIn+XdY4eVclFBooSNxyJgKvqqmK6ahw/tygeGpSYF2HUUPMmbCuZ3Qkwvc
+         bfkMW9zQ+h4/kco4b1k39AevSUtpm7x7LklvnVCj499Oss2vV6ZMnQnH4wYKTGnTvuRu
+         8kOE96yIdnS03sAhIsWvw1+KY7VNksPSFI7LCZwrKfZO2spx9jZg8cZz/UMWJ/nxbqta
+         q3mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=H+HyNYqumhgzAfb6RQPcG1woV31dCtkzQNv0Z0BtjIQ=;
+        b=CsD50UhWOWcK67R8Bj0EC6l3eewPID2v0chy4cZhvdizZFA2AkwlsVxquVss1D+nNo
+         6qIUjDP0k9BQPb5/AI5H6MZaL4N0FkgIaMHb4AgE3opuXVNZi4cupmVeKzqCi+Gk2OiM
+         R2zVSC+t4z4LaxvAHIT9uEAKsRPCGu7FfWEGPHRRcVRLxrk1m18xwzXR65GbGkQZFqjl
+         lOu+fefB0iN6nyVejxhYHIiFEaDl1L/sAK3HllMWFwJl+U7uDeGLCCn4N52TL6vg6Lrl
+         D15j9Db263Jy0VecH1wc1op+fzmkNp/p709QSONfnSyk+he2wkVk4sZ6gsyifJ2V02LC
+         ww/w==
+X-Gm-Message-State: APjAAAXkFJKz58TvMoaCAZe6Tim3Eeuc/AbtMRTWP9dswa8yWPPOHBHM
+        m53mcghI4I4P6eyQ9d46dRw=
+X-Google-Smtp-Source: APXvYqwjsJco2jXdMRkUTIwWS2QWhfQFiEMv9osfzl+KqkM1x4EDJWCjMdbH4r3jUxyvxr1DFQNJJA==
+X-Received: by 2002:a5d:4a4e:: with SMTP id v14mr28818222wrs.200.1565719932335;
+        Tue, 13 Aug 2019 11:12:12 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id a6sm1435050wmj.15.2019.08.13.11.12.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Aug 2019 11:12:11 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH v2] soundwire: Make slave.o depend on ACPI and rename to acpi_slave.o
+Date:   Tue, 13 Aug 2019 11:09:30 -0700
+Message-Id: <20190813180929.22497-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.23.0.rc2
+In-Reply-To: <20190813061014.45015-1-natechancellor@gmail.com>
+References: <20190813061014.45015-1-natechancellor@gmail.com>
 MIME-Version: 1.0
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the brightness control for I2C mode.  Instead of
-changing the full scale current register update the ALS target
-register for the appropriate banks.
+clang warns when CONFIG_ACPI is unset:
 
-In addition clean up some code errors and random misspellings found
-during coding.
+../drivers/soundwire/slave.c:16:12: warning: unused function
+'sdw_slave_add' [-Wunused-function]
+static int sdw_slave_add(struct sdw_bus *bus,
+           ^
+1 warning generated.
 
-Tested on Droid4 as well as LM3532 EVM connected to a BeagleBoneBlack
+Before commit 8676b3ca4673 ("soundwire: fix regmap dependencies and
+align with other serial links"), this code would only be compiled when
+ACPI was set because it was only selected by SOUNDWIRE_INTEL, which
+depends on ACPI.
 
-Fixes: e37a7f8d77e1 ("leds: lm3532: Introduce the lm3532 LED driver")
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Now, this code can be compiled without CONFIG_ACPI, which causes the
+above warning. The IS_ENABLED(CONFIG_ACPI) guard could be moved to avoid
+compiling the function; however, slave.c only contains three functions,
+two of which are static. Since slave.c is completetely dependent on
+ACPI, rename it to acpi_slave.c and only compile it when CONFIG_ACPI
+is set so sdw_acpi_find_slaves will actually be used. bus.h contains
+a stub for sdw_acpi_find_slaves so there will be no issues with an
+undefined function.
+
+This has been build tested with CONFIG_ACPI set and unset in combination
+with CONFIG_SOUNDWIRE unset, built in, and a module.
+
+Fixes: 8676b3ca4673 ("soundwire: fix regmap dependencies and align with other serial links")
+Link: https://github.com/ClangBuiltLinux/linux/issues/637
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
 
-v2 - Separated out random fixes and brightness control fix - https://lore.kernel.org/patchwork/patch/1109502/
+v1 -> v2:
 
- drivers/leds/leds-lm3532.c | 56 ++++++++++++++++++++++++--------------
- 1 file changed, 36 insertions(+), 20 deletions(-)
+* Rename slave.o to acpi_slave.o
+* Reword commit message to reflect this
 
-diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
-index 646100724971..b28b7f63198b 100644
---- a/drivers/leds/leds-lm3532.c
-+++ b/drivers/leds/leds-lm3532.c
-@@ -23,11 +23,11 @@
- #define LM3532_REG_PWM_B_CFG	0x14
- #define LM3532_REG_PWM_C_CFG	0x15
- #define LM3532_REG_ZONE_CFG_A	0x16
--#define LM3532_REG_CTRL_A_BRT	0x17
-+#define LM3532_REG_CTRL_A_FS_CURR	0x17
- #define LM3532_REG_ZONE_CFG_B	0x18
--#define LM3532_REG_CTRL_B_BRT	0x19
-+#define LM3532_REG_CTRL_B_FS_CURR	0x19
- #define LM3532_REG_ZONE_CFG_C	0x1a
--#define LM3532_REG_CTRL_C_BRT	0x1b
-+#define LM3532_REG_CTRL_C_FS_CURR	0x1b
- #define LM3532_REG_ENABLE	0x1d
- #define LM3532_ALS_CONFIG	0x23
- #define LM3532_REG_ZN_0_HI	0x60
-@@ -38,6 +38,9 @@
- #define LM3532_REG_ZN_2_LO	0x65
- #define LM3532_REG_ZN_3_HI	0x66
- #define LM3532_REG_ZN_3_LO	0x67
-+#define LM3532_REG_ZONE_TRGT_A	0x70
-+#define LM3532_REG_ZONE_TRGT_B	0x75
-+#define LM3532_REG_ZONE_TRGT_C	0x7a
- #define LM3532_REG_MAX		0x7e
+ drivers/soundwire/Makefile                  | 6 +++++-
+ drivers/soundwire/{slave.c => acpi_slave.c} | 3 ---
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+ rename drivers/soundwire/{slave.c => acpi_slave.c} (98%)
+
+diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
+index 45b7e5001653..718d8dd0ac79 100644
+--- a/drivers/soundwire/Makefile
++++ b/drivers/soundwire/Makefile
+@@ -4,9 +4,13 @@
+ #
  
- /* Contorl Enable */
-@@ -116,6 +119,7 @@ struct lm3532_als_data {
-  * @priv - Pointer the device data structure
-  * @control_bank - Control bank the LED is associated to
-  * @mode - Mode of the LED string
-+ * @ctrl_brt_pointer - Zone target register that controls the sink
-  * @num_leds - Number of LED strings are supported in this array
-  * @led_strings - The LED strings supported in this array
-  * @label - LED label
-@@ -126,6 +130,7 @@ struct lm3532_led {
+ #Bus Objs
+-soundwire-bus-objs := bus_type.o bus.o slave.o mipi_disco.o stream.o
++soundwire-bus-objs := bus_type.o bus.o mipi_disco.o stream.o
+ obj-$(CONFIG_SOUNDWIRE) += soundwire-bus.o
  
- 	int control_bank;
- 	int mode;
-+	int ctrl_brt_pointer;
- 	int num_leds;
- 	u32 led_strings[LM3532_MAX_CONTROL_BANKS];
- 	char label[LED_MAX_NAME_SIZE];
-@@ -168,11 +173,11 @@ static const struct reg_default lm3532_reg_defs[] = {
- 	{LM3532_REG_PWM_B_CFG, 0x82},
- 	{LM3532_REG_PWM_C_CFG, 0x82},
- 	{LM3532_REG_ZONE_CFG_A, 0xf1},
--	{LM3532_REG_CTRL_A_BRT, 0xf3},
-+	{LM3532_REG_CTRL_A_FS_CURR, 0x13},
- 	{LM3532_REG_ZONE_CFG_B, 0xf1},
--	{LM3532_REG_CTRL_B_BRT, 0xf3},
-+	{LM3532_REG_CTRL_B_FS_CURR, 0x13},
- 	{LM3532_REG_ZONE_CFG_C, 0xf1},
--	{LM3532_REG_CTRL_C_BRT, 0xf3},
-+	{LM3532_REG_CTRL_C_FS_CURR, 0x13},
- 	{LM3532_REG_ENABLE, 0xf8},
- 	{LM3532_ALS_CONFIG, 0x44},
- 	{LM3532_REG_ZN_0_HI, 0x35},
-@@ -339,8 +344,8 @@ static int lm3532_brightness_set(struct led_classdev *led_cdev,
- 	if (ret)
- 		goto unlock;
- 
--	brightness_reg = LM3532_REG_CTRL_A_BRT + led->control_bank * 2;
--	brt_val = brt_val / LM3532_BRT_VAL_ADJUST;
-+	brightness_reg = LM3532_REG_ZONE_TRGT_A + led->control_bank * 5 +
-+			 (led->ctrl_brt_pointer >> 2);
- 
- 	ret = regmap_write(led->priv->regmap, brightness_reg, brt_val);
- 
-@@ -356,8 +361,30 @@ static int lm3532_init_registers(struct lm3532_led *led)
- 	unsigned int output_cfg_val = 0;
- 	unsigned int output_cfg_shift = 0;
- 	unsigned int output_cfg_mask = 0;
-+	unsigned int brightness_config_reg;
-+	unsigned int brightness_config_val;
- 	int ret, i;
- 
-+	if (drvdata->enable_gpio)
-+		gpiod_direction_output(drvdata->enable_gpio, 1);
++ifdef CONFIG_ACPI
++soundwire-bus-objs += acpi_slave.o
++endif
 +
-+	brightness_config_reg = LM3532_REG_ZONE_CFG_A + led->control_bank * 2;
-+	/*
-+	 * This could be hard coded to the default value but the control
-+	 * brightness register may have changed during boot.
-+	 */
-+	ret = regmap_read(drvdata->regmap, brightness_config_reg,
-+			  &led->ctrl_brt_pointer);
-+	if (ret)
-+		return ret;
-+
-+	led->ctrl_brt_pointer &= LM3532_ZONE_MASK;
-+	brightness_config_val = led->ctrl_brt_pointer | led->mode;
-+	ret = regmap_write(drvdata->regmap, brightness_config_reg,
-+			   brightness_config_val);
-+	if (ret)
-+		return ret;
-+
- 	for (i = 0; i < led->num_leds; i++) {
- 		output_cfg_shift = led->led_strings[i] * 2;
- 		output_cfg_val |= (led->control_bank << output_cfg_shift);
-@@ -382,7 +409,6 @@ static int lm3532_als_configure(struct lm3532_data *priv,
- 	struct lm3532_als_data *als = priv->als_data;
- 	u32 als_vmin, als_vmax, als_vstep;
- 	int zone_reg = LM3532_REG_ZN_0_HI;
--	int brightnes_config_reg;
- 	int ret;
- 	int i;
- 
-@@ -411,14 +437,7 @@ static int lm3532_als_configure(struct lm3532_data *priv,
- 	als->config = (als->als_avrg_time | (LM3532_ENABLE_ALS) |
- 		(als->als_input_mode << LM3532_ALS_SEL_SHIFT));
- 
--	ret = regmap_write(priv->regmap, LM3532_ALS_CONFIG, als->config);
--	if (ret)
--		return ret;
--
--	brightnes_config_reg = LM3532_REG_ZONE_CFG_A + led->control_bank * 2;
--
--	return regmap_update_bits(priv->regmap, brightnes_config_reg,
--				  LM3532_I2C_CTRL, LM3532_ALS_CTRL);
-+	return regmap_write(priv->regmap, LM3532_ALS_CONFIG, als->config);
- }
- 
- static int lm3532_parse_als(struct lm3532_data *priv)
-@@ -634,9 +653,6 @@ static int lm3532_probe(struct i2c_client *client,
- 		return ret;
- 	}
- 
--	if (drvdata->enable_gpio)
--		gpiod_direction_output(drvdata->enable_gpio, 1);
--
+ #Cadence Objs
+ soundwire-cadence-objs := cadence_master.o
+ obj-$(CONFIG_SOUNDWIRE_CADENCE) += soundwire-cadence.o
+diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/acpi_slave.c
+similarity index 98%
+rename from drivers/soundwire/slave.c
+rename to drivers/soundwire/acpi_slave.c
+index f39a5815e25d..0dc188e6873b 100644
+--- a/drivers/soundwire/slave.c
++++ b/drivers/soundwire/acpi_slave.c
+@@ -60,7 +60,6 @@ static int sdw_slave_add(struct sdw_bus *bus,
  	return ret;
  }
  
+-#if IS_ENABLED(CONFIG_ACPI)
+ /*
+  * sdw_acpi_find_slaves() - Find Slave devices in Master ACPI node
+  * @bus: SDW bus instance
+@@ -110,5 +109,3 @@ int sdw_acpi_find_slaves(struct sdw_bus *bus)
+ 
+ 	return 0;
+ }
+-
+-#endif
 -- 
-2.22.0.214.g8dca754b1e
+2.23.0.rc2
 
