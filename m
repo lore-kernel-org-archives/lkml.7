@@ -7,334 +7,139 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5B8C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1715C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D4F20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF3F206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfHMWWn (ORCPT
+        id S1727134AbfHMW0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 18:22:43 -0400
-Received: from mga11.intel.com ([192.55.52.93]:14199 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbfHMWWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 18:22:43 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 15:22:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="194289843"
-Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2019 15:22:42 -0700
-Date:   Tue, 13 Aug 2019 15:19:58 -0700
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v5 5/7] PCI/ATS: Add PASID support for PCIe VF devices
-Message-ID: <20190813221958.GA139211@skuppusw-desk.amr.corp.intel.com>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <d10b5f08212a42c4a710ec649bffe082599dbb46.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190812200508.GM11785@google.com>
+        Tue, 13 Aug 2019 18:26:41 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38822 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfHMW0k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 18:26:40 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r20so27998993ota.5
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 15:26:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=suYvhmHKZHJtRbU1etiqI2wU0TBYticgz13MW2eBmCs=;
+        b=T6CMZpk/PK4ge/wshF7yGB11iiL7qd5LndwMiEd9X2XCY+lbqwWUgVZU+mphfc3YUs
+         e/MmjvjJjIzzMsLs1bDjGLM7t+q8VmaAvmxJQ+ZswsD+9zL9Ulr2muLSwXxxylvvOd/a
+         dUf1CexexozaB5EcCXQJuGf93Lb08XwyXsCvoWJtdtcBxtUv6ZcFWOpGfyD77Tu9QzsU
+         EVz1ZZnDskT/KfkS+XBadtqBrSFU64jdxdB6HBcrb+eT7F8PsPkvkWj3EQD0eipBIXio
+         Er9166AzDY/JOBl40l9r2fGPARA16s4+i+5I4fe3L9el6rfTCyfMvYTSTxJsFqEBAXXr
+         DNwA==
+X-Gm-Message-State: APjAAAWlpHnbwWfcuvm+iEkKLSpaUxaoEe7c6iKiXPbDApMhyW0c3dfu
+        3SSlixk7/3veuwOUG0n97VTHPQ==
+X-Google-Smtp-Source: APXvYqxvnxOu8FQxxdgYaGL/EtAxC0fOJv+l8Zx6AbPm6JzhweJNdZba8aEa0MVGJ5h30rYO5uGyaA==
+X-Received: by 2002:a5d:948a:: with SMTP id v10mr26587703ioj.103.1565735200010;
+        Tue, 13 Aug 2019 15:26:40 -0700 (PDT)
+Received: from masetto.ahs3 (c-67-165-232-89.hsd1.co.comcast.net. [67.165.232.89])
+        by smtp.gmail.com with ESMTPSA id e22sm16141388iog.2.2019.08.13.15.26.39
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 15:26:39 -0700 (PDT)
+Reply-To: ahs3@redhat.com
+Subject: Re: [PATCH] ACPI / CPPC: do not require the _PSD method when using
+ CPPC
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Len Brown <lenb@kernel.org>
+References: <20190805170338.29493-1-ahs3@redhat.com>
+ <521915646.RcUJINxfhL@kreacher>
+From:   Al Stone <ahs3@redhat.com>
+Organization: Red Hat, Inc.
+Message-ID: <e103debd-d0f2-5b40-1e6d-7a533ef4ac07@redhat.com>
+Date:   Tue, 13 Aug 2019 16:26:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812200508.GM11785@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <521915646.RcUJINxfhL@kreacher>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 03:05:08PM -0500, Bjorn Helgaas wrote:
-> On Thu, Aug 01, 2019 at 05:06:02PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > 
-> > When IOMMU tries to enable PASID for VF device in
-> > iommu_enable_dev_iotlb(), it always fails because PASID support for PCIe
-> > VF device is currently broken in PCIE driver. Current implementation
-> > expects the given PCIe device (PF & VF) to implement PASID capability
-> > before enabling the PASID support. But this assumption is incorrect. As
-> > per PCIe spec r4.0, sec 9.3.7.14, all VFs associated with PF can only
-> > use the PASID of the PF and not implement it.
-> > 
-> > Also, since PASID is a shared resource between PF/VF, following rules
-> > should apply.
-> > 
-> > 1. Use proper locking before accessing/modifying PF resources in VF
-> >    PASID enable/disable call.
-> > 2. Use reference count logic to track the usage of PASID resource.
-> > 3. Disable PASID only if the PASID reference count (pasid_ref_cnt) is zero.
-> > 
-> > Cc: Ashok Raj <ashok.raj@intel.com>
-> > Cc: Keith Busch <keith.busch@intel.com>
-> > Suggested-by: Ashok Raj <ashok.raj@intel.com>
-> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > ---
-> >  drivers/pci/ats.c   | 113 ++++++++++++++++++++++++++++++++++----------
-> >  include/linux/pci.h |   2 +
-> >  2 files changed, 90 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> > index 079dc5444444..9384afd7d00e 100644
-> > --- a/drivers/pci/ats.c
-> > +++ b/drivers/pci/ats.c
-> > @@ -402,6 +402,8 @@ void pci_pasid_init(struct pci_dev *pdev)
-> >  	if (pdev->is_virtfn)
-> >  		return;
-> >  
-> > +	mutex_init(&pdev->pasid_lock);
-> > +
-> >  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
-> >  	if (!pos)
-> >  		return;
-> > @@ -436,32 +438,57 @@ void pci_pasid_init(struct pci_dev *pdev)
-> >  int pci_enable_pasid(struct pci_dev *pdev, int features)
-> >  {
-> >  	u16 control, supported;
-> > +	int ret = 0;
-> > +	struct pci_dev *pf = pci_physfn(pdev);
-> >  
-> > -	if (WARN_ON(pdev->pasid_enabled))
-> > -		return -EBUSY;
-> > +	mutex_lock(&pf->pasid_lock);
-> >  
-> > -	if (!pdev->eetlp_prefix_path)
-> > -		return -EINVAL;
-> > +	if (WARN_ON(pdev->pasid_enabled)) {
-> > +		ret = -EBUSY;
-> > +		goto pasid_unlock;
-> > +	}
-> >  
-> > -	if (!pdev->pasid_cap)
-> > -		return -EINVAL;
-> > +	if (!pdev->eetlp_prefix_path) {
-> > +		ret = -EINVAL;
-> > +		goto pasid_unlock;
-> > +	}
-> >  
-> > -	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
-> > -			     &supported);
-> > +	if (!pf->pasid_cap) {
-> > +		ret = -EINVAL;
-> > +		goto pasid_unlock;
-> > +	}
-> > +
-> > +	if (pdev->is_virtfn && pf->pasid_enabled)
-> > +		goto update_status;
-> > +
-> > +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CAP, &supported);
-> >  	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
-> >  
-> >  	/* User wants to enable anything unsupported? */
-> > -	if ((supported & features) != features)
-> > -		return -EINVAL;
-> > +	if ((supported & features) != features) {
-> > +		ret = -EINVAL;
-> > +		goto pasid_unlock;
-> > +	}
-> >  
-> >  	control = PCI_PASID_CTRL_ENABLE | features;
-> > -	pdev->pasid_features = features;
-> > -
-> > +	pf->pasid_features = features;
-> >  	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
-> >  
-> > -	pdev->pasid_enabled = 1;
-> > +	/*
-> > +	 * If PASID is not already enabled in PF, increment pasid_ref_cnt
-> > +	 * to count PF PASID usage.
-> > +	 */
-> > +	if (pdev->is_virtfn && !pf->pasid_enabled) {
-> > +		atomic_inc(&pf->pasid_ref_cnt);
-> > +		pf->pasid_enabled = 1;
-> > +	}
-> >  
-> > -	return 0;
-> > +update_status:
-> > +	atomic_inc(&pf->pasid_ref_cnt);
-> > +	pdev->pasid_enabled = 1;
-> > +pasid_unlock:
-> > +	mutex_unlock(&pf->pasid_lock);
-> > +	return ret;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_enable_pasid);
-> >  
-> > @@ -472,16 +499,29 @@ EXPORT_SYMBOL_GPL(pci_enable_pasid);
-> >  void pci_disable_pasid(struct pci_dev *pdev)
-> >  {
-> >  	u16 control = 0;
-> > +	struct pci_dev *pf = pci_physfn(pdev);
-> > +
-> > +	mutex_lock(&pf->pasid_lock);
-> >  
-> >  	if (WARN_ON(!pdev->pasid_enabled))
-> > -		return;
-> > +		goto pasid_unlock;
-> >  
-> > -	if (!pdev->pasid_cap)
-> > -		return;
-> > +	if (!pf->pasid_cap)
-> > +		goto pasid_unlock;
-> >  
-> > -	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
-> > +	atomic_dec(&pf->pasid_ref_cnt);
-> >  
-> > +	if (atomic_read(&pf->pasid_ref_cnt))
-> > +		goto done;
-> > +
-> > +	/* Disable PASID only if pasid_ref_cnt is zero */
-> > +	pci_write_config_word(pf, pf->pasid_cap + PCI_PASID_CTRL, control);
-> > +
-> > +done:
-> >  	pdev->pasid_enabled = 0;
-> > +pasid_unlock:
-> > +	mutex_unlock(&pf->pasid_lock);
-> > +
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_disable_pasid);
-> >  
-> > @@ -492,15 +532,25 @@ EXPORT_SYMBOL_GPL(pci_disable_pasid);
-> >  void pci_restore_pasid_state(struct pci_dev *pdev)
-> >  {
-> >  	u16 control;
-> > +	struct pci_dev *pf = pci_physfn(pdev);
-> >  
-> >  	if (!pdev->pasid_enabled)
-> >  		return;
-> >  
-> > -	if (!pdev->pasid_cap)
-> > +	if (!pf->pasid_cap)
-> >  		return;
-> >  
-> > +	mutex_lock(&pf->pasid_lock);
-> > +
-> > +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CTRL, &control);
-> > +	if (control & PCI_PASID_CTRL_ENABLE)
-> > +		goto pasid_unlock;
-> > +
-> >  	control = PCI_PASID_CTRL_ENABLE | pdev->pasid_features;
-> > -	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
-> > +	pci_write_config_word(pf, pf->pasid_cap + PCI_PASID_CTRL, control);
-> > +
-> > +pasid_unlock:
-> > +	mutex_unlock(&pf->pasid_lock);
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
-> >  
-> > @@ -517,15 +567,22 @@ EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
-> >  int pci_pasid_features(struct pci_dev *pdev)
-> >  {
-> >  	u16 supported;
-> > +	struct pci_dev *pf = pci_physfn(pdev);
-> > +
-> > +	mutex_lock(&pf->pasid_lock);
-> >  
-> > -	if (!pdev->pasid_cap)
-> > +	if (!pf->pasid_cap) {
-> > +		mutex_unlock(&pf->pasid_lock);
-> >  		return -EINVAL;
-> > +	}
-> >  
-> > -	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
-> > +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CAP,
-> >  			     &supported);
-> >  
-> >  	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
-> >  
-> > +	mutex_unlock(&pf->pasid_lock);
-> > +
-> >  	return supported;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_pasid_features);
-> > @@ -579,15 +636,21 @@ EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
-> >  int pci_max_pasids(struct pci_dev *pdev)
-> >  {
-> >  	u16 supported;
-> > +	struct pci_dev *pf = pci_physfn(pdev);
-> > +
-> > +	mutex_lock(&pf->pasid_lock);
-> >  
-> > -	if (!pdev->pasid_cap)
-> > +	if (!pf->pasid_cap) {
-> > +		mutex_unlock(&pf->pasid_lock);
-> >  		return -EINVAL;
-> > +	}
-> >  
-> > -	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
-> > -			     &supported);
-> > +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CAP, &supported);
-> >  
-> >  	supported = (supported & PASID_NUMBER_MASK) >> PASID_NUMBER_SHIFT;
-> >  
-> > +	mutex_unlock(&pf->pasid_lock);
-> > +
-> >  	return (1 << supported);
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_max_pasids);
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 3c9c4c82be27..4bfcca045afd 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -461,8 +461,10 @@ struct pci_dev {
-> >  	atomic_t	pri_ref_cnt;	/* Number of PF/VF PRI users */
-> >  #endif
-> >  #ifdef CONFIG_PCI_PASID
-> > +	struct mutex	pasid_lock;	/* PASID enable lock */
+On 8/13/19 3:59 PM, Rafael J. Wysocki wrote:
+> On Monday, August 5, 2019 7:03:38 PM CEST Al Stone wrote:
+>> According to the ACPI 6.3 specification, the _PSD method is optional
+>> when using CPPC.  The underlying assumption appears to be that each CPU
+>> can change frequency independently from all other CPUs; _PSD is provided
+>> to tell the OS that some processors can NOT do that.
+>>
+>> However, the acpi_get_psd() function returns -ENODEV if there is no _PSD
+>> method present, or an ACPI error status if an error occurs when evaluating
+>> _PSD, if present.  This essentially makes _PSD mandatory when using CPPC,
+>> in violation of the specification, and only on Linux.
+>>
+>> This has forced some firmware writers to provide a dummy _PSD, even though
+>> it is irrelevant, but only because Linux requires it; other OSPMs follow
+>> the spec.  We really do not want to have OS specific ACPI tables, though.
+>>
+>> So, correct acpi_get_psd() so that it does not return an error if there
+>> is no _PSD method present, but does return a failure when the method can
+>> not be executed properly.  This allows _PSD to be optional as it should
+>> be.
+>>
+>> Signed-off-by: Al Stone <ahs3@redhat.com>
+>> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+>> Cc: Len Brown <lenb@kernel.org>
+>> ---
+>>  drivers/acpi/cppc_acpi.c | 11 +++++++----
+>>  1 file changed, 7 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+>> index 15f103d7532b..e9ecfa13e997 100644
+>> --- a/drivers/acpi/cppc_acpi.c
+>> +++ b/drivers/acpi/cppc_acpi.c
+>> @@ -365,10 +365,13 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
+>>  	union acpi_object  *psd = NULL;
+>>  	struct acpi_psd_package *pdomain;
+>>  
+>> -	status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
+>> -			ACPI_TYPE_PACKAGE);
+>> -	if (ACPI_FAILURE(status))
+>> -		return -ENODEV;
+>> +	if (acpi_has_method(handle, "_PSD")) {
 > 
-> I think these locks are finer-grained than necessary.  I'm not sure
-> it's worth having two mutexes for every device (one for PRI and
-> another for PASID).  Is there really a performance benefit for having
-> two?
-Performance benefit should be minimal. But, PRI and PASID are functionally
-independent. So I don't think its correct to protect its resources with
-a common lock. Let me know your comments.
+> It would be better to compare the status below to AE_NOT_FOUND
+> and return 0 if that's the case.
 > 
-> Do it (or do they) need to be in struct pci_dev?  You only use the PF
-> mutexes, so maybe it could be in the struct pci_sriov, which I think
-> is only one per PF.
-Its possible to move it to pci_sriov structure. But is that the right
-place for it? This lock is only used for protecting PRI and PASID feature
-updates and PRI/PASID are not dependent on IOV feature. Let me know your
-comments.
+> A couple of code lines could be saved this way at least.
 
-If you want to move this lock to pci_sriov structure and use one lock
-for both PRI/PASID, then the implementation would look like following. We
-could create physfn lock/unlock functions in include/linux/pci.h similar
-to pci_physfn() function.
+D'oh.  Good point.
 
-#ifdef CONFIG_PCI_IOV
-static inline void pci_physfn_reslock(struct pci_dev *dev)
-{
-    struct pci_dev *pf = pci_physfn(dev);
+Let me dig back through the ACPICA code again; I had some reason for not
+relying on AE_NOT_FOUND alone that I apparently did not write down in my
+notes.  I'll send out a v2 when I figure out what it was, and if it was
+of any consequence.
 
-    if (!pf->is_physfn)
-        return;
-
-    mutex_lock(&pf->sriov->reslock);
-
-}
-#else
-static inline void pci_physfn_reslock(struct pci_dev *dev) {}; 
-#endif
-
-> 
-> >  	u16		pasid_cap;	/* PASID Capability offset */
-> >  	u16		pasid_features;
-> > +	atomic_t	pasid_ref_cnt;	/* Number of VFs with PASID enabled */
-> >  #endif
-> >  #ifdef CONFIG_PCI_P2PDMA
-> >  	struct pci_p2pdma *p2pdma;
-> > -- 
-> > 2.21.0
-> > 
+>> +		status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
+>> +						    &buffer, ACPI_TYPE_PACKAGE);
+>> +		if (ACPI_FAILURE(status))
+>> +			return -ENODEV;
+>> +	} else
+>> +		return 0;		/* _PSD is optional */
+>>  
+>>  	psd = buffer.pointer;
+>>  	if (!psd || psd->package.count != 1) {
+>>
+Thanks.
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+ciao,
+al
+-----------------------------------
+Al Stone
+Software Engineer
+Red Hat, Inc.
+ahs3@redhat.com
+-----------------------------------
