@@ -4,115 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6CBC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6244BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8943205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF04205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbfHMKiK (ORCPT
+        id S1727944AbfHMKil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 06:38:10 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33290 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727221AbfHMKiH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 06:38:07 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n9so107389633wru.0;
-        Tue, 13 Aug 2019 03:38:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7fA4ImgTXDy54WkrrWpZEbCCgZQJp3nUMqu6kivAEHE=;
-        b=FO/qnFt/sp+xk1BO5CqMw5J+EBN6WhpvDsaH/h/m97kzOLovP8o3zbMeR3Q+lQ0O3v
-         5tYOH31Nv0sjwLJx+M1zz3SA76u6UtpKXPfQpRiU59ZASLelyufcH8aQDoq7bJa5qjJz
-         BnuMb4V2qzu/DHgRRcWc4x2Ibkm98qe9U1IC8TP7Ohr7aZcvPA3VqzAEUMdv+MI8CINx
-         gxw2kVQW0MvOj80ljfymDjp1lY39xAHBi7QlMCCtpDoNsZGNqDZUOzfGJWuPfibiRj2k
-         R0HZEptCID9CBG2x66CtNGLXLcAy9YgYN/dHGLinDt8DyClLmTZRLdakmXpDgKzzdQye
-         0vfQ==
-X-Gm-Message-State: APjAAAV1zfihnhkTQrKE2hlG+WRY2iALHvWeofk+kPmr8j4vjqkwRSVz
-        vVc62GSW0z1EwDSXWWWZmrIAVNaQ+qVbpw==
-X-Google-Smtp-Source: APXvYqwJhQAcPo3ERBZnabP8qqSJfaIMlg+cCQT9+ITjd2tPgcv7HbOe4c56c7ufaMOznaURXCPzuw==
-X-Received: by 2002:a5d:610d:: with SMTP id v13mr36286575wrt.249.1565692684135;
-        Tue, 13 Aug 2019 03:38:04 -0700 (PDT)
-Received: from 1aq-andre.garage.tyco.com ([77.107.218.170])
-        by smtp.gmail.com with ESMTPSA id f70sm1484635wme.22.2019.08.13.03.38.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2019 03:38:03 -0700 (PDT)
-From:   =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: imx6q-pcie: add "fsl,pcie-phy-refclk-internal" for i.MX7D
-Date:   Tue, 13 Aug 2019 11:37:59 +0100
-Message-Id: <20190813103759.38358-2-git@andred.net>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20190813103759.38358-1-git@andred.net>
-References: <20190813103759.38358-1-git@andred.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 13 Aug 2019 06:38:41 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:48558 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726298AbfHMKil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 06:38:41 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7BCD31A00C2;
+        Tue, 13 Aug 2019 12:38:39 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 06B701A0300;
+        Tue, 13 Aug 2019 12:38:34 +0200 (CEST)
+Received: from lsv03124.swis.in-blr01.nxp.com (lsv03124.swis.in-blr01.nxp.com [92.120.146.121])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6AD82402F0;
+        Tue, 13 Aug 2019 18:38:27 +0800 (SGT)
+From:   Ashish Kumar <Ashish.Kumar@nxp.com>
+To:     tudor.ambarus@microchip.com, marek.vasut@gmail.com,
+        dwmw2@infradead.org, computersforpeace@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        linux-mtd@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, Ashish Kumar <Ashish.Kumar@nxp.com>,
+        Kuldeep Singh <kuldeep.singh@nxp.com>,
+        Ashish Kumar <ashish.kumar@nxp.com>
+Subject: [Patch v3] drivers: mtd: spi-nor: Add flash property for mt25qu512a and mt35xu02g
+Date:   Tue, 13 Aug 2019 16:08:25 +0530
+Message-Id: <1565692705-27749-1-git-send-email-Ashish.Kumar@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i.MX7D variant of the IP can use either an external
-crystal oscillator input or an internal clock input as
-a reference clock input for the PCIe PHY.
+mt25qu512a is rebranded after its spinoff from STM, so it is
+different only in term of operating frequency, initial JEDEC id
+is same as that of n25q512a. In order to avoid any confussion
+with respect to name new entry is added.
+This flash is tested for Single I/O and QUAD I/O mode on LS1046FRWY.
 
-Document the optional property 'fsl,pcie-phy-refclk-internal'
+mt35xu02g is Octal flash supporting Single I/O and QCTAL I/O
+and it has been tested on LS1028ARDB
 
-Signed-off-by: André Draszik <git@andred.net>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
 ---
- Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+v3:
+-Reword commits msg
+-rebase to top of mtd-linux spi-nor/next
+v2:
+Incorporate review comments from Vignesh
 
-diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-index a7f5f5afa0e6..985d7083df9f 100644
---- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-@@ -56,6 +56,11 @@ Additional required properties for imx7d-pcie and imx8mq-pcie:
- 	       - "turnoff"
- - fsl,imx7d-pcie-phy: A phandle to an fsl,imx7d-pcie-phy node.
- 
-+Additional optional properties for imx7d-pcie:
-+- fsl,pcie-phy-refclk-internal: If present then an internal PLL input is used
-+  as PCIe PHY reference clock source. By default an external ocsillator input
-+  is used.
+ drivers/mtd/spi-nor/spi-nor.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index 03cc788..97d3de8 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -1988,6 +1988,12 @@ static const struct flash_info spi_nor_ids[] = {
+ 	{ "n25q128a13",  INFO(0x20ba18, 0, 64 * 1024,  256, SECT_4K | SPI_NOR_QUAD_READ) },
+ 	{ "n25q256a",    INFO(0x20ba19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+ 	{ "n25q256ax1",  INFO(0x20bb19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_QUAD_READ) },
 +
- Additional required properties for imx8mq-pcie:
- - clock-names: Must include the following additional entries:
- 	- "pcie_aux"
++	/* Micron */
++	{ "mt25qu512a", INFO6(0x20bb20, 0x104400, 64 * 1024, 1024, SECT_4K |
++				USE_FSR | SPI_NOR_DUAL_READ |
++				SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
++
+ 	{ "n25q512a",    INFO(0x20bb20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
+ 	{ "n25q512ax3",  INFO(0x20ba20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
+ 	{ "n25q00",      INFO(0x20ba21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+@@ -2003,6 +2009,9 @@ static const struct flash_info spi_nor_ids[] = {
+ 			SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ |
+ 			SPI_NOR_4B_OPCODES)
+ 	},
++	{ "mt35xu02g",  INFO(0x2c5b1c, 0, 128 * 1024, 2048,
++			SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ |
++			SPI_NOR_4B_OPCODES) },
+ 
+ 	/* PMC */
+ 	{ "pm25lv512",   INFO(0,        0, 32 * 1024,    2, SECT_4K_PMC) },
 -- 
-2.23.0.rc1
+2.7.4
 
