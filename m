@@ -2,98 +2,88 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F77C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCFBC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E07420840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:02:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jzWEnGhD"
+	by mail.kernel.org (Postfix) with ESMTP id 321A520840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565686951;
+	bh=5BiaJ/yApWvwWT9xYpwix6hXyHdsGQBWDkvVoNxr9P4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IN10fmTqp2lPwg51G/6sA2QwBKrr81M6EbY+r1u1MnovA8k2aKbIqwbIgvaLZTZxj
+	 XF3XrxKCkkyAuxI/8GmbWtw6Tl95ShiRvukeh32SImCPG4yEv1VtsQuCGYjE4w1r3L
+	 CT2Je1c9+f6g0XtLEnsvcWfh/8yWPpw4SKLoRVaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbfHMJCT (ORCPT
+        id S1728423AbfHMJCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:02:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37326 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfHMJCP (ORCPT
+        Tue, 13 Aug 2019 05:02:30 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39027 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfHMJC1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:02:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rwawfSmb1AGqD9EUztZX7iOxqE00kp2qBT1NnM3L8EE=; b=jzWEnGhDyuUs/Xztk9bAldlrCL
-        TT3mbvpcwRiez6Qr/bfQeAGr6GiGDLEBOwvYOEaE4tny/QgYmRlRrDlPiiWWUa+zdQrwGVr225os4
-        6bHBUFMCKS2vSEmeUSChZ2NcL+x4kce8ziOHKiohPsIrO+0HYfmSdbYZBDMwxjnk8cxJN7Cy0ZTUY
-        7gg3iE8TcwZ0UXy20KD78ob+8B+O9eCPP9Zqwk/uR6PRYBJyWj+U/iqLA52F2QhYJgg3xaBZ11Gas
-        gHa8cqEgZGhp5Cm52y694WTFleZFyUdQuRiW2Wug8k5dAHjacmQVfLHEGH+IjLYwVUVCYCmiMQ9Nj
-        /wrh+0vg==;
-Received: from [2001:4bb8:180:1ec3:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hxSgw-0006a0-L3; Tue, 13 Aug 2019 09:02:07 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, x86@kernel.org
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] x86: remove the unused set_pages_array_wt function
-Date:   Tue, 13 Aug 2019 11:01:46 +0200
-Message-Id: <20190813090146.26377-7-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190813090146.26377-1-hch@lst.de>
-References: <20190813090146.26377-1-hch@lst.de>
+        Tue, 13 Aug 2019 05:02:27 -0400
+Received: by mail-lj1-f193.google.com with SMTP id x4so8708674ljj.6;
+        Tue, 13 Aug 2019 02:02:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wTepSsVHXSW1eYjUwZ1pH3F/70zTR4Vl8GGiERGTF58=;
+        b=BJ553ZpMJar1x18XVn344g4dDsvDk+TE6Ifi4t/meZqWMR/HLmX1E0cba7nAS2XQo5
+         HGg5Oqj9kO+xOhqPihS1cUGNZh/UllmgQrrIp8RsYGqm8GVTB9InuF5dHqAlH0ulKmHV
+         q9XSam4sn8Srk9EjZYEDYwPIxVrHmxn1eRsuRwEIF8BjlFofc/c0AL8MsSXpny/odCDO
+         TEv/jWPje6JARQ/8GZ31efMy/HsBzsxXCwjh76Cpk+Vv+eh4ZXU4z+yzzUF7DK2sNItT
+         6K1vyEv6uG/hw0V3MG8nreu9oXHdtuJ0Eifvh/Nz9gLaBXBJBDgJDrb+G9MeNU3Hfdoj
+         1ajg==
+X-Gm-Message-State: APjAAAXMCSqBI2dtCyQscqw7Hq/FBpZDT5OeZeeD+77S3DAA0YG90B69
+        6z3wzatvKg2KfMUHt7bp7cs=
+X-Google-Smtp-Source: APXvYqyQDKfZciI/rmUWmSfMPVbOpC9DONeUAS0NpBb7V9bk9PSuAZCXunVTpeF0Jjfinv37w8/Kbw==
+X-Received: by 2002:a2e:7001:: with SMTP id l1mr8898124ljc.48.1565686944801;
+        Tue, 13 Aug 2019 02:02:24 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id a15sm5244210lfo.2.2019.08.13.02.02.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 02:02:24 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92)
+        (envelope-from <johan@kernel.org>)
+        id 1hxShA-0002zA-7R; Tue, 13 Aug 2019 11:02:20 +0200
+Date:   Tue, 13 Aug 2019 11:02:20 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Matthew Michilot <mmichilot@gateworks.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthew Michilot <matthew.michilot@gmail.com>
+Subject: Re: [PATCH] USB: serial: ftdi_sio: add support for FT232H CBUS gpios
+Message-ID: <20190813090220.GC15556@localhost>
+References: <20190808222348.4428-1-matthew.michilot@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808222348.4428-1-matthew.michilot@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/x86/include/asm/set_memory.h | 1 -
- arch/x86/mm/pageattr.c            | 6 ------
- 2 files changed, 7 deletions(-)
+On Thu, Aug 08, 2019 at 10:23:48PM +0000, Matthew Michilot wrote:
+> Enable support for cbus gpios on FT232H. The cbus configuration is
+> stored in one word in the EEPROM at byte-offset 0x1a with the mux
+> config for ACBUS5, ACBUS6, ACBUS8 and ACBUS9 (only pins that can be
+> configured as I/O mode).
+> 
+> Tested using FT232H by configuring one ACBUS pin at a time.
+> 
+> Review-by: Tim Harvey <tharvey@gateworks.com>
+> Signed-off-by: Matthew Michilot <matthew.michilot@gmail.com>
 
-diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
-index 2ee8e469dcf5..cff5e07c1e19 100644
---- a/arch/x86/include/asm/set_memory.h
-+++ b/arch/x86/include/asm/set_memory.h
-@@ -49,7 +49,6 @@ int set_memory_np_noalias(unsigned long addr, int numpages);
- 
- int set_pages_array_uc(struct page **pages, int addrinarray);
- int set_pages_array_wc(struct page **pages, int addrinarray);
--int set_pages_array_wt(struct page **pages, int addrinarray);
- int set_pages_array_wb(struct page **pages, int addrinarray);
- 
- /*
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 9acd568c4faa..255c90d6aaa7 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -2047,12 +2047,6 @@ int set_pages_array_wc(struct page **pages, int numpages)
- }
- EXPORT_SYMBOL(set_pages_array_wc);
- 
--int set_pages_array_wt(struct page **pages, int numpages)
--{
--	return _set_pages_array(pages, numpages, _PAGE_CACHE_MODE_WT);
--}
--EXPORT_SYMBOL_GPL(set_pages_array_wt);
--
- int set_pages_wb(struct page *page, int numpages)
- {
- 	unsigned long addr = (unsigned long)page_address(page);
--- 
-2.20.1
+Also make sure your SoB matches the From line.
 
+Johan
