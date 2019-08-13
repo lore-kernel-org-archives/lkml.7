@@ -2,148 +2,116 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13603C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1C5C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE79206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:50:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565733012;
-	bh=qZlws6v+N8kI1UKOVdpEHH2UF31aMI5gwG/rOfFqHzw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tvC3pNpvH9KJTKCz0zR/QA486CZjLCfR/kQZpXq4e+JCDqgb94Gz9PNnBK/gE23T2
-	 wBeyMsgTDdPD8R8DGvPqz8UdPvZXssWjQILPzQtjMsY1sgpmToSDs2yNFrT9GNz1Bw
-	 NTcJlSF2chW1IlNiSO9iuqrgRxfiRd5D3fB3cxqQ=
+	by mail.kernel.org (Postfix) with ESMTP id E4EC22067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:52:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CpmOQTlB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfHMVuL (ORCPT
+        id S1726981AbfHMVwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:50:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfHMVuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:50:11 -0400
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03A8A20842;
-        Tue, 13 Aug 2019 21:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565733010;
-        bh=qZlws6v+N8kI1UKOVdpEHH2UF31aMI5gwG/rOfFqHzw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sqrnJ/m/lZjwrQjDTqlrzGi1anuWpCof3q1L4UIhTXIXaYkQySPbMoiC5CnzVwWWc
-         9148vWRJwV4fBbIZRDHWDqWS4brABGhBzsHkksdoqSgu5KWedwbYeyOfL7UBBRyoJR
-         Bz5WUcSlul2NfHeUcZ1jzK8ApAkBqsJYaJLA/Zfo=
-Received: by mail-qk1-f177.google.com with SMTP id s145so80982484qke.7;
-        Tue, 13 Aug 2019 14:50:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAU5X3DWyr5I4q02Mjg0VEzG1I5wYL4UzGnYxWx3SnylrQ+6hVUW
-        BS2B8dVgUTWTDJsdvhL+A7ev9Hy3z6pqQbicnQ==
-X-Google-Smtp-Source: APXvYqzMYP4+7zj4XfcIegLbEaqHi41gyoiH8MyCXiN9EIcjrt64BloYhGN0yKxe/9u4lsm4KPn2KKl8nfimpDdfVJk=
-X-Received: by 2002:a37:a44a:: with SMTP id n71mr34676994qke.393.1565733009197;
- Tue, 13 Aug 2019 14:50:09 -0700 (PDT)
+        Tue, 13 Aug 2019 17:52:15 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39925 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfHMVwP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 17:52:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id i63so2700844wmg.4;
+        Tue, 13 Aug 2019 14:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Aq+Y2GhebEKnLBnrxQhotqb+IDj71O/k31BTDDdJ94c=;
+        b=CpmOQTlBTp4oKABypS3aBgls/6oK6Kwi/RlPNB6D9pLZvAG+x6JOmW6O5ArUQg3/tq
+         /JGLy5u72qq5Gnum9haNKtMN9Em05dviEf5tL/FZJSQn4KgiFCDKSYy6MuZAK5PZBrfM
+         aurYzQg1X2V4YA4wYnlquLAKESp1RBLagEvlOPj+Gaw4NC7014GoY5hpgjVHkJrJBmBV
+         qQRjA4PU607GOO/+Y7rTg840JQValwoVZ/bAFXVv2+Uo+Esvn3xDYXFab70PK7DHLrG1
+         /o44k+qFYWf+uLtj3TEBS1eoRPsU/rxTFftqSucA8zb3F7cdQCu0pyWXjJ3UBoGHOmfG
+         +55g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Aq+Y2GhebEKnLBnrxQhotqb+IDj71O/k31BTDDdJ94c=;
+        b=UtknEb/dpXyftUMKaNIyPvrwegBzrO/B7aoMowY/eBz7s92k4yuhPrhQbyLNL4iX5b
+         L6R40ySrZEgWOGgaRb80rv7DMTLf75PmXZowzljMO6YbMhreMs3oXitz0fBD6CE//AdD
+         +jQdBsX0ySUWeFlPNBk4hLWrQ8tJ4y/ieG5vqywBf6Q+znHXmLaTmXyz4LipPBsAz1ny
+         HAEINXQjHUrMHOAUt1vxm6uATs1HNTMi9k3xRhpgTJW8SNJ8lYnEi6qgHLUmIPEmwvak
+         cW+mJNE2NW06/P0SAzrDtfHltK6TfWhhuuiOBl8dsYzySQ39SF8GCe+4Ry8j+m+Ja7T+
+         b+pg==
+X-Gm-Message-State: APjAAAXR75ZknkLW1HyYPJ52QAUHqbyeIkEB1WD2P3N937654ZDkFiUG
+        ckyur2JSKpTXLL++AHGn6zWskZOs
+X-Google-Smtp-Source: APXvYqwYnbR/jrmC7swOOoNJx78NLELh0rDowKVHL2lNer6mbgViai3DyldbLMPnpFs1vPX0XSXPbA==
+X-Received: by 2002:a1c:f106:: with SMTP id p6mr4556035wmh.148.1565733132831;
+        Tue, 13 Aug 2019 14:52:12 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f2f:3200:e1e2:64b7:ee24:2d4a? (p200300EA8F2F3200E1E264B7EE242D4A.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:e1e2:64b7:ee24:2d4a])
+        by smtp.googlemail.com with ESMTPSA id a18sm7039606wrt.18.2019.08.13.14.52.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 14:52:12 -0700 (PDT)
+Subject: Re: [PATCH] MAINTAINERS: r8169: Update path to the driver
+To:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org
+Cc:     joe@perches.com, nic_swsd@realtek.com,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
+ <20190813060759.14256-1-efremov@linux.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <69fac52e-8464-ea87-e2e5-422ae36a92c8@gmail.com>
+Date:   Tue, 13 Aug 2019 23:52:05 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190808140153.9156-1-dinguyen@kernel.org>
-In-Reply-To: <20190808140153.9156-1-dinguyen@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 13 Aug 2019 15:49:58 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLJN3n6A3NWX=pEYSPfnvQFsdBYwqr9iREHWGFwL2wHYQ@mail.gmail.com>
-Message-ID: <CAL_JsqLJN3n6A3NWX=pEYSPfnvQFsdBYwqr9iREHWGFwL2wHYQ@mail.gmail.com>
-Subject: Re: [PATCHv3] drivers/amba: add reset control to amba bus probe
-To:     Dinh Nguyen <dinguyen@kernel.org>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190813060759.14256-1-efremov@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Russell
-
-On Thu, Aug 8, 2019 at 8:02 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
->
-> The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
-> default. Until recently, the DMA controller was brought out of reset by the
-> bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals that
-> are not used are held in reset and are left to Linux to bring them out of
-> reset.
->
-> Add a mechanism for getting the reset property and de-assert the primecell
-> module from reset if found. This is a not a hard fail if the reset property
-> is not present in the device tree node, so the driver will continue to probe.
->
-> Because there are different variants of the controller that may have multiple
-> reset signals, the code will find all reset(s) specified and de-assert them.
->
-> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+On 13.08.2019 08:07, Denis Efremov wrote:
+> Update MAINTAINERS record to reflect the filename change
+> from r8169.c to r8169_main.c
+> 
+> Cc: Heiner Kallweit <hkallweit1@gmail.com>
+> Cc: nic_swsd@realtek.com
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: netdev@vger.kernel.org
+> Fixes: 25e992a4603c ("r8169: rename r8169.c to r8169_main.c")
+> Signed-off-by: Denis Efremov <efremov@linux.com>
 > ---
-> v3: add a reset_control_put()
->     add error handling for -EPROBE_DEFER
-> v2: move reset control to bus code
->     find all reset properties and de-assert them
-> ---
->  drivers/amba/bus.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->
-> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-> index 100e798a5c82..00e68ea416ca 100644
-> --- a/drivers/amba/bus.c
-> +++ b/drivers/amba/bus.c
-> @@ -18,6 +18,7 @@
->  #include <linux/limits.h>
->  #include <linux/clk/clk-conf.h>
->  #include <linux/platform_device.h>
-> +#include <linux/reset.h>
->
->  #include <asm/irq.h>
->
-> @@ -401,6 +402,28 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
->         ret = amba_get_enable_pclk(dev);
->         if (ret == 0) {
->                 u32 pid, cid;
-> +               int count;
-> +               struct reset_control *rstc;
-> +
-> +               /*
-> +                * Find reset control(s) of the amba bus and de-assert them.
-> +                */
-> +               count = reset_control_get_count(&dev->dev);
-> +               while (count > 0) {
-> +                       rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
-> +                       if (IS_ERR(rstc)) {
-> +                               if (PTR_ERR(rstc) == -EPROBE_DEFER) {
-> +                                       ret = -EPROBE_DEFER;
-> +                               } else {
-> +                                       dev_err(&dev->dev, "Can't get amba reset!\n");
-> +                               }
-> +                               break;
-> +                       } else {
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 99a7392ad6bc..25eb86f3261e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -183,7 +183,7 @@ M:	Realtek linux nic maintainers <nic_swsd@realtek.com>
+>  M:	Heiner Kallweit <hkallweit1@gmail.com>
+>  L:	netdev@vger.kernel.org
+>  S:	Maintained
+> -F:	drivers/net/ethernet/realtek/r8169.c
+> +F:	drivers/net/ethernet/realtek/r8169_main.c
+>  
+That's better than before, but wouldn't cover e.g. changes
+to r8169_firmware.c. Better may be:
 
-You can remove the else here and save some indentation on the rest.
+F:	drivers/net/ethernet/realtek/r8169*
 
-Otherwise,
+>  8250/16?50 (AND CLONE UARTS) SERIAL DRIVER
+>  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Heiner
 
-
-> +                               reset_control_deassert(rstc);
-> +                               reset_control_put(rstc);
-> +                               count--;
-> +                       }
-> +               }
->
->                 /*
->                  * Read pid and cid based on size of resource
-> --
-> 2.20.0
->
