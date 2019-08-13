@@ -2,106 +2,102 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0B8C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E9DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F96620840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506A2206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:16:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XNUFdEtT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfHMMOV (ORCPT
+        id S1727351AbfHMMQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:14:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52794 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726600AbfHMMOV (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:14:21 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 23C183064FD2;
-        Tue, 13 Aug 2019 12:14:21 +0000 (UTC)
-Received: from krava (unknown [10.43.17.33])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1F4316A75E;
-        Tue, 13 Aug 2019 12:14:18 +0000 (UTC)
-Date:   Tue, 13 Aug 2019 14:14:18 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v3] perf diff: Report noisy for cycles diff
-Message-ID: <20190813121418.GA9349@krava>
-References: <20190809233029.12265-1-yao.jin@linux.intel.com>
- <20190812083555.GC11752@krava>
- <0e1a0f70-5089-7524-c53b-2762fc174a20@linux.intel.com>
+        Tue, 13 Aug 2019 08:16:10 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37353 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbfHMMQK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 08:16:10 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 129so4598697pfa.4
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 05:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HVlLJiIzjaXDxFFkRwCgsS9CVo3aI/KKzGwIYcEyzZU=;
+        b=XNUFdEtT15n7SWbDoymnDWB6S1FHl3jTRMDvFq1tpn+deX4cDMtdSaifhruzfd5utA
+         Zm6EOCAz2i2aXTj/LvosazkuB1chumYOVHkJVyOztRrzdHDgtxXKQsag4uSefxubT8x+
+         x8F9fAzkGkBc7u9QgBuN/hq7bzEW/tmUINBC0DuoIUPEe455xY7RjQ2NFB3+cTbPFKny
+         eYCN6EhLj+4oY6s+oDAWKtGbhZo4r+HhznjjdW37EgA0ODTPkQnXJkWn5QB6sCpwgMb9
+         3jfjohhGwfSx4Y7y23bjrgF8Dgs8wqn4QCUrhRRoUK+AqAEGBXjikFMhsCwTCF9uuNa7
+         1VnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HVlLJiIzjaXDxFFkRwCgsS9CVo3aI/KKzGwIYcEyzZU=;
+        b=YDHbMTSBjTQ02wHrJFizGFiIn5HnaeQLMUDpAaftiQSkPhrTKl6ZMUPPfNqqUVHbEA
+         PVXpr+hNwzq7uNcJgm3qD7CxJozVuW4mF9q5+YkQgMcR3r+k8j9Q5LlEt0RqU5xXf84q
+         HUteMUgUs9yIbC1hD8iQhsPfWfKE19QuLWenvHcNo9rIh66HqmtirtMB/olerpzPMQz5
+         GKq8FMIWqGmInvk0pNlEzXO/hgGs29Xlu7MevL/hlWzLmNtKxu6SySaD8FRHFMGfONXK
+         78o4nmjzKQg5/n275hnyaW5VnMtUPjI/KJD9UbRzvZHORyBIVsDThJ5ub6GMtKlq3jdF
+         madQ==
+X-Gm-Message-State: APjAAAXc1pfd6OhPsypzSrCw6rel9rSRbRum4QPraWxLBYPhKYDEzVOp
+        HEOw9jC1TxAupB0iUxGu1Oih
+X-Google-Smtp-Source: APXvYqyqBDGNMo4tLSC5P2L0ZMq6zP+MdPBF4+rrYMx7vSuFUW2VLy1NayISlC8n8x8eROfvPHOiTw==
+X-Received: by 2002:a17:90a:fe07:: with SMTP id ck7mr1936580pjb.68.1565698569207;
+        Tue, 13 Aug 2019 05:16:09 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:649c:6ce0:9d44:669c:5d6c:bc5f])
+        by smtp.gmail.com with ESMTPSA id o24sm200027991pfp.135.2019.08.13.05.16.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 13 Aug 2019 05:16:08 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 17:46:01 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com
+Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
+ binding
+Message-ID: <20190813121601.GB29378@Mani-XPS-13-9360>
+References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
+ <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
+ <20190813115427.GC2527@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0e1a0f70-5089-7524-c53b-2762fc174a20@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 13 Aug 2019 12:14:21 +0000 (UTC)
+In-Reply-To: <20190813115427.GC2527@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 12:13:26PM +0800, Jin, Yao wrote:
+On Tue, Aug 13, 2019 at 02:54:27PM +0300, Sakari Ailus wrote:
+> On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
+> ...
+> > +Required Properties:
+> > +- compatible: Should be "sony,imx290"
+> > +- reg: I2C bus address of the device
+> > +- clocks: Reference to the xclk clock.
+> > +- clock-names: Should be "xclk".
+> > +- clock-frequency: Frequency of the xclk clock.
+> > +- vdddo-supply: Sensor digital IO regulator.
+> > +- vdda-supply: Sensor analog regulator.
+> > +- vddd-supply: Sensor digital core regulator.
 > 
+> Could you also add the link-frequencies property, please?
 > 
-> On 8/12/2019 4:35 PM, Jiri Olsa wrote:
-> > On Sat, Aug 10, 2019 at 07:30:29AM +0800, Jin Yao wrote:
-> > 
-> > SNIP
-> > 
-> > > +		if (vals[i] != 0)
-> > > +			return 0;
-> > > +	return 1;
-> > > +}
-> > > +
-> > > +static int print_cycles_spark(char *bf, int size, unsigned long *svals, u64 n)
-> > > +{
-> > > +	int len = n, printed;
-> > > +
-> > > +	if (len <= 1)
-> > > +		return 0;
-> > > +
-> > > +	if (len > NUM_SPARKS)
-> > > +		len = NUM_SPARKS;
-> > > +	if (all_zero(svals, len))
-> > > +		return 0;
-> > > +
-> > > +	printed = print_spark(bf, size, svals, len);
-> > > +	printed += scnprintf(bf + printed, size - printed, " ");
-> > > +
-> > > +	if (n > NUM_SPARKS)
-> > > +		printed += scnprintf(bf + printed, size - printed, "..");
-> > 
-> > will this '..' ever be printed? I can't see that even if I enlarge
-> > the column width..
-> > 
-> > jirka
-> > 
-> 
-> @@ -83,6 +85,8 @@ struct hist_entry_diff {
->                 /* PERF_HPP_DIFF__CYCLES */
->                 s64     cycles;
->         };
-> +       struct stats    stats;
-> +       unsigned long   svals[NUM_SPARKS];
->  };
-> 
-> Now we only save 8 items in svals[] (NUM_PARKS = 8). So '..' will not be
-> printed. The code of printing '..' is for future possible case.
-> 
-> If you think it's not necessary, I would remove this.
 
-please remove it then
+Sure, will do.
 
-thanks,
-jirka
+Thanks,
+Mani
+
+> -- 
+> Sakari Ailus
