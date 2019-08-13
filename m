@@ -2,214 +2,108 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA8EC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD07C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2C42067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF472067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:42:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nn0LLbEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfHMDmv (ORCPT
+        id S1727441AbfHMDm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 23:42:51 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:39400 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727362AbfHMDmq (ORCPT
+        Mon, 12 Aug 2019 23:42:56 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37999 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727362AbfHMDmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 23:42:46 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7D3gi9V012013, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7D3gi9V012013
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 13 Aug 2019 11:42:44 +0800
-Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
- (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Tue, 13 Aug 2019
- 11:42:43 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     <netdev@vger.kernel.org>
-CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net-next v2 5/5] r8152: change rx_copybreak and rx_pending through ethtool
-Date:   Tue, 13 Aug 2019 11:42:09 +0800
-Message-ID: <1394712342-15778-300-albertk@realtek.com>
-X-Mailer: Microsoft Office Outlook 11
-In-Reply-To: <1394712342-15778-295-albertk@realtek.com>
-References: <1394712342-15778-289-Taiwan-albertk@realtek.com>
- <1394712342-15778-295-albertk@realtek.com>
+        Mon, 12 Aug 2019 23:42:52 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z14so13290246pga.5
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 20:42:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0k9YKjP/cSKJilQHVEEEWvX6n5tlm0qX23zD4SCMvhE=;
+        b=Nn0LLbEocWdQsZe0KwASTMeF3yvcOUKdkEWMYH1WHDcbYZWs1/M9S46ADNJLT6ztKg
+         ohnPs8aI1SGl2ecJD5x4iWvugHTXqr1TmFHT9cv+2mrcs8/YL8avkYWxe2qtcS225nYV
+         P14ZkKXD8rYHbCL1BztGCkUqvwFTpCDtg2APVRC3DfIiLoTr2T0mY9ymE1fahlqjs1tt
+         jAqGyWq1s5KnLlyXrLJxyCGWMSHc4nX72i9PyAnH4BPXneTS8wdr1UA9Qv5ybNJHztXl
+         ZERPDzUATurdIpD42BJbH+z1ziScK9WqqXl1xpmFhDYq6wbbAGEnOCag2tCMQ1v41Qcb
+         7ILQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0k9YKjP/cSKJilQHVEEEWvX6n5tlm0qX23zD4SCMvhE=;
+        b=AgFGjPsNNQtQ8q9H5R1SkdAl8LjNMSGIyJXuDPWzrFLaolUrUo65/ZIu0J46MC/itP
+         QBFfJBiaOqDoZ/il4EHpnWfu2E6NHUpApGxmfTxoynmBtQmPYIAvKz41OU7p4isH0nYN
+         8ew4yV1SJwEc4YpaQQ/b8jJrqh7+WtAKSxS2OAz/hR122d6jNLnV+1MRDIVaajgcNY0+
+         gCj9a9DoDX5JLK792adXpl+WPDn4szBlVJij/4I1YlUWa7+UBYkhyAMVzr3vo0m/C9qY
+         MjZwSCGT4o/kVF1QnaJQIuQxEh39xxA9cFJdO0ANUmdV+VJoXfbpP0JfBMwRWSSUbDAP
+         nxig==
+X-Gm-Message-State: APjAAAUHG1DtDzmsK8x8ts6/HWyQObARmmo5Ujdrk+xLrNWhx8j3Se8v
+        HZrv3oCMcb+D9VetGFs+tAg=
+X-Google-Smtp-Source: APXvYqzuXbjPwNtkLqe7J3EZLKeX4YYvLOu0YBW46xJSkLaMzHDG9bUK3ND0R2GCFO8QqIz8Vs5+KQ==
+X-Received: by 2002:a63:ed55:: with SMTP id m21mr32978136pgk.343.1565667771751;
+        Mon, 12 Aug 2019 20:42:51 -0700 (PDT)
+Received: from masabert (150-66-86-142m5.mineo.jp. [150.66.86.142])
+        by smtp.gmail.com with ESMTPSA id q10sm10076800pfl.8.2019.08.12.20.42.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 20:42:51 -0700 (PDT)
+Received: by masabert (Postfix, from userid 1000)
+        id 7F0F62011CB; Tue, 13 Aug 2019 12:42:37 +0900 (JST)
+From:   Masanari Iida <standby24x7@gmail.com>
+To:     linux-kernel@vger.kernel.org, peter.ujfalusi@ti.com,
+        lgirdwood@gmail.com, broonie@kernel.org, tiwai@suse.com,
+        perex@perex.cz, alsa-devel@alsa-project.org
+Cc:     Masanari Iida <standby24x7@gmail.com>
+Subject: [PATCH] ASoC: ti: Fix typos in ti/Kconfig
+Date:   Tue, 13 Aug 2019 12:42:35 +0900
+Message-Id: <20190813034235.30673-1-standby24x7@gmail.com>
+X-Mailer: git-send-email 2.23.0.rc2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.21.177.138]
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let the rx_copybreak and rx_pending could be modified by
-ethtool.
+This patch fixes some spelling typo in Kconfig.
 
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
 ---
- drivers/net/usb/r8152.c | 91 ++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 86 insertions(+), 5 deletions(-)
+ sound/soc/ti/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 2ae04522cd5a..40d18e866269 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -26,7 +26,7 @@
- #include <linux/acpi.h>
+diff --git a/sound/soc/ti/Kconfig b/sound/soc/ti/Kconfig
+index 2197f3e1eaed..87a9b9dd4e98 100644
+--- a/sound/soc/ti/Kconfig
++++ b/sound/soc/ti/Kconfig
+@@ -12,7 +12,7 @@ config SND_SOC_TI_SDMA_PCM
  
- /* Information for net-next */
--#define NETNEXT_VERSION		"09"
-+#define NETNEXT_VERSION		"10"
+ comment "Texas Instruments DAI support for:"
+ config SND_SOC_DAVINCI_ASP
+-	tristate "daVinci Audio Serial Port (ASP) or McBSP suport"
++	tristate "daVinci Audio Serial Port (ASP) or McBSP support"
+ 	depends on ARCH_DAVINCI || COMPILE_TEST
+ 	select SND_SOC_TI_EDMA_PCM
+ 	help
+@@ -33,7 +33,7 @@ config SND_SOC_DAVINCI_MCASP
+ 	  - Keystone devices
  
- /* Information for net */
- #define NET_VERSION		"10"
-@@ -584,7 +584,7 @@ enum rtl_register_content {
- #define TX_ALIGN		4
- #define RX_ALIGN		8
- 
--#define RTL8152_MAX_RX_AGG	(10 * RTL8152_MAX_RX)
-+#define RTL8152_RX_MAX_PENDING	4096
- #define RTL8152_RXFG_HEADSZ	256
- 
- #define INTR_LINK		0x0004
-@@ -756,6 +756,9 @@ struct r8152 {
- 	u32 tx_qlen;
- 	u32 coalesce;
- 	u32 rx_buf_sz;
-+	u32 rx_copybreak;
-+	u32 rx_pending;
-+
- 	u16 ocp_base;
- 	u16 speed;
- 	u8 *intr_buff;
-@@ -1984,7 +1987,7 @@ static struct rx_agg *rtl_get_free_rx(struct r8152 *tp, gfp_t mflags)
- 
- 	spin_unlock_irqrestore(&tp->rx_lock, flags);
- 
--	if (!agg_free && atomic_read(&tp->rx_count) < RTL8152_MAX_RX_AGG)
-+	if (!agg_free && atomic_read(&tp->rx_count) < tp->rx_pending)
- 		agg_free = alloc_rx_agg(tp, mflags);
- 
- 	return agg_free;
-@@ -2064,10 +2067,10 @@ static int rx_bottom(struct r8152 *tp, int budget)
- 			pkt_len -= ETH_FCS_LEN;
- 			rx_data += sizeof(struct rx_desc);
- 
--			if (!agg_free || RTL8152_RXFG_HEADSZ > pkt_len)
-+			if (!agg_free || tp->rx_copybreak > pkt_len)
- 				rx_frag_head_sz = pkt_len;
- 			else
--				rx_frag_head_sz = RTL8152_RXFG_HEADSZ;
-+				rx_frag_head_sz = tp->rx_copybreak;
- 
- 			skb = napi_alloc_skb(napi, rx_frag_head_sz);
- 			if (!skb) {
-@@ -5104,6 +5107,77 @@ static int rtl8152_set_coalesce(struct net_device *netdev,
- 	return ret;
- }
- 
-+static int rtl8152_get_tunable(struct net_device *netdev,
-+			       const struct ethtool_tunable *tunable, void *d)
-+{
-+	struct r8152 *tp = netdev_priv(netdev);
-+
-+	switch (tunable->id) {
-+	case ETHTOOL_RX_COPYBREAK:
-+		*(u32 *)d = tp->rx_copybreak;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rtl8152_set_tunable(struct net_device *netdev,
-+			       const struct ethtool_tunable *tunable,
-+			       const void *d)
-+{
-+	struct r8152 *tp = netdev_priv(netdev);
-+	u32 val;
-+
-+	switch (tunable->id) {
-+	case ETHTOOL_RX_COPYBREAK:
-+		val = *(u32 *)d;
-+		if (val < ETH_ZLEN) {
-+			netif_err(tp, rx_err, netdev,
-+				  "Invalid rx copy break value\n");
-+			return -EINVAL;
-+		}
-+
-+		if (tp->rx_copybreak != val) {
-+			napi_disable(&tp->napi);
-+			tp->rx_copybreak = val;
-+			napi_enable(&tp->napi);
-+		}
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static void rtl8152_get_ringparam(struct net_device *netdev,
-+				  struct ethtool_ringparam *ring)
-+{
-+	struct r8152 *tp = netdev_priv(netdev);
-+
-+	ring->rx_max_pending = RTL8152_RX_MAX_PENDING;
-+	ring->rx_pending = tp->rx_pending;
-+}
-+
-+static int rtl8152_set_ringparam(struct net_device *netdev,
-+				 struct ethtool_ringparam *ring)
-+{
-+	struct r8152 *tp = netdev_priv(netdev);
-+
-+	if (ring->rx_pending < (RTL8152_MAX_RX * 2))
-+		return -EINVAL;
-+
-+	if (tp->rx_pending != ring->rx_pending) {
-+		napi_disable(&tp->napi);
-+		tp->rx_pending = ring->rx_pending;
-+		napi_enable(&tp->napi);
-+	}
-+
-+	return 0;
-+}
-+
- static const struct ethtool_ops ops = {
- 	.get_drvinfo = rtl8152_get_drvinfo,
- 	.get_link = ethtool_op_get_link,
-@@ -5121,6 +5195,10 @@ static const struct ethtool_ops ops = {
- 	.set_eee = rtl_ethtool_set_eee,
- 	.get_link_ksettings = rtl8152_get_link_ksettings,
- 	.set_link_ksettings = rtl8152_set_link_ksettings,
-+	.get_tunable = rtl8152_get_tunable,
-+	.set_tunable = rtl8152_set_tunable,
-+	.get_ringparam = rtl8152_get_ringparam,
-+	.set_ringparam = rtl8152_set_ringparam,
- };
- 
- static int rtl8152_ioctl(struct net_device *netdev, struct ifreq *rq, int cmd)
-@@ -5474,6 +5552,9 @@ static int rtl8152_probe(struct usb_interface *intf,
- 	tp->speed = tp->mii.supports_gmii ? SPEED_1000 : SPEED_100;
- 	tp->duplex = DUPLEX_FULL;
- 
-+	tp->rx_copybreak = RTL8152_RXFG_HEADSZ;
-+	tp->rx_pending = 10 * RTL8152_MAX_RX;
-+
- 	intf->needs_remote_wakeup = 1;
- 
- 	tp->rtl_ops.init(tp);
+ config SND_SOC_DAVINCI_VCIF
+-	tristate "daVinci Voice Interface (VCIF) suport"
++	tristate "daVinci Voice Interface (VCIF) support"
+ 	depends on ARCH_DAVINCI || COMPILE_TEST
+ 	select SND_SOC_TI_EDMA_PCM
+ 	help
 -- 
-2.21.0
+2.23.0.rc2
 
