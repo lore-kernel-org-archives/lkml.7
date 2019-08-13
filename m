@@ -2,104 +2,151 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE55C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BA2C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31A2A20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D45C720679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:39:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ok0gZh2E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfHMHjt (ORCPT
+        id S1727731AbfHMHjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:39:49 -0400
-Received: from mga14.intel.com ([192.55.52.115]:55694 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbfHMHjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:39:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 00:39:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,380,1559545200"; 
-   d="scan'208";a="170318857"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga008.jf.intel.com with ESMTP; 13 Aug 2019 00:39:46 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH 2/3] iommu/vt-d: Apply per-device dma_ops
-To:     Christoph Hellwig <hch@lst.de>
-References: <20190801060156.8564-1-baolu.lu@linux.intel.com>
- <20190801060156.8564-3-baolu.lu@linux.intel.com>
- <20190806064347.GA14906@lst.de>
- <f532a2c3-f73a-85d2-d2ad-37cde02547ce@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <f0163adb-f9f9-5c7b-2bf8-2e0f182ffe49@linux.intel.com>
-Date:   Tue, 13 Aug 2019 15:38:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <f532a2c3-f73a-85d2-d2ad-37cde02547ce@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 13 Aug 2019 03:39:53 -0400
+Received: from mail-eopbgr130041.outbound.protection.outlook.com ([40.107.13.41]:32128
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725981AbfHMHjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 03:39:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BK0AzB1hdHBxOpafcPVaLFe8BrALgNoiGLnWJxBWzRg2dON3jAx2tJ31feqQXAmzzbMbnozR3NKf+VLuuu/sZQsb8Aq1IceJqx0qStNv5D+oNPBC2vPWgb8U/yEMmAarhcjOD9qva24YCDXg/ldlqOpWTv3inFicxw4jHsoiImfHBFKf3xQ8YGWG5xXzmYeRoc4WhrItNE/Ly2T2VIGHFcpsy6Yrs2dEitaG4kg8AjCBSeQ4NOMp7r9IRElMgq0BeVN7mMvIAP3SkWearlFOqDfENKMYo93+zJ7ABXL/aYH4Cfb8N1JdkKUBgb4uNttC3Xx+fSn+BSOdRC6+cmLkYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P77/HK+A2hAAqQS5mdJRckP8Gm6gRbAnWpnCbKgAqhA=;
+ b=W4z77RPwNT1MokFE8GQu9TpK+0RU9acGL4icr0+WLKctyXFIr8ckL0a2f53jCKTrT3lK4IPUeyvic9RNajbOas3tTTWBgqsrxBbWhiOkXBOB86/0hFnznKzhilUSvOguaTCItYNFcwUZ1lJkzHw84XlgDY7kxI4DOt+UHzHryY30bP3lZejoISNHdF9A22pPmF+aUsZVkNIWzz9bU3kVQ7A5K54nZ18QGqjVnIEUtkf5+yPcqZoGcLmBqt91i7AIm/GpwOP8ZmLk4FsZvshIUYQ04ooibsaJ8QduuImVMUEGnBs+m5yHIhSZwEXE1OOR7pXykpJqP2ZVq65QIc/fLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P77/HK+A2hAAqQS5mdJRckP8Gm6gRbAnWpnCbKgAqhA=;
+ b=Ok0gZh2Es9x2hzw/IrbWiaGbRwcUje2iOtVfLbuVQkVhg+XioY9f3c8QqGim0eOIb0vBkZgm/8bdldnlO3Iv/eHq9CaHAwkNH3faigKmoKL+6dTnQrMDXGYqd+M022h0+tzQc/uUwaoceIKBDLcYbkwm88ncyubQwDM4AK9rNOo=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3220.eurprd04.prod.outlook.com (10.173.255.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.23; Tue, 13 Aug 2019 07:39:48 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::5012:d47a:1f5d:9b84]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::5012:d47a:1f5d:9b84%5]) with mapi id 15.20.2157.022; Tue, 13 Aug 2019
+ 07:39:48 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "tpiepho@impinj.com" <tpiepho@impinj.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "yue.wang@amlogic.com" <yue.wang@amlogic.com>,
+        "hayashi.kunihiko@socionext.com" <hayashi.kunihiko@socionext.com>,
+        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
+        "jonnyc@amazon.com" <jonnyc@amazon.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [EXT] Re: [PATCHv5 1/2] PCI: layerscape: Add the bar_fixed_64bit
+ property in EP driver.
+Thread-Topic: [EXT] Re: [PATCHv5 1/2] PCI: layerscape: Add the bar_fixed_64bit
+ property in EP driver.
+Thread-Index: AQHVUaHA8E+uV7sB3kSdNrIxtC9aDKb4rpUAgAAB5uA=
+Date:   Tue, 13 Aug 2019 07:39:48 +0000
+Message-ID: <AM5PR04MB32993CC1344DD660A298C7E1F5D20@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190813062840.2733-1-xiaowei.bao@nxp.com>
+ <61e6df1c-a0dc-8f05-f74a-85a3cac9823f@ti.com>
+In-Reply-To: <61e6df1c-a0dc-8f05-f74a-85a3cac9823f@ti.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 93dab06e-14c7-4194-a128-08d71fc16b18
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3220;
+x-ms-traffictypediagnostic: AM5PR04MB3220:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR04MB32200E45A421ADF53D5E1772F5D20@AM5PR04MB3220.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:284;
+x-forefront-prvs: 01283822F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(136003)(39860400002)(366004)(13464003)(189003)(199004)(3846002)(305945005)(7736002)(2501003)(86362001)(6116002)(81166006)(478600001)(81156014)(8676002)(9686003)(486006)(53546011)(102836004)(110136005)(6506007)(186003)(446003)(6436002)(316002)(44832011)(76176011)(476003)(55016002)(99286004)(76116006)(64756008)(66556008)(66476007)(11346002)(2201001)(66946007)(66446008)(26005)(7696005)(8936002)(229853002)(25786009)(6246003)(74316002)(7416002)(53936002)(33656002)(2906002)(256004)(14454004)(71200400001)(71190400001)(52536014)(5660300002)(66066001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3220;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: NYt9vtks3dsd/HX1VCxdj9d3e2+/yHC0hGytE1vGjHcvrpyNuz81tAnm2MsO/cAIn5Q4P8xDIO+tDdv91onLwNvx6e7IIuNdu+MeJNgId4PspWUlWe/o17Q/HtLYysfm5bWavkZmEGEeUNuAyqtGlWJNgzPYxC8NgFbL/I8X2LgZaXoMZXj3t7ucphlJ/v0eO3HgV5vYYtKSp68nhpE12JsUlv1JcIAxSVpoXUNIdD6mVeZV2rSSEtJE4uwjeA3LeekeUw8NJDLBh39lcCMmNwuCPjmOE/aQm1S6hrdE5Xe+R81oODllcSbOy3s6x/WigaYK+yuBbxgS9wRfiUTC9CJJEq2j8Vfs1H0++rXXWh0KBZgU4g+015m0YtqPryY2zjTHwi2LzNQRb3Vv5sF06PXwzypIeD6mM0Q63F0210o=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93dab06e-14c7-4194-a128-08d71fc16b18
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 07:39:48.1250
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NOJCq0LTRTlfKgrfA2vsSO9QDVdvwxIpshRkTDBJ937J+gU2Hlhm7R5oD6KZXHt7Y9LpviIok1yHwHdr4sbbHg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3220
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi again,
-
-On 8/7/19 11:06 AM, Lu Baolu wrote:
-> Hi Christoph,
-> 
-> On 8/6/19 2:43 PM, Christoph Hellwig wrote:
->> Hi Lu,
->>
->> I really do like the switch to the per-device dma_map_ops, but:
->>
->> On Thu, Aug 01, 2019 at 02:01:55PM +0800, Lu Baolu wrote:
->>> Current Intel IOMMU driver sets the system level dma_ops. This
->>> implementation has at least the following drawbacks: 1) each
->>> dma API will go through the IOMMU driver even the devices are
->>> using identity mapped domains; 2) if user requests to use an
->>> identity mapped domain (a.k.a. bypass iommu translation), the
->>> driver might fall back to dma domain blindly if the device is
->>> not able to address all system memory.
->>
->> This is very clearly a behavioral regression.  The intel-iommu driver
->> has always used the iommu mapping to provide decent support for
->> devices that do not have the full 64-bit addressing capability, and
->> changing this will make a lot of existing setups go slower.
->>
-> 
-> I agree with you that we should keep the capability and avoid possible
-> performance regression on some setups. But, instead of hard-coding this
-> in the iommu driver, I prefer a more scalable way.
-> 
-> For example, the concept of per group default domain type [1] seems to
-> be a good choice. The kernel could be statically compiled as by-default
-> "pass through" or "translate everything". The per group default domain
-> type API could then be used by the privileged user to tweak some of the
-> groups for better performance, either by 1) bypassing iommu translation
-> for the trusted super-speed devices, or 2) applying iommu translation to
-> access the system memory which is beyond the device's address capability
-> (without the necessary of using bounce buffer).
-> 
-> [1] https://www.spinics.net/lists/iommu/msg37113.html
-> 
-
-The code that this patch is trying to remove also looks buggy. The check
-and replace of domain happens in each DMA API, but there isn't any lock
-to serialize them.
-
-Best regards,
-Lu Baolu
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2lzaG9uIFZpamF5IEFi
+cmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4NCj4gU2VudDogMjAxOeW5tDjmnIgxM+aXpSAxNTozMA0K
+PiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlz
+aUBhcm0uY29tOw0KPiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBNLmguIExpYW4gPG1pbmdodWFuLmxp
+YW5AbnhwLmNvbT47IE1pbmdrYWkgSHUNCj4gPG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveSBaYW5n
+IDxyb3kuemFuZ0BueHAuY29tPjsNCj4gbC5zdGFjaEBwZW5ndXRyb25peC5kZTsgdHBpZXBob0Bp
+bXBpbmouY29tOyBMZW9uYXJkIENyZXN0ZXoNCj4gPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPjsg
+YW5kcmV3LnNtaXJub3ZAZ21haWwuY29tOw0KPiB5dWUud2FuZ0BhbWxvZ2ljLmNvbTsgaGF5YXNo
+aS5rdW5paGlrb0Bzb2Npb25leHQuY29tOw0KPiBkd213QGFtYXpvbi5jby51azsgam9ubnljQGFt
+YXpvbi5jb207IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOw0KPiBsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogW0VYVF0gUmU6IFtQQVRDSHY1
+IDEvMl0gUENJOiBsYXllcnNjYXBlOiBBZGQgdGhlIGJhcl9maXhlZF82NGJpdA0KPiBwcm9wZXJ0
+eSBpbiBFUCBkcml2ZXIuDQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gDQo+IE9uIDEzLzA4
+LzE5IDExOjU4IEFNLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiBUaGUgUENJZSBjb250cm9sbGVy
+IG9mIGxheWVyc2NhcGUganVzdCBoYXZlIDQgQkFScywgQkFSMCBhbmQgQkFSMSBpcw0KPiA+IDMy
+Yml0LCBCQVIyIGFuZCBCQVI0IGlzIDY0Yml0LCB0aGlzIGlzIGRldGVybWluZWQgYnkgaGFyZHdh
+cmUsIHNvIHNldA0KPiA+IHRoZSBiYXJfZml4ZWRfNjRiaXQgd2l0aCAweDE0Lg0KPiA+DQo+ID4g
+U2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IA0KPiBB
+Y2tlZC1ieTogS2lzaG9uIFZpamF5IEFicmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4NCj4gPiAtLS0N
+Cj4gPiB2MjoNCj4gPiAgLSBSZXBsYWNlIHZhbHVlIDB4MTQgd2l0aCBhIG1hY3JvLg0KPiA+IHYz
+Og0KPiA+ICAtIE5vIGNoYW5nZS4NCj4gPiB2NDoNCj4gPiAgLSBzZW5kIHRoZSBwYXRjaCBhZ2Fp
+biB3aXRoICctLXRvJy4NCj4gPiB2NToNCj4gPiAgLSBmaXggdGhlIGNvbW1pdCBtZXNzYWdlLg0K
+PiA+DQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMg
+fCAxICsNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+ID4NCj4gPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0K
+PiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+
+IGluZGV4IGJlNjFkOTYuLmNhOWFhNDUgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29u
+dHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2Nv
+bnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiBAQCAtNDQsNiArNDQsNyBAQCBz
+dGF0aWMgY29uc3Qgc3RydWN0IHBjaV9lcGNfZmVhdHVyZXMNCj4gbHNfcGNpZV9lcGNfZmVhdHVy
+ZXMgPSB7DQo+ID4gICAgICAgLmxpbmt1cF9ub3RpZmllciA9IGZhbHNlLA0KPiA+ICAgICAgIC5t
+c2lfY2FwYWJsZSA9IHRydWUsDQo+ID4gICAgICAgLm1zaXhfY2FwYWJsZSA9IGZhbHNlLA0KPiA+
+ICsgICAgIC5iYXJfZml4ZWRfNjRiaXQgPSAoMSA8PCBCQVJfMikgfCAoMSA8PCBCQVJfNCksDQo+
+ID4gIH07DQo+ID4NCj4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBwY2lfZXBjX2ZlYXR1cmVzKg0K
+SSBjaGVjayBvdGhlciBwbGF0Zm9ybXMsIGl0IGlzICdzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9l
+cGNfZmVhdHVyZXMnLCBJIGNhbiBnZXQgdGhlIGNvcnJlY3QgDQpWYWx1ZSB1c2UgdGhpcyBkZWZp
+bmUgd2F5IGluIHBjaS1lcGYtdGVzdC5jIGZpbGUuDQo+ID4NCg==
