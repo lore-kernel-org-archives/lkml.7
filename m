@@ -2,127 +2,113 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F648C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BC6C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D32E20651
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:25:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="O3P3oy4F"
+	by mail.kernel.org (Postfix) with ESMTP id A458F20651
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:26:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfHMFZQ (ORCPT
+        id S1726950AbfHMF0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 01:25:16 -0400
-Received: from ozlabs.org ([203.11.71.1]:37433 "EHLO ozlabs.org"
+        Tue, 13 Aug 2019 01:26:00 -0400
+Received: from mga03.intel.com ([134.134.136.65]:47278 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbfHMFZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 01:25:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4671Pj2zxkz9sNm;
-        Tue, 13 Aug 2019 15:25:13 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565673913;
-        bh=W1t92lLc1O2p0zeHcTydEI3caUnIYahKMT+GH5evFfk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=O3P3oy4F4QFyoFmHRybQfvaaUN1NSNHHGYaNtHHQWDaUjQZG8fuU8T2T5yurhu8Z/
-         SM59FEqTCh3ajNWV0PHHfrNB8RnolZCWd4fhZcEQT1El8gKlTylfUTpc3gVcKgMej+
-         c0H1nP2OEKqORhriZd/aQGKzuX5E3/f8x6s6PKW4DGpKwfmWJc4/Ry7dH/SU/EeTK6
-         lY3+5lphjz7AQJWAGMGW9hvaVpa/wlHXoAWjCPH9ZJpoTo9NocjL99358xc/NCRdjU
-         FTIt2zu2K6udlCQjbRQpwRgSq7eYKidW1taLNszg3qBg6uU9CL8koAQEcWu8VrGIBJ
-         18j0sGNbrCv1Q==
-Date:   Tue, 13 Aug 2019 15:25:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: build failure after merge of the rcu tree
-Message-ID: <20190813152511.21737e32@canb.auug.org.au>
-In-Reply-To: <20190812161934.GJ28441@linux.ibm.com>
-References: <20190812161236.21defb17@canb.auug.org.au>
-        <20190812161934.GJ28441@linux.ibm.com>
+        id S1726769AbfHMF0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 01:26:00 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 22:25:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,380,1559545200"; 
+   d="scan'208";a="376185850"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga006.fm.intel.com with ESMTP; 12 Aug 2019 22:25:59 -0700
+Date:   Tue, 13 Aug 2019 13:25:34 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/mmap.c: rb_parent is not necessary in __vma_link_list
+Message-ID: <20190813052534.GA17131@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20190813032656.16625-1-richardw.yang@linux.intel.com>
+ <20190813033958.GB5307@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/UwbxNLX_LFaFu4/j.HNGJrh";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813033958.GB5307@bombadil.infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/UwbxNLX_LFaFu4/j.HNGJrh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Paul,
-
-On Mon, 12 Aug 2019 09:19:34 -0700 "Paul E. McKenney" <paulmck@linux.ibm.co=
-m> wrote:
+On Mon, Aug 12, 2019 at 08:39:58PM -0700, Matthew Wilcox wrote:
+>On Tue, Aug 13, 2019 at 11:26:56AM +0800, Wei Yang wrote:
+>> Now we use rb_parent to get next, while this is not necessary.
+>> 
+>> When prev is NULL, this means vma should be the first element in the
+>> list. Then next should be current first one (mm->mmap), no matter
+>> whether we have parent or not.
+>> 
+>> After removing it, the code shows the beauty of symmetry.
 >
-> Huh.  "It has been building fine for me."  I added
->=20
-> 	#include <uapi/asm-generic/types.h>
-> 	#include <asm-generic/atomic-long.h>
->=20
-> to include/linux/rcu_segcblist.h, which hopefully fixes it at your end.
+>Uhh ... did you test this?
+>
 
-That did not work as I got a lot of errors from
-include/asm-generic/atomic-long.h.  I have added the following patch
-for today (which does build).  These errors come from having
-CONFIG_{,KERNEL_,UAPI_}HEADER_TEST set (which allmodconfig a should do).
+I reboot successfully with this patch.
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 13 Aug 2019 15:12:00 +1000
-Subject: [PATCH] rcu: use the correct includes
+>> @@ -273,12 +273,8 @@ void __vma_link_list(struct mm_struct *mm, struct vm_area_struct *vma,
+>>  		next = prev->vm_next;
+>>  		prev->vm_next = vma;
+>>  	} else {
+>> +		next = mm->mmap;
+>>  		mm->mmap = vma;
+>> -		if (rb_parent)
+>> -			next = rb_entry(rb_parent,
+>> -					struct vm_area_struct, vm_rb);
+>> -		else
+>> -			next = NULL;
+>>  	}
+>
+>The full context is:
+>
+>        if (prev) {
+>                next = prev->vm_next;
+>                prev->vm_next = vma;
+>        } else {
+>                mm->mmap = vma;
+>                if (rb_parent)
+>                        next = rb_entry(rb_parent,
+>                                        struct vm_area_struct, vm_rb);
+>                else
+>                        next = NULL;
+>        }
+>
+>Let's imagine we have a small tree with three ranges in it.
+>
+>A: 5-7
+>B: 8-10
+>C: 11-13
+>
+>I would imagine an rbtree for this case has B at the top with A
+>to its left and B to its right.
+>
+>Now we're going to add range D at 3-4.  'next' should clearly be range A.
+>It will have NULL prev.  Your code is going to make 'B' next, not A.
+>Right?
 
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- include/linux/rcu_segcblist.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+mm->mmap is not the rb_root.
 
-diff --git a/include/linux/rcu_segcblist.h b/include/linux/rcu_segcblist.h
-index 43e2935e8966..646759042333 100644
---- a/include/linux/rcu_segcblist.h
-+++ b/include/linux/rcu_segcblist.h
-@@ -14,8 +14,8 @@
- #ifndef __INCLUDE_LINUX_RCU_SEGCBLIST_H
- #define __INCLUDE_LINUX_RCU_SEGCBLIST_H
-=20
--#include <uapi/asm-generic/types.h>
--#include <asm-generic/atomic-long.h>
-+#include <linux/types.h>
-+#include <linux/atomic.h>
-=20
- /* Simple unsegmented callback lists. */
- struct rcu_cblist {
---=20
-2.20.1
+mm->mmap is the first element in the ordered list, if my understanding is
+correct.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/UwbxNLX_LFaFu4/j.HNGJrh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1SSbcACgkQAVBC80lX
-0GxI5wf+I4uBSHd2YmYlAxuZYMf94oAllzGJ0e/WZjCWF+PuF4tYdeVCdRYoLnjq
-sKFekiPfgCgSDy3uOSDaWE7mib+vO039YJJExerzQ3HbdGWsKS0wi7jOOq7R6W+O
-rjstgjYOpxX83mGKp4eySSGup/B6WOU9YL+QnciFWMQ0Tc4sxQCARUlA9cT4aRr+
-xBPYXhOA/LeelRe8htaloknDMbaUPXeicEjE66pda0jo/cQyVMLkzi/OK1Wre9K+
-gihnZyVF6eNAZdmPkoCS+8iyfuEGOG7j0Ta7OYeUFZKGpzt+47xwf5ykKLx77gpj
-T3nfrkZORs8JuxkorCESqlYA02e69w==
-=qZKm
------END PGP SIGNATURE-----
-
---Sig_/UwbxNLX_LFaFu4/j.HNGJrh--
+-- 
+Wei Yang
+Help you, Help me
