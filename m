@@ -2,90 +2,100 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D94C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5217EC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E39208C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:59:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="RpTx+//5"
+	by mail.kernel.org (Postfix) with ESMTP id 26F8320665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:04:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfHMT7t (ORCPT
+        id S1726608AbfHMUEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 15:59:49 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38100 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbfHMT7t (ORCPT
+        Tue, 13 Aug 2019 16:04:23 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33696 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfHMUEX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 15:59:49 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r20so27086556ota.5
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 12:59:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=nWHNHqC3bIoRSwxuJl3F0SbV8pQ/Gx2zD3CiOeVvxHM=;
-        b=RpTx+//5O9mDpRShXm2soE7BxQNZ/E69lzZKvBD4Eyj7Zcz5AZ9/JOnA8RRj2j8zMO
-         np46BJ79HOnpT+k6xHYwZHiAn7QQ/5KJXvhZgThFn4T132QDvX4j2UwDrxtSXLgbPRfi
-         Xtl3NDG+bO5TG+1A5WsST2oftutb6MChj4lnoKmqN66lS1SurI87+w3SQcgDLtO8B5Ed
-         WOGeet1AOPhlp99+tLtt/SIMWWf7NYE66VYIkhL+8YwyOnjMlsVf+K0Lhc+SC41x4pVE
-         plxrVBAhhcAk565C8P/alfYup7JAk2GDSrGZggsWdTX/XlKstw3W3Yl5yqqrKOj0BXuu
-         Speg==
+        Tue, 13 Aug 2019 16:04:23 -0400
+Received: by mail-qk1-f193.google.com with SMTP id r6so80760095qkc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 13:04:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=nWHNHqC3bIoRSwxuJl3F0SbV8pQ/Gx2zD3CiOeVvxHM=;
-        b=Z0cGBNktOS0r0iTYN1xia/EJ4NMix264/jbr6YRIag3FsGSbASTgPTd04XlBSzXBOh
-         86BuR79qQCRy/aLS+Od75yBOLA0qqJ3+eV7OsHMxb9PMUGjgWkyh/nZYo2GM/4YW+VBH
-         qaynI3P0Rvp4qrfdZIUygOLkrc0QGhzE/nsK8q5VlVF3BZdGp1MEYXP34xL/DDKJKg1Y
-         axb6eZilBFmudvuduywcperrXl2J6wLh7IqfOzhXDvlJrpoPi1k836gsStA2FbCzoufH
-         qXKJ/yP7DK3Q6UobOs1FFVZylVwM+NdUZEQRzh5tyVlUeyBpGP+Odm53HXqVVdXIO2P1
-         /uhA==
-X-Gm-Message-State: APjAAAVqTJLFhdxAoxd/I1SphHt8yuoxEjPZpeInOIuqyNd20md1ELR+
-        E7oUZK9C2YY4IJaxKf9vZpv6bA==
-X-Google-Smtp-Source: APXvYqwc0uOqr7pRZlj85UgmmPYYrogEs6beI+PqksxlVBwZUtkPwKhgCRe5EWMdFyOGNFdEQENfxw==
-X-Received: by 2002:a6b:6209:: with SMTP id f9mr2472333iog.236.1565726388798;
-        Tue, 13 Aug 2019 12:59:48 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id o6sm9868759ioh.22.2019.08.13.12.59.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 12:59:48 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 12:59:47 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Bin Meng <bmeng.cn@gmail.com>
-cc:     Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Andreas Schwab <schwab@suse.de>, Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v3] riscv: Using CSR numbers to access CSRs
-In-Reply-To: <1565194418-9672-1-git-send-email-bmeng.cn@gmail.com>
-Message-ID: <alpine.DEB.2.21.9999.1908131259290.5033@viisi.sifive.com>
-References: <1565184656-4282-1-git-send-email-bmeng.cn@gmail.com> <1565194418-9672-1-git-send-email-bmeng.cn@gmail.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ama7Tg2aWhvE0NVoH4vqvv98NhGbGAzz1NVcfkHyItw=;
+        b=BtogfYE6Ncz2eGiF/ANLEa9gwfZ3l20rrTX8/NSCjpuO837TMUkPGv05AZEUAw6dxW
+         ZPUSDc4ZLLlYM4jm73lOM5wAHNScOnYPD6C24ySXIYH1+5dYBjp3GvyaWs6tTNJWxtmJ
+         hB7u3qiISfF81oz0ZLCPbFYpIEhWn8x0ln4YdX7QBoDcjAWEnW7D9mYLjbM/P404i033
+         szsSXg22IwJNj24BBaOlxHVTkOO57AqUsRgHKhAHnW7Jf+HyQYU2z8mXK+IO6K2DHUx1
+         shR03fHkHMj8Elh8zp8lIDdBhtAsBGhDZL2Z8LNk1gmHEEnGfeeUjmbpWe2zQjhzW+8g
+         OWkw==
+X-Gm-Message-State: APjAAAVKiZMBgdCFfNc+58BPz0PgnIo7JxsEZaEAFmxuwUeK7wTyNHy0
+        xmFatBwo4AbWa5AtoW6X5sAQ+BCOVj01D0Iiav8=
+X-Google-Smtp-Source: APXvYqyrynY29BAMTciUypf5U8XfdwgfGM9arQl7rLqLL5xFK4w21YbUT/3AyNemkegtSRMaw64BooYqgX3gvHzdagQ=
+X-Received: by 2002:a37:76c5:: with SMTP id r188mr35052600qkc.394.1565726662513;
+ Tue, 13 Aug 2019 13:04:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
+ <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
+ <ecf2742a-6cab-cc00-16ab-589fad07b8db@cs.ucla.edu> <87tvakuak6.fsf@mid.deneb.enyo.de>
+In-Reply-To: <87tvakuak6.fsf@mid.deneb.enyo.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 13 Aug 2019 22:04:05 +0200
+Message-ID: <CAK8P3a13f7an3xkQcP7qcSR-yhp=wYMT_cJ9h7gEdB3Qk8chBw@mail.gmail.com>
+Subject: Re: New kernel interface for sys_tz and timewarp?
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     Paul Eggert <eggert@cs.ucla.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Karel Zak <kzak@redhat.com>,
+        Lennart Poettering <lennart@poettering.net>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 7 Aug 2019, Bin Meng wrote:
+On Tue, Aug 13, 2019 at 9:31 PM Florian Weimer <fw@deneb.enyo.de> wrote:
+> * Paul Eggert:
+> > Linus Torvalds wrote:
+> >> I assume/think that glibc uses (a) environment
+> >> variables and (b) a filesystem-set default (per-user file with a
+> >> system-wide default? I don't know what people do).
+>
+> > glibc relies on the TZ environment variable, with a system-wide
+> > default specified in /etc/localtime or suchlike (there is no
+> > per-user default). glibc ignores the kernel's 'struct timezone'
+> > settings for of this, as 'struct timezone' is obsolete/vestigial and
+> > doesn't contain enough info to do proper conversions anyway.
+>
+> I think the configuration value that settimeofday changes is not
+> actually a time zone, but an time offset used to interpret various
+> things, mostly in a dual-boot environment with Windows, apparently
+> (Like the default time offset for extracting timetamps from FAT
+> volumes.)
+>
+> This data has to come from *somewhere*.  The TZ variable and
+> /etc/localtime cover something else entirely.
 
-> Since commit a3182c91ef4e ("RISC-V: Access CSRs using CSR numbers"),
-> we should prefer accessing CSRs using their CSR numbers, but there
-> are several leftovers like sstatus / sptbr we missed.
-> 
-> Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
-> Reviewed-by: Anup Patel <anup@brainfault.org>
+systemd and hwclock call localtime_r() when setting initial
+system time an tz information at boot time, so that information
+comes from /etc/localtime.
 
-Thanks, queued for v5.4-rc1.
+/etc/adjtime is used to determine whether to set warp the
+time at boot and rtc update or not warp it.
 
-
-- Paul
+      Arnd
