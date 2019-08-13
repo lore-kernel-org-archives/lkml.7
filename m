@@ -2,211 +2,111 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A86C32759
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6764DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6CD2189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B7020844
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565709966;
-	bh=HmV3d0tX/vIGU4K6vVAo5cUg5Z8uSssDtsYqHJAG5bg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=k8bjRVU0aOhtGaew9gkBKcY71BhT0UTPcmjGfpNQFVT8uMzWkKqhXxm7P+KTbFgSQ
-	 0GlH85aZ8K/Ucw07hTICvaLSmWlHmbMOi2IYqGsxP0cG0qBs8dS+X+UCI57mCRRGnX
-	 SDHOyY8vBe34AGOnzUq8Zpa/R61Lx0w96tCxLBRk=
+	s=default; t=1565709989;
+	bh=CrAz1yCfo6+iN/BmxOQbHCwrHnLhxx45xOC9Q0XW81k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vfWb9+n9LYh9xhdLTwWc2/KYU7hdFCCBt+p1Nb245xnyzzZlfAjLTcLVnrs4xYuLB
+	 F+Kau9KOMFg2vRUy1Dr7lxaIgMoAs+yn0r48PQO9ErlfzGZsk7F6zSqEtzifgQ/+kh
+	 ac3XlMNKf55E8NLRAY9xphhbXwaY9uDuWd7kGN4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbfHMP0D (ORCPT
+        id S1730009AbfHMP02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:26:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37690 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 11:26:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727494AbfHMP0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:26:01 -0400
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726705AbfHMP01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 11:26:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAC942184B;
-        Tue, 13 Aug 2019 15:26:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D402420663;
+        Tue, 13 Aug 2019 15:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565709960;
-        bh=HmV3d0tX/vIGU4K6vVAo5cUg5Z8uSssDtsYqHJAG5bg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=oXTK/Z2XPavPmmocWCTzqLAhdopHEqr0+WhpFAK86e901QMUz2hwOJ782cXRzWt6O
-         dd73osGsviYHzdVpTeZ7PctENRLocN/S6i3IIyyXpit2zvkMSpRGWyOpqenE2s4clG
-         NWV+sTZ4ZhnFbgA7AijE2ghB1sb8nDYpGJvZVppw=
-Received: by mail-qk1-f176.google.com with SMTP id 201so79889272qkm.9;
-        Tue, 13 Aug 2019 08:26:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAWLC6YJdMtPlS/iI+m/2q69RnrRQJSKhRbSsao4/flCJw99Muwd
-        V/7qONQvMCUEJMCrEzeSciYqz86Z16DgmEP+nQ==
-X-Google-Smtp-Source: APXvYqwu0CBqLROjtaQy/EXgqwp575KsDNniswfKsW6qsOEg0w760DgeRdr91KRxD6alIStviaHUoqrBGdSw3n2c0Xw=
-X-Received: by 2002:a37:6944:: with SMTP id e65mr31723600qkc.119.1565709959793;
- Tue, 13 Aug 2019 08:25:59 -0700 (PDT)
+        s=default; t=1565709986;
+        bh=CrAz1yCfo6+iN/BmxOQbHCwrHnLhxx45xOC9Q0XW81k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gi/sr8eKHUIdY0KORo3OqENJ9nHWlSzy+hIt2NL7mc1mwejIYNU+9CxxhxGs3XzBy
+         zrLxEXbf1MLrCEinxCSs8WDmf42Dd0q2H5jvauxI+/7SCsVSCuEd9Pks3bBg4eg1Ji
+         lHSGNIcWrEoerh5cgMx/WeA5auWMaoaaYuuy9qR8=
+Date:   Tue, 13 Aug 2019 17:26:24 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     linux-kernel@vger.kernel.org, maco@android.com,
+        kernel-team@android.com, arnd@arndb.de, geert@linux-m68k.org,
+        hpa@zytor.com, jeyu@kernel.org, joel@joelfernandes.org,
+        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
+        maco@google.com, michal.lkml@markovi.net, mingo@redhat.com,
+        oneukum@suse.com, pombredanne@nexb.com, sam@ravnborg.org,
+        sboyd@codeaurora.org, sspatil@google.com,
+        stern@rowland.harvard.edu, tglx@linutronix.de,
+        usb-storage@lists.one-eyed-alien.net, x86@kernel.org,
+        yamada.masahiro@socionext.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH v2 03/10] module: add support for symbol namespaces.
+Message-ID: <20190813152624.GB26138@kroah.com>
+References: <20180716122125.175792-1-maco@android.com>
+ <20190813121733.52480-1-maennich@google.com>
+ <20190813121733.52480-4-maennich@google.com>
 MIME-Version: 1.0
-References: <20190812121511.4169-1-frank-w@public-files.de> <20190812121511.4169-2-frank-w@public-files.de>
-In-Reply-To: <20190812121511.4169-2-frank-w@public-files.de>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 13 Aug 2019 09:25:47 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+fW=x8MoL3GMj6+ZKC3fd6F6+8Rtx=j5R9vEuL9UHCuQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+fW=x8MoL3GMj6+ZKC3fd6F6+8Rtx=j5R9vEuL9UHCuQ@mail.gmail.com>
-Subject: Re: [PATCH v5 01/10] dt-bindings: add powercontroller
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Allison Randal <allison@lohutok.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Tianping . Fang" <tianping.fang@mediatek.com>,
-        Josef Friedl <josef.friedl@speed.at>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813121733.52480-4-maennich@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 6:24 AM Frank Wunderlich
-<frank-w@public-files.de> wrote:
->
-> From: Josef Friedl <josef.friedl@speed.at>
->
-> add mt6323-rtc and mt6323-pwrc to mt6397 mfd DT bindings
-> an example is shown in mt6323-poweroff.txt
+On Tue, Aug 13, 2019 at 01:17:00PM +0100, Matthias Maennich wrote:
+> The EXPORT_SYMBOL_NS() and EXPORT_SYMBOL_NS_GPL() macros can be used to
+> export a symbol to a specific namespace.  There are no _GPL_FUTURE and
+> _UNUSED variants because these are currently unused, and I'm not sure
+> they are necessary.
+> 
+> I didn't add EXPORT_SYMBOL_NS() for ASM exports; this patch sets the
+> namespace of ASM exports to NULL by default. In case of relative
+> references, it will be relocatable to NULL. If there's a need, this
+> should be pretty easy to add.
+> 
+> A module that wants to use a symbol exported to a namespace must add a
+> MODULE_IMPORT_NS() statement to their module code; otherwise, modpost
+> will complain when building the module, and the kernel module loader
+> will emit an error and fail when loading the module.
+> 
+> MODULE_IMPORT_NS() adds a modinfo tag 'import_ns' to the module. That
+> tag can be observed by the modinfo command, modpost and kernel/module.c
+> at the time of loading the module.
+> 
+> The ELF symbols are renamed to include the namespace with an asm label;
+> for example, symbol 'usb_stor_suspend' in namespace USB_STORAGE becomes
+> 'usb_stor_suspend.USB_STORAGE'.  This allows modpost to do namespace
+> checking, without having to go through all the effort of parsing ELF and
+> relocation records just to get to the struct kernel_symbols.
+> 
+> On x86_64 I saw no difference in binary size (compression), but at
+> runtime this will require a word of memory per export to hold the
+> namespace. An alternative could be to store namespaced symbols in their
+> own section and use a separate 'struct namespaced_kernel_symbol' for
+> that section, at the cost of making the module loader more complex.
+> 
+> Co-developed-by: Martijn Coenen <maco@android.com>
+> Signed-off-by: Martijn Coenen <maco@android.com>
+> Signed-off-by: Matthias Maennich <maennich@google.com>
 
-How does this get to v5 with such a terrible subject? At least give
-some indication this is for some Mediatek chip.
-
-The recipient list needs some work too. Don't Cc git committers that
-get_maintainers.pl lists.
-
->
-> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
-> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> ---
-> changes since v4: use relative path
-> changes since v3: none
-> changes since v2: separated rtc-mt6397.txt to part 2
-> ---
->  .../devicetree/bindings/mfd/mt6397.txt        | 20 +++++++++++++------
->  .../bindings/power/reset/mt6323-poweroff.txt  | 20 +++++++++++++++++++
->  2 files changed, 34 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
->
-> diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> index 0ebd08af777d..063f5fe1cace 100644
-> --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-> +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> @@ -8,11 +8,12 @@ MT6397/MT6323 is a multifunction device with the following sub modules:
->  - Clock
->  - LED
->  - Keys
-> +- Power controller
->
->  It is interfaced to host controller using SPI interface by a proprietary hardware
->  called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of pwrap.
->  See the following for pwarp node definitions:
-> -Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> +../../bindings/soc/mediatek/pwrap.txt
-
-Unrelated change to what the subject says. Clean-ups and new things in
-separate patches please.
-
->
->  This document describes the binding for MFD device and its sub module.
->
-> @@ -22,14 +23,16 @@ compatible: "mediatek,mt6397" or "mediatek,mt6323"
->  Optional subnodes:
->
->  - rtc
-> -       Required properties:
-> +       Required properties: Should be one of follows
-> +               - compatible: "mediatek,mt6323-rtc"
-
-How is this related to 'powercontroller'?
-
->                 - compatible: "mediatek,mt6397-rtc"
-> +       For details, see ../../bindings/rtc/rtc-mt6397.txt
->  - regulators
->         Required properties:
->                 - compatible: "mediatek,mt6397-regulator"
-> -       see Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
-> +       see ../../bindings/regulator/mt6397-regulator.txt
->                 - compatible: "mediatek,mt6323-regulator"
-> -       see Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
-> +       see ../../bindings/regulator/mt6323-regulator.txt
->  - codec
->         Required properties:
->                 - compatible: "mediatek,mt6397-codec"
-> @@ -39,12 +42,17 @@ Optional subnodes:
->  - led
->         Required properties:
->                 - compatible: "mediatek,mt6323-led"
-> -       see Documentation/devicetree/bindings/leds/leds-mt6323.txt
-> +       see ../../bindings/leds/leds-mt6323.txt
->
->  - keys
->         Required properties:
->                 - compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
-> -       see Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
-> +       see ../../bindings/input/mtk-pmic-keys.txt
-> +
-> +- power-controller
-> +       Required properties:
-> +               - compatible: "mediatek,mt6323-pwrc"
-> +       For details, see ../../bindings/power/reset/mt6323-poweroff.txt
->
->  Example:
->         pwrap: pwrap@1000f000 {
-> diff --git a/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-> new file mode 100644
-> index 000000000000..933f0c48e887
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-> @@ -0,0 +1,20 @@
-> +Device Tree Bindings for Power Controller on MediaTek PMIC
-> +
-> +The power controller which could be found on PMIC is responsible for externally
-> +powering off or on the remote MediaTek SoC through the circuit BBPU.
-> +
-> +Required properties:
-> +- compatible: Should be one of follows
-> +       "mediatek,mt6323-pwrc": for MT6323 PMIC
-> +
-> +Example:
-> +
-> +       pmic {
-> +               compatible = "mediatek,mt6323";
-> +
-> +               ...
-> +
-> +               power-controller {
-> +                       compatible = "mediatek,mt6323-pwrc";
-> +               };
-> +       }
-> --
-> 2.17.1
->
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
