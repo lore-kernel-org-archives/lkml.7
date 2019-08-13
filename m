@@ -2,140 +2,131 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A39B7C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C08BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78FDC20874
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565693508;
-	bh=xG3aF0XmOiu5BGc++wjXnmrV4Zc8GkPnXTQx4cJH/8A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VgvQNjO2TSbrd+81uyvRhIB4yU/IiemjZU78b3qxc2T7mSasPYAK5iLM+Bycda9Oa
-	 aEnJW/PtwmTgu8fc8IcZYV0efO9CNEptritIIOd5JGe4ya7cdhYsW3CmdMqezDyAvX
-	 mTu4EP5gBFOri2IQMnK4O6qq80XbGRs8/nELKA7g=
+	by mail.kernel.org (Postfix) with ESMTP id E84F32067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:54:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tqnsUgP0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbfHMKvr (ORCPT
+        id S1728272AbfHMKyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 06:51:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59842 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726298AbfHMKvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 06:51:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A7B68AD7F;
-        Tue, 13 Aug 2019 10:51:44 +0000 (UTC)
-Date:   Tue, 13 Aug 2019 12:51:43 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Miguel de Dios <migueldedios@google.com>,
-        Wei Wang <wvw@google.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH] mm: drop mark_page_access from the unmap path
-Message-ID: <20190813105143.GG17933@dhcp22.suse.cz>
-References: <20190730123237.GR9330@dhcp22.suse.cz>
- <20190730123935.GB184615@google.com>
- <20190730125751.GS9330@dhcp22.suse.cz>
- <20190731054447.GB155569@google.com>
- <20190731072101.GX9330@dhcp22.suse.cz>
- <20190806105509.GA94582@google.com>
- <20190809124305.GQ18351@dhcp22.suse.cz>
- <20190809183424.GA22347@cmpxchg.org>
- <20190812080947.GA5117@dhcp22.suse.cz>
- <20190812150725.GA3684@cmpxchg.org>
+        Tue, 13 Aug 2019 06:54:03 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:54938 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfHMKyD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 06:54:03 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190813105400euoutp0277900ac5dd53adeb3930279abb393851~6dhIwS-lE0916809168euoutp02P
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:54:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190813105400euoutp0277900ac5dd53adeb3930279abb393851~6dhIwS-lE0916809168euoutp02P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1565693640;
+        bh=aDFPtneXHeVobCb1CMDp3QUHNNU2kziXVEXsVFserU0=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=tqnsUgP050mjqSksicM3yknaqcDCMvA46u61J9BvflwhJR3jkU0oMvdaFryyGenjg
+         /oTF85rN/DGEp5t5dTp2a2tfjsx3pN80VrYrxDCFNT4VMMZPcOpWTCZIaICa3Mt8Wg
+         Z9aHHE2SJbyWNakLgRwWRzu4tU7K+XHrN+P7qRQc=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190813105400eucas1p2edac71742c8bd13353f5c295a5cf9150~6dhIO7lsL3060430604eucas1p2X;
+        Tue, 13 Aug 2019 10:54:00 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 96.30.04309.8C6925D5; Tue, 13
+        Aug 2019 11:54:00 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190813105359eucas1p2c4fecf74be23d3e7739a61c55050bc89~6dhHM0Fn32856828568eucas1p2r;
+        Tue, 13 Aug 2019 10:53:59 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190813105359eusmtrp234ae32169119983abd201c921d2e4f6f~6dhG9NEqx2908429084eusmtrp2g;
+        Tue, 13 Aug 2019 10:53:59 +0000 (GMT)
+X-AuditID: cbfec7f4-ae1ff700000010d5-54-5d5296c8e64e
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id CB.A6.04117.6C6925D5; Tue, 13
+        Aug 2019 11:53:58 +0100 (BST)
+Received: from AMDC3555.DIGITAL.local (unknown [106.120.51.67]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190813105358eusmtip15612398bdf76ce66e17014d3a900833a~6dhGkX-CB1328413284eusmtip1c;
+        Tue, 13 Aug 2019 10:53:58 +0000 (GMT)
+From:   =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>
+To:     devel@lists.orangefs.org, linux-kernel@vger.kernel.org
+Cc:     hubcap@omnibond.com, martin@omnibond.com
+Subject: [PATCH] orangefs: Add octal zero prefix
+Date:   Tue, 13 Aug 2019 12:53:37 +0200
+Message-Id: <20190813105337.3065-1-a.swigon@partner.samsung.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812150725.GA3684@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJKsWRmVeSWpSXmKPExsWy7djPc7onpgXFGrw+xmJx6NhWdov9m6cw
+        WbTf7WOyuLxrDpvFz7UrWSxOrv/P7MDm0TD1FpvHr9t3WD0OvtvD5NG3ZRWjx+dNcgGsUVw2
+        Kak5mWWpRfp2CVwZC14dYyx4xlqx7cMVtgbGZyxdjJwcEgImEu+ftgDZXBxCAisYJSafnAPl
+        fGGU2PZtMZTzmVHixtkpTDAtK5sOskIkljNKLG4+zQjX8uHWa2aQKjYBT4meiTtYQWwRASuJ
+        z7+/gtnMAjoS+24cALOFBQwkPr+5AzaVRUBV4sTNR2wgNq+Ag8S9I+egDpSXWL3hADNEXFDi
+        5MwnLBBz5CWat85mBlksIfCfTeJa302oBheJw41/2CFsYYlXx7dA2TIS/3fOh3qhWOLpzvus
+        EM0NjBKblh1hhkhYSxw+fhEowQG0QVNi/S59iLCjxMH/15hBwhICfBI33gpC3MAnMWnbdKgw
+        r0RHmxCEqSWx4Hc0RKOERNPqa1CzPSQeXlrGCGILCcRKvP+9gWUCo8IsJI/NQvLYLIQTFjAy
+        r2IUTy0tzk1PLTbKSy3XK07MLS7NS9dLzs/dxAhMMKf/Hf+yg3HXn6RDjAIcjEo8vBUJgbFC
+        rIllxZW5hxglOJiVRHgvmQTFCvGmJFZWpRblxxeV5qQWH2KU5mBREuetZngQLSSQnliSmp2a
+        WpBaBJNl4uCUamBkvP38a+ws5RMJbm1HDzfp3cyaLLb4LKdmuZ34ikBz66v83F99L8vJT9v7
+        zMFAS1dixrFiideZJXeP5T32+7+tc6t9+ZN27o08BWpf7i45s1TsphIrc5FE+usT7/lsX9QY
+        zAo4afHac7JQYN/mZZu+ff90csHDjIwMxa/ctY0mUTzT5v+8dmqGEktxRqKhFnNRcSIAA6et
+        siwDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplkeLIzCtJLcpLzFFi42I5/e/4Xd1j04JiDT5OtbY4dGwru8X+zVOY
+        LNrv9jFZXN41h83i59qVLBYn1/9ndmDzaJh6i83j1+07rB4H3+1h8ujbsorR4/MmuQDWKD2b
+        ovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSczLLUIn27BL2MBa+OMRY8
+        Y63Y9uEKWwPjM5YuRk4OCQETiZVNB1m7GLk4hASWMkpMb5nJBpGQkPi4/gYrhC0s8edaFxtE
+        0SdGiVkTO5lAEmwCnhI9E3cAFXFwiAjYSDybXg8SZhbQkzg5ezlYr7CAgcTnN3fAylkEVCVO
+        3HwENp9XwEHi3pFzUEfIS6zecIAZIi4ocXLmExaQkcwC6hLr5wlBjJSXaN46m3kCI/8sJFWz
+        EKpmIalawMi8ilEktbQ4Nz232EivODG3uDQvXS85P3cTIzAKth37uWUHY9e74EOMAhyMSjy8
+        FQmBsUKsiWXFlbmHGCU4mJVEeC+ZBMUK8aYkVlalFuXHF5XmpBYfYjQFemEis5Rocj4wQvNK
+        4g1NDc0tLA3Njc2NzSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTA2Lld+dfffw297hGOf
+        cb3VOPcljj01aUZibuA2nvmZcSVMvcvryiZtialOCpUssO3R+nDt65X9CVH3/x3/5MGyTftO
+        6nLemgW9Sx8bP5fIjH2gmmI8dQlriI3sGmHVgNaToq5Kns/6JLgnZyUXrfrVnLAmdarIc7/7
+        FZV3tk5YtKng+LyC6L9KLMUZiYZazEXFiQACCjYTmAIAAA==
+X-CMS-MailID: 20190813105359eucas1p2c4fecf74be23d3e7739a61c55050bc89
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190813105359eucas1p2c4fecf74be23d3e7739a61c55050bc89
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190813105359eucas1p2c4fecf74be23d3e7739a61c55050bc89
+References: <CGME20190813105359eucas1p2c4fecf74be23d3e7739a61c55050bc89@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 12-08-19 11:07:25, Johannes Weiner wrote:
-> On Mon, Aug 12, 2019 at 10:09:47AM +0200, Michal Hocko wrote:
-[...]
-> > Btw. can we promote PageReferenced pages with zero mapcount? I am
-> > throwing that more as an idea because I haven't really thought that
-> > through yet.
-> 
-> That flag implements a second-chance policy, see this commit:
-> 
-> commit 645747462435d84c6c6a64269ed49cc3015f753d
-> Author: Johannes Weiner <hannes@cmpxchg.org>
-> Date:   Fri Mar 5 13:42:22 2010 -0800
-> 
->     vmscan: detect mapped file pages used only once
-> 
-> We had an application that would checksum large files using mmapped IO
-> to avoid double buffering. The VM used to activate mapped cache
-> directly, and it trashed the actual workingset.
-> 
-> In response I added support for use-once mapped pages using this flag.
-> SetPageReferenced signals the VM that we're not sure about the page
-> yet and give it another round trip on the LRU.
-> 
-> If you activate on this flag, it would restore the initial problem of
-> use-once pages trashing the workingset.
+This patch adds a missing zero to mode 755 specification required to
+express it in octal numeral system.
 
-You are right of course. I should have realized that! We really need
-another piece of information to store to the struct page or maybe xarray
-to reflect that.
+Reported-by: Łukasz Wrochna <l.wrochna@samsung.com>
+Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
+---
+ fs/orangefs/namei.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/orangefs/namei.c b/fs/orangefs/namei.c
+index 1dd710e5f376..3e7cf3d0a494 100644
+--- a/fs/orangefs/namei.c
++++ b/fs/orangefs/namei.c
+@@ -224,7 +224,7 @@ static int orangefs_symlink(struct inode *dir,
+ 	struct orangefs_object_kref ref;
+ 	struct inode *inode;
+ 	struct iattr iattr;
+-	int mode = 755;
++	int mode = 0755;
+ 	int ret;
  
-> > > Maybe the refaults will be fine - but latency expectations around
-> > > mapped page cache certainly are a lot higher than unmapped cache.
-> > >
-> > > So I'm a bit reluctant about this patch. If Minchan can be happy with
-> > > the lock batching, I'd prefer that.
-> > 
-> > Yes, it seems that the regular lock drop&relock helps in Minchan's case
-> > but this is a kind of change that might have other subtle side effects.
-> > E.g. will-it-scale has noticed a regression [1], likely because the
-> > critical section is shorter and the overal throughput of the operation
-> > decreases. Now, the w-i-s is an artificial benchmark so I wouldn't lose
-> > much sleep over it normally but we have already seen real regressions
-> > when the locking pattern has changed in the past so I would by a bit
-> > cautious.
-> 
-> I'm much more concerned about fundamentally changing the aging policy
-> of mapped page cache then about the lock breaking scheme. With locking
-> we worry about CPU effects; with aging we worry about additional IO.
-
-But the later is observable and debuggable little bit easier IMHO.
-People are quite used to watch for major faults from my experience
-as that is an easy metric to compare.
- 
-> > As I've said, this RFC is mostly to open a discussion. I would really
-> > like to weigh the overhead of mark_page_accessed and potential scenario
-> > when refaults would be visible in practice. I can imagine that a short
-> > lived statically linked applications have higher chance of being the
-> > only user unlike libraries which are often being mapped via several
-> > ptes. But the main problem to evaluate this is that there are many other
-> > external factors to trigger the worst case.
-> 
-> We can discuss the pros and cons, but ultimately we simply need to
-> test it against real workloads to see if changing the promotion rules
-> regresses the amount of paging we do in practice.
-
-Agreed. Do you see other option than to try it out and revert if we see
-regressions? We would get a workload description which would be helpful
-for future regression testing when touching this area. We can start
-slower and keep it in linux-next for a release cycle to catch any
-fallouts early.
-
-Thoughts?
-
+ 	gossip_debug(GOSSIP_NAME_DEBUG, "%s: called\n", __func__);
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
