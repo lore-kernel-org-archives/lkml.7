@@ -2,321 +2,214 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415FBC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B03C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8E520651
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A0F20651
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:48:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="PwzlZ4lF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbfHMOsS (ORCPT
+        id S1729783AbfHMOs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:48:18 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63228 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726637AbfHMOsS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:48:18 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DEcJ6p072026
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:48:16 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ubwdunuwu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:48:16 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 13 Aug 2019 15:48:15 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 13 Aug 2019 15:48:09 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7DEm8A336307234
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 14:48:08 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A6920B205F;
-        Tue, 13 Aug 2019 14:48:08 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7711FB2064;
-        Tue, 13 Aug 2019 14:48:08 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 13 Aug 2019 14:48:08 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 50CC616C0A22; Tue, 13 Aug 2019 07:48:09 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 07:48:09 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: Re: [PATCH RFC tip/core/rcu 14/14] rcu/nohz: Make multi_cpu_stop()
- enable tick on all online CPUs
-Reply-To: paulmck@linux.ibm.com
-References: <20190802151435.GA1081@linux.ibm.com>
- <20190802151501.13069-14-paulmck@linux.ibm.com>
- <20190812210232.GA3648@lenoir>
- <20190812232316.GT28441@linux.ibm.com>
- <20190813123016.GA11455@lenoir>
+        Tue, 13 Aug 2019 10:48:28 -0400
+Received: from mail-eopbgr140085.outbound.protection.outlook.com ([40.107.14.85]:1146
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726637AbfHMOs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 10:48:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fymU/9Y0AsyTQYxiy+oO5h5FuAW2Y6OcHEAwXyrS1onHR6JmP768vLlMPppafWTWoaUYaQOyKbqep8zDyvO16KJygbaPYZvxzER/c0H9vpCl4OFtfjx6WC4u+LoMPvr03ybUAutwsOcauW8FZlogiWBNpWj2XeiWvVc8Cv5W711GxajqFkHY6CawnZcmdP2XA3svuv3uQ1nucBrVAETvZEoNZnZ1jurSU0mSeQVmn7xzoy04ahqA/KfEuZpu2JOUZpJ2g3jRWZNI0ye599XTyeYCVDSkRTdVqj+wUbWA5XtfECVXLmcsVN7yJS4jv6QDtpHzD6b5kXU5OJTNtLfZaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CXsgTrlL01pWM5nixhCcC8kYdjhoKSrAPFH8y0xChxc=;
+ b=KDtCrwojRCX4lqET7r6iIUPdmgcK9Nz9MnXhwCDd4br1vfpQ0WtrJPC498npudUKEuFifVk21lYmbixQPiJfnlDpK6KVSsDvnlanyXJeb+ZcncOPjuUik0IxInETg+n+5gMzXQu+Ryx259dDVM7XCIj+iNTsoh6K+gbC0/8N9lWSl6jRbfQISTLYbHFm2rQ8wVBN1qlpnErg16BLWMiyCOJ0r76nzG4/8SIBHvrnGD2/bx3XUhVWjc7H1HnebiNeTTbYmL6yLUztgBhl+yDoHUFK6qwlHMMTX5nUuVjdMdfB7PKgHEF5VwhVPgZDQJUXjQvUKF+ZQJlkwwdUYPiwEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CXsgTrlL01pWM5nixhCcC8kYdjhoKSrAPFH8y0xChxc=;
+ b=PwzlZ4lFptA1nuWvpPqUD8pIto7uGdw3gMuzgSn5JkiLdfzEDm4f7umVwdkeUYZHaNuA4gRp0vS6h9xk3nFXk/9oBh1IiI2tsJapA87+y4OooJAz2KSH6RZMM60xP9yYi355llX1hWfEL1wh68aKnFY+d73oLOrdZT9ddoXRyf0=
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
+ AM0PR05MB5923.eurprd05.prod.outlook.com (20.178.118.221) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.18; Tue, 13 Aug 2019 14:48:24 +0000
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2157.022; Tue, 13 Aug 2019
+ 14:48:24 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>
+Subject: RE: [PATCH v2 0/2] Simplify mtty driver and mdev core
+Thread-Topic: [PATCH v2 0/2] Simplify mtty driver and mdev core
+Thread-Index: AQHVTfNxjgfwJJG2ZUiuOAmKCwQvf6bx3uKAgAdPQrA=
+Date:   Tue, 13 Aug 2019 14:48:23 +0000
+Message-ID: <AM0PR05MB48661804F69F24B08036E57DD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190802065905.45239-1-parav@mellanox.com>
+        <20190808141255.45236-1-parav@mellanox.com> <20190808170247.1fc2c4c4@x1.home>
+In-Reply-To: <20190808170247.1fc2c4c4@x1.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [106.51.22.188]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8363628b-477e-47ff-e5d2-08d71ffd4b2f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB5923;
+x-ms-traffictypediagnostic: AM0PR05MB5923:
+x-microsoft-antispam-prvs: <AM0PR05MB5923AC459F0A54EF66AF6B53D1D20@AM0PR05MB5923.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01283822F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(346002)(366004)(136003)(189003)(13464003)(54534003)(199004)(26005)(7736002)(33656002)(305945005)(486006)(74316002)(53936002)(25786009)(476003)(14454004)(86362001)(53546011)(6246003)(8936002)(2906002)(54906003)(55236004)(9456002)(7696005)(6506007)(102836004)(76176011)(186003)(3846002)(446003)(11346002)(4326008)(6116002)(316002)(71200400001)(71190400001)(256004)(66476007)(66446008)(66946007)(229853002)(76116006)(64756008)(66556008)(6436002)(99286004)(14444005)(9686003)(55016002)(5660300002)(52536014)(8676002)(81156014)(81166006)(478600001)(66066001)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5923;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8nVVktnguPKZzUMiomOhzBc1DwWDIVWM9rxvyPyXqEky2dd7f4mq/k3vT3EW3HDAOVPogKlvwIfTguypLpUF6vdGcJjbfrU3JdCO5XatoaA8HnEI6WEr63XNvUspeLMIHJFss6xAKOtWdxnbX47gSNEf+8l4dbbY4o8bRcJ7ZSvVxHFuKVRX8ex0BDqOF5c7s0byQOo4qwizneUlLXFyLXi5S6j+uIjf1W0tv0mb4irL14I/Dok07dm0FyY5NqYqj1ZBsIpTvx02XTn5afNTGLY8SknWbOgODpHVpMRyFD9jbLxHRjF2CAWTUpuz4dHODKFUk5r5KJGg7/mONHULEEUInhW1UaKvuFOqBRgG2vRHQwKH8rnjaHrtaFUP+U/ZaH+7OnxY50ZXasbqRcRlKYSFXFOb1pb6G3K8oZLayws=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813123016.GA11455@lenoir>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19081314-0064-0000-0000-000004082DE4
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011588; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01246253; UDB=6.00657648; IPR=6.01027759;
- MB=3.00028160; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-13 14:48:13
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081314-0065-0000-0000-00003EA76B26
-Message-Id: <20190813144809.GB28441@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908130156
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8363628b-477e-47ff-e5d2-08d71ffd4b2f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 14:48:23.9824
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QkgMwiwp08LFwHrS3lw9BLZ0Ob0BzeQjcALeWWEB8dtQXOqYw2HglFngZ+GzCRXI1nVzBX5rnwYt9saYHrXg9A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5923
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 02:30:19PM +0200, Frederic Weisbecker wrote:
-> On Mon, Aug 12, 2019 at 04:23:16PM -0700, Paul E. McKenney wrote:
-> > On Mon, Aug 12, 2019 at 11:02:33PM +0200, Frederic Weisbecker wrote:
-> > > On Fri, Aug 02, 2019 at 08:15:01AM -0700, Paul E. McKenney wrote:
-> > > Looks like it's not the right fix but, should you ever need to set an
-> > > all-CPUs (system wide) tick dependency in the future, you can use tick_set_dep().
-> > 
-> > Indeed, I have dropped this patch, but I now do something similar in
-> > RCU's CPU-hotplug notifiers.  Which does have an effect, especially on
-> > the system that isn't subject to the insane-latency cpu_relax().
-> > 
-> > Plus I am having to put a similar workaround into RCU's quiescent-state
-> > forcing logic.
-> > 
-> > But how should this really be done?
-> > 
-> > Isn't there some sort of monitoring of nohz_full CPUs for accounting
-> > purposes?  If so, would it make sense for this monitoring to check for
-> > long-duration kernel execution and enable the tick in this case?  The
-> > RCU dyntick machinery can be used to remotely detect the long-duration
-> > kernel execution using something like the following:
-> > 
-> > 	int nohz_in_kernel_snap = rcu_dynticks_snap_cpu(cpu);
-> > 
-> > 	...
-> > 
-> > 	if (rcu_dynticks_in_eqs_cpu(cpu, nohz_in_kernel_snap)
-> > 		nohz_in_kernel_snap = rcu_dynticks_snap_cpu(cpu);
-> > 	else
-> > 		/* Turn on the tick! */
-> > 
-> > I would supply rcu_dynticks_snap_cpu() and rcu_dynticks_in_eqs_cpu(),
-> > which would be simple wrappers around RCU's private rcu_dynticks_snap()
-> > and rcu_dynticks_in_eqs() functions.
-> > 
-> > Would this make sense as a general solution, or am I missing a corner
-> > case or three?
-> 
-> Oh I see. Until now we considered than running into the kernel (between user/guest/idle)
-> is supposed to be short but there can be specific places where it doesn't apply.
-> 
-> I'm wondering if, more than just providing wrappers, this shouldn't be entirely
-> driven by RCU using the tick_set_dep_cpu()/tick_clear_dep_cpu() at appropriate timings.
-> 
-> I don't want to sound like I'm trying to put all the work on you :p  It's just that
-> the tick shouldn't know much about RCU, it's rather RCU that is a client for the tick and
-> is probably better suited to determine when a CPU becomes annoying with its extended grace
-> period.
-> 
-> Arming a CPU timer could also be an alternative to tick_set_dep_cpu() for that.
-> 
-> What do you think?
+Hi Alex,
 
-Left to itself, RCU would take action only when a given nohz_full
-in-kernel CPU was delaying a grace period, which is what the (lightly
-tested) patch below is supposed to help with.  If that is all that is
-needed, well and good!
 
-But should we need long-running in-kernel nohz_full CPUs to turn on
-their ticks when they are not blocking an RCU grace period, for example,
-when RCU is idle, more will be needed.  To that point, isn't there some
-sort of monitoring that checks up on nohz_full CPUs ever second or so?
-If so, perhaps that monitoring could periodically invoke an RCU function
-that I provide for deciding when to turn the tick on.  We would also need
-to work out how to turn the tick off in a timely fashion once the CPU got
-out of kernel mode, perhaps in rcu_user_enter() or rcu_nmi_exit_common().
+> -----Original Message-----
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Friday, August 9, 2019 4:33 AM
+> To: Parav Pandit <parav@mellanox.com>
+> Cc: kvm@vger.kernel.org; kwankhede@nvidia.com; linux-
+> kernel@vger.kernel.org; cohuck@redhat.com; cjia@nvidia.com
+> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+>=20
+> On Thu,  8 Aug 2019 09:12:53 -0500
+> Parav Pandit <parav@mellanox.com> wrote:
+>=20
+> > Currently mtty sample driver uses mdev state and UUID in convoluated
+> > way to generate an interrupt.
+> > It uses several translations from mdev_state to mdev_device to mdev uui=
+d.
+> > After which it does linear search of long uuid comparision to find out
+> > mdev_state in mtty_trigger_interrupt().
+> > mdev_state is already available while generating interrupt from which
+> > all such translations are done to reach back to mdev_state.
+> >
+> > This translations are done during interrupt generation path.
+> > This is unnecessary and reduandant.
+>=20
+> Is the interrupt handling efficiency of this particular sample driver rea=
+lly
+> relevant, or is its purpose more to illustrate the API and provide a proo=
+f of
+> concept?  If we go to the trouble to optimize the sample driver and remov=
+e this
+> interface from the API, what do we lose?
+>=20
+> This interface was added via commit:
+>=20
+> 99e3123e3d72 vfio-mdev: Make mdev_device private and abstract interfaces
+>=20
+> Where the goal was to create a more formal interface and abstract driver
+> access to the struct mdev_device.  In part this served to make out-of-tre=
+e mdev
+> vendor drivers more supportable; the object is considered opaque and acce=
+ss is
+> provided via an API rather than through direct structure fields.
+>=20
+This is not the common practice in the kernel to provide exported symbol fo=
+r every single field of the structure.
 
-If this would be called only every second or so, the separate grace-period
-checking is still needed for its shorter timespan, though.
+> I believe that the NVIDIA GRID mdev driver does make use of this interfac=
+e and
+> it's likely included in the sample driver specifically so that there is a=
+n in-kernel
+> user for it (ie. specifically to avoid it being removed so casually).  An=
+ interesting
+> feature of the NVIDIA mdev driver is that I believe it has portions that =
+run in
+> userspace.  As we know, mdevs are named with a UUID, so I can imagine the=
+re
+> are some efficiencies to be gained in having direct access to the UUID fo=
+r a
+> device when interacting with userspace, rather than repeatedly parsing it=
+ from
+> a device name. =20
+Can you please point to the kernel code that accesses the UUID?
 
-Thoughts?
+> Is that really something we want to make more difficult in
+> order to optimize a sample driver?  Knowing that an mdev device uses a UU=
+ID
+> for it's name, as tools like libvirt and mdevctl expect, is it really wor=
+thwhile to
+> remove such a trivial API?
+>=20
+Yes. it is worthwhile to not keep any dead code in the kernel when there is=
+ no in-kernel driver using it.
+Did I miss a caller?
+Sample driver is setting wrong example of how/when uuid is used.
+There has be better example to show how/when/why to use it.
+Out of tree driver doesn't qualify API addition to my understanding.
+I like to listen to Greg and others for an API inclusion without user as I =
+haven't come across such practice in other subsystems such as nvme, netdev,=
+ rdma.
 
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit 1cb89508804f6f2fdb79a1be032b1932d52318c4
-Author: Paul E. McKenney <paulmck@linux.ibm.com>
-Date:   Mon Aug 12 16:14:00 2019 -0700
-
-    rcu: Force tick on for nohz_full CPUs not reaching quiescent states
-    
-    CPUs running for long time periods in the kernel in nohz_full mode
-    might leave the scheduling-clock interrupt disabled for then full
-    duration of their in-kernel execution.  This can (among other things)
-    delay grace periods.  This commit therefore forces the tick back on
-    for any nohz_full CPU that is failing to pass through a quiescent state
-    upon return from interrupt, which the resched_cpu() will induce.
-    
-    Reported-by: Joel Fernandes <joel@joelfernandes.org>
-    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 8c494a692728..8b8f5bffdc5a 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -651,6 +651,12 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
- 	 */
- 	if (rdp->dynticks_nmi_nesting != 1) {
- 		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2, rdp->dynticks);
-+		if (tick_nohz_full_cpu(rdp->cpu) &&
-+		    rdp->dynticks_nmi_nesting == 2 &&
-+		    rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-+			rdp->rcu_forced_tick = true;
-+			tick_dep_set_cpu(rdp->cpu, TICK_DEP_MASK_RCU);
-+		}
- 		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
- 			   rdp->dynticks_nmi_nesting - 2);
- 		return;
-@@ -886,6 +892,16 @@ void rcu_irq_enter_irqson(void)
- 	local_irq_restore(flags);
- }
- 
-+/*
-+ * If the scheduler-clock interrupt was enabled on a nohz_full CPU
-+ * in order to get to a quiescent state, disable it.
-+ */
-+void rcu_disable_tick_upon_qs(struct rcu_data *rdp)
-+{
-+	if (tick_nohz_full_cpu(rdp->cpu) && rdp->rcu_forced_tick)
-+		tick_dep_clear_cpu(rdp->cpu, TICK_DEP_MASK_RCU);
-+}
-+
- /**
-  * rcu_is_watching - see if RCU thinks that the current CPU is not idle
-  *
-@@ -1980,6 +1996,7 @@ rcu_report_qs_rdp(int cpu, struct rcu_data *rdp)
- 		if (!offloaded)
- 			needwake = rcu_accelerate_cbs(rnp, rdp);
- 
-+		rcu_disable_tick_upon_qs(rdp);
- 		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
- 		/* ^^^ Released rnp->lock */
- 		if (needwake)
-@@ -2269,6 +2286,7 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
- 	int cpu;
- 	unsigned long flags;
- 	unsigned long mask;
-+	struct rcu_data *rdp;
- 	struct rcu_node *rnp;
- 
- 	rcu_for_each_leaf_node(rnp) {
-@@ -2293,8 +2311,11 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
- 		for_each_leaf_node_possible_cpu(rnp, cpu) {
- 			unsigned long bit = leaf_node_cpu_bit(rnp, cpu);
- 			if ((rnp->qsmask & bit) != 0) {
--				if (f(per_cpu_ptr(&rcu_data, cpu)))
-+				rdp = per_cpu_ptr(&rcu_data, cpu);
-+				if (f(rdp)) {
- 					mask |= bit;
-+					rcu_disable_tick_upon_qs(rdp);
-+				}
- 			}
- 		}
- 		if (mask != 0) {
-@@ -2322,7 +2343,7 @@ void rcu_force_quiescent_state(void)
- 	rnp = __this_cpu_read(rcu_data.mynode);
- 	for (; rnp != NULL; rnp = rnp->parent) {
- 		ret = (READ_ONCE(rcu_state.gp_flags) & RCU_GP_FLAG_FQS) ||
--		      !raw_spin_trylock(&rnp->fqslock);
-+		       !raw_spin_trylock(&rnp->fqslock);
- 		if (rnp_old != NULL)
- 			raw_spin_unlock(&rnp_old->fqslock);
- 		if (ret)
-@@ -2855,7 +2876,7 @@ static void rcu_barrier_callback(struct rcu_head *rhp)
- {
- 	if (atomic_dec_and_test(&rcu_state.barrier_cpu_count)) {
- 		rcu_barrier_trace(TPS("LastCB"), -1,
--				   rcu_state.barrier_sequence);
-+				  rcu_state.barrier_sequence);
- 		complete(&rcu_state.barrier_completion);
- 	} else {
- 		rcu_barrier_trace(TPS("CB"), -1, rcu_state.barrier_sequence);
-@@ -2879,7 +2900,7 @@ static void rcu_barrier_func(void *unused)
- 	} else {
- 		debug_rcu_head_unqueue(&rdp->barrier_head);
- 		rcu_barrier_trace(TPS("IRQNQ"), -1,
--				   rcu_state.barrier_sequence);
-+				  rcu_state.barrier_sequence);
- 	}
- 	rcu_nocb_unlock(rdp);
- }
-@@ -2906,7 +2927,7 @@ void rcu_barrier(void)
- 	/* Did someone else do our work for us? */
- 	if (rcu_seq_done(&rcu_state.barrier_sequence, s)) {
- 		rcu_barrier_trace(TPS("EarlyExit"), -1,
--				   rcu_state.barrier_sequence);
-+				  rcu_state.barrier_sequence);
- 		smp_mb(); /* caller's subsequent code after above check. */
- 		mutex_unlock(&rcu_state.barrier_mutex);
- 		return;
-@@ -2938,11 +2959,11 @@ void rcu_barrier(void)
- 			continue;
- 		if (rcu_segcblist_n_cbs(&rdp->cblist)) {
- 			rcu_barrier_trace(TPS("OnlineQ"), cpu,
--					   rcu_state.barrier_sequence);
-+					  rcu_state.barrier_sequence);
- 			smp_call_function_single(cpu, rcu_barrier_func, NULL, 1);
- 		} else {
- 			rcu_barrier_trace(TPS("OnlineNQ"), cpu,
--					   rcu_state.barrier_sequence);
-+					  rcu_state.barrier_sequence);
- 		}
- 	}
- 	put_online_cpus();
-@@ -3168,6 +3189,7 @@ void rcu_cpu_starting(unsigned int cpu)
- 	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
- 	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
- 	if (rnp->qsmask & mask) { /* RCU waiting on incoming CPU? */
-+		rcu_disable_tick_upon_qs(rdp);
- 		/* Report QS -after- changing ->qsmaskinitnext! */
- 		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
- 	} else {
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index c612f306fe89..055c31781d3a 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -181,6 +181,7 @@ struct rcu_data {
- 	atomic_t dynticks;		/* Even value for idle, else odd. */
- 	bool rcu_need_heavy_qs;		/* GP old, so heavy quiescent state! */
- 	bool rcu_urgent_qs;		/* GP old need light quiescent state. */
-+	bool rcu_forced_tick;		/* Forced tick to provide QS. */
- #ifdef CONFIG_RCU_FAST_NO_HZ
- 	bool all_lazy;			/* All CPU's CBs lazy at idle start? */
- 	unsigned long last_accelerate;	/* Last jiffy CBs were accelerated. */
+> > Hence,
+> > Patch-1 simplifies mtty sample driver to directly use mdev_state.
+> >
+> > Patch-2, Since no production driver uses mdev_uuid(), simplifies and
+> > removes redandant mdev_uuid() exported symbol.
+>=20
+> s/no production driver/no in-kernel production driver/
+>=20
+> I'd be interested to hear how the NVIDIA folks make use of this API inter=
+face.
+> Thanks,
+>=20
+> Alex
+>=20
+> > ---
+> > Changelog:
+> > v1->v2:
+> >  - Corrected email of Kirti
+> >  - Updated cover letter commit log to address comment from Cornelia
+> >  - Added Reviewed-by tag
+> > v0->v1:
+> >  - Updated commit log
+> >
+> > Parav Pandit (2):
+> >   vfio-mdev/mtty: Simplify interrupt generation
+> >   vfio/mdev: Removed unused and redundant API for mdev UUID
+> >
+> >  drivers/vfio/mdev/mdev_core.c |  6 ------
+> >  include/linux/mdev.h          |  1 -
+> >  samples/vfio-mdev/mtty.c      | 39 +++++++----------------------------
+> >  3 files changed, 8 insertions(+), 38 deletions(-)
+> >
 
