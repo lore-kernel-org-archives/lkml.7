@@ -2,160 +2,466 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 821C1C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D4BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDC620665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE26206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:41:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="pqX+AsGx"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oS74yJ1H";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nofqohuo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbfHMBeF (ORCPT
+        id S1726556AbfHMBk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 21:34:05 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45590 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfHMBeF (ORCPT
+        Mon, 12 Aug 2019 21:40:59 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46348 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfHMBk6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 21:34:05 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a30so12525719lfk.12
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 18:34:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xhOMsZgraPbofDXHGlEAPblhYgeF7xROTk8w4FSX/Q8=;
-        b=pqX+AsGxsOOmro0DhzbCC8yIL18XGXrlTdxb1jh2O7AQ4Zpxtc3qR66hu/oqhESsq7
-         lruMije3Zt2EqNSnR5czmrGtEA4wnN5fIAo2BEK7CYe5z3SQ4bs1oCx/sSg8LmGpwP6Q
-         RCNhUECyMsRJmV5xsX8q48Aq7xOvj0C7qZw6s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xhOMsZgraPbofDXHGlEAPblhYgeF7xROTk8w4FSX/Q8=;
-        b=F9Z9IJWmFCrKNet/mEpstAzCMSF9u7qiPMOR5hoR5p9LHZubOFYtEdsEcv/NM3mN/D
-         xlhhrm3mjrbzoZn4Y9ZQKTt+epOoeEdpOGer0IVE6WmUrr6vv18c/g2O2na22+nSYiZR
-         sO0CIMQXyG1dqf2cgbRegU9hjRMaLd5qUYXw/DdUxvmEtBFh1UwNIb6+vkarmZIl9n6y
-         Ec/UmkA0awgUWjgHbZIa8ApwHluDbVVbgZaxMELoOakRxXC43jdOnWozrn9abejmrcq1
-         9pj+Ra1NDHhgeKY8ok48SYNiIjc0DzZEB8/mYDFOkyxVVTIaHAfW/Hd3VYdkov0icvq/
-         RHtQ==
-X-Gm-Message-State: APjAAAW0uyQeQOLZuySi2xcFMIgej3yOout9ghzwVetTyL+oT2+/EWJU
-        3L4EHoH1v8g1cVl56hODqiNQTJo3sA88dexom5O8BQ==
-X-Google-Smtp-Source: APXvYqywVV126qBkpvCj9wilDgs7/ubL/o2+AGR81L9EPWfdcToV8DH6PE+74TIUSlJiAqOlP4zxXU+RTHhqUSv+3kY=
-X-Received: by 2002:ac2:5394:: with SMTP id g20mr22731532lfh.112.1565660042882;
- Mon, 12 Aug 2019 18:34:02 -0700 (PDT)
+        Mon, 12 Aug 2019 21:40:58 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D1delh194811;
+        Tue, 13 Aug 2019 01:40:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=W7olyqMEnKkatUqz1lQyWN3evuwwaasu9s6VIUHKsQ8=;
+ b=oS74yJ1HzTk3k/0/Vx4Au/r7pQfcRQF50hVFvrj9hNF1IXD/SVOyKYVth8cm0WEweqlT
+ pZCBVObu4sI/NtzZIYrOtuLCdfFcZhEpcNkcTjRWQY+z3d4RGBOaN7tgtYz8WlVk3JHG
+ bRYQXSwgsQiMgB3PkDH5n0ZdbTwAer7rwwb/rufiBcLWy4wSS3SYL8YPfNdDmo9BP1Cd
+ nxBQo7cWyWsd2FL+2HrgBiBDpAni2sIazP9In364iLzA1SIDjQ8eKPpta/ffEkMTAaiJ
+ 3CDp04RpryX9wF/trwtqWhJXHE51TXf+p0Fn9VIfnliEHGg5uUkmnbb/oPXFlNs3dLsG hw== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=W7olyqMEnKkatUqz1lQyWN3evuwwaasu9s6VIUHKsQ8=;
+ b=nofqohuov3BP+Cc9QNke9ajQeTqL8hus5PbtpQG5mUay3H1CIzmwiqXxqJtkPZ6qV9WU
+ Qy4cTX5nFYkCmdMGoNQV+LRI85AJYQM/TQTvyOMy4BgFgTNTaZpSxywR8qbp5B/dkcvC
+ 97kqr/mWN4DkpGjbcI4g3E1h5ZDzMSkcArPeV+uvgki6uDLp5CUitHhkwOttY8D1jBvk
+ 3SbXBq/x50GrfMHHelCMEcIeA5dmv6FNk05NhsUk5qqMwJFkGBLJeXeYbQGX+HITFyE2
+ Ev/6YBhlk++rZKJbpfxp0nIQ2GOVIsoA5HC9M62/rAlB3fmMJnPrAcKtMVicP6WWmswh 4Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2u9nbtb1gp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 01:40:35 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D1cZPR138460;
+        Tue, 13 Aug 2019 01:40:34 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2u9m0asa3d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 01:40:34 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7D1eUDM014871;
+        Tue, 13 Aug 2019 01:40:30 GMT
+Received: from concerto.internal (/10.154.133.246)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 12 Aug 2019 18:40:29 -0700
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+To:     akpm@linux-foundation.org, vbabka@suse.cz,
+        mgorman@techsingularity.net, mhocko@suse.com,
+        dan.j.williams@intel.com
+Cc:     Khalid Aziz <khalid.aziz@oracle.com>, osalvador@suse.de,
+        richard.weiyang@gmail.com, hannes@cmpxchg.org,
+        arunks@codeaurora.org, rppt@linux.vnet.ibm.com, jgg@ziepe.ca,
+        amir73il@gmail.com, alexander.h.duyck@linux.intel.com,
+        linux-mm@kvack.org, linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org,
+        Bharath Vedartham <linux.bhar@gmail.com>,
+        Vandana BN <bnvandana@gmail.com>
+Subject: [RFC PATCH 1/2] mm: Add trend based prediction algorithm for memory usage
+Date:   Mon, 12 Aug 2019 19:40:11 -0600
+Message-Id: <20190813014012.30232-2-khalid.aziz@oracle.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190813014012.30232-1-khalid.aziz@oracle.com>
+References: <20190813014012.30232-1-khalid.aziz@oracle.com>
 MIME-Version: 1.0
-References: <20190802151435.GA1081@linux.ibm.com> <20190802151501.13069-14-paulmck@linux.ibm.com>
- <20190812210232.GA3648@lenoir> <20190812232316.GT28441@linux.ibm.com>
-In-Reply-To: <20190812232316.GT28441@linux.ibm.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Mon, 12 Aug 2019 21:33:51 -0400
-Message-ID: <CAEXW_YRm6cBp-J3tPeRH+Jx=38LaAtNoCM9f0FeFG+ZBZKBH6w@mail.gmail.com>
-Subject: Re: [PATCH RFC tip/core/rcu 14/14] rcu/nohz: Make multi_cpu_stop()
- enable tick on all online CPUs
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        dipankar <dipankar@in.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Glexiner <tglx@linutronix.de>,
-        Peter Zilstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908130015
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908130015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 7:23 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
->
-> On Mon, Aug 12, 2019 at 11:02:33PM +0200, Frederic Weisbecker wrote:
-> > On Fri, Aug 02, 2019 at 08:15:01AM -0700, Paul E. McKenney wrote:
-> > > The multi_cpu_stop() function relies on the scheduler to gain control from
-> > > whatever is running on the various online CPUs, including any nohz_full
-> > > CPUs running long loops in kernel-mode code.  Lack of the scheduler-clock
-> > > interrupt on such CPUs can delay multi_cpu_stop() for several minutes
-> > > and can also result in RCU CPU stall warnings.  This commit therefore
-> > > causes multi_cpu_stop() to enable the scheduler-clock interrupt on all
-> > > online CPUs.
-> > >
-> > > Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> > > ---
-> > >  kernel/stop_machine.c | 9 ++++++++-
-> > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
-> > > index b4f83f7bdf86..a2659f61ed92 100644
-> > > --- a/kernel/stop_machine.c
-> > > +++ b/kernel/stop_machine.c
-> > > @@ -20,6 +20,7 @@
-> > >  #include <linux/smpboot.h>
-> > >  #include <linux/atomic.h>
-> > >  #include <linux/nmi.h>
-> > > +#include <linux/tick.h>
-> > >  #include <linux/sched/wake_q.h>
-> > >
-> > >  /*
-> > > @@ -187,15 +188,19 @@ static int multi_cpu_stop(void *data)
-> > >  {
-> > >     struct multi_stop_data *msdata = data;
-> > >     enum multi_stop_state curstate = MULTI_STOP_NONE;
-> > > -   int cpu = smp_processor_id(), err = 0;
-> > > +   int cpu, err = 0;
-> > >     const struct cpumask *cpumask;
-> > >     unsigned long flags;
-> > >     bool is_active;
-> > >
-> > > +   for_each_online_cpu(cpu)
-> > > +           tick_nohz_dep_set_cpu(cpu, TICK_DEP_MASK_RCU);
-> >
-> > Looks like it's not the right fix but, should you ever need to set an
-> > all-CPUs (system wide) tick dependency in the future, you can use tick_set_dep().
->
-> Indeed, I have dropped this patch, but I now do something similar in
-> RCU's CPU-hotplug notifiers.  Which does have an effect, especially on
-> the system that isn't subject to the insane-latency cpu_relax().
->
-> Plus I am having to put a similar workaround into RCU's quiescent-state
-> forcing logic.
->
-> But how should this really be done?
->
-> Isn't there some sort of monitoring of nohz_full CPUs for accounting
-> purposes?  If so, would it make sense for this monitoring to check for
-> long-duration kernel execution and enable the tick in this case?  The
-> RCU dyntick machinery can be used to remotely detect the long-duration
-> kernel execution using something like the following:
->
->         int nohz_in_kernel_snap = rcu_dynticks_snap_cpu(cpu);
->
->         ...
->
->         if (rcu_dynticks_in_eqs_cpu(cpu, nohz_in_kernel_snap)
->                 nohz_in_kernel_snap = rcu_dynticks_snap_cpu(cpu);
->         else
->                 /* Turn on the tick! */
+Direct page reclamation and compaction have high and unpredictable
+latency costs for applications. This patch adds code to predict if
+system is about to run out of free memory by watching the historical
+memory consumption trends. It computes a best fit line to this
+historical data using method of least squares. it can then compute if
+system will run out of memory if the current trend continues.
+Historical data is held in a new data structure lsq_struct for each
+zone and each order within the zone. Size of the window for historical
+data is given by LSQ_LOOKBACK.
 
-This solution does make sense to me and is simpler than the
-rcu_nmi_exit_common() solution you proposed in the other thread.
+Signed-off-by: Khalid Aziz <khalid.aziz@oracle.com>
+Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+Reviewed-by: Vandana BN <bnvandana@gmail.com>
+---
+ include/linux/mmzone.h |  34 +++++
+ mm/Makefile            |   2 +-
+ mm/lsq.c               | 273 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 308 insertions(+), 1 deletion(-)
+ create mode 100644 mm/lsq.c
 
-Though I am not sure about the intricacies of remotely enabling the
-timer tick for a CPU. But overall, the above solution does seem
-simpler.
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index d77d717c620c..9a0e5cab7171 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -355,6 +355,38 @@ struct per_cpu_nodestat {
+ 
+ #endif /* !__GENERATING_BOUNDS.H */
+ 
++/*
++ * Size of lookback window for the free memory exhaustion prediction
++ * algorithm. Keep it to less than 16 to keep data manageable
++ */
++#define LSQ_LOOKBACK 8
++
++/*
++ * How far forward to look when determining if memory exhaustion would
++ * become an issue.
++ */
++extern unsigned long mempredict_threshold;
++
++/*
++ * Structure to keep track of current values required to compute the best
++ * fit line using method of least squares
++ */
++struct lsq_struct {
++	bool ready;
++	int next;
++	u64 x[LSQ_LOOKBACK];
++	unsigned long y[LSQ_LOOKBACK];
++};
++
++struct frag_info {
++	unsigned long free_pages;
++	unsigned long time;
++};
++
++/* Possile bits to be set by mem_predict in its return value */
++#define MEMPREDICT_RECLAIM	0x01
++#define MEMPREDICT_COMPACT	0x02
++
+ enum zone_type {
+ #ifdef CONFIG_ZONE_DMA
+ 	/*
+@@ -581,6 +613,8 @@ enum zone_flags {
+ 					 */
+ };
+ 
++extern int mem_predict(struct frag_info *frag_vec, struct zone *zone);
++
+ static inline unsigned long zone_managed_pages(struct zone *zone)
+ {
+ 	return (unsigned long)atomic_long_read(&zone->managed_pages);
+diff --git a/mm/Makefile b/mm/Makefile
+index 338e528ad436..fb7b3c19dd13 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -39,7 +39,7 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
+ 			   mm_init.o mmu_context.o percpu.o slab_common.o \
+ 			   compaction.o vmacache.o \
+ 			   interval_tree.o list_lru.o workingset.o \
+-			   debug.o gup.o $(mmu-y)
++			   debug.o gup.o lsq.o $(mmu-y)
+ 
+ # Give 'page_alloc' its own module-parameter namespace
+ page-alloc-y := page_alloc.o
+diff --git a/mm/lsq.c b/mm/lsq.c
+new file mode 100644
+index 000000000000..6005a2b2f44d
+--- /dev/null
++++ b/mm/lsq.c
+@@ -0,0 +1,273 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * lsq.c: Provide a prediction on whether free memory exhaustion is
++ *	imminent or not by using a best fit line based upon method of
++ *	least squares. Best fit line is based upon recent historical
++ *	data. This historical data forms the lookback window for the
++ *	algorithm.
++ *
++ *
++ * Author: Robert Harris
++ * Author: Khalid Aziz <khalid.aziz@oracle.com>
++ *
++ * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
++ * or visit www.oracle.com if you need additional information or have any
++ * questions.
++ *
++ */
++
++#include <linux/mm.h>
++#include <linux/mmzone.h>
++#include <linux/math64.h>
++
++/*
++ * How far forward to look when determining if fragmentation would
++ * become an issue. The unit for this is same as the unit for the
++ * x-axis of graph where sample points for memory utilization are being
++ * plotted. We start with a default value of 1000 units but can tweak it
++ * dynamically to get better prediction results. With data points for
++ * memory being gathered with granularity of milliseconds, this translates
++ * to a look ahead of 1 second. If system is 1 second away from severe
++ * fragmentation, start compaction now to avoid direct comapction.
++ */
++unsigned long mempredict_threshold = 1000;
++
++/*
++ * Threshold for number of free pages that should trigger reclamation,
++ * expressed as percentage of total number of pages
++ */
++#define MEMRECLAMATION_THRESHOLD	20
++
++/*
++ * This function inserts the given value into the list of most recently seen
++ * data and returns the parameters, m and c, of a straight line of the form
++ * y = (mx/100) + c that, according to the the method of least squares
++ * fits them best. This implementation looks at just the last few data points
++ * (lookback window) which allows for fixed amount of storage required for
++ * data points and a nearly fixed time to calculate best fit line. Using
++ * line equation of the form y=(mx/100)+c instead of y=mx+c allows us to
++ * avoid floating point operations since m can be fractional often.
++ */
++static int
++lsq_fit(struct lsq_struct *lsq, unsigned long new_y, u64 new_x,
++	long long *m, long long *c)
++{
++	u64 sigma_x, sigma_y;
++	u64 sigma_xy, sigma_xx;
++	long long slope_divisor;
++	int i, next;
++	u64 x_offset;
++
++	next = lsq->next++;
++	lsq->x[next] = new_x;
++	lsq->y[next] = new_y;
++
++	if (lsq->next == LSQ_LOOKBACK) {
++		lsq->next = 0;
++		/*
++		 * Lookback window is fill which means a reasonable
++		 * best fit line can be computed. Flag enough data
++		 * is available in lookback window now.
++		 */
++		lsq->ready = true;
++	}
++
++	/*
++	 * If lookback window is not full, do not continue with
++	 * computing slope and intercept of best fit line.
++	 */
++	if (!lsq->ready)
++		return -1;
++
++	/*
++	 * If lookback window is full, compute slope and intercept
++	 * for the best fit line. In the process of computing those, we need
++	 * to compute squares of values along x-axis. Sqaure values can be
++	 * large enough to overflow 64-bits if they are large enough to
++	 * begin with. To solve this problem, transform the line on
++	 * x-axis so the first point falls at x=0. Since lsq->x is a
++	 * circular buffer, lsq->next points to the oldest entry in this
++	 * buffer.
++	 */
++	x_offset = lsq->x[lsq->next];
++	for (i = 0; i < LSQ_LOOKBACK; i++)
++		lsq->x[i] -= x_offset;
++
++	/*
++	 * Lookback window is full. Compute slope and intercept
++	 * for the best fit line
++	 */
++	sigma_x = sigma_y = sigma_xy = sigma_xx = 0;
++	for (i = 0; i < LSQ_LOOKBACK; i++) {
++		sigma_x += lsq->x[i];
++		sigma_y += lsq->y[i];
++		sigma_xy += (lsq->x[i] * lsq->y[i]);
++		sigma_xx += (lsq->x[i] * lsq->x[i]);
++	}
++
++	/*
++	 * guard against divide-by-zero
++	 */
++	slope_divisor = LSQ_LOOKBACK * sigma_xx - sigma_x * sigma_x;
++	if (slope_divisor == 0)
++		return -1;
++	*m = div64_s64(((LSQ_LOOKBACK * sigma_xy - sigma_x * sigma_y) * 100),
++			slope_divisor);
++
++	*c = div64_long((sigma_y - *m * sigma_x), LSQ_LOOKBACK);
++
++	/*
++	 * Restore original values for x-axis
++	 */
++	for (i = 0; i < LSQ_LOOKBACK; ++i)
++		lsq->x[i] += x_offset;
++
++	return 0;
++}
++
++/*
++ * This function determines whether it is necessary to begin
++ * reclamation/compaction now in order to avert exhaustion of any of the
++ * free lists.
++ *
++ * Its basis is a simple model in which the total free memory, f_T, is
++ * consumed at a constant rate, R_T, i.e.
++ *
++ *	f_T(t) = R_T * t + f_T(0)
++ *
++ * For any given order, o > 0, members of subordinate lists constitute
++ * fragmented free memory, f_f(o): the blocks are notionally free but
++ * they are unavailable for allocation. The fragmented free memory is
++ * also assumed to behave linearly and in the absence of compaction is
++ * given by
++ *
++ *	f_f(o, t) = R_f(o) t + f_f(o, 0)
++ *
++ * Order 0 function represents current trend line for total free pages
++ * instead.
++ *
++ * It is assumed that all allocations will be made from contiguous
++ * memory meaning that, under net memory pressure and with no change in
++ * fragmentation, f_T will become equal to f_f and subsequent allocations
++ * will stall in either direct compaction or reclaim. Preemptive compaction
++ * will delay the onset of exhaustion but, to be useful, must begin early
++ * enough and must proceed at a sufficient rate.
++ *
++ * On each invocation, this function obtains estimates for the
++ * parameters f_T(0), R_T, f_f(o, 0) and R_f(o). Using the best fit
++ * line, it then determines if reclamation or compaction should be started
++ * now to avert free pages exhaustion or severe fragmentation. Return value
++ * is a set of bits which represent which condition has been observed -
++ * potential free memory exhaustion, and potential severe fragmentation.
++ */
++int mem_predict(struct frag_info *frag_vec, struct zone *zone)
++{
++	int order, retval = 0;
++	long long m[MAX_ORDER];
++	long long c[MAX_ORDER];
++	bool is_ready = true;
++	long long x_cross;
++	struct lsq_struct *lsq = zone->mem_prediction;
++
++	/*
++	 * Compute the trend line for fragmentation on each order page.
++	 * For order 0 pages, it will be a trend line showing rate
++	 * of consumption of pages. For higher order pages, trend line
++	 * shows loss/gain of pages of that order. When the trend line
++	 * for example for order n pages intersects with trend line for
++	 * total free pages, it means all available pages are of order
++	 * (n-1) or lower and there is 100% fragmentation of order n
++	 * pages. Kernel must compact pages at this point to gain
++	 * new order n pages.
++	 */
++	for (order = 0; order < MAX_ORDER; order++) {
++		if (lsq_fit(&lsq[order], frag_vec[order].free_pages,
++				frag_vec[order].time, &m[order],
++				&c[order]) == -1)
++			is_ready = false;
++	}
++
++	if (!is_ready)
++		return 0;
++
++	/*
++	 * Trend line for each order page is available now. If the trend
++	 * line for overall free pages is trending upwards (positive
++	 * slope), there is no need to reclaim pages but there may be
++	 * need to compact pages if system is running out of contiguous pages
++	 * for higher orders.
++	 */
++	if (m[0] >= 0) {
++		for (order = 1; order < MAX_ORDER; order++) {
++			/*
++			 * If lines are parallel, then they never intersect.
++			 */
++			if (m[0] == m[order])
++				continue;
++			/*
++			 * Find the point of intersection of the two lines.
++			 * The point of intersection represents 100%
++			 * fragmentation for this order.
++			 */
++			x_cross = div64_s64(((c[0] - c[order]) * 100),
++					(m[order] - m[0]));
++
++			/*
++			 * If they intersect anytime soon in the future
++			 * or intersected recently in the past, then it
++			 * is time for compaction and there is no need
++			 * to continue evaluating remaining order pages
++			 *
++			 * TODO: Instead of a fixed time threshold,
++			 * track compaction rate on the system and compute
++			 * how soon should compaction be started with the
++			 * current compaction rate to avoid direct
++			 * compaction
++			 */
++			if ((x_cross < mempredict_threshold) &&
++				(x_cross > -mempredict_threshold)) {
++				retval |= MEMPREDICT_COMPACT;
++				return retval;
++			}
++		}
++	} else {
++		unsigned long threshold;
++
++		/*
++		 * Trend line for overall free pages is showing a
++		 * negative trend. Check if less than threshold
++		 * pages are free. If so, start reclamation now to stave
++		 * off memory exhaustion
++		 *
++		 * TODO: This is not the best way to use trend analysis.
++		 * The right way to determine if it is time to start
++		 * reclamation to avoid memory exhaustion is to compute
++		 * how far away is exhaustion (least square fit
++		 * line can provide that) and what is the average rate of
++		 * memory reclamation. Using those two rates, compute how
++		 * far in advance of exhaustion should reclamation be
++		 * started to avoid exhaustion. This can be done after
++		 * additional code has been added to keep track of current
++		 * rate of reclamation.
++		 */
++		threshold = (zone_managed_pages(zone)*MEMRECLAMATION_THRESHOLD)
++				/100;
++		if (frag_vec[0].free_pages < threshold)
++			retval |= MEMPREDICT_RECLAIM;
++	}
++
++	return retval;
++}
+-- 
+2.20.1
 
-thanks,
-
- - Joel
