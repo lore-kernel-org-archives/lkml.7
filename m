@@ -2,239 +2,140 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACE9C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB8BC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC89620844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:56:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="L08sAdPz"
+	by mail.kernel.org (Postfix) with ESMTP id 2DB222084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729798AbfHMO40 (ORCPT
+        id S1729827AbfHMO4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:56:26 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38966 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729539AbfHMO40 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:56:26 -0400
-Received: by mail-ed1-f65.google.com with SMTP id e16so13932574edv.6
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 07:56:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=6wLnnK/l8H+MAZNrHDyoquiU2XSQhj8zFU+j5+WzSvQ=;
-        b=L08sAdPzzFznlmk4G+Dh6cPYVhdA6h8RbEyUzysstNPVcKewLg+5JHxR1bvJEsfcid
-         /Y8yrFbCBWBtGwRP1FJwpb5zJMD6AuOTIYuierBhQu+v+uVNesLNJySsrKZOXyT/+HdE
-         UVVFLKm3a8SO7flfnP/D50I+i0mLLOxRwD468=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=6wLnnK/l8H+MAZNrHDyoquiU2XSQhj8zFU+j5+WzSvQ=;
-        b=cyYTFPmVmVt+xb5Xk1vMRZYMr0YZjfjoOaBqZmCpWoMON5ZBHNLNdYWHAJyxObEYwu
-         95vqFzERxWYq3YRecdqaXzTaCaMa7CPK0phvuAZToLOdC+5UQjTexsev3YV0xCySrM17
-         O5khMFQwoxqrXz9UycW3aBrTTt0RilppghX/8/7NL3Msa5gwjhjbrCJFYHWKCQp3Y9tH
-         lQjfXr9cFp6C2PHZHGyaAEYK6hrgbzV4gpwOqbTcngxohP/sBqMVyMxLJMKYw6HDS3FX
-         toG4p1AogB+RXuWWpNmubonn814UgPrL3LWO6CVyjtYQFIBsi4hl6aTTqEo+abA1cczl
-         DxQw==
-X-Gm-Message-State: APjAAAXmT/eqjuA+cEVeCmmQlJMXXBtgK0EgfAnlhYTECVtcPOC+TVPn
-        RMsWMCCHM/YCZrouwCEXrUHvtA==
-X-Google-Smtp-Source: APXvYqzs/SYXJlJ4o2bDLUPt+KPeT44hq3JG2zY8+DfiBLzjKjj073E34pb6qI6Bo8DLofGUVqp97Q==
-X-Received: by 2002:a17:906:2551:: with SMTP id j17mr11334783ejb.36.1565708183663;
-        Tue, 13 Aug 2019 07:56:23 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id d20sm1567405ejb.75.2019.08.13.07.56.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 07:56:22 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 16:56:20 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/26] drm/dp_mst: Remove huge conditional in
- drm_dp_mst_handle_up_req()
-Message-ID: <20190813145620.GY7444@phenom.ffwll.local>
-Mail-Followup-To: Lyude Paul <lyude@redhat.com>,
-        dri-devel@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-        Harry Wentland <hwentlan@amd.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org
-References: <20190718014329.8107-1-lyude@redhat.com>
- <20190718014329.8107-10-lyude@redhat.com>
+        Tue, 13 Aug 2019 10:56:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729539AbfHMO4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 10:56:51 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEFA5205F4;
+        Tue, 13 Aug 2019 14:56:49 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 10:56:45 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Vasily Gorbik <gor@linux.ibm.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        James Morris <jmorris@namei.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: linux-next: Tree for Aug 13
+Message-ID: <20190813105645.4ffba70c@gandalf.local.home>
+In-Reply-To: <your-ad-here.call-01565700115-ext-9407@work.hours>
+References: <20190813191924.7c5310dd@canb.auug.org.au>
+        <your-ad-here.call-01565700115-ext-9407@work.hours>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190718014329.8107-10-lyude@redhat.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 09:42:32PM -0400, Lyude Paul wrote:
-> Which reduces indentation and makes this function more legible.
 
-Indeed, nice one.
+This looks related to what Marek posted.
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+  https://lore.kernel.org/linux-security-module/3028ed35-3b6d-459f-f3c8-103c5636fe95@samsung.com/
+
+Care to apply the change he suggested to see if it fixes the issue for
+you. If it does, Marek, can you make an official patch?
+
+-- Steve
 
 
+On Tue, 13 Aug 2019 14:41:55 +0200
+Vasily Gorbik <gor@linux.ibm.com> wrote:
+
+> On Tue, Aug 13, 2019 at 07:19:24PM +1000, Stephen Rothwell wrote:
+> > Merging security/next-testing (a4848e06f9af Merge branch 'next-lockdown' into next-testing)
+> > CONFLICT (content): Merge conflict in kernel/trace/trace_kprobe.c
+> > CONFLICT (content): Merge conflict in fs/tracefs/inode.c
+> > Applying: early_security_init() needs a stub got !CONFIG_SECURITY  
 > 
-> Cc: Juston Li <juston.li@intel.com>
-> Cc: Imre Deak <imre.deak@intel.com>
-> Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> Cc: Harry Wentland <hwentlan@amd.com>
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Hi all,
+> 
+> next-lockdown causes panic on s390 when doing:
+> cat /sys/kernel/debug/tracing/events/syscalls/sys_enter_read/id
+> 
+> [ 3972.384027] Unable to handle kernel pointer dereference in virtual kernel address space
+> [ 3972.384031] Failing address: 0000000000000000 TEID: 0000000000000887
+> [ 3972.384032] Fault in home space mode while using kernel ASCE.
+> [ 3972.384033] AS:00000000744cc007 R3:00000001fffd0007 S:00000001fffd6000 P:000000000000013d 
+> [ 3972.384051] Oops: 0004 ilc:1 [#1] SMP 
+> [ 3972.384053] Modules linked in: binfmt_misc(E) dm_crypt(E) lcs(E) ctcm(E) fsm(E) algif_skcipher(E) af_alg(E) nfsv3(E) nfs_acl(E) nfs(E) lockd(E) grace(E) sctp(E) quota_v2(E) quota_tree(E) ntfs(E) vfat(E) fat(E) overlay(E) loop(E) dm_service_time(E) kvm(E) xt_CHECKSUM(E) xt_MASQUERADE(E) xt_tcpudp(E) ip6t_rpfilter(E) ip6t_REJECT(E) nf_reject_ipv6(E) ipt_REJECT(E) nf_reject_ipv4(E) xt_conntrack(E) ip6table_nat(E) ip6table_mangle(E) ip6table_raw(E) tun(E) ip6table_security(E) bridge(E) iptable_nat(E) nf_nat(E) stp(E) llc(E) iptable_mangle(E) iptable_raw(E) iptable_security(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) ip_set(E) nfnetlink(E) ip6table_filter(E) ip6_tables(E) iptable_filter(E) ip_tables(E) x_tables(E) sunrpc(E) dm_multipath(E) dm_mod(E) scsi_dh_rdac(E) scsi_dh_emc(E) scsi_dh_alua(E) s390_trng(E) ghash_s390(E) prng(E) aes_s390(E) des_s390(E) des_generic(E) sha512_s390(E) sha1_s390(E) vfio_ccw(E) vfio_mdev(E) mdev(E) vfio_iommu_type1(E) vfio(E) eadm_sch(E) sch_f
+ q_codel(E)
+> [ 3972.384076]  sha256_s390(E) sha_common(E) pkey(E) zcrypt(E) rng_core(E) autofs4(E) [last unloaded: dummy_del_mod]
+> [ 3972.384084] CPU: 17 PID: 45118 Comm: psvc-ioctl-bpf1 Tainted: G           OE     5.3.0-20190813.rc4.git0.8e72ac275c63.301.fc30.s390x+next #1
+> [ 3972.384086] Hardware name: IBM 3906 M04 704 (LPAR)
+> [ 3972.384087] Krnl PSW : 0704c00180000000 0000000000000000 (0x0)
+> [ 3972.384090]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 RI:0 EA:3
+> [ 3972.384103] Krnl GPRS: 000003e004c0fb90 0000000000000000 00000001f912abf0 0000000197b36800
+> [ 3972.384104]            0000000197b36810 0000000000000001 0000000100000000 0000000197b36810
+> [ 3972.384105]            00000000736ae3a0 0000000100000000 00000001f912abf0 0000000197b36800
+> [ 3972.384106]            000000013aff0000 0000000073c625a8 00000000734a1486 000003e004c0fbc8
+> [ 3972.384110] Krnl Code:>0000000000000000: 0000                illegal 
+>                           0000000000000002: 0000                illegal 
+>                           0000000000000004: 0000                illegal 
+>                           0000000000000006: 0000                illegal 
+>                           0000000000000008: 0000                illegal 
+>                           000000000000000a: 0000                illegal 
+>                           000000000000000c: 0000                illegal 
+>                           000000000000000e: 0000                illegal 
+> [ 3972.384116] Call Trace:
+> [ 3972.384122] ([<00000000734a1486>] do_dentry_open+0x206/0x3c0)
+> [ 3972.384125]  [<00000000734b8c1e>] do_last+0x16e/0x918 
+> [ 3972.384126]  [<00000000734b944e>] path_openat+0x86/0x2b8 
+> [ 3972.384128]  [<00000000734baa64>] do_filp_open+0x7c/0xf8 
+> [ 3972.384129]  [<00000000734a3484>] do_sys_open+0x18c/0x258 
+> [ 3972.384134]  [<0000000073c457cc>] system_call+0xd8/0x2c8 
+> [ 3972.384135] Last Breaking-Event-Address:
+> [ 3972.384139]  [<00000000736ae3fa>] default_open_file+0x5a/0x78
+> [ 3972.384141] Kernel panic - not syncing: Fatal exception: panic_on_oops
+> 
+> Which correspond to:
+> fs/tracefs/inode.c:46
+> static int default_open_file(struct inode *inode, struct file *filp)
+>  45         real_fops = dentry->d_fsdata;
+>  46         return real_fops->open(inode, filp);
+> 
+> Commit which introduces the problem:
+> commit 757ff7244358406dd16a7f5f623ca40ed27c603c
+> Author:     Matthew Garrett <matthewgarrett@google.com>
+> AuthorDate: Wed Aug 7 17:07:19 2019 -0700
+> Commit:     James Morris <jmorris@namei.org>
+> CommitDate: Fri Aug 9 22:23:58 2019 -0700
+> 
+>     tracefs: Restrict tracefs when the kernel is locked down
+>     
+>     Tracefs may release more information about the kernel than desirable, so
+>     restrict it when the kernel is locked down in confidentiality mode by
+>     preventing open().
+>     
+>     Signed-off-by: Matthew Garrett <mjg59@google.com>
+>     Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+>     Signed-off-by: James Morris <jmorris@namei.org>
 > ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 90 +++++++++++++--------------
->  1 file changed, 45 insertions(+), 45 deletions(-)
+>  fs/tracefs/inode.c           | 40 +++++++++++++++++++++++++++++++++++++++-
+>  include/linux/security.h     |  1 +
+>  security/lockdown/lockdown.c |  1 +
+>  3 files changed, 41 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 57c9c605ee17..b867a2e8f779 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -3126,7 +3126,9 @@ static int drm_dp_mst_handle_down_rep(struct drm_dp_mst_topology_mgr *mgr)
->  
->  static int drm_dp_mst_handle_up_req(struct drm_dp_mst_topology_mgr *mgr)
->  {
-> -	int ret = 0;
-> +	struct drm_dp_sideband_msg_req_body msg;
-> +	struct drm_dp_mst_branch *mstb = NULL;
-> +	bool seqno;
->  
->  	if (!drm_dp_get_one_sb_msg(mgr, true)) {
->  		memset(&mgr->up_req_recv, 0,
-> @@ -3134,62 +3136,60 @@ static int drm_dp_mst_handle_up_req(struct drm_dp_mst_topology_mgr *mgr)
->  		return 0;
->  	}
->  
-> -	if (mgr->up_req_recv.have_eomt) {
-> -		struct drm_dp_sideband_msg_req_body msg;
-> -		struct drm_dp_mst_branch *mstb = NULL;
-> -		bool seqno;
-> -
-> -		if (!mgr->up_req_recv.initial_hdr.broadcast) {
-> -			mstb = drm_dp_get_mst_branch_device(mgr,
-> -							    mgr->up_req_recv.initial_hdr.lct,
-> -							    mgr->up_req_recv.initial_hdr.rad);
-> -			if (!mstb) {
-> -				DRM_DEBUG_KMS("Got MST reply from unknown device %d\n", mgr->up_req_recv.initial_hdr.lct);
-> -				memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
-> -				return 0;
-> -			}
-> -		}
-> +	if (!mgr->up_req_recv.have_eomt)
-> +		return 0;
->  
-> -		seqno = mgr->up_req_recv.initial_hdr.seqno;
-> -		drm_dp_sideband_parse_req(&mgr->up_req_recv, &msg);
-> +	if (!mgr->up_req_recv.initial_hdr.broadcast) {
-> +		mstb = drm_dp_get_mst_branch_device(mgr,
-> +						    mgr->up_req_recv.initial_hdr.lct,
-> +						    mgr->up_req_recv.initial_hdr.rad);
-> +		if (!mstb) {
-> +			DRM_DEBUG_KMS("Got MST reply from unknown device %d\n", mgr->up_req_recv.initial_hdr.lct);
-> +			memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
-> +			return 0;
-> +		}
-> +	}
->  
-> -		if (msg.req_type == DP_CONNECTION_STATUS_NOTIFY) {
-> -			drm_dp_send_up_ack_reply(mgr, mgr->mst_primary, msg.req_type, seqno, false);
-> +	seqno = mgr->up_req_recv.initial_hdr.seqno;
-> +	drm_dp_sideband_parse_req(&mgr->up_req_recv, &msg);
->  
-> -			if (!mstb)
-> -				mstb = drm_dp_get_mst_branch_device_by_guid(mgr, msg.u.conn_stat.guid);
-> +	if (msg.req_type == DP_CONNECTION_STATUS_NOTIFY) {
-> +		drm_dp_send_up_ack_reply(mgr, mgr->mst_primary, msg.req_type, seqno, false);
->  
-> -			if (!mstb) {
-> -				DRM_DEBUG_KMS("Got MST reply from unknown device %d\n", mgr->up_req_recv.initial_hdr.lct);
-> -				memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
-> -				return 0;
-> -			}
-> +		if (!mstb)
-> +			mstb = drm_dp_get_mst_branch_device_by_guid(mgr, msg.u.conn_stat.guid);
->  
-> -			drm_dp_update_port(mstb, &msg.u.conn_stat);
-> +		if (!mstb) {
-> +			DRM_DEBUG_KMS("Got MST reply from unknown device %d\n", mgr->up_req_recv.initial_hdr.lct);
-> +			memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
-> +			return 0;
-> +		}
->  
-> -			DRM_DEBUG_KMS("Got CSN: pn: %d ldps:%d ddps: %d mcs: %d ip: %d pdt: %d\n", msg.u.conn_stat.port_number, msg.u.conn_stat.legacy_device_plug_status, msg.u.conn_stat.displayport_device_plug_status, msg.u.conn_stat.message_capability_status, msg.u.conn_stat.input_port, msg.u.conn_stat.peer_device_type);
-> -			drm_kms_helper_hotplug_event(mgr->dev);
-> +		drm_dp_update_port(mstb, &msg.u.conn_stat);
->  
-> -		} else if (msg.req_type == DP_RESOURCE_STATUS_NOTIFY) {
-> -			drm_dp_send_up_ack_reply(mgr, mgr->mst_primary, msg.req_type, seqno, false);
-> -			if (!mstb)
-> -				mstb = drm_dp_get_mst_branch_device_by_guid(mgr, msg.u.resource_stat.guid);
-> +		DRM_DEBUG_KMS("Got CSN: pn: %d ldps:%d ddps: %d mcs: %d ip: %d pdt: %d\n", msg.u.conn_stat.port_number, msg.u.conn_stat.legacy_device_plug_status, msg.u.conn_stat.displayport_device_plug_status, msg.u.conn_stat.message_capability_status, msg.u.conn_stat.input_port, msg.u.conn_stat.peer_device_type);
-> +		drm_kms_helper_hotplug_event(mgr->dev);
->  
-> -			if (!mstb) {
-> -				DRM_DEBUG_KMS("Got MST reply from unknown device %d\n", mgr->up_req_recv.initial_hdr.lct);
-> -				memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
-> -				return 0;
-> -			}
-> +	} else if (msg.req_type == DP_RESOURCE_STATUS_NOTIFY) {
-> +		drm_dp_send_up_ack_reply(mgr, mgr->mst_primary, msg.req_type, seqno, false);
-> +		if (!mstb)
-> +			mstb = drm_dp_get_mst_branch_device_by_guid(mgr, msg.u.resource_stat.guid);
->  
-> -			DRM_DEBUG_KMS("Got RSN: pn: %d avail_pbn %d\n", msg.u.resource_stat.port_number, msg.u.resource_stat.available_pbn);
-> +		if (!mstb) {
-> +			DRM_DEBUG_KMS("Got MST reply from unknown device %d\n", mgr->up_req_recv.initial_hdr.lct);
-> +			memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
-> +			return 0;
->  		}
->  
-> -		if (mstb)
-> -			drm_dp_mst_topology_put_mstb(mstb);
-> -
-> -		memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
-> +		DRM_DEBUG_KMS("Got RSN: pn: %d avail_pbn %d\n", msg.u.resource_stat.port_number, msg.u.resource_stat.available_pbn);
->  	}
-> -	return ret;
-> +
-> +	if (mstb)
-> +		drm_dp_mst_topology_put_mstb(mstb);
-> +
-> +	memset(&mgr->up_req_recv, 0, sizeof(struct drm_dp_sideband_msg_rx));
-> +
-> +	return 0;
->  }
->  
->  /**
-> -- 
-> 2.21.0
+> Using default s390 config, where
+> # CONFIG_SECURITY_LOCKDOWN_LSM is not set
 > 
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
