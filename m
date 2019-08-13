@@ -2,162 +2,157 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7074EC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E571C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4214520844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 268A32067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvp7xvUo"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vc/E1EEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbfHMSMS (ORCPT
+        id S1728538AbfHMSMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 14:12:18 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44592 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728453AbfHMSMO (ORCPT
+        Tue, 13 Aug 2019 14:12:23 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:53534 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728387AbfHMSMK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 14:12:14 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p17so108601760wrf.11
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 11:12:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=H+HyNYqumhgzAfb6RQPcG1woV31dCtkzQNv0Z0BtjIQ=;
-        b=fvp7xvUoAEO8LLtyrZs5Yi0BBIa9cTCA3g44OvUxFc8MB6V7gtoyk8ZX6aCCatQpyq
-         IF3Iw296V6/hMXs8TSlQCGQ3WwORhSHmTbSmSi6ZHuSsok3Uybyi82sl93cdtM22rKIN
-         vASlEhBGHPIn+XdY4eVclFBooSNxyJgKvqqmK6ahw/tygeGpSYF2HUUPMmbCuZ3Qkwvc
-         bfkMW9zQ+h4/kco4b1k39AevSUtpm7x7LklvnVCj499Oss2vV6ZMnQnH4wYKTGnTvuRu
-         8kOE96yIdnS03sAhIsWvw1+KY7VNksPSFI7LCZwrKfZO2spx9jZg8cZz/UMWJ/nxbqta
-         q3mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=H+HyNYqumhgzAfb6RQPcG1woV31dCtkzQNv0Z0BtjIQ=;
-        b=CsD50UhWOWcK67R8Bj0EC6l3eewPID2v0chy4cZhvdizZFA2AkwlsVxquVss1D+nNo
-         6qIUjDP0k9BQPb5/AI5H6MZaL4N0FkgIaMHb4AgE3opuXVNZi4cupmVeKzqCi+Gk2OiM
-         R2zVSC+t4z4LaxvAHIT9uEAKsRPCGu7FfWEGPHRRcVRLxrk1m18xwzXR65GbGkQZFqjl
-         lOu+fefB0iN6nyVejxhYHIiFEaDl1L/sAK3HllMWFwJl+U7uDeGLCCn4N52TL6vg6Lrl
-         D15j9Db263Jy0VecH1wc1op+fzmkNp/p709QSONfnSyk+he2wkVk4sZ6gsyifJ2V02LC
-         ww/w==
-X-Gm-Message-State: APjAAAXkFJKz58TvMoaCAZe6Tim3Eeuc/AbtMRTWP9dswa8yWPPOHBHM
-        m53mcghI4I4P6eyQ9d46dRw=
-X-Google-Smtp-Source: APXvYqwjsJco2jXdMRkUTIwWS2QWhfQFiEMv9osfzl+KqkM1x4EDJWCjMdbH4r3jUxyvxr1DFQNJJA==
-X-Received: by 2002:a5d:4a4e:: with SMTP id v14mr28818222wrs.200.1565719932335;
-        Tue, 13 Aug 2019 11:12:12 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id a6sm1435050wmj.15.2019.08.13.11.12.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2019 11:12:11 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH v2] soundwire: Make slave.o depend on ACPI and rename to acpi_slave.o
-Date:   Tue, 13 Aug 2019 11:09:30 -0700
-Message-Id: <20190813180929.22497-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.23.0.rc2
-In-Reply-To: <20190813061014.45015-1-natechancellor@gmail.com>
-References: <20190813061014.45015-1-natechancellor@gmail.com>
+        Tue, 13 Aug 2019 14:12:10 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7DIC0xJ093399;
+        Tue, 13 Aug 2019 13:12:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565719920;
+        bh=T8YhRhrUnmvguCG9ZbI6QXVwTo4aPfyMVmxa6iApDGM=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=vc/E1EEmhkXDcReMvUqdtA3Zasbbe59Wkkgb7yzmudJdHseGr+Lz/OPb2f4MjjfU7
+         hBd4YlWVVdho3bj007VV+hoam3dsok/IGhTz9JempUZvnWjfyuC2nGe0cEhsQ+Petr
+         jRM9q6wVnFMumMQ180ibVj2brldVKETIQyxzBBgs=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7DIC0ov004393
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 13 Aug 2019 13:12:00 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 13
+ Aug 2019 13:11:59 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 13 Aug 2019 13:11:59 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7DIBxaZ013200;
+        Tue, 13 Aug 2019 13:11:59 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <tony@atomide.com>,
+        <sre@kernel.org>, <nekit1000@gmail.com>, <mpartap@gmx.net>,
+        <merlijn@wizzup.org>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v2 4/4] leds: lm3532: Add full scale current configuration
+Date:   Tue, 13 Aug 2019 13:11:54 -0500
+Message-ID: <20190813181154.6614-4-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+In-Reply-To: <20190813181154.6614-1-dmurphy@ti.com>
+References: <20190813181154.6614-1-dmurphy@ti.com>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang warns when CONFIG_ACPI is unset:
+Allow the full scale current to be configured at init.
+Valid rangles are 5mA->29.8mA.
 
-../drivers/soundwire/slave.c:16:12: warning: unused function
-'sdw_slave_add' [-Wunused-function]
-static int sdw_slave_add(struct sdw_bus *bus,
-           ^
-1 warning generated.
-
-Before commit 8676b3ca4673 ("soundwire: fix regmap dependencies and
-align with other serial links"), this code would only be compiled when
-ACPI was set because it was only selected by SOUNDWIRE_INTEL, which
-depends on ACPI.
-
-Now, this code can be compiled without CONFIG_ACPI, which causes the
-above warning. The IS_ENABLED(CONFIG_ACPI) guard could be moved to avoid
-compiling the function; however, slave.c only contains three functions,
-two of which are static. Since slave.c is completetely dependent on
-ACPI, rename it to acpi_slave.c and only compile it when CONFIG_ACPI
-is set so sdw_acpi_find_slaves will actually be used. bus.h contains
-a stub for sdw_acpi_find_slaves so there will be no issues with an
-undefined function.
-
-This has been build tested with CONFIG_ACPI set and unset in combination
-with CONFIG_SOUNDWIRE unset, built in, and a module.
-
-Fixes: 8676b3ca4673 ("soundwire: fix regmap dependencies and align with other serial links")
-Link: https://github.com/ClangBuiltLinux/linux/issues/637
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
 
-v1 -> v2:
+v2 - Change ti,fs-current to led-max-microamp - https://lore.kernel.org/patchwork/patch/1109503/
 
-* Rename slave.o to acpi_slave.o
-* Reword commit message to reflect this
+ drivers/leds/leds-lm3532.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
- drivers/soundwire/Makefile                  | 6 +++++-
- drivers/soundwire/{slave.c => acpi_slave.c} | 3 ---
- 2 files changed, 5 insertions(+), 4 deletions(-)
- rename drivers/soundwire/{slave.c => acpi_slave.c} (98%)
-
-diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
-index 45b7e5001653..718d8dd0ac79 100644
---- a/drivers/soundwire/Makefile
-+++ b/drivers/soundwire/Makefile
-@@ -4,9 +4,13 @@
- #
+diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
+index ef4c74cbcdc0..dabf4be1e8c8 100644
+--- a/drivers/leds/leds-lm3532.c
++++ b/drivers/leds/leds-lm3532.c
+@@ -89,6 +89,10 @@
+ #define LM3532_NUM_AVG_VALS	8
+ #define LM3532_NUM_IMP_VALS	32
  
- #Bus Objs
--soundwire-bus-objs := bus_type.o bus.o slave.o mipi_disco.o stream.o
-+soundwire-bus-objs := bus_type.o bus.o mipi_disco.o stream.o
- obj-$(CONFIG_SOUNDWIRE) += soundwire-bus.o
- 
-+ifdef CONFIG_ACPI
-+soundwire-bus-objs += acpi_slave.o
-+endif
++#define LM3532_FS_CURR_MIN	5000
++#define LM3532_FS_CURR_MAX	29800
++#define LM3532_FS_CURR_STEP	800
 +
- #Cadence Objs
- soundwire-cadence-objs := cadence_master.o
- obj-$(CONFIG_SOUNDWIRE_CADENCE) += soundwire-cadence.o
-diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/acpi_slave.c
-similarity index 98%
-rename from drivers/soundwire/slave.c
-rename to drivers/soundwire/acpi_slave.c
-index f39a5815e25d..0dc188e6873b 100644
---- a/drivers/soundwire/slave.c
-+++ b/drivers/soundwire/acpi_slave.c
-@@ -60,7 +60,6 @@ static int sdw_slave_add(struct sdw_bus *bus,
- 	return ret;
- }
- 
--#if IS_ENABLED(CONFIG_ACPI)
  /*
-  * sdw_acpi_find_slaves() - Find Slave devices in Master ACPI node
-  * @bus: SDW bus instance
-@@ -110,5 +109,3 @@ int sdw_acpi_find_slaves(struct sdw_bus *bus)
+  * struct lm3532_als_data
+  * @config - value of ALS configuration register
+@@ -121,6 +125,7 @@ struct lm3532_als_data {
+  * @mode - Mode of the LED string
+  * @ctrl_brt_pointer - Zone target register that controls the sink
+  * @num_leds - Number of LED strings are supported in this array
++ * @full_scale_current - The full-scale current setting for the current sink.
+  * @led_strings - The LED strings supported in this array
+  * @label - LED label
+  */
+@@ -130,8 +135,9 @@ struct lm3532_led {
  
- 	return 0;
- }
--
--#endif
+ 	int control_bank;
+ 	int mode;
+-	int ctrl_brt_pointer;
+ 	int num_leds;
++	int ctrl_brt_pointer;
++	int full_scale_current;
+ 	u32 led_strings[LM3532_MAX_CONTROL_BANKS];
+ 	char label[LED_MAX_NAME_SIZE];
+ };
+@@ -363,6 +369,8 @@ static int lm3532_init_registers(struct lm3532_led *led)
+ 	unsigned int output_cfg_mask = 0;
+ 	unsigned int brightness_config_reg;
+ 	unsigned int brightness_config_val;
++	int fs_current_reg;
++	int fs_current_val;
+ 	int ret, i;
+ 
+ 	if (drvdata->enable_gpio)
+@@ -385,6 +393,16 @@ static int lm3532_init_registers(struct lm3532_led *led)
+ 	if (ret)
+ 		return ret;
+ 
++	if (led->full_scale_current) {
++		fs_current_reg = LM3532_REG_CTRL_A_FS_CURR + led->control_bank * 2;
++		fs_current_val = led->full_scale_current - LM3532_FS_CURR_MIN /
++				 LM3532_FS_CURR_STEP;
++		ret = regmap_write(drvdata->regmap, fs_current_reg,
++				   fs_current_val);
++		if (ret)
++			return ret;
++	}
++
+ 	for (i = 0; i < led->num_leds; i++) {
+ 		output_cfg_shift = led->led_strings[i] * 2;
+ 		output_cfg_val |= (led->control_bank << output_cfg_shift);
+@@ -560,6 +578,12 @@ static int lm3532_parse_node(struct lm3532_data *priv)
+ 			goto child_out;
+ 		}
+ 
++		ret = fwnode_property_read_u32(child, "led-max-microamp",
++					       &led->full_scale_current);
++
++		if (led->full_scale_current > LM3532_FS_CURR_MAX)
++			led->full_scale_current = LM3532_FS_CURR_MAX;
++
+ 		if (led->mode == LM3532_BL_MODE_ALS) {
+ 			led->mode = LM3532_ALS_CTRL;
+ 			ret = lm3532_parse_als(priv);
 -- 
-2.23.0.rc2
+2.22.0.214.g8dca754b1e
 
