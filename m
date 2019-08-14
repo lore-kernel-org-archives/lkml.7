@@ -2,105 +2,78 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122BCC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21A1C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F1C205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:46:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fooishbar-org.20150623.gappssmtp.com header.i=@fooishbar-org.20150623.gappssmtp.com header.b="OV6v4RpJ"
+	by mail.kernel.org (Postfix) with ESMTP id BA046205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:47:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfHNLqa (ORCPT
+        id S1727537AbfHNLrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 07:46:30 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45583 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfHNLq3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 07:46:29 -0400
-Received: by mail-lj1-f194.google.com with SMTP id t3so15963416ljj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:46:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fooishbar-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HVIUs4ZIQVm7b7SR1n38pcFhXz6C3M2CIhWpAxdt8LQ=;
-        b=OV6v4RpJEGTSaeN9WjacjemHo7ZUtwknpaHLLy+MEre+zyB39wCwfeJtTg+FZ8IZ+B
-         OcJGOV/93rJokdOIQwig6ROI8s46ddhjgNFjuNQIRHDFv0ccHr12uxB9mmYTVVx67gy1
-         s8hLywCYXHwDkDbFXcF0V4TeSFIfT3tVWiVJTVB7XNHhkoelxy83LEM1tJcaxshNsR7G
-         nbvYUYuPB2OPUjvHesf9PtA8fp6EqjxvwKx+GijgH5csPsIWsi1CddxxpdnawisyZMAF
-         G1GvqKTt8QXGUkeS0wAZzBsBRXx6kryesDbVbLTprqrHNM3bOGm2jgMnuynRAAZzCWXS
-         SI9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HVIUs4ZIQVm7b7SR1n38pcFhXz6C3M2CIhWpAxdt8LQ=;
-        b=JVwJbyluNB5yS5yRVCtrkWh2VeTrhpy0ir8aC8qyNibP1QcYJgGrFOmDqKFIdk/pOJ
-         raLkKkOL/J2OwAcajFIBNjaZggTKHeafW9qmeio+m9un+wb2PGc3fREzIZx7PFNSh2Hj
-         DB6zB0MjOKplEU1Dz4BBljvOkqxWUiodwoiWrb2nJqaYSOF2R4mZyvRc3+lVJLxqGSLL
-         jT3MwcdRT8h0ws/VypDHbqsOMhW8BjXWjRAzoE4sDcwYDBKnUzSecCc5aX5sTV9SPMH7
-         v0DY0ub7QTTyCa309q8wm+c2rR0MpjW/eQzLeHWDw5rGBZz1tPFCqS9sHdoN38EjItr4
-         RyDg==
-X-Gm-Message-State: APjAAAUl30JT5cjjyZbS/FH3f33tnYAB6NUBzJA1eQtughLyWQzeB/yG
-        kexMKVcw4Q5JWmlya13Py4qfucCFt18RNKmrgEHBluna
-X-Google-Smtp-Source: APXvYqx8H8wf2cUfndKRitBxUVt4PunZZn7bV5z50HzDJV5mvhAjxp+vVMjixTxwiL4xvtZ+Nynqmt1s1BQ2RX367ts=
-X-Received: by 2002:a2e:b4e6:: with SMTP id s6mr11087965ljm.169.1565783187372;
- Wed, 14 Aug 2019 04:46:27 -0700 (PDT)
+        Wed, 14 Aug 2019 07:47:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46886 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726126AbfHNLrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 07:47:33 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1B806307C820;
+        Wed, 14 Aug 2019 11:47:33 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D74A1600C8;
+        Wed, 14 Aug 2019 11:47:02 +0000 (UTC)
+Date:   Wed, 14 Aug 2019 19:46:48 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Martijn Coenen <maco@android.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>, kernel-team@android.com,
+        Narayan Kamath <narayan@google.com>,
+        Dario Freni <dariofreni@google.com>,
+        Nikita Ioffe <ioffe@google.com>,
+        Jiyong Park <jiyong@google.com>,
+        Martijn Coenen <maco@google.com>
+Subject: Re: [PATCH] RFC: loop: Avoid calling blk_mq_freeze_queue() when
+ possible.
+Message-ID: <20190814114646.GA14561@ming.t460p>
+References: <20190814103244.92518-1-maco@android.com>
+ <20190814113348.GA525@ming.t460p>
+ <CAB0TPYHdaOTUKf5ix-oU7cXsV12ZW6YDYBsG+VKr6zk=RCW2NA@mail.gmail.com>
 MIME-Version: 1.0
-References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com> <1565779731-1300-7-git-send-email-robert.chiras@nxp.com>
-In-Reply-To: <1565779731-1300-7-git-send-email-robert.chiras@nxp.com>
-From:   Daniel Stone <daniel@fooishbar.org>
-Date:   Wed, 14 Aug 2019 12:44:34 +0100
-Message-ID: <CAPj87rMFG=RGmfVnawbE7qX4zU7vdYxLJB__K4E3B8jcJ764KQ@mail.gmail.com>
-Subject: Re: [PATCH v2 06/15] drm/mxsfb: Update mxsfb with additional pixel formats
-To:     Robert Chiras <robert.chiras@nxp.com>
-Cc:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAB0TPYHdaOTUKf5ix-oU7cXsV12ZW6YDYBsG+VKr6zk=RCW2NA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 14 Aug 2019 11:47:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+On Wed, Aug 14, 2019 at 01:38:25PM +0200, Martijn Coenen wrote:
+> On Wed, Aug 14, 2019 at 1:34 PM Ming Lei <ming.lei@redhat.com> wrote:
+> > Another candidate is to not switch to q_usage_counter's percpu mode
+> > until loop becomes Lo_bound, and this way may be more clean.
+> 
+> Thanks! I had considered this too, but thought it a bit risky to mess
+> with the init flag from the loop driver. Maybe we could delay
 
-On Wed, 14 Aug 2019 at 11:49, Robert Chiras <robert.chiras@nxp.com> wrote:
-> +       case DRM_FORMAT_BGR565: /* BG16 */
-> +               if (mxsfb->devdata->ipversion < 4)
-> +                       goto err;
-> +               writel(CTRL2_ODD_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR) |
-> +                       CTRL2_EVEN_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR),
-> +                       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
-> +               /* Fall through */
-> +       case DRM_FORMAT_RGB565: /* RG16 */
-> +               ctrl |= CTRL_SET_WORD_LENGTH(0);
-> +               ctrl &= ~CTRL_DF16;
-> +               ctrl1 |= CTRL1_SET_BYTE_PACKAGING(0xf);
-> +               break;
+blk_queue_init_done() is only called in blk_queue_init_done() for
+this purpose, so this approach should be fine, IMO.
 
-For non-BGR formats, do you need to write RGB line-pattern back to the
-CTRL2 register? Otherwise, if you start with BGR565 then switch back
-to RGB565, presumably CTRL2 would still be programmed for BGR so you
-would display inverted channels.
+> switching q_usage_counter to per-cpu mode in the block layer in
+> general, until the first request comes in?
 
-Same goes for all the other BGR/RGB format pairs below.
+This approach may not help your issue on loop, IO request comes
+just after disk is added, such as by systemd, or reading partition table.
 
-Cheers,
-Daniel
+However, loop only starts to handle IO really after it becomes 'Lo_bound'.
+
+thanks, 
+Ming
