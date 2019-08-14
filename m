@@ -2,119 +2,102 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFA1C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B03C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0CA2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CA022064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:20:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="tbbYvH5N"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="SVq5cWxf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbfHNUTl (ORCPT
+        id S1729351AbfHNUUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 16:19:41 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:17526 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726509AbfHNUTk (ORCPT
+        Wed, 14 Aug 2019 16:20:36 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38977 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbfHNUUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 16:19:40 -0400
-Received: from pps.filterd (m0170394.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7EKEmq7016364
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 16:19:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=WcSC1bSopTVeFcc/5wNxd5IcewwWd/Pxa+GV9dQeI3o=;
- b=tbbYvH5Ni4mSUoHcuNg+wYTTLc7o1GvAfc4SszqSuQbd3rHgB2Q8hRYOOYYJ9a8IGM/c
- eeLmWpOYQV21Q2kNOXHOHdt76An7Ab+JX4vQ0gWaPF69GNW+eHIOagW4882YdL19MfS+
- QnvVVsLcGbbRe/s5rk3jNH319X2yMQhwiEFUUUMFpvhtJ4XnMuV/0AS+oFyrqsXYfPtw
- YMC5kg+yytagPsH/GzdTjB8RCLzxrUib7kFE2UaeMCvvfcplQ6AGqyWh8u5m+FwnkiNV
- j8Bh+rvMjUWAoLfxZlDmYAyPzq69Q1ELvm6I67GQVGkjqi8rH98MOqEGSvuWa7QFDh+g 3w== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0b-00154904.pphosted.com with ESMTP id 2ubydm6su1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 16:19:39 -0400
-Received: from pps.filterd (m0089483.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7EKHr8O039394
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 16:19:38 -0400
-Received: from ausxipps310.us.dell.com (AUSXIPPS310.us.dell.com [143.166.148.211])
-        by mx0b-00154901.pphosted.com with ESMTP id 2ucqw196qb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 16:19:38 -0400
-X-LoopCount0: from 10.166.132.55
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="408454404"
-From:   <Mario.Limonciello@dell.com>
-To:     <sagi@grimberg.me>, <kbusch@kernel.org>
-CC:     <axboe@fb.com>, <hch@lst.de>, <linux-nvme@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <Ryan.Hong@Dell.com>,
-        <Crag.Wang@dell.com>, <sjg@google.com>,
-        <Charles.Hyde@dellteam.com>, <Jared.Dominguez@dell.com>
-Subject: RE: [PATCH v2] nvme: Add quirk for LiteON CL1 devices running FW
- 22301111
-Thread-Topic: [PATCH v2] nvme: Add quirk for LiteON CL1 devices running FW
- 22301111
-Thread-Index: AQHVUtwQRoMvFWyQNUuquaDdHeAiWqb7Z/MA//+sqmA=
-Date:   Wed, 14 Aug 2019 20:19:34 +0000
-Message-ID: <3e38dce0c1ae406496af3a70dfd36077@AUSX13MPC105.AMER.DELL.COM>
-References: <1565813304-16710-1-git-send-email-mario.limonciello@dell.com>
- <32f20898-b9af-eee0-97de-0a568de54b57@grimberg.me>
-In-Reply-To: <32f20898-b9af-eee0-97de-0a568de54b57@grimberg.me>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-08-14T20:19:32.9806728Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
- aiplabel=External Public
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.18.86]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 14 Aug 2019 16:20:35 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g8so359213edm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 13:20:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nWZWsKOfmIl4yNVyC1A/XslquByM6vO1WGS7Kz0bD8U=;
+        b=SVq5cWxfnMTCbnzjMxfAenRqPrywZHCY7aSYPqhjndhFoxhSpIaewsuAAbQ+hxRege
+         LlE77zS9n3UHrI63NXV/R4kzhjhCsYIyspu6VzmOq3rB3oTT4FTYaoEIf2AXE4TNZw67
+         EpRfZR5Lx03CDLH2/rXob/8M+d0YAjVHOhE5s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nWZWsKOfmIl4yNVyC1A/XslquByM6vO1WGS7Kz0bD8U=;
+        b=nFRQV/lr01ZkPS5zvC4JwBnGaQ+oz8D6RIV/VH4sNT80o/SDV4Q16tYfX3PU1HVdpL
+         AVUGqw3s/SprTDAIJTvad7C7g9CPY4UcSy6L0KBZVGudueDLXhB/J3wl+VqYbrtpwKvJ
+         Xh6quIZBY70GkAEs0uWcrTWfSS7GdEEkm83Q+1m5h3V2/Z7Om0OF1VPGJRH6gqMgEXFO
+         u2vXIfzzcLjxeBulE1cQF0NVvswj1Mrd7TWg4UNLX46DN39/zjO34VBTW3lwb6xXtTsq
+         9YDK5BTxY9BHcrqYlbqD8KBRQnRCyC2BVa3/xien/w6rzkSHhwKkrunQ6WHdXmEa4KLp
+         U7hQ==
+X-Gm-Message-State: APjAAAUb++TblIt19qYqJiEqZBJ9QHkFtbsYtwAu2QCh9In3vgSCJdLp
+        pmc269jy+/8zDz8TQaEL9652vMea7/Qtmg==
+X-Google-Smtp-Source: APXvYqw0SI+1ky3oT9vQxF5bI61NxCDkMXiJWr+jVakG6fqDm3c/lfxYyJWqP0bvugFJUIGMMW1jXQ==
+X-Received: by 2002:a17:906:5042:: with SMTP id e2mr1299846ejk.220.1565814033793;
+        Wed, 14 Aug 2019 13:20:33 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id ns22sm84342ejb.9.2019.08.14.13.20.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 13:20:33 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     linux-mm@kvack.org,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH 0/5] hmm & mmu_notifier debug/lockdep annotations
+Date:   Wed, 14 Aug 2019 22:20:22 +0200
+Message-Id: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-14_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908140185
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908140184
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTYWdpIEdyaW1iZXJnIDxzYWdp
-QGdyaW1iZXJnLm1lPg0KPiBTZW50OiBXZWRuZXNkYXksIEF1Z3VzdCAxNCwgMjAxOSAzOjE1IFBN
-DQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW87IEtlaXRoIEJ1c2NoDQo+IENjOiBKZW5zIEF4Ym9l
-OyBDaHJpc3RvcGggSGVsbHdpZzsgbGludXgtbnZtZUBsaXN0cy5pbmZyYWRlYWQub3JnOyBMS01M
-OyBIb25nLA0KPiBSeWFuOyBXYW5nLCBDcmFnOyBzamdAZ29vZ2xlLmNvbTsgSHlkZSwgQ2hhcmxl
-cyAtIERlbGwgVGVhbTsgRG9taW5ndWV6LCBKYXJlZA0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYy
-XSBudm1lOiBBZGQgcXVpcmsgZm9yIExpdGVPTiBDTDEgZGV2aWNlcyBydW5uaW5nIEZXDQo+IDIy
-MzAxMTExDQo+IA0KPiANCj4gW0VYVEVSTkFMIEVNQUlMXQ0KPiANCj4gTWFyaW8sDQo+IA0KPiBD
-YW4geW91IHBsZWFzZSByZXNwaW4gYSBwYXRjaCB0aGF0IGFwcGxpZXMgY2xlYW5seSBvbiBudm1l
-LTUuND8NCg0KSXQgbG9va3MgbGlrZSBudm1lLTUuNCBpcyBtaXNzaW5nIHRoZSBjb21taXQgY29t
-aW5nIGluIGZyb20gUmFmYWVsJ3MgbGludXgtbmV4dCB0cmVlIHRoYXQgaXQncyBkZXBlbmRlbnQg
-dXBvbjoNCmh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3Jh
-ZmFlbC9saW51eC1wbS5naXQvY29tbWl0L2RyaXZlcnMvbnZtZS9ob3N0P2g9bGludXgtbmV4dCZp
-ZD00ZWFlZmU4YzYyMWM2MTk1YzkxMDQ0Mzk2ZWQ4MDYwYzE3OWY3YWFlDQoNCkNvdWxkIHlvdSBj
-aGVycnkgcGljayB0aGF0IGludG8gbnZtZS01LjQgYXMgd2VsbD8gIEl0IHNob3VsZCBhcHBseSBj
-bGVhbmx5IHRoZW4uICBPdGhlcndpc2UsIHdvdWxkIHlvdSBwcmVmZXINCnRoaXMgdG8gY29tZSBp
-biBSYWZhZWwncyB0cmVlIHRvbz8NCg==
+Hi all (but I guess mostly Jason),
+
+Finally gotten around to rebasing the previous version, fixing the rebase
+fail in there, update the commit message a bit and give this a spin with
+some tests. Nicely caught a lockdep splat that we're now discussing in
+i915, and seems to not have misfired anywhere else (including a few oom).
+
+Review, comments and everything very much appreciated. Plus I'd really
+like to land this, there's more hmm_mirror users in-flight, and I've seen
+some that get things wrong which this patchset should catch.
+
+Thanks, Daniel
+
+Daniel Vetter (5):
+  mm: Check if mmu notifier callbacks are allowed to fail
+  kernel.h: Add non_block_start/end()
+  mm, notifier: Catch sleeping/blocking for !blockable
+  mm, notifier: Add a lockdep map for invalidate_range_start
+  mm/hmm: WARN on illegal ->sync_cpu_device_pagetables errors
+
+ include/linux/kernel.h       | 10 +++++++++-
+ include/linux/mmu_notifier.h |  6 ++++++
+ include/linux/sched.h        |  4 ++++
+ kernel/sched/core.c          | 19 ++++++++++++++-----
+ mm/hmm.c                     |  3 +++
+ mm/mmu_notifier.c            | 17 ++++++++++++++++-
+ 6 files changed, 52 insertions(+), 7 deletions(-)
+
+-- 
+2.22.0
+
