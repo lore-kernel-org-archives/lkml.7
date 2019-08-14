@@ -4,141 +4,158 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBF1C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E37FC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C26420843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24CB120843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:40:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="k13l2Vgo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KdvB6r3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfHNAji (ORCPT
+        id S1726810AbfHNAk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 20:39:38 -0400
-Received: from mail-eopbgr780101.outbound.protection.outlook.com ([40.107.78.101]:60864
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726231AbfHNAji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 20:39:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Kz00UJyUylrWyXs7D9aIVzdmKGASZnpc44MWZm5iEougLVbcrW9GEr6lRKku77yxqPbXX4xczhOT069LmQ3MnAQL8DLG+MEXsG3g9z2eyUD6F3Q269dPcL3BKEDbA57fX+oRhvAK7kNEt/Deh58r5Xnrbx9q3cy8zd2wC1XCGK4sv5ChViDAiFj6tlRHoYvc8LI7iyj1uPNTn6DFOLz5Hg6b5u1GRfYGqhyBKhDo3ZIdWk50FOpEN8OTf8vAbhizCB8TddI2qAXWitrp18xEj4ot9ZBBhdKLaA5D7TtDtiI+N2ECYZ9k3dt++4+DGe5XJ7q1pS1rw9ylmHF8UOtuSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zgcDpRUMjuJAWhzK2bog4nWoAxxCJh2WjK3u6Upsg9s=;
- b=iZH32LebEKOcXb0Irvhl2PhdPBk3mPWG1k+dGcMZG3RVM0QRNZPlpKnVy67tKOzEYumQWjeJSJ+z2DlKhD22hzbSDI3muctTuGbcx3hlE653nn8JTcoQCgmdfH3F6ch/MRMMquCGPokzXd1TuNAvR8kki3nN68mB2PLDKH3oGHR2SxvDxEI0Jn9o2cmogss6E1JrIJGhWsP4DlUhxYObeCrHTAbPIyqAmG02dwW2SKWql2Rfa3zVtsCytQWDwAqfQ50w01+Si7v2Wm/BRDiaiE/tSNKpGD8He5jihIa4WC72HbSP8x82Z/fjSQVW8s1x479MH/lG5xf+uuS0hR+qVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zgcDpRUMjuJAWhzK2bog4nWoAxxCJh2WjK3u6Upsg9s=;
- b=k13l2VgoelDvCvlgOZ0J7ytpXj1gugHt1iS2qak0cg07VPXeV2aDJMAXk6HMPqLwFA0++PC0BLFt6zaiNme3wO8eIqDACroBha/VhpBj6KAHPgHlVOl1R1V0EpjLVZX5foM0GgebVZanH/SIGfsj0m1key2wMXS4srUnMeIDV6U=
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
- DM6PR21MB1514.namprd21.prod.outlook.com (10.255.109.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.6; Wed, 14 Aug 2019 00:39:35 +0000
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::ddd:8e5b:2930:6726]) by DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::ddd:8e5b:2930:6726%9]) with mapi id 15.20.2178.006; Wed, 14 Aug 2019
- 00:39:35 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4,2/2] PCI: hv: Use bytes 4 and 5 from instance ID as the PCI
- domain numbers
-Thread-Topic: [PATCH v4,2/2] PCI: hv: Use bytes 4 and 5 from instance ID as
- the PCI domain numbers
-Thread-Index: AQHVUji/yqFsDJoFh0+QlpM5gVx5RQ==
-Date:   Wed, 14 Aug 2019 00:39:35 +0000
-Message-ID: <1565743084-2069-2-git-send-email-haiyangz@microsoft.com>
-References: <1565743084-2069-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1565743084-2069-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MW2PR16CA0057.namprd16.prod.outlook.com
- (2603:10b6:907:1::34) To DM6PR21MB1242.namprd21.prod.outlook.com
- (2603:10b6:5:169::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a52eee8f-0d18-41ff-5183-08d7204fe151
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1514;
-x-ms-traffictypediagnostic: DM6PR21MB1514:|DM6PR21MB1514:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB1514745CADCA94BE937951FDACAD0@DM6PR21MB1514.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01294F875B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(39860400002)(366004)(136003)(396003)(189003)(199004)(2201001)(5660300002)(4720700003)(11346002)(66946007)(2906002)(66066001)(66476007)(66556008)(64756008)(66446008)(25786009)(2501003)(53936002)(4326008)(99286004)(54906003)(110136005)(14444005)(22452003)(256004)(316002)(486006)(36756003)(476003)(2616005)(7846003)(71200400001)(71190400001)(6486002)(6436002)(446003)(10290500003)(10090500001)(52116002)(81156014)(8936002)(76176011)(81166006)(8676002)(6392003)(478600001)(6116002)(3846002)(14454004)(186003)(102836004)(6506007)(305945005)(386003)(7736002)(50226002)(6512007)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1514;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rOMuuDZ9Ftt7yfXrinWvFcZPvdpLY1ctnmZKydvVO0/yRD0qxbrM3TSkJYkA96MiSWfxF2ZvWEEf8skDNeuCk+c3UFEpiY1NFlDX/K4MA2V51uJs0FJi1fv/xohUqAVthd3T8UnClf4hjGY31ZVC1tEw5QQ7Ny+1HG/nhtlynVvEDJ+rkXEnvF0ay2LmSnlYQo3Q2k8R8F9iZ/GWqLynH+nvYWbkJXOXdtFSaFXua5fQmcF2tASHWEOgdFgPbd63s2BqIu64ezYNRVBLGR+puOyD5jBHjzFi9d+rAj0qOAb/BYZ42SHji+cl6v3Us2ap2B7Ojvx0mBFuxGcHYPQ2gnjvPbOVRRe0UOz4dPM8cxuVRFx+Ad05U+X25DP/pRrLK3OsWjBcdfklOHxot94jqLXUsVJujDIQfe+AW7KUMI4=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 13 Aug 2019 20:40:56 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44381 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfHNAkz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 20:40:55 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t14so49932307plr.11
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 17:40:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZegRusiqGixl7ULE1EVfSCo6wty0zljEyz/3njLSEWA=;
+        b=KdvB6r3D6IKZUQzzdmhizmsoUjmnDloOmrt1wEsk6hweVdhif4+MM9MFNwNL37LQNN
+         rcC5jQhBXUImbtXe3HHlSVeHWVXNEvxLoPVbtJQD5ZWfh7ewU6602nQjTu/zEgZcYGED
+         N6oWRlFqN8fuG5neBunCbEm9nKAjFNHSVFRXo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZegRusiqGixl7ULE1EVfSCo6wty0zljEyz/3njLSEWA=;
+        b=h8mPxblyTiJB80CD806ky6nUZtljxXiN47AcJEAudpNeLhFagCI3sKJ/ZtyuLVoOGc
+         yTIumhs88EycTuT0LbHo3XUzWlqTYrIDc8dABMEveUQuQrGHhTE/gfEbT/8P5fDZi5+c
+         nyA003SBDZo8vZB3CIq9MAupyVMTEU4hCywW69MQBFoq4+xnBUXHr4B35wJZ2k4Wi5b6
+         vxASRT7i/Ku7vWIg5TEblB2C8Pre4NanaOAmbTzB+DYikOmkfFG5lPvRe7HlsSXjblmN
+         o7l9EXJOoDVfa2YgaSAnTKAKRRZG3j0u8y0yUM5a6yQNPf5Sr9aT/GvjUclzLyioTKb5
+         ZY1Q==
+X-Gm-Message-State: APjAAAUSU9a+omIA4ZXsvjUHtGqmZCl54X9Q8Nt8oPV4T+wvk6N1gPaa
+        y4E4Kda2phxw9n9zaxiLiP1enw==
+X-Google-Smtp-Source: APXvYqypLncBjZTiawDZwgQntm3bgscfNzYB+rZ7IHBEeChDvPvjD+yNoBEh16wYIUkelcl8AtFoLg==
+X-Received: by 2002:a17:902:f81:: with SMTP id 1mr39854552plz.191.1565743255180;
+        Tue, 13 Aug 2019 17:40:55 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x65sm111023402pfd.139.2019.08.13.17.40.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 13 Aug 2019 17:40:54 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, Tri Vo <trong@android.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] PM / wakeup: Fix sysfs registration error path
+Date:   Tue, 13 Aug 2019 17:40:53 -0700
+Message-Id: <20190814004053.23775-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a52eee8f-0d18-41ff-5183-08d7204fe151
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 00:39:35.3840
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OgUnUeThPuhifhE4pBH7MCT3GyvySKkRfUL2HQ/q80FVk1PJMB0/7di6L8oZ5ENTjGZ8kJp/7zIq6jXHCWRyyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1514
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As recommended by Azure host team, the bytes 4, 5 have more uniqueness
-(info entropy) than bytes 8, 9. So now we use bytes 4, 5 as the PCI domain
-numbers. On older hosts, bytes 4, 5 can also be used -- no backward
-compatibility issues here. The chance of collision is greatly reduced.
+We shouldn't call wakeup_source_destroy() from the error path in
+wakeup_source_register() because that calls __pm_relax() which takes a
+lock that isn't initialized until wakeup_source_add() is called. Add a
+new function, wakeup_source_free(), that just does the bare minimum to
+free a wakeup source that was created but hasn't been added yet and use
+it from the two places it's needed. This fixes the following problem
+seen on various x86 server boxes:
 
-In the rare cases of collision, the driver code detects and finds another
-number that is not in use.
+ INFO: trying to register non-static key.
+ the code is fine but needs lockdep annotation.
+ turning off the locking correctness validator.
+ CPU: 12 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc4-
+ Hardware name: HP ProLiant XL420 Gen9/ProLiant XL420 Gen9, BIOS U19 12/27/2015
+ Call Trace:
+  dump_stack+0x62/0x9a
+  register_lock_class+0x95a/0x960
+  ? __platform_driver_probe+0xcd/0x230
+  ? __platform_create_bundle+0xc0/0xe0
+  ? i8042_init+0x4ec/0x578
+  ? do_one_initcall+0xfe/0x45a
+  ? kernel_init_freeable+0x614/0x6a7
+  ? kernel_init+0x11/0x138
+  ? ret_from_fork+0x35/0x40
+  ? is_dynamic_key+0xf0/0xf0
+  ? rwlock_bug.part.0+0x60/0x60
+  ? __debug_check_no_obj_freed+0x8e/0x250
+  __lock_acquire.isra.13+0x5f/0x830
+  ? __debug_check_no_obj_freed+0x152/0x250
+  lock_acquire+0x107/0x220
+  ? __pm_relax.part.2+0x21/0xa0
+  _raw_spin_lock_irqsave+0x35/0x50
+  ? __pm_relax.part.2+0x21/0xa0
+  __pm_relax.part.2+0x21/0xa0
+  wakeup_source_destroy.part.3+0x18/0x190
+  wakeup_source_register+0x43/0x50
 
-Suggested-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Acked-by: Sasha Levin <sashal@kernel.org>
+Fixes: 986845e747af ("PM / wakeup: Show wakeup sources stats in sysfs")
+Reported-by: Qian Cai <cai@lca.pw>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Tri Vo <trong@android.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- drivers/pci/controller/pci-hyperv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/base/power/wakeup.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
-ci-hyperv.c
-index 31b8fd5..4f3d97e 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -2590,7 +2590,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	 * (2) There will be no overlap between domains (after fixing possible
- 	 * collisions) in the same VM.
- 	 */
--	dom_req =3D hdev->dev_instance.b[8] << 8 | hdev->dev_instance.b[9];
-+	dom_req =3D hdev->dev_instance.b[5] << 8 | hdev->dev_instance.b[4];
- 	dom =3D hv_get_dom_num(dom_req);
-=20
- 	if (dom =3D=3D HVPCI_DOM_INVALID) {
---=20
-1.8.3.1
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index 3a7f5803aa81..f7925820b5ca 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -137,6 +137,13 @@ static void wakeup_source_record(struct wakeup_source *ws)
+ 	spin_unlock_irqrestore(&deleted_ws.lock, flags);
+ }
+ 
++static void wakeup_source_free(struct wakeup_source *ws)
++{
++	ida_free(&wakeup_ida, ws->id);
++	kfree_const(ws->name);
++	kfree(ws);
++}
++
+ /**
+  * wakeup_source_destroy - Destroy a struct wakeup_source object.
+  * @ws: Wakeup source to destroy.
+@@ -150,9 +157,7 @@ void wakeup_source_destroy(struct wakeup_source *ws)
+ 
+ 	__pm_relax(ws);
+ 	wakeup_source_record(ws);
+-	ida_free(&wakeup_ida, ws->id);
+-	kfree_const(ws->name);
+-	kfree(ws);
++	wakeup_source_free(ws);
+ }
+ EXPORT_SYMBOL_GPL(wakeup_source_destroy);
+ 
+@@ -217,7 +222,7 @@ struct wakeup_source *wakeup_source_register(struct device *dev,
+ 	if (ws) {
+ 		ret = wakeup_source_sysfs_add(dev, ws);
+ 		if (ret) {
+-			wakeup_source_destroy(ws);
++			wakeup_source_free(ws);
+ 			return NULL;
+ 		}
+ 		wakeup_source_add(ws);
+-- 
+Sent by a computer through tubes
 
