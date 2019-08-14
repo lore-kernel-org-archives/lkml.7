@@ -2,181 +2,157 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BC8C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B7CC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494E52063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABEDB20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565775308;
+	bh=Qt/wFYSxlhI4W4s15cJ48R439kTvj2TD/XTHO0La9Po=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iIPbjnp0p/qHO4byhvit6wLxh8cIfC9Ioy0qCrhzEpsbeTdYUglr97ZI6Fx6Leiol
+	 JmZ7I2ShCsMSzGRR9LO7fQDu/6nUzwrkQ15/VhL9gvDSeky1gNycNnv8GbswKFoq1G
+	 M5crUEbiVrpVLNoI4MAnm4RHJ10MrzXQh6lhRioY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfHNJe4 (ORCPT
+        id S1727269AbfHNJfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:34:56 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39127 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727117AbfHNJez (ORCPT
+        Wed, 14 Aug 2019 05:35:07 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40350 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfHNJfH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:34:55 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i63so3830290wmg.4
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 02:34:53 -0700 (PDT)
+        Wed, 14 Aug 2019 05:35:07 -0400
+Received: by mail-oi1-f196.google.com with SMTP id h21so2807876oie.7;
+        Wed, 14 Aug 2019 02:35:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=bCXlW1ZX2x/gE3exfi6QX7hss8Ko8wkhLU8ZZUxwNBU=;
-        b=mjYKX/Zesu1Jg7UA7jpXLWKU61qP6H0sWu+8zearRIuIfrtS4dq36gRyAu4zlgcV6T
-         VfsaHiV0xWUuDWPTToPfzP6mUVBHnTBGjZuDgI8sEuuob9eDOU0m7Tga29j+MDkU8kD6
-         hoJcvYD5w7vp7NZGOMKyo7s+4JSNWCXSCs5AtQ+nUwmuwfhj1fjmCpFhW9eQMrvpgOGG
-         RC4bNmcseHVusRMhCeHcIgwnQUPzGjD48+27ShQ4ykq9QjbnCU9wya3vgqE5GwIy0/4q
-         wqZIM2zWfWS78+O4Bi7rXhUzXt+Ejak39nu/fo3U1XjrMr0gDiQnlsZZepK6YvbGiN2b
-         /kLg==
-X-Gm-Message-State: APjAAAWhlMWSTcw7Xj0LNSwY/icDxC/zux9R4XanlfHIqj0oL8pTa/a6
-        8R/qIBgDmNkSn354XT0JjFlBHA==
-X-Google-Smtp-Source: APXvYqxdMrevq9YKa/7FH4WvkgvuQ01+GLfmaHpnbo9WhYxWY4nzsk+EH0+c0Ut6mWws+y50P2sYcw==
-X-Received: by 2002:a7b:c441:: with SMTP id l1mr7293142wmi.170.1565775293031;
-        Wed, 14 Aug 2019 02:34:53 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id i30sm3256274wmb.20.2019.08.14.02.34.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 02:34:52 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH v4 2/7] x86: kvm: svm: propagate errors from skip_emulated_instruction()
-In-Reply-To: <20190813180759.GF13991@linux.intel.com>
-References: <20190813135335.25197-1-vkuznets@redhat.com> <20190813135335.25197-3-vkuznets@redhat.com> <20190813180759.GF13991@linux.intel.com>
-Date:   Wed, 14 Aug 2019 11:34:52 +0200
-Message-ID: <87d0h89jk3.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bw5KhbpmibFWhChU8YoAfUG7HzRzPn3xcgdayXlgbWA=;
+        b=I0/3itXLi7byMjI4r4146+nK2sgSrVZGr0v9LjTC2gHfIj6VNo13WdVpzwzpgycqjV
+         Z5lSN2oscM0MN6wjZJzlpTv2OHM9pZw23z6jYd5NVpWpokz8uDfS+pGlr2wuBtt6VTYg
+         hxbaWXpMPX/UJB7gBOVCUF0DxWeLJk713i1MXWdog/BdR7E871giVV9qQnpWgz+2Xn8Q
+         O9oZvhaX7uCmKUU2qOWC0kH/7zEXJ1AEVBrXwFIiwYBrcPWm3RJINCfrd9uCDuGalq3y
+         dHXYIUqt1Fs7WywzXcFu3ElQDjpgbBxHOHXFZnox7Q1ULt/4v6GMngA8t1gXcgAgToPX
+         CILw==
+X-Gm-Message-State: APjAAAUKCOE85kseGXrvvrWrUw+jA03oUVykWtaTq1eD/iLlJBJdkKMb
+        FNyCd/66uYkRLVHX/qKsKqoEhcrKv89acJgHoGM=
+X-Google-Smtp-Source: APXvYqxT08JTHoU9IIFLNv0rxGzFt+rmcw413cBIvAnyG34f7vnC9YGHZUNQ2XqUeo1/iaAXT6LbLCv/piqoWcvq0gE=
+X-Received: by 2002:aca:ab56:: with SMTP id u83mr4787577oie.57.1565775305817;
+ Wed, 14 Aug 2019 02:35:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190814004053.23775-1-swboyd@chromium.org>
+In-Reply-To: <20190814004053.23775-1-swboyd@chromium.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 14 Aug 2019 11:34:54 +0200
+Message-ID: <CAJZ5v0gaC0AzJak8qmGf-qH8bbMiRDXB6r-PuHzPO4rU7eeAFw@mail.gmail.com>
+Subject: Re: [PATCH] PM / wakeup: Fix sysfs registration error path
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>, Qian Cai <cai@lca.pw>,
+        Tri Vo <trong@android.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
-
-> On Tue, Aug 13, 2019 at 03:53:30PM +0200, Vitaly Kuznetsov wrote:
->> @@ -3899,20 +3898,25 @@ static int task_switch_interception(struct vcpu_svm *svm)
->>  	if (reason != TASK_SWITCH_GATE ||
->>  	    int_type == SVM_EXITINTINFO_TYPE_SOFT ||
->>  	    (int_type == SVM_EXITINTINFO_TYPE_EXEPT &&
->> -	     (int_vec == OF_VECTOR || int_vec == BP_VECTOR)))
->> -		skip_emulated_instruction(&svm->vcpu);
->> +	     (int_vec == OF_VECTOR || int_vec == BP_VECTOR))) {
->> +		if (skip_emulated_instruction(&svm->vcpu) != EMULATE_DONE)
+On Wed, Aug 14, 2019 at 2:40 AM Stephen Boyd <swboyd@chromium.org> wrote:
 >
-> This isn't broken in the current code, but it's flawed in the sense that
-> it assumes skip_emulated_instruction() never returns EMULATE_USER_EXIT.
+> We shouldn't call wakeup_source_destroy() from the error path in
+> wakeup_source_register() because that calls __pm_relax() which takes a
+> lock that isn't initialized until wakeup_source_add() is called. Add a
+> new function, wakeup_source_free(), that just does the bare minimum to
+> free a wakeup source that was created but hasn't been added yet and use
+> it from the two places it's needed. This fixes the following problem
+> seen on various x86 server boxes:
 >
-> Note, both SVM and VMX make the opposite assumption when handling
-> kvm_task_switch() and kvm_inject_realmode_interrupt().
+>  INFO: trying to register non-static key.
+>  the code is fine but needs lockdep annotation.
+>  turning off the locking correctness validator.
+>  CPU: 12 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc4-
+>  Hardware name: HP ProLiant XL420 Gen9/ProLiant XL420 Gen9, BIOS U19 12/27/2015
+>  Call Trace:
+>   dump_stack+0x62/0x9a
+>   register_lock_class+0x95a/0x960
+>   ? __platform_driver_probe+0xcd/0x230
+>   ? __platform_create_bundle+0xc0/0xe0
+>   ? i8042_init+0x4ec/0x578
+>   ? do_one_initcall+0xfe/0x45a
+>   ? kernel_init_freeable+0x614/0x6a7
+>   ? kernel_init+0x11/0x138
+>   ? ret_from_fork+0x35/0x40
+>   ? is_dynamic_key+0xf0/0xf0
+>   ? rwlock_bug.part.0+0x60/0x60
+>   ? __debug_check_no_obj_freed+0x8e/0x250
+>   __lock_acquire.isra.13+0x5f/0x830
+>   ? __debug_check_no_obj_freed+0x152/0x250
+>   lock_acquire+0x107/0x220
+>   ? __pm_relax.part.2+0x21/0xa0
+>   _raw_spin_lock_irqsave+0x35/0x50
+>   ? __pm_relax.part.2+0x21/0xa0
+>   __pm_relax.part.2+0x21/0xa0
+>   wakeup_source_destroy.part.3+0x18/0x190
+>   wakeup_source_register+0x43/0x50
 >
-> More below...
+> Fixes: 986845e747af ("PM / wakeup: Show wakeup sources stats in sysfs")
+> Reported-by: Qian Cai <cai@lca.pw>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Tri Vo <trong@android.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  drivers/base/power/wakeup.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 >
->> +			goto fail;
->> +	}
->>  
->>  	if (int_type != SVM_EXITINTINFO_TYPE_SOFT)
->>  		int_vec = -1;
->>  
->>  	if (kvm_task_switch(&svm->vcpu, tss_selector, int_vec, reason,
->> -				has_error_code, error_code) == EMULATE_FAIL) {
->> -		svm->vcpu.run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
->> -		svm->vcpu.run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
->> -		svm->vcpu.run->internal.ndata = 0;
->> -		return 0;
->> -	}
->> +				has_error_code, error_code) == EMULATE_FAIL)
->> +		goto fail;
->> +
->>  	return 1;
->> +
->> +fail:
->> +	svm->vcpu.run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
->> +	svm->vcpu.run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
->> +	svm->vcpu.run->internal.ndata = 0;
->> +	return 0;
->>  }
->>  
->>  static int cpuid_interception(struct vcpu_svm *svm)
+> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+> index 3a7f5803aa81..f7925820b5ca 100644
+> --- a/drivers/base/power/wakeup.c
+> +++ b/drivers/base/power/wakeup.c
+> @@ -137,6 +137,13 @@ static void wakeup_source_record(struct wakeup_source *ws)
+>         spin_unlock_irqrestore(&deleted_ws.lock, flags);
+>  }
 >
-> ...
+> +static void wakeup_source_free(struct wakeup_source *ws)
+> +{
+> +       ida_free(&wakeup_ida, ws->id);
+> +       kfree_const(ws->name);
+> +       kfree(ws);
+> +}
+> +
+>  /**
+>   * wakeup_source_destroy - Destroy a struct wakeup_source object.
+>   * @ws: Wakeup source to destroy.
+> @@ -150,9 +157,7 @@ void wakeup_source_destroy(struct wakeup_source *ws)
 >
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index c6d951cbd76c..e8f797fe9d9e 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -6383,9 +6383,11 @@ static void kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu, int *r)
->>  int kvm_skip_emulated_instruction(struct kvm_vcpu *vcpu)
->>  {
->>  	unsigned long rflags = kvm_x86_ops->get_rflags(vcpu);
->> -	int r = EMULATE_DONE;
->> +	int r;
->>  
->> -	kvm_x86_ops->skip_emulated_instruction(vcpu);
->> +	r = kvm_x86_ops->skip_emulated_instruction(vcpu);
->> +	if (unlikely(r != EMULATE_DONE))
->> +		return 0;
+>         __pm_relax(ws);
+>         wakeup_source_record(ws);
+> -       ida_free(&wakeup_ida, ws->id);
+> -       kfree_const(ws->name);
+> -       kfree(ws);
+> +       wakeup_source_free(ws);
+>  }
+>  EXPORT_SYMBOL_GPL(wakeup_source_destroy);
 >
-> x86_emulate_instruction() doesn't set vcpu->run->exit_reason when emulation
-> fails with EMULTYPE_SKIP, i.e. this will exit to userspace with garbage in
-> the exit_reason.
-
-Oh, nice catch, will take a look!
-
->
-> handle_ept_misconfig() also has the same (pre-existing) flaw.
->
-> Given the handle_ept_misconfig() bug and that kvm_emulate_instruction()
-> sets vcpu->run->exit_reason when it returns EMULATE_FAIL in the normal
-> case, I think it makes sense to fix the issue in x86_emulate_instruction().
-> That would also eliminate the need to worry about EMULATE_USER_EXIT in
-> task_switch_interception(), e.g. the SVM code can just return 0 when it
-> gets a non-EMULATE_DONE return type.
->
-> E.g.:
->
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 07ab14d73094..73b86f81ed9c 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -6201,7 +6201,8 @@ static int handle_emulation_failure(struct kvm_vcpu *vcpu, int emulation_type)
->         if (emulation_type & EMULTYPE_NO_UD_ON_FAIL)
->                 return EMULATE_FAIL;
->
-> -       if (!is_guest_mode(vcpu) && kvm_x86_ops->get_cpl(vcpu) == 0) {
-> +       if ((!is_guest_mode(vcpu) && kvm_x86_ops->get_cpl(vcpu) == 0) ||
-> +           (emulation_type & EMULTYPE_SKIP)) {
->                 vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
->                 vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
->                 vcpu->run->internal.ndata = 0;
-> @@ -6525,8 +6526,6 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
->                                 return EMULATE_DONE;
->                         if (ctxt->have_exception && inject_emulated_exception(vcpu))
->                                 return EMULATE_DONE;
-> -                       if (emulation_type & EMULTYPE_SKIP)
-> -                               return EMULATE_FAIL;
->                         return handle_emulation_failure(vcpu, emulation_type);
+> @@ -217,7 +222,7 @@ struct wakeup_source *wakeup_source_register(struct device *dev,
+>         if (ws) {
+>                 ret = wakeup_source_sysfs_add(dev, ws);
+>                 if (ret) {
+> -                       wakeup_source_destroy(ws);
+> +                       wakeup_source_free(ws);
+>                         return NULL;
 >                 }
->         }
->
->
-> As for the kvm_task_switch() handling and other cases, I think it's
-> possible to rework all of the functions and callers that return/handle
-> EMULATE_DONE to instead return 0/1, i.e. contain EMULATE_* to x86.c.
-> I'll put together a series, I think you've suffered more than enough scope
-> creep as it is :-)
+>                 wakeup_source_add(ws);
+> --
 
-No problem at all, you seem to have a lot of great ideas on how to
-improve things :-) Thanks for your review!
-
--- 
-Vitaly
+Applied, thanks!
