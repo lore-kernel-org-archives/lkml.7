@@ -2,106 +2,116 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AFFC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C068CC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10249208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:03:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jPBf3uDu"
+	by mail.kernel.org (Postfix) with ESMTP id 932932133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbfHNVDT (ORCPT
+        id S1729411AbfHNVKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 17:03:19 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44500 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728524AbfHNVDS (ORCPT
+        Wed, 14 Aug 2019 17:10:07 -0400
+Received: from emh01.mail.saunalahti.fi ([62.142.5.107]:51686 "EHLO
+        emh01.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728395AbfHNVKH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 17:03:18 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k22so39548oiw.11
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 14:03:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fQvw6+Cysy9DNZAaud1joF+LzoMS/HD7HFa+/9L4GG0=;
-        b=jPBf3uDulUcoKNAc5FGbcIPpld5MB7MguGlABvefio2QnWvJq/obtoqu6LpahFZIkQ
-         rM/GMVkfcRxE3U1bulrtw0Zs/k9utF6dZSbCwlX6WycAAjJgYMSbiXmThaLHRA6xThco
-         HZWYFDFuZtVUJTvJgk524nTNZRqlxLibSrVV+70Nyx4Ob47dkyLqrBabX24h5YgReC+W
-         t0UblEXnsWwaot5BRaD5GakbpFUgKWjS0dCY/pj1V7gaFj+wT35TLpg0S7O+vFDCztih
-         CI9HH/dfo1Rjqicz02DtjCrRt8heoR+3fKr4BErk1UwzCeCQ4BdkjzhheZqxAUuD1PVj
-         0IEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fQvw6+Cysy9DNZAaud1joF+LzoMS/HD7HFa+/9L4GG0=;
-        b=J5bk6Q+XYGNScmBJMeMI8Tax5PVOh8U9ayNtv1HkdSF5KWZOuAbY85OYftJg/nUWS5
-         Ys9nd6qypsavX5kWivFK5OYlUyPn3Q5x8qK8mgOsKdD3CQ/wR7de5CpmeCnuwoTNj7xd
-         djnf/KbCkpPFtvZWLer6NEeB+H7gPTQAsFeqHWjvO0Zj/+tDpczan6svwLf4zn61PO9j
-         0Ul2joOsmxXBWffq+kq9R5a+NeHQHsuYk4zlbS/PTW4wiVnAnqvqwqNR5gjLTeRqKDc2
-         VNNXqY8grYOm5EoqJHVWUWSJolnfUdp9cpcwo3StrgKZonTvGUSIMoe5c9UPWnZEwyN9
-         nMBw==
-X-Gm-Message-State: APjAAAXzcvEWmnsd1nFzHDoT2iZDSVF5W9VQ1UELYvpROMeTa5N7eOjx
-        KGmZd5ZX4ux6UwRjm1lo90yL4cojyglT5UV5mvE58w==
-X-Google-Smtp-Source: APXvYqx3dcBMnUheir3gSBs9xUQOcTyId+C2d3MDO2QXd53RNomRiQfCtM0IPYyzSOLbYGH7WOVy7saGs2fKzMZzluQ=
-X-Received: by 2002:aca:6104:: with SMTP id v4mr1341676oib.172.1565816597247;
- Wed, 14 Aug 2019 14:03:17 -0700 (PDT)
+        Wed, 14 Aug 2019 17:10:07 -0400
+Received: from darkstar.musicnaut.iki.fi (85-76-96-82-nat.elisa-mobile.fi [85.76.96.82])
+        by emh01.mail.saunalahti.fi (Postfix) with ESMTP id A8FA6200B2;
+        Thu, 15 Aug 2019 00:10:02 +0300 (EEST)
+Date:   Thu, 15 Aug 2019 00:10:02 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 21/22] ARM: omap1: use common clk framework
+Message-ID: <20190814211002.GA1952@darkstar.musicnaut.iki.fi>
+References: <20190808212234.2213262-1-arnd@arndb.de>
+ <20190808214347.2865294-1-arnd@arndb.de>
+ <20190808214347.2865294-2-arnd@arndb.de>
 MIME-Version: 1.0
-References: <20190806192654.138605-1-saravanak@google.com> <20190806192654.138605-2-saravanak@google.com>
- <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com> <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
-In-Reply-To: <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 14 Aug 2019 14:02:41 -0700
-Message-ID: <CAGETcx89sjoT0OWjhJyWtCfB_dBFTzwS9+bSSSXEbTUFygmuvw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] of/platform: Disable generic device linking code for PowerPC
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808214347.2865294-2-arnd@arndb.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 3:04 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Tue, Aug 6, 2019 at 2:27 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Tue, Aug 6, 2019 at 1:27 PM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > PowerPC platforms don't use the generic of/platform code to populate the
-> > > devices from DT.
-> >
-> > Yes, they do.
->
-> No they don't. My wording could be better, but they don't use
-> of_platform_default_populate_init()
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/of/platform.c#n511
->
-> >
-> > > Therefore the generic device linking code is never used
-> > > in PowerPC.  Compile it out to avoid warning about unused functions.
-> >
-> > I'd prefer this get disabled on PPC using 'if (IS_ENABLED(CONFIG_PPC))
-> > return' rather than #ifdefs.
->
-> I'm just moving the existing ifndef some lines above. I don't want to
-> go change existing #ifndef in this patch. Maybe that should be a
-> separate patch series that goes and fixes all such code in drivers/of/
-> or driver/
+Hi,
 
-Bump. Thoughts? I don't think changing the existing if(n)defs should
-be part of this patch series.
+On Thu, Aug 08, 2019 at 11:43:39PM +0200, Arnd Bergmann wrote:
+> The omap1 clock driver now uses types and calling conventions
+> that are compatible with the common clk core.
+> 
+> Turn on CONFIG_COMMON_CLK and remove all the code that is
+> now duplicated.
+> 
+> Note: if this previous steps didn't already break it, this one
+> most likely will, because the interfaces are very likely to
+> have different semantics.
 
--Saravana
+QEMU SX1 board works up to this patch (the I/O virtual address change
+included). With this patch, it seems to fail to allocate memory during
+omap1_init_early() (the log is a bit messy as I extracted it using QEMU
+memory dumping):
+
+swapper: page allocation failure: order:0, mode:0x0(), nodemask=(null)
+CPU: 0 PID: 0 Comm: swapper Not tainted 5.3.0-rc4-sx1-los_80efa++ #1
+Hardware name: OMAP310 based Siemens SX1
+[<c000dc44>] (unwind_backtrace) from [<c000cb00>] (show_stack+0x10/0x18)
+[<c000cb00>] (show_stack) from [<c0172ba8>] (dump_stack+0x18/0x24)
+[<c0172ba8>] (dump_stack) from [<c00844e8>] (warn_alloc+0x90/0x140)
+[<c00844e8>] (warn_alloc) from [<c0084dcc>] (__alloc_pages_nodemask+0x7a4/0x9cc)
+[<c0084dcc>] (__alloc_pages_nodemask) from [<c008df24>] (slob_new_pages.constpro
+p.2+0x10/0x3c)
+[<c008df24>] (slob_new_pages.constprop.2) from [<c008e208>] (slob_alloc.constprop.1+0xe4/0x1e8)
+[<c008e208>] (slob_alloc.constprop.1) from [<c008e344>] (__kmalloc+0x38/0xb0)
+[<c008e344>] (__kmalloc) from [<c0126514>] (__clk_register+0x20/0x62c)
+[<c0126514>] (__clk_register) from [<c01f6614>] (omap1_clk_init+0x88/0x220)
+[<c01f6614>] (omap1_clk_init) from [<c01f5820>] (omap1_init_early+0x20/0x30)
+[<c01f5820>] (omap1_init_early) from [<c01f09e8>] (start_kernel+0x48/0x408)
+[<c01f09e8>] (start_kernel) from [<00000000>] (0x0)
+Clocks: ARM_SYSST: 0x003a DPLL_CTL: 0x2002 ARM_CKCTL: 0x3000
+Clocking rate (xtal/DPLL1/MPU): 12.0/12.0/0.0 MHz
+"8<--- cut here ---
+"Unable to handle kernel NULL pointer dereference at virtual address 00000018
+"pgd = (ptrval)
+"[00000018] *pgd=00000000
+Internal error: Oops: 5 [#1] ARM
+CPU: 0 PID: 0 Comm: swapper Not tainted 5.3.0-rc4-sx1-los_80efa++ #1
+Hardware name: OMAP310 based Siemens SX1
+PC is at clk_hw_get_parent+0x4/0x14
+LR is at omap1_clk_enable+0xc/0xcc
+OMAP310 based Siemens SX1
+[    0.000000]  free:0 free_pcp:0 free_cma:0
+pc : [<c0126cd0>]    lr : [<c00128d4>]    psr: 600001d3
+sp : c03aff88  ip : 00000000  fp : 00000000
+r10: 00000001  r9 : 54029252  r8 : 10000100
+r7 : c03b1000  r6 : 00002002  r5 : 0000003a  r4 : c03b5444
+r3 : 00000000  r2 : c03b9818  r1 : ff03ce08  r0 : c03b5444
+Flags: nZCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment user
+Control: 0000317f  Table: 10004000  DAC: 00000055
+Process swapper (pid: 0, stack limit = 0x(ptrval))
+Stack: (0xc03aff88 to 0xc03b0000)
+ff80:                   c03b5438 0000003a 00002002 c01f6734 00000000 00000057
+ffa0: 0000313d c01f5820 00000000 c01f09e8 00000000 00000000 00000000 00000000
+ffc0: 00000000 00000000 00000000 c0201a38 00000000 c01f0330 00000057 0000313d
+ffe0: 00000265 10000100 54029252 0000317f 00000000 00000000 00000000 00000000
+[<c0126cd0>] (clk_hw_get_parent) from [<c00128d4>] (omap1_clk_enable+0xc/0xcc)
+[<c00128d4>] (omap1_clk_enable) from [<c01f6734>] (omap1_clk_init+0x1a8/0x220)
+[<c01f6734>] (omap1_clk_init) from [<c01f5820>] (omap1_init_early+0x20/0x30)
+[<c01f5820>] (omap1_init_early) from [<c01f09e8>] (start_kernel+0x48/0x408)
+[<c01f09e8>] (start_kernel) from [<00000000>] (0x0)
+
+A.
