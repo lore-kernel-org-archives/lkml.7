@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21C4C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E54C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9FB20842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D78920844
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748736;
-	bh=yIk9PQxdyju4Bzm9qNkxx1EFIuAWgj5Im7e/vA8jlwE=;
+	s=default; t=1565748744;
+	bh=j1sGOzYFZNk0FSQxOU7lnbmPxSt71M1MHXcXeBV2zEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vXVZ8wNUITGmd9RA3XfWb6Ny6TSpmrpMB5z8SwgBTT73qlSCUDHzLm7enA9JpcLKb
-	 yy/JRHHoPCFlGaCr4VRTfHOX8bsMiAd7KMJA41O6Kqhlze+gn/U7rnYN3hpVhUF7o3
-	 ETcAiV/hrQjmwXP6Q0mKyNrcFFYFQRQgb0TiPjD0=
+	b=BJDaCFz+mnFgd9PZMQg/QV3KBHxVsltIT4F+yNpkDcGMx9H+BaX+w5KKeUcohBII/
+	 g+p8MHl1T2q3j1NjGi1IUhKd9gzbXiRHN042GF75AG1rtr7KT25Kpme2mCg/X3xPEv
+	 u+3VV8pQhCdL7Mox1EJhsH3E+XQwqDPzj26R+mjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfHNCMP (ORCPT
+        id S1726975AbfHNCMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44314 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:12:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727807AbfHNCMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:12:07 -0400
+        id S1727157AbfHNCMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:12:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD2872084F;
-        Wed, 14 Aug 2019 02:12:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A98C420844;
+        Wed, 14 Aug 2019 02:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748726;
-        bh=yIk9PQxdyju4Bzm9qNkxx1EFIuAWgj5Im7e/vA8jlwE=;
+        s=default; t=1565748725;
+        bh=j1sGOzYFZNk0FSQxOU7lnbmPxSt71M1MHXcXeBV2zEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zc1rz5a4WtJAcmjOfGUC0DAPVB9TKCbfY6UZhaYg911UyRe9tiQuxHD70pHNbGebm
-         F1tHtXLzD2Qm5xNGbU7ng56Q6ibDPmLTwNNm1J6rt7JTGUidhzbitHjC2AxNFG9kY9
-         IRciuCdmhPU4PWAwRKlKUgsWQB9dqCLZJNfvES9s=
+        b=PYInPa4bT0sovoOvWEBWCFDWpqwniNYDZkytUo/i+ojPH4hUU+aWsCUiZQl6nJSma
+         S65JHQyPfATOSHXrCoVVU9FSy/cJnfm8DwHYCsPyT4kxy/frL0x4ZfSJFNjfUGc7bs
+         T0yF1uarbfFM9XrPPnLfmMWmNZmDzdnWuG41M/4g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ricard Wanderlof <ricard.wanderlof@axis.com>,
-        Ricard Wanderlof <ricardw@axis.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 040/123] ASoC: Fail card instantiation if DAI format setup fails
-Date:   Tue, 13 Aug 2019 22:09:24 -0400
-Message-Id: <20190814021047.14828-40-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 039/123] can: gw: Fix error path of cgw_module_init
+Date:   Tue, 13 Aug 2019 22:09:23 -0400
+Message-Id: <20190814021047.14828-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -60,40 +61,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricard Wanderlof <ricard.wanderlof@axis.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 40aa5383e393d72f6aa3943a4e7b1aae25a1e43b ]
+[ Upstream commit b7a14297f102b6e2ce6f16feffebbb9bde1e9b55 ]
 
-If the DAI format setup fails, there is no valid communication format
-between CPU and CODEC, so fail card instantiation, rather than continue
-with a card that will most likely not function properly.
+This patch add error path for cgw_module_init to avoid possible crash if
+some error occurs.
 
-Signed-off-by: Ricard Wanderlof <ricardw@axis.com>
-Link: https://lore.kernel.org/r/alpine.DEB.2.20.1907241132350.6338@lnxricardw1.se.axis.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: c1aabdf379bc ("can-gw: add netlink based CAN routing")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/can/gw.c | 48 +++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 33 insertions(+), 15 deletions(-)
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 6aeba0d66ec50..dd0f43a1c5e14 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -1605,8 +1605,11 @@ static int soc_probe_link_dais(struct snd_soc_card *card,
- 		}
- 	}
+diff --git a/net/can/gw.c b/net/can/gw.c
+index 5275ddf580bc7..72711053ebe66 100644
+--- a/net/can/gw.c
++++ b/net/can/gw.c
+@@ -1046,32 +1046,50 @@ static __init int cgw_module_init(void)
+ 	pr_info("can: netlink gateway (rev " CAN_GW_VERSION ") max_hops=%d\n",
+ 		max_hops);
  
--	if (dai_link->dai_fmt)
--		snd_soc_runtime_set_dai_fmt(rtd, dai_link->dai_fmt);
-+	if (dai_link->dai_fmt) {
-+		ret = snd_soc_runtime_set_dai_fmt(rtd, dai_link->dai_fmt);
-+		if (ret)
-+			return ret;
-+	}
+-	register_pernet_subsys(&cangw_pernet_ops);
++	ret = register_pernet_subsys(&cangw_pernet_ops);
++	if (ret)
++		return ret;
++
++	ret = -ENOMEM;
+ 	cgw_cache = kmem_cache_create("can_gw", sizeof(struct cgw_job),
+ 				      0, 0, NULL);
+-
+ 	if (!cgw_cache)
+-		return -ENOMEM;
++		goto out_cache_create;
  
- 	ret = soc_post_component_init(rtd, dai_link->name);
- 	if (ret)
+ 	/* set notifier */
+ 	notifier.notifier_call = cgw_notifier;
+-	register_netdevice_notifier(&notifier);
++	ret = register_netdevice_notifier(&notifier);
++	if (ret)
++		goto out_register_notifier;
+ 
+ 	ret = rtnl_register_module(THIS_MODULE, PF_CAN, RTM_GETROUTE,
+ 				   NULL, cgw_dump_jobs, 0);
+-	if (ret) {
+-		unregister_netdevice_notifier(&notifier);
+-		kmem_cache_destroy(cgw_cache);
+-		return -ENOBUFS;
+-	}
+-
+-	/* Only the first call to rtnl_register_module can fail */
+-	rtnl_register_module(THIS_MODULE, PF_CAN, RTM_NEWROUTE,
+-			     cgw_create_job, NULL, 0);
+-	rtnl_register_module(THIS_MODULE, PF_CAN, RTM_DELROUTE,
+-			     cgw_remove_job, NULL, 0);
++	if (ret)
++		goto out_rtnl_register1;
++
++	ret = rtnl_register_module(THIS_MODULE, PF_CAN, RTM_NEWROUTE,
++				   cgw_create_job, NULL, 0);
++	if (ret)
++		goto out_rtnl_register2;
++	ret = rtnl_register_module(THIS_MODULE, PF_CAN, RTM_DELROUTE,
++				   cgw_remove_job, NULL, 0);
++	if (ret)
++		goto out_rtnl_register3;
+ 
+ 	return 0;
++
++out_rtnl_register3:
++	rtnl_unregister(PF_CAN, RTM_NEWROUTE);
++out_rtnl_register2:
++	rtnl_unregister(PF_CAN, RTM_GETROUTE);
++out_rtnl_register1:
++	unregister_netdevice_notifier(&notifier);
++out_register_notifier:
++	kmem_cache_destroy(cgw_cache);
++out_cache_create:
++	unregister_pernet_subsys(&cangw_pernet_ops);
++
++	return ret;
+ }
+ 
+ static __exit void cgw_module_exit(void)
 -- 
 2.20.1
 
