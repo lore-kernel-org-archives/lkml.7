@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2748C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033F9C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59002085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24CD20842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749000;
-	bh=8kno17t5G0+IQF9Amfj1SsO5zRRh4PZmqZoEBgEN3Kk=;
+	s=default; t=1565749008;
+	bh=OPSiXxS4swt0ozoxU8qLxZd2FnOGMLU53bDmra08Nqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uOBCG87ebCSAN47PmbB8AjdKdCZJ0jCUwK5U0q4QyDR3yavu9PKlF92LNRyh3bj69
-	 y1bNRSZMWRXqQMXQ2+LiTGNQ6XW/BHg99CCWM3LFwuLEKV+lvYHw9+tUOlbjKCNGYQ
-	 HAxBGNl3fmRfQD2pHKWTi3BgRL4QuI3mC6uYtlHs=
+	b=0WQA+gxd0X8B1rSXjGRmnKFqxlwDCBzwnNYCX8C+uQnGsOrlOy8UqgRw4RzRVvpMb
+	 cgYt9CtVdI6GJNqe0C9UzjAeeJ3hvygiiINVcfZytQksSvl+CmAkMFYgbI+Mf2HbVm
+	 hzyfk+GXj6kp3nyXLSVuwfV/czskK++d4lWQszpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbfHNCQj (ORCPT
+        id S1729198AbfHNCQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:16:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48056 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:16:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729124AbfHNCQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:16:37 -0400
+        id S1729174AbfHNCQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:16:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14A4120842;
-        Wed, 14 Aug 2019 02:16:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8533E208C2;
+        Wed, 14 Aug 2019 02:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748997;
-        bh=8kno17t5G0+IQF9Amfj1SsO5zRRh4PZmqZoEBgEN3Kk=;
+        s=default; t=1565749003;
+        bh=OPSiXxS4swt0ozoxU8qLxZd2FnOGMLU53bDmra08Nqc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nS2m4kpzNg5LVHSVLMZO0eMzn2WPV6jj4YfsgXA5WDPGALL9ESBfOBpEoUiRck6py
-         JCMNvSYJCmURYvjqItTrEJli1Tr25oNpWwMBHVjTVIdGNEH5i9N5f3VOow+Y33MYT4
-         c7IZlIAadnVfFP6aHFeEdJpHv5m+aCiHNoe6PaCI=
+        b=yIM0o/SVM009u8vLeJrsFxxPFM8Gstn39hxqlltnefyEYMECtozST/HTyBDlmKw2v
+         3b8i2UTR2nAixFJsMEV1pvn8pGLceVe8TkDMW2sEzhKcth4zcqrxS7hnxRUS02YXJ1
+         Zd9RSICi6yQ59D0pFwibalFNbKtb7PJsxPsfaFk0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefano Brivio <sbrivio@redhat.com>, Chen Yi <yiche@redhat.com>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+Cc:     David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Jeffrey Altman <jaltman@auristor.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 26/68] netfilter: ipset: Copy the right MAC address in bitmap:ip,mac and hash:ip,mac sets
-Date:   Tue, 13 Aug 2019 22:15:04 -0400
-Message-Id: <20190814021548.16001-26-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 30/68] rxrpc: Fix the lack of notification when sendmsg() fails on a DATA packet
+Date:   Tue, 13 Aug 2019 22:15:08 -0400
+Message-Id: <20190814021548.16001-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -61,86 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Brivio <sbrivio@redhat.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 1b4a75108d5bc153daf965d334e77e8e94534f96 ]
+[ Upstream commit c69565ee6681e151e2bb80502930a16e04b553d1 ]
 
-In commit 8cc4ccf58379 ("ipset: Allow matching on destination MAC address
-for mac and ipmac sets"), ipset.git commit 1543514c46a7, I added to the
-KADT functions for sets matching on MAC addreses the copy of source or
-destination MAC address depending on the configured match.
+Fix the fact that a notification isn't sent to the recvmsg side to indicate
+a call failed when sendmsg() fails to transmit a DATA packet with the error
+ENETUNREACH, EHOSTUNREACH or ECONNREFUSED.
 
-This was done correctly for hash:mac, but for hash:ip,mac and
-bitmap:ip,mac, copying and pasting the same code block presents an
-obvious problem: in these two set types, the MAC address is the second
-dimension, not the first one, and we are actually selecting the MAC
-address depending on whether the first dimension (IP address) specifies
-source or destination.
+Without this notification, the afs client just sits there waiting for the
+call to complete in some manner (which it's not now going to do), which
+also pins the rxrpc call in place.
 
-Fix this by checking for the IPSET_DIM_TWO_SRC flag in option flags.
+This can be seen if the client has a scope-level IPv6 address, but not a
+global-level IPv6 address, and we try and transmit an operation to a
+server's IPv6 address.
 
-This way, mixing source and destination matches for the two dimensions
-of ip,mac set types works as expected. With this setup:
+Looking in /proc/net/rxrpc/calls shows completed calls just sat there with
+an abort code of RX_USER_ABORT and an error code of -ENETUNREACH.
 
-  ip netns add A
-  ip link add veth1 type veth peer name veth2 netns A
-  ip addr add 192.0.2.1/24 dev veth1
-  ip -net A addr add 192.0.2.2/24 dev veth2
-  ip link set veth1 up
-  ip -net A link set veth2 up
-
-  dst=$(ip netns exec A cat /sys/class/net/veth2/address)
-
-  ip netns exec A ipset create test_bitmap bitmap:ip,mac range 192.0.0.0/16
-  ip netns exec A ipset add test_bitmap 192.0.2.1,${dst}
-  ip netns exec A iptables -A INPUT -m set ! --match-set test_bitmap src,dst -j DROP
-
-  ip netns exec A ipset create test_hash hash:ip,mac
-  ip netns exec A ipset add test_hash 192.0.2.1,${dst}
-  ip netns exec A iptables -A INPUT -m set ! --match-set test_hash src,dst -j DROP
-
-ipset correctly matches a test packet:
-
-  # ping -c1 192.0.2.2 >/dev/null
-  # echo $?
-  0
-
-Reported-by: Chen Yi <yiche@redhat.com>
-Fixes: 8cc4ccf58379 ("ipset: Allow matching on destination MAC address for mac and ipmac sets")
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+Fixes: c54e43d752c7 ("rxrpc: Fix missing start of call timeout")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipset/ip_set_bitmap_ipmac.c | 2 +-
- net/netfilter/ipset/ip_set_hash_ipmac.c   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ net/rxrpc/sendmsg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/netfilter/ipset/ip_set_bitmap_ipmac.c b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
-index 13ade5782847b..4f01321e793ce 100644
---- a/net/netfilter/ipset/ip_set_bitmap_ipmac.c
-+++ b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
-@@ -230,7 +230,7 @@ bitmap_ipmac_kadt(struct ip_set *set, const struct sk_buff *skb,
- 
- 	e.id = ip_to_id(map, ip);
- 
--	if (opt->flags & IPSET_DIM_ONE_SRC)
-+	if (opt->flags & IPSET_DIM_TWO_SRC)
- 		ether_addr_copy(e.ether, eth_hdr(skb)->h_source);
- 	else
- 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
-diff --git a/net/netfilter/ipset/ip_set_hash_ipmac.c b/net/netfilter/ipset/ip_set_hash_ipmac.c
-index 75c21c8b76514..16ec822e40447 100644
---- a/net/netfilter/ipset/ip_set_hash_ipmac.c
-+++ b/net/netfilter/ipset/ip_set_hash_ipmac.c
-@@ -99,7 +99,7 @@ hash_ipmac4_kadt(struct ip_set *set, const struct sk_buff *skb,
- 	    (skb_mac_header(skb) + ETH_HLEN) > skb->data)
- 		return -EINVAL;
- 
--	if (opt->flags & IPSET_DIM_ONE_SRC)
-+	if (opt->flags & IPSET_DIM_TWO_SRC)
- 		ether_addr_copy(e.ether, eth_hdr(skb)->h_source);
- 	else
- 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
+diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
+index be01f9c5d963d..5d6ab4f6fd7ab 100644
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -230,6 +230,7 @@ static void rxrpc_queue_packet(struct rxrpc_sock *rx, struct rxrpc_call *call,
+ 			rxrpc_set_call_completion(call,
+ 						  RXRPC_CALL_LOCAL_ERROR,
+ 						  0, ret);
++			rxrpc_notify_socket(call);
+ 			goto out;
+ 		}
+ 		_debug("need instant resend %d", ret);
 -- 
 2.20.1
 
