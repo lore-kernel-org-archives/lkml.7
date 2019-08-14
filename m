@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2E7C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DB1C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F83216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C55C216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802838;
-	bh=qDZva4gHxim8jnTlgaNdRKpb8F1TlaMNJ/vRHk0cXAU=;
+	s=default; t=1565802843;
+	bh=dexmZpGFjO/NwWbZA2WUjZYlVs2/LhEw6gTFdY/zetY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BeIILO//drSiLSatiLrOOEvRxVhinj4jG3HG8RDwhCR5R88TfJkBh6u/6brg2SN7W
-	 vwJpuy48GVzQRPWe4IEzdE2cXJwiSAHG+0KiJ411utJ7TBoGxtThGANwN5X/BJU9W4
-	 UiuQZVi6ulAH+U3n8ZlZa5ldhl4zBT0rM7TUchlg=
+	b=uVdzvhmNUoavI37+Y5PVfCs1l+Irx3tjC3eEOqNLZshSpYyYsUQR4Uz7SHZuXA7az
+	 GzrZrBd6Ey1jeuuCLRLntcu13S47BxwBqbtx0mhMOrs/T5vWKfNBVhTB76wqoCk5X7
+	 w4ZLmeJaobv1XkJJuN3aEIN9QIUqDP9XkTgnrGes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbfHNRN5 (ORCPT
+        id S1730997AbfHNROC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:13:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38296 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:14:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730968AbfHNRNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:13:54 -0400
+        id S1730982AbfHNRN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:13:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB7CD20665;
-        Wed, 14 Aug 2019 17:13:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEEDF2063F;
+        Wed, 14 Aug 2019 17:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802833;
-        bh=qDZva4gHxim8jnTlgaNdRKpb8F1TlaMNJ/vRHk0cXAU=;
+        s=default; t=1565802838;
+        bh=dexmZpGFjO/NwWbZA2WUjZYlVs2/LhEw6gTFdY/zetY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kdSmfCtfexmrHkilbF9AQ2u6CndZ2VcYorRL2X9nczHLZcq7jKsy51ODDfEcjrJkA
-         llySAa27hcCxjSIuyPB32yXuIo48L8IzdxXS4SjTOBw/WARhHwwetP9LITmDUTywFc
-         aOEKqGwLwMiLJpeb/OjRCf1pp8xbkKi1Fzuv8q8U=
+        b=rrxUVCqgXP6rnxhTavnxIJVX9y5LLHAPMBvIa3gglZNgvl/4J33wv/CGPSttaaNb7
+         ncyiPDM5OsYqxHQEav5Ouk7K3xvAXbn1B5YlQADU2ZrhsrX14vnINR1ZwD04hBDeuH
+         Y94RsxdIN83E7c7hpKN5TIoxW62l4w5NYr/oUxXQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH 4.14 17/69] mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()
-Date:   Wed, 14 Aug 2019 19:01:15 +0200
-Message-Id: <20190814165746.789352202@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.14 19/69] perf db-export: Fix thread__exec_comm()
+Date:   Wed, 14 Aug 2019 19:01:17 +0200
+Message-Id: <20190814165746.892078463@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -60,58 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 3f8fd02b1bf1d7ba964485a56f2f4b53ae88c167 upstream.
+commit 3de7ae0b2a1d86dbb23d0cb135150534fdb2e836 upstream.
 
-On x86-32 with PTI enabled, parts of the kernel page-tables are not shared
-between processes. This can cause mappings in the vmalloc/ioremap area to
-persist in some page-tables after the region is unmapped and released.
+Threads synthesized from /proc have comms with a start time of zero, and
+not marked as "exec". Currently, there can be 2 such comms. The first is
+created by processing a synthesized fork event and is set to the
+parent's comm string, and the second by processing a synthesized comm
+event set to the thread's current comm string.
 
-When the region is re-used the processes with the old mappings do not fault
-in the new mappings but still access the old ones.
+In the absence of an "exec" comm, thread__exec_comm() picks the last
+(oldest) comm, which, in the case above, is the parent's comm string.
+For a main thread, that is very probably wrong. Use the second-to-last
+in that case.
 
-This causes undefined behavior, in reality often data corruption, kernel
-oopses and panics and even spontaneous reboots.
+This affects only db-export because it is the only user of
+thread__exec_comm().
 
-Fix this problem by activly syncing unmaps in the vmalloc/ioremap area to
-all page-tables in the system before the regions can be re-used.
+Example:
 
-Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lkml.kernel.org/r/20190719184652.11391-4-joro@8bytes.org
+  $ sudo perf record -a -o pt-a-sleep-1 -e intel_pt//u -- sleep 1
+  $ sudo chown ahunter pt-a-sleep-1
+
+Before:
+
+  $ perf script -i pt-a-sleep-1 --itrace=bep -s tools/perf/scripts/python/export-to-sqlite.py pt-a-sleep-1.db branches calls
+  $ sqlite3 -header -column pt-a-sleep-1.db 'select * from comm_threads_view'
+  comm_id     command     thread_id   pid         tid
+  ----------  ----------  ----------  ----------  ----------
+  1           swapper     1           0           0
+  2           rcu_sched   2           10          10
+  3           kthreadd    3           78          78
+  5           sudo        4           15180       15180
+  5           sudo        5           15180       15182
+  7           kworker/4:  6           10335       10335
+  8           kthreadd    7           55          55
+  10          systemd     8           865         865
+  10          systemd     9           865         875
+  13          perf        10          15181       15181
+  15          sleep       10          15181       15181
+  16          kworker/3:  11          14179       14179
+  17          kthreadd    12          29376       29376
+  19          systemd     13          746         746
+  21          systemd     14          401         401
+  23          systemd     15          879         879
+  23          systemd     16          879         945
+  25          kthreadd    17          556         556
+  27          kworker/u1  18          14136       14136
+  28          kworker/u1  19          15021       15021
+  29          kthreadd    20          509         509
+  31          systemd     21          836         836
+  31          systemd     22          836         967
+  33          systemd     23          1148        1148
+  33          systemd     24          1148        1163
+  35          kworker/2:  25          17988       17988
+  36          kworker/0:  26          13478       13478
+
+After:
+
+  $ perf script -i pt-a-sleep-1 --itrace=bep -s tools/perf/scripts/python/export-to-sqlite.py pt-a-sleep-1b.db branches calls
+  $ sqlite3 -header -column pt-a-sleep-1b.db 'select * from comm_threads_view'
+  comm_id     command     thread_id   pid         tid
+  ----------  ----------  ----------  ----------  ----------
+  1           swapper     1           0           0
+  2           rcu_sched   2           10          10
+  3           kswapd0     3           78          78
+  4           perf        4           15180       15180
+  4           perf        5           15180       15182
+  6           kworker/4:  6           10335       10335
+  7           kcompactd0  7           55          55
+  8           accounts-d  8           865         865
+  8           accounts-d  9           865         875
+  10          perf        10          15181       15181
+  12          sleep       10          15181       15181
+  13          kworker/3:  11          14179       14179
+  14          kworker/1:  12          29376       29376
+  15          haveged     13          746         746
+  16          systemd-jo  14          401         401
+  17          NetworkMan  15          879         879
+  17          NetworkMan  16          879         945
+  19          irq/131-iw  17          556         556
+  20          kworker/u1  18          14136       14136
+  21          kworker/u1  19          15021       15021
+  22          kworker/u1  20          509         509
+  23          thermald    21          836         836
+  23          thermald    22          836         967
+  25          unity-sett  23          1148        1148
+  25          unity-sett  24          1148        1163
+  27          kworker/2:  25          17988       17988
+  28          kworker/0:  26          13478       13478
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 65de51f93ebf ("perf tools: Identify which comms are from exec")
+Link: http://lkml.kernel.org/r/20190808064823.14846-1-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmalloc.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/perf/util/thread.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1766,6 +1766,12 @@ void *__vmalloc_node_range(unsigned long
- 		return NULL;
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -160,14 +160,24 @@ struct comm *thread__comm(const struct t
  
- 	/*
-+	 * First make sure the mappings are removed from all page-tables
-+	 * before they are freed.
-+	 */
-+	vmalloc_sync_all();
-+
-+	/*
- 	 * In this function, newly allocated vm_struct has VM_UNINITIALIZED
- 	 * flag. It means that vm_struct is not fully initialized.
- 	 * Now, it is fully initialized, so remove this flag here.
-@@ -2314,6 +2320,9 @@ EXPORT_SYMBOL(remap_vmalloc_range);
- /*
-  * Implement a stub for vmalloc_sync_all() if the architecture chose not to
-  * have one.
-+ *
-+ * The purpose of this function is to make sure the vmalloc area
-+ * mappings are identical in all page-tables in the system.
-  */
- void __weak vmalloc_sync_all(void)
+ struct comm *thread__exec_comm(const struct thread *thread)
  {
+-	struct comm *comm, *last = NULL;
++	struct comm *comm, *last = NULL, *second_last = NULL;
+ 
+ 	list_for_each_entry(comm, &thread->comm_list, list) {
+ 		if (comm->exec)
+ 			return comm;
++		second_last = last;
+ 		last = comm;
+ 	}
+ 
++	/*
++	 * 'last' with no start time might be the parent's comm of a synthesized
++	 * thread (created by processing a synthesized fork event). For a main
++	 * thread, that is very probably wrong. Prefer a later comm to avoid
++	 * that case.
++	 */
++	if (second_last && !last->start && thread->pid_ == thread->tid)
++		return second_last;
++
+ 	return last;
+ }
+ 
 
 
