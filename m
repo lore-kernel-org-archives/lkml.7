@@ -2,75 +2,111 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A12C0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7195BC0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9752084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BC7208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:34:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBi/8nGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfHNHdb (ORCPT
+        id S1727543AbfHNHe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:33:31 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:53337 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbfHNHdb (ORCPT
+        Wed, 14 Aug 2019 03:34:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46236 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfHNHe6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:33:31 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7E7XOR1013132, This message is accepted by code: ctaloc0852
-Received: from RS-CAS01.realsil.com.cn (rsl1.realsil.com.cn[172.29.17.2](maybeforged))
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7E7XOR1013132
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 14 Aug 2019 15:33:24 +0800
-Received: from RS-MBS01.realsil.com.cn ([::1]) by RS-CAS01.realsil.com.cn
- ([::1]) with mapi id 14.03.0439.000; Wed, 14 Aug 2019 15:33:20 +0800
-From:   =?utf-8?B?6ZmG5pyx5Lyf?= <alex_lu@realsil.com.cn>
-To:     Marcel Holtmann <marcel@holtmann.org>
-CC:     Johan Hedberg <johan.hedberg@gmail.com>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Max Chou <max.chou@realtek.com>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjJdIEJsdWV0b290aDogYnR1c2I6IEZpeCBzdXNw?= =?utf-8?Q?end_issue_for_Realtek_devices?=
-Thread-Topic: [PATCH v2] Bluetooth: btusb: Fix suspend issue for Realtek
- devices
-Thread-Index: AQHVSSoXcj83mYj970uYtopmxf680qb3PuqAgAMTiBA=
-Date:   Wed, 14 Aug 2019 07:33:20 +0000
-Message-ID: <0551C926975A174EA8972327741C7889EE81189A@RS-MBS01.realsil.com.cn>
-References: <20190802120217.GA8712@toshiba>
- <A83A0A38-8AC8-4662-BBC1-3B48B707E97B@holtmann.org>
-In-Reply-To: <A83A0A38-8AC8-4662-BBC1-3B48B707E97B@holtmann.org>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.29.36.107]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Wed, 14 Aug 2019 03:34:58 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q139so4786687pfc.13;
+        Wed, 14 Aug 2019 00:34:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=RHOMr4ptKfjquPk5bhUDtq5uLFKfISVcupJSVaOf/TA=;
+        b=FBi/8nGE8HcVC+P34RYHPJ9g24kSlA2MLqh/h6tXLHEDmsvkRu1ZcmKJQYTkbdfJoJ
+         cBACdIbmQsqSzhry0zkObXx60Y4ZEqjl2lMl2vqZ+ku+oDS1mPhZjBcB5E3VTa+jgzOd
+         f+Vzm3pjeyQOzUd6R34loEr9V6PZmL1m718Dh3pY+Xp1b3AAsP9UPbTZAswnZRMq0BlY
+         lVkenWT/0tKIjO22TX713kE+0k6mMfZh5loTOnBiJTf3cMX+YwZ/4jsFGO896yPUQMSM
+         7ppi95qVM1xYvbnqaTKZ8MXiDlCVpIFgvaLyaj2W1oeza8FJwleyN1+bWf2fBiIuP8XK
+         HLlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RHOMr4ptKfjquPk5bhUDtq5uLFKfISVcupJSVaOf/TA=;
+        b=f5ca3j0wnw5wkiBdoJkDYhXkZrjvY/hktiErP6u4nqs+u/Mn62xdVao8M3W8A6/leI
+         jOAcyyFw56NAlGa20kPVWUKF9B/y8F4F8HtvHcYF8X9u4O6Bm2k01lm9LoKjZb8Qb8xs
+         Q8wBR4uM8jlihgcapBfw8/0aKcDXjUH8X37HuqbSERZT7PJUPJ7/HbTPm9i/295CO9/P
+         azF8VWMKlXF3MLszijohhNLeYCaXjbAqWW3mNEmuyTeU4zqNCDa4w7Fgyh0gnPhgN/Pe
+         nHJ2IzXNIDc5s1Gsxs4QA02/NrUa7vnHjEzLxjW5JVCwm6bmQX5JApvzx+LKwEv4qKxh
+         Gzrg==
+X-Gm-Message-State: APjAAAVZGXpqm9JFxkhxxDLl/F2wGQpQVrEzxiHN2xPmo274+vddzr9r
+        gigc9jHCVNdZIYV7FnzrmpE=
+X-Google-Smtp-Source: APXvYqznL4dsNbQONSJciPqTQxe+yFkIGRzx4cM9Q0lLHaDfbY7p0gHdYdXVzAJPhJQVqIjLYM32gQ==
+X-Received: by 2002:a17:90a:9202:: with SMTP id m2mr5879136pjo.16.1565768097390;
+        Wed, 14 Aug 2019 00:34:57 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([167.220.255.114])
+        by smtp.googlemail.com with ESMTPSA id v184sm109639230pfb.82.2019.08.14.00.34.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 14 Aug 2019 00:34:56 -0700 (PDT)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com
+Subject: [PATCH V2 0/3] KVM/Hyper-V: Add Hyper-V direct tlb flush support
+Date:   Wed, 14 Aug 2019 15:34:44 +0800
+Message-Id: <20190814073447.96141-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWFyY2VsLA0KT2theSwgSSB3aWxsIHNlbmQgYSB2ZXJzaW9uIGZvciBibHVldG9vdGgtbmV4
-dC4NCg0KVGhhbmtzLA0KQlJzLg0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjJdIEJsdWV0b290
-aDogYnR1c2I6IEZpeCBzdXNwZW5kIGlzc3VlIGZvciBSZWFsdGVrIGRldmljZXMNCj4gDQo+IEhp
-IEFsZXgsDQo+IA0KPiA+IEZyb20gdGhlIHBlcnNwZWN0aXZlIG9mIGNvbnRyb2xsZXIsIGdsb2Jh
-bCBzdXNwZW5kIG1lYW5zIHRoZXJlIGlzIG5vDQo+ID4gU0VUX0ZFQVRVUkUgKERFVklDRV9SRU1P
-VEVfV0FLRVVQKSBhbmQgY29udHJvbGxlciB3b3VsZCBkcm9wIHRoZQ0KPiA+IGZpcm13YXJlLiBJ
-dCB3b3VsZCBjb25zdW1lIGxlc3MgcG93ZXIuIFNvIHdlIHNob3VsZCBub3Qgc2VuZCB0aGlzIGtp
-bmQNCj4gPiBvZiBTRVRfRkVBVFVSRSB3aGVuIGhvc3QgZ29lcyB0byBzdXNwZW5kIHN0YXRlLg0K
-PiA+IE90aGVyd2lzZSwgd2hlbiBtYWtpbmcgZGV2aWNlIGVudGVyIHNlbGVjdGl2ZSBzdXNwZW5k
-LCBob3N0IHNob3VsZCBzZW5kDQo+ID4gU0VUX0ZFQVRVUkUgdG8gbWFrZSBzdXJlIHRoZSBmaXJt
-d2FyZSByZW1haW5zLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQWxleCBMdSA8YWxleF9sdUBy
-ZWFsc2lsLmNvbS5jbj4NCj4gPiAtLS0NCj4gPiBkcml2ZXJzL2JsdWV0b290aC9idHVzYi5jIHwg
-MzQgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLQ0KPiA+IDEgZmlsZSBjaGFuZ2Vk
-LCAzMCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiANCj4gdGhpcyBvbmUgZG9lc27i
-gJl0IGFwcGx5IGNsZWFubHkgdG8gYmx1ZXRvb3RoLW5leHQuIENhbiB5b3UgcGxlYXNlIHNlbmQg
-YQ0KPiB2ZXJzaW9uIHRoYXQgZG9lcy4NCj4gDQo+IFJlZ2FyZHMNCj4gDQo+IE1hcmNlbA0KPiAN
-Cj4gDQo+IC0tLS0tLVBsZWFzZSBjb25zaWRlciB0aGUgZW52aXJvbm1lbnQgYmVmb3JlIHByaW50
-aW5nIHRoaXMgZS1tYWlsLg0K
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+
+This patchset is to add Hyper-V direct tlb support in KVM. Hyper-V
+in L0 can delegate L1 hypervisor to handle tlb flush request from
+L2 guest when direct tlb flush is enabled in L1.
+
+Patch 2 introduces new cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH to enable
+feature from user space. User space should enable this feature only
+when Hyper-V hypervisor capability is exposed to guest and KVM profile
+is hided. There is a parameter conflict between KVM and Hyper-V hypercall.
+We hope L2 guest doesn't use KVM hypercall when the feature is
+enabled. Detail please see comment of new API "KVM_CAP_HYPERV_DIRECT_TLBFLUSH"
+
+Change since v1:
+       - Fix offset issue in the patch 1.
+       - Update description of KVM KVM_CAP_HYPERV_DIRECT_TLBFLUSH.
+
+Tianyu Lan (2):
+  x86/Hyper-V: Fix definition of struct hv_vp_assist_page
+  KVM/Hyper-V: Add new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH
+
+Vitaly Kuznetsov (1):
+  KVM/Hyper-V/VMX: Add direct tlb flush support
+
+ Documentation/virtual/kvm/api.txt  | 12 ++++++++++++
+ arch/x86/include/asm/hyperv-tlfs.h | 24 +++++++++++++++++++-----
+ arch/x86/include/asm/kvm_host.h    |  2 ++
+ arch/x86/kvm/vmx/evmcs.h           |  2 ++
+ arch/x86/kvm/vmx/vmx.c             | 38 ++++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/x86.c                 |  8 ++++++++
+ include/linux/kvm_host.h           |  1 +
+ include/uapi/linux/kvm.h           |  1 +
+ 8 files changed, 83 insertions(+), 5 deletions(-)
+
+-- 
+2.14.5
+
