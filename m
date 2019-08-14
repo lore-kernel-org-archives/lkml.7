@@ -2,106 +2,216 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A92C32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A48C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0DA2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0033A2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:32:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="vVh2LAgl"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="jPSDMBQ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfHNKbT (ORCPT
+        id S1726972AbfHNKcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:31:19 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:51240 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfHNKbS (ORCPT
+        Wed, 14 Aug 2019 06:32:50 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39137 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfHNKct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:31:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vIn3VrH7ocwDZwAAstv4Z1w3Iw6dyOjCurgY/OY+iMg=; b=vVh2LAglzEG++FwqN4KSlYc3e
-        r1btgKmDEiOv85fXEZ+HfeiKQBXj02w1pCssYPOmHUYKWhHS2i274oG8l7lzAZQyzqLikkkKa2/cn
-        WqMl1l0IGoprA+wUx5VYjOFf8yY23van8tZYvi6GupNDAe5pITc2JQ3GiWymo+Kc7VaMu2DZ6jqsM
-        2q0ZsPP+7DcgBWAlSUisioPDmWaF5tS9lO/A5V44fXMDcQMBLxm+bdNYuCMutScF2l2wOZXilNUAC
-        Y22OnCoc77oDHHMtZ+EIAfsKBwK6Mcu/2EPbieFfdGiXbXawu/8aRhm05G6xCnRbCDDFMmJ3m/ak/
-        ulXIvjO9w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56468)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hxqYb-0005uy-JR; Wed, 14 Aug 2019 11:31:05 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hxqYR-0008OC-2C; Wed, 14 Aug 2019 11:30:55 +0100
-Date:   Wed, 14 Aug 2019 11:30:55 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Steve Longerbeam <slongerbeam@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Len Brown <lenb@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "moderated list:ARM/ZYNQ ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Enrico Weigelt <info@metux.net>
-Subject: Re: [PATCH 04/22] media: Move v4l2_fwnode_parse_link from v4l2 to
- driver base
-Message-ID: <20190814103054.GI13294@shell.armlinux.org.uk>
-References: <20190805233505.21167-1-slongerbeam@gmail.com>
- <20190805233505.21167-5-slongerbeam@gmail.com>
- <CAHp75VcOh8bOf_s6t0ehwGtcYn64QFGj303SVvpHrztEOhTRgg@mail.gmail.com>
- <4750b347-b421-6569-600f-0ced8406460e@gmail.com>
+        Wed, 14 Aug 2019 06:32:49 -0400
+Received: by mail-ed1-f67.google.com with SMTP id g8so423696edm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 03:32:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dBtemWUHTumI2mqw+n8wmnycs/uDqcEImdqPTzrreFU=;
+        b=jPSDMBQ8wHXd5nnN4pQRCcjuk/Tf/zo5Gq/c3IPIvlKqLypTaDE7O9pJQQMKJWpurY
+         afliwfOG5B/FTYlhid2lB2X/kDJaCoth4ZBtiLABtPH++SFoldn4GxBJbI+MEXHxPAc/
+         SQCH30Q3GypvPbDTOH9K4MsQ6jwaMfvSzn/U1VB0C5akRUnsXj7WygUAEL2CQAmlpRIr
+         F+CrwVHJ5rcWnIuLAMqxIZJLGzOXzkFMIn65jl6GE/XaxCwLjlLOKLXZndW+zDgDvXDp
+         mBddRPGyfXkHEKxdAds27IMGu+jCEUV69dn9UVjN8XbIvV+8YenKahu2JtCJBXiH2aPy
+         /iug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dBtemWUHTumI2mqw+n8wmnycs/uDqcEImdqPTzrreFU=;
+        b=Ont9CchrfZrux3RsXnyHh/nB2YJ6b3X40ymUq2DxG5uKq64x4CLf1GbMoh6e2J//Ze
+         IrCIYwNOVR8qG3at+ADcAcZeaMDK9fS5AoCoWAqoVk4X0J/liOwqyOs59vjkNx48sjhG
+         IyDPMxj1CDZcuvE17HO4wogwjCxs+Op4iZPKKpPUUBa/xTyg8ZVLopWA/GMpps49nMsk
+         JJ4G9m06EhmDxOaYEa8RFHpz2MJ54P/gPtxYZvgI9EEm5rsMz47TSIyCLneHueshHY4P
+         5tB/wxv6jcpRAsB3TKSHAi+CKRK6pXQTO0H9/BXCRBR2a3XGOveuTGdua1exX0QDOXfJ
+         BdMA==
+X-Gm-Message-State: APjAAAWbcvFDQ22UdMb5R0GBYNBYJzIconA/PpEtzXjzsSabJh3jC7hO
+        m1Uk57QNWDQ3auGfZfvJ8yjFgg==
+X-Google-Smtp-Source: APXvYqwRp6BkhAOiQNXuaWuzsnMLq7pbX/Yzz8215caYil9aHzMp2C3TXzlRapBe4QbVglgHlc04OQ==
+X-Received: by 2002:a05:6402:789:: with SMTP id d9mr28725992edy.25.1565778767338;
+        Wed, 14 Aug 2019 03:32:47 -0700 (PDT)
+Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
+        by smtp.gmail.com with ESMTPSA id a22sm17778362eje.61.2019.08.14.03.32.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 03:32:46 -0700 (PDT)
+From:   Martijn Coenen <maco@android.com>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, kernel-team@android.com,
+        narayan@google.com, dariofreni@google.com, ioffe@google.com,
+        jiyong@google.com, maco@google.com,
+        Martijn Coenen <maco@android.com>
+Subject: [PATCH] RFC: loop: Avoid calling blk_mq_freeze_queue() when possible.
+Date:   Wed, 14 Aug 2019 12:32:44 +0200
+Message-Id: <20190814103244.92518-1-maco@android.com>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4750b347-b421-6569-600f-0ced8406460e@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 09:53:41AM -0700, Steve Longerbeam wrote:
-> The full patchset doesn't seem to be up yet, but see [1] for the cover
-> letter.
+Since Android Q, the creation and configuration of loop devices is in
+the critical path of device boot. We found that the configuration of
+loop devices is pretty slow, because many ioctl()'s involve freezing the
+block queue, which in turn needs to wait for an RCU grace period. On
+Android devices we've observed up to 60ms for the creation and
+configuration of a single loop device; as we anticipate creating many
+more in the future, we'd like to avoid this delay.
 
-Was the entire series copied to the mailing lists, or just selected
-patches?  I only saw 4, 9, 11 and 13-22 via lakml.
+This allows LOOP_SET_BLOCK_SIZE to be called before the loop device has
+been bound; since the block queue is not running at that point, we can
+avoid the expensive freezing of the queue.
 
-In the absence of the other patches, will this solve imx-media binding
-the internal subdevs of sensor devices to the CSI2 interface?
+On a recent x86, this patch yields the following results:
 
-Thanks.
+===
+Call LOOP_SET_BLOCK_SIZE on /dev/loop0 before being bound
+===
+~# time ./set_block_size
 
+real 0m0.002s
+user 0m0.000s
+sys  0m0.002s
+
+===
+Call LOOP_SET_BLOCK_SIZE on /dev/loop0 after being bound
+===
+~# losetup /dev/loop0 fs.img
+~# time ./set_block_size
+
+real 0m0.008s
+user 0m0.000s
+sys  0m0.002s
+
+Over many runs, this is a 4x improvement.
+
+This is RFC because technically it is a change in behavior; before,
+calling LOOP_SET_BLOCK_SIZE on an unbound device would return ENXIO, and
+userspace programs that left it in their code despite the returned
+error, would now suddenly see the requested value effectuated. I'm not
+sure whether this is acceptable.
+
+An alternative might be a CONFIG option to set the default block size to
+another value than 512. Another alternative I considered is allowing the
+block device to be created with a "frozen" queue, where we can manually
+unfreeze the queue when all the configuration is done. This would be a
+much larger code change, though.
+
+Signed-off-by: Martijn Coenen <maco@android.com>
+---
+ drivers/block/loop.c | 42 +++++++++++++++++++++++-------------------
+ 1 file changed, 23 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index ab7ca5989097a..d4348a4fdd7a6 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -214,7 +214,8 @@ static void __loop_update_dio(struct loop_device *lo, bool dio)
+ 	 * LO_FLAGS_READ_ONLY, both are set from kernel, and losetup
+ 	 * will get updated by ioctl(LOOP_GET_STATUS)
+ 	 */
+-	blk_mq_freeze_queue(lo->lo_queue);
++	if (lo->lo_state == Lo_bound)
++		blk_mq_freeze_queue(lo->lo_queue);
+ 	lo->use_dio = use_dio;
+ 	if (use_dio) {
+ 		blk_queue_flag_clear(QUEUE_FLAG_NOMERGES, lo->lo_queue);
+@@ -223,7 +224,8 @@ static void __loop_update_dio(struct loop_device *lo, bool dio)
+ 		blk_queue_flag_set(QUEUE_FLAG_NOMERGES, lo->lo_queue);
+ 		lo->lo_flags &= ~LO_FLAGS_DIRECT_IO;
+ 	}
+-	blk_mq_unfreeze_queue(lo->lo_queue);
++	if (lo->lo_state == Lo_bound)
++		blk_mq_unfreeze_queue(lo->lo_queue);
+ }
+ 
+ static int
+@@ -621,6 +623,8 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
+ 
+ static inline void loop_update_dio(struct loop_device *lo)
+ {
++	if (lo->lo_state != Lo_bound)
++		return;
+ 	__loop_update_dio(lo, io_is_direct(lo->lo_backing_file) |
+ 			lo->use_dio);
+ }
+@@ -1510,27 +1514,26 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+ {
+ 	int err = 0;
+ 
+-	if (lo->lo_state != Lo_bound)
+-		return -ENXIO;
+-
+ 	if (arg < 512 || arg > PAGE_SIZE || !is_power_of_2(arg))
+ 		return -EINVAL;
+ 
+-	if (lo->lo_queue->limits.logical_block_size != arg) {
+-		sync_blockdev(lo->lo_device);
+-		kill_bdev(lo->lo_device);
+-	}
++	if (lo->lo_state == Lo_bound) {
++		if (lo->lo_queue->limits.logical_block_size != arg) {
++			sync_blockdev(lo->lo_device);
++			kill_bdev(lo->lo_device);
++		}
+ 
+-	blk_mq_freeze_queue(lo->lo_queue);
++		blk_mq_freeze_queue(lo->lo_queue);
+ 
+-	/* kill_bdev should have truncated all the pages */
+-	if (lo->lo_queue->limits.logical_block_size != arg &&
+-			lo->lo_device->bd_inode->i_mapping->nrpages) {
+-		err = -EAGAIN;
+-		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+-			__func__, lo->lo_number, lo->lo_file_name,
+-			lo->lo_device->bd_inode->i_mapping->nrpages);
+-		goto out_unfreeze;
++		/* kill_bdev should have truncated all the pages */
++		if (lo->lo_queue->limits.logical_block_size != arg &&
++				lo->lo_device->bd_inode->i_mapping->nrpages) {
++			err = -EAGAIN;
++			pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
++				__func__, lo->lo_number, lo->lo_file_name,
++				lo->lo_device->bd_inode->i_mapping->nrpages);
++			goto out_unfreeze;
++		}
+ 	}
+ 
+ 	blk_queue_logical_block_size(lo->lo_queue, arg);
+@@ -1538,7 +1541,8 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+ 	blk_queue_io_min(lo->lo_queue, arg);
+ 	loop_update_dio(lo);
+ out_unfreeze:
+-	blk_mq_unfreeze_queue(lo->lo_queue);
++	if (lo->lo_state == Lo_bound)
++		blk_mq_unfreeze_queue(lo->lo_queue);
+ 
+ 	return err;
+ }
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.23.0.rc1.153.gdeed80330f-goog
+
