@@ -2,302 +2,163 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94978C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8E2C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58B812063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:58:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565801938;
-	bh=14kpVeN5jWNC6nXkPCoNsGsW334g7m9vBYuBFQ8RO2I=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=XnYsMKyXLMb5hKL/wAaoqmZAzY6ONPWy3q9oB81vDrgWjLpz6VXeiSXx+yk+d9oV0
-	 IFh0IiUadbuhTKLVKvt8+pIbjqxtqaJ8GHYL0QN9KeRJ09BHnsEV9xo0POWCi8GPvg
-	 xHGnlua4yzgSmrVA9R3YiJNrt2aargZHcYX4SGyk=
+	by mail.kernel.org (Postfix) with ESMTP id 58DE12063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbfHNQ65 (ORCPT
+        id S1728496AbfHNQ7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:58:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727558AbfHNQ65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:58:57 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 098FD2063F;
-        Wed, 14 Aug 2019 16:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565801935;
-        bh=14kpVeN5jWNC6nXkPCoNsGsW334g7m9vBYuBFQ8RO2I=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=eUYaSxcXPQBD2jPWEqORt3lTGGIh9QpwxIFCcuuN1cRYap2lFt3aoDTYVuPYspwuI
-         4KC6SA73+hPzfA6jr6S01yHwYwydB9FDaxrsAFAC7AMNxM9I2P2D0keZE+P30n00xW
-         aBrf9Cdjw2NKkgUe8s1xulcf0SAj4UwKLekvV7kc=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 14 Aug 2019 12:59:33 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54686 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728253AbfHNQ7d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 12:59:33 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7EGsKgG095660
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 12:59:31 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ucn5ejv3w-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 12:59:31 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Wed, 14 Aug 2019 17:59:30 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 14 Aug 2019 17:59:26 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7EGxPTa53084526
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 14 Aug 2019 16:59:25 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8AE31B2064;
+        Wed, 14 Aug 2019 16:59:25 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5BD83B205F;
+        Wed, 14 Aug 2019 16:59:25 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 14 Aug 2019 16:59:25 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 1546416C0FD4; Wed, 14 Aug 2019 09:59:27 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 09:59:27 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Byungchul Park <byungchul.park@lge.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Byungchul Park <max.byungchul.park@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rao Shoaib <rao.shoaib@oracle.com>, kernel-team@android.com,
+        kernel-team <kernel-team@lge.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
+ batching
+Reply-To: paulmck@linux.ibm.com
+References: <20190811083626.GA9486@X58A-UD3R>
+ <20190811084950.GB9486@X58A-UD3R>
+ <20190811234939.GC28441@linux.ibm.com>
+ <20190812101052.GA10478@X58A-UD3R>
+ <20190812131234.GC27552@google.com>
+ <20190813052954.GA18373@X58A-UD3R>
+ <20190813154145.GE28441@linux.ibm.com>
+ <20190814001103.GA31884@X58A-UD3R>
+ <20190814025349.GM28441@linux.ibm.com>
+ <20190814034310.GA31272@X58A-UD3R>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190814125012.8700-2-vkoul@kernel.org>
-References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-2-vkoul@kernel.org>
-Subject: Re: [PATCH 01/22] arm64: dts: qcom: sm8150: add base dts file
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        sibis@codeaurora.org, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 14 Aug 2019 09:58:54 -0700
-Message-Id: <20190814165855.098FD2063F@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814034310.GA31272@X58A-UD3R>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19081416-0052-0000-0000-000003EAD90F
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011590; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01246775; UDB=6.00657962; IPR=6.01028282;
+ MB=3.00028173; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-14 16:59:29
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081416-0053-0000-0000-00006217D9A1
+Message-Id: <20190814165927.GT28441@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-14_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908140158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-08-14 05:49:51)
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/q=
-com/sm8150.dtsi
-> new file mode 100644
-> index 000000000000..cd9fcadaeacb
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> @@ -0,0 +1,269 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +// Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-> +// Copyright (c) 2019, Linaro Limited
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/qcom,gcc-sm8150.h>
-> +
-> +/ {
-> +       interrupt-parent =3D <&intc>;
-> +
-> +       #address-cells =3D <2>;
-> +       #size-cells =3D <2>;
-> +
-> +       chosen { };
-> +
-> +       clocks {
-> +               xo_board: xo-board {
-> +                       compatible =3D "fixed-clock";
-> +                       #clock-cells =3D <0>;
-> +                       clock-frequency =3D <19200000>;
+On Wed, Aug 14, 2019 at 12:43:10PM +0900, Byungchul Park wrote:
+> On Tue, Aug 13, 2019 at 07:53:49PM -0700, Paul E. McKenney wrote:
+> > On Wed, Aug 14, 2019 at 09:11:03AM +0900, Byungchul Park wrote:
+> > > On Tue, Aug 13, 2019 at 08:41:45AM -0700, Paul E. McKenney wrote:
+> > > > On Tue, Aug 13, 2019 at 02:29:54PM +0900, Byungchul Park wrote:
+> > > > > On Mon, Aug 12, 2019 at 09:12:34AM -0400, Joel Fernandes wrote:
+> > > > > > On Mon, Aug 12, 2019 at 07:10:52PM +0900, Byungchul Park wrote:
+> > > > > > > On Sun, Aug 11, 2019 at 04:49:39PM -0700, Paul E. McKenney wrote:
+> > > > > > > > Maybe.  Note well that I said "potential issue".  When I checked a few
+> > > > > > > > years ago, none of the uses of rcu_barrier() cared about kfree_rcu().
+> > > > > > > > They cared instead about call_rcu() callbacks that accessed code or data
+> > > > > > > > that was going to disappear soon, for example, due to module unload or
+> > > > > > > > filesystem unmount.
+> > > > > > > > 
+> > > > > > > > So it -might- be that rcu_barrier() can stay as it is, but with changes
+> > > > > > > > as needed to documentation.
+> > > > > > 
+> > > > > > Right, we should update the docs. Byungchul, do you mind sending a patch that
+> > > > > > documents the rcu_barrier() behavior?
+> > > > > 
+> > > > > Are you trying to give me the chance? I feel thankful. It doens't matter
+> > > > > to try it at the moment though, I can't follow-up until September. I'd
+> > > > > better do that in Septamber or give it up this time.
+> > > > 
+> > > > Which reminds me...  I recall your asking if the kfree_rcu() patch
+> > > > might be sensitive to the exact hardware, but I cannot locate that
+> > > > email right off-hand.  This is an excellent question!  When faced with
+> > > > floods of kfree_rcu() calls, I would expect some hardware, compiler,
+> > > > and kernel-configuration sensitivity.  Which is why it will likely be
+> > > 
+> > > Yes.
+> > > 
+> > > > necessary to do a few more improvements over time -- for but one example,
+> > > > accumulating callbacks into vectors in order to reduce the number of
+> > > > kfree()-time cache misses.
+> > > 
+> > > Yes. That would be a pretty good way to mitigate the problem. I hope
+> > > the simple way we've done works well enough so it would never happen
+> > > though.
+> > > 
+> > > Or I would check the condition of all system resourses e.g. CPU and
+> > > memory and control the bandwith of them, of course only if that actually
+> > > happens.
+> > > 
+> > > Thanks a lot for sharing your opinion on it!
+> > 
+> > Didn't you say earlier that you were getting OOM on your system even
+> > with the patches?  Or did I miss the resolution of that issue?
+> 
+> I said I saw OOM with a *larger* value of KFREE_DRAIN_JIFFIES. It was
+> fine with the patch itself.
 
-Is it 19.2 or 38.4 MHz? It seems like lately there are dividers, but I
-guess it doesn't really matter in the end.
+Got it, thank you!
 
-> +                       clock-output-names =3D "xo_board";
-> +               };
-> +
-> +               sleep_clk: sleep-clk {
-> +                       compatible =3D "fixed-clock";
-> +                       #clock-cells =3D <0>;
-> +                       clock-frequency =3D <32764>;
-> +                       clock-output-names =3D "sleep_clk";
+> Anyway I'm sorry I expressed it in a confusing way.
 
-Does it matter to have this property anymore? Presumably it's OK if the
-name is now sleep-clk instead of sleep_clk because the name doesn't
-matter to connect clk tree.
+But what is life without a little confusion?  ;-)
 
-> +               };
-> +       };
-> +
-> +       cpus {
-> +               #address-cells =3D <2>;
-> +               #size-cells =3D <0>;
-> +
-> +               CPU0: cpu@0 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x0>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_0>;
-> +                       L2_0: l2-cache {
-> +                               compatible =3D "cache";
-> +                               next-level-cache =3D <&L3_0>;
-> +                               L3_0: l3-cache {
-> +                                     compatible =3D "cache";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               CPU1: cpu@100 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x100>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_100>;
-> +                       L2_100: l2-cache {
-> +                               compatible =3D "cache";
-> +                               next-level-cache =3D <&L3_0>;
-> +                       };
-> +
-> +               };
-> +
-> +               CPU2: cpu@200 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x200>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_200>;
-> +                       L2_200: l2-cache {
-> +                               compatible =3D "cache";
-> +                               next-level-cache =3D <&L3_0>;
-> +                       };
-> +               };
-> +
-> +               CPU3: cpu@300 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x300>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_300>;
-> +                       L2_300: l2-cache {
-> +                               compatible =3D "cache";
-> +                               next-level-cache =3D <&L3_0>;
-> +                       };
-> +               };
-> +
-> +               CPU4: cpu@400 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x400>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_400>;
-> +                       L2_400: l2-cache {
-> +                               compatible =3D "cache";
-> +                               next-level-cache =3D <&L3_0>;
-> +                       };
-> +               };
-> +
-> +               CPU5: cpu@500 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x500>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_500>;
-> +                       L2_500: l2-cache {
-> +                               compatible =3D "cache";
-> +                               next-level-cache =3D <&L3_0>;
-> +                       };
-> +               };
-> +
-> +               CPU6: cpu@600 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
-> +                       reg =3D <0x0 0x600>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_600>;
-> +                       L2_600: l2-cache {
-> +                               compatible =3D "cache";
-> +                               next-level-cache =3D <&L3_0>;
-> +                       };
-> +               };
-> +
-> +               CPU7: cpu@700 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo485";
+							Thanx, Paul
 
-Is this compatible documented?
-
-> +                       reg =3D <0x0 0x700>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_700>;
-> +                       L2_700: l2-cache {
-> +                               compatible =3D "cache";
-> +                               next-level-cache =3D <&L3_0>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       firmware {
-> +               scm: scm {
-> +                       compatible =3D "qcom,scm-sm8150", "qcom,scm";
-> +                       #reset-cells =3D <1>;
-> +               };
-> +       };
-> +
-> +       memory@80000000 {
-> +               device_type =3D "memory";
-> +               /* We expect the bootloader to fill in the size */
-> +               reg =3D <0 0x80000000 0 0>;
-> +       };
-> +
-> +       psci {
-> +               compatible =3D "arm,psci-1.0";
-> +               method =3D "smc";
-> +       };
-> +
-> +       soc: soc@0 {
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <1>;
-> +               ranges =3D <0 0 0 0xffffffff>;
-> +               compatible =3D "simple-bus";
-> +
-> +               gcc: clock-controller@100000 {
-> +                       compatible =3D "qcom,gcc-sm8150";
-> +                       reg =3D <0x00100000 0x1f0000>;
-> +                       #clock-cells =3D <1>;
-> +                       #reset-cells =3D <1>;
-> +                       #power-domain-cells =3D <1>;
-> +                       clock-names =3D "bi_tcxo", "sleep_clk";
-> +                       clocks =3D <&xo_board>, <&sleep_clk>;
-> +               };
-> +
-> +               qupv3_id_1: geniqup@ac0000 {
-> +                       compatible =3D "qcom,geni-se-qup";
-> +                       reg =3D <0x00ac0000 0x6000>;
-> +                       clock-names =3D "m-ahb", "s-ahb";
-> +                       clocks =3D <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
-> +                                <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
-> +                       #address-cells =3D <1>;
-> +                       #size-cells =3D <1>;
-> +                       ranges;
-> +                       status =3D "disabled";
-> +
-> +                       uart2: serial@a90000 {
-> +                               compatible =3D "qcom,geni-debug-uart";
-> +                               reg =3D <0x00a90000 0x4000>;
-> +                               clock-names =3D "se";
-> +                               clocks =3D <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
-> +                               interrupts =3D <GIC_SPI 357 IRQ_TYPE_LEVE=
-L_HIGH>;
-> +                               status =3D "disabled";
-> +                       };
-> +               };
-> +
-> +               intc: interrupt-controller@17a00000 {
-> +                       compatible =3D "arm,gic-v3";
-> +                       interrupt-controller;
-> +                       #interrupt-cells =3D <3>;
-> +                       reg =3D <0x17a00000 0x10000>,     /* GICD */
-> +                             <0x17a60000 0x100000>;    /* GICR * 8 */
-> +                       interrupts =3D <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-
-Is there an its node? Probably the same as sdm845?
-
-> +               };
-> +
-> +               timer@17c20000 {
-> +                       #address-cells =3D <1>;
-> +                       #size-cells =3D <1>;
-> +                       ranges;
-> +                       compatible =3D "arm,armv7-timer-mem";
-> +                       reg =3D <0x17c20000 0x1000>;
-> +                       clock-frequency =3D <19200000>;
-
-This property shouldn't be necessary. Please remove.
-
-> +
-> +                       frame@17c21000{
-> +                               frame-number =3D <0>;
-> +                               interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_=
-HIGH>,
-> +                                            <GIC_SPI 6 IRQ_TYPE_LEVEL_HI=
-GH>;
