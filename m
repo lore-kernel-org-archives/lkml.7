@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06773C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778A9C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D168621744
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EFDE2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802235;
-	bh=i4JaZPlAIAKbDEgv0AxRQX0K70BEiDs/vRW6yvhAZHw=;
+	s=default; t=1565802239;
+	bh=SJmBCSPDxyO5xYp/rxqIK+nCIOJDRvTnyp5P/YzQDqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=knd09oef6qNtCZPg8IgVL+P0sW/r6+pMJHaI21yRoc3DI4NN0eU/o98sn+QZy9Pu1
-	 Z7fV/+LCHFtg3T+rWDgXXUF7XY5pRAg/lMYohBr2/KoxkQSQ26iO/RQr259xCNiOdl
-	 DpwWqfd5aeYNOfdCyblvRvztc4LEXvXVk6opdU/Y=
+	b=jbpgXmyW8xRQyWdoknH5OKixWWvh1fJ95cn7ynnzyKbNv9L7KTEOAy024QzIuojyc
+	 VZ6vU89zHxQq1sCjbGfyTKSxofsJgTZ4cp9c42StR+gpjnAL3ykiIlqsn0QsvAeGDI
+	 S4PBu+wm/KiU8DDEQWzxamRQ2v8fF7D73R3E1b7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfHNRDy (ORCPT
+        id S1729087AbfHNRD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:03:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52572 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:03:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729047AbfHNRDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:03:51 -0400
+        id S1728527AbfHNRD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:03:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D75FA21880;
-        Wed, 14 Aug 2019 17:03:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14F4D208C2;
+        Wed, 14 Aug 2019 17:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802230;
-        bh=i4JaZPlAIAKbDEgv0AxRQX0K70BEiDs/vRW6yvhAZHw=;
+        s=default; t=1565802235;
+        bh=SJmBCSPDxyO5xYp/rxqIK+nCIOJDRvTnyp5P/YzQDqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eQscw1jcIPBxslH845euSM/WiIdfJYRm/XXS09Vp6qonnV18OIzorEjKT/LtUBNJr
-         mn6MGHrvT2fJNsm3IOTSxeEozbLhBw0Y/yp/TweN+JS0SgcfMfgGKxuQKXssWTHRfV
-         1KX9jbRurv5OUqZcLJ+vhL4aDXOrjIKIfppaxQdc=
+        b=UmnbXZo7sFws8OkfpNLcfqhqMswPRRh4KGauEYf0vPUmqc7VOh1l8b5Pi5bfmti5I
+         Tqyn9HkSIdzmTH8Oi1ek00a5u3h8G1GWzZg2bo4v3VlRUSYFssHsXf52ZXM0WHoCdW
+         Qg8xC1PTk6iZ7FuIf1TcYsGjJJU7VzpuWDNeT1MA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 5.2 045/144] can: rcar_canfd: fix possible IRQ storm on high load
-Date:   Wed, 14 Aug 2019 19:00:01 +0200
-Message-Id: <20190814165801.712085039@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH 5.2 029/144] mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()
+Date:   Wed, 14 Aug 2019 18:59:45 +0200
+Message-Id: <20190814165801.057660943@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -60,67 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit d4b890aec4bea7334ca2ca56fd3b12fb48a00cd1 upstream.
+commit 3f8fd02b1bf1d7ba964485a56f2f4b53ae88c167 upstream.
 
-We have observed rcar_canfd driver entering IRQ storm under high load,
-with following scenario:
-- rcar_canfd_global_interrupt() in entered due to Rx available,
-- napi_schedule_prep() is called, and sets NAPIF_STATE_SCHED in state
-- Rx fifo interrupts are masked,
-- rcar_canfd_global_interrupt() is entered again, this time due to
-  error interrupt (e.g. due to overflow),
-- since scheduled napi poller has not yet executed, condition for calling
-  napi_schedule_prep() from rcar_canfd_global_interrupt() remains true,
-  thus napi_schedule_prep() gets called and sets NAPIF_STATE_MISSED flag
-  in state,
-- later, napi poller function rcar_canfd_rx_poll() gets executed, and
-  calls napi_complete_done(),
-- due to NAPIF_STATE_MISSED flag in state, this call does not clear
-  NAPIF_STATE_SCHED flag from state,
-- on return from napi_complete_done(), rcar_canfd_rx_poll() unmasks Rx
-  interrutps,
-- Rx interrupt happens, rcar_canfd_global_interrupt() gets called
-  and calls napi_schedule_prep(),
-- since NAPIF_STATE_SCHED is set in state at this time, this call
-  returns false,
-- due to that false return, rcar_canfd_global_interrupt() returns
-  without masking Rx interrupt
-- and this results into IRQ storm: unmasked Rx interrupt happens again
-  and again is misprocessed in the same way.
+On x86-32 with PTI enabled, parts of the kernel page-tables are not shared
+between processes. This can cause mappings in the vmalloc/ioremap area to
+persist in some page-tables after the region is unmapped and released.
 
-This patch fixes that scenario by unmasking Rx interrupts only when
-napi_complete_done() returns true, which means it has cleared
-NAPIF_STATE_SCHED in state.
+When the region is re-used the processes with the old mappings do not fault
+in the new mappings but still access the old ones.
 
-Fixes: dd3bd23eb438 ("can: rcar_canfd: Add Renesas R-Car CAN FD driver")
-Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+This causes undefined behavior, in reality often data corruption, kernel
+oopses and panics and even spontaneous reboots.
+
+Fix this problem by activly syncing unmaps in the vmalloc/ioremap area to
+all page-tables in the system before the regions can be re-used.
+
+Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/20190719184652.11391-4-joro@8bytes.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/rcar/rcar_canfd.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ mm/vmalloc.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/net/can/rcar/rcar_canfd.c
-+++ b/drivers/net/can/rcar/rcar_canfd.c
-@@ -1508,10 +1508,11 @@ static int rcar_canfd_rx_poll(struct nap
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1214,6 +1214,12 @@ static bool __purge_vmap_area_lazy(unsig
+ 		return false;
  
- 	/* All packets processed */
- 	if (num_pkts < quota) {
--		napi_complete_done(napi, num_pkts);
--		/* Enable Rx FIFO interrupts */
--		rcar_canfd_set_bit(priv->base, RCANFD_RFCC(ridx),
--				   RCANFD_RFCC_RFIE);
-+		if (napi_complete_done(napi, num_pkts)) {
-+			/* Enable Rx FIFO interrupts */
-+			rcar_canfd_set_bit(priv->base, RCANFD_RFCC(ridx),
-+					   RCANFD_RFCC_RFIE);
-+		}
- 	}
- 	return num_pkts;
- }
+ 	/*
++	 * First make sure the mappings are removed from all page-tables
++	 * before they are freed.
++	 */
++	vmalloc_sync_all();
++
++	/*
+ 	 * TODO: to calculate a flush range without looping.
+ 	 * The list can be up to lazy_max_pages() elements.
+ 	 */
+@@ -3001,6 +3007,9 @@ EXPORT_SYMBOL(remap_vmalloc_range);
+ /*
+  * Implement a stub for vmalloc_sync_all() if the architecture chose not to
+  * have one.
++ *
++ * The purpose of this function is to make sure the vmalloc area
++ * mappings are identical in all page-tables in the system.
+  */
+ void __weak vmalloc_sync_all(void)
+ {
 
 
