@@ -2,93 +2,102 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0207C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A983FC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A484D2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565801436;
-	bh=rr5Yx5jWWXjv1elleVvNixlj9ZG6FWWLR96+BvLKJTs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z0iW2YGCd2kwM/XUIif9cUU9JfX+9kjtXgo/qWeDg1mF1unbeY93hyo6ERufS0TX9
-	 ze5fon9a33rC4vEBN3eht2ouiXXe+I9nI22iwanNqr1suQcXWzdcjGGC63gt07qfru
-	 cUNO0IAEg+CpYWIwdktneXShMjCNMmNzYsUg3bbQ=
+	by mail.kernel.org (Postfix) with ESMTP id 86E692084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbfHNQuf (ORCPT
+        id S1728315AbfHNQvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:50:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47480 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 12:51:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:57346 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbfHNQuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:50:35 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9E3620665;
-        Wed, 14 Aug 2019 16:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565801434;
-        bh=rr5Yx5jWWXjv1elleVvNixlj9ZG6FWWLR96+BvLKJTs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zBfq3Ps7UwSWeCBHg3Nhawrm70s4X1Ue1TkGDjnU3dH4GLcUTa5FVXhY96bYLfpB8
-         tRUlGr9jER91hBRTzXAdKwH74CVEhNn+wG6BowZd/CrQDTszU23WMSsrbNDPq+QLAt
-         Vf28F+ZsRzV3ndHNS3F6DKCdEHuQm7I+TYv2MDF0=
-Date:   Wed, 14 Aug 2019 17:50:29 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] arm64: unexport set_memory_x and set_memory_nx
-Message-ID: <20190814165029.yfmpopn34vxpnmte@willie-the-truck>
-References: <20190813090146.26377-1-hch@lst.de>
- <20190813090146.26377-2-hch@lst.de>
+        id S1726126AbfHNQvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 12:51:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6676344;
+        Wed, 14 Aug 2019 09:51:42 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 621593F694;
+        Wed, 14 Aug 2019 09:51:41 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 17:51:33 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Morten Borup Petersen <morten_bp@live.dk>,
+        Tushar Khandelwal <tushar.khandelwal@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>,
+        "nd@arm.com" <nd@arm.com>,
+        Morten Borup Petersen <morten.petersen@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
+ documentation
+Message-ID: <20190814165133.GA8346@e107155-lin>
+References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
+ <20190717192616.1731-2-tushar.khandelwal@arm.com>
+ <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
+ <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
+ <VI1PR0601MB21113C48E719B2C79EC2FE508FC20@VI1PR0601MB2111.eurprd06.prod.outlook.com>
+ <CABb+yY3yMWbUiQnJgfQhwnW1OM3aoFL3ZFc018E-fxGichi-4Q@mail.gmail.com>
+ <VI1PR0601MB2111A5A4E951F011D389A8978FD90@VI1PR0601MB2111.eurprd06.prod.outlook.com>
+ <CABb+yY3Ni7wV+ui1LO7TERWQH_BoakZbPq961wdRPB4X-nwS2A@mail.gmail.com>
+ <20190814100518.GA21898@e107155-lin>
+ <CABb+yY1jZs0OU-oi86iNNHiqBTjaY6ixFPMoUPkU6MCH_YrwLg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813090146.26377-2-hch@lst.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CABb+yY1jZs0OU-oi86iNNHiqBTjaY6ixFPMoUPkU6MCH_YrwLg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 11:01:41AM +0200, Christoph Hellwig wrote:
-> No module currently messed with clearing or setting the execute
-> permission of kernel memory, and none really should.
+On Wed, Aug 14, 2019 at 09:52:25AM -0500, Jassi Brar wrote:
+> On Wed, Aug 14, 2019 at 5:05 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > On Tue, Aug 13, 2019 at 11:36:56AM -0500, Jassi Brar wrote:
+> > [...]
+> >
+> > > > >>
+> > > > >> As mentioned in the response to your initial comment, the driver does
+> > > > >> not currently support mixing protocols.
+> > > > >>
+> > > > > Thanks for acknowledging that limitation. But lets also address it.
+> > > > >
+> > > >
+> > > > We are hesitant to dedicate time to developing mixing protocols given
+> > > > that we don't have any current usecase nor any current platform which
+> > > > would support this.
+> > > >
+> > > Can you please share the client code against which you tested this driver?
+> > > From my past experience, I realise it is much more efficient to tidyup
+> > > the code myself, than endlessly trying to explain the benefits.
+> > >
+> >
+> > Thanks for the patience and offer.
+> >
+> Ok, but the offer is to Morten for MHUv2 driver.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/arm64/mm/pageattr.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-> index 03c53f16ee77..9ce7bd9d4d9c 100644
-> --- a/arch/arm64/mm/pageattr.c
-> +++ b/arch/arm64/mm/pageattr.c
-> @@ -128,7 +128,6 @@ int set_memory_nx(unsigned long addr, int numpages)
->  					__pgprot(PTE_PXN),
->  					__pgprot(0));
->  }
-> -EXPORT_SYMBOL_GPL(set_memory_nx);
->  
->  int set_memory_x(unsigned long addr, int numpages)
->  {
-> @@ -136,7 +135,6 @@ int set_memory_x(unsigned long addr, int numpages)
->  					__pgprot(0),
->  					__pgprot(PTE_PXN));
->  }
-> -EXPORT_SYMBOL_GPL(set_memory_x);
+> > Can we try the same with MHUv1 and SCMI
+> > upstream driver.
+> >
+> MHUv1 driver is fine as it is.
+> I did try my best to keep you from messing the SCMI driver, without success
+> https://lkml.org/lkml/2017/8/7/924
 
-arm64 allmodconfig and defconfig are happy with this, so I'll pick it up
-for 5.4 if that's ok with you?
+I disagree, you haven't told me how to address the usecase which I mentioned
+with the abstraction/multiplexer on top of MHU as you have been suggesting.
 
-Will
+I am sure MHUv2 will have the same usecase.
+
+--
+Regards,
+Sudeep
