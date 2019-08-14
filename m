@@ -2,51 +2,60 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BCDC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FB4C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7CC7214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7ED5214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802502;
-	bh=WUqGA5sSF94AVkt1Y/70tI6qVQor9P9h2wrIsLeR4wE=;
+	s=default; t=1565802505;
+	bh=8d+DXjxnTBnpLKRX5659bJcWsiMINxWaioAMrxT+YZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SE9HKupaMxlWSGMI060vTRgsKoSRoya7SKxN1vhzxd8jQosprQlO7wAIsTWbLYH1v
-	 IXy5jjdVS3a2fD2zyvc++Y0J4VqL5mBARdPnLeuQML0A8EAjfLKbjGO2iQaMf0NGa3
-	 q4QQYzSAF3ZFw0dciM8fsW70e/R2IUX7ieyq0oks=
+	b=bddeIWa8eTpLlt8ruB2MYq9xlqbuwd1w0T60gf5ot9fqHllBanuOHfVgdn+atLTUa
+	 TDH3BYon9vY/hlpPTw1xIf/AUnnYv7RCdjLy7oVzdfD/pQMKomT06OYkSea+tD5X0p
+	 m2eso/u3xwpPNGOJO+1FlSohjT4atBkQnMiwcgJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbfHNRIV (ORCPT
+        id S1730137AbfHNRIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:08:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58256 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:08:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730108AbfHNRIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:08:19 -0400
+        id S1730128AbfHNRIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:08:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDD20216F4;
-        Wed, 14 Aug 2019 17:08:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CAE22133F;
+        Wed, 14 Aug 2019 17:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802498;
-        bh=WUqGA5sSF94AVkt1Y/70tI6qVQor9P9h2wrIsLeR4wE=;
+        s=default; t=1565802500;
+        bh=8d+DXjxnTBnpLKRX5659bJcWsiMINxWaioAMrxT+YZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lAkErKGQeBFaYbRtAMGcsYp0d/7Eu7ZIivET+kqzSYuWPnsM8lo8WkSiJrPrIDIoD
-         wtY1tc4QZmCEpPKM6gHy/XustVnH+qAGQWI1ZOGzZIXlS43kwnopm0HmFC5sP2nOVB
-         iGAh3W2Jesc8DXvhmtlfjCupYmiFulFDDS1aGaZA=
+        b=Pgg80KAxm8uc9x2/uWB20X38pCdmD2IYiTPLF7KUlIYKDKKbNDs0gatlB6M4cVGfM
+         +OJgmo7979wjFLw8rDHk9ROlr720nF2SZheRULjQOjwPMgJncj2S+5b570m3pTzwOJ
+         qAjzexj4NCzgllQ5cJRwB5fZloSjEvi2YsFHuLxA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilles Buloz <Gilles.Buloz@kontron.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.2 123/144] hwmon: (nct7802) Fix wrong detection of in4 presence
-Date:   Wed, 14 Aug 2019 19:01:19 +0200
-Message-Id: <20190814165805.076972552@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Borislav Petkov <bp@alien8.de>, Jiri Olsa <jolsa@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 114/144] perf/x86: Apply more accurate check on hypervisor platform
+Date:   Wed, 14 Aug 2019 19:01:10 +0200
+Message-Id: <20190814165804.682059835@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -59,56 +68,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+[ Upstream commit 5ea3f6fb37b79da33ac9211df336fd2b9f47c39f ]
 
-commit 38ada2f406a9b81fb1249c5c9227fa657e7d5671 upstream.
+check_msr is used to fix a bug report in guest where KVM doesn't support
+LBR MSR and cause #GP.
 
-The code to detect if in4 is present is wrong; if in4 is not present,
-the in4_input sysfs attribute is still present.
+The msr check is bypassed on real HW to workaround a false failure,
+see commit d0e1a507bdc7 ("perf/x86/intel: Disable check_msr for real HW")
 
-In detail:
+When running a guest with CONFIG_HYPERVISOR_GUEST not set or "nopv"
+enabled, current check isn't enough and #GP could trigger.
 
-- Ihen RTD3_MD=11 (VSEN3 present), everything is as expected (no bug).
-- If we have RTD3_MD!=11 (no VSEN3), we unexpectedly have a in4_input
-  file under /sys and the "sensors" command displays in4_input.
-  But as expected, we have no in4_min, in4_max, in4_alarm, in4_beep.
-
-Fix is_visible function to detect and report in4_input visibility
-as expected.
-
-Reported-by: Gilles Buloz <Gilles.Buloz@kontron.com>
-Cc: Gilles Buloz <Gilles.Buloz@kontron.com>
-Cc: stable@vger.kernel.org
-Fixes: 3434f37835804 ("hwmon: Driver for Nuvoton NCT7802Y")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1564022366-18293-1-git-send-email-zhenzhong.duan@oracle.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/nct7802.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/events/intel/core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/hwmon/nct7802.c
-+++ b/drivers/hwmon/nct7802.c
-@@ -704,7 +704,7 @@ static struct attribute *nct7802_in_attr
- 	&sensor_dev_attr_in3_alarm.dev_attr.attr,
- 	&sensor_dev_attr_in3_beep.dev_attr.attr,
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index e9042e3f3052c..6179be624f357 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -20,7 +20,6 @@
+ #include <asm/intel-family.h>
+ #include <asm/apic.h>
+ #include <asm/cpu_device_id.h>
+-#include <asm/hypervisor.h>
  
--	&sensor_dev_attr_in4_input.dev_attr.attr,	/* 17 */
-+	&sensor_dev_attr_in4_input.dev_attr.attr,	/* 16 */
- 	&sensor_dev_attr_in4_min.dev_attr.attr,
- 	&sensor_dev_attr_in4_max.dev_attr.attr,
- 	&sensor_dev_attr_in4_alarm.dev_attr.attr,
-@@ -730,9 +730,9 @@ static umode_t nct7802_in_is_visible(str
+ #include "../perf_event.h"
  
- 	if (index >= 6 && index < 11 && (reg & 0x03) != 0x03)	/* VSEN1 */
- 		return 0;
--	if (index >= 11 && index < 17 && (reg & 0x0c) != 0x0c)	/* VSEN2 */
-+	if (index >= 11 && index < 16 && (reg & 0x0c) != 0x0c)	/* VSEN2 */
- 		return 0;
--	if (index >= 17 && (reg & 0x30) != 0x30)		/* VSEN3 */
-+	if (index >= 16 && (reg & 0x30) != 0x30)		/* VSEN3 */
- 		return 0;
+@@ -4057,7 +4056,7 @@ static bool check_msr(unsigned long msr, u64 mask)
+ 	 * Disable the check for real HW, so we don't
+ 	 * mess with potentionaly enabled registers:
+ 	 */
+-	if (hypervisor_is_type(X86_HYPER_NATIVE))
++	if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
+ 		return true;
  
- 	return attr->mode;
+ 	/*
+-- 
+2.20.1
+
 
 
