@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D15C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FC5C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE0E720842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5AD520842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749186;
-	bh=Nf5bWEv1YurWK28bKI8mpi6Sexgb/mHeMuUfSe0LaIg=;
+	s=default; t=1565749188;
+	bh=Ru6KRlanO+UUuQwjsRGwQlGUiWu1aOFlwpYd+M1QXaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OAHwmctNX00Nvr7MnjyrrSANWjJflNYBcMSx7ygK7Wvz1ruX12iT6qHFxvTDog8GO
-	 WfdD/dMaF9D6eqf5H85Gi7c4K1GiC3mBYSzDcLGW1abyrR21oXDvds3XYSodGKVkW/
-	 nyX1Pl8uia7BT7liT0OCZyAvp1bRvOuIk6d1VDsE=
+	b=rwXsW+mB8dHYqMVa6k8F6PA5tqXVxuwWAVDhALlcoKvBtz50Qr08DADRnEZoPZKeC
+	 AboS6+XH7UQp2IYxRhVSpELeJpiGbla4BGwxr/kk2Zn+v8dur/rtAcTa4HAIaJI1Dg
+	 btg8sngwsQY11Q7WZCmxvejz0Qe5xdPwnXRdaW1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbfHNCTp (ORCPT
+        id S1729496AbfHNCTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:19:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50586 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:19:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729476AbfHNCTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:19:43 -0400
+        id S1729817AbfHNCTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:19:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3732214DA;
-        Wed, 14 Aug 2019 02:19:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 835E62084D;
+        Wed, 14 Aug 2019 02:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749183;
-        bh=Nf5bWEv1YurWK28bKI8mpi6Sexgb/mHeMuUfSe0LaIg=;
+        s=default; t=1565749180;
+        bh=Ru6KRlanO+UUuQwjsRGwQlGUiWu1aOFlwpYd+M1QXaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kmrdwAkn+hjQe33TF2GYOpdmrhSQqFOxnjT0b0f48n/PmjRNFYzOcAPnqQWs542e9
-         7W3Spxmbh4XbH2m4prAk6ZBtnysMsn3cc9SL8Yv/6SrGv1V6hBtBprkobJJANzC3C3
-         1JzbzEqzcEmU3NA5oJwUOurpIMGdJW2gozphVBLo=
+        b=mZc+fXaCz7KuPggI7bw9kRsnpGWltu7swtw2AQ3PePNAzHXjLYFD9fdEViuuh5NPC
+         y2T6qFnSP2Ht2sn4N1OQ8b2ug+0jJZNrr3s8fLOnOcud6V90IAxEZ/7DXI7Ftkblvw
+         Bqytq0NqKQ4ZlJexw1qdI/XoMR0ofZkkkMJpYcro=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jin Yao <yao.jin@linux.intel.com>,
+Cc:     He Zhe <zhe.he@windriver.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 43/44] perf pmu-events: Fix missing "cpu_clk_unhalted.core" event
-Date:   Tue, 13 Aug 2019 22:18:32 -0400
-Message-Id: <20190814021834.16662-43-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 42/44] perf cpumap: Fix writing to illegal memory in handling cpumap mask
+Date:   Tue, 13 Aug 2019 22:18:31 -0400
+Message-Id: <20190814021834.16662-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021834.16662-1-sashal@kernel.org>
 References: <20190814021834.16662-1-sashal@kernel.org>
@@ -64,64 +66,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: He Zhe <zhe.he@windriver.com>
 
-[ Upstream commit 8e6e5bea2e34c61291d00cb3f47560341aa84bc3 ]
+[ Upstream commit 5f5e25f1c7933a6e1673515c0b1d5acd82fea1ed ]
 
-The events defined in pmu-events JSON are parsed and added into perf
-tool. For fixed counters, we handle the encodings between JSON and perf
-by using a static array fixed[].
+cpu_map__snprint_mask() would write to illegal memory pointed by
+zalloc(0) when there is only one cpu.
 
-But the fixed[] has missed an important event "cpu_clk_unhalted.core".
+This patch fixes the calculation and adds sanity check against the input
+parameters.
 
-For example, on the Tremont platform,
-
-  [root@localhost ~]# perf stat -e cpu_clk_unhalted.core -a
-  event syntax error: 'cpu_clk_unhalted.core'
-                       \___ parser error
-
-With this patch, the event cpu_clk_unhalted.core can be parsed.
-
-  [root@localhost perf]# ./perf stat -e cpu_clk_unhalted.core -a -vvv
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             4
-    size                             112
-    config                           0x3c
-    sample_type                      IDENTIFIER
-    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-    disabled                         1
-    inherit                          1
-    exclude_guest                    1
-  ------------------------------------------------------------
-...
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190729072755.2166-1-yao.jin@linux.intel.com
+Cc: Stephane Eranian <eranian@google.com>
+Fixes: 4400ac8a9a90 ("perf cpumap: Introduce cpu_map__snprint_mask()")
+Link: http://lkml.kernel.org/r/1564734592-15624-2-git-send-email-zhe.he@windriver.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/pmu-events/jevents.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/cpumap.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index d51dc9ca8861a..94a7cabe9b824 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -346,6 +346,7 @@ static struct fixed {
- 	{ "inst_retired.any_p", "event=0xc0" },
- 	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
- 	{ "cpu_clk_unhalted.thread", "event=0x3c" },
-+	{ "cpu_clk_unhalted.core", "event=0x3c" },
- 	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
- 	{ NULL, NULL},
- };
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 383674f448fcd..f93846edc1e0d 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -701,7 +701,10 @@ size_t cpu_map__snprint_mask(struct cpu_map *map, char *buf, size_t size)
+ 	unsigned char *bitmap;
+ 	int last_cpu = cpu_map__cpu(map, map->nr - 1);
+ 
+-	bitmap = zalloc((last_cpu + 7) / 8);
++	if (buf == NULL)
++		return 0;
++
++	bitmap = zalloc(last_cpu / 8 + 1);
+ 	if (bitmap == NULL) {
+ 		buf[0] = '\0';
+ 		return 0;
 -- 
 2.20.1
 
