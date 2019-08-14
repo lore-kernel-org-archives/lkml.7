@@ -2,190 +2,281 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E444C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DB4C32757
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C122A20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44DED2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:52:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="BPH1yoso";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Ts62owqy"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="bD2XlibH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbfHNPv7 (ORCPT
+        id S1728223AbfHNPwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 11:51:59 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:38290 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726047AbfHNPv6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 11:51:58 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7EFhx6e016551;
-        Wed, 14 Aug 2019 08:51:32 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : subject :
- date : message-id : references : in-reply-to : content-type : content-id :
- content-transfer-encoding : mime-version; s=facebook;
- bh=x2t0o6e+bQHxHobP3O+blO6xm2f45Cp4VlCF0GVAMoE=;
- b=BPH1yosozlAzg3BUG1LFKTnjlnZ90l7+Y4ZDTf1aUv0UwW62PvlF+KZI76ntQEUQPoxi
- qSa5S++Ie3GxHvEdjTgR7lZyNR2iVLwzYhHZtq8KOe7cP52Ffa+DtEUVoT/J54X8h2Zd
- jYGPBaEgr7v9Vb5YyzmS2HbqaZWMXTIv0Vc= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ucjbarux9-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 14 Aug 2019 08:51:32 -0700
-Received: from prn-hub05.TheFacebook.com (2620:10d:c081:35::129) by
- prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 14 Aug 2019 08:51:30 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Wed, 14 Aug 2019 08:51:30 -0700
+        Wed, 14 Aug 2019 11:52:21 -0400
+Received: from mail-eopbgr750114.outbound.protection.outlook.com ([40.107.75.114]:7566
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728092AbfHNPwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 11:52:21 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y1u3FTNpKBM8e44SA/wXFpPRxCERDsy75ah6y8itCt+u951FwtHgkE48/qNGin9WhjnJu8AL8CnUx/t+hxVZULL7qq5czDYIWkyWX6XUvU9NNo/gIgQY/s/B5zISyNuqjxMIw4eY8DdnWsMyNro+5OIKk9w3n2U7edV3hPsd7mhoodOYV+3o55SktYXxzRLaPy9FKd4Zv9sgua8ekJ98kQy81VCLkD7UUKTBG3Abk6zJ8mAr6YgTXj4F+rAVP3niVewjOYfVhHXQ4AaXfQIWZ4vZN9claDQfEkNPFLapdbVrNjrbt+YInDfo3b9/zljkfhlm+skb+nkcK5fzeAIU2w==
+ b=nKUpS17s33WnOMUwZe2teX5De1El56HrrugVnMdrycNXoXZclxDOswAteBocLrFoYXWXZAN9tAhvtpRk1jkU1cEoHPS3xOKB34R2TVx3AewTTwABprlc+l7nyHAHNbmKxJFPP64khhkHWPdNo+p8h9Aja2SktznYvEBhl/xSItyGkozoY5sf+LdT4i/tqJFwxgL+nqbt4/UMVjf8+iFET1VPaCcd8vKpuvGwqTYB7vKSs8CoIwatPQHLR7tHYOzuGS/zpJ0SebIBfSvLzqwTHdDHGHTNn0j3HEXeA4PlOv9numuVo3RX95mV7Rd3Apw70m5OFBiJE8e/fwk9YwsRaw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x2t0o6e+bQHxHobP3O+blO6xm2f45Cp4VlCF0GVAMoE=;
- b=XpwmxQ+o4WQpUQCU1LlTzPQOl92ZNlQBi/zTFWgHfytRjiEUd6q9MIxPBZ2c5oFP+1kyQw+LTQUdMgRpPNaCn0wG/KdBZYqadVNO4u1mbZMqYcvqRssgk7x9tN+V069FV2VupeId261BwRCH7N7Yb3kpd3x0tF/2WQcgltaidn+vYTIsgMpl+ed58rHulGnf7bq8lOyanYAeUasChdVLJma3LEalp57/9ttPDeI2NbQqDU2xNdQl+4pH0h/7QebTlZoHwLcGgPflHD7TX/S8MuQxVPwJqIgJZgzMeg2Q3aZJAp7VLjQkhSV8xJAdhDshv5lBmyW8OOELgiKcXdU6Qw==
+ bh=vHOm6fDq+2Gyv5fTK5e/OGDKAs2/D/2NBjEbXJk1jdo=;
+ b=TOR6QcF9832dHlausfCKkajQesTmIJMlQXzOPN98Pvy3KyhS+rzWbmNhKQ6cUP2idwCl/cRgXyt+fgvgT+mvMUrGMYtjErCs9z4seiiiTKKW9gmsS6HBdJIQC3xL0CuluftTVHHShxJkWkV02/8cfyrUueugEt1UjdqYBftCFJfmGgY1yix+njT+kbPgsX7SX5M0SrLZmsn3PzEs7XwYTUgCLC4sDD04daNqBa838m5Nh4j162W6sjFNQ3uhUc3HlgObn/oz6+l0Q2J17oMvvL0AP67K9PbI73YRhcTnNDUPNSlARsRxq7rY1PC5eJE7dQfc9wJrKpuFBfhSCZCYAg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x2t0o6e+bQHxHobP3O+blO6xm2f45Cp4VlCF0GVAMoE=;
- b=Ts62owqy6AgPI0cToy9mdAuYzDo0QLiLHUo0IhepBbWPCAlDhJxchi98Vc2CK41i5tgH3K7/rzHkxL1H14AoRICZy9jaO9wM9uLX0uMzJHIyktFq+L4FKA5k8QOEMTBY43PGFAimv8BSdIfIti3tZ4aSjyxQL8jOf13aLj1wDws=
-Received: from BYAPR15MB3384.namprd15.prod.outlook.com (20.179.59.17) by
- BYAPR15MB2712.namprd15.prod.outlook.com (20.179.157.29) with Microsoft SMTP
+ bh=vHOm6fDq+2Gyv5fTK5e/OGDKAs2/D/2NBjEbXJk1jdo=;
+ b=bD2XlibHgEPQ6N56SIKYKYxFCv5v7ZwbSuLDA5tvtC0dIMhAGohjBu+HjWKWrV/D4BS7xqC7zlmRk/Tl5ReLxLkP1tsVFZ6BSkbmM9tLSRwTHAyLX6eL2PKESLTtRFMsjGTc9p4pipHnOhe0E/kRG/ZGkITAvP/NTTRusigYE5U=
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
+ DM6PR21MB1260.namprd21.prod.outlook.com (20.179.50.210) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.20; Wed, 14 Aug 2019 15:51:29 +0000
-Received: from BYAPR15MB3384.namprd15.prod.outlook.com
- ([fe80::d95b:271:fa7e:e978]) by BYAPR15MB3384.namprd15.prod.outlook.com
- ([fe80::d95b:271:fa7e:e978%5]) with mapi id 15.20.2157.022; Wed, 14 Aug 2019
- 15:51:29 +0000
-From:   Yonghong Song <yhs@fb.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next 1/3] libbpf: add asm/unistd.h to xsk to get
- __NR_mmap2
-Thread-Topic: [PATCH bpf-next 1/3] libbpf: add asm/unistd.h to xsk to get
- __NR_mmap2
-Thread-Index: AQHVUoIEKyrT2yAIekOTwiyoLftnBKb6yzyA
-Date:   Wed, 14 Aug 2019 15:51:28 +0000
-Message-ID: <f7be2fe9-cc06-ba99-dc78-f9296bcb4f20@fb.com>
-References: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
- <20190813102318.5521-2-ivan.khoronzhuk@linaro.org>
- <CAEf4BzZ2y_DmTXkVqFh6Hdcquo6UvntvCygw5h5WwrWYXRRg_g@mail.gmail.com>
- <20190814092403.GA4142@khorivan>
-In-Reply-To: <20190814092403.GA4142@khorivan>
+ 15.20.2157.2; Wed, 14 Aug 2019 15:52:15 +0000
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::ddd:8e5b:2930:6726]) by DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::ddd:8e5b:2930:6726%9]) with mapi id 15.20.2178.006; Wed, 14 Aug 2019
+ 15:52:15 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     "sashal@kernel.org" <sashal@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Thread-Topic: [PATCH v5,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Thread-Index: AQHVUrg+xNhbQy4qc0m3irmViCOzpQ==
+Date:   Wed, 14 Aug 2019 15:52:15 +0000
+Message-ID: <1565797908-5970-1-git-send-email-haiyangz@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: CO1PR15CA0086.namprd15.prod.outlook.com
- (2603:10b6:101:20::30) To BYAPR15MB3384.namprd15.prod.outlook.com
- (2603:10b6:a03:10e::17)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::2:b5df]
+x-clientproxiedby: MWHPR17CA0064.namprd17.prod.outlook.com
+ (2603:10b6:300:93::26) To DM6PR21MB1242.namprd21.prod.outlook.com
+ (2603:10b6:5:169::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 2
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a90710aa-416f-4189-70d5-08d720cf4522
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR15MB2712;
-x-ms-traffictypediagnostic: BYAPR15MB2712:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <BYAPR15MB2712F92564B6B1CCE220C4AFD3AD0@BYAPR15MB2712.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1751;
+x-ms-office365-filtering-correlation-id: 526022d2-c69c-46ec-48ef-08d720cf60c4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1260;
+x-ms-traffictypediagnostic: DM6PR21MB1260:|DM6PR21MB1260:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM6PR21MB12601A6878D8BD3FDEE435CCACAD0@DM6PR21MB1260.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2201;
 x-forefront-prvs: 01294F875B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(396003)(366004)(376002)(346002)(52314003)(199004)(189003)(6116002)(31686004)(36756003)(966005)(110136005)(486006)(8936002)(64756008)(2616005)(31696002)(14454004)(66446008)(66556008)(11346002)(66476007)(446003)(66946007)(478600001)(316002)(53936002)(2906002)(52116002)(386003)(86362001)(53546011)(6506007)(99286004)(76176011)(476003)(25786009)(229853002)(46003)(6512007)(5660300002)(6306002)(6486002)(256004)(6436002)(186003)(102836004)(2501003)(6246003)(81156014)(8676002)(71190400001)(81166006)(7416002)(71200400001)(7736002)(305945005)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2712;H:BYAPR15MB3384.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(39860400002)(346002)(396003)(376002)(199004)(189003)(6392003)(71190400001)(53936002)(305945005)(3846002)(50226002)(186003)(5660300002)(14444005)(54906003)(22452003)(81156014)(256004)(6116002)(102836004)(386003)(26005)(7846003)(110136005)(99286004)(6436002)(71200400001)(6512007)(316002)(4720700003)(52116002)(6486002)(66446008)(478600001)(66476007)(10290500003)(10090500001)(8936002)(66556008)(64756008)(6506007)(2501003)(36756003)(25786009)(66946007)(2906002)(486006)(2616005)(476003)(81166006)(8676002)(2201001)(7736002)(14454004)(4326008)(66066001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1260;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ID/v7/cZoyX4/Eq77+hps1JsktovpvzY9leitgBjeA9PwTYnfqGIz6ZZZeDLAc9rCOKmgv5u5x/cEtQ1mqAvFkpqZV/s4u3DbjJw2vCcBKNvg2d2WzFex8u7+nEYIsNCU5C8Q2lP/pUVJbug61OcrRoKqFeaDofll2oRc4zwoaNDcNlCmy0b6hP06GgLBvwZEg9oizv6B7lv+5YltJgRgphw/0Yhoez+RMjibRTXu3ysUsq2R41NCDQwdOJRRBnChuutET6Xk/gyHrzIYZmOXFVuq76KPyGXNAD2uhNPAF2nEOMkpsR6bmI05vivHPMrK6tHPWbW8IOfsE7zN7oJBfltS8V6DtCtIjISYH3pTN2jHulO+2mSH85nZfcMdM++4vsYN/5Mw0/MwkOG8/pYCBkoV433gjMpNQ3y4NryDe8=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DB1DF4AD137DE34B9D5F98B17E637118@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: ZoqQgmdbWkbs3+wwrUiP16lIyy46pDAhUMqOkK+yq51D8XZOhAswyMoZywnzggvjcs5LS3k7UrAiBtB55AJW+u6n66MejDEvO73waVc+KEtQh32FFyFNlQ0fBLcWY7/ZCTQ98AxM405HNgmBYq5m3M3+yDORbjew80xLC/7lXdwDIaR0abCG5xLuah2c7RIiMJ72HKK9amGLmBF7LiMzFB7yB5fsfE6RBTlaFhcAkwcQr4AOW6PiaWHgdDVxWHzv+OL0J7pRtKlyf+u/8RFSygWmn7VWaW9UuMBA5VQlbVQ4padc5ESLXXJ6GtVu0T039rqjhH9cOWkcB6LQmtVSswKkmx8/grRWb9h7loCQOY4ZbAN4ekMDUqi93j3BZbcsJijPDTI3RV8E+F8XlXUhkcZPGiYk6R8WkLnnT7W6m4k=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: a90710aa-416f-4189-70d5-08d720cf4522
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 15:51:28.9316
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 526022d2-c69c-46ec-48ef-08d720cf60c4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 15:52:15.5476
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TjUMGeMes2Qg9X5WDAzSHKCU9N6I1txJ/aT1/Hr6pxIdLH0io3RuLw2Lq9P4Jk0I
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2712
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-14_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908140153
-X-FB-Internal: deliver
+X-MS-Exchange-CrossTenant-userprincipalname: WfS3XjpQayRQ+OrKei/usq4foX2noFf95Jbub/E/ZKcV8JHFGNnZzFF8dgHs0hxklyf7la/nRs6pOJmyHAHKpQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1260
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDgvMTQvMTkgMjoyNCBBTSwgSXZhbiBLaG9yb256aHVrIHdyb3RlOg0KPiBPbiBUdWUs
-IEF1ZyAxMywgMjAxOSBhdCAwNDozODoxM1BNIC0wNzAwLCBBbmRyaWkgTmFrcnlpa28gd3JvdGU6
-DQo+IA0KPiBIaSwgQW5kcmlpDQo+IA0KPj4gT24gVHVlLCBBdWcgMTMsIDIwMTkgYXQgMzoyNCBB
-TSBJdmFuIEtob3JvbnpodWsNCj4+IDxpdmFuLmtob3JvbnpodWtAbGluYXJvLm9yZz4gd3JvdGU6
-DQo+Pj4NCj4+PiBUaGF0J3MgbmVlZGVkIHRvIGdldCBfX05SX21tYXAyIHdoZW4gbW1hcDIgc3lz
-Y2FsbCBpcyB1c2VkLg0KPj4+DQo+Pj4gU2lnbmVkLW9mZi1ieTogSXZhbiBLaG9yb256aHVrIDxp
-dmFuLmtob3JvbnpodWtAbGluYXJvLm9yZz4NCj4+PiAtLS0NCj4+PiDCoHRvb2xzL2xpYi9icGYv
-eHNrLmMgfCAxICsNCj4+PiDCoDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPj4+DQo+
-Pj4gZGlmZiAtLWdpdCBhL3Rvb2xzL2xpYi9icGYveHNrLmMgYi90b29scy9saWIvYnBmL3hzay5j
-DQo+Pj4gaW5kZXggNTAwN2I1ZDRmZDJjLi5mMmZjNDBmOTgwNGMgMTAwNjQ0DQo+Pj4gLS0tIGEv
-dG9vbHMvbGliL2JwZi94c2suYw0KPj4+ICsrKyBiL3Rvb2xzL2xpYi9icGYveHNrLmMNCj4+PiBA
-QCAtMTIsNiArMTIsNyBAQA0KPj4+IMKgI2luY2x1ZGUgPHN0ZGxpYi5oPg0KPj4+IMKgI2luY2x1
-ZGUgPHN0cmluZy5oPg0KPj4+IMKgI2luY2x1ZGUgPHVuaXN0ZC5oPg0KPj4+ICsjaW5jbHVkZSA8
-YXNtL3VuaXN0ZC5oPg0KPj4NCj4+IGFzbS91bmlzdGQuaCBpcyBub3QgcHJlc2VudCBpbiBHaXRo
-dWIgbGliYnBmIHByb2plY3Rpb24uIElzIHRoZXJlIGFueQ0KPiANCj4gTG9vayBvbiBpbmNsdWRl
-cyBmcm9tDQo+IHRvb2xzL2xpYi9icGYvbGlicGYuYw0KPiB0b29scy9saWIvYnBmL2JwZi5jDQo+
-IA0KPiBUaGF0J3MgaG93IGl0J3MgZG9uZS4uLiBDb3BwaW5nIGhlYWRlcnMgdG8gYXJjaC9hcm0g
-d2lsbCBub3QNCj4gc29sdmUgdGhpcywgaXQgaW5jbHVkZXMgYm90aCBvZiB0aGVtIGFueXdheSwg
-YW5kIGFueXdheSBpdCBuZWVkcw0KPiBhc20vdW5pc3RkLmggaW5jbHVzaW9uIGhlcmUsIG9ubHkg
-YmVjYXVzZSB4c2suYyBuZWVkcyBfX05SXyoNCj4gDQo+IA0KPj4gd2F5IHRvIGF2b2lkIGluY2x1
-ZGluZyB0aGlzIGhlYWRlcj8gR2VuZXJhbGx5LCBsaWJicGYgY2FuJ3QgZWFzaWx5IHVzZQ0KPj4g
-YWxsIG9mIGtlcm5lbCBoZWFkZXJzLCB3ZSBuZWVkIHRvIHJlLWltcGxlbWVudGVkIGFsbCB0aGUg
-ZXh0cmEgdXNlZA0KPj4gc3R1ZmYgZm9yIEdpdGh1YiB2ZXJzaW9uIG9mIGxpYmJwZiwgc28gd2Ug
-dHJ5IHRvIG1pbmltaXplIHVzYWdlIG9mIG5ldw0KPj4gaGVhZGVycyB0aGF0IGFyZSBub3QganVz
-dCBwbGFpbiB1YXBpIGhlYWRlcnMgZnJvbSBpbmNsdWRlL3VhcGkuDQo+IA0KPiBZZXMgSSBrbm93
-LCBpdCdzIGZhciBhd2F5IGZyb20gcmVhbCBudW1iZXIgb2YgY2hhbmdlcyBuZWVkZWQuDQo+IEkg
-ZmFjZWQgZW5vdWdoIGFib3V0IHRoaXMgYWxyZWFkeSBhbmQga2VybmVsIGhlYWRlcnMsIGVzcGVj
-aWFsbHkNCj4gZm9yIGFybTMyIGl0J3MgYSBiaXQgZGVjZW5jeSBwcm9ibGVtLiBCdXQgdGhpcyBw
-YXRjaCBpdCdzIHBhcnQgb2YNCj4gbm9ybWFsIG9uZS4gSSBoYXZlIGNvdXBsZSBpc3N1ZXMgZGVz
-cGl0ZSB0aGlzIG5vcm1hbGx5IGZpeGVkIG1tYXAyDQo+IHRoYXQgaXMgdGhlIHNhbWUgZXZlbiBp
-ZiB1YXBpIGluY2x1ZGVzIGFyZSBjb3BwaWVkIHRvIHRvb2xzL2FyY2gvYXJtLg0KPiANCj4gSW4g
-Y29udGludWF0aW9uIG9mIGtlcm5lbCBoZWFkZXJzIGluY2x1c2lvbiBhbmQgYXJtIGJ1aWxkOg0K
-PiANCj4gRm9yIGluc3RhbmNlLCB3aGF0IGFib3V0IHRoaXMgcm91Z2ggImtlcm5lbCBoZWFkZXJz
-IiBoYWNrOg0KPiBodHRwczovL2dpdGh1Yi5jb20vaWtob3JuL2FmX3hkcF9zdHVmZi9jb21taXQv
-YWE2NDVjY2NhNGQ4NDRmNDA0ZWMzYzJiMjc0MDJkNGQ3ODQ4ZDFiNSANCg0KVGhlICIuc3ludGF4
-IHVuaWZpZWQiIGlzIG1lbnRpb25lZCBhIGNvdXBsZSBvZiB0aW1lcw0KaW4gYmNjIG1haWxpbmcg
-bGlzdCBhcyB3ZWxsLiBsbHZtIGJwZiBiYWNrZW5kIG1pZ2h0DQpiZSBhYmxlIHRvIHNvbHZlIGl0
-LiBJIGhhdmUgbm90IGxvb2tlZCBhdCB0aGUgZGV0YWlscyB0aG91Z2guDQoNCj4gDQo+IG9yIHRo
-aXMgb25lIHJlbGF0ZWQgZm9yIGFybTMyIG9ubHk6DQo+IGh0dHBzOi8vZ2l0aHViLmNvbS9pa2hv
-cm4vYWZfeGRwX3N0dWZmL2NvbW1pdC8yYzZjNmQ1Mzg2MDVhYWMzOTYwMGRjYjNjOWI2NmRlMTFj
-NzBiOTYzIA0KDQpUaGlzIG1heSBub3Qgd29yayBpZiBicGYgcHJvZ3JhbSB0cmllcyB0byBoYW5k
-bGUga2VybmVsIGhlYWRlcnMuDQpicGYgcHJvZ3JhbSBtYXkgZ2V0IHdyb25nIGxheW91dC4NCg0K
-QW55d2F5LCB0aGUgYWJvdmUgdHdvIGNvbW1lbnRzIGFyZSBpcnJlbGV2YW50IHRvIHRoaXMgcGF0
-Y2ggc2V0DQphbmQgaWYgbmVlZGVkIHNob3VsZCBiZSBkaXNjdXNzZWQgc2VwYXJhdGVseS4NCg0K
-PiANCj4gDQo+IEkgaGF2ZSBtb3JlLi4uDQo+IA0KPj4NCj4+PiDCoCNpbmNsdWRlIDxhcnBhL2lu
-ZXQuaD4NCj4+PiDCoCNpbmNsdWRlIDxhc20vYmFycmllci5oPg0KPj4+IMKgI2luY2x1ZGUgPGxp
-bnV4L2NvbXBpbGVyLmg+DQo+Pj4gLS0gDQo+Pj4gMi4xNy4xDQo+Pj4NCj4gDQo=
+Currently in Azure cloud, for passthrough devices, the host sets the device
+instance ID's bytes 8 - 15 to a value derived from the host HWID, which is
+the same on all devices in a VM. So, the device instance ID's bytes 8 and 9
+provided by the host are no longer unique. This affects all Azure hosts
+since last year, and can cause device passthrough to VMs to fail because
+the bytes 8 and 9 are used as PCI domain number. Collision of domain
+numbers will cause the second device with the same domain number fail to
+load.
+
+In the cases of collision, we will detect and find another number that is
+not in use.
+
+Suggested-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Acked-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/controller/pci-hyperv.c | 92 +++++++++++++++++++++++++++++++--=
+----
+ 1 file changed, 79 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
+ci-hyperv.c
+index 40b6254..31b8fd5 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct hv_pcibus_device *hb=
+us)
+ 		complete(&hbus->remove_event);
+ }
+=20
++#define HVPCI_DOM_MAP_SIZE (64 * 1024)
++static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
++
++/*
++ * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define =
+0
++ * as invalid for passthrough PCI devices of this driver.
++ */
++#define HVPCI_DOM_INVALID 0
++
++/**
++ * hv_get_dom_num() - Get a valid PCI domain number
++ * Check if the PCI domain number is in use, and return another number if
++ * it is in use.
++ *
++ * @dom: Requested domain number
++ *
++ * return: domain number on success, HVPCI_DOM_INVALID on failure
++ */
++static u16 hv_get_dom_num(u16 dom)
++{
++	unsigned int i;
++
++	if (test_and_set_bit(dom, hvpci_dom_map) =3D=3D 0)
++		return dom;
++
++	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
++		if (test_and_set_bit(i, hvpci_dom_map) =3D=3D 0)
++			return i;
++	}
++
++	return HVPCI_DOM_INVALID;
++}
++
++/**
++ * hv_put_dom_num() - Mark the PCI domain number as free
++ * @dom: Domain number to be freed
++ */
++static void hv_put_dom_num(u16 dom)
++{
++	clear_bit(dom, hvpci_dom_map);
++}
++
+ /**
+  * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
+  * @hdev:	VMBus's tracking struct for this root PCI bus
+@@ -2521,6 +2563,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 			const struct hv_vmbus_device_id *dev_id)
+ {
+ 	struct hv_pcibus_device *hbus;
++	u16 dom_req, dom;
+ 	int ret;
+=20
+ 	/*
+@@ -2535,19 +2578,34 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	hbus->state =3D hv_pcibus_init;
+=20
+ 	/*
+-	 * The PCI bus "domain" is what is called "segment" in ACPI and
+-	 * other specs.  Pull it from the instance ID, to get something
+-	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
+-	 * do the same thing for consistency.  Note that, since this code
+-	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
+-	 * that (1) the only domain in use for something that looks like
+-	 * a physical PCI bus (which is actually emulated by the
+-	 * hypervisor) is domain 0 and (2) there will be no overlap
+-	 * between domains derived from these instance IDs in the same
+-	 * VM.
++	 * The PCI bus "domain" is what is called "segment" in ACPI and other
++	 * specs. Pull it from the instance ID, to get something usually
++	 * unique. In rare cases of collision, we will find out another number
++	 * not in use.
++	 *
++	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
++	 * together with this guest driver can guarantee that (1) The only
++	 * domain used by Gen1 VMs for something that looks like a physical
++	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
++	 * (2) There will be no overlap between domains (after fixing possible
++	 * collisions) in the same VM.
+ 	 */
+-	hbus->sysdata.domain =3D hdev->dev_instance.b[9] |
+-			       hdev->dev_instance.b[8] << 8;
++	dom_req =3D hdev->dev_instance.b[8] << 8 | hdev->dev_instance.b[9];
++	dom =3D hv_get_dom_num(dom_req);
++
++	if (dom =3D=3D HVPCI_DOM_INVALID) {
++		dev_err(&hdev->device,
++			"Unable to use dom# 0x%hx or other numbers", dom_req);
++		ret =3D -EINVAL;
++		goto free_bus;
++	}
++
++	if (dom !=3D dom_req)
++		dev_info(&hdev->device,
++			 "PCI dom# 0x%hx has collision, using 0x%hx",
++			 dom_req, dom);
++
++	hbus->sysdata.domain =3D dom;
+=20
+ 	hbus->hdev =3D hdev;
+ 	refcount_set(&hbus->remove_lock, 1);
+@@ -2562,7 +2620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 					   hbus->sysdata.domain);
+ 	if (!hbus->wq) {
+ 		ret =3D -ENOMEM;
+-		goto free_bus;
++		goto free_dom;
+ 	}
+=20
+ 	ret =3D vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+@@ -2639,6 +2697,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	vmbus_close(hdev->channel);
+ destroy_wq:
+ 	destroy_workqueue(hbus->wq);
++free_dom:
++	hv_put_dom_num(hbus->sysdata.domain);
+ free_bus:
+ 	free_page((unsigned long)hbus);
+ 	return ret;
+@@ -2720,6 +2780,9 @@ static int hv_pci_remove(struct hv_device *hdev)
+ 	put_hvpcibus(hbus);
+ 	wait_for_completion(&hbus->remove_event);
+ 	destroy_workqueue(hbus->wq);
++
++	hv_put_dom_num(hbus->sysdata.domain);
++
+ 	free_page((unsigned long)hbus);
+ 	return 0;
+ }
+@@ -2747,6 +2810,9 @@ static void __exit exit_hv_pci_drv(void)
+=20
+ static int __init init_hv_pci_drv(void)
+ {
++	/* Set the invalid domain number's bit, so it will not be used */
++	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
++
+ 	return vmbus_driver_register(&hv_pci_drv);
+ }
+=20
+--=20
+1.8.3.1
+
