@@ -2,169 +2,92 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED74C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED22C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC368214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0053C2133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:48:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfHNKsK (ORCPT
+        id S1727704AbfHNKsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:48:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44242 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727465AbfHNKsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:48:07 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2FBE6302C066;
-        Wed, 14 Aug 2019 10:48:07 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C39D1001B35;
-        Wed, 14 Aug 2019 10:48:06 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net 2/2] rxrpc: Fix read-after-free in rxrpc_queue_local()
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 14 Aug 2019 11:48:05 +0100
-Message-ID: <156577968542.1405.1844096159304543778.stgit@warthog.procyon.org.uk>
-In-Reply-To: <156577967167.1405.3581547705200268244.stgit@warthog.procyon.org.uk>
-References: <156577967167.1405.3581547705200268244.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Wed, 14 Aug 2019 06:48:45 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44110 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfHNKso (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:48:44 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d79so82010405qke.11;
+        Wed, 14 Aug 2019 03:48:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6Pd2kynJ3XCWkX4RKcVEYfgPLi/9H/DDd0NVl7yQPeo=;
+        b=b3WfU4JrlERMYKiLFbBextRd7Yf69VVTW6nuiE21/6RvqXYKge8poIU+J8JMwdJiZH
+         pzUPX8ALt7pm0DOucJNDLl4QMghRb0/j4O8FtrWS3vNMctxx9I3OZCkpQNEohrg1WS1h
+         5TdReU4oZMhBV92RSRM7DwElUHfP/dQPL/ajWUMIogpyCMeyIJNrII8cLsiX1j9gdbsS
+         4VVkGJfwKfCCm1Ggi1kI7IlP4Kkldzk+U/h+Gfh7Jm8galthdPkquR1oLPw9QjOZ2BqT
+         Ryrw6u3uIbgPhV+CElyw08M/Isw7bGI8rznYdLlN1j4GVsWmQe3F+8qcUlc7PQzC418l
+         3WMA==
+X-Gm-Message-State: APjAAAWq0ebSqKDmFCdj0GJN40JJAkqmONMUNQzD76dwn0L5TEHp5zU8
+        5sGJLDfPaXhRDLe6ZF6tKMKV6zwixU7SEbSfFDs=
+X-Google-Smtp-Source: APXvYqzJchKTdX84186eS/GRemJU2ycIuCn2KmHcwgWMevAGnRcm51YC1Y0PGo9zYEARmcpYhVr0785iqWnXPMYbu7s=
+X-Received: by 2002:a37:4ac3:: with SMTP id x186mr36177300qka.138.1565779720761;
+ Wed, 14 Aug 2019 03:48:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 14 Aug 2019 10:48:07 +0000 (UTC)
+References: <20190809162956.488941-1-arnd@arndb.de> <20190809163334.489360-1-arnd@arndb.de>
+ <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
+ <20190812094456.GI10598@jirafa.cyrius.com> <CACRpkdao8LF8g5qi_h+9BT9cHwmB4OadabkdGfP0sEFeLbmiLw@mail.gmail.com>
+In-Reply-To: <CACRpkdao8LF8g5qi_h+9BT9cHwmB4OadabkdGfP0sEFeLbmiLw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 14 Aug 2019 12:48:23 +0200
+Message-ID: <CAK8P3a3Jtc-hgP+st=oDUF2hWkLK7CCM461YSA2ks3dqcv-W7g@mail.gmail.com>
+Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Martin Michlmayr <tbm@cyrius.com>,
+        Dan Williams <dan.j.williams@intel.com>, soc@kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Peter Teichmann <lists@peter-teichmann.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rxrpc_queue_local() attempts to queue the local endpoint it is given and
-then, if successful, prints a trace line.  The trace line includes the
-current usage count - but we're not allowed to look at the local endpoint
-at this point as we passed our ref on it to the workqueue.
+On Wed, Aug 14, 2019 at 10:36 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Mon, Aug 12, 2019 at 11:45 AM Martin Michlmayr <tbm@cyrius.com> wrote:
+>
+> > As Arnd points out, Debian used to have support for various iop32x
+> > devices.  While Debian hasn't supported iop32x in a number of years,
+> > these devices are still usable and in use (RMK being a prime example).
+>
+> I suppose it could be a good idea to add support for iop32x to
+> OpenWrt and/or OpenEmbedded, both of which support some
+> pretty constrained systems. I am personally using these
+> distributions to support elder ARM hardware these days.
 
-Fix this by reading the usage count before queuing the work item.
+OpenWRT also had support in the past and dropped it around the
+same time as Debian. The way I understand it, a couple of platforms
+including iop32x were moved out of the main openwrt source tree
+into https://github.com/openwrt/targets/ because there was little
+interest in keeping them running.
 
-Also fix the reading of local->debug_id for trace lines, which must be done
-with the same consideration as reading the usage count.
+The idea was that any remaining users could add that feed to get
+minimal support, but I'm not sure if would still work. In particular,
+iop33x appears to be based on linux-3.3 plus three patches that
+are no longer needed in mainline. Building a mainline kernel without
+those patches may or may not work.
 
-Fixes: 09d2bf595db4 ("rxrpc: Add a tracepoint to track rxrpc_local refcounting")
-Reported-by: syzbot+78e71c5bab4f76a6a719@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- include/trace/events/rxrpc.h |    6 +++---
- net/rxrpc/local_object.c     |   19 ++++++++++---------
- 2 files changed, 13 insertions(+), 12 deletions(-)
-
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index cc1d060cbf13..fa06b528c73c 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -498,10 +498,10 @@ rxrpc_tx_points;
- #define E_(a, b)	{ a, b }
- 
- TRACE_EVENT(rxrpc_local,
--	    TP_PROTO(struct rxrpc_local *local, enum rxrpc_local_trace op,
-+	    TP_PROTO(unsigned int local_debug_id, enum rxrpc_local_trace op,
- 		     int usage, const void *where),
- 
--	    TP_ARGS(local, op, usage, where),
-+	    TP_ARGS(local_debug_id, op, usage, where),
- 
- 	    TP_STRUCT__entry(
- 		    __field(unsigned int,	local		)
-@@ -511,7 +511,7 @@ TRACE_EVENT(rxrpc_local,
- 			     ),
- 
- 	    TP_fast_assign(
--		    __entry->local = local->debug_id;
-+		    __entry->local = local_debug_id;
- 		    __entry->op = op;
- 		    __entry->usage = usage;
- 		    __entry->where = where;
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index c45765b7263e..72a6e12a9304 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -93,7 +93,7 @@ static struct rxrpc_local *rxrpc_alloc_local(struct rxrpc_net *rxnet,
- 		local->debug_id = atomic_inc_return(&rxrpc_debug_id);
- 		memcpy(&local->srx, srx, sizeof(*srx));
- 		local->srx.srx_service = 0;
--		trace_rxrpc_local(local, rxrpc_local_new, 1, NULL);
-+		trace_rxrpc_local(local->debug_id, rxrpc_local_new, 1, NULL);
- 	}
- 
- 	_leave(" = %p", local);
-@@ -321,7 +321,7 @@ struct rxrpc_local *rxrpc_get_local(struct rxrpc_local *local)
- 	int n;
- 
- 	n = atomic_inc_return(&local->usage);
--	trace_rxrpc_local(local, rxrpc_local_got, n, here);
-+	trace_rxrpc_local(local->debug_id, rxrpc_local_got, n, here);
- 	return local;
- }
- 
-@@ -335,7 +335,8 @@ struct rxrpc_local *rxrpc_get_local_maybe(struct rxrpc_local *local)
- 	if (local) {
- 		int n = atomic_fetch_add_unless(&local->usage, 1, 0);
- 		if (n > 0)
--			trace_rxrpc_local(local, rxrpc_local_got, n + 1, here);
-+			trace_rxrpc_local(local->debug_id, rxrpc_local_got,
-+					  n + 1, here);
- 		else
- 			local = NULL;
- 	}
-@@ -343,16 +344,16 @@ struct rxrpc_local *rxrpc_get_local_maybe(struct rxrpc_local *local)
- }
- 
- /*
-- * Queue a local endpoint unless it has become unreferenced and pass the
-- * caller's reference to the work item.
-+ * Queue a local endpoint and pass the caller's reference to the work item.
-  */
- void rxrpc_queue_local(struct rxrpc_local *local)
- {
- 	const void *here = __builtin_return_address(0);
-+	unsigned int debug_id = local->debug_id;
-+	int n = atomic_read(&local->usage);
- 
- 	if (rxrpc_queue_work(&local->processor))
--		trace_rxrpc_local(local, rxrpc_local_queued,
--				  atomic_read(&local->usage), here);
-+		trace_rxrpc_local(debug_id, rxrpc_local_queued, n, here);
- 	else
- 		rxrpc_put_local(local);
- }
-@@ -367,7 +368,7 @@ void rxrpc_put_local(struct rxrpc_local *local)
- 
- 	if (local) {
- 		n = atomic_dec_return(&local->usage);
--		trace_rxrpc_local(local, rxrpc_local_put, n, here);
-+		trace_rxrpc_local(local->debug_id, rxrpc_local_put, n, here);
- 
- 		if (n == 0)
- 			call_rcu(&local->rcu, rxrpc_local_rcu);
-@@ -456,7 +457,7 @@ static void rxrpc_local_processor(struct work_struct *work)
- 		container_of(work, struct rxrpc_local, processor);
- 	bool again;
- 
--	trace_rxrpc_local(local, rxrpc_local_processing,
-+	trace_rxrpc_local(local->debug_id, rxrpc_local_processing,
- 			  atomic_read(&local->usage), NULL);
- 
- 	do {
-
+        Arnd
