@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 740D3C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634DEC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D04B2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3101320665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750179;
-	bh=x3MKwYkqOuixu1DlbFFVMJcToYiacJ4OpivV0h20SVE=;
+	s=default; t=1565750200;
+	bh=gHrlxgU92Gcc1Zi76YQDYAb8AuaLAwjaPwuJpyck8TQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gyMYFVHmFSHnM9sl99K2kAgc/5Ps/QgX7ELoGzihQEV6VLJYMtbEUaD7XHXixkd74
-	 Wo6hSviqYCWBGGnqlyouzX3f0JKGTx8Td1UXFRfFOYhbfWwz4+rEJRkZsrZc0NzPTj
-	 mlinVfaOo1xT93C3+8ZsdkcWRySLDOkOySypcPfE=
+	b=2B8a2RQlbMS9S4+uuAivnLNbueVoAOnn8L4PGg308eS91CN6i4LJCdw0JlPp2vXSM
+	 m7mkgUu17aaiplY5DdGVktnXIZs1f5dC80jWf9xCih19MB5E+KKJi3R9P1eYBGE4RM
+	 bsRLkpp6FpZ1PNR+IHDaT78TfWXyGI43VSxHAJlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728836AbfHNCgL (ORCPT
+        id S1729138AbfHNCgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:36:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45306 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:36:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728230AbfHNCNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:19 -0400
+        id S1728137AbfHNCNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20A2A208C2;
-        Wed, 14 Aug 2019 02:13:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F89020844;
+        Wed, 14 Aug 2019 02:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748797;
-        bh=x3MKwYkqOuixu1DlbFFVMJcToYiacJ4OpivV0h20SVE=;
+        s=default; t=1565748785;
+        bh=gHrlxgU92Gcc1Zi76YQDYAb8AuaLAwjaPwuJpyck8TQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JUfdIel41xBZmL1l/RERwpo6DKZ8bDukTNw8RvnZZ0qkfjm7g8WequFb5kPYiub+v
-         mIPYLZ9mdpWkItP7N/Wjr+VXEKg0nWRSksjQ2lceJmtwL9gU0LtavoQ1KeILj/q/gn
-         dL72u8avgy46EwoKvzIcdXlT4hmCQTFZ2A7hYjt8=
+        b=QM1+B1zHmKcQUf382NLZZHLWsshoENUUeoS+N59/O9aDIu3aYVYW5KL+g6oSThk/y
+         uRbiyHRK/n6yxNWiPPN2XenYA1T2HHwE3A8SakXGzxliz0H2OyRKlyP7KI3pZJAVJd
+         x+OIjz/j1jXnAXBjEajOa13RoMwlIYMpbwYL6POs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 068/123] enetc: Fix build error without PHYLIB
-Date:   Tue, 13 Aug 2019 22:09:52 -0400
-Message-Id: <20190814021047.14828-68-sashal@kernel.org>
+Cc:     Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 064/123] iwlwifi: dbg_ini: move iwl_dbg_tlv_free outside of debugfs ifdef
+Date:   Tue, 13 Aug 2019 22:09:48 -0400
+Message-Id: <20190814021047.14828-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -60,46 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Shahar S Matityahu <shahar.s.matityahu@intel.com>
 
-[ Upstream commit 5f4e4203add2b860d2345312509a160f8292063b ]
+[ Upstream commit abcbef5977df1fb61026ba429964cd6b9a085699 ]
 
-If PHYLIB is not set, build enetc will fails:
+The driver should call iwl_dbg_tlv_free even if debugfs is not defined
+since ini mode does not depend on debugfs ifdef.
 
-drivers/net/ethernet/freescale/enetc/enetc.o: In function `enetc_open':
-enetc.c: undefined reference to `phy_disconnect'
-enetc.c: undefined reference to `phy_start'
-drivers/net/ethernet/freescale/enetc/enetc.o: In function `enetc_close':
-enetc.c: undefined reference to `phy_stop'
-enetc.c: undefined reference to `phy_disconnect'
-drivers/net/ethernet/freescale/enetc/enetc_ethtool.o: undefined reference to `phy_ethtool_get_link_ksettings'
-drivers/net/ethernet/freescale/enetc/enetc_ethtool.o: undefined reference to `phy_ethtool_set_link_ksettings'
-drivers/net/ethernet/freescale/enetc/enetc_mdio.o: In function `enetc_mdio_probe':
-enetc_mdio.c: undefined reference to `mdiobus_alloc_size'
-enetc_mdio.c: undefined reference to `mdiobus_free'
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: d4fd0404c1c9 ("enetc: Introduce basic PF and VF ENETC ethernet drivers")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Shahar S Matityahu <shahar.s.matityahu@intel.com>
+Fixes: 68f6f492c4fa ("iwlwifi: trans: support loading ini TLVs from external file")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/enetc/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/enetc/Kconfig b/drivers/net/ethernet/freescale/enetc/Kconfig
-index 8429f5c1d8106..8ac109e73a7bb 100644
---- a/drivers/net/ethernet/freescale/enetc/Kconfig
-+++ b/drivers/net/ethernet/freescale/enetc/Kconfig
-@@ -2,6 +2,7 @@
- config FSL_ENETC
- 	tristate "ENETC PF driver"
- 	depends on PCI && PCI_MSI && (ARCH_LAYERSCAPE || COMPILE_TEST)
-+	select PHYLIB
- 	help
- 	  This driver supports NXP ENETC gigabit ethernet controller PCIe
- 	  physical function (PF) devices, managing ENETC Ports at a privileged
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+index efd4bf04d0162..fa81ad67539f3 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+@@ -1649,8 +1649,8 @@ struct iwl_drv *iwl_drv_start(struct iwl_trans *trans)
+ err_fw:
+ #ifdef CONFIG_IWLWIFI_DEBUGFS
+ 	debugfs_remove_recursive(drv->dbgfs_drv);
+-	iwl_fw_dbg_free(drv->trans);
+ #endif
++	iwl_fw_dbg_free(drv->trans);
+ 	kfree(drv);
+ err:
+ 	return ERR_PTR(ret);
 -- 
 2.20.1
 
