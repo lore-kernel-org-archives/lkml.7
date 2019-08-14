@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E28CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025DCC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BA02085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4E92208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749033;
-	bh=MLP40Xee1XZVetBmWFSJCKBW+PStioixF9jdljQ31A4=;
+	s=default; t=1565749037;
+	bh=R9b0WmDUwLwfCrk+r4uWJfaX5hpfWv/qraTPHwJeGe0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HqkoqV4ZTau2AfBchFiOkEcUjblDXFRiUJ4Mu1tEVD7KCzon35DT9nJAmH6qhJ/Pa
-	 a7VCnKrZTyPOtv0VVKF/E96RJicqe79kZSOFia7r1tu3XxSfpDzCflaED2i75kmB7+
-	 rI53zb63gmHlwU2BouXFc840VjREgVOM5+mxgzDI=
+	b=elGy8OkcGO/iU+31L/Ioy7ystXXDXITAFQQznpQ5zol/1nd4nD/NsuzOWq//GNY/r
+	 /3p+NzdUwjlt6WjpyRRlksTkdVH9AZ0VJnz/qwmjPv/ofH+wYC7FJiIcmfTdW3WQ0b
+	 yuvZciGgMwSdisl/MsyXCnijuS5BF065QrpmPN/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbfHNCRM (ORCPT
+        id S1729339AbfHNCRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:17:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48426 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:17:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729295AbfHNCRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:17:06 -0400
+        id S1727624AbfHNCRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:17:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 789122085A;
-        Wed, 14 Aug 2019 02:17:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A608720843;
+        Wed, 14 Aug 2019 02:17:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749025;
-        bh=MLP40Xee1XZVetBmWFSJCKBW+PStioixF9jdljQ31A4=;
+        s=default; t=1565749027;
+        bh=R9b0WmDUwLwfCrk+r4uWJfaX5hpfWv/qraTPHwJeGe0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V+O5sCE4S+a8TMzUE5AC3sE6GWXChHLbGgpIIHdv6nDDBL+ytRrXtcatUPPfnr2oI
-         NXSe+4B5K88cQfIEjNHVf8PBkecG6XPxQf6iA7GXj/YLH2z7desKAtkAcTilBrfhfA
-         3KYIflwjeyZZDH8xdVw+mbnjgQGqwaCemAmomv7M=
+        b=O66RaF7PsGYE0us4sQv0XR+7vGCXuVY0w74XGDdpbDrz2JVMbiAflA7Mq7zS5qUUB
+         MQJgPvsfZoey6w7RGsSGucsX74U/bUxh/+xqwU1FS9w1Ljvc+OTOsrj+JKGX+hoFaB
+         NLnSdr9MMOCRPN3LmfTv6RQ+0nRU3+xbagc9ElMY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+965152643a75a56737be@syzkaller.appspotmail.com,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 43/68] HID: holtek: test for sanity of intfdata
-Date:   Tue, 13 Aug 2019 22:15:21 -0400
-Message-Id: <20190814021548.16001-43-sashal@kernel.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 45/68] drm/rockchip: Suspend DP late
+Date:   Tue, 13 Aug 2019 22:15:23 -0400
+Message-Id: <20190814021548.16001-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -60,44 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 01ec0a5f19c8c82960a07f6c7410fc9e01d7fb51 ]
+[ Upstream commit f7ccbed656f78212593ca965d9a8f34bf24e0aab ]
 
-The ioctl handler uses the intfdata of a second interface,
-which may not be present in a broken or malicious device, hence
-the intfdata needs to be checked for NULL.
+In commit fe64ba5c6323 ("drm/rockchip: Resume DP early") we moved
+resume to be early but left suspend at its normal time.  This seems
+like it could be OK, but casues problems if a suspend gets interrupted
+partway through.  The OS only balances matching suspend/resume levels.
+...so if suspend was called then resume will be called.  If suspend
+late was called then resume early will be called.  ...but if suspend
+was called resume early might not get called.  This leads to an
+unbalance in the clock enables / disables.
 
-[jkosina@suse.cz: fix newly added spurious space]
-Reported-by: syzbot+965152643a75a56737be@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Lets take the simple fix and just move suspend to be late to match.
+This makes the PM core take proper care in keeping things balanced.
+
+Fixes: fe64ba5c6323 ("drm/rockchip: Resume DP early")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190802184616.44822-1-dianders@chromium.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-holtek-kbd.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/rockchip/analogix_dp-rockchip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-holtek-kbd.c b/drivers/hid/hid-holtek-kbd.c
-index 6e1a4a4fc0c10..ab9da597106fa 100644
---- a/drivers/hid/hid-holtek-kbd.c
-+++ b/drivers/hid/hid-holtek-kbd.c
-@@ -126,9 +126,14 @@ static int holtek_kbd_input_event(struct input_dev *dev, unsigned int type,
+diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+index 080f053521950..6a4da3a0ff1c3 100644
+--- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
++++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+@@ -436,7 +436,7 @@ static int rockchip_dp_resume(struct device *dev)
  
- 	/* Locate the boot interface, to receive the LED change events */
- 	struct usb_interface *boot_interface = usb_ifnum_to_if(usb_dev, 0);
-+	struct hid_device *boot_hid;
-+	struct hid_input *boot_hid_input;
- 
--	struct hid_device *boot_hid = usb_get_intfdata(boot_interface);
--	struct hid_input *boot_hid_input = list_first_entry(&boot_hid->inputs,
-+	if (unlikely(boot_interface == NULL))
-+		return -ENODEV;
-+
-+	boot_hid = usb_get_intfdata(boot_interface);
-+	boot_hid_input = list_first_entry(&boot_hid->inputs,
- 		struct hid_input, list);
- 
- 	return boot_hid_input->input->event(boot_hid_input->input, type, code,
+ static const struct dev_pm_ops rockchip_dp_pm_ops = {
+ #ifdef CONFIG_PM_SLEEP
+-	.suspend = rockchip_dp_suspend,
++	.suspend_late = rockchip_dp_suspend,
+ 	.resume_early = rockchip_dp_resume,
+ #endif
+ };
 -- 
 2.20.1
 
