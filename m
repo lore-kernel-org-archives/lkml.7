@@ -2,272 +2,342 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B91C32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB3DC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6F52084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FBA52083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:19:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="e6HiDfqH"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="sf/PiAfB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbfHNPRk (ORCPT
+        id S1728008AbfHNPTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 11:17:40 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:37194 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfHNPRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 11:17:40 -0400
-Received: from zn.tnic (p200300EC2F0BD0000538F16F91702398.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:d000:538:f16f:9170:2398])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 073551EC0965;
-        Wed, 14 Aug 2019 17:17:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565795859;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=53NlseYGebs+2OSufJuR61D20hSXhseLKb9HPRoVlMI=;
-        b=e6HiDfqHdiMF5/9+dJhf1LjzFb6KXIVoYSvY5GjAi/XQOQ96rQ57ZQBWIXEZYgvMNGs6Xp
-        3WoirBM1R3J8tC+r6QShsr5uMtdJ6DHAXaBQHglAemdJD0UqiTa7uRr2ZXSmkneANxZRB9
-        G8eZLpJZSelyE3jT3QnLlpTGZDJL+X8=
-Date:   Wed, 14 Aug 2019 17:18:24 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 08/24] EDAC: Introduce mci_for_each_dimm() iterator
-Message-ID: <20190814151824.GB1841@zn.tnic>
-References: <20190624150758.6695-1-rrichter@marvell.com>
- <20190624150758.6695-9-rrichter@marvell.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190624150758.6695-9-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 14 Aug 2019 11:19:31 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:27230 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfHNPTa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 11:19:30 -0400
+Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x7EFJLNZ020382;
+        Thu, 15 Aug 2019 00:19:21 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7EFJLNZ020382
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1565795961;
+        bh=y3IupXP4uCG9M0NBKHNHg+8cmzWQIXTNv72K4/tntOo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sf/PiAfBTsJmdgx9KtSaI301eEfdfeDOlRE5NRltje0dceuj1xu3aMLw15yFYgYdp
+         g5XUlfknOf6B5mV7QbC07p5u9jl93PhUVQQ4EHTKesP6dJNm7lXO5eXOl5vSfJ0aZK
+         uLnclQtfbBoh3a36/yyuBf7BCGA/cr2nzJp1S+Tbk9OJGvNjSbYmFe698Dp39Yc/Xf
+         xuQ0uYZSjT56UYdWeEIL5+Ql5HHhNPxP+x4li6ighQE9iXbTnOocaQ2JJfgbTzwfF7
+         07gzySMhTKjwQWN+KS/PHZ6sdvV4T444QWmbQzfXIzdN+LrNccIT/wCEM4vdyB+5KJ
+         ro+VR/FD9/6HA==
+X-Nifty-SrcIP: [126.125.143.222]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] kbuild: make single targets work more correctly
+Date:   Thu, 15 Aug 2019 00:19:18 +0900
+Message-Id: <20190814151919.16300-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 03:09:11PM +0000, Robert Richter wrote:
-> Make code more readable by introducing a mci_for_each_dimm() iterator.
-> Now, we just get a pointer to a struct dimm_info. Direct array access
-> using an index is no longer needed to iterate.
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> ---
->  drivers/edac/edac_mc.c       | 18 ++++++++++--------
->  drivers/edac/edac_mc_sysfs.c | 34 +++++++++++++++-------------------
->  drivers/edac/ghes_edac.c     |  8 ++++----
->  drivers/edac/i5100_edac.c    | 11 +++++------
->  include/linux/edac.h         |  7 +++++++
->  5 files changed, 41 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-> index c44bc83e8502..27277ca46ab3 100644
-> --- a/drivers/edac/edac_mc.c
-> +++ b/drivers/edac/edac_mc.c
-> @@ -145,15 +145,18 @@ static void edac_mc_dump_channel(struct rank_info *chan)
->  	edac_dbg(4, "    channel->dimm = %p\n", chan->dimm);
->  }
->  
-> -static void edac_mc_dump_dimm(struct dimm_info *dimm, int number)
-> +static void edac_mc_dump_dimm(struct dimm_info *dimm)
->  {
->  	char location[80];
->  
-> +	if (!dimm->nr_pages)
-> +		return;
-> +
+Currently, the single target build directly descends into the directory
+of the target. For example,
 
-What's that for?
+  $ make foo/bar/baz.o
 
->  	edac_dimm_info_location(dimm, location, sizeof(location));
->  
->  	edac_dbg(4, "%s%i: %smapped as virtual row %d, chan %d\n",
->  		 dimm->mci->csbased ? "rank" : "dimm",
-> -		 number, location, dimm->csrow, dimm->cschannel);
-> +		 dimm->idx, location, dimm->csrow, dimm->cschannel);
->  	edac_dbg(4, "  dimm = %p\n", dimm);
->  	edac_dbg(4, "  dimm->label = '%s'\n", dimm->label);
->  	edac_dbg(4, "  dimm->nr_pages = 0x%x\n", dimm->nr_pages);
-> @@ -703,6 +706,7 @@ EXPORT_SYMBOL_GPL(edac_get_owner);
->  int edac_mc_add_mc_with_groups(struct mem_ctl_info *mci,
->  			       const struct attribute_group **groups)
->  {
-> +	struct dimm_info *dimm;
->  	int ret = -EINVAL;
->  	edac_dbg(0, "\n");
->  
-> @@ -727,9 +731,8 @@ int edac_mc_add_mc_with_groups(struct mem_ctl_info *mci,
->  				if (csrow->channels[j]->dimm->nr_pages)
->  					edac_mc_dump_channel(csrow->channels[j]);
->  		}
-> -		for (i = 0; i < mci->tot_dimms; i++)
-> -			if (mci->dimms[i]->nr_pages)
-> -				edac_mc_dump_dimm(mci->dimms[i], i);
+... directly descends into foo/bar/.
 
-<---- newline here.
+On the other hand, the normal build usually descends one directory at
+a time, i.e. descends into foo/, and then foo/bar/.
 
-> +		mci_for_each_dimm(mci, dimm)
-> +			edac_mc_dump_dimm(dimm);
->  	}
->  #endif
->  	mutex_lock(&mem_ctls_mutex);
+This difference causes some problems.
 
-...
+[1] miss subdir-asflags-y, subdir-ccflags-y in upper Makefiles
 
-> @@ -950,9 +949,10 @@ int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
->  			printk(KERN_CONT "\n");
->  		}
->  #endif
-> -		err = edac_create_dimm_object(mci, dimm, i);
-> +		err = edac_create_dimm_object(mci, dimm);
->  		if (err) {
-> -			edac_dbg(1, "failure: create dimm %d obj\n", i);
-> +			edac_dbg(1, "failure: create dimm %d obj\n",
-> +				dimm->idx);
->  			goto fail_unregister_dimm;
->  		}
->  	}
+    The options in subdir-{as,cc}flags-y take effect in the current
+    and its sub-directories. In other words, they are inherited
+    downward. In the example above, the single target will miss
+    subdir-{as,cc}flags-y if they are defined in foo/Makefile.
 
-Since you're touching this, pls do
+[2] could be built in a different directory
 
-s/dimm/DIMM/g
+    As Documentation/kbuild/modules.rst section 4.3 says, Kbuild can
+    handle files that are spread over several sub-directories.
 
-in the user-visible strings because it is an abbreviation.
+    The build rule of foo/bar/baz.o may not necessarily be specified in
+    foo/bar/Makefile. It might be specifies in foo/Makefile as follows:
 
-> @@ -967,12 +967,9 @@ int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
->  	return 0;
->  
->  fail_unregister_dimm:
-> -	for (i--; i >= 0; i--) {
-> -		struct dimm_info *dimm = mci->dimms[i];
-> -		if (!dimm->nr_pages)
-> -			continue;
-> -
-> -		device_unregister(&dimm->dev);
-> +	mci_for_each_dimm(mci, dimm) {
-> +		if (device_is_registered(&dimm->dev))
-> +			device_unregister(&dimm->dev);
->  	}
->  	device_unregister(&mci->dev);
->  
-> @@ -984,7 +981,7 @@ int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
->   */
->  void edac_remove_sysfs_mci_device(struct mem_ctl_info *mci)
->  {
-> -	int i;
-> +	struct dimm_info *dimm;
->  
->  	edac_dbg(0, "\n");
->  
-> @@ -995,8 +992,7 @@ void edac_remove_sysfs_mci_device(struct mem_ctl_info *mci)
->  	edac_delete_csrow_objects(mci);
->  #endif
->  
-> -	for (i = 0; i < mci->tot_dimms; i++) {
-> -		struct dimm_info *dimm = mci->dimms[i];
-> +	mci_for_each_dimm(mci, dimm) {
->  		if (dimm->nr_pages == 0)
->  			continue;
->  		edac_dbg(0, "removing device %s\n", dev_name(&dimm->dev));
-> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-> index 8050f9577fe6..72e75ea5526c 100644
-> --- a/drivers/edac/ghes_edac.c
-> +++ b/drivers/edac/ghes_edac.c
-> @@ -81,11 +81,11 @@ static void ghes_edac_count_dimms(const struct dmi_header *dh, void *arg)
->  static int get_dimm_smbios_index(u16 handle)
->  {
->  	struct mem_ctl_info *mci = ghes_pvt->mci;
-> -	int i;
-> +	struct dimm_info *dimm;
->  
-> -	for (i = 0; i < mci->tot_dimms; i++) {
-> -		if (mci->dimms[i]->smbios_handle == handle)
-> -			return i;
-> +	mci_for_each_dimm(mci, dimm) {
-> +		if (dimm->smbios_handle == handle)
-> +			return dimm->idx;
->  	}
->  	return -1;
->  }
-> diff --git a/drivers/edac/i5100_edac.c b/drivers/edac/i5100_edac.c
-> index 39ba7f2414ae..7ec42b26a716 100644
-> --- a/drivers/edac/i5100_edac.c
-> +++ b/drivers/edac/i5100_edac.c
-> @@ -846,14 +846,13 @@ static void i5100_init_interleaving(struct pci_dev *pdev,
->  
->  static void i5100_init_csrows(struct mem_ctl_info *mci)
->  {
-> -	int i;
->  	struct i5100_priv *priv = mci->pvt_info;
-> +	struct dimm_info *dimm;
->  
-> -	for (i = 0; i < mci->tot_dimms; i++) {
-> -		struct dimm_info *dimm;
-> -		const unsigned long npages = i5100_npages(mci, i);
-> -		const unsigned chan = i5100_csrow_to_chan(mci, i);
-> -		const unsigned rank = i5100_csrow_to_rank(mci, i);
-> +	mci_for_each_dimm(mci, dimm) {
-> +		const unsigned long npages = i5100_npages(mci, dimm->idx);
-> +		const unsigned chan = i5100_csrow_to_chan(mci, dimm->idx);
-> +		const unsigned rank = i5100_csrow_to_rank(mci, dimm->idx);
->  
->  		if (!npages)
->  			continue;
+    [foo/Makefile]
+    obj-y := bar/baz.o
 
-This cannot be right: the code here under this does now:
+    This often happens when a module is so big that its source files
+    are divided into sub-directories.
 
-	dimm = edac_get_dimm(mci, chan, rank, 0);
+    In this case, there is no Makefile in the foo/bar/ directory, yet
+    the single target descends into foo/bar/, then fails due to the
+    missing Makefile. You can still do 'make foo/bar/' for partial
+    building, but cannot do 'make foo/bar/baz.s'. I believe the single
+    target '%.s' is a useful feature for inspecting the compiler output.
 
-but dimm is already set. It used to get the DIMM using chan and rank but
-now you're iterating over the already initialized pointers. So I think
-you don't need the edac_get_dimm() anymore.
+    Some modules work around this issue by putting an empty Makefile
+    in every sub-directory.
 
-Also fix those up too, while at it pls:
+This commit fixes those problems by making the single target build
+descend in the same way as the normal build does.
 
-WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-#235: FILE: drivers/edac/i5100_edac.c:854:
-+               const unsigned chan = i5100_csrow_to_chan(mci, dimm->idx);
+Another change is the single target build will observe the CONFIG
+options. Previously, it allowed users to build the foo.o even when
+the corresponding CONFIG_FOO is disabled:
 
-WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-#236: FILE: drivers/edac/i5100_edac.c:855:
-+               const unsigned rank = i5100_csrow_to_rank(mci, dimm->idx);
+   obj-$(CONFIG_FOO) += foo.o
 
+In the new behavior, the single target build will just fail and show
+"No rule to make target ..." (or "Nothing to be done for ..." if the
+stale object already exists, but cannot be updated).
 
-> diff --git a/include/linux/edac.h b/include/linux/edac.h
-> index 2ee9b8598ae0..20a04f48616c 100644
-> --- a/include/linux/edac.h
-> +++ b/include/linux/edac.h
-> @@ -599,6 +599,13 @@ struct mem_ctl_info {
->  	u16 fake_inject_count;
->  };
->  
-> +#define mci_for_each_dimm(mci, dimm)			\
-> +	for ((dimm) = (mci)->dimms[0];			\
-> +	     (dimm);					\
-> +	     (dimm) = (dimm)->idx < (mci)->tot_dimms	\
-> +		     ? (mci)->dimms[(dimm)->idx + 1]	\
-> +		     : NULL)
-> +
->  /**
->   * edac_get_dimm_by_index - Get DIMM info from a memory controller
->   *                          given by an index
-> -- 
+The disadvantage of this commit is the build speed. Now that the
+single target build visits every directory and parses lots of
+Makefiles, it is slower than before. (But, I hope it will not be
+too slow.)
 
-Thx.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
+Changes in v2:
+ - Fix single targets for external module build
+
+ Makefile               | 84 ++++++++++++++++++++++++++----------------
+ scripts/Makefile.build | 45 +++++++++++++++++++---
+ 2 files changed, 92 insertions(+), 37 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 9661fa37158f..164ca615e2f6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -230,6 +230,8 @@ endif
+ 
+ export KBUILD_CHECKSRC KBUILD_EXTMOD
+ 
++extmod-prefix = $(if $(KBUILD_EXTMOD),$(KBUILD_EXTMOD)/)
++
+ ifeq ($(abs_srctree),$(abs_objtree))
+         # building in the source tree
+         srctree := .
+@@ -271,11 +273,16 @@ no-dot-config-targets := $(clean-targets) \
+ 			 %asm-generic kernelversion %src-pkg
+ no-sync-config-targets := $(no-dot-config-targets) install %install \
+ 			   kernelrelease
++single-targets := %.a %.i %.ko %.lds %.lst %.mod %.o %.s %.symtypes %/
++ifdef CONFIG_CC_IS_CLANG
++single-targets += %.ll
++endif
+ 
+ config-build	:=
+ mixed-build	:=
+ need-config	:= 1
+ may-sync-config	:= 1
++single-build	:=
+ 
+ ifneq ($(filter $(no-dot-config-targets), $(MAKECMDGOALS)),)
+ 	ifeq ($(filter-out $(no-dot-config-targets), $(MAKECMDGOALS)),)
+@@ -302,6 +309,14 @@ ifeq ($(KBUILD_EXTMOD),)
+         endif
+ endif
+ 
++# We cannot build single targets and the others at the same time
++ifneq ($(filter $(single-targets), $(MAKECMDGOALS)),)
++	single-build := 1
++	ifneq ($(filter-out $(single-targets), $(MAKECMDGOALS)),)
++		mixed-build := 1
++	endif
++endif
++
+ # For "make -j clean all", "make -j mrproper defconfig all", etc.
+ ifneq ($(filter $(clean-targets),$(MAKECMDGOALS)),)
+         ifneq ($(filter-out $(clean-targets),$(MAKECMDGOALS)),)
+@@ -1003,7 +1018,7 @@ endif
+ 
+ PHONY += prepare0
+ 
+-export MODORDER := $(if $(KBUILD_EXTMOD),$(KBUILD_EXTMOD)/)modules.order
++export MODORDER := $(extmod-prefix)modules.order
+ 
+ ifeq ($(KBUILD_EXTMOD),)
+ core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/
+@@ -1655,7 +1670,7 @@ endif # KBUILD_EXTMOD
+ PHONY += descend $(build-dirs)
+ descend: $(build-dirs)
+ $(build-dirs): prepare
+-	$(Q)$(MAKE) $(build)=$@ need-builtin=1 need-modorder=1
++	$(Q)$(MAKE) $(build)=$@ single-build=$(single-build) need-builtin=1 need-modorder=1
+ 
+ clean-dirs := $(addprefix _clean_, $(clean-dirs))
+ PHONY += $(clean-dirs) clean
+@@ -1752,40 +1767,47 @@ tools/%: FORCE
+ 
+ # Single targets
+ # ---------------------------------------------------------------------------
+-# Single targets are compatible with:
+-# - build with mixed source and output
+-# - build with separate output dir 'make O=...'
+-# - external modules
++# To build individual files in subdirectories, you can do like this:
++#
++#   make foo/bar/baz.s
++#
++# The supported suffixes for single-target are listed in 'single-targets'
+ #
+-#  target-dir => where to store outputfile
+-#  build-dir  => directory in kernel source tree to use
+-
+-build-target = $(if $(KBUILD_EXTMOD), $(KBUILD_EXTMOD)/)$@
+-build-dir = $(patsubst %/,%,$(dir $(build-target)))
+-
+-%.i: prepare FORCE
+-	$(Q)$(MAKE) $(build)=$(build-dir) $(build-target)
+-%.ll: prepare FORCE
+-	$(Q)$(MAKE) $(build)=$(build-dir) $(build-target)
+-%.lst: prepare FORCE
+-	$(Q)$(MAKE) $(build)=$(build-dir) $(build-target)
+-%.o: prepare FORCE
+-	$(Q)$(MAKE) $(build)=$(build-dir) $(build-target)
+-%.s: prepare FORCE
+-	$(Q)$(MAKE) $(build)=$(build-dir) $(build-target)
+-%.symtypes: prepare FORCE
+-	$(Q)$(MAKE) $(build)=$(build-dir) $(build-target)
++# To build only under specific subdirectories, you can do like this:
++#
++#   make foo/bar/baz/
++
++ifdef single-build
++
++single-all := $(filter $(single-targets), $(MAKECMDGOALS))
++
++# .ko is special because modpost is needed
++single-ko := $(sort $(filter %.ko, $(single-all)))
++single-no-ko := $(sort $(patsubst %.ko,%.mod, $(single-all)))
++
++$(single-ko): single_modpost
++	@:
++$(single-no-ko): descend
++	@:
++
+ ifeq ($(KBUILD_EXTMOD),)
+-# For the single build of an in-tree module, use a temporary file to avoid
++# For the single build of in-tree modules, use a temporary file to avoid
+ # the situation of modules_install installing an invalid modules.order.
+-%.ko: MODORDER := .modules.tmp
++MODORDER := .modules.tmp
+ endif
+-%.ko: prepare FORCE
+-	$(Q)$(MAKE) $(build)=$(build-dir) $(build-target:.ko=.mod)
+-	$(Q)echo $(build-target) > $(MODORDER)
++
++PHONY += single_modpost
++single_modpost: $(single-no-ko)
++	$(Q){ $(foreach m, $(single-ko), echo $(extmod-prefix)$m;) } > $(MODORDER)
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
+-%/: prepare FORCE
+-	$(Q)$(MAKE) KBUILD_MODULES=1 $(build)=$(build-dir) need-modorder=1
++
++KBUILD_MODULES := 1
++
++export KBUILD_SINGLE_TARGETS := $(addprefix $(extmod-prefix), $(single-no-ko))
++
++single-build = $(if $(filter-out $@/, $(single-no-ko)),1)
++
++endif
+ 
+ # FIXME Should go into a make.lib or something
+ # ===========================================================================
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index f84ccca8d74f..10adf3b558de 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -52,7 +52,7 @@ ifndef obj
+ $(warning kbuild: Makefile.build is included improperly)
+ endif
+ 
+-ifeq ($(MAKECMDGOALS)$(need-modorder),)
++ifeq ($(need-modorder),)
+ ifneq ($(obj-m),)
+ $(warning $(patsubst %.o,'%.ko',$(obj-m)) will not be built even though obj-m is specified.)
+ $(warning You cannot use subdir-y/m to visit a module Makefile. Use obj-y/m instead.)
+@@ -76,11 +76,6 @@ endif
+ 
+ mod-targets := $(patsubst %.o, %.mod, $(obj-m))
+ 
+-__build: $(if $(KBUILD_BUILTIN),$(builtin-target) $(lib-target) $(extra-y)) \
+-	 $(if $(KBUILD_MODULES),$(obj-m) $(mod-targets) $(modorder-target)) \
+-	 $(subdir-ym) $(always)
+-	@:
+-
+ # Linus' kernel sanity checking tool
+ ifeq ($(KBUILD_CHECKSRC),1)
+   quiet_cmd_checksrc       = CHECK   $<
+@@ -487,12 +482,50 @@ targets += $(call intermediate_targets, .asn1.o, .asn1.c .asn1.h) \
+ 	   $(call intermediate_targets, .lex.o, .lex.c) \
+ 	   $(call intermediate_targets, .tab.o, .tab.c .tab.h)
+ 
++# Build
++# ---------------------------------------------------------------------------
++
++ifdef single-build
++
++curdir-single := $(sort $(foreach x, $(KBUILD_SINGLE_TARGETS), \
++			$(if $(filter $(x) $(basename $(x)).o, $(targets)), $(x))))
++
++# Handle single targets without any rule: show "Nothing to be done for ..." or
++# "No rule to make target ..." depending on whether the target exists.
++unknown-single := $(filter-out $(addsuffix /%, $(subdir-ym)), \
++			$(filter $(obj)/%, \
++				$(filter-out $(curdir-single), \
++					$(KBUILD_SINGLE_TARGETS))))
++
++__build: $(curdir-single) $(subdir-ym)
++ifneq ($(unknown-single),)
++	$(Q)$(MAKE) -f /dev/null $(unknown-single)
++endif
++	@:
++
++ifeq ($(curdir-single),)
++# Nothing to do in this directory. Do not include any .*.cmd file for speed-up
++targets :=
++else
++targets += $(curdir-single)
++endif
++
++else
++
++__build: $(if $(KBUILD_BUILTIN),$(builtin-target) $(lib-target) $(extra-y)) \
++	 $(if $(KBUILD_MODULES),$(obj-m) $(mod-targets) $(modorder-target)) \
++	 $(subdir-ym) $(always)
++	@:
++
++endif
++
+ # Descending
+ # ---------------------------------------------------------------------------
+ 
+ PHONY += $(subdir-ym)
+ $(subdir-ym):
+ 	$(Q)$(MAKE) $(build)=$@ \
++	$(if $(filter $@/, $(KBUILD_SINGLE_TARGETS)),single-build=) \
+ 	need-builtin=$(if $(filter $@/built-in.a, $(subdir-obj-y)),1) \
+ 	need-modorder=$(if $(need-modorder),$(if $(filter $@/modules.order, $(modorder)),1))
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.17.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
