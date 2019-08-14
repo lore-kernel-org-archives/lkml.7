@@ -4,56 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34421C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A471AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065F320842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C85220842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748900;
-	bh=DNPn1LYkKtUL1VebfEK1u4OwCn1fgKi39PxpcNrev8Y=;
+	s=default; t=1565748903;
+	bh=OUie+gbJEPH0v/w4er6kUVBrDlqXOkXb9KmP3S61H+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JV3OwZdpIyd1M9Svmz+35ypuZUwp6th07jggQ7SaWTsUwSE4U0uyPQTVwozE3GkhM
-	 AOdeB2GgENSyDqKQU4qyM+JEqZ2Oz0+973RASluLQVQZazh5HptAdUxeHtnHufg10K
-	 iJA1zKILBP9EGK7WI6OWr3T7qeON+W4ODLpz7w50=
+	b=kaTyceSP5V+ijJuaHnXvCjkwexbVHP+cwmgN30zLc+fQDfmNTVrmT2fuKzUCQiB9N
+	 h/xI+RpaBdeXuBPjG+6pNKytge3ImtJNzjM5NKHHdGk8MO+nicJ2VZlaAdVVlP3R2A
+	 qMFEZrCL7p9H9OlblT4PYxKWmAXbbAJl2jbIObTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbfHNCOp (ORCPT
+        id S1728803AbfHNCPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:14:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46480 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:15:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728759AbfHNCOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:14:32 -0400
+        id S1728784AbfHNCOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:14:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFED02133F;
-        Wed, 14 Aug 2019 02:14:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B4012085A;
+        Wed, 14 Aug 2019 02:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748872;
-        bh=DNPn1LYkKtUL1VebfEK1u4OwCn1fgKi39PxpcNrev8Y=;
+        s=default; t=1565748883;
+        bh=OUie+gbJEPH0v/w4er6kUVBrDlqXOkXb9KmP3S61H+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WDcMOmU2XMO3P5v7VDzbn6eL81WenOuc9Kr+rU51Is/K3LgEUPs3hb4KNI0y6g/Qb
-         axKZHEYNseyBiCkj18IR1gquA3d5dz1URvGAdiCfS8mxV93Ospz14BXpD+8mGw5c98
-         a9uV6FkEmcSVzHZ6KUh0K+R02OiW6qNydWZxo7xE=
+        b=xIug+PTmmJUZ90gU0zAz4aXv3ZF/jWfLZxSorBG/X0AfvBNBYOFjuC6xdVeRJj2qf
+         F6adenMRElr+kMctQ93jicUTR6Kit9rr4cdlRc6blUbOc/m7zm6ouWjTcflqlYSDhR
+         CGlndjJYJg43DDL5O6wzH2hyhQf9g7ZRC8zN2k9I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     He Zhe <zhe.he@windriver.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 117/123] perf ftrace: Fix failure to set cpumask when only one cpu is present
-Date:   Tue, 13 Aug 2019 22:10:41 -0400
-Message-Id: <20190814021047.14828-117-sashal@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 5.2 122/123] KVM: arm: Don't write junk to CP15 registers on reset
+Date:   Tue, 13 Aug 2019 22:10:46 -0400
+Message-Id: <20190814021047.14828-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -66,52 +58,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: He Zhe <zhe.he@windriver.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit cf30ae726c011e0372fd4c2d588466c8b50a8907 ]
+[ Upstream commit c69509c70aa45a8c4954c88c629a64acf4ee4a36 ]
 
-The buffer containing the string used to set cpumask is overwritten at
-the end of the string later in cpu_map__snprint_mask due to not enough
-memory space, when there is only one cpu.
+At the moment, the way we reset CP15 registers is mildly insane:
+We write junk to them, call the reset functions, and then check that
+we have something else in them.
 
-And thus causes the following failure:
+The "fun" thing is that this can happen while the guest is running
+(PSCI, for example). If anything in KVM has to evaluate the state
+of a CP15 register while junk is in there, bad thing may happen.
 
-  $ perf ftrace ls
-  failed to reset ftrace
-  $
+Let's stop doing that. Instead, we track that we have called a
+reset function for that register, and assume that the reset
+function has done something.
 
-This patch fixes the calculation of the cpumask string size.
+In the end, the very need of this reset check is pretty dubious,
+as it doesn't check everything (a lot of the CP15 reg leave outside
+of the cp15_regs[] array). It may well be axed in the near future.
 
-Signed-off-by: He Zhe <zhe.he@windriver.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Fixes: dc23103278c5 ("perf ftrace: Add support for -a and -C option")
-Link: http://lkml.kernel.org/r/1564734592-15624-1-git-send-email-zhe.he@windriver.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/kvm/coproc.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 9c228c55e1fb7..22386ab350504 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -173,7 +173,7 @@ static int set_tracing_cpumask(struct cpu_map *cpumap)
- 	int last_cpu;
+diff --git a/arch/arm/kvm/coproc.c b/arch/arm/kvm/coproc.c
+index d2806bcff8bbb..07745ee022a12 100644
+--- a/arch/arm/kvm/coproc.c
++++ b/arch/arm/kvm/coproc.c
+@@ -651,13 +651,22 @@ int kvm_handle_cp14_64(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ }
  
- 	last_cpu = cpu_map__cpu(cpumap, cpumap->nr - 1);
--	mask_size = (last_cpu + 3) / 4 + 1;
-+	mask_size = last_cpu / 4 + 2; /* one more byte for EOS */
- 	mask_size += last_cpu / 32; /* ',' is needed for every 32th cpus */
+ static void reset_coproc_regs(struct kvm_vcpu *vcpu,
+-			      const struct coproc_reg *table, size_t num)
++			      const struct coproc_reg *table, size_t num,
++			      unsigned long *bmap)
+ {
+ 	unsigned long i;
  
- 	cpumask = malloc(mask_size);
+ 	for (i = 0; i < num; i++)
+-		if (table[i].reset)
++		if (table[i].reset) {
++			int reg = table[i].reg;
++
+ 			table[i].reset(vcpu, &table[i]);
++			if (reg > 0 && reg < NR_CP15_REGS) {
++				set_bit(reg, bmap);
++				if (table[i].is_64bit)
++					set_bit(reg + 1, bmap);
++			}
++		}
+ }
+ 
+ static struct coproc_params decode_32bit_hsr(struct kvm_vcpu *vcpu)
+@@ -1432,17 +1441,15 @@ void kvm_reset_coprocs(struct kvm_vcpu *vcpu)
+ {
+ 	size_t num;
+ 	const struct coproc_reg *table;
+-
+-	/* Catch someone adding a register without putting in reset entry. */
+-	memset(vcpu->arch.ctxt.cp15, 0x42, sizeof(vcpu->arch.ctxt.cp15));
++	DECLARE_BITMAP(bmap, NR_CP15_REGS) = { 0, };
+ 
+ 	/* Generic chip reset first (so target could override). */
+-	reset_coproc_regs(vcpu, cp15_regs, ARRAY_SIZE(cp15_regs));
++	reset_coproc_regs(vcpu, cp15_regs, ARRAY_SIZE(cp15_regs), bmap);
+ 
+ 	table = get_target_table(vcpu->arch.target, &num);
+-	reset_coproc_regs(vcpu, table, num);
++	reset_coproc_regs(vcpu, table, num, bmap);
+ 
+ 	for (num = 1; num < NR_CP15_REGS; num++)
+-		WARN(vcpu_cp15(vcpu, num) == 0x42424242,
++		WARN(!test_bit(num, bmap),
+ 		     "Didn't reset vcpu_cp15(vcpu, %zi)", num);
+ }
 -- 
 2.20.1
 
