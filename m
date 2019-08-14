@@ -2,53 +2,55 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD36C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF4AC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62952084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 726D32063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802736;
-	bh=WxNqavY8+WLPdEEfFVrqo9hF2HEFECHIJ4G1X/i8P+0=;
+	s=default; t=1565802740;
+	bh=SKkNANZr+ygJCo5isJhEgLS5Oabwbiqh+RoOuJkiSlw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ugE3hOGqcN9ZwUsnNBZQaZMr1wrqfHzlwXYAYLGAaWZA6C1M/R5ZvxOjsEjZ1RK6w
-	 yVNhEbH2/njjw7T86WdHysH+sB/6JVZXvsxUokpRlAgYhOmAE+UbT752BlDZsa8/M3
-	 g85rT4tporm0bB2jWGO/88VUV5IRBAPrs4odSSxI=
+	b=I+a+KAUzN6vXHvLhuXCSmx8IsVcPV8B7A4Z9OWEBUYzImQ5eQbsYR2nqCShwIw1ZX
+	 XOPLBfApGNEYlGfWZizVvX34ytGgCme1BkRBM25aeBnk7yQ1vCxart4bSFYaFPzN7/
+	 DLP7H+GT+lWZ1ux1BJH7P3sKqqIIB+0o98e15Wxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfHNRMO (ORCPT
+        id S1730704AbfHNRMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:12:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35896 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:12:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730527AbfHNRML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:12:11 -0400
+        id S1730698AbfHNRMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:12:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72A1B216F4;
-        Wed, 14 Aug 2019 17:12:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95FCD216F4;
+        Wed, 14 Aug 2019 17:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802730;
-        bh=WxNqavY8+WLPdEEfFVrqo9hF2HEFECHIJ4G1X/i8P+0=;
+        s=default; t=1565802736;
+        bh=SKkNANZr+ygJCo5isJhEgLS5Oabwbiqh+RoOuJkiSlw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YtvWxvHeMZWisQadXfyJSl4bTi79TjCXz+/Bw+5I7+E3kMQ0lmeCe9F+FsVl4m4I2
-         Tv+yU5TCWhfk+EdkMGoimDOIMpGw80cxvl8D8Swejr2wd1BmoiuJ1LcpskVTG7SOvk
-         ch+Cnv9+x7782vAi6CFW6zxYuqNIaUKdHe3F+GgA=
+        b=o3KbLzhXXD39EX7oHGgFyDE3xoqlr+BWDX8QhnmkJdRFmv8Lp2HNq5hS4Qmc6d8PX
+         aPqmkkqRurWbe7YvZDv5Xk4k9uG1A4z2byNdrm8EJclF4LLUVeGEk7uZbBZsCWxqVU
+         b/GijwFhAjMLKatdzmJajKrW6cSixFUgQN/DB4JI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Halil Pasic <pasic@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 69/91] s390/dma: provide proper ARCH_ZONE_DMA_BITS value
-Date:   Wed, 14 Aug 2019 19:01:32 +0200
-Message-Id: <20190814165752.562527266@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vaibhav Rustagi <vaibhavrustagi@google.com>,
+        Alistair Delva <adelva@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Manoj Gupta <manojgupta@google.com>
+Subject: [PATCH 4.19 71/91] x86/purgatory: Do not use __builtin_memcpy and __builtin_memset
+Date:   Wed, 14 Aug 2019 19:01:34 +0200
+Message-Id: <20190814165752.710198889@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -61,38 +63,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1a2dcff881059dedc14fafc8a442664c8dbd60f1 ]
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-On s390 ZONE_DMA is up to 2G, i.e. ARCH_ZONE_DMA_BITS should be 31 bits.
-The current value is 24 and makes __dma_direct_alloc_pages() take a
-wrong turn first (but __dma_direct_alloc_pages() recovers then).
+commit 4ce97317f41d38584fb93578e922fcd19e535f5b upstream.
 
-Let's correct ARCH_ZONE_DMA_BITS value and avoid wrong turns.
+Implementing memcpy and memset in terms of __builtin_memcpy and
+__builtin_memset is problematic.
 
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Reported-by: Petr Tesarik <ptesarik@suse.cz>
-Fixes: c61e9637340e ("dma-direct: add support for allocation from ZONE_DMA and ZONE_DMA32")
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+GCC at -O2 will replace calls to the builtins with calls to memcpy and
+memset (but will generate an inline implementation at -Os).  Clang will
+replace the builtins with these calls regardless of optimization level.
+$ llvm-objdump -dr arch/x86/purgatory/string.o | tail
+
+0000000000000339 memcpy:
+     339: 48 b8 00 00 00 00 00 00 00 00 movabsq $0, %rax
+                000000000000033b:  R_X86_64_64  memcpy
+     343: ff e0                         jmpq    *%rax
+
+0000000000000345 memset:
+     345: 48 b8 00 00 00 00 00 00 00 00 movabsq $0, %rax
+                0000000000000347:  R_X86_64_64  memset
+     34f: ff e0
+
+Such code results in infinite recursion at runtime. This is observed
+when doing kexec.
+
+Instead, reuse an implementation from arch/x86/boot/compressed/string.c.
+This requires to implement a stub function for warn(). Also, Clang may
+lower memcmp's that compare against 0 to bcmp's, so add a small definition,
+too. See also: commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
+
+Fixes: 8fc5b4d4121c ("purgatory: core purgatory functionality")
+Reported-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
+Debugged-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
+Debugged-by: Manoj Gupta <manojgupta@google.com>
+Suggested-by: Alistair Delva <adelva@google.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
+Cc: stable@vger.kernel.org
+Link: https://bugs.chromium.org/p/chromium/issues/detail?id=984056
+Link: https://lkml.kernel.org/r/20190807221539.94583-1-ndesaulniers@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/s390/include/asm/page.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/boot/string.c         |    8 ++++++++
+ arch/x86/purgatory/Makefile    |    3 +++
+ arch/x86/purgatory/purgatory.c |    6 ++++++
+ arch/x86/purgatory/string.c    |   25 -------------------------
+ 4 files changed, 17 insertions(+), 25 deletions(-)
 
-diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
-index 41e3908b397f8..0d753291c43c0 100644
---- a/arch/s390/include/asm/page.h
-+++ b/arch/s390/include/asm/page.h
-@@ -176,6 +176,8 @@ static inline int devmem_is_allowed(unsigned long pfn)
- #define VM_DATA_DEFAULT_FLAGS	(VM_READ | VM_WRITE | \
- 				 VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
+--- a/arch/x86/boot/string.c
++++ b/arch/x86/boot/string.c
+@@ -34,6 +34,14 @@ int memcmp(const void *s1, const void *s
+ 	return diff;
+ }
  
-+#define ARCH_ZONE_DMA_BITS	31
++/*
++ * Clang may lower `memcmp == 0` to `bcmp == 0`.
++ */
++int bcmp(const void *s1, const void *s2, size_t len)
++{
++	return memcmp(s1, s2, len);
++}
 +
- #include <asm-generic/memory_model.h>
- #include <asm-generic/getorder.h>
+ int strcmp(const char *str1, const char *str2)
+ {
+ 	const unsigned char *s1 = (const unsigned char *)str1;
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -6,6 +6,9 @@ purgatory-y := purgatory.o stack.o setup
+ targets += $(purgatory-y)
+ PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
  
--- 
-2.20.1
-
++$(obj)/string.o: $(srctree)/arch/x86/boot/compressed/string.c FORCE
++	$(call if_changed_rule,cc_o_c)
++
+ $(obj)/sha256.o: $(srctree)/lib/sha256.c FORCE
+ 	$(call if_changed_rule,cc_o_c)
+ 
+--- a/arch/x86/purgatory/purgatory.c
++++ b/arch/x86/purgatory/purgatory.c
+@@ -70,3 +70,9 @@ void purgatory(void)
+ 	}
+ 	copy_backup_region();
+ }
++
++/*
++ * Defined in order to reuse memcpy() and memset() from
++ * arch/x86/boot/compressed/string.c
++ */
++void warn(const char *msg) {}
+--- a/arch/x86/purgatory/string.c
++++ /dev/null
+@@ -1,25 +0,0 @@
+-/*
+- * Simple string functions.
+- *
+- * Copyright (C) 2014 Red Hat Inc.
+- *
+- * Author:
+- *       Vivek Goyal <vgoyal@redhat.com>
+- *
+- * This source code is licensed under the GNU General Public License,
+- * Version 2.  See the file COPYING for more details.
+- */
+-
+-#include <linux/types.h>
+-
+-#include "../boot/string.c"
+-
+-void *memcpy(void *dst, const void *src, size_t len)
+-{
+-	return __builtin_memcpy(dst, src, len);
+-}
+-
+-void *memset(void *dst, int c, size_t len)
+-{
+-	return __builtin_memset(dst, c, len);
+-}
 
 
