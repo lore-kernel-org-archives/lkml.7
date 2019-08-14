@@ -2,285 +2,150 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DBBC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121D0C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B61A02084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4085204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfHNKh7 (ORCPT
+        id S1726770AbfHNKlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:37:59 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57996 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726166AbfHNKht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:37:49 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 31B2095A4597CCF664B3;
-        Wed, 14 Aug 2019 18:37:47 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 14 Aug
- 2019 18:37:37 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>, Pavel Machek <pavel@denx.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, <linux-fsdevel@vger.kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v2 1/3] staging: erofs: introduce EFSCORRUPTED and more logs
-Date:   Wed, 14 Aug 2019 18:37:03 +0800
-Message-ID: <20190814103705.60698-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+        Wed, 14 Aug 2019 06:41:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:51806 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfHNKlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:41:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC16A28;
+        Wed, 14 Aug 2019 03:41:38 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0BE723F706;
+        Wed, 14 Aug 2019 03:41:36 -0700 (PDT)
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ak@linux.intel.com, akpm@linux-foundation.org,
+        bigeasy@linutronix.de, bp@suse.de, catalin.marinas@arm.com,
+        davem@davemloft.net, hch@lst.de, kan.liang@intel.com,
+        mark.rutland@arm.com, mingo@kernel.org, peterz@infradead.org,
+        riel@surriel.com, will@kernel.org
+Subject: [PATCH 0/9] kthread detection cleanup
+Date:   Wed, 14 Aug 2019 11:41:22 +0100
+Message-Id: <20190814104131.20190-1-mark.rutland@arm.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously, EROFS uses EIO to indicate that filesystem
-is corrupted as well. However, as Pavel said [1], other
-filesystems tend to use EUCLEAN(EFSCORRUPTED) instead,
-let's follow what others do right now.
+A reasonable amount of kernel code looks at task_struct::mm to determine
+whether a thread is a kthread or a real user task. This isn't quite right,
+since kthreads can have a non-NULL mm when calling use_mm().
 
-Also, add some more prints to the syslog.
+The correct way to check whether a task is a kthread is to check whether
+PF_KTHREAD is set in task_struct::flags, but doing so is a bit unwieldy.
 
-[1] https://lore.kernel.org/lkml/20190813114821.GB11559@amd/
+To make this a bit nicer, this series adds a new is_kthread(tsk) helper,
+converts existing code to make use of it, and fixes up a number of erroneous
+checks of current->mm.  Hopefully this will push people to use the right
+approach in future.
 
-Suggested-by: Pavel Machek <pavel@denx.de>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
-change log from v1:
- - update the commit message;
+I'm sure there are other instances in the kernel tree where we don't check this
+correctly. In this series I'm just trying to fix the instances I'm reasonably
+confident are incorrect.
 
-This patchset has dependency on the previous patchset yesterday
- https://lore.kernel.org/lkml/20190813023054.73126-1-gaoxiang25@huawei.com/
+This series is based on v5.3-rc3, and I've pushed it out to my
+sched/kthread-cleanup branch on kernel.org [1,2].
 
 Thanks,
-Gao Xiang
+Mark.
 
- drivers/staging/erofs/data.c     |  6 ++++--
- drivers/staging/erofs/dir.c      | 15 ++++++++-------
- drivers/staging/erofs/inode.c    | 17 ++++++++++++-----
- drivers/staging/erofs/internal.h |  2 ++
- drivers/staging/erofs/namei.c    |  6 ++++--
- drivers/staging/erofs/xattr.c    |  5 +++--
- drivers/staging/erofs/zmap.c     |  5 +++--
- 7 files changed, 36 insertions(+), 20 deletions(-)
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git sched/kthread-cleanup
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=sched/kthread-cleanup
 
-diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
-index 4cdb743c8b8d..72c4b4c5296b 100644
---- a/drivers/staging/erofs/data.c
-+++ b/drivers/staging/erofs/data.c
-@@ -143,10 +143,12 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
- 			vi->xattr_isize + erofs_blkoff(map->m_la);
- 		map->m_plen = inode->i_size - offset;
- 
--		/* inline data should locate in one meta block */
-+		/* inline data should be located in one meta block */
- 		if (erofs_blkoff(map->m_pa) + map->m_plen > PAGE_SIZE) {
-+			errln("inline data cross block boundary @ nid %llu",
-+			      vi->nid);
- 			DBG_BUGON(1);
--			err = -EIO;
-+			err = -EFSCORRUPTED;
- 			goto err_out;
- 		}
- 
-diff --git a/drivers/staging/erofs/dir.c b/drivers/staging/erofs/dir.c
-index 2fbfc4935077..01efc96e1212 100644
---- a/drivers/staging/erofs/dir.c
-+++ b/drivers/staging/erofs/dir.c
-@@ -34,7 +34,7 @@ static void debug_one_dentry(unsigned char d_type, const char *de_name,
- #endif
- }
- 
--static int erofs_fill_dentries(struct dir_context *ctx,
-+static int erofs_fill_dentries(struct inode *dir, struct dir_context *ctx,
- 			       void *dentry_blk, unsigned int *ofs,
- 			       unsigned int nameoff, unsigned int maxsize)
- {
-@@ -63,8 +63,9 @@ static int erofs_fill_dentries(struct dir_context *ctx,
- 		/* a corrupted entry is found */
- 		if (unlikely(nameoff + de_namelen > maxsize ||
- 			     de_namelen > EROFS_NAME_LEN)) {
-+			errln("bogus dirent @ nid %llu", EROFS_V(dir)->nid);
- 			DBG_BUGON(1);
--			return -EIO;
-+			return -EFSCORRUPTED;
- 		}
- 
- 		debug_one_dentry(d_type, de_name, de_namelen);
-@@ -104,10 +105,9 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
- 
- 		if (unlikely(nameoff < sizeof(struct erofs_dirent) ||
- 			     nameoff >= PAGE_SIZE)) {
--			errln("%s, invalid de[0].nameoff %u",
--			      __func__, nameoff);
--
--			err = -EIO;
-+			errln("%s, invalid de[0].nameoff %u @ nid %llu",
-+			      __func__, nameoff, EROFS_V(dir)->nid);
-+			err = -EFSCORRUPTED;
- 			goto skip_this;
- 		}
- 
-@@ -123,7 +123,8 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
- 				goto skip_this;
- 		}
- 
--		err = erofs_fill_dentries(ctx, de, &ofs, nameoff, maxsize);
-+		err = erofs_fill_dentries(dir, ctx, de, &ofs,
-+					  nameoff, maxsize);
- skip_this:
- 		kunmap(dentry_page);
- 
-diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-index 286729143365..461fd4213ce7 100644
---- a/drivers/staging/erofs/inode.c
-+++ b/drivers/staging/erofs/inode.c
-@@ -43,7 +43,7 @@ static int read_inode(struct inode *inode, void *data)
- 		else if (S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode))
- 			inode->i_rdev = 0;
- 		else
--			return -EIO;
-+			goto bogusimode;
- 
- 		i_uid_write(inode, le32_to_cpu(v2->i_uid));
- 		i_gid_write(inode, le32_to_cpu(v2->i_gid));
-@@ -76,7 +76,7 @@ static int read_inode(struct inode *inode, void *data)
- 		else if (S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode))
- 			inode->i_rdev = 0;
- 		else
--			return -EIO;
-+			goto bogusimode;
- 
- 		i_uid_write(inode, le16_to_cpu(v1->i_uid));
- 		i_gid_write(inode, le16_to_cpu(v1->i_gid));
-@@ -104,6 +104,11 @@ static int read_inode(struct inode *inode, void *data)
- 	else
- 		inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
- 	return 0;
-+
-+bogusimode:
-+	errln("bogus i_mode (%o) @ nid %llu", inode->i_mode, vi->nid);
-+	DBG_BUGON(1);
-+	return -EFSCORRUPTED;
- }
- 
- /*
-@@ -137,9 +142,11 @@ static int fill_inline_data(struct inode *inode, void *data,
- 
- 		/* inline symlink data shouldn't across page boundary as well */
- 		if (unlikely(m_pofs + inode->i_size > PAGE_SIZE)) {
--			DBG_BUGON(1);
- 			kfree(lnk);
--			return -EIO;
-+			errln("inline data cross block boundary @ nid %llu",
-+			      vi->nid);
-+			DBG_BUGON(1);
-+			return -EFSCORRUPTED;
- 		}
- 
- 		/* get in-page inline data */
-@@ -200,7 +207,7 @@ static int fill_inode(struct inode *inode, int isdir)
- 			init_special_inode(inode, inode->i_mode, inode->i_rdev);
- 			goto out_unlock;
- 		} else {
--			err = -EIO;
-+			err = -EFSCORRUPTED;
- 			goto out_unlock;
- 		}
- 
-diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
-index 4ce5991c381f..12f737cbc0c0 100644
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -548,5 +548,7 @@ static inline int z_erofs_init_zip_subsystem(void) { return 0; }
- static inline void z_erofs_exit_zip_subsystem(void) {}
- #endif	/* !CONFIG_EROFS_FS_ZIP */
- 
-+#define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
-+
- #endif	/* __EROFS_INTERNAL_H */
- 
-diff --git a/drivers/staging/erofs/namei.c b/drivers/staging/erofs/namei.c
-index 8e06526da023..c0963f5a2d22 100644
---- a/drivers/staging/erofs/namei.c
-+++ b/drivers/staging/erofs/namei.c
-@@ -116,10 +116,12 @@ static struct page *find_target_block_classic(struct inode *dir,
- 			struct erofs_qstr dname;
- 
- 			if (unlikely(!ndirents)) {
--				DBG_BUGON(1);
- 				kunmap_atomic(de);
- 				put_page(page);
--				page = ERR_PTR(-EIO);
-+				errln("corrupted dir block %d @ nid %llu",
-+				      mid, EROFS_V(dir)->nid);
-+				DBG_BUGON(1);
-+				page = ERR_PTR(-EFSCORRUPTED);
- 				goto out;
- 			}
- 
-diff --git a/drivers/staging/erofs/xattr.c b/drivers/staging/erofs/xattr.c
-index 289c7850ec96..c5bfc9be412f 100644
---- a/drivers/staging/erofs/xattr.c
-+++ b/drivers/staging/erofs/xattr.c
-@@ -75,8 +75,9 @@ static int init_inode_xattrs(struct inode *inode)
- 		goto out_unlock;
- 	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
- 		if (unlikely(vi->xattr_isize)) {
-+			errln("bogus xattr ibody @ nid %llu", vi->nid);
- 			DBG_BUGON(1);
--			ret = -EIO;
-+			ret = -EFSCORRUPTED;
- 			goto out_unlock;	/* xattr ondisk layout error */
- 		}
- 		ret = -ENOATTR;
-@@ -237,7 +238,7 @@ static int xattr_foreach(struct xattr_iter *it,
- 		/* xattr on-disk corruption: xattr entry beyond xattr_isize */
- 		if (unlikely(*tlimit < entry_sz)) {
- 			DBG_BUGON(1);
--			return -EIO;
-+			return -EFSCORRUPTED;
- 		}
- 		*tlimit -= entry_sz;
- 	}
-diff --git a/drivers/staging/erofs/zmap.c b/drivers/staging/erofs/zmap.c
-index aeed5c674d9e..16b3625604f4 100644
---- a/drivers/staging/erofs/zmap.c
-+++ b/drivers/staging/erofs/zmap.c
-@@ -338,8 +338,9 @@ static int vle_extent_lookback(struct z_erofs_maprecorder *m,
- 	int err;
- 
- 	if (lcn < lookback_distance) {
-+		errln("bogus lookback distance @ nid %llu", vi->nid);
- 		DBG_BUGON(1);
--		return -EIO;
-+		return -EFSCORRUPTED;
- 	}
- 
- 	/* load extent head logical cluster if needed */
-@@ -419,7 +420,7 @@ int z_erofs_map_blocks_iter(struct inode *inode,
- 		if (unlikely(!m.lcn)) {
- 			errln("invalid logical cluster 0 at nid %llu",
- 			      vi->nid);
--			err = -EIO;
-+			err = -EFSCORRUPTED;
- 			goto unmap_out;
- 		}
- 		end = (m.lcn << lclusterbits) | m.clusterofs;
+Mark Rutland (9):
+  sched/core: add is_kthread() helper
+  sched: treewide: use is_kthread()
+  kmemleak: correctly check for kthreads
+  arm/perf: correctly check for kthreads
+  arm64: correctly check for ktrheads
+  sparc/perf: correctly check for kthreads
+  x86/lbr: correctly check for kthreads
+  x86/fpu: correctly check for kthreads
+  samples/kretprobe: correctly check for kthreads
+
+ arch/alpha/kernel/process.c         |  2 +-
+ arch/arc/kernel/process.c           |  2 +-
+ arch/arm/kernel/perf_callchain.c    |  2 +-
+ arch/arm/kernel/process.c           |  2 +-
+ arch/arm/mm/init.c                  |  2 +-
+ arch/arm64/kernel/process.c         |  6 +++---
+ arch/c6x/kernel/process.c           |  2 +-
+ arch/csky/kernel/process.c          |  2 +-
+ arch/h8300/kernel/process.c         |  2 +-
+ arch/hexagon/kernel/process.c       |  2 +-
+ arch/ia64/kernel/process.c          |  2 +-
+ arch/m68k/kernel/process.c          |  2 +-
+ arch/microblaze/kernel/process.c    |  2 +-
+ arch/mips/kernel/process.c          |  4 ++--
+ arch/nds32/kernel/process.c         |  4 ++--
+ arch/nios2/kernel/process.c         |  2 +-
+ arch/openrisc/kernel/process.c      |  2 +-
+ arch/parisc/kernel/process.c        |  2 +-
+ arch/powerpc/kernel/process.c       |  2 +-
+ arch/riscv/kernel/process.c         |  2 +-
+ arch/s390/kernel/process.c          |  2 +-
+ arch/sh/kernel/process_32.c         |  2 +-
+ arch/sh/kernel/process_64.c         |  2 +-
+ arch/sparc/kernel/perf_event.c      |  2 +-
+ arch/sparc/kernel/process_32.c      |  2 +-
+ arch/sparc/kernel/process_64.c      |  2 +-
+ arch/um/kernel/process.c            |  2 +-
+ arch/unicore32/kernel/process.c     |  2 +-
+ arch/x86/events/intel/lbr.c         |  2 +-
+ arch/x86/include/asm/fpu/internal.h |  2 +-
+ arch/x86/kernel/fpu/core.c          |  2 +-
+ arch/x86/kernel/process_32.c        |  2 +-
+ arch/x86/kernel/process_64.c        |  2 +-
+ arch/xtensa/kernel/process.c        |  2 +-
+ block/blk-cgroup.c                  |  2 +-
+ drivers/tty/sysrq.c                 |  2 +-
+ fs/coredump.c                       |  2 +-
+ fs/file_table.c                     |  4 ++--
+ fs/namespace.c                      |  2 +-
+ fs/proc/base.c                      |  4 ++--
+ include/linux/cgroup.h              |  2 +-
+ include/linux/sched.h               | 13 ++++++++++++-
+ kernel/cgroup/freezer.c             |  4 ++--
+ kernel/events/core.c                |  2 +-
+ kernel/exit.c                       |  2 +-
+ kernel/fork.c                       |  6 +++---
+ kernel/freezer.c                    |  4 ++--
+ kernel/futex.c                      |  2 +-
+ kernel/kthread.c                    |  6 +++---
+ kernel/livepatch/transition.c       |  2 +-
+ kernel/ptrace.c                     |  2 +-
+ kernel/sched/core.c                 |  8 ++++----
+ kernel/sched/idle.c                 |  2 +-
+ kernel/sched/wait.c                 |  2 +-
+ kernel/signal.c                     |  2 +-
+ kernel/stacktrace.c                 |  2 +-
+ lib/is_single_threaded.c            |  2 +-
+ mm/kmemleak.c                       |  6 +++---
+ mm/memcontrol.c                     |  2 +-
+ mm/oom_kill.c                       |  4 ++--
+ mm/page_alloc.c                     |  2 +-
+ mm/vmacache.c                       |  2 +-
+ mm/vmscan.c                         |  2 +-
+ samples/kprobes/kretprobe_example.c |  2 +-
+ security/smack/smack_access.c       |  2 +-
+ security/smack/smack_lsm.c          |  4 ++--
+ security/yama/yama_lsm.c            |  2 +-
+ 67 files changed, 97 insertions(+), 86 deletions(-)
+
 -- 
-2.17.1
+2.11.0
 
