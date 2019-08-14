@@ -2,208 +2,137 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F79DC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D29B8C32757
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 379F620843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9E820843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:49:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="H9qn7WjE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfHNJsJ (ORCPT
+        id S1726699AbfHNJtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:48:09 -0400
-Received: from mail-oi1-f198.google.com ([209.85.167.198]:38090 "EHLO
-        mail-oi1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfHNJsG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:48:06 -0400
-Received: by mail-oi1-f198.google.com with SMTP id d63so1787508oib.5
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 02:48:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=XV02cgM0DiaLJPBZT/dcL2UEgRbdd37HvTZKiTSvZao=;
-        b=KQ20MdwcGRFTzEpZ1DA80iPDpN/a/MCAVLgtHogiIe9DadsRRXu+YQXnyySAkF5nYD
-         sRyELvd3gBIsHtTGbV4rryrjy8WSFMMhiTPBuBgoZm1hnWGjhc2XB49gpj9GtK+SF2fI
-         TzSd90CWuj1rQvcuOMuC1iIBOdsKtRL5T/udvjTkKJD9njjix3uU/cwA73VW9/6z6Zlk
-         OeiDrLbaq5KQ8tmRk/8jtUb1akLBV2n4NJh0MCnstqGW0+31CntjUJw4JmBIBXdOJylR
-         ZPl4pJfKz7lK0c543MQR6Dlw3k90Vt/MbuKoOtzanpLmQfKH/6oM3xP+yhDaiZ8eKBNG
-         QfgA==
-X-Gm-Message-State: APjAAAVofMsLxa+wa6t71ALB7Vy3iNm6Eq2urmSMc4mYLfG2/cm1SD4Z
-        Tdzb9HJcoVDLAxbld1Fkckyi8R43fLb0RTgnJizLQs6qGwTm
-X-Google-Smtp-Source: APXvYqwtNHvsouv3Ix3nM4wBkrtyFA3/tPsxw9Nhrd9lTSoNdWSy0FQVn0x4hxKROq5CgFY+BMIlNHAp4r7LuCJXb0+jMiaqNgNk
+        Wed, 14 Aug 2019 05:49:33 -0400
+Received: from mail-eopbgr60085.outbound.protection.outlook.com ([40.107.6.85]:42150
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725280AbfHNJtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 05:49:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lQn3jyUnFvezQgC5EGFX4MXEUJHPryr/ZZuySrDlFcT9ynccvLYRgi7UUdjRsE7tqXgulEa0UhLW6L2fmTBxOhijuWs892hb40xejccOgGVQuqaYfzhqaEtlO0pEzDZyesIvpC0ZH/wQ2S/VsHcvjsPl1gnjAbmswVWZ4wL8OEDaj24mfN5HGGH3MvOaa3HAuGh7hGRcVC6+0Z02lAgXgPYnTlqe+p4XpTDSn+YFJ8hVS7k7tId5h3xAlO1gRovqm7JW0Lk0OQU+Kymo++pjPEsAryX8BJKs6a1dnu1arW6p87LnpbM1kRqnLpHxkn0909m4eaWp38py81RWoGZIBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zRd/psKjwplic+EWLadb0xRsxO4dZLXyZ+s3ZTAi2eg=;
+ b=eRKAv1CYzYKAVmpjWskQjN7OTc2yvGUMt+sWArhtveRfUe4gEGMfafNPYe4JWwLjNSkfND3tstV3x+eC32AK/9fBtpI29aNRjTCkSOSVQP9ojPemU+T31RzWzqdpY4idCiT4Vwa4QZ0NcbYH6tbHfKtxcABwIdhYeDsZSy7zE2aOObyJqdVGP/P5EcKuokFn5OniZsCJsiuulqmSzYmjwualyjjxkRTDrBoeWOYYQdQd8rdw39x8PrR7fmXFyf3KRdr+b1IkxnKSgPVku3l/JeX7k1XIUwG1Li8OKXMjDxNIrZd/Uwk+shMpfgvzMJHmdWyeP49jpZU3YASm5JhBVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zRd/psKjwplic+EWLadb0xRsxO4dZLXyZ+s3ZTAi2eg=;
+ b=H9qn7WjEcqw29PHsf4ldWQTbh2Dyoj2/Mf956qQst0cx7nId1g4O4XW9xRRd3r9FIOU3mEgwoufknzJf7/i8lFRYz5+Np73dCTYQehnvb7Hy66s0nJH59AUqZurOqmk9m//0dZQpD/raip9hWdJJxYZbPCjdb76fbDDuKI/lmDs=
+Received: from DB7PR04MB5195.eurprd04.prod.outlook.com (20.176.236.27) by
+ DB7PR04MB4700.eurprd04.prod.outlook.com (20.176.233.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.13; Wed, 14 Aug 2019 09:49:29 +0000
+Received: from DB7PR04MB5195.eurprd04.prod.outlook.com
+ ([fe80::e854:ffa9:a285:88a4]) by DB7PR04MB5195.eurprd04.prod.outlook.com
+ ([fe80::e854:ffa9:a285:88a4%5]) with mapi id 15.20.2157.022; Wed, 14 Aug 2019
+ 09:49:29 +0000
+From:   Wen He <wen.he_1@nxp.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Leo Li <leoyang.li@nxp.com>,
+        "liviu.dudau@arm.com" <liviu.dudau@arm.com>
+Subject: RE: [EXT] Re: [v1 2/3] dt/bindings: clk: Add DT bindings for LS1028A
+ Display output interface
+Thread-Topic: [EXT] Re: [v1 2/3] dt/bindings: clk: Add DT bindings for LS1028A
+ Display output interface
+Thread-Index: AQHVUPZmmHsvouKPJkueVWpL5KhirKb5aFSAgAD9yfA=
+Date:   Wed, 14 Aug 2019 09:49:29 +0000
+Message-ID: <DB7PR04MB51950A726D59F17EE269F2F3E2AD0@DB7PR04MB5195.eurprd04.prod.outlook.com>
+References: <20190812100216.34459-1-wen.he_1@nxp.com>
+ <20190813183005.EC13020665@mail.kernel.org>
+In-Reply-To: <20190813183005.EC13020665@mail.kernel.org>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=wen.he_1@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6c28a252-6c56-4cbc-e367-08d7209cb3a2
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4700;
+x-ms-traffictypediagnostic: DB7PR04MB4700:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB4700D0FFE0E582F9E56DBB80E2AD0@DB7PR04MB4700.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 01294F875B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(396003)(366004)(136003)(13464003)(189003)(199004)(76116006)(186003)(66476007)(81156014)(99286004)(446003)(66946007)(102836004)(66556008)(256004)(6506007)(53546011)(7696005)(26005)(9686003)(8936002)(64756008)(2906002)(14444005)(3846002)(76176011)(33656002)(81166006)(66446008)(2501003)(6116002)(476003)(14454004)(11346002)(478600001)(486006)(55016002)(52536014)(110136005)(6436002)(66066001)(7736002)(54906003)(71190400001)(71200400001)(74316002)(53936002)(316002)(305945005)(5660300002)(2201001)(86362001)(6246003)(8676002)(4326008)(25786009)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4700;H:DB7PR04MB5195.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: K8IcF9Kz6ZcsOSRXi9JE2lWloEWXLQ4Tu3hZWCp9qsTyw61rza/hSn+HcHwaD430zJaUSLxwFrkP+Bw0IQ6Jh/E/H/z/wo28kMojGZyBEinlZNMmpp8TZ/Dkv1VhWKDZDuHGrrg3BB5KIe94j0ZEzRBVHT4B3RV5DRAA2uZd0ajtMZL8G9/l9ytwJUd7KQNK4QNK4tPrXACfLXqMPPtC5hc2AowgWMkfWq+0y4VSShoXAaBF8OFkqpAcTKAceR+I0uJYL0ABp4xIkD013qI79fLLF84DXjLtIwlMC6VcYnME4rcR168AZ6LFx/iUQqt2FoMicL469znNwekF6fi3CMh/ri+Prtt14lpEQmeaxvz2B1fgsBCqQ0gbBWb7XjcCXvpGGCzfry38NC0x+ErhZQwgBKdaH7KLefYTHNpsO7U=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a02:b88b:: with SMTP id p11mr2437470jam.144.1565776085760;
- Wed, 14 Aug 2019 02:48:05 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 02:48:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000063c050059010a7d4@google.com>
-Subject: INFO: task hung in fuse_lookup (3)
-From:   syzbot <syzbot+b64df836ad08c8e31a47@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        miklos@szeredi.hu, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c28a252-6c56-4cbc-e367-08d7209cb3a2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 09:49:29.5878
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8wdMlI0NuOBpFMJfWwB4WcR+m7rD9o0OfFxtTnhvbCVWcla2/cjtBcBxzpWgW9Fc3AClDubhOH33WWgd4ZCRzw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    ee1c7bd3 Merge tag 'tpmdd-next-20190813' of git://git.infr..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=153f3422600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3ff364e429585cf2
-dashboard link: https://syzkaller.appspot.com/bug?extid=b64df836ad08c8e31a47
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=176c385a600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12482e86600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b64df836ad08c8e31a47@syzkaller.appspotmail.com
-
-INFO: task init:1 blocked for more than 143 seconds.
-       Not tainted 5.3.0-rc4+ #101
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-init            D23792     1      0 0x00000000
-Call Trace:
-  context_switch kernel/sched/core.c:3254 [inline]
-  __schedule+0x755/0x1580 kernel/sched/core.c:3880
-  schedule+0xa8/0x270 kernel/sched/core.c:3944
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4003
-  __mutex_lock_common kernel/locking/mutex.c:1007 [inline]
-  __mutex_lock+0x7b0/0x13c0 kernel/locking/mutex.c:1077
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1092
-  fuse_lock_inode+0xba/0xf0 fs/fuse/inode.c:362
-  fuse_lookup+0x8e/0x360 fs/fuse/dir.c:335
-  __lookup_slow+0x279/0x500 fs/namei.c:1669
-  lookup_slow+0x58/0x80 fs/namei.c:1686
-  walk_component+0x747/0x2000 fs/namei.c:1808
-  link_path_walk.part.0+0x9a4/0x1340 fs/namei.c:2139
-  link_path_walk fs/namei.c:2267 [inline]
-  path_lookupat.isra.0+0xe3/0x8d0 fs/namei.c:2315
-  filename_lookup+0x1b0/0x410 fs/namei.c:2346
-  user_path_at_empty+0x43/0x50 fs/namei.c:2606
-  user_path_at include/linux/namei.h:60 [inline]
-  vfs_statx+0x129/0x200 fs/stat.c:187
-  vfs_stat include/linux/fs.h:3188 [inline]
-  __do_sys_newstat+0xa4/0x130 fs/stat.c:341
-  __se_sys_newstat fs/stat.c:337 [inline]
-  __x64_sys_newstat+0x54/0x80 fs/stat.c:337
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7eff41718c65
-Code: 00 00 00 e8 5d 01 00 00 48 83 c4 18 c3 90 90 90 90 90 90 90 90 83 ff  
-01 48 89 f0 77 18 48 89 c7 48 89 d6 b8 04 00 00 00 0f 05 <48> 3d 00 f0 ff  
-ff 77 17 f3 c3 90 48 8b 05 a1 51 2b 00 64 c7 00 16
-RSP: 002b:00007fff34a35eb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000004
-RAX: ffffffffffffffda RBX: 00007fff34a360f0 RCX: 00007eff41718c65
-RDX: 00007fff34a360f0 RSI: 00007fff34a360f0 RDI: 0000000000407545
-RBP: 0000000000000000 R08: 000000000159cb60 R09: 0000000000000001
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00007fff34a365f0 R14: 0000000000000000 R15: 0000000000000000
-INFO: task syz-executor205:11118 blocked for more than 143 seconds.
-       Not tainted 5.3.0-rc4+ #101
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor205 D27656 11118  11116 0x00000000
-Call Trace:
-  context_switch kernel/sched/core.c:3254 [inline]
-  __schedule+0x755/0x1580 kernel/sched/core.c:3880
-  schedule+0xa8/0x270 kernel/sched/core.c:3944
-  d_wait_lookup fs/dcache.c:2506 [inline]
-  d_alloc_parallel+0x12cd/0x1c30 fs/dcache.c:2588
-  __lookup_slow+0x1ab/0x500 fs/namei.c:1652
-  lookup_slow+0x58/0x80 fs/namei.c:1686
-  walk_component+0x747/0x2000 fs/namei.c:1808
-  link_path_walk.part.0+0x9a4/0x1340 fs/namei.c:2139
-  link_path_walk fs/namei.c:2070 [inline]
-  path_openat+0x202/0x4630 fs/namei.c:3532
-  do_filp_open+0x1a1/0x280 fs/namei.c:3563
-  do_sys_open+0x3fe/0x5d0 fs/open.c:1089
-  __do_sys_open fs/open.c:1107 [inline]
-  __se_sys_open fs/open.c:1102 [inline]
-  __x64_sys_open+0x7e/0xc0 fs/open.c:1102
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x444ca0
-Code: Bad RIP value.
-RSP: 002b:00007ffec1436ed0 EFLAGS: 00000202 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000444ca0
-RDX: 0000000000000000 RSI: 0000000000090800 RDI: 00000000004ae91e
-RBP: 0000000000002b72 R08: 0000000000002b6e R09: 0000555556c39880
-R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffec1437100
-R13: 00000000004075d0 R14: 0000000000000000 R15: 0000000000000000
-INFO: task syz-executor205:11122 blocked for more than 144 seconds.
-       Not tainted 5.3.0-rc4+ #101
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor205 D28336 11122  11118 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:3254 [inline]
-  __schedule+0x755/0x1580 kernel/sched/core.c:3880
-  schedule+0xa8/0x270 kernel/sched/core.c:3944
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4003
-  __mutex_lock_common kernel/locking/mutex.c:1007 [inline]
-  __mutex_lock+0x7b0/0x13c0 kernel/locking/mutex.c:1077
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1092
-  fuse_lock_inode+0xba/0xf0 fs/fuse/inode.c:362
-  fuse_lookup+0x8e/0x360 fs/fuse/dir.c:335
-  __lookup_slow+0x279/0x500 fs/namei.c:1669
-  lookup_slow+0x58/0x80 fs/namei.c:1686
-  walk_component+0x747/0x2000 fs/namei.c:1808
-  link_path_walk.part.0+0x9a4/0x1340 fs/namei.c:2139
-  link_path_walk fs/namei.c:2070 [inline]
-  path_openat+0x202/0x4630 fs/namei.c:3532
-  do_filp_open+0x1a1/0x280 fs/namei.c:3563
-  do_sys_open+0x3fe/0x5d0 fs/open.c:1089
-  __do_sys_open fs/open.c:1107 [inline]
-  __se_sys_open fs/open.c:1102 [inline]
-  __x64_sys_open+0x7e/0xc0 fs/open.c:1102
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x405810
-Code: 00 48 85 c0 75 e8 8b 15 2e 33 20 00 83 e2 fb 89 15 25 33 20 00 f7 c2  
-00 00 00 10 74 4b 48 8b 05 c6 30 20 00 48 85 c0 75 15 eb <31> 0f 1f 80 00  
-00 00 00 48 8b 80 c0 00 00 00 48 85 c0 74 18 83 78
-RSP: 002b:00007ffec1436bd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 00007ffec1436c04 RCX: 0000000000405810
-RDX: 00007ffec1436c0a RSI: 0000000000080001 RDI: 00000000004ae93c
-RBP: 00007ffec1436c00 R08: 0000000000000000 R09: 0000000000000004
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000407540
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-INFO: lockdep is turned off.
-NMI backtrace for cpu 0
-CPU: 0 PID: 1057 Comm: khungtaskd Not tainted 5.3.0-rc4+ #101
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
-  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
-  watchdog+0x9d0/0xef0 kernel/hung_task.c:289
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1 skipped: idling at native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RlcGhlbiBCb3lkIDxz
+Ym95ZEBrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE55bm0OOaciDE05pelIDI6MzANCj4gVG86IE1h
+cmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBNaWNoYWVsIFR1cnF1ZXR0ZQ0KPiA8
+bXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3Jn
+PjsgU2hhd24gR3VvDQo+IDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgV2VuIEhlIDx3ZW4uaGVfMUBu
+eHAuY29tPjsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWNsa0B2Z2VyLmtl
+cm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IExlbyBMaSA8
+bGVveWFuZy5saUBueHAuY29tPjsgbGl2aXUuZHVkYXVAYXJtLmNvbTsgV2VuIEhlDQo+IDx3ZW4u
+aGVfMUBueHAuY29tPg0KPiBTdWJqZWN0OiBbRVhUXSBSZTogW3YxIDIvM10gZHQvYmluZGluZ3M6
+IGNsazogQWRkIERUIGJpbmRpbmdzIGZvciBMUzEwMjhBDQo+IERpc3BsYXkgb3V0cHV0IGludGVy
+ZmFjZQ0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBRdW90aW5nIFdlbiBIZSAoMjAx
+OS0wOC0xMiAwMzowMjoxNikNCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Nsb2NrL2ZzbCxwbGxkaWcudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvY2xvY2svZnNsLHBsbGRpZy50eHQNCj4gPiBuZXcgZmlsZSBtb2Rl
+IDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uMjljNWE2MTE3ODA5DQo+ID4gLS0tIC9k
+ZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9j
+ay9mc2wscGxsZGlnLnR4dA0KPiA+IEBAIC0wLDAgKzEsMjYgQEANCj4gPiArTlhQIFFvcklRIExh
+eWVyc2NhcGUgTFMxMDI4QSBEaXNwbGF5IG91dHB1dCBpbnRlcmZhY2UgQ2xvY2sNCj4gPiArPT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0N
+Cj4gDQo+IENhbiB5b3UgY29udmVydCB0aGlzIHRvIFlBTUw/DQoNClN1cmUsIG5vIHByb2JsZW0u
+DQoNCj4gDQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICsgICAgLSBjb21w
+YXRpYmxlOiBzaGFsbCBjb250YWluICJmc2wsbHMxMDI4YS1wbGxkaWciDQo+ID4gKyAgICAtIHJl
+ZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBzaXplIG9mIHRoZSBibG9jayByZWdpc3RlcnMN
+Cj4gPiArICAgIC0gI2Nsb2NrLWNlbGxzOiBzaGFsbCBjb250YWluIDEuDQo+IA0KPiBBcyBJIHNh
+aWQgaW4gdGhlIHByZXZpb3VzIHBhdGNoLCB0aGlzIHNob3VsZCBwcm9iYWJseSBiZSAwLiBBbHNv
+LCBwbGVhc2Ugb3JkZXINCj4gdGhpcyBiZWZvcmUgdGhlIGRyaXZlciBpbiB0aGUgcGF0Y2ggc2Vy
+aWVzIGFuZCB0aHJlYWQgeW91ciBtZXNzYWdlcyBwbGVhc2UuIElmDQo+IHlvdSB1c2UgZ2l0LXNl
+bmQtZW1haWwgdGhpcyBpcyBkb25lIGZvciB5b3UgcHJldHR5IGVhc2lseS4NCg0KVW5kZXJzdGFu
+ZCwgV2lsbCBwcmVwYXJlIGFuZCBzZW5kIG5leHQgdmVyc2lvbiBwYXRjaC4NCg0KQmVzdCBSZWdh
+cmRzLA0KV2VuDQoNCj4gDQo+ID4gKyAgICAtIGNsb2NrczogYSBwaGFuZGxlICsgY2xvY2stc3Bl
+Y2lmaWVyIHBhaXJzLCBoZXJlIHNob3VsZCBiZQ0KPiA+ICsgICAgc3BlY2lmeSB0aGUgcmVmZXJl
+bmNlIGNsb2NrIG9mIHRoZSBzeXN0ZW0NCj4gPiArDQo+ID4gKw0K
