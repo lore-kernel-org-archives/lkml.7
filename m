@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4B5C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E21FC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B63220842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C94520842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749196;
-	bh=fG5gKSURpvl8cm1v+OZybGwKNiFssUS3aCFzr7Uketo=;
+	s=default; t=1565749200;
+	bh=DpTWWp8Ary8OwiXEHFFoQYSI7ZIAMWbVV11yN36G/EM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0oxV31bs2XYo1S2HD59PVGXwe/NHKhLvcIUxzXWB3jfNCIf7mMKDmBBYSag08aIVH
-	 f7bzzWLeIr+ky3//E2XXiFcj0ukmvhirZaQ2eU2oQN2nlp45Hii40NuqegwZ7MMJJO
-	 8D0F1syFVgHpndKaGuZCEfVZ+tNsRfqxM7QaTyk0=
+	b=HFNe5I3BBC+5tFLOgEnJB8jsMDhlJ6A+V/qUXQ+NgRuAg7kMPFf2+7R70XrYTWYOc
+	 urNq1tBQZ1LyeNrCbM48KOoVzKQjrJPDsPTQeo3gi4iR626vs12JNWGKh+b30Wgebe
+	 IvorHqOStk7WrGGifPLCcSAlHxFQ53xMRAtumwrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbfHNCTy (ORCPT
+        id S1729794AbfHNCTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:19:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50468 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:19:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727620AbfHNCTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:19:37 -0400
+        id S1729333AbfHNCTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:19:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D29862084D;
-        Wed, 14 Aug 2019 02:19:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94F452085A;
+        Wed, 14 Aug 2019 02:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749176;
-        bh=fG5gKSURpvl8cm1v+OZybGwKNiFssUS3aCFzr7Uketo=;
+        s=default; t=1565749170;
+        bh=DpTWWp8Ary8OwiXEHFFoQYSI7ZIAMWbVV11yN36G/EM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VDPiDtMhlWrIrG1TVscC5A7ZQNO5aFEFHj6FnSFoqUxlesYtXEKsiJ7ioy98F3ZRI
-         KDrZV1Trsok7RS7bVeol2Sjcuviv37ai38ngY66lPTNhKB3RMaojtRJmm7lJphFAKD
-         6lZkdl72LO18Ytg66cy6uJUrWJj0SwbSjNWYZS8Y=
+        b=tLlhZBIV1maSYn6Ractzc+lvEkqNGFuAyhyDeBHtNFX/eWN7k1UDeJoKDv8JodcYW
+         diiwxSAv93Px4Nx/3O7Rju0nNLVI5/vR42hqID2yVaJmSr0z4kfaKsEpasEIf6xJjG
+         9QgPyy+8YAFF1ZFuHqBqIoD4KX7L61iOtYoV8wsI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Deepak Rawat <drawat@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 40/44] drm/vmwgfx: fix memory leak when too many retries have occurred
-Date:   Tue, 13 Aug 2019 22:18:29 -0400
-Message-Id: <20190814021834.16662-40-sashal@kernel.org>
+Cc:     Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 35/44] net: hisilicon: fix hip04-xmit never return TX_BUSY
+Date:   Tue, 13 Aug 2019 22:18:24 -0400
+Message-Id: <20190814021834.16662-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021834.16662-1-sashal@kernel.org>
 References: <20190814021834.16662-1-sashal@kernel.org>
@@ -61,41 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
-[ Upstream commit 6b7c3b86f0b63134b2ab56508921a0853ffa687a ]
+[ Upstream commit f2243b82785942be519016067ee6c55a063bbfe2 ]
 
-Currently when too many retries have occurred there is a memory
-leak on the allocation for reply on the error return path. Fix
-this by kfree'ing reply before returning.
+TX_DESC_NUM is 256, in tx_count, the maximum value of
+mod(TX_DESC_NUM - 1) is 254, the variable "count" in
+the hip04_mac_start_xmit function is never equal to
+(TX_DESC_NUM - 1), so hip04_mac_start_xmit never
+return NETDEV_TX_BUSY.
 
-Addresses-Coverity: ("Resource leak")
-Fixes: a9cd9c044aa9 ("drm/vmwgfx: Add a check to handle host message failure")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Deepak Rawat <drawat@vmware.com>
-Signed-off-by: Deepak Rawat <drawat@vmware.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+tx_count is modified to mod(TX_DESC_NUM) so that
+the maximum value of tx_count can reach
+(TX_DESC_NUM - 1), then hip04_mac_start_xmit can reurn
+NETDEV_TX_BUSY.
+
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-index 97000996b8dc5..50cc060cc552a 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-@@ -300,8 +300,10 @@ static int vmw_recv_msg(struct rpc_channel *channel, void **msg,
- 		break;
- 	}
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index 60ef6d40e4896..b04fb82d7fa3e 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -185,7 +185,7 @@ struct hip04_priv {
  
--	if (retries == RETRIES)
-+	if (retries == RETRIES) {
-+		kfree(reply);
- 		return -EINVAL;
-+	}
+ static inline unsigned int tx_count(unsigned int head, unsigned int tail)
+ {
+-	return (head - tail) % (TX_DESC_NUM - 1);
++	return (head - tail) % TX_DESC_NUM;
+ }
  
- 	*msg_len = reply_len;
- 	*msg     = reply;
+ static void hip04_config_port(struct net_device *ndev, u32 speed, u32 duplex)
 -- 
 2.20.1
 
