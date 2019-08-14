@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B43C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3266DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2711C20844
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33CE20989
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748810;
-	bh=oSbzBdKzhnfKVE5QZmW6mGXx5+0/JriZqI90oCiWkA4=;
+	s=default; t=1565748816;
+	bh=6zB7ZAfRx6kO6WdFF2X4dn1BVug42pXpOBkfk/jE5/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GXILhd4RkhfyMgHpClLVFgC4GCrFXSHSqmzMYH2prfDTZUy1kJMvsK6zLNYQg63j7
-	 rTJDMjAVaon7PQcuUlwkK+6d+PWw7Qckt2t2xCCIF3UrfAMIEdclBlaKOwv3heJiXD
-	 Kg4wcWlMUh92a20j2wQ1gvDwmjg8qXCHa9wfOTnE=
+	b=up+vUZ7m1qzUrtTM2eopdJfAVklKT5iPUFMpuYCQNpuzdO/Yep7382Qtljv4oXHWu
+	 dii2F/ihOywyObV3EOt1mGw/NMwAhlyI/u32O37uippQ/teTfKqulitr3H/QvHgt+s
+	 QpEtwLbYSEm+bMdKcyiI+ykk3AVTLssCAy5klRO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbfHNCN3 (ORCPT
+        id S1728332AbfHNCNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:13:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45430 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:13:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728277AbfHNCN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:27 -0400
+        id S1728300AbfHNCNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35C1A20842;
-        Wed, 14 Aug 2019 02:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEF6B20842;
+        Wed, 14 Aug 2019 02:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748805;
-        bh=oSbzBdKzhnfKVE5QZmW6mGXx5+0/JriZqI90oCiWkA4=;
+        s=default; t=1565748810;
+        bh=6zB7ZAfRx6kO6WdFF2X4dn1BVug42pXpOBkfk/jE5/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IhuU/pXsI6S503CAdVZxz6iDwlr9kMR7pJ4HgTIl/zu9W9My1VioRsMJuq3LCkRYh
-         9AAQy2ApPzpAf2OqExGtbFQvBSfo7ivu24igDyLHd1/50tV48mrOzwx9YUFBCjwAl6
-         0z3gDTZSeDza6GocnPANbjb7Y9pdJtFm0pYyj/II=
+        b=TLKZL8PQ9wqQJR31tu7Zc5EF2OiiHF4ZXBj1m5WvsXdP5oFhWqqmTfCj2NQz272Er
+         4hK8bYgZnnmPiHS27VpEF+3c+r26eEEgn87ErXK7W6pxoJOoUJi1uTEZqfHpViX+0D
+         cWlM9RZlX74dxjf3xwZ4nR+qpQDtPuGaHCCzsVX4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 072/123] Input: kbtab - sanity check for endpoint type
-Date:   Tue, 13 Aug 2019 22:09:56 -0400
-Message-Id: <20190814021047.14828-72-sashal@kernel.org>
+Cc:     Wang Xiayang <xywang.sjtu@sjtu.edu.cn>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 075/123] can: sja1000: force the string buffer NULL-terminated
+Date:   Tue, 13 Aug 2019 22:09:59 -0400
+Message-Id: <20190814021047.14828-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -60,45 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
 
-[ Upstream commit c88090dfc84254fa149174eb3e6a8458de1912c4 ]
+[ Upstream commit cd28aa2e056cd1ea79fc5f24eed0ce868c6cab5c ]
 
-The driver should check whether the endpoint it uses has the correct
-type.
+strncpy() does not ensure NULL-termination when the input string size
+equals to the destination buffer size IFNAMSIZ. The output string
+'name' is passed to dev_info which relies on NULL-termination.
 
-Reported-by: syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Use strlcpy() instead.
+
+This issue is identified by a Coccinelle script.
+
+Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/tablet/kbtab.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/can/sja1000/peak_pcmcia.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/tablet/kbtab.c b/drivers/input/tablet/kbtab.c
-index 04b85571f41e3..aa577898e952b 100644
---- a/drivers/input/tablet/kbtab.c
-+++ b/drivers/input/tablet/kbtab.c
-@@ -117,6 +117,10 @@ static int kbtab_probe(struct usb_interface *intf, const struct usb_device_id *i
- 	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
- 		return -ENODEV;
+diff --git a/drivers/net/can/sja1000/peak_pcmcia.c b/drivers/net/can/sja1000/peak_pcmcia.c
+index 185c7f7d38a4a..5e0d5e8101c86 100644
+--- a/drivers/net/can/sja1000/peak_pcmcia.c
++++ b/drivers/net/can/sja1000/peak_pcmcia.c
+@@ -479,7 +479,7 @@ static void pcan_free_channels(struct pcan_pccard *card)
+ 		if (!netdev)
+ 			continue;
  
-+	endpoint = &intf->cur_altsetting->endpoint[0].desc;
-+	if (!usb_endpoint_is_int_in(endpoint))
-+		return -ENODEV;
-+
- 	kbtab = kzalloc(sizeof(struct kbtab), GFP_KERNEL);
- 	input_dev = input_allocate_device();
- 	if (!kbtab || !input_dev)
-@@ -155,8 +159,6 @@ static int kbtab_probe(struct usb_interface *intf, const struct usb_device_id *i
- 	input_set_abs_params(input_dev, ABS_Y, 0, 0x1750, 4, 0);
- 	input_set_abs_params(input_dev, ABS_PRESSURE, 0, 0xff, 0, 0);
+-		strncpy(name, netdev->name, IFNAMSIZ);
++		strlcpy(name, netdev->name, IFNAMSIZ);
  
--	endpoint = &intf->cur_altsetting->endpoint[0].desc;
--
- 	usb_fill_int_urb(kbtab->irq, dev,
- 			 usb_rcvintpipe(dev, endpoint->bEndpointAddress),
- 			 kbtab->data, 8,
+ 		unregister_sja1000dev(netdev);
+ 
 -- 
 2.20.1
 
