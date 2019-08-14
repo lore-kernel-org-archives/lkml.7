@@ -2,143 +2,122 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6BAC0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D0DC0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9564E206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED4B206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:26:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BYcaYaPV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PQPmRWR5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfHNHZT (ORCPT
+        id S1727397AbfHNH0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:25:19 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:49952 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726575AbfHNHZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:25:19 -0400
-Received: from zn.tnic (p200300EC2F0BD0001434546E6F7AC9DD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:d000:1434:546e:6f7a:c9dd])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AAA611EC02FE;
-        Wed, 14 Aug 2019 09:25:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565767517;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=9if7NiovkDbOcgnGK6zDQsx1E8XZHnyCTx4ck5LNTh8=;
-        b=BYcaYaPV4Ro0O8zZOHqqUv+fBqnmEBl7UqmriQHIHgzMVdE5oO1HNfXr5H7j6ZNeMRJpyt
-        NK3uZLBmOJuxt9LWoat7m7bOleVm/Vr5EXtgVRMWjysURqwQueYNtp2YUO5hIKD9nd+vIM
-        nzTz6YjcqOLkS82SwnF+SrEpmeBrYyo=
-Date:   Wed, 14 Aug 2019 09:26:02 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Josh Boyer <jwboyer@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Young <dyoung@redhat.com>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH V38 15/29] acpi: Ignore acpi_rsdp kernel param when the
- kernel has been locked down
-Message-ID: <20190814072602.GA27836@zn.tnic>
-References: <20190808000721.124691-1-matthewgarrett@google.com>
- <20190808000721.124691-16-matthewgarrett@google.com>
+        Wed, 14 Aug 2019 03:26:06 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42965 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfHNH0F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:26:05 -0400
+Received: by mail-oi1-f194.google.com with SMTP id o6so2387361oic.9
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 00:26:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=olhS25dpAXpeU0ZvOtkBvW+ClqVt1x4RdJvEXREO/pM=;
+        b=PQPmRWR5gZp7mzNL5oK4V7JWl+aObCQ514py2raT6sWBvoDpoDhuhxyizxfGl2XDNP
+         UdsBhgl9sEiDrvP0H8ET+8rIEoPFqY6R1sm9YoFL86uC2rfA6bUw+PV8xE7CK2lySd5m
+         ZNBGAwbUtKuUMQWtxa0+IWsAFm8tUM8ypG9BxebjDxqKA0dIeupfD0FzbrZH2TCifaTu
+         CXyk57FMxJ+e0lk8uxDEfwiEONa4tZCtX3RT9CFvTMiJd5Wdf+K5M72jTGZ3kdRnDTi7
+         QhaxqQDtcl0A1omOHnRG3sSxc8/pfu9CrbwFznkMPVZ+6pLAWZQco9/JqGyRqH5OC2Gu
+         1srw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=olhS25dpAXpeU0ZvOtkBvW+ClqVt1x4RdJvEXREO/pM=;
+        b=MREbOulqjLP1f/nA6cQ/zBmph3Z10WPCEr8M6jGi6OUgMy6OjmxS5k383Ozrp+cEzx
+         5BAzfrCiyhm3iOn8j0GqGsOYKX9zAr2F1F9/tMPSfAK+QGTAxiX1ei3JH/Q98u+TQ8AP
+         AqQ3yLiKjKW4s9ZY3YMox5KvyrCcc8HhlVsJAsyqca+fNcfbtORMfreW0C/qc8xH4R4U
+         1IzDGSnpVe6/kZVqbcmcfLwbSIhRwHxXz3Lvg0NHiXkO0sLnZIaeSfCigR3niWxg+XXf
+         sirEjHEUjdaCrsIk6538B1hMl9+TttSlXUVd0m6c5KejG+WNoXyr9HaRXsgJVEA/YJ0h
+         3d+Q==
+X-Gm-Message-State: APjAAAXVotS37iNnFoqwXWbFg/8/yAa2QjO2QHnQjVqh6DWrQDwJPEDN
+        34skq/peWPoCr84AqyIkoQS4uqdNrkpDxmxn7uUwKg==
+X-Google-Smtp-Source: APXvYqw5nOr78y7pKXN0vQAd6beatsPQcxL4mjFV1POgeeN9zP3ZACVssAXIMIfMHPLrY/8lYDNt3otHDUbe5BNSK4s=
+X-Received: by 2002:aca:4255:: with SMTP id p82mr4392410oia.6.1565767564780;
+ Wed, 14 Aug 2019 00:26:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190808000721.124691-16-matthewgarrett@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+ <20190813141256.jnbrfld42rtigek3@pengutronix.de> <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
+ <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
+In-Reply-To: <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Wed, 14 Aug 2019 15:25:53 +0800
+Message-ID: <CAMz4ku+55O6ORVM9xDv4R954QG4PXV8EkcGypSTB5wKni+Dq+Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM documentation
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 05:07:07PM -0700, Matthew Garrett wrote:
-> From: Josh Boyer <jwboyer@redhat.com>
-> 
-> This option allows userspace to pass the RSDP address to the kernel, which
-> makes it possible for a user to modify the workings of hardware. Reject
-> the option when the kernel is locked down. This requires some reworking
-> of the existing RSDP command line logic, since the early boot code also
-> makes use of a command-line passed RSDP when locating the SRAT table
-> before the lockdown code has been initialised. This is achieved by
-> separating the command line RSDP path in the early boot code from the
-> generic RSDP path, and then copying the command line RSDP into boot
-> params in the kernel proper if lockdown is not enabled. If lockdown is
-> enabled and an RSDP is provided on the command line, this will only be
-> used when parsing SRAT (which shouldn't permit kernel code execution)
-> and will be ignored in the rest of the kernel.
-> 
-> (Modified by Matthew Garrett in order to handle the early boot RSDP
-> environment)
-> 
-> Signed-off-by: Josh Boyer <jwboyer@redhat.com>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> cc: Dave Young <dyoung@redhat.com>
-> cc: linux-acpi@vger.kernel.org
-> ---
->  arch/x86/boot/compressed/acpi.c | 19 +++++++++++++------
->  arch/x86/include/asm/acpi.h     |  9 +++++++++
->  arch/x86/include/asm/x86_init.h |  2 ++
->  arch/x86/kernel/acpi/boot.c     |  5 +++++
->  arch/x86/kernel/x86_init.c      |  1 +
->  drivers/acpi/osl.c              | 14 +++++++++++++-
->  include/linux/acpi.h            |  6 ++++++
->  7 files changed, 49 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-> index 15255f388a85..149795c369f2 100644
-> --- a/arch/x86/boot/compressed/acpi.c
-> +++ b/arch/x86/boot/compressed/acpi.c
-> @@ -26,7 +26,7 @@ struct mem_vector immovable_mem[MAX_NUMNODES*2];
->   */
->  #define MAX_ADDR_LEN 19
->  
-> -static acpi_physical_address get_acpi_rsdp(void)
-> +static acpi_physical_address get_cmdline_acpi_rsdp(void)
->  {
->  	acpi_physical_address addr = 0;
->  
-> @@ -278,10 +278,7 @@ acpi_physical_address get_rsdp_addr(void)
->  {
->  	acpi_physical_address pa;
->  
-> -	pa = get_acpi_rsdp();
-> -
-> -	if (!pa)
-> -		pa = boot_params->acpi_rsdp_addr;
+Hi Uwe,
 
-AFAICT, this looks like it would break current usage: get_rsdp_addr()
-needs to call get_acpi_rsdp() which you've now called
-get_cmdline_acpi_rsdp() to parse "acpi_rsdp=" but it ain't happening
-anymore.
+On Wed, 14 Aug 2019 at 15:01, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello Baolin,
+>
+> On Wed, Aug 14, 2019 at 09:51:34AM +0800, Baolin Wang wrote:
+> > On Tue, 13 Aug 2019 at 22:13, Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
+> > > > +- assigned-clock-parents: The phandle of the parent clock of PWM c=
+lock.
+> > >
+> > > I'm not sure you need to point out assigned-clocks and
+> > > assigned-clock-parents as this is general clk stuff. Also I wonder if
+> > > these should be "required properties".
+> >
+> > I think I should describe any properties used by PWM node, like
+> > 'clocks' and 'clock-names' properties, though they are common clock
+> > properties.
+>
+> Then you might want to describe also "status", "assigned-clock-rates",
+> "pinctrl-$n", "pinctrl-names", "power-domains", "power-domain-names" and
+> probably another dozen I'm not aware of.
 
-Where the parsing is happening now is in get_acpi_srat_table() which is
-not present in configs with
+We usually do not describe 'status', but if your device node used
+"pinctrl-$n", "pinctrl-names" ... common properties, yes, you should
+describe them to let users know what is the purpose of these
+properties. That's also asked by DT maintainer Rob.
 
-#if defined(CONFIG_RANDOMIZE_BASE) && defined(CONFIG_MEMORY_HOTREMOVE)
+>
+> > Yes, they are required. Thanks for your comments.
+>
+> required in which sense? Why can a Spreadtrum PWM not work when the
+> clock parents are unspecified?
 
-false and thus not available to early code anymore.
+On some Spreadtrum platforms, the default source clock of PWM may not
+be enabled, so we should force users to select one available source
+clock for PWM output clock.
 
-I think the cleaner/easier approach would be to clear
-boot_params->acpi_rsdp_addr after SRAT has been parsed in lockdown
-configurations so that nothing else uses the supplied RDSP address
-anymore. But I could very well be missing something...
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+--=20
+Baolin Wang
+Best Regards
