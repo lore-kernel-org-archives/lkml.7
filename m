@@ -2,58 +2,54 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBFAC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC277C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47306216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E9C421721
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565808157;
-	bh=G6SLBKtPcCn6+bkxylFHP/9pWE6GUa4gPQkLSzMaufA=;
+	s=default; t=1565808175;
+	bh=N5TpHcUTmlrhvV3UqolE4KL8/LV8os0UPPGPsPlAXVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tFA5hd2XLlh7Jm5W+ZuYiyEmBsCMs7Tc6ReNNqlEnkeNSLLEmLy5QzmHizGtM1IDR
-	 yEsNKtchp/4tDT1FfPIMicUEqeXWKLOeo1+IShYXjsuEB5KXTaYriEnpoovsdi9Pqc
-	 t9PSJjD1VVR+OgDZAWQ0IqEct8o/yAZkkOZsMZFg=
+	b=SuEtGUF/LhOZK/12pgSka1CD12ogePtVRCflXMzbVlLA8Gzr3zsDcHehe/NiOcI7j
+	 UfwK3Btx+SSogAwv2sp84rrWMmxYJJkyM6Gim9yRUH+DS+9E6maH063jY5wja41Nw/
+	 SJSJfH6W/4hhlq16GfamPijA40k9IWgzlqE51ji8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbfHNSmg (ORCPT
+        id S1729119AbfHNSmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 14:42:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53468 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 14:42:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728262AbfHNSmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 14:42:35 -0400
+        id S1728603AbfHNSmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 14:42:54 -0400
 Received: from quaco.ghostprotocols.net (unknown [177.195.212.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 773C82064A;
-        Wed, 14 Aug 2019 18:42:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37EE0216F4;
+        Wed, 14 Aug 2019 18:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565808154;
-        bh=G6SLBKtPcCn6+bkxylFHP/9pWE6GUa4gPQkLSzMaufA=;
+        s=default; t=1565808173;
+        bh=N5TpHcUTmlrhvV3UqolE4KL8/LV8os0UPPGPsPlAXVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GI7ukkff1pGJgda2LRSvexRGgF5oLTcl2VC/OPI/mQRzcll8lhGamWHjjnFXerOt9
-         adPXajetLtp+3EJVT8ZrSrV42CPE2lmr1P3AMwAcO7mXy7LeJuxkzIkkDcTwWnyBDv
-         4+pfteQ0zPSf1FV9vhaT6fM9+X0kpyw8NGakx7Lo=
+        b=GPgcIAEZrHzs7WkmB3gb6ln9asfb7xQqsAP1CiS+Jy5iRliPyQdnpivwFEtizUHx/
+         GOAJwzHlwgo1DUtvVqji+p10Mo3r4uvMvXxtfXhK8OpRLypN3Ba8koB6XhffnsFveL
+         laxk9MKmTbaHcpN/LqGBfr0lJ3PbN51g9dTw8P0I=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Luke Mujica <lukemujica@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 05/28] perf tools: Fix paths in include statements
-Date:   Wed, 14 Aug 2019 15:40:28 -0300
-Message-Id: <20190814184051.3125-6-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 07/28] perf top: Set display thread COMM to help with debugging
+Date:   Wed, 14 Aug 2019 15:40:30 -0300
+Message-Id: <20190814184051.3125-8-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190814184051.3125-1-acme@kernel.org>
 References: <20190814184051.3125-1-acme@kernel.org>
@@ -64,89 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Mujica <lukemujica@google.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-These paths point to the wrong location but still work because they get
-picked up by a -I flag that happens to direct to the correct file. Fix
-paths to lead to the actual file location without help from include
-flags.
+When we want to attach just to the thread that updates the display it
+helps having its COMM stand out, so change it from the default "perf" to
+"perf-top-UI".
 
-Signed-off-by: Luke Mujica <lukemujica@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190719202253.220261-1-lukemujica@google.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-5w0hmlk3zfvysxvpsh763k9w@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/x86/util/kvm-stat.c | 4 ++--
- tools/perf/arch/x86/util/tsc.c      | 6 +++---
- tools/perf/ui/helpline.c            | 4 ++--
- tools/perf/ui/util.c                | 2 +-
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ tools/perf/builtin-top.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/arch/x86/util/kvm-stat.c b/tools/perf/arch/x86/util/kvm-stat.c
-index 54a3f2373c35..81b531a707bf 100644
---- a/tools/perf/arch/x86/util/kvm-stat.c
-+++ b/tools/perf/arch/x86/util/kvm-stat.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <errno.h>
--#include "../../util/kvm-stat.h"
--#include "../../util/evsel.h"
-+#include "../../../util/kvm-stat.h"
-+#include "../../../util/evsel.h"
- #include <asm/svm.h>
- #include <asm/vmx.h>
- #include <asm/kvm.h>
-diff --git a/tools/perf/arch/x86/util/tsc.c b/tools/perf/arch/x86/util/tsc.c
-index 950539f9a4f7..b1eb963b4a6e 100644
---- a/tools/perf/arch/x86/util/tsc.c
-+++ b/tools/perf/arch/x86/util/tsc.c
-@@ -5,10 +5,10 @@
- #include <linux/stddef.h>
- #include <linux/perf_event.h>
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 1a4615a5f6c9..94e34853a238 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -601,6 +601,8 @@ static void *display_thread_tui(void *arg)
+ 	 */
+ 	unshare(CLONE_FS);
  
--#include "../../perf.h"
-+#include "../../../perf.h"
- #include <linux/types.h>
--#include "../../util/debug.h"
--#include "../../util/tsc.h"
-+#include "../../../util/debug.h"
-+#include "../../../util/tsc.h"
++	prctl(PR_SET_NAME, "perf-top-UI", 0, 0, 0);
++
+ 	perf_top__sort_new_samples(top);
  
- int perf_read_tsc_conversion(const struct perf_event_mmap_page *pc,
- 			     struct perf_tsc_conversion *tc)
-diff --git a/tools/perf/ui/helpline.c b/tools/perf/ui/helpline.c
-index b3c421429ed4..54bcd08df87e 100644
---- a/tools/perf/ui/helpline.c
-+++ b/tools/perf/ui/helpline.c
-@@ -3,10 +3,10 @@
- #include <stdlib.h>
- #include <string.h>
+ 	/*
+@@ -651,6 +653,8 @@ static void *display_thread(void *arg)
+ 	 */
+ 	unshare(CLONE_FS);
  
--#include "../debug.h"
-+#include "../util/debug.h"
- #include "helpline.h"
- #include "ui.h"
--#include "../util.h"
-+#include "../util/util.h"
- 
- char ui_helpline__current[512];
- 
-diff --git a/tools/perf/ui/util.c b/tools/perf/ui/util.c
-index 63bf06e80ab9..9ed76e88a3e4 100644
---- a/tools/perf/ui/util.c
-+++ b/tools/perf/ui/util.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "util.h"
--#include "../debug.h"
-+#include "../util/debug.h"
- 
- 
- /*
++	prctl(PR_SET_NAME, "perf-top-UI", 0, 0, 0);
++
+ 	display_setup_sig();
+ 	pthread__unblock_sigwinch();
+ repeat:
 -- 
 2.21.0
 
