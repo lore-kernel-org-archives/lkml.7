@@ -2,146 +2,160 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA23CC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F42C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5AD6208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2D9205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565781993;
+	bh=YND+JWbSMZZsR9SQxiwR2FIJXArQNr0iMib10vHQQbw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e2kxxfCjyRigKNOGiKjmevLOcQjM6Jn0cgCAK1Xgl6Ocvu9chAHVVN0G1BWkOmSMq
+	 MXNP4dAit2h4KDK0z23Zkmu99izWP2UqfW+AV2l1ZP1YHKVOyAJgw2B+cQNcZ4FRnR
+	 ihmY957EH7HFzCoukD8tYN2TBTD9Ysl9nPjqUz20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfHNL0T (ORCPT
+        id S1727701AbfHNL0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 07:26:19 -0400
-Received: from smark.slackware.pl ([88.198.48.135]:55578 "EHLO
-        smark.slackware.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfHNL0S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 07:26:18 -0400
-X-Greylist: delayed 525 seconds by postgrey-1.27 at vger.kernel.org; Wed, 14 Aug 2019 07:26:17 EDT
-Received: from kich.toxcorp.com (kich.slackware.pl [193.218.152.244])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: shasta@toxcorp.com)
-        by smark.slackware.pl (Postfix) with ESMTPSA id 473EB20630;
-        Wed, 14 Aug 2019 13:17:31 +0200 (CEST)
-Date:   Wed, 14 Aug 2019 13:17:30 +0200 (CEST)
-From:   Jakub Jankowski <shasta@toxcorp.com>
-To:     Reindl Harald <h.reindl@thelounge.net>
-cc:     Thomas Jarosch <thomas.jarosch@intra2net.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 04/42] netfilter: conntrack: always store
- window size un-scaled
-In-Reply-To: <41ce587d-dfaa-fe6b-66a8-58ba1a3a2872@thelounge.net>
-Message-ID: <alpine.LNX.2.21.1908141316420.1803@kich.toxcorp.com>
-References: <20190802132302.13537-1-sashal@kernel.org> <20190802132302.13537-4-sashal@kernel.org> <20190808090209.wb63n6ibii4ivvba@intra2net.com> <41ce587d-dfaa-fe6b-66a8-58ba1a3a2872@thelounge.net>
-User-Agent: Alpine 2.21 (LNX 202 2017-01-01)
+        Wed, 14 Aug 2019 07:26:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38606 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725800AbfHNL0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 07:26:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A7AA8AD0B;
+        Wed, 14 Aug 2019 11:26:29 +0000 (UTC)
+Date:   Wed, 14 Aug 2019 13:26:29 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH 1/2] mm: memcontrol: flush percpu vmstats before
+ releasing memcg
+Message-ID: <20190814112629.GU17933@dhcp22.suse.cz>
+References: <20190812222911.2364802-1-guro@fb.com>
+ <20190812222911.2364802-2-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812222911.2364802-2-guro@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-14, Reindl Harald wrote:
+On Mon 12-08-19 15:29:10, Roman Gushchin wrote:
+> Percpu caching of local vmstats with the conditional propagation
+> by the cgroup tree leads to an accumulation of errors on non-leaf
+> levels.
+> 
+> Let's imagine two nested memory cgroups A and A/B. Say, a process
+> belonging to A/B allocates 100 pagecache pages on the CPU 0.
+> The percpu cache will spill 3 times, so that 32*3=96 pages will be
+> accounted to A/B and A atomic vmstat counters, 4 pages will remain
+> in the percpu cache.
+> 
+> Imagine A/B is nearby memory.max, so that every following allocation
+> triggers a direct reclaim on the local CPU. Say, each such attempt
+> will free 16 pages on a new cpu. That means every percpu cache will
+> have -16 pages, except the first one, which will have 4 - 16 = -12.
+> A/B and A atomic counters will not be touched at all.
+> 
+> Now a user removes A/B. All percpu caches are freed and corresponding
+> vmstat numbers are forgotten. A has 96 pages more than expected.
+> 
+> As memory cgroups are created and destroyed, errors do accumulate.
+> Even 1-2 pages differences can accumulate into large numbers.
+> 
+> To fix this issue let's accumulate and propagate percpu vmstat
+> values before releasing the memory cgroup. At this point these
+> numbers are stable and cannot be changed.
 
-> that's still not in 5.2.8
+It is worth spending a word or two on why this doesn't matter during the
+memcg life time.
 
-It will make its way into next 5.2.x release, as it is now in the pending 
-queue: 
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-5.2
+> Since on cpu hotplug we do flush percpu vmstats anyway, we can
+> iterate only over online cpus.
+> 
+> Fixes: 42a300353577 ("mm: memcontrol: fix recursive statistics correctness & scalabilty")
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
 
-Regards,
-  Jakub.
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-
->
-> without the exception and "nf_conntrack_tcp_timeout_max_retrans = 60" a
-> vnc-over-ssh session having the VNC view in the background freezes
-> within 60 secods
->
-> -----------------------------------------------------------------------------------------------
-> IPV4 TABLE MANGLE (STATEFUL PRE-NAT/FILTER)
-> -----------------------------------------------------------------------------------------------
-> Chain PREROUTING (policy ACCEPT 100 packets, 9437 bytes)
-> num   pkts bytes target     prot opt in     out     source
-> destination
-> 1     6526 3892K ACCEPT     all  --  *      *       0.0.0.0/0
-> 0.0.0.0/0            ctstate RELATED,ESTABLISHED
-> 2      125  6264 ACCEPT     all  --  lo     *       0.0.0.0/0
-> 0.0.0.0/0
-> 3       64  4952 ACCEPT     all  --  vmnet8 *       0.0.0.0/0
-> 0.0.0.0/0
-> 4        1    40 DROP       all  --  *      *       0.0.0.0/0
-> 0.0.0.0/0            ctstate INVALID
->
-> -------- Weitergeleitete Nachricht --------
-> Betreff: [PATCH AUTOSEL 5.2 07/76] netfilter: conntrack: always store
-> window size un-scaled
->
-> Am 08.08.19 um 11:02 schrieb Thomas Jarosch:
->> Hello together,
->>
->> You wrote on Fri, Aug 02, 2019 at 09:22:24AM -0400:
->>> From: Florian Westphal <fw@strlen.de>
->>>
->>> [ Upstream commit 959b69ef57db00cb33e9c4777400ae7183ebddd3 ]
->>>
->>> Jakub Jankowski reported following oddity:
->>>
->>> After 3 way handshake completes, timeout of new connection is set to
->>> max_retrans (300s) instead of established (5 days).
->>>
->>> shortened excerpt from pcap provided:
->>> 25.070622 IP (flags [DF], proto TCP (6), length 52)
->>> 10.8.5.4.1025 > 10.8.1.2.80: Flags [S], seq 11, win 64240, [wscale 8]
->>> 26.070462 IP (flags [DF], proto TCP (6), length 48)
->>> 10.8.1.2.80 > 10.8.5.4.1025: Flags [S.], seq 82, ack 12, win 65535, [wscale 3]
->>> 27.070449 IP (flags [DF], proto TCP (6), length 40)
->>> 10.8.5.4.1025 > 10.8.1.2.80: Flags [.], ack 83, win 512, length 0
->>>
->>> Turns out the last_win is of u16 type, but we store the scaled value:
->>> 512 << 8 (== 0x20000) becomes 0 window.
->>>
->>> The Fixes tag is not correct, as the bug has existed forever, but
->>> without that change all that this causes might cause is to mistake a
->>> window update (to-nonzero-from-zero) for a retransmit.
->>>
->>> Fixes: fbcd253d2448b8 ("netfilter: conntrack: lower timeout to RETRANS seconds if window is 0")
->>> Reported-by: Jakub Jankowski <shasta@toxcorp.com>
->>> Tested-by: Jakub Jankowski <shasta@toxcorp.com>
->>> Signed-off-by: Florian Westphal <fw@strlen.de>
->>> Acked-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
->>> Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
->>> Signed-off-by: Sasha Levin <sashal@kernel.org>
->>
->> Also:
->> Tested-by: Thomas Jarosch <thomas.jarosch@intra2net.com>
->>
->> ;)
->>
->> We've hit the issue with the wrong conntrack timeout at two different sites,
->> long-lived connections to a SAP server over IPSec VPN were constantly dropping.
->>
->> For us this was a regression after updating from kernel 3.14 to 4.19.
->> Yesterday I've applied the patch to kernel 4.19.57 and the problem is fixed.
->>
->> The issue was extra hard to debug as we could just boot the new kernel
->> for twenty minutes in the evening on these productive systems.
->>
->> The stable kernel patch from last Friday came right on time. I was just
->> about the replay the TCP connection with tcpreplay, so this saved
->> me from another week of debugging. Thanks everyone!
->
+> ---
+>  mm/memcontrol.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 3e821f34399f..348f685ab94b 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -3412,6 +3412,41 @@ static int memcg_online_kmem(struct mem_cgroup *memcg)
+>  	return 0;
+>  }
+>  
+> +static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg)
+> +{
+> +	unsigned long stat[MEMCG_NR_STAT];
+> +	struct mem_cgroup *mi;
+> +	int node, cpu, i;
+> +
+> +	for (i = 0; i < MEMCG_NR_STAT; i++)
+> +		stat[i] = 0;
+> +
+> +	for_each_online_cpu(cpu)
+> +		for (i = 0; i < MEMCG_NR_STAT; i++)
+> +			stat[i] += raw_cpu_read(memcg->vmstats_percpu->stat[i]);
+> +
+> +	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
+> +		for (i = 0; i < MEMCG_NR_STAT; i++)
+> +			atomic_long_add(stat[i], &mi->vmstats[i]);
+> +
+> +	for_each_node(node) {
+> +		struct mem_cgroup_per_node *pn = memcg->nodeinfo[node];
+> +		struct mem_cgroup_per_node *pi;
+> +
+> +		for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
+> +			stat[i] = 0;
+> +
+> +		for_each_online_cpu(cpu)
+> +			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
+> +				stat[i] += raw_cpu_read(
+> +					pn->lruvec_stat_cpu->count[i]);
+> +
+> +		for (pi = pn; pi; pi = parent_nodeinfo(pi, node))
+> +			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
+> +				atomic_long_add(stat[i], &pi->lruvec_stat[i]);
+> +	}
+> +}
+> +
+>  static void memcg_offline_kmem(struct mem_cgroup *memcg)
+>  {
+>  	struct cgroup_subsys_state *css;
+> @@ -4805,6 +4840,11 @@ static void __mem_cgroup_free(struct mem_cgroup *memcg)
+>  {
+>  	int node;
+>  
+> +	/*
+> +	 * Flush percpu vmstats to guarantee the value correctness
+> +	 * on parent's and all ancestor levels.
+> +	 */
+> +	memcg_flush_percpu_vmstats(memcg);
+>  	for_each_node(node)
+>  		free_mem_cgroup_per_node_info(memcg, node);
+>  	free_percpu(memcg->vmstats_percpu);
+> -- 
+> 2.21.0
 
 -- 
-Jakub Jankowski|shasta@toxcorp.com|https://toxcorp.com/
+Michal Hocko
+SUSE Labs
