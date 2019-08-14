@@ -2,477 +2,156 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 937C2C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B04C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57284205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:28:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gMyXVgwv";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="N6zw/0u+"
+	by mail.kernel.org (Postfix) with ESMTP id 4873B205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:29:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfHNL2B (ORCPT
+        id S1727507AbfHNL3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 07:28:01 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34590 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbfHNL16 (ORCPT
+        Wed, 14 Aug 2019 07:29:25 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44723 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfHNL3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 07:27:58 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A486160258; Wed, 14 Aug 2019 11:27:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565782076;
-        bh=JeEcLhw3NZyzSR0QFVaKCrR0i/IS+20ds3VLwJ84xGE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gMyXVgwvSeFp2iaZL1CTv1pp4pWwqO1Uy4FrZ6qxyfI/fg05NEYJhoT+zFfrQNLf2
-         z13FZq0ESmbIarm7LQ1tbkxQoQBEZnYMVXEpdvIImKkjyKGDS4Qb5XDZJsKsFXF4uy
-         Vy7PpnKL/+M43WlK9zprtikkYFYjrtW92WP8CQHo=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 92D5F60128;
-        Wed, 14 Aug 2019 11:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565782073;
-        bh=JeEcLhw3NZyzSR0QFVaKCrR0i/IS+20ds3VLwJ84xGE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=N6zw/0u+r0I7QiOf0gAviJrPPg2VqfdtCEcj45DXmIjF2x3UFimemNWM9u2hX/Qvg
-         n2jEh6GyaRieHX8LGCodHJHxYA677G/sbgg5uWn0HtQOeq6Y1A1YKPOo1UUXwl3gye
-         H5A841Pzr4GnUZhQAHOqTSJiDgA/SmeIte7qhGCw=
+        Wed, 14 Aug 2019 07:29:24 -0400
+Received: by mail-lj1-f196.google.com with SMTP id e24so7757570ljg.11
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:29:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from:openpgp
+         :autocrypt:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=G7h9ZPs2SsF+ym2u1QKjCUIVuuVN1JS6MMNQMwIhLCM=;
+        b=gZtysKbdZCZusq1uTun3u2iYwLAyaXENCWAYlAN7/diFXMW68DPJP9jjU2AAzxuGOk
+         73xJSX8Jazn1KFO+ce9EHBDaGWK0WAXwuh5q7HT6+AZjq8hAYDaaoz0M/ajsEsa+oEFt
+         pk5RSwqpQrJn174aHK3fnLTDPdEKFiNztQkfcM5XZmGwlUm7CJmZOzuGOsKrFuIG/K9E
+         2sEdnUghP1SOu6rKxrrtoA3a3Tp1VDV1VWOSfyAYs+o0enzpFwFvldNfhEeKeW9Yl8by
+         xQI3hPsgm7RuqFQ+Hn3PawXZQ4w00sGBmIWUG56/wbsd5JiPp4o6Uh2kpjz4rdobFNzL
+         UsmQ==
+X-Gm-Message-State: APjAAAXqB8b+vO2dC9CyAKsoq73GtmeS4GwCzRPCV8qmCE8GXWSQO4tt
+        O65Xt7yPSe8+epyEls11yKUay2m5
+X-Google-Smtp-Source: APXvYqz9odWTZ62ERdJp5QbMCnOGn5yIGuWyXRSQ1RBoZtSo8r6lw6Aj9SXYrMyBZhSGBJM8iDTnGA==
+X-Received: by 2002:a2e:760f:: with SMTP id r15mr10438042ljc.92.1565782161565;
+        Wed, 14 Aug 2019 04:29:21 -0700 (PDT)
+Received: from [192.168.42.130] ([213.87.138.18])
+        by smtp.gmail.com with ESMTPSA id i9sm20206108lfl.10.2019.08.14.04.29.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 04:29:20 -0700 (PDT)
+Reply-To: alex.popov@linux.com
+Subject: Re: [PATCH] Documentation patch (gcc-plugins kernel)
+To:     Kees Cook <keescook@chromium.org>,
+        Robin Lindner <robin.lindner1@t-online.de>
+Cc:     re.emese@gmail.com, kernel-hardening@lists.openwall.com,
+        linux-kernel@vger.kernel.org
+References: <ebb6d995-a356-bc01-074b-6154a283e299@t-online.de>
+ <201908011311.A06FB03C6C@keescook>
+From:   Alexander Popov <alex.popov@linux.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
+ 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
+ jXz/74kjFsyRgZA+d6a1pGtOwITEBxtxxg==
+Message-ID: <9d1a86e8-0997-54ba-d3b9-58cc92af3a1f@linux.com>
+Date:   Wed, 14 Aug 2019 14:29:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <201908011311.A06FB03C6C@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 14 Aug 2019 16:57:53 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        agross@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Dai <daidavid1@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH 2/2] interconnect: qcom: Add OSM L3 interconnect provider
- support
-In-Reply-To: <CAE=gft45QSLyTG0Vi-ZHjbtu4d7vY51-trfLQhswVVrS3NNHew@mail.gmail.com>
-References: <20190807112432.26521-1-sibis@codeaurora.org>
- <20190807112432.26521-3-sibis@codeaurora.org>
- <CAE=gft45QSLyTG0Vi-ZHjbtu4d7vY51-trfLQhswVVrS3NNHew@mail.gmail.com>
-Message-ID: <5c9c3e1ff70b4a80a2b97ded8aa2f0e7@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Evan,
+Hello Kees and Robin,
 
-Thanks for the review!
-
-On 2019-08-14 02:02, Evan Green wrote:
-> Hi Sibi,
-> 
-> On Wed, Aug 7, 2019 at 4:24 AM Sibi Sankar <sibis@codeaurora.org> 
-> wrote:
->> 
->> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
->> resources of scaling L3 caches. Add a driver to handle bandwidth
->> requests to OSM L3 from CPU/GPU.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> 
-> This looks good to me, just a couple minor comments below.
-> 
+On 01.08.2019 23:14, Kees Cook wrote:
+> On Thu, Aug 01, 2019 at 09:30:58AM +0200, Robin Lindner wrote:
+>> Cleaned documentation comment up. I removed the "TODO" because it was very old.
 >> ---
->>  drivers/interconnect/qcom/Kconfig  |   7 +
->>  drivers/interconnect/qcom/Makefile |   2 +
->>  drivers/interconnect/qcom/osm-l3.c | 292 
->> +++++++++++++++++++++++++++++
->>  3 files changed, 301 insertions(+)
->>  create mode 100644 drivers/interconnect/qcom/osm-l3.c
->> 
->> diff --git a/drivers/interconnect/qcom/Kconfig 
->> b/drivers/interconnect/qcom/Kconfig
->> index d5e70ebc24108..f6c2a11a1a2c9 100644
->> --- a/drivers/interconnect/qcom/Kconfig
->> +++ b/drivers/interconnect/qcom/Kconfig
->> @@ -5,6 +5,13 @@ config INTERCONNECT_QCOM
->>         help
->>           Support for Qualcomm's Network-on-Chip interconnect 
->> hardware.
->> 
->> +config INTERCONNECT_QCOM_OSM_L3
->> +       tristate "Qualcomm OSM L3 interconnect driver"
->> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
->> +       help
->> +         Say y here to support the Operating State Manager (OSM) 
->> interconnect
->> +         driver which controls the scaling of L3 caches on Qualcomm 
->> SoCs.
->> +
->>  config INTERCONNECT_QCOM_SDM845
->>         tristate "Qualcomm SDM845 interconnect driver"
->>         depends on INTERCONNECT_QCOM
->> diff --git a/drivers/interconnect/qcom/Makefile 
->> b/drivers/interconnect/qcom/Makefile
->> index 1c1cea690f922..9078af5fed109 100644
->> --- a/drivers/interconnect/qcom/Makefile
->> +++ b/drivers/interconnect/qcom/Makefile
->> @@ -1,5 +1,7 @@
->>  # SPDX-License-Identifier: GPL-2.0
->> 
->> +icc-osm-l3-objs                                := osm-l3.o
->>  qnoc-sdm845-objs                       := sdm845.o
->> 
->> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
->>  obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
->> diff --git a/drivers/interconnect/qcom/osm-l3.c 
->> b/drivers/interconnect/qcom/osm-l3.c
->> new file mode 100644
->> index 0000000000000..1e7dfce6f4f9b
->> --- /dev/null
->> +++ b/drivers/interconnect/qcom/osm-l3.c
->> @@ -0,0 +1,292 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
->> + *
->> + */
->> +
->> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
->> +#include <dt-bindings/interconnect/qcom,sdm845.h>
->> +#include <linux/bitfield.h>
->> +#include <linux/clk.h>
->> +#include <linux/interconnect-provider.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of_device.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/platform_device.h>
->> +
->> +#define LUT_MAX_ENTRIES                        40U
->> +#define LUT_SRC                                GENMASK(31, 30)
->> +#define LUT_L_VAL                      GENMASK(7, 0)
->> +#define LUT_ROW_SIZE                   32
->> +#define CLK_HW_DIV                     2
->> +
->> +/* Register offsets */
->> +#define REG_ENABLE                     0x0
->> +#define REG_FREQ_LUT                   0x110
->> +#define REG_PERF_STATE                 0x920
->> +
->> +#define OSM_L3_MAX_LINKS               1
->> +
->> +#define to_qcom_provider(_provider) \
->> +       container_of(_provider, struct qcom_icc_provider, provider)
->> +
->> +enum {
->> +       SDM845_MASTER_OSM_L3_APPS = SLAVE_TCU + 1,
->> +       SDM845_MASTER_OSM_L3_GPU,
->> +       SDM845_SLAVE_OSM_L3,
->> +};
->> +
->> +struct qcom_icc_provider {
+>>  scripts/gcc-plugins/stackleak_plugin.c | 2 --
+>>  1 file changed, 2 deletions(-)
+>>
+>> diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/stackleak_plugin.c
+>> index dbd37460c573e..d8ba12c3bb238 100644
+>> --- a/scripts/gcc-plugins/stackleak_plugin.c
+>> +++ b/scripts/gcc-plugins/stackleak_plugin.c
+>> @@ -144,8 +144,6 @@ static unsigned int stackleak_instrument_execute(void)
+>>  	 *
+>>  	 * Case in point: native_save_fl on amd64 when optimized for size
+>>  	 * clobbers rdx if it were instrumented here.
+>> -	 *
+>> -	 * TODO: any more special cases?
+>>  	 */
+>>  	if (is_leaf &&
+>>  	    !TREE_PUBLIC(current_function_decl) &&
 > 
-> Maybe we should rename this and the ones below to avoid collisions
-> with drivers/interconnect/qcom/sdm845.c, even though those structures
-> are currently local.
-
-sure I'll do that
-
+> As to the content of the patch, let's also CC Alexander...
 > 
->> +       void __iomem *base;
->> +       unsigned int max_state;
->> +       unsigned long lut_tables[LUT_MAX_ENTRIES];
->> +       struct icc_provider provider;
->> +};
->> +
->> +/**
->> + * struct qcom_icc_node - Qualcomm specific interconnect nodes
->> + * @name: the node name used in debugfs
->> + * @links: an array of nodes where we can go next while traversing
->> + * @id: a unique node identifier
->> + * @num_links: the total number of @links
->> + * @buswidth: width of the interconnect between a node and the bus
->> + */
->> +struct qcom_icc_node {
->> +       const char *name;
->> +       u16 links[OSM_L3_MAX_LINKS];
->> +       u16 id;
->> +       u16 num_links;
->> +       u16 buswidth;
->> +};
->> +
->> +struct qcom_icc_desc {
->> +       struct qcom_icc_node **nodes;
->> +       size_t num_nodes;
->> +};
->> +
->> +#define DEFINE_QNODE(_name, _id, _buswidth, ...)                      
->>  \
->> +               static struct qcom_icc_node _name = {                  
->>  \
->> +               .name = #_name,                                        
->>  \
->> +               .id = _id,                                             
->>  \
->> +               .buswidth = _buswidth,                                 
->>  \
->> +               .num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),     
->>  \
->> +               .links = { __VA_ARGS__ },                              
->>  \
->> +       }
->> +
->> +DEFINE_QNODE(osm_apps_l3, SDM845_MASTER_OSM_L3_APPS, 16, 
->> SDM845_SLAVE_OSM_L3);
->> +DEFINE_QNODE(osm_gpu_l3, SDM845_MASTER_OSM_L3_GPU, 16, 
->> SDM845_SLAVE_OSM_L3);
->> +DEFINE_QNODE(osm_l3, SDM845_SLAVE_OSM_L3, 16);
->> +
->> +static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
->> +       [MASTER_OSM_L3_APPS] = &osm_apps_l3,
->> +       [MASTER_OSM_L3_GPU] = &osm_gpu_l3,
->> +       [SLAVE_OSM_L3] = &osm_l3,
->> +};
->> +
->> +static struct qcom_icc_desc sdm845_osm_l3 = {
->> +       .nodes = sdm845_osm_l3_nodes,
->> +       .num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
->> +};
->> +
->> +static int qcom_icc_aggregate(struct icc_node *node, u32 avg_bw,
->> +                             u32 peak_bw, u32 *agg_avg, u32 
->> *agg_peak)
->> +{
->> +       *agg_avg += avg_bw;
->> +       *agg_peak = max_t(u32, *agg_peak, peak_bw);
->> +
->> +       return 0;
->> +}
->> +
->> +static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
->> +{
->> +       struct icc_provider *provider;
->> +       struct qcom_icc_provider *qp;
->> +       struct qcom_icc_node *qn;
->> +       struct icc_node *n;
->> +       unsigned int index;
->> +       u32 agg_peak = 0;
->> +       u32 agg_avg = 0;
->> +       u64 rate;
->> +
->> +       qn = src->data;
->> +       provider = src->provider;
->> +       qp = to_qcom_provider(provider);
->> +
->> +       list_for_each_entry(n, &provider->nodes, node_list)
->> +               qcom_icc_aggregate(n, n->avg_bw, n->peak_bw,
->> +                                  &agg_avg, &agg_peak);
->> +
->> +       rate = max(agg_avg, agg_peak);
->> +       rate = icc_units_to_bps(rate);
->> +       do_div(rate, qn->buswidth);
->> +
->> +       for (index = 0; index < qp->max_state; index++) {
->> +               if (qp->lut_tables[index] >= rate)
->> +                       break;
->> +       }
->> +
->> +       writel_relaxed(index, qp->base + REG_PERF_STATE);
->> +
->> +       return 0;
->> +}
->> +
->> +static int qcom_osm_l3_probe(struct platform_device *pdev)
->> +{
->> +       u32 info, src, lval, i, prev_freq = 0, freq;
->> +       static unsigned long hw_rate, xo_rate;
->> +       const struct qcom_icc_desc *desc;
->> +       struct icc_onecell_data *data;
->> +       struct icc_provider *provider;
->> +       struct qcom_icc_node **qnodes;
->> +       struct qcom_icc_provider *qp;
->> +       struct icc_node *node;
->> +       size_t num_nodes;
->> +       struct clk *clk;
->> +       int ret;
->> +
->> +       clk = clk_get(&pdev->dev, "xo");
->> +       if (IS_ERR(clk))
->> +               return PTR_ERR(clk);
->> +
->> +       xo_rate = clk_get_rate(clk);
->> +       clk_put(clk);
->> +
->> +       clk = clk_get(&pdev->dev, "alternate");
->> +       if (IS_ERR(clk))
->> +               return PTR_ERR(clk);
->> +
->> +       hw_rate = clk_get_rate(clk) / CLK_HW_DIV;
->> +       clk_put(clk);
->> +
->> +       qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
->> +       if (!qp)
->> +               return -ENOMEM;
->> +
->> +       qp->base = devm_platform_ioremap_resource(pdev, 0);
->> +       if (IS_ERR(qp->base))
->> +               return PTR_ERR(qp->base);
->> +
->> +       /* HW should be in enabled state to proceed */
->> +       if (!(readl_relaxed(qp->base + REG_ENABLE) & 0x1)) {
->> +               dev_err(&pdev->dev, "error hardware not enabled\n");
->> +               return -ENODEV;
->> +       }
->> +
->> +       for (i = 0; i < LUT_MAX_ENTRIES; i++) {
->> +               info = readl_relaxed(qp->base + REG_FREQ_LUT +
->> +                                    i * LUT_ROW_SIZE);
->> +               src = FIELD_GET(LUT_SRC, info);
->> +               lval = FIELD_GET(LUT_L_VAL, info);
->> +               if (src)
->> +                       freq = xo_rate * lval;
->> +               else
->> +                       freq = hw_rate;
->> +
->> +               /*
->> +                * Two of the same frequencies with the same core 
->> counts means
->> +                * end of table
->> +                */
->> +               if (i > 0 && prev_freq == freq)
->> +                       break;
->> +
->> +               qp->lut_tables[i] = freq;
->> +               prev_freq = freq;
->> +       }
->> +       qp->max_state = i;
->> +
->> +       desc = of_device_get_match_data(&pdev->dev);
->> +       if (!desc)
->> +               return -EINVAL;
->> +
->> +       qnodes = desc->nodes;
->> +       num_nodes = desc->num_nodes;
->> +
->> +       data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), 
->> GFP_KERNEL);
->> +       if (!data)
->> +               return -ENOMEM;
->> +
->> +       provider = &qp->provider;
->> +       provider->dev = &pdev->dev;
->> +       provider->set = qcom_icc_set;
->> +       provider->aggregate = qcom_icc_aggregate;
->> +       provider->xlate = of_icc_xlate_onecell;
->> +       INIT_LIST_HEAD(&provider->nodes);
->> +       provider->data = data;
->> +
->> +       ret = icc_provider_add(provider);
->> +       if (ret) {
->> +               dev_err(&pdev->dev, "error adding interconnect 
->> provider\n");
->> +               return ret;
->> +       }
->> +
->> +       for (i = 0; i < num_nodes; i++) {
->> +               size_t j;
->> +
->> +               node = icc_node_create(qnodes[i]->id);
->> +               if (IS_ERR(node)) {
->> +                       ret = PTR_ERR(node);
->> +                       goto err;
->> +               }
->> +
->> +               node->name = qnodes[i]->name;
->> +               node->data = qnodes[i];
->> +               icc_node_add(node, provider);
->> +
->> +               dev_dbg(&pdev->dev, "registered node %p %s %d\n", 
->> node,
->> +                       qnodes[i]->name, node->id);
->> +
->> +               /* populate links */
->> +               for (j = 0; j < qnodes[i]->num_links; j++)
->> +                       icc_link_create(node, qnodes[i]->links[j]);
->> +
->> +               data->nodes[i] = node;
->> +       }
->> +       data->num_nodes = num_nodes;
->> +
->> +       platform_set_drvdata(pdev, qp);
->> +
->> +       return ret;
->> +err:
->> +       list_for_each_entry(node, &provider->nodes, node_list) {
->> +               icc_node_del(node);
->> +               icc_node_destroy(node->id);
->> +       }
->> +
->> +       icc_provider_del(provider);
-> 
-> I looks like you could just call qcom_osm_l3_remove() here instead of 
-> the above.
+> Are there no more special cases?
 
-yeah
+I don't know other special cases when we should avoid the instrumentation.
 
-> 
-> 
->> +       return ret;
->> +}
->> +
->> +static int qcom_osm_l3_remove(struct platform_device *pdev)
->> +{
->> +       struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
->> +       struct icc_provider *provider = &qp->provider;
->> +       struct icc_node *n;
->> +
->> +       list_for_each_entry(n, &provider->nodes, node_list) {
->> +               icc_node_del(n);
->> +               icc_node_destroy(n->id);
->> +       }
->> +
->> +       return icc_provider_del(provider);
->> +}
->> +
->> +static const struct of_device_id osm_l3_of_match[] = {
->> +       { .compatible = "qcom,sdm845-osm-l3", .data = &sdm845_osm_l3 
->> },
->> +       { },
->> +};
->> +MODULE_DEVICE_TABLE(of, osm_l3_of_match);
->> +
->> +static struct platform_driver osm_l3_driver = {
->> +       .probe = qcom_osm_l3_probe,
->> +       .remove = qcom_osm_l3_remove,
->> +       .driver = {
->> +               .name = "osm-l3",
->> +               .of_match_table = osm_l3_of_match,
->> +       },
->> +};
->> +module_platform_driver(osm_l3_driver);
->> +
->> +MODULE_DESCRIPTION("Qualcomm OSM L3 interconnect driver");
->> +MODULE_LICENSE("GPL v2");
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
+And I can't imagine a method of finding such cases except runtime testing.
 
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Robin, I would better save this comment only removing "TODO" if it matters.
+
+Best regards,
+Alexander
