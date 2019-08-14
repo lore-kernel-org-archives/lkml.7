@@ -2,60 +2,51 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FB4C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328A1C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7ED5214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08C95217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802505;
-	bh=8d+DXjxnTBnpLKRX5659bJcWsiMINxWaioAMrxT+YZY=;
+	s=default; t=1565802511;
+	bh=P7Rjrz7bA+AxUUjdjRu62QFk1gGz/UCPmO33bcqzB7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bddeIWa8eTpLlt8ruB2MYq9xlqbuwd1w0T60gf5ot9fqHllBanuOHfVgdn+atLTUa
-	 TDH3BYon9vY/hlpPTw1xIf/AUnnYv7RCdjLy7oVzdfD/pQMKomT06OYkSea+tD5X0p
-	 m2eso/u3xwpPNGOJO+1FlSohjT4atBkQnMiwcgJM=
+	b=E37h91xn3CpTf8UXYoEWg0CVTeWn1hzmgvNydQhZijWdGILSRG5Rs6dCLdu2eeSus
+	 Opm+aoIO4OaXx17BiQ0PdEIBtMfJmbXAzach8aGy9YxvL+SKFTVJeJdayMMvbQayn/
+	 14fiNltvMEewNsrTDIzmNijrTeL/oeWWW8TtM388=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730137AbfHNRIY (ORCPT
+        id S1729656AbfHNRI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:08:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58346 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:08:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730128AbfHNRIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:08:21 -0400
+        id S1729640AbfHNRIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:08:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CAE22133F;
-        Wed, 14 Aug 2019 17:08:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A017E2084D;
+        Wed, 14 Aug 2019 17:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802500;
-        bh=8d+DXjxnTBnpLKRX5659bJcWsiMINxWaioAMrxT+YZY=;
+        s=default; t=1565802503;
+        bh=P7Rjrz7bA+AxUUjdjRu62QFk1gGz/UCPmO33bcqzB7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pgg80KAxm8uc9x2/uWB20X38pCdmD2IYiTPLF7KUlIYKDKKbNDs0gatlB6M4cVGfM
-         +OJgmo7979wjFLw8rDHk9ROlr720nF2SZheRULjQOjwPMgJncj2S+5b570m3pTzwOJ
-         qAjzexj4NCzgllQ5cJRwB5fZloSjEvi2YsFHuLxA=
+        b=Qmzje68TAOi2Zo65Tzxq/6oxjs5XFoEoKtDegdD7ZASXD2mq9Ck4eVmVQzC7XDyq/
+         gmQwdC36HtW7FGNqlhusUTp2ljNxZ9WvpCJwwFEM8YbqRZyT2LqO+Y6cPokYT2LUN5
+         WctvAVNOYFLyAcYa//1+vI0li/Yz3MdcUMAE/B30=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Borislav Petkov <bp@alien8.de>, Jiri Olsa <jolsa@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 114/144] perf/x86: Apply more accurate check on hypervisor platform
-Date:   Wed, 14 Aug 2019 19:01:10 +0200
-Message-Id: <20190814165804.682059835@linuxfoundation.org>
+        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.2 144/144] iwlwifi: mvm: fix version check for GEO_TX_POWER_LIMIT support
+Date:   Wed, 14 Aug 2019 19:01:40 +0200
+Message-Id: <20190814165805.991434750@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -68,59 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5ea3f6fb37b79da33ac9211df336fd2b9f47c39f ]
+From: Luca Coelho <luciano.coelho@intel.com>
 
-check_msr is used to fix a bug report in guest where KVM doesn't support
-LBR MSR and cause #GP.
+commit f5a47fae6aa3eb06f100e701d2342ee56b857bee upstream.
 
-The msr check is bypassed on real HW to workaround a false failure,
-see commit d0e1a507bdc7 ("perf/x86/intel: Disable check_msr for real HW")
+We erroneously added a check for FW API version 41 before sending
+GEO_TX_POWER_LIMIT, but this was already implemented in version 38.
+Additionally, it was cherry-picked to older versions, namely 17, 26
+and 29, so check for those as well.
 
-When running a guest with CONFIG_HYPERVISOR_GUEST not set or "nopv"
-enabled, current check isn't enough and #GP could trigger.
+Cc: stable@vger.kernel.org
+Fixes: eca1e56ceedd ("iwlwifi: mvm: don't send GEO_TX_POWER_LIMIT to old firmwares")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1564022366-18293-1-git-send-email-zhenzhong.duan@oracle.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index e9042e3f3052c..6179be624f357 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -20,7 +20,6 @@
- #include <asm/intel-family.h>
- #include <asm/apic.h>
- #include <asm/cpu_device_id.h>
--#include <asm/hypervisor.h>
- 
- #include "../perf_event.h"
- 
-@@ -4057,7 +4056,7 @@ static bool check_msr(unsigned long msr, u64 mask)
- 	 * Disable the check for real HW, so we don't
- 	 * mess with potentionaly enabled registers:
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -880,9 +880,14 @@ static bool iwl_mvm_sar_geo_support(stru
+ 	 * The GEO_TX_POWER_LIMIT command is not supported on earlier
+ 	 * firmware versions.  Unfortunately, we don't have a TLV API
+ 	 * flag to rely on, so rely on the major version which is in
+-	 * the first byte of ucode_ver.
++	 * the first byte of ucode_ver.  This was implemented
++	 * initially on version 38 and then backported to 36, 29 and
++	 * 17.
  	 */
--	if (hypervisor_is_type(X86_HYPER_NATIVE))
-+	if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
- 		return true;
+-	return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 41;
++	return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 38 ||
++	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 36 ||
++	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 ||
++	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17;
+ }
  
- 	/*
--- 
-2.20.1
-
+ int iwl_mvm_get_sar_geo_profile(struct iwl_mvm *mvm)
 
 
