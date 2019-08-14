@@ -2,112 +2,74 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A33DC32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62056C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10FE72133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:58:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565798302;
-	bh=n4ZEBe452gAKtMljXMdXe16lsMLEEOZehc4jHOnIKAo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xJmst75Da8c7TFCBAggyIXN/ydhxce9KdGTGqGxFY09AbJhQrcQZLIxAvLxIiYCsf
-	 Cp4OvSLANrwu5OEjJTRum3XLZ+YRpZ/BkNXZOklPs/UMsB1+mEee6z32wu+17qKfK1
-	 0xActdL2WUkrlPOQQ2CX+pZQWML/cHB5W+KozBtc=
+	by mail.kernel.org (Postfix) with ESMTP id 3D7B32133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfHNP6V (ORCPT
+        id S1727867AbfHNP61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 11:58:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbfHNP6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 11:58:20 -0400
-Received: from localhost (unknown [104.133.9.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31EFE2083B;
-        Wed, 14 Aug 2019 15:58:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565798300;
-        bh=n4ZEBe452gAKtMljXMdXe16lsMLEEOZehc4jHOnIKAo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xnCPCiT2W4dJvwbcIUqXLcF2DB+Km3eoi5BJrq3fouoa4kGMa+pstuVudykKKIcjn
-         XPyhhQxc3jhKbqikB5ySEkT1f1JnwnS49YieTe1PI/ICm/eGWEWHlEX4lZXzZT15rH
-         Ic9/bKKjVxrqYUCwV6L145ew0Y778Ut4xUnmVJn8=
-Date:   Wed, 14 Aug 2019 10:58:19 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jake Oshins <jakeo@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
-Message-ID: <20190814155819.GC253360@google.com>
-References: <abbe8012-1e6f-bdea-1454-5c59ccbced3d@infradead.org>
- <DM6PR21MB133723E9D1FA8BA0006E06FECAF20@DM6PR21MB1337.namprd21.prod.outlook.com>
- <20190713150353.GF10104@sasha-vm>
- <20190723212107.GB9742@google.com>
- <20190814101409.GB29414@e121166-lin.cambridge.arm.com>
+        Wed, 14 Aug 2019 11:58:27 -0400
+Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:47256 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfHNP60 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 11:58:26 -0400
+Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
+        id 1hxvfK-0005VF-00; Wed, 14 Aug 2019 15:58:22 +0000
+Date:   Wed, 14 Aug 2019 11:58:22 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, libc-alpha@sourceware.org,
+        oleg@redhat.com, alistair23@gmail.com, ebiederm@xmission.com,
+        arnd@arndb.de, torvalds@linux-foundation.org,
+        adhemerval.zanella@linaro.org, fweimer@redhat.com,
+        palmer@sifive.com, macro@wdc.com, zongbox@gmail.com,
+        akpm@linux-foundation.org, viro@zeniv.linux.org.uk, hpa@zytor.com
+Subject: Re: [PATCH v3 0/1] waitid: process group enhancement
+Message-ID: <20190814155822.GI9017@brightrain.aerifal.cx>
+References: <CAKmqyKMJPQAOKn11xepzAwXOd4e9dU0Cyz=A0T-uMEgUp5yJjA@mail.gmail.com>
+ <20190814154400.6371-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190814101409.GB29414@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190814154400.6371-1-christian.brauner@ubuntu.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 11:14:09AM +0100, Lorenzo Pieralisi wrote:
-> On Tue, Jul 23, 2019 at 04:21:07PM -0500, Bjorn Helgaas wrote:
-> > On Sat, Jul 13, 2019 at 11:03:53AM -0400, Sasha Levin wrote:
+On Wed, Aug 14, 2019 at 05:43:59PM +0200, Christian Brauner wrote:
+> Hey everyone,
 > 
-> [...]
+> This patch adds support for waiting on the current process group by
+> specifying waitid(P_PGID, 0, ...) as discussed in [1]. The details why
+> we need to do this are in the commit message of [PATCH 1/1] so I won't
+> repeat them here.
 > 
-> > > > > v3: corrected Fixes: tag [Dexuan Cui <decui@microsoft.com>]
-> > > > >     This is the Microsoft-preferred version of the patch.
-> > > > > 
-> > > > >  drivers/pci/Kconfig |    2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > 
-> > > > > --- lnx-52.orig/drivers/pci/Kconfig
-> > > > > +++ lnx-52/drivers/pci/Kconfig
-> > > > > @@ -181,7 +181,7 @@ config PCI_LABEL
-> > > > > 
-> > > > >  config PCI_HYPERV
-> > > > >          tristate "Hyper-V PCI Frontend"
-> > > > > -        depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN
-> > > > > && X86_64
-> > > > > +        depends on X86_64 && HYPERV && PCI_MSI &&
-> > > > > PCI_MSI_IRQ_DOMAIN && SYSFS
-> > > > >          help
-> > > > >            The PCI device frontend driver allows the kernel to import arbitrary
-> > > > >            PCI devices from a PCI backend to support PCI driver domains.
-> > > > > 
-> > > > 
-> > > > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > > 
-> > > Queued up for hyperv-fixes, thank you!
-> > 
-> > What merge strategy do you envision for this?  Previous
-> > drivers/pci/controller/pci-hyperv.c changes have generally been merged
-> > by Lorenzo and incorporated into my PCI tree.
-> > 
-> > This particular patch doesn't actually touch pci-hyperv.c; it touches
-> > drivers/pci/Kconfig, so should somehow be coordinated with me.
+> I've picked this up since the thread has gone stale and parts of
+> userspace are actually blocked by this.
 > 
-> Bjorn please let me know if you can pick this up or I should, thanks.
+> Note that the patch has been changed to be more closely aligned with the
+> P_PIDFD changes to waitid() I have sitting in my for-next branch (cf. [2]).
+> This makes the merge conflict a little simpler and picks up on the
+> coding style discussions that guided the P_PIDFD patchset.
+> 
+> There was some desire to get this feature in with 5.3 (cf. [3]).
+> But given that this is a new feature for waitid() and for the sake of
+> avoiding any merge conflicts I would prefer to land this in the 5.4
+> merge window together with the P_PIDFD changes.
 
-Would you mind picking it up?  Then we can sort of keep all the
-Hyper-V-related changes together.
+That makes 5.4 (or later, depending on other stuff) the hard minimum
+for RV32 ABI. Is that acceptable? I was under the impression (perhaps
+mistaken) that 5.3 was going to be next LTS series which is why I'd
+like to have the necessary syscalls for a complete working RV32
+userspace in it. If I'm wrong about that please ignore me. :-)
+
+Rich
