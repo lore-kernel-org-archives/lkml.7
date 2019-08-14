@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BCAC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AC5C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE00820843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B5C520843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749086;
-	bh=aZ38rz6VCA8Q/RCMofW28uLSJZbLCjFdNmOmpsDIwmk=;
+	s=default; t=1565749090;
+	bh=W6zjYvuOPX26fpE1Mz/RixhVto6IOI2UoMOnVg4fDU0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0g+U3F4uUFyablDwei381mbrl9DY+TY4a9e5Yw7u/Xblpd07/0s7ZX/bzLxmWE+vU
-	 uR5+2N4VU6nPiWIJblVj8+4DNaELlQLy5UQCpf6ItaCzVp7h0AfSKLyXxRhDf6JTfy
-	 oK2+bktqjBDatXqrWusvEcosL9hgoxSy7NEUPHWs=
+	b=kX3d+mfmJBzaQ7KLq1hz7HlBsQ4j8U6G7cyEBbTft2Wp8WEP6J/duV2tAu9D4VNe/
+	 upnFVz7n+bBhKIlFfsuvMlfcOiCtyHRY9XlEKBC8DdI/NVwCTMiOC0KC+xFlj//SFB
+	 rhS3BDdWIikyKNdX4Uj8WW6qvMxpuR8V6p0d6KFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbfHNCRj (ORCPT
+        id S1729450AbfHNCRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:17:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48700 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:17:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729353AbfHNCRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:17:20 -0400
+        id S1727984AbfHNCRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:17:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B14B20874;
-        Wed, 14 Aug 2019 02:17:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0203020989;
+        Wed, 14 Aug 2019 02:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749039;
-        bh=aZ38rz6VCA8Q/RCMofW28uLSJZbLCjFdNmOmpsDIwmk=;
+        s=default; t=1565749038;
+        bh=W6zjYvuOPX26fpE1Mz/RixhVto6IOI2UoMOnVg4fDU0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AFu0R71Rsv8leZwZ+mPMNE1wuJzsYDEolcR+Q+TJn9SVE9pVwMjDl7a2N18yjXYCv
-         BJyDnoHnSfftSmRCBP2/Re7CiBoC9J3JCK31OBgUgUI1WRVkvL0DeS2Cr2y8FpvYJG
-         djL1MvfYa6piT4A0x2fmp4JgFIKOc7uEvVMhBW0I=
+        b=Sn7eEAI700d6/tSJz7ind0aqnZiqOphU44KeNLOY4ijs38a3pkNbwQq08Ri37VJ1T
+         ZTa1NYO9s5a6ZGaBgG2J71r3uWcV+98nmotY42BsNZmM3VzNxyinPiyZ7PTH3Z3aAW
+         ELuyUASirSvd4lYX8ahsbImAs5jlxhu/zZ+UzrqI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
         Jose Abreu <joabreu@synopsys.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 54/68] net: stmmac: tc: Do not return a fragment entry
-Date:   Tue, 13 Aug 2019 22:15:32 -0400
-Message-Id: <20190814021548.16001-54-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 53/68] net: stmmac: Fix issues when number of Queues >= 4
+Date:   Tue, 13 Aug 2019 22:15:31 -0400
+Message-Id: <20190814021548.16001-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -62,31 +62,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 4a6a1385a4db5f42258a40fcd497cbfd22075968 ]
+[ Upstream commit e8df7e8c233a18d2704e37ecff47583b494789d3 ]
 
-Do not try to return a fragment entry from TC list. Otherwise we may not
-clean properly allocated entries.
+When queues >= 4 we use different registers but we were not subtracting
+the offset of 4. Fix this.
+
+Found out by Coverity.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c   | 4 ++++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-index 58ea18af9813a..37c0bc699cd9c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-@@ -37,7 +37,7 @@ static struct stmmac_tc_entry *tc_find_entry(struct stmmac_priv *priv,
- 		entry = &priv->tc_entries[i];
- 		if (!entry->in_use && !first && free)
- 			first = entry;
--		if (entry->handle == loc && !free)
-+		if ((entry->handle == loc) && !free && !entry->is_frag)
- 			dup = entry;
- 	}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index d0e6e1503581f..48cf5e2b24417 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -88,6 +88,8 @@ static void dwmac4_rx_queue_priority(struct mac_device_info *hw,
+ 	u32 value;
  
+ 	base_register = (queue < 4) ? GMAC_RXQ_CTRL2 : GMAC_RXQ_CTRL3;
++	if (queue >= 4)
++		queue -= 4;
+ 
+ 	value = readl(ioaddr + base_register);
+ 
+@@ -105,6 +107,8 @@ static void dwmac4_tx_queue_priority(struct mac_device_info *hw,
+ 	u32 value;
+ 
+ 	base_register = (queue < 4) ? GMAC_TXQ_PRTY_MAP0 : GMAC_TXQ_PRTY_MAP1;
++	if (queue >= 4)
++		queue -= 4;
+ 
+ 	value = readl(ioaddr + base_register);
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index d182f82f7b586..870302a7177e2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -106,6 +106,8 @@ static void dwxgmac2_rx_queue_prio(struct mac_device_info *hw, u32 prio,
+ 	u32 value, reg;
+ 
+ 	reg = (queue < 4) ? XGMAC_RXQ_CTRL2 : XGMAC_RXQ_CTRL3;
++	if (queue >= 4)
++		queue -= 4;
+ 
+ 	value = readl(ioaddr + reg);
+ 	value &= ~XGMAC_PSRQ(queue);
+@@ -169,6 +171,8 @@ static void dwxgmac2_map_mtl_to_dma(struct mac_device_info *hw, u32 queue,
+ 	u32 value, reg;
+ 
+ 	reg = (queue < 4) ? XGMAC_MTL_RXQ_DMA_MAP0 : XGMAC_MTL_RXQ_DMA_MAP1;
++	if (queue >= 4)
++		queue -= 4;
+ 
+ 	value = readl(ioaddr + reg);
+ 	value &= ~XGMAC_QxMDMACH(queue);
 -- 
 2.20.1
 
