@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB495C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13499C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845EF20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D59E520842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750069;
-	bh=oUTvVHpGCXniprAY65ZrDbxr23TG1b7WMgMOcwgLu4Q=;
+	s=default; t=1565750077;
+	bh=BFAM/OpfzNz2arFnoqYAr08U99/SP+2B+z5l1hDy4Ls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HRT+6Xv+RY6fgILpWdv/quADtNCedduF77CvUn2Fx6CLvp0zW21GicNTAbZwYes1E
-	 GGMe3eey8xi4SMk0D1dqvpPo2jJ83lFPbZijiRcAYMmgPpu2ZX1kMUiZCT9PSvvEg4
-	 yNSLjRALLYSeGt4Xk9WBD28yi4bi7tIVDhv8SREE=
+	b=tM+oOZVtOPummMVDUGROF8eEKRRAzMaIOZwar4c5KuMCIwdemQY4ykpy2uvpClq48
+	 kwQufmIeRuCaGdhbTBVbcNq/aQhzmtcBrd1WwmvLTNo3TzMJ6k3rrI+JutzMnsJL2F
+	 1LazrXJ3FLsjm//prp+z/SlRU0fLzukeHYIHw+jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbfHNCe2 (ORCPT
+        id S1726807AbfHNCef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:34:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45938 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:34:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728460AbfHNCNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:52 -0400
+        id S1728442AbfHNCNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAE7920874;
-        Wed, 14 Aug 2019 02:13:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B80A2084D;
+        Wed, 14 Aug 2019 02:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748831;
-        bh=oUTvVHpGCXniprAY65ZrDbxr23TG1b7WMgMOcwgLu4Q=;
+        s=default; t=1565748829;
+        bh=BFAM/OpfzNz2arFnoqYAr08U99/SP+2B+z5l1hDy4Ls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pscl496XrhIt36Hq0oFPQPAsvI4j+tv4/VKyuwY6U8ELJv+jfzBqgezSG8OkCjB0Z
-         s4/UKfXmNsC712iEMXikO83Yno3/ABr6tE0cA69GKm7shL5bRtaJFqz1+1hFG6Jmbs
-         tJKCIfB9yre/AZgzayEseYCli//EDypHrybkuNI0=
+        b=bUR0XuYji11OLpCEVniNYOjrlWy7oeN/WLJ2HMyeEYILbBTHmwupj8G3Ba1Xpgut1
+         extjacMGcVzuCscFrR6bxnxEA7Ew3wQBuEuo3PF5WbILR+Oa4RQvS9qsScyo9TXEIN
+         58UedVjLhc5RJi4ngztR7BuRnHtfgFeXC0aqx58s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sebastien Tisserant <stisserant@wallix.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 091/123] SMB3: Kernel oops mounting a encryptData share with CONFIG_DEBUG_VIRTUAL
-Date:   Tue, 13 Aug 2019 22:10:15 -0400
-Message-Id: <20190814021047.14828-91-sashal@kernel.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 089/123] drm/rockchip: Suspend DP late
+Date:   Tue, 13 Aug 2019 22:10:13 -0400
+Message-Id: <20190814021047.14828-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -60,42 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastien Tisserant <stisserant@wallix.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit ee9d66182392695535cc9fccfcb40c16f72de2a9 ]
+[ Upstream commit f7ccbed656f78212593ca965d9a8f34bf24e0aab ]
 
-Fix kernel oops when mounting a encryptData CIFS share with
-CONFIG_DEBUG_VIRTUAL
+In commit fe64ba5c6323 ("drm/rockchip: Resume DP early") we moved
+resume to be early but left suspend at its normal time.  This seems
+like it could be OK, but casues problems if a suspend gets interrupted
+partway through.  The OS only balances matching suspend/resume levels.
+...so if suspend was called then resume will be called.  If suspend
+late was called then resume early will be called.  ...but if suspend
+was called resume early might not get called.  This leads to an
+unbalance in the clock enables / disables.
 
-Signed-off-by: Sebastien Tisserant <stisserant@wallix.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Lets take the simple fix and just move suspend to be late to match.
+This makes the PM core take proper care in keeping things balanced.
+
+Fixes: fe64ba5c6323 ("drm/rockchip: Resume DP early")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190802184616.44822-1-dianders@chromium.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2ops.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/rockchip/analogix_dp-rockchip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index ae10d6e297c3a..42de31d206169 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -3439,7 +3439,15 @@ fill_transform_hdr(struct smb2_transform_hdr *tr_hdr, unsigned int orig_len,
- static inline void smb2_sg_set_buf(struct scatterlist *sg, const void *buf,
- 				   unsigned int buflen)
- {
--	sg_set_page(sg, virt_to_page(buf), buflen, offset_in_page(buf));
-+	void *addr;
-+	/*
-+	 * VMAP_STACK (at least) puts stack into the vmalloc address space
-+	 */
-+	if (is_vmalloc_addr(buf))
-+		addr = vmalloc_to_page(buf);
-+	else
-+		addr = virt_to_page(buf);
-+	sg_set_page(sg, addr, buflen, offset_in_page(buf));
- }
+diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+index 95e5c517a15f7..9aae3d8e99ef4 100644
+--- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
++++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+@@ -432,7 +432,7 @@ static int rockchip_dp_resume(struct device *dev)
  
- /* Assumes the first rqst has a transform header as the first iov.
+ static const struct dev_pm_ops rockchip_dp_pm_ops = {
+ #ifdef CONFIG_PM_SLEEP
+-	.suspend = rockchip_dp_suspend,
++	.suspend_late = rockchip_dp_suspend,
+ 	.resume_early = rockchip_dp_resume,
+ #endif
+ };
 -- 
 2.20.1
 
