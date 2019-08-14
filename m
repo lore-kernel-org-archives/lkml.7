@@ -2,239 +2,85 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E08C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BE1C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7680120843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 109EF20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:31:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbfHNIak (ORCPT
+        id S1727556AbfHNIbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 04:30:40 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:58191 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfHNIak (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 04:30:40 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7E8Uc0Y027914, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7E8Uc0Y027914
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 14 Aug 2019 16:30:38 +0800
-Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
- (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Wed, 14 Aug 2019
- 16:30:36 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     <netdev@vger.kernel.org>
-CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
-        Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net-next] r8152: divide the tx and rx bottom functions
-Date:   Wed, 14 Aug 2019 16:30:17 +0800
-Message-ID: <1394712342-15778-301-Taiwan-albertk@realtek.com>
-X-Mailer: Microsoft Office Outlook 11
+        Wed, 14 Aug 2019 04:31:18 -0400
+Received: from mga05.intel.com ([192.55.52.43]:41186 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726347AbfHNIbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 04:31:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 01:31:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,384,1559545200"; 
+   d="scan'208";a="167322667"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 14 Aug 2019 01:31:16 -0700
+Received: from [10.226.39.52] (ekotax-mobl.gar.corp.intel.com [10.226.39.52])
+        by linux.intel.com (Postfix) with ESMTP id 388D3580238;
+        Wed, 14 Aug 2019 01:31:15 -0700 (PDT)
+Subject: Re: [PATCH] PCI: dwc: Add map irq callback
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com
+References: <333e87c8ea92cd7442fbe874fc8c9eccabc62f58.1565763869.git.eswara.kota@linux.intel.com>
+ <20190814073605.GA31526@infradead.org>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <fe722a89-37e7-9ef6-042b-a9584f234740@linux.intel.com>
+Date:   Wed, 14 Aug 2019 16:31:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.21.177.138]
+In-Reply-To: <20190814073605.GA31526@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the tx bottom function from NAPI to a new tasklet. Then, for
-multi-cores, the bottom functions of tx and rx may be run at same
-time with different cores. This is used to improve performance.
+Hi Christoph Hellwig,
 
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
----
- drivers/net/usb/r8152.c | 39 ++++++++++++++++++++++++++-------------
- 1 file changed, 26 insertions(+), 13 deletions(-)
+On 8/14/2019 3:36 PM, Christoph Hellwig wrote:
+> On Wed, Aug 14, 2019 at 02:56:49PM +0800, Dilip Kota wrote:
+>> Certain platforms like Intel need to configure
+>> registers to enable the interrupts.
+>> Map Irq callback helps to perform platform specific
+>> configurations while assigning or enabling the interrupts.
+> This seems to miss the hunk that actually assigns the map_irq
+> callback.
+pp->map_irq() must assign the callback along with the platform specific 
+configuration.
+In Intel PCIe driver pp->map_irq() does the same. (Driver is not yet 
+present in mainline, i will submit for review once this change is approved).
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> index f93252d0da5b..5880d2b72ef8 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> @@ -470,7 +470,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>   	bridge->sysdata = pp;
+>>   	bridge->busnr = pp->root_bus_nr;
+>>   	bridge->ops = &dw_pcie_ops;
+>> -	bridge->map_irq = of_irq_parse_and_map_pci;
+>> +	bridge->map_irq = pp->map_irq ? pp->map_irq : of_irq_parse_and_map_pci;
+> Pleae just use a classic if / else to make the code a little easier
+> to read.
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 40d18e866269..3ed9f8e082c9 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -619,7 +619,7 @@ enum rtl8152_flags {
- 	RTL8152_LINK_CHG,
- 	SELECTIVE_SUSPEND,
- 	PHY_RESET,
--	SCHEDULE_NAPI,
-+	SCHEDULE_TASKLET,
- 	GREEN_ETHERNET,
- 	DELL_TB_RX_AGG_BUG,
- };
-@@ -733,6 +733,7 @@ struct r8152 {
- #ifdef CONFIG_PM_SLEEP
- 	struct notifier_block pm_notifier;
- #endif
-+	struct tasklet_struct tx_tl;
- 
- 	struct rtl_ops {
- 		void (*init)(struct r8152 *);
-@@ -1401,7 +1402,7 @@ static void write_bulk_callback(struct urb *urb)
- 		return;
- 
- 	if (!skb_queue_empty(&tp->tx_queue))
--		napi_schedule(&tp->napi);
-+		tasklet_schedule(&tp->tx_tl);
- }
- 
- static void intr_callback(struct urb *urb)
-@@ -2179,8 +2180,12 @@ static void tx_bottom(struct r8152 *tp)
- 	} while (res == 0);
- }
- 
--static void bottom_half(struct r8152 *tp)
-+static void bottom_half(unsigned long data)
- {
-+	struct r8152 *tp;
-+
-+	tp = (struct r8152 *)data;
-+
- 	if (test_bit(RTL8152_UNPLUG, &tp->flags))
- 		return;
- 
-@@ -2192,7 +2197,7 @@ static void bottom_half(struct r8152 *tp)
- 	if (!netif_carrier_ok(tp->netdev))
- 		return;
- 
--	clear_bit(SCHEDULE_NAPI, &tp->flags);
-+	clear_bit(SCHEDULE_TASKLET, &tp->flags);
- 
- 	tx_bottom(tp);
- }
-@@ -2203,16 +2208,12 @@ static int r8152_poll(struct napi_struct *napi, int budget)
- 	int work_done;
- 
- 	work_done = rx_bottom(tp, budget);
--	bottom_half(tp);
- 
- 	if (work_done < budget) {
- 		if (!napi_complete_done(napi, work_done))
- 			goto out;
- 		if (!list_empty(&tp->rx_done))
- 			napi_schedule(napi);
--		else if (!skb_queue_empty(&tp->tx_queue) &&
--			 !list_empty(&tp->tx_free))
--			napi_schedule(napi);
- 	}
- 
- out:
-@@ -2366,11 +2367,11 @@ static netdev_tx_t rtl8152_start_xmit(struct sk_buff *skb,
- 
- 	if (!list_empty(&tp->tx_free)) {
- 		if (test_bit(SELECTIVE_SUSPEND, &tp->flags)) {
--			set_bit(SCHEDULE_NAPI, &tp->flags);
-+			set_bit(SCHEDULE_TASKLET, &tp->flags);
- 			schedule_delayed_work(&tp->schedule, 0);
- 		} else {
- 			usb_mark_last_busy(tp->udev);
--			napi_schedule(&tp->napi);
-+			tasklet_schedule(&tp->tx_tl);
- 		}
- 	} else if (skb_queue_len(&tp->tx_queue) > tp->tx_qlen) {
- 		netif_stop_queue(netdev);
-@@ -4020,9 +4021,11 @@ static void set_carrier(struct r8152 *tp)
- 	} else {
- 		if (netif_carrier_ok(netdev)) {
- 			netif_carrier_off(netdev);
-+			tasklet_disable(&tp->tx_tl);
- 			napi_disable(napi);
- 			tp->rtl_ops.disable(tp);
- 			napi_enable(napi);
-+			tasklet_enable(&tp->tx_tl);
- 			netif_info(tp, link, netdev, "carrier off\n");
- 		}
- 	}
-@@ -4055,10 +4058,10 @@ static void rtl_work_func_t(struct work_struct *work)
- 	if (test_and_clear_bit(RTL8152_SET_RX_MODE, &tp->flags))
- 		_rtl8152_set_rx_mode(tp->netdev);
- 
--	/* don't schedule napi before linking */
--	if (test_and_clear_bit(SCHEDULE_NAPI, &tp->flags) &&
-+	/* don't schedule tasket before linking */
-+	if (test_and_clear_bit(SCHEDULE_TASKLET, &tp->flags) &&
- 	    netif_carrier_ok(tp->netdev))
--		napi_schedule(&tp->napi);
-+		tasklet_schedule(&tp->tx_tl);
- 
- 	mutex_unlock(&tp->control);
- 
-@@ -4144,6 +4147,7 @@ static int rtl8152_open(struct net_device *netdev)
- 		goto out_unlock;
- 	}
- 	napi_enable(&tp->napi);
-+	tasklet_enable(&tp->tx_tl);
- 
- 	mutex_unlock(&tp->control);
- 
-@@ -4171,6 +4175,7 @@ static int rtl8152_close(struct net_device *netdev)
- #ifdef CONFIG_PM_SLEEP
- 	unregister_pm_notifier(&tp->pm_notifier);
- #endif
-+	tasklet_disable(&tp->tx_tl);
- 	if (!test_bit(RTL8152_UNPLUG, &tp->flags))
- 		napi_disable(&tp->napi);
- 	clear_bit(WORK_ENABLE, &tp->flags);
-@@ -4440,6 +4445,7 @@ static int rtl8152_pre_reset(struct usb_interface *intf)
- 		return 0;
- 
- 	netif_stop_queue(netdev);
-+	tasklet_disable(&tp->tx_tl);
- 	napi_disable(&tp->napi);
- 	clear_bit(WORK_ENABLE, &tp->flags);
- 	usb_kill_urb(tp->intr_urb);
-@@ -4483,6 +4489,7 @@ static int rtl8152_post_reset(struct usb_interface *intf)
- 	}
- 
- 	napi_enable(&tp->napi);
-+	tasklet_enable(&tp->tx_tl);
- 	netif_wake_queue(netdev);
- 	usb_submit_urb(tp->intr_urb, GFP_KERNEL);
- 
-@@ -4636,10 +4643,12 @@ static int rtl8152_system_suspend(struct r8152 *tp)
- 
- 		clear_bit(WORK_ENABLE, &tp->flags);
- 		usb_kill_urb(tp->intr_urb);
-+		tasklet_disable(&tp->tx_tl);
- 		napi_disable(napi);
- 		cancel_delayed_work_sync(&tp->schedule);
- 		tp->rtl_ops.down(tp);
- 		napi_enable(napi);
-+		tasklet_enable(&tp->tx_tl);
- 	}
- 
- 	return 0;
-@@ -5499,6 +5508,8 @@ static int rtl8152_probe(struct usb_interface *intf,
- 	mutex_init(&tp->control);
- 	INIT_DELAYED_WORK(&tp->schedule, rtl_work_func_t);
- 	INIT_DELAYED_WORK(&tp->hw_phy_work, rtl_hw_phy_work_func_t);
-+	tasklet_init(&tp->tx_tl, bottom_half, (unsigned long)tp);
-+	tasklet_disable(&tp->tx_tl);
- 
- 	netdev->netdev_ops = &rtl8152_netdev_ops;
- 	netdev->watchdog_timeo = RTL8152_TX_TIMEOUT;
-@@ -5585,6 +5596,7 @@ static int rtl8152_probe(struct usb_interface *intf,
- 
- out1:
- 	netif_napi_del(&tp->napi);
-+	tasklet_kill(&tp->tx_tl);
- 	usb_set_intfdata(intf, NULL);
- out:
- 	free_netdev(netdev);
-@@ -5601,6 +5613,7 @@ static void rtl8152_disconnect(struct usb_interface *intf)
- 
- 		netif_napi_del(&tp->napi);
- 		unregister_netdev(tp->netdev);
-+		tasklet_kill(&tp->tx_tl);
- 		cancel_delayed_work_sync(&tp->hw_phy_work);
- 		tp->rtl_ops.unload(tp);
- 		free_netdev(tp->netdev);
--- 
-2.21.0
+Noted, will update it.
+
+--Dilip
 
