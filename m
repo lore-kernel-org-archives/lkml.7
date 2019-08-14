@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E8CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81824C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F1320679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C522084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749548;
-	bh=5OM0KKqgmvpI3Ob3ZcIFnfVf47X5AKUtdvCUgHxSCWg=;
+	s=default; t=1565749551;
+	bh=2Ej4JXBL+umRmchx+lpkGnP86ilUK0ZlJFwHz58qWn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PU/PBT51v0phFrBlFRjh69uKeO554bX2xgX0ypsTFfeVRcQV+GMp6pwOT1I6f8XNi
-	 1nIu/TKhHcVU4eCr4M7TakxdNyf1COo7EMpI5CZmYu2sNwp332AvZkhWH2A5Y59RAU
-	 /g3t0se2FJimKLUbatOdr4L/IV1Fx35+3WEiWvT4=
+	b=A1iXr52xVh/7kbVT+slKRlss3vvNUAYxfxxvNmHsSLKlr5uVNTje2TRrp5WAcG0bG
+	 5Q5ZXaoy2awKus0ePMGrDEXOrGDTZUIGEecTE/dlVHCrQua4BrKQDFHR/PtfwPiTh1
+	 LqWiSGnt2Rm+zhZP4qXZIzFUAIiC641DV+s2X9ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbfHNCZr (ORCPT
+        id S1729969AbfHNCXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:25:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52802 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:23:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729971AbfHNCXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:23:51 -0400
+        id S1729923AbfHNCXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:23:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56ADA20679;
-        Wed, 14 Aug 2019 02:23:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFAE420842;
+        Wed, 14 Aug 2019 02:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749431;
-        bh=5OM0KKqgmvpI3Ob3ZcIFnfVf47X5AKUtdvCUgHxSCWg=;
+        s=default; t=1565749423;
+        bh=2Ej4JXBL+umRmchx+lpkGnP86ilUK0ZlJFwHz58qWn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uOi1dXl9RdbOpCpXK2GWkmoTg2zNTwoOJq9/wGxWF+DDiAfjpzbQzTwj8QWExFlSG
-         5ugqdCSFH8t87QwRNtFh/TC8ledMAiY6n66zwy2BeXIKXw1krVOiIv0glgoC/kWCWv
-         BHbDCtBaer218a02ed6NjuXb/dPSBo1BFNdOWGFA=
+        b=rO3N69vTD2cxsVhehfCzZXw8vppclvor+Ze/uWNa8Xq72B4xP2uodymQ9Inw4L14E
+         ii2/2nCYJQvV8eOJkmRpLZ4YxVszrjL+x96UIgLWHKteTXl+SOcj3tS/wUuJdk19gS
+         psVCrUisrVQhYGwEIiABZXOzCgV8Kr005aHoR/dM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 15/33] Input: kbtab - sanity check for endpoint type
-Date:   Tue, 13 Aug 2019 22:23:05 -0400
-Message-Id: <20190814022323.17111-15-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 12/33] isdn: mISDN: hfcsusb: Fix possible null-pointer dereferences in start_isoc_chain()
+Date:   Tue, 13 Aug 2019 22:23:02 -0400
+Message-Id: <20190814022323.17111-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022323.17111-1-sashal@kernel.org>
 References: <20190814022323.17111-1-sashal@kernel.org>
@@ -60,45 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit c88090dfc84254fa149174eb3e6a8458de1912c4 ]
+[ Upstream commit a0d57a552b836206ad7705a1060e6e1ce5a38203 ]
 
-The driver should check whether the endpoint it uses has the correct
-type.
+In start_isoc_chain(), usb_alloc_urb() on line 1392 may fail
+and return NULL. At this time, fifo->iso[i].urb is assigned to NULL.
 
-Reported-by: syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Then, fifo->iso[i].urb is used at some places, such as:
+LINE 1405:    fill_isoc_urb(fifo->iso[i].urb, ...)
+                  urb->number_of_packets = num_packets;
+                  urb->transfer_flags = URB_ISO_ASAP;
+                  urb->actual_length = 0;
+                  urb->interval = interval;
+LINE 1416:    fifo->iso[i].urb->...
+LINE 1419:    fifo->iso[i].urb->...
+
+Thus, possible null-pointer dereferences may occur.
+
+To fix these bugs, "continue" is added to avoid using fifo->iso[i].urb
+when it is NULL.
+
+These bugs are found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/tablet/kbtab.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/isdn/hardware/mISDN/hfcsusb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/tablet/kbtab.c b/drivers/input/tablet/kbtab.c
-index 4d9d64908b595..b7ea64ec1205e 100644
---- a/drivers/input/tablet/kbtab.c
-+++ b/drivers/input/tablet/kbtab.c
-@@ -125,6 +125,10 @@ static int kbtab_probe(struct usb_interface *intf, const struct usb_device_id *i
- 	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
- 		return -ENODEV;
- 
-+	endpoint = &intf->cur_altsetting->endpoint[0].desc;
-+	if (!usb_endpoint_is_int_in(endpoint))
-+		return -ENODEV;
-+
- 	kbtab = kzalloc(sizeof(struct kbtab), GFP_KERNEL);
- 	input_dev = input_allocate_device();
- 	if (!kbtab || !input_dev)
-@@ -163,8 +167,6 @@ static int kbtab_probe(struct usb_interface *intf, const struct usb_device_id *i
- 	input_set_abs_params(input_dev, ABS_Y, 0, 0x1750, 4, 0);
- 	input_set_abs_params(input_dev, ABS_PRESSURE, 0, 0xff, 0, 0);
- 
--	endpoint = &intf->cur_altsetting->endpoint[0].desc;
--
- 	usb_fill_int_urb(kbtab->irq, dev,
- 			 usb_rcvintpipe(dev, endpoint->bEndpointAddress),
- 			 kbtab->data, 8,
+diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
+index c60c7998af173..6f19530ba2a93 100644
+--- a/drivers/isdn/hardware/mISDN/hfcsusb.c
++++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
+@@ -1402,6 +1402,7 @@ start_isoc_chain(struct usb_fifo *fifo, int num_packets_per_urb,
+ 				printk(KERN_DEBUG
+ 				       "%s: %s: alloc urb for fifo %i failed",
+ 				       hw->name, __func__, fifo->fifonum);
++				continue;
+ 			}
+ 			fifo->iso[i].owner_fifo = (struct usb_fifo *) fifo;
+ 			fifo->iso[i].indx = i;
 -- 
 2.20.1
 
