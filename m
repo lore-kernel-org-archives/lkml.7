@@ -4,59 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7BFC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921ADC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70C620843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D7B2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748681;
-	bh=7lqU3VISHW01Tu5PdJRQx1nmhBG8wakGY9Gmcmw4DG8=;
+	s=default; t=1565748682;
+	bh=TSBliH0qWd9PJs1EiN+1smbpDa3gXwEEYQr6fkkxRRM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j62arJf7XZGAg9TnbH94dztVTjMggjGb96HDdAPx9FFUUn74/MUgvgeCq848t+f+p
-	 xtdGyzV8qjCVfI767XyaYF4OjrmH3VucCJx5xMiDOjTG/gZMxs2DeolCaYVTIHbI1U
-	 xHKIvdt8iUrw7f1UMdZjGbZGfa2dlTUFvxrLs37c=
+	b=tMzGpPLYbqFFrDcNSu5Jdddy/BSPxjRtKRuW4SqMrt8aDA2JwvksuNePo9VGtTR8W
+	 K/AgAmfJX6h5UmEEHvWVDhSmc0H43MQmPIiur3g7EM5FdGXCHhFyKaZcQ4ecu9gaVf
+	 e3de3uHgdyeREacO8bYvu2+2DUksi9jy6wv+54Tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfHNCLU (ORCPT
+        id S1727406AbfHNCLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:11:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43402 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:11:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727283AbfHNCLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:11:12 -0400
+        id S1727333AbfHNCLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:11:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5742B20989;
-        Wed, 14 Aug 2019 02:11:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B727820843;
+        Wed, 14 Aug 2019 02:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748672;
-        bh=7lqU3VISHW01Tu5PdJRQx1nmhBG8wakGY9Gmcmw4DG8=;
+        s=default; t=1565748677;
+        bh=TSBliH0qWd9PJs1EiN+1smbpDa3gXwEEYQr6fkkxRRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AIp3n+Gfqy4CuYqa0DjhKGoxYjKr2rKZcKYhf7qn05FCElGN3ub80jhYOdBHNJFwZ
-         EqhBqQfsY8yWlva8kHIY/U02nSJrhUDyGn11R6Lfv89l0cgcC/9rLom3lsGg62JEr0
-         HPD8a8E+5KWIkhhUFrPOlGSqAZhLNN5XtxcYgcTc=
+        b=LfySNg4M4AP5rYJ8gkKF2YCgJZ41rfewkH4+AR0giq782hyVfOHqe08Qs5hwnignJ
+         EriKsXSzARRa4A2MPFUqQWWQgO3KDNszLMAwe5f4vdI7L4F22RIAOEbSUtGNoWA4R2
+         I+LAN8bPYTovW63NIdri5AD0JW3ByH8kPIb31vBk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 013/123] ASoC: samsung: odroid: fix an use-after-free issue for codec
-Date:   Tue, 13 Aug 2019 22:08:57 -0400
-Message-Id: <20190814021047.14828-13-sashal@kernel.org>
+Cc:     =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 016/123] HID: logitech-hidpp: add USB PID for a few more supported mice
+Date:   Tue, 13 Aug 2019 22:09:00 -0400
+Message-Id: <20190814021047.14828-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,63 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Filipe Laíns <lains@archlinux.org>
 
-[ Upstream commit 9b6d104a6b150bd4d3e5b039340e1f6b20c2e3c1 ]
+[ Upstream commit 27fc32fd9417968a459d43d9a7c50fd423d53eb9 ]
 
-The codec variable is still being used after the of_node_put() call,
-which may result in use-after-free.
+Add more device IDs to logitech-hidpp driver.
 
-Fixes: bc3cf17b575a ("ASoC: samsung: odroid: Add support for secondary CPU DAI")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Sangbeom Kim <sbkim73@samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/1562989575-33785-2-git-send-email-wen.yang99@zte.com.cn
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Filipe Laíns <lains@archlinux.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/samsung/odroid.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/hid/hid-logitech-hidpp.c | 32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
-index e688169ff12ab..95c35e3ff3303 100644
---- a/sound/soc/samsung/odroid.c
-+++ b/sound/soc/samsung/odroid.c
-@@ -275,9 +275,8 @@ static int odroid_audio_probe(struct platform_device *pdev)
- 	}
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index cf05816a601f5..34e2b3f9d540d 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -3749,15 +3749,45 @@ static const struct hid_device_id hidpp_devices[] = {
  
- 	of_node_put(cpu);
--	of_node_put(codec);
- 	if (ret < 0)
--		return ret;
-+		goto err_put_node;
+ 	{ L27MHZ_DEVICE(HID_ANY_ID) },
  
- 	ret = snd_soc_of_get_dai_link_codecs(dev, codec, codec_link);
- 	if (ret < 0)
-@@ -308,6 +307,7 @@ static int odroid_audio_probe(struct platform_device *pdev)
- 		goto err_put_clk_i2s;
- 	}
+-	{ /* Logitech G403 Gaming Mouse over USB */
++	{ /* Logitech G203/Prodigy Gaming Mouse */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC084) },
++	{ /* Logitech G302 Gaming Mouse */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC07F) },
++	{ /* Logitech G303 Gaming Mouse */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC080) },
++	{ /* Logitech G400 Gaming Mouse */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC07E) },
++	{ /* Logitech G403 Wireless Gaming Mouse over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC082) },
++	{ /* Logitech G403 Gaming Mouse */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC083) },
++	{ /* Logitech G403 Hero Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC08F) },
++	{ /* Logitech G502 Proteus Core Gaming Mouse */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC07D) },
++	{ /* Logitech G502 Proteus Spectrum Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC332) },
++	{ /* Logitech G502 Hero Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC08B) },
+ 	{ /* Logitech G700 Gaming Mouse over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC06B) },
++	{ /* Logitech G700s Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC07C) },
++	{ /* Logitech G703 Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC087) },
++	{ /* Logitech G703 Hero Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC090) },
+ 	{ /* Logitech G900 Gaming Mouse over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC081) },
++	{ /* Logitech G903 Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC086) },
++	{ /* Logitech G903 Hero Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC091) },
+ 	{ /* Logitech G920 Wheel over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_G920_WHEEL),
+ 		.driver_data = HIDPP_QUIRK_CLASS_G920 | HIDPP_QUIRK_FORCE_OUTPUT_REPORTS},
++	{ /* Logitech G Pro Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC088) },
  
-+	of_node_put(codec);
- 	return 0;
- 
- err_put_clk_i2s:
-@@ -317,6 +317,8 @@ static int odroid_audio_probe(struct platform_device *pdev)
- err_put_cpu_dai:
- 	of_node_put(cpu_dai);
- 	snd_soc_of_put_dai_link_codecs(codec_link);
-+err_put_node:
-+	of_node_put(codec);
- 	return ret;
- }
- 
+ 	{ /* MX5000 keyboard over Bluetooth */
+ 	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb305),
 -- 
 2.20.1
 
