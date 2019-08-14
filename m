@@ -5,52 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833F3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 716B2C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5124A2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D5221721
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802412;
-	bh=kMnTO3RgwWOH+yLy+5j3sBYEHdgm1LH/sb0y+RPW8pQ=;
+	s=default; t=1565802415;
+	bh=BluXNTtUwEK0Jl4OaSu1C2M9EndSW854P3+bDniEGPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qub8pvtOMETS3WJXGB8IQSfQsQ5gNPJvBUNHjP0xNeHezaK9bch6MXg1NlDe+5ntN
-	 H2rCSJK5M3m/VKDysTfcaXLtGPb6mbT9TSkGhCCBRF26ajGwaKOoaCMJSQEqu5F2Ju
-	 k0TaRTHbZjfb0Ka/QtEQfRxiZhjlJhvTVSIya+rI=
+	b=T9yk4OVdB9werdnnr46vy4Vcg+IsnSDhlWgaWX4Zr3akRiiGrqapAkwH3j1fT2vMP
+	 VrjpGUA27b9NBpHJkRbXnUkVP5PgFz3TOBUL+dI85rvkP74JWoNBuz5NmCT75anZXL
+	 HEucmklrOb/uENDlVH/njwUpZyUvacPZF2hK3uJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbfHNRGu (ORCPT
+        id S1729757AbfHNRGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:06:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:06:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729136AbfHNRGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:06:44 -0400
+        id S1728458AbfHNRGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:06:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E4C621721;
-        Wed, 14 Aug 2019 17:06:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC028216F4;
+        Wed, 14 Aug 2019 17:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802404;
-        bh=kMnTO3RgwWOH+yLy+5j3sBYEHdgm1LH/sb0y+RPW8pQ=;
+        s=default; t=1565802406;
+        bh=BluXNTtUwEK0Jl4OaSu1C2M9EndSW854P3+bDniEGPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wE1wnwahl6IxlR+BQDvfVyd5W0wmt11FpnMDy3gIAyFnrrad0zj7g6pzKlz4Jdxmh
-         KYtdQn7fBntZ3w7QuhmhzF3H71BZTDQcrd12Ms2DiEs3oh2i856XE9++TW0Ktu7p3Q
-         9ZpVl9+znQH6ywcprni6DfQSwv71AA0yA/FWlZbg=
+        b=KKMSgQydPzsYgasprJyWlgvOSLgQiP4py9QOh53n+PDE76iqJJdYwGc0S4vuMBY2P
+         /3qkCmMoqBH8B4nj6OCexIILE+mhUhm7j7ilvN7kGszb1bNuQVNCocuHXPpe/jD4Cy
+         R4mkLdalRJ6gmM9zpJ/G9c7FC0ZwOdmZXCEJUa9g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        stable@vger.kernel.org, Yunying Sun <yunying.sun@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, bp@alien8.de, hpa@zytor.com,
+        jolsa@redhat.com, namhyung@kernel.org,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 112/144] perf/x86/intel: Fix SLOTS PEBS event constraint
-Date:   Wed, 14 Aug 2019 19:01:08 +0200
-Message-Id: <20190814165804.595706787@linuxfoundation.org>
+Subject: [PATCH 5.2 113/144] perf/x86/intel: Fix invalid Bit 13 for Icelake MSR_OFFCORE_RSP_x register
+Date:   Wed, 14 Aug 2019 19:01:09 +0200
+Message-Id: <20190814165804.637162453@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -63,42 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3d0c3953601d250175c7684ec0d9df612061dae5 ]
+[ Upstream commit 3b238a64c3009fed36eaea1af629d9377759d87d ]
 
-Sampling SLOTS event and ref-cycles event in a group on Icelake gives
-EINVAL.
+The Intel SDM states that bit 13 of Icelake's MSR_OFFCORE_RSP_x
+register is valid, and used for counting hardware generated prefetches
+of L3 cache. Update the bitmask to allow bit 13.
 
-SLOTS event is the event stands for the fixed counter 3, not fixed
-counter 2. Wrong mask was set to SLOTS event in
-intel_icl_pebs_event_constraints[].
+Before:
+$ perf stat -e cpu/event=0xb7,umask=0x1,config1=0x1bfff/u sleep 3
+ Performance counter stats for 'sleep 3':
+   <not supported>      cpu/event=0xb7,umask=0x1,config1=0x1bfff/u
 
-Reported-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+After:
+$ perf stat -e cpu/event=0xb7,umask=0x1,config1=0x1bfff/u sleep 3
+ Performance counter stats for 'sleep 3':
+             9,293      cpu/event=0xb7,umask=0x1,config1=0x1bfff/u
+
+Signed-off-by: Yunying Sun <yunying.sun@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 6017608936c1 ("perf/x86/intel: Add Icelake support")
-Link: https://lkml.kernel.org/r/20190723200429.8180-1-kan.liang@linux.intel.com
+Cc: acme@kernel.org
+Cc: alexander.shishkin@linux.intel.com
+Cc: bp@alien8.de
+Cc: hpa@zytor.com
+Cc: jolsa@redhat.com
+Cc: namhyung@kernel.org
+Link: https://lkml.kernel.org/r/20190724082932.12833-1-yunying.sun@intel.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/ds.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/intel/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 505c73dc6a730..6601b8759c92f 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -851,7 +851,7 @@ struct event_constraint intel_skl_pebs_event_constraints[] = {
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 2889dd0235668..e9042e3f3052c 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -263,8 +263,8 @@ static struct event_constraint intel_icl_event_constraints[] = {
+ };
  
- struct event_constraint intel_icl_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1c0, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
--	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x400000000ULL),	/* SLOTS */
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),	/* SLOTS */
- 
- 	INTEL_PLD_CONSTRAINT(0x1cd, 0xff),			/* MEM_TRANS_RETIRED.LOAD_LATENCY */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x1d0, 0xf),	/* MEM_INST_RETIRED.LOAD */
+ static struct extra_reg intel_icl_extra_regs[] __read_mostly = {
+-	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x3fffff9fffull, RSP_0),
+-	INTEL_UEVENT_EXTRA_REG(0x01bb, MSR_OFFCORE_RSP_1, 0x3fffff9fffull, RSP_1),
++	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x3fffffbfffull, RSP_0),
++	INTEL_UEVENT_EXTRA_REG(0x01bb, MSR_OFFCORE_RSP_1, 0x3fffffbfffull, RSP_1),
+ 	INTEL_UEVENT_PEBS_LDLAT_EXTRA_REG(0x01cd),
+ 	INTEL_UEVENT_EXTRA_REG(0x01c6, MSR_PEBS_FRONTEND, 0x7fff17, FE),
+ 	EVENT_EXTRA_END
 -- 
 2.20.1
 
