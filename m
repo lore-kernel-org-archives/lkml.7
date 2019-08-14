@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944D4C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBD9C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6998B20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5653220874
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750118;
-	bh=tT82xRkihxHI2sedOcvsSUDg84D0mqteRBZHZJaYlo0=;
+	s=default; t=1565750130;
+	bh=KHlI+UFOgX55V7hPb7anE+CUz6f3gHYaztSKhpbWUgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fmULHxiJdH3/UrmuD0T9NQBmvbWFPP3TcLBVSmCkHiIUsJKGltdV23BkUDYBhiqTw
-	 DwAQj0BT5+9bas1nzKJieGRTU4w60LYYWPJV8hfla9Ut+gByhnBOdlqZXEv/PM4uaN
-	 SDCGwHsw4npw4lkMX75sv3pwdrUHLCapUYNWVSUY=
+	b=b+7FIWwskKQ8h+im/gCHlVkQZxlQzUZ5wohG84k8I4YxsBTA+bWk7NCkrpl9O5i7l
+	 0oS9afUZQDKgr/0WstCqnEVDdqf05deeL1r+zEdf2+MZTH7uRW+d1b7K/RBHF0d8qf
+	 LO+0tJrWMLSpcQlL9yYscBc2GWKrp8XvlNhtdWnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbfHNCfR (ORCPT
+        id S1728319AbfHNCNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:35:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45664 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:13:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728362AbfHNCNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:39 -0400
+        id S1728265AbfHNCNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 436442084F;
-        Wed, 14 Aug 2019 02:13:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94E0120844;
+        Wed, 14 Aug 2019 02:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748819;
-        bh=tT82xRkihxHI2sedOcvsSUDg84D0mqteRBZHZJaYlo0=;
+        s=default; t=1565748803;
+        bh=KHlI+UFOgX55V7hPb7anE+CUz6f3gHYaztSKhpbWUgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DSEp/C9L1JxgyuMmUwJu4ZsxitCE6y4h84BllAnFfTP6s/purZuozOTF8f0gVt1Vh
-         hzmGHl3D5IUAeAnRPhvBWmWDzmonX3OHpH4+yEooOkXUr7JKISTx1dJOqXwyIy2FJH
-         FDjwypHw/9sltl65QEYqEtTm0uYcCA23Q/ScMLOg=
+        b=tiPhGrw24+XvGc6hZvPJsPWygWF6Dp2ZaO/iKFtN5rQe5vepXn8j8mMzi9euLmzzh
+         jQVYkSosUKpkkrKI6Ed0j+aV9E2cIDoYzGBJSBBEz7tB8oKxmN6ABErGFdC4jX74Ci
+         fFd2xQVCQ0xBPEf/oFFF4ZILpG2E1efZnHAqjF8M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 079/123] enetc: Select PHYLIB while CONFIG_FSL_ENETC_VF is set
-Date:   Tue, 13 Aug 2019 22:10:03 -0400
-Message-Id: <20190814021047.14828-79-sashal@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Michael Petlan <mpetlan@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 071/123] perf bench numa: Fix cpu0 binding
+Date:   Tue, 13 Aug 2019 22:09:55 -0400
+Message-Id: <20190814021047.14828-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -59,43 +64,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-[ Upstream commit 2802d2cf24b1ca7ea4c54dde266ded6a16020eb5 ]
+[ Upstream commit 6bbfe4e602691b90ac866712bd4c43c51e546a60 ]
 
-Like FSL_ENETC, when CONFIG_FSL_ENETC_VF is set,
-we should select PHYLIB, otherwise building still fails:
+Michael reported an issue with perf bench numa failing with binding to
+cpu0 with '-0' option.
 
-drivers/net/ethernet/freescale/enetc/enetc.o: In function `enetc_open':
-enetc.c:(.text+0x2744): undefined reference to `phy_start'
-enetc.c:(.text+0x282c): undefined reference to `phy_disconnect'
-drivers/net/ethernet/freescale/enetc/enetc.o: In function `enetc_close':
-enetc.c:(.text+0x28f8): undefined reference to `phy_stop'
-enetc.c:(.text+0x2904): undefined reference to `phy_disconnect'
-drivers/net/ethernet/freescale/enetc/enetc_ethtool.o:(.rodata+0x3f8): undefined reference to `phy_ethtool_get_link_ksettings'
-drivers/net/ethernet/freescale/enetc/enetc_ethtool.o:(.rodata+0x400): undefined reference to `phy_ethtool_set_link_ksettings'
+  # perf bench numa mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd
+  # Running 'numa/mem' benchmark:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: d4fd0404c1c9 ("enetc: Introduce basic PF and VF ENETC ethernet drivers")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+   # Running main, "perf bench numa numa-mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd"
+  binding to node 0, mask: 0000000000000001 => -1
+  perf: bench/numa.c:356: bind_to_memnode: Assertion `!(ret)' failed.
+  Aborted (core dumped)
+
+This happens when the cpu0 is not part of node0, which is the benchmark
+assumption and we can see that's not the case for some powerpc servers.
+
+Using correct node for cpu0 binding.
+
+Reported-by: Michael Petlan <mpetlan@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/20190801142642.28004-1-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/enetc/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/bench/numa.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/enetc/Kconfig b/drivers/net/ethernet/freescale/enetc/Kconfig
-index 8ac109e73a7bb..a268e74b1834e 100644
---- a/drivers/net/ethernet/freescale/enetc/Kconfig
-+++ b/drivers/net/ethernet/freescale/enetc/Kconfig
-@@ -13,6 +13,7 @@ config FSL_ENETC
- config FSL_ENETC_VF
- 	tristate "ENETC VF driver"
- 	depends on PCI && PCI_MSI && (ARCH_LAYERSCAPE || COMPILE_TEST)
-+	select PHYLIB
- 	help
- 	  This driver supports NXP ENETC gigabit ethernet controller PCIe
- 	  virtual function (VF) devices enabled by the ENETC PF driver.
+diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+index a7784554a80de..23c27ca48abf3 100644
+--- a/tools/perf/bench/numa.c
++++ b/tools/perf/bench/numa.c
+@@ -379,8 +379,10 @@ static u8 *alloc_data(ssize_t bytes0, int map_flags,
+ 
+ 	/* Allocate and initialize all memory on CPU#0: */
+ 	if (init_cpu0) {
+-		orig_mask = bind_to_node(0);
+-		bind_to_memnode(0);
++		int node = numa_node_of_cpu(0);
++
++		orig_mask = bind_to_node(node);
++		bind_to_memnode(node);
+ 	}
+ 
+ 	bytes = bytes0 + HPSIZE;
 -- 
 2.20.1
 
