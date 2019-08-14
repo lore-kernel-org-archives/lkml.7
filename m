@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBD9C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F0FC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5653220874
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C456220665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750130;
-	bh=KHlI+UFOgX55V7hPb7anE+CUz6f3gHYaztSKhpbWUgQ=;
+	s=default; t=1565750136;
+	bh=nvv5wvA6z8M5WfbSUdq7v2bAub2mac3SXvLLZWtTXLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b+7FIWwskKQ8h+im/gCHlVkQZxlQzUZ5wohG84k8I4YxsBTA+bWk7NCkrpl9O5i7l
-	 0oS9afUZQDKgr/0WstCqnEVDdqf05deeL1r+zEdf2+MZTH7uRW+d1b7K/RBHF0d8qf
-	 LO+0tJrWMLSpcQlL9yYscBc2GWKrp8XvlNhtdWnA=
+	b=CwOPcoBoCIVXanjEWXKuJjtC4mRFCqF5FENlX6CexvVFS2aQSI1up53c721rx1X0z
+	 mGn5P+vIobvah8L4QfEA1uYZq7SpN58UjKaamr62b1NkGWadrCSsWjPk8SRGobFPU5
+	 f20Er7340yqLUftZRAsEL4NJoaer+onI9zvGaalk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbfHNCNc (ORCPT
+        id S1728986AbfHNCff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45378 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:35:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728265AbfHNCNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:24 -0400
+        id S1728287AbfHNCN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94E0120844;
-        Wed, 14 Aug 2019 02:13:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A83A214DA;
+        Wed, 14 Aug 2019 02:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748803;
-        bh=KHlI+UFOgX55V7hPb7anE+CUz6f3gHYaztSKhpbWUgQ=;
+        s=default; t=1565748808;
+        bh=nvv5wvA6z8M5WfbSUdq7v2bAub2mac3SXvLLZWtTXLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tiPhGrw24+XvGc6hZvPJsPWygWF6Dp2ZaO/iKFtN5rQe5vepXn8j8mMzi9euLmzzh
-         jQVYkSosUKpkkrKI6Ed0j+aV9E2cIDoYzGBJSBBEz7tB8oKxmN6ABErGFdC4jX74Ci
-         fFd2xQVCQ0xBPEf/oFFF4ZILpG2E1efZnHAqjF8M=
+        b=FXlTmsTx0K3idWdnktRwCiumh+lfI2hlOdDsFXXD4WxMVgOfc8bIu9JVJ2ZZxcKJ+
+         UXxaK8mS1fr4TX9m2dC4l5lflrurMvO7KiJWGkOYJsC7xDaqzV1feCjyWb5lO9ubhS
+         z+16uN+SqtYe9Z5a/QwwuPs2mIt+eTxa+wMxSzZU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Olsa <jolsa@kernel.org>, Michael Petlan <mpetlan@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 071/123] perf bench numa: Fix cpu0 binding
-Date:   Tue, 13 Aug 2019 22:09:55 -0400
-Message-Id: <20190814021047.14828-71-sashal@kernel.org>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 074/123] spi: pxa2xx: Add support for Intel Tiger Lake
+Date:   Tue, 13 Aug 2019 22:09:58 -0400
+Message-Id: <20190814021047.14828-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -64,57 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 
-[ Upstream commit 6bbfe4e602691b90ac866712bd4c43c51e546a60 ]
+[ Upstream commit a4127952859a869cf3fc5a49547dbe2ffa2eac89 ]
 
-Michael reported an issue with perf bench numa failing with binding to
-cpu0 with '-0' option.
+Intel Tiger Lake -LP LPSS SPI controller is otherwise similar than
+Cannon Lake but has more controllers and up to two chip selects per
+controller.
 
-  # perf bench numa mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd
-  # Running 'numa/mem' benchmark:
-
-   # Running main, "perf bench numa numa-mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd"
-  binding to node 0, mask: 0000000000000001 => -1
-  perf: bench/numa.c:356: bind_to_memnode: Assertion `!(ret)' failed.
-  Aborted (core dumped)
-
-This happens when the cpu0 is not part of node0, which is the benchmark
-assumption and we can see that's not the case for some powerpc servers.
-
-Using correct node for cpu0 binding.
-
-Reported-by: Michael Petlan <mpetlan@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20190801142642.28004-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Link: https://lore.kernel.org/r/20190801134901.12635-1-jarkko.nikula@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/bench/numa.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/spi/spi-pxa2xx.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index a7784554a80de..23c27ca48abf3 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -379,8 +379,10 @@ static u8 *alloc_data(ssize_t bytes0, int map_flags,
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index c1af8887d9186..1f32c9e3ca65c 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1453,6 +1453,14 @@ static const struct pci_device_id pxa2xx_spi_pci_compound_match[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x02aa), LPSS_CNL_SSP },
+ 	{ PCI_VDEVICE(INTEL, 0x02ab), LPSS_CNL_SSP },
+ 	{ PCI_VDEVICE(INTEL, 0x02fb), LPSS_CNL_SSP },
++	/* TGL-LP */
++	{ PCI_VDEVICE(INTEL, 0xa0aa), LPSS_CNL_SSP },
++	{ PCI_VDEVICE(INTEL, 0xa0ab), LPSS_CNL_SSP },
++	{ PCI_VDEVICE(INTEL, 0xa0de), LPSS_CNL_SSP },
++	{ PCI_VDEVICE(INTEL, 0xa0df), LPSS_CNL_SSP },
++	{ PCI_VDEVICE(INTEL, 0xa0fb), LPSS_CNL_SSP },
++	{ PCI_VDEVICE(INTEL, 0xa0fd), LPSS_CNL_SSP },
++	{ PCI_VDEVICE(INTEL, 0xa0fe), LPSS_CNL_SSP },
+ 	{ },
+ };
  
- 	/* Allocate and initialize all memory on CPU#0: */
- 	if (init_cpu0) {
--		orig_mask = bind_to_node(0);
--		bind_to_memnode(0);
-+		int node = numa_node_of_cpu(0);
-+
-+		orig_mask = bind_to_node(node);
-+		bind_to_memnode(node);
- 	}
- 
- 	bytes = bytes0 + HPSIZE;
 -- 
 2.20.1
 
