@@ -2,106 +2,96 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE4AC0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63650C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B58F820843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3656F2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="c5WQb60F";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HTnL4xcI"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kT2sRsBR";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kT2sRsBR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfHNHnE (ORCPT
+        id S1727205AbfHNHnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:43:04 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:50459 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726365AbfHNHnE (ORCPT
+        Wed, 14 Aug 2019 03:43:19 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60608 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbfHNHnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:43:04 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id D73A221B2A;
-        Wed, 14 Aug 2019 03:43:02 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Wed, 14 Aug 2019 03:43:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=yogH4/hVyl6iDCyO+eqkZ4m14+M
-        nUmKS6c0kluBeFkI=; b=c5WQb60FqOuuuYS0FtSkZndmeJV19/KgCq2gfBPagT5
-        xcdqHM9bjZGgTz9UFNvRbevA0dTrLmusRptXG7Kzz/6QiRXbABvlRUqD/r0QfXR7
-        dt4bbfaFsHiMacs38cei9EZ9UNj89sX0K2n/wBgFJEunkhhZGJeqZuG9P9XFzz2d
-        ETv+VzKn30QWDLwHyEokNvC8GhAFs6mOOdUF4JuxJTTuO+GwYEbEr4lcdYs1qIrM
-        q64YRBFdmNg/MHihmGxVZKLr+bAYU2Y3F14hZUk+JRrwJfr10ZnT2P4fpHvXjVFZ
-        58vX11pHn6E4GpsKVDhTV/qNbv9MxZ2oXFlvaZx1FjQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=yogH4/
-        hVyl6iDCyO+eqkZ4m14+MnUmKS6c0kluBeFkI=; b=HTnL4xcIUngEP3+D+jIAr5
-        GsqQtGxUpfalaZLIS9Vd3B5OhKBNxDa9ZqJZwfD4YfybOOar5XtjB2PQKYmd5WXD
-        Lpov0W6qkbN8bIAyw6bLyTYDmoARjwq5BCiM4qM4H/5zMC2ypBTL+ZwxZ6ccWXU5
-        U/KgiGFZaG+e1Fhj3TfPq6W6cp8R9B2F7380q/D5R+2/iRqcQXor7App2IrK0YTs
-        4khZfv9OOtIvdGVfP2CPx9ZZI3KIDfHDGyZLWgXMPZbIqJiwu03owEVtmrr5SFwR
-        4NTFZGmcMwnVcrvqloBC9E5hQSEwIphibRQRwGgLDrLK9dYEllEsozfxj/Zo3grg
-        ==
-X-ME-Sender: <xms:hbtTXbA9rjQpI12rNLEHMMa3cJO0HIN3bssyWkCeUgSFYO_wp68Zww>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddvjedguddvudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
-    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrd
-    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
-    ucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:hbtTXSzltRNzgRoIBLRTQlYHBOEBMN5auEVMTZjk3atZe6MFNs8vOg>
-    <xmx:hbtTXb7Wh4rPeuGTUBbj79Yxfw889oB1I4ErTvBtz1_Us1ygBAdrUg>
-    <xmx:hbtTXbu0JZEB-hwXgWZ78rq-43vW_sCSof4NJDnKqHYAgvfvowU7gA>
-    <xmx:hrtTXfRZMnv8zSwgj2XNmypKvZDAh4-EcCfq0bNN4fZqHsbVuSdrqw>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7A38980059;
-        Wed, 14 Aug 2019 03:43:01 -0400 (EDT)
-Date:   Wed, 14 Aug 2019 09:42:59 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Martyn Welch <martyn.welch@collabora.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: linux-next: build warning after merge of the staging tree
-Message-ID: <20190814074259.GA3495@kroah.com>
-References: <20190814160835.4aabb60a@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814160835.4aabb60a@canb.auug.org.au>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 14 Aug 2019 03:43:19 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8066A607DE; Wed, 14 Aug 2019 07:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565768598;
+        bh=SNdKX9aeCldaAT6R793W5ewPrb6x1ertjSoz3YWnHCE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kT2sRsBRlbWw9Gpw8yrjU1DnTIddArYInKnmJO1RysRZ37oF2CcIkxxGRbm387AIl
+         W35vTvacAIB0i7qeaIfi3OkAssRJO1QkmF/KQywhtH7Cpnm9Jx51cWd/vEPHOr2k0C
+         S4nVRsCGJ2ppWP93jlyWweqgoLyGSMeptw+7a2oQ=
+Received: from rocky-HP-EliteBook-8460p.qca.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rjliao@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 72276602E0;
+        Wed, 14 Aug 2019 07:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565768598;
+        bh=SNdKX9aeCldaAT6R793W5ewPrb6x1ertjSoz3YWnHCE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kT2sRsBRlbWw9Gpw8yrjU1DnTIddArYInKnmJO1RysRZ37oF2CcIkxxGRbm387AIl
+         W35vTvacAIB0i7qeaIfi3OkAssRJO1QkmF/KQywhtH7Cpnm9Jx51cWd/vEPHOr2k0C
+         S4nVRsCGJ2ppWP93jlyWweqgoLyGSMeptw+7a2oQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 72276602E0
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        Rocky Liao <rjliao@codeaurora.org>
+Subject: [PATCH v1] Bluetooth: hci_qca: Skip 1 error print in device_want_to_sleep()
+Date:   Wed, 14 Aug 2019 15:42:39 +0800
+Message-Id: <1565768559-30755-1-git-send-email-rjliao@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 04:08:35PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the staging tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
-> 
-> drivers/iio/light/noa1305.c: In function 'noa1305_scale':
-> drivers/iio/light/noa1305.c:87:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    *val2 = 77 * 4;
->    ~~~~~~^~~~~~~~
-> drivers/iio/light/noa1305.c:88:2: note: here
->   case NOA1305_INTEGR_TIME_200MS:
->   ^~~~
-> 
-> Introduced by commit
-> 
->   741172d18e8a ("iio: light: noa1305: Add support for NOA1305")
+Don't fall through to print error message when receive sleep indication
+in HCI_IBS_RX_ASLEEP state, this is allowed behavior.
 
-Fix for this is already in my testing tree, forgot to push it to my
--next branch, but have done so now, thanks!
+Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+---
+ drivers/bluetooth/hci_qca.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-greg k-h
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index a054210..2affb4e 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -686,7 +686,7 @@ static void device_want_to_sleep(struct hci_uart *hu)
+ 	unsigned long flags;
+ 	struct qca_data *qca = hu->priv;
+ 
+-	BT_DBG("hu %p want to sleep", hu);
++	BT_DBG("hu %p want to sleep in %d state", hu, qca->rx_ibs_state);
+ 
+ 	spin_lock_irqsave(&qca->hci_ibs_lock, flags);
+ 
+@@ -701,7 +701,7 @@ static void device_want_to_sleep(struct hci_uart *hu)
+ 		break;
+ 
+ 	case HCI_IBS_RX_ASLEEP:
+-		/* Fall through */
++		break;
+ 
+ 	default:
+ 		/* Any other state is illegal */
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+
