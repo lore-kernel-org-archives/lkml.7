@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0397C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E051DC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8FCB2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F252083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbfHNUi5 (ORCPT
+        id S1729553AbfHNUjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 16:38:57 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:56364 "EHLO
+        Wed, 14 Aug 2019 16:39:04 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:43948 "EHLO
         mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726047AbfHNUi5 (ORCPT
+        by vger.kernel.org with ESMTP id S1727516AbfHNUjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 16:38:57 -0400
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7EKVfje021590;
-        Wed, 14 Aug 2019 20:38:49 GMT
-Received: from g2t2353.austin.hpe.com (g2t2353.austin.hpe.com [15.233.44.26])
-        by mx0a-002e3701.pphosted.com with ESMTP id 2ucnxe1f5j-1
+        Wed, 14 Aug 2019 16:39:04 -0400
+Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7EKV2bW020841;
+        Wed, 14 Aug 2019 20:38:58 GMT
+Received: from g9t5009.houston.hpe.com (g9t5009.houston.hpe.com [15.241.48.73])
+        by mx0a-002e3701.pphosted.com with ESMTP id 2ucsasg2f9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 14 Aug 2019 20:38:49 +0000
+        Wed, 14 Aug 2019 20:38:58 +0000
 Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
-        by g2t2353.austin.hpe.com (Postfix) with ESMTP id C5A2577;
-        Wed, 14 Aug 2019 20:38:48 +0000 (UTC)
+        by g9t5009.houston.hpe.com (Postfix) with ESMTP id 2864B51;
+        Wed, 14 Aug 2019 20:38:57 +0000 (UTC)
 Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 48777)
-        id 8E17320131383; Wed, 14 Aug 2019 15:38:48 -0500 (CDT)
+        id E3F0920131383; Wed, 14 Aug 2019 15:38:56 -0500 (CDT)
 From:   Kyle Meyer <meyerk@hpe.com>
 Cc:     Kyle Meyer <meyerk@hpe.com>, Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -42,9 +42,9 @@ Cc:     Kyle Meyer <meyerk@hpe.com>, Peter Zijlstra <peterz@infradead.org>,
         linux-kernel@vger.kernel.org,
         Russ Anderson <russ.anderson@hpe.com>,
         Kyle Meyer <kyle.meyer@hpe.com>
-Subject: [PATCH v2 3/6] perf/util/stat: Replace MAX_NR_CPUS with cpu__max_cpu
-Date:   Wed, 14 Aug 2019 15:38:46 -0500
-Message-Id: <20190814203846.204861-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
+Subject: [PATCH v2 4/6] perf/util/session: Replace MAX_NR_CPUS with nr_cpus_online
+Date:   Wed, 14 Aug 2019 15:38:55 -0500
+Message-Id: <20190814203855.204923-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
 X-Mailer: git-send-email 2.12.3
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-14_07:,,
@@ -60,9 +60,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function cpu__max_cpu returns the possible number of CPUs as defined in the
-sysfs and can be used as an alternative for MAX_NR_CPUS in zero_per_pkg and
-check_per_pkg.
+nr_cpus_online, the number of CPUs online during a record session, can be
+used as a dynamic alternative for MAX_NR_CPUS in perf_session__cpu_bitmap.
 
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
@@ -74,30 +73,32 @@ Cc: linux-kernel@vger.kernel.org
 Cc: Russ Anderson <russ.anderson@hpe.com>
 Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
 ---
- tools/perf/util/stat.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/session.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index e4e4e3bf8b2b..199008ce936d 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -208,7 +208,7 @@ void perf_evlist__reset_stats(struct evlist *evlist)
- static void zero_per_pkg(struct evsel *counter)
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 11e6093c941b..a9d244a94e24 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -2275,6 +2275,7 @@ int perf_session__cpu_bitmap(struct perf_session *session,
  {
- 	if (counter->per_pkg_mask)
--		memset(counter->per_pkg_mask, 0, MAX_NR_CPUS);
-+		memset(counter->per_pkg_mask, 0, cpu__max_cpu());
- }
+ 	int i, err = -1;
+ 	struct perf_cpu_map *map;
++	int nr_cpus_online = session->header.env.nr_cpus_online;
  
- static int check_per_pkg(struct evsel *counter,
-@@ -227,7 +227,7 @@ static int check_per_pkg(struct evsel *counter,
- 		return 0;
+ 	for (i = 0; i < PERF_TYPE_MAX; ++i) {
+ 		struct evsel *evsel;
+@@ -2299,9 +2300,8 @@ int perf_session__cpu_bitmap(struct perf_session *session,
+ 	for (i = 0; i < map->nr; i++) {
+ 		int cpu = map->map[i];
  
- 	if (!mask) {
--		mask = zalloc(MAX_NR_CPUS);
-+		mask = zalloc(cpu__max_cpu());
- 		if (!mask)
- 			return -ENOMEM;
+-		if (cpu >= MAX_NR_CPUS) {
+-			pr_err("Requested CPU %d too large. "
+-			       "Consider raising MAX_NR_CPUS\n", cpu);
++		if (cpu >= nr_cpus_online) {
++			pr_err("Requested CPU %d too large\n", cpu);
+ 			goto out_delete_map;
+ 		}
  
 -- 
 2.12.3
