@@ -2,234 +2,344 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCE9C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F49C0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD9B12084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C642084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:54:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dDd5TTuP"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="b9vJ8/Zo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfHNFyC (ORCPT
+        id S1727702AbfHNFyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 01:54:02 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58460 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbfHNFyB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 01:54:01 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7E5mmNH062458;
-        Wed, 14 Aug 2019 05:53:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
- : from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=corp-2019-08-05;
- bh=rRiXO74iWklLyv8JVdtr2hELdy+2gwwC6aWR8IUkp3U=;
- b=dDd5TTuP02nIVLxRT8hb8591vNdv6uTSXo9GsdTVSdpqiEqmxHl6RWAhVwjL+59rtjQB
- P3mdophG43L67lid0Z5IRJOQwC3Pq6+75a7Uo2RahSf3hCPmifPI75mDxWmNaNVYTOpE
- uB1vPW1km7dGvcfWZtqxTENR7OZBhggQVixN3YFfZatg1L4+9nTMct64OkqumwUkf4Lg
- Vl6MyWz/VI4b6sCGcnbhha8DBX9HPlBiu/q+g9JhTfUX4jvtFeIj6NJ+yPeDqRWnoVQL
- lEaUHRQBqUkHf7DjtGoAQQNlCu9CUrYbP6bhw5fxInsLROVTfx48xFuEkHSe1LPRFYNo Zg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2u9nvpajjx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 14 Aug 2019 05:53:40 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7E5rXGG178517;
-        Wed, 14 Aug 2019 05:53:39 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2ubwqsqugc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 14 Aug 2019 05:53:39 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7E5qsil000744;
-        Wed, 14 Aug 2019 05:52:54 GMT
-Received: from abi.no.oracle.com (/141.143.213.43)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 13 Aug 2019 22:52:54 -0700
-Message-ID: <167a0b0c90a1ecc65da7bfc109f6d8ff860b70da.camel@oracle.com>
-Subject: Re: [RFC 01/19] kbuild: Fixes to rules for host-cshlib and
- host-cxxshlib
-From:   Knut Omang <knut.omang@oracle.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shreyans Devendra Doshi <0xinfosect0r@gmail.com>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Hidenori Yamaji <hidenori.yamaji@sony.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Timothy Bird <Tim.Bird@sony.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
-        Stephen Boyd <sboyd@kernel.org>
-Date:   Wed, 14 Aug 2019 07:52:50 +0200
-In-Reply-To: <CAK7LNASgfd6KPRQ=hcqKkpZ6EVhFmbBjCXa30bvEqscu_5dwbQ@mail.gmail.com>
-References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
-         <be2c361eac49ded2848b2a555b75e30cc3c24e71.1565676440.git-series.knut.omang@oracle.com>
-         <CAK7LNASX4jPRxRxD+JafAfKqjck=x27HuHZgPV1VFfW8MzcwZA@mail.gmail.com>
-         <14b99d26a4cff1c813c92818dc1234007fa06fc9.camel@oracle.com>
-         <CAK7LNASgfd6KPRQ=hcqKkpZ6EVhFmbBjCXa30bvEqscu_5dwbQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 14 Aug 2019 01:54:43 -0400
+Received: from mail-eopbgr60045.outbound.protection.outlook.com ([40.107.6.45]:49123
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727593AbfHNFym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 01:54:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gJNyb+c3ClEepcPEhzjgCvO9+jwaRYSy4m5m0UguuHGsaeVFsX9PQrZpRkg1wuoM9QkSae285kY4LytiYdmbbZMCz4XySejXPKrBsfoyW4Y27QBlkpL3mZBNoFO9qob1iOPiq+Oj38biCiXDD8764jugSFvBFQn1oQQufxhghXUQewvT6uY8cBommpnHxgvtUN8tJWrotCfcLULabXoLQ5u+02qBmqCIHhX4zOCWP99q1dc4j23L3cObzdva3Y6x8WvwJJndarHdO+cF3s+xh9FFH+y/1SED2DyB4m/RsyRUQD9KE3iXfMTOyekKLZcQdTQrQp0njthntpqcGQ/jqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=skldPkjx3qcicxyDug/W1CSCYV38sz3vSvUPRp+DelQ=;
+ b=QkXXe9tbLs7QbnQDjEgk4pbBOpp45qzQYNuvNPtee1grLx1AGe/l1Lwuklq3TZWi0ULp6jJomUyyFCrr2re81RUsXfWxbqjFMsKoOS6Ez9Rm1GuL5nT6Kv2h0YrKiO0NdAeB/3Wa+N+155YAs8CADXM1eDMvviYMVJKcIXBOqSDHM4RNaRkd7yk/q76iMsJV/bVOwIds0g6P19PJtHOQU1h/NYjLD8dMYzSGpGN7CT7MwHMdOxUV0KMGbOwqZdapkMcfIwreYia+Clio4Nge9NG5mqKeXHNyuJyyoj0SdLQkc4jZ7djquemjyg427YUMT8IRgQlYIMN2r7yu5Ki6LA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=skldPkjx3qcicxyDug/W1CSCYV38sz3vSvUPRp+DelQ=;
+ b=b9vJ8/ZomU9QE3u5bsC64unvHw2XEBjYYPpO64SGF2y4NtGNl9hlRvJPNoE1ErKYv8EYCOYyzqX74+hqAx7T8YmkbVdrd42kV3GzdBjnLeZ99aG4yxioqy2j/C3fzpliCfSc/BNDBsfpeWDZDxjW3cnbx827TK94g6DW6xFN0E8=
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
+ AM0PR05MB5970.eurprd05.prod.outlook.com (20.178.119.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.20; Wed, 14 Aug 2019 05:54:36 +0000
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2157.022; Wed, 14 Aug 2019
+ 05:54:36 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     Kirti Wankhede <kwankhede@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>
+Subject: RE: [PATCH v2 0/2] Simplify mtty driver and mdev core
+Thread-Topic: [PATCH v2 0/2] Simplify mtty driver and mdev core
+Thread-Index: AQHVTfNxjgfwJJG2ZUiuOAmKCwQvf6bx3uKAgAWJU4CAAcVCEIAABCsAgAAWVtCAABCDgIAAzoew
+Date:   Wed, 14 Aug 2019 05:54:36 +0000
+Message-ID: <AM0PR05MB4866D40F8EBB382C78193C91D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190802065905.45239-1-parav@mellanox.com>
+        <20190808141255.45236-1-parav@mellanox.com>     <20190808170247.1fc2c4c4@x1.home>
+        <77ffb1f8-e050-fdf5-e306-0a81614f7a88@nvidia.com>
+        <AM0PR05MB4866993536C0C8ACEA2F92DBD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190813085246.1d642ae5@x1.home>
+        <AM0PR05MB48663579A340E6597B3D01BCD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
+ <20190813111149.027c6a3c@x1.home>
+In-Reply-To: <20190813111149.027c6a3c@x1.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [106.51.22.188]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9f77ee97-082e-4d66-c6d1-08d7207be34f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB5970;
+x-ms-traffictypediagnostic: AM0PR05MB5970:
+x-microsoft-antispam-prvs: <AM0PR05MB5970F28EDAB6B35B11A9E5A1D1AD0@AM0PR05MB5970.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01294F875B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(199004)(189003)(13464003)(74316002)(7736002)(305945005)(71190400001)(9686003)(71200400001)(55016002)(52536014)(6436002)(86362001)(99286004)(33656002)(6916009)(54906003)(316002)(5660300002)(229853002)(53936002)(4326008)(9456002)(186003)(25786009)(14444005)(26005)(446003)(8936002)(66476007)(81166006)(8676002)(2906002)(476003)(81156014)(11346002)(486006)(14454004)(256004)(55236004)(102836004)(76176011)(6246003)(53546011)(6116002)(76116006)(66446008)(478600001)(3846002)(64756008)(6506007)(66556008)(66066001)(7696005)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5970;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: n6nCYY1NI61h+FAqly9wOnEFaPwgY3t6Q77F7SaxAeYXvWDxK+FQs3LrCaiiX0YDPY2x1Vtsais8AIQ8eWc0dKmzOSROljkPC21UrZLYgp4UvxLnzKhrTj3TXLLvLGQkdAIPf9ktAFAOLJKu3OvyQoC1WzXzo+U/bwAm+E9Hm3Qk9NnD13Xzh/MHRGCTN2H6b1tAN5QNQNLwsallygI/2z1i0imts5gTWW8ffiFT8wXf2oWskMWYjm4Y76ogwlT+lgAzF+U6wNGhMXo16LaOhkH7VZJ88YXVGKXZYXyzUD5KieBXcSEaEG052++NAweaGItpdL68gFshdFq+mYXnPTR3kR5UCoaC0QJD7b1nzBuL3d/a3Pu6lRAa2BSjcUyMT6phcrVwXqd9WNhsy8uttx0oEQdwJy0RiCsJl3SuYk4=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908140057
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908140056
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f77ee97-082e-4d66-c6d1-08d7207be34f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 05:54:36.1877
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6pCri7l0U3X02/tuq8j8Eoz+Aj15o8+29Q9dXb71vafeVq9ZqVwIITQwFhoPQOJM7vYWM/z6sWgUxAAgMC/k9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5970
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-08-14 at 11:02 +0900, Masahiro Yamada wrote:
-> Hi Knut,
-> 
-> On Wed, Aug 14, 2019 at 1:19 AM Knut Omang <knut.omang@oracle.com> wrote:
-> > On Tue, 2019-08-13 at 23:01 +0900, Masahiro Yamada wrote:
-> > > On Tue, Aug 13, 2019 at 3:13 PM Knut Omang <knut.omang@oracle.com> wrote:
-> > > > C++ libraries interfacing to C APIs might sometimes need some glue
-> > > > logic more easily written in C.
-> > > > Allow a C++ library to also contain 0 or more C objects.
-> > > > 
-> > > > Also fix rules for both C and C++ shared libraries:
-> > > > - C++ shared libraries depended on .c instead of .cc files
-> > > > - Rules were referenced as -objs instead of the intended
-> > > >   -cobjs and -cxxobjs following the pattern from hostprogs*.
-> > > > 
-> > > > Signed-off-by: Knut Omang <knut.omang@oracle.com>
-> > > 
-> > > How is this patch related to the rest of this series?
-> > 
-> > This is just my (likely naive) way I to get what I had working
-> > using autotools in the Github version of KTF) translated into something
-> > comparable using kbuild only. We need to build a shared library consisting
-> > of a few C++ files and a very simple C file, and a couple of simple binaries,
-> > and the rule in there does seem to take .c files and subject them to the
-> > C++ compiler, which makes this difficult to achieve?
-> 
-> Looking at the diff stat of the cover-letter,
-> the rest of this patch series is touching only
-> Documentation/ and tools/testing/kselftests/.
-> 
-> So, this one is unused by the rest of the changes, isn't it?
-> Am I missing something?
-> 
-> 
-> 
-> > > This patch breaks GCC-plugins.
-> > > Did you really compile-test this patch before the submission?
-> > 
-> > Sorry for my ignorance here:
-> > I ran through the kernel build and installed the resulting kernel
-> > on a VM that I used to test this, if that's what you are asking
-> > about?
-> > 
-> > Do I need some unusual .config options or run a special make target
-> > to trigger the problem you see?
-> > 
-> > I used a recent Fedora config with default values for new options,
-> > and ran the normal default make target (also with O=) and make selftests
-> > to test the patch itself.
-> 
-> I just built allmodconfig for arm.
-> 
-> (The 0-day bot tests allmodconfig for most of architectures,
-> so you may receive error reports anyway.)
-> 
-> 
-> With your patch, I got the following:
-> 
-> 
-> masahiro@grover:~/ref/linux$ make  ARCH=arm
-> CROSS_COMPILE=arm-linux-gnueabihf-  allmodconfig all
->   HOSTCC  scripts/basic/fixdep
->   HOSTCC  scripts/kconfig/conf.o
->   HOSTCC  scripts/kconfig/confdata.o
->   HOSTCC  scripts/kconfig/expr.o
->   LEX     scripts/kconfig/lexer.lex.c
->   YACC    scripts/kconfig/parser.tab.h
->   HOSTCC  scripts/kconfig/lexer.lex.o
->   YACC    scripts/kconfig/parser.tab.c
->   HOSTCC  scripts/kconfig/parser.tab.o
->   HOSTCC  scripts/kconfig/preprocess.o
->   HOSTCC  scripts/kconfig/symbol.o
->   HOSTLD  scripts/kconfig/conf
-> scripts/kconfig/conf  --allmodconfig Kconfig
-> #
-> # configuration written to .config
-> #
->   SYSHDR  arch/arm/include/generated/uapi/asm/unistd-common.h
->   SYSHDR  arch/arm/include/generated/uapi/asm/unistd-oabi.h
->   SYSHDR  arch/arm/include/generated/uapi/asm/unistd-eabi.h
->   HOSTCC  scripts/dtc/dtc.o
->   HOSTCC  scripts/dtc/flattree.o
->   HOSTCC  scripts/dtc/fstree.o
->   HOSTCC  scripts/dtc/data.o
->   HOSTCC  scripts/dtc/livetree.o
->   HOSTCC  scripts/dtc/treesource.o
->   HOSTCC  scripts/dtc/srcpos.o
->   HOSTCC  scripts/dtc/checks.o
->   HOSTCC  scripts/dtc/util.o
->   LEX     scripts/dtc/dtc-lexer.lex.c
->   YACC    scripts/dtc/dtc-parser.tab.h
->   HOSTCC  scripts/dtc/dtc-lexer.lex.o
->   YACC    scripts/dtc/dtc-parser.tab.c
->   HOSTCC  scripts/dtc/dtc-parser.tab.o
->   HOSTCC  scripts/dtc/yamltree.o
->   HOSTLD  scripts/dtc/dtc
->   CC      scripts/gcc-plugins/latent_entropy_plugin.o
-> cc1: error: cannot load plugin ./scripts/gcc-plugins/arm_ssp_per_task_plugin.so
->    ./scripts/gcc-plugins/arm_ssp_per_task_plugin.so: cannot open
-> shared object file: No such file or directory
-> cc1: error: cannot load plugin ./scripts/gcc-plugins/structleak_plugin.so
->    ./scripts/gcc-plugins/structleak_plugin.so: cannot open shared
-> object file: No such file or directory
-> cc1: error: cannot load plugin ./scripts/gcc-plugins/latent_entropy_plugin.so
->    ./scripts/gcc-plugins/latent_entropy_plugin.so: cannot open shared
-> object file: No such file or directory
-> cc1: error: cannot load plugin ./scripts/gcc-plugins/randomize_layout_plugin.so
->    ./scripts/gcc-plugins/randomize_layout_plugin.so: cannot open
-> shared object file: No such file or directory
-> make[3]: *** [scripts/Makefile.build;281:
-> scripts/gcc-plugins/latent_entropy_plugin.o] Error 1
-> make[2]: *** [scripts/Makefile.build;497: scripts/gcc-plugins] Error 2
-> make[1]: *** [Makefile;1097: scripts] Error 2
-> make: *** [Makefile;330: __build_one_by_one] Error 2
 
-Ok, I see!
 
-I'll recall this target and look into it!
+> -----Original Message-----
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Tuesday, August 13, 2019 10:42 PM
+> To: Parav Pandit <parav@mellanox.com>
+> Cc: Kirti Wankhede <kwankhede@nvidia.com>; kvm@vger.kernel.org; linux-
+> kernel@vger.kernel.org; cohuck@redhat.com; cjia@nvidia.com
+> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+>=20
+> On Tue, 13 Aug 2019 16:28:53 +0000
+> Parav Pandit <parav@mellanox.com> wrote:
+>=20
+> > > -----Original Message-----
+> > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > Sent: Tuesday, August 13, 2019 8:23 PM
+> > > To: Parav Pandit <parav@mellanox.com>
+> > > Cc: Kirti Wankhede <kwankhede@nvidia.com>; kvm@vger.kernel.org;
+> > > linux- kernel@vger.kernel.org; cohuck@redhat.com; cjia@nvidia.com
+> > > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+> > >
+> > > On Tue, 13 Aug 2019 14:40:02 +0000
+> > > Parav Pandit <parav@mellanox.com> wrote:
+> > >
+> > > > > -----Original Message-----
+> > > > > From: Kirti Wankhede <kwankhede@nvidia.com>
+> > > > > Sent: Monday, August 12, 2019 5:06 PM
+> > > > > To: Alex Williamson <alex.williamson@redhat.com>; Parav Pandit
+> > > > > <parav@mellanox.com>
+> > > > > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > > > cohuck@redhat.com; cjia@nvidia.com
+> > > > > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+> > > > >
+> > > > >
+> > > > >
+> > > > > On 8/9/2019 4:32 AM, Alex Williamson wrote:
+> > > > > > On Thu,  8 Aug 2019 09:12:53 -0500 Parav Pandit
+> > > > > > <parav@mellanox.com> wrote:
+> > > > > >
+> > > > > >> Currently mtty sample driver uses mdev state and UUID in
+> > > > > >> convoluated way to generate an interrupt.
+> > > > > >> It uses several translations from mdev_state to mdev_device
+> > > > > >> to mdev
+> > > uuid.
+> > > > > >> After which it does linear search of long uuid comparision to
+> > > > > >> find out mdev_state in mtty_trigger_interrupt().
+> > > > > >> mdev_state is already available while generating interrupt
+> > > > > >> from which all such translations are done to reach back to
+> mdev_state.
+> > > > > >>
+> > > > > >> This translations are done during interrupt generation path.
+> > > > > >> This is unnecessary and reduandant.
+> > > > > >
+> > > > > > Is the interrupt handling efficiency of this particular sample
+> > > > > > driver really relevant, or is its purpose more to illustrate
+> > > > > > the API and provide a proof of concept?  If we go to the
+> > > > > > trouble to optimize the sample driver and remove this
+> > > > > > interface from the API, what
+> > > do we lose?
+> > > > > >
+> > > > > > This interface was added via commit:
+> > > > > >
+> > > > > > 99e3123e3d72 vfio-mdev: Make mdev_device private and abstract
+> > > > > > interfaces
+> > > > > >
+> > > > > > Where the goal was to create a more formal interface and
+> > > > > > abstract driver access to the struct mdev_device.  In part
+> > > > > > this served to make out-of-tree mdev vendor drivers more
+> > > > > > supportable; the object is considered opaque and access is
+> > > > > > provided via an API rather than through direct structure fields=
+.
+> > > > > >
+> > > > > > I believe that the NVIDIA GRID mdev driver does make use of
+> > > > > > this interface and it's likely included in the sample driver
+> > > > > > specifically so that there is an in-kernel user for it (ie.
+> > > > > > specifically to avoid it being removed so casually).  An
+> > > > > > interesting feature of the NVIDIA mdev driver is that I
+> > > > > > believe it has
+> > > portions that run in userspace.
+> > > > > > As we know, mdevs are named with a UUID, so I can imagine
+> > > > > > there are some efficiencies to be gained in having direct
+> > > > > > access to the UUID for a device when interacting with
+> > > > > > userspace, rather than repeatedly parsing it from a device name=
+.
+> > > > >
+> > > > > That's right.
+> > > > >
+> > > > > >  Is that really something we want to make more difficult in
+> > > > > > order to optimize a sample driver?  Knowing that an mdev
+> > > > > > device uses a UUID for it's name, as tools like libvirt and
+> > > > > > mdevctl expect, is it really worthwhile to remove such a trivia=
+l API?
+> > > > > >
+> > > > > >> Hence,
+> > > > > >> Patch-1 simplifies mtty sample driver to directly use mdev_sta=
+te.
+> > > > > >>
+> > > > > >> Patch-2, Since no production driver uses mdev_uuid(),
+> > > > > >> simplifies and removes redandant mdev_uuid() exported symbol.
+> > > > > >
+> > > > > > s/no production driver/no in-kernel production driver/
+> > > > > >
+> > > > > > I'd be interested to hear how the NVIDIA folks make use of
+> > > > > > this API interface.  Thanks,
+> > > > > >
+> > > > >
+> > > > > Yes, NVIDIA mdev driver do use this interface. I don't agree on
+> > > > > removing
+> > > > > mdev_uuid() interface.
+> > > > >
+> > > > We need to ask Greg or Linus on the kernel policy on whether an
+> > > > API should exist without in-kernel driver. We don't add such API
+> > > > in netdev, rdma and possibly other subsystem. Where can we find
+> > > > this mdev driver in-tree?
+> > >
+> > > We probably would not have added the API only for an out of tree
+> > > driver, but we do have a sample driver that uses it, even if it's
+> > > rather convoluted.  The sample driver is showing an example of using =
+the
+> API, which is rather its
+> > > purpose more so than absolutely efficient interrupt handling.
+> > For showing API use, it doesn't have to convoluted that too in interrup=
+t
+> handling code.
+> > It could be just dev_info(" UUID print..)
+>=20
+> I was thinking we could have the mtty driver expose a vendor sysfs attrib=
+ute
+> providing the UUID if you insist on cleaning up the interrupt path.
+>=20
+A vendor driver can add its own sysfs file per device.
+A while back I refactored rdma system to simplify all of such sysfs entries=
+ for several drivers.
+We had hurdle when we introduced namespaces to it.
+So I do not recommend adding it in the vendor driver.
+Rather, mdev code can add sysfs entry per device exposing its UUID.
+This will be unified across the vendors.
+And for below discussion, if the device is not based on UUID, this sysfs en=
+try won't exist.
+More below.
 
-Thanks!
-Knut
+> > But the whole point is to have useful API that non sample driver need t=
+o use.
+> > And there is none.
+>=20
+> Kirti has already indicated this API was useful and it's not a burden to =
+maintain
+> it.  The trouble is that we don't have any in-kernel mdev drivers sophist=
+icated
+> enough to have the same kernel/user split as the NVIDIA driver, but that'=
+s a
+> feature that I believe we wish to continue to support.  The kernel expose=
+s the
+> device by UUID, userspace references the device by UUID, so it seems intu=
+itive
+> to provide a core API to retrieve the UUID for a device without parsing i=
+t from a
+> device name string.  We can continue to add trivial sample driver use cas=
+es or
+But mdev or any vendor drivers are not parsing it anywhere today.
+That is why I was asking for an example production driver that explains why=
+/how it uses it.
 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
+> we can just agree that this is a useful interface for UUID based device.
+>=20
+> > In bigger objective, I wanted to discuss post this cleanup patch, is
+> > to expand mdev to have more user friendly device names.
+>=20
+> "Friendly" is a matter of opinion.  UUIDs provide us with consistent name=
+s,
+> effectively avoids name collisions which in turn effectively avoids races=
+ in
+> device creation, they're easy to deal with, and they're well known.  Nami=
+ng
+> things is hard. Dealing with arbitrary user generated names or defining a=
+ policy
+> around acceptable naming is hard.
+>=20
+> > Before we reach there, I should include a patch that eliminates
+> > storing UUID itself in the mdev_device.
+> >
+> > > Also, let's not
+> > > overstate what this particular API callback provides, it's simply
+> > > access to the uuid of the device, which is a fundamental property of
+> > > a mediated device.
+> > This fundamental property is available in form of device name already.
+>=20
+> So you're wanting to optimize a sample driver interrupt handler in order =
+to
+> eliminate an API which makes the UUID available without parsing it from a
+> string?
+Yes. because none production driver needs this and it can be derived from t=
+he device name.
 
+> And the complexity grows when you later propose that the string is now
+> arbitrary?  It doesn't seem like a good replacement.
+>=20
+Well sample driver shouldn't use the API the way it uses in convoluted appr=
+oach.
+Just a UUID print during create() call using mdev_uuid() is good enough for=
+ sake of showing example of an API.
+
+If we want to uniquely identify mdev using UUID, but not derive their names=
+ from UUID, by having additional parameter for its name,
+It makes sense to me.
+In this approach, mdev_uuid() can be added/kept if a vendor driver is inter=
+ested in the UUID.
+At present there is none.
+
+> > > API was added simply to provide data abstraction, allowing the
+> > > struct mdev_device to be opaque to vendor drivers.  Thanks,
+> > >
+> > I get that part. I prefer to remove the UUID itself from the structure
+> > and therefore removing this API makes lot more sense?
+>=20
+> Mdev and support tools around mdev are based on UUIDs because it's define=
+d
+> in the documentation. =20
+When we introduce newer device naming scheme, it will update the documentat=
+ion also.
+May be that is the time to move to .rst format too.
+
+> I don't think it's as simple as saying "voila, UUID
+> dependencies are removed, users are free to use arbitrary strings".  We'd=
+ need
+> to create some kind of naming policy, what characters are allows so that =
+we
+> can potentially expand the creation parameters as has been proposed a cou=
+ple
+> times, how do we deal with collisions and races, and why should we make s=
+uch
+> a change when a UUID is a perfectly reasonable devices name.  Thanks,
+>
+Sure, we should define a policy on device naming to be more relaxed.
+We have enough examples in-kernel.
+Few that I am aware of are netdev (vxlan, macvlan, ipvlan, lot more), rdma =
+etc which has arbitrary device names and ID based device names.
+=20
+Collisions and race is already taken care today in the mdev core. Same uniq=
+ue device names continue.
