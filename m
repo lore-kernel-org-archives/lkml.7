@@ -2,126 +2,120 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE26DC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD88C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B5520665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79DD20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:19:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfHNBS3 (ORCPT
+        id S1726983AbfHNBTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 21:18:29 -0400
-Received: from 59-120-53-16.HINET-IP.hinet.net ([59.120.53.16]:27000 "EHLO
-        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726102AbfHNBS3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 21:18:29 -0400
-Received: from ATCSQR.andestech.com (localhost [127.0.0.2] (may be forged))
-        by ATCSQR.andestech.com with ESMTP id x7E0n9Jj017975
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 08:49:09 +0800 (GMT-8)
-        (envelope-from alankao@andestech.com)
-Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
-        by ATCSQR.andestech.com with ESMTP id x7E0mjaZ017904;
-        Wed, 14 Aug 2019 08:48:45 +0800 (GMT-8)
-        (envelope-from alankao@andestech.com)
-Received: from andestech.com (10.0.15.65) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Wed, 14 Aug 2019
- 09:00:13 +0800
-Date:   Wed, 14 Aug 2019 09:00:14 +0800
-From:   Alan Kao <alankao@andestech.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 13/15] riscv: clear the instruction cache and all
- registers when booting
-Message-ID: <20190814010013.GA18655@andestech.com>
-References: <20190813154747.24256-1-hch@lst.de>
- <20190813154747.24256-14-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190813154747.24256-14-hch@lst.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.0.15.65]
-X-DNSRBL: 
-X-MAIL: ATCSQR.andestech.com x7E0mjaZ017904
+        Tue, 13 Aug 2019 21:19:08 -0400
+Received: from mga07.intel.com ([134.134.136.100]:45614 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726373AbfHNBTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 21:19:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 18:19:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
+   d="scan'208";a="170575833"
+Received: from tsduncan-ubuntu.jf.intel.com ([10.7.169.130])
+  by orsmga008.jf.intel.com with ESMTP; 13 Aug 2019 18:19:07 -0700
+From:   "Terry S. Duncan" <terry.s.duncan@linux.intel.com>
+To:     Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        William Kennington <wak@google.com>,
+        Joel Stanley <joel@jms.id.au>
+Cc:     "Terry S. Duncan" <terry.s.duncan@linux.intel.com>
+Subject: [PATCH] net/ncsi: Ensure 32-bit boundary for data cksum
+Date:   Tue, 13 Aug 2019 18:18:40 -0700
+Message-Id: <20190814011840.9387-1-terry.s.duncan@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+The NCSI spec indicates that if the data does not end on a 32 bit
+boundary, one to three padding bytes equal to 0x00 shall be present to
+align the checksum field to a 32-bit boundary.
 
-On Tue, Aug 13, 2019 at 05:47:45PM +0200, Christoph Hellwig wrote:
-> When we get booted we want a clear slate without any leaks from previous
-> supervisors or the firmware.  Flush the instruction cache and then clear
-> all registers to known good values.  This is really important for the
-> upcoming nommu support that runs on M-mode, but can't really harm when
-> running in S-mode either.  
+Signed-off-by: Terry S. Duncan <terry.s.duncan@linux.intel.com>
+---
+ net/ncsi/internal.h |  1 +
+ net/ncsi/ncsi-cmd.c |  2 +-
+ net/ncsi/ncsi-rsp.c | 12 ++++++++----
+ 3 files changed, 10 insertions(+), 5 deletions(-)
 
-Sure.
+diff --git a/net/ncsi/internal.h b/net/ncsi/internal.h
+index 0b3f0673e1a2..468a19fdfd88 100644
+--- a/net/ncsi/internal.h
++++ b/net/ncsi/internal.h
+@@ -185,6 +185,7 @@ struct ncsi_package;
+ #define NCSI_TO_CHANNEL(p, c)	(((p) << NCSI_PACKAGE_SHIFT) | (c))
+ #define NCSI_MAX_PACKAGE	8
+ #define NCSI_MAX_CHANNEL	32
++#define NCSI_ROUND32(x)		(((x) + 3) & ~3) /* Round to 32 bit boundary */
+ 
+ struct ncsi_channel {
+ 	unsigned char               id;
+diff --git a/net/ncsi/ncsi-cmd.c b/net/ncsi/ncsi-cmd.c
+index 5c3fad8cba57..c12f2183b460 100644
+--- a/net/ncsi/ncsi-cmd.c
++++ b/net/ncsi/ncsi-cmd.c
+@@ -54,7 +54,7 @@ static void ncsi_cmd_build_header(struct ncsi_pkt_hdr *h,
+ 	checksum = ncsi_calculate_checksum((unsigned char *)h,
+ 					   sizeof(*h) + nca->payload);
+ 	pchecksum = (__be32 *)((void *)h + sizeof(struct ncsi_pkt_hdr) +
+-		    nca->payload);
++		    NCSI_ROUND32(nca->payload));
+ 	*pchecksum = htonl(checksum);
+ }
+ 
+diff --git a/net/ncsi/ncsi-rsp.c b/net/ncsi/ncsi-rsp.c
+index 7581bf919885..10a142d0422f 100644
+--- a/net/ncsi/ncsi-rsp.c
++++ b/net/ncsi/ncsi-rsp.c
+@@ -47,7 +47,8 @@ static int ncsi_validate_rsp_pkt(struct ncsi_request *nr,
+ 	if (ntohs(h->code) != NCSI_PKT_RSP_C_COMPLETED ||
+ 	    ntohs(h->reason) != NCSI_PKT_RSP_R_NO_ERROR) {
+ 		netdev_dbg(nr->ndp->ndev.dev,
+-			   "NCSI: non zero response/reason code\n");
++			   "NCSI: non zero response/reason code %04xh, %04xh\n",
++			    ntohs(h->code), ntohs(h->reason));
+ 		return -EPERM;
+ 	}
+ 
+@@ -55,15 +56,18 @@ static int ncsi_validate_rsp_pkt(struct ncsi_request *nr,
+ 	 * sender doesn't support checksum according to NCSI
+ 	 * specification.
+ 	 */
+-	pchecksum = (__be32 *)((void *)(h + 1) + payload - 4);
++	pchecksum = (__be32 *)((void *)(h + 1) + NCSI_ROUND32(payload) - 4);
+ 	if (ntohl(*pchecksum) == 0)
+ 		return 0;
+ 
+ 	checksum = ncsi_calculate_checksum((unsigned char *)h,
+-					   sizeof(*h) + payload - 4);
++					   sizeof(*h) +
++					       NCSI_ROUND32(payload) - 4);
+ 
+ 	if (*pchecksum != htonl(checksum)) {
+-		netdev_dbg(nr->ndp->ndev.dev, "NCSI: checksum mismatched\n");
++		netdev_dbg(nr->ndp->ndev.dev,
++			   "NCSI: checksum mismatched; recd: %08x calc: %08x\n",
++			   *pchecksum, htonl(checksum));
+ 		return -EINVAL;
+ 	}
+ 
+-- 
+2.17.1
 
-> +#ifdef CONFIG_FPU
-
-But it doesn't really mean that the running system has an FPU given CONFIG_FPU
-enabled.  Normally the existence of an FPU is checked in riscv_fill_hwcap by
-searching device tree, where the code looks like
-
-
-bool has_fpu = false; // this one is global
-...
-#ifdef CONFIG_FPU
-        if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
-                has_fpu = true;
-#endif
-
-
-Or does CONFIG_FPU have a more intuitive meaning when CONFIG_M_MODE is enabled?
-
-> +	csrr	t0, CSR_MISA
-> +	andi	t0, t0, (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D)
-> +	bnez	t0, .Lreset_regs_done
-> +
-> +	li	t1, SR_FS
-> +	csrs	CSR_XSTATUS, t1
-> +	fmv.s.x	f0, zero
-> +	fmv.s.x	f1, zero
-> +	fmv.s.x	f2, zero
-> +	fmv.s.x	f3, zero
-> +	fmv.s.x	f4, zero
-> +	fmv.s.x	f5, zero
-> +	fmv.s.x	f6, zero
-> +	fmv.s.x	f7, zero
-> +	fmv.s.x	f8, zero
-> +	fmv.s.x	f9, zero
-> +	fmv.s.x	f10, zero
-> +	fmv.s.x	f11, zero
-> +	fmv.s.x	f12, zero
-> +	fmv.s.x	f13, zero
-> +	fmv.s.x	f14, zero
-> +	fmv.s.x	f15, zero
-> +	fmv.s.x	f16, zero
-> +	fmv.s.x	f17, zero
-> +	fmv.s.x	f18, zero
-> +	fmv.s.x	f19, zero
-> +	fmv.s.x	f20, zero
-> +	fmv.s.x	f21, zero
-> +	fmv.s.x	f22, zero
-> +	fmv.s.x	f23, zero
-> +	fmv.s.x	f24, zero
-> +	fmv.s.x	f25, zero
-> +	fmv.s.x	f26, zero
-> +	fmv.s.x	f27, zero
-> +	fmv.s.x	f28, zero
-> +	fmv.s.x	f29, zero
-> +	fmv.s.x	f30, zero
-> +	fmv.s.x	f31, zero
-> +	csrw	fcsr, 0
-> +	/* note that the caller must clear SR_FS */
-> +#endif /* CONFIG_FPU */
