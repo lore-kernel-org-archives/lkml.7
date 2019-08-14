@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72109C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB23C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43851217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D462084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802276;
-	bh=EmXnNYRrjXkAFuyAfp9FKE1t/lNadDL0hVpRJKH24Cc=;
+	s=default; t=1565802281;
+	bh=LPfPacdqzNLUM0fy/JrApmF/4SQTkvNzeA5k+KvbKKQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CNXOEqeDMU00KqIVQZjr9VaKkXXkKJPFefHzf1eMMRqkXR5bTGpo97K0OTVNf0x2i
-	 so46r/EqF0EbG3peCrN/dvndorLa/gKiOlNn1RlbyUdyf5gE9KJmSJI6T6p3bFZw7x
-	 e8Fo7i0zqVUAYEIpPi1iz3XM5gdJvaBkXuHlNT/A=
+	b=bucG4KrUyBjjfKgDWyQSFDyDb/1mtiov1Fg4/a5Jl+jLmlRFbyuC6ZZ3RNqhofcHo
+	 8+RLkhM9WHersfC2v2YfjwkZxKBjliwuZSxjJsuoCnd6tUXxHlEkzNVy1KBU/pxcxw
+	 X5ftgUg09ri0NhOWEDXTd6sRu9Doxdbt7H+fboEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfHNREf (ORCPT
+        id S1729290AbfHNREk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:04:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53380 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:04:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729235AbfHNREc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:04:32 -0400
+        id S1729253AbfHNREe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:04:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20101216F4;
-        Wed, 14 Aug 2019 17:04:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 765B1214DA;
+        Wed, 14 Aug 2019 17:04:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802271;
-        bh=EmXnNYRrjXkAFuyAfp9FKE1t/lNadDL0hVpRJKH24Cc=;
+        s=default; t=1565802273;
+        bh=LPfPacdqzNLUM0fy/JrApmF/4SQTkvNzeA5k+KvbKKQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TJB7rlitwAj3iPCfF79wjRWHPFUjCH6NzmUL4Y9YWWPZ0H6nP+UyVB9YmRW5MhLa1
-         x7+k3p8xkMpgFWMy6FY26K5qoIlm656koesgzUxEwmOaKDUgibJX9elktKUJG72PF6
-         lgqbdlsG3SZqPe07hcHmTnM+lgDUP4wThQFFygtA=
+        b=KpvMPPlvGZoxiMDaPCZoJQinVJvrWYDuIUyVDTzxzL3LntyikZbEq1kHYIWqmxcEp
+         u6xcMJKQTXGI6ssq6EXubBYpJSrg13u7pSVz50wZzCnQw3KCP4p+mKYPalaQWyHIR+
+         OJDAj4mILNLfKWjaxsOfK32/g+TSu8VRYtUaagqM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vaibhav Rustagi <vaibhavrustagi@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH 5.2 035/144] x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS
-Date:   Wed, 14 Aug 2019 18:59:51 +0200
-Message-Id: <20190814165801.293530827@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.2 036/144] genirq/affinity: Create affinity mask for single vector
+Date:   Wed, 14 Aug 2019 18:59:52 +0200
+Message-Id: <20190814165801.335390862@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -62,76 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-commit b059f801a937d164e03b33c1848bb3dca67c0b04 upstream.
+commit 491beed3b102b6e6c0e7734200661242226e3933 upstream.
 
-KBUILD_CFLAGS is very carefully built up in the top level Makefile,
-particularly when cross compiling or using different build tools.
-Resetting KBUILD_CFLAGS via := assignment is an antipattern.
+Since commit c66d4bd110a1f8 ("genirq/affinity: Add new callback for
+(re)calculating interrupt sets"), irq_create_affinity_masks() returns
+NULL in case of single vector. This change has caused regression on some
+drivers, such as lpfc.
 
-The comment above the reset mentions that -pg is problematic.  Other
-Makefiles use `CFLAGS_REMOVE_file.o = $(CC_FLAGS_FTRACE)` when
-CONFIG_FUNCTION_TRACER is set. Prefer that pattern to wiping out all of
-the important KBUILD_CFLAGS then manually having to re-add them. Seems
-also that __stack_chk_fail references are generated when using
-CONFIG_STACKPROTECTOR or CONFIG_STACKPROTECTOR_STRONG.
+The problem is that single vector requests can happen in some generic cases:
 
-Fixes: 8fc5b4d4121c ("purgatory: core purgatory functionality")
-Reported-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+  1) kdump kernel
+
+  2) irq vectors resource is close to exhaustion.
+
+If in that situation the affinity mask for a single vector is not created,
+every caller has to handle the special case.
+
+There is no reason why the mask cannot be created, so remove the check for
+a single vector and create the mask.
+
+Fixes: c66d4bd110a1f8 ("genirq/affinity: Add new callback for (re)calculating interrupt sets")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190807221539.94583-2-ndesaulniers@google.com
+Link: https://lkml.kernel.org/r/20190805011906.5020-1-ming.lei@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/purgatory/Makefile |   31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+ kernel/irq/affinity.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -20,11 +20,34 @@ KCOV_INSTRUMENT := n
- 
- # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
- # in turn leaves some undefined symbols like __fentry__ in purgatory and not
--# sure how to relocate those. Like kexec-tools, use custom flags.
-+# sure how to relocate those.
-+ifdef CONFIG_FUNCTION_TRACER
-+CFLAGS_REMOVE_sha256.o		+= $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_purgatory.o	+= $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_string.o		+= $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_kexec-purgatory.o	+= $(CC_FLAGS_FTRACE)
-+endif
- 
--KBUILD_CFLAGS := -fno-strict-aliasing -Wall -Wstrict-prototypes -fno-zero-initialized-in-bss -fno-builtin -ffreestanding -c -Os -mcmodel=large
--KBUILD_CFLAGS += -m$(BITS)
--KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
-+ifdef CONFIG_STACKPROTECTOR
-+CFLAGS_REMOVE_sha256.o		+= -fstack-protector
-+CFLAGS_REMOVE_purgatory.o	+= -fstack-protector
-+CFLAGS_REMOVE_string.o		+= -fstack-protector
-+CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector
-+endif
-+
-+ifdef CONFIG_STACKPROTECTOR_STRONG
-+CFLAGS_REMOVE_sha256.o		+= -fstack-protector-strong
-+CFLAGS_REMOVE_purgatory.o	+= -fstack-protector-strong
-+CFLAGS_REMOVE_string.o		+= -fstack-protector-strong
-+CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector-strong
-+endif
-+
-+ifdef CONFIG_RETPOLINE
-+CFLAGS_REMOVE_sha256.o		+= $(RETPOLINE_CFLAGS)
-+CFLAGS_REMOVE_purgatory.o	+= $(RETPOLINE_CFLAGS)
-+CFLAGS_REMOVE_string.o		+= $(RETPOLINE_CFLAGS)
-+CFLAGS_REMOVE_kexec-purgatory.o	+= $(RETPOLINE_CFLAGS)
-+endif
- 
- $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
- 		$(call if_changed,ld)
+--- a/kernel/irq/affinity.c
++++ b/kernel/irq/affinity.c
+@@ -253,11 +253,9 @@ irq_create_affinity_masks(unsigned int n
+ 	 * Determine the number of vectors which need interrupt affinities
+ 	 * assigned. If the pre/post request exhausts the available vectors
+ 	 * then nothing to do here except for invoking the calc_sets()
+-	 * callback so the device driver can adjust to the situation. If there
+-	 * is only a single vector, then managing the queue is pointless as
+-	 * well.
++	 * callback so the device driver can adjust to the situation.
+ 	 */
+-	if (nvecs > 1 && nvecs > affd->pre_vectors + affd->post_vectors)
++	if (nvecs > affd->pre_vectors + affd->post_vectors)
+ 		affvecs = nvecs - affd->pre_vectors - affd->post_vectors;
+ 	else
+ 		affvecs = 0;
 
 
