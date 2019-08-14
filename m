@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5ABC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B44C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0327C2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207CC2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802338;
-	bh=wQmac9/ZBNRlqQz+lw76NAL4derxix4316uFaeYGSXs=;
+	s=default; t=1565802341;
+	bh=T453qyHZq//8+NhURIFxQ7lt1tKfZfZY7GS3Gieo0rc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z8aNbh9a9F06WQweunpHIHnNk7BOIrwD73tXN1pkqs/UTm4DJE2Bh5GTUUGyOPjCo
-	 Iiw+GW383ejM+U6/mUetKtYRccYbKLK+eWqedls4g5hkRn+00QTtXTP6rlgycxgsfz
-	 3yccU2lhwoRbfrsw0x6jc55OWstDOEpt9//rVY40=
+	b=lWLZp678jP7BODZriH1C3+FP9Z9J8iCOCT8TVi0V26Z7xr+7ul1y3IZnhD4dgsOaH
+	 qn1hNlol27HUQYJEyytMoLDqLBAN6m4YYzEmyCwnCWFpIMkH587BShvLlcn/YOt3kg
+	 b/w1pRBkhkT8LrdaiMydHcHtgAHqd2EjaWBhXoWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbfHNRFg (ORCPT
+        id S1728442AbfHNRFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:05:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54432 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:05:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729455AbfHNRFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:05:30 -0400
+        id S1729462AbfHNRFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:05:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D3E82173E;
-        Wed, 14 Aug 2019 17:05:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B57DF216F4;
+        Wed, 14 Aug 2019 17:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802330;
-        bh=wQmac9/ZBNRlqQz+lw76NAL4derxix4316uFaeYGSXs=;
+        s=default; t=1565802335;
+        bh=T453qyHZq//8+NhURIFxQ7lt1tKfZfZY7GS3Gieo0rc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CMW9b2s0OtcDvo+jTDsPrgSV3zffgJaHtAodv4R0m2hUU0HrrYhAvENFP9BAoZkoJ
-         te8ms4V+JRoWbpVGZ4bZO0GOaj+Pbv9BLMdxPrZVkQJHQatJUufWMk4CQLn2885mJ+
-         KuD5hh6illLh+JwjCDF/bB5GPTIn53wJgpWFsIMw=
+        b=gRgTbOspI9em98FXj1PqQaUwU5PXWLIH7TtvW7I9ISGtwq9HYEExo5VeVFkWwHMbg
+         UGLRnVo5YBIvjTskpOKPJRZkxKSZ7vUvg6h+cn/9CuvjcLU/+JyUtpesdj9LH6NbTd
+         Uh6VgpJrz425Cixe2NixVKq7/SE3o4PtP77opLjo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 083/144] arm64: Force SSBS on context switch
-Date:   Wed, 14 Aug 2019 19:00:39 +0200
-Message-Id: <20190814165803.345753423@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 058/144] scripts/sphinx-pre-install: dont use LaTeX with CentOS 7
+Date:   Wed, 14 Aug 2019 19:00:14 +0200
+Message-Id: <20190814165802.258827525@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -59,117 +60,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cbdf8a189a66001c36007bf0f5c975d0376c5c3a ]
+[ Upstream commit 56e5a633923793b31515795ad30156a307572c1e ]
 
-On a CPU that doesn't support SSBS, PSTATE[12] is RES0.  In a system
-where only some of the CPUs implement SSBS, we end-up losing track of
-the SSBS bit across task migration.
+There aren't enough texlive packages for LaTeX-based builds
+to work on CentOS/RHEL <= 7.
 
-To address this issue, let's force the SSBS bit on context switch.
-
-Fixes: 8f04e8e6e29c ("arm64: ssbd: Add support for PSTATE.SSBS rather than trapping to EL3")
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-[will: inverted logic and added comments]
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/processor.h | 14 ++++++++++++--
- arch/arm64/kernel/process.c        | 29 ++++++++++++++++++++++++++++-
- 2 files changed, 40 insertions(+), 3 deletions(-)
+ scripts/sphinx-pre-install | 68 ++++++++++++++++++++++++++++----------
+ 1 file changed, 50 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-index fd5b1a4efc70e..844e2964b0f5e 100644
---- a/arch/arm64/include/asm/processor.h
-+++ b/arch/arm64/include/asm/processor.h
-@@ -193,6 +193,16 @@ static inline void start_thread_common(struct pt_regs *regs, unsigned long pc)
- 		regs->pmr_save = GIC_PRIO_IRQON;
- }
+diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+index 778f3ae918775..4cc2b3ee5209f 100755
+--- a/scripts/sphinx-pre-install
++++ b/scripts/sphinx-pre-install
+@@ -77,6 +77,17 @@ sub check_missing(%)
+ 	foreach my $prog (sort keys %missing) {
+ 		my $is_optional = $missing{$prog};
  
-+static inline void set_ssbs_bit(struct pt_regs *regs)
-+{
-+	regs->pstate |= PSR_SSBS_BIT;
-+}
++		# At least on some LTS distros like CentOS 7, texlive doesn't
++		# provide all packages we need. When such distros are
++		# detected, we have to disable PDF output.
++		#
++		# So, we need to ignore the packages that distros would
++		# need for LaTeX to work
++		if ($is_optional == 2 && !$pdf) {
++			$optional--;
++			next;
++		}
 +
-+static inline void set_compat_ssbs_bit(struct pt_regs *regs)
-+{
-+	regs->pstate |= PSR_AA32_SSBS_BIT;
-+}
-+
- static inline void start_thread(struct pt_regs *regs, unsigned long pc,
- 				unsigned long sp)
- {
-@@ -200,7 +210,7 @@ static inline void start_thread(struct pt_regs *regs, unsigned long pc,
- 	regs->pstate = PSR_MODE_EL0t;
+ 		if ($is_optional) {
+ 			print "Warning: better to also install \"$prog\".\n";
+ 		} else {
+@@ -326,10 +337,10 @@ sub give_debian_hints()
  
- 	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
--		regs->pstate |= PSR_SSBS_BIT;
-+		set_ssbs_bit(regs);
- 
- 	regs->sp = sp;
- }
-@@ -219,7 +229,7 @@ static inline void compat_start_thread(struct pt_regs *regs, unsigned long pc,
- #endif
- 
- 	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
--		regs->pstate |= PSR_AA32_SSBS_BIT;
-+		set_compat_ssbs_bit(regs);
- 
- 	regs->compat_sp = sp;
- }
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index 6a869d9f304f7..b0c859ca63201 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -398,7 +398,7 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
- 			childregs->pstate |= PSR_UAO_BIT;
- 
- 		if (arm64_get_ssbd_state() == ARM64_SSBD_FORCE_DISABLE)
--			childregs->pstate |= PSR_SSBS_BIT;
-+			set_ssbs_bit(childregs);
- 
- 		if (system_uses_irq_prio_masking())
- 			childregs->pmr_save = GIC_PRIO_IRQON;
-@@ -442,6 +442,32 @@ void uao_thread_switch(struct task_struct *next)
+ 	if ($pdf) {
+ 		check_missing_file("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+-				   "fonts-dejavu", 1);
++				   "fonts-dejavu", 2);
  	}
- }
  
-+/*
-+ * Force SSBS state on context-switch, since it may be lost after migrating
-+ * from a CPU which treats the bit as RES0 in a heterogeneous system.
-+ */
-+static void ssbs_thread_switch(struct task_struct *next)
-+{
-+	struct pt_regs *regs = task_pt_regs(next);
-+
-+	/*
-+	 * Nothing to do for kernel threads, but 'regs' may be junk
-+	 * (e.g. idle task) so check the flags and bail early.
-+	 */
-+	if (unlikely(next->flags & PF_KTHREAD))
-+		return;
-+
-+	/* If the mitigation is enabled, then we leave SSBS clear. */
-+	if ((arm64_get_ssbd_state() == ARM64_SSBD_FORCE_ENABLE) ||
-+	    test_tsk_thread_flag(next, TIF_SSBD))
-+		return;
-+
-+	if (compat_user_mode(regs))
-+		set_compat_ssbs_bit(regs);
-+	else if (user_mode(regs))
-+		set_ssbs_bit(regs);
-+}
-+
- /*
-  * We store our current task in sp_el0, which is clobbered by userspace. Keep a
-  * shadow copy so that we can restore this upon entry from userspace.
-@@ -471,6 +497,7 @@ __notrace_funcgraph struct task_struct *__switch_to(struct task_struct *prev,
- 	entry_task_switch(next);
- 	uao_thread_switch(next);
- 	ptrauth_thread_switch(next);
-+	ssbs_thread_switch(next);
+-	check_program("dvipng", 1) if ($pdf);
++	check_program("dvipng", 2) if ($pdf);
+ 	check_missing(\%map);
  
- 	/*
- 	 * Complete any pending TLB or cache maintenance on this CPU in case
+ 	return if (!$need && !$optional);
+@@ -364,22 +375,40 @@ sub give_redhat_hints()
+ 	#
+ 	# Checks valid for RHEL/CentOS version 7.x.
+ 	#
++	my $old = 0;
++	my $rel;
++	$rel = $1 if ($system_release =~ /release\s+(\d+)/);
++
+ 	if (!($system_release =~ /Fedora/)) {
+ 		$map{"virtualenv"} = "python-virtualenv";
+-	}
+ 
+-	my $release;
++		if ($rel && $rel < 8) {
++			$old = 1;
++			$pdf = 0;
+ 
+-	$release = $1 if ($system_release =~ /Fedora\s+release\s+(\d+)/);
++			printf("Note: texlive packages on RHEL/CENTOS <= 7 are incomplete. Can't support PDF output\n");
++			printf("If you want to build PDF, please read:\n");
++			printf("\thttps://www.systutorials.com/241660/how-to-install-tex-live-on-centos-7-linux/\n");
++		}
++	} else {
++		if ($rel && $rel < 26) {
++			$old = 1;
++		}
++	}
++	if (!$rel) {
++		printf("Couldn't identify release number\n");
++		$old = 1;
++		$pdf = 0;
++	}
+ 
+-	check_rpm_missing(\@fedora26_opt_pkgs, 1) if ($pdf && $release >= 26);
+-	check_rpm_missing(\@fedora_tex_pkgs, 1) if ($pdf);
+-	check_missing_tex(1) if ($pdf);
++	check_rpm_missing(\@fedora26_opt_pkgs, 2) if ($pdf && !$old);
++	check_rpm_missing(\@fedora_tex_pkgs, 2) if ($pdf);
++	check_missing_tex(2) if ($pdf);
+ 	check_missing(\%map);
+ 
+ 	return if (!$need && !$optional);
+ 
+-	if ($release >= 18) {
++	if (!$old) {
+ 		# dnf, for Fedora 18+
+ 		printf("You should run:\n\n\tsudo dnf install -y $install\n");
+ 	} else {
+@@ -418,8 +447,8 @@ sub give_opensuse_hints()
+ 		"texlive-zapfding",
+ 	);
+ 
+-	check_rpm_missing(\@suse_tex_pkgs, 1) if ($pdf);
+-	check_missing_tex(1) if ($pdf);
++	check_rpm_missing(\@suse_tex_pkgs, 2) if ($pdf);
++	check_missing_tex(2) if ($pdf);
+ 	check_missing(\%map);
+ 
+ 	return if (!$need && !$optional);
+@@ -443,7 +472,7 @@ sub give_mageia_hints()
+ 		"texlive-fontsextra",
+ 	);
+ 
+-	check_rpm_missing(\@tex_pkgs, 1) if ($pdf);
++	check_rpm_missing(\@tex_pkgs, 2) if ($pdf);
+ 	check_missing(\%map);
+ 
+ 	return if (!$need && !$optional);
+@@ -466,7 +495,8 @@ sub give_arch_linux_hints()
+ 		"texlive-latexextra",
+ 		"ttf-dejavu",
+ 	);
+-	check_pacman_missing(\@archlinux_tex_pkgs, 1) if ($pdf);
++	check_pacman_missing(\@archlinux_tex_pkgs, 2) if ($pdf);
++
+ 	check_missing(\%map);
+ 
+ 	return if (!$need && !$optional);
+@@ -485,7 +515,7 @@ sub give_gentoo_hints()
+ 	);
+ 
+ 	check_missing_file("/usr/share/fonts/dejavu/DejaVuSans.ttf",
+-			   "media-fonts/dejavu", 1) if ($pdf);
++			   "media-fonts/dejavu", 2) if ($pdf);
+ 
+ 	check_missing(\%map);
+ 
+@@ -553,7 +583,7 @@ sub check_distros()
+ 	my %map = (
+ 		"sphinx-build" => "sphinx"
+ 	);
+-	check_missing_tex(1) if ($pdf);
++	check_missing_tex(2) if ($pdf);
+ 	check_missing(\%map);
+ 	print "I don't know distro $system_release.\n";
+ 	print "So, I can't provide you a hint with the install procedure.\n";
+@@ -591,11 +621,13 @@ sub check_needs()
+ 	check_program("make", 0);
+ 	check_program("gcc", 0);
+ 	check_python_module("sphinx_rtd_theme", 1) if (!$virtualenv);
+-	check_program("xelatex", 1) if ($pdf);
+ 	check_program("dot", 1);
+ 	check_program("convert", 1);
+-	check_program("rsvg-convert", 1) if ($pdf);
+-	check_program("latexmk", 1) if ($pdf);
++
++	# Extra PDF files - should use 2 for is_optional
++	check_program("xelatex", 2) if ($pdf);
++	check_program("rsvg-convert", 2) if ($pdf);
++	check_program("latexmk", 2) if ($pdf);
+ 
+ 	check_distros();
+ 
 -- 
 2.20.1
 
