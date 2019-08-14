@@ -2,51 +2,53 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB23C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D97C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D462084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 596FB216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802281;
-	bh=LPfPacdqzNLUM0fy/JrApmF/4SQTkvNzeA5k+KvbKKQ=;
+	s=default; t=1565802284;
+	bh=b8t8g1ACQkvCxFBdeFia9t9I2vkxr4sZhptQsOoBZpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bucG4KrUyBjjfKgDWyQSFDyDb/1mtiov1Fg4/a5Jl+jLmlRFbyuC6ZZ3RNqhofcHo
-	 8+RLkhM9WHersfC2v2YfjwkZxKBjliwuZSxjJsuoCnd6tUXxHlEkzNVy1KBU/pxcxw
-	 X5ftgUg09ri0NhOWEDXTd6sRu9Doxdbt7H+fboEs=
+	b=oW/8Y97YhvZTxmzyd23e/UY/Jr57nOksP45p6Hskrdmr7OXTBOoto4SHlKjvJ3uxt
+	 9qxNtaR2XP4Skdks8YA3gXRDecvfX5OOK9B40mk0yta38prAuhUf1b4yVRpDDrSBoh
+	 ZKVCyAie513D3ABu3VaDZ/RXeB1VSoYFSOg+ClJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbfHNREk (ORCPT
+        id S1729296AbfHNREn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:04:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53434 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:04:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729253AbfHNREe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:04:34 -0400
+        id S1728673AbfHNREm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:04:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 765B1214DA;
-        Wed, 14 Aug 2019 17:04:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C81B214DA;
+        Wed, 14 Aug 2019 17:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802273;
-        bh=LPfPacdqzNLUM0fy/JrApmF/4SQTkvNzeA5k+KvbKKQ=;
+        s=default; t=1565802281;
+        bh=b8t8g1ACQkvCxFBdeFia9t9I2vkxr4sZhptQsOoBZpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KpvMPPlvGZoxiMDaPCZoJQinVJvrWYDuIUyVDTzxzL3LntyikZbEq1kHYIWqmxcEp
-         u6xcMJKQTXGI6ssq6EXubBYpJSrg13u7pSVz50wZzCnQw3KCP4p+mKYPalaQWyHIR+
-         OJDAj4mILNLfKWjaxsOfK32/g+TSu8VRYtUaagqM=
+        b=hM+m+es5SLJd+d8GyBHf5YF0izXt0emfJ6JeAcbh+OZPeHEmAq7P/o1C1ptjIRuzA
+         FQxvzsIINqXaGZkQTgOEoecDsikTIcLC8QU2nfcTDEmRr4iF0KIN69yt1CrkiIt3H0
+         OKqasv1bG5UFgh03hLWpZkWK0WeCGWak0YI7G/58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.2 036/144] genirq/affinity: Create affinity mask for single vector
-Date:   Wed, 14 Aug 2019 18:59:52 +0200
-Message-Id: <20190814165801.335390862@linuxfoundation.org>
+        stable@vger.kernel.org, Murton Liu <murton.liu@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 065/144] drm/amd/display: Clock does not lower in Updateplanes
+Date:   Wed, 14 Aug 2019 19:00:21 +0200
+Message-Id: <20190814165802.555579467@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -59,53 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+[ Upstream commit 492d9ec244923420af96db6b69ad7d575859aa92 ]
 
-commit 491beed3b102b6e6c0e7734200661242226e3933 upstream.
+[why]
+We reset the optimized_required in atomic_plane_disable
+flag immediately after it is set in atomic_plane_disconnect, causing us to
+never have flag set during next flip in UpdatePlanes.
 
-Since commit c66d4bd110a1f8 ("genirq/affinity: Add new callback for
-(re)calculating interrupt sets"), irq_create_affinity_masks() returns
-NULL in case of single vector. This change has caused regression on some
-drivers, such as lpfc.
+[how]
+Optimize directly after each time plane is removed.
 
-The problem is that single vector requests can happen in some generic cases:
-
-  1) kdump kernel
-
-  2) irq vectors resource is close to exhaustion.
-
-If in that situation the affinity mask for a single vector is not created,
-every caller has to handle the special case.
-
-There is no reason why the mask cannot be created, so remove the check for
-a single vector and create the mask.
-
-Fixes: c66d4bd110a1f8 ("genirq/affinity: Add new callback for (re)calculating interrupt sets")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190805011906.5020-1-ming.lei@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Murton Liu <murton.liu@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/irq/affinity.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/kernel/irq/affinity.c
-+++ b/kernel/irq/affinity.c
-@@ -253,11 +253,9 @@ irq_create_affinity_masks(unsigned int n
- 	 * Determine the number of vectors which need interrupt affinities
- 	 * assigned. If the pre/post request exhausts the available vectors
- 	 * then nothing to do here except for invoking the calc_sets()
--	 * callback so the device driver can adjust to the situation. If there
--	 * is only a single vector, then managing the queue is pointless as
--	 * well.
-+	 * callback so the device driver can adjust to the situation.
- 	 */
--	if (nvecs > 1 && nvecs > affd->pre_vectors + affd->post_vectors)
-+	if (nvecs > affd->pre_vectors + affd->post_vectors)
- 		affvecs = nvecs - affd->pre_vectors - affd->post_vectors;
- 	else
- 		affvecs = 0;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index 9e4d70a0055e1..c7b4c3048b71d 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -2416,6 +2416,12 @@ static void dcn10_apply_ctx_for_surface(
+ 		if (removed_pipe[i])
+ 			dcn10_disable_plane(dc, &dc->current_state->res_ctx.pipe_ctx[i]);
+ 
++	for (i = 0; i < dc->res_pool->pipe_count; i++)
++		if (removed_pipe[i]) {
++			dc->hwss.optimize_bandwidth(dc, context);
++			break;
++		}
++
+ 	if (dc->hwseq->wa.DEGVIDCN10_254)
+ 		hubbub1_wm_change_req_wa(dc->res_pool->hubbub);
+ }
+-- 
+2.20.1
+
 
 
