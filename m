@@ -2,103 +2,92 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247FFC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949EEC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F19E6214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70CB020651
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:59:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vit3Wwwb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zc/RhUNa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbfHNR6S (ORCPT
+        id S1728689AbfHNR7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:58:18 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46351 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728681AbfHNR6R (ORCPT
+        Wed, 14 Aug 2019 13:59:45 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35513 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728301AbfHNR7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:58:17 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w3so16257759pgt.13;
-        Wed, 14 Aug 2019 10:58:17 -0700 (PDT)
+        Wed, 14 Aug 2019 13:59:45 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n4so11732825pgv.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 10:59:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MpjkKQG57NWCogNh6HA4vWFkmzsK8Kfyi0DRma3/+J0=;
-        b=Vit3WwwbyY1gvyZrE3M7s+gCpFczxu1keMfk4x9zOOcG22+a3nZHMXfDdYNIlR8F94
-         7RtBj4EYZETbDD3DTilFs5qtwW7EZv74YfX853Hxun5myTZnBLPKcbuSMBsYIRXl/g5F
-         K88eKV8SBM3a9S59DgwuNlUG+0HKb/1ULI3IvCmxvTewpHZy8fZNG3rfAkBi1F/5BmC8
-         qhP86GwUbYVkq3AfAOCdGycTDZRsEHt5reS2eEAYVlq9x3UTqm76N9a7hXGDnGv/t2vR
-         IW9Q3kt5e499XQz9mS0STJsY2emJ1hVqU2ueUBa+9M3mRdHIBAzqyIp5kt28z+mVKR8R
-         QvhQ==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=kF2rSGg7TWdsph3+jKGWM5Z90AAtcPpo25Mf5csWFrU=;
+        b=Zc/RhUNaKUH6TKfhRZWBo6OBqnN6wsyVNMAXjBgiNUtQxZoaGMZ+qifnZYFCHOtQNq
+         93B6SETP1TqUWc7SCQ5mY3c3gtiWJs3r/RoBFb0OerUawl9ihfJgTVV4pxnTZyN7Uy7w
+         41upxhquofjg2gVE6AG70o1y8XyTA+QyHCgLQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MpjkKQG57NWCogNh6HA4vWFkmzsK8Kfyi0DRma3/+J0=;
-        b=bdlZ8+O+kSaGbjmRcA+5IDKDhAacfkAHK15+kn9UJtrWdJBo5WdcXcTv1Q5vKvfUF/
-         WHmcj7dLxA+RhJ7RCnBPqYWfr1t4IIjusZ+0unz/H3wCSjzCF5i0X8tcY/Gggi+2+Xwq
-         +px8UP2ho2xXg1ayyNFyoqUOSZx79YrOsy1US8PSXe3zXPPdY5Y3W6H4liLWdx8MnppD
-         pE28LbKsO0OAXs5bl5LS43pdYpJqXsPjwRY9QskSXFnyH9McsSEadF6iUOE6wGOS7Mw4
-         qaMiNEt6n3PTI/Rd2u9lkjpB2GK7POoSWNX2Z0sbA95ggSGfbcd6nC2iHUAw48dKJj8D
-         dEgg==
-X-Gm-Message-State: APjAAAUaHaooJiElRc6oTpNXPHTKENg3LhETGoQRbsZ6xCohnsZn+1cJ
-        NaWV4/3ZajTs1UOCWC92AvY=
-X-Google-Smtp-Source: APXvYqxzm2vUyPLeI4Vkfj1AqqAKclypzJih427wh8mJFQqBI0P5FfXK2Ix5RYE6RVQeNB1kNsKdrw==
-X-Received: by 2002:a17:90a:db0d:: with SMTP id g13mr886282pjv.51.1565805496969;
-        Wed, 14 Aug 2019 10:58:16 -0700 (PDT)
-Received: from [10.69.78.41] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id c199sm604284pfb.28.2019.08.14.10.58.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 10:58:16 -0700 (PDT)
-Subject: Re: [PATCH v4 12/14] net: phy: adin: implement downshift
- configuration via phy-tunable
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        hkallweit1@gmail.com, andrew@lunn.ch
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
- <20190812112350.15242-13-alexandru.ardelean@analog.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <081d5898-40c5-54d8-f543-942a3518f36e@gmail.com>
-Date:   Wed, 14 Aug 2019 10:58:10 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=kF2rSGg7TWdsph3+jKGWM5Z90AAtcPpo25Mf5csWFrU=;
+        b=XRlyIS9JSBMUrXJOelXSv9pPFBCbIU7jc14L4z6xI0pjVAJuaJaVZA2lo1b6Mo1JyB
+         W9Zx23qKxWIe29Q9zo3M9r9HOMlPzCfz9mEn3NjRfYa2RLCrNMIqDgeS3McdF9soRmC2
+         akVTD6m0gVw4Ps07LYNuNDX1P9n/pkqOE/MbEfY8OXzMP5CL6i1fygYfOkLVwwfl7kyH
+         k4y0upV08Bl79asd02qDoPmJUjtb+gInrk5PGnTs2L/5fbRu3OzCIpKGa7qsLBhOZqDf
+         hikzikBcLUJDDP5YXiDiGzZoT6+G/sxisLeG1f5MNwqeU/pbpjscIYlPOnb2G0viCX2I
+         HU3A==
+X-Gm-Message-State: APjAAAUMXEBNU7BKe9+op6XYbhCvnBUGalXRwzhv8EnNLh/i8pofNsra
+        5bjt8Tf5nDktqbOgdRjIbiPNXNhQz7TlkA==
+X-Google-Smtp-Source: APXvYqzlhFg/syHBm6u3NkrWSTkdwA/nnqbqnwh5uAmEwTa/NV7gwIbeSWeDmlMEvcDq5rUej/oTTg==
+X-Received: by 2002:a17:90a:7d09:: with SMTP id g9mr903391pjl.38.1565805584194;
+        Wed, 14 Aug 2019 10:59:44 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id f72sm486217pjg.10.2019.08.14.10.59.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 14 Aug 2019 10:59:43 -0700 (PDT)
+Message-ID: <5d544c0f.1c69fb81.a78d3.1381@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190812112350.15242-13-alexandru.ardelean@analog.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190813082442.25796-2-mkshah@codeaurora.org>
+References: <20190813082442.25796-1-mkshah@codeaurora.org> <20190813082442.25796-2-mkshah@codeaurora.org>
+Subject: Re: [PATCH 1/4] drivers: qcom: rpmh: fix macro to accept NULL argument
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org, ulf.hansson@linaro.org,
+        Maulik Shah <mkshah@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, agross@kernel.org,
+        david.brown@linaro.org, linux-arm-msm@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Wed, 14 Aug 2019 10:59:42 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Maulik Shah (2019-08-13 01:24:39)
+> Device argument matches with dev variable declared in RPMH message.
+> Compiler reports error when the argument is NULL since the argument
+> matches the name of the property. Rename dev argument to device to
+> fix this.
+>=20
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+
+Maybe this should have a Fixes tag? And the subject could be something
+like "avoid shadowing local variables in macro"?
+
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
 
-On 8/12/2019 4:23 AM, Alexandru Ardelean wrote:
-> Down-speed auto-negotiation may not always be enabled, in which case the
-> PHY won't down-shift to 100 or 10 during auto-negotiation.
-> 
-> This change enables downshift and configures the number of retries to
-> default 4 (which is also in the datasheet
-> 
-> The downshift control mechanism can also be controlled via the phy-tunable
-> interface (ETHTOOL_PHY_DOWNSHIFT control).
-> 
-> The change has been adapted from the Aquantia PHY driver.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
