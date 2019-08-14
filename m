@@ -2,126 +2,87 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FB8C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B972C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2BE620842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749470;
-	bh=sml/q+TWg4pt2Fx4C/8hXbbtwxpBWZ1jBQwrz6SBUFE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D8hKtYFGKzn0YpeqjXr7LAkPgDfwOfZCVZp6M3yTmCRXkdolV0PKqOQ6IENgifv9f
-	 SfaHzMR3R1KVEByWM4dE6p2fOiMRlqbtIvLXVKbqfeysoPwfhjxXkf4r7J2WsBsBB1
-	 H6iO4SsatPU4i0koFU4g/jbvGbG+iHWQf6+W62pE=
+	by mail.kernel.org (Postfix) with ESMTP id 55FF62085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="aUTYvZKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbfHNCY3 (ORCPT
+        id S1730161AbfHNCYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:24:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730139AbfHNCYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:24:16 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58EEB216F4;
-        Wed, 14 Aug 2019 02:24:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749456;
-        bh=sml/q+TWg4pt2Fx4C/8hXbbtwxpBWZ1jBQwrz6SBUFE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xa1WSjIGln2iaXkhWBqT9Yfu+Rq7znpPksHiMNxpguseO0jf90LXsHZwb5FmyTYqE
-         bgA8kmQYhxL4b4YVqDni/Y4kcQVn6MGirDepYcgRYjIFmh7LqGw2J6cv8T6+peRVqS
-         PyIc3pVeKu0HC4NUv+euJ/wXyLo07wajuxI5sKFk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jin Yao <yao.jin@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 32/33] perf pmu-events: Fix missing "cpu_clk_unhalted.core" event
-Date:   Tue, 13 Aug 2019 22:23:22 -0400
-Message-Id: <20190814022323.17111-32-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190814022323.17111-1-sashal@kernel.org>
-References: <20190814022323.17111-1-sashal@kernel.org>
+        Tue, 13 Aug 2019 22:24:34 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39622 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730139AbfHNCYb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:24:31 -0400
+Received: by mail-ot1-f67.google.com with SMTP id b1so10764123otp.6
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 19:24:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=djwbOoU5ileobHGHzugslDxkoFaMGMiR2MOTUznWvvE=;
+        b=aUTYvZKENV7jx2SUF1Rt71AnU/eAfEOkOw82G9L2RA4jgcGrfvsbDozKAy/0Jd7xzj
+         dEZxsN1WCqx+vRxpE+2VZIaqHXxgGM5SLtGhQuB5JOJH7Was1RG0JSZPOdWVRH17vJD2
+         dLbkqTIpgKpxrzt66K9NiV9wke8kgqU+WNqLwmY0uSzAoZ4hWXbAQ1/JcyQuQltNiudT
+         cyh2KV2Q8y2+x1/+ytCHsMqZ5V79Njok7qu20FaXuZBg3e0SSQXi+Cu3Kj0Bt/XuAY6n
+         aVa9W6MzOIQuxeTLAO8rfrpJRidlychF7eKk1l6HDENnpfX0EUMfkwik3TNXY4v+tciy
+         a7Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=djwbOoU5ileobHGHzugslDxkoFaMGMiR2MOTUznWvvE=;
+        b=HrPqve3Ib3ZM5MhmC/UpLfhHC+kDcMB0IGKMhWlNvq19LIzN5sbKerlrMl/m7+bTiv
+         9FKigqhE+TfnP0FSn9QsA/aNM2T9N2ChHVbfuUA4wteubJTlREhDMzw76/1nGcrPZgB7
+         Hu0ylRUC9FoVX+y91OB7Ga6gILNNJ8iK3UADwKE2NWG1hRnb8RlchVdm1sUfmfC+dZgv
+         PNLXbUko4RqXQrZcy+Xju1DNrOlAWko+JxIs2Fg4k+aKJtrd+h/KlARj1eFQfKXBcowP
+         kvoPWXdI3+1cKVCmIB46syeyDCVEQxAjKNUSem29+kKkf5xyOFhl3DlIcpr2v0dOLN0Q
+         Gndw==
+X-Gm-Message-State: APjAAAUVhus/QqzN/uLkl1wojvlIbpD+H+Jsb+3OKvTHPz9iBdRNz5b0
+        P9CR5+ownRpIpZcipcLXBjQEgw==
+X-Google-Smtp-Source: APXvYqx+xLwy91cVwpgk6Jxu4j6BEJ3bP1Um+itheAYr7zgJCtQf5lOwrktHCYRgtlFyKi9r/5/W+g==
+X-Received: by 2002:a5d:9453:: with SMTP id x19mr2569033ior.183.1565749470857;
+        Tue, 13 Aug 2019 19:24:30 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id a8sm79125353ioh.29.2019.08.13.19.24.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Aug 2019 19:24:30 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 19:24:30 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Alistair Francis <alistair.francis@wdc.com>
+cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        alistair23@gmail.com
+Subject: Re: [PATCH 2/2] riscv: defconfig: Update the defconfig
+In-Reply-To: <20190813233230.21804-2-alistair.francis@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1908131924210.19217@viisi.sifive.com>
+References: <20190813233230.21804-1-alistair.francis@wdc.com> <20190813233230.21804-2-alistair.francis@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+On Tue, 13 Aug 2019, Alistair Francis wrote:
 
-[ Upstream commit 8e6e5bea2e34c61291d00cb3f47560341aa84bc3 ]
+> Update the defconfig:
+>  - Add CONFIG_HW_RANDOM=y and CONFIG_HW_RANDOM_VIRTIO=y to enable
+>    VirtIORNG when running on QEMU
+> 
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
 
-The events defined in pmu-events JSON are parsed and added into perf
-tool. For fixed counters, we handle the encodings between JSON and perf
-by using a static array fixed[].
+Thanks, queued for v5.3-rc.
 
-But the fixed[] has missed an important event "cpu_clk_unhalted.core".
 
-For example, on the Tremont platform,
-
-  [root@localhost ~]# perf stat -e cpu_clk_unhalted.core -a
-  event syntax error: 'cpu_clk_unhalted.core'
-                       \___ parser error
-
-With this patch, the event cpu_clk_unhalted.core can be parsed.
-
-  [root@localhost perf]# ./perf stat -e cpu_clk_unhalted.core -a -vvv
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             4
-    size                             112
-    config                           0x3c
-    sample_type                      IDENTIFIER
-    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-    disabled                         1
-    inherit                          1
-    exclude_guest                    1
-  ------------------------------------------------------------
-...
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190729072755.2166-1-yao.jin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/pmu-events/jevents.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 41611d7f9873c..016d12af68773 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -315,6 +315,7 @@ static struct fixed {
- 	{ "inst_retired.any_p", "event=0xc0" },
- 	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
- 	{ "cpu_clk_unhalted.thread", "event=0x3c" },
-+	{ "cpu_clk_unhalted.core", "event=0x3c" },
- 	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
- 	{ NULL, NULL},
- };
--- 
-2.20.1
-
+- Paul
