@@ -2,95 +2,95 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33027C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FD3C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 079DB20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4741920679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbfHNM6K (ORCPT
+        id S1727960AbfHNM6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 08:58:10 -0400
-Received: from sauhun.de ([88.99.104.3]:48676 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbfHNM6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 08:58:10 -0400
-Received: from localhost (p54B33326.dip0.t-ipconnect.de [84.179.51.38])
-        by pokefinder.org (Postfix) with ESMTPSA id 99FD42C311C;
-        Wed, 14 Aug 2019 14:58:08 +0200 (CEST)
-Date:   Wed, 14 Aug 2019 14:58:08 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Nishad Kamdar <nishadkamdar@gmail.com>
-Cc:     Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-i2c@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: stm32: Use the correct style for SPDX License
- Identifier
-Message-ID: <20190814125808.GD9716@ninjato>
-References: <20190803141331.GA3588@nishad>
+        Wed, 14 Aug 2019 08:58:30 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43826 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727474AbfHNM63 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 08:58:29 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y8so5054869wrn.10;
+        Wed, 14 Aug 2019 05:58:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sKNecaG9uJ6OOz0KBdXfDcOGxAObXFQzYaSa9S2/+74=;
+        b=P7FxR8JDgfx+GgLDPh3O/Hl411Ibb71G7/EJYj4PvZSrvxSfb7RYg3F6dfdftZLQy9
+         MHFqjnhEs9rfe6oVn7FDpmVQSYnGOPFHRoKfY15Y13Oi5XqqQ0iSXCoBCy5O+BIEzyg7
+         5DYAMl3GKmgxd2Zvv5YT8KdvNmYPMssbo7TVbO/Ml+ToWXWieqfw1HzsS8aULo4D2xQl
+         +HiH8Q58/YN7BCPsGhWD9RaQZoNUlhnkri/bv/gDLjrbTKyZvSRvxwHd5Uwwq4oo/RMu
+         IPgZgAiyZZcn30ZCp/Tg2bC5Xk1o9+6ToP5Pdixau/t6DrkNGzq0M0Ic+Zb5MDr5aS4A
+         cJjw==
+X-Gm-Message-State: APjAAAX+W0uMdOPD8BflMej5kAdlCIFo2wMysbo4dIMu06Bri2gYh2rs
+        qLhNXtU07Uq/Sp87WLdniic=
+X-Google-Smtp-Source: APXvYqxhM9476qaxGNT9qSQ8wXfkeXu1K37RaE1WScWDGKyW9FuchX8TJhOtx6AwF5sKc9TsM59trg==
+X-Received: by 2002:adf:dd88:: with SMTP id x8mr45113464wrl.331.1565787507561;
+        Wed, 14 Aug 2019 05:58:27 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id q20sm68659440wrc.79.2019.08.14.05.58.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 14 Aug 2019 05:58:27 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
+        linux-kernel@vger.kernel.org,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: PHY LIBRARY: Update files in the record
+Date:   Wed, 14 Aug 2019 15:58:00 +0300
+Message-Id: <20190814125800.23729-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <039d86b5-6897-0176-bf15-6f58e9d26b89@gmail.com>
+References: <039d86b5-6897-0176-bf15-6f58e9d26b89@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="SO98HVl1bnMOfKZd"
-Content-Disposition: inline
-In-Reply-To: <20190803141331.GA3588@nishad>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Update MAINTAINERS to reflect that sysfs-bus-mdio was removed in
+commit a6cd0d2d493a ("Documentation: net-sysfs: Remove duplicate
+PHY device documentation") and sysfs-class-net-phydev was added in
+commit 86f22d04dfb5 ("net: sysfs: Document PHY device sysfs
+attributes").
 
---SO98HVl1bnMOfKZd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Sat, Aug 03, 2019 at 07:43:35PM +0530, Nishad Kamdar wrote:
-> This patch corrects the SPDX License Identifier style
-> in header file related to STM32 Driver for I2C hardware
-> bus support.
-> For C header files Documentation/process/license-rules.rst
-> mandates C-like comments (opposed to C source files where
-> C++ style should be used)
->=20
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46
->=20
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7e944baeca75..168e5121578e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6065,7 +6065,7 @@ M:	Florian Fainelli <f.fainelli@gmail.com>
+ M:	Heiner Kallweit <hkallweit1@gmail.com>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/ABI/testing/sysfs-bus-mdio
++F:	Documentation/ABI/testing/sysfs-class-net-phydev
+ F:	Documentation/devicetree/bindings/net/ethernet-phy.yaml
+ F:	Documentation/devicetree/bindings/net/mdio*
+ F:	Documentation/networking/phy.rst
+-- 
+2.21.0
 
-Pierre-Yves is on holiday and this patch is obviously correct, so
-applied to for-current, thanks!
-
-
---SO98HVl1bnMOfKZd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1UBWAACgkQFA3kzBSg
-KbZgmBAArH8glfhLKtTkL5UWa4RdGvAUOavsDcYcimkOpgqU9Lbh4CG7AqxoohDc
-4SqzUm4dZTlC5snKoTVPnO5vmsNouyjD85xud37NhdWYX1k4HTnKEpo2k8N/vop1
-ryZkczi52PVtxZSoIsfKNnAGB3wkyXSvGM7UnmTmc6PFnIQDTpGOSzgrV1HnXjFu
-YdTk301hifcdaHc/+JyvXL+arw30iwBgerzUlS3fAPURippr5qScbFR4Xevyozdu
-xJSzmc03vaniJ5KqYT6zhp3yik+NaZzc6zoqHk3B5XmQvM3VO4xK14TxbPK1exXS
-g8j7KsfoSjK/jidf/6pSTMoCp5+GnyQCBhzK0hcTTLxjcsKltICA+5sE2OjYdYSY
-4dG8vAZNOagcYPUyRD7J4sT1PHK+27O6n0k03et8pU8Lg+8IhWNcz8PfRpLVvkOr
-jIW6dzLHzZmtRJoa3CFIrWSTFfChd68u0O7EFxkqRfzqVLOfIZfS1kwK21LsXM6i
-uF7jLgs2F4fEOzdktw0NapEDVbVYS2AQbL9B+keiBdWpR9nfKJPjPiodpPeYxntn
-lnSCiiOTAWlVE5WxF+F+1ONza0M16uh5H9FM7dkHp5SpvJskxRrxDzG6rkGhI/SN
-Gxh3BXLtyVjUs4FlfqcZsm87aX4AGBy/zwEmpKpYqaRNe/ZKftM=
-=W0pC
------END PGP SIGNATURE-----
-
---SO98HVl1bnMOfKZd--
