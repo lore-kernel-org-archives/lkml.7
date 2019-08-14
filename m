@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E45C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4085EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF73A20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E01321743
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749435;
-	bh=kIEbfTT98/uEJP80obzZQD5GGPh94hBZFFRRdsXv5eI=;
+	s=default; t=1565749440;
+	bh=WI/EfAnOncHGpyQuhasDcz8tRW1vgeiQ6AEAx0QGQr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sBx3lxGacFpQiyKPK8xtPAnDyZlRPP5Nz4wLN5cQBsj2PqkKs+zM1KmF7ohPsuuQE
-	 QSgsj2k3AbpY5jZllmxcrZ/RN7v31ZJO4tvEcdCyGoRn3C7O7qmCwMc8pcLUDNKotl
-	 44WqebvTulArWXjTllSmzv4w26ZpgaZUf7DAWxlQ=
+	b=sql4VSXBi8SmYK1gHf6FVSY5BTRh3zsE+MXAn0wW1b+Jxge8jxUKYSNFHYUDW2ymF
+	 ZDazLzyTEayq2ltM/jUc9TUJVH8thjwscsgh07sC2ORJqVQGT/dbZiRH6bRYRBhJZy
+	 kfT8AiqrcTMfILXzCGbj4CEIC2zWi9msWTV+Vg7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729987AbfHNCXx (ORCPT
+        id S1730002AbfHNCX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:23:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52774 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:23:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729961AbfHNCXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:23:49 -0400
+        id S1728943AbfHNCXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:23:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6D1E20842;
-        Wed, 14 Aug 2019 02:23:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE5D120842;
+        Wed, 14 Aug 2019 02:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749428;
-        bh=kIEbfTT98/uEJP80obzZQD5GGPh94hBZFFRRdsXv5eI=;
+        s=default; t=1565749434;
+        bh=WI/EfAnOncHGpyQuhasDcz8tRW1vgeiQ6AEAx0QGQr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R9fhZOrljr0mygM1hvRuxReRDT/TLNPdPqGYqO9Xd8aepRFJ/xYR4xSVl06Gv/kiE
-         kvtc3Ab5PPuEkBHxZqdT6BosSOKWg+Ll6k2cPGyOk8lXfEaNdG4n1vPrY0dXDTjHMk
-         2MpGPlU4ztrebslaIvjyji3n+nEswiIylC7I1ZBM=
+        b=C/xwhon1q84gPYY8ejDwlboraN0LbGbWZmjiYjZrLaTAED89hAEaUVPly/GSxc6zL
+         NmZOnLZpk/fnRKQVZ1nBHLhLXtDQiv+zM9lbCUnMnj807MZjmaRyKjRPZ0FS12NpYR
+         KLJkmxzZYx7YlR0uFt1jJ7F/zfBCiJ06z9YGppEk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Olsa <jolsa@kernel.org>, Michael Petlan <mpetlan@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 14/33] perf bench numa: Fix cpu0 binding
-Date:   Tue, 13 Aug 2019 22:23:04 -0400
-Message-Id: <20190814022323.17111-14-sashal@kernel.org>
+Cc:     Wang Xiayang <xywang.sjtu@sjtu.edu.cn>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 17/33] can: sja1000: force the string buffer NULL-terminated
+Date:   Tue, 13 Aug 2019 22:23:07 -0400
+Message-Id: <20190814022323.17111-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022323.17111-1-sashal@kernel.org>
 References: <20190814022323.17111-1-sashal@kernel.org>
@@ -64,57 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
 
-[ Upstream commit 6bbfe4e602691b90ac866712bd4c43c51e546a60 ]
+[ Upstream commit cd28aa2e056cd1ea79fc5f24eed0ce868c6cab5c ]
 
-Michael reported an issue with perf bench numa failing with binding to
-cpu0 with '-0' option.
+strncpy() does not ensure NULL-termination when the input string size
+equals to the destination buffer size IFNAMSIZ. The output string
+'name' is passed to dev_info which relies on NULL-termination.
 
-  # perf bench numa mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd
-  # Running 'numa/mem' benchmark:
+Use strlcpy() instead.
 
-   # Running main, "perf bench numa numa-mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd"
-  binding to node 0, mask: 0000000000000001 => -1
-  perf: bench/numa.c:356: bind_to_memnode: Assertion `!(ret)' failed.
-  Aborted (core dumped)
+This issue is identified by a Coccinelle script.
 
-This happens when the cpu0 is not part of node0, which is the benchmark
-assumption and we can see that's not the case for some powerpc servers.
-
-Using correct node for cpu0 binding.
-
-Reported-by: Michael Petlan <mpetlan@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20190801142642.28004-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/bench/numa.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/can/sja1000/peak_pcmcia.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index e58be7eeced83..7b364f2926d4f 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -373,8 +373,10 @@ static u8 *alloc_data(ssize_t bytes0, int map_flags,
+diff --git a/drivers/net/can/sja1000/peak_pcmcia.c b/drivers/net/can/sja1000/peak_pcmcia.c
+index dd56133cc4616..fc9f8b01ecae2 100644
+--- a/drivers/net/can/sja1000/peak_pcmcia.c
++++ b/drivers/net/can/sja1000/peak_pcmcia.c
+@@ -487,7 +487,7 @@ static void pcan_free_channels(struct pcan_pccard *card)
+ 		if (!netdev)
+ 			continue;
  
- 	/* Allocate and initialize all memory on CPU#0: */
- 	if (init_cpu0) {
--		orig_mask = bind_to_node(0);
--		bind_to_memnode(0);
-+		int node = numa_node_of_cpu(0);
-+
-+		orig_mask = bind_to_node(node);
-+		bind_to_memnode(node);
- 	}
+-		strncpy(name, netdev->name, IFNAMSIZ);
++		strlcpy(name, netdev->name, IFNAMSIZ);
  
- 	bytes = bytes0 + HPSIZE;
+ 		unregister_sja1000dev(netdev);
+ 
 -- 
 2.20.1
 
