@@ -2,106 +2,80 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D846C0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5344C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374EC2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94C422084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:36:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mKr4y7ub"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZyMfyP3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfHNHf0 (ORCPT
+        id S1727670AbfHNHgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:35:26 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42821 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727017AbfHNHf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:35:26 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 467hFP5gLBz9sNx;
-        Wed, 14 Aug 2019 17:35:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565768123;
-        bh=AbhlP0YN/t21Gh6VHypds9xO7GALcd9PcpzEvbJBWLY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mKr4y7ubBT1RSL5MteT4KE5I6wGGlkimt2wrdzWZjTnXHZuelmhaAF0qg51WQBf0F
-         Ay/pHUiASdiZ4kfV206QP/fdJyucfmeYoLpFQy8MS8UkNTCq4aDGQee3nSIq+ZxP3W
-         8tZ8BkhBCcVif7e7iNc+nsc6CU15aPjtRNd3VxXtt1gEHA+GNySe+xhr2oePwAzHL2
-         MdrDb72Kpm6aCGotb5ij4O3lox8vek29gLNS5CQGeaUmjpLLOanllfsNjoZ4pi8/T0
-         a8k+YvwSF1wC/lBLI8J52j4v6WhCHTbtFGeonHn9kP6Pe0hKjvPOnEUPBkYhCgtcTv
-         Y+BN8QtTRJTyw==
-Date:   Wed, 14 Aug 2019 17:35:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        James Morris <jmorris@namei.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Tree for Aug 13
-Message-ID: <20190814173502.26849651@canb.auug.org.au>
-In-Reply-To: <c17d1844-7e13-aba5-0fc9-98c4b247c147@samsung.com>
-References: <20190813191924.7c5310dd@canb.auug.org.au>
-        <your-ad-here.call-01565700115-ext-9407@work.hours>
-        <CGME20190813145654epcas2p2981ea6b19b84470dc37825469cba91de@epcas2p2.samsung.com>
-        <20190813105645.4ffba70c@gandalf.local.home>
-        <c17d1844-7e13-aba5-0fc9-98c4b247c147@samsung.com>
+        Wed, 14 Aug 2019 03:36:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57972 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfHNHgI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:36:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/9vf3+fl+e1zoOcbUV8lxlGbJPXutwl+wZG2EQhhqm4=; b=ZyMfyP3oWYGUfjB7y7gL1xans
+        /Ee0nnIGoncTJrGUFJ6RmlhBfHZ0fPZLzFR2QQiWSQ0j5l5+a/niHqLxe/z2pDYq59dmTQHX3JYmV
+        9/4DPd/8naL5dsxRR51RAa/vWUABkiybdpJkKNF8rsSymNdm5NchKjsAo7F+hHDKgbOazOuYBrqhM
+        nLRDPMYGQTI1Ro1GD4loGCVdPXhJzaTpnTsw8oTrKl0c6mhztBUXIwqv7S5mlPeg4tiu/2cX2APfg
+        SLu5oztA/ZuUI5656XFIVHQu3Qh6+BvKSteYzc7EsYmC2CZy9m9D0DSBg+/qEfdaV8zoW6R2wDDAJ
+        dUPxbYttw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hxnpF-00016n-DB; Wed, 14 Aug 2019 07:36:05 +0000
+Date:   Wed, 14 Aug 2019 00:36:05 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com
+Subject: Re: [PATCH] PCI: dwc: Add map irq callback
+Message-ID: <20190814073605.GA31526@infradead.org>
+References: <333e87c8ea92cd7442fbe874fc8c9eccabc62f58.1565763869.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hKv=nLl41CRqYFReUFUYyDM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <333e87c8ea92cd7442fbe874fc8c9eccabc62f58.1565763869.git.eswara.kota@linux.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hKv=nLl41CRqYFReUFUYyDM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Aug 14, 2019 at 02:56:49PM +0800, Dilip Kota wrote:
+> Certain platforms like Intel need to configure
+> registers to enable the interrupts.
+> Map Irq callback helps to perform platform specific
+> configurations while assigning or enabling the interrupts.
 
-Hi all,
+This seems to miss the hunk that actually assigns the map_irq
+callback.
 
-On Wed, 14 Aug 2019 08:14:18 +0200 Marek Szyprowski <m.szyprowski@samsung.c=
-om> wrote:
->
-> On 2019-08-13 16:56, Steven Rostedt wrote:
-> > This looks related to what Marek posted.
-> >
-> >    https://lore.kernel.org/linux-security-module/3028ed35-3b6d-459f-f3c=
-8-103c5636fe95@samsung.com/
-> >
-> > Care to apply the change he suggested to see if it fixes the issue for
-> > you. If it does, Marek, can you make an official patch? =20
->=20
-> Sure: https://lkml.org/lkml/2019/8/14/75
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index f93252d0da5b..5880d2b72ef8 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -470,7 +470,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  	bridge->sysdata = pp;
+>  	bridge->busnr = pp->root_bus_nr;
+>  	bridge->ops = &dw_pcie_ops;
+> -	bridge->map_irq = of_irq_parse_and_map_pci;
+> +	bridge->map_irq = pp->map_irq ? pp->map_irq : of_irq_parse_and_map_pci;
 
-I have applied that to linux-next today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/hKv=nLl41CRqYFReUFUYyDM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1TuaYACgkQAVBC80lX
-0GzxBwf/XZyO2R13ZCKJdXnXCGQnkbohwC1M6LrhuSQ6nGt1zyBClZ85ToZy/t2B
-2pn2uPEgAiJv6QtMhEt2Tza6Ch1PYhWsRqut19JfZZLzy1qpY2KEY4AiDH5Ywvur
-Y4l9iJcOnE80XifjzoXrO8tnBZnWZly0xxb7p1ERtIcatE2lNUCA9y/jUHI32sm3
-rdQjZ4PY5ex5QL2jCxjWC9ZNPbEmy+KqAvsdxkiKppTzEya4SSxIz8MS9pU3ZVtC
-QoSRYcSd9HGZxwwmWW1EUiRREXTAxFBo8y/ra/O0YYhjgoPmX1oDSkd2lIQD7lRv
-P6Tc0rNUgBbyQj8kKLR043OmE+qdHg==
-=Lk/j
------END PGP SIGNATURE-----
-
---Sig_/hKv=nLl41CRqYFReUFUYyDM--
+Pleae just use a classic if / else to make the code a little easier
+to read.
