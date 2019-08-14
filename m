@@ -2,58 +2,54 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E89C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D38C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBFCD216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DAF82184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565808190;
-	bh=qEVYPB6Jqk3jXn6eFfy5VXy3R2qvcSmsFFkS0W7NS4Y=;
+	s=default; t=1565808194;
+	bh=59A965NaqewnSBFbtxkOVGqh2eGU5ziOsVA0+IqmPDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yYNT5z4joOSBoHffgZVe3o3ZiMRA1Jqi3ePeUTf/ynMh/Okny8zctV8l1O/58fPSK
-	 0UfEPyNTyFs0/kwZBnnB1xz3k9FIVUtKdt31BFcWk9LtyOQz1dx9djKnNxvgmzcJsa
-	 FjGspxrUVkkpel0JRQ4YR3AZ9c6Cx68lgNkB6Zho=
+	b=qDUL+QTR/gdEMbHjf9DYlaRe6/eH7ulR8cTGn4vpqYfEAb7ZnTdkUyJ8hgSZNJaO+
+	 VI6nsTy1105XHkB+yEZ+0cfRO3lxy31Ov2z3JE70HwNiq3tOvZ8QKMWFJxx7ysTpnr
+	 iLHx9aHFLunBXDqWtEOJDPuLpHDcWBh2khaeyuKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbfHNSnJ (ORCPT
+        id S1729209AbfHNSnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 14:43:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53818 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 14:43:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728334AbfHNSnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 14:43:09 -0400
+        id S1728334AbfHNSnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 14:43:13 -0400
 Received: from quaco.ghostprotocols.net (unknown [177.195.212.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2208E2064A;
-        Wed, 14 Aug 2019 18:42:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E31CB2084F;
+        Wed, 14 Aug 2019 18:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565808188;
-        bh=qEVYPB6Jqk3jXn6eFfy5VXy3R2qvcSmsFFkS0W7NS4Y=;
+        s=default; t=1565808192;
+        bh=59A965NaqewnSBFbtxkOVGqh2eGU5ziOsVA0+IqmPDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J4do9aP6AuWHy9mptA2b4eHpSEWTw1CTZm+fcoBqQOZew09nDt13y+l9nB50ZW+3B
-         v7F3UmIV4cSOBHlC8w5Zrh8mqXhKezImrfNGObHjnBzeBAWcXj6RAnr854soDVQTvz
-         bx67OtKUtmU4xJb0DJM7fHRFFHxuqJ0MQ8fApHHc=
+        b=l5cQtB7S3+7i+FNH78Jat1C7RyJXslWJvK4ok2xy2rJEpp/TSTSuzgASbacRIu03k
+         cH8zyhtJgOovYZ4c5JhZTJeF/wTU+59FAv5ZbYOzUbfY42Gy6LA1p7CrSPqU0ZFwSL
+         veOBVW7jidCMDpDQmFsa9uKldBc5jnmBNwMMhvGw=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@redhat.com>, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 09/28] perf trace: Fix segmentation fault when access syscall info on arm64
-Date:   Wed, 14 Aug 2019 15:40:32 -0300
-Message-Id: <20190814184051.3125-10-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 10/28] perf hist: Remove dummy entries when finding real ones.
+Date:   Wed, 14 Aug 2019 15:40:33 -0300
+Message-Id: <20190814184051.3125-11-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190814184051.3125-1-acme@kernel.org>
 References: <20190814184051.3125-1-acme@kernel.org>
@@ -64,70 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-'perf trace' reports the segmentation fault as below on Arm64:
+When he have an event group we have multiple struct hist instances, one
+per evsel, and in each of these hists we may have hist_entries that
+point to the same thing being observed, say a symbol, i.e. if we're
+looking at instructions and cycles, then we'll have one hist_entry in
+the "instructions" evsel and another in the "cycles" evsel.
 
-  # perf trace -e string -e augmented_raw_syscalls.c
-  LLVM: dumping tools/perf/examples/bpf/augmented_raw_syscalls.o
-  perf: Segmentation fault
-  Obtained 12 stack frames.
-  perf(sighandler_dump_stack+0x47) [0xaaaaac96ac87]
-  linux-vdso.so.1(+0x5b7) [0xffffadbeb5b7]
-  /lib/aarch64-linux-gnu/libc.so.6(strlen+0x10) [0xfffface7d5d0]
-  /lib/aarch64-linux-gnu/libc.so.6(_IO_vfprintf+0x1ac7) [0xfffface49f97]
-  /lib/aarch64-linux-gnu/libc.so.6(__vsnprintf_chk+0xc7) [0xffffacedfbe7]
-  perf(scnprintf+0x97) [0xaaaaac9ca3ff]
-  perf(+0x997bb) [0xaaaaac8e37bb]
-  perf(cmd_trace+0x28e7) [0xaaaaac8ec09f]
-  perf(+0xd4a13) [0xaaaaac91ea13]
-  perf(main+0x62f) [0xaaaaac8a147f]
-  /lib/aarch64-linux-gnu/libc.so.6(__libc_start_main+0xe3) [0xfffface22d23]
-  perf(+0x57723) [0xaaaaac8a1723]
-  Segmentation fault
+We need to link those to then show one column for each. When we're
+looking at some other pair of events, say instructions and cache misses,
+we may have just the "instructions" hist entry and not one for "cache
+misses", as instructions not necessarily generate cache misses, as the
+logic expects one hist_entry per evsel, we end up adding "dummy"
+hist_entries.
 
-This issue is introduced by commit 30a910d7d3e0 ("perf trace:
-Preallocate the syscall table"), it allocates trace->syscalls.table[]
-array and the element count is 'trace->sctbl->syscalls.nr_entries'; but
-on Arm64, the system call number is not continuously used; e.g. the
-syscall maximum id is 436 but the real entries is only 281.
+This is enough for 'perf report', that does this matching operation
+(hists__match()) just once after processing all events, but for 'perf
+top', we do this at each refresh, so we may finally find events matching
+and then we need to trow away the dummies and link with the real events.
 
-So the table is allocated with 'nr_entries' as the element count, but it
-accesses the table with the syscall id, which might be out of the bound
-of the array and cause the segmentation fault.
+So if we find a match, traverse the link of matches and trow away
+dummies for that hists.
 
-This patch allocates trace->syscalls.table[] with the element count is
-'trace->sctbl->syscalls.max_id + 1', this allows any id to access the
-table without out of the bound.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Fixes: 30a910d7d3e0 ("perf trace: Preallocate the syscall table")
-Link: http://lkml.kernel.org/r/20190809104752.27338-1-leo.yan@linaro.org
+Link: https://lkml.kernel.org/n/tip-dwvtjqqifsbsczeb35q6mqkk@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/hist.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 75eb3811e942..d553d06a9aeb 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1492,7 +1492,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	const char *name = syscalltbl__name(trace->sctbl, id);
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index d923a5bb7b48..8efbf58dc3d0 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -2436,7 +2436,7 @@ void hists__match(struct hists *leader, struct hists *other)
+ {
+ 	struct rb_root_cached *root;
+ 	struct rb_node *nd;
+-	struct hist_entry *pos, *pair;
++	struct hist_entry *pos, *pair, *pos_pair, *tmp_pair;
  
- 	if (trace->syscalls.table == NULL) {
--		trace->syscalls.table = calloc(trace->sctbl->syscalls.nr_entries, sizeof(*sc));
-+		trace->syscalls.table = calloc(trace->sctbl->syscalls.max_id + 1, sizeof(*sc));
- 		if (trace->syscalls.table == NULL)
- 			return -ENOMEM;
+ 	if (symbol_conf.report_hierarchy) {
+ 		/* hierarchy report always collapses entries */
+@@ -2453,8 +2453,24 @@ void hists__match(struct hists *leader, struct hists *other)
+ 		pos  = rb_entry(nd, struct hist_entry, rb_node_in);
+ 		pair = hists__find_entry(other, pos);
+ 
+-		if (pair && list_empty(&pair->pairs.node))
++		if (pair && list_empty(&pair->pairs.node)) {
++			list_for_each_entry_safe(pos_pair, tmp_pair, &pos->pairs.head, pairs.node) {
++				if (pos_pair->hists == other) {
++					/*
++					 * XXX maybe decayed entries can appear
++					 * here?  but then we would have use
++					 * after free, as decayed entries are
++					 * freed see hists__delete_entry
++					 */
++					BUG_ON(!pos_pair->dummy);
++					list_del_init(&pos_pair->pairs.node);
++					hist_entry__delete(pos_pair);
++					break;
++				}
++			}
++
+ 			hist_entry__add_pair(pair, pos);
++		}
  	}
+ }
+ 
 -- 
 2.21.0
 
