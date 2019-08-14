@@ -2,69 +2,155 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E230FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 046F4C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B4620843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE09120843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:20:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565749231;
+	bh=IOPdm9k3VPoaPXeXZ9z/V6zcLHMRjbCmVT1iw1qRiZE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xnDdIFvuwIpWpvBtBoCd1xGJ6XAVl7T93TWt9fuSqq8I3DQPYr3j+WFt/RJbbVXPu
+	 qM32eQzhFOlKYuoE42105NVbmeCG4QP/msz85Vt82EwTGLD5glbJ86tin5Z2xzxfIm
+	 AODhvzHgN9VKeR2Ni62wISw0XwBzEBOqx4QiCetY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729844AbfHNCUS (ORCPT
+        id S1729731AbfHNCT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:20:18 -0400
-Received: from mga12.intel.com ([192.55.52.136]:4524 "EHLO mga12.intel.com"
+        Tue, 13 Aug 2019 22:19:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727699AbfHNCUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:20:15 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 19:20:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="181365818"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga006.jf.intel.com with ESMTP; 13 Aug 2019 19:20:13 -0700
-Date:   Wed, 14 Aug 2019 10:19:50 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/mmap.c: rb_parent is not necessary in __vma_link_list
-Message-ID: <20190814021950.GA2025@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20190813032656.16625-1-richardw.yang@linux.intel.com>
- <20190813033958.GB5307@bombadil.infradead.org>
+        id S1728601AbfHNCTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:19:22 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 279902173B;
+        Wed, 14 Aug 2019 02:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565749160;
+        bh=IOPdm9k3VPoaPXeXZ9z/V6zcLHMRjbCmVT1iw1qRiZE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ma5xwHlN6o93B2tKNuOIw7sF23SWKkpob32bCLyn+SOSz3w+2nsK30mnIHEjej3r9
+         57rM1wiHUbc5jDeetMFuW5g7/02AtCvvT/gOv5fTmXKXBoNRaRxur0EZYdAlRfmJTm
+         X363edb+yffdapB3Wm//kR0KvU+iCbZdkSswC43I=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 28/44] HID: input: fix a4tech horizontal wheel custom usage
+Date:   Tue, 13 Aug 2019 22:18:17 -0400
+Message-Id: <20190814021834.16662-28-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190814021834.16662-1-sashal@kernel.org>
+References: <20190814021834.16662-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813033958.GB5307@bombadil.infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 08:39:58PM -0700, Matthew Wilcox wrote:
->On Tue, Aug 13, 2019 at 11:26:56AM +0800, Wei Yang wrote:
->> Now we use rb_parent to get next, while this is not necessary.
->> 
->> When prev is NULL, this means vma should be the first element in the
->> list. Then next should be current first one (mm->mmap), no matter
->> whether we have parent or not.
->> 
->> After removing it, the code shows the beauty of symmetry.
->
->Uhh ... did you test this?
->
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-I have enabled DEBUG_VM_RB, system looks good with this.
+[ Upstream commit 1c703b53e5bfb5c2205c30f0fb157ce271fd42fb ]
 
+Some a4tech mice use the 'GenericDesktop.00b8' usage to inform whether
+the previous wheel report was horizontal or vertical. Before
+c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key") this
+usage was being mapped to 'Relative.Misc'. After the patch it's simply
+ignored (usage->type == 0 & usage->code == 0). Which ultimately makes
+hid-a4tech ignore the WHEEL/HWHEEL selection event, as it has no
+usage->type.
+
+We shouldn't rely on a mapping for that usage as it's nonstandard and
+doesn't really map to an input event. So we bypass the mapping and make
+sure the custom event handling properly handles both reports.
+
+Fixes: c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hid/hid-a4tech.c | 30 +++++++++++++++++++++++++++---
+ 1 file changed, 27 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/hid/hid-a4tech.c b/drivers/hid/hid-a4tech.c
+index 9428ea7cdf8a0..c52bd163abb3e 100644
+--- a/drivers/hid/hid-a4tech.c
++++ b/drivers/hid/hid-a4tech.c
+@@ -26,12 +26,36 @@
+ #define A4_2WHEEL_MOUSE_HACK_7	0x01
+ #define A4_2WHEEL_MOUSE_HACK_B8	0x02
+ 
++#define A4_WHEEL_ORIENTATION	(HID_UP_GENDESK | 0x000000b8)
++
+ struct a4tech_sc {
+ 	unsigned long quirks;
+ 	unsigned int hw_wheel;
+ 	__s32 delayed_value;
+ };
+ 
++static int a4_input_mapping(struct hid_device *hdev, struct hid_input *hi,
++			    struct hid_field *field, struct hid_usage *usage,
++			    unsigned long **bit, int *max)
++{
++	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
++
++	if (a4->quirks & A4_2WHEEL_MOUSE_HACK_B8 &&
++	    usage->hid == A4_WHEEL_ORIENTATION) {
++		/*
++		 * We do not want to have this usage mapped to anything as it's
++		 * nonstandard and doesn't really behave like an HID report.
++		 * It's only selecting the orientation (vertical/horizontal) of
++		 * the previous mouse wheel report. The input_events will be
++		 * generated once both reports are recorded in a4_event().
++		 */
++		return -1;
++	}
++
++	return 0;
++
++}
++
+ static int a4_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+ 		struct hid_field *field, struct hid_usage *usage,
+ 		unsigned long **bit, int *max)
+@@ -53,8 +77,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+ 	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
+ 	struct input_dev *input;
+ 
+-	if (!(hdev->claimed & HID_CLAIMED_INPUT) || !field->hidinput ||
+-			!usage->type)
++	if (!(hdev->claimed & HID_CLAIMED_INPUT) || !field->hidinput)
+ 		return 0;
+ 
+ 	input = field->hidinput->input;
+@@ -65,7 +88,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+ 			return 1;
+ 		}
+ 
+-		if (usage->hid == 0x000100b8) {
++		if (usage->hid == A4_WHEEL_ORIENTATION) {
+ 			input_event(input, EV_REL, value ? REL_HWHEEL :
+ 					REL_WHEEL, a4->delayed_value);
+ 			return 1;
+@@ -129,6 +152,7 @@ MODULE_DEVICE_TABLE(hid, a4_devices);
+ static struct hid_driver a4_driver = {
+ 	.name = "a4tech",
+ 	.id_table = a4_devices,
++	.input_mapping = a4_input_mapping,
+ 	.input_mapped = a4_input_mapped,
+ 	.event = a4_event,
+ 	.probe = a4_probe,
 -- 
-Wei Yang
-Help you, Help me
+2.20.1
+
