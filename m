@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7A9C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8539BC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 723622085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D762085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749130;
-	bh=J6mQ9/2igUrWkfb/ewDtRr+g54jLGwhZCXQHjwUToLo=;
+	s=default; t=1565749135;
+	bh=PZE6ev6QUjvbvmg5pau7L3RjrFENrGaK9OlYYFyEI8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MP5y/GfTWOUT8TLcG0405i7AugqOdJj26MwXaJFHq9od8J0LO4ysvGhzXODtJRJX+
-	 Gu5bdQ3DlbbKee1QMr8O+tRXMGsUk3fcRXOAwXQQQi4k3ypdtI4Hx/Buo+7L+aVbNZ
-	 fiIL7UriiuuKGDEW6FLEinByrPpYpQS7frb7Qbec=
+	b=RJwZkBS30/Ux/ro+zrWl7SCvzHtogc+wZoudSTEQ96GNIAgqNA/9p9HZRsasLHgyd
+	 gPYQoasHbAbwOhLmv3zYfhqmTdYJe82KfJQ5EtVhiya5GXMg5AOcg+zH07yqfXdZEU
+	 v5pyfV5p68mRyFxXdRgx9JaY2dOjb93UhQ1KhLOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbfHNCSt (ORCPT
+        id S1729569AbfHNCSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:18:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49706 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:18:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728738AbfHNCSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:18:46 -0400
+        id S1729203AbfHNCSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:18:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DA81216F4;
-        Wed, 14 Aug 2019 02:18:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1924221743;
+        Wed, 14 Aug 2019 02:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749125;
-        bh=J6mQ9/2igUrWkfb/ewDtRr+g54jLGwhZCXQHjwUToLo=;
+        s=default; t=1565749127;
+        bh=PZE6ev6QUjvbvmg5pau7L3RjrFENrGaK9OlYYFyEI8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HZ754ViXg2yrGoUwH8q4F1e7FQ6Pmu2se4fO5SnMopLEDfW+SBbbuyGvimU6ocssf
-         lfP9RFNs/K8kYvAVZQm8+AqXv0zrWQFbR611yM6fnsOc1hl9gxoWs1uEHmWHtGPXSL
-         WkMB+przNa5z9hbkIM3dKlAYN2JxlRQRmUyErXZ4=
+        b=RvSAiuZwSDszgRXSkTsH6A+EBR2p4xLY7FaUFvStWwXvQcQOCzQEzrIjBBfwmlS8L
+         bq1bFW84S2wewDDsViSTz1WEPoUg6HIkyAgZNw7ZYc9M5JyWuTSkLosKidlJ5RdVdc
+         X78SAIzhydI/Z70D//QZG793i6Sfmh2p/BK5ID1g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
-        Jarod Wilson <jarod@redhat.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/44] bonding: Force slave speed check after link state recovery for 802.3ad
-Date:   Tue, 13 Aug 2019 22:17:56 -0400
-Message-Id: <20190814021834.16662-7-sashal@kernel.org>
+Cc:     Ricard Wanderlof <ricard.wanderlof@axis.com>,
+        Ricard Wanderlof <ricardw@axis.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 09/44] ASoC: Fail card instantiation if DAI format setup fails
+Date:   Tue, 13 Aug 2019 22:17:58 -0400
+Message-Id: <20190814021834.16662-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021834.16662-1-sashal@kernel.org>
 References: <20190814021834.16662-1-sashal@kernel.org>
@@ -63,72 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Ricard Wanderlof <ricard.wanderlof@axis.com>
 
-[ Upstream commit 12185dfe44360f814ac4ead9d22ad2af7511b2e9 ]
+[ Upstream commit 40aa5383e393d72f6aa3943a4e7b1aae25a1e43b ]
 
-The following scenario was encountered during testing of logical
-partition mobility on pseries partitions with bonded ibmvnic
-adapters in LACP mode.
+If the DAI format setup fails, there is no valid communication format
+between CPU and CODEC, so fail card instantiation, rather than continue
+with a card that will most likely not function properly.
 
-1. Driver receives a signal that the device has been
-   swapped, and it needs to reset to initialize the new
-   device.
-
-2. Driver reports loss of carrier and begins initialization.
-
-3. Bonding driver receives NETDEV_CHANGE notifier and checks
-   the slave's current speed and duplex settings. Because these
-   are unknown at the time, the bond sets its link state to
-   BOND_LINK_FAIL and handles the speed update, clearing
-   AD_PORT_LACP_ENABLE.
-
-4. Driver finishes recovery and reports that the carrier is on.
-
-5. Bond receives a new notification and checks the speed again.
-   The speeds are valid but miimon has not altered the link
-   state yet.  AD_PORT_LACP_ENABLE remains off.
-
-Because the slave's link state is still BOND_LINK_FAIL,
-no further port checks are made when it recovers. Though
-the slave devices are operational and have valid speed
-and duplex settings, the bond will not send LACPDU's. The
-simplest fix I can see is to force another speed check
-in bond_miimon_commit. This way the bond will update
-AD_PORT_LACP_ENABLE if needed when transitioning from
-BOND_LINK_FAIL to BOND_LINK_UP.
-
-CC: Jarod Wilson <jarod@redhat.com>
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ricard Wanderlof <ricardw@axis.com>
+Link: https://lore.kernel.org/r/alpine.DEB.2.20.1907241132350.6338@lnxricardw1.se.axis.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ sound/soc/soc-core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 11a0e84d3d7cb..68e28346a367f 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2151,6 +2151,15 @@ static void bond_miimon_commit(struct bonding *bond)
- 	bond_for_each_slave(bond, slave, iter) {
- 		switch (slave->new_link) {
- 		case BOND_LINK_NOCHANGE:
-+			/* For 802.3ad mode, check current slave speed and
-+			 * duplex again in case its port was disabled after
-+			 * invalid speed/duplex reporting but recovered before
-+			 * link monitoring could make a decision on the actual
-+			 * link status
-+			 */
-+			if (BOND_MODE(bond) == BOND_MODE_8023AD &&
-+			    slave->link == BOND_LINK_UP)
-+				bond_3ad_adapter_speed_duplex_changed(slave);
- 			continue;
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 42c2a3065b779..ff5206f5455d9 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -1757,8 +1757,11 @@ static int soc_probe_link_dais(struct snd_soc_card *card,
+ 		}
+ 	}
  
- 		case BOND_LINK_UP:
+-	if (dai_link->dai_fmt)
+-		snd_soc_runtime_set_dai_fmt(rtd, dai_link->dai_fmt);
++	if (dai_link->dai_fmt) {
++		ret = snd_soc_runtime_set_dai_fmt(rtd, dai_link->dai_fmt);
++		if (ret)
++			return ret;
++	}
+ 
+ 	ret = soc_post_component_init(rtd, dai_link->name);
+ 	if (ret)
 -- 
 2.20.1
 
