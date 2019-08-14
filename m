@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5023CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CEBC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6662084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3152E216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802555;
-	bh=rDtx/CqF0F237JhsM7MFNIO+jwNhyv+rna3pVjVcc5Q=;
+	s=default; t=1565802559;
+	bh=UtMMtdD9yZxdECn3sH/nwTMhh/liM+yk8raGUiC1nIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jF4GU2QAsF++FeQGpB7zhU5N1P169jGHaiQqePchc+ejAcGo98z6D5oR1RTVZDiBh
-	 jk3Fisv7r52ompQEDcfBlEgTwp2mmCjAGlS6NBMjlcblbeg5LvcGq0bG4CFBJMork4
-	 r+6fN6l5nJsQRQG43d+5lsgttDoHAG0exC8b+91A=
+	b=mAHXu12+yq+jar8VytTOTCFhd/jHQ5z9OBx7UFidDgF+IevcngtfJM5udwCS9j0CB
+	 UOtW+PH63HCfzvOMuGAuHgcsO/kgTu8lO0YJ4IZ8+BD4FAgBoa4M7KnE9LjiznZCLj
+	 NQclMCjdJlQnH4nn8+mWHgdNe2fe/j/FIyBEw4I4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730293AbfHNRJN (ORCPT
+        id S1730305AbfHNRJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:09:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59424 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:09:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730283AbfHNRJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:09:10 -0400
+        id S1729330AbfHNRJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:09:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1858214DA;
-        Wed, 14 Aug 2019 17:09:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D38F4216F4;
+        Wed, 14 Aug 2019 17:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802549;
-        bh=rDtx/CqF0F237JhsM7MFNIO+jwNhyv+rna3pVjVcc5Q=;
+        s=default; t=1565802554;
+        bh=UtMMtdD9yZxdECn3sH/nwTMhh/liM+yk8raGUiC1nIQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ckAEUfklPYoZtsNT0iUVQ2/z6NWYW6Qpw//ldTtECeN07XWle942WVery6j52H2oG
-         L+0rZDg2leqVF3m/61+FUJRd/GrXuShO1yvH+F2jqbS6dJRmlArCvTD6I/CNUWLkp8
-         mh0zyhBwSq3RcMOQZ1fGzggezlCh81tfqlwjybOk=
+        b=iJSv2UfULkugG0CTU7eHL0Us+1H/bxG/yEFab4yp0LffCHQuF9jk2ufYYBHXnG2oo
+         88eIa/DoOFkXfrUVSzKtCuWUXksZ4INaUGSNjvVxJKwKiZyg6Dnt2t/dJRfn7wlKHh
+         nAzcam9o/MrKqwUSjBYVFc2V1jMVgP6PTQV7+Pgk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>
-Subject: [PATCH 4.19 24/91] gfs2: gfs2_walk_metadata fix
-Date:   Wed, 14 Aug 2019 19:00:47 +0200
-Message-Id: <20190814165750.730973940@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
+        Tomoki Sekiyama <tomoki.sekiyama@gmail.com>,
+        Oliver Neukum <oneukum@suse.com>, andreyknvl@google.com,
+        Alan Stern <stern@rowland.harvard.edu>,
+        syzkaller-bugs@googlegroups.com, dtor@chromium.org,
+        syzbot+d1fedb1c1fdb07fca507@syzkaller.appspotmail.com,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH 4.19 26/91] usb: yurex: Fix use-after-free in yurex_delete
+Date:   Wed, 14 Aug 2019 19:00:49 +0200
+Message-Id: <20190814165750.814131397@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -59,270 +64,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-commit a27a0c9b6a208722016c8ec5ad31ec96082b91ec upstream.
+commit fc05481b2fcabaaeccf63e32ac1baab54e5b6963 upstream.
 
-It turns out that the current version of gfs2_metadata_walker suffers
-from multiple problems that can cause gfs2_hole_size to report an
-incorrect size.  This will confuse fiemap as well as lseek with the
-SEEK_DATA flag.
+syzbot reported the following crash [0]:
 
-Fix that by changing gfs2_hole_walker to compute the metapath to the
-first data block after the hole (if any), and compute the hole size
-based on that.
+BUG: KASAN: use-after-free in usb_free_coherent+0x79/0x80
+drivers/usb/core/usb.c:928
+Read of size 8 at addr ffff8881b18599c8 by task syz-executor.4/16007
 
-Fixes xfstest generic/490.
+CPU: 0 PID: 16007 Comm: syz-executor.4 Not tainted 5.3.0-rc2+ #23
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x6a/0x32c mm/kasan/report.c:351
+  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+  kasan_report+0xe/0x12 mm/kasan/common.c:612
+  usb_free_coherent+0x79/0x80 drivers/usb/core/usb.c:928
+  yurex_delete+0x138/0x330 drivers/usb/misc/yurex.c:100
+  kref_put include/linux/kref.h:65 [inline]
+  yurex_release+0x66/0x90 drivers/usb/misc/yurex.c:392
+  __fput+0x2d7/0x840 fs/file_table.c:280
+  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x413511
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48
+83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48
+89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffc424ea2e0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000007 RCX: 0000000000413511
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000006
+RBP: 0000000000000001 R08: 0000000029a2fc22 R09: 0000000029a2fc26
+R10: 00007ffc424ea3c0 R11: 0000000000000293 R12: 000000000075c9a0
+R13: 000000000075c9a0 R14: 0000000000761938 R15: ffffffffffffffff
 
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Reviewed-by: Bob Peterson <rpeterso@redhat.com>
-Cc: stable@vger.kernel.org # v4.18+
+Allocated by task 2776:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:487 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
+  kmalloc include/linux/slab.h:552 [inline]
+  kzalloc include/linux/slab.h:748 [inline]
+  usb_alloc_dev+0x51/0xf95 drivers/usb/core/usb.c:583
+  hub_port_connect drivers/usb/core/hub.c:5004 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x15c0/0x3640 drivers/usb/core/hub.c:5441
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 16007:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
+  slab_free_hook mm/slub.c:1423 [inline]
+  slab_free_freelist_hook mm/slub.c:1470 [inline]
+  slab_free mm/slub.c:3012 [inline]
+  kfree+0xe4/0x2f0 mm/slub.c:3953
+  device_release+0x71/0x200 drivers/base/core.c:1064
+  kobject_cleanup lib/kobject.c:693 [inline]
+  kobject_release lib/kobject.c:722 [inline]
+  kref_put include/linux/kref.h:65 [inline]
+  kobject_put+0x171/0x280 lib/kobject.c:739
+  put_device+0x1b/0x30 drivers/base/core.c:2213
+  usb_put_dev+0x1f/0x30 drivers/usb/core/usb.c:725
+  yurex_delete+0x40/0x330 drivers/usb/misc/yurex.c:95
+  kref_put include/linux/kref.h:65 [inline]
+  yurex_release+0x66/0x90 drivers/usb/misc/yurex.c:392
+  __fput+0x2d7/0x840 fs/file_table.c:280
+  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881b1859980
+  which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 72 bytes inside of
+  2048-byte region [ffff8881b1859980, ffff8881b185a180)
+The buggy address belongs to the page:
+page:ffffea0006c61600 refcount:1 mapcount:0 mapping:ffff8881da00c000
+index:0x0 compound_mapcount: 0
+flags: 0x200000000010200(slab|head)
+raw: 0200000000010200 0000000000000000 0000000100000001 ffff8881da00c000
+raw: 0000000000000000 00000000000f000f 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8881b1859880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8881b1859900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff8881b1859980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                               ^
+  ffff8881b1859a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881b1859a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+A quick look at the yurex_delete() shows that we drop the reference
+to the usb_device before releasing any buffers associated with the
+device. Delay the reference drop until we have finished the cleanup.
+
+[0] https://lore.kernel.org/lkml/0000000000003f86d8058f0bd671@google.com/
+
+Fixes: 6bc235a2e24a5e ("USB: add driver for Meywa-Denki & Kayac YUREX")
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Tomoki Sekiyama <tomoki.sekiyama@gmail.com>
+Cc: Oliver Neukum <oneukum@suse.com>
+Cc: andreyknvl@google.com
+Cc: gregkh@linuxfoundation.org
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: syzkaller-bugs@googlegroups.com
+Cc: dtor@chromium.org
+Reported-by: syzbot+d1fedb1c1fdb07fca507@syzkaller.appspotmail.com
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190805111528.6758-1-suzuki.poulose@arm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/gfs2/bmap.c |  168 ++++++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 103 insertions(+), 65 deletions(-)
+ drivers/usb/misc/yurex.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/gfs2/bmap.c
-+++ b/fs/gfs2/bmap.c
-@@ -392,6 +392,19 @@ static int fillup_metapath(struct gfs2_i
- 	return mp->mp_aheight - x - 1;
- }
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -92,7 +92,6 @@ static void yurex_delete(struct kref *kr
  
-+static sector_t metapath_to_block(struct gfs2_sbd *sdp, struct metapath *mp)
-+{
-+	sector_t factor = 1, block = 0;
-+	int hgt;
-+
-+	for (hgt = mp->mp_fheight - 1; hgt >= 0; hgt--) {
-+		if (hgt < mp->mp_aheight)
-+			block += mp->mp_list[hgt] * factor;
-+		factor *= sdp->sd_inptrs;
-+	}
-+	return block;
-+}
-+
- static void release_metapath(struct metapath *mp)
- {
- 	int i;
-@@ -432,60 +445,84 @@ static inline unsigned int gfs2_extent_l
- 	return ptr - first;
- }
+ 	dev_dbg(&dev->interface->dev, "%s\n", __func__);
  
--typedef const __be64 *(*gfs2_metadata_walker)(
--		struct metapath *mp,
--		const __be64 *start, const __be64 *end,
--		u64 factor, void *data);
--
--#define WALK_STOP ((__be64 *)0)
--#define WALK_NEXT ((__be64 *)1)
--
--static int gfs2_walk_metadata(struct inode *inode, sector_t lblock,
--		u64 len, struct metapath *mp, gfs2_metadata_walker walker,
--		void *data)
-+enum walker_status { WALK_STOP, WALK_FOLLOW, WALK_CONTINUE };
-+
-+/*
-+ * gfs2_metadata_walker - walk an indirect block
-+ * @mp: Metapath to indirect block
-+ * @ptrs: Number of pointers to look at
-+ *
-+ * When returning WALK_FOLLOW, the walker must update @mp to point at the right
-+ * indirect block to follow.
-+ */
-+typedef enum walker_status (*gfs2_metadata_walker)(struct metapath *mp,
-+						   unsigned int ptrs);
-+
-+/*
-+ * gfs2_walk_metadata - walk a tree of indirect blocks
-+ * @inode: The inode
-+ * @mp: Starting point of walk
-+ * @max_len: Maximum number of blocks to walk
-+ * @walker: Called during the walk
-+ *
-+ * Returns 1 if the walk was stopped by @walker, 0 if we went past @max_len or
-+ * past the end of metadata, and a negative error code otherwise.
-+ */
-+
-+static int gfs2_walk_metadata(struct inode *inode, struct metapath *mp,
-+		u64 max_len, gfs2_metadata_walker walker)
- {
--	struct metapath clone;
- 	struct gfs2_inode *ip = GFS2_I(inode);
- 	struct gfs2_sbd *sdp = GFS2_SB(inode);
--	const __be64 *start, *end, *ptr;
- 	u64 factor = 1;
- 	unsigned int hgt;
--	int ret = 0;
-+	int ret;
- 
--	for (hgt = ip->i_height - 1; hgt >= mp->mp_aheight; hgt--)
-+	/*
-+	 * The walk starts in the lowest allocated indirect block, which may be
-+	 * before the position indicated by @mp.  Adjust @max_len accordingly
-+	 * to avoid a short walk.
-+	 */
-+	for (hgt = mp->mp_fheight - 1; hgt >= mp->mp_aheight; hgt--) {
-+		max_len += mp->mp_list[hgt] * factor;
-+		mp->mp_list[hgt] = 0;
- 		factor *= sdp->sd_inptrs;
-+	}
- 
- 	for (;;) {
--		u64 step;
-+		u16 start = mp->mp_list[hgt];
-+		enum walker_status status;
-+		unsigned int ptrs;
-+		u64 len;
- 
- 		/* Walk indirect block. */
--		start = metapointer(hgt, mp);
--		end = metaend(hgt, mp);
--
--		step = (end - start) * factor;
--		if (step > len)
--			end = start + DIV_ROUND_UP_ULL(len, factor);
--
--		ptr = walker(mp, start, end, factor, data);
--		if (ptr == WALK_STOP)
-+		ptrs = (hgt >= 1 ? sdp->sd_inptrs : sdp->sd_diptrs) - start;
-+		len = ptrs * factor;
-+		if (len > max_len)
-+			ptrs = DIV_ROUND_UP_ULL(max_len, factor);
-+		status = walker(mp, ptrs);
-+		switch (status) {
-+		case WALK_STOP:
-+			return 1;
-+		case WALK_FOLLOW:
-+			BUG_ON(mp->mp_aheight == mp->mp_fheight);
-+			ptrs = mp->mp_list[hgt] - start;
-+			len = ptrs * factor;
- 			break;
--		if (step >= len)
-+		case WALK_CONTINUE:
- 			break;
--		len -= step;
--		if (ptr != WALK_NEXT) {
--			BUG_ON(!*ptr);
--			mp->mp_list[hgt] += ptr - start;
--			goto fill_up_metapath;
- 		}
-+		if (len >= max_len)
-+			break;
-+		max_len -= len;
-+		if (status == WALK_FOLLOW)
-+			goto fill_up_metapath;
- 
- lower_metapath:
- 		/* Decrease height of metapath. */
--		if (mp != &clone) {
--			clone_metapath(&clone, mp);
--			mp = &clone;
--		}
- 		brelse(mp->mp_bh[hgt]);
- 		mp->mp_bh[hgt] = NULL;
-+		mp->mp_list[hgt] = 0;
- 		if (!hgt)
- 			break;
- 		hgt--;
-@@ -493,10 +530,7 @@ lower_metapath:
- 
- 		/* Advance in metadata tree. */
- 		(mp->mp_list[hgt])++;
--		start = metapointer(hgt, mp);
--		end = metaend(hgt, mp);
--		if (start >= end) {
--			mp->mp_list[hgt] = 0;
-+		if (mp->mp_list[hgt] >= sdp->sd_inptrs) {
- 			if (!hgt)
- 				break;
- 			goto lower_metapath;
-@@ -504,44 +538,36 @@ lower_metapath:
- 
- fill_up_metapath:
- 		/* Increase height of metapath. */
--		if (mp != &clone) {
--			clone_metapath(&clone, mp);
--			mp = &clone;
--		}
- 		ret = fillup_metapath(ip, mp, ip->i_height - 1);
- 		if (ret < 0)
--			break;
-+			return ret;
- 		hgt += ret;
- 		for (; ret; ret--)
- 			do_div(factor, sdp->sd_inptrs);
- 		mp->mp_aheight = hgt + 1;
+-	usb_put_dev(dev->udev);
+ 	if (dev->cntl_urb) {
+ 		usb_kill_urb(dev->cntl_urb);
+ 		kfree(dev->cntl_req);
+@@ -108,6 +107,7 @@ static void yurex_delete(struct kref *kr
+ 				dev->int_buffer, dev->urb->transfer_dma);
+ 		usb_free_urb(dev->urb);
  	}
--	if (mp == &clone)
--		release_metapath(mp);
--	return ret;
-+	return 0;
- }
- 
--struct gfs2_hole_walker_args {
--	u64 blocks;
--};
--
--static const __be64 *gfs2_hole_walker(struct metapath *mp,
--		const __be64 *start, const __be64 *end,
--		u64 factor, void *data)
-+static enum walker_status gfs2_hole_walker(struct metapath *mp,
-+					   unsigned int ptrs)
- {
--	struct gfs2_hole_walker_args *args = data;
--	const __be64 *ptr;
-+	const __be64 *start, *ptr, *end;
-+	unsigned int hgt;
-+
-+	hgt = mp->mp_aheight - 1;
-+	start = metapointer(hgt, mp);
-+	end = start + ptrs;
- 
- 	for (ptr = start; ptr < end; ptr++) {
- 		if (*ptr) {
--			args->blocks += (ptr - start) * factor;
-+			mp->mp_list[hgt] += ptr - start;
- 			if (mp->mp_aheight == mp->mp_fheight)
- 				return WALK_STOP;
--			return ptr;  /* increase height */
-+			return WALK_FOLLOW;
- 		}
- 	}
--	args->blocks += (end - start) * factor;
--	return WALK_NEXT;
-+	return WALK_CONTINUE;
- }
- 
- /**
-@@ -559,12 +585,24 @@ static const __be64 *gfs2_hole_walker(st
- static int gfs2_hole_size(struct inode *inode, sector_t lblock, u64 len,
- 			  struct metapath *mp, struct iomap *iomap)
- {
--	struct gfs2_hole_walker_args args = { };
--	int ret = 0;
-+	struct metapath clone;
-+	u64 hole_size;
-+	int ret;
-+
-+	clone_metapath(&clone, mp);
-+	ret = gfs2_walk_metadata(inode, &clone, len, gfs2_hole_walker);
-+	if (ret < 0)
-+		goto out;
-+
-+	if (ret == 1)
-+		hole_size = metapath_to_block(GFS2_SB(inode), &clone) - lblock;
-+	else
-+		hole_size = len;
-+	iomap->length = hole_size << inode->i_blkbits;
-+	ret = 0;
- 
--	ret = gfs2_walk_metadata(inode, lblock, len, mp, gfs2_hole_walker, &args);
--	if (!ret)
--		iomap->length = args.blocks << inode->i_blkbits;
-+out:
-+	release_metapath(&clone);
- 	return ret;
++	usb_put_dev(dev->udev);
+ 	kfree(dev);
  }
  
 
