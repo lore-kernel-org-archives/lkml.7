@@ -2,229 +2,146 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56995C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B30D7C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED53820679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:05:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nbpRDK49"
+	by mail.kernel.org (Postfix) with ESMTP id 8351120679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:06:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565787989;
+	bh=d/Hxf3vmPYsdj6m+7b/zR0Tc7ldEmzN9HwYhQquDtMo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=QREacyJZjKoPHwhdXcPiKbuSI4XHR+rWzCXwhDX/CasrcCTKbv46Y+IVStBXpPQ+5
+	 d8Ef1Cto1SY4CUSnNrP8QfBadryMPFvcSyuWVL81HmhW5YqQeif7JIM5hwhSIZS21X
+	 iSM2I1+ThsGN0SmrrtilIpwzRfMMgQBAqZng31Z8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfHNNF0 (ORCPT
+        id S1727933AbfHNNG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 09:05:26 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55231 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbfHNNF0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:05:26 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p74so4542761wme.4
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 06:05:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=M+bsaaj2Ga3pu54AXXWmjUL9rt0aOPiQ8+nmUAYP/oo=;
-        b=nbpRDK49g152oiOfCiNOvpc8Xyb0NVveg6zO5IZoCXWTGnhF5WyPC2EVBHrvcNUByM
-         YVhSlop3nu73jfRhhMVu6+GjpXV3j1gHmSp56U3D/SOUIp/sc3lAEpwSLaHNmFPyFYys
-         /yUStabo0PVcdc4lOmVC/ven7/oueuzNavKNn/mTHeglf2eV+DAcmz72gUAvKxhEnB1l
-         +1ZCQVH3TqlR00l//I33lZ48X2k6FoiK+c7DRumRF+jkEGa9LGJphD6fZ45Yj5fM+HjP
-         Ndy0AleDsJiEZGc6B1TEgbyvqkm2vNCxlHjLlu+iDhOFtDDpI9xVwbR5CUg3T+YFsYef
-         Yqqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=M+bsaaj2Ga3pu54AXXWmjUL9rt0aOPiQ8+nmUAYP/oo=;
-        b=XGykIARzUbpkL2ReKTuuBDa5iBkBv1mH7sJjbSgFn+CyFkqxN+y8I64eD8LPgGvDEv
-         +qS5rzwoWvitxm17C2ig9SyVHUC4cZHeISwiaxAwPx8u4EjmSDZ7w6Ux3SQmvXtxiySu
-         WbdyCaXSaOlA0T5lS5BNT8qxxrcHVRtK3JKnduMdodrC4oysENOOSb+LzfIpciWL+0L4
-         5cfwR/nvP/+6i++N+4BmmEcP0MnwpcDgHq09YNMw53/yQ4Cv9YmN3OQUqY38lX3WX4tp
-         xttdfGu4dLCFrw/v7BmKHpEqaSRYHLrvE20/tEo0qTaKhS1uEYNN1QipLKjE+w7OMHmN
-         RtAQ==
-X-Gm-Message-State: APjAAAV4T5ly7Uh/WKOv0nk6jvSCsngcsSlKJSF33cdkqGg68cyynQph
-        Am+idzfp6bpgIiEj9lXYxiThlQ==
-X-Google-Smtp-Source: APXvYqy10CnrbQvDKrugAMRXObfhKdfwxrWL6zxEBkTn3rd9eMZZ4hUmo/ZW5cI89g0Uhn0JznfpUg==
-X-Received: by 2002:a1c:3945:: with SMTP id g66mr8117096wma.139.1565787923452;
-        Wed, 14 Aug 2019 06:05:23 -0700 (PDT)
-Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id x20sm242194564wrg.10.2019.08.14.06.05.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 06:05:22 -0700 (PDT)
-Subject: Re: [RESEND PATCH v2 8/8] drm/bridge: dw-hdmi-i2s: add .get_eld
- support
-To:     Jonas Karlman <jonas@kwiboo.se>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        "linux-amlogic@lists.infradead.org" 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-References: <20190812120726.1528-9-jbrunet@baylibre.com>
- <20190812125016.20169-1-jbrunet@baylibre.com>
- <HE1PR06MB401112DA555C49332C968D50ACAD0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <54dc4ee1-3e1c-8393-e90d-aef0f5a07eeb@baylibre.com>
-Date:   Wed, 14 Aug 2019 15:05:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 14 Aug 2019 09:06:28 -0400
+Received: from mga03.intel.com ([134.134.136.65]:1678 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726934AbfHNNG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:06:28 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 06:06:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,385,1559545200"; 
+   d="asc'?scan'208";a="328044176"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga004.jf.intel.com with ESMTP; 14 Aug 2019 06:06:08 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Vicente Bergas <vicencb@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: kexec on rk3399
+In-Reply-To: <c6993a1e-6fc2-44ab-b59e-152142e2ff4d@gmail.com>
+References: <ebcb52be-2063-4e2c-9a09-fdcacb94f855@gmail.com> <c6993a1e-6fc2-44ab-b59e-152142e2ff4d@gmail.com>
+Date:   Wed, 14 Aug 2019 16:06:04 +0300
+Message-ID: <87v9uzaocj.fsf@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <HE1PR06MB401112DA555C49332C968D50ACAD0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/08/2019 12:08, Jonas Karlman wrote:
-> On 2019-08-12 14:50, Jerome Brunet wrote:
->> Provide the eld to the generic hdmi-codec driver.
->> This will let the driver enforce the maximum channel number and set the
->> channel allocation depending on the hdmi sink.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi,
+
+Vicente Bergas <vicencb@gmail.com> writes:
+> On Monday, July 22, 2019 4:31:27 PM CEST, Vicente Bergas wrote:
+>> Hi, i have been running linux on rk3399 booted with kexec fine until 5.2
+>> From 5.2 onwards, there are memory corruption issues as reported here:
+>> http://lkml.iu.edu/hypermail/linux/kernel/1906.2/07211.html
+>> kexec has been identified as the principal reason for the issues.
 >>
->> Cc: Jonas Karlman <jonas@kwiboo.se>
->> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> 
-> Tested on Rockchip RK3288/RK3328 devices, full ELD is now available to userspace.
-> Please note that the r-b line in patch 2 is mixed in middle of commit message.
-> 
-> Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
-> 
-> Regards,
-> Jonas
-> 
->> ---
->>  drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h     |  1 +
->>  drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c | 11 +++++++++++
->>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c           |  1 +
->>  3 files changed, 13 insertions(+)
+>> It turns out that kexec has never worked reliably on this platform,
+>> i was just lucky until recently.
 >>
->> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
->> index 63b5756f463b..cb07dc0da5a7 100644
->> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
->> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
->> @@ -14,6 +14,7 @@ struct dw_hdmi_audio_data {
->>  
->>  struct dw_hdmi_i2s_audio_data {
->>  	struct dw_hdmi *hdmi;
->> +	u8 *eld;
->>  
->>  	void (*write)(struct dw_hdmi *hdmi, u8 val, int offset);
->>  	u8 (*read)(struct dw_hdmi *hdmi, int offset);
->> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
->> index b8ece9c1ba2c..1d15cf9b6821 100644
->> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
->> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
->> @@ -10,6 +10,7 @@
->>  #include <linux/module.h>
->>  
->>  #include <drm/bridge/dw_hdmi.h>
->> +#include <drm/drm_crtc.h>
->>  
->>  #include <sound/hdmi-codec.h>
->>  
->> @@ -121,6 +122,15 @@ static void dw_hdmi_i2s_audio_shutdown(struct device *dev, void *data)
->>  	dw_hdmi_audio_disable(hdmi);
->>  }
->>  
->> +static int dw_hdmi_i2s_get_eld(struct device *dev, void *data, uint8_t *buf,
->> +			       size_t len)
->> +{
->> +	struct dw_hdmi_i2s_audio_data *audio = data;
->> +
->> +	memcpy(buf, audio->eld, min_t(size_t, MAX_ELD_BYTES, len));
->> +	return 0;
->> +}
->> +
->>  static int dw_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
->>  				  struct device_node *endpoint)
->>  {
->> @@ -144,6 +154,7 @@ static int dw_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
->>  static struct hdmi_codec_ops dw_hdmi_i2s_ops = {
->>  	.hw_params	= dw_hdmi_i2s_hw_params,
->>  	.audio_shutdown	= dw_hdmi_i2s_audio_shutdown,
->> +	.get_eld	= dw_hdmi_i2s_get_eld,
->>  	.get_dai_id	= dw_hdmi_i2s_get_dai_id,
->>  };
->>  
->> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> index bed4bb017afd..8df69c9dbfad 100644
->> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> @@ -2797,6 +2797,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
->>  		struct dw_hdmi_i2s_audio_data audio;
->>  
->>  		audio.hdmi	= hdmi;
->> +		audio.eld	= hdmi->connector.eld;
->>  		audio.write	= hdmi_writeb;
->>  		audio.read	= hdmi_readb;
->>  		hdmi->enable_audio = dw_hdmi_i2s_audio_enable;
-> 
+>> Please, can you provide some directions on how to debug the issue?
+>
+> Thank you all for your suggestions on where the issue could be.
+>
+> It seems that it was the USB driver.
+> Now using v5.2.8 booted with kexec from v5.2.8 with a workaround and
+> so far so good. It is being tested on the Sapphire board.
+>
+> The workaround is:
+> --- a/drivers/usb/dwc3/dwc3-of-simple.c
+> +++ b/drivers/usb/dwc3/dwc3-of-simple.c
+> @@ -133,6 +133,13 @@
+>  	return 0;
+>  }
+>=20=20
+> +static void dwc3_of_simple_shutdown(struct platform_device *pdev)
+> +{
+> +	struct dwc3_of_simple *simple =3D platform_get_drvdata(pdev);
+> +
+> +	reset_control_assert(simple->resets);
+> +}
+> +
+>  static int __maybe_unused dwc3_of_simple_runtime_suspend(struct device=20
+> *dev)
+>  {
+>  	struct dwc3_of_simple	*simple =3D dev_get_drvdata(dev);
+> @@ -190,6 +197,7 @@
+>  static struct platform_driver dwc3_of_simple_driver =3D {
+>  	.probe		=3D dwc3_of_simple_probe,
+>  	.remove		=3D dwc3_of_simple_remove,
+> +	.shutdown	=3D dwc3_of_simple_shutdown,
+>  	.driver		=3D {
+>  		.name	=3D "dwc3-of-simple",
+>  		.of_match_table =3D of_dwc3_simple_match,
+>
+> If this patch is OK after review i can resubmit it as a pull request.
 
-Applying the whole serie, with this resent patch 8 and the patch 2 commit log
-fixed to drm-misc-next.
+not a pull request, just send a patch using git send-email
 
-Thanks,
+> Should a similar change be applied to drivers/usb/dwc3/core.c ?
 
-Neil
+Is it necessary? We haven't had any bug reports regarding that. Also, if
+we have reset control support in the core driver, why do we need it in
+of_simple? Seems like of_simple could just rely on what core does.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1UBzwACgkQzL64meEa
+mQYOVQ//eKd2UVl0Lk/iBF9be4Qe4UnhUTXChWgQRk4zD9Xvjfgx16lvKHRd202Y
+tDKEYXDrOeSfQZTopKUfO8d3vjPkxfqYMeLyiiXTA983oXVwc6ZeaE6+VA3AO9m1
+nWdQthWGnpSiBaXhceBgMmAaKkvuFe/dDua9OhGkLz/aOYFQ5iLEVT/Ffkj8sr5g
+u9oXIq/Vs49XFoymk8s+9qGip9l3ZbQNEkUkJbL4+hw83IiFR5SWtGG7kf/Uv/bI
+sA6JUkcTDvOXkqI/9cSk9ZeCePbOQpu5lk9C5B78//hdDNpkopJ8OeIW6YOBh5HF
+HIOZzyBgWjXu6fRM1XiqoRjWZvfpv/76CGml0zNKdDs5bvN4tbcUoJtf655JWdav
+S+0cEGfvLMsh5UiFcsBTT63S7+/Gh/d8Z/m3JsgSw9i0TBZLhbGQ36SYX+RpNSrr
+LNZsCbl67wc12ftHZOJaUTsdHy6MU4O5nf5vlSFTJCkRJtNKV65hODulCRMiTdkh
+kgyjs98yUegt2siGNHbVg8LC14GjWQaAxRLB7BN4pCx4243vmpapRRWjHG63f2Jh
+VZvYCB8hj5MBy+2BZ5S94siSoMS6+qaZ8DQ2L065EwdrlKLly4Rofh0FNhtbL5I5
+F5P6V1xEnd0TN75wevzsI57lsNB2Cov8WoSeFQ0D7OSrS6eN38s=
+=9b3X
+-----END PGP SIGNATURE-----
+--=-=-=--
