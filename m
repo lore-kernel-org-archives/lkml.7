@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9196CC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F367FC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 639A72084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC0F82085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748697;
-	bh=cD+Zhfy+M0hjFszWVvt6SMupSaZ0cXfm6e1X3yY7n74=;
+	s=default; t=1565748699;
+	bh=9zDbpXrPwc3N3ew0Hf5XdLobrVPXyTxAnXCNgfMII4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=02clSs+TKRpTVRMbsjBuTtIySSuwcEyctVfHQ+J52L98zlCA4z4FP0TGTi4dRQDDc
-	 x3laJiSw9vMlfdFw1PU1yXiZCaokmJxv9JA3pk/mjcpucTw0HQott7RvH2AgQhVtZx
-	 QU6xJZay+m2nw3soMpTJGq0Wn3hPouOBeio1Mb2I=
+	b=jcWB+lFd9JV6RyGSvymwcgd0XVARKtL/17T1qpYEE0d6sIYz0xSbk7iFhrWj4pWbN
+	 80wULo3mYGM70Mfu2ZTy1Koh4P26AQzijmVbe+Ko7Xo1NVrh+C2LloNUHnkzyIxItc
+	 a4wICbtjkhRYCoBc1/T30xRUqc88FIZkVeIvM+HM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfHNCLg (ORCPT
+        id S1727600AbfHNCLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:11:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43752 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727427AbfHNCLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:11:33 -0400
+        id S1727535AbfHNCLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:11:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E947A20843;
-        Wed, 14 Aug 2019 02:11:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04064216F4;
+        Wed, 14 Aug 2019 02:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748692;
-        bh=cD+Zhfy+M0hjFszWVvt6SMupSaZ0cXfm6e1X3yY7n74=;
+        s=default; t=1565748695;
+        bh=9zDbpXrPwc3N3ew0Hf5XdLobrVPXyTxAnXCNgfMII4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gfg+C7bDy2H4Ps8Ge97TCDcowEA7+e9kQ2Pqb69zvOlaQBVB6XBsb4X/eeWMCAksd
-         OiQoZS8Pvps7P6f93SbvAj2xhgmM1OzbFTNZ3wv5CBm1ZcRwZN6cyXQQSOup/WR5ZX
-         RMbamNwT2EHyqenm6lkqo/04lru1Aw4BC/dkaDwM=
+        b=Gnlpni8M+xCyxdPovOFiGTFx4BZBfMWbgXwea3h+ztWqlryhS0wysdybhzitm2TB7
+         gy2dcBCU0fBnFi5v0LhV4gv/jl1/ylA1fLgoQzK96BFifkctv5Ni6ddsw03fNNOZ2L
+         BD2TyaJjwiZ7mqhOFZP7EVitU5Uc3sscujm3o4BM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 023/123] ASoC: SOF: use __u32 instead of uint32_t in uapi headers
-Date:   Tue, 13 Aug 2019 22:09:07 -0400
-Message-Id: <20190814021047.14828-23-sashal@kernel.org>
+Cc:     John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 026/123] bpf: sockmap, synchronize_rcu before free'ing map
+Date:   Tue, 13 Aug 2019 22:09:10 -0400
+Message-Id: <20190814021047.14828-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,157 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: John Fastabend <john.fastabend@gmail.com>
 
-[ Upstream commit 62ec3d13601bd626ca7a0edef6d45dbb753d94e8 ]
+[ Upstream commit 2bb90e5cc90e1d09f631aeab041a9cf913a5bbe5 ]
 
-When CONFIG_UAPI_HEADER_TEST=y, exported headers are compile-tested to
-make sure they can be included from user-space.
+We need to have a synchronize_rcu before free'ing the sockmap because
+any outstanding psock references will have a pointer to the map and
+when they use this could trigger a use after free.
 
-Currently, header.h and fw.h are excluded from the test coverage.
-To make them join the compile-test, we need to fix the build errors
-attached below.
-
-For a case like this, we decided to use __u{8,16,32,64} variable types
-in this discussion:
-
-  https://lkml.org/lkml/2019/6/5/18
-
-Build log:
-
-  CC      usr/include/sound/sof/header.h.s
-  CC      usr/include/sound/sof/fw.h.s
-In file included from <command-line>:32:0:
-./usr/include/sound/sof/header.h:19:2: error: unknown type name ‘uint32_t’
-  uint32_t magic;  /**< 'S', 'O', 'F', '\0' */
-  ^~~~~~~~
-./usr/include/sound/sof/header.h:20:2: error: unknown type name ‘uint32_t’
-  uint32_t type;  /**< component specific type */
-  ^~~~~~~~
-./usr/include/sound/sof/header.h:21:2: error: unknown type name ‘uint32_t’
-  uint32_t size;  /**< size in bytes of data excl. this struct */
-  ^~~~~~~~
-./usr/include/sound/sof/header.h:22:2: error: unknown type name ‘uint32_t’
-  uint32_t abi;  /**< SOF ABI version */
-  ^~~~~~~~
-./usr/include/sound/sof/header.h:23:2: error: unknown type name ‘uint32_t’
-  uint32_t reserved[4]; /**< reserved for future use */
-  ^~~~~~~~
-./usr/include/sound/sof/header.h:24:2: error: unknown type name ‘uint32_t’
-  uint32_t data[0]; /**< Component data - opaque to core */
-  ^~~~~~~~
-In file included from <command-line>:32:0:
-./usr/include/sound/sof/fw.h:49:2: error: unknown type name ‘uint32_t’
-  uint32_t size;  /* bytes minus this header */
-  ^~~~~~~~
-./usr/include/sound/sof/fw.h:50:2: error: unknown type name ‘uint32_t’
-  uint32_t offset; /* offset from base */
-  ^~~~~~~~
-./usr/include/sound/sof/fw.h:64:2: error: unknown type name ‘uint32_t’
-  uint32_t size;  /* bytes minus this header */
-  ^~~~~~~~
-./usr/include/sound/sof/fw.h:65:2: error: unknown type name ‘uint32_t’
-  uint32_t num_blocks; /* number of blocks */
-  ^~~~~~~~
-./usr/include/sound/sof/fw.h:73:2: error: unknown type name ‘uint32_t’
-  uint32_t file_size; /* size of file minus this header */
-  ^~~~~~~~
-./usr/include/sound/sof/fw.h:74:2: error: unknown type name ‘uint32_t’
-  uint32_t num_modules; /* number of modules */
-  ^~~~~~~~
-./usr/include/sound/sof/fw.h:75:2: error: unknown type name ‘uint32_t’
-  uint32_t abi;  /* version of header format */
-  ^~~~~~~~
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Link: https://lore.kernel.org/r/20190721142308.30306-1-yamada.masahiro@socionext.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 604326b41a6fb ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/sound/sof/fw.h     | 16 +++++++++-------
- include/uapi/sound/sof/header.h | 14 ++++++++------
- 2 files changed, 17 insertions(+), 13 deletions(-)
+ net/core/sock_map.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/uapi/sound/sof/fw.h b/include/uapi/sound/sof/fw.h
-index 1afca973eb097..e9f697467a861 100644
---- a/include/uapi/sound/sof/fw.h
-+++ b/include/uapi/sound/sof/fw.h
-@@ -13,6 +13,8 @@
- #ifndef __INCLUDE_UAPI_SOF_FW_H__
- #define __INCLUDE_UAPI_SOF_FW_H__
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 1d40e040320d2..bbc91597d8364 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -252,6 +252,8 @@ static void sock_map_free(struct bpf_map *map)
+ 	raw_spin_unlock_bh(&stab->lock);
+ 	rcu_read_unlock();
  
-+#include <linux/types.h>
++	synchronize_rcu();
 +
- #define SND_SOF_FW_SIG_SIZE	4
- #define SND_SOF_FW_ABI		1
- #define SND_SOF_FW_SIG		"Reef"
-@@ -46,8 +48,8 @@ enum snd_sof_fw_blk_type {
- 
- struct snd_sof_blk_hdr {
- 	enum snd_sof_fw_blk_type type;
--	uint32_t size;		/* bytes minus this header */
--	uint32_t offset;	/* offset from base */
-+	__u32 size;		/* bytes minus this header */
-+	__u32 offset;		/* offset from base */
- } __packed;
- 
- /*
-@@ -61,8 +63,8 @@ enum snd_sof_fw_mod_type {
- 
- struct snd_sof_mod_hdr {
- 	enum snd_sof_fw_mod_type type;
--	uint32_t size;		/* bytes minus this header */
--	uint32_t num_blocks;	/* number of blocks */
-+	__u32 size;		/* bytes minus this header */
-+	__u32 num_blocks;	/* number of blocks */
- } __packed;
- 
- /*
-@@ -70,9 +72,9 @@ struct snd_sof_mod_hdr {
-  */
- struct snd_sof_fw_header {
- 	unsigned char sig[SND_SOF_FW_SIG_SIZE]; /* "Reef" */
--	uint32_t file_size;	/* size of file minus this header */
--	uint32_t num_modules;	/* number of modules */
--	uint32_t abi;		/* version of header format */
-+	__u32 file_size;	/* size of file minus this header */
-+	__u32 num_modules;	/* number of modules */
-+	__u32 abi;		/* version of header format */
- } __packed;
- 
- #endif
-diff --git a/include/uapi/sound/sof/header.h b/include/uapi/sound/sof/header.h
-index 7868990b0d6f3..5f4518e7a9723 100644
---- a/include/uapi/sound/sof/header.h
-+++ b/include/uapi/sound/sof/header.h
-@@ -9,6 +9,8 @@
- #ifndef __INCLUDE_UAPI_SOUND_SOF_USER_HEADER_H__
- #define __INCLUDE_UAPI_SOUND_SOF_USER_HEADER_H__
- 
-+#include <linux/types.h>
-+
- /*
-  * Header for all non IPC ABI data.
-  *
-@@ -16,12 +18,12 @@
-  * Used by any bespoke component data structures or binary blobs.
-  */
- struct sof_abi_hdr {
--	uint32_t magic;		/**< 'S', 'O', 'F', '\0' */
--	uint32_t type;		/**< component specific type */
--	uint32_t size;		/**< size in bytes of data excl. this struct */
--	uint32_t abi;		/**< SOF ABI version */
--	uint32_t reserved[4];	/**< reserved for future use */
--	uint32_t data[0];	/**< Component data - opaque to core */
-+	__u32 magic;		/**< 'S', 'O', 'F', '\0' */
-+	__u32 type;		/**< component specific type */
-+	__u32 size;		/**< size in bytes of data excl. this struct */
-+	__u32 abi;		/**< SOF ABI version */
-+	__u32 reserved[4];	/**< reserved for future use */
-+	__u32 data[0];		/**< Component data - opaque to core */
- }  __packed;
- 
- #endif
+ 	bpf_map_area_free(stab->sks);
+ 	kfree(stab);
+ }
 -- 
 2.20.1
 
