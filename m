@@ -2,95 +2,142 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16209C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F60CC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF86B206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B68206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:53:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMLz/CMJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kliu/oC7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbfHNRxF (ORCPT
+        id S1729003AbfHNRxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:53:05 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34384 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728188AbfHNRxE (ORCPT
+        Wed, 14 Aug 2019 13:53:37 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:32954 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbfHNRxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:53:04 -0400
-Received: by mail-pl1-f195.google.com with SMTP id i2so51047963plt.1;
-        Wed, 14 Aug 2019 10:53:04 -0700 (PDT)
+        Wed, 14 Aug 2019 13:53:36 -0400
+Received: by mail-pf1-f194.google.com with SMTP id g2so54019661pfq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 10:53:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8iaIY5u6ArQsWMUMgAKvaicK4w7/20OGfodEGmYtcUE=;
-        b=gMLz/CMJHxHnu9kURNWBHopTjtSGFQkI0UvIZEhG10utbfLh0zkvsGOqxU7JWPeE0O
-         xK9PsjzElrAvEuywaUaulrnl1mJVQ2sr/aoAAJnKqg20lw/TFcHYkiTRjxVQGISwVOVj
-         cwEmkM1Be9Mgm1pTHnmScBxX8Vj/rP4bpepVjtvIkYoEupRqylv8G2e8BNjQ3lL/CYpQ
-         obbyf3z4iaGanKXbDCrcuBmQ85L6jyVTNPC3MWlhBEynTxXdaywg+Im+E1Z+xr+ji/Vx
-         dnvvpAU4PsOI8aaOKarAdTQxh7doNq7/DK6rAP3tkm9XGJsjK2c2B8fmC77TrbKYu6KW
-         A7dA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ArUMi9WppD4KpmP84aiabPQB2r88tFmYQMOJibiN7ys=;
+        b=kliu/oC7PiMQOOfilpD5KvgHHyE8oa5C6lAExUySmM8Gmc2V94Xyf6Qt5G/mkSgZhR
+         QoFzTj+lZ1ObVgrqM+0gtiijudG06ZfyLJ5kJjYItLw4I+rL1Z79ZDaoftLaBRBFK8q+
+         dWMTHzKF6NZcIO435/wCcEWgyaQiCltRj0zs3ftm1/vnz2zC5tq7dAcQx9Hw8XcgDDEd
+         fNu/pV8Ggd3G0/AyPAzdGDlGMZH3ZdiSXvDAEJg7G2fql6hV4mG6GWE5XgalyO45XUnK
+         s5magF6WCYFUrHtyomNCckDGMWe6chR6VSez62+ZOPWVo/ocYLBw+fSbNqAIrOnqHVcm
+         XzCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8iaIY5u6ArQsWMUMgAKvaicK4w7/20OGfodEGmYtcUE=;
-        b=qY1XrvCXdTwQO8DayCTxdVR0cEIbV8MQtNDfX5QSscalM1Ash2Enw7ZfgqrzBcUs1o
-         nPUgg+ywdmUKu7cUBf1sx2p51NZCBE4grI7ymD4lGQQf7UbOPmXo+P0kUv+WYAbLEmrL
-         w8NMRNjrMxnfRS8j/kRdl5cDsDE3m+2tq/1zRKQ37BFmbsaqewZykpzhMZoCyIj0Pt90
-         ijCg6SmNem5ITGgcnbzK+MDaQ7CWQ/OpN/7iAUAFXT5XVBnjzmC6NAcF57KMQcS7lVHU
-         gl5Xlht8OGZNuufRtVok3PNO8tLIGFqYcfeQFA13XlN9xTL1xPaRdyc1ihfK00o6RJ3p
-         lGSw==
-X-Gm-Message-State: APjAAAWEa6aC04I8rnJsSqMS4yRdDnr25qO4890N7sbSapKgtEIRRXeO
-        g/iko59pRkLE5yy4O99R8OQ=
-X-Google-Smtp-Source: APXvYqw5LTP7Fy7PGJx5niJbiwCJNXnJ2iWZFQ1B7+V3zYYIX8nPxCRjG4cQ8wcnSNqzcjWQd8/vvg==
-X-Received: by 2002:a17:902:9a8d:: with SMTP id w13mr537132plp.157.1565805184076;
-        Wed, 14 Aug 2019 10:53:04 -0700 (PDT)
-Received: from [10.69.78.41] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id u128sm448046pfu.48.2019.08.14.10.53.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 10:53:03 -0700 (PDT)
-Subject: Re: [PATCH v4 07/14] net: phy: adin: make RMII fifo depth
- configurable
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ArUMi9WppD4KpmP84aiabPQB2r88tFmYQMOJibiN7ys=;
+        b=rWcykx8KjTZurvsPn2vZRMKCkQ57p8nAcUxbYPEPwOn8HfjRJKx0TeuL0R8a3onUsi
+         opwWV3+irv6zT1U0JD2ej9luxkjVzkDhN03PhSTCX1VUamSeAcpHMFcY7Dk/3qKEwDK/
+         wf7tk4JNq/nciheJ6jRUadVYPn9i4X7GSdvjTpQ8bGZ/m2RVjUFkMKRxNDUteVYhI+th
+         vefbIp0rYyGRXdxM7tG0soD+xLkzBsDvrqaKacfIWKWwHLMw7ITxbABsC62uP1QIiXlx
+         VE3otxDTRy+ka91F00Q7J7c9mG0pHrepkXXGPTPa1PesZ0LtMfiIJmY+Uc7OfbixEr0z
+         TK2A==
+X-Gm-Message-State: APjAAAV6LehNMH+GArGl4DobTBg8AwrEihYEz4chOkC17ysKFyBgKLDg
+        Dx3Z61ruOuTOUpmcIu/aSsHCYQ==
+X-Google-Smtp-Source: APXvYqzzMd/5cvFBLMtXfDsAG0LpYnyV+4JJdTWPaUZn9IwFFuOYCZZhd94jls34yHAIl6jxNlK44A==
+X-Received: by 2002:aa7:82da:: with SMTP id f26mr1210723pfn.82.1565805215646;
+        Wed, 14 Aug 2019 10:53:35 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id q8sm387240pjq.20.2019.08.14.10.53.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 10:53:35 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 10:53:32 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        hkallweit1@gmail.com, andrew@lunn.ch
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
- <20190812112350.15242-8-alexandru.ardelean@analog.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <653e9be4-dde0-4d50-b2d1-fc7b5c5118b9@gmail.com>
-Date:   Wed, 14 Aug 2019 10:53:01 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: Re: [PATCH 02/22] arm64: dts: qcom: sm8150-mtp: add base dts file
+Message-ID: <20190814175332.GG6167@minitux>
+References: <20190814125012.8700-1-vkoul@kernel.org>
+ <20190814125012.8700-3-vkoul@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190812112350.15242-8-alexandru.ardelean@analog.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814125012.8700-3-vkoul@kernel.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 14 Aug 05:49 PDT 2019, Vinod Koul wrote:
 
-
-On 8/12/2019 4:23 AM, Alexandru Ardelean wrote:
-> The FIFO depth can be configured for the RMII mode. This change adds
-> support for doing this via device-tree (or ACPI).
+> This add base DTS file for sm8150-mtp and enables
+> boot to console
 > 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile       |  1 +
+>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 28 +++++++++++++++++++++++++
+>  2 files changed, 29 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 0a7e5dfce6f7..1964dacaf19b 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> new file mode 100644
+> index 000000000000..df08ee50510d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> @@ -0,0 +1,28 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +// Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+> +// Copyright (c) 2019, Linaro Limited
+> +
+> +/dts-v1/;
+> +
+> +#include "sm8150.dtsi"
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. SM8150 MTP";
+> +	compatible = "qcom,sm8150-mtp";
+> +
+> +	aliases {
+> +		serial0 = &uart2;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +};
+> +
+> +&qupv3_id_1 {
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> -- 
+> 2.20.1
+> 
