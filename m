@@ -2,171 +2,159 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D26C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC079C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED9120665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:32:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="RnBh7I01"
+	by mail.kernel.org (Postfix) with ESMTP id BA676214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbfHNQcH (ORCPT
+        id S1728335AbfHNQdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:32:07 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35739 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbfHNQcH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:32:07 -0400
-Received: by mail-pl1-f193.google.com with SMTP id gn20so1661374plb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 09:32:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JW7NJ2x8aCYJgh9Quu4m2Xy6h4AMn4oD9DcUlwK+nlA=;
-        b=RnBh7I01/H1DbTynCmuURc8VbMF7+q40o0fbix1RneZMmFzklD3vG3O010YUou1qzr
-         xgDCJtHMH/tZntjjAeYmLfFj3G6gKPLWnQnMVapQQcNVGDb2UBOMic/vN+kl/T1f3hpI
-         6jlqwgKsplgqpmo7KxuSiGH/I6rDpu/yLQ17E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JW7NJ2x8aCYJgh9Quu4m2Xy6h4AMn4oD9DcUlwK+nlA=;
-        b=DjzQsjfI9EbBSiO5zQjPZz9yMMg5UyHcrZ/m6LUpn4oZjeScCdYrLBjyl34thtc1qP
-         IApRGzFbvCrzlbEGbmDiYYhlpkRf767qNnQm+bA5aLIDtp99UJqVJEeFeLjtj/UTvWz3
-         acsw1wO4SUIAoAX6keLneb5vtzp87bQXaQlLVDDSlxCqw5/j8JbNlrj/WICef/Bnz6q6
-         EpdlUuPklJCOFH9+ljeS7UqsLCOU2wtibNxNXiw0y5+kdhJPty7zWfrqe2/3451Ed4ii
-         3fyyW7NXG05NQlAtIkzggxd8kZp4fyNWu0LCOxy2bD9s28uizxuuHQ16HXH47BN5Z/8u
-         awaw==
-X-Gm-Message-State: APjAAAXHFpBz/1daNbMZbyW44R05Wogz/MaaRVOBJ6KRklK2rlN0CxpL
-        RLk8vVMiVt5kzLq9mUfJvO9I9A==
-X-Google-Smtp-Source: APXvYqyNmLGFG4L6ESKyb+mVrWkKxNJARdOlA2tR89i2oE4Rl4NOl56mfPIJHkJQ8RneB/DaFT2yCg==
-X-Received: by 2002:a17:902:169:: with SMTP id 96mr219508plb.297.1565800325785;
-        Wed, 14 Aug 2019 09:32:05 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id t7sm290486pjq.15.2019.08.14.09.32.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 09:32:04 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 12:32:03 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     khlebnikov@yandex-team.ru, linux-kernel@vger.kernel.org,
-        Minchan Kim <minchan@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Mike Rapoport <rppt@linux.ibm.com>, namhyung@google.com,
-        paulmck@linux.ibm.com, Robin Murphy <robin.murphy@arm.com>,
-        Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v5 2/6] mm/page_idle: Add support for handling swapped
- PG_Idle pages
-Message-ID: <20190814163203.GB59398@google.com>
-References: <20190807171559.182301-1-joel@joelfernandes.org>
- <20190807171559.182301-2-joel@joelfernandes.org>
- <20190813150450.GN17933@dhcp22.suse.cz>
- <20190813153659.GD14622@google.com>
- <20190814080531.GP17933@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814080531.GP17933@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 14 Aug 2019 12:33:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47332 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726166AbfHNQdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 12:33:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F1463B061;
+        Wed, 14 Aug 2019 16:33:01 +0000 (UTC)
+Date:   Wed, 14 Aug 2019 18:33:01 +0200
+Message-ID: <s5hmugbbtc2.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     =?UTF-8?B?5b2t6L6J?= <benquike@gmail.com>
+Cc:     security@kernel.org, alsa-devel@alsa-project.org,
+        YueHaibing <yuehaibing@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Wenwen Wang <wang6495@umn.edu>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Fix an OOB bug in parse_audio_mixer_unit
+In-Reply-To: <CAKpmkkUv=arsdJiexaM-UVhXEwfGN=zreny9P_kDNhQUij8=FQ@mail.gmail.com>
+References: <20190814023625.21683-1-benquike@gmail.com>
+        <s5hzhkcb6dh.wl-tiwai@suse.de>
+        <CAKpmkkUv=arsdJiexaM-UVhXEwfGN=zreny9P_kDNhQUij8=FQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 10:05:31AM +0200, Michal Hocko wrote:
-> On Tue 13-08-19 11:36:59, Joel Fernandes wrote:
-> > On Tue, Aug 13, 2019 at 05:04:50PM +0200, Michal Hocko wrote:
-> > > On Wed 07-08-19 13:15:55, Joel Fernandes (Google) wrote:
-> > > > Idle page tracking currently does not work well in the following
-> > > > scenario:
-> > > >  1. mark page-A idle which was present at that time.
-> > > >  2. run workload
-> > > >  3. page-A is not touched by workload
-> > > >  4. *sudden* memory pressure happen so finally page A is finally swapped out
-> > > >  5. now see the page A - it appears as if it was accessed (pte unmapped
-> > > >     so idle bit not set in output) - but it's incorrect.
-> > > > 
-> > > > To fix this, we store the idle information into a new idle bit of the
-> > > > swap PTE during swapping of anonymous pages.
-> > > >
-> > > > Also in the future, madvise extensions will allow a system process
-> > > > manager (like Android's ActivityManager) to swap pages out of a process
-> > > > that it knows will be cold. To an external process like a heap profiler
-> > > > that is doing idle tracking on another process, this procedure will
-> > > > interfere with the idle page tracking similar to the above steps.
-> > > 
-> > > This could be solved by checking the !present/swapped out pages
-> > > right? Whoever decided to put the page out to the swap just made it
-> > > idle effectively.  So the monitor can make some educated guess for
-> > > tracking. If that is fundamentally not possible then please describe
-> > > why.
-> > 
-> > But the monitoring process (profiler) does not have control over the 'whoever
-> > made it effectively idle' process.
+On Wed, 14 Aug 2019 18:28:39 +0200,
+彭辉 wrote:
 > 
-> Why does that matter? Whether it is a global/memcg reclaim or somebody
-> calling MADV_PAGEOUT or whatever it is a decision to make the page not
-> hot. Sure you could argue that a missing idle bit on swap entries might
-> mean that the swap out decision was pre-mature/sub-optimal/wrong but is
-> this the aim of the interface?
-> 
-> > As you said it will be a guess, it will not be accurate.
-> 
-> Yes and the point I am trying to make is that having some space and not
-> giving a guarantee sounds like a safer option for this interface because
+> Hi, Takashi:
+> Here the problem is that `desc->bLength` is controlled by the device side,
+> so  `desc->bLength` may not represent the real length of the descriptor.
+> That is why I use pointer arithmetic operations to derive the real size of the
+> buffer
+> in my patch.
 
-I do see your point of view, but jJust because a future (and possibly not
-going to happen) usecase which you mentioned as pte reclaim, makes you feel
-that userspace may be subject to inaccuracies anyway, doesn't mean we should
-make everything inaccurate..  We already know idle page tracking is not
-completely accurate. But that doesn't mean we miss out on the opportunity to
-make the "non pte-reclaim" usecase inaccurate as well. 
+But bLength is checked before calling this, i.e. it's already assured
+that bLength fits within the buffer limit.  So, the result calls don't
+have to care about the buffer limit itself, and they can just
+concentrate on overflow over bLength.
 
-IMO, we should do our best for today, and not hypothesize. How likely is pte
-reclaim and is there a thread to describe that direction?
-
-> > I am curious what is your concern with using a bit in the swap PTE?
-> 
-> ... It is a promiss of the semantic I find limiting for future. The bit
-> in the pte might turn out insufficient (e.g. pte reclaim) so teaching
-> the userspace to consider this a hard guarantee is a ticket to problems
-> later on. Maybe I am overly paranoid because I have seen so many "nice
-> to have" features turning into a maintenance burden in the past.
-> 
-> If this is really considered mostly debugging purpouse interface then a
-> certain level of imprecision should be tolerateable. If there is a
-> really strong real world usecase that simply has no other way to go
-> then this might be added later. Adding an information is always safer
-> than take it away.
-> 
-> That being said, if I am a minority voice here then I will not really
-> stand in the way and won't nack the patch. I will not ack it neither
-> though.
-
-Ok.
 
 thanks,
 
- - Joel
+Takashi
 
+> 
+> On Wed, Aug 14, 2019 at 2:36 AM Takashi Iwai <tiwai@suse.de> wrote:
+> 
+>     On Wed, 14 Aug 2019 04:36:24 +0200,
+>     Hui Peng wrote:
+>     >
+>     > The `uac_mixer_unit_descriptor` shown as below is read from the
+>     > device side. In `parse_audio_mixer_unit`, `baSourceID` field is
+>     > accessed from index 0 to `bNrInPins` - 1, the current implementation
+>     > assumes that descriptor is always valid (the length  of descriptor
+>     > is no shorter than 5 + `bNrInPins`). If a descriptor read from
+>     > the device side is invalid, it may trigger out-of-bound memory
+>     > access.
+>     >
+>     > ```
+>     > struct uac_mixer_unit_descriptor {
+>     >       __u8 bLength;
+>     >       __u8 bDescriptorType;
+>     >       __u8 bDescriptorSubtype;
+>     >       __u8 bUnitID;
+>     >       __u8 bNrInPins;
+>     >       __u8 baSourceID[];
+>     > }
+>     > ```
+>     >
+>     > This patch fixes the bug by add a sanity check on the length of
+>     > the descriptor.
+>     >
+>     > Signed-off-by: Hui Peng <benquike@gmail.com>
+>     > Reported-by: Hui Peng <benquike@gmail.com>
+>     > Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+>     > ---
+>     >  sound/usb/mixer.c | 9 +++++++++
+>     >  1 file changed, 9 insertions(+)
+>     >
+>     > diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+>     > index 7498b5191b68..38202ce67237 100644
+>     > --- a/sound/usb/mixer.c
+>     > +++ b/sound/usb/mixer.c
+>     > @@ -2091,6 +2091,15 @@ static int parse_audio_mixer_unit(struct
+>     mixer_build *state, int unitid,
+>     >       struct usb_audio_term iterm;
+>     >       int input_pins, num_ins, num_outs;
+>     >       int pin, ich, err;
+>     > +     int desc_len = (int) ((unsigned long) state->buffer +
+>     > +                     state->buflen - (unsigned long) raw_desc);
+>     > +
+>     > +     if (desc_len < sizeof(*desc) + desc->bNrInPins) {
+>     > +             usb_audio_err(state->chip,
+>     > +                           "descriptor %d too short\n",
+>     > +                           unitid);
+>     > +             return -EINVAL;
+>     > +     }
+>     > 
+>     >       err = uac_mixer_unit_get_channels(state, desc);
+>     >       if (err < 0) {
+>    
+>     Hm, what is the desc->bLength value in the error case?
+>    
+>     Basically the buffer boundary is already checked against bLength in
+>     snd_usb_find_desc() which is called from obtaining the raw_desc in the
+>     caller of this function (parse_audio_unit()).
+>    
+>     So, if any, we need to check bLength for the possible overflow like
+>     below.
+> 
+>     thanks,
+>    
+>     Takashi
+>    
+>     --- a/sound/usb/mixer.c
+>     +++ b/sound/usb/mixer.c
+>     @@ -744,6 +744,8 @@ static int uac_mixer_unit_get_channels(struct
+>     mixer_build *state,
+>                     return -EINVAL;
+>             if (!desc->bNrInPins)
+>                     return -EINVAL;
+>     +       if (desc->bLength < sizeof(*desc) + desc->bNrInPins)
+>     +               return -EINVAL;
+>    
+>             switch (state->mixer->protocol) {
+>             case UAC_VERSION_1:
+> 
+> --
+> May the Lord Richly Bless you and yours !
+> 
+> 
