@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC14C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270C8C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4D30208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E35214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802628;
-	bh=zwjdXstRbcb7XY6j3orW5Z8Zd9eGdQ/B8Hkyos/oTN4=;
+	s=default; t=1565802632;
+	bh=KndO6B65yvVUQnrXfFuyhPn4dfia5yRGl9PLHDG1aHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wXdsugxC+vMCl3HM2HMpzZxfTCcW1FO9ADqyNE0R1dVL5IS/Qyb2XwQUCMsJqHFQp
-	 SCZ2WVaLDdr5xScqX3i1ITQc4qCEeCGK5cPQ1xDaRk3P92nezJQSJi3hEvsYEHxbIa
-	 24pmPQEy/IM/xiIncMpvYsuensvYSRBrlq4diozE=
+	b=ag7Rcb4X2lpL3lMKOgLaiZEzGgDAGcL/hfTd/ShHbpLE+efL4RBccjFnGwtEeyUZ5
+	 KtaG6bsrkvcSXx98Q+qNsrXJzN3rOqXheMtXS6W8GCYBBelPqjeWXKCu9Yen7FQjvd
+	 YSzdtLyHAZnNEmlVWS8YrWBf1v7lTZXdOlEZJD38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730484AbfHNRK0 (ORCPT
+        id S1730440AbfHNRKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:10:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32916 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:10:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730448AbfHNRKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:10:16 -0400
+        id S1730481AbfHNRK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:10:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F82F2133F;
-        Wed, 14 Aug 2019 17:10:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A71F9208C2;
+        Wed, 14 Aug 2019 17:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802615;
-        bh=zwjdXstRbcb7XY6j3orW5Z8Zd9eGdQ/B8Hkyos/oTN4=;
+        s=default; t=1565802626;
+        bh=KndO6B65yvVUQnrXfFuyhPn4dfia5yRGl9PLHDG1aHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wNeWzHPHWIw2sLG3ELTuqlNkYiH6eGqewfub9sOoPUL86RNjmMmY664fZZtyJnvtJ
-         y2/eQohT1h3xX2xGbUjwN9piG2pltMa3LiO38oO5UjmUhC9LO83teAoqO3lI2AE3r/
-         wTgxlXNXjYxJZlcwqM8SKrbphnuFWtQh5TDdWVuw=
+        b=KfW8zu/YE7C1VbzyIEQG2kDdjueo/8JSAaGyYpnXculQ6EvbyZmnHw71VXADrZAct
+         z8etynszDwFLx+4VoNrIr4i0vWZoXYp5agp7epy/koHjOMq1yXPD5BlW2WzOJCoP9p
+         fdKH6zJi48IcDZHG4N70p5RklB6Zk5VZMjUs/ekA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 51/91] s390/qdio: add sanity checks to the fast-requeue path
-Date:   Wed, 14 Aug 2019 19:01:14 +0200
-Message-Id: <20190814165751.724832660@linuxfoundation.org>
+Subject: [PATCH 4.19 54/91] ALSA: compress: Dont allow paritial drain operations on capture streams
+Date:   Wed, 14 Aug 2019 19:01:17 +0200
+Message-Id: <20190814165751.897366594@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -61,48 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a6ec414a4dd529eeac5c3ea51c661daba3397108 ]
+[ Upstream commit a70ab8a8645083f3700814e757f2940a88b7ef88 ]
 
-If the device driver were to send out a full queue's worth of SBALs,
-current code would end up discovering the last of those SBALs as PRIMED
-and erroneously skip the SIGA-w. This immediately stalls the queue.
+Partial drain and next track are intended for gapless playback and
+don't really have an obvious interpretation for a capture stream, so
+makes sense to not allow those operations on capture streams.
 
-Add a check to not attempt fast-requeue in this case. While at it also
-make sure that the state of the previous SBAL was successfully extracted
-before inspecting it.
-
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/qdio_main.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ sound/core/compress_offload.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
-index 4ac4a73037f59..4b7cc8d425b1c 100644
---- a/drivers/s390/cio/qdio_main.c
-+++ b/drivers/s390/cio/qdio_main.c
-@@ -1569,13 +1569,13 @@ static int handle_outbound(struct qdio_q *q, unsigned int callflags,
- 		rc = qdio_kick_outbound_q(q, phys_aob);
- 	} else if (need_siga_sync(q)) {
- 		rc = qdio_siga_sync_q(q);
-+	} else if (count < QDIO_MAX_BUFFERS_PER_Q &&
-+		   get_buf_state(q, prev_buf(bufnr), &state, 0) > 0 &&
-+		   state == SLSB_CU_OUTPUT_PRIMED) {
-+		/* The previous buffer is not processed yet, tack on. */
-+		qperf_inc(q, fast_requeue);
- 	} else {
--		/* try to fast requeue buffers */
--		get_buf_state(q, prev_buf(bufnr), &state, 0);
--		if (state != SLSB_CU_OUTPUT_PRIMED)
--			rc = qdio_kick_outbound_q(q, 0);
--		else
--			qperf_inc(q, fast_requeue);
-+		rc = qdio_kick_outbound_q(q, 0);
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index 5e74f518bd598..9c1684f01aca0 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -835,6 +835,10 @@ static int snd_compr_next_track(struct snd_compr_stream *stream)
+ 	if (stream->runtime->state != SNDRV_PCM_STATE_RUNNING)
+ 		return -EPERM;
+ 
++	/* next track doesn't have any meaning for capture streams */
++	if (stream->direction == SND_COMPRESS_CAPTURE)
++		return -EPERM;
++
+ 	/* you can signal next track if this is intended to be a gapless stream
+ 	 * and current track metadata is set
+ 	 */
+@@ -862,6 +866,10 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
+ 		break;
  	}
  
- 	/* in case of SIGA errors we must process the error immediately */
++	/* partial drain doesn't have any meaning for capture streams */
++	if (stream->direction == SND_COMPRESS_CAPTURE)
++		return -EPERM;
++
+ 	/* stream can be drained only when next track has been signalled */
+ 	if (stream->next_track == false)
+ 		return -EPERM;
 -- 
 2.20.1
 
