@@ -2,455 +2,173 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9A5C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DDAC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB80120842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B075020842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SRJqoOow"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="X8t2NG/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfHNAoE (ORCPT
+        id S1726786AbfHNAvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 20:44:04 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44269 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbfHNAoE (ORCPT
+        Tue, 13 Aug 2019 20:51:06 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:11202 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfHNAvG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 20:44:04 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k22so1375809oiw.11
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 17:44:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xTgTghZIlx7I03WklruelXMJsYuL++iO37GrwFIicHk=;
-        b=SRJqoOowrRgCds5aSQx3XU6KOHzcsjNxoJQiJv0fsYy9/FZKa9TtOs5veqLNNA2652
-         aYIWl8vtRh5+eVNtxly2UIuSHnkZHIcRgfi4pKyTN2HPbt8F+xJ5vdMj8KBrs0q7k0NX
-         IDOodsq/sKE2kSNGZ+x4Wo7ZVLAnMuci9XUOU8YsURZO4SKRyeP5YRtkIsafnz810SOo
-         1trmOENVtDElTOoH6VwoUZN0wlwRANljAyzcEa+h/q9qbwlFiTVMDmRIYdwCZtBDs6gE
-         lM8vDlz1bs1SoBmv+Nn3r2a+DETMwp+GmTc/gnWxR/PiitYJh/tWgB6iHLAHNleWIH97
-         rCwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xTgTghZIlx7I03WklruelXMJsYuL++iO37GrwFIicHk=;
-        b=dkFHSwY61QbFTiMKOX24ZWGVi/vv4Cp97skqos22WHaww/Z9j2j8KiAJNtzitrBI0p
-         Tv2WzvMZU3FA8/Ep8EYHq4EDKe+YAeL1TmANf7mKmES265WHLqbdiW0QYLek+QVFdPuf
-         voYGI0k4XQq9AiY6KyDr8TmGU06uOw4A6DNGkEqsIbmoV52p3VP0dT+v8QHnbtmOFfq1
-         hE/IGOX5Qu2ekArOlFPkgFdR4Wa2ddwJXGZ0aVmuKCH69bNzt6rH0+Fgt91n+ezxraWW
-         DRO2xB7t05+9TsMSYeMH7zstP0IdpnFJzufyCTBeaxGoA4vZJRnpIAz9AjNG+TD9La40
-         qxrQ==
-X-Gm-Message-State: APjAAAXULZDX7g52ELNwzuRyeh+a0ajf6VVp7/sY2d9wNwZ2W4Fzzloj
-        rAG97w2tGDxzwQM4U61AfNggi1E6BD9rb3UjONPhUQ==
-X-Google-Smtp-Source: APXvYqyElvtpnME3+9aAcep4FvmsIqjaLMCF7GNjIwMg44Jv5ZRx+r6x5FDVpwtMG3LnBptrMiP59S9PLCVAoHMrmj8=
-X-Received: by 2002:aca:6104:: with SMTP id v4mr3463968oib.172.1565743441057;
- Tue, 13 Aug 2019 17:44:01 -0700 (PDT)
+        Tue, 13 Aug 2019 20:51:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d535afb0000>; Tue, 13 Aug 2019 17:51:07 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 13 Aug 2019 17:51:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 13 Aug 2019 17:51:05 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 14 Aug
+ 2019 00:51:04 +0000
+Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
+References: <20190812015044.26176-1-jhubbard@nvidia.com>
+ <20190812015044.26176-3-jhubbard@nvidia.com>
+ <20190812234950.GA6455@iweiny-DESK2.sc.intel.com>
+ <38d2ff2f-4a69-e8bd-8f7c-41f1dbd80fae@nvidia.com>
+ <20190813210857.GB12695@iweiny-DESK2.sc.intel.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <a1044a0d-059c-f347-bd68-38be8478bf20@nvidia.com>
+Date:   Tue, 13 Aug 2019 17:51:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190807112432.26521-1-sibis@codeaurora.org> <20190807112432.26521-3-sibis@codeaurora.org>
- <CAGETcx8JgigJpRgjXsG+xChLUPrASRO7BapkYaSrvvTdQKfEuQ@mail.gmail.com> <9ea6ab4c-6357-653b-f91c-9b649205f0ab@codeaurora.org>
-In-Reply-To: <9ea6ab4c-6357-653b-f91c-9b649205f0ab@codeaurora.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 13 Aug 2019 17:43:24 -0700
-Message-ID: <CAGETcx-+h0MOfSsR2Kf3kE4+8rDhnjBr_fRH5U0URgJPDQCyzQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] interconnect: qcom: Add OSM L3 interconnect provider support
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        agross@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Evan Green <evgreen@chromium.org>,
-        David Dai <daidavid1@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190813210857.GB12695@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565743867; bh=IF2KEhhP6zk3NQWmA0ULQJTJjwAVYOpzkUJKOo6LvPA=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=X8t2NG/HwtOOxsv+PWLwZkXzQBmV3g9W1+CETIuHbEBOZqmWs/Z3QVPwCCfOuE4j7
+         FAn37D4tAKs1iNzSLF4sU0q27j/J0kreTxBk5EdDnjmcpFdnLvZyh09QNj0fQQ5ecR
+         278+NRy3q2LNMUyzey3JI17g+2dxO7OHNRIiYFqP0ia2OHH2ybZLRUoqabxfgHq/Z3
+         ks8jh0dZk8GygCbxKcSvTjii+QRcI9jD1DMaD3HTLtWgz0BnD/daEzr0fvhFYT7YHx
+         QOmzN2wd9yyy2Y4xgeDMBIi54hhjzHn+OrDeFgWObH0ukNC3M1B5U5XS9zob1i11FC
+         2WF0RE/WJZkDg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 10:37 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> Hey Saravana,
->
-> Thanks for the review!
->
-> On 8/8/19 2:51 AM, Saravana Kannan wrote:
-> > On Wed, Aug 7, 2019 at 4:24 AM Sibi Sankar <sibis@codeaurora.org> wrote:
-> >>
-> >> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
-> >> resources of scaling L3 caches. Add a driver to handle bandwidth
-> >> requests to OSM L3 from CPU/GPU.
-> >>
-> >> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> >> ---
-> >>   drivers/interconnect/qcom/Kconfig  |   7 +
-> >>   drivers/interconnect/qcom/Makefile |   2 +
-> >>   drivers/interconnect/qcom/osm-l3.c | 292 +++++++++++++++++++++++++++++
-> >>   3 files changed, 301 insertions(+)
-> >>   create mode 100644 drivers/interconnect/qcom/osm-l3.c
-> >>
-> >> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-> >> index d5e70ebc24108..f6c2a11a1a2c9 100644
-> >> --- a/drivers/interconnect/qcom/Kconfig
-> >> +++ b/drivers/interconnect/qcom/Kconfig
-> >> @@ -5,6 +5,13 @@ config INTERCONNECT_QCOM
-> >>          help
-> >>            Support for Qualcomm's Network-on-Chip interconnect hardware.
-> >>
-> >> +config INTERCONNECT_QCOM_OSM_L3
-> >> +       tristate "Qualcomm OSM L3 interconnect driver"
-> >> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
-> >> +       help
-> >> +         Say y here to support the Operating State Manager (OSM) interconnect
-> >> +         driver which controls the scaling of L3 caches on Qualcomm SoCs.
-> >> +
-> >>   config INTERCONNECT_QCOM_SDM845
-> >>          tristate "Qualcomm SDM845 interconnect driver"
-> >>          depends on INTERCONNECT_QCOM
-> >> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
-> >> index 1c1cea690f922..9078af5fed109 100644
-> >> --- a/drivers/interconnect/qcom/Makefile
-> >> +++ b/drivers/interconnect/qcom/Makefile
-> >> @@ -1,5 +1,7 @@
-> >>   # SPDX-License-Identifier: GPL-2.0
-> >>
-> >> +icc-osm-l3-objs                                := osm-l3.o
-> >>   qnoc-sdm845-objs                       := sdm845.o
-> >>
-> >> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
-> >>   obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
-> >> diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
-> >> new file mode 100644
-> >> index 0000000000000..1e7dfce6f4f9b
-> >> --- /dev/null
-> >> +++ b/drivers/interconnect/qcom/osm-l3.c
-> >> @@ -0,0 +1,292 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> >> + *
-> >> + */
-> >> +
-> >> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
-> >> +#include <dt-bindings/interconnect/qcom,sdm845.h>
-> >> +#include <linux/bitfield.h>
-> >> +#include <linux/clk.h>
-> >> +#include <linux/interconnect-provider.h>
-> >> +#include <linux/io.h>
-> >> +#include <linux/kernel.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of_device.h>
-> >> +#include <linux/of_platform.h>
-> >> +#include <linux/platform_device.h>
-> >> +
-> >> +#define LUT_MAX_ENTRIES                        40U
-> >> +#define LUT_SRC                                GENMASK(31, 30)
-> >> +#define LUT_L_VAL                      GENMASK(7, 0)
-> >> +#define LUT_ROW_SIZE                   32
-> >> +#define CLK_HW_DIV                     2
-> >> +
-> >> +/* Register offsets */
-> >> +#define REG_ENABLE                     0x0
-> >> +#define REG_FREQ_LUT                   0x110
-> >> +#define REG_PERF_STATE                 0x920
-> >> +
-> >> +#define OSM_L3_MAX_LINKS               1
-> >> +
-> >> +#define to_qcom_provider(_provider) \
-> >> +       container_of(_provider, struct qcom_icc_provider, provider)
-> >> +
-> >> +enum {
-> >> +       SDM845_MASTER_OSM_L3_APPS = SLAVE_TCU + 1,
-> >> +       SDM845_MASTER_OSM_L3_GPU,
-> >> +       SDM845_SLAVE_OSM_L3,
-> >> +};
-> >> +
-> >> +struct qcom_icc_provider {
-> >> +       void __iomem *base;
-> >> +       unsigned int max_state;
-> >> +       unsigned long lut_tables[LUT_MAX_ENTRIES];
-> >> +       struct icc_provider provider;
-> >> +};
-> >> +
-> >> +/**
-> >> + * struct qcom_icc_node - Qualcomm specific interconnect nodes
-> >> + * @name: the node name used in debugfs
-> >> + * @links: an array of nodes where we can go next while traversing
-> >> + * @id: a unique node identifier
-> >> + * @num_links: the total number of @links
-> >> + * @buswidth: width of the interconnect between a node and the bus
-> >> + */
-> >> +struct qcom_icc_node {
-> >> +       const char *name;
-> >> +       u16 links[OSM_L3_MAX_LINKS];
-> >> +       u16 id;
-> >> +       u16 num_links;
-> >> +       u16 buswidth;
-> >> +};
-> >> +
-> >> +struct qcom_icc_desc {
-> >> +       struct qcom_icc_node **nodes;
-> >> +       size_t num_nodes;
-> >> +};
-> >> +
-> >> +#define DEFINE_QNODE(_name, _id, _buswidth, ...)                       \
-> >> +               static struct qcom_icc_node _name = {                   \
-> >> +               .name = #_name,                                         \
-> >> +               .id = _id,                                              \
-> >> +               .buswidth = _buswidth,                                  \
-> >> +               .num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),      \
-> >> +               .links = { __VA_ARGS__ },                               \
-> >> +       }
-> >> +
-> >> +DEFINE_QNODE(osm_apps_l3, SDM845_MASTER_OSM_L3_APPS, 16, SDM845_SLAVE_OSM_L3);
-> >> +DEFINE_QNODE(osm_gpu_l3, SDM845_MASTER_OSM_L3_GPU, 16, SDM845_SLAVE_OSM_L3);
-> >> +DEFINE_QNODE(osm_l3, SDM845_SLAVE_OSM_L3, 16);
-> >> +
-> >> +static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
-> >> +       [MASTER_OSM_L3_APPS] = &osm_apps_l3,
-> >> +       [MASTER_OSM_L3_GPU] = &osm_gpu_l3,
-> >> +       [SLAVE_OSM_L3] = &osm_l3,
-> >> +};
-> >> +
-> >> +static struct qcom_icc_desc sdm845_osm_l3 = {
-> >> +       .nodes = sdm845_osm_l3_nodes,
-> >> +       .num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
-> >> +};
-> >> +
-> >> +static int qcom_icc_aggregate(struct icc_node *node, u32 avg_bw,
-> >> +                             u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-> >> +{
-> >> +       *agg_avg += avg_bw;
-> >> +       *agg_peak = max_t(u32, *agg_peak, peak_bw);
-> >> +
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-> >> +{
-> >> +       struct icc_provider *provider;
-> >> +       struct qcom_icc_provider *qp;
-> >> +       struct qcom_icc_node *qn;
-> >> +       struct icc_node *n;
-> >> +       unsigned int index;
-> >> +       u32 agg_peak = 0;
-> >> +       u32 agg_avg = 0;
-> >> +       u64 rate;
-> >> +
-> >> +       qn = src->data;
-> >> +       provider = src->provider;
-> >> +       qp = to_qcom_provider(provider);
-> >> +
-> >> +       list_for_each_entry(n, &provider->nodes, node_list)
-> >> +               qcom_icc_aggregate(n, n->avg_bw, n->peak_bw,
-> >> +                                  &agg_avg, &agg_peak);
-> >> +
-> >> +       rate = max(agg_avg, agg_peak);
-> >> +       rate = icc_units_to_bps(rate);
-> >> +       do_div(rate, qn->buswidth);
-> >> +
-> >> +       for (index = 0; index < qp->max_state; index++) {
-> >> +               if (qp->lut_tables[index] >= rate)
-> >> +                       break;
-> >> +       }
-> >> +
-> >> +       writel_relaxed(index, qp->base + REG_PERF_STATE);
-> >> +
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +static int qcom_osm_l3_probe(struct platform_device *pdev)
-> >> +{
-> >> +       u32 info, src, lval, i, prev_freq = 0, freq;
-> >> +       static unsigned long hw_rate, xo_rate;
-> >> +       const struct qcom_icc_desc *desc;
-> >> +       struct icc_onecell_data *data;
-> >> +       struct icc_provider *provider;
-> >> +       struct qcom_icc_node **qnodes;
-> >> +       struct qcom_icc_provider *qp;
-> >> +       struct icc_node *node;
-> >> +       size_t num_nodes;
-> >> +       struct clk *clk;
-> >> +       int ret;
-> >> +
-> >> +       clk = clk_get(&pdev->dev, "xo");
-> >> +       if (IS_ERR(clk))
-> >> +               return PTR_ERR(clk);
-> >> +
-> >> +       xo_rate = clk_get_rate(clk);
-> >> +       clk_put(clk);
-> >> +
-> >> +       clk = clk_get(&pdev->dev, "alternate");
-> >> +       if (IS_ERR(clk))
-> >> +               return PTR_ERR(clk);
-> >> +
-> >> +       hw_rate = clk_get_rate(clk) / CLK_HW_DIV;
-> >> +       clk_put(clk);
-> >> +
-> >> +       qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
-> >> +       if (!qp)
-> >> +               return -ENOMEM;
-> >> +
-> >> +       qp->base = devm_platform_ioremap_resource(pdev, 0);
-> >> +       if (IS_ERR(qp->base))
-> >> +               return PTR_ERR(qp->base);
-> >> +
-> >> +       /* HW should be in enabled state to proceed */
-> >> +       if (!(readl_relaxed(qp->base + REG_ENABLE) & 0x1)) {
-> >> +               dev_err(&pdev->dev, "error hardware not enabled\n");
-> >> +               return -ENODEV;
-> >> +       }
-> >> +
-> >> +       for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> >> +               info = readl_relaxed(qp->base + REG_FREQ_LUT +
-> >> +                                    i * LUT_ROW_SIZE);
-> >> +               src = FIELD_GET(LUT_SRC, info);
-> >> +               lval = FIELD_GET(LUT_L_VAL, info);
-> >> +               if (src)
-> >> +                       freq = xo_rate * lval;
-> >> +               else
-> >> +                       freq = hw_rate;
-> >> +
-> >> +               /*
-> >> +                * Two of the same frequencies with the same core counts means
-> >> +                * end of table
-> >> +                */
-> >> +               if (i > 0 && prev_freq == freq)
-> >> +                       break;
-> >> +
-> >> +               qp->lut_tables[i] = freq;
-> >> +               prev_freq = freq;
-> >> +       }
-> >> +       qp->max_state = i;
-> >> +
-> >> +       desc = of_device_get_match_data(&pdev->dev);
-> >> +       if (!desc)
-> >> +               return -EINVAL;
-> >> +
-> >> +       qnodes = desc->nodes;
-> >> +       num_nodes = desc->num_nodes;
-> >> +
-> >> +       data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
-> >> +       if (!data)
-> >> +               return -ENOMEM;
-> >> +
-> >> +       provider = &qp->provider;
-> >> +       provider->dev = &pdev->dev;
-> >> +       provider->set = qcom_icc_set;
-> >> +       provider->aggregate = qcom_icc_aggregate;
-> >> +       provider->xlate = of_icc_xlate_onecell;
-> >> +       INIT_LIST_HEAD(&provider->nodes);
-> >> +       provider->data = data;
-> >> +
-> >> +       ret = icc_provider_add(provider);
-> >> +       if (ret) {
-> >> +               dev_err(&pdev->dev, "error adding interconnect provider\n");
-> >> +               return ret;
-> >> +       }
-> >> +
-> >> +       for (i = 0; i < num_nodes; i++) {
-> >> +               size_t j;
-> >> +
-> >> +               node = icc_node_create(qnodes[i]->id);
-> >> +               if (IS_ERR(node)) {
-> >> +                       ret = PTR_ERR(node);
-> >> +                       goto err;
-> >> +               }
-> >> +
-> >> +               node->name = qnodes[i]->name;
-> >> +               node->data = qnodes[i];
-> >> +               icc_node_add(node, provider);
-> >> +
-> >> +               dev_dbg(&pdev->dev, "registered node %p %s %d\n", node,
-> >> +                       qnodes[i]->name, node->id);
-> >> +
-> >> +               /* populate links */
-> >> +               for (j = 0; j < qnodes[i]->num_links; j++)
-> >> +                       icc_link_create(node, qnodes[i]->links[j]);
-> >> +
-> >> +               data->nodes[i] = node;
-> >> +       }
-> >> +       data->num_nodes = num_nodes;
-> >> +
-> >> +       platform_set_drvdata(pdev, qp);
-> >> +
-> >> +       return ret;
-> >> +err:
-> >> +       list_for_each_entry(node, &provider->nodes, node_list) {
-> >> +               icc_node_del(node);
-> >> +               icc_node_destroy(node->id);
-> >> +       }
-> >> +
-> >> +       icc_provider_del(provider);
-> >> +       return ret;
-> >> +}
-> >> +
-> >> +static int qcom_osm_l3_remove(struct platform_device *pdev)
-> >> +{
-> >> +       struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
-> >> +       struct icc_provider *provider = &qp->provider;
-> >> +       struct icc_node *n;
-> >> +
-> >> +       list_for_each_entry(n, &provider->nodes, node_list) {
-> >> +               icc_node_del(n);
-> >> +               icc_node_destroy(n->id);
-> >> +       }
-> >> +
-> >> +       return icc_provider_del(provider);
-> >> +}
-> >> +
-> >> +static const struct of_device_id osm_l3_of_match[] = {
-> >> +       { .compatible = "qcom,sdm845-osm-l3", .data = &sdm845_osm_l3 },
-> >> +       { },
-> >> +};
-> >> +MODULE_DEVICE_TABLE(of, osm_l3_of_match);
-> >> +
-> >> +static struct platform_driver osm_l3_driver = {
-> >> +       .probe = qcom_osm_l3_probe,
-> >> +       .remove = qcom_osm_l3_remove,
-> >> +       .driver = {
-> >> +               .name = "osm-l3",
-> >> +               .of_match_table = osm_l3_of_match,
-> >> +       },
-> >> +};
-> >> +module_platform_driver(osm_l3_driver);
-> >> +
-> >> +MODULE_DESCRIPTION("Qualcomm OSM L3 interconnect driver");
-> >> +MODULE_LICENSE("GPL v2");
-> >
-> > Did a quick scan of the code and it's not clear how you connect the L3
-> > interconnect provider to the rest of the interconnect. I don't see any
-> > DT or code references to the rest of the interconnects in the system.
-> > If GPU is making a bandwidth request all the way to L3, how do you
-> > make sure the interconnects between GPU and L3 also scale up properly.
->
-> For SDM845 OSM L3 provider the icc nodes endpoints are isolated from
-> rsc icc node endpoints i.e GPU would need to vote on this path in
-> addition to voting for DDR. On future SoCs if the need to scale
-> interconnect between GPU rsc nodes along with the OSM l3 nodes arises,
-> it can be trivially extended by linking the osm icc nodes with global
-> icc node ids of the gpu rsc nodes.
+On 8/13/19 2:08 PM, Ira Weiny wrote:
+> On Mon, Aug 12, 2019 at 05:07:32PM -0700, John Hubbard wrote:
+>> On 8/12/19 4:49 PM, Ira Weiny wrote:
+>>> On Sun, Aug 11, 2019 at 06:50:44PM -0700, john.hubbard@gmail.com wrote:
+>>>> From: John Hubbard <jhubbard@nvidia.com>
+>> ...
+>>> Thinking about this part of the patch... is this pin really necessary?  This
+>>> code is not doing a long term pin.  The page just needs a reference while we
+>>> map it into the devices page tables.  Once that is done we should get notifiers
+>>> if anything changes and we can adjust.  right?
+>>>
+>>
+>> OK, now it's a little interesting: the FOLL_PIN is necessary, but maybe not
+>> FOLL_LONGTERM. Illustrating once again that it's actually necessary to allow
+>> these flags to vary independently.
+> 
+> Why is PIN necessary?  I think we do want all drivers to use the new
+> user_uaddr_vaddr_pin_user_pages() call...  :-P  But in this case I think a
+> simple "get" reference is enough to reference the page while we are using it.
+> If it changes after the "put/unpin" we get a fault which should handle the
+> change right?
+> 
 
-Sorry, I'm not sure we are talking about the same thing. To keep the
-discussion focused, let's completely ignore GPU's DDR needs for now.
+FOLL_PIN is necessary because the caller is clearly in the use case that 
+requires it--however briefly they might be there. As Jan described it,
 
-Talking about GPU <-> L3 traffic, unless the GPU is directly connected
-to the L3 with no additional interconnects in between (unlikely), this
-L3 provider need to connect the L3 icc node with the rest of the
-interconnect nodes. Otherwise, even if the L3 itself is provisioned to
-handle, say 10 GB/s, the interconnects connecting the GPU to L3 might
-be left at 1 GB/s.
+"Anything that gets page reference and then touches page data (e.g. direct IO)
+needs the new kind of tracking so that filesystem knows someone is messing with
+the page data." [1]
 
-So, can we please connect this node to the rest of the interconnect
-nodes in SDM845?
+> The other issue I have with FOLL_PIN is what does it mean to call "...pin...()"
+> without FOLL_PIN?
+> 
+> This is another confusion of get_user_pages()...  you can actually call it
+> without FOLL_GET...  :-/  And you just don't get pages back.  I've never really
+> dug into how (or if) you "put" them later...
+>
 
-Thanks,
-Saravana
+Yes, you are talking to someone who has been suffering through that. The
+problem here is that gup() has evolved into a do-everything tool. I think we're
+getting closer to teasing it apart into more specific interfaces that do
+more limited things.
+
+Anyway, I want FOLL_PIN as a way to help clarify this...
+
+ 
+>>
+>> And that leads to another API refinement idea: let's set FOLL_PIN within the
+>> vaddr_pin_pages*() wrappers, and set FOLL_LONGTER in the *callers* of those
+>> wrappers, yes?
+> 
+> I've thought about this before and I think any default flags should simply
+> define what we want follow_pages to do.
+
+Hmm, so don't forget that we need to know what gup_fast() should do, too.
+
+Anyway, I'm not worried about which combination of wrapper calls set which flags,
+I'm open to suggestion there. But it does still seem to me that we should have
+independent FOLL_LONGTERM and FOLL_PIN flags, once the API churn settles. 
+
+
+> 
+> Also, the addition of vaddr_pin information creates an implicit flag which if
+> not there disallows any file pages from being pinned.  It becomes our new
+> "longterm" flag.  FOLL_PIN _could_ be what we should use "internally".  But we
+> could also just use this implicit vaddr_pin flag and not add a new flag.
+
+I'd like to have FOLL_PIN internally, in order to solve the problems that
+you just raised, above! Namely, that it's too hard to figure out all the
+cases that gup() is handling.
+
+With FOLL_PIN, we know that we should be taking the new pin refcount, and
+releasing it via the (currently named) put_user_page*(), ultimately.
+
+> 
+> Finally, I struggle with converting everyone to a new call.  It is more
+> overhead to use vaddr_pin in the call above because now the GUP code is going
+> to associate a file pin object with that file when in ODP we don't need that
+> because the pages can move around.
+
+What if the pages in ODP are file-backed? 
+
+> 
+> This overhead may be fine, not sure in this case, but I don't see everyone
+> wanting it.
+
+I think most callers don't have much choice, otherwise they'll be broken with
+file-backed memory.
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
