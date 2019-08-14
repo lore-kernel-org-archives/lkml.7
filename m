@@ -2,71 +2,102 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD370C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D8AC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A5E214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565822108;
-	bh=+XFoGOE8vFi2OMlqKzNPrlgZuGbhcK6T9DiWxiyJzdk=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Tyy6DM72oMbLNC6/n8RaThViruMUdua3KwFUV5580PkAdzL6oEsoSfUaI5FFjLaZa
-	 NC2lWKrToQFdkwnERzO+GW/lI90BUJfj7dlFQIszPpUB+9qKysDDSIANI822sltjdb
-	 a/9Q24IvMI1eNU00xpAk+x5C47GE6pqF63M2b3rg=
+	by mail.kernel.org (Postfix) with ESMTP id E5AE921721
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:40:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="FyDcEDET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbfHNWfH (ORCPT
+        id S1728457AbfHNWkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 18:35:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727217AbfHNWfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 18:35:06 -0400
-Subject: Re: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565822106;
-        bh=+XFoGOE8vFi2OMlqKzNPrlgZuGbhcK6T9DiWxiyJzdk=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=vVvwssPt7kbMSQISv6bwePtnLBAN8E2VIwPunq8TNFIjHHsSH83YhYTnv0ykuD3zF
-         Uay6T0LyfBmJ9S8+BxsRZHU+R3eZGPV6QuLJnhSRF54HgOwwDx+NqBcNUVtYiQUABT
-         hFDp47NoLIhQtqDYt8TH12EO9TPbioxibuWvxVFQ=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190814184901.GA16709@embeddedor>
-References: <20190814184901.GA16709@embeddedor>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190814184901.GA16709@embeddedor>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git
- tags/Wimplicit-fallthrough-5.3-rc5
-X-PR-Tracked-Commit-Id: 1ee1119d184bb06af921b48c3021d921bbd85bac
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 41de59634046b19cd53a1983594a95135c656997
-Message-Id: <156582210598.11528.2788392621579499903.pr-tracker-bot@kernel.org>
-Date:   Wed, 14 Aug 2019 22:35:05 +0000
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+        Wed, 14 Aug 2019 18:40:43 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57898 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfHNWkm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 18:40:42 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 27ED32B2;
+        Thu, 15 Aug 2019 00:40:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1565822440;
+        bh=pP48/D76g4ScH0kk0XJHtcKoUrGy09hdCLB/Efv1QiU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FyDcEDET6W4/tAkHMNA9RJuBnW0RvT250HZ6TRe//NvVCe034O/sPxVQZ1DYvdfRf
+         gzYa1pDVK3RcT1ks5LNswXYnj8AClA46XRjYM1EbG+sY6drPCQxh4kjcJrovmdrzrN
+         9hnkpYDI403yKnHHVopeAoGyXuF7FGEKPY8RWzus=
+Date:   Thu, 15 Aug 2019 01:40:28 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC 1/5] media: dt-bindings: Document 'location' property
+Message-ID: <20190814224028.GC5015@pendragon.ideasonboard.com>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-2-jacopo@jmondi.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190814202815.32491-2-jacopo@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 14 Aug 2019 13:49:01 -0500:
+Hi Jacopo,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wimplicit-fallthrough-5.3-rc5
+Thank you for the patch.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/41de59634046b19cd53a1983594a95135c656997
+On Wed, Aug 14, 2019 at 10:28:11PM +0200, Jacopo Mondi wrote:
+> Add the 'location' device property, used to specify the camera device
+> mounting position. The property is particularly meaningful for mobile
+> devices with a well defined usage orientation.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> ---
+>  Documentation/devicetree/bindings/media/video-interfaces.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> index f884ada0bffc..819077b2649c 100644
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> @@ -89,6 +89,10 @@ Optional properties
+>    but a number of degrees counter clockwise. Typical values are 0 and 180
+>    (upside down).
+> 
+> +- location: The camera device mounting position, relative to the device
+> +  usage orientation. Possible values are:
 
-Thank you!
+I would mention "camera sensor" explicitly here, as well as clearly
+stating that the property applies to camera sensors only.
+
+> +  0 - Front camera. The image sensor is mounted on the front side of the device.
+> +  1 - Back camera. The image sensor is mounted on the back side of the device.
+
+An additional paragraph explained what "device usage orientation" means
+would be useful. In particular I would give examples for phones, tablets
+and laptops.
+
+> 
+>  Optional endpoint properties
+>  ----------------------------
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Regards,
+
+Laurent Pinchart
