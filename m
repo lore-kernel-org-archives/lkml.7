@@ -2,140 +2,200 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B52C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0180C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC2662133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84C1D2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6rUo53R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sgPCxVPD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729739AbfHNWGa (ORCPT
+        id S1729774AbfHNWHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 18:06:30 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33737 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbfHNWG3 (ORCPT
+        Wed, 14 Aug 2019 18:07:46 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38954 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727975AbfHNWHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 18:06:29 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n190so305654pgn.0;
-        Wed, 14 Aug 2019 15:06:29 -0700 (PDT)
+        Wed, 14 Aug 2019 18:07:45 -0400
+Received: by mail-pf1-f193.google.com with SMTP id f17so182002pfn.6;
+        Wed, 14 Aug 2019 15:07:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FLFblGnxzQ1wI2QM5HelENy2vNVHmhf51uAkZDB+jpI=;
-        b=T6rUo53R9JDRHIkMfoGdrnDrsfMPkMGgqRTP3o5lVIOOcp2qrBarQDVb1rpfBmja8n
-         hb29IYPLiS+4SjkOcCclg6MMZoxlIVyTqswgEgSR7V8KdraVWdIS/Y9f7EuAGynkNAUW
-         q7mxLhX+gUtvRob9dALNvXjLvJG5SmqDsEzgqhzg+mcldPILPgMEgQ9DisII1gmhy1CL
-         btdIuPVtWn3qLlsf15RY2HYGl/QYNwAKfpBflkrRimTHbAPcEzBdlCUpDqEI8N1wIQSP
-         Xy9dZAyXPOS14n1PtzcJdAys2fGt8RKD+ZON5r/jZSwRi0T4BB1FTRf33dgs6plfiXK6
-         LSHA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=fm+XMGdKo1qLDwMEPJoOd+67atBUmC1hzfZly9LEwV0=;
+        b=sgPCxVPDpH9l2X4SPUlx10kZFVi9IyEGQZCYZYSp7q2+1HYZUvT2BP02kXdHCDxuQe
+         ovLGoEDRejVtZkJFak27XXUav3OaPEikhGNchX4l2i6fwcPxTxbG+IuniEBAnuJs1Wnn
+         vE3XrY4NLX8lQ0cXESW4Dhc9SO9SwnUyFax0vMAwqj1rzBIWXFt0FeSvTdRUc4l3NpvN
+         jX3+ZqLSgrLGCWOssPanOkD0fstz6U6ag9S/JUBDg1jCWNYg1kaWU8QYMgT+SvMMzzb2
+         dX82zkunQSsga8PbpkqwG1h5iYhdx/yxUvNXdd7H192iWYxzh/ZNrGhBHqmcDohBWF4H
+         +wGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FLFblGnxzQ1wI2QM5HelENy2vNVHmhf51uAkZDB+jpI=;
-        b=eh/L90nKRH9z2jqp8p0wGn7B1Vs8g4S5WA3MjPQTNQIiu8niW4CrwE8VDLzKZA+wEI
-         UJXtzgpP21AYm9aendTIXQRe+t58+TRMgbGtyMeOfb6YRTsmXo79fNL9tesOcUp6OPLC
-         w/infUNvQ6O2MxYdZdriWBoQMvEFEaFyTZ07RiwnS5VAsyfieVev2WRdCzpv9SqgI688
-         RZSGQzidNkzxwBwcgB63iiXeHAxG/s2rbIEYISS7gqXmOAZE8o2K9nb8LS6IorvsqWx7
-         XgTfJdniHmkExS4XrixNSI7Oev8jiDmAh6EriboAfrd5jK8Ik6FqJQbt5kAJxIeF8D5B
-         Wq6Q==
-X-Gm-Message-State: APjAAAWA4Y/cguNq3u0Zau0q4PdL6pD+gCGDBYu+7DJnnOnov8/SvcjJ
-        1XdNEDG2+6h8zKSjNTVF58LWYbYy
-X-Google-Smtp-Source: APXvYqxOv2+QJT56iITOcewqwm/svzN0f2xI1RFG9HZpdRwcds+DscI/HKfjP2Yj28OcgA1qHhUUzg==
-X-Received: by 2002:a63:40a:: with SMTP id 10mr1072437pge.317.1565820388356;
-        Wed, 14 Aug 2019 15:06:28 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id i9sm5475pjj.2.2019.08.14.15.06.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 15:06:27 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 15:06:25 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Fei Shao <fshao@chromium.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Ting Shen <phoenixshen@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Input: cros_ec_keyb: Add back missing mask for event_type
-Message-ID: <20190814220625.GD121898@dtor-ws>
-References: <20190813093821.74158-1-fshao@chromium.org>
- <CANMq1KCNFfWA=ApVUFoPctgTftHDSAvGjtk-Xu2hcKWBq9R1zw@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=fm+XMGdKo1qLDwMEPJoOd+67atBUmC1hzfZly9LEwV0=;
+        b=liKKYHuldK7U5oJrugKPIGoNpHUf9SXW8xpPViEky0MmtONe2HXUfxK43LVbLMrubT
+         kfF8QMyI9sCzAYkpWpeGFBqsBtKgjyRgELoSOoIO1RwNrcR8Q8CBo4Fof5L8OfkczG+U
+         SuHSYCsfo7+RF/ocuvXdgrlaVfPw0UJ7itrZZKDvDfHxfhEkL4VHRDccRg7jQW5N0+yc
+         8NRNfxdCH8Ug0DEB3KG/JEGCCWV3ja5kiDGNAk/5IU3HaaelszpsHwlb/afysX9un07r
+         BIYCQRDGuQv28DTJlb25OAj9gJ77xXTmMlh55wjl5kvMo5z7hMKThNrK+sxFBiTKhBDX
+         1cyg==
+X-Gm-Message-State: APjAAAW9VrpmRKQLfUiWPPLfUf0dWSRO7OT4LvF1uC67qZXZdzeCtywG
+        c9eF9CXoRxaV+s8rQLYSUkk=
+X-Google-Smtp-Source: APXvYqxEANCpUtYQ+5OhPEAzs37rqT2wBBhN570Sw5KrEeNXbOBWwWt7Xo763dhxGWxso/PvNN7UjA==
+X-Received: by 2002:a17:90a:eb05:: with SMTP id j5mr87119pjz.102.1565820464819;
+        Wed, 14 Aug 2019 15:07:44 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id i9sm659836pgo.46.2019.08.14.15.07.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 15:07:44 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH 2/6] mips: export arch_sync_dma_for_*()
+Date:   Wed, 14 Aug 2019 14:59:57 -0700
+Message-Id: <20190814220011.26934-3-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190814220011.26934-1-robdclark@gmail.com>
+References: <20190814220011.26934-1-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANMq1KCNFfWA=ApVUFoPctgTftHDSAvGjtk-Xu2hcKWBq9R1zw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 05:47:22PM +0800, Nicolas Boichat wrote:
-> On Tue, Aug 13, 2019 at 5:38 PM Fei Shao <fshao@chromium.org> wrote:
-> >
-> > In the previous patch we didn't mask out event_type in case statement,
-> > so switches are always picked instead of buttons, which results in
-> > ChromeOS devices misbehaving when power button is pressed.
-> > This patch adds back the missing mask.
-> >
-> > Fixes: d096aa3eb604 ("Input: cros_ec_keyb: mask out extra flags in event_type")
-> > Signed-off-by: Fei Shao <fshao@chromium.org>
-> 
-> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+From: Rob Clark <robdclark@chromium.org>
 
-Applied, thank you.
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ arch/arm64/mm/flush.c          |  2 ++
+ arch/mips/mm/dma-noncoherent.c |  2 ++
+ drivers/gpu/drm/drm_cache.c    | 20 +++++++++++++++++---
+ include/drm/drm_cache.h        |  4 ++++
+ 4 files changed, 25 insertions(+), 3 deletions(-)
 
-> 
-> > ---
-> >  drivers/input/keyboard/cros_ec_keyb.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/keyboard/cros_ec_keyb.c
-> > index 38cb6d82d8fe..bef7bee6f05e 100644
-> > --- a/drivers/input/keyboard/cros_ec_keyb.c
-> > +++ b/drivers/input/keyboard/cros_ec_keyb.c
-> > @@ -226,6 +226,8 @@ static int cros_ec_keyb_work(struct notifier_block *nb,
-> >  {
-> >         struct cros_ec_keyb *ckdev = container_of(nb, struct cros_ec_keyb,
-> >                                                   notifier);
-> > +       uint8_t mkbp_event_type = ckdev->ec->event_data.event_type &
-> > +                                 EC_MKBP_EVENT_TYPE_MASK;
-> >         u32 val;
-> >         unsigned int ev_type;
-> >
-> > @@ -237,7 +239,7 @@ static int cros_ec_keyb_work(struct notifier_block *nb,
-> >         if (queued_during_suspend && !device_may_wakeup(ckdev->dev))
-> >                 return NOTIFY_OK;
-> >
-> > -       switch (ckdev->ec->event_data.event_type & EC_MKBP_EVENT_TYPE_MASK) {
-> > +       switch (mkbp_event_type) {
-> >         case EC_MKBP_EVENT_KEY_MATRIX:
-> >                 pm_wakeup_event(ckdev->dev, 0);
-> >
-> > @@ -264,7 +266,7 @@ static int cros_ec_keyb_work(struct notifier_block *nb,
-> >         case EC_MKBP_EVENT_SWITCH:
-> >                 pm_wakeup_event(ckdev->dev, 0);
-> >
-> > -               if (ckdev->ec->event_data.event_type == EC_MKBP_EVENT_BUTTON) {
-> > +               if (mkbp_event_type == EC_MKBP_EVENT_BUTTON) {
-> >                         val = get_unaligned_le32(
-> >                                         &ckdev->ec->event_data.data.buttons);
-> >                         ev_type = EV_KEY;
-> > --
-> > 2.23.0.rc1.153.gdeed80330f-goog
-
+diff --git a/arch/arm64/mm/flush.c b/arch/arm64/mm/flush.c
+index dc19300309d2..f0eb6320c979 100644
+--- a/arch/arm64/mm/flush.c
++++ b/arch/arm64/mm/flush.c
+@@ -93,3 +93,5 @@ void arch_invalidate_pmem(void *addr, size_t size)
+ }
+ EXPORT_SYMBOL_GPL(arch_invalidate_pmem);
+ #endif
++
++EXPORT_SYMBOL_GPL(__flush_dcache_area);
+diff --git a/arch/mips/mm/dma-noncoherent.c b/arch/mips/mm/dma-noncoherent.c
+index ed56c6fa7be2..bd5debe1b423 100644
+--- a/arch/mips/mm/dma-noncoherent.c
++++ b/arch/mips/mm/dma-noncoherent.c
+@@ -131,6 +131,7 @@ void arch_sync_dma_for_device(struct device *dev, phys_addr_t paddr,
+ {
+ 	dma_sync_phys(paddr, size, dir);
+ }
++EXPORT_SYMBOL_GPL(arch_sync_dma_for_device);
+ 
+ #ifdef CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU
+ void arch_sync_dma_for_cpu(struct device *dev, phys_addr_t paddr,
+@@ -139,6 +140,7 @@ void arch_sync_dma_for_cpu(struct device *dev, phys_addr_t paddr,
+ 	if (cpu_needs_post_dma_flush(dev))
+ 		dma_sync_phys(paddr, size, dir);
+ }
++EXPORT_SYMBOL_GPL(arch_sync_dma_for_cpu);
+ #endif
+ 
+ void arch_dma_cache_sync(struct device *dev, void *vaddr, size_t size,
+diff --git a/drivers/gpu/drm/drm_cache.c b/drivers/gpu/drm/drm_cache.c
+index 3bd76e918b5d..90105c637797 100644
+--- a/drivers/gpu/drm/drm_cache.c
++++ b/drivers/gpu/drm/drm_cache.c
+@@ -69,6 +69,14 @@ static void drm_cache_flush_clflush(struct page *pages[],
+ }
+ #endif
+ 
++#if defined(__powerpc__)
++static void __flush_dcache_area(void *addr, size_t len)
++{
++	flush_dcache_range((unsigned long)addr,
++			   (unsigned long)addr + PAGE_SIZE);
++}
++#endif
++
+ /**
+  * drm_clflush_pages - Flush dcache lines of a set of pages.
+  * @pages: List of pages to be flushed.
+@@ -90,7 +98,7 @@ drm_clflush_pages(struct page *pages[], unsigned long num_pages)
+ 	if (wbinvd_on_all_cpus())
+ 		pr_err("Timed out waiting for cache flush\n");
+ 
+-#elif defined(__powerpc__)
++#elif defined(__powerpc__) || defined(CONFIG_ARM64)
+ 	unsigned long i;
+ 	for (i = 0; i < num_pages; i++) {
+ 		struct page *page = pages[i];
+@@ -100,8 +108,7 @@ drm_clflush_pages(struct page *pages[], unsigned long num_pages)
+ 			continue;
+ 
+ 		page_virtual = kmap_atomic(page);
+-		flush_dcache_range((unsigned long)page_virtual,
+-				   (unsigned long)page_virtual + PAGE_SIZE);
++		__flush_dcache_area(page_virtual, PAGE_SIZE);
+ 		kunmap_atomic(page_virtual);
+ 	}
+ #else
+@@ -135,6 +142,13 @@ drm_clflush_sg(struct sg_table *st)
+ 
+ 	if (wbinvd_on_all_cpus())
+ 		pr_err("Timed out waiting for cache flush\n");
++#elif defined(CONFIG_ARM64)
++	struct sg_page_iter sg_iter;
++
++	for_each_sg_page(st->sgl, &sg_iter, st->nents, 0) {
++		struct page *p = sg_page_iter_page(&sg_iter);
++		drm_clflush_pages(&p, 1);
++	}
+ #else
+ 	pr_err("Architecture has no drm_cache.c support\n");
+ 	WARN_ON_ONCE(1);
+diff --git a/include/drm/drm_cache.h b/include/drm/drm_cache.h
+index 987ff16b9420..f94e7bd3eca4 100644
+--- a/include/drm/drm_cache.h
++++ b/include/drm/drm_cache.h
+@@ -40,6 +40,10 @@ void drm_clflush_sg(struct sg_table *st);
+ void drm_clflush_virt_range(void *addr, unsigned long length);
+ bool drm_need_swiotlb(int dma_bits);
+ 
++#if defined(CONFIG_X86) || defined(__powerpc__) || defined(CONFIG_ARM64)
++#define HAS_DRM_CACHE 1
++#endif
++
+ 
+ static inline bool drm_arch_can_wc_memory(void)
+ {
 -- 
-Dmitry
+2.21.0
+
