@@ -2,101 +2,453 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DACC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DB8C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 478E8208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:03:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUrbF4Gx"
+	by mail.kernel.org (Postfix) with ESMTP id 3B407205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfHNJDM (ORCPT
+        id S1726715AbfHNJDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:03:12 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36854 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfHNJDI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:03:08 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g4so3965665plo.3;
-        Wed, 14 Aug 2019 02:03:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+xayDP2oypqDVXTm/RH82wgRTkmtKwwjJXMVRTlgmYg=;
-        b=AUrbF4GxYP1s1KQrRCOaA8ks7gKQwS1xC10NQXqkVLagBjt5EQcwJgZVd3GlZktdGn
-         P06ovTLVoEmSDD6+Eoh6Cp9+vlFkxjBhfDN3hjECcKw/W9aF2wn4gXcti9vSpiAzqZkb
-         E1+W+AoxiB8w/g0St/9i/lORg0LE32jIclhkdtzj9/uHsq0rJuVUATlHiGozXirQ7uIm
-         47FvGgq1mQ8FuyPClAxm6QzMvmFjmyFvjhj1eXt5LZblicwly4thclRRocrGPmBgJYOf
-         hzbEWJU4fZSe5peZTXX5k8OgEwYumZxq2ka8F20LQcvToi3SIOea4+ptiwmfB9ifQ79/
-         j7JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+xayDP2oypqDVXTm/RH82wgRTkmtKwwjJXMVRTlgmYg=;
-        b=TNVCNJFQ8zRvwlOsseY2wSfFCaO3kfOyieHn83pewjRV+/VyPLuC9q8xc3WP8j1M6v
-         gUJKI3cC45Stk61ImSEGZ66J7dWC2Ta3A0m4CaYV69fd7LIZLB/uGqzZrk4NDjH7MDHJ
-         O4wbbmImdFrpQrVuRCE7XmRVmR63EG1R2xUNHTWkgRvE6q+dR4Lf17klf/2HJem2QZpT
-         0UZLRdzuyNMCx/imOFHdPCgDzLXFZdMylUqVtu0og/GNorr0tUUHg6RGhDSQXvBL4aV7
-         SXCjogOmEckhLIFWoNfARgTEIgFm9kVTo5xg/pKf3mSe5xhIDFpEVP3nRrexHdQ8n9CD
-         RcBw==
-X-Gm-Message-State: APjAAAUcxwt/br/ZPDgpGxzF8mXJcfJeJlUwRTWJiQYbQ6XO0gEBqU9O
-        Afyy/v9ikSNvPrkWOutfe3BKzhuVCD/TbQ==
-X-Google-Smtp-Source: APXvYqwkDH7HjHvSzr/Gy4L3yRkRgLxGCrIVojIgFFlPYrKL0oB+Qcqvd0VeMJpiLf+z/Fof8EZleQ==
-X-Received: by 2002:a17:902:8d91:: with SMTP id v17mr23960022plo.88.1565773387060;
-        Wed, 14 Aug 2019 02:03:07 -0700 (PDT)
-Received: from [192.168.68.119] (203-219-253-117.static.tpgi.com.au. [203.219.253.117])
-        by smtp.gmail.com with ESMTPSA id j6sm10350514pjd.19.2019.08.14.02.03.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 02:03:06 -0700 (PDT)
-Subject: Re: [PATCH v9 1/7] powerpc/mce: Schedule work from irq_work
-To:     Santosh Sivaraj <santosh@fossix.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        stable@vger.kernel.org
-References: <20190812092236.16648-1-santosh@fossix.org>
- <20190812092236.16648-2-santosh@fossix.org>
-From:   Balbir Singh <bsingharora@gmail.com>
-Message-ID: <f82b6fb7-23a9-7400-6c29-74701455a8dc@gmail.com>
-Date:   Wed, 14 Aug 2019 19:02:56 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 14 Aug 2019 05:03:20 -0400
+Received: from gofer.mess.org ([88.97.38.141]:41913 "EHLO gofer.mess.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbfHNJDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 05:03:20 -0400
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id 344EE603F6; Wed, 14 Aug 2019 10:03:17 +0100 (BST)
+Date:   Wed, 14 Aug 2019 10:03:17 +0100
+From:   Sean Young <sean@mess.org>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 1/2] dt-bindings: media: Add YAML schemas for the generic
+ RC bindings
+Message-ID: <20190814090316.q7ilx63h63a6wgih@gofer.mess.org>
+References: <20190813124513.31413-1-mripard@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190812092236.16648-2-santosh@fossix.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813124513.31413-1-mripard@kernel.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 12/8/19 7:22 pm, Santosh Sivaraj wrote:
-> schedule_work() cannot be called from MCE exception context as MCE can
-> interrupt even in interrupt disabled context.
+On Tue, Aug 13, 2019 at 02:45:12PM +0200, Maxime Ripard wrote:
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
 > 
-> fixes: 733e4a4c ("powerpc/mce: hookup memory_failure for UE errors")
-> Suggested-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-> Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
-> Cc: stable@vger.kernel.org # v4.15+
+> The RC controllers have a bunch of generic properties that are needed in a
+> device tree. Add a YAML schemas for those.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 > ---
+>  .../devicetree/bindings/media/rc.txt          | 118 +--------------
+>  .../devicetree/bindings/media/rc.yaml         | 135 ++++++++++++++++++
+>  2 files changed, 136 insertions(+), 117 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/rc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/rc.txt b/Documentation/devicetree/bindings/media/rc.txt
+> index d3e7a012bfda..be629f7fa77e 100644
+> --- a/Documentation/devicetree/bindings/media/rc.txt
+> +++ b/Documentation/devicetree/bindings/media/rc.txt
+> @@ -1,117 +1 @@
+> -The following properties are common to the infrared remote controllers:
+> -
+> -- linux,rc-map-name: string, specifies the scancode/key mapping table
+> -  defined in-kernel for the remote controller. Support values are:
+> -  * "rc-adstech-dvb-t-pci"
+> -  * "rc-alink-dtu-m"
+> -  * "rc-anysee"
+> -  * "rc-apac-viewcomp"
+> -  * "rc-asus-pc39"
+> -  * "rc-asus-ps3-100"
+> -  * "rc-ati-tv-wonder-hd-600"
+> -  * "rc-ati-x10"
+> -  * "rc-avermedia-a16d"
+> -  * "rc-avermedia-cardbus"
+> -  * "rc-avermedia-dvbt"
+> -  * "rc-avermedia-m135a"
+> -  * "rc-avermedia-m733a-rm-k6"
+> -  * "rc-avermedia-rm-ks"
+> -  * "rc-avermedia"
+> -  * "rc-avertv-303"
+> -  * "rc-azurewave-ad-tu700"
+> -  * "rc-behold-columbus"
+> -  * "rc-behold"
+> -  * "rc-budget-ci-old"
+> -  * "rc-cec"
+> -  * "rc-cinergy-1400"
+> -  * "rc-cinergy"
+> -  * "rc-delock-61959"
+> -  * "rc-dib0700-nec"
+> -  * "rc-dib0700-rc5"
+> -  * "rc-digitalnow-tinytwin"
+> -  * "rc-digittrade"
+> -  * "rc-dm1105-nec"
+> -  * "rc-dntv-live-dvbt-pro"
+> -  * "rc-dntv-live-dvb-t"
+> -  * "rc-dtt200u"
+> -  * "rc-dvbsky"
+> -  * "rc-empty"
+> -  * "rc-em-terratec"
+> -  * "rc-encore-enltv2"
+> -  * "rc-encore-enltv-fm53"
+> -  * "rc-encore-enltv"
+> -  * "rc-evga-indtube"
+> -  * "rc-eztv"
+> -  * "rc-flydvb"
+> -  * "rc-flyvideo"
+> -  * "rc-fusionhdtv-mce"
+> -  * "rc-gadmei-rm008z"
+> -  * "rc-geekbox"
+> -  * "rc-genius-tvgo-a11mce"
+> -  * "rc-gotview7135"
+> -  * "rc-hauppauge"
+> -  * "rc-imon-mce"
+> -  * "rc-imon-pad"
+> -  * "rc-iodata-bctv7e"
+> -  * "rc-it913x-v1"
+> -  * "rc-it913x-v2"
+> -  * "rc-kaiomy"
+> -  * "rc-kworld-315u"
+> -  * "rc-kworld-pc150u"
+> -  * "rc-kworld-plus-tv-analog"
+> -  * "rc-leadtek-y04g0051"
+> -  * "rc-lirc"
+> -  * "rc-lme2510"
+> -  * "rc-manli"
+> -  * "rc-medion-x10"
+> -  * "rc-medion-x10-digitainer"
+> -  * "rc-medion-x10-or2x"
+> -  * "rc-msi-digivox-ii"
+> -  * "rc-msi-digivox-iii"
+> -  * "rc-msi-tvanywhere-plus"
+> -  * "rc-msi-tvanywhere"
+> -  * "rc-nebula"
+> -  * "rc-nec-terratec-cinergy-xs"
+> -  * "rc-norwood"
+> -  * "rc-npgtech"
+> -  * "rc-pctv-sedna"
+> -  * "rc-pinnacle-color"
+> -  * "rc-pinnacle-grey"
+> -  * "rc-pinnacle-pctv-hd"
+> -  * "rc-pixelview-new"
+> -  * "rc-pixelview"
+> -  * "rc-pixelview-002t"
+> -  * "rc-pixelview-mk12"
+> -  * "rc-powercolor-real-angel"
+> -  * "rc-proteus-2309"
+> -  * "rc-purpletv"
+> -  * "rc-pv951"
+> -  * "rc-hauppauge"
+> -  * "rc-rc5-tv"
+> -  * "rc-rc6-mce"
+> -  * "rc-real-audio-220-32-keys"
+> -  * "rc-reddo"
+> -  * "rc-snapstream-firefly"
+> -  * "rc-streamzap"
+> -  * "rc-tbs-nec"
+> -  * "rc-technisat-ts35"
+> -  * "rc-technisat-usb2"
+> -  * "rc-terratec-cinergy-c-pci"
+> -  * "rc-terratec-cinergy-s2-hd"
+> -  * "rc-terratec-cinergy-xs"
+> -  * "rc-terratec-slim"
+> -  * "rc-terratec-slim-2"
+> -  * "rc-tevii-nec"
+> -  * "rc-tivo"
+> -  * "rc-total-media-in-hand"
+> -  * "rc-total-media-in-hand-02"
+> -  * "rc-trekstor"
+> -  * "rc-tt-1500"
+> -  * "rc-twinhan-dtv-cab-ci"
+> -  * "rc-twinhan1027"
+> -  * "rc-videomate-k100"
+> -  * "rc-videomate-s350"
+> -  * "rc-videomate-tv-pvr"
+> -  * "rc-winfast"
+> -  * "rc-winfast-usbii-deluxe"
+> -  * "rc-su3000"
+> +This file has been moved to rc.yaml.
+> diff --git a/Documentation/devicetree/bindings/media/rc.yaml b/Documentation/devicetree/bindings/media/rc.yaml
+> new file mode 100644
+> index 000000000000..19b28e7edf9c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/rc.yaml
+> @@ -0,0 +1,135 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/rc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic Infrared Remote Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Mauro Carvalho Chehab <mchehab@kernel.org>
+> +  - Sean Young <sean@mess.org>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^ir(@[a-f0-9]+)?$"
+> +
+> +  linux,rc-map-name:
+> +    description:
+> +      Specifies the scancode/key mapping table defined in-kernel for
+> +      the remote controller.
+> +    allOf:
+> +      - $ref: '/schemas/types.yaml#/definitions/string'
+> +      - enum:
+> +          - rc-adstech-dvb-t-pci
+> +          - rc-alink-dtu-m
+> +          - rc-anysee
+> +          - rc-apac-viewcomp
+> +          - rc-asus-pc39
+> +          - rc-asus-ps3-100
+> +          - rc-ati-tv-wonder-hd-600
+> +          - rc-ati-x10
+> +          - rc-avermedia
+> +          - rc-avermedia-a16d
+> +          - rc-avermedia-cardbus
+> +          - rc-avermedia-dvbt
+> +          - rc-avermedia-m135a
+> +          - rc-avermedia-m733a-rm-k6
+> +          - rc-avermedia-rm-ks
+> +          - rc-avertv-303
+> +          - rc-azurewave-ad-tu700
+> +          - rc-behold
+> +          - rc-behold-columbus
+> +          - rc-budget-ci-old
+> +          - rc-cec
+> +          - rc-cinergy
+> +          - rc-cinergy-1400
+> +          - rc-delock-61959
+> +          - rc-dib0700-nec
+> +          - rc-dib0700-rc5
+> +          - rc-digitalnow-tinytwin
+> +          - rc-digittrade
+> +          - rc-dm1105-nec
+> +          - rc-dntv-live-dvb-t
+> +          - rc-dntv-live-dvbt-pro
+> +          - rc-dtt200u
+> +          - rc-dvbsky
+> +          - rc-em-terratec
+> +          - rc-empty
+> +          - rc-encore-enltv
+> +          - rc-encore-enltv-fm53
+> +          - rc-encore-enltv2
+> +          - rc-evga-indtube
+> +          - rc-eztv
+> +          - rc-flydvb
+> +          - rc-flyvideo
+> +          - rc-fusionhdtv-mce
+> +          - rc-gadmei-rm008z
+> +          - rc-geekbox
+> +          - rc-genius-tvgo-a11mce
+> +          - rc-gotview7135
+> +          - rc-hauppauge
+> +          - rc-imon-mce
+> +          - rc-imon-pad
+> +          - rc-iodata-bctv7e
+> +          - rc-it913x-v1
+> +          - rc-it913x-v2
+> +          - rc-kaiomy
+> +          - rc-kworld-315u
+> +          - rc-kworld-pc150u
+> +          - rc-kworld-plus-tv-analog
+> +          - rc-leadtek-y04g0051
+> +          - rc-lirc
+> +          - rc-lme2510
+> +          - rc-manli
+> +          - rc-medion-x10
+> +          - rc-medion-x10-digitainer
+> +          - rc-medion-x10-or2x
+> +          - rc-msi-digivox-ii
+> +          - rc-msi-digivox-iii
+> +          - rc-msi-tvanywhere
+> +          - rc-msi-tvanywhere-plus
+> +          - rc-nebula
+> +          - rc-nec-terratec-cinergy-xs
+> +          - rc-norwood
+> +          - rc-npgtech
+> +          - rc-pctv-sedna
+> +          - rc-pinnacle-color
+> +          - rc-pinnacle-grey
+> +          - rc-pinnacle-pctv-hd
+> +          - rc-pixelview
+> +          - rc-pixelview-002t
+> +          - rc-pixelview-mk12
+> +          - rc-pixelview-new
+> +          - rc-powercolor-real-angel
+> +          - rc-proteus-2309
+> +          - rc-purpletv
+> +          - rc-pv951
+> +          - rc-rc5-tv
+> +          - rc-rc6-mce
+> +          - rc-real-audio-220-32-keys
+> +          - rc-reddo
+> +          - rc-snapstream-firefly
+> +          - rc-streamzap
+> +          - rc-su3000
+> +          - rc-tbs-nec
+> +          - rc-technisat-ts35
+> +          - rc-technisat-usb2
+> +          - rc-terratec-cinergy-c-pci
+> +          - rc-terratec-cinergy-s2-hd
+> +          - rc-terratec-cinergy-xs
+> +          - rc-terratec-slim
+> +          - rc-terratec-slim-2
+> +          - rc-tevii-nec
+> +          - rc-tivo
+> +          - rc-total-media-in-hand
+> +          - rc-total-media-in-hand-02
+> +          - rc-trekstor
+> +          - rc-tt-1500
+> +          - rc-twinhan-dtv-cab-ci
+> +          - rc-twinhan1027
+> +          - rc-videomate-k100
+> +          - rc-videomate-s350
+> +          - rc-videomate-tv-pvr
+> +          - rc-winfast
+> +          - rc-winfast-usbii-deluxe
 
-Acked-by: Balbir Singh <bsingharora@gmail.com>
+The list of keymaps is out of date. Might as well fix it up at now?
+
+Thanks
+Sean
+
+          # awk -F ' ' '/define RC_MAP_/ { gsub(/"/, "", $3); print "          - " $3 }' < include/media/rc-map.h
+          - rc-adstech-dvb-t-pci
+          - rc-alink-dtu-m
+          - rc-anysee
+          - rc-apac-viewcomp
+          - rc-astrometa-t2hybrid
+          - rc-asus-pc39
+          - rc-asus-ps3-100
+          - rc-ati-tv-wonder-hd-600
+          - rc-ati-x10
+          - rc-avermedia-a16d
+          - rc-avermedia-cardbus
+          - rc-avermedia-dvbt
+          - rc-avermedia-m135a
+          - rc-avermedia-m733a-rm-k6
+          - rc-avermedia-rm-ks
+          - rc-avermedia
+          - rc-avertv-303
+          - rc-azurewave-ad-tu700
+          - rc-behold-columbus
+          - rc-behold
+          - rc-budget-ci-old
+          - rc-cec
+          - rc-cinergy-1400
+          - rc-cinergy
+          - rc-d680-dmb
+          - rc-delock-61959
+          - rc-dib0700-nec
+          - rc-dib0700-rc5
+          - rc-digitalnow-tinytwin
+          - rc-digittrade
+          - rc-dm1105-nec
+          - rc-dntv-live-dvbt-pro
+          - rc-dntv-live-dvb-t
+          - rc-dtt200u
+          - rc-dvbsky
+          - rc-dvico-mce
+          - rc-dvico-portable
+          - rc-empty
+          - rc-em-terratec
+          - rc-encore-enltv2
+          - rc-encore-enltv-fm53
+          - rc-encore-enltv
+          - rc-evga-indtube
+          - rc-eztv
+          - rc-flydvb
+          - rc-flyvideo
+          - rc-fusionhdtv-mce
+          - rc-gadmei-rm008z
+          - rc-geekbox
+          - rc-genius-tvgo-a11mce
+          - rc-gotview7135
+          - rc-hauppauge
+          - rc-hisi-poplar
+          - rc-hisi-tv-demo
+          - rc-imon-mce
+          - rc-imon-pad
+          - rc-imon-rsc
+          - rc-iodata-bctv7e
+          - rc-it913x-v1
+          - rc-it913x-v2
+          - rc-kaiomy
+          - rc-kworld-315u
+          - rc-kworld-pc150u
+          - rc-kworld-plus-tv-analog
+          - rc-leadtek-y04g0051
+          - rc-lme2510
+          - rc-manli
+          - rc-medion-x10
+          - rc-medion-x10-digitainer
+          - rc-medion-x10-or2x
+          - rc-msi-digivox-ii
+          - rc-msi-digivox-iii
+          - rc-msi-tvanywhere-plus
+          - rc-msi-tvanywhere
+          - rc-nebula
+          - rc-nec-terratec-cinergy-xs
+          - rc-norwood
+          - rc-npgtech
+          - rc-pctv-sedna
+          - rc-pinnacle-color
+          - rc-pinnacle-grey
+          - rc-pinnacle-pctv-hd
+          - rc-pixelview-new
+          - rc-pixelview
+          - rc-pixelview-002t
+          - rc-pixelview-mk12
+          - rc-powercolor-real-angel
+          - rc-proteus-2309
+          - rc-purpletv
+          - rc-pv951
+          - rc-hauppauge
+          - rc-rc5-tv
+          - rc-rc6-mce
+          - rc-real-audio-220-32-keys
+          - rc-reddo
+          - rc-snapstream-firefly
+          - rc-streamzap
+          - rc-tango
+          - rc-tbs-nec
+          - rc-technisat-ts35
+          - rc-technisat-usb2
+          - rc-terratec-cinergy-c-pci
+          - rc-terratec-cinergy-s2-hd
+          - rc-terratec-cinergy-xs
+          - rc-terratec-slim
+          - rc-terratec-slim-2
+          - rc-tevii-nec
+          - rc-tivo
+          - rc-total-media-in-hand
+          - rc-total-media-in-hand-02
+          - rc-trekstor
+          - rc-tt-1500
+          - rc-twinhan-dtv-cab-ci
+          - rc-twinhan1027
+          - rc-videomate-k100
+          - rc-videomate-s350
+          - rc-videomate-tv-pvr
+          - rc-winfast
+          - rc-winfast-usbii-deluxe
+          - rc-su3000
+          - rc-xbox-dvd
+          - rc-zx-irdec
+
