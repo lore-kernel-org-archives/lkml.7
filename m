@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373FDC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364D4C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 066E42084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 085AF20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750213;
-	bh=nTNEIx10Vjh03n0qsD4zI8XKLpPpJTX9LKmOJDGNKXo=;
+	s=default; t=1565750222;
+	bh=MksosQLMGZ89hzq1CyJjp04g4mTD95UR39ssKqqsh+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=01WkBTqpanzD0z9wR6oydQ5/I/H2I2+MTJOHC7fSNvC14EwpfNcTM2ejvkRyIHUkF
-	 1yosMPup2azoDgSsoBx9/k1Z7aQKhnqRBuQXILuNOrJg+gVQB4uz/SDs4wBY9zD2LE
-	 TI8qw8mj80ur9yBytX3XuKaNNHW4zH38EDXQBsiE=
+	b=k9txCwqZZ+VbX69gmXk5cz7RB3HJfaqh5VUxEUcTJKjDc+FA+3k3v+lD5mgn0bO6S
+	 UtqfnJW/gKCghhzDg1S4FSHhGgKtVs0hH3oqGTRyFvVrdzYUE8/174BJ1Xq2OeN5hn
+	 1AO8RV4eFNINgZLjnioEUKP8Ou+puzJ1k64mrftI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbfHNCMy (ORCPT
+        id S1728967AbfHNChB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:12:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44820 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbfHNCMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:12:42 -0400
+        id S1728040AbfHNCMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:12:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BECF208C2;
-        Wed, 14 Aug 2019 02:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A4DE20842;
+        Wed, 14 Aug 2019 02:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748761;
-        bh=nTNEIx10Vjh03n0qsD4zI8XKLpPpJTX9LKmOJDGNKXo=;
+        s=default; t=1565748770;
+        bh=MksosQLMGZ89hzq1CyJjp04g4mTD95UR39ssKqqsh+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QvnsTDVYAsQQdesJ68BLAXMMR1KEFfw+ezqTU/Mw7OEJLZH7X46v7oga/qpgnD3iB
-         7l4LDa0BcoLiThmA9GEpnfk0CTjh+ifvvxlrd70EmIZOv95oLIySfBJHHIYRGoZDiG
-         vK+nSKTVea9BiNh2s2LEFn+52bpk5Szy8Jl9XfXA=
+        b=x3nwzRtSuvSOiI1m/fr/VLU6jDwAAqAa1vkrGn8SQtZwtMgzLVV+UmItrSc9PaZ60
+         ktLSXnAeOoCF5ncss1KCZ+3Zs/1IOtFp+1MyHjGEXone6yycHmJXXNkttztMSzeiQL
+         JgQKpXaWXZI0Gri1rUjPn0ZfNLIETBT5aQ0luytQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 054/123] net: stmmac: manage errors returned by of_get_mac_address()
-Date:   Tue, 13 Aug 2019 22:09:38 -0400
-Message-Id: <20190814021047.14828-54-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        syzbot+276ddebab3382bbf72db@syzkaller.appspotmail.com,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 058/123] netfilter: ebtables: also count base chain policies
+Date:   Tue, 13 Aug 2019 22:09:42 -0400
+Message-Id: <20190814021047.14828-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -60,49 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 195b2919ccd7ffcaf6b6bbcb39444a53ab8308c7 ]
+[ Upstream commit 3b48300d5cc7c7bed63fddb006c4046549ed4aec ]
 
-Commit d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
-added support for reading the MAC address from an nvmem-cell. This
-required changing the logic to return an error pointer upon failure.
+ebtables doesn't include the base chain policies in the rule count,
+so we need to add them manually when we call into the x_tables core
+to allocate space for the comapt offset table.
 
-If stmmac is loaded before the nvmem provider driver then
-of_get_mac_address() return an error pointer with -EPROBE_DEFER.
+This lead syzbot to trigger:
+WARNING: CPU: 1 PID: 9012 at net/netfilter/x_tables.c:649
+xt_compat_add_offset.cold+0x11/0x36 net/netfilter/x_tables.c:649
 
-Propagate this error so the stmmac driver will be probed again after the
-nvmem provider driver is loaded.
-Default to a random generated MAC address in case of any other error,
-instead of using the error pointer as MAC address.
-
-Fixes: d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: syzbot+276ddebab3382bbf72db@syzkaller.appspotmail.com
+Fixes: 2035f3ff8eaa ("netfilter: ebtables: compat: un-break 32bit setsockopt when no rules are present")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ net/bridge/netfilter/ebtables.c | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index 0f0f4b31eb7ec..9b5218a8c15bc 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -385,6 +385,13 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
- 		return ERR_PTR(-ENOMEM);
+diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
+index fd84b48e48b57..c8177a89f52c3 100644
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -1770,20 +1770,28 @@ static int compat_calc_entry(const struct ebt_entry *e,
+ 	return 0;
+ }
  
- 	*mac = of_get_mac_address(np);
-+	if (IS_ERR(*mac)) {
-+		if (PTR_ERR(*mac) == -EPROBE_DEFER)
-+			return ERR_CAST(*mac);
++static int ebt_compat_init_offsets(unsigned int number)
++{
++	if (number > INT_MAX)
++		return -EINVAL;
 +
-+		*mac = NULL;
-+	}
++	/* also count the base chain policies */
++	number += NF_BR_NUMHOOKS;
 +
- 	plat->interface = of_get_phy_mode(np);
++	return xt_compat_init_offsets(NFPROTO_BRIDGE, number);
++}
  
- 	/* Get max speed of operation from device tree */
+ static int compat_table_info(const struct ebt_table_info *info,
+ 			     struct compat_ebt_replace *newinfo)
+ {
+ 	unsigned int size = info->entries_size;
+ 	const void *entries = info->entries;
++	int ret;
+ 
+ 	newinfo->entries_size = size;
+-	if (info->nentries) {
+-		int ret = xt_compat_init_offsets(NFPROTO_BRIDGE,
+-						 info->nentries);
+-		if (ret)
+-			return ret;
+-	}
++	ret = ebt_compat_init_offsets(info->nentries);
++	if (ret)
++		return ret;
+ 
+ 	return EBT_ENTRY_ITERATE(entries, size, compat_calc_entry, info,
+ 							entries, newinfo);
+@@ -2234,11 +2242,9 @@ static int compat_do_replace(struct net *net, void __user *user,
+ 
+ 	xt_compat_lock(NFPROTO_BRIDGE);
+ 
+-	if (tmp.nentries) {
+-		ret = xt_compat_init_offsets(NFPROTO_BRIDGE, tmp.nentries);
+-		if (ret < 0)
+-			goto out_unlock;
+-	}
++	ret = ebt_compat_init_offsets(tmp.nentries);
++	if (ret < 0)
++		goto out_unlock;
+ 
+ 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
+ 	if (ret < 0)
 -- 
 2.20.1
 
