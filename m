@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 456A5C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C0FC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3F1206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D78206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803620;
-	bh=CMtC4t94zvH+sK9mOeNZYQhRE9tKxvGvOKZoQrxpeok=;
+	s=default; t=1565803625;
+	bh=dcNlIq3Uf0l0lx13G3Fyg5C2xZf/pldIfA1pAiWLhjo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cT9UF+1ItvgLKbVWS7zJ9htqR6LayDZXU/KGzpVMY0IZTr0u+/0yCxJivMynuNqoA
-	 M6ImZFoqSS2TjKQGTTooOvcOaEehPvWoe6c6AFxsnOBKiPVmlUy5/Tj/6xBE4wKQ8J
-	 9E/MxVCKbEut083yzybBppxAMceXJVBdQD5MCv2A=
+	b=WXr/6H9nKYqVqG/HTnPX5rRKiU+yEaVXZawyF1lOWyWJPo/MgSuFtMDXCBmu+EoPB
+	 WI8/TvmipISWyb0+kztOp9qhsTrokBIMZlcF/K8Nel7ZLWROxE3vzycSlGzLE729Dm
+	 mXDTw2HzdTuDQ2T7ZygwOdqddcLD60aIKASEQlV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfHNR06 (ORCPT
+        id S1729144AbfHNREL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:26:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53072 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729173AbfHNREQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:04:16 -0400
+        id S1729127AbfHNREJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:04:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EECD208C2;
-        Wed, 14 Aug 2019 17:04:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAB2F208C2;
+        Wed, 14 Aug 2019 17:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802256;
-        bh=CMtC4t94zvH+sK9mOeNZYQhRE9tKxvGvOKZoQrxpeok=;
+        s=default; t=1565802248;
+        bh=dcNlIq3Uf0l0lx13G3Fyg5C2xZf/pldIfA1pAiWLhjo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M1nvbpciR3+aa3B41M2FHytnJOQ33Bm84RZCa8mrpwz0vAY3D5KN7jCzS3n1H8IHK
-         yN/6zPVi5W/qQahob/G/Vv8UpJpiI6zFRc0/+Yu0EA3/mk0OZfAwqyf9nTMzDITc+c
-         MgfoiFmHNIydQoqpYTCzYLmufQhUtT0TTSTKhNKo=
+        b=laj6tMLrxxoX6/VMhNT+f3OowbXoXsGg0fBgMwkqrnceIhkeM2PEDa2BrCgJaR06w
+         FqWfEZ3rrU4RkcSaXe6SkOwHG0N+UaUf9ZeprtzBvzNEb54s06It3maQUDlz9vxG8H
+         NRuUpcpFDMT/jm6JdCZWS1AF1zeYMxRewjNEZYvo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Hesse <mail@eworm.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 054/144] netfilter: nf_tables: fix module autoload for redir
-Date:   Wed, 14 Aug 2019 19:00:10 +0200
-Message-Id: <20190814165802.092528994@linuxfoundation.org>
+Subject: [PATCH 5.2 051/144] vfio-ccw: Set pa_nr to 0 if memory allocation fails for pa_iova_pfn
+Date:   Wed, 14 Aug 2019 19:00:07 +0200
+Message-Id: <20190814165801.962212682@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -60,28 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f41828ee10b36644bb2b2bfa9dd1d02f55aa0516 ]
+[ Upstream commit c1ab69268d124ebdbb3864580808188ccd3ea355 ]
 
-Fix expression for autoloading.
+So we don't call try to call vfio_unpin_pages() incorrectly.
 
-Fixes: 5142967ab524 ("netfilter: nf_tables: fix module autoload with inet family")
-Signed-off-by: Christian Hesse <mail@eworm.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 0a19e61e6d4c ("vfio: ccw: introduce channel program interfaces")
+Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+Reviewed-by: Eric Farman <farman@linux.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Message-Id: <33a89467ad6369196ae6edf820cbcb1e2d8d050c.1562854091.git.alifm@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_redir.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/cio/vfio_ccw_cp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nft_redir.c b/net/netfilter/nft_redir.c
-index 8487eeff5c0ec..43eeb1f609f13 100644
---- a/net/netfilter/nft_redir.c
-+++ b/net/netfilter/nft_redir.c
-@@ -291,4 +291,4 @@ module_exit(nft_redir_module_exit);
+diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
+index 0e79799e9a719..79eb40bdaf9f4 100644
+--- a/drivers/s390/cio/vfio_ccw_cp.c
++++ b/drivers/s390/cio/vfio_ccw_cp.c
+@@ -89,8 +89,10 @@ static int pfn_array_alloc_pin(struct pfn_array *pa, struct device *mdev,
+ 				  sizeof(*pa->pa_iova_pfn) +
+ 				  sizeof(*pa->pa_pfn),
+ 				  GFP_KERNEL);
+-	if (unlikely(!pa->pa_iova_pfn))
++	if (unlikely(!pa->pa_iova_pfn)) {
++		pa->pa_nr = 0;
+ 		return -ENOMEM;
++	}
+ 	pa->pa_pfn = pa->pa_iova_pfn + pa->pa_nr;
  
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Arturo Borrero Gonzalez <arturo@debian.org>");
--MODULE_ALIAS_NFT_EXPR("nat");
-+MODULE_ALIAS_NFT_EXPR("redir");
+ 	pa->pa_iova_pfn[0] = pa->pa_iova >> PAGE_SHIFT;
 -- 
 2.20.1
 
