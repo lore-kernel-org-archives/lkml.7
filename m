@@ -2,209 +2,104 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157B8C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 277D6C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A4920844
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF78620844
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:04:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LYR09X6N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l9ndCYzl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfHNCDp (ORCPT
+        id S1727116AbfHNCEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:03:45 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:44716 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfHNCDp (ORCPT
+        Tue, 13 Aug 2019 22:04:31 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38059 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfHNCEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:03:45 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x7E23L5g029484;
-        Wed, 14 Aug 2019 11:03:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x7E23L5g029484
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1565748202;
-        bh=gg/aXfWoj1dr/iQJNgz6p/0wrctSN5GJ08iIhhlqIHY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LYR09X6NkgDT7yZadd1KwV6UdmZQdkHcmevmz1kYVgM7IRpW8m2ty4KkMUt9OiLTP
-         LDCwbVSXHQOidRWyWa/4obYsDJnX+u/v6b/uZDjHW/Av0Xwke1IlCJbO6RZfBpS7J0
-         sLpDUnGdv9S3IGvrM5kepqaJs9eNULIzfuZmiBm9K/OmYcRF1rEo6I8izp7orGyFsl
-         +QaImjQUlAzgxCiVrwzEFUPj4A5la3t91WYCKQnyJ6Z+r4kE5J8KvVbM0QSSOHILXb
-         QhjKkd/ZShxTCZE8NFPDNz8nDU7ieFBSzpEz1uVf4iyp8yKDT4CSyAQZ5ZRDVxIbES
-         IQHLtGL6cF/Gw==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id u3so73515988vsh.6;
-        Tue, 13 Aug 2019 19:03:22 -0700 (PDT)
-X-Gm-Message-State: APjAAAXrh117WL2CovHMwdRm5km7NRTCeWBSnrJuFabGIY8xh0cq0WUk
-        bg4GcgfpDJyojVXNkrQGwJS0aW64LaAGJzmfvPA=
-X-Google-Smtp-Source: APXvYqzqNBqm+hwNLTOEci/lspPuPMkY9zOEYB7EyM/q2ufzPas85GtjdbUpizxOvvLyJqnSy4EsbPJ3kQPFBvoIe60=
-X-Received: by 2002:a67:b916:: with SMTP id q22mr242654vsn.54.1565748201144;
- Tue, 13 Aug 2019 19:03:21 -0700 (PDT)
+        Tue, 13 Aug 2019 22:04:30 -0400
+Received: by mail-ed1-f65.google.com with SMTP id r12so5708122edo.5;
+        Tue, 13 Aug 2019 19:04:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yClt4IiYnvtlCU9uUEc5mhIYUjABpvyWOso+HI4mu3o=;
+        b=l9ndCYzlwR5qGpefWEgVLiJsPd4v8Dk4nsao6j4NOxiRFw3jG0aPROGqZxMVJR3lpC
+         GgflwMHAjzTKnoSfg6myFWphE5+A5HM8M2CC4ZNWiHjcMVl9lJ/c+PaDElSrNzJrfBGb
+         BniQUVDawR1ghe7yEsAp2HWpQJrndum1p0fxY5vT+knYDfn0SUqQPRT2Fgy1pQLXrb+I
+         WtvdlASjkuw+vO/1ZJ0V56F047OwOcNphKVmF3q3LEuJ6bEUsRuU1v5RdOVyx6oBNJbf
+         7glrhkCTTq7yr9ZGLALrsby9RiapZVvRb2IKimk68pRikKBjUMxUDjEVDYoqd8rLVkoM
+         IM0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yClt4IiYnvtlCU9uUEc5mhIYUjABpvyWOso+HI4mu3o=;
+        b=PJgHaZPnbKXJKqkVYvGMnUNUfRFlbwaYKHASInI+ak4LtttNCCeqJ76LQ8L0kRUoMu
+         nb5khdCVbmC5yh8dkT0NiG4h3oyi6ZRFbHx0u2aaGPIF1z5XztRWriuun9s3PPocmx2E
+         wpX5Ae06CvRJMVxBORvj4gc6PXxW5UDLjhTp79JsSkjwKsqS6zvLuKux4keZGxszKP1M
+         0Y7u3MC18JU6ogMhXIfwoDQzCfFmDOJ/qIAU1Gmy6oiQKjS7rPecf2pQDfIqQ++15yho
+         V9LSMp1lrd4A03viztn2IfuerY1ZcEskeJgL4TAiesCI9Iaf8giwUncg5d5Wj8SLIFKQ
+         UBYA==
+X-Gm-Message-State: APjAAAWlXr3axFgvQqD2sIfb/UNK9sdsTFp/dycanfm8SpF3HM98KvXi
+        puMwbSm/91qLiPRMIFJ65qA=
+X-Google-Smtp-Source: APXvYqxhOvGYIm/p1syoBfmRH4Nh5i7jAhIt7mkfGBb6oygRhVeG0iblgw2hn7e0AoAKsPwHBKza7g==
+X-Received: by 2002:a50:b48f:: with SMTP id w15mr45996037edd.260.1565748268455;
+        Tue, 13 Aug 2019 19:04:28 -0700 (PDT)
+Received: from continental ([186.212.91.40])
+        by smtp.gmail.com with ESMTPSA id x11sm25444255eda.80.2019.08.13.19.04.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Aug 2019 19:04:27 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 23:05:40 -0300
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@vger.kernel.org, hch@lst.de,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCHv2 0/4] blk_execute_rq{_nowait} cleanup part1
+Message-ID: <20190814020540.GA27622@continental>
+References: <20190809105433.8946-1-marcos.souza.org@gmail.com>
+ <55246cff-6d32-e7d5-bee0-9940bc59250a@kernel.dk>
 MIME-Version: 1.0
-References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
- <be2c361eac49ded2848b2a555b75e30cc3c24e71.1565676440.git-series.knut.omang@oracle.com>
- <CAK7LNASX4jPRxRxD+JafAfKqjck=x27HuHZgPV1VFfW8MzcwZA@mail.gmail.com> <14b99d26a4cff1c813c92818dc1234007fa06fc9.camel@oracle.com>
-In-Reply-To: <14b99d26a4cff1c813c92818dc1234007fa06fc9.camel@oracle.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 14 Aug 2019 11:02:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASgfd6KPRQ=hcqKkpZ6EVhFmbBjCXa30bvEqscu_5dwbQ@mail.gmail.com>
-Message-ID: <CAK7LNASgfd6KPRQ=hcqKkpZ6EVhFmbBjCXa30bvEqscu_5dwbQ@mail.gmail.com>
-Subject: Re: [RFC 01/19] kbuild: Fixes to rules for host-cshlib and host-cxxshlib
-To:     Knut Omang <knut.omang@oracle.com>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shreyans Devendra Doshi <0xinfosect0r@gmail.com>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Hidenori Yamaji <hidenori.yamaji@sony.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Timothy Bird <Tim.Bird@sony.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
-        Stephen Boyd <sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <55246cff-6d32-e7d5-bee0-9940bc59250a@kernel.dk>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Knut,
+On Sun, Aug 11, 2019 at 07:47:17AM -0600, Jens Axboe wrote:
+> On 8/9/19 3:54 AM, Marcos Paulo de Souza wrote:
+> > After checking the request_queue argument of funtion blk_execute_rq_nowait, I
+> > now added three more patches, one to remove the same argument from
+> > blk_execute_rq and other two to change the at_head argument from
+> > blk_exeute_rq_{nowait} from int to bool.
+> > 
+> > Original patch can be checked here[1].
+> > 
+> > After this patch gets merged, my plan is to analyse the usage the gendisk
+> > argument, is being set as NULL but the majority of callers.
+> > 
+> > [1]: https://lkml.org/lkml/2019/8/6/31
+> 
+> Don't ever send something out that hasn't even been compiled. I already
+> detest doing kernel-wide cleanup changes like this, but when I do, I
+> need absolute confidence in it actually being tested. The fact that it
+> hasn't even been compiled is a big black mark on the submitter.
 
-On Wed, Aug 14, 2019 at 1:19 AM Knut Omang <knut.omang@oracle.com> wrote:
->
-> On Tue, 2019-08-13 at 23:01 +0900, Masahiro Yamada wrote:
-> > On Tue, Aug 13, 2019 at 3:13 PM Knut Omang <knut.omang@oracle.com> wrote:
-> > >
-> > > C++ libraries interfacing to C APIs might sometimes need some glue
-> > > logic more easily written in C.
-> > > Allow a C++ library to also contain 0 or more C objects.
-> > >
-> > > Also fix rules for both C and C++ shared libraries:
-> > > - C++ shared libraries depended on .c instead of .cc files
-> > > - Rules were referenced as -objs instead of the intended
-> > >   -cobjs and -cxxobjs following the pattern from hostprogs*.
-> > >
-> > > Signed-off-by: Knut Omang <knut.omang@oracle.com>
-> >
-> >
-> > How is this patch related to the rest of this series?
->
-> This is just my (likely naive) way I to get what I had working
-> using autotools in the Github version of KTF) translated into something
-> comparable using kbuild only. We need to build a shared library consisting
-> of a few C++ files and a very simple C file, and a couple of simple binaries,
-> and the rule in there does seem to take .c files and subject them to the
-> C++ compiler, which makes this difficult to achieve?
+My bad. I compiled the code locally and tested in VM, but later on I removed
+the semicolon by mistake while reviewing the changes once more and the code
+was commited without the semicolon. I'm improving my setup (scripts
+and whatnot) to avoid this happening again in the future.
 
-
-Looking at the diff stat of the cover-letter,
-the rest of this patch series is touching only
-Documentation/ and tools/testing/kselftests/.
-
-So, this one is unused by the rest of the changes, isn't it?
-Am I missing something?
-
-
-
-> > This patch breaks GCC-plugins.
-> > Did you really compile-test this patch before the submission?
->
-> Sorry for my ignorance here:
-> I ran through the kernel build and installed the resulting kernel
-> on a VM that I used to test this, if that's what you are asking
-> about?
->
-> Do I need some unusual .config options or run a special make target
-> to trigger the problem you see?
->
-> I used a recent Fedora config with default values for new options,
-> and ran the normal default make target (also with O=) and make selftests
-> to test the patch itself.
-
-
-I just built allmodconfig for arm.
-
-(The 0-day bot tests allmodconfig for most of architectures,
-so you may receive error reports anyway.)
-
-
-With your patch, I got the following:
-
-
-masahiro@grover:~/ref/linux$ make  ARCH=arm
-CROSS_COMPILE=arm-linux-gnueabihf-  allmodconfig all
-  HOSTCC  scripts/basic/fixdep
-  HOSTCC  scripts/kconfig/conf.o
-  HOSTCC  scripts/kconfig/confdata.o
-  HOSTCC  scripts/kconfig/expr.o
-  LEX     scripts/kconfig/lexer.lex.c
-  YACC    scripts/kconfig/parser.tab.h
-  HOSTCC  scripts/kconfig/lexer.lex.o
-  YACC    scripts/kconfig/parser.tab.c
-  HOSTCC  scripts/kconfig/parser.tab.o
-  HOSTCC  scripts/kconfig/preprocess.o
-  HOSTCC  scripts/kconfig/symbol.o
-  HOSTLD  scripts/kconfig/conf
-scripts/kconfig/conf  --allmodconfig Kconfig
-#
-# configuration written to .config
-#
-  SYSHDR  arch/arm/include/generated/uapi/asm/unistd-common.h
-  SYSHDR  arch/arm/include/generated/uapi/asm/unistd-oabi.h
-  SYSHDR  arch/arm/include/generated/uapi/asm/unistd-eabi.h
-  HOSTCC  scripts/dtc/dtc.o
-  HOSTCC  scripts/dtc/flattree.o
-  HOSTCC  scripts/dtc/fstree.o
-  HOSTCC  scripts/dtc/data.o
-  HOSTCC  scripts/dtc/livetree.o
-  HOSTCC  scripts/dtc/treesource.o
-  HOSTCC  scripts/dtc/srcpos.o
-  HOSTCC  scripts/dtc/checks.o
-  HOSTCC  scripts/dtc/util.o
-  LEX     scripts/dtc/dtc-lexer.lex.c
-  YACC    scripts/dtc/dtc-parser.tab.h
-  HOSTCC  scripts/dtc/dtc-lexer.lex.o
-  YACC    scripts/dtc/dtc-parser.tab.c
-  HOSTCC  scripts/dtc/dtc-parser.tab.o
-  HOSTCC  scripts/dtc/yamltree.o
-  HOSTLD  scripts/dtc/dtc
-  CC      scripts/gcc-plugins/latent_entropy_plugin.o
-cc1: error: cannot load plugin ./scripts/gcc-plugins/arm_ssp_per_task_plugin.so
-   ./scripts/gcc-plugins/arm_ssp_per_task_plugin.so: cannot open
-shared object file: No such file or directory
-cc1: error: cannot load plugin ./scripts/gcc-plugins/structleak_plugin.so
-   ./scripts/gcc-plugins/structleak_plugin.so: cannot open shared
-object file: No such file or directory
-cc1: error: cannot load plugin ./scripts/gcc-plugins/latent_entropy_plugin.so
-   ./scripts/gcc-plugins/latent_entropy_plugin.so: cannot open shared
-object file: No such file or directory
-cc1: error: cannot load plugin ./scripts/gcc-plugins/randomize_layout_plugin.so
-   ./scripts/gcc-plugins/randomize_layout_plugin.so: cannot open
-shared object file: No such file or directory
-make[3]: *** [scripts/Makefile.build;281:
-scripts/gcc-plugins/latent_entropy_plugin.o] Error 1
-make[2]: *** [scripts/Makefile.build;497: scripts/gcc-plugins] Error 2
-make[1]: *** [Makefile;1097: scripts] Error 2
-make: *** [Makefile;330: __build_one_by_one] Error 2
-
-
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> 
+> -- 
+> Jens Axboe
+> 
