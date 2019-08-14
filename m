@@ -2,144 +2,109 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9721C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED44DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4022084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C44AD2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfHNKHB (ORCPT
+        id S1727184AbfHNKH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:07:01 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:53505 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726121AbfHNKG7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:06:59 -0400
-X-UUID: b6fe7958dc7e4710af101f9b1029e17d-20190814
-X-UUID: b6fe7958dc7e4710af101f9b1029e17d-20190814
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <michael.kao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 220725746; Wed, 14 Aug 2019 18:06:52 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 14 Aug 2019 18:06:53 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 14 Aug 2019 18:06:53 +0800
-From:   Michael Kao <michael.kao@mediatek.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <hsinyi@chromium.org>
-CC:     <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Michael Kao <michael.kao@mediatek.com>
-Subject: [PATCH 4/4] arm64: dts: mt8183: Configure CPU cooling
-Date:   Wed, 14 Aug 2019 18:06:49 +0800
-Message-ID: <1565777209-21869-5-git-send-email-michael.kao@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1565777209-21869-1-git-send-email-michael.kao@mediatek.com>
-References: <1565777209-21869-1-git-send-email-michael.kao@mediatek.com>
+        Wed, 14 Aug 2019 06:07:59 -0400
+Received: from sauhun.de ([88.99.104.3]:47182 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbfHNKH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:07:59 -0400
+Received: from localhost (p54B33326.dip0.t-ipconnect.de [84.179.51.38])
+        by pokefinder.org (Postfix) with ESMTPSA id 42A722C311C;
+        Wed, 14 Aug 2019 12:07:57 +0200 (CEST)
+Date:   Wed, 14 Aug 2019 12:07:56 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] i2c: avoid sleep in IRQ context
+Message-ID: <20190814100756.GF1511@ninjato>
+References: <20190807071807.17488-1-huangfq.daxian@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-TM-SNTS-SMTP: 6B35072D115418BD62FDFB3A8FCC7BF1CA3916877D76B820D34241335E752A382000:8
-X-MTK:  N
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cpvLTH7QU4gwfq3S"
+Content-Disposition: inline
+In-Reply-To: <20190807071807.17488-1-huangfq.daxian@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Kaehlcke <mka@chromium.org>
 
-Add SoC temperature threshold at 68°C and target at 80°C.
-Add trip points and cooling maps for big and litter clusters.
+--cpvLTH7QU4gwfq3S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Michael Kao <michael.kao@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 55 ++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+On Wed, Aug 07, 2019 at 03:18:07PM +0800, Fuqian Huang wrote:
+> i2c_pxa_handler -> i2c_pxa_irq_txempty ->
+> i2c_pxa_reset -> i2c_pxa_set_slave -> i2c_pxa_wait_slave
+>=20
+> As i2c_pxa_handler is an interrupt handler, it will finally
+> calls i2c_pxa_wait_slave which calls msleep.
+>=20
+> Add in_interrupt check before msleep to avoid sleep
+> in IRQ context.
+> When in interrupt context, use mdelay instead of msleep.
+>=20
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index bc42b82..6611d29 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -411,6 +411,61 @@
- 				polling-delay = <500>;
- 				thermal-sensors = <&thermal 0>;
- 				sustainable-power = <4500>;
-+
-+				trips {
-+					threshold: trip-point@0 {
-+						temperature = <68000>;
-+						hysteresis = <2000>;
-+						type = "passive";
-+					};
-+
-+					target: trip-point@1 {
-+						temperature = <80000>;
-+						hysteresis = <2000>;
-+						type = "passive";
-+					};
-+
-+					cpu_crit: cpu-crit {
-+						temperature = <115000>;
-+						hysteresis = <2000>;
-+						type = "critical";
-+					};
-+				};
-+
-+				cooling-maps {
-+					map0 {
-+						trip = <&target>;
-+						cooling-device = <&cpu0
-+							THERMAL_NO_LIMIT
-+							THERMAL_NO_LIMIT>,
-+								 <&cpu1
-+							THERMAL_NO_LIMIT
-+							THERMAL_NO_LIMIT>,
-+								 <&cpu2
-+							THERMAL_NO_LIMIT
-+							THERMAL_NO_LIMIT>,
-+								 <&cpu3
-+							THERMAL_NO_LIMIT
-+							THERMAL_NO_LIMIT>;
-+						contribution = <3072>;
-+					};
-+					map1 {
-+						trip = <&target>;
-+						cooling-device = <&cpu4
-+							THERMAL_NO_LIMIT
-+							14>,
-+								 <&cpu5
-+							THERMAL_NO_LIMIT
-+							14>,
-+								 <&cpu6
-+							THERMAL_NO_LIMIT
-+							14>,
-+								 <&cpu7
-+							THERMAL_NO_LIMIT
-+							14>;
-+						contribution = <1024>;
-+					};
-+				};
- 			};
- 
- 			/* The tzts1 ~ tzts6 don't need to polling */
--- 
-1.9.1
+Adding RMK to CC because he is the PXA I2C slave user I know of.
 
+> ---
+>  drivers/i2c/busses/i2c-pxa.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+> index 2c3c3d6935c0..876e693bafd9 100644
+> --- a/drivers/i2c/busses/i2c-pxa.c
+> +++ b/drivers/i2c/busses/i2c-pxa.c
+> @@ -456,7 +456,10 @@ static int i2c_pxa_wait_slave(struct pxa_i2c *i2c)
+>  			return 1;
+>  		}
+> =20
+> -		msleep(1);
+> +		if (in_interrupt())
+> +			mdelay(1);
+> +		else
+> +			msleep(1);
+>  	}
+> =20
+>  	if (i2c_debug > 0)
+> --=20
+> 2.11.0
+>=20
+
+--cpvLTH7QU4gwfq3S
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1T3XwACgkQFA3kzBSg
+KbZRyw//cTr0sByawJ6jOB3ewub37WDzoXSmdd3Q9hCacD8Ya66zum7xtMEbO2uq
+dG5djFuGXNRsUWQlYo66bxUYHm7zqqYt4EKvKxqJ3WKfreUW805Tjz6HkhCbZvqd
+5euudhyXvpW6cKLU1zBL6hCvf3rPXbigDAiEuJdTin5HrOsNtBeTpceLN1YClze8
+fIJAKfF3zINoI2rvH9Y3lQubb89FohC6kDvwQ3plJtc5a2zFT31BKNI0HaodmKVs
+jGUUTYqAAXr/o/tvTodoZGE9I3dfOraW6qDfv2uetQQRLeaU5c+6BUxqyJIBmwp3
+Btjx+zSXx+/4EBfSKWFnur/VQlhozE2b+tDSlFsnSMFRGr78pNs4sP2yIdGx2WT8
+XCNDiwGgFD4FIGmtzuyBOjwu8XwktDDPgMgK5RXgjXJY/kN6pWZRhYAhwBcRzPjo
+MOD+CJ9Gz49xgigRvO5BwHb+EGK2eh8jMDN6CcjIUwttIyA9QFn9Bmd49yu0YlYc
+M3ZC8u29HR8kraIv+qL61xKVw1+0ZRNKUAV2/nIpn0Quv1AtGPa3iEgny03nseIF
+emlAKD9GZ58FQBzUBeNHbulWnbfVrcNiBeEXEKiRPa/DBwr8ZeAWstnCLOfd55UH
+xA2OXGyXzxRpTdoFwlmR3VLIB2r0QPWJOJtVwsNfi+WEcns7G9I=
+=RuWr
+-----END PGP SIGNATURE-----
+
+--cpvLTH7QU4gwfq3S--
