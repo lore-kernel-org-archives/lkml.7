@@ -2,73 +2,93 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE90CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C365C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82C4120665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04FD7206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:19:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803191;
-	bh=nAkuDP2FQ89IlX5/rCnqh9hhxWvJhrfgiaK5H9MwhLs=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=MHZPjNkcLqInUwrNC5PhnEROq7lTM+NBVP8iqIIwKWNbWyiwlMgw9n7vzbnsyy5Rj
-	 4PNV8012+s4ii5S08HF+VFkw8V4w+IJcOFmhbPr67ZukcZWBUIUnMLG8vRzHT9kKdt
-	 QufRywyvrUMqN2CTysvfXwDgFw/GiMm6nJK01Xdw=
+	s=default; t=1565803198;
+	bh=OAk7QqMcbP1ViKQBmkxH/jmCMAV05Acr4atDy2mMEIM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wi2FgremKftxJgigp909fIs7XaRzu7OWJi+MmS78eQ7/25RGJAcWo8nAHbnxMPzxN
+	 k4XxAQ3qcjMCApgmchoLyQa5EzQOJVgfIS+ItzV58pli7YL4kE0cJhNmkhrrD7QQoa
+	 HjiCZpaSJGL1J2HmAqIQsSyox/PkWxnH4I2kM5Kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbfHNRTt (ORCPT
+        id S1729418AbfHNRT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:19:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43274 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:19:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729579AbfHNRTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:19:48 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1730066AbfHNRLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:11:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9E8D20665;
-        Wed, 14 Aug 2019 17:19:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8C422133F;
+        Wed, 14 Aug 2019 17:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565803187;
-        bh=nAkuDP2FQ89IlX5/rCnqh9hhxWvJhrfgiaK5H9MwhLs=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=hPQgcdLJ/117BHOcYmgSrhkgHU9qP9D4YV/eUBcWWx2IhPQZoqbKaFvVIdHnZXPBX
-         VZ63c3vKXfWdTS1BojNIiOPkGWDBdEXxu4tkGMAOlX/3THqvvn1MD3TATmV/O6u8GK
-         pcn5uDs4ZHqJtDYgt6JORouZYBALVlBBXCSy28wM=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1565802672;
+        bh=OAk7QqMcbP1ViKQBmkxH/jmCMAV05Acr4atDy2mMEIM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=m4uJKmM1R7UA7h/iS1Uvda7+LPlBlq3kREYHPIkiP7oi8prruoZZaNAlOsduHxmWA
+         0NIHL6Q4o8h+esmSvoF0HJ5vIXOYbwC7Jqr8jGNk4nwLPGMCb+EFG1XDd/ex5T4xZX
+         Ne4kh1OsZ6OmPMotPaH66S5rzxkHkqlFDIFHe/wU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
+        syzbot+d6a5a1a3657b596ef132@syzkaller.appspotmail.com,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.19 73/91] can: peak_usb: pcan_usb_pro: Fix info-leaks to USB devices
+Date:   Wed, 14 Aug 2019 19:01:36 +0200
+Message-Id: <20190814165752.821918686@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
+References: <20190814165748.991235624@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190814122958.4981-2-vkoul@kernel.org>
-References: <20190814122958.4981-1-vkoul@kernel.org> <20190814122958.4981-2-vkoul@kernel.org>
-Subject: Re: [PATCH 2/2] clk: qcom: clk-rpmh: Add support for SM8150
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Vinod Koul <vkoul@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 14 Aug 2019 10:19:46 -0700
-Message-Id: <20190814171946.E9E8D20665@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-08-14 05:29:58)
-> Add support for rpmh clocks found in SM8150
->=20
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
+From: Tomas Bortoli <tomasbortoli@gmail.com>
 
-Patch looks OK, but can you convert this driver to use the new parent
-style and then update the binding to handle it? We can fix the other
-platforms and dts files that use this driver in parallel, but sm8150
-will be forward looking.
+commit ead16e53c2f0ed946d82d4037c630e2f60f4ab69 upstream.
+
+Uninitialized Kernel memory can leak to USB devices.
+
+Fix by using kzalloc() instead of kmalloc() on the affected buffers.
+
+Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+Reported-by: syzbot+d6a5a1a3657b596ef132@syzkaller.appspotmail.com
+Fixes: f14e22435a27 ("net: can: peak_usb: Do not do dma on the stack")
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/net/can/usb/peak_usb/pcan_usb_pro.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
+@@ -502,7 +502,7 @@ static int pcan_usb_pro_drv_loaded(struc
+ 	u8 *buffer;
+ 	int err;
+ 
+-	buffer = kmalloc(PCAN_USBPRO_FCT_DRVLD_REQ_LEN, GFP_KERNEL);
++	buffer = kzalloc(PCAN_USBPRO_FCT_DRVLD_REQ_LEN, GFP_KERNEL);
+ 	if (!buffer)
+ 		return -ENOMEM;
+ 
+
 
