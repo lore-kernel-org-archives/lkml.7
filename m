@@ -2,209 +2,219 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 297E3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E74C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB8632083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3056C2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:20:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dgpu3lsc"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LLkaKFDJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbfHNPTt (ORCPT
+        id S1728207AbfHNPUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 11:19:49 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36847 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfHNPTs (ORCPT
+        Wed, 14 Aug 2019 11:20:41 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:28766 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfHNPUk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 11:19:48 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w2so2945689pfi.3;
-        Wed, 14 Aug 2019 08:19:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Km2pgpRIn1Rtk7yawTCCHjLc0RoQZXV3wZQhocfSUP0=;
-        b=dgpu3lscVd/jWu9JCSsgEAghAmVKlj8K8eUZRyng90q9x0VLKK16ERvQYoe9ivvhh9
-         A/7Vj64tFIIZaSKntT3Fe4nXIBT+X6zDn8VSamzz24bb+npc5NSZLz9REXS2vtTgy89G
-         qhraCFu4Yo34LQ08HvYJP3UvXvBkIBcgect/7gHAvO4DsNo9iC7mqQRIUAniFN9s4w0s
-         lDY0+9wdj/uw54YLEVma42KAINP1zSOyMedtLLEzppI+H9DrKPO+91uSi1oDv2vRALTX
-         xs84o5qelR6z+tXPx3wdqF+f2fJROfBMAjtjoJ616ab7ZReY7WPlh/Qzm6iA8jICTYlA
-         fJxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Km2pgpRIn1Rtk7yawTCCHjLc0RoQZXV3wZQhocfSUP0=;
-        b=WAGjyZcD1pB9c5BUCjycV5ipQVOAirxhasZNIbYT5fWaFgGU8ViaybbU/qqk3BqU2G
-         65XbnIIkKMqewnu5kHkx2vFIh9cefkvHHNCPmBIUj5pP1goIrLFQ1GFILqpSdJHigzvN
-         KxME46w7i+nM331dx8274eao+vtByPP27drPyi4N0/+rMakpa+1uaFtpIfTYpbTwjoSj
-         zBfDYhjrggSBSg+C78yQdB+r/KCOis81+DarWsHMjNxmdu9h1/19WkTR3lo0XJjkH573
-         QDfNlKC8GmyvVcTsfRv0/m8/5hiO/EETuOdp/SDHxMlmGN3Xtdk3uB0I8kmKmP00zjbs
-         LlBg==
-X-Gm-Message-State: APjAAAUnS/OxYAt9ERid5ug8wV+VwTet+X1a63bXRG8AfGsTHfC+r07m
-        e0K4ek/xiwy69EZ5hUKrFZ4=
-X-Google-Smtp-Source: APXvYqyUuOXNashqVyigO74bGk3hcx/QshE8qBnwuNr5dHnh3HPFUqEVisEOv+CzsemxmYQZvEQexA==
-X-Received: by 2002:a63:cb4b:: with SMTP id m11mr40382624pgi.49.1565795987214;
-        Wed, 14 Aug 2019 08:19:47 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id g14sm100541pfo.41.2019.08.14.08.19.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 08:19:45 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 08:19:43 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Qian Cai <cai@lca.pw>, Tri Vo <trong@android.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rafael@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: "PM / wakeup: Show wakeup sources stats in sysfs" causes boot
- warnings
-Message-ID: <20190814151943.GA121898@dtor-ws>
-References: <1565731976.8572.16.camel@lca.pw>
- <5d53b238.1c69fb81.d3cd3.cd53@mx.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5d53b238.1c69fb81.d3cd3.cd53@mx.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 14 Aug 2019 11:20:40 -0400
+Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x7EFJLNa020382;
+        Thu, 15 Aug 2019 00:19:22 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7EFJLNa020382
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1565795963;
+        bh=KGInDuib3ttevnP+7+WuDjXitD/kBZuxU7S3UlEMP84=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LLkaKFDJHU8VP5478qZgjrpiY5pXKxQ+37C36RyCMy4jDxKARuEcaehzLj/DHAKc0
+         rqk7UejfA9jICs7M8CRjJQr/hf83FUC2jgLYmHXWbTvQDnMSbPHegjECwMCjvBBNkf
+         nnLG3b/qNTEuCSnWww97NgjA22P6GSghpkqbAcIDE9aXBEzwgtGkaQoCLdopJyoodl
+         Xffoad6xGM+IsO5+vSSR5J9L3q/gM6g+qGF/7BtJe6BRf2iyn3J6TzJ2U8wxkw2N8L
+         Z7q94tyHzWjMw0LK790VShUYyqx9E66+AVrgTFncNirq4M3HHtDCnRjrVjaB/KpUXb
+         uv8qSM41B109g==
+X-Nifty-SrcIP: [126.125.143.222]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Boris Pismenny <borisp@mellanox.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Igor Russkikh <igor.russkikh@aquantia.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        oss-drivers@netronome.com
+Subject: [PATCH v2 2/2] treewide: remove dummy Makefiles for single targets
+Date:   Thu, 15 Aug 2019 00:19:19 +0900
+Message-Id: <20190814151919.16300-2-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190814151919.16300-1-yamada.masahiro@socionext.com>
+References: <20190814151919.16300-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 12:03:19AM -0700, Stephen Boyd wrote:
-> Quoting Qian Cai (2019-08-13 14:32:56)
-> > The linux-next commit "PM / wakeup: Show wakeup sources stats in sysfs" [1]
-> > introduced some baddies during boot on several x86 servers. Reverted the commit
-> > fixed the issue.
-> > 
-> > [1] https://lore.kernel.org/lkml/20190807014846.143949-4-trong@android.com/
-> > 
-> > [   39.195053][    T1] serio: i8042 KBD port at 0x60,0x64 irq 1
-> > [   39.197347][    T1] kobject_add_internal failed for wakeup (error: -2 parent: serio0)
-> > [   39.199845][    T1] INFO: trying to register non-static key.
-> > [   39.201582][    T1] the code is fine but needs lockdep annotation.
-> > [   39.203477][    T1] turning off the locking correctness validator.
-> > [   39.205399][    T1] CPU: 12 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc4-
-> > next-20190813 #3
-> > [   39.207938][    T1] Hardware name: HP ProLiant XL420 Gen9/ProLiant XL420
-> > Gen9, BIOS U19 12/27/2015
-> > [   39.210606][    T1] Call Trace:
-> > [   39.210606][    T1]  dump_stack+0x62/0x9a
-> > [   39.210606][    T1]  register_lock_class+0x95a/0x960
-> > [   39.210606][    T1]  ? __platform_driver_probe+0xcd/0x230
-> > [   39.210606][    T1]  ? __platform_create_bundle+0xc0/0xe0
-> > [   39.210606][    T1]  ? i8042_init+0x4ec/0x578
-> > [   39.210606][    T1]  ? do_one_initcall+0xfe/0x45a
-> > [   39.219571][    T1]  ? kernel_init_freeable+0x614/0x6a7
-> > [   39.219571][    T1]  ? kernel_init+0x11/0x138
-> > [   39.219571][    T1]  ? ret_from_fork+0x35/0x40
-> > [   39.219571][    T1]  ? is_dynamic_key+0xf0/0xf0
-> > [   39.219571][    T1]  ? rwlock_bug.part.0+0x60/0x60
-> > [   39.219571][    T1]  ? __debug_check_no_obj_freed+0x8e/0x250
-> > [   39.219571][    T1]  __lock_acquire.isra.13+0x5f/0x830
-> > [   39.229491][    T1]  ? __debug_check_no_obj_freed+0x152/0x250
-> > [   39.229491][    T1]  lock_acquire+0x107/0x220
-> > [   39.229491][    T1]  ? __pm_relax.part.2+0x21/0xa0
-> > [   39.229491][    T1]  _raw_spin_lock_irqsave+0x35/0x50
-> > [   39.229491][    T1]  ? __pm_relax.part.2+0x21/0xa0
-> > [   39.229491][    T1]  __pm_relax.part.2+0x21/0xa0
-> > [   39.239588][    T1]  wakeup_source_destroy.part.3+0x18/0x190
-> > [   39.239588][    T1]  wakeup_source_register+0x43/0x50
-> > [   39.239588][    T1]  device_wakeup_enable+0x76/0x170
-> > [   39.239588][    T1]  device_set_wakeup_enable+0x13/0x20
-> > [   39.239588][    T1]  i80probe+0x921/0xa45
-> > [   39.339546][    T1]  ? i8042_toggle_aux+0xeb/0xeb
-> > [   39.349486][    T1]  ? kernfs_create_link+0xce/0x100
-> > [   39.349486][    T1]  ? sysfs_do_create_link_sd+0x7b/0xe0
-> > [   39.349486][    T1]  ? acpi_dev_pm_attach+0x31/0xf0
-> > [   39.349486][    T1]  platform_drv_probe+0x51/0xe0
-> > [   39.349486][    T1]  really_probe+0x1a2/0x630
-> > [   39.349486][    T1]  ? device_driver_attach+0xa0/0xa0
-> > [   39.349486][    T1]  driver_probe_device+0xcd/0x1f0
-> > [   39.359562][    T1]  ? device_driver_attach+0xa0/0xa0
-> > [   39.359562][    T1]  device_driver_attach+0x8f/0xa0
-> > [   39.359562][    T1]  __driver_attach+0xc7/0x1a0
-> > [   39.359562][    T1]  bus_for_each_dev+0xfe/0x160
-> > [   39.359562][    T1]  ? subsys_dev_iter_init+0x80/0x80
-> > [   39.359562][    T1]  ? __kasan_check_read+0x11/0x20
-> > [   39.359562][    T1]  ? _raw_spin_unlock+0x27/0x40
-> > [   39.369488][    T1]  driver_attach+0x2b/0x30
-> > [   39.369488][    T1]  bus_add_driver+0x298/0x350
-> > [   39.369488][    T1]  driver_register+0xdc/0x1d0
-> > [   39.369488][    T1]  ? i8042_toggle_aux+0xeb/0xeb
-> > [   39.369488][    T1]  __platform_driver_probe+0xcd/0x230
-> > [   39.3  __platform_create_bundle+0xc0/0xe0
-> > [   39.769489][    T1]  ? i8042_toggle_aux+0xeb/0xeb
-> > [   39.779556][    T1]  ? i8042_probe+0xa45/0xa45
-> > [   39.779556][    T1]  i8042_init+0x4ec/0x578
-> > [   39.779556][    T1]  ? i8042_probe+0xa45/0xa45
-> > [   39.779556][    T1]  ? netdev_run_todo+0x2f/0x4a0
-> > [   39.779556][    T1]  ? qdisc_create_dflt+0xf0/0xf0
-> > [   39.779556][    T1]  ? net_olddevs_init+0x67/0x67
-> > [   39.779556][    T1]  ? i8042_probe+0xa45/0xa45
-> > [   39.789486][    T1]  do_one_initcall+0xfe/0x45a
-> > [   39.789486][    T1]  ? initcall_blacklisted+0x150/0x150
-> > [   39.789486][    T1]  ? __kasan_check_write+0x14/0x20
-> > [   39.789486][    T1]  ? up_write+0xee/0x2a0
-> > [   39.789486][    T1]  kernel_init_freeable+0x614/0x6a7
-> > [   39.789486][    T1]  ? rest_init+0x188/0x188
-> > [   39.789486][    T1]  kernel_init+0x11/0x138
-> > [   39.799563][    T1]  ? rest_init+0x188/0x188
-> > [   39.799563][    T1]  ret_from_fork+0x35/0x40
-> > [   39.803412][    T1] serio: i8042 AUX port at 0x60,0x64 irq 12
-> 
-> Besides the bad error path causing the big stack trace, I think there's
-> a race between when the serio device is added with device_add() in
-> serio_add_port() and when i8042_register_ports() calls
-> device_set_wakeup_enable(). The serio_add_port() function is called from
-> a workqueue that is schedule to run by i8042_register_ports() calling
-> serio_register_port(), but otherwise there isn't any guarantee that the
-> workqueue has actually run by the time the function returns and
-> i8042_register_ports() calls device_set_wakeup_enable().
-> 
-> This means that the device may not have actually been registered yet,
-> and thus doing other device like operations on the serio device before
-> the workqueue runs will lead to weird behavior because the parent device
-> isn't fully registered with the driver core. That causes the error
-> message above:
-> 
-> > [   39.197347][    T1] kobject_add_internal failed for wakeup (error: -2 parent: serio0)
-> 
-> So maybe we need to add another hook after the device is added
-> successfully so we can do the wakeup things.
-> 
-> I also notice that device_set_wakeup_capable() has a check to see if the
-> device is registered yet and it skips creating sysfs entries for the
-> device if it isn't created in sysfs yet. Why? Just so it can be called
-> before the device is created? I guess the same logic is handled by
-> dpm_sysfs_add() if the device is registered after calling
-> device_set_wakeup_*().
-> 
-> There's two approaches I see:
-> 
-> 	1) Do a similar check for device_set_wakeup_enable() and skip
-> 	adding the wakeup class until dpm_sysfs_add().
-> 
-> 	2) Find each case where this happens and only call wakeup APIs
-> 	on the device after the device is added.
+Now that the single target build descends into sub-directories in the
+same way as the normal build, these dummy Makefiles are not needed
+any more.
 
-So from i8042 POV what it is doing now is completely wrong, as it is
-operating on structure in an unknown state, and what you propose below
-makes total sense, except I'd use bus notifier and not a dedicated
-callback, unless we see more serio drivers needing it.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Thanks.
+Changes in v2: None
 
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/Makefile      | 2 --
+ drivers/net/ethernet/mellanox/mlx5/core/accel/Makefile      | 2 --
+ drivers/net/ethernet/mellanox/mlx5/core/diag/Makefile       | 2 --
+ drivers/net/ethernet/mellanox/mlx5/core/en/Makefile         | 2 --
+ drivers/net/ethernet/mellanox/mlx5/core/en/xsk/Makefile     | 1 -
+ drivers/net/ethernet/mellanox/mlx5/core/en_accel/Makefile   | 2 --
+ drivers/net/ethernet/mellanox/mlx5/core/fpga/Makefile       | 2 --
+ drivers/net/ethernet/mellanox/mlx5/core/ipoib/Makefile      | 2 --
+ drivers/net/ethernet/mellanox/mlx5/core/lib/Makefile        | 2 --
+ drivers/net/ethernet/netronome/nfp/bpf/Makefile             | 2 --
+ drivers/net/ethernet/netronome/nfp/flower/Makefile          | 2 --
+ drivers/net/ethernet/netronome/nfp/nfpcore/Makefile         | 2 --
+ drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000/Makefile | 2 --
+ drivers/net/ethernet/netronome/nfp/nic/Makefile             | 2 --
+ 14 files changed, 27 deletions(-)
+ delete mode 100644 drivers/net/ethernet/aquantia/atlantic/hw_atl/Makefile
+ delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/accel/Makefile
+ delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/diag/Makefile
+ delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/Makefile
+ delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/xsk/Makefile
+ delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en_accel/Makefile
+ delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/fpga/Makefile
+ delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/ipoib/Makefile
+ delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/Makefile
+ delete mode 100644 drivers/net/ethernet/netronome/nfp/bpf/Makefile
+ delete mode 100644 drivers/net/ethernet/netronome/nfp/flower/Makefile
+ delete mode 100644 drivers/net/ethernet/netronome/nfp/nfpcore/Makefile
+ delete mode 100644 drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000/Makefile
+ delete mode 100644 drivers/net/ethernet/netronome/nfp/nic/Makefile
+
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/Makefile b/drivers/net/ethernet/aquantia/atlantic/hw_atl/Makefile
+deleted file mode 100644
+index 805fa28f391a..000000000000
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-# kbuild requires Makefile in a directory to build individual objects
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/accel/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/accel/Makefile
+deleted file mode 100644
+index c78512eed8d7..000000000000
+--- a/drivers/net/ethernet/mellanox/mlx5/core/accel/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-subdir-ccflags-y += -I$(src)/..
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/diag/Makefile
+deleted file mode 100644
+index c78512eed8d7..000000000000
+--- a/drivers/net/ethernet/mellanox/mlx5/core/diag/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-subdir-ccflags-y += -I$(src)/..
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/en/Makefile
+deleted file mode 100644
+index c78512eed8d7..000000000000
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-subdir-ccflags-y += -I$(src)/..
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/Makefile
+deleted file mode 100644
+index 5ee42991900a..000000000000
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/Makefile
++++ /dev/null
+@@ -1 +0,0 @@
+-subdir-ccflags-y += -I$(src)/../..
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/Makefile
+deleted file mode 100644
+index c78512eed8d7..000000000000
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-subdir-ccflags-y += -I$(src)/..
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/fpga/Makefile
+deleted file mode 100644
+index c78512eed8d7..000000000000
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-subdir-ccflags-y += -I$(src)/..
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/Makefile
+deleted file mode 100644
+index c78512eed8d7..000000000000
+--- a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-subdir-ccflags-y += -I$(src)/..
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/lib/Makefile
+deleted file mode 100644
+index c78512eed8d7..000000000000
+--- a/drivers/net/ethernet/mellanox/mlx5/core/lib/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-subdir-ccflags-y += -I$(src)/..
+diff --git a/drivers/net/ethernet/netronome/nfp/bpf/Makefile b/drivers/net/ethernet/netronome/nfp/bpf/Makefile
+deleted file mode 100644
+index 805fa28f391a..000000000000
+--- a/drivers/net/ethernet/netronome/nfp/bpf/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-# kbuild requires Makefile in a directory to build individual objects
+diff --git a/drivers/net/ethernet/netronome/nfp/flower/Makefile b/drivers/net/ethernet/netronome/nfp/flower/Makefile
+deleted file mode 100644
+index 805fa28f391a..000000000000
+--- a/drivers/net/ethernet/netronome/nfp/flower/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-# kbuild requires Makefile in a directory to build individual objects
+diff --git a/drivers/net/ethernet/netronome/nfp/nfpcore/Makefile b/drivers/net/ethernet/netronome/nfp/nfpcore/Makefile
+deleted file mode 100644
+index 805fa28f391a..000000000000
+--- a/drivers/net/ethernet/netronome/nfp/nfpcore/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-# kbuild requires Makefile in a directory to build individual objects
+diff --git a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000/Makefile b/drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000/Makefile
+deleted file mode 100644
+index 805fa28f391a..000000000000
+--- a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-# kbuild requires Makefile in a directory to build individual objects
+diff --git a/drivers/net/ethernet/netronome/nfp/nic/Makefile b/drivers/net/ethernet/netronome/nfp/nic/Makefile
+deleted file mode 100644
+index 805fa28f391a..000000000000
+--- a/drivers/net/ethernet/netronome/nfp/nic/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-# kbuild requires Makefile in a directory to build individual objects
 -- 
-Dmitry
+2.17.1
+
