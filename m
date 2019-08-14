@@ -2,216 +2,155 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A48C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63DDC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0033A2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 738F0208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:33:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="jPSDMBQ8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="jF17/G2P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbfHNKcu (ORCPT
+        id S1727099AbfHNKdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:32:50 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39137 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfHNKct (ORCPT
+        Wed, 14 Aug 2019 06:33:45 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:23513 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfHNKdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:32:49 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g8so423696edm.6
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 03:32:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dBtemWUHTumI2mqw+n8wmnycs/uDqcEImdqPTzrreFU=;
-        b=jPSDMBQ8wHXd5nnN4pQRCcjuk/Tf/zo5Gq/c3IPIvlKqLypTaDE7O9pJQQMKJWpurY
-         afliwfOG5B/FTYlhid2lB2X/kDJaCoth4ZBtiLABtPH++SFoldn4GxBJbI+MEXHxPAc/
-         SQCH30Q3GypvPbDTOH9K4MsQ6jwaMfvSzn/U1VB0C5akRUnsXj7WygUAEL2CQAmlpRIr
-         F+CrwVHJ5rcWnIuLAMqxIZJLGzOXzkFMIn65jl6GE/XaxCwLjlLOKLXZndW+zDgDvXDp
-         mBddRPGyfXkHEKxdAds27IMGu+jCEUV69dn9UVjN8XbIvV+8YenKahu2JtCJBXiH2aPy
-         /iug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dBtemWUHTumI2mqw+n8wmnycs/uDqcEImdqPTzrreFU=;
-        b=Ont9CchrfZrux3RsXnyHh/nB2YJ6b3X40ymUq2DxG5uKq64x4CLf1GbMoh6e2J//Ze
-         IrCIYwNOVR8qG3at+ADcAcZeaMDK9fS5AoCoWAqoVk4X0J/liOwqyOs59vjkNx48sjhG
-         IyDPMxj1CDZcuvE17HO4wogwjCxs+Op4iZPKKpPUUBa/xTyg8ZVLopWA/GMpps49nMsk
-         JJ4G9m06EhmDxOaYEa8RFHpz2MJ54P/gPtxYZvgI9EEm5rsMz47TSIyCLneHueshHY4P
-         5tB/wxv6jcpRAsB3TKSHAi+CKRK6pXQTO0H9/BXCRBR2a3XGOveuTGdua1exX0QDOXfJ
-         BdMA==
-X-Gm-Message-State: APjAAAWbcvFDQ22UdMb5R0GBYNBYJzIconA/PpEtzXjzsSabJh3jC7hO
-        m1Uk57QNWDQ3auGfZfvJ8yjFgg==
-X-Google-Smtp-Source: APXvYqwRp6BkhAOiQNXuaWuzsnMLq7pbX/Yzz8215caYil9aHzMp2C3TXzlRapBe4QbVglgHlc04OQ==
-X-Received: by 2002:a05:6402:789:: with SMTP id d9mr28725992edy.25.1565778767338;
-        Wed, 14 Aug 2019 03:32:47 -0700 (PDT)
-Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
-        by smtp.gmail.com with ESMTPSA id a22sm17778362eje.61.2019.08.14.03.32.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 03:32:46 -0700 (PDT)
-From:   Martijn Coenen <maco@android.com>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, kernel-team@android.com,
-        narayan@google.com, dariofreni@google.com, ioffe@google.com,
-        jiyong@google.com, maco@google.com,
-        Martijn Coenen <maco@android.com>
-Subject: [PATCH] RFC: loop: Avoid calling blk_mq_freeze_queue() when possible.
-Date:   Wed, 14 Aug 2019 12:32:44 +0200
-Message-Id: <20190814103244.92518-1-maco@android.com>
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 14 Aug 2019 06:33:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1565778822;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=+dRuRACOuTwimjyPyZLc5UA++p2iDvOTeMgyc+O+/+o=;
+        b=jF17/G2PlQ/5DPYAxiFrJOnvobIGCCWke62obqv7fg+TEhhvXZe54QqQqIQLvHH1by
+        2RMPaTKku0RawaETfEQAVpE8QmIMVj2Nf7f04AScdmKw9nWjcd2bzG1CEHCPHkrQcChh
+        y4ZomHVuvg2LSRsQVd9AsGIywXCA63dsAMGCXe0rtCOQnAsX6kOK+X5P69Rlg3KZ8pK1
+        cXJn+a+Ora4VrHvbtS9AFwfMG27YAjP46VJc2ytiL+Y0eXbUoJ9UJrNvfUCJ5NuQBZY4
+        WfWMXnyltJHMhj8o2XrRa6gJuMPcpT8HTHlWTRw0beRY7272K3IbR45BQnd/Cms5MRxx
+        x1tg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMmw47slWo="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.26.1 DYNA|AUTH)
+        with ESMTPSA id V074e8v7EAXa5EO
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 14 Aug 2019 12:33:36 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: Lay common foundation to make PVR/SGX work without hacks on OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20190814094755.GC52127@atomide.com>
+Date:   Wed, 14 Aug 2019 12:33:36 +0200
+Cc:     Merlijn Wajer <merlijn@wizzup.org>,
+        =?utf-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Philipp Rossak <embed3d@gmail.com>,
+        moaz korena <moaz@korena.xyz>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        =?utf-8?Q?Filip_Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
+        Adam Ford <aford173@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        kernel@pyra-handheld.com,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6A6394A6-9D50-4E43-A8E4-716888897AD6@goldelico.com>
+References: <CAKpie0RXM1UC33YFeFy-kAxfGhYGNkw4vUgNTThf-ZCAhPTVXw@mail.gmail.com> <BE23C1E4-2877-49FA-B230-F9C10691B805@goldelico.com> <CAKpie0TSo-8gmDm9_Zw4Sd+kjVVEomp8yA9Vu8qY2U2AcrQc=w@mail.gmail.com> <8A069D96-C65F-43F5-8F54-20019CFB1A8D@goldelico.com> <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org> <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com> <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org> <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com> <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org> <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com> <20190814094755.GC52127@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since Android Q, the creation and configuration of loop devices is in
-the critical path of device boot. We found that the configuration of
-loop devices is pretty slow, because many ioctl()'s involve freezing the
-block queue, which in turn needs to wait for an RCU grace period. On
-Android devices we've observed up to 60ms for the creation and
-configuration of a single loop device; as we anticipate creating many
-more in the future, we'd like to avoid this delay.
 
-This allows LOOP_SET_BLOCK_SIZE to be called before the loop device has
-been bound; since the block queue is not running at that point, we can
-avoid the expensive freezing of the queue.
+> Am 14.08.2019 um 11:47 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [190814 08:57]:
+>> I also have pushed good news to
+>>=20
+>> 	=
+https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/tree/letux-pvr
+>>=20
+>> Thanks to the help from the Pyra community, I was able to get a =
+(binary) reference
+>> implementation using DRM that works on Pyra/OMAP5. At least the =
+gles1test1.
+>>=20
+>> With that reference setup I was able to fix my Makefiles for the =
+staging/pvr implementation.
+>>=20
+>> I have tested that it works with v4.19.66 and v5.3-rc4 (LPAE build of =
+the LetuxOS kernel tree)
+>> on the Pyra.
+>>=20
+>> In which areas does this tree go beyond the TI SDK/IMG DDK 1.14?
+>>=20
+>> * includes internal API fixes for kernels up to v5.3
+>> * lives in drivers/staging/pvr/1.14.3699939 - so that we can ask for =
+inclusion in linux-next
+>> * has Kconfig and Makefiles for in-kernel configuration (no separate =
+build system)
+>> * builds separate kernel modules for omap3430, omap3630, am335x, =
+omap4, omap5, dra7 etc.
+>>  pvrsrvkm
+>>  e.g. pvrsrvkm_omap_omap5_sgx544_116
+>> * the correct kernel module is automatically probed by matching =
+.compatible in device tree
+>>  so that the code is multi-platform friendly
+>> * includes SoC integration for OMAP3/4/5 and has some preliminary =
+bindings documentation
+>> * code base should also support JZ4780/CI20 and some Intel Atom =
+processors (CedarView, Poulsbo)
+>> * has got a ToDo to describe what should be done during staging phase
+>>=20
+>> 	=
+https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/blob/letux/latest-=
+pvr/drivers/staging/pvr/TODO
+>>=20
+>> My plans for the next steps are:
+>>=20
+>> * do more testing (e.g. X11, kmscube)
+>> * check if and/or how it can run on am335x (BeagleBone) or OMAP3 =
+(e.g. GTA04, OpenPandora)
+>> * try a JZ480/CI20 build (unfortuantely I have no HDMI there with =
+mainline kernels and I am
+>>  missing the user-space libraries for MIPS).
+>=20
+> That sounds good to me, just one comment. Before getting these into
+> staging, I'd like to have omap variants use proper interconnect
+> target module in devicetree like we already have in omap4.dtsi
+> as target-module@56000000. This should simplify things further
+> as the module child device driver(s) can just enable things with
+> runtime PM and we can leave out all the legacy hwmod platform data
+> that sounds like you're still carrying.
 
-On a recent x86, this patch yields the following results:
+Yes, there is still a lot of SoC-glue included:
 
-===
-Call LOOP_SET_BLOCK_SIZE on /dev/loop0 before being bound
-===
-~# time ./set_block_size
+	=
+https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux/omap=
+-pvr-soc-glue
 
-real 0m0.002s
-user 0m0.000s
-sys  0m0.002s
+It would indeed be a good move to simplify and reduce the glue code
+and make it more maintainable / stable / identical on different =
+platforms.
 
-===
-Call LOOP_SET_BLOCK_SIZE on /dev/loop0 after being bound
-===
-~# losetup /dev/loop0 fs.img
-~# time ./set_block_size
+>=20
+> I have patches here to add similar interconnect target modules for
+> at least omap34xx, omap36xx, omap5, and am335x that I'll try to post
+> later on today to play with. For am335x, things still depend on the
+> recentely posted prm rstctrl patches. I'm not sure if I already
+> did a dts patch for dra7 yet, need to check.
 
-real 0m0.008s
-user 0m0.000s
-sys  0m0.002s
+I assume it is not yet in linux-next... So something for v5.5 or later.
 
-Over many runs, this is a 4x improvement.
-
-This is RFC because technically it is a change in behavior; before,
-calling LOOP_SET_BLOCK_SIZE on an unbound device would return ENXIO, and
-userspace programs that left it in their code despite the returned
-error, would now suddenly see the requested value effectuated. I'm not
-sure whether this is acceptable.
-
-An alternative might be a CONFIG option to set the default block size to
-another value than 512. Another alternative I considered is allowing the
-block device to be created with a "frozen" queue, where we can manually
-unfreeze the queue when all the configuration is done. This would be a
-much larger code change, though.
-
-Signed-off-by: Martijn Coenen <maco@android.com>
----
- drivers/block/loop.c | 42 +++++++++++++++++++++++-------------------
- 1 file changed, 23 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index ab7ca5989097a..d4348a4fdd7a6 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -214,7 +214,8 @@ static void __loop_update_dio(struct loop_device *lo, bool dio)
- 	 * LO_FLAGS_READ_ONLY, both are set from kernel, and losetup
- 	 * will get updated by ioctl(LOOP_GET_STATUS)
- 	 */
--	blk_mq_freeze_queue(lo->lo_queue);
-+	if (lo->lo_state == Lo_bound)
-+		blk_mq_freeze_queue(lo->lo_queue);
- 	lo->use_dio = use_dio;
- 	if (use_dio) {
- 		blk_queue_flag_clear(QUEUE_FLAG_NOMERGES, lo->lo_queue);
-@@ -223,7 +224,8 @@ static void __loop_update_dio(struct loop_device *lo, bool dio)
- 		blk_queue_flag_set(QUEUE_FLAG_NOMERGES, lo->lo_queue);
- 		lo->lo_flags &= ~LO_FLAGS_DIRECT_IO;
- 	}
--	blk_mq_unfreeze_queue(lo->lo_queue);
-+	if (lo->lo_state == Lo_bound)
-+		blk_mq_unfreeze_queue(lo->lo_queue);
- }
- 
- static int
-@@ -621,6 +623,8 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
- 
- static inline void loop_update_dio(struct loop_device *lo)
- {
-+	if (lo->lo_state != Lo_bound)
-+		return;
- 	__loop_update_dio(lo, io_is_direct(lo->lo_backing_file) |
- 			lo->use_dio);
- }
-@@ -1510,27 +1514,26 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
- {
- 	int err = 0;
- 
--	if (lo->lo_state != Lo_bound)
--		return -ENXIO;
--
- 	if (arg < 512 || arg > PAGE_SIZE || !is_power_of_2(arg))
- 		return -EINVAL;
- 
--	if (lo->lo_queue->limits.logical_block_size != arg) {
--		sync_blockdev(lo->lo_device);
--		kill_bdev(lo->lo_device);
--	}
-+	if (lo->lo_state == Lo_bound) {
-+		if (lo->lo_queue->limits.logical_block_size != arg) {
-+			sync_blockdev(lo->lo_device);
-+			kill_bdev(lo->lo_device);
-+		}
- 
--	blk_mq_freeze_queue(lo->lo_queue);
-+		blk_mq_freeze_queue(lo->lo_queue);
- 
--	/* kill_bdev should have truncated all the pages */
--	if (lo->lo_queue->limits.logical_block_size != arg &&
--			lo->lo_device->bd_inode->i_mapping->nrpages) {
--		err = -EAGAIN;
--		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
--			__func__, lo->lo_number, lo->lo_file_name,
--			lo->lo_device->bd_inode->i_mapping->nrpages);
--		goto out_unfreeze;
-+		/* kill_bdev should have truncated all the pages */
-+		if (lo->lo_queue->limits.logical_block_size != arg &&
-+				lo->lo_device->bd_inode->i_mapping->nrpages) {
-+			err = -EAGAIN;
-+			pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
-+				__func__, lo->lo_number, lo->lo_file_name,
-+				lo->lo_device->bd_inode->i_mapping->nrpages);
-+			goto out_unfreeze;
-+		}
- 	}
- 
- 	blk_queue_logical_block_size(lo->lo_queue, arg);
-@@ -1538,7 +1541,8 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
- 	blk_queue_io_min(lo->lo_queue, arg);
- 	loop_update_dio(lo);
- out_unfreeze:
--	blk_mq_unfreeze_queue(lo->lo_queue);
-+	if (lo->lo_state == Lo_bound)
-+		blk_mq_unfreeze_queue(lo->lo_queue);
- 
- 	return err;
- }
--- 
-2.23.0.rc1.153.gdeed80330f-goog
-
+BR and thanks,
+Nikolaus=
