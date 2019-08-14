@@ -2,145 +2,178 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D864C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BE1C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 189AC2133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836882083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:03:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AenAOkdd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfHNMCk (ORCPT
+        id S1727485AbfHNMD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 08:02:40 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:40147 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfHNMCj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 08:02:39 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7EC2R69024393, This message is accepted by code: ctloc85258
-Received: from RS-CAS02.realsil.com.cn (rsn1.realsil.com.cn[172.29.17.3](maybeforged))
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7EC2R69024393
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 14 Aug 2019 20:02:27 +0800
-Received: from toshiba (172.29.36.108) by RS-CAS02.realsil.com.cn
- (172.29.17.3) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 14 Aug
- 2019 20:02:27 +0800
-Date:   Wed, 14 Aug 2019 20:02:52 +0800
-From:   Alex Lu <alex_lu@realsil.com.cn>
-To:     Marcel Holtmann <marcel@holtmann.org>
-CC:     Johan Hedberg <johan.hedberg@gmail.com>,
-        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Max Chou <max.chou@realtek.com>
-Subject: [PATCH v3] Bluetooth: btusb: Fix suspend issue for Realtek devices
-Message-ID: <20190814120252.GA4572@toshiba>
-MIME-Version: 1.0
+        Wed, 14 Aug 2019 08:03:57 -0400
+Received: from mail-eopbgr60080.outbound.protection.outlook.com ([40.107.6.80]:1030
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726263AbfHNMD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 08:03:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cnw/fBu+c4SlYSEoqOchRpXhvaOfR2HoO9prSmbGMVA2thxHNlS77mcc/RCRjHu0bOEmPTcNIHSTSM4tIX4vSxOazOHajj5mbTjEFiVlitPEmjUDu4HBGg2JbefcVWoM/y5nRRjPYtDDXv6VYWkNhXyryIIpSMCFTJu8USVs754G8Y+Ls+VPGOPvYo4ltUb42TyB9s0fDt3mArwHuA2695ypBSyxX8wgEyu+6o8Bin+G7GBJevlxpY/gUjnXkqMTXEF31QsIWwajOXcVe8oW35AkrnJ/aTmVhW2akzWg4MiczrIAE+htMOsHl6KwfX6eRvE08Jnhg0NYHzdbaAdj0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sIGYa83jI9xgPwJLHYcF6ge5UfVPaSHW9i7ux4fOhr4=;
+ b=Rb2YKhqXTA0le1c3Fjia+OoO3fCa+yffaF8lqqOJQEVY8Inih8Gu/1eSTr1uLLq4cwxCQ4xt9ikoduF6YnFZ0zmtuMt3W4XMg8mwywWQkGXpJyZknmeath1bkitSpAN10/Me1Wp8RVV9GNg7Oo9mapO+0DGgLq/wTeIOLLZiiD6KMXazETUsJRwdFoH7bLcZ0UXr9y/TOlcGde0v156PeUjKplb+wKEjq6Kp/ot0Dn3gP0KvcUL+0oR1nnZGa6d/3NqmQtLCCfWPaIRBuvCit9z6mPKPEkrfDLUkyeUAWjhmLjnDhLb2Zdd0+RZBOIIVoLFxbtmP4WccGIbDJleEQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sIGYa83jI9xgPwJLHYcF6ge5UfVPaSHW9i7ux4fOhr4=;
+ b=AenAOkddWgcaZOn0hMjx5/P78jQpdCLnHel6I85gKX8RigyvJ+KyXKPYxobWV6IwxmSApCOcW/rhsuultEoZF57ELGJH0gcjUxcmwJT3rjqahrTY9a68lUsejFKezkJU3v9QqMjUxZ7CnF4Vo5qF8frszpGHAWY4XNPz3JrV548=
+Received: from DB8PR04MB6715.eurprd04.prod.outlook.com (20.179.251.14) by
+ DB8PR04MB5867.eurprd04.prod.outlook.com (20.179.11.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.20; Wed, 14 Aug 2019 12:03:51 +0000
+Received: from DB8PR04MB6715.eurprd04.prod.outlook.com
+ ([fe80::b0ab:d127:ca27:e1fa]) by DB8PR04MB6715.eurprd04.prod.outlook.com
+ ([fe80::b0ab:d127:ca27:e1fa%7]) with mapi id 15.20.2157.022; Wed, 14 Aug 2019
+ 12:03:51 +0000
+From:   Robert Chiras <robert.chiras@nxp.com>
+To:     "stefan@agner.ch" <stefan@agner.ch>
+CC:     dl-linux-imx <linux-imx@nxp.com>, "marex@denx.de" <marex@denx.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Subject: Re: [EXT] Re: [PATCH v2 09/15] dt-bindings: display: Add max-res
+ property for mxsfb
+Thread-Topic: [EXT] Re: [PATCH v2 09/15] dt-bindings: display: Add max-res
+ property for mxsfb
+Thread-Index: AQHVUo3mMmhKJOP0h0GajC46r83SHKb6esqAgAAC3ICAAAMVgIAACtWA
+Date:   Wed, 14 Aug 2019 12:03:51 +0000
+Message-ID: <1565784231.3209.74.camel@nxp.com>
+References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
+         <1565779731-1300-10-git-send-email-robert.chiras@nxp.com>
+         <491aff3d08f24ab4d79a4f8c139d2e44@agner.ch>
+         <1565781243.3209.55.camel@nxp.com>
+         <33feedd20e0fc154c5b736f882d24569@agner.ch>
+In-Reply-To: <33feedd20e0fc154c5b736f882d24569@agner.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=robert.chiras@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5e851788-dffb-44cb-0160-08d720af78e6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB5867;
+x-ms-traffictypediagnostic: DB8PR04MB5867:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB5867A6ECBDDCA2AB1B6FEC04E3AD0@DB8PR04MB5867.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01294F875B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(376002)(396003)(346002)(199004)(189003)(86362001)(81156014)(81166006)(6246003)(102836004)(305945005)(7416002)(26005)(53546011)(5660300002)(76176011)(6506007)(186003)(66556008)(66476007)(66946007)(2351001)(66446008)(91956017)(64756008)(1730700003)(8676002)(7736002)(14454004)(2501003)(76116006)(53936002)(44832011)(4326008)(2616005)(446003)(99286004)(476003)(25786009)(486006)(256004)(11346002)(6512007)(478600001)(54906003)(66066001)(50226002)(3846002)(6116002)(229853002)(103116003)(6916009)(14444005)(2906002)(8936002)(36756003)(6436002)(71200400001)(71190400001)(6486002)(5640700003)(316002)(99106002)(17423001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB5867;H:DB8PR04MB6715.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qX57KmA4wPJpWnsRuzX7Mnqu30ZTg5qqMKB9rT/YskcEKi+D5nTRAh5i6pSH/voqbzMZw4ucIE7+7pRMsQCVST1R85kkH7HfJk4ckHJs0oPnCf1uJnkWGNXLqHG6Aem3/3oJspFCh6zmhAiIrj+6ToHXpQjP1ocbNC9eyjBZ5Nu/HcIM0MHfZU9dKn2B+92QMqaIGl1ghsIVIgKp4gw83/HWmatEcA8DA+Zz3NNUfQfhlBvEkoFUi5nY3t6hwhLAhB2U9L+4qAHlPLT475LpUbNXf0YQqAWn7Ix647N3E+HmZ0fcrFNNqlJRTvggF/yOsOydcK+mgGy//xlarhpY89KeKDTAXEtvs9JAbXpXEmg5btb8X4eeyIr89eAM2+MLdxDOxljq6UdThHcDBpbTDvJRRb+iqmF6HR5Okfy00zc=
 Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Originating-IP: [172.29.36.108]
+Content-ID: <4CB1B8C993E68742BADA05B1ABF60A5A@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e851788-dffb-44cb-0160-08d720af78e6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 12:03:51.5040
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GyQSSwOPhftv6oPj43p9vZ5a7uhcwNCLa6oUC4z98wJayRvNGta1pmGTBSG9lKFUrHXMoSPHPeKlg574iY10Nw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5867
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Lu <alex_lu@realsil.com.cn>
-
-From the perspective of controller, global suspend means there is no
-SET_FEATURE (DEVICE_REMOTE_WAKEUP) and controller would drop the
-firmware. It would consume less power. So we should not send this kind
-of SET_FEATURE when host goes to suspend state.
-Otherwise, when making device enter selective suspend, host should send
-SET_FEATURE to make sure the firmware remains.
-
-Signed-off-by: Alex Lu <alex_lu@realsil.com.cn>
----
-Changes in v3:
-  - Change to fit for bluetooth-next
-Changes in v2:
-  - Change flag to be more descriptive
-  - Delete pointless #ifdef CONFIG_BT_HCIBTUSB_RTL and #endif
-
- drivers/bluetooth/btusb.c | 34 ++++++++++++++++++++++++++++++----
- 1 file changed, 30 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 3876fee6ad13..b606c663ba57 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -435,6 +435,7 @@ static const struct dmi_system_id btusb_needs_reset_resume_table[] = {
- #define BTUSB_OOB_WAKE_ENABLED	11
- #define BTUSB_HW_RESET_ACTIVE	12
- #define BTUSB_TX_WAIT_VND_EVT	13
-+#define BTUSB_WAKEUP_DISABLE	14
- 
- struct btusb_data {
- 	struct hci_dev       *hdev;
-@@ -1175,6 +1176,13 @@ static int btusb_open(struct hci_dev *hdev)
- 	 */
- 	device_wakeup_enable(&data->udev->dev);
- 
-+	/* Disable device remote wakeup when host is suspended
-+	 * For Realtek chips, global suspend without
-+	 * SET_FEATURE (DEVICE_REMOTE_WAKEUP) can save more power in device.
-+	 */
-+	if (test_bit(BTUSB_WAKEUP_DISABLE, &data->flags))
-+		device_wakeup_disable(&data->udev->dev);
-+
- 	if (test_and_set_bit(BTUSB_INTR_RUNNING, &data->flags))
- 		goto done;
- 
-@@ -1238,6 +1246,11 @@ static int btusb_close(struct hci_dev *hdev)
- 		goto failed;
- 
- 	data->intf->needs_remote_wakeup = 0;
-+
-+	/* Enable remote wake up for auto-suspend */
-+	if (test_bit(BTUSB_WAKEUP_DISABLE, &data->flags))
-+		data->intf->needs_remote_wakeup = 1;
-+
- 	device_wakeup_disable(&data->udev->dev);
- 	usb_autopm_put_interface(data->intf);
- 
-@@ -3769,11 +3782,11 @@ static int btusb_probe(struct usb_interface *intf,
- 		hdev->setup = btrtl_setup_realtek;
- 		hdev->shutdown = btrtl_shutdown_realtek;
- 
--		/* Realtek devices lose their updated firmware over suspend,
--		 * but the USB hub doesn't notice any status change.
--		 * Explicitly request a device reset on resume.
-+		/* Realtek devices lose their updated firmware over global
-+		 * suspend that means host doesn't send SET_FEATURE
-+		 * (DEVICE_REMOTE_WAKEUP)
- 		 */
--		interface_to_usbdev(intf)->quirks |= USB_QUIRK_RESET_RESUME;
-+		set_bit(BTUSB_WAKEUP_DISABLE, &data->flags);
- 	}
- #endif
- 
-@@ -3947,6 +3960,19 @@ static int btusb_suspend(struct usb_interface *intf, pm_message_t message)
- 		enable_irq(data->oob_wake_irq);
- 	}
- 
-+	/* For global suspend, Realtek devices lose the loaded fw
-+	 * in them. But for autosuspend, firmware should remain.
-+	 * Actually, it depends on whether the usb host sends
-+	 * set feature (enable wakeup) or not.
-+	 */
-+	if (test_bit(BTUSB_WAKEUP_DISABLE, &data->flags)) {
-+		if (PMSG_IS_AUTO(message) &&
-+		    device_can_wakeup(&data->udev->dev))
-+			data->udev->do_remote_wakeup = 1;
-+		else if (!PMSG_IS_AUTO(message))
-+			data->udev->reset_resume = 1;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.19.2
-
+SGkgU3RlZmFubiwNCk9uIE1pLCAyMDE5LTA4LTE0IGF0IDEzOjI1ICswMjAwLCBTdGVmYW4gQWdu
+ZXIgd3JvdGU6DQo+IE9uIDIwMTktMDgtMTQgMTM6MTQsIFJvYmVydCBDaGlyYXMgd3JvdGU6DQo+
+ID4gDQo+ID4gSGkgU3RlZmFuLA0KPiA+IE9uIE1pLCAyMDE5LTA4LTE0IGF0IDEzOjAzICswMjAw
+LCBTdGVmYW4gQWduZXIgd3JvdGU6DQo+ID4gPiANCj4gPiA+IE9uIDIwMTktMDgtMTQgMTI6NDgs
+IFJvYmVydCBDaGlyYXMgd3JvdGU6DQo+ID4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gQWRkIG5l
+dyBvcHRpb25hbCBwcm9wZXJ0eSAnbWF4LXJlcycsIHRvIGxpbWl0IHRoZSBtYXhpbXVtDQo+ID4g
+PiA+IHN1cHBvcnRlZA0KPiA+ID4gPiByZXNvbHV0aW9uIGJ5IHRoZSBNWFNGQl9EUk0gZHJpdmVy
+Lg0KPiA+ID4gSSB3b3VsZCBhbHNvIG1lbnRpb24gdGhlIHJlYXNvbiB3aHkgd2UgbmVlZCB0aGlz
+Lg0KPiA+ID4gDQo+ID4gPiBJIGd1ZXNzIHRoaXMgbmVlZHMgYSB2ZW5kb3IgcHJlZml4IGFzIHdl
+bGwgKGZzbCxtYXgtcmVzKS4gSSBhbHNvDQo+ID4gPiB3b3VsZA0KPiA+ID4gbGlrZSB0byBoYXZl
+IHRoZSBhY2sgb2YgdGhlIGRldmljZSB0cmVlIGZvbGtzIGhlcmUuDQo+ID4gUm9iIEhlcnJpbmcg
+YWxzbyBha2VkIGJlIGFib3V0IHRoaXMsIGFuZCBJJ2xsIGNvcHkgaGVyZSB0aGUgcmVwbHksDQo+
+ID4gd2l0aA0KPiA+IGV4cGxhbmF0aW9uczoNCj4gPiANCj4gPiBJbmRlZWQsIHRoaXMgbGltaXRh
+dGlvbiBpcyBhY3R1YWxseSBkdWUgdG8gYmFuZHdpZHRoIGxpbWl0YXRpb24sDQo+ID4gYnV0DQo+
+ID4gdGhlIHByb2JsZW0gaXMgdGhhdCB0aGlzIGxpbWl0YXRpb24gY29tZXMgb24gaS5NWDhNIChr
+bm93biBhcw0KPiA+IG1TY2FsZQ0KPiA+IDg1MEQpLCB3aGVyZSB0aGUgbWVtb3J5IGJhbmR3aWR0
+aCBjYW5ub3Qgc3VwcG9ydDogR1BVL1ZQVSB3b3JrbG9hZA0KPiA+IGluDQo+ID4gdGhlIHNhbWUg
+dGltZSB3aXRoIGJvdGggRENTUyBkcml2aW5nIDRrQDYwIGFuZCBlTENESUYgZHJpdmluZyAxMDgw
+cA0KPiA+IEA2MC4NCj4gPiBTaW5jZSBlTENESUYgaXMgYSBzZWNvbmRhcnkgZGlzcGxheSB3ZSB0
+aG91Z2ggdG8gYWRkIHRoZSBwb3NpYmlsaXR5DQo+ID4gdG8NCj4gPiBsaW1pdCBpdCdzIGJhbmR3
+aWR0aCBieSBsaW1pdGluZyB0aGUgcmVzb2x1dGlvbi4NCj4gPiBJZiB5b3Ugc2F5IHRoYXQgbW9y
+ZSBkZXRhaWxzIGFyZSBuZWVkZWQsIEkgY2FuIGFkZCB0aGVtIGluIHRoZQ0KPiA+IGRlc2NyaXB0
+aW9uLg0KPiBPaCBzb3JyeSBJIG1pc3NlZCB0aGF0Lg0KPiANCj4gUm9iIEhlcnJpbmcgYWxzbyB3
+cm90ZToNCj4gPiANCj4gPiBJIHN1cHBvc2Ugd2hhdCB5b3UgYXJlIGFmdGVyIGlzIGJhbmR3aWR0
+aCBsaW1pdHM/IElJUkMsIHRoZXJlJ3MNCj4gPiBhbHJlYWR5DQo+ID4gc29tZSBiaW5kaW5ncyBl
+eHByZXNzaW5nIHN1Y2ggbGltaXRzLiBBbHNvLCB3b3VsZG4ndCB5b3UgbmVlZCB0bw0KPiA+IGFj
+Y291bnQNCj4gPiBmb3IgYnBwIGFuZCB1c2luZyB0aGUgMm5kIHBsYW5lIChJSVJDIHRoYXQgdGhl
+cmUgaXMgb25lKS4NCj4gSSBndWVzcyB0aGUgYmluZGluZyBoZSByZWZlcnMgdG8gaXMgbWF4LW1l
+bW9yeS1iYW5kd2lkdGgsIHdoaWNoIGlzDQo+IHVzZWQNCj4gaW4gbXVsdGlwbGUgZHJpdmVyIGFs
+cmVhZHkuIEl0IG1ha2VzIHNlbnNlIHRvIHJldXNlIHRoaXMgcHJvcGVydHkNCj4gaW5zdGVhZCBv
+ZiBpbnZlbnRpbmcgYSBuZXcgc2V0IG9mIHByb3BlcnR5IHdoaWNoIGlzIGFsc28gbm90IHRha2lu
+Zw0KPiBicHANCj4gaW50byBhY2NvdW50Li4uDQpBY3R1YWxseSBJIHNhdyB0aGlzIGJpbmRpbmcs
+IGJ1dCBJIHRob3VnaHQgaXQgaXMgc3RyaWN0bHkgcmVsYXRlZCB0bw0KdGhhdCBkcml2ZXIsIHdo
+ZXJlIGl0IGlzIGRvY3VtZW50ZWQuIE5vdywgdGhhdCB5b3Ugc2F5IHRoaXMgb25lIGlzIHVzZWQN
+CmluIG1hbnkgZHJpdmVycyAoYW5kIHJlY2FsbGluZyB0aGF0IHlvdSBzdWdnZXN0ZWQgZm9yIG15
+ICdtYXgtcmVzJyB0bw0KYWRkIGEgcHJlZml4KSwgSSBnZXQgaXQgbm93Lg0KPiANCj4gVGhlIHBs
+MTExIGRyaXZlciBpbXBsZW1lbnRzIHRoaXMgcHJvcGVydHksIGl0IHNob3VsZCBiZSBmYWlybHkg
+ZWFzeQ0KPiB0bw0KPiBhZG9wdCB0aGF0IGNvZGUuDQpTdXJlLCBJIHdpbGwgZG8gc29tZXRoaW5n
+IHNpbWlsYXIgaGVyZSwgdG9vLg0KPiANCj4gLS0NCj4gU3RlZmFuDQo+IA0KPiANCj4gDQo+ID4g
+DQo+ID4gPiANCj4gPiA+IA0KPiA+ID4gLS0NCj4gPiA+IFN0ZWZhbg0KPiA+ID4gDQo+ID4gPiA+
+IA0KPiA+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFJvYmVydCBDaGly
+YXMgPHJvYmVydC5jaGlyYXNAbnhwLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+IMKgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXhzZmIudHh0IHwgNiArKysrKysN
+Cj4gPiA+ID4gwqAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspDQo+ID4gPiA+IA0KPiA+
+ID4gPiBkaWZmIC0tZ2l0DQo+ID4gPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvbXhzZmIudHh0DQo+ID4gPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvbXhzZmIudHh0DQo+ID4gPiA+IGluZGV4IDQ3MmUxZWEuLjU1ZTIy
+ZWQgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L214c2ZiLnR4dA0KPiA+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9teHNmYi50eHQNCj4gPiA+ID4gQEAgLTE3LDYgKzE3LDEyIEBA
+IFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gPiA+IMKgUmVxdWlyZWQgc3ViLW5vZGVzOg0KPiA+
+ID4gPiDCoMKgwqAtIHBvcnQ6IFRoZSBjb25uZWN0aW9uIHRvIGFuIGVuY29kZXIgY2hpcC4NCj4g
+PiA+ID4gDQo+ID4gPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiArLSBtYXgtcmVz
+OsKgwqDCoGFuIGFycmF5IHdpdGggYSBtYXhpbXVtIG9mIHR3byBpbnRlZ2VycywNCj4gPiA+ID4g
+cmVwcmVzZW50aW5nDQo+ID4gPiA+IHRoZQ0KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqBtYXhpbXVtIHN1cHBvcnRlZCByZXNvbHV0aW9uLCBpbiB0aGUgZm9ybSBvZg0KPiA+ID4g
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA8bWF4WD4sIDxtYXhZPjsgaWYgb25lIG9mIHRo
+ZSBpdGVtIGlzIDwwPiwgdGhlDQo+ID4gPiA+IGRlZmF1bHQNCj4gPiA+ID4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgZHJpdmVyLWRlZmluZWQgbWF4aW11bSByZXNvbHV0aW9uIGZvciB0aGF0
+IGF4aXMNCj4gPiA+ID4gaXMNCj4gPiA+ID4gdXNlZA0KPiA+ID4gPiArDQo+ID4gPiA+IMKgRXhh
+bXBsZToNCj4gPiA+ID4gDQo+ID4gPiA+IMKgwqDCoMKgwqDCoGxjZGlmMTogZGlzcGxheS1jb250
+cm9sbGVyQDIyMjAwMDAgew0KPiA+IFRoYW5rcywNCj4gPiBSb2JlcnQ=
