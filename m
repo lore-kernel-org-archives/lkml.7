@@ -2,119 +2,206 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFA2C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3EAC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27257206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565789270;
-	bh=x7mdKvWLxMd/R2+emM7IDljJoGkEVQ8qgJIieKj8u60=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=dG4jlaXi5MXf0RRDmYxPDa4tFuljXZR6lUJ9ZXR9yUmIO44S1z2+NBlWCrS9qMvm/
-	 0N7F7Eaxq/dW0bbBfIjCYuK7lIJWNMRbwrADg3fwz5hlI5ONSkB/PmdAQYkwC7GDq7
-	 ppen/6YPb3A4pUf5ZFzkfjegKjo5Pj0CiMgCjSm0=
+	by mail.kernel.org (Postfix) with ESMTP id A3A82206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:27:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="REGzqX53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbfHNN1s (ORCPT
+        id S1728040AbfHNN16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 09:27:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfHNN1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:27:48 -0400
-Received: from [192.168.1.31] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F96D206C1;
-        Wed, 14 Aug 2019 13:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565789266;
-        bh=x7mdKvWLxMd/R2+emM7IDljJoGkEVQ8qgJIieKj8u60=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WDuyKCFGBd7tB36ZQm59oQ03cURtX1lPeOYheXDnNn1m0aJeQdHM7sCm0FVHIZ2xh
-         fQfLGoEhDvmllBIO/0zBS5PvKKs86gJVyRs2n5kERwI6gYfPFtsJJDJay2KtSX9+AZ
-         bB2FVFF+V+XhW7YqezaGbS0dYWbxx8rYnkdbOog8=
-Subject: Re: [PATCH] clk: socfpga: deindent code to proper indentation
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-References: <20190814002402.18154-1-sboyd@kernel.org>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <8e2a3d84-9b6c-be16-e404-3df367aaf344@kernel.org>
-Date:   Wed, 14 Aug 2019 08:27:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190814002402.18154-1-sboyd@kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Wed, 14 Aug 2019 09:27:58 -0400
+Received: from mail-eopbgr130047.outbound.protection.outlook.com ([40.107.13.47]:30887
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726551AbfHNN15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:27:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R0dhX0lPYPL82ZsdcaXS7JDcikD9zKYnnxrRdomTvS6hIdmWyd0AAligDJxWX2BacpOWdKWn8a/KgTVSdeJC38wi15eTfH0N9v00nk2FDLI1772jpB483qdORm6jjoLYUAvSEFUR8VC7rYoIH7K41j42JwldzeKUdOcTKBZfB2+Eisvpo+xqQQshzWJipxd2DtO//sdBsRtMiMjw10q59xsNHFsa7YCsVQGtNAkYWogRyLkKKt66fXkRkX9cKNVer0zajNDVho8+HqbIkF4xsEpPXnRliuSn+/cgUirK5H3If3LikoqWer/xJ96SrHR7tWbilmjctejvIbWkK8k/1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aXtUnfBm/RmYoAdAhMp7g7aP3a+4ZFnCVZuMBoG+XJA=;
+ b=faW9BtYTMouOQOLJ0ZOzoc2bXUx/NPgHX+Bwgx5sXGA0dABPzMA46LModighAG4WNJU5CN8CdPo5RFoSfVwVkKNLy4Ak34cAtIkxE24Mc006excaj2d/ydRrA+yGs7vetWdVprykgtyrVpY/yAAzdQJvix+TAKcs08XsxuNghnYQPkmG0DuSadeE/3bCtS46GHtl5bOmjsBIJETJ6NTSrqx24acSKihkkC+Z27Fuu3CKwf31ZVS1lvk2PZNy8I81dkvIw7PUvAQxcgo+jzwtPelg/hcspcTyK2GEy1NVjOIDrB194Z54Kbet/zrvZN8ANv2Fv0Q2TjTYvHduhHLXXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aXtUnfBm/RmYoAdAhMp7g7aP3a+4ZFnCVZuMBoG+XJA=;
+ b=REGzqX535jrPExQjR5xop/jXEm/IxuOijqgwwc6zKwXToowceUci3aqLFuamW3LKc5fuXmgXx7d4HKFSCMjRshfW1mIexxsZmXS/+/RHMyqI0LSrzEuhcVTONQSyBo4gt1cH9naEiTOXcyN4tF9J+rNFx7ieP/xDF5aZOIxvUU0=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4543.eurprd05.prod.outlook.com (20.176.3.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.20; Wed, 14 Aug 2019 13:27:51 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2157.022; Wed, 14 Aug 2019
+ 13:27:51 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
+Thread-Topic: [PATCH 04/15] mm: remove the pgmap field from struct
+ hmm_vma_walk
+Thread-Index: AQHVTHDc5B4IgstYQk6yBJaVfn8xGqbv9wIAgAARNACAAMySgIAJE76AgABlPQCAAGF5AA==
+Date:   Wed, 14 Aug 2019 13:27:50 +0000
+Message-ID: <20190814132746.GE13756@mellanox.com>
+References: <20190806160554.14046-1-hch@lst.de>
+ <20190806160554.14046-5-hch@lst.de> <20190807174548.GJ1571@mellanox.com>
+ <CAPcyv4hPCuHBLhSJgZZEh0CbuuJNPLFDA3f-79FX5uVOO0yubA@mail.gmail.com>
+ <20190808065933.GA29382@lst.de>
+ <CAPcyv4hMUzw8vyXFRPe2pdwef0npbMm9tx9wiZ9MWkHGhH1V6w@mail.gmail.com>
+ <20190814073854.GA27249@lst.de>
+In-Reply-To: <20190814073854.GA27249@lst.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: QB1PR01CA0025.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:2d::38) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4cc061f5-56ad-4773-7c58-08d720bb3481
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4543;
+x-ms-traffictypediagnostic: VI1PR05MB4543:
+x-microsoft-antispam-prvs: <VI1PR05MB4543101E2F4E883967CA67AACFAD0@VI1PR05MB4543.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01294F875B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(396003)(39860400002)(136003)(346002)(189003)(199004)(6116002)(33656002)(7416002)(86362001)(11346002)(6916009)(2616005)(5660300002)(8676002)(476003)(14454004)(6246003)(7736002)(25786009)(54906003)(1076003)(26005)(102836004)(3846002)(66066001)(316002)(186003)(8936002)(305945005)(81166006)(2906002)(478600001)(52116002)(6512007)(76176011)(99286004)(71190400001)(6436002)(229853002)(71200400001)(256004)(446003)(66446008)(66556008)(386003)(6486002)(6506007)(66476007)(64756008)(486006)(36756003)(4326008)(81156014)(66946007)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4543;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Vs9ITQhDo95Y04P7vJSqSGZG48VlfvfPENlCo1dwgbyOptbvw1pd2E1mK3POI+WEgDsqmUBS4RMZInyDX3g62MvJ16dEjM+owZnp17xkqnaVeKjELYMDp0KjC7FTz+1/xPuOF5qdDQiRHBBkcTBvl3bPKQGJHWkOGSICXO3U41R+fsyeueZt4AF/iVe9KGEh0B1WnyYvp3NNJGE1Jc4rFHAUK0uexqgFjSt/RtrBRXiaTfDoNZ2i3mR2GxGhND+T7rH/3P+RptLFNJtizlvJ+NzM+nRyKAaL5ii04o9jSIu+QNPEKqd6F+Qe6O1wSgaWM6Sz/eAeeLMvhLnh+gfKuTU8jVQ775LxRCSTRTxrWXGDXvu0o5tzQI2BKBW7YP6DtNfNJrMs8A2j+PCaBvHcUN7bDO1EAdnJAKQaypE2Zps=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <EF42566A523CE142A2EFF155B9958285@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4cc061f5-56ad-4773-7c58-08d720bb3481
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 13:27:50.9468
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IMnZjJw4rXdPNRe7707GHxiF1SFEJxFKOQBVTYGk2VFuwM9F8tUpkMTyYxiO1iPafyZWUOCAlqhQrz4SzCWVzg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4543
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 14, 2019 at 09:38:54AM +0200, Christoph Hellwig wrote:
+> On Tue, Aug 13, 2019 at 06:36:33PM -0700, Dan Williams wrote:
+> > Section alignment constraints somewhat save us here. The only example
+> > I can think of a PMD not containing a uniform pgmap association for
+> > each pte is the case when the pgmap overlaps normal dram, i.e. shares
+> > the same 'struct memory_section' for a given span. Otherwise, distinct
+> > pgmaps arrange to manage their own exclusive sections (and now
+> > subsections as of v5.3). Otherwise the implementation could not
+> > guarantee different mapping lifetimes.
+> >=20
+> > That said, this seems to want a better mechanism to determine "pfn is
+> > ZONE_DEVICE".
+>=20
+> So I guess this patch is fine for now, and once you provide a better
+> mechanism we can switch over to it?
 
+What about the version I sent to just get rid of all the strange
+put_dev_pagemaps while scanning? Odds are good we will work with only
+a single pagemap, so it makes some sense to cache it once we find it?
 
-On 8/13/19 7:24 PM, Stephen Boyd wrote:
-> This code is indented oddly, causing checkpatch to complain. Indent it
-> properly.
-> 
-> Cc: Dinh Nguyen <dinguyen@kernel.org>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-> ---
->  drivers/clk/socfpga/clk-gate.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
-
+diff --git a/mm/hmm.c b/mm/hmm.c
+index 9a908902e4cc38..4e30128c23a505 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -497,10 +497,6 @@ static int hmm_vma_handle_pmd(struct mm_walk *walk,
+ 		}
+ 		pfns[i] =3D hmm_device_entry_from_pfn(range, pfn) | cpu_flags;
+ 	}
+-	if (hmm_vma_walk->pgmap) {
+-		put_dev_pagemap(hmm_vma_walk->pgmap);
+-		hmm_vma_walk->pgmap =3D NULL;
+-	}
+ 	hmm_vma_walk->last =3D end;
+ 	return 0;
+ #else
+@@ -604,10 +600,6 @@ static int hmm_vma_handle_pte(struct mm_walk *walk, un=
+signed long addr,
+ 	return 0;
+=20
+ fault:
+-	if (hmm_vma_walk->pgmap) {
+-		put_dev_pagemap(hmm_vma_walk->pgmap);
+-		hmm_vma_walk->pgmap =3D NULL;
+-	}
+ 	pte_unmap(ptep);
+ 	/* Fault any virtual address we were asked to fault */
+ 	return hmm_vma_walk_hole_(addr, end, fault, write_fault, walk);
+@@ -690,16 +682,6 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
+ 			return r;
+ 		}
+ 	}
+-	if (hmm_vma_walk->pgmap) {
+-		/*
+-		 * We do put_dev_pagemap() here and not in hmm_vma_handle_pte()
+-		 * so that we can leverage get_dev_pagemap() optimization which
+-		 * will not re-take a reference on a pgmap if we already have
+-		 * one.
+-		 */
+-		put_dev_pagemap(hmm_vma_walk->pgmap);
+-		hmm_vma_walk->pgmap =3D NULL;
+-	}
+ 	pte_unmap(ptep - 1);
+=20
+ 	hmm_vma_walk->last =3D addr;
+@@ -751,10 +733,6 @@ static int hmm_vma_walk_pud(pud_t *pudp,
+ 			pfns[i] =3D hmm_device_entry_from_pfn(range, pfn) |
+ 				  cpu_flags;
+ 		}
+-		if (hmm_vma_walk->pgmap) {
+-			put_dev_pagemap(hmm_vma_walk->pgmap);
+-			hmm_vma_walk->pgmap =3D NULL;
+-		}
+ 		hmm_vma_walk->last =3D end;
+ 		return 0;
+ 	}
+@@ -1026,6 +1004,14 @@ long hmm_range_fault(struct hmm_range *range, unsign=
+ed int flags)
+ 			/* Keep trying while the range is valid. */
+ 		} while (ret =3D=3D -EBUSY && range->valid);
+=20
++		/*
++		 * We do put_dev_pagemap() here so that we can leverage
++		 * get_dev_pagemap() optimization which will not re-take a
++		 * reference on a pgmap if we already have one.
++		 */
++		if (hmm_vma_walk->pgmap)
++			put_dev_pagemap(hmm_vma_walk->pgmap);
++
+ 		if (ret) {
+ 			unsigned long i;
+=20
 
