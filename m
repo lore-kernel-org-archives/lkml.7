@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCD5C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD2CC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD73214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B967216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727638AbfHNKmD (ORCPT
+        id S1727662AbfHNKmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:42:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:52008 "EHLO foss.arm.com"
+        Wed, 14 Aug 2019 06:42:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:52030 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727573AbfHNKl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:41:59 -0400
+        id S1726821AbfHNKmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:42:01 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C58AA1597;
-        Wed, 14 Aug 2019 03:41:58 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4741815AD;
+        Wed, 14 Aug 2019 03:42:01 -0700 (PDT)
 Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 056CB3F706;
-        Wed, 14 Aug 2019 03:41:56 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6EE2A3F706;
+        Wed, 14 Aug 2019 03:41:59 -0700 (PDT)
 From:   Mark Rutland <mark.rutland@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     ak@linux.intel.com, akpm@linux-foundation.org,
@@ -32,9 +32,9 @@ Cc:     ak@linux.intel.com, akpm@linux-foundation.org,
         davem@davemloft.net, hch@lst.de, kan.liang@intel.com,
         mark.rutland@arm.com, mingo@kernel.org, peterz@infradead.org,
         riel@surriel.com, will@kernel.org
-Subject: [PATCH 8/9] x86/fpu: correctly check for kthreads
-Date:   Wed, 14 Aug 2019 11:41:30 +0100
-Message-Id: <20190814104131.20190-9-mark.rutland@arm.com>
+Subject: [PATCH 9/9] samples/kretprobe: correctly check for kthreads
+Date:   Wed, 14 Aug 2019 11:41:31 +0100
+Message-Id: <20190814104131.20190-10-mark.rutland@arm.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190814104131.20190-1-mark.rutland@arm.com>
 References: <20190814104131.20190-1-mark.rutland@arm.com>
@@ -42,14 +42,6 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-
-Per commit:
-
-  0cecca9d03c964ab ("x86/fpu: Eager switch PKRU state")
-
-... switch_fpu_state() is trying to distinguish user threads from
-kthreads, such that kthreads consistently use init_pkru_value. It does
-do by looking at current->mm.
 
 In general, a non-NULL current->mm doesn't imply that current is a
 kthread, as kthreads can install an mm via use_mm(), and so it's
@@ -59,29 +51,26 @@ kthread.
 For consistency, let's use is_kthread() here.
 
 Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Christoph Hellwig <hch@lst.de>
 Cc: Ingo Molnar <mingo@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 ---
- arch/x86/include/asm/fpu/internal.h | 2 +-
+ samples/kprobes/kretprobe_example.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 4c95c365058a..ed3d85fa7c67 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -607,7 +607,7 @@ static inline void switch_fpu_finish(struct fpu *new_fpu)
- 	 * PKRU state is switched eagerly because it needs to be valid before we
- 	 * return to userland e.g. for a copy_to_user() operation.
- 	 */
--	if (current->mm) {
-+	if (!is_kthread(current)) {
- 		pk = get_xsave_addr(&new_fpu->state.xsave, XFEATURE_PKRU);
- 		if (pk)
- 			pkru_val = pk->pkru;
+diff --git a/samples/kprobes/kretprobe_example.c b/samples/kprobes/kretprobe_example.c
+index 186315ca88b3..d6e0bf196f0e 100644
+--- a/samples/kprobes/kretprobe_example.c
++++ b/samples/kprobes/kretprobe_example.c
+@@ -41,7 +41,7 @@ static int entry_handler(struct kretprobe_instance *ri, struct pt_regs *regs)
+ {
+ 	struct my_data *data;
+ 
+-	if (!current->mm)
++	if (is_kthread(current))
+ 		return 1;	/* Skip kernel threads */
+ 
+ 	data = (struct my_data *)ri->data;
 -- 
 2.11.0
 
