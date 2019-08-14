@@ -5,54 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716B2C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440CFC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D5221721
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B3D82173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802415;
-	bh=BluXNTtUwEK0Jl4OaSu1C2M9EndSW854P3+bDniEGPE=;
+	s=default; t=1565802419;
+	bh=zAJIPmjoCYWSGafJerE0GQskZKt2BcTJxwk8jxxgqyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T9yk4OVdB9werdnnr46vy4Vcg+IsnSDhlWgaWX4Zr3akRiiGrqapAkwH3j1fT2vMP
-	 VrjpGUA27b9NBpHJkRbXnUkVP5PgFz3TOBUL+dI85rvkP74JWoNBuz5NmCT75anZXL
-	 HEucmklrOb/uENDlVH/njwUpZyUvacPZF2hK3uJs=
+	b=vth8CWi1Jr5zKE6h/ZGEuea6T354819foPOAYbVsvUo5WeCxXdA9hm6z4qjgpeyhx
+	 rQZlYEQPG5iq+d7VrZ9Pg5RX5rZw5cdU1+s5lhasJs2Qshao2dl7DsuaRRg79LHHa2
+	 yRoKyPCnPo4p1cJ+DN3IBJyZXkDjUPaGNEXUz1M0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbfHNRGy (ORCPT
+        id S1729758AbfHNRG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56014 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:06:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728458AbfHNRGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:06:47 -0400
+        id S1729743AbfHNRGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:06:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC028216F4;
-        Wed, 14 Aug 2019 17:06:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74C362173B;
+        Wed, 14 Aug 2019 17:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802406;
-        bh=BluXNTtUwEK0Jl4OaSu1C2M9EndSW854P3+bDniEGPE=;
+        s=default; t=1565802409;
+        bh=zAJIPmjoCYWSGafJerE0GQskZKt2BcTJxwk8jxxgqyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KKMSgQydPzsYgasprJyWlgvOSLgQiP4py9QOh53n+PDE76iqJJdYwGc0S4vuMBY2P
-         /3qkCmMoqBH8B4nj6OCexIILE+mhUhm7j7ilvN7kGszb1bNuQVNCocuHXPpe/jD4Cy
-         R4mkLdalRJ6gmM9zpJ/G9c7FC0ZwOdmZXCEJUa9g=
+        b=U7N99X8xJKJtromylpThjigC2FqobTzh1SYk5iwsa1F4Yjsuy/IJpVuCSc9HOsW6H
+         /y8ELEB4XgaWYvsrkxXOwZ3GKr5sYbwpYeGxpg/CqLKE+7Kq6BGb23kDIEaGEQbjw6
+         hrXEcxLdTuCaltG1+OTAGxNXej4jIWEdcXduzeVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunying Sun <yunying.sun@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, bp@alien8.de, hpa@zytor.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 113/144] perf/x86/intel: Fix invalid Bit 13 for Icelake MSR_OFFCORE_RSP_x register
-Date:   Wed, 14 Aug 2019 19:01:09 +0200
-Message-Id: <20190814165804.637162453@linuxfoundation.org>
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 088/144] arm64: dts: imx8mm: Correct SAI3 RXC/TXFS pins mux option #1
+Date:   Wed, 14 Aug 2019 19:00:44 +0200
+Message-Id: <20190814165803.557924318@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -65,56 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b238a64c3009fed36eaea1af629d9377759d87d ]
+[ Upstream commit 52d09014bb104a9157c0f5530700291052d2955c ]
 
-The Intel SDM states that bit 13 of Icelake's MSR_OFFCORE_RSP_x
-register is valid, and used for counting hardware generated prefetches
-of L3 cache. Update the bitmask to allow bit 13.
+According to i.MX8MM reference manual Rev.1, 03/2019:
 
-Before:
-$ perf stat -e cpu/event=0xb7,umask=0x1,config1=0x1bfff/u sleep 3
- Performance counter stats for 'sleep 3':
-   <not supported>      cpu/event=0xb7,umask=0x1,config1=0x1bfff/u
+SAI3_RXC pin's mux option #1 should be GPT1_CLK, NOT GPT1_CAPTURE2;
+SAI3_TXFS pin's mux option #1 should be GPT1_CAPTURE2, NOT GPT1_CLK.
 
-After:
-$ perf stat -e cpu/event=0xb7,umask=0x1,config1=0x1bfff/u sleep 3
- Performance counter stats for 'sleep 3':
-             9,293      cpu/event=0xb7,umask=0x1,config1=0x1bfff/u
-
-Signed-off-by: Yunying Sun <yunying.sun@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: acme@kernel.org
-Cc: alexander.shishkin@linux.intel.com
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
-Cc: jolsa@redhat.com
-Cc: namhyung@kernel.org
-Link: https://lkml.kernel.org/r/20190724082932.12833-1-yunying.sun@intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: c1c9d41319c3 ("dt-bindings: imx: Add pinctrl binding doc for imx8mm")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 4 ++--
+ arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 2889dd0235668..e9042e3f3052c 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -263,8 +263,8 @@ static struct event_constraint intel_icl_event_constraints[] = {
- };
- 
- static struct extra_reg intel_icl_extra_regs[] __read_mostly = {
--	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x3fffff9fffull, RSP_0),
--	INTEL_UEVENT_EXTRA_REG(0x01bb, MSR_OFFCORE_RSP_1, 0x3fffff9fffull, RSP_1),
-+	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x3fffffbfffull, RSP_0),
-+	INTEL_UEVENT_EXTRA_REG(0x01bb, MSR_OFFCORE_RSP_1, 0x3fffffbfffull, RSP_1),
- 	INTEL_UEVENT_PEBS_LDLAT_EXTRA_REG(0x01cd),
- 	INTEL_UEVENT_EXTRA_REG(0x01c6, MSR_PEBS_FRONTEND, 0x7fff17, FE),
- 	EVENT_EXTRA_END
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h b/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
+index e25f7fcd79975..cffa8991880d1 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
++++ b/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
+@@ -462,7 +462,7 @@
+ #define MX8MM_IOMUXC_SAI3_RXFS_GPIO4_IO28                                   0x1CC 0x434 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_RXFS_TPSMP_HTRANS0                                0x1CC 0x434 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI3_RXC_SAI3_RX_BCLK                                  0x1D0 0x438 0x000 0x0 0x0
+-#define MX8MM_IOMUXC_SAI3_RXC_GPT1_CAPTURE2                                 0x1D0 0x438 0x000 0x1 0x0
++#define MX8MM_IOMUXC_SAI3_RXC_GPT1_CLK                                      0x1D0 0x438 0x000 0x1 0x0
+ #define MX8MM_IOMUXC_SAI3_RXC_SAI5_RX_BCLK                                  0x1D0 0x438 0x4D0 0x2 0x2
+ #define MX8MM_IOMUXC_SAI3_RXC_GPIO4_IO29                                    0x1D0 0x438 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_RXC_TPSMP_HTRANS1                                 0x1D0 0x438 0x000 0x7 0x0
+@@ -472,7 +472,7 @@
+ #define MX8MM_IOMUXC_SAI3_RXD_GPIO4_IO30                                    0x1D4 0x43C 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_RXD_TPSMP_HDATA0                                  0x1D4 0x43C 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI3_TXFS_SAI3_TX_SYNC                                 0x1D8 0x440 0x000 0x0 0x0
+-#define MX8MM_IOMUXC_SAI3_TXFS_GPT1_CLK                                     0x1D8 0x440 0x000 0x1 0x0
++#define MX8MM_IOMUXC_SAI3_TXFS_GPT1_CAPTURE2                                0x1D8 0x440 0x000 0x1 0x0
+ #define MX8MM_IOMUXC_SAI3_TXFS_SAI5_RX_DATA1                                0x1D8 0x440 0x4D8 0x2 0x2
+ #define MX8MM_IOMUXC_SAI3_TXFS_GPIO4_IO31                                   0x1D8 0x440 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_TXFS_TPSMP_HDATA1                                 0x1D8 0x440 0x000 0x7 0x0
 -- 
 2.20.1
 
