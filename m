@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 462EFC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA2EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D27D208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B01ED2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802304;
-	bh=gMyYvyHi4bzkfcwcBzPJRr8p4xBjXOE9TAdzrk2+zuE=;
+	s=default; t=1565802311;
+	bh=kyMMWi/9VDnkrXmroYinFKQnd21XEuq3gSb6JFy5QkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ezZSDQeZhwTgWpxhSBycOsm7lykVNAGQZrAhBbjsu74XJ0Fe4TPmOf1jtKYefEn4G
-	 YlgSDAh9Rb5awHWEGRLoDMGcb3ZPCr5kCDcImTqUl0j9+EmNnadigXL1kklEx0kdpy
-	 iqf6YyU9dU/lk6vZMdWZzcnhn+yLqhK1EkNTGMwI=
+	b=NNNCVA+qn6ie104sxD9Tw3VTkjcjAvA832Zy073cEWZranZiRAPfwnTfEBZ4KHYyf
+	 HlECU1FloP7P+wV7YFJefyHHMKiVQM1lTSsrfL9JNXZUjtimCBUhnuTb6AyZp+Vrc7
+	 s3Qu9ryV/cIgdCOJRE9t3WXj2npj+2/sax2MT0Ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729354AbfHNRFD (ORCPT
+        id S1729380AbfHNRFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:05:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53878 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:05:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728561AbfHNRFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:05:00 -0400
+        id S1729357AbfHNRFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:05:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17AB82084D;
-        Wed, 14 Aug 2019 17:04:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27EEA214DA;
+        Wed, 14 Aug 2019 17:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802299;
-        bh=gMyYvyHi4bzkfcwcBzPJRr8p4xBjXOE9TAdzrk2+zuE=;
+        s=default; t=1565802304;
+        bh=kyMMWi/9VDnkrXmroYinFKQnd21XEuq3gSb6JFy5QkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tosbT3N1NXDB7d+irX0pMkkLn+mjjqhXLdmDTid2tuEx7zd2+ZRdNvoz6+5BNS9W2
-         WaANpKosQSQeG7vGn/bY8XZcE48tUkUO9r2ZrW/ewy8RnlufBXpJYhpqHq2SZxIidM
-         WuvAbBEbuvr8CGXdsJXe5dXzNHs1sBz0Ts6XUyMU=
+        b=sHrClJmDvuH2N7bu2CnFyFkIFPkrsYvIhZDHOSD4LF/mBfSp8KvdKvvQxsQ9BASmF
+         FIHzoagmSKAAjzw0dUjh31BXx8asDbiWJk803scMl/sqXJiW+uCh/RTyWxbKsLx6e0
+         5X1dcEGIoNNCw7IelYWqv/9EvoR1OyT3lcR3cTqQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alvin Lee <alvin.lee2@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>, Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Thomas Tai <thomas.tai@oracle.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 072/144] drm/amd/display: Only enable audio if speaker allocation exists
-Date:   Wed, 14 Aug 2019 19:00:28 +0200
-Message-Id: <20190814165802.868097698@linuxfoundation.org>
+Subject: [PATCH 5.2 074/144] iscsi_ibft: make ISCSI_IBFT dependson ACPI instead of ISCSI_IBFT_FIND
+Date:   Wed, 14 Aug 2019 19:00:30 +0200
+Message-Id: <20190814165802.952672907@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -61,42 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6ac25e6d5b2fbf251e9fa2f4131d42c815b43867 ]
+[ Upstream commit 94bccc34071094c165c79b515d21b63c78f7e968 ]
 
-[Why]
+iscsi_ibft can use ACPI to find the iBFT entry during bootup,
+currently, ISCSI_IBFT depends on ISCSI_IBFT_FIND which is
+a X86 legacy way to find the iBFT by searching through the
+low memory. This patch changes the dependency so that other
+arch like ARM64 can use ISCSI_IBFT as long as the arch supports
+ACPI.
 
-In dm_helpers_parse_edid_caps, there is a corner case where no speakers
-can be allocated even though the audio mode count is greater than 0.
-Enabling audio when no speaker allocations exists can cause issues in
-the video stream.
+ibft_init() needs to use the global variable ibft_addr declared
+in iscsi_ibft_find.c. A #ifndef CONFIG_ISCSI_IBFT_FIND is needed
+to declare the variable if CONFIG_ISCSI_IBFT_FIND is not selected.
+Moving ibft_addr into the iscsi_ibft.c does not work because if
+ISCSI_IBFT is selected as a module, the arch/x86/kernel/setup.c won't
+be able to find the variable at compile time.
 
-[How]
-
-Add a check to not enable audio unless one or more speaker allocations
-exist (since doing this can cause issues in the video stream).
-
-Signed-off-by: Alvin Lee <alvin.lee2@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Thomas Tai <thomas.tai@oracle.com>
+Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_resource.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/Kconfig      | 5 +++--
+ drivers/firmware/iscsi_ibft.c | 4 ++++
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-index b2525ab8a95f6..b459ce056b609 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-@@ -2019,7 +2019,7 @@ enum dc_status resource_map_pool_resources(
- 	/* TODO: Add check if ASIC support and EDID audio */
- 	if (!stream->converter_disable_audio &&
- 	    dc_is_audio_capable_signal(pipe_ctx->stream->signal) &&
--	    stream->audio_info.mode_count) {
-+	    stream->audio_info.mode_count && stream->audio_info.flags.all) {
- 		pipe_ctx->stream_res.audio = find_first_free_audio(
- 		&context->res_ctx, pool, pipe_ctx->stream_res.stream_enc->id);
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index d40ccc3af9e26..fa7ed01415b72 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -157,7 +157,7 @@ config DMI_SCAN_MACHINE_NON_EFI_FALLBACK
  
+ config ISCSI_IBFT_FIND
+ 	bool "iSCSI Boot Firmware Table Attributes"
+-	depends on X86 && ACPI
++	depends on X86 && ISCSI_IBFT
+ 	default n
+ 	help
+ 	  This option enables the kernel to find the region of memory
+@@ -168,7 +168,8 @@ config ISCSI_IBFT_FIND
+ config ISCSI_IBFT
+ 	tristate "iSCSI Boot Firmware Table Attributes module"
+ 	select ISCSI_BOOT_SYSFS
+-	depends on ISCSI_IBFT_FIND && SCSI && SCSI_LOWLEVEL
++	select ISCSI_IBFT_FIND if X86
++	depends on ACPI && SCSI && SCSI_LOWLEVEL
+ 	default	n
+ 	help
+ 	  This option enables support for detection and exposing of iSCSI
+diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
+index ab3aa39838338..7e12cbdf957cc 100644
+--- a/drivers/firmware/iscsi_ibft.c
++++ b/drivers/firmware/iscsi_ibft.c
+@@ -84,6 +84,10 @@ MODULE_DESCRIPTION("sysfs interface to BIOS iBFT information");
+ MODULE_LICENSE("GPL");
+ MODULE_VERSION(IBFT_ISCSI_VERSION);
+ 
++#ifndef CONFIG_ISCSI_IBFT_FIND
++struct acpi_table_ibft *ibft_addr;
++#endif
++
+ struct ibft_hdr {
+ 	u8 id;
+ 	u8 version;
 -- 
 2.20.1
 
