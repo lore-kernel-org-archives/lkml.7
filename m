@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7117BC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1305CC41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 394A520665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D43332063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802975;
-	bh=BtqCLSai4wh4OD2jBiqrILAd4IwAXlkPsvd5EAO5rtE=;
+	s=default; t=1565802981;
+	bh=JOCltH1DMh61NrLH5AdQxR6vGW+HapVtJRAfqhp1iUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vmk8D25VbBSJwVekXh1DE8d5PR6FrVmSRiOgeR59aRRx3pcecgr72rqNdB7M3n5//
-	 w/jk1Jb3beZofDJhaLd/l+EJ8pJZHdq2A0jkauwVplqvCIR8jPoAsRreS+rM3y+Il8
-	 8Nt629VpYI4amW1u7Vzke0TlwHz7qb2jvccMd5KA=
+	b=tVHZOxHRsDIOrLFbJl7AXUa/2X88weKiyDzq4WBO/QD+r/+biDpsQ8kNeLtzXy5QR
+	 zJCXfhjVQnkOb8tRfgACGvk217sM8BG7pLR8chBAs/qT72H8J0BLfq4GL0ILfOUs2y
+	 Ok2O9k9S+l9GmML/HqvlD1HaqiU5Bdxn3o7MDFOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731151AbfHNRQN (ORCPT
+        id S1731107AbfHNROg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:16:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39250 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:14:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731126AbfHNROo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:14:44 -0400
+        id S1731098AbfHNROb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:14:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B43C62133F;
-        Wed, 14 Aug 2019 17:14:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69DA72133F;
+        Wed, 14 Aug 2019 17:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802884;
-        bh=BtqCLSai4wh4OD2jBiqrILAd4IwAXlkPsvd5EAO5rtE=;
+        s=default; t=1565802868;
+        bh=JOCltH1DMh61NrLH5AdQxR6vGW+HapVtJRAfqhp1iUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k8FgeUvj31eB+abDzrK/YxjhhCGZ7WUHhseqoLnJM+tclsDPdJyhBAKwB/xKXRdI9
-         +3zkI/XyKeOcwnydA5iJ6nsIZG5acOfa54nLlpWKRP0kqWAaZ/lzyxA+DlLJQpf81m
-         Ey/5HUYH3NaagMqYoCUJm5ynQ1XkSaVqTA4OJcLY=
+        b=hPGvtVfXkFa/k2KbnqOQoEA2s8Cn7T3nUw6F23PySBttomCEr4bk1DCmH24ZUzir9
+         ftPi+d+SxG6EscTStA9sNJlZOpLu8bAZzx6bIEhIDDVK4C0c4ytWcNFn5bItMnntYz
+         P42Cc00gWwj3PuoV+h6Fp+f24CSOscdOlQK79xOY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olga Kornievskaia <aglo@umich.edu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4.14 63/69] NFSv4: Fix an Oops in nfs4_do_setattr
-Date:   Wed, 14 Aug 2019 19:02:01 +0200
-Message-Id: <20190814165750.358605921@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 58/69] ALSA: hda - Workaround for crackled sound on AMD controller (1022:1457)
+Date:   Wed, 14 Aug 2019 19:01:56 +0200
+Message-Id: <20190814165749.389084657@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -59,34 +58,202 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 09a54f0ebfe263bc27c90bbd80187b9a93283887 upstream.
+commit c02f77d32d2c45cfb1b2bb99eabd8a78f5ecc7db upstream.
 
-If the user specifies an open mode of 3, then we don't have a NFSv4 state
-attached to the context, and so we Oops when we try to dereference it.
+A long-time problem on the recent AMD chip (X370, X470, B450, etc with
+PCI ID 1022:1457) with Realtek codecs is the crackled or distorted
+sound for capture streams, as well as occasional playback hiccups.
+After lengthy debugging sessions, the workarounds we've found are like
+the following:
 
-Reported-by: Olga Kornievskaia <aglo@umich.edu>
-Fixes: 29b59f9416937 ("NFSv4: change nfs4_do_setattr to take...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org # v4.10: 991eedb1371dc: NFSv4: Only pass the...
-Cc: stable@vger.kernel.org # v4.10+
+- Set up the proper driver caps for this controller, similar as the
+  other AMD controller.
+
+- Correct the DMA position reporting with the fixed FIFO size, which
+  is similar like as workaround used for VIA chip set.
+
+- Even after the position correction, PulseAudio still shows
+  mysterious stalls of playback streams when a capture is triggered in
+  timer-scheduled mode.  Since we have no clear way to eliminate the
+  stall, pass the BATCH PCM flag for PA to suppress the tsched mode as
+  a temporary workaround.
+
+This patch implements the workarounds.  For the driver caps, it
+defines a new preset, AXZ_DCAPS_PRESET_AMD_SB.  It enables the FIFO-
+corrected position reporting (corresponding to the new position_fix=6)
+and enforces the SNDRV_PCM_INFO_BATCH flag.
+
+Note that the current implementation is merely a workaround.
+Hopefully we'll find a better alternative in future, especially about
+removing the BATCH flag hack again.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=195303
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4proc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/hda_controller.c |    7 ++++
+ sound/pci/hda/hda_controller.h |    2 -
+ sound/pci/hda/hda_intel.c      |   63 ++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 70 insertions(+), 2 deletions(-)
 
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -2966,7 +2966,7 @@ static int _nfs4_do_setattr(struct inode
+--- a/sound/pci/hda/hda_controller.c
++++ b/sound/pci/hda/hda_controller.c
+@@ -624,6 +624,13 @@ static int azx_pcm_open(struct snd_pcm_s
+ 				     20,
+ 				     178000000);
  
- 	if (nfs4_copy_delegation_stateid(inode, FMODE_WRITE, &arg->stateid, &delegation_cred)) {
- 		/* Use that stateid */
--	} else if (ctx != NULL) {
-+	} else if (ctx != NULL && ctx->state) {
- 		struct nfs_lock_context *l_ctx;
- 		if (!nfs4_valid_open_stateid(ctx->state))
- 			return -EBADF;
++	/* by some reason, the playback stream stalls on PulseAudio with
++	 * tsched=1 when a capture stream triggers.  Until we figure out the
++	 * real cause, disable tsched mode by telling the PCM info flag.
++	 */
++	if (chip->driver_caps & AZX_DCAPS_AMD_WORKAROUND)
++		runtime->hw.info |= SNDRV_PCM_INFO_BATCH;
++
+ 	if (chip->align_buffer_size)
+ 		/* constrain buffer sizes to be multiple of 128
+ 		   bytes. This is more efficient in terms of memory
+--- a/sound/pci/hda/hda_controller.h
++++ b/sound/pci/hda/hda_controller.h
+@@ -40,7 +40,7 @@
+ /* 14 unused */
+ #define AZX_DCAPS_CTX_WORKAROUND (1 << 15)	/* X-Fi workaround */
+ #define AZX_DCAPS_POSFIX_LPIB	(1 << 16)	/* Use LPIB as default */
+-/* 17 unused */
++#define AZX_DCAPS_AMD_WORKAROUND (1 << 17)	/* AMD-specific workaround */
+ #define AZX_DCAPS_NO_64BIT	(1 << 18)	/* No 64bit address */
+ #define AZX_DCAPS_SYNC_WRITE	(1 << 19)	/* sync each cmd write */
+ #define AZX_DCAPS_OLD_SSYNC	(1 << 20)	/* Old SSYNC reg for ICH */
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -78,6 +78,7 @@ enum {
+ 	POS_FIX_VIACOMBO,
+ 	POS_FIX_COMBO,
+ 	POS_FIX_SKL,
++	POS_FIX_FIFO,
+ };
+ 
+ /* Defines for ATI HD Audio support in SB450 south bridge */
+@@ -149,7 +150,7 @@ module_param_array(model, charp, NULL, 0
+ MODULE_PARM_DESC(model, "Use the given board model.");
+ module_param_array(position_fix, int, NULL, 0444);
+ MODULE_PARM_DESC(position_fix, "DMA pointer read method."
+-		 "(-1 = system default, 0 = auto, 1 = LPIB, 2 = POSBUF, 3 = VIACOMBO, 4 = COMBO, 5 = SKL+).");
++		 "(-1 = system default, 0 = auto, 1 = LPIB, 2 = POSBUF, 3 = VIACOMBO, 4 = COMBO, 5 = SKL+, 6 = FIFO).");
+ module_param_array(bdl_pos_adj, int, NULL, 0644);
+ MODULE_PARM_DESC(bdl_pos_adj, "BDL position adjustment offset.");
+ module_param_array(probe_mask, int, NULL, 0444);
+@@ -350,6 +351,11 @@ enum {
+ #define AZX_DCAPS_PRESET_ATI_HDMI_NS \
+ 	(AZX_DCAPS_PRESET_ATI_HDMI | AZX_DCAPS_SNOOP_OFF)
+ 
++/* quirks for AMD SB */
++#define AZX_DCAPS_PRESET_AMD_SB \
++	(AZX_DCAPS_NO_TCSEL | AZX_DCAPS_SYNC_WRITE | AZX_DCAPS_AMD_WORKAROUND |\
++	 AZX_DCAPS_SNOOP_TYPE(ATI) | AZX_DCAPS_PM_RUNTIME)
++
+ /* quirks for Nvidia */
+ #define AZX_DCAPS_PRESET_NVIDIA \
+ 	(AZX_DCAPS_NO_MSI | AZX_DCAPS_CORBRP_SELF_CLEAR |\
+@@ -917,6 +923,49 @@ static unsigned int azx_via_get_position
+ 	return bound_pos + mod_dma_pos;
+ }
+ 
++#define AMD_FIFO_SIZE	32
++
++/* get the current DMA position with FIFO size correction */
++static unsigned int azx_get_pos_fifo(struct azx *chip, struct azx_dev *azx_dev)
++{
++	struct snd_pcm_substream *substream = azx_dev->core.substream;
++	struct snd_pcm_runtime *runtime = substream->runtime;
++	unsigned int pos, delay;
++
++	pos = snd_hdac_stream_get_pos_lpib(azx_stream(azx_dev));
++	if (!runtime)
++		return pos;
++
++	runtime->delay = AMD_FIFO_SIZE;
++	delay = frames_to_bytes(runtime, AMD_FIFO_SIZE);
++	if (azx_dev->insufficient) {
++		if (pos < delay) {
++			delay = pos;
++			runtime->delay = bytes_to_frames(runtime, pos);
++		} else {
++			azx_dev->insufficient = 0;
++		}
++	}
++
++	/* correct the DMA position for capture stream */
++	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
++		if (pos < delay)
++			pos += azx_dev->core.bufsize;
++		pos -= delay;
++	}
++
++	return pos;
++}
++
++static int azx_get_delay_from_fifo(struct azx *chip, struct azx_dev *azx_dev,
++				   unsigned int pos)
++{
++	struct snd_pcm_substream *substream = azx_dev->core.substream;
++
++	/* just read back the calculated value in the above */
++	return substream->runtime->delay;
++}
++
+ static unsigned int azx_skl_get_dpib_pos(struct azx *chip,
+ 					 struct azx_dev *azx_dev)
+ {
+@@ -1484,6 +1533,7 @@ static int check_position_fix(struct azx
+ 	case POS_FIX_VIACOMBO:
+ 	case POS_FIX_COMBO:
+ 	case POS_FIX_SKL:
++	case POS_FIX_FIFO:
+ 		return fix;
+ 	}
+ 
+@@ -1500,6 +1550,10 @@ static int check_position_fix(struct azx
+ 		dev_dbg(chip->card->dev, "Using VIACOMBO position fix\n");
+ 		return POS_FIX_VIACOMBO;
+ 	}
++	if (chip->driver_caps & AZX_DCAPS_AMD_WORKAROUND) {
++		dev_dbg(chip->card->dev, "Using FIFO position fix\n");
++		return POS_FIX_FIFO;
++	}
+ 	if (chip->driver_caps & AZX_DCAPS_POSFIX_LPIB) {
+ 		dev_dbg(chip->card->dev, "Using LPIB position fix\n");
+ 		return POS_FIX_LPIB;
+@@ -1520,6 +1574,7 @@ static void assign_position_fix(struct a
+ 		[POS_FIX_VIACOMBO] = azx_via_get_position,
+ 		[POS_FIX_COMBO] = azx_get_pos_lpib,
+ 		[POS_FIX_SKL] = azx_get_pos_skl,
++		[POS_FIX_FIFO] = azx_get_pos_fifo,
+ 	};
+ 
+ 	chip->get_position[0] = chip->get_position[1] = callbacks[fix];
+@@ -1534,6 +1589,9 @@ static void assign_position_fix(struct a
+ 			azx_get_delay_from_lpib;
+ 	}
+ 
++	if (fix == POS_FIX_FIFO)
++		chip->get_delay[0] = chip->get_delay[1] =
++			azx_get_delay_from_fifo;
+ }
+ 
+ /*
+@@ -2516,6 +2574,9 @@ static const struct pci_device_id azx_id
+ 	/* AMD Hudson */
+ 	{ PCI_DEVICE(0x1022, 0x780d),
+ 	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_SB },
++	/* AMD, X370 & co */
++	{ PCI_DEVICE(0x1022, 0x1457),
++	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_AMD_SB },
+ 	/* AMD Stoney */
+ 	{ PCI_DEVICE(0x1022, 0x157a),
+ 	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_SB |
 
 
