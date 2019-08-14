@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9994C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8792C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 885D820842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B0F208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750027;
-	bh=rrk9/8EgLkAoFGEbZoXPVCLUP0cQcpOx1d21FoZD+MY=;
+	s=default; t=1565750031;
+	bh=D3uyHhDPrRrZLv2L2PWhHsmk44pssyKmM/XGyPX8yvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0go6nrIZYqPAju5Vbcx6ihDFnKg0mmelGsWe2nEwmWjZGaviuw1IAnYoWSdNCr1xB
-	 nmzkJM44mBY/iw2pk1IKKSvuv5VypMesTA+RpwElgINwLTDDx5BvphtTmTxkzrOPYY
-	 iwSUoakEvpi/b2hnu9ZjIWInAbgT4aX8K+qb+AVU=
+	b=s43rCXQcpz6uuuzQTlrwfPsCmC+Kqbvf+WzqK8Yq4zkE56Dc+/CkAyjj1pIQwa5cf
+	 8wqSDzLJUgVctZbDPR6kFyr+NLaW2bpYs6PwdHOLBGnto5FFF5ni6x9+QxAY5xQ/64
+	 URm1d/lkyIhfXnxY7FCwMJRI8IgWY/h1IAWQkjE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729257AbfHNCdq (ORCPT
+        id S1728648AbfHNCOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:33:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46152 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:14:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728618AbfHNCOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:14:11 -0400
+        id S1728560AbfHNCOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:14:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94E1120842;
-        Wed, 14 Aug 2019 02:14:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42F5F2084D;
+        Wed, 14 Aug 2019 02:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748850;
-        bh=rrk9/8EgLkAoFGEbZoXPVCLUP0cQcpOx1d21FoZD+MY=;
+        s=default; t=1565748845;
+        bh=D3uyHhDPrRrZLv2L2PWhHsmk44pssyKmM/XGyPX8yvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vsgOFiAiqj713DW35E6qfPykQdETybI6rRjfLoAnb+1zZ14pcopdjeToNlExFQaNA
-         Dbc5MH4M5nCzlQWST1RFUrjShv/0lOIEYlrBD2aIG4sj2li5c9bBXc8sVYvdYNMKyG
-         jht4nlK9jSZaihkserKkINpsfsR7FzVs6mIAnpmQ=
+        b=qUtzsHeWvm746nRWHH2ykM2Y8KBA01V2UGvH0XbirkaUVdCCrQ6Sc6YhtAaxII4Mg
+         K+Q6uK1tWCJuYQX0DZMoxZK1ehoLY6iJ74v1RmQAQj+bhspb2gMyo1XKWKbZ4e18O5
+         AWuI/mKCFFqjmPVxTJZHYRvvwWyAP1Z346IVwusI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+5efc10c005014d061a74@syzkaller.appspotmail.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 101/123] Input: iforce - add sanity checks
-Date:   Tue, 13 Aug 2019 22:10:25 -0400
-Message-Id: <20190814021047.14828-101-sashal@kernel.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 098/123] s390/mm: fix dump_pagetables top level page table walking
+Date:   Tue, 13 Aug 2019 22:10:22 -0400
+Message-Id: <20190814021047.14828-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -60,38 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 849f5ae3a513c550cad741c68dd3d7eb2bcc2a2c ]
+[ Upstream commit 8024b5a9fc2bed9a00f0bdba60b443fa3cc4bb5d ]
 
-The endpoint type should also be checked before a device
-is accepted.
+Since commit d1874a0c2805 ("s390/mm: make the pxd_offset functions more
+robust") behaviour of p4d_offset, pud_offset and pmd_offset has been
+changed so that they cannot be used to iterate through top level page
+table, because the index for the top level page table is now calculated
+in pgd_offset. To avoid dumping the very first region/segment top level
+table entry 2048 times simply iterate entry pointer like it is already
+done in other page walking cases.
 
-Reported-by: syzbot+5efc10c005014d061a74@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: d1874a0c2805 ("s390/mm: make the pxd_offset functions more robust")
+Reported-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/joystick/iforce/iforce-usb.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/s390/mm/dump_pagetables.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/input/joystick/iforce/iforce-usb.c b/drivers/input/joystick/iforce/iforce-usb.c
-index f1569ae8381bc..a0a686f56ac4f 100644
---- a/drivers/input/joystick/iforce/iforce-usb.c
-+++ b/drivers/input/joystick/iforce/iforce-usb.c
-@@ -129,7 +129,12 @@ static int iforce_usb_probe(struct usb_interface *intf,
- 		return -ENODEV;
+diff --git a/arch/s390/mm/dump_pagetables.c b/arch/s390/mm/dump_pagetables.c
+index 3b93ba0b5d8d6..5d67b81c704a4 100644
+--- a/arch/s390/mm/dump_pagetables.c
++++ b/arch/s390/mm/dump_pagetables.c
+@@ -161,9 +161,9 @@ static void walk_pmd_level(struct seq_file *m, struct pg_state *st,
+ 	}
+ #endif
  
- 	epirq = &interface->endpoint[0].desc;
-+	if (!usb_endpoint_is_int_in(epirq))
-+		return -ENODEV;
-+
- 	epout = &interface->endpoint[1].desc;
-+	if (!usb_endpoint_is_int_out(epout))
-+		return -ENODEV;
+-	for (i = 0; i < PTRS_PER_PMD && addr < max_addr; i++) {
++	pmd = pmd_offset(pud, addr);
++	for (i = 0; i < PTRS_PER_PMD && addr < max_addr; i++, pmd++) {
+ 		st->current_address = addr;
+-		pmd = pmd_offset(pud, addr);
+ 		if (!pmd_none(*pmd)) {
+ 			if (pmd_large(*pmd)) {
+ 				prot = pmd_val(*pmd) &
+@@ -192,9 +192,9 @@ static void walk_pud_level(struct seq_file *m, struct pg_state *st,
+ 	}
+ #endif
  
- 	if (!(iforce = kzalloc(sizeof(struct iforce) + 32, GFP_KERNEL)))
- 		goto fail;
+-	for (i = 0; i < PTRS_PER_PUD && addr < max_addr; i++) {
++	pud = pud_offset(p4d, addr);
++	for (i = 0; i < PTRS_PER_PUD && addr < max_addr; i++, pud++) {
+ 		st->current_address = addr;
+-		pud = pud_offset(p4d, addr);
+ 		if (!pud_none(*pud))
+ 			if (pud_large(*pud)) {
+ 				prot = pud_val(*pud) &
+@@ -222,9 +222,9 @@ static void walk_p4d_level(struct seq_file *m, struct pg_state *st,
+ 	}
+ #endif
+ 
+-	for (i = 0; i < PTRS_PER_P4D && addr < max_addr; i++) {
++	p4d = p4d_offset(pgd, addr);
++	for (i = 0; i < PTRS_PER_P4D && addr < max_addr; i++, p4d++) {
+ 		st->current_address = addr;
+-		p4d = p4d_offset(pgd, addr);
+ 		if (!p4d_none(*p4d))
+ 			walk_pud_level(m, st, p4d, addr);
+ 		else
 -- 
 2.20.1
 
