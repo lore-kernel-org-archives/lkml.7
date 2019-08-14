@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53199C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CB7C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28778206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FCB5206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:20:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803246;
-	bh=tOPneCiU3dnJ2IqXOI7xEijvZxNxzuf6Zmq9V0z+500=;
+	s=default; t=1565803254;
+	bh=794wgnbXaWkTJ0/bmNdN8SC03enKj458fY9bChFr2W4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lc2cMlt7UXW0/g50BeMNo7Up8eOCPJrSOo3vD3gVWEidx5gPLEzwoI7jsRV6accvN
-	 Ni+dYIa7OpUdrA2b7LNswtnfoW5WqR1OHxkAPo42I1pfT9nPjfsC2RaKO6vhTJB4et
-	 7Abhl9MN0EklVyrtgc8RUO1sV6x7vSv01zh3dorw=
+	b=KxtAG3YXwoM8JezwBRZ12FxTKlHyZmK+Ydq1smbALizxh8rcoPqR3jBw+ntJ+0Vo/
+	 J4jlCr1RfkC8rr+ATboGMZlH5+NXzSeHRtSzLuUWqJMLn+bT+57+AwvpIGwNU+wgQh
+	 BiVkzbX2VkBLjp3+wzFt6Pp7fHxHsQJOHa0LZXmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbfHNRUp (ORCPT
+        id S1730541AbfHNRUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:20:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33116 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:20:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730129AbfHNRKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:10:24 -0400
+        id S1730465AbfHNRKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:10:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17CF82133F;
-        Wed, 14 Aug 2019 17:10:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80AF32133F;
+        Wed, 14 Aug 2019 17:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802623;
-        bh=tOPneCiU3dnJ2IqXOI7xEijvZxNxzuf6Zmq9V0z+500=;
+        s=default; t=1565802621;
+        bh=794wgnbXaWkTJ0/bmNdN8SC03enKj458fY9bChFr2W4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W+/xf697LYG1jPcDt5YdmdQGGPNqz994osqzmDzMY/++B7USTYPXtrxAjjZaWgo/B
-         AnD58qHpZX9rHRClgeEvm8MoKdOcDejZrNunUYk8oC/NBFCegdzPZe3crpuC1CVLTB
-         Fldg8C3kAlwjxLzTXG2/KJOXz0wCGi5X1KB20Gvk=
+        b=VpPLmlvQqVeGSN6dviMvlj7Tf3xlYqy5pWhb3EgIfJ3Eqg0PfiH1e6m0aw3Kp7ddc
+         ViYOqDREWi0JLeZRhIy348eBFPdOg8w9nIEeA2MXSFuEqnvB5yFB4DFOI3h7sR/MSi
+         U7KiWFQZK3k5KAmYgulsBqX73z+oEqWdcT0M8TII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Jankowski <shasta@toxcorp.com>,
-        Florian Westphal <fw@strlen.de>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 36/91] netfilter: conntrack: always store window size un-scaled
-Date:   Wed, 14 Aug 2019 19:00:59 +0200
-Message-Id: <20190814165751.214416473@linuxfoundation.org>
+Subject: [PATCH 4.19 53/91] ALSA: compress: Prevent bypasses of set_params
+Date:   Wed, 14 Aug 2019 19:01:16 +0200
+Message-Id: <20190814165751.843021519@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -62,78 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 959b69ef57db00cb33e9c4777400ae7183ebddd3 ]
+[ Upstream commit 26c3f1542f5064310ad26794c09321780d00c57d ]
 
-Jakub Jankowski reported following oddity:
+Currently, whilst in SNDRV_PCM_STATE_OPEN it is possible to call
+snd_compr_stop, snd_compr_drain and snd_compr_partial_drain, which
+allow a transition to SNDRV_PCM_STATE_SETUP. The stream should
+only be able to move to the setup state once it has received a
+SNDRV_COMPRESS_SET_PARAMS ioctl. Fix this issue by not allowing
+those ioctls whilst in the open state.
 
-After 3 way handshake completes, timeout of new connection is set to
-max_retrans (300s) instead of established (5 days).
-
-shortened excerpt from pcap provided:
-25.070622 IP (flags [DF], proto TCP (6), length 52)
-10.8.5.4.1025 > 10.8.1.2.80: Flags [S], seq 11, win 64240, [wscale 8]
-26.070462 IP (flags [DF], proto TCP (6), length 48)
-10.8.1.2.80 > 10.8.5.4.1025: Flags [S.], seq 82, ack 12, win 65535, [wscale 3]
-27.070449 IP (flags [DF], proto TCP (6), length 40)
-10.8.5.4.1025 > 10.8.1.2.80: Flags [.], ack 83, win 512, length 0
-
-Turns out the last_win is of u16 type, but we store the scaled value:
-512 << 8 (== 0x20000) becomes 0 window.
-
-The Fixes tag is not correct, as the bug has existed forever, but
-without that change all that this causes might cause is to mistake a
-window update (to-nonzero-from-zero) for a retransmit.
-
-Fixes: fbcd253d2448b8 ("netfilter: conntrack: lower timeout to RETRANS seconds if window is 0")
-Reported-by: Jakub Jankowski <shasta@toxcorp.com>
-Tested-by: Jakub Jankowski <shasta@toxcorp.com>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Acked-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_proto_tcp.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ sound/core/compress_offload.c | 30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_proto_tcp.c b/net/netfilter/nf_conntrack_proto_tcp.c
-index 842f3f86fb2e7..7011ab27c4371 100644
---- a/net/netfilter/nf_conntrack_proto_tcp.c
-+++ b/net/netfilter/nf_conntrack_proto_tcp.c
-@@ -480,6 +480,7 @@ static bool tcp_in_window(const struct nf_conn *ct,
- 	struct ip_ct_tcp_state *receiver = &state->seen[!dir];
- 	const struct nf_conntrack_tuple *tuple = &ct->tuplehash[dir].tuple;
- 	__u32 seq, ack, sack, end, win, swin;
-+	u16 win_raw;
- 	s32 receiver_offset;
- 	bool res, in_recv_win;
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index 44e81cf302401..5e74f518bd598 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -712,9 +712,15 @@ static int snd_compr_stop(struct snd_compr_stream *stream)
+ {
+ 	int retval;
  
-@@ -488,7 +489,8 @@ static bool tcp_in_window(const struct nf_conn *ct,
- 	 */
- 	seq = ntohl(tcph->seq);
- 	ack = sack = ntohl(tcph->ack_seq);
--	win = ntohs(tcph->window);
-+	win_raw = ntohs(tcph->window);
-+	win = win_raw;
- 	end = segment_seq_plus_len(seq, skb->len, dataoff, tcph);
+-	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
+-			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
++	switch (stream->runtime->state) {
++	case SNDRV_PCM_STATE_OPEN:
++	case SNDRV_PCM_STATE_SETUP:
++	case SNDRV_PCM_STATE_PREPARED:
+ 		return -EPERM;
++	default:
++		break;
++	}
++
+ 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_STOP);
+ 	if (!retval) {
+ 		snd_compr_drain_notify(stream);
+@@ -802,9 +808,14 @@ static int snd_compr_drain(struct snd_compr_stream *stream)
+ {
+ 	int retval;
  
- 	if (receiver->flags & IP_CT_TCP_FLAG_SACK_PERM)
-@@ -663,14 +665,14 @@ static bool tcp_in_window(const struct nf_conn *ct,
- 			    && state->last_seq == seq
- 			    && state->last_ack == ack
- 			    && state->last_end == end
--			    && state->last_win == win)
-+			    && state->last_win == win_raw)
- 				state->retrans++;
- 			else {
- 				state->last_dir = dir;
- 				state->last_seq = seq;
- 				state->last_ack = ack;
- 				state->last_end = end;
--				state->last_win = win;
-+				state->last_win = win_raw;
- 				state->retrans = 0;
- 			}
- 		}
+-	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
+-			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
++	switch (stream->runtime->state) {
++	case SNDRV_PCM_STATE_OPEN:
++	case SNDRV_PCM_STATE_SETUP:
++	case SNDRV_PCM_STATE_PREPARED:
+ 		return -EPERM;
++	default:
++		break;
++	}
+ 
+ 	retval = stream->ops->trigger(stream, SND_COMPR_TRIGGER_DRAIN);
+ 	if (retval) {
+@@ -841,9 +852,16 @@ static int snd_compr_next_track(struct snd_compr_stream *stream)
+ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
+ {
+ 	int retval;
+-	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
+-			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
++
++	switch (stream->runtime->state) {
++	case SNDRV_PCM_STATE_OPEN:
++	case SNDRV_PCM_STATE_SETUP:
++	case SNDRV_PCM_STATE_PREPARED:
+ 		return -EPERM;
++	default:
++		break;
++	}
++
+ 	/* stream can be drained only when next track has been signalled */
+ 	if (stream->next_track == false)
+ 		return -EPERM;
 -- 
 2.20.1
 
