@@ -2,129 +2,197 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41295C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BFBC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C4A206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:20:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mlksZd0g"
+	by mail.kernel.org (Postfix) with ESMTP id 217BE206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfHNKUE (ORCPT
+        id S1726918AbfHNKXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:20:04 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40726 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbfHNKUC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:20:02 -0400
-Received: by mail-lj1-f193.google.com with SMTP id e27so9138554ljb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 03:20:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LNONNFXrGqvOtXZDbhestEqwQXax/1n3/5TNvc5DICg=;
-        b=mlksZd0gBWCNSchq/6oBDjmyQUZ6kOe8L/P2I4bi1TJUahRnht34+T+2RqEKyNMgY7
-         YsjszEkrTju9J1/CBMIebMjOtA9fF5RfTRCaEuKmqsWuYw1w2aJaq0EMBO1n844voqrs
-         d+Tjt/K5G3Wo/W1f1FozlZZR9M+5fSjWGQKmtQD/OC/9xPWTbVp0Wad0ugJBltv2bFhX
-         jf71A7tGUJgiFOvPwXBeX5V8hrOJF/d7/x0wJ6k6Ah0V3mniO3qWFIdsxEwJNzaZwLud
-         1CjdbNoEsKg2cZqDCeAzG/xsOLaVD00eiRlVEzhjqLoOLBeu8iCBW4m0ysvnW7/tHsep
-         kZKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=LNONNFXrGqvOtXZDbhestEqwQXax/1n3/5TNvc5DICg=;
-        b=kHP68xJl0UxUxaLQ63+epZWu0gcM7POLQ01akbfrbQIqhYk1GRXQB34pNE/iKWlOYw
-         Dks6rcSVytRDu5b7N3tc2LT7uSzF7cFsgy1BJWPNxZ2A+KMuhX2KAUOygylbMo+xuSex
-         /1Pz22FLdxMhH2X4f4N/qJZyFE/41gbyNZa6tly0T5IjakQKwkloAVrflo+QkkCrl3fK
-         iaGPI6MzNRW0GDwJBaus2FlvGlDfnraVZ8CvoKcUHtSdvxqMSfMXdKRBs95Of5i+K0fp
-         /Gpt4o8WB6CF/tKQ8q2rLo9VTvLtK3iVqW5j+FbRgxkAHlrJOvkbRpY2FItIieFH9w/t
-         i7aA==
-X-Gm-Message-State: APjAAAX9tbIVs9hOL3nFxJj/ONTV7tXfrQ1HE5/GSGdvbbBxwxroqgwd
-        pk8M4qdw4RzXls97Ssg1z1mV9g==
-X-Google-Smtp-Source: APXvYqyPW+JUeUyj8OH23+74Qvhhy6dvjThEquM3C2xwT+kZ++cix1fxH6nw1BxpuKzD+pif73Er/Q==
-X-Received: by 2002:a2e:3a0e:: with SMTP id h14mr7672871lja.180.1565778000259;
-        Wed, 14 Aug 2019 03:20:00 -0700 (PDT)
-Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id j4sm1605560ljg.23.2019.08.14.03.19.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 03:19:59 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 13:19:57 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Yonghong Song <yhs@fb.com>
-Cc:     "magnus.karlsson@intel.com" <magnus.karlsson@intel.com>,
-        "bjorn.topel@intel.com" <bjorn.topel@intel.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next 1/3] libbpf: add asm/unistd.h to xsk to get
- __NR_mmap2
-Message-ID: <20190814101955.GB4142@khorivan>
-Mail-Followup-To: Yonghong Song <yhs@fb.com>,
-        "magnus.karlsson@intel.com" <magnus.karlsson@intel.com>,
-        "bjorn.topel@intel.com" <bjorn.topel@intel.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
- <20190813102318.5521-2-ivan.khoronzhuk@linaro.org>
- <05e5d15b-5ef9-b4dc-a76c-0d423fb2f15d@fb.com>
+        Wed, 14 Aug 2019 06:23:09 -0400
+Received: from mga11.intel.com ([192.55.52.93]:3680 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725800AbfHNKXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:23:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 03:23:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,384,1559545200"; 
+   d="scan'208";a="376683811"
+Received: from rfried-mobl1.iil.intel.com ([143.185.152.137])
+  by fmsmga006.fm.intel.com with ESMTP; 14 Aug 2019 03:23:06 -0700
+Message-ID: <8dbeb0c64fbb90d05dfa7302c48cbf1ca45faa43.camel@linux.intel.com>
+Subject: Re: [PATCH v2] gpiolib: Take MUX usage into account
+From:   Ramon Fried <ramon.fried@linux.intel.com>
+To:     Stefan Wahren <wahrenst@gmx.net>, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 14 Aug 2019 13:22:12 +0300
+In-Reply-To: <f568ca31-c9f0-0dc2-be12-22de25891794@gmx.net>
+References: <20190813014210.15519-1-ramon.fried@linux.intel.com>
+         <1650c967-5176-70db-ff9a-b2af432ba1e7@i2se.com>
+         <88cbb5b2-fd95-afb3-3645-e5b799844941@linux.intel.com>
+         <f568ca31-c9f0-0dc2-be12-22de25891794@gmx.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <05e5d15b-5ef9-b4dc-a76c-0d423fb2f15d@fb.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 12:32:41AM +0000, Yonghong Song wrote:
+On Tue, 2019-08-13 at 18:32 +0200, Stefan Wahren wrote:
+> Am 13.08.19 um 08:10 schrieb Fried, Ramon:
+> > On 8/13/2019 08:38, Stefan Wahren wrote:
+> > > Hi Ramon,
+> > > 
+> > > On 13.08.19 03:42, Ramon Fried wrote:
+> > > > From: Stefan Wahren <stefan.wahren@i2se.com>
+> > > > 
+> > > > The user space like gpioinfo only see the GPIO usage but not
+> > > > the
+> > > > MUX usage (e.g. I2C or SPI usage) of a pin. As a user we want
+> > > > to
+> > > > know which
+> > > > pin is free/safe to use. So take the MUX usage of strict pinmux
+> > > > controllers
+> > > > into account to get a more realistic view for ioctl
+> > > > GPIO_GET_LINEINFO_IOCTL.
+> > > > 
+> > > > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> > > > Tested-by: Ramon Fried <rfried.dev@gmail.com>
+> > > > Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
+> > > > ---
+> > > > v2: Address review from linus:
+> > > > * ** Please notive logic was reversed **
+> > > > * renamed pinctrl_gpio_is_in_use() to
+> > > > pinctrl_gpio_can_use_line()
+> > > > * renamed pinmux_is_in_use() to pinmux_can_be_used_for_gpio()
+> > > > * changed dev_err to dev_dbg (Linus suggested removing it
+> > > > altogether, I
+> > > >    find it better to keep it for debug).
+> > > thanks for taking care of this.
+> > > >   drivers/gpio/gpiolib.c           |  3 ++-
+> > > >   drivers/pinctrl/core.c           | 28
+> > > > ++++++++++++++++++++++++++++
+> > > >   drivers/pinctrl/pinmux.c         | 27
+> > > > +++++++++++++++++++++++++++
+> > > >   drivers/pinctrl/pinmux.h         |  8 ++++++++
+> > > >   include/linux/pinctrl/consumer.h |  6 ++++++
+> > > >   5 files changed, 71 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > > > index f497003f119c..52937bf8e514 100644
+> > > > --- a/drivers/gpio/gpiolib.c
+> > > > +++ b/drivers/gpio/gpiolib.c
+> > > > @@ -1084,7 +1084,8 @@ static long gpio_ioctl(struct file *filp,
+> > > > unsigned int cmd, unsigned long arg)
+> > > >               test_bit(FLAG_IS_HOGGED, &desc->flags) ||
+> > > >               test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
+> > > >               test_bit(FLAG_EXPORT, &desc->flags) ||
+> > > > -            test_bit(FLAG_SYSFS, &desc->flags))
+> > > > +            test_bit(FLAG_SYSFS, &desc->flags) ||
+> > > > +            !pinctrl_gpio_can_use_line(chip->base +
+> > > > lineinfo.line_offset))
+> > > >               lineinfo.flags |= GPIOLINE_FLAG_KERNEL;
+> > > >           if (test_bit(FLAG_IS_OUT, &desc->flags))
+> > > >               lineinfo.flags |= GPIOLINE_FLAG_IS_OUT;
+> > > > diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+> > > > index b70df27874d1..2bbd8ee93507 100644
+> > > > --- a/drivers/pinctrl/core.c
+> > > > +++ b/drivers/pinctrl/core.c
+> > > > @@ -736,6 +736,34 @@ int pinctrl_get_group_selector(struct
+> > > > pinctrl_dev *pctldev,
+> > > >       return -EINVAL;
+> > > >   }
+> > > >   +bool pinctrl_gpio_can_use_line(unsigned gpio)
+> > > > +{
+> > > > +    struct pinctrl_dev *pctldev;
+> > > > +    struct pinctrl_gpio_range *range;
+> > > > +    bool result;
+> > > > +    int pin;
+> > > > +
+> > > > +    /*
+> > > > +     * Try to obtain GPIO range, if it fails
+> > > > +     * we're probably dealing with GPIO driver
+> > > > +     * without a backing pin controller - bail out.
+> > > > +     */
+> > > > +    if (pinctrl_get_device_gpio_range(gpio, &pctldev, &range))
+> > > > +        return true;
+> > > > +
+> > > > +    mutex_lock(&pctldev->mutex);
+> > > > +
+> > > > +    /* Convert to the pin controllers number space */
+> > > > +    pin = gpio_to_pin(range, gpio);
+> > > > +
+> > > > +    result = pinmux_can_be_used_for_gpio(pctldev, pin);
+> > > > +
+> > > > +    mutex_unlock(&pctldev->mutex);
+> > > > +
+> > > > +    return result;
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(pinctrl_gpio_can_use_line);
+> > > > +
+> > > >   /**
+> > > >    * pinctrl_gpio_request() - request a single pin to be used
+> > > > as GPIO
+> > > >    * @gpio: the GPIO pin number from the GPIO subsystem number
+> > > > space
+> > > > diff --git a/drivers/pinctrl/pinmux.c
+> > > > b/drivers/pinctrl/pinmux.c
+> > > > index 020e54f843f9..7e42a5738d82 100644
+> > > > --- a/drivers/pinctrl/pinmux.c
+> > > > +++ b/drivers/pinctrl/pinmux.c
+> > > > @@ -70,6 +70,33 @@ int pinmux_validate_map(const struct
+> > > > pinctrl_map
+> > > > *map, int i)
+> > > >       return 0;
+> > > >   }
+> > > >   +/**
+> > > > + * pinmux_can_be_used_for_gpio() - check if a specific pin
+> > > > + *    is either muxed to a different function or used as gpio.
+> > > > + *
+> > > > + * @pin: the pin number in the global pin space
+> > > > + *
+> > > > + * Controllers not defined as strict will always return true,
+> > > > + * menaning that the gpio can be used.
+> > > > + */
+> > > > +bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev,
+> > > > unsigned pin)
+> > > > +{
+> > > > +    struct pin_desc *desc = pin_desc_get(pctldev, pin);
+> > > > +    const struct pinmux_ops *ops = pctldev->desc->pmxops;
+> > > > +
+> > > > +    if (!desc) {
+> > > > +        dev_dbg(pctldev->dev,
+> > > > +            "pin %u is not registered so it cannot be
+> > > > requested\n",
+> > > > +            pin);
+> > > > +        return true;
+> > > This return value looks strange to me.
+> > 
+> > Basically, it's just the reversed return value you returned in the
+> > original patch,
+> > It means in this context that if the pin is not owned by a
+> > pin-controller it can be used for GPIO.
+> As long as the provided pin is valid. Btw shouldn't we change the
+> logic
+> in the debug message?
+Good catch. yes we should.
+I'll send V3 shortly.
+Thanks,
+Ramon.
+> > Thanks,
+> > Ramon.
+> > 
+> > > Stefan
+> > > 
 
-Hi, Yonghong Song
-
->
->
->On 8/13/19 3:23 AM, Ivan Khoronzhuk wrote:
->> That's needed to get __NR_mmap2 when mmap2 syscall is used.
->
->It seems I did not have this issue on x64 machine e.g., Fedora 29.
->My glibc version is 2.28. gcc 8.2.1.
-
-On 64 there is no the issue.
-
->
->What is your particular system glibc version?
->So needing kernel asm/unistd.h is because of older glibc on your
->system, or something else? Could you clarify?
-
-It doesn't fix build issues, only runtime one on 32bits.
-
-If no such inclusion -> no __NR_mmap2 definition - just mmap() is used ->
-no problems on x64.
-
-Is the inclusion -> no NR_mmap2 or is NR_mmap2 -> no problems on x64
-
-
--- 
-Regards,
-Ivan Khoronzhuk
