@@ -2,172 +2,86 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EC2C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82587C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B27A2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:50:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digidescorp.com header.i=@digidescorp.com header.b="Q46RYsE2"
+	by mail.kernel.org (Postfix) with ESMTP id 51FC82083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfHNMuN (ORCPT
+        id S1727874AbfHNMuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 08:50:13 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38036 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbfHNMuM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 08:50:12 -0400
-Received: by mail-oi1-f196.google.com with SMTP id p124so3498972oig.5
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 05:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digidescorp.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=/+aArS/+ZpXWQrNyAPbe/FVozsbsHho1Pyh+D5yt+eM=;
-        b=Q46RYsE22MhQi0qPL9mOVIvPiWIAlcb6XvRg2G1Kab100w6d33bkV6Nj7WbfBhZLFS
-         DePA24isLJdfXVfQiu01V6rvCiv+SNWBYE1TAmyt7D0OP0KaZLFg3PB7+pLJD+GF+OWk
-         MGcqJVVXmPl35qlkvYbT7sQLmXWlVgITTelZI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/+aArS/+ZpXWQrNyAPbe/FVozsbsHho1Pyh+D5yt+eM=;
-        b=dWtD1asWUbTT9lBT74LlMsFYxyaBXE2YIJ1bhpXiqUfP0GDMngbAL9gnyNoRPJgp4Z
-         x9/KlwDq1OfANpJ7Hn9ORqjyU7Q2dxiHhm32grjKip/8tZA0XX6pkKhFmt1BWNehUZHr
-         aUA10kUbT12410uiE48ZBnzW4LRLFXzdVyrIQ0h3PBLSMYBOhp4DQnVvGXE5egpbNOix
-         6nEMOHx4uFLhtvWrrIJLIDpey0m3yn/uK/lZ9Eus5wUSfH+IQeBFJcNhssdtdp65lmz6
-         AvcEYrD3D5VOX1LHv4Anay7fBxxUGoMAFNn0fxep+Y8ma0eGLxXgp37jMTxortwOyxDa
-         RwGw==
-X-Gm-Message-State: APjAAAU0WeCUVbmb7E5y5lSgHRMIG712RNVUlrOaMynNoVu6f83IQ85g
-        xPma/13PkyW8EVju7GEs/uqvog==
-X-Google-Smtp-Source: APXvYqwDOApCZPr3cCgqfm3OG0AgLMRjBq0SWb9OHeIgBreHeTX11da+LxeS/BlgpYOjG+0S+p3dig==
-X-Received: by 2002:a02:9981:: with SMTP id a1mr3295802jal.17.1565787011740;
-        Wed, 14 Aug 2019 05:50:11 -0700 (PDT)
-Received: from iscandar.digidescorp.com ([50.73.98.161])
-        by smtp.googlemail.com with ESMTPSA id j5sm83102558iom.69.2019.08.14.05.50.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 05:50:11 -0700 (PDT)
-From:   "Steven J. Magnani" <steve.magnani@digidescorp.com>
-X-Google-Original-From: "Steven J. Magnani" <steve@digidescorp.com>
-To:     Jan Kara <jack@suse.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Steven J . Magnani" <steve@digidescorp.com>
-Subject: [PATCH v2] udf: reduce leakage of blocks related to named streams
-Date:   Wed, 14 Aug 2019 07:50:02 -0500
-Message-Id: <20190814125002.10869-1-steve@digidescorp.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 14 Aug 2019 08:50:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37952 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727844AbfHNMuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 08:50:18 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9C29830044EF;
+        Wed, 14 Aug 2019 12:50:18 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 2083060BE1;
+        Wed, 14 Aug 2019 12:50:13 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed, 14 Aug 2019 14:50:17 +0200 (CEST)
+Date:   Wed, 14 Aug 2019 14:50:12 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, libc-alpha@sourceware.org,
+        alistair23@gmail.com, ebiederm@xmission.com, arnd@arndb.de,
+        dalias@libc.org, torvalds@linux-foundation.org,
+        adhemerval.zanella@linaro.org, fweimer@redhat.com,
+        palmer@sifive.com, macro@wdc.com, zongbox@gmail.com,
+        akpm@linux-foundation.org, viro@zeniv.linux.org.uk, hpa@zytor.com
+Subject: Re: [PATCH v1 1/1] waitid: Add support for waiting for the current
+ process group
+Message-ID: <20190814125012.GB11595@redhat.com>
+References: <CAKmqyKMJPQAOKn11xepzAwXOd4e9dU0Cyz=A0T-uMEgUp5yJjA@mail.gmail.com>
+ <20190814113822.9505-1-christian.brauner@ubuntu.com>
+ <20190814113822.9505-2-christian.brauner@ubuntu.com>
+ <20190814122909.GA11595@redhat.com>
+ <20190814124551.hnt363g3blhuf2pv@wittgenstein>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814124551.hnt363g3blhuf2pv@wittgenstein>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 14 Aug 2019 12:50:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Windows is capable of creating UDF files having named streams.
-One example is the "Zone.Identifier" stream attached automatically
-to files downloaded from a network. See:
-  https://msdn.microsoft.com/en-us/library/dn392609.aspx
+On 08/14, Christian Brauner wrote:
+>
+> On Wed, Aug 14, 2019 at 02:29:10PM +0200, Oleg Nesterov wrote:
+> > On 08/14, christian.brauner@ubuntu.com wrote:
+> > >
+> > >  	case P_PGID:
+> > >  		type = PIDTYPE_PGID;
+> > > -		if (upid <= 0)
+> > > +		if (upid < 0)
+> > >  			return -EINVAL;
+> > > +
+> > > +		if (upid == 0)
+> > > +			pid = get_pid(task_pgrp(current));
+> >
+> > this needs rcu lock or tasklist_lock, this can race with another thread
+> > doing sys_setpgid/setsid (see change_pid(PIDTYPE_PGID)).
+>
+> Oh, I naively assumed task_pgrp() would take an rcu lock...
 
-Modification of a file having one or more named streams in Linux causes
-the stream directory to become detached from the file, essentially leaking
-all blocks pertaining to the file's streams.
+but it would not help ;)
 
-Fix by saving off information about an inode's streams when reading it,
-for later use when its on-disk data is updated.
+> though I think we should be fine with just rcu_read_lock().
 
-Changes from v1:
-Remove modifications that would limit leakage of all inode blocks
-on deletion.
-This restricts the patch to preservation of stream data during inode
-modification.
+Yes,
 
-Signed-off-by: Steven J. Magnani <steve@digidescorp.com>
+Oleg.
 
---- a/fs/udf/udf_i.h	2019-07-26 11:35:28.257563879 -0500
-+++ b/fs/udf/udf_i.h	2019-08-06 14:35:55.579654263 -0500
-@@ -42,12 +42,15 @@ struct udf_inode_info {
- 	unsigned		i_efe : 1;	/* extendedFileEntry */
- 	unsigned		i_use : 1;	/* unallocSpaceEntry */
- 	unsigned		i_strat4096 : 1;
--	unsigned		reserved : 26;
-+	unsigned		i_streamdir : 1;
-+	unsigned		reserved : 25;
- 	union {
- 		struct short_ad	*i_sad;
- 		struct long_ad		*i_lad;
- 		__u8		*i_data;
- 	} i_ext;
-+	struct kernel_lb_addr	i_locStreamdir;
-+	__u64			i_lenStreams;
- 	struct rw_semaphore	i_data_sem;
- 	struct udf_ext_cache cached_extent;
- 	/* Spinlock for protecting extent cache */
---- a/fs/udf/super.c	2019-07-26 11:35:28.253563792 -0500
-+++ b/fs/udf/super.c	2019-08-06 15:04:30.851086957 -0500
-@@ -151,9 +151,13 @@ static struct inode *udf_alloc_inode(str
- 
- 	ei->i_unique = 0;
- 	ei->i_lenExtents = 0;
-+	ei->i_lenStreams = 0;
- 	ei->i_next_alloc_block = 0;
- 	ei->i_next_alloc_goal = 0;
- 	ei->i_strat4096 = 0;
-+	ei->i_streamdir = 0;
-+	ei->i_locStreamdir.logicalBlockNum = 0xFFFFFFFF;
-+	ei->i_locStreamdir.partitionReferenceNum = 0xFFFF;
- 	init_rwsem(&ei->i_data_sem);
- 	ei->cached_extent.lstart = -1;
- 	spin_lock_init(&ei->i_extent_cache_lock);
---- a/fs/udf/inode.c	2019-07-26 11:35:28.253563792 -0500
-+++ b/fs/udf/inode.c	2019-08-06 15:04:30.851086957 -0500
-@@ -1485,6 +1485,10 @@ reread:
- 		iinfo->i_lenEAttr = le32_to_cpu(fe->lengthExtendedAttr);
- 		iinfo->i_lenAlloc = le32_to_cpu(fe->lengthAllocDescs);
- 		iinfo->i_checkpoint = le32_to_cpu(fe->checkpoint);
-+		iinfo->i_streamdir = 0;
-+		iinfo->i_lenStreams = 0;
-+		iinfo->i_locStreamdir.logicalBlockNum = 0xFFFFFFFF;
-+		iinfo->i_locStreamdir.partitionReferenceNum = 0xFFFF;
- 	} else {
- 		inode->i_blocks = le64_to_cpu(efe->logicalBlocksRecorded) <<
- 		    (inode->i_sb->s_blocksize_bits - 9);
-@@ -1498,6 +1502,16 @@ reread:
- 		iinfo->i_lenEAttr = le32_to_cpu(efe->lengthExtendedAttr);
- 		iinfo->i_lenAlloc = le32_to_cpu(efe->lengthAllocDescs);
- 		iinfo->i_checkpoint = le32_to_cpu(efe->checkpoint);
-+
-+		/* Named streams */
-+		iinfo->i_streamdir = (efe->streamDirectoryICB.extLength != 0);
-+		iinfo->i_locStreamdir =
-+			lelb_to_cpu(efe->streamDirectoryICB.extLocation);
-+		iinfo->i_lenStreams = le64_to_cpu(efe->objectSize);
-+		if (iinfo->i_lenStreams >= inode->i_size)
-+			iinfo->i_lenStreams -= inode->i_size;
-+		else
-+			iinfo->i_lenStreams = 0;
- 	}
- 	inode->i_generation = iinfo->i_unique;
- 
-@@ -1760,9 +1774,19 @@ static int udf_update_inode(struct inode
- 		       iinfo->i_ext.i_data,
- 		       inode->i_sb->s_blocksize -
- 					sizeof(struct extendedFileEntry));
--		efe->objectSize = cpu_to_le64(inode->i_size);
-+		efe->objectSize =
-+			cpu_to_le64(inode->i_size + iinfo->i_lenStreams);
- 		efe->logicalBlocksRecorded = cpu_to_le64(lb_recorded);
- 
-+		if (iinfo->i_streamdir) {
-+			struct long_ad *icb_lad = &efe->streamDirectoryICB;
-+
-+			icb_lad->extLocation =
-+				cpu_to_lelb(iinfo->i_locStreamdir);
-+			icb_lad->extLength =
-+				cpu_to_le32(inode->i_sb->s_blocksize);
-+		}
-+
- 		udf_adjust_time(iinfo, inode->i_atime);
- 		udf_adjust_time(iinfo, inode->i_mtime);
- 		udf_adjust_time(iinfo, inode->i_ctime);
