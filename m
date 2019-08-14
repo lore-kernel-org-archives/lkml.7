@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 453F6C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7B3C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6C420679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B22E20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749641;
-	bh=ATgu5sVMXu5Bvc2XYr6x+coYMNy3bq3/q+Ll4nIE4aU=;
+	s=default; t=1565749644;
+	bh=MLP40Xee1XZVetBmWFSJCKBW+PStioixF9jdljQ31A4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rt7I9xrDoPIItTUapqwpOy6hTZ7OV/Q6qgpPsiY4YGl60WR20YKOkUoIXosnj/cql
-	 9mPprCXzDM+2WP5bv/RhzifLvxoZTHYsvQdBqrasWm9c3Gxbs7ycxmB6pxC337uwmW
-	 tqB+msrkC7s4GqPKilq3F88KpfnQc+l7K9NjbM5g=
+	b=OBs57hE21cfFrBAE7J5UeLG+zHSOn3AQkC5OREiv90Vm9y6NDs71NGwV6gqWbeqsa
+	 KSbuqgeICSnwdJL+kQKsC9/Mua9FkvU9v9W7lmQgu6lu6/rpcfjK4MHkXYLSb1p9EV
+	 CqhxuU36sK/hxHARWOPaLKi37UACm6dvT/pXYmF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730074AbfHNC1S (ORCPT
+        id S1730327AbfHNC03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:27:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54566 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:26:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729521AbfHNC0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:26:30 -0400
+        id S1730303AbfHNC0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:26:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F9C32085A;
-        Wed, 14 Aug 2019 02:26:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3A3A2184B;
+        Wed, 14 Aug 2019 02:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749589;
-        bh=ATgu5sVMXu5Bvc2XYr6x+coYMNy3bq3/q+Ll4nIE4aU=;
+        s=default; t=1565749584;
+        bh=MLP40Xee1XZVetBmWFSJCKBW+PStioixF9jdljQ31A4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dqjTsoy3GsTy7Ckl63yeC6G4JvfTuAImNO5L4Rm0oX1P7/wkSLEbY2/F+umeEeQuO
-         3TxtQtmSvfem50+grOkB1eO7patddNbhj7FJ/oU/PWKUqKyKDP1PQaRIzKORidek0G
-         Ul0EipEyYX+tvMk88C1IjwnO/TtrA+3i2kbMNOA0=
+        b=UgEz98zv32t87/N7qWrT7uv8f10zSYPHRzmmG+K6WyUtxTuP4YKlxs7WzwbDHNSnr
+         NxyUbdXYvdgO9uqYrPrAr47pPVmJv6Dt8IGcYXQtOxtFX+tWE/CAsGm/qtqnwySafp
+         EjX5w4wHnuYPc1sqvCfYDF3BMPqWTNY9dg9SnKDY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+5efc10c005014d061a74@syzkaller.appspotmail.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 22/28] Input: iforce - add sanity checks
-Date:   Tue, 13 Aug 2019 22:25:44 -0400
-Message-Id: <20190814022550.17463-22-sashal@kernel.org>
+        syzbot+965152643a75a56737be@syzkaller.appspotmail.com,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 19/28] HID: holtek: test for sanity of intfdata
+Date:   Tue, 13 Aug 2019 22:25:41 -0400
+Message-Id: <20190814022550.17463-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022550.17463-1-sashal@kernel.org>
 References: <20190814022550.17463-1-sashal@kernel.org>
@@ -62,36 +62,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 849f5ae3a513c550cad741c68dd3d7eb2bcc2a2c ]
+[ Upstream commit 01ec0a5f19c8c82960a07f6c7410fc9e01d7fb51 ]
 
-The endpoint type should also be checked before a device
-is accepted.
+The ioctl handler uses the intfdata of a second interface,
+which may not be present in a broken or malicious device, hence
+the intfdata needs to be checked for NULL.
 
-Reported-by: syzbot+5efc10c005014d061a74@syzkaller.appspotmail.com
+[jkosina@suse.cz: fix newly added spurious space]
+Reported-by: syzbot+965152643a75a56737be@syzkaller.appspotmail.com
 Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/joystick/iforce/iforce-usb.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/hid/hid-holtek-kbd.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/joystick/iforce/iforce-usb.c b/drivers/input/joystick/iforce/iforce-usb.c
-index db64adfbe1aff..3e1ea912b41d1 100644
---- a/drivers/input/joystick/iforce/iforce-usb.c
-+++ b/drivers/input/joystick/iforce/iforce-usb.c
-@@ -145,7 +145,12 @@ static int iforce_usb_probe(struct usb_interface *intf,
- 		return -ENODEV;
+diff --git a/drivers/hid/hid-holtek-kbd.c b/drivers/hid/hid-holtek-kbd.c
+index 6e1a4a4fc0c10..ab9da597106fa 100644
+--- a/drivers/hid/hid-holtek-kbd.c
++++ b/drivers/hid/hid-holtek-kbd.c
+@@ -126,9 +126,14 @@ static int holtek_kbd_input_event(struct input_dev *dev, unsigned int type,
  
- 	epirq = &interface->endpoint[0].desc;
-+	if (!usb_endpoint_is_int_in(epirq))
+ 	/* Locate the boot interface, to receive the LED change events */
+ 	struct usb_interface *boot_interface = usb_ifnum_to_if(usb_dev, 0);
++	struct hid_device *boot_hid;
++	struct hid_input *boot_hid_input;
+ 
+-	struct hid_device *boot_hid = usb_get_intfdata(boot_interface);
+-	struct hid_input *boot_hid_input = list_first_entry(&boot_hid->inputs,
++	if (unlikely(boot_interface == NULL))
 +		return -ENODEV;
 +
- 	epout = &interface->endpoint[1].desc;
-+	if (!usb_endpoint_is_int_out(epout))
-+		return -ENODEV;
++	boot_hid = usb_get_intfdata(boot_interface);
++	boot_hid_input = list_first_entry(&boot_hid->inputs,
+ 		struct hid_input, list);
  
- 	if (!(iforce = kzalloc(sizeof(struct iforce) + 32, GFP_KERNEL)))
- 		goto fail;
+ 	return boot_hid_input->input->event(boot_hid_input->input, type, code,
 -- 
 2.20.1
 
