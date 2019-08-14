@@ -2,130 +2,156 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E40C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684A6C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75290214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B9362067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Lxv3421X"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="TFrhjp76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbfHNWx6 (ORCPT
+        id S1729155AbfHNW4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 18:53:58 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:57970 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728692AbfHNWx6 (ORCPT
+        Wed, 14 Aug 2019 18:56:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51298 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729025AbfHNW4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 18:53:58 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3CDF42B2;
-        Thu, 15 Aug 2019 00:53:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1565823236;
-        bh=CL84GQStNil7GZQgqIhkQ2ibX45iAPYQVUl32fqY34g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lxv3421XVhXPBCrb/G2YQqWu1tUXBmTyodkTiTzktnWgYp7LzrNR66ZJzRp5NHns7
-         UulmXilClz/bllnLRrnfwMZbex0/y9RzAHFfKsFtbyqM7OHFKV8lau6zRSww0K5Nd0
-         aoRNQtGkhlPpwMHGp8Jpfh+ijUVnsa7y2s5tE4Q4=
-Date:   Thu, 15 Aug 2019 01:53:53 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 3/5] media: v4l2-ctrls: Add support for V4L2_CID_LOCATION
-Message-ID: <20190814225353.GE5015@pendragon.ideasonboard.com>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-4-jacopo@jmondi.org>
+        Wed, 14 Aug 2019 18:56:20 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 207so119330wma.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 15:56:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=oj0hiMpymPXol1ueA+RVPbGRQRBHE7nRWC8Jc3SIHJQ=;
+        b=TFrhjp76KvhcPhVTK2TfGWaxGV4sXpTjcbT9q7BQxzt5MoIPR1+gjOy3Gf6ZIWXj5q
+         nKuVjh5sGmHcu5otL1t4DJJrNZtTRrbaS16GpURlrVA3mzYfql+BTs5/C9EUd2sQmMWg
+         pHudRsqRyNKcRpryQrk/f00JrGzFQyj4UKDpGbHMhlEy3ekEGjn3l7Ul8QdsNsDPnADE
+         a0hGM5/8rC6HQsidUisOCLSjovoRgnYgzi1C0xFazhku1REsa1Qcn+/1vW+vC7HfzGzt
+         uCqz9WKKHBoXkTu74vlHUuhsVl7pjhrNbbgZDLCD/MjgXvfDqO5Kyw6S+Rm1E3bGHtSO
+         BzhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=oj0hiMpymPXol1ueA+RVPbGRQRBHE7nRWC8Jc3SIHJQ=;
+        b=d37hWd548dyii7+hLjulG283IiOJWMFfUCMiCRPnQX+SxUmwAsNz+P6txR6ZJ1TJ5p
+         2Q/qHg6QWwFBZ4aQSmX4bBLVwkm/Hoyq0WnYtiRhmW3M5wQ61alCmHBBJLATYM1cFDEF
+         lRigz2sCAYKapNAswPX2yKGN6YcoS+MIfU1OPNx9Bo9BopXY/6+AKXLwZTGug93fyn88
+         BoXt8pER8F1hSSL05BpJdU/qWvPERBN9LQt3Y7iRrhgzkUIOwROhbRLaW9eCj01rvk2C
+         LjEcdRIcSi+2hstcJhJIoMcOcsmNb8MOpYZs/7V6rL37WH3DeCgRm/oPn6swaa2zMepE
+         Gofw==
+X-Gm-Message-State: APjAAAV+ZIkdPu0PJhCrencuJr6j8Y1Y2VH4uFzqcuc99ofHMTo7v4ii
+        Ip7jbkaWRB4E/VeenGTeXfmamw==
+X-Google-Smtp-Source: APXvYqxsU8yqp02nrnZwlAkGgRcMTC2zlmhzGqITndHZpKMA4JwdUhVqOJy9irnnPQCs0DCtze21NQ==
+X-Received: by 2002:a1c:a909:: with SMTP id s9mr150134wme.20.1565823377815;
+        Wed, 14 Aug 2019 15:56:17 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id e3sm1135644wrs.37.2019.08.14.15.56.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 15:56:16 -0700 (PDT)
+Message-ID: <5d549190.1c69fb81.186a2.5bd1@mx.google.com>
+Date:   Wed, 14 Aug 2019 15:56:16 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190814202815.32491-4-jacopo@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v4.14.138-70-g736c2f07319a
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Report-Type: boot
+X-Kernelci-Branch: linux-4.14.y
+In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
+References: <20190814165744.822314328@linuxfoundation.org>
+Subject: Re: [PATCH 4.14 00/69] 4.14.139-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+stable-rc/linux-4.14.y boot: 132 boots: 2 failed, 117 passed with 12 offlin=
+e, 1 untried/unknown (v4.14.138-70-g736c2f07319a)
 
-Thank you for the patch.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.14.y/kernel/v4.14.138-70-g736c2f07319a/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
+y/kernel/v4.14.138-70-g736c2f07319a/
 
-On Wed, Aug 14, 2019 at 10:28:13PM +0200, Jacopo Mondi wrote:
-> Add support for the newly defined V4L2_CID_LOCATION read-only control
-> used to report the camera device mounting position.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> ---
->  drivers/media/v4l2-core/v4l2-ctrls.c | 7 +++++++
->  include/uapi/linux/v4l2-controls.h   | 4 ++++
->  2 files changed, 11 insertions(+)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index 7d3a33258748..8ab0857df59a 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -943,6 +943,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
->  	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
->  	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
-> +	case V4L2_CID_LOCATION:			return "Location";
+Tree: stable-rc
+Branch: linux-4.14.y
+Git Describe: v4.14.138-70-g736c2f07319a
+Git Commit: 736c2f07319a323c55007bcf8fca70481e9c7175
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 69 unique boards, 25 SoC families, 16 builds out of 201
 
-Depending on what we decide to name the control (see review of 2/5), you
-should adjust the description accordingly.
+Boot Regressions Detected:
 
->  
->  	/* FM Radio Modulator controls */
->  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-> @@ -1300,6 +1301,12 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
->  		break;
->  	case V4L2_CID_MPEG_VIDEO_FWHT_PARAMS:
->  		*type = V4L2_CTRL_TYPE_FWHT_PARAMS;
-> +	case V4L2_CID_LOCATION:
-> +		*type = V4L2_CTRL_TYPE_INTEGER;
-> +		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
-> +		*min = V4L2_LOCATION_FRONT;
-> +		*max = V4L2_LOCATION_BACK;
+arm:
 
-I don't think the control should have a min and a max different than the
-current value, as it's a fully static control. I'd drop those two lines
-here, and drivers will have to set value = min = max = V4L2_LOCATION_xxx
-when creating the control. That why you should be able to collapse this
-with V4L2_CID_MIN_BUFFERS_FOR_OUTPUT.
+    qcom_defconfig:
+        gcc-8:
+          qcom-apq8064-cm-qs600:
+              lab-baylibre-seattle: new failure (last pass: v4.14.138)
+          qcom-apq8064-ifc6410:
+              lab-baylibre-seattle: new failure (last pass: v4.14.138)
 
-> +		*step = 1;
->  		break;
->  	default:
->  		*type = V4L2_CTRL_TYPE_INTEGER;
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index 37807f23231e..5c4c7b245921 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -889,6 +889,10 @@ enum v4l2_auto_focus_range {
->  #define V4L2_CID_PAN_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+32)
->  #define V4L2_CID_TILT_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+33)
->  
-> +#define V4L2_CID_LOCATION			(V4L2_CID_CAMERA_CLASS_BASE+34)
-> +#define V4L2_LOCATION_FRONT			(0 << 0)
-> +#define V4L2_LOCATION_BACK			(1 << 0)
+Boot Failures Detected:
 
-Why not just 0 and 1 ?
+arc:
+    hsdk_defconfig:
+        gcc-8:
+            hsdk: 1 failed lab
 
-> +
->  /* FM Modulator class control IDs */
->  
->  #define V4L2_CID_FM_TX_CLASS_BASE		(V4L2_CTRL_CLASS_FM_TX | 0x900)
+arm64:
+    defconfig:
+        gcc-8:
+            rk3399-firefly: 1 failed lab
 
--- 
-Regards,
+Offline Platforms:
 
-Laurent Pinchart
+arm64:
+
+    defconfig:
+        gcc-8
+            apq8016-sbc: 1 offline lab
+            meson-gxbb-odroidc2: 1 offline lab
+
+arm:
+
+    multi_v7_defconfig:
+        gcc-8
+            imx6dl-wandboard_solo: 1 offline lab
+            imx6q-wandboard: 1 offline lab
+            qcom-apq8064-cm-qs600: 1 offline lab
+            qcom-apq8064-ifc6410: 1 offline lab
+            sun5i-r8-chip: 1 offline lab
+
+    sunxi_defconfig:
+        gcc-8
+            sun5i-r8-chip: 1 offline lab
+
+    qcom_defconfig:
+        gcc-8
+            qcom-apq8064-cm-qs600: 1 offline lab
+            qcom-apq8064-ifc6410: 1 offline lab
+
+    imx_v6_v7_defconfig:
+        gcc-8
+            imx6dl-wandboard_solo: 1 offline lab
+            imx6q-wandboard: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
