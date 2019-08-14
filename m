@@ -2,53 +2,52 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CF3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAE5C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8469521852
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 809D12133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802853;
-	bh=9J/hVlocitOzGgJbVxHih96oSCV/jmUgFFqrsAWV2aE=;
+	s=default; t=1565802859;
+	bh=Qxmb6vn3g3QEs2Y31wCulIpv1Hya/mij5H+crVxaM88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZGWDIZSrAxjhc58ylnrkSPr1JG2I5B4zCR0bqqjJ28Bf9Ww28uXKu3KSpahUZqw7j
-	 cNU38ooLEQXLyWKILWbOA+mFAiskLjWxZugblbmggzbzYDszSdjEcMMhK/UyWhOWqt
-	 yjio8Cjo4+WU496IRe3V3OrZzfnoxRI6clZ6dyzg=
+	b=OEH1lWt1bOK657MnAgZvc/1z4WPTXDd2ssmDO9t8si1evykD/628D8zy5Z/paRx1N
+	 BRkZiD8v7D5pboYVQWn3hxwMPJO/oD9X85WLRsr5HaUIBm5Iu+RBencp3wKgnVTeeF
+	 P3WHevhW4K0t9TXyYKh1a5mhHJdM/OMGPtWD8qdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730625AbfHNROL (ORCPT
+        id S1731056AbfHNROS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:14:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38594 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:14:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731023AbfHNROI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:14:08 -0400
+        id S1731038AbfHNROO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:14:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 044A12063F;
-        Wed, 14 Aug 2019 17:14:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CCF62084D;
+        Wed, 14 Aug 2019 17:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802848;
-        bh=9J/hVlocitOzGgJbVxHih96oSCV/jmUgFFqrsAWV2aE=;
+        s=default; t=1565802853;
+        bh=Qxmb6vn3g3QEs2Y31wCulIpv1Hya/mij5H+crVxaM88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E8meYCjttmB6wmApiI60hfpHkJyuNEkp0MIGhTJNAALJmKEJ+iiiVPpqEnKiStn6g
-         oL8sSWZ0wzztwCrj5aLWv9HI69ve2TmbjaPqO7PCm6pzUPkfFs/iksS/V99S069clu
-         rM0SajkKL7lG3Tt6wtHiD5dOlX1WaHr2c3zMQtwA=
+        b=EHC3Wa+T57ba0CnRsEa+eahM0T0ONgixcwBgYy5DJZQc0CmI5Mx47k3Ed9itIOh6e
+         w38N+N0nhJgd4irFPqgR+vFCyM7Lvg/C3d5XJqqmRdsBLT77ogGxJTd/sqbgPZPCLE
+         qAAe7tln71Cfyp1EV8mUtcmJ8Cq3UTcSGWPOB6js=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Roland Kammerer <roland.kammerer@linbit.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 42/69] drbd: dynamically allocate shash descriptor
-Date:   Wed, 14 Aug 2019 19:01:40 +0200
-Message-Id: <20190814165748.230767321@linuxfoundation.org>
+        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
+        syzbot+d6a5a1a3657b596ef132@syzkaller.appspotmail.com,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.14 52/69] can: peak_usb: pcan_usb_pro: Fix info-leaks to USB devices
+Date:   Wed, 14 Aug 2019 19:01:50 +0200
+Message-Id: <20190814165749.015597775@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -61,69 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 77ce56e2bfaa64127ae5e23ef136c0168b818777 ]
+From: Tomas Bortoli <tomasbortoli@gmail.com>
 
-Building with clang and KASAN, we get a warning about an overly large
-stack frame on 32-bit architectures:
+commit ead16e53c2f0ed946d82d4037c630e2f60f4ab69 upstream.
 
-drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
-      [-Werror,-Wframe-larger-than=]
+Uninitialized Kernel memory can leak to USB devices.
 
-We already allocate other data dynamically in this function, so
-just do the same for the shash descriptor, which makes up most of
-this memory.
+Fix by using kzalloc() instead of kmalloc() on the affected buffers.
 
-Link: https://lore.kernel.org/lkml/20190617132440.2721536-1-arnd@arndb.de/
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Roland Kammerer <roland.kammerer@linbit.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+Reported-by: syzbot+d6a5a1a3657b596ef132@syzkaller.appspotmail.com
+Fixes: f14e22435a27 ("net: can: peak_usb: Do not do dma on the stack")
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/block/drbd/drbd_receiver.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/net/can/usb/peak_usb/pcan_usb_pro.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-index 1aad373da50e2..8fbdfaacc2226 100644
---- a/drivers/block/drbd/drbd_receiver.c
-+++ b/drivers/block/drbd/drbd_receiver.c
-@@ -5237,7 +5237,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	unsigned int key_len;
- 	char secret[SHARED_SECRET_MAX]; /* 64 byte */
- 	unsigned int resp_size;
--	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
-+	struct shash_desc *desc;
- 	struct packet_info pi;
- 	struct net_conf *nc;
- 	int err, rv;
-@@ -5250,6 +5250,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	memcpy(secret, nc->shared_secret, key_len);
- 	rcu_read_unlock();
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
+@@ -500,7 +500,7 @@ static int pcan_usb_pro_drv_loaded(struc
+ 	u8 *buffer;
+ 	int err;
  
-+	desc = kmalloc(sizeof(struct shash_desc) +
-+		       crypto_shash_descsize(connection->cram_hmac_tfm),
-+		       GFP_KERNEL);
-+	if (!desc) {
-+		rv = -1;
-+		goto fail;
-+	}
- 	desc->tfm = connection->cram_hmac_tfm;
- 	desc->flags = 0;
+-	buffer = kmalloc(PCAN_USBPRO_FCT_DRVLD_REQ_LEN, GFP_KERNEL);
++	buffer = kzalloc(PCAN_USBPRO_FCT_DRVLD_REQ_LEN, GFP_KERNEL);
+ 	if (!buffer)
+ 		return -ENOMEM;
  
-@@ -5392,7 +5399,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	kfree(peers_ch);
- 	kfree(response);
- 	kfree(right_response);
--	shash_desc_zero(desc);
-+	if (desc) {
-+		shash_desc_zero(desc);
-+		kfree(desc);
-+	}
- 
- 	return rv;
- }
--- 
-2.20.1
-
 
 
