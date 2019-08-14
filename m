@@ -2,110 +2,75 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB189C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 442BCC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF5FC206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F456206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbfHNXix (ORCPT
+        id S1729596AbfHNXkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 19:38:53 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39391 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727217AbfHNXiw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 19:38:52 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 843FC80A2A; Thu, 15 Aug 2019 01:38:37 +0200 (CEST)
-Date:   Thu, 15 Aug 2019 01:38:49 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>, tytso@mit.edu,
-        nhorman@tuxdriver.com, security@kernel.org
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Chen Yu <yu.c.chen@intel.com>, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: Non-random RDRAND Re: [PATCH] x86/CPU/AMD: Clear RDRAND CPUID
- bit on AMD family 15h/16h
-Message-ID: <20190814233849.GA462@amd>
-References: <776cb5c2d33e7fd0d2893904724c0e52b394f24a.1565817448.git.thomas.lendacky@amd.com>
- <20190814232434.GA31769@amd>
+        Wed, 14 Aug 2019 19:40:32 -0400
+Received: from mga02.intel.com ([134.134.136.20]:11922 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727217AbfHNXkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 19:40:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 16:40:31 -0700
+X-IronPort-AV: E=Sophos;i="5.64,387,1559545200"; 
+   d="scan'208";a="167584999"
+Received: from agluck-desk2.sc.intel.com ([10.3.52.68])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 16:40:30 -0700
+From:   Tony Luck <tony.luck@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain asm/intel-family.h
+Date:   Wed, 14 Aug 2019 16:40:30 -0700
+Message-Id: <20190814234030.30817-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
-Content-Disposition: inline
-In-Reply-To: <20190814232434.GA31769@amd>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There are a few different subsystems in the kernel that depend on
+model specific behaviour (perf, EDAC, power, ...). Easier for just
+one person to have the task to get new model numbers included instead
+of having these groups trip over each other to do it.
 
---PNTmBPCT7hxwcZjr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-On Thu 2019-08-15 01:24:35, Pavel Machek wrote:
-> On Wed 2019-08-14 21:17:41, Lendacky, Thomas wrote:
-> > From: Tom Lendacky <thomas.lendacky@amd.com>
-> >=20
-> > There have been reports of RDRAND issues after resuming from suspend on
-> > some AMD family 15h and family 16h systems. This issue stems from BIOS
-> > not performing the proper steps during resume to ensure RDRAND continues
-> > to function properly.
->=20
-> Burn it with fire!
->=20
-> I mean... people were afraid RDRAND would be backdoored, and you now
-> confirm ... it indeed _is_ backdoored? /., here's news for you!
->=20
-> So what is the impact? Does it give random-looking but predictable
-> numbers after resume? Does it give all zeros? Something else?
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e81e60bd7c26..29d58ad7f4f9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8064,6 +8064,12 @@ T:	git git://git.code.sf.net/p/intel-sas/isci
+ S:	Supported
+ F:	drivers/scsi/isci/
+ 
++INTEL Cpu family model numbers
++M:	Tony Luck <tony.luck@intel.com>
++L:	linux-kernel@vger.kernel.org
++S:	Supported
++F:	arch/x86/include/asm/intel-family.h
++
+ INTEL DRM DRIVERS (excluding Poulsbo, Moorestown and derivative chipsets)
+ M:	Jani Nikula <jani.nikula@linux.intel.com>
+ M:	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+-- 
+2.20.1
 
-Plus... We trust the RDRAND in some configurations:
-
-        random.trust_cpu=3D{on,off}
-				[KNL] Enable or disable trusting the
-				use of the CPU's random
-				number generator (if available) to
-	       		     fully seed the
-				kernel's CRNG. Default is controlled by
-				CONFIG_RANDOM_TRUST_CPU.
-
-so.. does this mean /dev/random was giving non-random values for some
-users?
-
-Certainly it means userland users were getting non-random values. That
-sounds like something worth CVE and informing affected users?
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---PNTmBPCT7hxwcZjr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1Um4kACgkQMOfwapXb+vIG8QCfcMvaMkAtM9hsS5yK2VENUKxn
-ka4AoLbv6GDCX/Ku6G0zERnadnXHCQNE
-=6aFU
------END PGP SIGNATURE-----
-
---PNTmBPCT7hxwcZjr--
