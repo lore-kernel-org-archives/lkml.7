@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37480C32753
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96A8C32757
 	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15533208C2
+	by mail.kernel.org (Postfix) with ESMTP id B9C65208C2
 	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfHNKpO (ORCPT
+        id S1727758AbfHNKpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 14 Aug 2019 06:45:14 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:29419 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726551AbfHNKpL (ORCPT
+Received: from mailgw01.mediatek.com ([210.61.82.183]:6368 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727484AbfHNKpN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:45:11 -0400
-X-UUID: da896fad1a3f48d6ab0961ca83e2064c-20190814
-X-UUID: da896fad1a3f48d6ab0961ca83e2064c-20190814
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        Wed, 14 Aug 2019 06:45:13 -0400
+X-UUID: 90cef1fb6b2c4dc8afdba457a633c001-20190814
+X-UUID: 90cef1fb6b2c4dc8afdba457a633c001-20190814
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
         (envelope-from <sam.shih@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 52192520; Wed, 14 Aug 2019 18:45:05 +0800
+        with ESMTP id 1035860045; Wed, 14 Aug 2019 18:45:05 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 14 Aug 2019 18:45:07 +0800
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 14 Aug 2019 18:45:05 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 14 Aug 2019 18:45:07 +0800
+ Transport; Wed, 14 Aug 2019 18:45:05 +0800
 From:   Sam Shih <sam.shih@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -42,10 +42,10 @@ CC:     Ryder Lee <ryder.lee@mediatek.com>,
         John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
-        sam shih <sam.shih@mediatek.com>
-Subject: [PATCH v2 9/10] dt-bindings: pwm: update bindings for MT7628 SoC 
-Date:   Wed, 14 Aug 2019 18:43:39 +0800
-Message-ID: <1565779497-23621-2-git-send-email-sam.shih@mediatek.com>
+        "sam shih" <sam.shih@mediatek.com>
+Subject: [PATCH v2 8/10] pwm: mediatek: add new property and fix mt7628 pwm
+Date:   Wed, 14 Aug 2019 18:43:38 +0800
+Message-ID: <1565779497-23621-1-git-send-email-sam.shih@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <621e49c01b943edb6ddac9182f34719eb0727f01.1548313019.git.ryder.lee@mediatek.com>
 References: <621e49c01b943edb6ddac9182f34719eb0727f01.1548313019.git.ryder.lee@mediatek.com>
@@ -59,39 +59,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: sam shih <sam.shih@mediatek.com>
 
-This updates bindings for MT7628 pwm controller.
+This fix mt7628 pwm during configure from userspace. The SoC
+is legacy MIPS and has no complex clock tree. This patch add property
+clock-frequency to the SoC specific data and legacy MIPS SoC need to
+configure it in DT. This property is use for period calculation.
 
 Signed-off-by: Sam Shih <sam.shih@mediatek.com>
 ---
- .../devicetree/bindings/pwm/pwm-mediatek.txt       | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/pwm/pwm-mediatek.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-index c7bd5633d1eb..9d2d893a07ff 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-@@ -21,6 +21,8 @@ Required properties:
-  - pinctrl-0: One property must exist for each entry in pinctrl-names.
-    See pinctrl/pinctrl-bindings.txt for details of the property values.
-  - num-pwms: the number of PWM channels.
-+ - clock-frequency: fix clock frequency, this is an optional property, only use in MT7628 SoC
-+                    for period calculation. This SoC has no complex clock tree.
+diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+index d696df7a58fa..922a7543a2b1 100644
+--- a/drivers/pwm/pwm-mediatek.c
++++ b/drivers/pwm/pwm-mediatek.c
+@@ -53,6 +53,7 @@ struct pwm_mediatek_chip {
+ 	struct clk *clk_top;
+ 	struct clk *clk_main;
+ 	struct clk **clk_pwms;
++	unsigned int clock_frequency;
+ 	const struct pwm_mediatek_of_data *soc;
+ };
  
- Example:
- 	pwm0: pwm@11006000 {
-@@ -40,3 +42,13 @@ Example:
- 		pinctrl-0 = <&pwm0_pins>;
- 		num-pwms = <5>;
- 	};
-+MT7628 Example:
-+	pwm: pwm@5000 {
-+		compatible = "mediatek,mt7628-pwm";
-+		reg = <0x5000 0x1000>;
-+		#pwm-cells = <2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm0_pins>, <&pwm1_pins>;
-+		num-pwms = <4>;
-+		clock-frequency = <100000>;
-+	};
+@@ -139,7 +140,10 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	/* Using resolution in picosecond gets accuracy higher */
+ 	resolution = (u64)NSEC_PER_SEC * 1000;
+-	do_div(resolution, clk_get_rate(clk));
++	if (pc->soc->has_clks)
++		do_div(resolution, clk_get_rate(clk));
++	else
++		do_div(resolution, pc->clock_frequency);
+ 
+ 	cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000, resolution);
+ 	while (cnt_period > 8191) {
+@@ -216,6 +220,7 @@ static int pwm_mediatek_probe(struct platform_device *pdev)
+ 	struct pwm_mediatek_chip *pc;
+ 	struct resource *res;
+ 	unsigned int npwms;
++	unsigned int clock_frequency;
+ 	int ret;
+ 
+ 	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+@@ -265,6 +270,14 @@ static int pwm_mediatek_probe(struct platform_device *pdev)
+ 			if (IS_ERR(pc->clk_pwms[i]))
+ 				return PTR_ERR(pc->clk_pwms[i]);
+ 		}
++	} else {
++		ret = of_property_read_u32(np, "clock-frequency",
++						&clock_frequency);
++		if (ret < 0) {
++			dev_err(&pdev->dev, "failed to get clock_frequency\n");
++			return ret;
++		}
++		pc->clock_frequency = clock_frequency;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, pc);
 -- 
 2.17.1
+
