@@ -2,157 +2,138 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CB6C32759
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950ADC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D707206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69480208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:38:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J/RX89Sf"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="GZ5y/O3f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbfHNRfW (ORCPT
+        id S1728719AbfHNRid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:35:22 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40694 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728128AbfHNRfV (ORCPT
+        Wed, 14 Aug 2019 13:38:33 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42550 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727558AbfHNRic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:35:21 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c34so44302385otb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 10:35:21 -0700 (PDT)
+        Wed, 14 Aug 2019 13:38:32 -0400
+Received: by mail-qt1-f196.google.com with SMTP id t12so22439377qtp.9
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 10:38:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fOFmALBZr12NwAFqPH4bz0Snzh0MYv/4Oy/ALTRaZDA=;
-        b=J/RX89SfeoHR3tNRvGakoeZptZJRFt1aGCoCGLanpgjt6kzr4VpQHXuOeq/XIub7h3
-         dtaz/Elri9LmCCrz1cJasmWNTs/t3B2DIMrEzFtcDd5S3T5Z7qW0x6VQtzyPUT8xX0Dr
-         tpBoGVGOFhjt5t/gsPYut79dUKJV/zOUYBE0KuVDsrJAB63xmL9rkN5sW1B/mX17RfT8
-         s7uhch2pStQ0Q6kOmXjpTKpW17nIDOPnBvNsIuNp6/qFxNyKoezYoApT9paR+P+AAJP+
-         1YlKwUJfVlXI0OJvPm/r92hOejmHZfRewJNJIhMYRbj46Pt2aVShyKZOOJ23qQt+gnU7
-         ycMQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4BL5XZQz+p5d6tRSI8UgGndGd0i26QwDHoau6MxYYLA=;
+        b=GZ5y/O3fyBNnstbyvOADsRpKWOCP6tLzpWK55C2O1o3SaTumF2M8WN5IquV0vharRJ
+         Vj6F0ER/zA4UHC1gLoJgqgJmo1pUufEieBTrdTqoGIBq2N4DUumbW/cMJbrl1VVNByad
+         4aZw5rj4SSAm/2VgxPx3ehp5ieE8vIwRpTpcljvn4XtLfC/IJjeZRnOJxcC9IAXjC348
+         u6NmUmhnUOWJ+9pf7Cg19TgIe9oMd4mmBt4OgnbpwVPRlHasESVQXh8DgORDFL7e9dIY
+         DQQ1R3SBs+BxU2oSOxNE84A+2nDuDnbsk5f6AxEuLomLooVFQuDKqC8zTybwExG7DYQv
+         Ovww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fOFmALBZr12NwAFqPH4bz0Snzh0MYv/4Oy/ALTRaZDA=;
-        b=rgaMUP9K35WEsPcR9RBec7T6TbGr1zzCqcn637I8CLrK1F9D+NFtzYibj5ekc7Uv+4
-         OkNyc32jmkh306pWfavqsWRK7Y26eacOnpdeHKspHMGH4pKZoomgFWyzrMkEpB7c5SAr
-         2mrHHuzSh+7FTqPgqSFDP1VAs62SnxpxUNZKvPD+k5p50RzdKcwktdAl8XQWg2gyLy/x
-         cc6jMRfJXE/jHUzb/MjsF1g9RESMCQiRoXjf32i5amB8DyFJ+LpsDBqh0LX+S3iI93Bd
-         Kouqt89N+MfHuLZkv/wPo9nzjUPjyK4QAsnXI4A3EiGXRA9mUTyzTON4t854yNWz7ZRV
-         8FTg==
-X-Gm-Message-State: APjAAAUptoQFdFD/vU9t+jJTcwYsQ/OWHfeMtTXoEaZFPm87itxuUn87
-        xbizE+aKGK3IwQIweCQIxsPmaX0FgV9/bQ7Ra3Cgtw==
-X-Google-Smtp-Source: APXvYqyjolYUGNDko/RtbeKAldUB4mXc2vz0kBg/ilppWohKo/GY5H6usCosoBEpZ0JF43wMzvRMaDIYk6L2L/batEg=
-X-Received: by 2002:a05:6830:1e0f:: with SMTP id s15mr177324otr.231.1565804120275;
- Wed, 14 Aug 2019 10:35:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4BL5XZQz+p5d6tRSI8UgGndGd0i26QwDHoau6MxYYLA=;
+        b=mfFin5hI6tbbMiDxzNudkCNyESaaYTDFmqZUDLD6EuK2SUJYPXvWD/o4jTlhgdiTKC
+         wpQpPEcyrkJh4p1xj6LaqZky1CzcVfrDCcfFvwMk+PRfnVbUOyn/cnkRJs2Tvg1ulzM/
+         SzE/74rgoi3yk+XKaN39B47+80nGKsEkHxuMDpewcaP+GAjkwNEKJySEtjVJ5WVY2b0w
+         qJwYn1LxRIFnjN5vt4xvimP/0It7TU9UTrB1oePjghe1uxRt2U7pXrOG8ghBe2RLA/tS
+         BghhU21wmpXU+/pHbQ4kZ/s1ycTqfVwi5bojbQWCxMOBpVxEttgl9u4cZRXcAo2VFOFE
+         qT5Q==
+X-Gm-Message-State: APjAAAVLKr08XfWqZL0L774hm8v8+KUO/DQyFW4VRQ4RF4bWtycCRH13
+        6KKdIDHD14KGQD8xHTwksf03Zg==
+X-Google-Smtp-Source: APXvYqxpAAoXp0kvOxvJXtMrsqgsFY3sTwK9jF6HD5sftMuz7DlYtAaSID0v0hvt26yGYDKgp7YVfg==
+X-Received: by 2002:aed:2fe6:: with SMTP id m93mr512005qtd.114.1565804311976;
+        Wed, 14 Aug 2019 10:38:31 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id j61sm150258qte.47.2019.08.14.10.38.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 14 Aug 2019 10:38:31 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hxxEE-0001nN-UV; Wed, 14 Aug 2019 14:38:30 -0300
+Date:   Wed, 14 Aug 2019 14:38:30 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Bharath Vedartham <linux.bhar@gmail.com>
+Cc:     Dimitri Sivanich <sivanich@hpe.com>, jhubbard@nvidia.com,
+        gregkh@linuxfoundation.org, arnd@arndb.de, ira.weiny@intel.com,
+        jglisse@redhat.com, william.kucharski@oracle.com, hch@lst.de,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [Linux-kernel-mentees][PATCH v5 1/1] sgi-gru: Remove *pte_lookup
+ functions, Convert to get_user_page*()
+Message-ID: <20190814173830.GC13770@ziepe.ca>
+References: <1565379497-29266-1-git-send-email-linux.bhar@gmail.com>
+ <1565379497-29266-2-git-send-email-linux.bhar@gmail.com>
+ <20190813145029.GA32451@hpe.com>
+ <20190813172301.GA10228@bharath12345-Inspiron-5559>
+ <20190813181938.GA4196@hpe.com>
+ <20190814173034.GA5121@bharath12345-Inspiron-5559>
 MIME-Version: 1.0
-References: <20180716122125.175792-1-maco@android.com> <20190813121733.52480-1-maennich@google.com>
- <20190813121733.52480-6-maennich@google.com> <CAGETcx_LQDdnaU+3JVGw+6=DJ8tRoQ00+3rD2gOiHHkWomt8jg@mail.gmail.com>
- <20190814125427.GA72826@google.com>
-In-Reply-To: <20190814125427.GA72826@google.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 14 Aug 2019 10:34:43 -0700
-Message-ID: <CAGETcx99Xx7aRPS-2Pw8h7O5D_+3T+1hbqja=p-gLN2wXApaEQ@mail.gmail.com>
-Subject: Re: [PATCH v2 05/10] module: add config option MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
-To:     Matthias Maennich <maennich@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, maco@android.com,
-        Android Kernel Team <kernel-team@android.com>, arnd@arndb.de,
-        geert@linux-m68k.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hpa@zytor.com,
-        jeyu@kernel.org,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-modules@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
-        lucas.de.marchi@gmail.com, Martijn Coenen <maco@google.com>,
-        michal.lkml@markovi.net, mingo@redhat.com, oneukum@suse.com,
-        Philippe Ombredanne <pombredanne@nexb.com>, sam@ravnborg.org,
-        Sandeep Patil <sspatil@google.com>, stern@rowland.harvard.edu,
-        tglx@linutronix.de, usb-storage@lists.one-eyed-alien.net,
-        x86@kernel.org, yamada.masahiro@socionext.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Richard Guy Briggs <rgb@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814173034.GA5121@bharath12345-Inspiron-5559>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 5:54 AM 'Matthias Maennich' via kernel-team
-<kernel-team@android.com> wrote:
->
-> On Tue, Aug 13, 2019 at 01:15:44PM -0700, Saravana Kannan wrote:
-> >On Tue, Aug 13, 2019 at 5:19 AM 'Matthias Maennich' via kernel-team
-> ><kernel-team@android.com> wrote:
-> >>
-> >> If MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS is enabled (default=n), the
-> >> requirement for modules to import all namespaces that are used by
-> >> the module is relaxed.
-> >>
-> >> Enabling this option effectively allows (invalid) modules to be loaded
-> >> while only a warning is emitted.
-> >>
-> >> Disabling this option keeps the enforcement at module loading time and
-> >> loading is denied if the module's imports are not satisfactory.
-> >>
-> >> Reviewed-by: Martijn Coenen <maco@android.com>
-> >> Signed-off-by: Matthias Maennich <maennich@google.com>
-> >> ---
-> >>  init/Kconfig    | 14 ++++++++++++++
-> >>  kernel/module.c | 11 +++++++++--
-> >>  2 files changed, 23 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/init/Kconfig b/init/Kconfig
-> >> index bd7d650d4a99..b3373334cdf1 100644
-> >> --- a/init/Kconfig
-> >> +++ b/init/Kconfig
-> >> @@ -2119,6 +2119,20 @@ config MODULE_COMPRESS_XZ
-> >>
-> >>  endchoice
-> >>
-> >> +config MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
-> >> +       bool "Allow loading of modules with missing namespace imports"
-> >> +       default n
-> >> +       help
-> >> +         Symbols exported with EXPORT_SYMBOL_NS*() are considered exported in
-> >> +         a namespace. A module that makes use of a symbol exported with such a
-> >> +         namespace is required to import the namespace via MODULE_IMPORT_NS().
-> >> +         This option relaxes this requirement when loading a module.
-> >
-> >> While
-> >> +         technically there is no reason to enforce correct namespace imports,
-> >> +         it creates consistency between symbols defining namespaces and users
-> >> +         importing namespaces they make use of.
-> >
-> >I'm confused by this sentence. It sounds like it's the opposite of
-> >what the config is doing? Can you please reword it for clarify?
->
-> How about:
->
->   Symbols exported with EXPORT_SYMBOL_NS*() are considered exported in
->   a namespace. A module that makes use of a symbol exported with such a
->   namespace is required to import the namespace via MODULE_IMPORT_NS().
->   There is no technical reason to enforce correct namespace imports,
->   but it creates consistency between symbols defining namespaces and
->   users importing namespaces they make use of. This option relaxes this
->   requirement and lifts the enforcement when loading a module.
+On Wed, Aug 14, 2019 at 11:00:34PM +0530, Bharath Vedartham wrote:
+> On Tue, Aug 13, 2019 at 01:19:38PM -0500, Dimitri Sivanich wrote:
+> > On Tue, Aug 13, 2019 at 10:53:01PM +0530, Bharath Vedartham wrote:
+> > > On Tue, Aug 13, 2019 at 09:50:29AM -0500, Dimitri Sivanich wrote:
+> > > > Bharath,
+> > > > 
+> > > > I do not believe that __get_user_pages_fast will work for the atomic case, as
+> > > > there is no guarantee that the 'current->mm' will be the correct one for the
+> > > > process in question, as the process might have moved away from the cpu that is
+> > > > handling interrupts for it's context.
+> > > So what your saying is, there may be cases where current->mm != gts->ts_mm
+> > > right? __get_user_pages_fast and get_user_pages do assume current->mm.
+> > 
+> > Correct, in the case of atomic context.
+> > 
+> > > 
+> > > These changes were inspired a bit from kvm. In kvm/kvm_main.c,
+> > > hva_to_pfn_fast uses __get_user_pages_fast. THe comment above the
+> > > function states it runs in atomic context.
+> > > 
+> > > Just curious, get_user_pages also uses current->mm. Do you think that is
+> > > also an issue? 
+> > 
+> > Not in non-atomic context.  Notice that it is currently done that way.
+> > 
+> > > 
+> > > Do you feel using get_user_pages_remote would be a better idea? We can
+> > > specify the mm_struct in get_user_pages_remote?
+> > 
+> > From that standpoint maybe, but is it safe in interrupt context?
+> Hmm.. The gup maintainers seemed fine with the code..
+> 
+> Now this is only an issue if gru_vtop can be executed in an interrupt
+> context. 
+> 
+> get_user_pages_remote is not valid in an interrupt context(if CONFIG_MMU
+> is set). If we follow the function, in __get_user_pages, cond_resched()
+> is called which definitly confirms that we can't run this function in an
+> interrupt context. 
+> 
+> I think we might need some advice from the gup maintainers here.
+> Note that the comment on the function __get_user_pages_fast states that
+> __get_user_pages_fast is IRQ-safe.
 
-That's a lot better. Especially moving the "This option relaxes..." to
-the bottom. Thanks.
+vhost is doing some approach where they switch current to the target
+then call __get_user_pages_fast in an IRQ context, that might be a
+reasonable pattern
 
--Saravana
+If this is a regular occurance we should probably add a
+get_atomic_user_pages_remote() to make the pattern clear.
+
+Jason
