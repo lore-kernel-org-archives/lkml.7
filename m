@@ -2,80 +2,82 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325D4C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECE9C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E7A206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A10206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:39:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbfHNNjN (ORCPT
+        id S1728340AbfHNNjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 09:39:13 -0400
-Received: from 8bytes.org ([81.169.241.247]:49366 "EHLO theia.8bytes.org"
+        Wed, 14 Aug 2019 09:39:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:54884 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbfHNNir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:38:47 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 1670A527; Wed, 14 Aug 2019 15:38:43 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     corbet@lwn.net, tony.luck@intel.com, fenghua.yu@intel.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, linux-doc@vger.kernel.org,
-        linux-ia64@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Thomas.Lendacky@amd.com,
-        Suravee.Suthikulpanit@amd.com, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 09/10] iommu: Disable passthrough mode when SME is active
-Date:   Wed, 14 Aug 2019 15:38:40 +0200
-Message-Id: <20190814133841.7095-10-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190814133841.7095-1-joro@8bytes.org>
-References: <20190814133841.7095-1-joro@8bytes.org>
+        id S1728134AbfHNNjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:39:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 711A428;
+        Wed, 14 Aug 2019 06:39:14 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCA2B3F706;
+        Wed, 14 Aug 2019 06:39:12 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 14:39:10 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        akpm@linux-foundation.org, bp@suse.de, catalin.marinas@arm.com,
+        davem@davemloft.net, hch@lst.de, kan.liang@intel.com,
+        mingo@kernel.org, peterz@infradead.org, riel@surriel.com,
+        will@kernel.org
+Subject: Re: [PATCH 8/9] x86/fpu: correctly check for kthreads
+Message-ID: <20190814133910.GC51963@lakrids.cambridge.arm.com>
+References: <20190814104131.20190-1-mark.rutland@arm.com>
+ <20190814104131.20190-9-mark.rutland@arm.com>
+ <20190814130708.b4lu3d6enkga5p4h@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814130708.b4lu3d6enkga5p4h@linutronix.de>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Wed, Aug 14, 2019 at 03:07:08PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-08-14 11:41:30 [+0100], Mark Rutland wrote:
+> > Per commit:
+> > 
+> >   0cecca9d03c964ab ("x86/fpu: Eager switch PKRU state")
+> > 
+> > ... switch_fpu_state() is trying to distinguish user threads from
+> > kthreads, such that kthreads consistently use init_pkru_value. It does
+> > do by looking at current->mm.
+> > 
+> > In general, a non-NULL current->mm doesn't imply that current is a
+> > kthread, as kthreads can install an mm via use_mm(), and so it's
+> > preferable to use is_kthread() to determine whether a thread is a
+> > kthread.
+> 
+> I think this was missed in commit.
+> 	8d3289f2fa1e0 ("x86/fpu: Don't use current->mm to check for a kthread")
 
-Using Passthrough mode when SME is active causes certain
-devices to use the SWIOTLB bounce buffer. The bounce buffer
-code has an upper limit of 256kb for the size of DMA
-allocations, which is too small for certain devices and
-causes them to fail.
+Yup, though if it's a bug it's been a bug since commit:
 
-With this patch we enable IOMMU by default when SME is
-active in the system, making the default configuration work
-for more systems than it does now.
+  0cecca9d03c964ab ("x86/fpu: Eager switch PKRU state")
 
-Users that don't want IOMMUs to be enabled still can disable
-them with kernel parameters.
+... which I guess the fixes tag would have to mention.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/iommu.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> 
+> A kthread with use_mm() would load here non-existing FPU state.
+> 
+> Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 96cc7cc8ab21..4bc9025a9975 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -119,6 +119,11 @@ static int __init iommu_subsys_init(void)
- 			iommu_set_default_passthrough();
- 		else
- 			iommu_set_default_translated();
-+
-+		if (iommu_default_passthrough() && sme_active()) {
-+			pr_info("SME detected - Disabling default IOMMU Passthrough\n");
-+			iommu_set_default_translated();
-+		}
- 	}
- 
- 	pr_info("Default domain type: %s %s\n",
--- 
-2.17.1
+Given the above, should I add the fixes tag (for 0cecca9d03c964ab)?
 
+Thanks,
+Mark.
