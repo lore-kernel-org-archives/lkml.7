@@ -2,102 +2,164 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B30C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E05C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A11FC2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:48:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="VGmsuSut"
+	by mail.kernel.org (Postfix) with ESMTP id A7B1D2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:48:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbfHNOsj (ORCPT
+        id S1728080AbfHNOsn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 10:48:39 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38284 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfHNOsj (ORCPT
+        Wed, 14 Aug 2019 10:48:43 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:3215 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfHNOsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 10:48:39 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r20so33082993ota.5
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 07:48:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TuidyYaeRyKNuzkufRgN6Ec9LRr2Ifgbce3UwZKDqAk=;
-        b=VGmsuSutDmh/CjlBsd4sxqgbi8um+dCHzh+K0g76f30mKTKa4vnjEUi5IghOvDT2TU
-         IiuduD1hp/FbpMVaMr/e7wBsaqMWdJ6XHtQ/1mBsBItSP4Wnk6xfU27TabVrZ7CxNxNQ
-         xk36x4tWlqqM3zgQ+imkzsVY04ipeNiKK+QA1YnFVauQbb2Je88bjQTJ7UYiJXdobeSQ
-         8yXovyKKvS5GfjCCiA8ng2LVaXxNaFUycGFOD1MJp5B3wtPnD6SMS1YSM8AN/j0ewy4K
-         946ksv8AZDHbxIlpfzizsK/Ykelqs/5V6AZKhURom457TIKDaqNjmkxGJQw/75l6BLCF
-         rGkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TuidyYaeRyKNuzkufRgN6Ec9LRr2Ifgbce3UwZKDqAk=;
-        b=HANDBtMW8EKKlY8RsbtcK/opd8nFpcOjjc8E1wsJkZxuqyEaV+fwAUy77+Foclk+5v
-         WK+JYK3pZr47fRuc3MsfwJyxdnC6ukZOeBcFWXSdN859GDR2GY3k/WdOhUCSPYvi1NUw
-         9s/ZCDBxgLuU8IZ9VOtVpFOLMdX6fDs2HJpKz5bsZxYYYZHfVrhbc8Y7g1yAMoPV+Zr1
-         3lmrCp2lJnAzZuyRG45Lp8s7oF5GIJj6ZFKNgqiqr8fXJ9QA3dTzQ5Xbo53+a5i+Fgbf
-         It04ijXzWNcLpB/WO0d4mPxIs3TK/6LwHRs2/B0QEwwOl7YVqMDPi58S0a1Bc4pNDtRR
-         SnCQ==
-X-Gm-Message-State: APjAAAWqQIc21CBS0Jyxiwda/OoaXT5ktcusY5aXx2DrQeODaDjPJaOl
-        jheW8DMkcaBSqzsjq69W18rfofU1GBq1QALdj2XFxg==
-X-Google-Smtp-Source: APXvYqz7zm4exw86gTxj/ItuLHdqDfdPZkzMbuPMtbbm6xwrB+umcFhlOUSiQC4HRsH79R5rtenZdkZ3lrgt5XcFI70=
-X-Received: by 2002:a9d:6b96:: with SMTP id b22mr2732383otq.363.1565794118373;
- Wed, 14 Aug 2019 07:48:38 -0700 (PDT)
+        Wed, 14 Aug 2019 10:48:42 -0400
+IronPort-SDR: Ob59t+9w4lRE1kWR5UzVGEd85CtqqVHAWPphIDI/ltJpNgfsJnthWDUYxbHvaEInT7gojXXZ/Q
+ NtsvuNwrDdEMEhXw1fL1woklX3IZoeGyBiybeEZzIIHJV2AHzviw7E2Tt8ScGK2uYnB/oa7D4Y
+ 8RHZwi2795dn/YfQvbKS5mAzODZ6qF0tuzLf+PLkPPiLcs5UxhObzkv6s0e+wFgFBhqU3SSbeS
+ XQIQKKv947myM5uD7lbp4jQZS8V9nabtZfRRSNBkHxuEc+hhQbJMKDw4+qcEt8nAg9hiG/Dw3B
+ QVY=
+X-IronPort-AV: E=Sophos;i="5.64,385,1559548800"; 
+   d="scan'208";a="40450613"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa3.mentor.iphmx.com with ESMTP; 14 Aug 2019 06:48:30 -0800
+IronPort-SDR: jMbxt+ASILuBqBmL8+IglLxg6Ajyl0a0rhfMqOHnnYTPuLghprJPi/pPceLenN6Mh+luI9XYdv
+ 6fEFabw8YQNR6aEarhIaQdpByZWBVtFK8SlSQ8E+LImhDGyOT3+BUKWr4QpS7B0uTl5Iv7+S8q
+ /tH4J3QKulCM14bsFdlTLDU03WVD2By40ht0m414djYBrmeuQDOXaX2sWODcza0eneex4Py9Qd
+ fahKV16LiZGJCkS+aCiPmFsYmHGAICGCGE6nhHkYCCJxRqe9ZOXOoEXgaxY2iN6HzdiXp7pZtI
+ z0s=
+From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Wei Yang <richard.weiyang@gmail.com>
+CC:     "bp@suse.de" <bp@suse.de>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "richardw.yang@linux.intel.com" <richardw.yang@linux.intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: [PATCH v2] kernel/resource.c: invalidate parent when freed resource
+ has childs
+Thread-Topic: [PATCH v2] kernel/resource.c: invalidate parent when freed
+ resource has childs
+Thread-Index: AQHVUq5kcb5Ex7JpNUSktSjVjdFuew==
+Date:   Wed, 14 Aug 2019 14:48:24 +0000
+Message-ID: <1565794104204.54092@mentor.com>
+References: <1565278859475.1962@mentor.com> <1565358624103.3694@mentor.com>
+ <20190809223831.fk4uyrzscr366syr@master>,<CAHk-=wi_9sdMxurjZ1MbNnxt-pA=dqoyf8Fdn9aYc8xvjjnTBg@mail.gmail.com>
+In-Reply-To: <CAHk-=wi_9sdMxurjZ1MbNnxt-pA=dqoyf8Fdn9aYc8xvjjnTBg@mail.gmail.com>
+Accept-Language: de-DE, en-IE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [137.202.0.90]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20190806160554.14046-1-hch@lst.de> <20190806160554.14046-5-hch@lst.de>
- <20190807174548.GJ1571@mellanox.com> <CAPcyv4hPCuHBLhSJgZZEh0CbuuJNPLFDA3f-79FX5uVOO0yubA@mail.gmail.com>
- <20190808065933.GA29382@lst.de> <CAPcyv4hMUzw8vyXFRPe2pdwef0npbMm9tx9wiZ9MWkHGhH1V6w@mail.gmail.com>
- <20190814073854.GA27249@lst.de> <20190814132746.GE13756@mellanox.com>
-In-Reply-To: <20190814132746.GE13756@mellanox.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 14 Aug 2019 07:48:28 -0700
-Message-ID: <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com>
-Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 6:28 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
->
-> On Wed, Aug 14, 2019 at 09:38:54AM +0200, Christoph Hellwig wrote:
-> > On Tue, Aug 13, 2019 at 06:36:33PM -0700, Dan Williams wrote:
-> > > Section alignment constraints somewhat save us here. The only example
-> > > I can think of a PMD not containing a uniform pgmap association for
-> > > each pte is the case when the pgmap overlaps normal dram, i.e. shares
-> > > the same 'struct memory_section' for a given span. Otherwise, distinct
-> > > pgmaps arrange to manage their own exclusive sections (and now
-> > > subsections as of v5.3). Otherwise the implementation could not
-> > > guarantee different mapping lifetimes.
-> > >
-> > > That said, this seems to want a better mechanism to determine "pfn is
-> > > ZONE_DEVICE".
-> >
-> > So I guess this patch is fine for now, and once you provide a better
-> > mechanism we can switch over to it?
->
-> What about the version I sent to just get rid of all the strange
-> put_dev_pagemaps while scanning? Odds are good we will work with only
-> a single pagemap, so it makes some sense to cache it once we find it?
+When a resource is freed and has children, the childrens are
+left without any hint that their parent is no more valid.
+This caused at least one use-after-free in the xhci-hcd using
+ext-caps driver when platform code released platform devices.
 
-Yes, if the scan is over a single pmd then caching it makes sense.
+In such case, warn and release all resources beyond.
+
+Signed-off-by: Carsten Schmid <carsten_schmid@mentor.com>
+---
+v2:
+- release everything below the released resource, not only
+  one child; re-using __release_child_resources
+  (Inspired by Linus Torvalds outline)
+- warn only once
+  (According to Linus Torvalds outline)
+- Keep parent and child name in warning message
+  (eases hunting for the involved parties)
+---
+ kernel/resource.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/resource.c b/kernel/resource.c
+index c3cc6d85ec52..eb48d793aa74 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -239,7 +239,7 @@ static int __release_resource(struct resource *old, bool release_child)
+ 	return -EINVAL;
+ }
+ 
+-static void __release_child_resources(struct resource *r)
++static void __release_child_resources(struct resource *r, bool warn)
+ {
+ 	struct resource *tmp, *p;
+ 	resource_size_t size;
+@@ -252,9 +252,10 @@ static void __release_child_resources(struct resource *r)
+ 
+ 		tmp->parent = NULL;
+ 		tmp->sibling = NULL;
+-		__release_child_resources(tmp);
++		__release_child_resources(tmp, warn);
+ 
+-		printk(KERN_DEBUG "release child resource %pR\n", tmp);
++		if (warn)
++			printk(KERN_DEBUG "release child resource %pR\n", tmp);
+ 		/* need to restore size, and keep flags */
+ 		size = resource_size(tmp);
+ 		tmp->start = 0;
+@@ -265,7 +266,7 @@ static void __release_child_resources(struct resource *r)
+ void release_child_resources(struct resource *r)
+ {
+ 	write_lock(&resource_lock);
+-	__release_child_resources(r);
++	__release_child_resources(r, true);
+ 	write_unlock(&resource_lock);
+ }
+ 
+@@ -1172,7 +1173,20 @@ EXPORT_SYMBOL(__request_region);
+  * @n: resource region size
+  *
+  * The described resource region must match a currently busy region.
++ * If the region has children they are released too.
+  */
++static void check_children(struct resource *parent)
++{
++	if (parent->child) {
++		/* warn and release all children */
++		WARN_ONCE(1, "%s: %s has child %s, release all children\n",
++				__func__, parent->name, parent->child->name);
++		write_lock(&resource_lock);
++		__release_child_resources(parent, false);
++		write_unlock(&resource_lock);
++	}
++}
++
+ void __release_region(struct resource *parent, resource_size_t start,
+ 		      resource_size_t n)
+ {
+@@ -1200,6 +1214,10 @@ void __release_region(struct resource *parent, resource_size_t start,
+ 			write_unlock(&resource_lock);
+ 			if (res->flags & IORESOURCE_MUXED)
+ 				wake_up(&muxed_resource_wait);
++
++			/* You should'nt release a resource that has children */
++			check_children(res);
++
+ 			free_resource(res);
+ 			return;
+ 		}
+-- 
+2.17.1
+
