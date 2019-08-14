@@ -2,143 +2,95 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0D4C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518E9C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48A16206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F03206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:52:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsF/WPDt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728833AbfHNRwS (ORCPT
+        id S1728948AbfHNRwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:52:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45876 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbfHNRwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:52:17 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 865A230B27A5;
-        Wed, 14 Aug 2019 17:52:17 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ED56F909E3;
-        Wed, 14 Aug 2019 17:52:14 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 11:52:14 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH v2] vfio: re-arrange vfio region definitions
-Message-ID: <20190814115214.0c5f23c7@x1.home>
-In-Reply-To: <20190806093000.30149-1-cohuck@redhat.com>
-References: <20190806093000.30149-1-cohuck@redhat.com>
-Organization: Red Hat
+        Wed, 14 Aug 2019 13:52:43 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34988 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728768AbfHNRwm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:52:42 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n4so11724172pgv.2;
+        Wed, 14 Aug 2019 10:52:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lRCo0N8AtsgFyI3T8EWB9ODOdEqeXdtYXIzkSor+lyQ=;
+        b=HsF/WPDtNY7ixk84VAHlxCL3krT/gwSwTL/acmmEV7T4zsjApLlRsh76JHTxzYGS/2
+         pV9udmkLyvBDUqEUG9eYrQ7Lb8KlTyFvW5ceqDO8YS+4uOlcoa4ss1OtBzDJ5nKDqagC
+         7GSZ+nAQyjKHj+/8XUXcb3HQ4GDmPscWy0EAZSIxZpDfVStx7SvCyS6Fit7U3S4XTSDg
+         qnVTHvaGNA+DLILdomzDH7ZTUlB9/ZySBq+juws3GT4G9ko8nmrtB74v8MJxy7y3MaWK
+         UUhyhbvOzzbKxJUnObVVQ6Xic0EdJZ7+X65N7ziTBOz9TyIEfZLYawtZVjFF0COMqKdZ
+         Lk/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lRCo0N8AtsgFyI3T8EWB9ODOdEqeXdtYXIzkSor+lyQ=;
+        b=XVK8018OSr7o7rLzCSAUyLBPyQrl9xEBNY84YXg+QBZm6UmpzxzZudfEe8CgArE6c7
+         GUBkNf8DZYTbSRoArxiOeh4h14Q5nj5ZNqDsBHFlGlIdhDMMJbs26FQ88tfnsYv+KPQa
+         lWjTRuCADU6m7kdfMzPduT+7eQwjJ7x80CN3d/GUtkX6FCZ4zu7lGWYDrh/P3kVdMrBg
+         rvP+L8FM3pATc2PZEI1XuIhvU/MhDrjUKU7hGHsu7w/NQLRK8HtoBu/Cop1TZUAnwCwP
+         WBmvLKi/bRO6j8/NbMtPFW6PJZcOs9SEMvcnZSHyfcml8nKu6pd/Wc7HhBo9teSJdOU5
+         YGBQ==
+X-Gm-Message-State: APjAAAXLb5zlZyojVCSXozMwhI0NYjj9octsvZIbVZC5uGJNdzNH3Isy
+        WYKC096nNDOGYeUxPYviw8Y=
+X-Google-Smtp-Source: APXvYqwv4d6CHKJYw/NR185R8CVRIV9LlAFP6ODKWjxN89NPM5qhVJByzvaTXGgNNrKc2ASnQv7GMw==
+X-Received: by 2002:a63:8a43:: with SMTP id y64mr351919pgd.104.1565805161542;
+        Wed, 14 Aug 2019 10:52:41 -0700 (PDT)
+Received: from [10.69.78.41] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id s16sm430549pfs.6.2019.08.14.10.52.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 10:52:40 -0700 (PDT)
+Subject: Re: [PATCH v4 06/14] net: phy: adin: make RGMII internal delays
+ configurable
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        hkallweit1@gmail.com, andrew@lunn.ch
+References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+ <20190812112350.15242-7-alexandru.ardelean@analog.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <b591cc5b-9511-2223-ae34-088eaec0ba03@gmail.com>
+Date:   Wed, 14 Aug 2019 10:52:36 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190812112350.15242-7-alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 14 Aug 2019 17:52:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  6 Aug 2019 11:30:00 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
 
-> It is easy to miss already defined region types. Let's re-arrange
-> the definitions a bit and add more comments to make it hopefully
-> a bit clearer.
+
+On 8/12/2019 4:23 AM, Alexandru Ardelean wrote:
+> The internal delays for the RGMII are configurable for both RX & TX. This
+> change adds support for configuring them via device-tree (or ACPI).
 > 
-> No functional change.
-> 
-> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-> ---
-> v1 -> v2:
->   - moved all pci subtypes together
->   - tweaked comments a bit more
-> ---
->  include/uapi/linux/vfio.h | 45 ++++++++++++++++++++++-----------------
->  1 file changed, 26 insertions(+), 19 deletions(-)
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-Thanks Connie!  This looks good to me, I'll queue it for v5.4.  Thanks,
-
-Alex
- 
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 8f10748dac79..e809b22f6a60 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -295,15 +295,38 @@ struct vfio_region_info_cap_type {
->  	__u32 subtype;	/* type specific */
->  };
->  
-> +/*
-> + * List of region types, global per bus driver.
-> + * If you introduce a new type, please add it here.
-> + */
-> +
-> +/* PCI region type containing a PCI vendor part */
->  #define VFIO_REGION_TYPE_PCI_VENDOR_TYPE	(1 << 31)
->  #define VFIO_REGION_TYPE_PCI_VENDOR_MASK	(0xffff)
-> +#define VFIO_REGION_TYPE_GFX                    (1)
-> +#define VFIO_REGION_TYPE_CCW			(2)
-> +
-> +/* sub-types for VFIO_REGION_TYPE_PCI_* */
->  
-> -/* 8086 Vendor sub-types */
-> +/* 8086 vendor PCI sub-types */
->  #define VFIO_REGION_SUBTYPE_INTEL_IGD_OPREGION	(1)
->  #define VFIO_REGION_SUBTYPE_INTEL_IGD_HOST_CFG	(2)
->  #define VFIO_REGION_SUBTYPE_INTEL_IGD_LPC_CFG	(3)
->  
-> -#define VFIO_REGION_TYPE_GFX                    (1)
-> +/* 10de vendor PCI sub-types */
-> +/*
-> + * NVIDIA GPU NVlink2 RAM is coherent RAM mapped onto the host address space.
-> + */
-> +#define VFIO_REGION_SUBTYPE_NVIDIA_NVLINK2_RAM	(1)
-> +
-> +/* 1014 vendor PCI sub-types */
-> +/*
-> + * IBM NPU NVlink2 ATSD (Address Translation Shootdown) register of NPU
-> + * to do TLB invalidation on a GPU.
-> + */
-> +#define VFIO_REGION_SUBTYPE_IBM_NVLINK2_ATSD	(1)
-> +
-> +/* sub-types for VFIO_REGION_TYPE_GFX */
->  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
->  
->  /**
-> @@ -353,25 +376,9 @@ struct vfio_region_gfx_edid {
->  #define VFIO_DEVICE_GFX_LINK_STATE_DOWN  2
->  };
->  
-> -#define VFIO_REGION_TYPE_CCW			(2)
-> -/* ccw sub-types */
-> +/* sub-types for VFIO_REGION_TYPE_CCW */
->  #define VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD	(1)
->  
-> -/*
-> - * 10de vendor sub-type
-> - *
-> - * NVIDIA GPU NVlink2 RAM is coherent RAM mapped onto the host address space.
-> - */
-> -#define VFIO_REGION_SUBTYPE_NVIDIA_NVLINK2_RAM	(1)
-> -
-> -/*
-> - * 1014 vendor sub-type
-> - *
-> - * IBM NPU NVlink2 ATSD (Address Translation Shootdown) register of NPU
-> - * to do TLB invalidation on a GPU.
-> - */
-> -#define VFIO_REGION_SUBTYPE_IBM_NVLINK2_ATSD	(1)
-> -
->  /*
->   * The MSIX mappable capability informs that MSIX data of a BAR can be mmapped
->   * which allows direct access to non-MSIX registers which happened to be within
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
