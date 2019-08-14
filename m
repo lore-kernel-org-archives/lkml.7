@@ -2,268 +2,188 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8565EC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB0EC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B265205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEDF7206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:01:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wg6kl5Hy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0JrRL8h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfHNA4o (ORCPT
+        id S1726688AbfHNBBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 20:56:44 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36788 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbfHNA4n (ORCPT
+        Tue, 13 Aug 2019 21:01:17 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37551 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfHNBBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 20:56:43 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w2so1746150pfi.3;
-        Tue, 13 Aug 2019 17:56:43 -0700 (PDT)
+        Tue, 13 Aug 2019 21:01:17 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d1so19344880pgp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 18:01:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=yd9YckEjmHyzuO2k/bJAhB54mNRDAVacBG/r+Hq6cX0=;
-        b=Wg6kl5HyD40ncNWCXvdCr2PGdFKf3GGQ0odLxgedcdM9cPBkJo7av4R+uUIFkMRXJX
-         JOsWv0H0N4MFVqTAMofDfPDSRrsIE9hIK6LnODezCQFYfVW6u32e/2t6dUke7sbUPN8M
-         YJ5WUL+NC+PtPdMNbpYwmDmN2MAZxQbJGBVGVNhxPkDe5S6I/gKIzgaN4CsftxzMglm2
-         F6rbxwtplfK+yPxASD040awcZZo+FNzfExBd7WzZLyDXsPAN6I7Xcqt7A3d45vWW+T9o
-         dAtYiZ2im1EODkwz2cCaPSpaOVEX7qyCmtLSeBzPIeLiIQVVK69WWpBm+LS8GbFnFJke
-         eeMw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NlE3r34RdoAVkEFP5Qhq0Z6vIQcskLB+6Ufwy9SSFTI=;
+        b=j0JrRL8hUVa8eSrWSd015kpUe5PnEgpSdofsQeNyBnm5Y5CvJ1+Y9TonRPe3X16nIP
+         Ht9o5VyuaIJ70Tq0slcqVnNfawSj9nVbjaxyT34apHEniHberD68us9KLKInA3396QkH
+         L1W2GX4/pv5gelAE125H78NI1KqoVWabWuO0p9uJwmZGcJBgUjfFcgURSIDNl4/SaWuc
+         kfmWz4JluAP/yxgopVTC9QTewX5OJtQ1sZd7jiRxviyS6rLljc3djHMU66sUg8imQBxL
+         fVwSYGotTNCgEJcqokBDwewTlY9WBArfirzWjFBqAUQr11Mq+1wvheIgEo7C6TnydriM
+         9nWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=yd9YckEjmHyzuO2k/bJAhB54mNRDAVacBG/r+Hq6cX0=;
-        b=tLVe7jZYoCE+LMIlLFJl72ExjuceBBCpLYa2e30BCWoFV3Hicj+XolBbbufL4zK3vS
-         4hjNnw3vZ+LX4TZsKAGDkyCr3lJ6XdXvi2+jWCiDIL1l7VW+wKhvoCbGYZgCK88YN99a
-         icXkIwnaGV4NkwzbM6bh/1xZQghLj8pZkocWoob6ho5vGztmpLMrCOnZ0Lv7BhyREc41
-         Ifr3A3MsN5t6usw+Rl+7SsV8c2InXP2Q5zX/JXIncwrvObrgqxQFp79LNYKlbOUK+yXo
-         B/HG07Cs8LnSbGeeX73raCjm7zSgiTYLdv9Lpn242gK0xWyjhWVCTo2kPyjwGxdQR3lu
-         /F5w==
-X-Gm-Message-State: APjAAAVrPOfwiQVKmA2d8FiJaIqIrJgrDX0liOeoS1waC5nje70BA5Lx
-        CANAMFFSB/Pbg4/ovff9ktI=
-X-Google-Smtp-Source: APXvYqw7AVhOBMa6nguYuGGN9Wx2r9pmAWHS5ii6sAcWs0NWBvK2z8TbuCGQkWvfE7bAJgW/+epm6w==
-X-Received: by 2002:a63:4a51:: with SMTP id j17mr36573371pgl.284.1565744202379;
-        Tue, 13 Aug 2019 17:56:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NlE3r34RdoAVkEFP5Qhq0Z6vIQcskLB+6Ufwy9SSFTI=;
+        b=IqlQVu7Ug+OK+wSijVUC+wkePAoMbXC3fa/ZjcKVD7grGQ8e4C55gTv9l6U9yA3qaZ
+         vun0ko4M/xSo0BBfhPnwnQIE+/LWB3IBku8xUYwxI73QfZ3OWtYpBv9cRZomMYEGXoFQ
+         MMVyfUYUO6tdO/NjDowWXyuYBdLOWRjuFzNS2xCiwbAUuCqaxDgXrdlmrW0mdEcgx1IJ
+         SRiTXWwoQFSL1vzyHX/6zaYAnw4gbIx1Jz/bjOnVIY3uLlIhlHvK5R6sBR/oUmkLv+7R
+         ODZpCIeneyw7TBjozjbVduRXdLpmZaSLGlz7bo1YqDuILjFmD0nLwSkj4oB8NefgFxU0
+         1KZg==
+X-Gm-Message-State: APjAAAU3qW+e5RcOYwNtHJPViaj+6KZySRGlxgkS4EWJ3IJFegoeH2gk
+        vYumfTgLAWklo+jLaMAcy9W3fU7w
+X-Google-Smtp-Source: APXvYqzwfcjX+A+jDK0pw8ha0TvDPFYa5JXWs5wev6iBxZ44rRGrF2DtI/VKTBQtAxYn6lFDxzxsIg==
+X-Received: by 2002:a63:a35e:: with SMTP id v30mr35393993pgn.129.1565744476044;
+        Tue, 13 Aug 2019 18:01:16 -0700 (PDT)
 Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id s24sm75567356pgm.3.2019.08.13.17.56.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2019 17:56:41 -0700 (PDT)
+        by smtp.gmail.com with ESMTPSA id h9sm120983074pgk.10.2019.08.13.18.01.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 13 Aug 2019 18:01:15 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 18:02:15 -0700
 From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com
-Cc:     linux-mmc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vdumpa@nvidia.com
-Subject: [PATCH v2] mmc: tegra: Implement enable_dma() to set dma_mask
-Date:   Tue, 13 Aug 2019 17:57:41 -0700
-Message-Id: <20190814005741.13331-1-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     broonie@kernel.org, festevam@gmail.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, Viorel Suman <viorel.suman@nxp.com>
+Subject: Re: [PATCH] ASoC: fsl_sai: Handle slave mode per TX/RX direction
+Message-ID: <20190814010215.GA13398@Asurada-Nvidia.nvidia.com>
+References: <20190811194517.19314-1-daniel.baluta@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190811194517.19314-1-daniel.baluta@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Integrated the change and commit message made by Thierry Reding ]
+On Sun, Aug 11, 2019 at 10:45:17PM +0300, Daniel Baluta wrote:
+> From: Viorel Suman <viorel.suman@nxp.com>
+> 
+> The SAI interface can be a clock supplier or consumer
+> as a function of stream direction. e.g SAI can be master
+> for Tx and slave for Rx.
+> 
+> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  sound/soc/fsl/fsl_sai.c | 18 +++++++++---------
+>  sound/soc/fsl/fsl_sai.h |  2 +-
+>  2 files changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+> index 4a346fcb5630..69cf3678c859 100644
+> --- a/sound/soc/fsl/fsl_sai.c
+> +++ b/sound/soc/fsl/fsl_sai.c
+> @@ -273,18 +273,18 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
 
-The SDHCI controller found in early Tegra SoCs (from Tegra20 through
-Tegra114) used an AHB interface to the memory controller, which allowed
-only 32 bits of memory to be addressed.
+This function is called for both TX and RX at the same time from
+fsl_sai_set_dai_fmt() so I don't actually see how it can operate
+in two opposite directions from this change alone. Anything that
+I have missed?
 
-Starting with Tegra124, this limitation was removed by making the SDHCI
-controllers native MCCIF clients, which means that they got increased
-bandwidth and better arbitration to the memory controller as well as an
-address range extended to 40 bits, out of which only 34 were actually
-used (bits 34-39 are tied to 0 in the controller).
+Thanks
+Nicolin
 
-For Tegra186, all of the 40 bits can be used; For Tegra194, 39-bit can
-be used.
-
-So far, sdhci-tegra driver has been relying on sdhci core to configure
-the DMA_BIT_MASK between 32-bit or 64-bit, using one of quirks2 flags:
-SDHCI_QUIRK2_BROKEN_64_BIT_DMA. However, there is a common way, being
-mentioned in sdhci.c file, to set dma_mask via enable_dma() callback in
-the device driver directly.
-
-So this patch implements an enable_dma() callback in the sdhci-tegra,
-in order to set an accurate DMA_BIT_MASK, other than just 32/64 bits.
-
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
-
-Changelog
-v1->v2:
- * Applied to older SoC, suggested by Thierry.
- * Note that only Tegra210, Tegra186 and Tegra194 are tested.
-
- drivers/mmc/host/sdhci-tegra.c | 48 ++++++++++++++++++++--------------
- 1 file changed, 28 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index f4d4761cf20a..6156ffb145cd 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -16,6 +16,7 @@
- #include <linux/pinctrl/consumer.h>
- #include <linux/regulator/consumer.h>
- #include <linux/reset.h>
-+#include <linux/dma-mapping.h>
- #include <linux/mmc/card.h>
- #include <linux/mmc/host.h>
- #include <linux/mmc/mmc.h>
-@@ -104,6 +105,7 @@
- 
- struct sdhci_tegra_soc_data {
- 	const struct sdhci_pltfm_data *pdata;
-+	u64 dma_bit_mask;
- 	u32 nvquirks;
- 	u8 min_tap_delay;
- 	u8 max_tap_delay;
-@@ -749,6 +751,19 @@ static void tegra_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
- 	}
- }
- 
-+static int tegra_sdhci_enable_dma(struct sdhci_host *host)
-+{
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
-+	const struct sdhci_tegra_soc_data *soc_data = tegra_host->soc_data;
-+	struct device *dev = mmc_dev(host->mmc);
-+
-+	if (soc_data->dma_bit_mask)
-+		return dma_set_mask_and_coherent(dev, soc_data->dma_bit_mask);
-+
-+	return 0;
-+}
-+
- static unsigned int tegra_sdhci_get_max_clock(struct sdhci_host *host)
- {
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-@@ -1228,6 +1243,7 @@ static const struct sdhci_ops tegra_sdhci_ops = {
- 	.write_l    = tegra_sdhci_writel,
- 	.set_clock  = tegra_sdhci_set_clock,
- 	.set_bus_width = sdhci_set_bus_width,
-+	.enable_dma = tegra_sdhci_enable_dma,
- 	.reset      = tegra_sdhci_reset,
- 	.platform_execute_tuning = tegra_sdhci_execute_tuning,
- 	.set_uhs_signaling = tegra_sdhci_set_uhs_signaling,
-@@ -1246,6 +1262,7 @@ static const struct sdhci_pltfm_data sdhci_tegra20_pdata = {
- 
- static const struct sdhci_tegra_soc_data soc_data_tegra20 = {
- 	.pdata = &sdhci_tegra20_pdata,
-+	.dma_bit_mask = DMA_BIT_MASK(32),
- 	.nvquirks = NVQUIRK_FORCE_SDHCI_SPEC_200 |
- 		    NVQUIRK_ENABLE_BLOCK_GAP_DET,
- };
-@@ -1272,6 +1289,7 @@ static const struct sdhci_pltfm_data sdhci_tegra30_pdata = {
- 
- static const struct sdhci_tegra_soc_data soc_data_tegra30 = {
- 	.pdata = &sdhci_tegra30_pdata,
-+	.dma_bit_mask = DMA_BIT_MASK(32),
- 	.nvquirks = NVQUIRK_ENABLE_SDHCI_SPEC_300 |
- 		    NVQUIRK_ENABLE_SDR50 |
- 		    NVQUIRK_ENABLE_SDR104 |
-@@ -1284,6 +1302,7 @@ static const struct sdhci_ops tegra114_sdhci_ops = {
- 	.write_l    = tegra_sdhci_writel,
- 	.set_clock  = tegra_sdhci_set_clock,
- 	.set_bus_width = sdhci_set_bus_width,
-+	.enable_dma = tegra_sdhci_enable_dma,
- 	.reset      = tegra_sdhci_reset,
- 	.platform_execute_tuning = tegra_sdhci_execute_tuning,
- 	.set_uhs_signaling = tegra_sdhci_set_uhs_signaling,
-@@ -1304,6 +1323,7 @@ static const struct sdhci_pltfm_data sdhci_tegra114_pdata = {
- 
- static const struct sdhci_tegra_soc_data soc_data_tegra114 = {
- 	.pdata = &sdhci_tegra114_pdata,
-+	.dma_bit_mask = DMA_BIT_MASK(32),
- };
- 
- static const struct sdhci_pltfm_data sdhci_tegra124_pdata = {
-@@ -1313,22 +1333,13 @@ static const struct sdhci_pltfm_data sdhci_tegra124_pdata = {
- 		  SDHCI_QUIRK_NO_HISPD_BIT |
- 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
- 		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
--	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
--		   /*
--		    * The TRM states that the SD/MMC controller found on
--		    * Tegra124 can address 34 bits (the maximum supported by
--		    * the Tegra memory controller), but tests show that DMA
--		    * to or from above 4 GiB doesn't work. This is possibly
--		    * caused by missing programming, though it's not obvious
--		    * what sequence is required. Mark 64-bit DMA broken for
--		    * now to fix this for existing users (e.g. Nyan boards).
--		    */
--		   SDHCI_QUIRK2_BROKEN_64_BIT_DMA,
-+	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
- 	.ops  = &tegra114_sdhci_ops,
- };
- 
- static const struct sdhci_tegra_soc_data soc_data_tegra124 = {
- 	.pdata = &sdhci_tegra124_pdata,
-+	.dma_bit_mask = DMA_BIT_MASK(34),
- };
- 
- static const struct sdhci_ops tegra210_sdhci_ops = {
-@@ -1337,6 +1348,7 @@ static const struct sdhci_ops tegra210_sdhci_ops = {
- 	.write_l    = tegra_sdhci_writel,
- 	.set_clock  = tegra_sdhci_set_clock,
- 	.set_bus_width = sdhci_set_bus_width,
-+	.enable_dma = tegra_sdhci_enable_dma,
- 	.reset      = tegra_sdhci_reset,
- 	.set_uhs_signaling = tegra_sdhci_set_uhs_signaling,
- 	.voltage_switch = tegra_sdhci_voltage_switch,
-@@ -1356,6 +1368,7 @@ static const struct sdhci_pltfm_data sdhci_tegra210_pdata = {
- 
- static const struct sdhci_tegra_soc_data soc_data_tegra210 = {
- 	.pdata = &sdhci_tegra210_pdata,
-+	.dma_bit_mask = DMA_BIT_MASK(34),
- 	.nvquirks = NVQUIRK_NEEDS_PAD_CONTROL |
- 		    NVQUIRK_HAS_PADCALIB |
- 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
-@@ -1370,6 +1383,7 @@ static const struct sdhci_ops tegra186_sdhci_ops = {
- 	.write_l    = tegra_sdhci_writel,
- 	.set_clock  = tegra_sdhci_set_clock,
- 	.set_bus_width = sdhci_set_bus_width,
-+	.enable_dma = tegra_sdhci_enable_dma,
- 	.reset      = tegra_sdhci_reset,
- 	.set_uhs_signaling = tegra_sdhci_set_uhs_signaling,
- 	.voltage_switch = tegra_sdhci_voltage_switch,
-@@ -1384,20 +1398,13 @@ static const struct sdhci_pltfm_data sdhci_tegra186_pdata = {
- 		  SDHCI_QUIRK_NO_HISPD_BIT |
- 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
- 		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
--	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
--		   /* SDHCI controllers on Tegra186 support 40-bit addressing.
--		    * IOVA addresses are 48-bit wide on Tegra186.
--		    * With 64-bit dma mask used for SDHCI, accesses can
--		    * be broken. Disable 64-bit dma, which would fall back
--		    * to 32-bit dma mask. Ideally 40-bit dma mask would work,
--		    * But it is not supported as of now.
--		    */
--		   SDHCI_QUIRK2_BROKEN_64_BIT_DMA,
-+	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
- 	.ops  = &tegra186_sdhci_ops,
- };
- 
- static const struct sdhci_tegra_soc_data soc_data_tegra186 = {
- 	.pdata = &sdhci_tegra186_pdata,
-+	.dma_bit_mask = DMA_BIT_MASK(40),
- 	.nvquirks = NVQUIRK_NEEDS_PAD_CONTROL |
- 		    NVQUIRK_HAS_PADCALIB |
- 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
-@@ -1410,6 +1417,7 @@ static const struct sdhci_tegra_soc_data soc_data_tegra186 = {
- 
- static const struct sdhci_tegra_soc_data soc_data_tegra194 = {
- 	.pdata = &sdhci_tegra186_pdata,
-+	.dma_bit_mask = DMA_BIT_MASK(39),
- 	.nvquirks = NVQUIRK_NEEDS_PAD_CONTROL |
- 		    NVQUIRK_HAS_PADCALIB |
- 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
--- 
-2.17.1
-
+>  	case SND_SOC_DAIFMT_CBS_CFS:
+>  		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
+>  		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
+> -		sai->is_slave_mode = false;
+> +		sai->is_slave_mode[tx] = false;
+>  		break;
+>  	case SND_SOC_DAIFMT_CBM_CFM:
+> -		sai->is_slave_mode = true;
+> +		sai->is_slave_mode[tx] = true;
+>  		break;
+>  	case SND_SOC_DAIFMT_CBS_CFM:
+>  		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
+> -		sai->is_slave_mode = false;
+> +		sai->is_slave_mode[tx] = false;
+>  		break;
+>  	case SND_SOC_DAIFMT_CBM_CFS:
+>  		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
+> -		sai->is_slave_mode = true;
+> +		sai->is_slave_mode[tx] = true;
+>  		break;
+>  	default:
+>  		return -EINVAL;
+> @@ -326,7 +326,7 @@ static int fsl_sai_set_bclk(struct snd_soc_dai *dai, bool tx, u32 freq)
+>  	int ret = 0;
+>  
+>  	/* Don't apply to slave mode */
+> -	if (sai->is_slave_mode)
+> +	if (sai->is_slave_mode[tx])
+>  		return 0;
+>  
+>  	for (id = 0; id < FSL_SAI_MCLK_MAX; id++) {
+> @@ -422,7 +422,7 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
+>  	if (sai->slot_width)
+>  		slot_width = sai->slot_width;
+>  
+> -	if (!sai->is_slave_mode) {
+> +	if (!sai->is_slave_mode[tx]) {
+>  		ret = fsl_sai_set_bclk(cpu_dai, tx,
+>  				slots * slot_width * params_rate(params));
+>  		if (ret)
+> @@ -458,7 +458,7 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
+>  	 * error.
+>  	 */
+>  
+> -	if (!sai->is_slave_mode) {
+> +	if (!sai->is_slave_mode[tx]) {
+>  		if (!sai->synchronous[TX] && sai->synchronous[RX] && !tx) {
+>  			regmap_update_bits(sai->regmap, FSL_SAI_TCR4(ofs),
+>  				FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
+> @@ -497,7 +497,7 @@ static int fsl_sai_hw_free(struct snd_pcm_substream *substream,
+>  	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
+>  	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+>  
+> -	if (!sai->is_slave_mode &&
+> +	if (!sai->is_slave_mode[tx] &&
+>  			sai->mclk_streams & BIT(substream->stream)) {
+>  		clk_disable_unprepare(sai->mclk_clk[sai->mclk_id[tx]]);
+>  		sai->mclk_streams &= ~BIT(substream->stream);
+> @@ -581,7 +581,7 @@ static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
+>  			 * This is a hardware bug, and will be fix in the
+>  			 * next sai version.
+>  			 */
+> -			if (!sai->is_slave_mode) {
+> +			if (!sai->is_slave_mode[tx]) {
+>  				/* Software Reset for both Tx and Rx */
+>  				regmap_write(sai->regmap, FSL_SAI_TCSR(ofs),
+>  					     FSL_SAI_CSR_SR);
+> diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
+> index b89b0ca26053..c2c43a7d9ba1 100644
+> --- a/sound/soc/fsl/fsl_sai.h
+> +++ b/sound/soc/fsl/fsl_sai.h
+> @@ -167,7 +167,7 @@ struct fsl_sai {
+>  	struct clk *bus_clk;
+>  	struct clk *mclk_clk[FSL_SAI_MCLK_MAX];
+>  
+> -	bool is_slave_mode;
+> +	bool is_slave_mode[2];
+>  	bool is_lsb_first;
+>  	bool is_dsp_mode;
+>  	bool synchronous[2];
+> -- 
+> 2.17.1
+> 
