@@ -2,93 +2,145 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EB0C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBC5C0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0F32063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B9520843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:02:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfHNHB3 (ORCPT
+        id S1727334AbfHNHC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:01:29 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51093 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfHNHB3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:01:29 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxnHf-0001Go-1r; Wed, 14 Aug 2019 09:01:23 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxnHd-0008VU-W0; Wed, 14 Aug 2019 09:01:21 +0200
-Date:   Wed, 14 Aug 2019 09:01:21 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM
- documentation
-Message-ID: <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <20190813141256.jnbrfld42rtigek3@pengutronix.de>
- <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Wed, 14 Aug 2019 03:02:26 -0400
+Received: from mga04.intel.com ([192.55.52.120]:42220 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726373AbfHNHCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:02:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 00:02:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,384,1559545200"; 
+   d="scan'208";a="181427050"
+Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
+  by orsmga006.jf.intel.com with ESMTP; 14 Aug 2019 00:02:21 -0700
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com
+Cc:     mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        yu.c.zhang@intel.com, alazar@bitdefender.com,
+        Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH RESEND v4 0/9] Enable Sub-page Write Protection Support
+Date:   Wed, 14 Aug 2019 15:03:54 +0800
+Message-Id: <20190814070403.6588-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Baolin,
+EPT-Based Sub-Page write Protection(SPP)is a HW capability which allows
+Virtual Machine Monitor(VMM) to specify write-permission for guest
+physical memory at a sub-page(128 byte) granularity. When this
+capability is enabled, the CPU enforces write-access check for sub-pages
+within a 4KB page.
 
-On Wed, Aug 14, 2019 at 09:51:34AM +0800, Baolin Wang wrote:
-> On Tue, 13 Aug 2019 at 22:13, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
-> > > +- assigned-clock-parents: The phandle of the parent clock of PWM clock.
-> >
-> > I'm not sure you need to point out assigned-clocks and
-> > assigned-clock-parents as this is general clk stuff. Also I wonder if
-> > these should be "required properties".
-> 
-> I think I should describe any properties used by PWM node, like
-> 'clocks' and 'clock-names' properties, though they are common clock
-> properties.
+The feature is targeted to provide fine-grained memory protection for
+usages such as device virtualization, memory check-point and VM
+introspection etc.
 
-Then you might want to describe also "status", "assigned-clock-rates",
-"pinctrl-$n", "pinctrl-names", "power-domains", "power-domain-names" and
-probably another dozen I'm not aware of.
+SPP is active when the "sub-page write protection" (bit 23) is 1 in
+Secondary VM-Execution Controls. The feature is backed with a Sub-Page
+Permission Table(SPPT), SPPT is referenced via a 64-bit control field
+called Sub-Page Permission Table Pointer (SPPTP) which contains a
+4K-aligned physical address.
 
-> Yes, they are required. Thanks for your comments.
+Right now, only 4KB physical pages are supported for SPP. To enable SPP
+for certain physical page, we need to first make the physical page
+write-protected, then set bit 61 of the corresponding EPT leaf entry. 
+While HW walks EPT, if bit 61 is set, it traverses SPPT with the guset
+physical address to find out the sub-page permissions at the leaf entry.
+If the corresponding bit is set, write to sub-page is permitted,
+otherwise, SPP induced EPT violation is generated.
 
-required in which sense? Why can a Spreadtrum PWM not work when the
-clock parents are unspecified?
+This patch serial passed SPP function test and selftest on Ice-Lake platform.
 
-Best regards
-Uwe
+Please refer to the SPP introduction document in this patch set and
+Intel SDM for details:
+
+Intel SDM:
+https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
+
+SPP selftest patch:
+https://lkml.org/lkml/2019/6/18/1197
+
+Previous patch:
+https://lkml.org/lkml/2019/6/6/695
+
+Patch 1: Introduction to SPP.
+Patch 2: Add SPP related flags and control bits.
+Patch 3: Functions for SPPT setup.
+Patch 4: Add SPP access bitmaps for memslots.
+Patch 5: Low level implementation of SPP operations.
+Patch 6: Implement User space access IOCTLs.
+Patch 7: Handle SPP induced VMExit and EPT violation.
+Patch 8: Enable lazy mode SPPT setup.
+Patch 9: Handle memory remapping and reclaim.
+
+
+Change logs:
+
+V3 -> v4:
+  1. Modified documentation to make it consistent with patches.
+  2. Allocated SPPT root page in init_spp() instead of vmx_set_cr3() to
+     avoid SPPT miss error.
+  3. Added back co-developers and sign-offs.
+
+V2 -> V3:                                                                
+  1. Rebased patches to kernel 5.1 release                                
+  2. Deferred SPPT setup to EPT fault handler if the page is not
+     available while set_subpage() is being called.
+  3. Added init IOCTL to reduce extra cost if SPP is not used.
+  4. Refactored patch structure, cleaned up cross referenced functions.
+  5. Added code to deal with memory swapping/migration/shrinker cases.
+
+V2 -> V1:
+  1. Rebased to 4.20-rc1
+  2. Move VMCS change to a separated patch.
+  3. Code refine and Bug fix 
+
+
+Yang Weijiang (9):
+  Documentation: Introduce EPT based Subpage Protection
+  KVM: VMX: Add control flags for SPP enabling
+  KVM: VMX: Implement functions for SPPT paging setup
+  KVM: VMX: Introduce SPP access bitmap and operation functions
+  KVM: VMX: Add init/set/get functions for SPP
+  KVM: VMX: Introduce SPP user-space IOCTLs
+  KVM: VMX: Handle SPP induced vmexit and page fault
+  KVM: MMU: Enable Lazy mode SPPT setup
+  KVM: MMU: Handle host memory remapping and reclaim
+
+ Documentation/virtual/kvm/spp_kvm.txt | 173 ++++++++++
+ arch/x86/include/asm/cpufeatures.h    |   1 +
+ arch/x86/include/asm/kvm_host.h       |  26 +-
+ arch/x86/include/asm/vmx.h            |  10 +
+ arch/x86/include/uapi/asm/vmx.h       |   2 +
+ arch/x86/kernel/cpu/intel.c           |   4 +
+ arch/x86/kvm/mmu.c                    | 480 ++++++++++++++++++++++++++
+ arch/x86/kvm/mmu.h                    |   1 +
+ arch/x86/kvm/vmx/capabilities.h       |   5 +
+ arch/x86/kvm/vmx/vmx.c                | 129 +++++++
+ arch/x86/kvm/x86.c                    | 141 ++++++++
+ include/linux/kvm_host.h              |   9 +
+ include/uapi/linux/kvm.h              |  17 +
+ 13 files changed, 997 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.17.2
+
