@@ -2,186 +2,140 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CD5C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B5AC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4590206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:09:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565741355;
-	bh=NGCjQUMppzGC46S5+/+MwbDqpRJ6D0XRhJjiDj5cviU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MPouONC7RGdHoTX/+yRHkIdOOQAukVmI5Nxy7o/irJRaS1GymM2oVqh/7hpTF2rDk
-	 iu4H+au68ZMA+oCRweVt62flnNlMlG3S/PlXz65xIld0L+iKUfgJ2sXl1LrawN2VbO
-	 8UNqnFCnx5wky0CVFTwIPqsmrX/lYfk4JwXDd8hM=
+	by mail.kernel.org (Postfix) with ESMTP id 110E0206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfHNAJO (ORCPT
+        id S1726753AbfHNAMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 20:09:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60678 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbfHNAJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 20:09:13 -0400
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8891420844;
-        Wed, 14 Aug 2019 00:09:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565741352;
-        bh=NGCjQUMppzGC46S5+/+MwbDqpRJ6D0XRhJjiDj5cviU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vgaW+4fGXXlQYWi3ipOqfpuiyxg/c4cx4aTK5d0appRa+6m/AN5HvQkgbNiT1ADtP
-         3kL/zUdYLztowLI7bmCUX0uqcehExCUJS8JkB4IEHuUKdpN0DA3yFIBjfX9UTkms6B
-         ykPMUYCxU/Ocp/LGrfVvG4Ut0J1y/dl8CLOIlQOQ=
-Received: by mail-wr1-f43.google.com with SMTP id t16so19262905wra.6;
-        Tue, 13 Aug 2019 17:09:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAWtXAf8VZ0m/HKZlqlElNo+7QX+k0ly1kgkSL/khswu/41iC1cj
-        OMKtj+aUB8uCKrTFdktoA7KaglBW2hYDXs8JM3A=
-X-Google-Smtp-Source: APXvYqwivDoGxxCEPO2MQaT8j3ps33eTCZBUFumiEdTK3SM4Cy+U4YNRbjoczyh07Yjigp07HYQZ2T437ukacnKbfZ0=
-X-Received: by 2002:adf:f90e:: with SMTP id b14mr489711wrr.124.1565741351010;
- Tue, 13 Aug 2019 17:09:11 -0700 (PDT)
+        Tue, 13 Aug 2019 20:12:38 -0400
+Received: from lgeamrelo12.lge.com ([156.147.23.52]:45020 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726512AbfHNAMi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 20:12:38 -0400
+Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
+        by 156.147.23.52 with ESMTP; 14 Aug 2019 09:12:35 +0900
+X-Original-SENDERIP: 156.147.1.126
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
+        by 156.147.1.126 with ESMTP; 14 Aug 2019 09:12:35 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Wed, 14 Aug 2019 09:11:03 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Byungchul Park <max.byungchul.park@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rao Shoaib <rao.shoaib@oracle.com>, kernel-team@android.com,
+        kernel-team <kernel-team@lge.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
+ batching
+Message-ID: <20190814001103.GA31884@X58A-UD3R>
+References: <20190808125607.GB261256@google.com>
+ <CANrsvRPU_u6oKpjZ1368Evto+1hGboNYeOuMdbdzaOfXhSO=5g@mail.gmail.com>
+ <20190808180916.GP28441@linux.ibm.com>
+ <20190811083626.GA9486@X58A-UD3R>
+ <20190811084950.GB9486@X58A-UD3R>
+ <20190811234939.GC28441@linux.ibm.com>
+ <20190812101052.GA10478@X58A-UD3R>
+ <20190812131234.GC27552@google.com>
+ <20190813052954.GA18373@X58A-UD3R>
+ <20190813154145.GE28441@linux.ibm.com>
 MIME-Version: 1.0
-References: <1565686400-5711-1-git-send-email-light.hsieh@mediatek.com> <1565686400-5711-3-git-send-email-light.hsieh@mediatek.com>
-In-Reply-To: <1565686400-5711-3-git-send-email-light.hsieh@mediatek.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Tue, 13 Aug 2019 17:08:59 -0700
-X-Gmail-Original-Message-ID: <CAGp9Lzr+cHZ5Ki6u1LP5LeOkuBZhbZR-xfDUHn24-w7xM2YSmg@mail.gmail.com>
-Message-ID: <CAGp9Lzr+cHZ5Ki6u1LP5LeOkuBZhbZR-xfDUHn24-w7xM2YSmg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/5] pinctrl: mediatek: Supporting driving setting
- without mapping current to register value
-To:     Light Hsieh <light.hsieh@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813154145.GE28441@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Light
+On Tue, Aug 13, 2019 at 08:41:45AM -0700, Paul E. McKenney wrote:
+> On Tue, Aug 13, 2019 at 02:29:54PM +0900, Byungchul Park wrote:
+> > On Mon, Aug 12, 2019 at 09:12:34AM -0400, Joel Fernandes wrote:
+> > > On Mon, Aug 12, 2019 at 07:10:52PM +0900, Byungchul Park wrote:
+> > > > On Sun, Aug 11, 2019 at 04:49:39PM -0700, Paul E. McKenney wrote:
+> > > > > Maybe.  Note well that I said "potential issue".  When I checked a few
+> > > > > years ago, none of the uses of rcu_barrier() cared about kfree_rcu().
+> > > > > They cared instead about call_rcu() callbacks that accessed code or data
+> > > > > that was going to disappear soon, for example, due to module unload or
+> > > > > filesystem unmount.
+> > > > > 
+> > > > > So it -might- be that rcu_barrier() can stay as it is, but with changes
+> > > > > as needed to documentation.
+> > > 
+> > > Right, we should update the docs. Byungchul, do you mind sending a patch that
+> > > documents the rcu_barrier() behavior?
+> > 
+> > Are you trying to give me the chance? I feel thankful. It doens't matter
+> > to try it at the moment though, I can't follow-up until September. I'd
+> > better do that in Septamber or give it up this time.
+> 
+> Which reminds me...  I recall your asking if the kfree_rcu() patch
+> might be sensitive to the exact hardware, but I cannot locate that
+> email right off-hand.  This is an excellent question!  When faced with
+> floods of kfree_rcu() calls, I would expect some hardware, compiler,
+> and kernel-configuration sensitivity.  Which is why it will likely be
 
-a few nitpicks, but the overall changes look good to me
+Yes.
 
-On Tue, Aug 13, 2019 at 1:53 AM Light Hsieh <light.hsieh@mediatek.com> wrote:
->
-> From: Light Hsieh <light.hsieh@mediatek.com>
->
-> Mediatek's smarphone project actual usage does need to know current value
-> (in mA) in procedure of finding the best driving setting.
-> The steps in the procedure is like as follow:
->
-> 1. set driving setting field in setting register as 0, measure waveform,
->    perform test, and etc.
-> 2. set driving setting field in setting register as 1, measure waveform,
->    perform test, and etc.
-> ...
-> n. set driving setting field in setting register as n-1, measure
->    waveform, perform test, and etc.
-> Check the results of steps 1~n and adopt the setting that get best result.
->
-> This procedure does need to know the mapping between current to register
-> value.
-> Therefore, setting driving without mapping current is more pratical for
-> Mediatek's smartphone usage.
->
-> Change-Id: Iacdabf0cada230fc5acad96673810c12a6c4556d
+> necessary to do a few more improvements over time -- for but one example,
+> accumulating callbacks into vectors in order to reduce the number of
+> kfree()-time cache misses.
 
-remove change-id
+Yes. That would be a pretty good way to mitigate the problem. I hope
+the simple way we've done works well enough so it would never happen
+though.
 
-> ---
->  drivers/pinctrl/mediatek/pinctrl-mt6765.c        |  4 ++--
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 21 +++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |  5 +++++
->  drivers/pinctrl/mediatek/pinctrl-paris.c         |  1 +
->  4 files changed, 29 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6765.c b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-> index 32451e8..e024ebc 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-> @@ -1077,8 +1077,8 @@
->         .bias_disable_get = mtk_pinconf_bias_disable_get,
->         .bias_set = mtk_pinconf_bias_set,
->         .bias_get = mtk_pinconf_bias_get,
-> -       .drive_set = mtk_pinconf_drive_set_rev1,
-> -       .drive_get = mtk_pinconf_drive_get_rev1,
-> +       .drive_set = mtk_pinconf_drive_set_direct_val,
-> +       .drive_get = mtk_pinconf_drive_get_direct_val,
+Or I would check the condition of all system resourses e.g. CPU and
+memory and control the bandwith of them, of course only if that actually
+happens.
 
-I prefer to mtk_pinconf_drive_[get,set]_raw_val that would be better
-to understand.
+Thanks a lot for sharing your opinion on it!
 
->         .adv_pull_get = mtk_pinconf_adv_pull_get,
->         .adv_pull_set = mtk_pinconf_adv_pull_set,
->  };
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index 4687f63..23a9529 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -607,6 +607,27 @@ int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
->         return 0;
->  }
->
-> +/* Revision direct value */
-> +int mtk_pinconf_drive_set_direct_val(struct mtk_pinctrl *hw,
-> +                              const struct mtk_pin_desc *desc, u32 arg)
-> +{
-> +       int err;
-> +
-> +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV, arg);
-> +
-> +       return err;
-> +}
-> +
-> +int mtk_pinconf_drive_get_direct_val(struct mtk_pinctrl *hw,
-> +                              const struct mtk_pin_desc *desc, int *val)
-> +{
-> +       int err;
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV, val);
-> +
-> +       return err;
-> +}
-> +
->  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->                              const struct mtk_pin_desc *desc, bool pullup,
->                              u32 arg)
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> index 1b7da42..b3bada0 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> @@ -288,6 +288,11 @@ int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
->  int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
->                                const struct mtk_pin_desc *desc, int *val);
->
-> +int mtk_pinconf_drive_set_direct_val(struct mtk_pinctrl *hw,
-> +                              const struct mtk_pin_desc *desc, u32 arg);
-> +int mtk_pinconf_drive_get_direct_val(struct mtk_pinctrl *hw,
-> +                              const struct mtk_pin_desc *desc, int *val);
-> +
->  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->                              const struct mtk_pin_desc *desc, bool pullup,
->                              u32 arg);
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index 28b4951..71c94b2 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -964,3 +964,4 @@ static int mtk_paris_pinctrl_resume(struct device *device)
->         .suspend_noirq = mtk_paris_pinctrl_suspend,
->         .resume_noirq = mtk_paris_pinctrl_resume,
->  };
-> +
+Thanks,
+Byungchul
 
-remove unnecessary the empty line
-
-> --
-> 1.8.1.1.dirty
->
+> 							Thanx, Paul
+> 
+> > Thanks,
+> > Byungchul
+> > 
+> > > > > It also -might- be, maybe now or maybe some time in the future, that
+> > > > > there will need to be a kfree_rcu_barrier() or some such.  But if so,
+> > > > > let's not create it until it is needed.  For one thing, it is reasonably
+> > > > > likely that something other than a kfree_rcu_barrier() would really
+> > > > > be what was needed.  After all, the main point would be to make sure
+> > > > > that the old memory really was freed before allocating new memory.
+> > > > 
+> > > > Now I fully understand what you meant thanks to you. Thank you for
+> > > > explaining it in detail.
+> > > > 
+> > > > > But if the system had ample memory, why wait?  In that case you don't
+> > > > > really need to wait for all the old memory to be freed, but rather for
+> > > > > sufficient memory to be available for allocation.
+> > > > 
+> > > > Agree. Totally make sense.
+> > > 
+> > > Agreed, all makes sense.
+> > > 
+> > > thanks,
+> > > 
+> > >  - Joel
+> > > 
+> > > [snip]
+> > 
