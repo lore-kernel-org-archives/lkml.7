@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEE4C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62CDC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F6221852
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD0421880
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:48:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JhjafeeS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="phHUUaiC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbfHNSr5 (ORCPT
+        id S1728533AbfHNSrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 14:47:57 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:32920 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729522AbfHNSrp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 14 Aug 2019 14:47:45 -0400
-Received: by mail-pf1-f193.google.com with SMTP id g2so54106383pfq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 11:47:44 -0700 (PDT)
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39319 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729529AbfHNSrm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 14:47:42 -0400
+Received: by mail-pl1-f193.google.com with SMTP id z3so4259326pln.6
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 11:47:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wO5ks8srjtZHHtpXOR5yQLjWhZNf1ho4YCPtcrf1Uww=;
-        b=JhjafeeSnqrY96MJ/4i5IWZwtutSY/+sjrJKNymWybFyvALBIrAwaLrXnNm+qRQJFR
-         SDwJLC5JbCWTXnmsCh3xFFheswBW72hayuwa4XzQtbYFMdz98f6PUkLTEzuFhrxa7dcT
-         +iK9J7/7XZ11mPfH+4rhV1qlHJOE9Cbn15Spe7OBIDglTWmOC5JJDFXGFEcNnn85sFph
-         nfFKbeM6gQtUvUA8ojdH0NUEOCMibVOA4ayu7r6zMI0uF1kb47k3aDvlNGBm4X8Ogop4
-         hkGyHkjIk+KzXra8pKLmPtOod3J6cD2P2fAQ5iuRAiSTVcRNwKTGrTg6uMRvhyxo9f9c
-         BKrw==
+        bh=LsxdKXlIE7uZ+/6eqxu7c+cok0i20/tbrH/8RDl0m7Y=;
+        b=phHUUaiCNqUXb2OQDy2PL5HiT4EhT3jgLrPghrja3apIV/sP47ECUK+syGDP5dxS4A
+         u+j4PGs/2h04W3SConQAkYMRWPkN+ePriNra7FScCzMkt73oDq1S0URnJY56t67cEP8L
+         6Kde0bxm6ML74X5v2uYA4015JBOAg83kGePtdvjL3cba7JLAtSvNzHe++HBCOCCTGQ7M
+         SdC5xiGI5kyWlBMRbN+p0GHUTH0QG9Kgu13fRBviu4FHdV9f6YQcgZcIwfyqaPamriYd
+         cEKPVXU80fB+TBz/Yiz15pMIdJJF1l+oRZmcJ68sbU8zBUbcVVaqT7RShmx2KXd9TI3D
+         cE3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=wO5ks8srjtZHHtpXOR5yQLjWhZNf1ho4YCPtcrf1Uww=;
-        b=GYwksOfZWJlh0lOGB2UOXat2ZxLoQBscYepo4HHkA/8NVFvgD2CcjSqjqMxJReP4fM
-         IHpcymvI0AqbizWpT98T12ZUtbPBuuFd5BK4qQEWMEhMnHuOuDzIK+MOXuXddfLkm96m
-         Cl4+yuBFDZS95iEAe1lGVM8GBlPdlcldWdLGHTp9tcYVRieY4Hj4S1y2LtZzXCgKlJFC
-         LmhMlwmjCHxnZaPZgiCqpC7JojIZGH7i9TAT2ceP82pGtWIOWlRB0L4K5bQ+1fO2qpow
-         uXEXg5szTcQBvjade0QvBLHlMbk4u5z0j/uxPM7/Clty82uF8BGEpfX2rU1+Mvc4LpM8
-         orHQ==
-X-Gm-Message-State: APjAAAVFjyCaxcfU6CWAQKayhzkiT0HVBZF+C5+3AyyP9QZmqcX4yG91
-        1zl/eYJN8UXxDdFWSwY4YBFgSQPWMIk=
-X-Google-Smtp-Source: APXvYqxW9O5O6lN6D75dJ6FsTbeutZUOicVbvKl6O0GFXkGTiyx7uCBE3n4NRfwQBEVHRq3DIGsO2w==
-X-Received: by 2002:a17:90a:ec07:: with SMTP id l7mr1055601pjy.39.1565808463626;
-        Wed, 14 Aug 2019 11:47:43 -0700 (PDT)
+        bh=LsxdKXlIE7uZ+/6eqxu7c+cok0i20/tbrH/8RDl0m7Y=;
+        b=jzXlCrxNQ8ftwOw8uC439sK4cvANaf1ADpTHCuBrdnRbgC1uXpimfUKUFydgwagVeF
+         7cApsxAkb516uZHbXjdVVdiNfQMV93ym+yAG3PjAx8dHsADjsh9gSwwXQN3jSHJW9owv
+         pEIW8NtKFwdKWHnSnUMAOnHhdCFRg0t2VCXunkoOfx5ClLD+0XmB+2kpOJyE/ZgPR0ev
+         khiUOyNrgcKThp6w1jfySauJW0WRJ6dPrP5rPE2PwY++4HYaLDES+YjlmskjbSoiy52/
+         qSZKF8fhfXLNUTNVxpPuBjTgasY4sZVQnu9tj9pVGZMXBULYJoiPY0ugoJw5b5efGpOx
+         R9QQ==
+X-Gm-Message-State: APjAAAX2N2vtL6ez7C9D19qTACNvPeLseMtjRHpFqStZHn4SOBefWrHo
+        IVxgig/o1h2+UopEp9eNnrnm8BKuetY=
+X-Google-Smtp-Source: APXvYqymhPQykXI8DyJnBWC3/2rfVnNZjSgYqV5xd4FwvmcqNtbeI6JIWHdpBIWAZKL/sL2ccjFXXA==
+X-Received: by 2002:a17:902:2f24:: with SMTP id s33mr734052plb.314.1565808461082;
+        Wed, 14 Aug 2019 11:47:41 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id y16sm610855pfc.36.2019.08.14.11.47.42
+        by smtp.gmail.com with ESMTPSA id y16sm610855pfc.36.2019.08.14.11.47.39
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 11:47:42 -0700 (PDT)
+        Wed, 14 Aug 2019 11:47:40 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
 Cc:     Xu YiPing <xuyiping@hisilicon.com>,
@@ -65,9 +65,9 @@ Cc:     Xu YiPing <xuyiping@hisilicon.com>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         Sam Ravnborg <sam@ravnborg.org>,
         John Stultz <john.stultz@linaro.org>
-Subject: [RESEND][PATCH v3 24/26] drm: kirin: Add alloc_hw_ctx/clean_hw_ctx ops in driver data
-Date:   Wed, 14 Aug 2019 18:47:00 +0000
-Message-Id: <20190814184702.54275-25-john.stultz@linaro.org>
+Subject: [RESEND][PATCH v3 22/26] drm: kirin: Fix dev->driver_data setting
+Date:   Wed, 14 Aug 2019 18:46:58 +0000
+Message-Id: <20190814184702.54275-23-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190814184702.54275-1-john.stultz@linaro.org>
 References: <20190814184702.54275-1-john.stultz@linaro.org>
@@ -80,11 +80,9 @@ From: Xu YiPing <xuyiping@hisilicon.com>
 
 As part of refactoring the kirin driver to better support
 different hardware revisions, this patch changes the
-alloc/clean_hw_ctx functions to be called via driver_data
-specific funciton pointers.
+dev->driver_data to point to a drm_device, not ade_data.
 
-This will allow the ade_drm_init to later be made generic and
-moved to kirin_drm_drv.c
+Thus we set the driver data to drm device after alloc.
 
 Cc: Rongrong Zou <zourongrong@gmail.com>
 Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
@@ -97,60 +95,43 @@ Signed-off-by: Xu YiPing <xuyiping@hisilicon.com>
 [jstultz: Reworded commit message]
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 9 ++++++++-
- drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h | 5 +++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 1 -
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 3 +--
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-index 09dc2c07533d..f729a1de6e14 100644
+index 0bdcac981d8b..09dc2c07533d 100644
 --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
 +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-@@ -999,7 +999,7 @@ static int ade_drm_init(struct platform_device *pdev)
+@@ -998,7 +998,6 @@ static int ade_drm_init(struct platform_device *pdev)
+ 		DRM_ERROR("failed to alloc ade_data\n");
  		return -ENOMEM;
  	}
+-	platform_set_drvdata(pdev, ade);
  
--	ctx = ade_hw_ctx_alloc(pdev, &ade->crtc.base);
-+	ctx = ade_driver_data.alloc_hw_ctx(pdev, &ade->crtc.base);
+ 	ctx = ade_hw_ctx_alloc(pdev, &ade->crtc.base);
  	if (IS_ERR(ctx)) {
- 		DRM_ERROR("failed to initialize kirin_priv hw ctx\n");
- 		return -EINVAL;
-@@ -1038,6 +1038,10 @@ static int ade_drm_init(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static void ade_hw_ctx_cleanup(void *hw_ctx)
-+{
-+}
-+
- static void ade_drm_cleanup(struct platform_device *pdev)
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+index 1c9658e9565e..f1853b84ab58 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+@@ -43,8 +43,6 @@ static int kirin_drm_kms_init(struct drm_device *dev)
  {
- }
-@@ -1090,6 +1094,9 @@ struct kirin_drm_data ade_driver_data = {
- 	.plane_funcs = &ade_plane_funcs,
- 	.mode_config_funcs = &ade_mode_config_funcs,
+ 	int ret;
  
-+	.alloc_hw_ctx = ade_hw_ctx_alloc,
-+	.cleanup_hw_ctx = ade_hw_ctx_cleanup,
-+
- 	.init = ade_drm_init,
- 	.cleanup = ade_drm_cleanup
- };
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-index 95f56c9960d5..1663610d2cd8 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-@@ -49,6 +49,11 @@ struct kirin_drm_data {
- 	const struct drm_plane_helper_funcs *plane_helper_funcs;
- 	const struct drm_plane_funcs  *plane_funcs;
- 	const struct drm_mode_config_funcs *mode_config_funcs;
-+
-+	void *(*alloc_hw_ctx)(struct platform_device *pdev,
-+			      struct drm_crtc *crtc);
-+	void (*cleanup_hw_ctx)(void *hw_ctx);
-+
- 	int (*init)(struct platform_device *pdev);
- 	void (*cleanup)(struct platform_device *pdev);
- };
+-	dev_set_drvdata(dev->dev, dev);
+-
+ 	/* dev->mode_config initialization */
+ 	drm_mode_config_init(dev);
+ 	dev->mode_config.min_width = 0;
+@@ -139,6 +137,7 @@ static int kirin_drm_bind(struct device *dev)
+ 	drm_dev = drm_dev_alloc(driver_data->driver, dev);
+ 	if (IS_ERR(drm_dev))
+ 		return PTR_ERR(drm_dev);
++	dev_set_drvdata(dev, drm_dev);
+ 
+ 	ret = kirin_drm_kms_init(drm_dev);
+ 	if (ret)
 -- 
 2.17.1
 
