@@ -2,62 +2,64 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09615C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE7DC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24FB20578
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0EE320578
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:41:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="I+a/3Ifr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFuFnRB0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfHNJjl (ORCPT
+        id S1726866AbfHNJlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:39:41 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44921 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfHNJjl (ORCPT
+        Wed, 14 Aug 2019 05:41:05 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39885 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfHNJlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:39:41 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so52810536pgl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 02:39:41 -0700 (PDT)
+        Wed, 14 Aug 2019 05:41:05 -0400
+Received: by mail-pf1-f195.google.com with SMTP id f17so49260087pfn.6
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 02:41:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fossix-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=r84qtxIuA7/blK51KqUqinmNMAkGTw/Qe9MaT+YbCuA=;
-        b=I+a/3IfrZka+df+VqO9hj1OrRsHIccQpcN3wJL1M06I0MWZHAMgdReQ9u09u/xk5QT
-         YH4G5KjoAs3u/+JfQIXMAdNw7d1S5TrrOBCp03qrJuzA++sRNm15SwkkknjFsufbEfsV
-         Xbqc3ApEG/vIj1Cci+lUAnazDWSYFtLQUPtkrt6cL2JsgB5I9xGxzRHt3Vkf94Dbz34m
-         ghXkXRhpZSvjyomABZ6z4PeASet4xx4OGRm6vzBrTBUCBAEHCoQ89YMIe+cnj20NSvid
-         60gXOa7ILqXgpe7VFulvVxxGo2oDwblbJqizPoJWaTqWb77uP2AfZfWX0qqYP/4p7r9i
-         6EsA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LfFkLwjqyQIH9T75mSQkj/WAlvM62io+hnQFkWZp6Pc=;
+        b=jFuFnRB0/8csf+W8FViKPIDaEmS37F+row4a3iyvUZTk3+UEYYsc/umedWVPXZUEPN
+         LDdtmXgjxyfggY0JP9gzuxWNLkt9w7hpjz8XuE2kCmm80gh3Ki9JQxk9tWm1EBPlfH/K
+         DP12ymtzlN9IHXiSHs19xPERgy/Qb624g0yuWHYl2dH4tQJSIcz8tQn7dX+ptc4xCSJz
+         B5+5z3lM3tK0y5tdfekEiXiAa3s+bulCjpDfShlgK+v7H75t366TqhsaV7NYrIMciMC/
+         qdUcENrR41a7h870LEPPVNzFj8aZQuAJJprtvNeh4/Pv5rXpcBKXNaVjOrJr6lJaZqWu
+         frmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=r84qtxIuA7/blK51KqUqinmNMAkGTw/Qe9MaT+YbCuA=;
-        b=Z25C74CFP7iC/fkgqjD3bKU+MTsj30X3DkrnMsIDaHPZ+BK80jHdn/QCfbTVtvOZiT
-         bNSk4xupAwMpghCQcPie7y8eoqqf9T2TgNvFYb5xB5w/Y3HEqWT6YnJTvE6qv99kzQ+R
-         WV80rjLdK4fHC8ckXRaR6klb00Ix+LPT2FKaofaLK4+wjSEFaT91/09WaN5ubC0TuuiK
-         lU0efgdhLqcPYEKCroZpQb8JMPZZAMU1dawXXVg+SR+09hXj5z6rj92G/W7YU1qW9BPv
-         M/7i5c7RhPa7WKsuckem86Lv2t1KE/yS1IQdgrAE8IyZlNp7tHN7nXiu3klJf/gWV6ZX
-         83Gg==
-X-Gm-Message-State: APjAAAX+IP/ijA0RNY/86fLqKG/HMt61spN4eDNC42Z5kx6PPRZB5L3q
-        +hKfr1bp8Tnt3s4Q+2SmrN42+w==
-X-Google-Smtp-Source: APXvYqwteVY2sGfFJZ13FnbIh3pNMmFyoM8OwTJPd/Jr/1JBkTgUgmhx+Zai3JUK3Kchry/hm3UpxA==
-X-Received: by 2002:a17:90a:246f:: with SMTP id h102mr6246079pje.125.1565775580607;
-        Wed, 14 Aug 2019 02:39:40 -0700 (PDT)
-Received: from localhost ([129.41.84.73])
-        by smtp.gmail.com with ESMTPSA id j11sm10747882pjb.11.2019.08.14.02.39.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 02:39:40 -0700 (PDT)
-From:   Santosh Sivaraj <santosh@fossix.org>
-To:     Balbir Singh <bsingharora@gmail.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LfFkLwjqyQIH9T75mSQkj/WAlvM62io+hnQFkWZp6Pc=;
+        b=Aj9qcNqyQvqljSwKM5tuXeVILdC7qsBgSYICNuq5EcoU+zvasZ9rUIHzR5zoBRyO06
+         3mD62vp+ZKbDRq9JlFooQW4NO84v0BFkv8AmQHUGWSUh6uQqCOihMLG2gLtXWrsR+/QI
+         KQw9hGcRE83d/ZOFAEKP6rh+FBQ51Sdxwih2wsf4wSBBLBwJDvtGt7lafsVJ4lQ+z0/j
+         1bUfED4rCWjciDZFJHQRCrdXSuENB683ClsfnTFKVeZOagMLlYpXEGz39RBFmTXNczJy
+         fNGYLc52tQ+QmyIieVzRwlDaQ7Id3w5NSuy+UgDBaPBgqmeFSO3wuUNgz4yUPD6J7ikC
+         Kc8Q==
+X-Gm-Message-State: APjAAAXHRpsLnc3hrCLLIAB8poMZTBYXYYykm50VHFWqYS+bVYMKXfkT
+        ouPlFVDKYfun5F4nbiXjS4U02IM6JyLObg==
+X-Google-Smtp-Source: APXvYqyRTX2xe/RXO2a1R4wAMFoGUHd/8F69mYx1bwHIiLNCMYtDwXDbG78SgJR7jpu9zRPE3C/+Kg==
+X-Received: by 2002:a62:7a0f:: with SMTP id v15mr26284997pfc.35.1565775664294;
+        Wed, 14 Aug 2019 02:41:04 -0700 (PDT)
+Received: from [192.168.68.119] (203-219-253-117.static.tpgi.com.au. [203.219.253.117])
+        by smtp.gmail.com with ESMTPSA id i11sm17425385pfk.34.2019.08.14.02.41.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 02:41:03 -0700 (PDT)
+Subject: Re: [PATCH v9 7/7] powerpc: add machine check safe copy_to_user
+To:     Santosh Sivaraj <santosh@fossix.org>,
         linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         Linux Kernel <linux-kernel@vger.kernel.org>
 Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
@@ -66,95 +68,75 @@ Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Chandan Rajendra <chandan@linux.vnet.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Nicholas Piggin <npiggin@gmail.com>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v9 4/7] extable: Add function to search only kernel exception table
-In-Reply-To: <916d5741-a0bd-8860-4a38-7a5ef677214a@gmail.com>
-References: <20190812092236.16648-1-santosh@fossix.org> <20190812092236.16648-5-santosh@fossix.org> <916d5741-a0bd-8860-4a38-7a5ef677214a@gmail.com>
-Date:   Wed, 14 Aug 2019 15:09:37 +0530
-Message-ID: <877e7gqe5i.fsf@santosiv.in.ibm.com>
+        christophe leroy <christophe.leroy@c-s.fr>
+References: <20190812092236.16648-1-santosh@fossix.org>
+ <20190812092236.16648-8-santosh@fossix.org>
+From:   Balbir Singh <bsingharora@gmail.com>
+Message-ID: <74d12529-d068-0210-e229-5cea68bcf9da@gmail.com>
+Date:   Wed, 14 Aug 2019 19:40:58 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190812092236.16648-8-santosh@fossix.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Balbir Singh <bsingharora@gmail.com> writes:
 
-> On 12/8/19 7:22 pm, Santosh Sivaraj wrote:
->> Certain architecture specific operating modes (e.g., in powerpc machine
->> check handler that is unable to access vmalloc memory), the
->> search_exception_tables cannot be called because it also searches the
->> module exception tables if entry is not found in the kernel exception
->> table.
->> 
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Ingo Molnar <mingo@kernel.org>
->> Cc: Nicholas Piggin <npiggin@gmail.com>
->> Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
->> Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
->> ---
->>  include/linux/extable.h |  2 ++
->>  kernel/extable.c        | 11 +++++++++--
->>  2 files changed, 11 insertions(+), 2 deletions(-)
->> 
->> diff --git a/include/linux/extable.h b/include/linux/extable.h
->> index 41c5b3a25f67..81ecfaa83ad3 100644
->> --- a/include/linux/extable.h
->> +++ b/include/linux/extable.h
->> @@ -19,6 +19,8 @@ void trim_init_extable(struct module *m);
->>  
->>  /* Given an address, look for it in the exception tables */
->>  const struct exception_table_entry *search_exception_tables(unsigned long add);
->> +const struct exception_table_entry *
->> +search_kernel_exception_table(unsigned long addr);
->> 
->
-> Can we find a better name search_kernel still sounds like all of the kernel.
-> Can we rename it to search_kernel_linear_map_extable?
 
-I thought search_kernel_exception_table and search_module_extables were
-non-ambiguous enough :-) But If you think name will be confusing, I can
-change that as suggested.
-
-Thanks,
-Santosh
-
->
+On 12/8/19 7:22 pm, Santosh Sivaraj wrote:
+> Use  memcpy_mcsafe() implementation to define copy_to_user_mcsafe()
+> 
+> Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
+> ---
+>  arch/powerpc/Kconfig               |  1 +
+>  arch/powerpc/include/asm/uaccess.h | 14 ++++++++++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 77f6ebf97113..4316e36095a2 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -137,6 +137,7 @@ config PPC
+>  	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !RELOCATABLE && !HIBERNATION)
+>  	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
+>  	select ARCH_HAS_UACCESS_FLUSHCACHE	if PPC64
+> +	select ARCH_HAS_UACCESS_MCSAFE		if PPC64
+>  	select ARCH_HAS_UBSAN_SANITIZE_ALL
+>  	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+>  	select ARCH_KEEP_MEMBLOCK
+> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+> index 8b03eb44e876..15002b51ff18 100644
+> --- a/arch/powerpc/include/asm/uaccess.h
+> +++ b/arch/powerpc/include/asm/uaccess.h
+> @@ -387,6 +387,20 @@ static inline unsigned long raw_copy_to_user(void __user *to,
+>  	return ret;
+>  }
 >  
->>  #ifdef CONFIG_MODULES
->>  /* For extable.c to search modules' exception tables. */
->> diff --git a/kernel/extable.c b/kernel/extable.c
->> index e23cce6e6092..f6c9406eec7d 100644
->> --- a/kernel/extable.c
->> +++ b/kernel/extable.c
->> @@ -40,13 +40,20 @@ void __init sort_main_extable(void)
->>  	}
->>  }
->>  
->> +/* Given an address, look for it in the kernel exception table */
->> +const
->> +struct exception_table_entry *search_kernel_exception_table(unsigned long addr)
->> +{
->> +	return search_extable(__start___ex_table,
->> +			      __stop___ex_table - __start___ex_table, addr);
->> +}
->> +
->>  /* Given an address, look for it in the exception tables. */
->>  const struct exception_table_entry *search_exception_tables(unsigned long addr)
->>  {
->>  	const struct exception_table_entry *e;
->>  
->> -	e = search_extable(__start___ex_table,
->> -			   __stop___ex_table - __start___ex_table, addr);
->> +	e = search_kernel_exception_table(addr);
->>  	if (!e)
->>  		e = search_module_extables(addr);
->>  	return e;
->> 
+> +static __always_inline unsigned long __must_check
+> +copy_to_user_mcsafe(void __user *to, const void *from, unsigned long n)
+> +{
+> +	if (likely(check_copy_size(from, n, true))) {
+> +		if (access_ok(to, n)) {
+> +			allow_write_to_user(to, n);
+> +			n = memcpy_mcsafe((void *)to, from, n);
+> +			prevent_write_to_user(to, n);
+> +		}
+> +	}
+> +
+> +	return n;
 
--- 
-if (( RANDOM % 2 )); then ~/bin/cookie; else fortune -s; fi
-#cat ~/notes/quotes | sort -R | head -1 | cut -f2- -d " "
+Do we always return n independent of the check_copy_size return value and access_ok return values?
+
+Balbir Singh.
+
+> +}
+> +
+>  extern unsigned long __clear_user(void __user *addr, unsigned long size);
+>  
+>  static inline unsigned long clear_user(void __user *addr, unsigned long size)
+> 
