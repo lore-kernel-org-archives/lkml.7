@@ -2,68 +2,67 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8EAC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE21C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7924A20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:23:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565799808;
-	bh=drGNaWF+vbPLIhKZdjKaaAPYvonVJd9CaHrHmd7Db8U=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=cNBCjsImds/AjHjGLvaunDcrH/TcxWM0IyBwHbyYl8U3esQZWu1wTsH8ALaNtEJkK
-	 LeT8+v2wgHs1duvM5FaIu4M/gJAbNJiH1vKpbEzrjBlgNhti8poyOCf90t7pwQFeAl
-	 hM5b0OpvYn5HPpgxEpWCvqShpuQmiA6AFKGaF5zM=
+	by mail.kernel.org (Postfix) with ESMTP id 4866620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:26:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbfHNQX1 (ORCPT
+        id S1727847AbfHNQ0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:23:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbfHNQXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:23:25 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF27020665;
-        Wed, 14 Aug 2019 16:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565799804;
-        bh=drGNaWF+vbPLIhKZdjKaaAPYvonVJd9CaHrHmd7Db8U=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=BfLdpAsRgcAHE6/V4EuMthY7eNveF0c0kyuZ7nri6Ps958ns7xt1B7NC3NHgv/d2W
-         +Aanff4PLlE3dD67YkQYWgcDx+TmHu7G3EhhX/Mw7EADl0qa3uEGtoK0pvk2BqHV6U
-         oqMzQV5FThqB2TLjsJN7LlAk8/IJjFVs0UEZ80+w=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190814153014.12962-1-dinguyen@kernel.org>
-References: <20190814153014.12962-1-dinguyen@kernel.org>
-Subject: Re: [PATCH] clk: socfpga: stratix10: fix rate caclulationg for cnt_clks
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
-        mturquette@baylibre.com, stable@vger.kernel.org
-To:     Dinh Nguyen <dinguyen@kernel.org>, linux-clk@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Wed, 14 Aug 2019 09:23:23 -0700
-Message-Id: <20190814162324.BF27020665@mail.kernel.org>
+        Wed, 14 Aug 2019 12:26:23 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:55626 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfHNQ0X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 12:26:23 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::202])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C5767154B4BAA;
+        Wed, 14 Aug 2019 09:26:21 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 12:26:18 -0400 (EDT)
+Message-Id: <20190814.122618.1414289033357500978.davem@davemloft.net>
+To:     mark.rutland@arm.com
+Cc:     linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        akpm@linux-foundation.org, bigeasy@linutronix.de, bp@suse.de,
+        catalin.marinas@arm.com, hch@lst.de, kan.liang@intel.com,
+        mingo@kernel.org, peterz@infradead.org, riel@surriel.com,
+        will@kernel.org
+Subject: Re: [PATCH 6/9] sparc/perf: correctly check for kthreads
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190814104131.20190-7-mark.rutland@arm.com>
+References: <20190814104131.20190-1-mark.rutland@arm.com>
+        <20190814104131.20190-7-mark.rutland@arm.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 14 Aug 2019 09:26:22 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Dinh Nguyen (2019-08-14 08:30:14)
-> Checking bypass_reg is incorrect for calculating the cnt_clk rates.
-> Instead we should be checking that there is a proper hardware register
-> that holds the clock divider.
->=20
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-> ---
+From: Mark Rutland <mark.rutland@arm.com>
+Date: Wed, 14 Aug 2019 11:41:28 +0100
 
-Applied to clk-fixes
+> The sparc perf_callchain_user() functions looks at current->mm,
+> apparently to determine whether the thread is a kthread without any
+> valid user context.
+> 
+> In general, a non-NULL current->mm doesn't imply that current is a
+> kthread, as kthreads can install an mm via use_mm(), and so it's
+> preferable to use is_kthread() to determine whether a thread is a
+> kthread.
+> 
+> For consistency, let's use is_kthread() here.
+> 
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
 
+Acked-by: David S. Miller <davem@davemloft.net>
