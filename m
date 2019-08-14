@@ -2,160 +2,125 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F42C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFB1C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2D9205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:26:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565781993;
-	bh=YND+JWbSMZZsR9SQxiwR2FIJXArQNr0iMib10vHQQbw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e2kxxfCjyRigKNOGiKjmevLOcQjM6Jn0cgCAK1Xgl6Ocvu9chAHVVN0G1BWkOmSMq
-	 MXNP4dAit2h4KDK0z23Zkmu99izWP2UqfW+AV2l1ZP1YHKVOyAJgw2B+cQNcZ4FRnR
-	 ihmY957EH7HFzCoukD8tYN2TBTD9Ysl9nPjqUz20=
+	by mail.kernel.org (Postfix) with ESMTP id 8D78C205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:26:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfHNL0c (ORCPT
+        id S1727727AbfHNL04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 07:26:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38606 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725800AbfHNL0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 07:26:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A7AA8AD0B;
-        Wed, 14 Aug 2019 11:26:29 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 13:26:29 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH 1/2] mm: memcontrol: flush percpu vmstats before
- releasing memcg
-Message-ID: <20190814112629.GU17933@dhcp22.suse.cz>
-References: <20190812222911.2364802-1-guro@fb.com>
- <20190812222911.2364802-2-guro@fb.com>
+        Wed, 14 Aug 2019 07:26:56 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42224 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfHNL0z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 07:26:55 -0400
+Received: by mail-oi1-f193.google.com with SMTP id o6so3170911oic.9
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:26:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f4v4qkIfH3jO9OemUkVOmNfKO3Ze07me/8dLA6V285s=;
+        b=qp2YZAgUARaGwnSC3WaD/s+m7gH6iQ/mf2Ido2LNqjEPLf7p8mAPotLR2UjRvHngmx
+         ymMItW2wqMXUphf3YTbXIfytDe0l3E2OSDPRpIaU+FbjuVY+XMtzhQ4gDT2maIR6Y4rn
+         FHmSgs72LtlZEftEDNCR98aSjpPJDJ+sXaJ3Ktdx1IB+P/BXBIOxtOe/PK7qSCOY8vcy
+         uI6TFkGcwZLfBBdd9FEHHk7oeyPQQhRBoC3WOuyf+WnfUUsih5u4BravJ2mURAZoKKlX
+         UGtxJzyLFu+b0/a2bQVjpyHvd9dQVyxwaLxUYIZhXeNq717+i9fbaEgZmJdiqtF97ks4
+         5dEg==
+X-Gm-Message-State: APjAAAWt+8LSzzZsBJoDThEyvcMYCZ8Y2pwvAf4Ln2W92zutHv3wxTjU
+        9QLB0I2V0vLcq0NQW77n98KPaWQtSxFwN+Sf6Cc=
+X-Google-Smtp-Source: APXvYqw9xnb/rL5SZzZcbLmA1koBCQkAzjM/18IlUnfBbaC+B/pqAWLIhE56InNBDawbI3Q0s6UnN07wPGIrSD8KIbw=
+X-Received: by 2002:aca:3bc6:: with SMTP id i189mr4507576oia.153.1565782014777;
+ Wed, 14 Aug 2019 04:26:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812222911.2364802-2-guro@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190814104131.20190-1-mark.rutland@arm.com> <20190814104131.20190-2-mark.rutland@arm.com>
+In-Reply-To: <20190814104131.20190-2-mark.rutland@arm.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 14 Aug 2019 13:26:43 +0200
+Message-ID: <CAMuHMdV_hZ-uMmKdqEutLL5+XkhhcKdSaurMUS2N46AhZwDNKQ@mail.gmail.com>
+Subject: Re: [PATCH 1/9] sched/core: add is_kthread() helper
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christoph Hellwig <hch@lst.de>, kan.liang@intel.com,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 12-08-19 15:29:10, Roman Gushchin wrote:
-> Percpu caching of local vmstats with the conditional propagation
-> by the cgroup tree leads to an accumulation of errors on non-leaf
-> levels.
-> 
-> Let's imagine two nested memory cgroups A and A/B. Say, a process
-> belonging to A/B allocates 100 pagecache pages on the CPU 0.
-> The percpu cache will spill 3 times, so that 32*3=96 pages will be
-> accounted to A/B and A atomic vmstat counters, 4 pages will remain
-> in the percpu cache.
-> 
-> Imagine A/B is nearby memory.max, so that every following allocation
-> triggers a direct reclaim on the local CPU. Say, each such attempt
-> will free 16 pages on a new cpu. That means every percpu cache will
-> have -16 pages, except the first one, which will have 4 - 16 = -12.
-> A/B and A atomic counters will not be touched at all.
-> 
-> Now a user removes A/B. All percpu caches are freed and corresponding
-> vmstat numbers are forgotten. A has 96 pages more than expected.
-> 
-> As memory cgroups are created and destroyed, errors do accumulate.
-> Even 1-2 pages differences can accumulate into large numbers.
-> 
-> To fix this issue let's accumulate and propagate percpu vmstat
-> values before releasing the memory cgroup. At this point these
-> numbers are stable and cannot be changed.
+Hi Mark,
 
-It is worth spending a word or two on why this doesn't matter during the
-memcg life time.
+On Wed, Aug 14, 2019 at 12:43 PM Mark Rutland <mark.rutland@arm.com> wrote:
+> Code checking whether a task is a kthread isn't very consistent. Some
+> code correctly tests task->flags & PF_THREAD, while other code checks
+> task->mm (which can be true for a kthread which calls use_mm()).
+>
+> So that we can clean this up and keep the code easy to follow, let's add
+> an obvious helper function to test whether a task is a kthread.
+> Subsequent patches will use this as part of cleaning up and correcting
+> open-coded tests.
+>
+> At the same time, let's fix up the kerneldoc for is_idle_task() for
+> consistency with the new helper, using true/false rather than 0/1, given
+> the functions return bool.
+>
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
 
-> Since on cpu hotplug we do flush percpu vmstats anyway, we can
-> iterate only over online cpus.
-> 
-> Fixes: 42a300353577 ("mm: memcontrol: fix recursive statistics correctness & scalabilty")
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
+Thanks for your patch!
 
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
->  mm/memcontrol.c | 40 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 3e821f34399f..348f685ab94b 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -3412,6 +3412,41 @@ static int memcg_online_kmem(struct mem_cgroup *memcg)
->  	return 0;
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1621,13 +1621,24 @@ extern struct task_struct *idle_task(int cpu);
+>   * is_idle_task - is the specified task an idle task?
+>   * @p: the task in question.
+>   *
+> - * Return: 1 if @p is an idle task. 0 otherwise.
+> + * Return: true if @p is an idle task, false otherwise.
+>   */
+>  static inline bool is_idle_task(const struct task_struct *p)
+>  {
+>         return !!(p->flags & PF_IDLE);
 >  }
->  
-> +static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg)
+>
+> +/**
+> + * is_kthread - is the specified task a kthread
+> + * @p: the task in question.
+> + *
+> + * Return: true if @p is a kthread, false otherwise.
+> + */
+> +static inline bool is_kthread(const struct task_struct *p)
 > +{
-> +	unsigned long stat[MEMCG_NR_STAT];
-> +	struct mem_cgroup *mi;
-> +	int node, cpu, i;
-> +
-> +	for (i = 0; i < MEMCG_NR_STAT; i++)
-> +		stat[i] = 0;
-> +
-> +	for_each_online_cpu(cpu)
-> +		for (i = 0; i < MEMCG_NR_STAT; i++)
-> +			stat[i] += raw_cpu_read(memcg->vmstats_percpu->stat[i]);
-> +
-> +	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
-> +		for (i = 0; i < MEMCG_NR_STAT; i++)
-> +			atomic_long_add(stat[i], &mi->vmstats[i]);
-> +
-> +	for_each_node(node) {
-> +		struct mem_cgroup_per_node *pn = memcg->nodeinfo[node];
-> +		struct mem_cgroup_per_node *pi;
-> +
-> +		for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
-> +			stat[i] = 0;
-> +
-> +		for_each_online_cpu(cpu)
-> +			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
-> +				stat[i] += raw_cpu_read(
-> +					pn->lruvec_stat_cpu->count[i]);
-> +
-> +		for (pi = pn; pi; pi = parent_nodeinfo(pi, node))
-> +			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
-> +				atomic_long_add(stat[i], &pi->lruvec_stat[i]);
-> +	}
+> +       return !!(p->flags & PF_KTHREAD);
+
+The !! is not really needed.
+Probably you followed is_idle_task() above (where it's also not needed).
+
 > +}
 > +
->  static void memcg_offline_kmem(struct mem_cgroup *memcg)
->  {
->  	struct cgroup_subsys_state *css;
-> @@ -4805,6 +4840,11 @@ static void __mem_cgroup_free(struct mem_cgroup *memcg)
->  {
->  	int node;
->  
-> +	/*
-> +	 * Flush percpu vmstats to guarantee the value correctness
-> +	 * on parent's and all ancestor levels.
-> +	 */
-> +	memcg_flush_percpu_vmstats(memcg);
->  	for_each_node(node)
->  		free_mem_cgroup_per_node_info(memcg, node);
->  	free_percpu(memcg->vmstats_percpu);
-> -- 
-> 2.21.0
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Michal Hocko
-SUSE Labs
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
