@@ -7,46 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDBDC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB08BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8EF20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24172085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749773;
-	bh=Ifj00gfVsgvP+iQz6eKGgCcOciA1KGPr8g0npFZqP+o=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=waST58Mct8UYaf+W6a2SwB0LL13KuMA5oTAijnEjr57lY5P6wzgnoVVu4XAr+TrHu
-	 KIJ7jHtT1Z18VQ6h23AAjpFjZ1+V6Wq0lLg4KLWpPb2QUaIqPpt/x8laHVuNfhJOaR
-	 urFFXyRINtD6nOh9ke4FS4LlvXKoHVx2OoF1qzUE=
+	s=default; t=1565749775;
+	bh=VwqIu6Zs5et+zIwo6WWfsCX9KCS+VO+NChuttBxxm/o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2Bz4cuUmxvynAmsqQJ1sBHnCnSxSRA09+H04vExwJiqhvnjtUqI0POKYoM7XIsDmY
+	 Cax8FzGDO2adX2JtaZrV75ftdgxTP0eD02nN3C8zGTxZYL//pY/Xym2zXDjYCO4WDI
+	 AF+7Coe9gDZfTHWlnTTUlXIN3cnf25H2Ch9qyzlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729859AbfHNCXb (ORCPT
+        id S1729680AbfHNC3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:23:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52458 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:29:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729603AbfHNCXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:23:25 -0400
+        id S1729856AbfHNCXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:23:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 420E620679;
-        Wed, 14 Aug 2019 02:23:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA40B216F4;
+        Wed, 14 Aug 2019 02:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749404;
-        bh=Ifj00gfVsgvP+iQz6eKGgCcOciA1KGPr8g0npFZqP+o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hb/1zdwHXCKd+xV+DdzOi+yzo4OIWDSiOzFQQ2oRdT3G5HCuGf72KVUfi0GCOFBXD
-         ArUihD3tDGNaEOm1RZ/1azB8WZ9VN3491/7tOKjNL0d+dRgMppQW086mL6J9d9Qe9E
-         7AlS8y+/ZMhBNEsi2isz4O3Y5tbN0ZjODxuC4nSw=
+        s=default; t=1565749410;
+        bh=VwqIu6Zs5et+zIwo6WWfsCX9KCS+VO+NChuttBxxm/o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=F7pIwrkxZ2I4Y+9j6FVXNDWujAXAZZvhAVW2bCmYk5DtefD5xug0I+ff3cfZFW6p9
+         RAetzlFDq0loEcHH5JG3fOcnG04wNIlSwaqCZ+PiKXRjSQ8CSvjJFVwR+ytcoJ2lSu
+         V05DbjcFz4Exiq+hOfV/fX6d3D5iM+kifoZWR1yA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Trukhanov <lahvuun@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 01/33] HID: Add 044f:b320 ThrustMaster, Inc. 2 in 1 DT
-Date:   Tue, 13 Aug 2019 22:22:51 -0400
-Message-Id: <20190814022323.17111-1-sashal@kernel.org>
+Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
+        Jarod Wilson <jarod@redhat.com>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/33] bonding: Force slave speed check after link state recovery for 802.3ad
+Date:   Tue, 13 Aug 2019 22:22:55 -0400
+Message-Id: <20190814022323.17111-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190814022323.17111-1-sashal@kernel.org>
+References: <20190814022323.17111-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,65 +63,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Trukhanov <lahvuun@gmail.com>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit 65f11c72780fa9d598df88def045ccb6a885cf80 ]
+[ Upstream commit 12185dfe44360f814ac4ead9d22ad2af7511b2e9 ]
 
-Enable force feedback for the Thrustmaster Dual Trigger 2 in 1 Rumble Force
-gamepad. Compared to other Thrustmaster devices, left and right rumble
-motors here are swapped.
+The following scenario was encountered during testing of logical
+partition mobility on pseries partitions with bonded ibmvnic
+adapters in LACP mode.
 
-Signed-off-by: Ilya Trukhanov <lahvuun@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+1. Driver receives a signal that the device has been
+   swapped, and it needs to reset to initialize the new
+   device.
+
+2. Driver reports loss of carrier and begins initialization.
+
+3. Bonding driver receives NETDEV_CHANGE notifier and checks
+   the slave's current speed and duplex settings. Because these
+   are unknown at the time, the bond sets its link state to
+   BOND_LINK_FAIL and handles the speed update, clearing
+   AD_PORT_LACP_ENABLE.
+
+4. Driver finishes recovery and reports that the carrier is on.
+
+5. Bond receives a new notification and checks the speed again.
+   The speeds are valid but miimon has not altered the link
+   state yet.  AD_PORT_LACP_ENABLE remains off.
+
+Because the slave's link state is still BOND_LINK_FAIL,
+no further port checks are made when it recovers. Though
+the slave devices are operational and have valid speed
+and duplex settings, the bond will not send LACPDU's. The
+simplest fix I can see is to force another speed check
+in bond_miimon_commit. This way the bond will update
+AD_PORT_LACP_ENABLE if needed when transitioning from
+BOND_LINK_FAIL to BOND_LINK_UP.
+
+CC: Jarod Wilson <jarod@redhat.com>
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-tmff.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/net/bonding/bond_main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/hid/hid-tmff.c b/drivers/hid/hid-tmff.c
-index b83376077d722..cfa0cb22c9b3c 100644
---- a/drivers/hid/hid-tmff.c
-+++ b/drivers/hid/hid-tmff.c
-@@ -34,6 +34,8 @@
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 5b116ec756b4e..0c96dabeb7f86 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2129,6 +2129,15 @@ static void bond_miimon_commit(struct bonding *bond)
+ 	bond_for_each_slave(bond, slave, iter) {
+ 		switch (slave->new_link) {
+ 		case BOND_LINK_NOCHANGE:
++			/* For 802.3ad mode, check current slave speed and
++			 * duplex again in case its port was disabled after
++			 * invalid speed/duplex reporting but recovered before
++			 * link monitoring could make a decision on the actual
++			 * link status
++			 */
++			if (BOND_MODE(bond) == BOND_MODE_8023AD &&
++			    slave->link == BOND_LINK_UP)
++				bond_3ad_adapter_speed_duplex_changed(slave);
+ 			continue;
  
- #include "hid-ids.h"
- 
-+#define THRUSTMASTER_DEVICE_ID_2_IN_1_DT	0xb320
-+
- static const signed short ff_rumble[] = {
- 	FF_RUMBLE,
- 	-1
-@@ -88,6 +90,7 @@ static int tmff_play(struct input_dev *dev, void *data,
- 	struct hid_field *ff_field = tmff->ff_field;
- 	int x, y;
- 	int left, right;	/* Rumbling */
-+	int motor_swap;
- 
- 	switch (effect->type) {
- 	case FF_CONSTANT:
-@@ -112,6 +115,13 @@ static int tmff_play(struct input_dev *dev, void *data,
- 					ff_field->logical_minimum,
- 					ff_field->logical_maximum);
- 
-+		/* 2-in-1 strong motor is left */
-+		if (hid->product == THRUSTMASTER_DEVICE_ID_2_IN_1_DT) {
-+			motor_swap = left;
-+			left = right;
-+			right = motor_swap;
-+		}
-+
- 		dbg_hid("(left,right)=(%08x, %08x)\n", left, right);
- 		ff_field->value[0] = left;
- 		ff_field->value[1] = right;
-@@ -238,6 +248,8 @@ static const struct hid_device_id tm_devices[] = {
- 		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb304),   /* FireStorm Dual Power 2 (and 3) */
- 		.driver_data = (unsigned long)ff_rumble },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, THRUSTMASTER_DEVICE_ID_2_IN_1_DT),   /* Dual Trigger 2-in-1 */
-+		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb323),   /* Dual Trigger 3-in-1 (PC Mode) */
- 		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb324),   /* Dual Trigger 3-in-1 (PS3 Mode) */
+ 		case BOND_LINK_UP:
 -- 
 2.20.1
 
