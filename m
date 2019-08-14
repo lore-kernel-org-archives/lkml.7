@@ -2,51 +2,58 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DD4C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED72EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B76820842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB0B820842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748893;
-	bh=hwoe9K6zNXadhDX/Sk9lr3C+DDaxgXsfHjJbaiV1PpU=;
+	s=default; t=1565748897;
+	bh=IbS/dvGQcin+XStg48DDmBF4AvJXci0GBk5InKsDwco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dS7rk7z9ehqpAkzSIwg5RTRuuEjqAsnZ+Eer4DTC5QpMmHN3C0vzTR19f3Z1++lbz
-	 /+8XlSbFTGMnhi4jLyC6HbuprFZFOvmDwXUPw95M2ENNSWREJcnc9IeUHrf4+Hhcwr
-	 eim8wIreXPPQHmc2OL+bG/FOsge0X7UbG+Bido+g=
+	b=MWbFIRzGRJvSTl+hpqeCZVqxs78EIlQMaclAzx09yAYu2iwsPoN1t6SYI1vkjhrdr
+	 liBHVwqPd8es/h2Qx072Ua/khj2I8qj6EMWciH/edC6593IPVVYJq7OmfsgpzDSFdh
+	 HD+UHoMrRWMlGXuImNir7ntCggG5ws72aFpZkEwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbfHNCOv (ORCPT
+        id S1728007AbfHNCOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:14:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46624 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:14:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728781AbfHNCOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:14:42 -0400
+        id S1727669AbfHNCOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:14:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74B5A20843;
-        Wed, 14 Aug 2019 02:14:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BE5E2085A;
+        Wed, 14 Aug 2019 02:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748881;
-        bh=hwoe9K6zNXadhDX/Sk9lr3C+DDaxgXsfHjJbaiV1PpU=;
+        s=default; t=1565748874;
+        bh=IbS/dvGQcin+XStg48DDmBF4AvJXci0GBk5InKsDwco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gW2e9jqIknW7DW8n9+RDhUzr5RirDLc1Yablk1iJoRQWi9VOrUIAB7wKGItPQW7NQ
-         5t21BXx1RKPE8dZtrUuwPQNNlRn9qt8TQrrLX+nBrkAbsh3LyjZOVh2w62G5Xj7Q2E
-         /8ryCyE8tjqQVD8DCmkcUAcm0dB76FVIl0SbQR/g=
+        b=vqAom6Jp9NqLrnJ5vtrzLAgzFepea7uk0rVWPSLkVMrDGE6Fu03UX66P/QIId7bs+
+         RjtJcsA5NDTmv81kiZ4eZYY7F9jDC8nmUmAHoiF1aBNFRK1fOKb+dAsTm0Bwf+MNxB
+         Sg25aprJfcHPhTaymcOlK/EGwqc0BxyJ7MnMv42w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 120/123] dt-bindings: riscv: fix the schema compatible string for the HiFive Unleashed board
-Date:   Tue, 13 Aug 2019 22:10:44 -0400
-Message-Id: <20190814021047.14828-120-sashal@kernel.org>
+Cc:     He Zhe <zhe.he@windriver.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 118/123] perf cpumap: Fix writing to illegal memory in handling cpumap mask
+Date:   Tue, 13 Aug 2019 22:10:42 -0400
+Message-Id: <20190814021047.14828-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -59,40 +66,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Walmsley <paul.walmsley@sifive.com>
+From: He Zhe <zhe.he@windriver.com>
 
-[ Upstream commit b390e0bfd2996f1215231395f4e25a4c011eeaf9 ]
+[ Upstream commit 5f5e25f1c7933a6e1673515c0b1d5acd82fea1ed ]
 
-The YAML binding document for SiFive boards has an incorrect
-compatible string for the HiFive Unleashed board.  Change it to match
-the name of the board on the SiFive web site:
+cpu_map__snprint_mask() would write to illegal memory pointed by
+zalloc(0) when there is only one cpu.
 
-   https://www.sifive.com/boards/hifive-unleashed
+This patch fixes the calculation and adds sanity check against the input
+parameters.
 
-which also matches the contents of the board DT data file:
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts#n13
-
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Fixes: 4400ac8a9a90 ("perf cpumap: Introduce cpu_map__snprint_mask()")
+Link: http://lkml.kernel.org/r/1564734592-15624-2-git-send-email-zhe.he@windriver.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/riscv/sifive.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/cpumap.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/riscv/sifive.yaml b/Documentation/devicetree/bindings/riscv/sifive.yaml
-index 9d17dc2f3f843..3ab532713dc12 100644
---- a/Documentation/devicetree/bindings/riscv/sifive.yaml
-+++ b/Documentation/devicetree/bindings/riscv/sifive.yaml
-@@ -19,7 +19,7 @@ properties:
-   compatible:
-     items:
-       - enum:
--          - sifive,freedom-unleashed-a00
-+          - sifive,hifive-unleashed-a00
-       - const: sifive,fu540-c000
-       - const: sifive,fu540
- ...
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 0b599229bc7e9..0aba5b39c21ef 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -701,7 +701,10 @@ size_t cpu_map__snprint_mask(struct cpu_map *map, char *buf, size_t size)
+ 	unsigned char *bitmap;
+ 	int last_cpu = cpu_map__cpu(map, map->nr - 1);
+ 
+-	bitmap = zalloc((last_cpu + 7) / 8);
++	if (buf == NULL)
++		return 0;
++
++	bitmap = zalloc(last_cpu / 8 + 1);
+ 	if (bitmap == NULL) {
+ 		buf[0] = '\0';
+ 		return 0;
 -- 
 2.20.1
 
