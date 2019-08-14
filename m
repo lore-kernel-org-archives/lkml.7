@@ -6,133 +6,106 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484C1C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC63C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20812208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D4A2184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbfHNXYT (ORCPT
+        id S1729333AbfHNXYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 19:24:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52154 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728388AbfHNXYT (ORCPT
+        Wed, 14 Aug 2019 19:24:39 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:36276 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728388AbfHNXYj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 19:24:19 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7ENNWjs008948;
-        Wed, 14 Aug 2019 19:24:06 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ucscbmpbe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 14 Aug 2019 19:24:05 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7ENNb1Q009522;
-        Wed, 14 Aug 2019 19:24:05 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ucscbmpax-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 14 Aug 2019 19:24:04 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7ENJx9n020765;
-        Wed, 14 Aug 2019 23:24:03 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma03dal.us.ibm.com with ESMTP id 2u9nj78phs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 14 Aug 2019 23:24:03 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7ENO2TB53084446
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 14 Aug 2019 23:24:02 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 96D3AB2065;
-        Wed, 14 Aug 2019 23:24:02 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 782DBB205F;
-        Wed, 14 Aug 2019 23:24:02 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 14 Aug 2019 23:24:02 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 98C3816C1049; Wed, 14 Aug 2019 16:24:04 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 16:24:04 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Akira Yokosawa <akiyks@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Lustig <dlustig@nvidia.com>
-Subject: Re: [PATCH 0/2] tools/memory-model: Update comment of jugdelitmus.sh
-Message-ID: <20190814232404.GC28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190801222026.GA11315@linux.ibm.com>
- <20190801222056.12144-27-paulmck@linux.ibm.com>
- <beb07965-eb83-9cd1-2b49-cfc24928dce5@gmail.com>
- <20190812180649.GM28441@linux.ibm.com>
- <277937a7-0f50-ec1c-09ec-95ffbf85541e@gmail.com>
+        Wed, 14 Aug 2019 19:24:39 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id E90BE80406; Thu, 15 Aug 2019 01:24:22 +0200 (CEST)
+Date:   Thu, 15 Aug 2019 01:24:35 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>, tytso@mit.edu,
+        nhorman@tuxdriver.com
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Chen Yu <yu.c.chen@intel.com>, Jonathan Corbet <corbet@lwn.net>
+Subject: Non-random RDRAND Re: [PATCH] x86/CPU/AMD: Clear RDRAND CPUID bit on
+ AMD family 15h/16h
+Message-ID: <20190814232434.GA31769@amd>
+References: <776cb5c2d33e7fd0d2893904724c0e52b394f24a.1565817448.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
 Content-Disposition: inline
-In-Reply-To: <277937a7-0f50-ec1c-09ec-95ffbf85541e@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-14_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908140212
+In-Reply-To: <776cb5c2d33e7fd0d2893904724c0e52b394f24a.1565817448.git.thomas.lendacky@amd.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 12:11:36AM +0900, Akira Yokosawa wrote:
-> Hi Paul,
-> 
-> I see some inconsistency between the header comment of judgelitmus.sh
-> and the updated script.
-> 
-> This patch set updates the header. It is relative to current lkmm-dev
-> of -rcu.
-> 
-> Patch 1/2 corresponds to ("tools/memory-model: Move from
-> .AArch64.litmus.out to .litmus.AArch.out").
-> 
-> Patch 2/2 corresponds to ("tools/memory-model: Add data-race
-> capabilities to judgelitmus.sh").
-> 
-> You should be able to use each patch as a fix-up commit respectively.
-> I'm OK either with them applied at the head of the branch or
-> with them merged into your commits.
 
-Good catches, thank you for looking these commits over!  I will squash
-your changes into the original commits with attribution.
+--DocE+STaALJfprDB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-							Thanx, Paul
+On Wed 2019-08-14 21:17:41, Lendacky, Thomas wrote:
+> From: Tom Lendacky <thomas.lendacky@amd.com>
+>=20
+> There have been reports of RDRAND issues after resuming from suspend on
+> some AMD family 15h and family 16h systems. This issue stems from BIOS
+> not performing the proper steps during resume to ensure RDRAND continues
+> to function properly.
 
->         Thanks, Akira
-> --
-> Akira Yokosawa (2):
->   tools/memory-model: Reflect updated file name convention in
->     judgelitmus.sh
->   tools/memory-model: Mention data-race capability in jugdelitmus.sh's
->     header
-> 
->  tools/memory-model/scripts/judgelitmus.sh | 20 +++++++++++++-------
->  1 file changed, 13 insertions(+), 7 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
-> 
+Burn it with fire!
+
+I mean... people were afraid RDRAND would be backdoored, and you now
+confirm ... it indeed _is_ backdoored? /., here's news for you!
+
+So what is the impact? Does it give random-looking but predictable
+numbers after resume? Does it give all zeros? Something else?
+
+> =20
+> +	rdrand_force	[X86]
+> +			On certain AMD processors, the advertisement of the
+> +			RDRAND instruction has been disabled by the kernel
+> +			because of buggy BIOS support, specifically around the
+> +			suspend/resume path. This option allows for overriding
+> +			that decision if it is known that the BIOS support for
+> +			RDRAND is not buggy on the system.
+
+But this is not how we normally deal with buggy BIOSes. We don't want
+user to have to decide this...
+
+Should we introduce black-list or white-list of BIOS versions?
+
+Hmm. Actually.
+
+You are the CPU vendor. Surely you can tell us how to init RDRAND in
+kernel if BIOS failed to do that... can you?
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--DocE+STaALJfprDB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1UmDIACgkQMOfwapXb+vIddACfRHWnR0cLHZEfhG6DY3MIyTXq
+QbAAoIiJ1aAu2CCmVd4tBCBEmPSkkrD3
+=0qd7
+-----END PGP SIGNATURE-----
+
+--DocE+STaALJfprDB--
