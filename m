@@ -2,60 +2,55 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFC6C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B13C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A644D20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72F5214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802922;
-	bh=fGHYA2jkSjAb5qy2817gBuqAcPDx6rCnCyhCJyo463A=;
+	s=default; t=1565802926;
+	bh=com3TRxcRZ4072zwSKf4aPMzXa1qbohAh+UwbVWjgAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=izUsq+AmBiplx7AUtxjFNEyB/l0+KtiEKXNClguA+CHERdG5WKWfpPnGuHcalv6Ta
-	 Jfn9rsdews2fmZHnxif9yEBD0IZZzgo3i0MKtfaYcxv5zzYogVIQ+dW5PzZs4H25rM
-	 I46m9iXhyH4QddMEcEEGSm99QQWU32JAuRgVhkDo=
+	b=Q5ClsByP5m6XFV8QS4j4ntK7NPgzchM6utP1zR3tEmRcwTSamUkkzLSz50PLF9yd3
+	 Qxut7eAKrOzrd+1R65w0Rvn/M5WeO9e1PLgnAMzlmtRgmPn0S/qNarTbl9hFh3Kp7e
+	 iMV5RtUiZdqKBZouGHe1oq/y0Zdp6qKO//9a/Tbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731226AbfHNRPV (ORCPT
+        id S1731234AbfHNRPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:15:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39904 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:15:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731213AbfHNRPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:15:18 -0400
+        id S1731222AbfHNRPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:15:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4D922173B;
-        Wed, 14 Aug 2019 17:15:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 425C821743;
+        Wed, 14 Aug 2019 17:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802918;
-        bh=fGHYA2jkSjAb5qy2817gBuqAcPDx6rCnCyhCJyo463A=;
+        s=default; t=1565802920;
+        bh=com3TRxcRZ4072zwSKf4aPMzXa1qbohAh+UwbVWjgAw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fbv1XCZNXlQ0PNNjb1yVvqjOiN7Zv+9OJ2OOx8tZdKCmEkOLQwKBAr94S0YM/lS2/
-         /BLLvBoXnIRm8JpNtyCphO0OH73gOUkG8DAXFxwXowx1Q9oSmUQ3Dvf9UgQRg3z/xU
-         epMeEsW+eOeafNW9yjhpGoB5bqQpMLOq3vVk2BPM=
+        b=eeTohfxxyvmZiErx7KUVzRsg38BelEpykxyPujHBlOgrwXuN/xGpuxBzm2R++Q7Rz
+         mo3troRVIAXJHuEndMgdyYdsvdpj8BgEYVikFm43cJotwHSoQOBhyUOzsbsTpXgE5z
+         rN4sMD1+Mlk6s2+8crf6HsrqX3+dUuaaa7HSlLfk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Frank Li <Frank.li@nxp.com>, Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 50/69] perf/core: Fix creating kernel counters for PMUs that override event->cpu
-Date:   Wed, 14 Aug 2019 19:01:48 +0200
-Message-Id: <20190814165748.941530786@linuxfoundation.org>
+Subject: [PATCH 4.14 41/69] perf probe: Avoid calling freeing routine multiple times for same pointer
+Date:   Wed, 14 Aug 2019 19:01:39 +0200
+Message-Id: <20190814165748.197878283@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -68,58 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4ce54af8b33d3e21ca935fc1b89b58cbba956051 ]
+[ Upstream commit d95daf5accf4a72005daa13fbb1d1bd8709f2861 ]
 
-Some hardware PMU drivers will override perf_event.cpu inside their
-event_init callback. This causes a lockdep splat when initialized through
-the kernel API:
+When perf_add_probe_events() we call cleanup_perf_probe_events() for the
+pev pointer it receives, then, as part of handling this failure the main
+'perf probe' goes on and calls cleanup_params() and that will again call
+cleanup_perf_probe_events()for the same pointer, so just set nevents to
+zero when handling the failure of perf_add_probe_events() to avoid the
+double free.
 
- WARNING: CPU: 0 PID: 250 at kernel/events/core.c:2917 ctx_sched_out+0x78/0x208
- pc : ctx_sched_out+0x78/0x208
- Call trace:
-  ctx_sched_out+0x78/0x208
-  __perf_install_in_context+0x160/0x248
-  remote_function+0x58/0x68
-  generic_exec_single+0x100/0x180
-  smp_call_function_single+0x174/0x1b8
-  perf_install_in_context+0x178/0x188
-  perf_event_create_kernel_counter+0x118/0x160
-
-Fix this by calling perf_install_in_context with event->cpu, just like
-perf_event_open
-
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Frank Li <Frank.li@nxp.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/r/c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/n/tip-x8qgma4g813z96dvtw9w219q@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-probe.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 3d4eb6f840eba..ea4f3f7a0c6f3 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10474,7 +10474,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
- 		goto err_unlock;
- 	}
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index c0065923a525f..e1ac51aaedcff 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -712,6 +712,16 @@ __cmd_probe(int argc, const char **argv)
  
--	perf_install_in_context(ctx, event, cpu);
-+	perf_install_in_context(ctx, event, event->cpu);
- 	perf_unpin_context(ctx);
- 	mutex_unlock(&ctx->mutex);
- 
+ 		ret = perf_add_probe_events(params.events, params.nevents);
+ 		if (ret < 0) {
++
++			/*
++			 * When perf_add_probe_events() fails it calls
++			 * cleanup_perf_probe_events(pevs, npevs), i.e.
++			 * cleanup_perf_probe_events(params.events, params.nevents), which
++			 * will call clear_perf_probe_event(), so set nevents to zero
++			 * to avoid cleanup_params() to call clear_perf_probe_event() again
++			 * on the same pevs.
++			 */
++			params.nevents = 0;
+ 			pr_err_with_code("  Error: Failed to add events.", ret);
+ 			return ret;
+ 		}
 -- 
 2.20.1
 
