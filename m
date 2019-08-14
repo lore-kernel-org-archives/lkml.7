@@ -2,396 +2,234 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D57C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCE9C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F338208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD9B12084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:54:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ey5X/Dil"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dDd5TTuP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbfHNFxv (ORCPT
+        id S1727944AbfHNFyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 01:53:51 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:49595 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727503AbfHNFwS (ORCPT
+        Wed, 14 Aug 2019 01:54:02 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:58460 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbfHNFyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 01:52:18 -0400
-Received: by mail-pl1-f202.google.com with SMTP id b30so10368092pla.16
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 22:52:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=7BwB+wMWUUc9lMbBgT2UM/fkLk+IPczvj1DNZaIo7js=;
-        b=Ey5X/DilM5yXDr1T3rkvjeSA4hQHEB4dnHsM7LOmmXWQ1/JZbBl9nonR9D7Nuk547j
-         wMVN/+QGLNp4A+0wFkQ6PJVsPYPCKN5tG9DKL3L/1Dk3TxaVt5xIjCVz3lLbTnUHxdtv
-         aPOR9TsoQWO1Q/lN9o5yKj24mxcDILGdu+TtsU08Ame99/0Zlb1qnku60EFCLP8W5Rme
-         GHEFWDZHSNF99wNETg3ZviH9j4mAxBgARV0lvsLpMhFse+V1Q53zMJTDyrN79ej1SCUX
-         dq7EfDzWUSR+ZBau3K20ETM0YxtxqNZzXThMASIqUIoU+hQcv9qscn9EKkX9WDfC2xPJ
-         Cf3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=7BwB+wMWUUc9lMbBgT2UM/fkLk+IPczvj1DNZaIo7js=;
-        b=MlAYC89BWWOsK8BR3tBPb90JjpZoupOn7psM+q9sXAiLcUj50Q1uPXo3ILMOOcLwfO
-         ykO8o3zlbreAcyxAQQqFPUL7PrILLMfflWrmiHXPxMf7ifJafytnaCRcQ2e1AT7jW+w3
-         v22NFFZ42FFXJPxGzTALu7K+VgoCjXTJZedoyCDXflNtman41XQLb3OmBCXhSasCJhFd
-         c190IVtODlNKezgB9ukAXHSjbW2xr04igOc77VpAzm+4PiUFsEU4Qgc3n/AOkKPyjl1a
-         myKlJARXlpd+9j0V8KAz5znZq2fAK9rvpdcNVPQw7iAwoJu/3jnwqh0Y/a3gnGeARAbw
-         IWAw==
-X-Gm-Message-State: APjAAAVzN6DNQl1B1jiQLoZbn2uXegv3jA5SO6z/s87mkRRGjwGjQU4C
-        w4B6/rb3DFE+G6EMAs4fv4I6ZECYUQTC1vK3Mr6Aag==
-X-Google-Smtp-Source: APXvYqwRpfR5V171aALBxNgHtd8qW4LD3QH7VWqhw02xxR40bMh/iSepQ4+LQeq6w+Rwc9ZKoXuPxv0TIzKmy+69DurD0Q==
-X-Received: by 2002:a63:c64b:: with SMTP id x11mr37297091pgg.319.1565761936948;
- Tue, 13 Aug 2019 22:52:16 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 22:50:53 -0700
-In-Reply-To: <20190814055108.214253-1-brendanhiggins@google.com>
-Message-Id: <20190814055108.214253-4-brendanhiggins@google.com>
-Mime-Version: 1.0
-References: <20190814055108.214253-1-brendanhiggins@google.com>
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-Subject: [PATCH v13 03/18] kunit: test: add string_stream a std::stream like
- string builder
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+        Wed, 14 Aug 2019 01:54:01 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7E5mmNH062458;
+        Wed, 14 Aug 2019 05:53:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
+ : from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=corp-2019-08-05;
+ bh=rRiXO74iWklLyv8JVdtr2hELdy+2gwwC6aWR8IUkp3U=;
+ b=dDd5TTuP02nIVLxRT8hb8591vNdv6uTSXo9GsdTVSdpqiEqmxHl6RWAhVwjL+59rtjQB
+ P3mdophG43L67lid0Z5IRJOQwC3Pq6+75a7Uo2RahSf3hCPmifPI75mDxWmNaNVYTOpE
+ uB1vPW1km7dGvcfWZtqxTENR7OZBhggQVixN3YFfZatg1L4+9nTMct64OkqumwUkf4Lg
+ Vl6MyWz/VI4b6sCGcnbhha8DBX9HPlBiu/q+g9JhTfUX4jvtFeIj6NJ+yPeDqRWnoVQL
+ lEaUHRQBqUkHf7DjtGoAQQNlCu9CUrYbP6bhw5fxInsLROVTfx48xFuEkHSe1LPRFYNo Zg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2u9nvpajjx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 14 Aug 2019 05:53:40 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7E5rXGG178517;
+        Wed, 14 Aug 2019 05:53:39 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2ubwqsqugc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 14 Aug 2019 05:53:39 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7E5qsil000744;
+        Wed, 14 Aug 2019 05:52:54 GMT
+Received: from abi.no.oracle.com (/141.143.213.43)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 13 Aug 2019 22:52:54 -0700
+Message-ID: <167a0b0c90a1ecc65da7bfc109f6d8ff860b70da.camel@oracle.com>
+Subject: Re: [RFC 01/19] kbuild: Fixes to rules for host-cshlib and
+ host-cxxshlib
+From:   Knut Omang <knut.omang@oracle.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shreyans Devendra Doshi <0xinfosect0r@gmail.com>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Hidenori Yamaji <hidenori.yamaji@sony.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Timothy Bird <Tim.Bird@sony.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
+        Stephen Boyd <sboyd@kernel.org>
+Date:   Wed, 14 Aug 2019 07:52:50 +0200
+In-Reply-To: <CAK7LNASgfd6KPRQ=hcqKkpZ6EVhFmbBjCXa30bvEqscu_5dwbQ@mail.gmail.com>
+References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
+         <be2c361eac49ded2848b2a555b75e30cc3c24e71.1565676440.git-series.knut.omang@oracle.com>
+         <CAK7LNASX4jPRxRxD+JafAfKqjck=x27HuHZgPV1VFfW8MzcwZA@mail.gmail.com>
+         <14b99d26a4cff1c813c92818dc1234007fa06fc9.camel@oracle.com>
+         <CAK7LNASgfd6KPRQ=hcqKkpZ6EVhFmbBjCXa30bvEqscu_5dwbQ@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908140057
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908140056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A number of test features need to do pretty complicated string printing
-where it may not be possible to rely on a single preallocated string
-with parameters.
+On Wed, 2019-08-14 at 11:02 +0900, Masahiro Yamada wrote:
+> Hi Knut,
+> 
+> On Wed, Aug 14, 2019 at 1:19 AM Knut Omang <knut.omang@oracle.com> wrote:
+> > On Tue, 2019-08-13 at 23:01 +0900, Masahiro Yamada wrote:
+> > > On Tue, Aug 13, 2019 at 3:13 PM Knut Omang <knut.omang@oracle.com> wrote:
+> > > > C++ libraries interfacing to C APIs might sometimes need some glue
+> > > > logic more easily written in C.
+> > > > Allow a C++ library to also contain 0 or more C objects.
+> > > > 
+> > > > Also fix rules for both C and C++ shared libraries:
+> > > > - C++ shared libraries depended on .c instead of .cc files
+> > > > - Rules were referenced as -objs instead of the intended
+> > > >   -cobjs and -cxxobjs following the pattern from hostprogs*.
+> > > > 
+> > > > Signed-off-by: Knut Omang <knut.omang@oracle.com>
+> > > 
+> > > How is this patch related to the rest of this series?
+> > 
+> > This is just my (likely naive) way I to get what I had working
+> > using autotools in the Github version of KTF) translated into something
+> > comparable using kbuild only. We need to build a shared library consisting
+> > of a few C++ files and a very simple C file, and a couple of simple binaries,
+> > and the rule in there does seem to take .c files and subject them to the
+> > C++ compiler, which makes this difficult to achieve?
+> 
+> Looking at the diff stat of the cover-letter,
+> the rest of this patch series is touching only
+> Documentation/ and tools/testing/kselftests/.
+> 
+> So, this one is unused by the rest of the changes, isn't it?
+> Am I missing something?
+> 
+> 
+> 
+> > > This patch breaks GCC-plugins.
+> > > Did you really compile-test this patch before the submission?
+> > 
+> > Sorry for my ignorance here:
+> > I ran through the kernel build and installed the resulting kernel
+> > on a VM that I used to test this, if that's what you are asking
+> > about?
+> > 
+> > Do I need some unusual .config options or run a special make target
+> > to trigger the problem you see?
+> > 
+> > I used a recent Fedora config with default values for new options,
+> > and ran the normal default make target (also with O=) and make selftests
+> > to test the patch itself.
+> 
+> I just built allmodconfig for arm.
+> 
+> (The 0-day bot tests allmodconfig for most of architectures,
+> so you may receive error reports anyway.)
+> 
+> 
+> With your patch, I got the following:
+> 
+> 
+> masahiro@grover:~/ref/linux$ make  ARCH=arm
+> CROSS_COMPILE=arm-linux-gnueabihf-  allmodconfig all
+>   HOSTCC  scripts/basic/fixdep
+>   HOSTCC  scripts/kconfig/conf.o
+>   HOSTCC  scripts/kconfig/confdata.o
+>   HOSTCC  scripts/kconfig/expr.o
+>   LEX     scripts/kconfig/lexer.lex.c
+>   YACC    scripts/kconfig/parser.tab.h
+>   HOSTCC  scripts/kconfig/lexer.lex.o
+>   YACC    scripts/kconfig/parser.tab.c
+>   HOSTCC  scripts/kconfig/parser.tab.o
+>   HOSTCC  scripts/kconfig/preprocess.o
+>   HOSTCC  scripts/kconfig/symbol.o
+>   HOSTLD  scripts/kconfig/conf
+> scripts/kconfig/conf  --allmodconfig Kconfig
+> #
+> # configuration written to .config
+> #
+>   SYSHDR  arch/arm/include/generated/uapi/asm/unistd-common.h
+>   SYSHDR  arch/arm/include/generated/uapi/asm/unistd-oabi.h
+>   SYSHDR  arch/arm/include/generated/uapi/asm/unistd-eabi.h
+>   HOSTCC  scripts/dtc/dtc.o
+>   HOSTCC  scripts/dtc/flattree.o
+>   HOSTCC  scripts/dtc/fstree.o
+>   HOSTCC  scripts/dtc/data.o
+>   HOSTCC  scripts/dtc/livetree.o
+>   HOSTCC  scripts/dtc/treesource.o
+>   HOSTCC  scripts/dtc/srcpos.o
+>   HOSTCC  scripts/dtc/checks.o
+>   HOSTCC  scripts/dtc/util.o
+>   LEX     scripts/dtc/dtc-lexer.lex.c
+>   YACC    scripts/dtc/dtc-parser.tab.h
+>   HOSTCC  scripts/dtc/dtc-lexer.lex.o
+>   YACC    scripts/dtc/dtc-parser.tab.c
+>   HOSTCC  scripts/dtc/dtc-parser.tab.o
+>   HOSTCC  scripts/dtc/yamltree.o
+>   HOSTLD  scripts/dtc/dtc
+>   CC      scripts/gcc-plugins/latent_entropy_plugin.o
+> cc1: error: cannot load plugin ./scripts/gcc-plugins/arm_ssp_per_task_plugin.so
+>    ./scripts/gcc-plugins/arm_ssp_per_task_plugin.so: cannot open
+> shared object file: No such file or directory
+> cc1: error: cannot load plugin ./scripts/gcc-plugins/structleak_plugin.so
+>    ./scripts/gcc-plugins/structleak_plugin.so: cannot open shared
+> object file: No such file or directory
+> cc1: error: cannot load plugin ./scripts/gcc-plugins/latent_entropy_plugin.so
+>    ./scripts/gcc-plugins/latent_entropy_plugin.so: cannot open shared
+> object file: No such file or directory
+> cc1: error: cannot load plugin ./scripts/gcc-plugins/randomize_layout_plugin.so
+>    ./scripts/gcc-plugins/randomize_layout_plugin.so: cannot open
+> shared object file: No such file or directory
+> make[3]: *** [scripts/Makefile.build;281:
+> scripts/gcc-plugins/latent_entropy_plugin.o] Error 1
+> make[2]: *** [scripts/Makefile.build;497: scripts/gcc-plugins] Error 2
+> make[1]: *** [Makefile;1097: scripts] Error 2
+> make: *** [Makefile;330: __build_one_by_one] Error 2
 
-So provide a library for constructing the string as you go similar to
-C++'s std::string. string_stream is really just a string builder,
-nothing more.
+Ok, I see!
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
----
- include/kunit/string-stream.h |  51 ++++++++
- kunit/Makefile                |   3 +-
- kunit/string-stream.c         | 217 ++++++++++++++++++++++++++++++++++
- 3 files changed, 270 insertions(+), 1 deletion(-)
- create mode 100644 include/kunit/string-stream.h
- create mode 100644 kunit/string-stream.c
+I'll recall this target and look into it!
 
-diff --git a/include/kunit/string-stream.h b/include/kunit/string-stream.h
-new file mode 100644
-index 0000000000000..fe98a00b75a9c
---- /dev/null
-+++ b/include/kunit/string-stream.h
-@@ -0,0 +1,51 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * C++ stream style string builder used in KUnit for building messages.
-+ *
-+ * Copyright (C) 2019, Google LLC.
-+ * Author: Brendan Higgins <brendanhiggins@google.com>
-+ */
-+
-+#ifndef _KUNIT_STRING_STREAM_H
-+#define _KUNIT_STRING_STREAM_H
-+
-+#include <linux/spinlock.h>
-+#include <linux/types.h>
-+#include <stdarg.h>
-+
-+struct string_stream_fragment {
-+	struct kunit *test;
-+	struct list_head node;
-+	char *fragment;
-+};
-+
-+struct string_stream {
-+	size_t length;
-+	struct list_head fragments;
-+	/* length and fragments are protected by this lock */
-+	spinlock_t lock;
-+	struct kunit *test;
-+	gfp_t gfp;
-+};
-+
-+struct kunit;
-+
-+struct string_stream *alloc_string_stream(struct kunit *test, gfp_t gfp);
-+
-+int __printf(2, 3) string_stream_add(struct string_stream *stream,
-+				     const char *fmt, ...);
-+
-+int string_stream_vadd(struct string_stream *stream,
-+		       const char *fmt,
-+		       va_list args);
-+
-+char *string_stream_get_string(struct string_stream *stream);
-+
-+int string_stream_append(struct string_stream *stream,
-+			 struct string_stream *other);
-+
-+bool string_stream_is_empty(struct string_stream *stream);
-+
-+int string_stream_destroy(struct string_stream *stream);
-+
-+#endif /* _KUNIT_STRING_STREAM_H */
-diff --git a/kunit/Makefile b/kunit/Makefile
-index 5efdc4dea2c08..275b565a0e81f 100644
---- a/kunit/Makefile
-+++ b/kunit/Makefile
-@@ -1 +1,2 @@
--obj-$(CONFIG_KUNIT) +=			test.o
-+obj-$(CONFIG_KUNIT) +=			test.o \
-+					string-stream.o
-diff --git a/kunit/string-stream.c b/kunit/string-stream.c
-new file mode 100644
-index 0000000000000..e6d17aacca30d
---- /dev/null
-+++ b/kunit/string-stream.c
-@@ -0,0 +1,217 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * C++ stream style string builder used in KUnit for building messages.
-+ *
-+ * Copyright (C) 2019, Google LLC.
-+ * Author: Brendan Higgins <brendanhiggins@google.com>
-+ */
-+
-+#include <kunit/string-stream.h>
-+#include <kunit/test.h>
-+#include <linux/list.h>
-+#include <linux/slab.h>
-+
-+struct string_stream_fragment_alloc_context {
-+	struct kunit *test;
-+	int len;
-+	gfp_t gfp;
-+};
-+
-+static int string_stream_fragment_init(struct kunit_resource *res,
-+				       void *context)
-+{
-+	struct string_stream_fragment_alloc_context *ctx = context;
-+	struct string_stream_fragment *frag;
-+
-+	frag = kunit_kzalloc(ctx->test, sizeof(*frag), ctx->gfp);
-+	if (!frag)
-+		return -ENOMEM;
-+
-+	frag->test = ctx->test;
-+	frag->fragment = kunit_kmalloc(ctx->test, ctx->len, ctx->gfp);
-+	if (!frag->fragment)
-+		return -ENOMEM;
-+
-+	res->allocation = frag;
-+
-+	return 0;
-+}
-+
-+static void string_stream_fragment_free(struct kunit_resource *res)
-+{
-+	struct string_stream_fragment *frag = res->allocation;
-+
-+	list_del(&frag->node);
-+	kunit_kfree(frag->test, frag->fragment);
-+	kunit_kfree(frag->test, frag);
-+}
-+
-+static struct string_stream_fragment *alloc_string_stream_fragment(
-+		struct kunit *test, int len, gfp_t gfp)
-+{
-+	struct string_stream_fragment_alloc_context context = {
-+		.test = test,
-+		.len = len,
-+		.gfp = gfp
-+	};
-+
-+	return kunit_alloc_resource(test,
-+				    string_stream_fragment_init,
-+				    string_stream_fragment_free,
-+				    gfp,
-+				    &context);
-+}
-+
-+static int string_stream_fragment_destroy(struct string_stream_fragment *frag)
-+{
-+	return kunit_resource_destroy(frag->test,
-+				      kunit_resource_instance_match,
-+				      string_stream_fragment_free,
-+				      frag);
-+}
-+
-+int string_stream_vadd(struct string_stream *stream,
-+		       const char *fmt,
-+		       va_list args)
-+{
-+	struct string_stream_fragment *frag_container;
-+	int len;
-+	va_list args_for_counting;
-+
-+	/* Make a copy because `vsnprintf` could change it */
-+	va_copy(args_for_counting, args);
-+
-+	/* Need space for null byte. */
-+	len = vsnprintf(NULL, 0, fmt, args_for_counting) + 1;
-+
-+	va_end(args_for_counting);
-+
-+	frag_container = alloc_string_stream_fragment(stream->test,
-+						      len,
-+						      stream->gfp);
-+	if (!frag_container)
-+		return -ENOMEM;
-+
-+	len = vsnprintf(frag_container->fragment, len, fmt, args);
-+	spin_lock(&stream->lock);
-+	stream->length += len;
-+	list_add_tail(&frag_container->node, &stream->fragments);
-+	spin_unlock(&stream->lock);
-+
-+	return 0;
-+}
-+
-+int string_stream_add(struct string_stream *stream, const char *fmt, ...)
-+{
-+	va_list args;
-+	int result;
-+
-+	va_start(args, fmt);
-+	result = string_stream_vadd(stream, fmt, args);
-+	va_end(args);
-+
-+	return result;
-+}
-+
-+static void string_stream_clear(struct string_stream *stream)
-+{
-+	struct string_stream_fragment *frag_container, *frag_container_safe;
-+
-+	spin_lock(&stream->lock);
-+	list_for_each_entry_safe(frag_container,
-+				 frag_container_safe,
-+				 &stream->fragments,
-+				 node) {
-+		string_stream_fragment_destroy(frag_container);
-+	}
-+	stream->length = 0;
-+	spin_unlock(&stream->lock);
-+}
-+
-+char *string_stream_get_string(struct string_stream *stream)
-+{
-+	struct string_stream_fragment *frag_container;
-+	size_t buf_len = stream->length + 1; /* +1 for null byte. */
-+	char *buf;
-+
-+	buf = kunit_kzalloc(stream->test, buf_len, stream->gfp);
-+	if (!buf)
-+		return NULL;
-+
-+	spin_lock(&stream->lock);
-+	list_for_each_entry(frag_container, &stream->fragments, node)
-+		strlcat(buf, frag_container->fragment, buf_len);
-+	spin_unlock(&stream->lock);
-+
-+	return buf;
-+}
-+
-+int string_stream_append(struct string_stream *stream,
-+			 struct string_stream *other)
-+{
-+	const char *other_content;
-+
-+	other_content = string_stream_get_string(other);
-+
-+	if (!other_content)
-+		return -ENOMEM;
-+
-+	return string_stream_add(stream, other_content);
-+}
-+
-+bool string_stream_is_empty(struct string_stream *stream)
-+{
-+	return list_empty(&stream->fragments);
-+}
-+
-+struct string_stream_alloc_context {
-+	struct kunit *test;
-+	gfp_t gfp;
-+};
-+
-+static int string_stream_init(struct kunit_resource *res, void *context)
-+{
-+	struct string_stream *stream;
-+	struct string_stream_alloc_context *ctx = context;
-+
-+	stream = kunit_kzalloc(ctx->test, sizeof(*stream), ctx->gfp);
-+	if (!stream)
-+		return -ENOMEM;
-+
-+	res->allocation = stream;
-+	stream->gfp = ctx->gfp;
-+	stream->test = ctx->test;
-+	INIT_LIST_HEAD(&stream->fragments);
-+	spin_lock_init(&stream->lock);
-+
-+	return 0;
-+}
-+
-+static void string_stream_free(struct kunit_resource *res)
-+{
-+	struct string_stream *stream = res->allocation;
-+
-+	string_stream_clear(stream);
-+}
-+
-+struct string_stream *alloc_string_stream(struct kunit *test, gfp_t gfp)
-+{
-+	struct string_stream_alloc_context context = {
-+		.test = test,
-+		.gfp = gfp
-+	};
-+
-+	return kunit_alloc_resource(test,
-+				    string_stream_init,
-+				    string_stream_free,
-+				    gfp,
-+				    &context);
-+}
-+
-+int string_stream_destroy(struct string_stream *stream)
-+{
-+	return kunit_resource_destroy(stream->test,
-+				      kunit_resource_instance_match,
-+				      string_stream_free,
-+				      stream);
-+}
--- 
-2.23.0.rc1.153.gdeed80330f-goog
+Thanks!
+Knut
+
+> 
+> 
+> 
+> 
+> 
+> 
+> 
 
