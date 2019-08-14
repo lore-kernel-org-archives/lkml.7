@@ -2,52 +2,52 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31564C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B485C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01054214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 615A4216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802598;
-	bh=ocwnyKs1rifK7iP2Y5EL/eziwLUfhU6jkrxnY1uaWtw=;
+	s=default; t=1565802601;
+	bh=x/eYL3iSlanQaQ7hgdilPPIYolaOzoMQ6/gvsF0Q6IY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MwlbG+var0K28qZ19z5U6MTe3wYbh31L+g//OJ2Phd630M6t0vkiaR24S5/zC0hpP
-	 diMJmhZa1pu2nM/q+jHgDxYu6/ksSWh+73bMofqcvmoX0S+tR/w86hMvfGHPxWcaZG
-	 nocQdJ8kE+yyCfIqNH2brJ9SOA2jQCGxlIfspMdc=
+	b=d5qTqNzvheUk9dv/2JrHG5ZlFw7TNbPT2VTDtuHKfKKiEVfqP5lombJoM3dcL7EbA
+	 QDq8sZitZzkeKRkGJ0gMOoEFenlW1iFhr5LSdUwNDaM66lakA3fHpvh5OeLZvO3whU
+	 0NO3KI1w9pNZ+llS0RD8qd/r2Abj64Tr8sV5+FkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbfHNRJ5 (ORCPT
+        id S1730411AbfHNRJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:09:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60490 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:09:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730396AbfHNRJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:09:53 -0400
+        id S1730391AbfHNRJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:09:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52560214DA;
-        Wed, 14 Aug 2019 17:09:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6493208C2;
+        Wed, 14 Aug 2019 17:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802592;
-        bh=ocwnyKs1rifK7iP2Y5EL/eziwLUfhU6jkrxnY1uaWtw=;
+        s=default; t=1565802595;
+        bh=x/eYL3iSlanQaQ7hgdilPPIYolaOzoMQ6/gvsF0Q6IY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VN/Ii/KxB0tKA7c/3XaSlruejrvjc0ninsIs6kFZTrf1Xcjmaj7tDMwPJMQotkz8C
-         CAxGuAUePDoMTJTLrBx9Xip7C5rnk62kIppBqzGPlyGmdfogca0RIru2DT4a4KQoJY
-         zgLAn4lRTdZn/P0fRqb/jRKQNd9YkWn3cbRklQxk=
+        b=JzeLCtgIFSvlL2IsyzB/BPO5WK0ISslRdvj/ekp7UOIvrSJHrSLFu86wDLjhahQLr
+         a7vs5211Ck8DmF8k9jW+A0WCiOu+tqkoRf0o9nnR7q82210Mlg5f520vV0cVIm5fvP
+         i8m4RSnCbImK5kGBZr8v5IoVAjegxmLO4mkAzTh8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 02/91] iio: adc: max9611: Fix misuse of GENMASK macro
-Date:   Wed, 14 Aug 2019 19:00:25 +0200
-Message-Id: <20190814165749.068181696@linuxfoundation.org>
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 35/91] netfilter: Fix rpfilter dropping vrf packets by mistake
+Date:   Wed, 14 Aug 2019 19:00:58 +0200
+Message-Id: <20190814165751.182391726@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -60,32 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches <joe@perches.com>
+[ Upstream commit b575b24b8eee37f10484e951b62ce2a31c579775 ]
 
-commit ae8cc91a7d85e018c0c267f580820b2bb558cd48 upstream.
+When firewalld is enabled with ipv4/ipv6 rpfilter, vrf
+ipv4/ipv6 packets will be dropped. Vrf device will pass
+through netfilter hook twice. One with enslaved device
+and another one with l3 master device. So in device may
+dismatch witch out device because out device is always
+enslaved device.So failed with the check of the rpfilter
+and drop the packets by mistake.
 
-Arguments are supposed to be ordered high then low.
-
-Signed-off-by: Joe Perches <joe@perches.com>
-Fixes: 69780a3bbc0b ("iio: adc: Add Maxim max9611 ADC driver")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/max9611.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/netfilter/ipt_rpfilter.c  | 1 +
+ net/ipv6/netfilter/ip6t_rpfilter.c | 8 ++++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
---- a/drivers/iio/adc/max9611.c
-+++ b/drivers/iio/adc/max9611.c
-@@ -86,7 +86,7 @@
- #define MAX9611_TEMP_MAX_POS		0x7f80
- #define MAX9611_TEMP_MAX_NEG		0xff80
- #define MAX9611_TEMP_MIN_NEG		0xd980
--#define MAX9611_TEMP_MASK		GENMASK(7, 15)
-+#define MAX9611_TEMP_MASK		GENMASK(15, 7)
- #define MAX9611_TEMP_SHIFT		0x07
- #define MAX9611_TEMP_RAW(_r)		((_r) >> MAX9611_TEMP_SHIFT)
- #define MAX9611_TEMP_SCALE_NUM		1000000
+diff --git a/net/ipv4/netfilter/ipt_rpfilter.c b/net/ipv4/netfilter/ipt_rpfilter.c
+index 12843c9ef1421..74b19a5c572e9 100644
+--- a/net/ipv4/netfilter/ipt_rpfilter.c
++++ b/net/ipv4/netfilter/ipt_rpfilter.c
+@@ -96,6 +96,7 @@ static bool rpfilter_mt(const struct sk_buff *skb, struct xt_action_param *par)
+ 	flow.flowi4_mark = info->flags & XT_RPFILTER_VALID_MARK ? skb->mark : 0;
+ 	flow.flowi4_tos = RT_TOS(iph->tos);
+ 	flow.flowi4_scope = RT_SCOPE_UNIVERSE;
++	flow.flowi4_oif = l3mdev_master_ifindex_rcu(xt_in(par));
+ 
+ 	return rpfilter_lookup_reverse(xt_net(par), &flow, xt_in(par), info->flags) ^ invert;
+ }
+diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
+index c3c6b09acdc4f..0f3407f2851ed 100644
+--- a/net/ipv6/netfilter/ip6t_rpfilter.c
++++ b/net/ipv6/netfilter/ip6t_rpfilter.c
+@@ -58,7 +58,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+ 	if (rpfilter_addr_linklocal(&iph->saddr)) {
+ 		lookup_flags |= RT6_LOOKUP_F_IFACE;
+ 		fl6.flowi6_oif = dev->ifindex;
+-	} else if ((flags & XT_RPFILTER_LOOSE) == 0)
++	/* Set flowi6_oif for vrf devices to lookup route in l3mdev domain. */
++	} else if (netif_is_l3_master(dev) || netif_is_l3_slave(dev) ||
++		  (flags & XT_RPFILTER_LOOSE) == 0)
+ 		fl6.flowi6_oif = dev->ifindex;
+ 
+ 	rt = (void *)ip6_route_lookup(net, &fl6, skb, lookup_flags);
+@@ -73,7 +75,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+ 		goto out;
+ 	}
+ 
+-	if (rt->rt6i_idev->dev == dev || (flags & XT_RPFILTER_LOOSE))
++	if (rt->rt6i_idev->dev == dev ||
++	    l3mdev_master_ifindex_rcu(rt->rt6i_idev->dev) == dev->ifindex ||
++	    (flags & XT_RPFILTER_LOOSE))
+ 		ret = true;
+  out:
+ 	ip6_rt_put(rt);
+-- 
+2.20.1
+
 
 
