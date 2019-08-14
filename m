@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C78C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31564C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0C52084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01054214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802594;
-	bh=Bdw0sl1aWne9A7zIwsKJUivc8ei5zDfDpTfnzUxJBYs=;
+	s=default; t=1565802598;
+	bh=ocwnyKs1rifK7iP2Y5EL/eziwLUfhU6jkrxnY1uaWtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V7e9B2GUEl+MMw6XslvQjaWHwtwbx6MD7BL4wAUqlPDiRwL03mnGhrsUrxB9sKrCU
-	 OAQO+9MacdtmCCuj6UzwasYKLH6hFRd8TJzKKpWOdCfOO/JIK6Fp8zLuHvNlEB+0W0
-	 yPVOHTm3RoMQqSvY/nTslEIMSkqBEUGWQ10gauvM=
+	b=MwlbG+var0K28qZ19z5U6MTe3wYbh31L+g//OJ2Phd630M6t0vkiaR24S5/zC0hpP
+	 diMJmhZa1pu2nM/q+jHgDxYu6/ksSWh+73bMofqcvmoX0S+tR/w86hMvfGHPxWcaZG
+	 nocQdJ8kE+yyCfIqNH2brJ9SOA2jQCGxlIfspMdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730399AbfHNRJx (ORCPT
+        id S1729458AbfHNRJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60358 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:09:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730391AbfHNRJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:09:48 -0400
+        id S1730396AbfHNRJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:09:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DA982084D;
-        Wed, 14 Aug 2019 17:09:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52560214DA;
+        Wed, 14 Aug 2019 17:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802587;
-        bh=Bdw0sl1aWne9A7zIwsKJUivc8ei5zDfDpTfnzUxJBYs=;
+        s=default; t=1565802592;
+        bh=ocwnyKs1rifK7iP2Y5EL/eziwLUfhU6jkrxnY1uaWtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hzcobyzkANO3Kk4zLs8ygxP4qY/1mWorEWzLUu8voTxdFdi7SWLwSSzXlqmVevUFo
-         8u9WQgp5U1d43RLSZruJr4QyZXaaiJrk6S7VBYa3ARGDLqWXeG7xrCnk8yKhzQ9NBt
-         3jZfWuP4ZY//h3dumNJhg6m7jjiGnjUXfMkHg6o4=
+        b=VN/Ii/KxB0tKA7c/3XaSlruejrvjc0ninsIs6kFZTrf1Xcjmaj7tDMwPJMQotkz8C
+         CAxGuAUePDoMTJTLrBx9Xip7C5rnk62kIppBqzGPlyGmdfogca0RIru2DT4a4KQoJY
+         zgLAn4lRTdZn/P0fRqb/jRKQNd9YkWn3cbRklQxk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 10/91] sound: fix a memory leak bug
-Date:   Wed, 14 Aug 2019 19:00:33 +0200
-Message-Id: <20190814165750.046750688@linuxfoundation.org>
+        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 02/91] iio: adc: max9611: Fix misuse of GENMASK macro
+Date:   Wed, 14 Aug 2019 19:00:25 +0200
+Message-Id: <20190814165749.068181696@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -59,39 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Joe Perches <joe@perches.com>
 
-commit c7cd7c748a3250ca33509f9235efab9c803aca09 upstream.
+commit ae8cc91a7d85e018c0c267f580820b2bb558cd48 upstream.
 
-In sound_insert_unit(), the controlling structure 's' is allocated through
-kmalloc(). Then it is added to the sound driver list by invoking
-__sound_insert_unit(). Later on, if __register_chrdev() fails, 's' is
-removed from the list through __sound_remove_unit(). If 'index' is not less
-than 0, -EBUSY is returned to indicate the error. However, 's' is not
-deallocated on this execution path, leading to a memory leak bug.
+Arguments are supposed to be ordered high then low.
 
-To fix the above issue, free 's' before -EBUSY is returned.
-
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Joe Perches <joe@perches.com>
+Fixes: 69780a3bbc0b ("iio: adc: Add Maxim max9611 ADC driver")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/sound_core.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/iio/adc/max9611.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/sound_core.c
-+++ b/sound/sound_core.c
-@@ -280,7 +280,8 @@ retry:
- 				goto retry;
- 			}
- 			spin_unlock(&sound_loader_lock);
--			return -EBUSY;
-+			r = -EBUSY;
-+			goto fail;
- 		}
- 	}
- 
+--- a/drivers/iio/adc/max9611.c
++++ b/drivers/iio/adc/max9611.c
+@@ -86,7 +86,7 @@
+ #define MAX9611_TEMP_MAX_POS		0x7f80
+ #define MAX9611_TEMP_MAX_NEG		0xff80
+ #define MAX9611_TEMP_MIN_NEG		0xd980
+-#define MAX9611_TEMP_MASK		GENMASK(7, 15)
++#define MAX9611_TEMP_MASK		GENMASK(15, 7)
+ #define MAX9611_TEMP_SHIFT		0x07
+ #define MAX9611_TEMP_RAW(_r)		((_r) >> MAX9611_TEMP_SHIFT)
+ #define MAX9611_TEMP_SCALE_NUM		1000000
 
 
