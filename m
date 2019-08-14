@@ -2,127 +2,128 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B670EC32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFF9C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA872063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E6620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:58:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XW6JU+74"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pcczEiMY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbfHNQ6D (ORCPT
+        id S1728430AbfHNQ6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:58:03 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38570 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfHNQ6C (ORCPT
+        Wed, 14 Aug 2019 12:58:36 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39807 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727975AbfHNQ6f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:58:02 -0400
-Received: by mail-wm1-f66.google.com with SMTP id m125so5059890wmm.3;
-        Wed, 14 Aug 2019 09:58:00 -0700 (PDT)
+        Wed, 14 Aug 2019 12:58:35 -0400
+Received: by mail-wr1-f68.google.com with SMTP id t16so21659983wra.6;
+        Wed, 14 Aug 2019 09:58:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MTEkYKL8BVYhxHYUGvIBzu9AUXRPM4JLAqesOWugBI4=;
-        b=XW6JU+744xiPyvNGXbdLzF9iT8xBjUrwuGqjiEzePGIE10acGza/QX9wb4sifiJBAM
-         s+Vyy/HYTvljbdR154FO5gtmYoW1+UlIcJRZC9sXJuXt1rDFpF/OQwU0XchQtQblKFbc
-         IkklEWAlaDopBwgale8LaS9oJ0BfMiMIf2P5Nf2A2xJh3tCNntxuMYi6K/sZSEDYpkBY
-         BNknRECBO3vUKy9XXwwvOCy0UiOp5wehR1znL40YUof9CC48bZXbB8MA0F/O+O5wI/ll
-         bhPZL/2ucJSM9SDYCOe08SqxFuKEREop4O6V9kG+Jmm0KY45RiDm46Dt3cDJD2ouV5lm
-         UXoQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uMo+P0KZM2egL/LGoSsPpOMP32NasvU+xJ/Ms0bauJU=;
+        b=pcczEiMYrynw454fsutGrSy2jvAne2yK5XfdfVtCUtZutyT2BZa447bEoLq4ShC9E5
+         dYLYtjmJSzSB5puRBFx33qbe/5b+BbgeBS+NhsuqdjwbKbo0dIVpJO8WfsVk7B8b/1Pn
+         2USNqz6kfkw3hFaNZuByTSg5IVedcGxUSNELoIiNQl3j8odW6E/Y1XfPEhtqV0Z0rXSK
+         m5+sL5pNokcTI9YFzt+wdOMN4rrNPavW5LGN8uXlgKHrLuvoPJ2+U/9EPKCrP0cSKQ4Y
+         K75Vum8fNJdX2nyUGrTsojq9hVZB0SU4w49BZe1Rdx3shNquZs+jYwvfUaicxB+8Riv4
+         W9Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MTEkYKL8BVYhxHYUGvIBzu9AUXRPM4JLAqesOWugBI4=;
-        b=IMRRaITUThNW8X0GDlfDRHchVTbSGB0Zl/OTkJCFXVKTdngbvuryXTwJfgKPiOnT93
-         pLOXSvnxdb1eViQbRKtyOd/fw9FSco5o1lIzGGdbmcfjjclP955RMWfXPs/I1LYppgVD
-         69/PxO4a//G79FrXaXo2FVNvlKJbFQuGrEm4HQFPGOvhJOBt71wSHmv23EXrvdQmjr/C
-         7eQqQI7osRyWWPRcQ6bIYLHQC+tmtRxZEugC3MfFo5P25NkmCQV8sYo1OpUnETWRPbSP
-         OugScLkieW77mKuSRTjF5LXrSpgCpMv4rTzMfj+qbbWwZ4u6mVLWLZJ6XHsA0iZwQLth
-         AkVA==
-X-Gm-Message-State: APjAAAVvkFqjpexBZzmVj+wi6Xf+Ckv/pHUkuhfakmhbhcVy24SncZVa
-        6714H2EACqXkmB7sC+Axnd1wMJeepmSuSWVvd4c=
-X-Google-Smtp-Source: APXvYqwkB83yqS+8NjQ83QcF+PEzdvw0fVo5cYYg9YRmO2gZttUCgzRF+qn91dqYvwhB3wvP6frRE/cX8xn120tcF9I=
-X-Received: by 2002:a05:600c:54c:: with SMTP id k12mr79276wmc.117.1565801879761;
- Wed, 14 Aug 2019 09:57:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uMo+P0KZM2egL/LGoSsPpOMP32NasvU+xJ/Ms0bauJU=;
+        b=AhODqpTDxJWEApxaK9ADEfRztqQTE3Z7ErF998cZn6iMgtn9j6Bqa9F+JHlw1O2HzH
+         90ypM7x5EYZmPyxAMI+k/ydNfyb/axyKkbpeYnILiLR+MBjXBIHZrcmMALpaO2M7qmLV
+         fgLxufivYLvgbfJNr2rXk2RxD2SaroRO6lzpToqhv1XRhYeZWyZDaMe/X/oYQgZnVg3Q
+         Pi6O8idOg/DEyknXfjlw2DQrdy/rQkSESB7skdovjixdrthYB+l1VQYURVuIDYKomWKT
+         UZ8gd0kev4edV72iDUava2M+EmdwIqnkPqYY7m87R6PWVkBwczs5yEpkNHkJf0LafTQh
+         DSEA==
+X-Gm-Message-State: APjAAAXrAL56Gamz4hAoi23wbNTnNMKINr9g6ueUJQaZD+/OUFhAxq0B
+        9Gyymn0h7CnX2aKX+mt2dik=
+X-Google-Smtp-Source: APXvYqxnX8CX/gnf086yLPjIcV4cmRsYgIggWs2IzqxLcAsdnnicLgd4impOxxIxX6VObIPKga7LfA==
+X-Received: by 2002:adf:dfc4:: with SMTP id q4mr776013wrn.54.1565801912364;
+        Wed, 14 Aug 2019 09:58:32 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id g12sm532151wrv.9.2019.08.14.09.58.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 09:58:31 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH] netfilter: nft_bitwise: Adjust parentheses to fix memcmp size argument
+Date:   Wed, 14 Aug 2019 09:58:09 -0700
+Message-Id: <20190814165809.46421-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.23.0.rc2
 MIME-Version: 1.0
-References: <20190809103235.16338-1-tbogendoerfer@suse.de> <20190809103235.16338-10-tbogendoerfer@suse.de>
- <CAOiHx=kuQtOuNfsJ+fDrps+hbrbp5cPujmQpi8Vfy+0qeP8dtA@mail.gmail.com> <20190814163733.82f624e342d061866ba8ff87@suse.de>
-In-Reply-To: <20190814163733.82f624e342d061866ba8ff87@suse.de>
-From:   Jonas Gorski <jonas.gorski@gmail.com>
-Date:   Wed, 14 Aug 2019 18:57:55 +0200
-Message-ID: <CAOiHx=mjLpLg9r=mE25T7RQFNRT8wEPkRcy2ZkfT7H=Y5RT-vw@mail.gmail.com>
-Subject: Re: [PATCH v4 9/9] Input: add IOC3 serio driver
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 at 16:37, Thomas Bogendoerfer <tbogendoerfer@suse.de> wrote:
->
-> On Wed, 14 Aug 2019 15:20:14 +0200
-> Jonas Gorski <jonas.gorski@gmail.com> wrote:
->
-> > > +       d = devm_kzalloc(&pdev->dev, sizeof(*d), GFP_KERNEL);
-> >
-> > &pdev->dev => dev
->
-> will change.
->
-> >
-> > > +       if (!d)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       sk = kzalloc(sizeof(*sk), GFP_KERNEL);
-> >
-> > any reason not to devm_kzalloc this as well? Then you won't need to
-> > manually free it in the error cases.
->
-> it has different life time than the device, so it may not allocated
-> via devm_kzalloc
->
-> > > +static int ioc3kbd_remove(struct platform_device *pdev)
-> > > +{
-> > > +       struct ioc3kbd_data *d = platform_get_drvdata(pdev);
-> > > +
-> > > +       devm_free_irq(&pdev->dev, d->irq, d);
-> > > +       serio_unregister_port(d->kbd);
-> > > +       serio_unregister_port(d->aux);
-> > > +       return 0;
-> > > +}
-> >
-> > and on that topic, won't you need to kfree d->kbd and d->aux here?
->
-> that's done in serio_release_port() by the serio core.
+clang warns:
 
-i see. But in that case, don't the kfree's after the
-serio_unregister_port's in the error path of the .probe function cause
-a double free?
+net/netfilter/nft_bitwise.c:138:50: error: size argument in 'memcmp'
+call is a comparison [-Werror,-Wmemsize-comparison]
+        if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
+                                      ~~~~~~~~~~~~~~~~~~^~
+net/netfilter/nft_bitwise.c:138:6: note: did you mean to compare the
+result of 'memcmp' instead?
+        if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
+            ^
+                                                       )
+net/netfilter/nft_bitwise.c:138:32: note: explicitly cast the argument
+to size_t to silence this warning
+        if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
+                                      ^
+                                      (size_t)(
+1 error generated.
 
+Adjust the parentheses so that the result of the sizeof is used for the
+size argument in memcmp, rather than the result of the comparison (which
+would always be true because sizeof is a non-zero number).
 
-Regards
-Jonas
+Fixes: bd8699e9e292 ("netfilter: nft_bitwise: add offload support")
+Link: https://github.com/ClangBuiltLinux/linux/issues/638
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ net/netfilter/nft_bitwise.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/netfilter/nft_bitwise.c b/net/netfilter/nft_bitwise.c
+index 1f04ed5c518c..974300178fa9 100644
+--- a/net/netfilter/nft_bitwise.c
++++ b/net/netfilter/nft_bitwise.c
+@@ -135,8 +135,8 @@ static int nft_bitwise_offload(struct nft_offload_ctx *ctx,
+ {
+ 	const struct nft_bitwise *priv = nft_expr_priv(expr);
+ 
+-	if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
+-	    priv->sreg != priv->dreg))
++	if (memcmp(&priv->xor, &zero, sizeof(priv->xor)) ||
++	    priv->sreg != priv->dreg)
+ 		return -EOPNOTSUPP;
+ 
+ 	memcpy(&ctx->regs[priv->dreg].mask, &priv->mask, sizeof(priv->mask));
+-- 
+2.23.0.rc2
+
