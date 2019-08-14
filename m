@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA4EC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9A4C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE39208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B984320843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748868;
-	bh=mxnWxWuMu9N+RIWzpMV7MjIXLsiiInilQr1dytlK0eE=;
+	s=default; t=1565748871;
+	bh=TMywJLHmRFOLnAVh2Tbe3MsCljS5poxTK8G5/GkDT0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bCt2FJz7yxwtYwEq4Mhlun1yNyDqnMaPDAYPH/h/3w3PxyZDEus79v9usjAhE9Syb
-	 np4GD4u5ZqaU7G07MkDun5JAVVtD3vN2L8WbhYI2Gvwg++2NC0KXB6fapG66kcXUzk
-	 JgKcAYvlhj3vDKWIhvD40jSS0yeEHz8IPlV2TAcM=
+	b=xvbqXiMfTYLg1B1Q/lyvmBEaxb6TtytEqTI/qrrZDXM+3VO89/hbluvFvYHGBq0p/
+	 OLpsj9y19RN3mm6jUmvO8xmtx5G3vNIzcetxRloRWRnaJXb/1pQQRY3LG77jdLhB72
+	 WfhGw7WfVWO5mq31pRX6cBn+NAl3swtGN0RFwZk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfHNCO1 (ORCPT
+        id S1728755AbfHNCOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:14:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46336 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:14:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728721AbfHNCOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:14:24 -0400
+        id S1728730AbfHNCO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:14:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52B6620874;
-        Wed, 14 Aug 2019 02:14:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EAEF2133F;
+        Wed, 14 Aug 2019 02:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748864;
-        bh=mxnWxWuMu9N+RIWzpMV7MjIXLsiiInilQr1dytlK0eE=;
+        s=default; t=1565748865;
+        bh=TMywJLHmRFOLnAVh2Tbe3MsCljS5poxTK8G5/GkDT0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LWipy90qskwXnz7vUH0LLHtH0sLaRx+xtPwznO1bgK3ROTC7H+sRHEBUA7mc3HKSc
-         APgETYtCjk6FWsy9eBRyLSxvZq+y4FVbQSQTddbCcvxtmux923gbw6gMoZpseGAHDW
-         Ga4/J3NimBKH/QfTzJBhGHfEmE93lok6FdFh00N8=
+        b=VHbYEO18VAD9lYsEIOI9N1OcZCytXL10S0sKP8KYUyJG+xvE5urMSROcbip5Md7sO
+         8oPuywP3ixm8n4Xw6pTYCkfTN58dGADMtVdF7FzTxKrRUa+Za1fzZ7IFHYanbBxCye
+         oDtWGNfm7HeLLD2+YNasI6N+66dCb64PWrlqx85A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, Krishna Ram Prakash R <krp@gtux.in>,
-        Kees Cook <keescook@chromium.org>,
+Cc:     Jens Axboe <axboe@kernel.dk>, Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 111/123] libata: have ata_scsi_rw_xlat() fail invalid passthrough requests
-Date:   Tue, 13 Aug 2019 22:10:35 -0400
-Message-Id: <20190814021047.14828-111-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 112/123] libata: add SG safety checks in SFF pio transfers
+Date:   Tue, 13 Aug 2019 22:10:36 -0400
+Message-Id: <20190814021047.14828-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -61,80 +60,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 2d7271501720038381d45fb3dcbe4831228fc8cc ]
+[ Upstream commit 752ead44491e8c91e14d7079625c5916b30921c5 ]
 
-For passthrough requests, libata-scsi takes what the user passes in
-as gospel. This can be problematic if the user fills in the CDB
-incorrectly. One example of that is in request sizes. For read/write
-commands, the CDB contains fields describing the transfer length of
-the request. These should match with the SG_IO header fields, but
-libata-scsi currently does no validation of that.
+Abort processing of a command if we run out of mapped data in the
+SG list. This should never happen, but a previous bug caused it to
+be possible. Play it safe and attempt to abort nicely if we don't
+have more SG segments left.
 
-Check that the number of blocks in the CDB for passthrough requests
-matches what was mapped into the request. If the CDB asks for more
-data then the validated SG_IO header fields, error it.
-
-Reported-by: Krishna Ram Prakash R <krp@gtux.in>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-scsi.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/ata/libata-sff.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index 391ac0503dc07..76d0f9de767bc 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -1786,6 +1786,21 @@ static unsigned int ata_scsi_verify_xlat(struct ata_queued_cmd *qc)
- 	return 1;
- }
+diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
+index 10aa278821427..4f115adb4ee83 100644
+--- a/drivers/ata/libata-sff.c
++++ b/drivers/ata/libata-sff.c
+@@ -658,6 +658,10 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+ 	unsigned int offset;
+ 	unsigned char *buf;
  
-+static bool ata_check_nblocks(struct scsi_cmnd *scmd, u32 n_blocks)
-+{
-+	struct request *rq = scmd->request;
-+	u32 req_blocks;
-+
-+	if (!blk_rq_is_passthrough(rq))
-+		return true;
-+
-+	req_blocks = blk_rq_bytes(rq) / scmd->device->sector_size;
-+	if (n_blocks > req_blocks)
-+		return false;
-+
-+	return true;
-+}
-+
- /**
-  *	ata_scsi_rw_xlat - Translate SCSI r/w command into an ATA one
-  *	@qc: Storage for translated ATA taskfile
-@@ -1830,6 +1845,8 @@ static unsigned int ata_scsi_rw_xlat(struct ata_queued_cmd *qc)
- 		scsi_10_lba_len(cdb, &block, &n_block);
- 		if (cdb[1] & (1 << 3))
- 			tf_flags |= ATA_TFLAG_FUA;
-+		if (!ata_check_nblocks(scmd, n_block))
-+			goto invalid_fld;
- 		break;
- 	case READ_6:
- 	case WRITE_6:
-@@ -1844,6 +1861,8 @@ static unsigned int ata_scsi_rw_xlat(struct ata_queued_cmd *qc)
- 		 */
- 		if (!n_block)
- 			n_block = 256;
-+		if (!ata_check_nblocks(scmd, n_block))
-+			goto invalid_fld;
- 		break;
- 	case READ_16:
- 	case WRITE_16:
-@@ -1854,6 +1873,8 @@ static unsigned int ata_scsi_rw_xlat(struct ata_queued_cmd *qc)
- 		scsi_16_lba_len(cdb, &block, &n_block);
- 		if (cdb[1] & (1 << 3))
- 			tf_flags |= ATA_TFLAG_FUA;
-+		if (!ata_check_nblocks(scmd, n_block))
-+			goto invalid_fld;
- 		break;
- 	default:
- 		DPRINTK("no-byte command\n");
++	if (!qc->cursg) {
++		qc->curbytes = qc->nbytes;
++		return;
++	}
+ 	if (qc->curbytes == qc->nbytes - qc->sect_size)
+ 		ap->hsm_task_state = HSM_ST_LAST;
+ 
+@@ -683,6 +687,8 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+ 
+ 	if (qc->cursg_ofs == qc->cursg->length) {
+ 		qc->cursg = sg_next(qc->cursg);
++		if (!qc->cursg)
++			ap->hsm_task_state = HSM_ST_LAST;
+ 		qc->cursg_ofs = 0;
+ 	}
+ }
 -- 
 2.20.1
 
