@@ -2,69 +2,95 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 386CFC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C349C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 161F520843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3542A204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:30:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfHNJ0D (ORCPT
+        id S1726714AbfHNJ37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:26:03 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38570 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725888AbfHNJ0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:26:02 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3EC4DE55934583B028EE;
-        Wed, 14 Aug 2019 17:25:55 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 14 Aug
- 2019 17:25:48 +0800
-Subject: Re: [PATCH RESEND 2/2] staging: erofs: differentiate unsupported
- on-disk format
-To:     Gao Xiang <gaoxiang25@huawei.com>, Pavel Machek <pavel@denx.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, <linux-fsdevel@vger.kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-References: <20190814042525.4925-2-gaoxiang25@huawei.com>
- <20190814043208.15591-1-gaoxiang25@huawei.com>
- <20190814043208.15591-2-gaoxiang25@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <108ee2f9-75dd-b8ab-8da7-b81c17bafbf6@huawei.com>
-Date:   Wed, 14 Aug 2019 17:25:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 14 Aug 2019 05:29:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:50628 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725928AbfHNJ37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 05:29:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D9707344;
+        Wed, 14 Aug 2019 02:29:58 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A12C63F694;
+        Wed, 14 Aug 2019 02:29:57 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 10:29:52 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        bhelgaas@google.com, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv6 1/2] PCI: layerscape: Add the bar_fixed_64bit property
+ in EP driver.
+Message-ID: <20190814092952.GA26840@e121166-lin.cambridge.arm.com>
+References: <20190814020330.12133-1-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190814043208.15591-2-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814020330.12133-1-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/14 12:32, Gao Xiang wrote:
-> For some specific fields, use ENOTSUPP instead of EIO
-> for values which look sane but aren't supported right now.
+I asked you to remove the period at the end of the patch $SUBJECT and
+you did not, either you do not read what I write or explain me what's
+going on.
+
+On Wed, Aug 14, 2019 at 10:03:29AM +0800, Xiaowei Bao wrote:
+> The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1
+> is 32bit, BAR2 and BAR4 is 64bit, this is determined by hardware,
+> so set the bar_fixed_64bit with 0x14.
 > 
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Kishon ACK'ed this patch and you have not carried his tag.
 
-> +		return -ENOTSUPP;
+I will make these changes but that's the last time I do that
+for you.
 
-A little bit confused about when we need to use ENOTSUPP or EOPNOTSUPP, I
-checked several manual of syscall, it looks EOPNOTSUPP is widely used.
+Lorenzo
 
-Thanks,
+> ---
+> v2:
+>  - Replace value 0x14 with a macro.
+> v3:
+>  - No change.
+> v4:
+>  - send the patch again with '--to'.
+> v5:
+>  - fix the commit message.
+> v6:
+>  - remove the [EXT] tag of the $SUBJECT in email.
+> 
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index be61d96..ca9aa45 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -44,6 +44,7 @@ static const struct pci_epc_features ls_pcie_epc_features = {
+>  	.linkup_notifier = false,
+>  	.msi_capable = true,
+>  	.msix_capable = false,
+> +	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+>  };
+>  
+>  static const struct pci_epc_features*
+> -- 
+> 2.9.5
+> 
