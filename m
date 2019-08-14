@@ -2,99 +2,126 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F60C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED1BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4342F2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A55214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:14:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pyo3c5oc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbfHNPMt (ORCPT
+        id S1728132AbfHNPOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 11:12:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35408 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727111AbfHNPMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 11:12:49 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 267D3302C067;
-        Wed, 14 Aug 2019 15:12:49 +0000 (UTC)
-Received: from treble (ovpn-120-159.rdu2.redhat.com [10.10.120.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D4CB17AB7E;
-        Wed, 14 Aug 2019 15:12:45 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 10:12:44 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     jikos@kernel.org, pmladek@suse.com, joe.lawrence@redhat.com,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-Message-ID: <20190814151244.5xoaxib5iya2qjco@treble>
-References: <20190719122840.15353-1-mbenes@suse.cz>
- <20190719122840.15353-3-mbenes@suse.cz>
- <20190728200427.dbrojgu7hafphia7@treble>
- <alpine.LSU.2.21.1908141256150.16696@pobox.suse.cz>
+        Wed, 14 Aug 2019 11:14:08 -0400
+Received: from mail-pl1-f173.google.com ([209.85.214.173]:44252 "EHLO
+        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfHNPOH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 11:14:07 -0400
+Received: by mail-pl1-f173.google.com with SMTP id t14so50793065plr.11;
+        Wed, 14 Aug 2019 08:14:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gCnccQTqt1TRhZousM+vcIN96ilUiP0gMRpcGtjYEMY=;
+        b=pyo3c5ocqozp/w167fimJi74vKzb/9pxXSdNIGBMN2rre9nrpHKc8UM09QS0MI9dgY
+         mtAh9neYqv0/v7/+EM2lvpLLLlosARSbyXVcYdk6Y27KiH6tdEJLvguImDLY2t087lfW
+         N6/TYoDKKMRoisj9+A4Rwfk/Bp/drypKPrjaSdYIvvO5YqoFnmLv8OPKVR2sJzsxNugJ
+         6L+EFOEIDdB/TCO71H0Aiu9PREwK+0BvznI3LZ3LwtUrSnxJVti+mbQJo9yjoLLAYkOo
+         ezMS38AvMwZYWP/RHrI+j05QpSkDSokyxNOUq7kApShr++J0OMxxw6QwemCjFS+elxI5
+         6zig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gCnccQTqt1TRhZousM+vcIN96ilUiP0gMRpcGtjYEMY=;
+        b=dZFYf5zJSbda/XdCHRHX3tteIgBnVdu12yudgBopOsXJtD18qA5mEpApQ6N6VLjtjU
+         NdetV3Mu4ufLE9s6ymU+WFsYlsRpd7iuRXdYWztKM5oIrwMeMD0uPim52+Z1WNrV7NsG
+         vgx7VJRgQXODDYGzQBT5tIWAcX3O6sXevm8cv73sWRi4GIT+bzTmLnfV21oCUkoV0fFd
+         wwo0Q/LablNxWG/se6wGwggUcIxPAHanoqeFMidkNd6w9uEZOxfyNPzCoIwM7+0+AUA7
+         jivfUauDtu+4ABd8iYraT9EN9Q3q6WT9U3UEA31dL0DN3sxZeAZh1TyBJdigb495Tpk3
+         LyPg==
+X-Gm-Message-State: APjAAAXJj5Cg9gZ3SoK33RWAcoSlQ5x6Ojp+cIGMxK575oxSOtbBcHNn
+        I/4dBYc0a/i0EnqJ92ULw8w=
+X-Google-Smtp-Source: APXvYqzAkbmn85pTOhEKsugN0FloVlGEhNHnwZnCPQ5UnqmdI9zhZfAThjItj0dOSwgsT4HIVTZoVg==
+X-Received: by 2002:a17:902:29a7:: with SMTP id h36mr43774122plb.158.1565795647004;
+        Wed, 14 Aug 2019 08:14:07 -0700 (PDT)
+Received: from [192.168.11.2] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id x22sm67086pfo.180.2019.08.14.08.14.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 08:14:06 -0700 (PDT)
+Subject: Subject: [PATCH 1/2] tools/memory-model: Reflect updated file name
+ convention in judgelitmus.sh
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Akira Yokosawa <akiyks@gmail.com>
+References: <20190801222026.GA11315@linux.ibm.com>
+ <20190801222056.12144-27-paulmck@linux.ibm.com>
+ <beb07965-eb83-9cd1-2b49-cfc24928dce5@gmail.com>
+ <20190812180649.GM28441@linux.ibm.com>
+ <277937a7-0f50-ec1c-09ec-95ffbf85541e@gmail.com>
+From:   Akira Yokosawa <akiyks@gmail.com>
+Message-ID: <1dbd392a-876c-1d6b-f718-76a37f1d55ee@gmail.com>
+Date:   Thu, 15 Aug 2019 00:13:57 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <277937a7-0f50-ec1c-09ec-95ffbf85541e@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.1908141256150.16696@pobox.suse.cz>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 14 Aug 2019 15:12:49 +0000 (UTC)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 01:06:09PM +0200, Miroslav Benes wrote:
-> > Really, we should be going in the opposite direction, by creating module
-> > dependencies, like all other kernel modules do, ensuring that a module
-> > is loaded *before* we patch it.  That would also eliminate this bug.
-> 
-> Yes, but it is not ideal either with cumulative one-fixes-all patch 
-> modules. It would load also modules which are not necessary for a 
-> customer and I know that at least some customers care about this. They 
-> want to deploy only things which are crucial for their systems.
+From 6251ebb775a81f1ac158f197ad8110b8f98c4248 Mon Sep 17 00:00:00 2001
+From: Akira Yokosawa <akiyks@gmail.com>
+Date: Wed, 14 Aug 2019 17:20:54 +0900
+Subject: [PATCH 1/2] tools/memory-model: Reflect updated file name convention in judgelitmus.sh
 
-If you frame the question as "do you want to destabilize the live
-patching infrastucture" then the answer might be different.
+Commit ("tools/memory-model: Move from .AArch64.litmus.out to
+.litmus.AArch.out") swapped "HW" and "litmus" part in .out file name.
+Reflect the change in header comment in judgelitmus.sh
 
-We should look at whether it makes sense to destabilize live patching
-for everybody, for a small minority of people who care about a small
-minority of edge cases.
+Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
+---
+ tools/memory-model/scripts/judgelitmus.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Or maybe there's some other solution we haven't thought about, which
-fits more in the framework of how kernel modules already work.
-
-> We could split patch modules as you proposed in the past, but that have 
-> issues as well.
-
-Right, I'm not really crazy about that solution either.
-
-Here's another idea: per-object patch modules.  Patches to vmlinux are
-in a vmlinux patch module.  Patches to kvm.ko are in a kvm patch module.
-That would require:
-
-- Careful management of dependencies between object-specific patches.
-  Maybe that just means that exported function ABIs shouldn't change.
-
-- Some kind of hooking into modprobe to ensure the patch module gets
-  loaded with the real one.
-
-- Changing 'atomic replace' to allow patch modules to be per-object.
-
-> Anyway, that is why I proposed "Rethinking late module patching" talk at 
-> LPC and we should try to come up with a solution there.
-
-Thanks, I saw that.  It's definitely worthy of more discussion.  The
-talk may be more productive if there were code to look at.  For example,
-a patch which removes all the "late module patching" gunk, so we can at
-least quantify the cost of the current approach.
-
+diff --git a/tools/memory-model/scripts/judgelitmus.sh b/tools/memory-model/scripts/judgelitmus.sh
+index 6408c012bdf5..c91130814593 100755
+--- a/tools/memory-model/scripts/judgelitmus.sh
++++ b/tools/memory-model/scripts/judgelitmus.sh
+@@ -6,7 +6,7 @@
+ # test ran correctly.  If the --hw argument is omitted, check against the
+ # LKMM output, which is assumed to be in file.litmus.out.  If this argument
+ # is provided, this is assumed to be a hardware test, and the output is
+-# assumed to be in file.HW.litmus.out, where "HW" is the --hw argument.
++# assumed to be in file.litmus.HW.out, where "HW" is the --hw argument.
+ # In addition, non-Sometimes verification results will be noted, but
+ # forgiven.  Furthermore, if there is no "Result:" comment but there is
+ # an LKMM .litmus.out file, the observation in that file will be used
 -- 
-Josh
+2.17.1
+
+
