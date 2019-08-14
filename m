@@ -2,93 +2,117 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A790C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECA6C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C62214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79DC214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803382;
-	bh=8obzKNZ7UGz3iDjYP52sVheyg1q6J65532QJ2C+znhw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tgweVnTD43X6Xbs8j0zdppC4Zpg/ppqqtF0ge+JdFky/2h0+cKMco7QyP5dMxkFLC
-	 Dt8vSE4kGrqDryXKEtBIpgew2/Op85rzDZ6+xp7ud1Wy8VX+X0Qt2pVL1LFYdo8Bmf
-	 Li8e9cXkIoSUVzm0JiNYil1K7gqRx7axmwqjtOrY=
+	s=default; t=1565803386;
+	bh=FN7svZ/+iXMULArgYt1oBNGNoJcD+bkl47j+nxOdq5Y=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=Hbhmxg/UPsGvqEgQ8b16lGNcjxqDQecpTRd/9YJ+9hqG8oc7GyKX/iR5cZN1Jjfpn
+	 lKCU5raXwF1NgJ9Ynv2XJoBSUGU6I3A8OUnDjliObBcZHQTZsmM4mJTXme7qj7tt6q
+	 65AV7Oi8NY7TRoWVAaFqd8ETUWJYifiSoAa00fzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbfHNRXB (ORCPT
+        id S1730335AbfHNRXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58014 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:23:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730062AbfHNRII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:08:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1729276AbfHNRXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:23:02 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91FE521721;
-        Wed, 14 Aug 2019 17:08:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9246520665;
+        Wed, 14 Aug 2019 17:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802488;
-        bh=8obzKNZ7UGz3iDjYP52sVheyg1q6J65532QJ2C+znhw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mqZmvdXNSTWkWNQfn+6IFAJFOAvGjbrehInst+/Hvf4b9VbgT60dwTRtqXAzL4NXs
-         T33wbGFD30SoLnKsUjLAjliDuQyMdllveecVMzFJJwdS3XQ0SeeKXQpVf3RPnoAbko
-         8rzQEliS6Any4p/B2C4Fcu2PNhnAfIUV5FaXGKkw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.2 119/144] ALSA: usb-audio: fix a memory leak bug
-Date:   Wed, 14 Aug 2019 19:01:15 +0200
-Message-Id: <20190814165804.907321722@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
-References: <20190814165759.466811854@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1565803381;
+        bh=FN7svZ/+iXMULArgYt1oBNGNoJcD+bkl47j+nxOdq5Y=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=U2k+Omw28LwRRoFmVtodT07PV6nxV/NjO0n84ZnQwJqJzPx0vkjnq79bp1wEvklFG
+         VMEVAJLqqexfV8yMpJeyrQSBTfCgZag1WzGsv1E4V8fP+esmsvW+CqJy/MmWeHrA/1
+         KqbEgb8F4a9wCCJHNpBFKV7UIh0krHKOR86fwJ8w=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAFd5g45NdQEcP0JQpZc3HYYgNZfsBsHL+ByXRK+OupWObwMuqg@mail.gmail.com>
+References: <20190814055108.214253-1-brendanhiggins@google.com> <CAFd5g45NdQEcP0JQpZc3HYYgNZfsBsHL+ByXRK+OupWObwMuqg@mail.gmail.com>
+Subject: Re: [PATCH v13 00/18] kunit: introduce KUnit, the Linux kernel unit testing framework
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Bjorn Helgaas <bhelgaas@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+        shuah <shuah@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 14 Aug 2019 10:23:00 -0700
+Message-Id: <20190814172301.9246520665@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+Quoting Brendan Higgins (2019-08-14 03:03:47)
+> On Tue, Aug 13, 2019 at 10:52 PM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > ## TL;DR
+> >
+> > This revision addresses comments from Stephen and Bjorn Helgaas. Most
+> > changes are pretty minor stuff that doesn't affect the API in anyway.
+> > One significant change, however, is that I added support for freeing
+> > kunit_resource managed resources before the test case is finished via
+> > kunit_resource_destroy(). Additionally, Bjorn pointed out that I broke
+> > KUnit on certain configurations (like the default one for x86, whoops).
+> >
+> > Based on Stephen's feedback on the previous change, I think we are
+> > pretty close. I am not expecting any significant changes from here on
+> > out.
+>=20
+> Stephen, it looks like you have just replied with "Reviewed-bys" on
+> all the remaining emails that you looked at. Is there anything else
+> that we are missing? Or is this ready for Shuah to apply?
+>=20
 
-commit a67060201b746a308b1674f66bf289c9faef6d09 upstream.
-
-In snd_usb_get_audioformat_uac3(), a structure for channel maps 'chmap' is
-allocated through kzalloc() before the execution goto 'found_clock'.
-However, this structure is not deallocated if the memory allocation for
-'pd' fails, leading to a memory leak bug.
-
-To fix the above issue, free 'fp->chmap' before returning NULL.
-
-Fixes: 7edf3b5e6a45 ("ALSA: usb-audio: AudioStreaming Power Domain parsing")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/usb/stream.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/sound/usb/stream.c
-+++ b/sound/usb/stream.c
-@@ -1043,6 +1043,7 @@ found_clock:
- 
- 		pd = kzalloc(sizeof(*pd), GFP_KERNEL);
- 		if (!pd) {
-+			kfree(fp->chmap);
- 			kfree(fp->rate_table);
- 			kfree(fp);
- 			return NULL;
-
+I think it's good to go! Thanks for the persistence.
 
