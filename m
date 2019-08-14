@@ -2,224 +2,216 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529C5C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B27C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B21B206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B88206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:38:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pIGO+EWG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IdYwQLhG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbfHNNhn (ORCPT
+        id S1727839AbfHNNi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 09:37:43 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41184 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbfHNNhm (ORCPT
+        Wed, 14 Aug 2019 09:38:29 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47112 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfHNNi3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:37:42 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m9so50547094pls.8;
-        Wed, 14 Aug 2019 06:37:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/IbKQFz9iEJ9QAG3H+pG4K1gLkKuiUxL+JncAuAkeYs=;
-        b=pIGO+EWGOCwc+x6DFzehUEHLK7WZT1pjFMO8sik1waJVkpBX5AHyBYmSjiCjzD++dZ
-         Q6nIMS7fQu9So1y4XcKP+djptwGLHRUGwvVUcTC8Rysh0bncJiixVla8VEVD9NG2jfI2
-         tM0y9VndWxvmwI9ZporXulpoLw/X71dFAuR8jDqCREPKGeAxugHgavGuuhJB3KCYIOGr
-         Czgn0Nk1G/afmroiEiLRjOWaDfombU5OJMu7NiKQq6/qYItRGJcMhGSGnZmXyvYztmf6
-         tZSBz4lKyXFoUYXyVJyQnG2NYTanBaYcCTvRyISpcYEKRNvyYKSja4d/ZgESZYsdamjj
-         Ofqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/IbKQFz9iEJ9QAG3H+pG4K1gLkKuiUxL+JncAuAkeYs=;
-        b=ZqNBWPxUKqbPGcrIpA/iUjI1jYq+KE2N1Z4jLDuiTuEQUeLhcClclRYx66cPwsHVZH
-         O4uPGKSMJ4jrcrywjoQchHHAxYrEztaWrANhS38yub5Z85XQk9J0ME440YA9s4h6TvMq
-         TEABZlV7Pqg3HVWxc5Xm50Z4VJzT4KynAxubMXA1e3sPEamKZ9JCFTTZh97GDICwHYRT
-         hZNAxH5zcBsC94VUdi8wJlldLwsIcmGtdn8BYbxYDuiJVcm7SRseGv9nobAi3SLFHkG0
-         NeUtTGBtq0JQBEPtm2MsYJT2qNBtFbhfxh7Q5rnI2B7ihjbigykWSkI6yJtxTwbItREC
-         Khhg==
-X-Gm-Message-State: APjAAAXHpIbklR9NlLcfgh6lU2SBRMELrw8BSpwcgESLJRsMQiArh/Bj
-        mRk9byXStwoTvGVkA2zlfpw=
-X-Google-Smtp-Source: APXvYqyr6NLSOj1WuKaIT9ZeerPUtwIJdVGRvwbLNkk5rFryEPEuKHLUsJd0q5cTE9T1cIYNJ4A1MQ==
-X-Received: by 2002:a17:902:b089:: with SMTP id p9mr6607981plr.269.1565789861950;
-        Wed, 14 Aug 2019 06:37:41 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d3sm5757861pjz.31.2019.08.14.06.37.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 06:37:41 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 06:37:40 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] usb: typec: fusb302: Always provide fwnode for the
- port
-Message-ID: <20190814133740.GD32629@roeck-us.net>
-References: <20190814132419.39759-1-heikki.krogerus@linux.intel.com>
- <20190814132419.39759-4-heikki.krogerus@linux.intel.com>
+        Wed, 14 Aug 2019 09:38:29 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7EDcKTR075923;
+        Wed, 14 Aug 2019 08:38:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565789900;
+        bh=aThyHL8ApwvdhvY3BnDVs0kFkolqrKiAquo0tskXkcg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=IdYwQLhGto2moxtF4RXiQKJEPdAyT1FbAHYmlU/u5t+GnknGuqF2ookzKY2qbPLJI
+         bvcjQQv6PzOzK+0lxODlqcqlpgf5W1WHQIUp/7wTpK3pWTpx4UGv1jDZ+l9DI6KbHo
+         OzPdWRE3N7IZnctJF06lL1Rti/bm2x1L9Q2f1OXk=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7EDcKi0130999
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 14 Aug 2019 08:38:20 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 14
+ Aug 2019 08:38:20 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 14 Aug 2019 08:38:20 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7EDcHrH100252;
+        Wed, 14 Aug 2019 08:38:17 -0500
+Subject: Re: [PATCH v10 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+To:     Pawel Laszczak <pawell@cadence.com>, <felipe.balbi@linux.intel.com>
+CC:     <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <jbergsagel@ti.com>,
+        <nsekhar@ti.com>, <nm@ti.com>, <sureshp@cadence.com>,
+        <jpawar@cadence.com>, <kurahul@cadence.com>, <aniljoy@cadence.com>
+References: <1563733939-21214-1-git-send-email-pawell@cadence.com>
+ <1563733939-21214-6-git-send-email-pawell@cadence.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <2c5ed505-6fee-1816-e5bb-59a9ed96fb70@ti.com>
+Date:   Wed, 14 Aug 2019 16:38:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814132419.39759-4-heikki.krogerus@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1563733939-21214-6-git-send-email-pawell@cadence.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 04:24:19PM +0300, Heikki Krogerus wrote:
-> By registering a software fwnode for the port when the
-> firmware does not supply one, we can always provide tcpm the
-> connector capabilities by using the common USB connector
-> device properties instead of using tcpc_config platform data.
+
+
+On 21/07/2019 21:32, Pawel Laszczak wrote:
+> This patch introduce new Cadence USBSS DRD driver to Linux kernel.
 > 
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
+> The Cadence USBSS DRD Controller is a highly configurable IP Core which
+> can be instantiated as Dual-Role Device (DRD), Peripheral Only and
+> Host Only (XHCI)configurations.
+> 
+> The current driver has been validated with FPGA platform. We have
+> support for PCIe bus, which is used on FPGA prototyping.
+> 
+> The host side of USBSS-DRD controller is compliant with XHCI
+> specification, so it works with standard XHCI Linux driver.
+> 
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
 > ---
->  drivers/usb/typec/tcpm/fusb302.c | 70 +++++++++++++++++++-------------
->  1 file changed, 41 insertions(+), 29 deletions(-)
+>  drivers/usb/Kconfig                |    2 +
+>  drivers/usb/Makefile               |    2 +
+>  drivers/usb/cdns3/Kconfig          |   46 +
+>  drivers/usb/cdns3/Makefile         |   17 +
+>  drivers/usb/cdns3/cdns3-pci-wrap.c |  203 +++
+>  drivers/usb/cdns3/core.c           |  554 +++++++
+>  drivers/usb/cdns3/core.h           |  109 ++
+>  drivers/usb/cdns3/debug.h          |  171 ++
+>  drivers/usb/cdns3/debugfs.c        |   87 ++
+>  drivers/usb/cdns3/drd.c            |  390 +++++
+>  drivers/usb/cdns3/drd.h            |  166 ++
+>  drivers/usb/cdns3/ep0.c            |  914 +++++++++++
+>  drivers/usb/cdns3/gadget-export.h  |   28 +
+>  drivers/usb/cdns3/gadget.c         | 2338 ++++++++++++++++++++++++++++
+>  drivers/usb/cdns3/gadget.h         | 1321 ++++++++++++++++
+>  drivers/usb/cdns3/host-export.h    |   28 +
+>  drivers/usb/cdns3/host.c           |   71 +
+>  drivers/usb/cdns3/trace.c          |   11 +
+>  drivers/usb/cdns3/trace.h          |  493 ++++++
+>  19 files changed, 6951 insertions(+)
+>  create mode 100644 drivers/usb/cdns3/Kconfig
+>  create mode 100644 drivers/usb/cdns3/Makefile
+>  create mode 100644 drivers/usb/cdns3/cdns3-pci-wrap.c
+>  create mode 100644 drivers/usb/cdns3/core.c
+>  create mode 100644 drivers/usb/cdns3/core.h
+>  create mode 100644 drivers/usb/cdns3/debug.h
+>  create mode 100644 drivers/usb/cdns3/debugfs.c
+>  create mode 100644 drivers/usb/cdns3/drd.c
+>  create mode 100644 drivers/usb/cdns3/drd.h
+>  create mode 100644 drivers/usb/cdns3/ep0.c
+>  create mode 100644 drivers/usb/cdns3/gadget-export.h
+>  create mode 100644 drivers/usb/cdns3/gadget.c
+>  create mode 100644 drivers/usb/cdns3/gadget.h
+>  create mode 100644 drivers/usb/cdns3/host-export.h
+>  create mode 100644 drivers/usb/cdns3/host.c
+>  create mode 100644 drivers/usb/cdns3/trace.c
+>  create mode 100644 drivers/usb/cdns3/trace.h
 > 
-> diff --git a/drivers/usb/typec/tcpm/fusb302.c b/drivers/usb/typec/tcpm/fusb302.c
-> index 074fbb17fa8b..93244d6c4bff 100644
-> --- a/drivers/usb/typec/tcpm/fusb302.c
-> +++ b/drivers/usb/typec/tcpm/fusb302.c
-> @@ -75,7 +75,6 @@ struct fusb302_chip {
->  	struct i2c_client *i2c_client;
->  	struct tcpm_port *tcpm_port;
->  	struct tcpc_dev tcpc_dev;
-> -	struct tcpc_config tcpc_config;
->  
->  	struct regulator *vbus;
->  
-> @@ -1110,23 +1109,6 @@ static void fusb302_bc_lvl_handler_work(struct work_struct *work)
->  	mutex_unlock(&chip->lock);
->  }
->  
-> -#define PDO_FIXED_FLAGS \
-> -	(PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP | PDO_FIXED_USB_COMM)
-> -
-> -static const u32 src_pdo[] = {
-> -	PDO_FIXED(5000, 400, PDO_FIXED_FLAGS),
-> -};
-> -
-> -static const struct tcpc_config fusb302_tcpc_config = {
-> -	.src_pdo = src_pdo,
-> -	.nr_src_pdo = ARRAY_SIZE(src_pdo),
-> -	.operating_snk_mw = 2500,
-> -	.type = TYPEC_PORT_DRP,
-> -	.data = TYPEC_PORT_DRD,
-> -	.default_role = TYPEC_SINK,
-> -	.alt_modes = NULL,
-> -};
-> -
->  static void init_tcpc_dev(struct tcpc_dev *fusb302_tcpc_dev)
->  {
->  	fusb302_tcpc_dev->init = tcpm_init;
-> @@ -1670,6 +1652,38 @@ static int init_gpio(struct fusb302_chip *chip)
->  	return 0;
->  }
->  
-> +#define PDO_FIXED_FLAGS \
-> +	(PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP | PDO_FIXED_USB_COMM)
+
+<snip>
+
+> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+> new file mode 100644
+> index 000000000000..291f08be56fe
+> --- /dev/null
+> +++ b/drivers/usb/cdns3/gadget.c
+> @@ -0,0 +1,2338 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Cadence USBSS DRD Driver - gadget side.
+> + *
+> + * Copyright (C) 2018-2019 Cadence Design Systems.
+> + * Copyright (C) 2017-2018 NXP
+> + *
+> + * Authors: Pawel Jez <pjez@cadence.com>,
+> + *          Pawel Laszczak <pawell@cadence.com>
+> + *          Peter Chen <peter.chen@nxp.com>
+> + */
 > +
-> +static const u32 src_pdo[] = {
-> +	PDO_FIXED(5000, 400, PDO_FIXED_FLAGS)
-> +};
+
+<snip>
+
 > +
-> +static const u32 snk_pdo[] = {
-> +	PDO_FIXED(5000, 400, PDO_FIXED_FLAGS)
-> +};
-> +
-> +static const struct property_entry port_props[] = {
-> +	PROPERTY_ENTRY_STRING("data-role", "dual"),
-> +	PROPERTY_ENTRY_STRING("power-role", "dual"),
-> +	PROPERTY_ENTRY_STRING("try-power-role", "sink"),
-> +	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
-> +	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
-> +	PROPERTY_ENTRY_U32("op-sink-microwatt", 2500),
-> +	{ }
-> +};
-> +
-> +static struct fwnode_handle *fusb302_fwnode_get(struct device *dev)
+> +static void cdns3_gadget_config(struct cdns3_device *priv_dev)
 > +{
-> +	struct fwnode_handle *fwnode;
+> +	struct cdns3_usb_regs __iomem *regs = priv_dev->regs;
+> +	u32 reg;
 > +
-> +	fwnode = device_get_named_child_node(dev, "connector");
-> +	if (!fwnode)
-> +		fwnode = fwnode_create_software_node(port_props, NULL);
+> +	cdns3_ep0_config(priv_dev);
 > +
-> +	return fwnode;
-> +}
+> +	/* enable interrupts for endpoint 0 (in and out) */
+> +	writel(EP_IEN_EP_OUT0 | EP_IEN_EP_IN0, &regs->ep_ien);
 > +
->  static int fusb302_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *id)
->  {
-> @@ -1690,19 +1704,8 @@ static int fusb302_probe(struct i2c_client *client,
->  
->  	chip->i2c_client = client;
->  	chip->dev = &client->dev;
-> -	chip->tcpc_config = fusb302_tcpc_config;
-> -	chip->tcpc_dev.config = &chip->tcpc_config;
->  	mutex_init(&chip->lock);
->  
-> -	chip->tcpc_dev.fwnode =
-> -		device_get_named_child_node(dev, "connector");
-> -
-> -	/* Composite sink PDO */
-> -	chip->snk_pdo[0] = PDO_FIXED(5000, 400, PDO_FIXED_FLAGS);
-> -
-> -	chip->tcpc_config.nr_snk_pdo = 1;
-> -	chip->tcpc_config.snk_pdo = chip->snk_pdo;
-> -
->  	/*
->  	 * Devicetree platforms should get extcon via phandle (not yet
->  	 * supported). On ACPI platforms, we get the name from a device prop.
-> @@ -1737,8 +1740,15 @@ static int fusb302_probe(struct i2c_client *client,
->  			goto destroy_workqueue;
->  	}
->  
-> +	chip->tcpc_dev.fwnode = fusb302_fwnode_get(dev);
-> +	if (IS_ERR(chip->tcpc_dev.fwnode)) {
-> +		ret = PTR_ERR(chip->tcpc_dev.fwnode);
-> +		goto destroy_workqueue;
+> +	/*
+> +	 * Driver needs to modify LFPS minimal U1 Exit time for DEV_VER_TI_V1
+> +	 * revision of controller.
+> +	 */
+> +	if (priv_dev->dev_ver == DEV_VER_TI_V1) {
+> +		reg = readl(&regs->dbg_link1);
+> +
+> +		reg &= ~DBG_LINK1_LFPS_MIN_GEN_U1_EXIT_MASK;
+> +		reg |= DBG_LINK1_LFPS_MIN_GEN_U1_EXIT(0x55) |
+> +		       DBG_LINK1_LFPS_MIN_GEN_U1_EXIT_SET;
+> +		writel(reg, &regs->dbg_link1);
 > +	}
 > +
->  	chip->tcpm_port = tcpm_register_port(&client->dev, &chip->tcpc_dev);
->  	if (IS_ERR(chip->tcpm_port)) {
-> +		fwnode_handle_put(chip->tcpc_dev.fwnode);
->  		ret = PTR_ERR(chip->tcpm_port);
->  		if (ret != -EPROBE_DEFER)
->  			dev_err(dev, "cannot register tcpm port, ret=%d", ret);
-> @@ -1760,6 +1770,7 @@ static int fusb302_probe(struct i2c_client *client,
->  
->  tcpm_unregister_port:
->  	tcpm_unregister_port(chip->tcpm_port);
-> +	fwnode_handle_put(chip->tcpc_dev.fwnode);
->  destroy_workqueue:
->  	destroy_workqueue(chip->wq);
->  
-> @@ -1775,6 +1786,7 @@ static int fusb302_remove(struct i2c_client *client)
->  	cancel_work_sync(&chip->irq_work);
->  	cancel_delayed_work_sync(&chip->bc_lvl_handler);
->  	tcpm_unregister_port(chip->tcpm_port);
-> +	fwnode_handle_put(chip->tcpc_dev.fwnode);
->  	destroy_workqueue(chip->wq);
->  	fusb302_debugfs_exit(chip);
->  
-> -- 
-> 2.20.1
-> 
+> +	/*
+> +	 * By default some platforms has set protected access to memory.
+> +	 * This cause problem with cache, so driver restore non-secure
+> +	 * access to memory.
+> +	 */
+> +	reg = readl(&regs->dma_axi_ctrl);
+
+Why read the reg at all if you are just overwriting it below?
+
+> +	reg = DMA_AXI_CTRL_MARPROT(DMA_AXI_CTRL_NON_SECURE) |
+> +	      DMA_AXI_CTRL_MAWPROT(DMA_AXI_CTRL_NON_SECURE);
+
+
+Otherwise you need to read modify only necessary bits and then write.
+i.e.
+	#define DMA_AXI_CTRL_MAPROT_MASK 0x3
+	reg &= ~(DMA_AXI_CTRL_MARPROT(DMA_AXI_CTRL_MAPROT_MASK) |
+		 DMA_AXI_CTRL_MARPROT(DMA_AXI_CTRL_MAPROT_MASK))
+	reg |= DMA_AXI_CTRL_MARPROT(DMA_AXI_CTRL_NON_SECURE) |
+	       DMA_AXI_CTRL_MAWPROT(DMA_AXI_CTRL_NON_SECURE);
+
+> +	writel(reg, &regs->dma_axi_ctrl);
+> +
+> +	/* enable generic interrupt*/
+> +	writel(USB_IEN_INIT, &regs->usb_ien);
+> +	writel(USB_CONF_CLK2OFFDS | USB_CONF_L1DS, &regs->usb_conf);
+> +
+> +	cdns3_configure_dmult(priv_dev, NULL);
+> +
+> +	cdns3_gadget_pullup(&priv_dev->gadget, 1);
+> +}
+> +
+
+<snip>
+
+cheers,
+-roger
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
