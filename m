@@ -2,90 +2,277 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D7EC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09868C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88DC22067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:46:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="IzzlmTyB"
+	by mail.kernel.org (Postfix) with ESMTP id D57882064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfHNCqh (ORCPT
+        id S1727255AbfHNCv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:46:37 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37937 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbfHNCqh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:46:37 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x4so10612181qts.5
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 19:46:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=pD/XpBOcxU6zmV0LLVzBEhXOXBom/NndH3aawH5g868=;
-        b=IzzlmTyB3Xsgb8CSHmNFv3EZm3rd7s/+Rpz8uK8clVoBf/U3P301mjwFTXWDqj1oSM
-         MQxMT8zWzlQhEBsElEoALqvNR+djrAIKRJ53nhPBVa5aeO26PnkJVrZgrXfbf8ebT6Kj
-         r7qxLrrdPykTVPYutPYmHibq89a7LpC/Cl6EVfYmS3XrUeITn2zAbbnaM7MUJfmRf2S/
-         ToYyAmhLTfC//ryy8k1z/E2YdvDMFN+uUV418XIAbOviazwxZEJsChBJjfMfbLEv8cHK
-         mvOsjt/5WsQYjAATOc8GbVcqfUrdB74JHXDEQ4L9B/LfbRRto9pY3SEndaiir56Sb9rv
-         Qbvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=pD/XpBOcxU6zmV0LLVzBEhXOXBom/NndH3aawH5g868=;
-        b=Q+2Kbl+V63xl6GfL2+CxyzfeCvPNSRjU650hYZpJZZg2YVNLxDggo3VRqmFx9Rmfln
-         0JGAa8Hnz8yHKdcF3qNzm1egOPqm4m02hqTobSBgoE+8z5DkmdgZYl7Ez3ZGoEXvPy2I
-         sd7EDWweJLa9PCZxxHkm4QS/bY/lwcpVKhoCQbusGS4wYWioa5xzb9RBcCNXJ/PdxDfl
-         g/jvpX1Xf0B0BAsCukWO6shZ/aYHb9ySkKiRkYEYK7Hg/VUsDMGrTFNTY1Fp2eaosiJ+
-         5JRiNn3Ileq/XbMu+20IYV5qOqHxeMZCFWafP6rWCseSoDuTtXlYKjskaHyqBvZnsu7B
-         oYvg==
-X-Gm-Message-State: APjAAAVK8I73JiIPqVn9zAODKR5eCLgaTc5nzJjSW2GdqpXACZWqka2P
-        DVIyaKb2FGKH7N7nf5sy5it0HQ==
-X-Google-Smtp-Source: APXvYqwZUhcYfqLZD1BmBDbDtrEp3VN4xaZXc5CMIUNdlUNrEwxJ99tUrtylVEq/hwrY8z7BcVtK5g==
-X-Received: by 2002:ac8:688:: with SMTP id f8mr36243068qth.130.1565750796315;
-        Tue, 13 Aug 2019 19:46:36 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id t26sm61485262qtc.95.2019.08.13.19.46.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2019 19:46:36 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 19:46:25 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev@vger.kernel.org (open list:MELLANOX ETHERNET DRIVER (mlx4_en)),
-        linux-rdma@vger.kernel.org (open list:MELLANOX MLX4 core VPI driver),
-        linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH v2] net/mlx4_en: fix a memory leak bug
-Message-ID: <20190813194625.565e02b8@cakuba.netronome.com>
-In-Reply-To: <1565637095-7972-1-git-send-email-wenwen@cs.uga.edu>
-References: <1565637095-7972-1-git-send-email-wenwen@cs.uga.edu>
-Organization: Netronome Systems, Ltd.
+        Tue, 13 Aug 2019 22:51:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42428 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726809AbfHNCv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:51:27 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 29F08470C;
+        Wed, 14 Aug 2019 02:51:27 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-19.pek2.redhat.com [10.72.12.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D5FBA808C0;
+        Wed, 14 Aug 2019 02:51:17 +0000 (UTC)
+Date:   Wed, 14 Aug 2019 10:51:13 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Josh Boyer <jwboyer@redhat.com>, bhe@redhat.com,
+        kasong@redhat.com, Borislav Petkov <bp@suse.de>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Kees Cook <keescook@chromium.org>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH V38 15/29] acpi: Ignore acpi_rsdp kernel param when the
+ kernel has been locked down
+Message-ID: <20190814025113.GA7058@dhcp-128-65.nay.redhat.com>
+References: <20190808000721.124691-1-matthewgarrett@google.com>
+ <20190808000721.124691-16-matthewgarrett@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808000721.124691-16-matthewgarrett@google.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 14 Aug 2019 02:51:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019 14:11:35 -0500, Wenwen Wang wrote:
-> In mlx4_en_config_rss_steer(), 'rss_map->indir_qp' is allocated through
-> kzalloc(). After that, mlx4_qp_alloc() is invoked to configure RSS
-> indirection. However, if mlx4_qp_alloc() fails, the allocated
-> 'rss_map->indir_qp' is not deallocated, leading to a memory leak bug.
+On 08/07/19 at 05:07pm, Matthew Garrett wrote:
+> From: Josh Boyer <jwboyer@redhat.com>
 > 
-> To fix the above issue, add the 'qp_alloc_err' label to free
-> 'rss_map->indir_qp'.
+> This option allows userspace to pass the RSDP address to the kernel, which
+> makes it possible for a user to modify the workings of hardware. Reject
+> the option when the kernel is locked down. This requires some reworking
+> of the existing RSDP command line logic, since the early boot code also
+> makes use of a command-line passed RSDP when locating the SRAT table
+> before the lockdown code has been initialised. This is achieved by
+> separating the command line RSDP path in the early boot code from the
+> generic RSDP path, and then copying the command line RSDP into boot
+> params in the kernel proper if lockdown is not enabled. If lockdown is
+> enabled and an RSDP is provided on the command line, this will only be
+> used when parsing SRAT (which shouldn't permit kernel code execution)
+> and will be ignored in the rest of the kernel.
 > 
-> Fixes: 4931c6ef04b4 ("net/mlx4_en: Optimized single ring steering")
-> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> (Modified by Matthew Garrett in order to handle the early boot RSDP
+> environment)
+> 
+> Signed-off-by: Josh Boyer <jwboyer@redhat.com>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> cc: Dave Young <dyoung@redhat.com>
+> cc: linux-acpi@vger.kernel.org
+> ---
+>  arch/x86/boot/compressed/acpi.c | 19 +++++++++++++------
+>  arch/x86/include/asm/acpi.h     |  9 +++++++++
+>  arch/x86/include/asm/x86_init.h |  2 ++
+>  arch/x86/kernel/acpi/boot.c     |  5 +++++
+>  arch/x86/kernel/x86_init.c      |  1 +
+>  drivers/acpi/osl.c              | 14 +++++++++++++-
+>  include/linux/acpi.h            |  6 ++++++
+>  7 files changed, 49 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+> index 15255f388a85..149795c369f2 100644
+> --- a/arch/x86/boot/compressed/acpi.c
+> +++ b/arch/x86/boot/compressed/acpi.c
+> @@ -26,7 +26,7 @@ struct mem_vector immovable_mem[MAX_NUMNODES*2];
+>   */
+>  #define MAX_ADDR_LEN 19
+>  
+> -static acpi_physical_address get_acpi_rsdp(void)
+> +static acpi_physical_address get_cmdline_acpi_rsdp(void)
+>  {
+>  	acpi_physical_address addr = 0;
+>  
+> @@ -278,10 +278,7 @@ acpi_physical_address get_rsdp_addr(void)
+>  {
+>  	acpi_physical_address pa;
+>  
+> -	pa = get_acpi_rsdp();
+> -
+> -	if (!pa)
+> -		pa = boot_params->acpi_rsdp_addr;
+> +	pa = boot_params->acpi_rsdp_addr;
+>  
+>  	/*
+>  	 * Try to get EFI data from setup_data. This can happen when we're a
+> @@ -311,7 +308,17 @@ static unsigned long get_acpi_srat_table(void)
+>  	char arg[10];
+>  	u8 *entry;
+>  
+> -	rsdp = (struct acpi_table_rsdp *)(long)boot_params->acpi_rsdp_addr;
+> +	/*
+> +	 * Check whether we were given an RSDP on the command line. We don't
+> +	 * stash this in boot params because the kernel itself may have
+> +	 * different ideas about whether to trust a command-line parameter.
+> +	 */
+> +	rsdp = (struct acpi_table_rsdp *)get_cmdline_acpi_rsdp();
+> +
+> +	if (!rsdp)
+> +		rsdp = (struct acpi_table_rsdp *)(long)
+> +			boot_params->acpi_rsdp_addr;
+> +
+>  	if (!rsdp)
+>  		return 0;
+>  
+> diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
+> index aac686e1e005..bc9693c9107e 100644
+> --- a/arch/x86/include/asm/acpi.h
+> +++ b/arch/x86/include/asm/acpi.h
+> @@ -117,6 +117,12 @@ static inline bool acpi_has_cpu_in_madt(void)
+>  	return !!acpi_lapic;
+>  }
+>  
+> +#define ACPI_HAVE_ARCH_SET_ROOT_POINTER
+> +static inline void acpi_arch_set_root_pointer(u64 addr)
+> +{
+> +	x86_init.acpi.set_root_pointer(addr);
+> +}
+> +
+>  #define ACPI_HAVE_ARCH_GET_ROOT_POINTER
+>  static inline u64 acpi_arch_get_root_pointer(void)
+>  {
+> @@ -125,6 +131,7 @@ static inline u64 acpi_arch_get_root_pointer(void)
+>  
+>  void acpi_generic_reduced_hw_init(void);
+>  
+> +void x86_default_set_root_pointer(u64 addr);
+>  u64 x86_default_get_root_pointer(void);
+>  
+>  #else /* !CONFIG_ACPI */
+> @@ -138,6 +145,8 @@ static inline void disable_acpi(void) { }
+>  
+>  static inline void acpi_generic_reduced_hw_init(void) { }
+>  
+> +static inline void x86_default_set_root_pointer(u64 addr) { }
+> +
+>  static inline u64 x86_default_get_root_pointer(void)
+>  {
+>  	return 0;
+> diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+> index ac0934189017..19435858df5f 100644
+> --- a/arch/x86/include/asm/x86_init.h
+> +++ b/arch/x86/include/asm/x86_init.h
+> @@ -134,10 +134,12 @@ struct x86_hyper_init {
+>  
+>  /**
+>   * struct x86_init_acpi - x86 ACPI init functions
+> + * @set_root_poitner:		set RSDP address
+>   * @get_root_pointer:		get RSDP address
+>   * @reduced_hw_early_init:	hardware reduced platform early init
+>   */
+>  struct x86_init_acpi {
+> +	void (*set_root_pointer)(u64 addr);
+>  	u64 (*get_root_pointer)(void);
+>  	void (*reduced_hw_early_init)(void);
+>  };
+> diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
+> index 17b33ef604f3..04205ce127a1 100644
+> --- a/arch/x86/kernel/acpi/boot.c
+> +++ b/arch/x86/kernel/acpi/boot.c
+> @@ -1760,6 +1760,11 @@ void __init arch_reserve_mem_area(acpi_physical_address addr, size_t size)
+>  	e820__update_table_print();
+>  }
+>  
+> +void x86_default_set_root_pointer(u64 addr)
+> +{
+> +	boot_params.acpi_rsdp_addr = addr;
+> +}
+> +
+>  u64 x86_default_get_root_pointer(void)
+>  {
+>  	return boot_params.acpi_rsdp_addr;
+> diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
+> index 1bef687faf22..18a799c8fa28 100644
+> --- a/arch/x86/kernel/x86_init.c
+> +++ b/arch/x86/kernel/x86_init.c
+> @@ -95,6 +95,7 @@ struct x86_init_ops x86_init __initdata = {
+>  	},
+>  
+>  	.acpi = {
+> +		.set_root_pointer	= x86_default_set_root_pointer,
+>  		.get_root_pointer	= x86_default_get_root_pointer,
+>  		.reduced_hw_early_init	= acpi_generic_reduced_hw_init,
+>  	},
+> diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+> index 9c0edf2fc0dd..d43df3a3fa8d 100644
+> --- a/drivers/acpi/osl.c
+> +++ b/drivers/acpi/osl.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/list.h>
+>  #include <linux/jiffies.h>
+>  #include <linux/semaphore.h>
+> +#include <linux/security.h>
+>  
+>  #include <asm/io.h>
+>  #include <linux/uaccess.h>
+> @@ -180,8 +181,19 @@ acpi_physical_address __init acpi_os_get_root_pointer(void)
+>  	acpi_physical_address pa;
+>  
+>  #ifdef CONFIG_KEXEC
+> -	if (acpi_rsdp)
+> +	/*
+> +	 * We may have been provided with an RSDP on the command line,
+> +	 * but if a malicious user has done so they may be pointing us
+> +	 * at modified ACPI tables that could alter kernel behaviour -
+> +	 * so, we check the lockdown status before making use of
+> +	 * it. If we trust it then also stash it in an architecture
+> +	 * specific location (if appropriate) so it can be carried
+> +	 * over further kexec()s.
+> +	 */
+> +	if (acpi_rsdp && !security_locked_down(LOCKDOWN_ACPI_TABLES)) {
+> +		acpi_arch_set_root_pointer(acpi_rsdp);
+>  		return acpi_rsdp;
+> +	}
+>  #endif
+>  	pa = acpi_arch_get_root_pointer();
+>  	if (pa)
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index e40e1e27ed8e..6b35f2f4cab3 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -643,6 +643,12 @@ bool acpi_gtdt_c3stop(int type);
+>  int acpi_arch_timer_mem_init(struct arch_timer_mem *timer_mem, int *timer_count);
+>  #endif
+>  
+> +#ifndef ACPI_HAVE_ARCH_SET_ROOT_POINTER
+> +static inline void acpi_arch_set_root_pointer(u64 addr)
+> +{
+> +}
+> +#endif
+> +
+>  #ifndef ACPI_HAVE_ARCH_GET_ROOT_POINTER
+>  static inline u64 acpi_arch_get_root_pointer(void)
+>  {
+> -- 
+> 2.22.0.770.g0f2c4a37fd-goog
+> 
 
-Applied, thanks.
+I'm not sure why this series get posted quickly again.  As for this
+patch it was restructured according the early rsdp parsing code, so
+personally I think keep the original Reviewed-by is questionable and it
+needs another review.  But I did not find time to read it carefully.
+
+Add several cc to void it slipped.
+
+Thanks
+Dave
