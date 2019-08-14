@@ -2,102 +2,91 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2A2C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2EAC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4118D20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803554;
-	bh=JLGDd8bsW7iM4fXbpOOdEbG+zT1Q3Zdh9IXZ5jbNYuY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OWkERlLnneMHGf/Z69bJyYfgQrabuX2EkXBa2vcM4VKsK78eWFIP2DKNYsl8BpxFw
-	 xiTheU0/qSfAGRUvIBrYoRMF5JjlBa+1Wr3gckgsL/BCzAuRug+BCed7j4/QhZFsrM
-	 s+Pqpx0qj4MzXMizg06zjG0X+hZAYNRIJdG9VZQs=
+	by mail.kernel.org (Postfix) with ESMTP id D2D9420665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbfHNRZw (ORCPT
+        id S1729667AbfHNR0B convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728882AbfHNRFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:05:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 649C3208C2;
-        Wed, 14 Aug 2019 17:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802319;
-        bh=JLGDd8bsW7iM4fXbpOOdEbG+zT1Q3Zdh9IXZ5jbNYuY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0KEpdsLhkO7dRQGFPBn3mJ8bUqZlzfpb2oOH7R3naHn4cPP/s+uQ5cs15fIoWFLLW
-         gNAmnVlGix6DGhMbSB/54LMt0vdk8CSWel/ZYSfIGnx8FxKtTZrQSiX1ZzNKJa3mjo
-         L2+BUhyGYNqh+AOn+qt1XyjE0z4JzkhLEG7G2aaQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lei YU <mine260309@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 079/144] hwmon: (occ) Fix division by zero issue
-Date:   Wed, 14 Aug 2019 19:00:35 +0200
-Message-Id: <20190814165803.163212709@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
-References: <20190814165759.466811854@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 14 Aug 2019 13:26:01 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45619 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729398AbfHNRFP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:05:15 -0400
+Received: by mail-pl1-f193.google.com with SMTP id y8so8848838plr.12;
+        Wed, 14 Aug 2019 10:05:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GTqeZQuB5IgM+FmX9PwW5NoGtvVH2NCZhDAITGesyDI=;
+        b=V4BknI/9PTqQybKoUCZBxz9U/b5ss9/oMzwfXviFWJQvjysp2n0UMUxS4FpgjCLXNC
+         72470W68kb3LTbYUsJih/SDba9IqNn0ofADPWaJ966SEiVPgF78wx2OJfRwp/yIB2QQ5
+         qzPM8Ofh149MJk+AuTxTGqfu/1gyYBBJc7zJb0mvK16xoWGgSRqq7nNe/UOopunAuGXl
+         rwdSx6g1dloV4QulTqGLbsw4t9cwXL6aAAEOzRXGc4Dzp5Jw7PpShCS0vdUgdImPmFUH
+         FlxekAu7Er1Z52PVHAq7HsTdPq6GvUwQM7+xYXZZHcHOEOxGztHVf/Vikv/VaPTmjgL8
+         jHNA==
+X-Gm-Message-State: APjAAAV3ciIb0fHybDZhn8ptyDFsaapNXBdwukteY4FH0ct5nMbcOUFV
+        djIwVtzpMtm3jTQydCpQ3Klfc9WrCXo=
+X-Google-Smtp-Source: APXvYqyY7dMRw94QInx53Q43ZHoQCxgqlpv6Xz4f7o17+uQhWoBsE2UtI2jpEFYNuEjRmoBdpNZKug==
+X-Received: by 2002:a17:902:8345:: with SMTP id z5mr406730pln.29.1565802314643;
+        Wed, 14 Aug 2019 10:05:14 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2c1:200:fb9c:664d:d2ad:c9b5? ([2620:15c:2c1:200:fb9c:664d:d2ad:c9b5])
+        by smtp.gmail.com with ESMTPSA id c70sm359640pfb.163.2019.08.14.10.05.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Aug 2019 10:05:13 -0700 (PDT)
+Subject: Re: [5.3.0-rc4-next][bisected 882632][qla2xxx] WARNING: CPU: 10 PID:
+ 425 at drivers/scsi/qla2xxx/qla_isr.c:2784 qla2x00_status_entry.isra
+To:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc:     linux-next <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        martin.petersen@oracle.com, hmadhani@marvell.com,
+        sachinp <sachinp@linux.vnet.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Himanshu Madhani <hmadhani@marvell.com>
+References: <1565801523.6908.6.camel@abdul>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <cafb1d40-a11e-c137-db06-4564e5f5caf5@acm.org>
+Date:   Wed, 14 Aug 2019 10:05:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1565801523.6908.6.camel@abdul>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 211186cae14de09573b062e478eb9fe215aed8d9 ]
+On 8/14/19 9:52 AM, Abdul Haleem wrote:
+> Greeting's
+> 
+> Today's linux-next kernel (5.3.0-rc4-next-20190813)  booted with warning on my powerpc power 8 lpar
+> 
+> The WARN_ON_ONCE() was introduced by commit 88263208 (scsi: qla2xxx: Complain if sp->done() is not...)
+> 
+> boot logs:
+> 
+> WARNING: CPU: 10 PID: 425 at drivers/scsi/qla2xxx/qla_isr.c:2784
 
-The code in occ_get_powr_avg() invokes div64_u64() without checking the
-divisor. In case the divisor is zero, kernel gets an "Division by zero
-in kernel" error.
+Hi Abdul,
 
-Check the divisor and make it return 0 if the divisor is 0.
+Thank you for having reported this. Is that the only warning reported on your setup by the qla2xxx
+driver? If that warning is commented out, does the qla2xxx driver work as expected?
 
-Fixes: c10e753d43eb ("hwmon (occ): Add sensor types and versions")
-Signed-off-by: Lei YU <mine260309@gmail.com>
-Reviewed-by: Eddie James <eajames@linux.ibm.com>
-Link: https://lore.kernel.org/r/1562813088-23708-1-git-send-email-mine260309@gmail.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hwmon/occ/common.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Thanks,
 
-diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
-index 13a6290c8d254..f02aa403332c2 100644
---- a/drivers/hwmon/occ/common.c
-+++ b/drivers/hwmon/occ/common.c
-@@ -402,8 +402,10 @@ static ssize_t occ_show_power_1(struct device *dev,
- 
- static u64 occ_get_powr_avg(u64 *accum, u32 *samples)
- {
--	return div64_u64(get_unaligned_be64(accum) * 1000000ULL,
--			 get_unaligned_be32(samples));
-+	u64 divisor = get_unaligned_be32(samples);
-+
-+	return (divisor == 0) ? 0 :
-+		div64_u64(get_unaligned_be64(accum) * 1000000ULL, divisor);
- }
- 
- static ssize_t occ_show_power_2(struct device *dev,
--- 
-2.20.1
-
-
+Bart.
 
