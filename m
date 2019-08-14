@@ -2,139 +2,116 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1847C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BED7C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6EF4206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7CA206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803092;
-	bh=8vACyV4HWZSpDIGeYsjVQviONxqVr7jlAcvVeMNcYis=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=04EguxjcoD06ml1Zflrx0ELnCltSCFDvXKKNHoICNc4UbSKyD1PuXCUtMXyaYTTsL
-	 69/unuEyhl2a670H6wx5qpidFpamHeSderAYDcK9Xm3IePc5UIlUnzkQmEYpZc2hDM
-	 zpxlYUfGva2KPdUuppp/ISOgGkNxilbHDEAZuuqo=
+	s=default; t=1565803103;
+	bh=FAAciiWxMv2HbnmTuQi2r+sFmhndjmM10hnTqGnrU6s=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=KgYTCBicKt1isEruWkTsjKNP1IIgdzXjeJH6b/qhAHyaHBkOCbEnBFJuETVWyXdoz
+	 0J+zU2ZEqEHb9d0dGKBrtmw5szdMMRnshlYTsvxi1UsFzqNJOkGzkqto86ZTTegOOK
+	 o9IeAQwODh+DfgXLjalaUKGG4F/UQtm2KJhjhefQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731049AbfHNRSL (ORCPT
+        id S1730772AbfHNRSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:18:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36866 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:18:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730409AbfHNRMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:12:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1730764AbfHNRMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:12:36 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3490214DA;
-        Wed, 14 Aug 2019 17:12:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BE1721721;
+        Wed, 14 Aug 2019 17:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802769;
-        bh=8vACyV4HWZSpDIGeYsjVQviONxqVr7jlAcvVeMNcYis=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ByPY/uMzzQ0o7JwXe77I4CFocudkWoNpo9o1uUlUrKAU63DN7zlPgktRFmbqIzyS5
-         DwGut8i6YYgPLgAb+qWaP5LHbhgATIQVqt0RPgP9C/PyMeH0DYphPNN0ZVblMH6SZw
-         mhxBkkYKLgmuoUX5iFeJD1EpWrNM/3kPio1wkPX0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.14 09/69] loop: set PF_MEMALLOC_NOIO for the worker thread
-Date:   Wed, 14 Aug 2019 19:01:07 +0200
-Message-Id: <20190814165746.162799150@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
-References: <20190814165744.822314328@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1565802755;
+        bh=FAAciiWxMv2HbnmTuQi2r+sFmhndjmM10hnTqGnrU6s=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=IZW4vquRvp6nTj8xECSl2DsQWLZ9UlVhL77SlELIL1od7nOKA4H1KK2IJ3DhqvmQA
+         pWFJi505fBwDJQKH4P1EgHfemTDtb6CLSkLWLJ7IFrp3ho57pMsC/kv7b2r1NNbqgQ
+         4gNEeH53a9ZmaPLH/dF/81wJdJXYiNBuCFP+4r9c=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190814125012.8700-18-vkoul@kernel.org>
+References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-18-vkoul@kernel.org>
+Subject: Re: [PATCH 17/22] arm64: dts: qcom: sm8150: Add apss_shared and apps_rsc nodes
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        sibis@codeaurora.org, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 14 Aug 2019 10:12:34 -0700
+Message-Id: <20190814171235.6BE1721721@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+Quoting Vinod Koul (2019-08-14 05:50:07)
+> Add apss_shared and apps_rsc node including the rpmhcc child node
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
 
-commit d0a255e795ab976481565f6ac178314b34fbf891 upstream.
+Can't this be squashed with the original dtsi file?
 
-A deadlock with this stacktrace was observed.
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi | 30 ++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/q=
+com/sm8150.dtsi
+> index 5c6b103b042b..5258b79676f6 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> @@ -4,6 +4,7 @@
+> =20
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/clock/qcom,gcc-sm8150.h>
+> +#include <dt-bindings/soc/qcom,rpmh-rsc.h>
 
-The loop thread does a GFP_KERNEL allocation, it calls into dm-bufio
-shrinker and the shrinker depends on I/O completion in the dm-bufio
-subsystem.
+But not the rpmh clk bindings?
 
-In order to fix the deadlock (and other similar ones), we set the flag
-PF_MEMALLOC_NOIO at loop thread entry.
+> @@ -272,6 +279,29 @@
+>                         };
+>                 };
+> =20
+> +               apps_rsc: rsc@18200000 {
+> +                       label =3D "apps_rsc";
+> +                       compatible =3D "qcom,rpmh-rsc";
+> +                       reg =3D <0x18200000 0x10000>,
+> +                             <0x18210000 0x10000>,
+> +                             <0x18220000 0x10000>;
+> +                       reg-names =3D "drv-0", "drv-1", "drv-2";
+> +                       interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+> +                                    <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+> +                                    <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+> +                       qcom,tcs-offset =3D <0xd00>;
+> +                       qcom,drv-id =3D <2>;
+> +                       qcom,tcs-config =3D <ACTIVE_TCS  2>,
+> +                                         <SLEEP_TCS   1>,
+> +                                         <WAKE_TCS    1>,
+> +                                         <CONTROL_TCS 0>;
+> +
+> +                       rpmhcc: clock-controller {
+> +                               compatible =3D "qcom,sm8150-rpmh-clk";
+> +                               #clock-cells =3D <1>;
 
-PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
-   #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
-   #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
-   #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
-   #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
-   #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
-   #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
-   #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
-   #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
-   #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
-   #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
-  #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
-  #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
-  #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
-  #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
-  #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
+Should take some sort of clocks property to get the board clock for XO?
 
-  PID: 14127  TASK: ffff881455749c00  CPU: 11  COMMAND: "loop1"
-   #0 [ffff88272f5af228] __schedule at ffffffff8173f405
-   #1 [ffff88272f5af280] schedule at ffffffff8173fa27
-   #2 [ffff88272f5af2a0] schedule_preempt_disabled at ffffffff8173fd5e
-   #3 [ffff88272f5af2b0] __mutex_lock_slowpath at ffffffff81741fb5
-   #4 [ffff88272f5af330] mutex_lock at ffffffff81742133
-   #5 [ffff88272f5af350] dm_bufio_shrink_count at ffffffffa03865f9 [dm_bufio]
-   #6 [ffff88272f5af380] shrink_slab at ffffffff811a86bd
-   #7 [ffff88272f5af470] shrink_zone at ffffffff811ad778
-   #8 [ffff88272f5af500] do_try_to_free_pages at ffffffff811adb34
-   #9 [ffff88272f5af590] try_to_free_pages at ffffffff811adef8
-  #10 [ffff88272f5af610] __alloc_pages_nodemask at ffffffff811a09c3
-  #11 [ffff88272f5af710] alloc_pages_current at ffffffff811e8b71
-  #12 [ffff88272f5af760] new_slab at ffffffff811f4523
-  #13 [ffff88272f5af7b0] __slab_alloc at ffffffff8173a1b5
-  #14 [ffff88272f5af880] kmem_cache_alloc at ffffffff811f484b
-  #15 [ffff88272f5af8d0] do_blockdev_direct_IO at ffffffff812535b3
-  #16 [ffff88272f5afb00] __blockdev_direct_IO at ffffffff81255dc3
-  #17 [ffff88272f5afb30] xfs_vm_direct_IO at ffffffffa01fe3fc [xfs]
-  #18 [ffff88272f5afb90] generic_file_read_iter at ffffffff81198994
-  #19 [ffff88272f5afc50] __dta_xfs_file_read_iter_2398 at ffffffffa020c970 [xfs]
-  #20 [ffff88272f5afcc0] lo_rw_aio at ffffffffa0377042 [loop]
-  #21 [ffff88272f5afd70] loop_queue_work at ffffffffa0377c3b [loop]
-  #22 [ffff88272f5afe60] kthread_worker_fn at ffffffff810a8a0c
-  #23 [ffff88272f5afec0] kthread at ffffffff810a8428
-  #24 [ffff88272f5aff50] ret_from_fork at ffffffff81745242
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/block/loop.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -857,7 +857,7 @@ static void loop_unprepare_queue(struct
- 
- static int loop_kthread_worker_fn(void *worker_ptr)
- {
--	current->flags |= PF_LESS_THROTTLE;
-+	current->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
- 	return kthread_worker_fn(worker_ptr);
- }
- 
-
-
+> +                       };
+> +               };
+> +
+=20
