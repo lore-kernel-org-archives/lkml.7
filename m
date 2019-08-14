@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542C0C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6307C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32FCF2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7D7A2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:10:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbfHNPKJ (ORCPT
+        id S1728278AbfHNPKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 11:10:09 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:56655 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfHNPKI (ORCPT
+        Wed, 14 Aug 2019 11:10:15 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:53663 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728134AbfHNPKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 11:10:08 -0400
-X-Originating-IP: 92.137.69.152
+        Wed, 14 Aug 2019 11:10:13 -0400
 Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 2A86EFF806;
-        Wed, 14 Aug 2019 15:10:06 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 7C0E2100007;
+        Wed, 14 Aug 2019 15:10:11 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 1/9] rtc: pcf2123: stop using dev.platform_data
-Date:   Wed, 14 Aug 2019 17:09:54 +0200
-Message-Id: <20190814151002.7324-1-alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 5/9] rtc: pcf2123: let the core handle range offsetting
+Date:   Wed, 14 Aug 2019 17:09:58 +0200
+Message-Id: <20190814151002.7324-5-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190814151002.7324-1-alexandre.belloni@bootlin.com>
+References: <20190814151002.7324-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,115 +41,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-platform_data is for platform specific data, use driver_data instead.
+Set the RTC range properly and use the core windowing and offsetting to
+(unfortunately) map back to a 1970-2069 range.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-pcf2123.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/rtc/rtc-pcf2123.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/rtc/rtc-pcf2123.c b/drivers/rtc/rtc-pcf2123.c
-index fb542a930bf0..ed20e947c16b 100644
+index 7d79180a4292..ba37060f299e 100644
 --- a/drivers/rtc/rtc-pcf2123.c
 +++ b/drivers/rtc/rtc-pcf2123.c
-@@ -119,7 +119,7 @@ static const struct regmap_config pcf2123_regmap_config = {
+@@ -194,9 +194,7 @@ static int pcf2123_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ 	tm->tm_mday = bcd2bin(rxbuf[3] & 0x3F);
+ 	tm->tm_wday = rxbuf[4] & 0x07;
+ 	tm->tm_mon = bcd2bin(rxbuf[5] & 0x1F) - 1; /* rtc mn 1-12 */
+-	tm->tm_year = bcd2bin(rxbuf[6]);
+-	if (tm->tm_year < 70)
+-		tm->tm_year += 100;	/* assume we are in 1970...2069 */
++	tm->tm_year = bcd2bin(rxbuf[6]) + 100;
  
- static int pcf2123_read_offset(struct device *dev, long *offset)
- {
--	struct pcf2123_plat_data *pdata = dev_get_platdata(dev);
-+	struct pcf2123_plat_data *pdata = dev_get_drvdata(dev);
- 	int ret, val;
- 	unsigned int reg;
+ 	dev_dbg(dev, "%s: tm is %ptR\n", __func__, tm);
  
-@@ -149,7 +149,7 @@ static int pcf2123_read_offset(struct device *dev, long *offset)
-  */
- static int pcf2123_set_offset(struct device *dev, long offset)
- {
--	struct pcf2123_plat_data *pdata = dev_get_platdata(dev);
-+	struct pcf2123_plat_data *pdata = dev_get_drvdata(dev);
- 	s8 reg;
+@@ -223,7 +221,7 @@ static int pcf2123_rtc_set_time(struct device *dev, struct rtc_time *tm)
+ 	txbuf[3] = bin2bcd(tm->tm_mday & 0x3F);
+ 	txbuf[4] = tm->tm_wday & 0x07;
+ 	txbuf[5] = bin2bcd((tm->tm_mon + 1) & 0x1F); /* rtc mn 1-12 */
+-	txbuf[6] = bin2bcd(tm->tm_year < 100 ? tm->tm_year : tm->tm_year - 100);
++	txbuf[6] = bin2bcd(tm->tm_year - 100);
  
- 	if (offset > OFFSET_STEP * 127)
-@@ -174,7 +174,7 @@ static int pcf2123_set_offset(struct device *dev, long offset)
+ 	ret = regmap_bulk_write(pcf2123->map, PCF2123_REG_SC, txbuf,
+ 				sizeof(txbuf));
+@@ -431,6 +429,9 @@ static int pcf2123_probe(struct spi_device *spi)
+ 	 */
+ 	rtc->uie_unsupported = 1;
+ 	rtc->ops = &pcf2123_rtc_ops;
++	rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
++	rtc->range_max = RTC_TIMESTAMP_END_2099;
++	rtc->set_start_time = true;
  
- static int pcf2123_rtc_read_time(struct device *dev, struct rtc_time *tm)
- {
--	struct pcf2123_plat_data *pdata = dev_get_platdata(dev);
-+	struct pcf2123_plat_data *pdata = dev_get_drvdata(dev);
- 	u8 rxbuf[7];
- 	int ret;
- 
-@@ -205,7 +205,7 @@ static int pcf2123_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 
- static int pcf2123_rtc_set_time(struct device *dev, struct rtc_time *tm)
- {
--	struct pcf2123_plat_data *pdata = dev_get_platdata(dev);
-+	struct pcf2123_plat_data *pdata = dev_get_drvdata(dev);
- 	u8 txbuf[7];
- 	int ret;
- 
-@@ -240,7 +240,7 @@ static int pcf2123_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 
- static int pcf2123_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
- {
--	struct pcf2123_plat_data *pdata = dev_get_platdata(dev);
-+	struct pcf2123_plat_data *pdata = dev_get_drvdata(dev);
- 	u8 rxbuf[4];
- 	int ret;
- 	unsigned int val = 0;
-@@ -268,7 +268,7 @@ static int pcf2123_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
- 
- static int pcf2123_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
- {
--	struct pcf2123_plat_data *pdata = dev_get_platdata(dev);
-+	struct pcf2123_plat_data *pdata = dev_get_drvdata(dev);
- 	u8 txbuf[4];
- 	int ret;
- 
-@@ -308,7 +308,7 @@ static int pcf2123_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
- 
- static irqreturn_t pcf2123_rtc_irq(int irq, void *dev)
- {
--	struct pcf2123_plat_data *pdata = dev_get_platdata(dev);
-+	struct pcf2123_plat_data *pdata = dev_get_drvdata(dev);
- 	struct mutex *lock = &pdata->rtc->ops_lock;
- 	unsigned int val = 0;
- 	int ret = IRQ_NONE;
-@@ -333,7 +333,7 @@ static irqreturn_t pcf2123_rtc_irq(int irq, void *dev)
- 
- static int pcf2123_reset(struct device *dev)
- {
--	struct pcf2123_plat_data *pdata = dev_get_platdata(dev);
-+	struct pcf2123_plat_data *pdata = dev_get_drvdata(dev);
- 	int ret;
- 	unsigned int val = 0;
- 
-@@ -385,7 +385,8 @@ static int pcf2123_probe(struct spi_device *spi)
- 				GFP_KERNEL);
- 	if (!pdata)
- 		return -ENOMEM;
--	spi->dev.platform_data = pdata;
-+
-+	dev_set_drvdata(&spi->dev, pdata);
- 
- 	pdata->map = devm_regmap_init_spi(spi, &pcf2123_regmap_config);
- 
-@@ -418,6 +419,7 @@ static int pcf2123_probe(struct spi_device *spi)
- 
- 	pdata->rtc = rtc;
- 
-+
- 	/* Register alarm irq */
- 	if (spi->irq > 0) {
- 		ret = devm_request_threaded_irq(&spi->dev, spi->irq, NULL,
-@@ -439,7 +441,6 @@ static int pcf2123_probe(struct spi_device *spi)
- 	return 0;
- 
- kfree_exit:
--	spi->dev.platform_data = NULL;
- 	return ret;
- }
- 
+ 	ret = rtc_register_device(rtc);
+ 	if (ret)
 -- 
 2.21.0
 
