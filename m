@@ -2,143 +2,68 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBF8C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99070C32757
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C944206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67BB8206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:59:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="efd7BB7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfHNKzm (ORCPT
+        id S1727072AbfHNK7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:55:42 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50547 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbfHNKzm (ORCPT
+        Wed, 14 Aug 2019 06:59:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37776 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfHNK7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:55:42 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxqwK-00058t-Au; Wed, 14 Aug 2019 12:55:36 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxqwJ-0008Ni-1w; Wed, 14 Aug 2019 12:55:35 +0200
-Date:   Wed, 14 Aug 2019 12:55:35 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
-Subject: Re: [PATCH v2 2/2] pwm: sprd: Add Spreadtrum PWM support
-Message-ID: <20190814105535.svslc57qp3wx5lub@pengutronix.de>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
- <20190813151612.v6x6e6kzxflkpu7b@pengutronix.de>
- <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
- <20190814092339.73ybj5mycklvpnrq@pengutronix.de>
- <CAMz4ku+3txx5kO-u_+_pxFwoovnX81WFF-moNBasUUgEpvQb+Q@mail.gmail.com>
+        Wed, 14 Aug 2019 06:59:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pgEYvZ1eHaerdck2Co4GVpTNOK0XG7sAjbhxzXDr3cg=; b=efd7BB7FFkItnlBI7w8GHVMsn
+        4GIbgYe82811OaU8L8vno4ecf6DctuZmkjgAcU6XJogETY9aisqUqQE488gz+w6ob6S3d1wAiwFQg
+        VF2ROeJuN5utdGVIF7F1coTOaAkq147leVOXWaxbv6bBEAGC4W4eRRIFWjr29Xkum22aa4xNgzaJ4
+        6LoNx/XH7TJAT23Zj9p1D2qRrgkFYTbhidlPp5R0TNxA4uZra5pt2DxXui0OpetIfeUIdz4CWfSo+
+        i2Wus477698g9LqAJiAruVKH/i03lJAoiAlqD/SilFQBOEVuE1m8s6PgWplVESN5T7c3Rz1xe1Oel
+        jHfRRPE/A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hxqzy-00032b-R3; Wed, 14 Aug 2019 10:59:22 +0000
+Date:   Wed, 14 Aug 2019 03:59:22 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com
+Subject: Re: [PATCH] PCI: dwc: Add map irq callback
+Message-ID: <20190814105922.GA11568@infradead.org>
+References: <333e87c8ea92cd7442fbe874fc8c9eccabc62f58.1565763869.git.eswara.kota@linux.intel.com>
+ <20190814073605.GA31526@infradead.org>
+ <fe722a89-37e7-9ef6-042b-a9584f234740@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMz4ku+3txx5kO-u_+_pxFwoovnX81WFF-moNBasUUgEpvQb+Q@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <fe722a89-37e7-9ef6-042b-a9584f234740@linux.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Baolin,
+On Wed, Aug 14, 2019 at 04:31:14PM +0800, Dilip Kota wrote:
+> > callback.
+> pp->map_irq() must assign the callback along with the platform specific
+> configuration.
+> In Intel PCIe driver pp->map_irq() does the same. (Driver is not yet present
+> in mainline, i will submit for review once this change is approved).
 
-On Wed, Aug 14, 2019 at 06:01:50PM +0800, Baolin Wang wrote:
-> On Wed, 14 Aug 2019 at 17:23, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Wed, Aug 14, 2019 at 04:42:28PM +0800, Baolin Wang wrote:
-> > > On Tue, 13 Aug 2019 at 23:16, Uwe Kleine-König
-> > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > On Tue, Aug 13, 2019 at 09:46:41PM +0800, Baolin Wang wrote:
-> > > > [...]
-> > > Not really, our hardware's method is, when you changed a new
-> > > configuration (MOD or duty is changed) , the hardware will wait for a
-> > > while to complete current period, then change to the new period.
-> >
-> > Can you describe that in more detail? This doesn't explain why MOD must be
-> > configured before DUTY. Is there another reason for that?
-> 
-> Sorry, I did not explain this explicitly. When we change a new PWM
-> configuration, the PWM controller will make sure the current period is
-> completed before changing to a new period. Once setting the MOD
-> register (since we always set MOD firstly), that will tell the
-> hardware that a new period need to change.
-
-So if the current period just ended after you reconfigured MOD but
-before you wrote to DUTY we'll see a bogus period, right? I assume the
-same holds true for writing the prescale value?
-
-> The reason MOD must be configured before DUTY is that, if we
-> configured DUTY firstly, the PWM can work abnormally if the current
-> DUTY is larger than previous MOD. That is also our hardware's
-> limitation.
-
-OK, so you must not get into a situation where DUTY > MOD, right?
-
-Now if the hardware was configured for
-
-	period = 8s, duty = 4s
-
-and now you are supposed to change to
-
-	period = 2s, duty = 1s
-
-you'd need to write DUTY first, don't you?
-
-> > > > > +static int sprd_pwm_remove(struct platform_device *pdev)
-> > > > > +{
-> > > > > +     struct sprd_pwm_chip *spc = platform_get_drvdata(pdev);
-> > > > > +     int ret, i;
-> > > > > +
-> > > > > +     ret = pwmchip_remove(&spc->chip);
-> > > > > +
-> > > > > +     for (i = 0; i < spc->num_pwms; i++) {
-> > > > > +             struct sprd_pwm_chn *chn = &spc->chn[i];
-> > > > > +
-> > > > > +             clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->clks);
-> > > >
-> > > > If a PWM was still running you're effectively stopping it here, right?
-> > > > Are you sure you don't disable once more than you enabled?
-> > >
-> > > Yes, you are right. I should check current enable status of the PWM channel.
-> > > Thanks for your comments.
-> >
-> > I didn't recheck, but I think the right approach is to not fiddle with
-> > the clocks at all and rely on the PWM framework to not let someone call
-> > sprd_pwm_remove when a PWM is still in use.
-> 
-> So you mean just return pwmchip_remove(&spc->chip); ?
-
-right.
-
-I just rechecked: If there is still a pwm in use, pwmchip_remove returns
--EBUSY. So this should be safe.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+And that's what I meant.  The standard procedure is to submit your
+core changes together with the user, not separately.
