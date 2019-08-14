@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56120C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0274CC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A4922133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43032133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750411;
-	bh=v8JNMx8s3Mg4rx4naATw4/h6FoQvpnPlHvb9F9IPm6Q=;
+	s=default; t=1565750413;
+	bh=eB7YhVPUizWg8v7xJrnxSGJjFSBOrQI3RZ69wlXaMVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jAMrrKYh+W5xfaKTJTg6nRyQJToQH2boK47wC1L0iZHywOk9ywfyeMcegIslDrIOz
-	 w4MxhpIft45VUO2++Z7fxAO4zdoF9cSysWeugS8Ry3GFYdHgOhr7MKAtbipub2WCgi
-	 r8SMFO3/0bAZkvwj+j5g1OM5ekJw3UKpFUJR4+2w=
+	b=S1rlE4vkMI3H9JsQzU/qqyJP4898EAw87IaPwXIToUFJdEKxu82jLIBIC1p/5Gn1O
+	 u0PcEBYrq7U/sEfA1HFkFzzXMXeG7hb75Oei4S1zhtJ48R7BekGA9RKxHtTC0JciPY
+	 zUdkfOkQP+Sxegf8EulW1y01Adegaz43WdNqq96I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbfHNCkK (ORCPT
+        id S1727225AbfHNCLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:40:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43372 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:11:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727206AbfHNCLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:11:10 -0400
+        id S1727083AbfHNCK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:10:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4567420842;
-        Wed, 14 Aug 2019 02:11:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 965B82084F;
+        Wed, 14 Aug 2019 02:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748669;
-        bh=v8JNMx8s3Mg4rx4naATw4/h6FoQvpnPlHvb9F9IPm6Q=;
+        s=default; t=1565748658;
+        bh=eB7YhVPUizWg8v7xJrnxSGJjFSBOrQI3RZ69wlXaMVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KQnvMBRG8uJYZEIFM1N6JEaGouD1SBiPVQjo5nNsjvaAm5MwIezut+KmlzlnOlBI9
-         sIWcgkwPuO9OoXkbpaFW5qjCKgTM6RSVdZpJKy7CWnvmb1gYH9thR8P38p9AEDwg7b
-         83sPZDGoaY1heFBIVyZbWGUbvZC317dpWNk47bIM=
+        b=ccHGzwy9AMb5hctfJTd0KfmGAaLfTLZB9iSxhk5wFkC2oDxUg8mPX0Zpey6pRcUGp
+         SsqSkHsjKF33PKqJs1yqaONzcmYv2dQACieQ6N6VS9W9awGPVh4sKT0LhfO5FHS8bn
+         l8F9ZPAOuA9zOlG9jUC9oG7eQMKooCa4niEknrpI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jean-Baptiste Maneyrol <JManeyrol@invensense.com>,
-        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 010/123] iio: imu: mpu6050: add missing available scan masks
-Date:   Tue, 13 Aug 2019 22:08:54 -0400
-Message-Id: <20190814021047.14828-10-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 005/123] ASoC: audio-graph-card: fix an use-after-free in graph_get_dai_id()
+Date:   Tue, 13 Aug 2019 22:08:49 -0400
+Message-Id: <20190814021047.14828-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -61,97 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 1244a720572fd1680ac8d6b8a4235f2e8557b810 ]
+[ Upstream commit c152f8491a8d9a4b25afd65a86eb5e55e2a8c380 ]
 
-Driver only supports 3-axis gyro and/or 3-axis accel.
-For icm20602, temp data is mandatory for all configurations.
+After calling of_node_put() on the node variable, it is still being
+used, which may result in use-after-free.
+Fix this issue by calling of_node_put() after the last usage.
 
-Fix all single and double axis configurations (almost never used) and more
-importantly fix 3-axis gyro and 6-axis accel+gyro buffer on icm20602 when
-temp data is not enabled.
-
-Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-Fixes: 1615fe41a195 ("iio: imu: mpu6050: Fix FIFO layout for ICM20602")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: a0c426fe1433 ("ASoC: simple-card-utils: check "reg" property on asoc_simple_card_get_dai_id()")
+Link: https://lore.kernel.org/r/1562743509-30496-5-git-send-email-wen.yang99@zte.com.cn
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ sound/soc/generic/audio-graph-card.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-index 53a59957cc542..8a704cd5bddb7 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-@@ -845,6 +845,25 @@ static const struct iio_chan_spec inv_mpu_channels[] = {
- 	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_Z, INV_MPU6050_SCAN_ACCL_Z),
- };
+diff --git a/sound/soc/generic/audio-graph-card.c b/sound/soc/generic/audio-graph-card.c
+index d5188a179378f..a681ea443fc16 100644
+--- a/sound/soc/generic/audio-graph-card.c
++++ b/sound/soc/generic/audio-graph-card.c
+@@ -63,6 +63,7 @@ static int graph_get_dai_id(struct device_node *ep)
+ 	struct device_node *endpoint;
+ 	struct of_endpoint info;
+ 	int i, id;
++	u32 *reg;
+ 	int ret;
  
-+static const unsigned long inv_mpu_scan_masks[] = {
-+	/* 3-axis accel */
-+	BIT(INV_MPU6050_SCAN_ACCL_X)
-+		| BIT(INV_MPU6050_SCAN_ACCL_Y)
-+		| BIT(INV_MPU6050_SCAN_ACCL_Z),
-+	/* 3-axis gyro */
-+	BIT(INV_MPU6050_SCAN_GYRO_X)
-+		| BIT(INV_MPU6050_SCAN_GYRO_Y)
-+		| BIT(INV_MPU6050_SCAN_GYRO_Z),
-+	/* 6-axis accel + gyro */
-+	BIT(INV_MPU6050_SCAN_ACCL_X)
-+		| BIT(INV_MPU6050_SCAN_ACCL_Y)
-+		| BIT(INV_MPU6050_SCAN_ACCL_Z)
-+		| BIT(INV_MPU6050_SCAN_GYRO_X)
-+		| BIT(INV_MPU6050_SCAN_GYRO_Y)
-+		| BIT(INV_MPU6050_SCAN_GYRO_Z),
-+	0,
-+};
-+
- static const struct iio_chan_spec inv_icm20602_channels[] = {
- 	IIO_CHAN_SOFT_TIMESTAMP(INV_ICM20602_SCAN_TIMESTAMP),
- 	{
-@@ -871,6 +890,28 @@ static const struct iio_chan_spec inv_icm20602_channels[] = {
- 	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_Z, INV_ICM20602_SCAN_ACCL_Z),
- };
+ 	/* use driver specified DAI ID if exist */
+@@ -83,8 +84,9 @@ static int graph_get_dai_id(struct device_node *ep)
+ 			return info.id;
  
-+static const unsigned long inv_icm20602_scan_masks[] = {
-+	/* 3-axis accel + temp (mandatory) */
-+	BIT(INV_ICM20602_SCAN_ACCL_X)
-+		| BIT(INV_ICM20602_SCAN_ACCL_Y)
-+		| BIT(INV_ICM20602_SCAN_ACCL_Z)
-+		| BIT(INV_ICM20602_SCAN_TEMP),
-+	/* 3-axis gyro + temp (mandatory) */
-+	BIT(INV_ICM20602_SCAN_GYRO_X)
-+		| BIT(INV_ICM20602_SCAN_GYRO_Y)
-+		| BIT(INV_ICM20602_SCAN_GYRO_Z)
-+		| BIT(INV_ICM20602_SCAN_TEMP),
-+	/* 6-axis accel + gyro + temp (mandatory) */
-+	BIT(INV_ICM20602_SCAN_ACCL_X)
-+		| BIT(INV_ICM20602_SCAN_ACCL_Y)
-+		| BIT(INV_ICM20602_SCAN_ACCL_Z)
-+		| BIT(INV_ICM20602_SCAN_GYRO_X)
-+		| BIT(INV_ICM20602_SCAN_GYRO_Y)
-+		| BIT(INV_ICM20602_SCAN_GYRO_Z)
-+		| BIT(INV_ICM20602_SCAN_TEMP),
-+	0,
-+};
-+
- /*
-  * The user can choose any frequency between INV_MPU6050_MIN_FIFO_RATE and
-  * INV_MPU6050_MAX_FIFO_RATE, but only these frequencies are matched by the
-@@ -1130,9 +1171,11 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
- 	if (chip_type == INV_ICM20602) {
- 		indio_dev->channels = inv_icm20602_channels;
- 		indio_dev->num_channels = ARRAY_SIZE(inv_icm20602_channels);
-+		indio_dev->available_scan_masks = inv_icm20602_scan_masks;
- 	} else {
- 		indio_dev->channels = inv_mpu_channels;
- 		indio_dev->num_channels = ARRAY_SIZE(inv_mpu_channels);
-+		indio_dev->available_scan_masks = inv_mpu_scan_masks;
+ 		node = of_get_parent(ep);
++		reg = of_get_property(node, "reg", NULL);
+ 		of_node_put(node);
+-		if (of_get_property(node, "reg", NULL))
++		if (reg)
+ 			return info.port;
  	}
- 
- 	indio_dev->info = &mpu_info;
+ 	node = of_graph_get_port_parent(ep);
 -- 
 2.20.1
 
