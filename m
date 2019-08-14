@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE50C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E28CC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4D12133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BA02085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749025;
-	bh=PffihcjvD0g7CbrtREsuGAPrLh7k4Se+VjzT2+ZC7nw=;
+	s=default; t=1565749033;
+	bh=MLP40Xee1XZVetBmWFSJCKBW+PStioixF9jdljQ31A4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dzwkZjhsM4OJda8YtmheAJnJ9jBuj+2RylECtScvdt5Z0v9cPBpQUqy/lRIW7NOSh
-	 H0QHJLLUAlSFwRAK25dmxpf/4f3nOdga633yN39diuM3mv3dGdQ2NsiMN8eVzVcd2D
-	 7ZdHGdj3NWN3WgOupnGho+MzIAyy24cFN07DEAbE=
+	b=HqkoqV4ZTau2AfBchFiOkEcUjblDXFRiUJ4Mu1tEVD7KCzon35DT9nJAmH6qhJ/Pa
+	 a7VCnKrZTyPOtv0VVKF/E96RJicqe79kZSOFia7r1tu3XxSfpDzCflaED2i75kmB7+
+	 rI53zb63gmHlwU2BouXFc840VjREgVOM5+mxgzDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729289AbfHNCRE (ORCPT
+        id S1729315AbfHNCRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:17:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48362 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:17:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727434AbfHNCRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:17:01 -0400
+        id S1729295AbfHNCRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:17:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 060DA21743;
-        Wed, 14 Aug 2019 02:16:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 789122085A;
+        Wed, 14 Aug 2019 02:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749020;
-        bh=PffihcjvD0g7CbrtREsuGAPrLh7k4Se+VjzT2+ZC7nw=;
+        s=default; t=1565749025;
+        bh=MLP40Xee1XZVetBmWFSJCKBW+PStioixF9jdljQ31A4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UukRyRbK34yNNxl+LIQgqJIpzlcE7J1A775+Xcxd9ZNiUyhIiLQ394140nufhjdoe
-         3tT0bbBDZtqWJ6J+eggwJYDoZ3BtuqxqD9RMn6MvWFKFgX7BU84ZmGpACu4noPrR8G
-         YsD5Lp32YBC0noyEGbUnP3RNxhYYtx4t2ov/NnwY=
+        b=V+O5sCE4S+a8TMzUE5AC3sE6GWXChHLbGgpIIHdv6nDDBL+ytRrXtcatUPPfnr2oI
+         NXSe+4B5K88cQfIEjNHVf8PBkecG6XPxQf6iA7GXj/YLH2z7desKAtkAcTilBrfhfA
+         3KYIflwjeyZZDH8xdVw+mbnjgQGqwaCemAmomv7M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Xiayang <xywang.sjtu@sjtu.edu.cn>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 39/68] net/ethernet/qlogic/qed: force the string buffer NULL-terminated
-Date:   Tue, 13 Aug 2019 22:15:17 -0400
-Message-Id: <20190814021548.16001-39-sashal@kernel.org>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+965152643a75a56737be@syzkaller.appspotmail.com,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 43/68] HID: holtek: test for sanity of intfdata
+Date:   Tue, 13 Aug 2019 22:15:21 -0400
+Message-Id: <20190814021548.16001-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -59,40 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 3690c8c9a8edff0db077a38783112d8fe12a7dd2 ]
+[ Upstream commit 01ec0a5f19c8c82960a07f6c7410fc9e01d7fb51 ]
 
-strncpy() does not ensure NULL-termination when the input string
-size equals to the destination buffer size 30.
-The output string is passed to qed_int_deassertion_aeu_bit()
-which calls DP_INFO() and relies NULL-termination.
+The ioctl handler uses the intfdata of a second interface,
+which may not be present in a broken or malicious device, hence
+the intfdata needs to be checked for NULL.
 
-Use strlcpy instead. The other conditional branch above strncpy()
-needs no fix as snprintf() ensures NULL-termination.
-
-This issue is identified by a Coccinelle script.
-
-Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[jkosina@suse.cz: fix newly added spurious space]
+Reported-by: syzbot+965152643a75a56737be@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_int.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-holtek-kbd.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
-index b22f464ea3fa7..f9e475075d3ea 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_int.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
-@@ -939,7 +939,7 @@ static int qed_int_deassertion(struct qed_hwfn  *p_hwfn,
- 						snprintf(bit_name, 30,
- 							 p_aeu->bit_name, num);
- 					else
--						strncpy(bit_name,
-+						strlcpy(bit_name,
- 							p_aeu->bit_name, 30);
+diff --git a/drivers/hid/hid-holtek-kbd.c b/drivers/hid/hid-holtek-kbd.c
+index 6e1a4a4fc0c10..ab9da597106fa 100644
+--- a/drivers/hid/hid-holtek-kbd.c
++++ b/drivers/hid/hid-holtek-kbd.c
+@@ -126,9 +126,14 @@ static int holtek_kbd_input_event(struct input_dev *dev, unsigned int type,
  
- 					/* We now need to pass bitmask in its
+ 	/* Locate the boot interface, to receive the LED change events */
+ 	struct usb_interface *boot_interface = usb_ifnum_to_if(usb_dev, 0);
++	struct hid_device *boot_hid;
++	struct hid_input *boot_hid_input;
+ 
+-	struct hid_device *boot_hid = usb_get_intfdata(boot_interface);
+-	struct hid_input *boot_hid_input = list_first_entry(&boot_hid->inputs,
++	if (unlikely(boot_interface == NULL))
++		return -ENODEV;
++
++	boot_hid = usb_get_intfdata(boot_interface);
++	boot_hid_input = list_first_entry(&boot_hid->inputs,
+ 		struct hid_input, list);
+ 
+ 	return boot_hid_input->input->event(boot_hid_input->input, type, code,
 -- 
 2.20.1
 
