@@ -2,52 +2,64 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EA1C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC5DC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA842206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7011214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565792112;
+	bh=kburXRh82xHoH2ULBf4qbUaBruG20vqIvfvEbFcltJY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=ILeN6J6UQ9UlToF+b2Gh3l815ZvVfukDCOnig1+ho3+o8E1rghL9A1m/IxB7tDM0s
+	 BrCrLII9gwrqjZBuCZODt5bo/tUo1NZ21m2H9Tycs6Wl5IuxSddcdMI9MSo740qu4U
+	 GwGckpF+ajroDHOq8S7EYbvgQ1Y6SblISHHTqsBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727651AbfHNOM2 (ORCPT
+        id S1727461AbfHNOPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 10:12:28 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55000 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfHNOM2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 10:12:28 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 78E88286289
-Message-ID: <c490068a4d1ea550f330e8127826014bec0e12f2.camel@collabora.com>
-Subject: Re: [PATCH v5 04/11] media: uapi: h264: Add the concept of start
- code
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
-Date:   Wed, 14 Aug 2019 11:12:16 -0300
-In-Reply-To: <20190814114928.GB4687@aptenodytes>
-References: <20190812193522.10911-1-ezequiel@collabora.com>
-         <20190812193522.10911-5-ezequiel@collabora.com>
-         <f88d144f-e0fe-6974-efe5-77b5ed5c6e09@xs4all.nl>
-         <20190814114928.GB4687@aptenodytes>
-Organization: Collabora
+        Wed, 14 Aug 2019 10:15:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbfHNOPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 10:15:10 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F11AF2133F;
+        Wed, 14 Aug 2019 14:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565792109;
+        bh=kburXRh82xHoH2ULBf4qbUaBruG20vqIvfvEbFcltJY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=YmMNPxPAWp25eQhuqgZ4ltWhMxF28BvGB5vskr14XqYVCQZZ96TVxfUdULrpt9Fg0
+         60trd+Jkb520pjcYaqrosDqW5ftToo6hZAXtZVmiRfDVvso+e6i9CkZS/dVjFp3R2p
+         sxNd0hLUe0BkrhCT6Rwkhd2HlJfkAotXSoeuAaW0=
+Message-ID: <fde2959db776616008fc5d31df700f5d7d899433.camel@kernel.org>
+Subject: Re: [RFC PATCH v2 02/19] fs/locks: Add Exclusive flag to user
+ Layout lease
+From:   Jeff Layton <jlayton@kernel.org>
+To:     ira.weiny@intel.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Date:   Wed, 14 Aug 2019 10:15:06 -0400
+In-Reply-To: <20190809225833.6657-3-ira.weiny@intel.com>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+         <20190809225833.6657-3-ira.weiny@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,89 +67,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-08-14 at 13:49 +0200, Paul Kocialkowski wrote:
-> Hi,
+On Fri, 2019-08-09 at 15:58 -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> On Wed 14 Aug 19, 10:11, Hans Verkuil wrote:
-> > On 8/12/19 9:35 PM, Ezequiel Garcia wrote:
-> > > Stateless decoders have different expectations about the
-> > > start code that is prepended on H264 slices. Add a
-> > > menu control to express the supported start code types
-> > > (including no start code).
-> > > 
-> > > Drivers are allowed to support only one start code type,
-> > > but they can support both too.
-> > > 
-> > > Note that this is independent of the H264 decoding mode,
-> > > which specifies the granularity of the decoding operations.
-> > > Either in frame-based or slice-based mode, this new control
-> > > will allow to define the start code expected on H264 slices.
-> > > 
-> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > > ---
-> > > Changes in v5:
-> > > * Improve specification as suggested by Hans.
-> > > Changes in v4:
-> > > * New patch.
-> > > ---
-> > >  .../media/uapi/v4l/ext-ctrls-codec.rst        | 33 +++++++++++++++++++
-> > >  .../media/uapi/v4l/pixfmt-compressed.rst      |  3 +-
-> > >  drivers/media/v4l2-core/v4l2-ctrls.c          |  9 +++++
-> > >  include/media/h264-ctrls.h                    |  6 ++++
-> > >  4 files changed, 50 insertions(+), 1 deletion(-)
-> > > 
-> > 
-> > <snip>
-> > 
-> > > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> > > index e6c510877f67..31555c99f64a 100644
-> > > --- a/include/media/h264-ctrls.h
-> > > +++ b/include/media/h264-ctrls.h
-> > > @@ -27,6 +27,7 @@
-> > >  #define V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS	(V4L2_CID_MPEG_BASE+1003)
-> > >  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS	(V4L2_CID_MPEG_BASE+1004)
-> > >  #define V4L2_CID_MPEG_VIDEO_H264_DECODING_MODE	(V4L2_CID_MPEG_BASE+1005)
-> > > +#define V4L2_CID_MPEG_VIDEO_H264_STARTCODE	(V4L2_CID_MPEG_BASE+1006)
-> > 
-> > I almost forgot: can you change this to _START_CODE? Since it is two words?
+> Add an exclusive lease flag which indicates that the layout mechanism
+> can not be broken.
 > 
-> Agreed, I like it better this way too.
+> Exclusive layout leases allow the file system to know that pages may be
+> GUP pined and that attempts to change the layout, ie truncate, should be
+> failed.
 > 
+> A process which attempts to break it's own exclusive lease gets an
+> EDEADLOCK return to help determine that this is likely a programming bug
+> vs someone else holding a resource.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  fs/locks.c                       | 23 +++++++++++++++++++++--
+>  include/linux/fs.h               |  1 +
+>  include/uapi/asm-generic/fcntl.h |  2 ++
+>  3 files changed, 24 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/locks.c b/fs/locks.c
+> index ad17c6ffca06..0c7359cdab92 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -626,6 +626,8 @@ static int lease_init(struct file *filp, long type, unsigned int flags,
+>  	fl->fl_flags = FL_LEASE;
+>  	if (flags & FL_LAYOUT)
+>  		fl->fl_flags |= FL_LAYOUT;
+> +	if (flags & FL_EXCLUSIVE)
+> +		fl->fl_flags |= FL_EXCLUSIVE;
+>  	fl->fl_start = 0;
+>  	fl->fl_end = OFFSET_MAX;
+>  	fl->fl_ops = NULL;
+> @@ -1619,6 +1621,14 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
+>  	list_for_each_entry_safe(fl, tmp, &ctx->flc_lease, fl_list) {
+>  		if (!leases_conflict(fl, new_fl))
+>  			continue;
+> +		if (fl->fl_flags & FL_EXCLUSIVE) {
+> +			error = -ETXTBSY;
+> +			if (new_fl->fl_pid == fl->fl_pid) {
+> +				error = -EDEADLOCK;
+> +				goto out;
+> +			}
+> +			continue;
+> +		}
+>  		if (want_write) {
+>  			if (fl->fl_flags & FL_UNLOCK_PENDING)
+>  				continue;
+> @@ -1634,6 +1644,13 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
+>  			locks_delete_lock_ctx(fl, &dispose);
+>  	}
+>  
+> +	/* We differentiate between -EDEADLOCK and -ETXTBSY so the above loop
+> +	 * continues with -ETXTBSY looking for a potential deadlock instead.
+> +	 * If deadlock is not found go ahead and return -ETXTBSY.
+> +	 */
+> +	if (error == -ETXTBSY)
+> +		goto out;
+> +
+>  	if (list_empty(&ctx->flc_lease))
+>  		goto out;
+>  
+> @@ -2044,9 +2061,11 @@ static int do_fcntl_add_lease(unsigned int fd, struct file *filp, long arg)
+>  	 * to revoke the lease in break_layout()  And this is done by using
+>  	 * F_WRLCK in the break code.
+>  	 */
+> -	if (arg == F_LAYOUT) {
+> +	if ((arg & F_LAYOUT) == F_LAYOUT) {
+> +		if ((arg & F_EXCLUSIVE) == F_EXCLUSIVE)
+> +			flags |= FL_EXCLUSIVE;
+>  		arg = F_RDLCK;
+> -		flags = FL_LAYOUT;
+> +		flags |= FL_LAYOUT;
+>  	}
+>  
+>  	fl = lease_alloc(filp, arg, flags);
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index dd60d5be9886..2e41ce547913 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1005,6 +1005,7 @@ static inline struct file *get_file(struct file *f)
+>  #define FL_UNLOCK_PENDING	512 /* Lease is being broken */
+>  #define FL_OFDLCK	1024	/* lock is "owned" by struct file */
+>  #define FL_LAYOUT	2048	/* outstanding pNFS layout or user held pin */
+> +#define FL_EXCLUSIVE	4096	/* Layout lease is exclusive */
+>  
+>  #define FL_CLOSE_POSIX (FL_POSIX | FL_CLOSE)
+>  
+> diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
+> index baddd54f3031..88b175ceccbc 100644
+> --- a/include/uapi/asm-generic/fcntl.h
+> +++ b/include/uapi/asm-generic/fcntl.h
+> @@ -176,6 +176,8 @@ struct f_owner_ex {
+>  
+>  #define F_LAYOUT	16      /* layout lease to allow longterm pins such as
+>  				   RDMA */
+> +#define F_EXCLUSIVE	32      /* layout lease is exclusive */
+> +				/* FIXME or shoudl this be F_EXLCK??? */
+>  
+>  /* operations for bsd flock(), also used by the kernel implementation */
+>  #define LOCK_SH		1	/* shared lock */
 
-The reason to have STARTCODE instead of START_CODE was to have some
-consistency with other controls (namely, V4L2_CID_MPEG_VIDEO_HEVC_WITHOUT_STARTCODE).
+This interface just seems weird to me. The existing F_*LCK values aren't
+really set up to be flags, but are enumerated values (even if there are
+some gaps on some arches). For instance, on parisc and sparc:
 
-Consistency is really important in a API,
-but at the same time, I agree START_CODE looks better.
+/* for posix fcntl() and lockf() */
+#define F_RDLCK         01
+#define F_WRLCK         02
+#define F_UNLCK         03
 
-> > Thanks!
-> > 
-> > 	Hans
-> > 
-> > >  
-> > >  /* enum v4l2_ctrl_type type values */
-> > >  #define V4L2_CTRL_TYPE_H264_SPS			0x0110
-> > > @@ -41,6 +42,11 @@ enum v4l2_mpeg_video_h264_decoding_mode {
-> > >  	V4L2_MPEG_VIDEO_H264_FRAME_BASED_DECODING,
-> > >  };
-> > >  
-> > > +enum v4l2_mpeg_video_h264_start_code {
-> > > +	V4L2_MPEG_VIDEO_H264_NO_STARTCODE,
-> > > +	V4L2_MPEG_VIDEO_H264_ANNEX_B_STARTCODE,
-> 
-> Could we apply the same START_CODE renaming here too?
-> 
-> I was also thinking that it would be slightly more readable put like this,
-> with START_CODE as a prefix since it's common to both options and the name of
-> the enum:
-> 
-> - V4L2_MPEG_VIDEO_H264_START_CODE_NONE
-> - V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B
-> 
+While your new flag values are well above these values, it's still a bit
+sketchy to do what you're proposing from a cross-platform interface
+standpoint.
 
-Yes, that looks much better.
+I think this would be a lot cleaner if you weren't overloading the
+F_SETLEASE command with new flags, and instead added new
+F_SETLAYOUT/F_GETLAYOUT cmd values.
 
-Thanks,
-Ezequiel
+You'd then be free to define a new set of "arg" values for use with
+layouts, and there's be a clear distinction interface-wise between
+setting a layout and a lease.
+
+-- 
+Jeff Layton <jlayton@kernel.org>
 
