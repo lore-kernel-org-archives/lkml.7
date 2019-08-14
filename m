@@ -2,112 +2,124 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C541CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5A6C32757
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E37B2133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:33:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNSNKHY4"
+	by mail.kernel.org (Postfix) with ESMTP id EC1E3214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:35:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565807755;
+	bh=9tAo8oSEswY4dySBG+2prag4EPquno+j1Jc6Rul1qxg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=RTUvOzequP8wLcY448hhn0ApEHHMlhkpknElYMOXucIRPurB84eFndJrMlv23Pxna
+	 JLjP9YMp4zuGub+T76brfBHkm/sLcDgu5eYo4yoMic47zLt3c8VWiUvh25Ep/B/Z1Z
+	 uhf3L/sdWLBXktVT53lHnWHBRJtthDWdDOhTVS0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbfHNSd5 (ORCPT
+        id S1728686AbfHNSfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 14:33:57 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43984 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfHNSd5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 14:33:57 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y8so17426wrn.10;
-        Wed, 14 Aug 2019 11:33:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=y+U2P77L5yF3rgxH6FgzV86C/p2e7T5M7nztZM7FoNA=;
-        b=GNSNKHY4zlXwjJmo8GGkNFDOKzfrG/bQ/NfZfGL2Ss4sCbVZlBpMpyLo/vQYhrC4Yl
-         6uf+pD0n3YbxhPrLR0cjUZzZhWcdbxGu3wTPx+3qzGKXW7g0of+8cbaEK2HeKfnhfKrk
-         GHsSTW1JUg6CIIaNrt2h/7TGsWZadezEv98TbcgIpSofwDMbDQvsCQgqlE9l+jL7o/1Y
-         102Wqp165KiFejssUf4Ppk8aXprgHen9aBn8dXhIXtZLBsiYeCLAeajqCUhyWwaWYOBx
-         RikW9DUaM/3+YPPg7j5F0qm/hYA19558nyKUcTBdCTjUyIIjwCWCnDFYct6vwLJInT43
-         LSbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=y+U2P77L5yF3rgxH6FgzV86C/p2e7T5M7nztZM7FoNA=;
-        b=M6mDGwnXAO6Scgr/asT5AA3DC5gp4keY8mBJnRFiOgQLq/GmDsXRlSZ8F1Sxxj/Hd1
-         kS9nB9mWImTrsyT5r13ZPXH/gZfZK5+oMxEAcbfpQqqBFOn5EHua702EOKuqwIFtnNRk
-         4edkqiPG/LrXXJ6Ovdfrts2ZXhggx5TtdIY2Pw8SWFyHNmhfCkMKk/8GCcsc4SVKeAyq
-         2oUT7k0w9LI5mA8wrWU1IanqEBDOPqiP59eSnWFqZd7z5Gp5rLVMc0TcxFJ591omqn40
-         2/LMUK/rjkAaBIIlfeL3BMLFjMOTz8+PNbJlik0KxIsqHhfmQo4tDKNYw5POyYJajY7q
-         wRuQ==
-X-Gm-Message-State: APjAAAXUY5DNNAD3WUbtbtLXuLj6xXyElwzfFdlZYSuFQ26fXJnNDeBR
-        H1aY+rIOPMS9ek7E3PvVgna1dvVB
-X-Google-Smtp-Source: APXvYqweTB2T6SpZJVzamx/JzBXYuLVcM/CWoxcHkdiddFthlEGPTteWPA8k8w75i7seeSHcSIBkZw==
-X-Received: by 2002:a05:6000:1284:: with SMTP id f4mr1226050wrx.89.1565807635304;
-        Wed, 14 Aug 2019 11:33:55 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f2f:3200:5905:9c04:aa53:7427? (p200300EA8F2F320059059C04AA537427.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:5905:9c04:aa53:7427])
-        by smtp.googlemail.com with ESMTPSA id r11sm375854wrt.84.2019.08.14.11.33.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 11:33:54 -0700 (PDT)
-Subject: Re: [PATCH] MAINTAINERS: r8169: Update path to the driver
-To:     Denis Efremov <efremov@linux.com>
-Cc:     joe@perches.com, linux-kernel@vger.kernel.org,
-        nic_swsd@realtek.com, "David S . Miller" <davem@davemloft.net>,
-        netdev@vger.kernel.org
-References: <69fac52e-8464-ea87-e2e5-422ae36a92c8@gmail.com>
- <20190814121209.3364-1-efremov@linux.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <7110b633-fd6b-68cf-2ade-81ccf30beb77@gmail.com>
-Date:   Wed, 14 Aug 2019 20:33:47 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 14 Aug 2019 14:35:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51642 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726522AbfHNSfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 14:35:53 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FF062133F;
+        Wed, 14 Aug 2019 18:35:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565807752;
+        bh=9tAo8oSEswY4dySBG+2prag4EPquno+j1Jc6Rul1qxg=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=cqeFc784XewRaoyjiWQdjwPJtXy60XYjptLMJV7LndEosH3B8GoyhJ6UrXCFrjYzl
+         jUIX+QIHJZhe6urpAZ6CkVGYOSRkIpOtCA9AZR+n4fZKWN+9wgunMN9PEgyN83gjq6
+         VeSKDC/IFB/6stoMEtRFdAKAG7Bot/JcAAKwrBko=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190814121209.3364-1-efremov@linux.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190814174439.GE6167@minitux>
+References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-2-vkoul@kernel.org> <20190814165855.098FD2063F@mail.kernel.org> <20190814174439.GE6167@minitux>
+Subject: Re: [PATCH 01/22] arm64: dts: qcom: sm8150: add base dts file
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        linux-arm-msm@vger.kernel.org, sibis@codeaurora.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 14 Aug 2019 11:35:51 -0700
+Message-Id: <20190814183552.5FF062133F@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.08.2019 14:12, Denis Efremov wrote:
-> Update MAINTAINERS record to reflect the filename change.
-> The file was moved in commit 25e992a4603c ("r8169: rename
-> r8169.c to r8169_main.c")
-> 
-> Cc: Heiner Kallweit <hkallweit1@gmail.com>
-> Cc: nic_swsd@realtek.com
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a43a1f0be49f..905efeda56fb 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -183,7 +183,7 @@ M:	Realtek linux nic maintainers <nic_swsd@realtek.com>
->  M:	Heiner Kallweit <hkallweit1@gmail.com>
->  L:	netdev@vger.kernel.org
->  S:	Maintained
-> -F:	drivers/net/ethernet/realtek/r8169.c
-> +F:	drivers/net/ethernet/realtek/r8169*
->  
->  8250/16?50 (AND CLONE UARTS) SERIAL DRIVER
->  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-For net-next.
-Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
+Quoting Bjorn Andersson (2019-08-14 10:44:39)
+> On Wed 14 Aug 09:58 PDT 2019, Stephen Boyd wrote:
+>=20
+> > Quoting Vinod Koul (2019-08-14 05:49:51)
+> > > diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/d=
+ts/qcom/sm8150.dtsi
+> [..]
+> > > +       clocks {
+> > > +               xo_board: xo-board {
+> > > +                       compatible =3D "fixed-clock";
+> > > +                       #clock-cells =3D <0>;
+> > > +                       clock-frequency =3D <19200000>;
+> >=20
+> > Is it 19.2 or 38.4 MHz? It seems like lately there are dividers, but I
+> > guess it doesn't really matter in the end.
+> >=20
+>=20
+> As with previous platforms, the board's XO feeds the PMIC at 38.4MHz and
+> the SoC's CXO_IN pin (i.e. bi_tcxo) is fed from the PMIC's LNBBCLK1,
+> which is ticking at 19.2MHz.
+>=20
+> [..]
+> > > +               gcc: clock-controller@100000 {
+> > > +                       compatible =3D "qcom,gcc-sm8150";
+> > > +                       reg =3D <0x00100000 0x1f0000>;
+> > > +                       #clock-cells =3D <1>;
+> > > +                       #reset-cells =3D <1>;
+> > > +                       #power-domain-cells =3D <1>;
+> > > +                       clock-names =3D "bi_tcxo", "sleep_clk";
+> > > +                       clocks =3D <&xo_board>, <&sleep_clk>;
+>=20
+> So this first one should actually be <&rpmhcc LNBBCLK1>.
+
+Hrmm LNBBCLK1 doesn't make any sense to me. That's a buffer that is
+technically the net connected to the XO pin on the Soc, but it isn't
+really supposed to be used by anything from what I recall. Last time I
+tried to use the buffers the RPM team told me I was using the wrong
+resource and I should just use the XO resource instead. Doesn't RPMh
+expose the other "XO" resource that is supposed to prevent XO shutdown?
+Just mark it critical for now so that XO isn't turned off at runtime.
+
+>=20
+> But while we now should handle this gracefully in the clock driver I
+> think we still have problems with the cascading probe deferral that
+> follows - last time I tried to do this the serial driver probe deferred
+> past user space initialization and the system crashed as we didn't have
+> a /dev/console.
+
+Does the serial driver probe eventually? Maybe you can run agetty when
+the device appears based on some uevent for /dev/console. Or we have a
+bug where /dev/console is created by devtmpfs when there isn't actually
+a console?
+
+>=20
+>=20
+> So, I think we should s/xo_board/lnbbclk1/ (at 19.2MHz) to make it
+> represent the schematics and then once we have rpmhcc and validated that
+> the system handles this gracefully we can switch it out.
+>=20
+
+Sure, some sort of approach that switches it later on is fine, just want
+to make sure that the board clk frequency is accurately reflected in the
+DT.
 
