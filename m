@@ -2,52 +2,54 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD15C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D2DC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3980208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9671208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802244;
-	bh=JF5p7eFdyL2uDlvITnkiJ4pO6uUc14BJq2mRocluJ2o=;
+	s=default; t=1565802246;
+	bh=TEkliHrCqmBMsOtkH+iKXQ2HGKVEK/CT4G9DrCRz0t8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xjr4osHa3+lqL6UZKt5sLQfj5LnAfNnw6nyDbBTAw1b7tIMtDT5EAK4htwGZ3mG7v
-	 K92Gqci6Y0tOnrHfQagtbXNk8WaqKuzE4fJJMkRq6ZZ57ZJiiN0NAKLNn8Yoi5ixzF
-	 eoeiFXs/zm4rY0ycgA74ZDIFpdQnrWZGLzYUV+K8=
+	b=XEIxwUdPXCt7YUW2Blgbhb+kLWUPK2y6c6GzJHvY6sEX7/NIxOZ1HPg4saO8qdJcm
+	 ZlYBd2GHENJPUWTlsTZAac9O7uUKih05Qj/gZzIToQCKYpvvCeNKSKjfVP3K9K+Fs8
+	 LIosAnhG0Th4Q1+Jy5Zl7/z6shR2AzNyAX+5t/hg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbfHNRED (ORCPT
+        id S1729126AbfHNREF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:04:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52794 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:04:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729092AbfHNREB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:04:01 -0400
+        id S1729112AbfHNRED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:04:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D8772084D;
-        Wed, 14 Aug 2019 17:03:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEDC721744;
+        Wed, 14 Aug 2019 17:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802240;
-        bh=JF5p7eFdyL2uDlvITnkiJ4pO6uUc14BJq2mRocluJ2o=;
+        s=default; t=1565802243;
+        bh=TEkliHrCqmBMsOtkH+iKXQ2HGKVEK/CT4G9DrCRz0t8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bKxc6PqY7wXzW/LKoEnRsfdWnT6YJIXl2MtmbBh/utNjhuctvSBS57nUSDS5CJP0s
-         f45+ZZAnVp1a4k8sTXNjJBl+It3hSnWwwIvKrgtK8HShoPpSJkONOMs42FSR/8+8Ow
-         7j737waoRJ8ED/X9cWkVLeodwMxjbm7ucpGDkQnU=
+        b=uvB2lUfewvo7jdNlIS2lQTIi8Og6nFbrTSpJnGWuZnXYVJUHJKy9mrLcMDu6Q018Z
+         AckZ1ZubqzQZQ04+/4UAXkTj7FloaiU9cg0+snz+XicNhy+8YNHmT+J78yXIWvrdR7
+         462etl6Wr3GLwTqzCHXb9iJ/o5Nv26P8flXwyygI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stephane Grosjean <s.grosjean@peak-system.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 5.2 048/144] can: peak_usb: fix potential double kfree_skb()
-Date:   Wed, 14 Aug 2019 19:00:04 +0200
-Message-Id: <20190814165801.836883958@linuxfoundation.org>
+        stable@vger.kernel.org, Zorro Lang <zlang@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 049/144] powerpc: fix off by one in max_zone_pfn initialization for ZONE_DMA
+Date:   Wed, 14 Aug 2019 19:00:05 +0200
+Message-Id: <20190814165801.880757406@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -60,48 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Grosjean <s.grosjean@peak-system.com>
+[ Upstream commit 03800e0526ee25ed7c843ca1e57b69ac2a5af642 ]
 
-commit fee6a8923ae0d318a7f7950c6c6c28a96cea099b upstream.
+25078dc1f74be16b858e914f52cc8f4d03c2271a first introduced an off by
+one error in the ZONE_DMA initialization of PPC_BOOK3E_64=y and since
+9739ab7eda459f0669ec9807e0d9be5020bab88c the off by one applies to
+PPC32=y too. This simply corrects the off by one and should resolve
+crashes like below:
 
-When closing the CAN device while tx skbs are inflight, echo skb could
-be released twice. By calling close_candev() before unlinking all
-pending tx urbs, then the internal echo_skb[] array is fully and
-correctly cleared before the USB write callback and, therefore,
-can_get_echo_skb() are called, for each aborted URB.
+[   65.179101] page 0x7fff outside node 0 zone DMA [ 0x0 - 0x7fff ]
 
-Fixes: bb4785551f64 ("can: usb: PEAK-System Technik USB adapters driver core")
-Signed-off-by: Stephane Grosjean <s.grosjean@peak-system.com>
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Unfortunately in various MM places "max" means a non inclusive end of
+range. free_area_init_nodes max_zone_pfn parameter is one case and
+MAX_ORDER is another one (unrelated) that comes by memory.
 
+Reported-by: Zorro Lang <zlang@redhat.com>
+Fixes: 25078dc1f74b ("powerpc: use mm zones more sensibly")
+Fixes: 9739ab7eda45 ("powerpc: enable a 30-bit ZONE_DMA for 32-bit pmac")
+Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190625141727.2883-1-aarcange@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/usb/peak_usb/pcan_usb_core.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/powerpc/mm/mem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-@@ -568,16 +568,16 @@ static int peak_usb_ndo_stop(struct net_
- 	dev->state &= ~PCAN_USB_STATE_STARTED;
- 	netif_stop_queue(netdev);
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index 2540d3b2588c3..2eda1ec36f552 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -249,7 +249,7 @@ void __init paging_init(void)
  
-+	close_candev(netdev);
-+
-+	dev->can.state = CAN_STATE_STOPPED;
-+
- 	/* unlink all pending urbs and free used memory */
- 	peak_usb_unlink_all_urbs(dev);
- 
- 	if (dev->adapter->dev_stop)
- 		dev->adapter->dev_stop(dev);
- 
--	close_candev(netdev);
--
--	dev->can.state = CAN_STATE_STOPPED;
--
- 	/* can set bus off now */
- 	if (dev->adapter->dev_set_bus) {
- 		int err = dev->adapter->dev_set_bus(dev, 0);
+ #ifdef CONFIG_ZONE_DMA
+ 	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn,
+-			((1UL << ARCH_ZONE_DMA_BITS) - 1) >> PAGE_SHIFT);
++				      1UL << (ARCH_ZONE_DMA_BITS - PAGE_SHIFT));
+ #endif
+ 	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
+ #ifdef CONFIG_HIGHMEM
+-- 
+2.20.1
+
 
 
