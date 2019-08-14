@@ -2,166 +2,119 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA10C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB725C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C732084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712892084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:09:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="ewaZL/m7"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="b7YT4qyJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbfHNUIh (ORCPT
+        id S1728736AbfHNUJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 16:08:37 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:35480 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726522AbfHNUIg (ORCPT
+        Wed, 14 Aug 2019 16:09:51 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42632 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfHNUJv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 16:08:36 -0400
-Received: from pps.filterd (m0170395.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7EK5HJf003387
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 16:08:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id; s=smtpout1;
- bh=fXpVluUplGl9HfVo+OrHKDg67y75U27zIUI7apa/eeA=;
- b=ewaZL/m7PEgrfaZXrWUD/kVLUb5q7rO7jawWy3zcsEjW+Fv47bvltNenjuhKlbz6OHHg
- wKSzdGu7xRJX9nsezI/YVXRZUnxG6ToftjiZ2gQ3LJkwL6rWVWNnHgfZBQRpFNAyBSsO
- 2qsPXamtCGJicnC00PMtqM5gDab1ljHSHeGoJ9/dlY4rOHT3xnUYaNEWSYMDpkJ1uKMy
- TC3wez1ydu3smuPDPv+VZU4RQkfS+c4BMigi4bu76OKOC+MTK3Otbp3WsYz3lBPIqtWr
- hr6S3Q9Tjm2j2F+0GXJ9CFudJOFW7miR+IxA5q1Yg6/irH/cJSIxN3ZnXj6dv10f6tO7 YQ== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 2uc42nwcbc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 16:08:35 -0400
-Received: from pps.filterd (m0090351.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7EK7kTk132468
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 16:08:34 -0400
-Received: from ausxippc110.us.dell.com (AUSXIPPC110.us.dell.com [143.166.85.200])
-        by mx0b-00154901.pphosted.com with ESMTP id 2ucp0tu33q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 16:08:34 -0400
-X-LoopCount0: from 10.173.37.27
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="843845849"
-From:   Mario Limonciello <mario.limonciello@dell.com>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ryan Hong <Ryan.Hong@Dell.com>, Crag Wang <Crag.Wang@dell.com>,
-        sjg@google.com, Charles Hyde <charles.hyde@dellteam.com>,
-        Jared Dominguez <jared.dominguez@dell.com>,
-        Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v2] nvme: Add quirk for LiteON CL1 devices running FW 22301111
-Date:   Wed, 14 Aug 2019 15:08:24 -0500
-Message-Id: <1565813304-16710-1-git-send-email-mario.limonciello@dell.com>
-X-Mailer: git-send-email 2.7.4
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-14_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=770 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908140183
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=885 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908140182
+        Wed, 14 Aug 2019 16:09:51 -0400
+Received: by mail-oi1-f193.google.com with SMTP id o6so5559866oic.9
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 13:09:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=paXj73KYL+NWP5ZXUWHWrPw2G6gc8123BvsposI90Bo=;
+        b=b7YT4qyJQvfxELhlzPTrHH9UpVblpaV25D445MXc6bb+UY+fVx/aeZtzluWXnKPiWx
+         jLuBLH/LeBWfVk2g1vd1tse0uAz3PZeuueEbpkgm6PbLhYKVaj+yAg2k81C1vkNNicdw
+         qvYHxRhCDaRSKMdkm+fPpYQQC3GWt3tbevb4ZbBZhQrkKrw4H+lGfyI8INn0MokKpYHm
+         WdkXWh1lOe6hWeYivy4SNAuUIUZ9QlUQniBqy5T/EvAVpq3cqyzEvWIiAtRB0j+6QvEc
+         3B7eaIFT5XRK23QpfIU+qyWCWEa8Ee3GOwZuianuwIzkJZagOL7JoKMKqcDXbYeKqqmS
+         J/cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=paXj73KYL+NWP5ZXUWHWrPw2G6gc8123BvsposI90Bo=;
+        b=ojuGTysIgu9VVkeGNFamSZqI7KoaAwJfLRPvfQhrHnqT+/QnyQswWq6PWjOL8BxGEb
+         VDmMo+x+SdxvdFVw4n4R4D9SZIx4HjG5SO3R47VI4n6DzHeQyCCPrpTqDqYHrVR1g/cw
+         eqRiBqt6S9PCmRZN9gr8dQX29B/olp8K5QiIxffvIv7WHwj4xTFUKzIcZMmFfFOByQ8/
+         M4YX9YuFEB0SkGZhHF6NRy8gY2XxI0ZRri7CkC+tPYmYgIf7z2eCVXV9L2RMl3hI2lBW
+         ZiuLDuJn5QBAloPCv/a4HROdnggbdHJ0m64sOTTnfze41MzQIhoVAzs9x84nxmCrimRE
+         qUaA==
+X-Gm-Message-State: APjAAAVv6Do1PCidxukqFnT7CZJ5uE/2XnH/s4C0eVC3wb6eYRmmhOeB
+        SA+cNVwo0yHlyko5/T71egcJOA==
+X-Google-Smtp-Source: APXvYqw1lyPb/CnPlEzGyigLpCsfoIWzRduhjsHvNrNZxuOSSWClhtGRaPdR8iq562gSdVmoVDYHUA==
+X-Received: by 2002:a02:a503:: with SMTP id e3mr1164929jam.134.1565813389877;
+        Wed, 14 Aug 2019 13:09:49 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id y25sm1071822iol.59.2019.08.14.13.09.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 13:09:49 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 13:09:48 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Logan Gunthorpe <logang@deltatee.com>
+cc:     Greentime Hu <green.hu@gmail.com>, Rob Herring <robh@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Waterman <andrew@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Bates <sbates@raithlin.com>, linux-mm@vger.kernel.org,
+        Olof Johansson <olof@lixom.net>, greentime.hu@sifive.com,
+        linux-riscv@lists.infradead.org,
+        Michael Clark <michaeljclark@mac.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v4 2/2] RISC-V: Implement sparsemem
+In-Reply-To: <26594413-227b-2cc8-0f61-232a6a3907d0@deltatee.com>
+Message-ID: <alpine.DEB.2.21.9999.1908141309390.18249@viisi.sifive.com>
+References: <20190109203911.7887-1-logang@deltatee.com> <CAEbi=3cn4+7zk2DU1iRa45CDwTsJYfkAV8jXHf-S7Jz63eYy-A@mail.gmail.com> <CAEbi=3eZcgWevpX9VO9ohgxVDFVprk_t52Xbs3-TdtZ+js3NVA@mail.gmail.com> <0926a261-520e-4c40-f926-ddd40bb8ce44@deltatee.com>
+ <CAEbi=3ebNM-t_vA4OA7KCvQUF08o6VmL1j=kMojVnYsYsN_fBw@mail.gmail.com> <e2603558-7b2c-2e5f-e28c-f01782dc4e66@deltatee.com> <CAEbi=3d7_xefYaVXEnMJW49Bzdbbmc2+UOwXWrCiBo7YkTAihg@mail.gmail.com> <96156909-1453-d487-ff66-a041d67c74d6@deltatee.com>
+ <CAEbi=3dC86dhGdwdarS_x+6-5=WPydUBKjo613qRZxKLDAqU_g@mail.gmail.com> <5506c875-9387-acc9-a7fe-5b7c10036c40@deltatee.com> <alpine.DEB.2.21.9999.1908130921170.30024@viisi.sifive.com> <e1f78a33-18bb-bd6e-eede-e5e86758a4d0@deltatee.com>
+ <CAEbi=3f+JDywuHYspfYKuC8z2wm8inRenBz+3DYbKK3ixFjU_g@mail.gmail.com> <0d81412d-73fc-fa56-6f84-dedda72b9cc6@deltatee.com> <alpine.DEB.2.21.9999.1908141035020.18249@viisi.sifive.com> <26594413-227b-2cc8-0f61-232a6a3907d0@deltatee.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the components in LiteON CL1 device has limitations that
-can be encountered based upon boundary race conditions using the
-nvme bus specific suspend to idle flow.
+On Wed, 14 Aug 2019, Logan Gunthorpe wrote:
 
-When this situation occurs the drive doesn't resume properly from
-suspend-to-idle.
+> On 2019-08-14 11:40 a.m., Paul Walmsley wrote:
+> > On Wed, 14 Aug 2019, Logan Gunthorpe wrote:
+> > 
+> >> On 2019-08-14 7:35 a.m., Greentime Hu wrote:
+> >>
+> >>> Maybe this commit explains why it used HAVE_ARCH_PFN_VALID instead of SPARSEMEM.
+> >>> https://github.com/torvalds/linux/commit/7b7bf499f79de3f6c85a340c8453a78789523f85
+> >>>
+> >>> BTW, I found another issue here.
+> >>> #define FIXADDR_TOP            (VMALLOC_START)
+> >>> #define FIXADDR_START           (FIXADDR_TOP - FIXADDR_SIZE)
+> >>> #define VMEMMAP_END    (VMALLOC_START - 1)
+> >>> #define VMEMMAP_START  (VMALLOC_START - VMEMMAP_SIZE)
+> >>> These 2 regions are overlapped.
+> >>>
+> >>> How about this fix? Not sure if it is good for everyone.
+> >>
+> >> Yes, this looks good to me. I can fold these changes into my patch and
+> >> send a v5 to the list.
+> > 
+> > The change to FIXADDR_TOP should be separated out into its own patch - it 
+> > probably needs to go up as a fix.
+> 
+> I don't think so... VMEMMAP_START doesn't exist until the sparsemem
+> patch so it can't be changed until after the sparsemem patch and no
+> sense adding a bug in the sparsemem patch...
 
-LiteON has confirmed this problem and fixed in the next firmware
-version.  As this firmware is already in the field, avoid running
-nvme specific suspend to idle flow.
+OK, that's fine then.
 
-Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
-Link: http://lists.infradead.org/pipermail/linux-nvme/2019-July/thread.html
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Charles Hyde <charles.hyde@dellteam.com>
----
- drivers/nvme/host/core.c | 10 ++++++++++
- drivers/nvme/host/nvme.h |  5 +++++
- drivers/nvme/host/pci.c  |  3 ++-
- 3 files changed, 17 insertions(+), 1 deletion(-)
 
-This patch is the spiritual successor to the previously submitted
-patch "[PATCH] drivers/nvme: save/restore HMB on suspend/resume".
-
-After discussion with LiteON, they agreed to resolve the issue
-in their next firmware release.
-
-changes from v1:
- * Group all 3 possible CL1 strings together
- * Remove the resume code because it's
-   already implied by ndev->last_ps = U32_MAX
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 8f3fbe5..02770d6 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -2251,6 +2251,16 @@ static const struct nvme_core_quirk_entry core_quirks[] = {
- 		.vid = 0x1179,
- 		.mn = "THNSF5256GPUK TOSHIBA",
- 		.quirks = NVME_QUIRK_NO_APST,
-+	},
-+	/*
-+	 * This LiteON CL1-3D*-Q11 firmware version has a race condition
-+	 * associated with actions related to suspend to idle.  LiteON has
-+	 * resolved the problem in future firmware.
-+	 */
-+	{
-+		.vid = 0x14a4,
-+		.fr = "22301111",
-+		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
- 	}
- };
- 
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 26b563f..fe1ca0d 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -92,6 +92,11 @@ enum nvme_quirks {
- 	 * Broken Write Zeroes.
- 	 */
- 	NVME_QUIRK_DISABLE_WRITE_ZEROES		= (1 << 9),
-+
-+	/*
-+	 * Force simple suspend/resume path.
-+	 */
-+	NVME_QUIRK_SIMPLE_SUSPEND		= (1 << 10),
- };
- 
- /*
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 108e109..b366f54 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2875,7 +2875,8 @@ static int nvme_suspend(struct device *dev)
- 	 * state (which may not be possible if the link is up).
- 	 */
- 	if (pm_suspend_via_firmware() || !ctrl->npss ||
--	    !pcie_aspm_enabled(pdev)) {
-+	    !pcie_aspm_enabled(pdev) ||
-+	    (ndev->ctrl.quirks & NVME_QUIRK_SIMPLE_SUSPEND)) {
- 		nvme_dev_disable(ndev, true);
- 		return 0;
- 	}
--- 
-2.7.4
-
+- Paul
