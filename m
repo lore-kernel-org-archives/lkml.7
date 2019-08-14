@@ -2,84 +2,124 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D0FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8D5C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B54205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024E2214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:44:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oe2SbrDs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbfHNRls (ORCPT
+        id S1728582AbfHNRoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:41:48 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:42884 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbfHNRls (ORCPT
+        Wed, 14 Aug 2019 13:44:44 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38174 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbfHNRon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:41:48 -0400
-Received: by mail-yw1-f67.google.com with SMTP id z63so41231722ywz.9;
-        Wed, 14 Aug 2019 10:41:48 -0700 (PDT)
+        Wed, 14 Aug 2019 13:44:43 -0400
+Received: by mail-pg1-f193.google.com with SMTP id e11so2878863pga.5
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 10:44:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8TCzd3zFiDX85xywn7ChohopRVZ50w25juT6dtizlkE=;
+        b=oe2SbrDsxV5qofbDmFkBqA/UP9LedTWCuoTlB0Dudr7XbzPEYuUN6J4RPjYPhUydZK
+         rXBGXeY5571WEWKzj9B1jVJ1S1lWxSwZUuUWFA2XtkHd0d+zQxMnATh3qY331FncYDrq
+         +1dAf/OvSZAbb/D1dqBPTQB4T+/q12M1m+juWLZ63EEgRUQ3ZhrIWM+3haIFRknl2R9W
+         am3nxtCWziF1Anpf4Sq4xKlgKXOiyl2aYOtwtPpJcRlPKjmsP2EsyzTVQtWoDkvEaSh+
+         XANVlK78HhARtfEdjzjSHCrufUqXl1/IOcJD/qBd6rf5XlxkWBWR2KxBMfgVl+KHRHKK
+         EU+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=sHuMccop5UgrrMj0/XyByQ81In/IvXzzxsdeKT5qeXY=;
-        b=jdld6SlHNDZmGx5M3pz405dLCUtfNHUjnXWEnLfagn1Zs0CiYAFaJpiv/OUfTUqbD1
-         BqK2rGZX6O4W9or6Pi14cpxZsPPcUX4oxIvfGcgCI4MM1jHm2MDBYqNxyW6lX/AbLPDV
-         5zEtnvGeckFaIo3PAKw08h4xjtUA3wijSsvnc81ug4eOBmwXSf97wTyogWTKmCBZ/jiQ
-         3MGHiS+CjoY4OarSbG3xlmqqQ5ivNtT7ecdkytuXMlFd7mL2fQ7q1cLH9gx7SKdKryvB
-         gAoeNDe7HFtU4Sag7LeWtVigiXvWR2RLxNGJPv6h+WpAUmORDjHO7mC0SzrxiwEFPGoA
-         0vFg==
-X-Gm-Message-State: APjAAAXEjuOW/N8+n6IXdf6HdCtZ8PLC4UpsN8eTes13c7jL5MzLrNpr
-        roxFCT3e7mPbCdVy2zmZWfB/sF8Ncbs=
-X-Google-Smtp-Source: APXvYqzpOodDIOzylD9sAsHwz6A1p4UQi0peD2Q4IDhPLW3fYKkvbnyyL0Au0Uw7CLG/07aow+hvgQ==
-X-Received: by 2002:a81:5c87:: with SMTP id q129mr266407ywb.403.1565804507497;
-        Wed, 14 Aug 2019 10:41:47 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id q65sm115032ywc.11.2019.08.14.10.41.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 14 Aug 2019 10:41:46 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev@vger.kernel.org (open list:USB "USBNET" DRIVER FRAMEWORK),
-        linux-usb@vger.kernel.org (open list:USB NETWORKING DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] net: usbnet: fix a memory leak bug
-Date:   Wed, 14 Aug 2019 12:41:33 -0500
-Message-Id: <1565804493-7758-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8TCzd3zFiDX85xywn7ChohopRVZ50w25juT6dtizlkE=;
+        b=e7ypCZzjNpPnaSPBiZQifyVsVwOTCKZX+MMjksSSr4VX8vtqXfkOJmKPYVrpdLooM9
+         YkXomjEZO7zqs00KoinGY0Ql3qkxEyALIV1z+HrDQSjCLHa1w1AwNFJj2Ohtd9cXPeai
+         Gnbtx3F1SlDjOeZ8R64z4oK1TLRiU4m0TQPDiEG0gDrubUVHXwnlTOpd6GjdCDjA5diL
+         qTx6zw+ji8l7HfFEce+BgjnAgK+ahbdSJIoCDWlAnZoRBjztA3/nbGGxYrHGj6nJrHg2
+         ClQyAVUTc5cv2eIuxuk6TFlaWU9F+56dHh6bGmfTPOxUTouweOlDqha0OXqXuElXEHSY
+         uFlw==
+X-Gm-Message-State: APjAAAVPQO/thpsrbO7+UObb7V96t3blOEvKpHWfET8+W8OKhGCcqf4i
+        bceky4CDfXMCWoknVFOm4jWBJw==
+X-Google-Smtp-Source: APXvYqz7MavHYdq/g7PveGK4Yap8TGnFicPUAMqpQBASUNRsOeDUdM0OR1O6eb/HCjCED+9QnKCHhg==
+X-Received: by 2002:a62:58c4:: with SMTP id m187mr1104043pfb.147.1565804682598;
+        Wed, 14 Aug 2019 10:44:42 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id e13sm438363pff.181.2019.08.14.10.44.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 10:44:41 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 10:44:39 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        linux-arm-msm@vger.kernel.org, sibis@codeaurora.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/22] arm64: dts: qcom: sm8150: add base dts file
+Message-ID: <20190814174439.GE6167@minitux>
+References: <20190814125012.8700-1-vkoul@kernel.org>
+ <20190814125012.8700-2-vkoul@kernel.org>
+ <20190814165855.098FD2063F@mail.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814165855.098FD2063F@mail.kernel.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In usbnet_start_xmit(), 'urb->sg' is allocated through kmalloc_array() by
-invoking build_dma_sg(). Later on, if 'CONFIG_PM' is defined and the if
-branch is taken, the execution will go to the label 'deferred'. However,
-'urb->sg' is not deallocated on this execution path, leading to a memory
-leak bug.
+On Wed 14 Aug 09:58 PDT 2019, Stephen Boyd wrote:
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- drivers/net/usb/usbnet.c | 1 +
- 1 file changed, 1 insertion(+)
+> Quoting Vinod Koul (2019-08-14 05:49:51)
+> > diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+[..]
+> > +       clocks {
+> > +               xo_board: xo-board {
+> > +                       compatible = "fixed-clock";
+> > +                       #clock-cells = <0>;
+> > +                       clock-frequency = <19200000>;
+> 
+> Is it 19.2 or 38.4 MHz? It seems like lately there are dividers, but I
+> guess it doesn't really matter in the end.
+> 
 
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index 72514c4..f17fafa 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -1433,6 +1433,7 @@ netdev_tx_t usbnet_start_xmit (struct sk_buff *skb,
- 		usb_anchor_urb(urb, &dev->deferred);
- 		/* no use to process more packets */
- 		netif_stop_queue(net);
-+		kfree(urb->sg);
- 		usb_put_urb(urb);
- 		spin_unlock_irqrestore(&dev->txq.lock, flags);
- 		netdev_dbg(dev->net, "Delaying transmission for resumption\n");
--- 
-2.7.4
+As with previous platforms, the board's XO feeds the PMIC at 38.4MHz and
+the SoC's CXO_IN pin (i.e. bi_tcxo) is fed from the PMIC's LNBBCLK1,
+which is ticking at 19.2MHz.
 
+[..]
+> > +               gcc: clock-controller@100000 {
+> > +                       compatible = "qcom,gcc-sm8150";
+> > +                       reg = <0x00100000 0x1f0000>;
+> > +                       #clock-cells = <1>;
+> > +                       #reset-cells = <1>;
+> > +                       #power-domain-cells = <1>;
+> > +                       clock-names = "bi_tcxo", "sleep_clk";
+> > +                       clocks = <&xo_board>, <&sleep_clk>;
+
+So this first one should actually be <&rpmhcc LNBBCLK1>.
+
+But while we now should handle this gracefully in the clock driver I
+think we still have problems with the cascading probe deferral that
+follows - last time I tried to do this the serial driver probe deferred
+past user space initialization and the system crashed as we didn't have
+a /dev/console.
+
+
+So, I think we should s/xo_board/lnbbclk1/ (at 19.2MHz) to make it
+represent the schematics and then once we have rpmhcc and validated that
+the system handles this gracefully we can switch it out.
+
+Regards,
+Bjorn
