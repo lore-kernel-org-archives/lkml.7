@@ -2,102 +2,93 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE5BC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0207C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2E820665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A484D2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:50:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565801436;
+	bh=rr5Yx5jWWXjv1elleVvNixlj9ZG6FWWLR96+BvLKJTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z0iW2YGCd2kwM/XUIif9cUU9JfX+9kjtXgo/qWeDg1mF1unbeY93hyo6ERufS0TX9
+	 ze5fon9a33rC4vEBN3eht2ouiXXe+I9nI22iwanNqr1suQcXWzdcjGGC63gt07qfru
+	 cUNO0IAEg+CpYWIwdktneXShMjCNMmNzYsUg3bbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbfHNQuN (ORCPT
+        id S1728347AbfHNQuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:50:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51580 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725828AbfHNQuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:50:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C8C4BACC2;
-        Wed, 14 Aug 2019 16:50:11 +0000 (UTC)
-Subject: Re: [PATCH] bcache: add cond_resched() in __bch_cache_cmp()
-To:     Heitor Alves de Siqueira <halves@canonical.com>
-Cc:     kent.overstreet@gmail.com, linux-bcache@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shile.zhang@linux.alibaba.com,
-        vojtech@suse.com
-References: <c13b1d2a-a8e6-f20c-604e-a375c018bf66@suse.de>
- <20190814142301.32556-1-halves@canonical.com>
-From:   Coly Li <colyli@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Labs
-Message-ID: <74950e24-245a-c627-0e2e-32ac0b304a6c@suse.de>
-Date:   Thu, 15 Aug 2019 00:50:03 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Wed, 14 Aug 2019 12:50:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727791AbfHNQuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 12:50:35 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9E3620665;
+        Wed, 14 Aug 2019 16:50:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565801434;
+        bh=rr5Yx5jWWXjv1elleVvNixlj9ZG6FWWLR96+BvLKJTs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zBfq3Ps7UwSWeCBHg3Nhawrm70s4X1Ue1TkGDjnU3dH4GLcUTa5FVXhY96bYLfpB8
+         tRUlGr9jER91hBRTzXAdKwH74CVEhNn+wG6BowZd/CrQDTszU23WMSsrbNDPq+QLAt
+         Vf28F+ZsRzV3ndHNS3F6DKCdEHuQm7I+TYv2MDF0=
+Date:   Wed, 14 Aug 2019 17:50:29 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] arm64: unexport set_memory_x and set_memory_nx
+Message-ID: <20190814165029.yfmpopn34vxpnmte@willie-the-truck>
+References: <20190813090146.26377-1-hch@lst.de>
+ <20190813090146.26377-2-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20190814142301.32556-1-halves@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813090146.26377-2-hch@lst.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/14 10:23 下午, Heitor Alves de Siqueira wrote:
-> Hi Coly,
+On Tue, Aug 13, 2019 at 11:01:41AM +0200, Christoph Hellwig wrote:
+> No module currently messed with clearing or setting the execute
+> permission of kernel memory, and none really should.
 > 
-> We've had users impacted by system stalls and were able to trace it back to the
-> bcache priority_stats query. After investigating a bit further, it seems that
-> the sorting step in the quantiles calculation can cause heavy CPU
-> contention. This has a severe performance impact on any task that is running in
-> the same CPU as the sysfs query, and caused issues even for non-bcache
-> workloads.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/arm64/mm/pageattr.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> We did some test runs with fio to get a better picture of the impact on
-> read/write workloads while a priority_stats query is running, and came up with
-> some interesting results. The bucket locking doesn't seem to have that
-> much performance impact even in full-write workloads, but the 'sort' can affect
-> bcache device throughput and latency pretty heavily (and any other tasks that
-> are "unlucky" to be scheduled together with it). In some of our tests, there was
-> a performance reduction of almost 90% in random read IOPS to the bcache device
-> (refer to the comparison graph at [0]). There's a few more details on the
-> Launchpad bug [1] we've created to track this, together with the complete fio
-> results + comparison graphs.
-> 
-> The cond_resched() patch suggested by Shile Zhang actually improved performance
-> a lot, and eliminated the stalls we've observed during the priority_stats
-> query. Even though it may cause the sysfs query to take a bit longer, it seems
-> like a decent tradeoff for general performance when running that query on a
-> system under heavy load. It's also a cheap short-term solution until we can look
-> into a more complex re-write of the priority_stats calculation (perhaps one that
-> doesn't require the locking?). Could we revisit Shile's patch, and consider
-> merging it?
-> 
-> Thanks!
-> Heitor
-> 
-> [0] https://people.canonical.com/~halves/priority_stats/read/4k-iops-2Dsmooth.png
-> [1] https://bugs.launchpad.net/bugs/1840043
-> 
+> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+> index 03c53f16ee77..9ce7bd9d4d9c 100644
+> --- a/arch/arm64/mm/pageattr.c
+> +++ b/arch/arm64/mm/pageattr.c
+> @@ -128,7 +128,6 @@ int set_memory_nx(unsigned long addr, int numpages)
+>  					__pgprot(PTE_PXN),
+>  					__pgprot(0));
+>  }
+> -EXPORT_SYMBOL_GPL(set_memory_nx);
+>  
+>  int set_memory_x(unsigned long addr, int numpages)
+>  {
+> @@ -136,7 +135,6 @@ int set_memory_x(unsigned long addr, int numpages)
+>  					__pgprot(0),
+>  					__pgprot(PTE_PXN));
+>  }
+> -EXPORT_SYMBOL_GPL(set_memory_x);
 
-Hi Heitor,
+arm64 allmodconfig and defconfig are happy with this, so I'll pick it up
+for 5.4 if that's ok with you?
 
-With your very detailed explanation I come to understand why people
-cares about performance impact of pririty_stats. In the case of system
-monitoring, how long priority_stats returns is less important than
-overall system throughput.
-
-Yes I agree with your opinion and the benchmark chart makes me confident
-with the original patch. I will add this patch to v5.4 window with
-tested-by: Heitor Alves de Siqueira <halves@canonical.com>
-
-Thanks for your detailed information. And thanks for Shile Zhang
-originally composing this patch.
-
--- 
-
-Coly Li
+Will
