@@ -2,126 +2,128 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8A6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD493C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4642084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0EB6208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:04:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="SxP5DKns"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mX9zQWTJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfHNKCX (ORCPT
+        id S1726937AbfHNKEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:02:23 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:39308 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbfHNKCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:02:23 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 467lW009Mxz9tynG;
-        Wed, 14 Aug 2019 12:02:20 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=SxP5DKns; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id YBeLb-kzBG1f; Wed, 14 Aug 2019 12:02:19 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 467lVz67JTz9tyn3;
-        Wed, 14 Aug 2019 12:02:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1565776939; bh=ZMMrk+3Fktg8VWVZeo65KkEXyFiN/EMJHpWcs2l4QSw=;
-        h=From:Subject:To:Cc:Date:From;
-        b=SxP5DKnsX+pr0RqtcrkK7es9y3DHTa0jxHZpytxI1BSCMEGRSUGwJN3j/KFiBujeo
-         6t56eUsjjaeI/wCOE800YlI7a2VzhZkBVN7piew1CnKaNwipB/YY+ip9WQ8wPwXL7G
-         fd7sNQLoOq5llRFo8izKR4rdLGrkPi0FFgdM+wwU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 282B08B7A3;
-        Wed, 14 Aug 2019 12:02:21 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id p5k-hEbzKXB2; Wed, 14 Aug 2019 12:02:21 +0200 (CEST)
-Received: from pc17473vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 007748B761;
-        Wed, 14 Aug 2019 12:02:20 +0200 (CEST)
-Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id E53716B6BA; Wed, 14 Aug 2019 10:02:20 +0000 (UTC)
-Message-Id: <b7860c5e1e784d6b96ba67edf47dd6cbc2e78ab6.1565776892.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2] powerpc/32s: fix boot failure with DEBUG_PAGEALLOC without
- KASAN.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, j.neuschaefer@gmx.net,
-        nch@infradead.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 14 Aug 2019 10:02:20 +0000 (UTC)
+        Wed, 14 Aug 2019 06:04:01 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46588 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfHNKEB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:04:01 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w3so15634583pgt.13
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 03:04:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A8hpxCTzvYAcZn9UvY3kAbimH8cB/wVPQT2NUqi4FTg=;
+        b=mX9zQWTJ21YVDsg/IO/lw3vK/5gRG1WKeYfq5hAVfRdrbxBQb/LOP7585An8TcS5uX
+         tQfD//4o9HuUJa0OuyeBf0yYOxvzPAaOMjQC0e2XsG/XzCmrU1JU4X/cHR16Fl4JFHLe
+         Zi0Tt+GUrI9Wq+kCxNmISk1ZO0HC18yrn6Nwe48kfT9CiA+xyYq2zY+VKjPraHI0VO+y
+         z/s0hx02KzWhdnSkkt85Mam6mmVNYQ/kS61kWPXi/v/57imnYMdAPEqFsVlbDExrl+Ld
+         2hdI8g4c1e8Cjj/bm8uvF1dfC8bBYtWFJT7eA1eUTgYFQ5SiQc/BI8jH+SCjQE2t4VrR
+         5trQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A8hpxCTzvYAcZn9UvY3kAbimH8cB/wVPQT2NUqi4FTg=;
+        b=GShUkQhsjRE401zDMQ8DoYrwU6ojojiyEY02l4TmMBS3nkg8t6gFldOh1A2SAST3yK
+         aT0VtgDaGvOn3dCZZA6aO/wNGP2GOkVDmxRoE4FB6aP3PqMs87hliU5Wk6giBiZxoLJH
+         idNZ6Gs9c2NH+TXT741VG/JBNCiZcAFtHtF7f2IwkAPPsabnfKteLUY0JxsCxaTsRFyS
+         V6iU41pPN7Q0ruVSOWu8XqV3rwewrbxT1LMtF8CIu2H6JQmmLvjoYOO58ymtK0Ppyj8P
+         RLe8hrO2vc10jI6TRHsvntXvCsJXSvSlJfW+BzpJOh1UEOY4zqpErWj2n1WX1Ju8y4/j
+         90Xw==
+X-Gm-Message-State: APjAAAWEzgx+6+pffwQaWeirge9gk4aq1sWpOVQS+vzRIQJc16r6pV75
+        Q+F5ofIA8mlUOzrOlJ4sLhanQSdsQlagoimJe8aVeQ==
+X-Google-Smtp-Source: APXvYqxyXqiNwjdTK3oFKny5yM7CmoKjVDpDDnZBrvH4fSE28h1/JfZ1mGpG1xfSCFWK+kgS1gJNI6SNjgBRmNUJeQM=
+X-Received: by 2002:a63:205f:: with SMTP id r31mr36074127pgm.159.1565777039574;
+ Wed, 14 Aug 2019 03:03:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190814055108.214253-1-brendanhiggins@google.com>
+In-Reply-To: <20190814055108.214253-1-brendanhiggins@google.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 14 Aug 2019 03:03:47 -0700
+Message-ID: <CAFd5g45NdQEcP0JQpZc3HYYgNZfsBsHL+ByXRK+OupWObwMuqg@mail.gmail.com>
+Subject: Re: [PATCH v13 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah <shuah@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When KASAN is selected, the definitive hash table has to be
-set up later, but there is already an early temporary one.
+On Tue, Aug 13, 2019 at 10:52 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> ## TL;DR
+>
+> This revision addresses comments from Stephen and Bjorn Helgaas. Most
+> changes are pretty minor stuff that doesn't affect the API in anyway.
+> One significant change, however, is that I added support for freeing
+> kunit_resource managed resources before the test case is finished via
+> kunit_resource_destroy(). Additionally, Bjorn pointed out that I broke
+> KUnit on certain configurations (like the default one for x86, whoops).
+>
+> Based on Stephen's feedback on the previous change, I think we are
+> pretty close. I am not expecting any significant changes from here on
+> out.
 
-When KASAN is not selected, there is no early hash table,
-so the setup of the definitive hash table cannot be delayed.
+Stephen, it looks like you have just replied with "Reviewed-bys" on
+all the remaining emails that you looked at. Is there anything else
+that we are missing? Or is this ready for Shuah to apply?
 
-Reported-by: Jonathan Neuschafer <j.neuschaefer@gmx.net>
-Fixes: 72f208c6a8f7 ("powerpc/32s: move hash code patching out of MMU_init_hw()")
-Tested-by: Jonathan Neuschafer <j.neuschaefer@gmx.net>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- v2: Added a comment in MMU_init_hw()
+[...]
 
- arch/powerpc/kernel/head_32.S  | 2 ++
- arch/powerpc/mm/book3s32/mmu.c | 9 +++++++++
- 2 files changed, 11 insertions(+)
-
-diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
-index f255e22184b4..c8b4f7ed318c 100644
---- a/arch/powerpc/kernel/head_32.S
-+++ b/arch/powerpc/kernel/head_32.S
-@@ -897,9 +897,11 @@ start_here:
- 	bl	machine_init
- 	bl	__save_cpu_setup
- 	bl	MMU_init
-+#ifdef CONFIG_KASAN
- BEGIN_MMU_FTR_SECTION
- 	bl	MMU_init_hw_patch
- END_MMU_FTR_SECTION_IFSET(MMU_FTR_HPTE_TABLE)
-+#endif
- 
- /*
-  * Go back to running unmapped so we can load up new values
-diff --git a/arch/powerpc/mm/book3s32/mmu.c b/arch/powerpc/mm/book3s32/mmu.c
-index e249fbf6b9c3..8d68f03bf5a4 100644
---- a/arch/powerpc/mm/book3s32/mmu.c
-+++ b/arch/powerpc/mm/book3s32/mmu.c
-@@ -358,6 +358,15 @@ void __init MMU_init_hw(void)
- 	hash_mb2 = hash_mb = 32 - LG_HPTEG_SIZE - lg_n_hpteg;
- 	if (lg_n_hpteg > 16)
- 		hash_mb2 = 16 - LG_HPTEG_SIZE;
-+
-+	/*
-+	 * When KASAN is selected, there is already an early temporary hash
-+	 * table and the switch to the final hash table is done later.
-+	 */
-+	if (IS_ENABLED(CONFIG_KASAN))
-+		return;
-+
-+	MMU_init_hw_patch();
- }
- 
- void __init MMU_init_hw_patch(void)
--- 
-2.13.3
-
+Cheers!
