@@ -2,155 +2,249 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2F4C0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A53EC0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60EAB205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:05:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YGMYfm22"
+	by mail.kernel.org (Postfix) with ESMTP id 4D197214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:05:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfHNIFQ (ORCPT
+        id S1727154AbfHNIFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 04:05:16 -0400
-Received: from mail-eopbgr150088.outbound.protection.outlook.com ([40.107.15.88]:45122
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725265AbfHNIFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 04:05:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a/WOC326CVDrsYVzLuXkFqPscbe6NC4Ys6h49ggB6N2935KyyW3qHYYvklpz59FrzMBkqWJpniC71qZXgPo9ipIVNtvXgneIt0wQmNTWuEnyyKAanCTuVKtaffJQRzQIQ6XOmsqK/EugflTUCYkoH8w7qoHmyZcra0criBNF+7c/1gLKqNYIed1fbE1G0G4Ke+2uaVAqlA/6Xv634E7k6X3jriQU/vyqs82eQhloga7HIISMEnVphw5VqyH/edD7ZTcXNc1Qnl3xH4Od+txHbENnOJMMQjLBa7xQVa1qFZu9zyrMQZmVHqwM107pMEXPpwzcxYiyvk1yUT1zFpWj6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w4VadzdZkke9/tpKXWFVN9Mx1lxW7Qm9xwoXExTI35c=;
- b=V+kNQcRgVH0CIBP1p6ZSaIHPt8d6HuYBsluxEn1whqR1CiPcvuCSriZRGcunW7IVa9YCs5Jt7uMnJmx4AfnAVh/0q5CDJPpxNQHQZGgIa7/Z4ddHrF2LmzVeu8Akkyr61d17Dhgs9VbyLKoEF/gJrXnctW2PqIPC8ewGVChnYYv9gIX3ZUe0q1z/QDpEIz2D2tyRv6NIRvnePsXt7AaS0z6bNnRBFcJlf2Lo5xG4OFgOyVHwKTWPBZIPlCHSeIKnf0sjm3RatBMEAfYg+aFAw7mafe97eRFkbx7Ad9xp7V38VurPAdwPUCveNzz/mENKY1ylo8RrBPkn1N0XaB/h5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w4VadzdZkke9/tpKXWFVN9Mx1lxW7Qm9xwoXExTI35c=;
- b=YGMYfm22Yfw7YKdR2cmMgmp6mUj0p06jevCj26UrvtXghjb9gUfL5bxsjPP4eXqe+Nm9BaXKcZm1CDZEnNmo2Zy1OgWEA3YqcftCx1T/Kv+uAJ2uEPj1ea8d8lTd5lvqwW7ytFtfLu5IzSn8ZnmmeMta62q0J6El0mXzOvCzl4I=
-Received: from DB8PR04MB6715.eurprd04.prod.outlook.com (20.179.251.14) by
- DB8PR04MB7082.eurprd04.prod.outlook.com (52.135.62.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.15; Wed, 14 Aug 2019 08:05:09 +0000
-Received: from DB8PR04MB6715.eurprd04.prod.outlook.com
- ([fe80::b0ab:d127:ca27:e1fa]) by DB8PR04MB6715.eurprd04.prod.outlook.com
- ([fe80::b0ab:d127:ca27:e1fa%7]) with mapi id 15.20.2157.022; Wed, 14 Aug 2019
- 08:05:09 +0000
-From:   Robert Chiras <robert.chiras@nxp.com>
-To:     "robh@kernel.org" <robh@kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>, "marex@denx.de" <marex@denx.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [EXT] Re: [PATCH 05/10] dt-bindings: display: Add max-res
- property for mxsfb
-Thread-Topic: [EXT] Re: [PATCH 05/10] dt-bindings: display: Add max-res
- property for mxsfb
-Thread-Index: AQHVLCOYopWLBVbJWkWVaSjBvKksZabXEyyAgCOChgA=
-Date:   Wed, 14 Aug 2019 08:05:09 +0000
-Message-ID: <1565769908.3209.51.camel@nxp.com>
-References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
-         <1561555938-21595-6-git-send-email-robert.chiras@nxp.com>
-         <20190722174853.GA31795@bogus>
-In-Reply-To: <20190722174853.GA31795@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=robert.chiras@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8cd1198c-46a3-4e7d-62f7-08d7208e2064
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB7082;
-x-ms-traffictypediagnostic: DB8PR04MB7082:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB708241512E6825FBA1B44A12E3AD0@DB8PR04MB7082.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01294F875B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(136003)(346002)(376002)(39860400002)(199004)(189003)(54906003)(66946007)(8936002)(53936002)(66066001)(36756003)(25786009)(186003)(26005)(66556008)(66476007)(6506007)(64756008)(66446008)(316002)(91956017)(6436002)(5660300002)(102836004)(6512007)(6486002)(76116006)(86362001)(6916009)(14454004)(229853002)(4326008)(5640700003)(8676002)(44832011)(486006)(305945005)(2616005)(446003)(11346002)(2351001)(2501003)(103116003)(50226002)(476003)(478600001)(71190400001)(71200400001)(81166006)(81156014)(1730700003)(99286004)(6246003)(76176011)(7416002)(14444005)(6116002)(7736002)(256004)(3846002)(2906002)(99106002)(17423001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB7082;H:DB8PR04MB6715.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: R9uBR0pe8Ey+bwDQ4fySmAgXAQmtsmBLsS3jq6FLsl9k35vq9hrsDze6qd/X1RC6TNgJQhAwxIScv94guDBaX9zBKftSbzp6DElMhK0EnhI7LyH6+joPV2nISxW4+klpRAGm+H8M7FAhXTMefKb68hM/aeOd6kniVGajuzyH70Pb1RlJnuzm8/Aj7/7k01jvO3DntklSSSP3ucw+2RBQw3jbROlY/xfCUJm8f/lZ2LRMN+zkucWBw0k80e+tkrP9NUP6ZCQkRivQtceJroewZFJVKw8CGzOI75qYsOl1UGJAqBjHVnT3o01adbla27ojPZJ+JQ7ryxrKvdEd/Wm6XDITEeg/4Y1iHaSJ5vUwv3JbxCZ38zkx9lJuonWxRnb8lbULNApS4fpop+8acGJYJud5RK1gs8YnOuMisfLf3hk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B8F60CC76CEA6D43B646C80F09DD0708@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 14 Aug 2019 04:05:24 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:45123 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725265AbfHNIFY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 04:05:24 -0400
+Received: from dread.disaster.area (pa49-195-190-67.pa.nsw.optusnet.com.au [49.195.190.67])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 2A6E62ADD91;
+        Wed, 14 Aug 2019 18:05:15 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hxoGO-0000sh-7T; Wed, 14 Aug 2019 18:04:08 +1000
+Date:   Wed, 14 Aug 2019 18:04:08 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 07/19] fs/xfs: Teach xfs to use new
+ dax_layout_busy_page()
+Message-ID: <20190814080408.GI6129@dread.disaster.area>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-8-ira.weiny@intel.com>
+ <20190809233037.GB7777@dread.disaster.area>
+ <20190812180551.GC19746@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8cd1198c-46a3-4e7d-62f7-08d7208e2064
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 08:05:09.5490
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +z8rojZLKTKID+u03VDOIbcvCOYSYryq2vcJQhpw9rLuOFnhm7dNKQRoda5nJuFaE5jgWT7JXxE5Ze6fwlPloQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7082
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812180551.GC19746@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=TR82T6zjGmBjdfWdGgpkDw==:117 a=TR82T6zjGmBjdfWdGgpkDw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=HrHlqKvGs1hBEanXDooA:9
+        a=7KaysmK63p_gRbVv:21 a=sBCleACJziiZA8k5:21 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTHUsIDIwMTktMDctMjIgYXQgMTE6NDggLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBP
-biBXZWQsIEp1biAyNiwgMjAxOSBhdCAwNDozMjoxM1BNICswMzAwLCBSb2JlcnQgQ2hpcmFzIHdy
-b3RlOg0KPiA+IA0KPiA+IEFkZCBuZXcgb3B0aW9uYWwgcHJvcGVydHkgJ21heC1yZXMnLCB0byBs
-aW1pdCB0aGUgbWF4aW11bSBzdXBwb3J0ZWQNCj4gPiByZXNvbHV0aW9uIGJ5IHRoZSBNWFNGQl9E
-Uk0gZHJpdmVyLg0KPiBCaW5kaW5ncyBhcmUgZm9yIGgvdyBkZXNjcmlwdGlvbiwgbm90IGRyaXZl
-ciBjb25maWcuDQo+IA0KPiA+IA0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFJvYmVydCBDaGly
-YXMgPHJvYmVydC5jaGlyYXNAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiDCoERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L214c2ZiLnR4dCB8IDYgKysrKysrDQo+ID4gwqAx
-IGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L214c2ZiLnR4dA0KPiA+IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXhzZmIudHh0DQo+ID4g
-aW5kZXggNDcyZTFlYS4uNTVlMjJlZCAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9teHNmYi50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9teHNmYi50eHQNCj4gPiBAQCAtMTcsNiAr
-MTcsMTIgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiDCoFJlcXVpcmVkIHN1Yi1ub2RlczoN
-Cj4gPiDCoMKgwqAtIHBvcnQ6IFRoZSBjb25uZWN0aW9uIHRvIGFuIGVuY29kZXIgY2hpcC4NCj4g
-PiANCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiArLSBtYXgtcmVzOsKgwqDCoGFuIGFy
-cmF5IHdpdGggYSBtYXhpbXVtIG9mIHR3byBpbnRlZ2VycywgcmVwcmVzZW50aW5nDQo+ID4gdGhl
-DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbWF4aW11bSBzdXBwb3J0ZWQgcmVzb2x1
-dGlvbiwgaW4gdGhlIGZvcm0gb2YNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA8bWF4
-WD4sIDxtYXhZPjsgaWYgb25lIG9mIHRoZSBpdGVtIGlzIDwwPiwgdGhlDQo+ID4gZGVmYXVsdA0K
-PiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRyaXZlci1kZWZpbmVkIG1heGltdW0gcmVz
-b2x1dGlvbiBmb3IgdGhhdCBheGlzIGlzDQo+ID4gdXNlZA0KPiBJIHN1cHBvc2Ugd2hhdCB5b3Ug
-YXJlIGFmdGVyIGlzIGJhbmR3aWR0aCBsaW1pdHM/IElJUkMsIHRoZXJlJ3MNCj4gYWxyZWFkeQ0K
-PiBzb21lIGJpbmRpbmdzIGV4cHJlc3Npbmcgc3VjaCBsaW1pdHMuIEFsc28sIHdvdWxkbid0IHlv
-dSBuZWVkIHRvDQo+IGFjY291bnQNCj4gZm9yIGJwcCBhbmQgdXNpbmcgdGhlIDJuZCBwbGFuZSAo
-SUlSQyB0aGF0IHRoZXJlIGlzIG9uZSkuDQpJIGFtIHNvcnJ5IGZvciB0aGlzIGxhdGUgcmVwbHks
-IGJ1dCBJIHdhcyBsb29raW5nIGFmdGVyIHRoZSBleGlzdGluZw0KYmluZGluZ3MgZXhwcmVzc2lu
-ZyBzdWNoIGxpbWl0cy4gSSBkaWRuJ3QgZmluZCBzdWNoIGJpbmRpbmdzIHJlbGF0ZWQgdG8NCnRo
-aXMgZHJpdmVyIHRob3VnaCwgSSBmb3VuZCBzb21lIGxpbWl0cyBwcmVzZW50IGluIHNvbWUgb3Ro
-ZXIgZHJpdmVycy4NCkluZGVlZCwgdGhpcyBsaW1pdGF0aW9uIGlzIGFjdHVhbGx5IGR1ZSB0byBi
-YW5kd2lkdGggbGltaXRhdGlvbiwgYnV0DQp0aGUgcHJvYmxlbSBpcyB0aGF0IHRoaXMgbGltaXRh
-dGlvbiBjb21lcyBpLk1YOE0gKGtub3duIGFzIG1TY2FsZQ0KODUwRCksIHdoZXJlIHRoZSBtZW1v
-cnkgYmFuZHdpZHRoIGNhbm5vdCBzdXBwb3J0OiBHUFUvVlBVIHdvcmtsb2FkIGluDQp0aGUgc2Ft
-ZSB0aW1lIHdpdGggYm90aCBEQ1NTIGRyaXZpbmcgNGtANjDCoGFuZCBlTENESUYgZHJpdmluZyAx
-MDgwcEA2MC4NClNpbmNlIGVMQ0RJRiBpcyBhIHNlY29uZGFyeSBkaXNwbGF5IHdlIHRob3VnaCB0
-byBhZGQgdGhlIHBvc2liaWxpdHkgdG8NCmxpbWl0IGl0J3MgYmFuZHdpZHRoIGJ5IGxpbWl0aW5n
-IHRoZSByZXNvbHV0aW9uLg0KSW5kZWVkLCB0aGVyZSBpcyBhbHNvIGEgc2Vjb25kIHBsYW5lLCBi
-dXQgY3VycmVudGx5IG5vdCB5ZXQgc3VwcG9ydGVkDQoodGhlcmUgaXMgbm8gc3VwcG9ydCBmb3Ig
-c2Vjb25kIHBsYW5lIGluIE1YU0ZCIGluIHRoZSB1cHN0cmVhbSBkcml2ZXINCm9yIGluIG91ciBp
-bnRlcm5hbCB0cmVlKS4NCklmIHlvdSB0aGluayB0aGlzIGxpbWl0YXRpb24gZG9lc24ndCBtYWtl
-IHNlbnNlLCBJIGNhbiBqdXN0IGRyb3AgaXQuDQo+IA0KPiBSb2INCg0KVGhhbmtzLA0KUm9iZXJ0
+On Mon, Aug 12, 2019 at 11:05:51AM -0700, Ira Weiny wrote:
+> On Sat, Aug 10, 2019 at 09:30:37AM +1000, Dave Chinner wrote:
+> > On Fri, Aug 09, 2019 at 03:58:21PM -0700, ira.weiny@intel.com wrote:
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > dax_layout_busy_page() can now operate on a sub-range of the
+> > > address_space provided.
+> > > 
+> > > Have xfs specify the sub range to dax_layout_busy_page()
+> > 
+> > Hmmm. I've got patches that change all these XFS interfaces to
+> > support range locks. I'm not sure the way the ranges are passed here
+> > is the best way to do it, and I suspect they aren't correct in some
+> > cases, either....
+> > 
+> > > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> > > index ff3c1fae5357..f0de5486f6c1 100644
+> > > --- a/fs/xfs/xfs_iops.c
+> > > +++ b/fs/xfs/xfs_iops.c
+> > > @@ -1042,10 +1042,16 @@ xfs_vn_setattr(
+> > >  		xfs_ilock(ip, XFS_MMAPLOCK_EXCL);
+> > >  		iolock = XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL;
+> > >  
+> > > -		error = xfs_break_layouts(inode, &iolock, BREAK_UNMAP);
+> > > -		if (error) {
+> > > -			xfs_iunlock(ip, XFS_MMAPLOCK_EXCL);
+> > > -			return error;
+> > > +		if (iattr->ia_size < inode->i_size) {
+> > > +			loff_t                  off = iattr->ia_size;
+> > > +			loff_t                  len = inode->i_size - iattr->ia_size;
+> > > +
+> > > +			error = xfs_break_layouts(inode, &iolock, off, len,
+> > > +						  BREAK_UNMAP);
+> > > +			if (error) {
+> > > +				xfs_iunlock(ip, XFS_MMAPLOCK_EXCL);
+> > > +				return error;
+> > > +			}
+> > 
+> > This isn't right - truncate up still needs to break the layout on
+> > the last filesystem block of the file,
+> 
+> I'm not following this?  From a user perspective they can't have done anything
+> with the data beyond the EOF.  So isn't it safe to allow EOF to grow without
+> changing the layout of that last block?
+
+
+You're looking at this from the perspective of what RDMA page
+pinning, not what the guarantees a filesystem has to provide layout
+holders.
+
+For example, truncate up has to zero the portion of the block beyond
+EOF and that requires a data write. What happens if that block is a
+shared extent and hence we have do a copy on write and alter the
+file layout?
+
+Or perhaps that tail block still has dirty data over it that is
+marked for delayed allocation? Truncate up will have to write that
+data to zero the delayed allocation extent that spans EOF, and hence
+the truncate modifies the layout because it triggers allocation.
+
+i.e. just because an operation does not change user data, it does
+not mean that it will not change the file layout. There is a chance
+that truncate up will modify the layout and so we need to break the
+layout leases that span the range from the old size to the new
+size...
+
+> > and truncate down needs to
+> > extend to "maximum file offset" because we remove all extents beyond
+> > EOF on a truncate down.
+> 
+> Ok, I was trying to allow a user to extend the file without conflicts if they
+> were to have a pin on the 'beginning' of the original file.
+
+If we want to allow file extension under a layout lease, the lease
+has to extend beyond EOF, otherwise the new section of the file is
+not covered by a lease. If leases only extend to the existing
+EOF, then once the new data is written and the file is extended,
+then the lease owner needs to take a new lease on the range they
+just wrote. SO the application ends up having to do write - lease
+-write -lease - .... so that it has leases covering the range of the
+file it is extending into.
+
+Much better it to define a lease that extends to max file offset,
+such that it always covers they range past the existing EOF and
+extending writes will automatically be covered. What this then does
+is to trigger layout break notifications on file size change, either
+by write, truncate, fallocate, without having to actually know or
+track the exactly file size in the lease....
+
+> This sounds like
+> you are saying that a layout lease must be dropped to do that?  In some ways I
+> think I understand what you are driving at and I think I see how I may have
+> been playing "fast and loose" with the strictness of the layout lease.  But
+> from a user perspective if there is a part of the file which "does not exist"
+> (beyond EOF) does it matter that the layout there may change?
+
+Yes, it does, because userspace can directly manipulate the layout
+beyond EOF via fallocate(). e.g. we can preallocation beyond EOF
+without changing the file size, such that when we then do an
+extending write no layout change actually takes place. The only
+thing that happens from a layout point of view is that the file size
+changes.
+
+This becomes /interesting/ when you start doing things like
+
+	lseek(fd, offset, SEEK_END);
+	write(fd, buf, len);
+
+which will trigger a write way beyond EOF into allocated space.
+That will also trigger block zeroing at the old tail, and there may
+be block zeroing around the write() as well. We've effectively
+change the layout of the file at EOF,  We've effectively change the
+layout of the file at EOF, and potentially beyond EOF.
+
+Indeed, the app might be expecting the preallocation beyond EOF to
+remain, so it might register a layout over that range to be notified
+if the preallocation is removed or the EOF extends beyond it. It
+needs to be notified on truncate down (which removes that
+preallocated range the lease sits over) and EOF is moved beyond it
+(layout range state has changed from inaccessable to valid file
+data)....
+
+
+> > i.e. when we use preallocation, the extent map extends beyond EOF,
+> > and layout leases need to be able to extend beyond the current EOF
+> > to allow the lease owner to do extending writes, extending truncate,
+> > preallocation beyond EOF, etc safely without having to get a new
+> > lease to cover the new region in the extended file...
+> 
+> I'm not following this.  What determines when preallocation is done?
+
+The application can direct it via fallocate(FALLOC_FL_KEEPSIZE).
+It's typically used for workloads that do appending O_DSYNC or
+direct IO writes to minimise file fragmentation.
+
+The filesystem can ialso choose to do allocation beyond EOFi
+speculatively during writes. XFS does this extensively with delayed
+allocation. And the filesystem can also remove this speculative
+allocation beyond EOF, which it may do if there are no active pages
+dirties on the inode for a period, it is reclaimed, the filesystem
+is running low on space, the user/group is running low on quota
+space, etc.
+
+Again, just because user data does not change, it does not mean that
+the file layout will not change....
+
+> Forgive my ignorance on file systems but how can we have a layout for every
+> file which is "maximum file offset" for every file even if a file is only 1
+> page long?
+
+The layout lease doesn't care what the file size it. It doesn't even
+know what the file size is. The layout lease covers a range the
+logical file offset with the intend that any change to the file
+layout within that range will result in a notification. The layout
+lease is not bound to the range of valid data in the file at all -
+it doesn't matter if it points beyond EOF - if the file grows to
+the size the it overlaps the layout lease, then that layout lease
+needs to be notified by break_layouts....
+
+I've had a stinking headache all day, so I'm struggling to make
+sense right now. The best I can describe is that layout lease ranges
+do not imply or require valid file data to exist within the range
+they are taken over - they just cover a file offset range.
+
+FWIW, the fcntl() locking interface uses a length of 0 to
+indicate "to max file offset" rather than a specific length. e.g.
+SETLK and friends:
+
+	Specifying 0 for l_len has the special meaning: lock all
+	bytes starting at the location specified by l_whence and
+	l_start through to the end of file, no  matter
+	how large the file grows.
+
+That's exactly the semantics I'm talking about here - layout leases
+need to be able to specify an extent anywhere within the valid file
+offset range, and also to specify a nebulous "through to the end of
+the layout range" so taht file growth can be done without needing
+new leases to be taken as the file grows....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
