@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F52C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C819EC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED0D320679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC6620679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749800;
-	bh=I+Et8CHLaDHb5aVf7jBfwWjMAQP/TDM5XArmZyBJHiA=;
+	s=default; t=1565749804;
+	bh=Bxrj4Oq4PbybT5IomXenT8sU7chCRKb66GKZVQ+kHuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FtcX1FQKcTBJPdx4mlOnWRHR+L69V4LXMyvrwhSBoYLqX/KDItVNoEvCoYhcKe9Cd
-	 GOlQMU2/8SbCI41T8WrLLdAoOFyEmtAWL3NxnQnGdqMa+vUFQ6i5VGzts3J6glnOYE
-	 dZ9gZvDhmshCPQ//djxggmtsJPfeyWiPwiMDA2So=
+	b=Fwb6iWRDGxTBe+0Qcc7sVe5dsg3+ongRoTZ0vkNBQhHD09H8L/izrkJ7sPsjfcmmG
+	 esRFhI9lc/67ro6t+UZ5a10wHRR2Wv849zX4j3ZRFIKNQi5Nxyamfz+PZwIEfJO6Ii
+	 M5cFneQr1rpaTU+Pl1gghsilrl7ZbOCpHQ9tjUwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbfHNCRV (ORCPT
+        id S1729713AbfHNCaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:17:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48508 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:30:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbfHNCRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:17:09 -0400
+        id S1727302AbfHNCRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:17:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE021208C2;
-        Wed, 14 Aug 2019 02:17:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33CEA20843;
+        Wed, 14 Aug 2019 02:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749028;
-        bh=I+Et8CHLaDHb5aVf7jBfwWjMAQP/TDM5XArmZyBJHiA=;
+        s=default; t=1565749040;
+        bh=Bxrj4Oq4PbybT5IomXenT8sU7chCRKb66GKZVQ+kHuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TCSmyQhHTutR1NAlh2ukJxUmwySfUv2zCNIVweA5/Cxn8MF0XPwFoHobpet53Wd/K
-         jmT7u0TJjLXyjsFzcnuFnrRefkJqdOYowP/uZHAISz3oC1AE2/BVuwRGmZNkubW5sY
-         9tFfMvXHQtWZQCpNvrxofiZezlV3mQDhwQLe/teM=
+        b=YPAWqKbCINywA4IWIKYZ+xNLdnDkEtA9CjiGz1atyPyZKzwFGg+K1P32KqioZ7LTH
+         p2HuIh5vSz3pCl95JHeynjp2fG9ve1+zDomqY1ov5Ja8wT6W0QA1ZVjAhI2Pft+tfG
+         p4NASU3VLkrrVxVOCguw/xnEbsG0/N6hyVNCNXnA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavel Shilovsky <pshilov@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 46/68] SMB3: Fix potential memory leak when processing compound chain
-Date:   Tue, 13 Aug 2019 22:15:24 -0400
-Message-Id: <20190814021548.16001-46-sashal@kernel.org>
+Cc:     Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 55/68] net: hisilicon: make hip04_tx_reclaim non-reentrant
+Date:   Tue, 13 Aug 2019 22:15:33 -0400
+Message-Id: <20190814021548.16001-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -60,87 +59,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
-[ Upstream commit 3edeb4a4146dc3b54d6fa71b7ee0585cb52ebfdf ]
+[ Upstream commit 1a2c070ae805910a853b4a14818481ed2e17c727 ]
 
-When a reconnect happens in the middle of processing a compound chain
-the code leaks a buffer from the memory pool. Fix this by properly
-checking for a return code and freeing buffers in case of error.
+If hip04_tx_reclaim is interrupted while it is running
+and then __napi_schedule continues to execute
+hip04_rx_poll->hip04_tx_reclaim, reentrancy occurs
+and oops is generated. So you need to mask the interrupt
+during the hip04_tx_reclaim run.
 
-Also maintain a buf variable to be equal to either smallbuf or bigbuf
-depending on a response buffer size while parsing a chain and when
-returning to the caller.
+The kernel oops exception stack is as follows:
 
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Unable to handle kernel NULL pointer dereference
+at virtual address 00000050
+pgd = c0003000
+[00000050] *pgd=80000000a04003, *pmd=00000000
+Internal error: Oops: 206 [#1] SMP ARM
+Modules linked in: hip04_eth mtdblock mtd_blkdevs mtd
+ohci_platform ehci_platform ohci_hcd ehci_hcd
+vfat fat sd_mod usb_storage scsi_mod usbcore usb_common
+CPU: 0 PID: 0 Comm: swapper/0 Tainted: G           O    4.4.185 #1
+Hardware name: Hisilicon A15
+task: c0a250e0 task.stack: c0a00000
+PC is at hip04_tx_reclaim+0xe0/0x17c [hip04_eth]
+LR is at hip04_tx_reclaim+0x30/0x17c [hip04_eth]
+pc : [<bf30c3a4>]    lr : [<bf30c2f4>]    psr: 600e0313
+sp : c0a01d88  ip : 00000000  fp : c0601f9c
+r10: 00000000  r9 : c3482380  r8 : 00000001
+r7 : 00000000  r6 : 000000e1  r5 : c3482000  r4 : 0000000c
+r3 : f2209800  r2 : 00000000  r1 : 00000000  r0 : 00000000
+Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment kernel
+Control: 32c5387d  Table: 03d28c80  DAC: 55555555
+Process swapper/0 (pid: 0, stack limit = 0xc0a00190)
+Stack: (0xc0a01d88 to 0xc0a02000)
+[<bf30c3a4>] (hip04_tx_reclaim [hip04_eth]) from [<bf30d2e0>]
+                                                (hip04_rx_poll+0x88/0x368 [hip04_eth])
+[<bf30d2e0>] (hip04_rx_poll [hip04_eth]) from [<c04c2d9c>] (net_rx_action+0x114/0x34c)
+[<c04c2d9c>] (net_rx_action) from [<c021eed8>] (__do_softirq+0x218/0x318)
+[<c021eed8>] (__do_softirq) from [<c021f284>] (irq_exit+0x88/0xac)
+[<c021f284>] (irq_exit) from [<c0240090>] (msa_irq_exit+0x11c/0x1d4)
+[<c0240090>] (msa_irq_exit) from [<c02677e0>] (__handle_domain_irq+0x110/0x148)
+[<c02677e0>] (__handle_domain_irq) from [<c0201588>] (gic_handle_irq+0xd4/0x118)
+[<c0201588>] (gic_handle_irq) from [<c0551700>] (__irq_svc+0x40/0x58)
+Exception stack(0xc0a01f30 to 0xc0a01f78)
+1f20:                                     c0ae8b40 00000000 00000000 00000000
+1f40: 00000002 ffffe000 c0601f9c 00000000 ffffffff c0a2257c c0a22440 c0831a38
+1f60: c0a01ec4 c0a01f80 c0203714 c0203718 600e0213 ffffffff
+[<c0551700>] (__irq_svc) from [<c0203718>] (arch_cpu_idle+0x20/0x3c)
+[<c0203718>] (arch_cpu_idle) from [<c025bfd8>] (cpu_startup_entry+0x244/0x29c)
+[<c025bfd8>] (cpu_startup_entry) from [<c054b0d8>] (rest_init+0xc8/0x10c)
+[<c054b0d8>] (rest_init) from [<c0800c58>] (start_kernel+0x468/0x514)
+Code: a40599e5 016086e2 018088e2 7660efe6 (503090e5)
+---[ end trace 1db21d6d09c49d74 ]---
+Kernel panic - not syncing: Fatal exception in interrupt
+CPU3: stopping
+CPU: 3 PID: 0 Comm: swapper/3 Tainted: G      D    O    4.4.185 #1
+
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2ops.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 0ccf8f9b63a2e..97fdbec54db97 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -3121,7 +3121,6 @@ receive_encrypted_standard(struct TCP_Server_Info *server,
- {
- 	int ret, length;
- 	char *buf = server->smallbuf;
--	char *tmpbuf;
- 	struct smb2_sync_hdr *shdr;
- 	unsigned int pdu_length = server->pdu_size;
- 	unsigned int buf_size;
-@@ -3151,18 +3150,15 @@ receive_encrypted_standard(struct TCP_Server_Info *server,
- 		return length;
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index 6127697ede120..57c0afa25f9fb 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -497,6 +497,9 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
+ 	u16 len;
+ 	u32 err;
  
- 	next_is_large = server->large_buf;
-- one_more:
-+one_more:
- 	shdr = (struct smb2_sync_hdr *)buf;
- 	if (shdr->NextCommand) {
--		if (next_is_large) {
--			tmpbuf = server->bigbuf;
-+		if (next_is_large)
- 			next_buffer = (char *)cifs_buf_get();
--		} else {
--			tmpbuf = server->smallbuf;
-+		else
- 			next_buffer = (char *)cifs_small_buf_get();
--		}
- 		memcpy(next_buffer,
--		       tmpbuf + le32_to_cpu(shdr->NextCommand),
-+		       buf + le32_to_cpu(shdr->NextCommand),
- 		       pdu_length - le32_to_cpu(shdr->NextCommand));
++	/* clean up tx descriptors */
++	tx_remaining = hip04_tx_reclaim(ndev, false);
++
+ 	while (cnt && !last) {
+ 		buf = priv->rx_buf[priv->rx_head];
+ 		skb = build_skb(buf, priv->rx_buf_size);
+@@ -557,8 +560,7 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
  	}
+ 	napi_complete_done(napi, rx);
+ done:
+-	/* clean up tx descriptors and start a new timer if necessary */
+-	tx_remaining = hip04_tx_reclaim(ndev, false);
++	/* start a new timer if necessary */
+ 	if (rx < budget && tx_remaining)
+ 		hip04_start_tx_timer(priv);
  
-@@ -3191,12 +3187,21 @@ receive_encrypted_standard(struct TCP_Server_Info *server,
- 		pdu_length -= le32_to_cpu(shdr->NextCommand);
- 		server->large_buf = next_is_large;
- 		if (next_is_large)
--			server->bigbuf = next_buffer;
-+			server->bigbuf = buf = next_buffer;
- 		else
--			server->smallbuf = next_buffer;
--
--		buf += le32_to_cpu(shdr->NextCommand);
-+			server->smallbuf = buf = next_buffer;
- 		goto one_more;
-+	} else if (ret != 0) {
-+		/*
-+		 * ret != 0 here means that we didn't get to handle_mid() thus
-+		 * server->smallbuf and server->bigbuf are still valid. We need
-+		 * to free next_buffer because it is not going to be used
-+		 * anywhere.
-+		 */
-+		if (next_is_large)
-+			free_rsp_buf(CIFS_LARGE_BUFFER, next_buffer);
-+		else
-+			free_rsp_buf(CIFS_SMALL_BUFFER, next_buffer);
- 	}
- 
- 	return ret;
 -- 
 2.20.1
 
