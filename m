@@ -2,146 +2,208 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8C0C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F79DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 478B620844
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:48:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JFGDgndU"
+	by mail.kernel.org (Postfix) with ESMTP id 379F620843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfHNJsF (ORCPT
+        id S1727040AbfHNJsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:48:05 -0400
-Received: from mail-eopbgr140048.outbound.protection.outlook.com ([40.107.14.48]:59719
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725955AbfHNJsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:48:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Bwkwpaawxu1ym0E7wQUUX6fOFksPdn/tK+awmcHqL5zEJHE0Y6Th3kAHQvJCKAXkWJKYqakKJyjENo5GFfflBqi1A5it3GoBvAP3lRtAPS1vSsOVzs878b3xcX1R5brzwSSjGdTkejo2yiiDhuP5vutsBI5XMrxcnv+xeGHWGPMDirT48iliRRMXzwagzW7VFzeq+ftwltE9v76JkTuTf+MN+QAIeDgZg/urQ91wiaD8vsa/hS7fDEuwOBy/giG1HHWIcvcuYeTi6EOCAZE+r+XtSFQsVfHeHFrhvYddZ5kszNJ0VyWvyAD4IVlH4WOIUmv6/n+ovRjbEfTnLA+ETQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=znncMx6vllCfJyxWkEqGwlGZhaNvryEUZOqe1Jjrcd0=;
- b=L0Coq4SyFL5R4lZAkMmN4C0QcIF8LshE54h6YjWjfXzcBq1QAvcbxit43jyxwfghIYoFQ2WdLJli9/UXH8s+A6UcheeOU/KG4IYtxmomtV6K9KjJYyesqR+Mg4S3/k8jB7FY0DCQmG483qRE7G2ThK1eUH/700k2Q3mZH7DeTFyViE6Mfa+NMA6P+9a+wOD66Fuo7VFI9oZDpKBca+juAJOPWceez26lQ+KWTvp2SyW/MJCnGS+V8wEASmS2LfhylkJfsUqMrpPvAIdscz2qvv0DdvvHFj5rZnKzPMQIojgpyUqLQBbhAZHOSjbe7XRB1pcHBmz8R1o0mHbMBJskyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=znncMx6vllCfJyxWkEqGwlGZhaNvryEUZOqe1Jjrcd0=;
- b=JFGDgndUsMc97MhxjLtbPFC9uKb0Sm14mZo+hhxLraAFTXQMiI0yzV8a4wQVZsDXzTEmQoPJxiE7uv8p6bESqTECq1t8Pje3NzlSJWE2sS++I9n7npn54zIHEYobpxoq3MHd7Ym6gWFZX0iUPh9M4kjkXUgZOEGz4K26L2bFwb0=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3297.eurprd04.prod.outlook.com (10.167.168.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.21; Wed, 14 Aug 2019 09:48:01 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::5012:d47a:1f5d:9b84]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::5012:d47a:1f5d:9b84%5]) with mapi id 15.20.2157.022; Wed, 14 Aug 2019
- 09:48:01 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCHv6 1/2] PCI: layerscape: Add the bar_fixed_64bit property
- in EP driver.
-Thread-Topic: [PATCHv6 1/2] PCI: layerscape: Add the bar_fixed_64bit property
- in EP driver.
-Thread-Index: AQHVUkXX4F7jGdZiC0eiDW46LdzUUKb6YRoAgAABy8A=
-Date:   Wed, 14 Aug 2019 09:48:00 +0000
-Message-ID: <AM5PR04MB32994A55A2951DD071C19F66F5AD0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190814020330.12133-1-xiaowei.bao@nxp.com>
- <20190814092952.GA26840@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190814092952.GA26840@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 032b63a8-b94d-4125-2196-08d7209c7eec
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3297;
-x-ms-traffictypediagnostic: AM5PR04MB3297:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR04MB32976EABAFAF0D81F000D736F5AD0@AM5PR04MB3297.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 01294F875B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(136003)(376002)(346002)(189003)(199004)(13464003)(99286004)(25786009)(53936002)(54906003)(478600001)(55016002)(5660300002)(316002)(6246003)(71190400001)(33656002)(256004)(81166006)(81156014)(8676002)(71200400001)(4326008)(9686003)(305945005)(74316002)(14454004)(26005)(52536014)(66446008)(76176011)(53546011)(6506007)(186003)(476003)(66476007)(6916009)(64756008)(66556008)(2906002)(7736002)(229853002)(86362001)(66946007)(8936002)(486006)(102836004)(76116006)(44832011)(66066001)(446003)(6436002)(11346002)(7696005)(3846002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3297;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BintUsxUwyYfBwckeoBu+OFlqDFsxSIAnuXdOTAYVrrZTWpckI3i4NqhN4OpuXX9GEhwh3bedmU2tie9YnY4A3m1OgUNzJHgMIpJqu40T3NI8NzAdJPDY7qdSGC8ZkoJ/20XQf60z+X/vZBoVWj85su8NYoauJKuMp7gRc59kYmXoF7VbRskwPGpc2z8c896KCgqop9TvBpsXwOFekRZG/gJ4c+fqNLrKEpjxqbq47800VjMAAccJ0V6hloKFRJevZ1jyVKCbp7Y/G18EDfrYXTJIQYoHXuHQht2iZYB5bQDmRFk+26MOxnFYpxN61WC2RPPEl1hyTZeyEHEXgBBqHT1QoX34EoJQVbcQWZ6c59bVm9qlVxpzrgRsfdrSxrj6XxlQRVY3Qb1kQQvPavhR5UiazaIvmlll5cWimigZb4=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Wed, 14 Aug 2019 05:48:09 -0400
+Received: from mail-oi1-f198.google.com ([209.85.167.198]:38090 "EHLO
+        mail-oi1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfHNJsG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 05:48:06 -0400
+Received: by mail-oi1-f198.google.com with SMTP id d63so1787508oib.5
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 02:48:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=XV02cgM0DiaLJPBZT/dcL2UEgRbdd37HvTZKiTSvZao=;
+        b=KQ20MdwcGRFTzEpZ1DA80iPDpN/a/MCAVLgtHogiIe9DadsRRXu+YQXnyySAkF5nYD
+         sRyELvd3gBIsHtTGbV4rryrjy8WSFMMhiTPBuBgoZm1hnWGjhc2XB49gpj9GtK+SF2fI
+         TzSd90CWuj1rQvcuOMuC1iIBOdsKtRL5T/udvjTkKJD9njjix3uU/cwA73VW9/6z6Zlk
+         OeiDrLbaq5KQ8tmRk/8jtUb1akLBV2n4NJh0MCnstqGW0+31CntjUJw4JmBIBXdOJylR
+         ZPl4pJfKz7lK0c543MQR6Dlw3k90Vt/MbuKoOtzanpLmQfKH/6oM3xP+yhDaiZ8eKBNG
+         QfgA==
+X-Gm-Message-State: APjAAAVofMsLxa+wa6t71ALB7Vy3iNm6Eq2urmSMc4mYLfG2/cm1SD4Z
+        Tdzb9HJcoVDLAxbld1Fkckyi8R43fLb0RTgnJizLQs6qGwTm
+X-Google-Smtp-Source: APXvYqwtNHvsouv3Ix3nM4wBkrtyFA3/tPsxw9Nhrd9lTSoNdWSy0FQVn0x4hxKROq5CgFY+BMIlNHAp4r7LuCJXb0+jMiaqNgNk
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 032b63a8-b94d-4125-2196-08d7209c7eec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 09:48:01.0497
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1cJup7C74HSirz/J66OznZIM1P/EwIGFvZsok3ZPDe6olYwbwdaMWNnUERoEVibIJ/bUri7b1oM6WCPZiXEAcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3297
+X-Received: by 2002:a02:b88b:: with SMTP id p11mr2437470jam.144.1565776085760;
+ Wed, 14 Aug 2019 02:48:05 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 02:48:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000063c050059010a7d4@google.com>
+Subject: INFO: task hung in fuse_lookup (3)
+From:   syzbot <syzbot+b64df836ad08c8e31a47@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        miklos@szeredi.hu, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
-c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnE6jjUwjE0yNUgMTc6
-MzANCj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogTS5oLiBM
-aWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1DQo+IDxtaW5na2FpLmh1QG54
-cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47DQo+IGJoZWxnYWFzQGdvb2dsZS5j
-b207IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOw0KPiBsaW51eC1wY2lAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSHY2IDEvMl0gUENJOiBs
-YXllcnNjYXBlOiBBZGQgdGhlIGJhcl9maXhlZF82NGJpdCBwcm9wZXJ0eQ0KPiBpbiBFUCBkcml2
-ZXIuDQo+IA0KPiBJIGFza2VkIHlvdSB0byByZW1vdmUgdGhlIHBlcmlvZCBhdCB0aGUgZW5kIG9m
-IHRoZSBwYXRjaCAkU1VCSkVDVCBhbmQgeW91DQo+IGRpZCBub3QsIGVpdGhlciB5b3UgZG8gbm90
-IHJlYWQgd2hhdCBJIHdyaXRlIG9yIGV4cGxhaW4gbWUgd2hhdCdzIGdvaW5nIG9uLg0KU29ycnks
-IEkgZGlkbid0IHVuZGVyc3RhbmQgdGhlIG1lYW5pbmcgb2YgcGVyaW9kIGNvcnJlY3RseSBiZWZv
-cmUuIA0KPiANCj4gT24gV2VkLCBBdWcgMTQsIDIwMTkgYXQgMTA6MDM6MjlBTSArMDgwMCwgWGlh
-b3dlaSBCYW8gd3JvdGU6DQo+ID4gVGhlIFBDSWUgY29udHJvbGxlciBvZiBsYXllcnNjYXBlIGp1
-c3QgaGF2ZSA0IEJBUnMsIEJBUjAgYW5kIEJBUjEgaXMNCj4gPiAzMmJpdCwgQkFSMiBhbmQgQkFS
-NCBpcyA2NGJpdCwgdGhpcyBpcyBkZXRlcm1pbmVkIGJ5IGhhcmR3YXJlLCBzbyBzZXQNCj4gPiB0
-aGUgYmFyX2ZpeGVkXzY0Yml0IHdpdGggMHgxNC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFhp
-YW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiANCj4gS2lzaG9uIEFDSydlZCB0aGlz
-IHBhdGNoIGFuZCB5b3UgaGF2ZSBub3QgY2FycmllZCBoaXMgdGFnLg0KPiANCj4gSSB3aWxsIG1h
-a2UgdGhlc2UgY2hhbmdlcyBidXQgdGhhdCdzIHRoZSBsYXN0IHRpbWUgSSBkbyB0aGF0IGZvciB5
-b3UuDQpUaGFua3MgYSBsb3QsIHlvdXIgbWVhbnMgaXMgdGhhdCBJIGRvbid0IG5lZWQgdG8gc2Vu
-ZCB0aGUgdjcgcGF0Y2ggYW5kIHlvdSBoZWxwIG1lIHRvDQpDb3JyZWN0IHRoaXMgcGF0Y2gsIHll
-cz8gVGhhbmtzIGEgbG90IGZvciB5b3VyIGhlbHAgYWJvdXQgdGhlIHJ1bGVzIG9mIHRoZSB1cHN0
-cmVhbS4gSSB3aWxsDQpDb3JyZWN0IHRoaXMgZXJyb3IgbmV4dCB0aW1lLiBeLl4gDQo+IA0KPiBM
-b3JlbnpvDQo+IA0KPiA+IC0tLQ0KPiA+IHYyOg0KPiA+ICAtIFJlcGxhY2UgdmFsdWUgMHgxNCB3
-aXRoIGEgbWFjcm8uDQo+ID4gdjM6DQo+ID4gIC0gTm8gY2hhbmdlLg0KPiA+IHY0Og0KPiA+ICAt
-IHNlbmQgdGhlIHBhdGNoIGFnYWluIHdpdGggJy0tdG8nLg0KPiA+IHY1Og0KPiA+ICAtIGZpeCB0
-aGUgY29tbWl0IG1lc3NhZ2UuDQo+ID4gdjY6DQo+ID4gIC0gcmVtb3ZlIHRoZSBbRVhUXSB0YWcg
-b2YgdGhlICRTVUJKRUNUIGluIGVtYWlsLg0KPiA+DQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xs
-ZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMgfCAxICsNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEg
-aW5zZXJ0aW9uKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxl
-ci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9k
-d2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+IGluZGV4IGJlNjFkOTYuLmNhOWFhNDUgMTAwNjQ0
-DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAu
-Yw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVw
-LmMNCj4gPiBAQCAtNDQsNiArNDQsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9lcGNfZmVh
-dHVyZXMNCj4gbHNfcGNpZV9lcGNfZmVhdHVyZXMgPSB7DQo+ID4gIAkubGlua3VwX25vdGlmaWVy
-ID0gZmFsc2UsDQo+ID4gIAkubXNpX2NhcGFibGUgPSB0cnVlLA0KPiA+ICAJLm1zaXhfY2FwYWJs
-ZSA9IGZhbHNlLA0KPiA+ICsJLmJhcl9maXhlZF82NGJpdCA9ICgxIDw8IEJBUl8yKSB8ICgxIDw8
-IEJBUl80KSwNCj4gPiAgfTsNCj4gPg0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9lcGNf
-ZmVhdHVyZXMqDQo+ID4gLS0NCj4gPiAyLjkuNQ0KPiA+DQo=
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    ee1c7bd3 Merge tag 'tpmdd-next-20190813' of git://git.infr..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=153f3422600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3ff364e429585cf2
+dashboard link: https://syzkaller.appspot.com/bug?extid=b64df836ad08c8e31a47
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=176c385a600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12482e86600000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b64df836ad08c8e31a47@syzkaller.appspotmail.com
+
+INFO: task init:1 blocked for more than 143 seconds.
+       Not tainted 5.3.0-rc4+ #101
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+init            D23792     1      0 0x00000000
+Call Trace:
+  context_switch kernel/sched/core.c:3254 [inline]
+  __schedule+0x755/0x1580 kernel/sched/core.c:3880
+  schedule+0xa8/0x270 kernel/sched/core.c:3944
+  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4003
+  __mutex_lock_common kernel/locking/mutex.c:1007 [inline]
+  __mutex_lock+0x7b0/0x13c0 kernel/locking/mutex.c:1077
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1092
+  fuse_lock_inode+0xba/0xf0 fs/fuse/inode.c:362
+  fuse_lookup+0x8e/0x360 fs/fuse/dir.c:335
+  __lookup_slow+0x279/0x500 fs/namei.c:1669
+  lookup_slow+0x58/0x80 fs/namei.c:1686
+  walk_component+0x747/0x2000 fs/namei.c:1808
+  link_path_walk.part.0+0x9a4/0x1340 fs/namei.c:2139
+  link_path_walk fs/namei.c:2267 [inline]
+  path_lookupat.isra.0+0xe3/0x8d0 fs/namei.c:2315
+  filename_lookup+0x1b0/0x410 fs/namei.c:2346
+  user_path_at_empty+0x43/0x50 fs/namei.c:2606
+  user_path_at include/linux/namei.h:60 [inline]
+  vfs_statx+0x129/0x200 fs/stat.c:187
+  vfs_stat include/linux/fs.h:3188 [inline]
+  __do_sys_newstat+0xa4/0x130 fs/stat.c:341
+  __se_sys_newstat fs/stat.c:337 [inline]
+  __x64_sys_newstat+0x54/0x80 fs/stat.c:337
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7eff41718c65
+Code: 00 00 00 e8 5d 01 00 00 48 83 c4 18 c3 90 90 90 90 90 90 90 90 83 ff  
+01 48 89 f0 77 18 48 89 c7 48 89 d6 b8 04 00 00 00 0f 05 <48> 3d 00 f0 ff  
+ff 77 17 f3 c3 90 48 8b 05 a1 51 2b 00 64 c7 00 16
+RSP: 002b:00007fff34a35eb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000004
+RAX: ffffffffffffffda RBX: 00007fff34a360f0 RCX: 00007eff41718c65
+RDX: 00007fff34a360f0 RSI: 00007fff34a360f0 RDI: 0000000000407545
+RBP: 0000000000000000 R08: 000000000159cb60 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00007fff34a365f0 R14: 0000000000000000 R15: 0000000000000000
+INFO: task syz-executor205:11118 blocked for more than 143 seconds.
+       Not tainted 5.3.0-rc4+ #101
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor205 D27656 11118  11116 0x00000000
+Call Trace:
+  context_switch kernel/sched/core.c:3254 [inline]
+  __schedule+0x755/0x1580 kernel/sched/core.c:3880
+  schedule+0xa8/0x270 kernel/sched/core.c:3944
+  d_wait_lookup fs/dcache.c:2506 [inline]
+  d_alloc_parallel+0x12cd/0x1c30 fs/dcache.c:2588
+  __lookup_slow+0x1ab/0x500 fs/namei.c:1652
+  lookup_slow+0x58/0x80 fs/namei.c:1686
+  walk_component+0x747/0x2000 fs/namei.c:1808
+  link_path_walk.part.0+0x9a4/0x1340 fs/namei.c:2139
+  link_path_walk fs/namei.c:2070 [inline]
+  path_openat+0x202/0x4630 fs/namei.c:3532
+  do_filp_open+0x1a1/0x280 fs/namei.c:3563
+  do_sys_open+0x3fe/0x5d0 fs/open.c:1089
+  __do_sys_open fs/open.c:1107 [inline]
+  __se_sys_open fs/open.c:1102 [inline]
+  __x64_sys_open+0x7e/0xc0 fs/open.c:1102
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x444ca0
+Code: Bad RIP value.
+RSP: 002b:00007ffec1436ed0 EFLAGS: 00000202 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000444ca0
+RDX: 0000000000000000 RSI: 0000000000090800 RDI: 00000000004ae91e
+RBP: 0000000000002b72 R08: 0000000000002b6e R09: 0000555556c39880
+R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffec1437100
+R13: 00000000004075d0 R14: 0000000000000000 R15: 0000000000000000
+INFO: task syz-executor205:11122 blocked for more than 144 seconds.
+       Not tainted 5.3.0-rc4+ #101
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor205 D28336 11122  11118 0x00000004
+Call Trace:
+  context_switch kernel/sched/core.c:3254 [inline]
+  __schedule+0x755/0x1580 kernel/sched/core.c:3880
+  schedule+0xa8/0x270 kernel/sched/core.c:3944
+  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4003
+  __mutex_lock_common kernel/locking/mutex.c:1007 [inline]
+  __mutex_lock+0x7b0/0x13c0 kernel/locking/mutex.c:1077
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1092
+  fuse_lock_inode+0xba/0xf0 fs/fuse/inode.c:362
+  fuse_lookup+0x8e/0x360 fs/fuse/dir.c:335
+  __lookup_slow+0x279/0x500 fs/namei.c:1669
+  lookup_slow+0x58/0x80 fs/namei.c:1686
+  walk_component+0x747/0x2000 fs/namei.c:1808
+  link_path_walk.part.0+0x9a4/0x1340 fs/namei.c:2139
+  link_path_walk fs/namei.c:2070 [inline]
+  path_openat+0x202/0x4630 fs/namei.c:3532
+  do_filp_open+0x1a1/0x280 fs/namei.c:3563
+  do_sys_open+0x3fe/0x5d0 fs/open.c:1089
+  __do_sys_open fs/open.c:1107 [inline]
+  __se_sys_open fs/open.c:1102 [inline]
+  __x64_sys_open+0x7e/0xc0 fs/open.c:1102
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x405810
+Code: 00 48 85 c0 75 e8 8b 15 2e 33 20 00 83 e2 fb 89 15 25 33 20 00 f7 c2  
+00 00 00 10 74 4b 48 8b 05 c6 30 20 00 48 85 c0 75 15 eb <31> 0f 1f 80 00  
+00 00 00 48 8b 80 c0 00 00 00 48 85 c0 74 18 83 78
+RSP: 002b:00007ffec1436bd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 00007ffec1436c04 RCX: 0000000000405810
+RDX: 00007ffec1436c0a RSI: 0000000000080001 RDI: 00000000004ae93c
+RBP: 00007ffec1436c00 R08: 0000000000000000 R09: 0000000000000004
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000407540
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+INFO: lockdep is turned off.
+NMI backtrace for cpu 0
+CPU: 0 PID: 1057 Comm: khungtaskd Not tainted 5.3.0-rc4+ #101
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+  watchdog+0x9d0/0xef0 kernel/hung_task.c:289
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1 skipped: idling at native_safe_halt+0xe/0x10  
+arch/x86/include/asm/irqflags.h:60
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
