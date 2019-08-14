@@ -2,142 +2,122 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F60CC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1D5C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B68206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AA5206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:54:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kliu/oC7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K+aDcvpR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbfHNRxh (ORCPT
+        id S1728882AbfHNRy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:53:37 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32954 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728188AbfHNRxg (ORCPT
+        Wed, 14 Aug 2019 13:54:28 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39487 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbfHNRy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:53:36 -0400
-Received: by mail-pf1-f194.google.com with SMTP id g2so54019661pfq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 10:53:36 -0700 (PDT)
+        Wed, 14 Aug 2019 13:54:28 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u17so53452174pgi.6;
+        Wed, 14 Aug 2019 10:54:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ArUMi9WppD4KpmP84aiabPQB2r88tFmYQMOJibiN7ys=;
-        b=kliu/oC7PiMQOOfilpD5KvgHHyE8oa5C6lAExUySmM8Gmc2V94Xyf6Qt5G/mkSgZhR
-         QoFzTj+lZ1ObVgrqM+0gtiijudG06ZfyLJ5kJjYItLw4I+rL1Z79ZDaoftLaBRBFK8q+
-         dWMTHzKF6NZcIO435/wCcEWgyaQiCltRj0zs3ftm1/vnz2zC5tq7dAcQx9Hw8XcgDDEd
-         fNu/pV8Ggd3G0/AyPAzdGDlGMZH3ZdiSXvDAEJg7G2fql6hV4mG6GWE5XgalyO45XUnK
-         s5magF6WCYFUrHtyomNCckDGMWe6chR6VSez62+ZOPWVo/ocYLBw+fSbNqAIrOnqHVcm
-         XzCA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bykeZE8BCmNlHEXlGnRvq6Ot00PEYW0pXG06m1NWsOU=;
+        b=K+aDcvpRMOpF3igF4pjSYIveLHcc1KXkwSCoadQIX2DFaKEWMI+vfJB79daC4MNQSC
+         ISvZrp/x+f+vACHHpVepn4vDTFSfoHeTQ+TggXZGjGRyUaafguPpzppVzOHgQbWGhixU
+         vxNP/YLtjeXvHh2o+aNMjClL/9/B/MaZbP1fYrVU1cmYyYX+1OvC254YtYaCRQGIf/bS
+         Yvj3NieVka4nvTAlGWiJ6NuIbYP2l68c2HMaUR4H6mvUYGfrCGVK3qWCiTBen6iK14Pk
+         pIw+sfUkw2hNlQlo2P8LCdGtzP00S4e0DTBVW5cimvcJp/hSaKKaEmEWBExLQ7giPGOX
+         K4HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ArUMi9WppD4KpmP84aiabPQB2r88tFmYQMOJibiN7ys=;
-        b=rWcykx8KjTZurvsPn2vZRMKCkQ57p8nAcUxbYPEPwOn8HfjRJKx0TeuL0R8a3onUsi
-         opwWV3+irv6zT1U0JD2ej9luxkjVzkDhN03PhSTCX1VUamSeAcpHMFcY7Dk/3qKEwDK/
-         wf7tk4JNq/nciheJ6jRUadVYPn9i4X7GSdvjTpQ8bGZ/m2RVjUFkMKRxNDUteVYhI+th
-         vefbIp0rYyGRXdxM7tG0soD+xLkzBsDvrqaKacfIWKWwHLMw7ITxbABsC62uP1QIiXlx
-         VE3otxDTRy+ka91F00Q7J7c9mG0pHrepkXXGPTPa1PesZ0LtMfiIJmY+Uc7OfbixEr0z
-         TK2A==
-X-Gm-Message-State: APjAAAV6LehNMH+GArGl4DobTBg8AwrEihYEz4chOkC17ysKFyBgKLDg
-        Dx3Z61ruOuTOUpmcIu/aSsHCYQ==
-X-Google-Smtp-Source: APXvYqzzMd/5cvFBLMtXfDsAG0LpYnyV+4JJdTWPaUZn9IwFFuOYCZZhd94jls34yHAIl6jxNlK44A==
-X-Received: by 2002:aa7:82da:: with SMTP id f26mr1210723pfn.82.1565805215646;
-        Wed, 14 Aug 2019 10:53:35 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q8sm387240pjq.20.2019.08.14.10.53.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 10:53:35 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 10:53:32 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bykeZE8BCmNlHEXlGnRvq6Ot00PEYW0pXG06m1NWsOU=;
+        b=Fp4objBNQI5W0miRgQfXzQ0DgqRvmeZtpEY1AiykFpUwOQltAIOdK8lJkO811Xr5zC
+         RtAYS4FpX9ALTfdRwqyLBQUJXq03QVTY2jQGZvye3BQzlbhjlWNwc8gwZhK+hzd8D+x2
+         waaoTbA8y9uEJsRt4RRPH3R7Me/WiTFF1zyjQi6AAb/whWlxib3mK+1Om/ZBRY9jwRK2
+         sRUHuPFEnRmjlyBvy1BkLqkawpx6b1SlmSZJOG2aR1JDposMIy2ccaz5S9+UfWvQdDZG
+         ttRIGul1UremOPkkR5LwG/e2qTfqe/Amde3J7mzDC1uXd/mh6IVV0gOMRMOhEIS/Cfpm
+         lSyQ==
+X-Gm-Message-State: APjAAAV4MyzpY8RqCA5RC1yS62OdvF3J7C0kyDhPqQH/2W6FYnV6zENA
+        QHUH7zbhDgDdr4/oemycq/M=
+X-Google-Smtp-Source: APXvYqwXaYv0laiV+LZv75ifYnMcC/YgpdEKv2m4f4Bvfmdjtb/GHTNV5jNZRKv4rKl2eWg6mfSvfA==
+X-Received: by 2002:a17:90a:a00d:: with SMTP id q13mr878315pjp.80.1565805267599;
+        Wed, 14 Aug 2019 10:54:27 -0700 (PDT)
+Received: from [10.69.78.41] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a26sm416425pff.174.2019.08.14.10.54.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 10:54:26 -0700 (PDT)
+Subject: Re: [PATCH v4 08/14] net: phy: adin: add support MDI/MDIX/Auto-MDI
+ selection
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/22] arm64: dts: qcom: sm8150-mtp: add base dts file
-Message-ID: <20190814175332.GG6167@minitux>
-References: <20190814125012.8700-1-vkoul@kernel.org>
- <20190814125012.8700-3-vkoul@kernel.org>
+Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        hkallweit1@gmail.com, andrew@lunn.ch
+References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+ <20190812112350.15242-9-alexandru.ardelean@analog.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <ff2c2af9-fc13-e10a-896c-3ede55346203@gmail.com>
+Date:   Wed, 14 Aug 2019 10:54:25 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814125012.8700-3-vkoul@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190812112350.15242-9-alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 14 Aug 05:49 PDT 2019, Vinod Koul wrote:
 
-> This add base DTS file for sm8150-mtp and enables
-> boot to console
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On 8/12/2019 4:23 AM, Alexandru Ardelean wrote:
+> The ADIN PHYs support automatic MDI/MDIX negotiation. By default this is
+> disabled, so this is enabled at `config_init`.
+> 
+> This is controlled via the PHY Control 1 register.
+> The supported modes are:
+>   1. Manual MDI
+>   2. Manual MDIX
+>   3. Auto MDIX - prefer MDIX
+>   4. Auto MDIX - prefer MDI
+> 
+> The phydev mdix & mdix_ctrl fields include modes 3 & 4 into a single
+> auto-mode. So, the default mode this driver enables is 4 when Auto-MDI mode
+> is used.
+> 
+> When detecting MDI/MDIX mode, a combination of the PHY Control 1 register
+> and PHY Status 1 register is used to determine the correct MDI/MDIX mode.
+> 
+> If Auto-MDI mode is not set, then the manual MDI/MDIX mode is returned.
+> If Auto-MDI mode is set, then MDIX mode is returned differs from the
+> preferred MDI/MDIX mode.
+> This covers all cases where:
+>   1. MDI preferred  & Pair01Swapped   == MDIX
+>   2. MDIX preferred & Pair01Swapped   == MDI
+>   3. MDI preferred  & ! Pair01Swapped == MDIX
+>   4. MDIX preferred & ! Pair01Swapped == MDI
+> 
+> The preferred MDI/MDIX mode is not configured via SW, but can be configured
+> via HW pins. Note that the `Pair01Swapped` is the Green-Yellow physical
+> pairs.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-> ---
->  arch/arm64/boot/dts/qcom/Makefile       |  1 +
->  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 28 +++++++++++++++++++++++++
->  2 files changed, 29 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 0a7e5dfce6f7..1964dacaf19b 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-> new file mode 100644
-> index 000000000000..df08ee50510d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-> @@ -0,0 +1,28 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +// Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-> +// Copyright (c) 2019, Linaro Limited
-> +
-> +/dts-v1/;
-> +
-> +#include "sm8150.dtsi"
-> +
-> +/ {
-> +	model = "Qualcomm Technologies, Inc. SM8150 MTP";
-> +	compatible = "qcom,sm8150-mtp";
-> +
-> +	aliases {
-> +		serial0 = &uart2;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +};
-> +
-> +&qupv3_id_1 {
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	status = "okay";
-> +};
-> -- 
-> 2.20.1
-> 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
