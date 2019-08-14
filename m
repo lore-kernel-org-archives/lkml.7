@@ -2,116 +2,147 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43935C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709E9C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF61214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45AD5208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:47:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbfHNVoV (ORCPT
+        id S1729094AbfHNVr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 17:44:21 -0400
-Received: from mga01.intel.com ([192.55.52.88]:38219 "EHLO mga01.intel.com"
+        Wed, 14 Aug 2019 17:47:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49874 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfHNVoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 17:44:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 14:44:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,386,1559545200"; 
-   d="scan'208";a="376182235"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Aug 2019 14:44:20 -0700
-Received: from orsmsx111.amr.corp.intel.com (10.22.240.12) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 14 Aug 2019 14:44:19 -0700
-Received: from orsmsx122.amr.corp.intel.com ([169.254.11.68]) by
- ORSMSX111.amr.corp.intel.com ([169.254.12.226]) with mapi id 14.03.0439.000;
- Wed, 14 Aug 2019 14:44:20 -0700
-From:   "Schmauss, Erik" <erik.schmauss@intel.com>
-To:     "Duran, Leo" <leo.duran@amd.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Subject: RE: Parsing PXM from ACPI (DSDT)
-Thread-Topic: Parsing PXM from ACPI (DSDT)
-Thread-Index: AdVSCEGThmsUNGQZSm2XEI5B9E2GMQA3cq8AAAA9gMAAAAlkEAAAd9EA
-Date:   Wed, 14 Aug 2019 21:44:19 +0000
-Message-ID: <CF6A88132359CE47947DB4C6E1709ED53C61A2BC@ORSMSX122.amr.corp.intel.com>
-References: <CY4PR12MB1815927E36A8A9A0E5B18734F9D20@CY4PR12MB1815.namprd12.prod.outlook.com>
- <CY4PR12MB18156AA493BA8F3C28F0377FF9AD0@CY4PR12MB1815.namprd12.prod.outlook.com>
- <CY4PR12MB1815E6208E334CE4EA8F2670F9AD0@CY4PR12MB1815.namprd12.prod.outlook.com>
- <CY4PR12MB1815251BBCB062AAA8EEB39CF9AD0@CY4PR12MB1815.namprd12.prod.outlook.com>
-In-Reply-To: <CY4PR12MB1815251BBCB062AAA8EEB39CF9AD0@CY4PR12MB1815.namprd12.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMWE4ZTM1NTQtNzkzMi00NzdhLTgyZDUtOWI3Y2JhYTcxNWI3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZG1wRnF0MUtxQVpJdGNadVlpK2RJNDNlMml3YmF5Y1huOVY1bEhuNnBMVEF2bGMyRTZFTG8yMzJ0S3NtbVwvbjEifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.139]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1728819AbfHNVr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 17:47:28 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CBB2D776C2;
+        Wed, 14 Aug 2019 21:47:27 +0000 (UTC)
+Received: from [10.36.116.18] (ovpn-116-18.ams2.redhat.com [10.36.116.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C0684806BB;
+        Wed, 14 Aug 2019 21:47:25 +0000 (UTC)
+Subject: Re: [PATCH v2 4/5] mm/memory_hotplug: Make sure the pfn is aligned to
+ the order when onlining
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Arun KS <arunks@codeaurora.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20190814154109.3448-1-david@redhat.com>
+ <20190814154109.3448-5-david@redhat.com>
+ <20190814135608.a449ca5a75cd700e077a8d23@linux-foundation.org>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <784cba14-e0ad-cfea-8ffc-bfbf855ceb10@redhat.com>
+Date:   Wed, 14 Aug 2019 23:47:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20190814135608.a449ca5a75cd700e077a8d23@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 14 Aug 2019 21:47:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtYWNwaS1vd25l
-ckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpsaW51eC1hY3BpLQ0KPiBvd25lckB2Z2VyLmtlcm5l
-bC5vcmddIE9uIEJlaGFsZiBPZiBEdXJhbiwgTGVvDQo+IFNlbnQ6IFdlZG5lc2RheSwgQXVndXN0
-IDE0LCAyMDE5IDI6MzAgUE0NCj4gVG86IGxpbnV4LWFjcGlAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IENjOiBSYWZhZWwgSi4gV3lzb2NraSA8cmp3QHJq
-d3lzb2NraS5uZXQ+OyBMZW4gQnJvd24gPGxlbmJAa2VybmVsLm9yZz4NCj4gU3ViamVjdDogUGFy
-c2luZyBQWE0gZnJvbSBBQ1BJIChEU0RUKQ0KPiANCkhpIExlbywNCg0KPiBIZWxsbywNCj4gSXMg
-bm90IGNsZWFyIG9yIGV2aWRlbnQgdG8gbWUgaWYgdGhlIGtlcm5lbCBwYXJzZXMgX1BYTSB2YWx1
-ZXMgYmVsb3cgKG9yIHVuZGVyKQ0KPiB0aGUgcm9vdC1jb21wbGV4Lg0KDQpCdWlsZCB3aXRoIENP
-TkZJR19BQ1BJX0RFQlVHPXkgYW5kIGJvb3Qgd2l0aCBhY3BpLmRlYnVnX2xheWVyPTB4ZmZmZmZm
-ZmYgYWNwaS5kZWJ1Z19sZXZlbD0weDgwMDAwDQoNClRoaXMgd2lsbCBwcmludCBhbGwgb2YgdGhl
-IEFjcGlFdmFsdWF0ZU9iamVjdCBxdWVyaWVzIHRvIHRoZSBkbWVzZy4NCg0KPiANCj4gRm9yIGV4
-YW1wbGUsIGluIG15IGV4cGVyaWVuY2U6DQo+IFRoaXMgQVNMIHNhbXBsZSBmb3IgUFhNIGF0IHRo
-ZSByb290LWNvbXBsZXggbGV2ZWwgcHJvZHVjZXMgdGhlIGV4cGVjdGVkDQo+IE5VTUEgYXNzaWdu
-bWVudCBmcm9tIOKAnGxzdG9wb+KAnToNCj4gU2NvcGUgKFxfU0IpIHsNCj4gICAvLyAuLi4NCj4g
-ICBEZXZpY2UgKFBDSTApIHsgLy8gUm9vdCBQQ0kgQnVzIChIb3N0LUJyaWRnZSkNCj4gICAgIE5h
-bWUgKF9ISUQsIEVJU0FJRCgiUE5QMEEwOCIpKQ0KPiAgICAgTmFtZSAoX0NJRCwgRUlTQUlEKCJQ
-TlAwQTAzIikpDQo+ICAgICBOYW1lIChfQkJOLCAwKQ0KPiAgICAgTWV0aG9kIChfQ1JTLDApIHsN
-Cj4gICAgICAgLy8gUmV0dXJuIGN1cnJlbnQgcmVzb3VyY2VzIGZvciBob3N0IGJyaWRnZSAwDQo+
-ICAgICB9DQo+ICAgICBOYW1lIChfUFJULCBQYWNrYWdlKCkgew0KPiAgICAgIC8vIFBhY2thZ2Ug
-d2l0aCBQQ0kgSVJRIHJvdXRpbmcgdGFibGUgaW5mb3JtYXRpb24NCj4gICAgIH0pDQo+ICAgICBN
-ZXRob2QgKF9QWE0sIDAsIE5vdFNlcmlhbGl6ZWQpIHsNCj4gICAgICAgUmV0dXJuICgwKQ0KPiAg
-ICAgfQ0KPiAgIH0NCj4gICAvLyAuLi4NCj4gfQ0KPiANCj4gSG93ZXZlciwNCj4gVGhpcyBBU0wg
-c2FtcGxlIGZvciBQWE0gYXQgdGhlIFAyUCByb290LWJyaWRnZSBsZXZlbCBkb2VzIG5vdCBwcm9k
-dWNlIHRoZQ0KPiBleHBlY3RlZCBOVU1BIGFzc2lnbm1lbnQgZnJvbSDigJxsc3RvcG/igJ06DQo+
-ICAoT2YgY291cnNlLCB0aGUgYXNzdW1wdGlvbiBpcyB0aGF0IG11bHRpcGxlIE5VTUEgbm9kZXMg
-YWN0dWFsbHkgZXhpc3Qgb24gdGhlDQo+IHN5c3RlbSkNCj4gDQo+ICBTY29wZSAoXF9TQikgew0K
-PiAgIC8vIC4uLg0KPiAgIERldmljZSAoUENJMCkgeyAvLyBSb290IFBDSSBCdXMgKEhvc3QtQnJp
-ZGdlKQ0KPiAgICAgTmFtZSAoX0hJRCwgRUlTQUlEICgiUE5QMEEwOCIpKQ0KPiAgICAgTmFtZSAo
-X0NJRCwgRUlTQUlEICgiUE5QMEEwMyIpKQ0KPiAgICAgTmFtZSAoX0JCTiwgMCkNCj4gICAgIE1l
-dGhvZCAoX0NSUywwKSB7DQo+ICAgICAgIC8vIFJldHVybiBjdXJyZW50IHJlc291cmNlcyBmb3Ig
-aG9zdCBicmlkZ2UgMA0KPiAgICAgfQ0KPiAgICAgTmFtZSAoX1BSVCwgUGFja2FnZSgpIHsNCj4g
-ICAgICAgLy8gUGFja2FnZSB3aXRoIFBDSSBJUlEgcm91dGluZyB0YWJsZSBpbmZvcm1hdGlvbg0K
-PiAgICAgfSkNCj4gDQo+IMKgwqDCoCBEZXZpY2UgKFAyUDApIHsgLy8gRmlyc3QgUENJLXRvLVBD
-SSBicmlkZ2UgKFBvcnQwKQ0KPiDCoMKgwqDCoMKgIE5hbWUgKF9BRFIsIDB4MDAwNzAwMDEpIC8v
-IERldmljZSM3aCwgRnVuYyMxIG9uIGJ1cyBQQ0kwDQo+IMKgwqDCoMKgwqAgTmFtZSAoX1BSVCwg
-UGFja2FnZSgpIHsNCj4gwqDCoMKgwqDCoCAgIC8vIFBhY2thZ2Ugd2l0aCBQQ0kgSVJRIHJvdXRp
-bmcgdGFibGUgaW5mb3JtYXRpb24NCj4gwqDCoMKgwqDCoCB9KQ0KPiAgICAgICBNZXRob2QgKF9Q
-WE0sIDAsIE5vdFNlcmlhbGl6ZWQpIHsNCj4gICAgICAgICBSZXR1cm4gKDApDQo+ICAgICAgIH0N
-Cj4gwqDCoMKgIH0NCj4gDQo+IMKgwqDCoCBEZXZpY2UgKFAyUDEpIHsgLy8gU2Vjb25kIFBDSS10
-by1QQ0kgYnJpZGdlIChQb3J0MSkNCj4gwqDCoMKgwqDCoCBOYW1lIChfQURSICwweDAwMDgwMDAx
-KSAvLyBEZXZpY2UjOGgsIEZ1bmMjMSBvbiBidXMgUENJMA0KPiDCoMKgwqDCoMKgIE5hbWUgKF9Q
-UlQsIFBhY2thZ2UoKSB7DQo+IMKgwqDCoMKgwqAgICAvLyBQYWNrYWdlIHdpdGggUENJIElSUSBy
-b3V0aW5nIHRhYmxlIGluZm9ybWF0aW9uDQo+IMKgICAgwqAgfSkNCj4gICAgICAgTWV0aG9kIChf
-UFhNLCAwLCBOb3RTZXJpYWxpemVkKSB7DQo+ICAgICAgICAgIFJldHVybiAoMSkNCj4gICAgICAg
-fQ0KPiDCoMKgwqAgfQ0KPiAgIH0NCj4gICAvLyAuLi4NCj4gfQ0KPiANCj4gVGhhbmtzLA0KPiBM
-ZW8uDQoNCg==
+On 14.08.19 22:56, Andrew Morton wrote:
+> On Wed, 14 Aug 2019 17:41:08 +0200 David Hildenbrand <david@redhat.com> wrote:
+> 
+>> Commit a9cd410a3d29 ("mm/page_alloc.c: memory hotplug: free pages as higher
+>> order") assumed that any PFN we get via memory resources is aligned to
+>> to MAX_ORDER - 1, I am not convinced that is always true. Let's play safe,
+>> check the alignment and fallback to single pages.
+>>
+>> ...
+>>
+>> --- a/mm/memory_hotplug.c
+>> +++ b/mm/memory_hotplug.c
+>> @@ -646,6 +646,9 @@ static int online_pages_range(unsigned long start_pfn, unsigned long nr_pages,
+>>  	 */
+>>  	for (pfn = start_pfn; pfn < end_pfn; pfn += 1ul << order) {
+>>  		order = min(MAX_ORDER - 1, get_order(PFN_PHYS(end_pfn - pfn)));
+>> +		/* __free_pages_core() wants pfns to be aligned to the order */
+>> +		if (unlikely(!IS_ALIGNED(pfn, 1ul << order)))
+>> +			order = 0;
+>>  		(*online_page_callback)(pfn_to_page(pfn), order);
+>>  	}
+> 
+> We aren't sure if this occurs, but if it does, we silently handle it.
+> 
+> It seems a reasonable defensive thing to do, but should we add a
+> WARN_ON_ONCE() so that we get to find out about it?  If we get such a
+> report then we can remove the WARN_ON_ONCE() and add an illuminating
+> comment.
+> 
+> 
+
+Makes sense, do you want to add the WARN_ON_ONCE() or shall I resend?
+
+I was recently thinking about limiting offlining to memory blocks
+without holes - then also onlining would only apply to memory blocks
+without holes and we could simplify both paths (single zone/node, no
+holes) - including this check, we would always have memory block size
+alignments. But I am not sure yet if there is a valid use case for
+offlining/re-online boot memory with holes.
+
+-- 
+
+Thanks,
+
+David / dhildenb
