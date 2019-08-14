@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88FCC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB118C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2AC214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778F22084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802539;
-	bh=fllYO8klzVBu/v/RKi/Wr7MUFDeaUMeXiVuI1JnUge0=;
+	s=default; t=1565802542;
+	bh=LC4KV5Kjbvv9tdZ6mUbxa/nNUGvWNgu7cVPQ7hN42s0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u2mTFWT5H/tp1CdbQczlMHkHl6V8UQ1nrCovJFJapkXWOm2WxiiuzMPdcTjyFjuKh
-	 KPLf6I7foBxyAsbnWzMuFQbqjYeWs3E3+6iWQVj32GLtAJM60zHvjjfTRnXuqgPwew
-	 Lk9M+A894MRXHtTLx2qFCw73h+f6kT1XvzAJyU6M=
+	b=U4Z34hRe9FdPiM71nLP6VoKEEbBvhUzkk4hI+Rdbi3Z/LgAwl6a9HNq6azyLRDCrO
+	 q0jRcYegTmYwDbmDHVIHjdLMTQsNfVvbIYjwsg23AA6kYPo31nXTeQi3Yv8E0kbQyn
+	 8vSqVAurkYjAM+oqmd9mYacB9t1eZL7+E7X9F7rA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730241AbfHNRI6 (ORCPT
+        id S1730256AbfHNRJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:08:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59118 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:09:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730216AbfHNRIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:08:54 -0400
+        id S1730244AbfHNRI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:08:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 618E721721;
-        Wed, 14 Aug 2019 17:08:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8BEA214DA;
+        Wed, 14 Aug 2019 17:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802533;
-        bh=fllYO8klzVBu/v/RKi/Wr7MUFDeaUMeXiVuI1JnUge0=;
+        s=default; t=1565802536;
+        bh=LC4KV5Kjbvv9tdZ6mUbxa/nNUGvWNgu7cVPQ7hN42s0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZRyMb+QhZ5l1qOOUu7dDHKs5kMKbGikggXm0DItWTI0BtogkEVHvF6E87/PSSZ8IG
-         lUeY25iDTDQ6sFZ39umXU4Ilz4nYCxh0/0Uug5/9KXSKSxqnuhawsghCvKx5mq8LbM
-         ttrj/MUvv76/I6rd0ybEF+AGqHpD3KftYX1wa2HY=
+        b=O82fYhlmYlcI2CwUpcV7ITei8JORngZTehhRuYbyIG2XWz0eDg0rvDJN6vu+0MjS7
+         fr9LWzwfLXPRZgVNSoOagD+GgYrEgpuyzMloOLCbin+EQU5BJj6YTcfph46rByjE9V
+         q9ndg9XqpSRPZ/ntyBxSci72+xIvWh76eydbaoXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH 4.19 19/91] mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()
-Date:   Wed, 14 Aug 2019 19:00:42 +0200
-Message-Id: <20190814165750.551462071@linuxfoundation.org>
+        stable@vger.kernel.org, Klaus Theurich <klaus.theurich@de.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.19 20/91] perf annotate: Fix s390 gap between kernel end and module start
+Date:   Wed, 14 Aug 2019 19:00:43 +0200
+Message-Id: <20190814165750.587317981@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -60,58 +63,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-commit 3f8fd02b1bf1d7ba964485a56f2f4b53ae88c167 upstream.
+commit b9c0a64901d5bdec6eafd38d1dc8fa0e2974fccb upstream.
 
-On x86-32 with PTI enabled, parts of the kernel page-tables are not shared
-between processes. This can cause mappings in the vmalloc/ioremap area to
-persist in some page-tables after the region is unmapped and released.
+During execution of command 'perf top' the error message:
 
-When the region is re-used the processes with the old mappings do not fault
-in the new mappings but still access the old ones.
+   Not enough memory for annotating '__irf_end' symbol!)
 
-This causes undefined behavior, in reality often data corruption, kernel
-oopses and panics and even spontaneous reboots.
+is emitted from this call sequence:
+  __cmd_top
+    perf_top__mmap_read
+      perf_top__mmap_read_idx
+        perf_event__process_sample
+          hist_entry_iter__add
+            hist_iter__top_callback
+              perf_top__record_precise_ip
+                hist_entry__inc_addr_samples
+                  symbol__inc_addr_samples
+                    symbol__get_annotation
+                      symbol__alloc_hist
 
-Fix this problem by activly syncing unmaps in the vmalloc/ioremap area to
-all page-tables in the system before the regions can be re-used.
+In this function the size of symbol __irf_end is calculated. The size of
+a symbol is the difference between its start and end address.
 
-Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lkml.kernel.org/r/20190719184652.11391-4-joro@8bytes.org
+When the symbol was read the first time, its start and end was set to:
+
+   symbol__new: __irf_end 0xe954d0-0xe954d0
+
+which is correct and maps with /proc/kallsyms:
+
+   root@s8360046:~/linux-4.15.0/tools/perf# fgrep _irf_end /proc/kallsyms
+   0000000000e954d0 t __irf_end
+   root@s8360046:~/linux-4.15.0/tools/perf#
+
+In function symbol__alloc_hist() the end of symbol __irf_end is
+
+  symbol__alloc_hist sym:__irf_end start:0xe954d0 end:0x3ff80045a8
+
+which is identical with the first module entry in /proc/kallsyms
+
+This results in a symbol size of __irf_req for histogram analyses of
+70334140059072 bytes and a malloc() for this requested size fails.
+
+The root cause of this is function
+  __dso__load_kallsyms()
+  +-> symbols__fixup_end()
+
+Function symbols__fixup_end() enlarges the last symbol in the kallsyms
+map:
+
+   # fgrep __irf_end /proc/kallsyms
+   0000000000e954d0 t __irf_end
+   #
+
+to the start address of the first module:
+   # cat /proc/kallsyms | sort  | egrep ' [tT] '
+   ....
+   0000000000e952d0 T __security_initcall_end
+   0000000000e954d0 T __initramfs_size
+   0000000000e954d0 t __irf_end
+   000003ff800045a8 T fc_get_event_number       [scsi_transport_fc]
+   000003ff800045d0 t store_fc_vport_disable    [scsi_transport_fc]
+   000003ff800046a8 T scsi_is_fc_rport  [scsi_transport_fc]
+   000003ff800046d0 t fc_target_setup   [scsi_transport_fc]
+
+On s390 the kernel is located around memory address 0x200, 0x10000 or
+0x100000, depending on linux version. Modules however start some- where
+around 0x3ff xxxx xxxx.
+
+This is different than x86 and produces a large gap for which histogram
+allocation fails.
+
+Fix this by detecting the kernel's last symbol and do no adjustment for
+it. Introduce a weak function and handle s390 specifics.
+
+Reported-by: Klaus Theurich <klaus.theurich@de.ibm.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190724122703.3996-2-tmricht@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmalloc.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/perf/arch/s390/util/machine.c |   17 +++++++++++++++++
+ tools/perf/util/symbol.c            |    7 ++++++-
+ tools/perf/util/symbol.h            |    1 +
+ 3 files changed, 24 insertions(+), 1 deletion(-)
 
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1752,6 +1752,12 @@ void *__vmalloc_node_range(unsigned long
- 		return NULL;
+--- a/tools/perf/arch/s390/util/machine.c
++++ b/tools/perf/arch/s390/util/machine.c
+@@ -6,6 +6,7 @@
+ #include "machine.h"
+ #include "api/fs/fs.h"
+ #include "debug.h"
++#include "symbol.h"
  
- 	/*
-+	 * First make sure the mappings are removed from all page-tables
-+	 * before they are freed.
-+	 */
-+	vmalloc_sync_all();
-+
-+	/*
- 	 * In this function, newly allocated vm_struct has VM_UNINITIALIZED
- 	 * flag. It means that vm_struct is not fully initialized.
- 	 * Now, it is fully initialized, so remove this flag here.
-@@ -2296,6 +2302,9 @@ EXPORT_SYMBOL(remap_vmalloc_range);
- /*
-  * Implement a stub for vmalloc_sync_all() if the architecture chose not to
-  * have one.
-+ *
-+ * The purpose of this function is to make sure the vmalloc area
-+ * mappings are identical in all page-tables in the system.
-  */
- void __weak vmalloc_sync_all(void)
+ int arch__fix_module_text_start(u64 *start, const char *name)
  {
+@@ -21,3 +22,19 @@ int arch__fix_module_text_start(u64 *sta
+ 
+ 	return 0;
+ }
++
++/* On s390 kernel text segment start is located at very low memory addresses,
++ * for example 0x10000. Modules are located at very high memory addresses,
++ * for example 0x3ff xxxx xxxx. The gap between end of kernel text segment
++ * and beginning of first module's text segment is very big.
++ * Therefore do not fill this gap and do not assign it to the kernel dso map.
++ */
++void arch__symbols__fixup_end(struct symbol *p, struct symbol *c)
++{
++	if (strchr(p->name, '[') == NULL && strchr(c->name, '['))
++		/* Last kernel symbol mapped to end of page */
++		p->end = roundup(p->end, page_size);
++	else
++		p->end = c->start;
++	pr_debug4("%s sym:%s end:%#lx\n", __func__, p->name, p->end);
++}
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -86,6 +86,11 @@ static int prefix_underscores_count(cons
+ 	return tail - str;
+ }
+ 
++void __weak arch__symbols__fixup_end(struct symbol *p, struct symbol *c)
++{
++	p->end = c->start;
++}
++
+ const char * __weak arch__normalize_symbol_name(const char *name)
+ {
+ 	return name;
+@@ -212,7 +217,7 @@ void symbols__fixup_end(struct rb_root *
+ 		curr = rb_entry(nd, struct symbol, rb_node);
+ 
+ 		if (prev->end == prev->start && prev->end != curr->start)
+-			prev->end = curr->start;
++			arch__symbols__fixup_end(prev, curr);
+ 	}
+ 
+ 	/* Last entry */
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -349,6 +349,7 @@ const char *arch__normalize_symbol_name(
+ #define SYMBOL_A 0
+ #define SYMBOL_B 1
+ 
++void arch__symbols__fixup_end(struct symbol *p, struct symbol *c);
+ int arch__compare_symbol_names(const char *namea, const char *nameb);
+ int arch__compare_symbol_names_n(const char *namea, const char *nameb,
+ 				 unsigned int n);
 
 
