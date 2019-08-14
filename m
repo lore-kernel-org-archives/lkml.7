@@ -2,52 +2,55 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D37C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB89C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41369208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C26F2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802784;
-	bh=ZOosVN0Ic6Q88AcFPeEupioIcmxpjRiFLM8kbGNB5nU=;
+	s=default; t=1565802790;
+	bh=eArX+yKXU6PQ/EZVaaQjVivBLWy5s58Vjl88rRonlZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L82+GCgWNExtaPFR9Iv2oFYs4wWWKSwT6iVNc8/MOl3m86FA3vSWWZxYskoA4FEC/
-	 uJ52AdOd59oZlT4eh7u9+Ahp71fA/xZKNI4SlhYSlUvvYP9z+kdweWVNpfGrviRqY5
-	 C19ctmJFf5yNo2naOAcXik/Vk5Ubb2sZWVn1a4eU=
+	b=uChFQG4tKquM93UyiwejneBAH2O1AWQNP/W3E19/nnhvO+9ZHi/9eBM0ZnROHJvdd
+	 rS/NQDjyad9B28akmCqmMbb2pElsEze0FGQ+FJ/dkI5XhU5gk7qRN0C8zTDT17uPjH
+	 DSIpvNzKr1AxTlgpSJaKpvnzu+8Mu90LQQtaxf4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730499AbfHNRND (ORCPT
+        id S1730840AbfHNRNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:13:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37134 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:13:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730473AbfHNRNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:13:00 -0400
+        id S1728503AbfHNRNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:13:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 068D02084D;
-        Wed, 14 Aug 2019 17:12:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D5A92084D;
+        Wed, 14 Aug 2019 17:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802779;
-        bh=ZOosVN0Ic6Q88AcFPeEupioIcmxpjRiFLM8kbGNB5nU=;
+        s=default; t=1565802784;
+        bh=eArX+yKXU6PQ/EZVaaQjVivBLWy5s58Vjl88rRonlZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vp1bTkLGdd8DXcVgpXQxSF9fMG29wD1I+ZDTqWrmjPOe7B59mKw5a89i8mp8V42wU
-         oOiLV7jDOvtV/FHzHtnm0B5whBmTWnt1P5/KCN/qU74IhF87ktklxNa97m/KBuJLo5
-         eyTw+qqIf6oo/fjXFdNNN7MQL/kTBdHNU95i/EUg=
+        b=V/ZXv4hlSiom2BPXOOkz6sN4g2jGaEeHaEAm0qcM8ri/TmIoT/wJzDsO1qzE45Y4V
+         IEF2w7t0LH/cbdEyyeS9yqV/YKOZey9cNsJ3NfzvwEaK4kpbViPXpjn76kZDj6lnTF
+         4NSLe0ievD1OhjquW4lo8UCMoeKacVfmGigUSu6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.14 23/69] can: rcar_canfd: fix possible IRQ storm on high load
-Date:   Wed, 14 Aug 2019 19:01:21 +0200
-Message-Id: <20190814165747.089684743@linuxfoundation.org>
+        Thomas Jarosch <thomas.jarosch@intra2net.com>,
+        Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 25/69] netfilter: nfnetlink: avoid deadlock due to synchronous request_module
+Date:   Wed, 14 Aug 2019 19:01:23 +0200
+Message-Id: <20190814165747.162439196@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -60,67 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+[ Upstream commit 1b0890cd60829bd51455dc5ad689ed58c4408227 ]
 
-commit d4b890aec4bea7334ca2ca56fd3b12fb48a00cd1 upstream.
+Thomas and Juliana report a deadlock when running:
 
-We have observed rcar_canfd driver entering IRQ storm under high load,
-with following scenario:
-- rcar_canfd_global_interrupt() in entered due to Rx available,
-- napi_schedule_prep() is called, and sets NAPIF_STATE_SCHED in state
-- Rx fifo interrupts are masked,
-- rcar_canfd_global_interrupt() is entered again, this time due to
-  error interrupt (e.g. due to overflow),
-- since scheduled napi poller has not yet executed, condition for calling
-  napi_schedule_prep() from rcar_canfd_global_interrupt() remains true,
-  thus napi_schedule_prep() gets called and sets NAPIF_STATE_MISSED flag
-  in state,
-- later, napi poller function rcar_canfd_rx_poll() gets executed, and
-  calls napi_complete_done(),
-- due to NAPIF_STATE_MISSED flag in state, this call does not clear
-  NAPIF_STATE_SCHED flag from state,
-- on return from napi_complete_done(), rcar_canfd_rx_poll() unmasks Rx
-  interrutps,
-- Rx interrupt happens, rcar_canfd_global_interrupt() gets called
-  and calls napi_schedule_prep(),
-- since NAPIF_STATE_SCHED is set in state at this time, this call
-  returns false,
-- due to that false return, rcar_canfd_global_interrupt() returns
-  without masking Rx interrupt
-- and this results into IRQ storm: unmasked Rx interrupt happens again
-  and again is misprocessed in the same way.
+(rmmod nf_conntrack_netlink/xfrm_user)
 
-This patch fixes that scenario by unmasking Rx interrupts only when
-napi_complete_done() returns true, which means it has cleared
-NAPIF_STATE_SCHED in state.
+  conntrack -e NEW -E &
+  modprobe -v xfrm_user
 
-Fixes: dd3bd23eb438 ("can: rcar_canfd: Add Renesas R-Car CAN FD driver")
-Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+They provided following analysis:
 
+conntrack -e NEW -E
+    netlink_bind()
+        netlink_lock_table() -> increases "nl_table_users"
+            nfnetlink_bind()
+            # does not unlock the table as it's locked by netlink_bind()
+                __request_module()
+                    call_usermodehelper_exec()
+
+This triggers "modprobe nf_conntrack_netlink" from kernel, netlink_bind()
+won't return until modprobe process is done.
+
+"modprobe xfrm_user":
+    xfrm_user_init()
+        register_pernet_subsys()
+            -> grab pernet_ops_rwsem
+                ..
+                netlink_table_grab()
+                    calls schedule() as "nl_table_users" is non-zero
+
+so modprobe is blocked because netlink_bind() increased
+nl_table_users while also holding pernet_ops_rwsem.
+
+"modprobe nf_conntrack_netlink" runs and inits nf_conntrack_netlink:
+    ctnetlink_init()
+        register_pernet_subsys()
+            -> blocks on "pernet_ops_rwsem" thanks to xfrm_user module
+
+both modprobe processes wait on one another -- neither can make
+progress.
+
+Switch netlink_bind() to "nowait" modprobe -- this releases the netlink
+table lock, which then allows both modprobe instances to complete.
+
+Reported-by: Thomas Jarosch <thomas.jarosch@intra2net.com>
+Reported-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/rcar/rcar_canfd.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ net/netfilter/nfnetlink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/can/rcar/rcar_canfd.c
-+++ b/drivers/net/can/rcar/rcar_canfd.c
-@@ -1512,10 +1512,11 @@ static int rcar_canfd_rx_poll(struct nap
- 
- 	/* All packets processed */
- 	if (num_pkts < quota) {
--		napi_complete_done(napi, num_pkts);
--		/* Enable Rx FIFO interrupts */
--		rcar_canfd_set_bit(priv->base, RCANFD_RFCC(ridx),
--				   RCANFD_RFCC_RFIE);
-+		if (napi_complete_done(napi, num_pkts)) {
-+			/* Enable Rx FIFO interrupts */
-+			rcar_canfd_set_bit(priv->base, RCANFD_RFCC(ridx),
-+					   RCANFD_RFCC_RFIE);
-+		}
- 	}
- 	return num_pkts;
+diff --git a/net/netfilter/nfnetlink.c b/net/netfilter/nfnetlink.c
+index 733d3e4a30d85..2cee032af46d2 100644
+--- a/net/netfilter/nfnetlink.c
++++ b/net/netfilter/nfnetlink.c
+@@ -530,7 +530,7 @@ static int nfnetlink_bind(struct net *net, int group)
+ 	ss = nfnetlink_get_subsys(type << 8);
+ 	rcu_read_unlock();
+ 	if (!ss)
+-		request_module("nfnetlink-subsys-%d", type);
++		request_module_nowait("nfnetlink-subsys-%d", type);
+ 	return 0;
  }
+ #endif
+-- 
+2.20.1
+
 
 
