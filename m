@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31049C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F72C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF0172084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4EE2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748770;
-	bh=NScOqo+/Xnzi6GbYOIe5OX0ISrm1MWRJGyj0x9zIYUo=;
+	s=default; t=1565748772;
+	bh=rL229EiVdHJ9uYzZvBHPwLKzwBdqrgjYJeNuBTGV+qM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MBH1eAk4bP7CZRjipJujIZjml/JczVQAeg4MwPZTy6GPZubWS9KLFhV+Z0THJ6hf5
-	 N0J1D5h7oca19ZQK+su2c2IBG+LxoQAyoPRHBLT6vHEAlojPDSuh+4zbj7vGtfh2a6
-	 iEbmLAaIJ4kNKL7gSYGWVRm4Bxw9T0QQzMiOEDP0=
+	b=v8ASgmftxNgG7RBisIUBMqbcmV+ui8tSJB6vKo5qxPUNIXiZFV7fp7xM9dd/HGf3/
+	 PA6Hu1qGPs1WtiYoW1WolncRWmbwoC+trS3HBjVMOIv4Jz1oibmJkQ0zsHGE/eLZZx
+	 qjayP73L93plJBfUi7OlMLvnbXAKpJWizL0QxSzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbfHNCMs (ORCPT
+        id S1728047AbfHNCMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:12:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44786 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:12:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727954AbfHNCMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:12:39 -0400
+        id S1727979AbfHNCMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:12:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5379220842;
-        Wed, 14 Aug 2019 02:12:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A9EE20842;
+        Wed, 14 Aug 2019 02:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748758;
-        bh=NScOqo+/Xnzi6GbYOIe5OX0ISrm1MWRJGyj0x9zIYUo=;
+        s=default; t=1565748760;
+        bh=rL229EiVdHJ9uYzZvBHPwLKzwBdqrgjYJeNuBTGV+qM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HimVR5MHpCCOzF9syvVPi025pw8mUOlblVFjOyD8pAXQ3em17aTW0lzRRdcylbGXq
-         ZqPW0rVP36bjWFByQPUfRweyNlzYjA+2JTBmWM7Coc8/PGDqKmOhU9A0RZElyb5mmT
-         ShIiX3chAF5tfPkxJkEmrC50BQPg0FnCpY13SJlM=
+        b=Koda1McQTgvN4XPgkgczWZXqKlzx1fddw9Z6rvnnw3wJmdIu/v9gJdj1Rzg73QxE+
+         H7GmJ0iKdcKYJknIfo+Qq4pyf39LL7YyhJa6ZiZTNsZY6bzGYUdos7KukRlbPY+SJ8
+         rw7vgH284iYN+1aibSS71ruwTnnZIdGpb0xLaEvI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 051/123] isdn: mISDN: hfcsusb: Fix possible null-pointer dereferences in start_isoc_chain()
-Date:   Tue, 13 Aug 2019 22:09:35 -0400
-Message-Id: <20190814021047.14828-51-sashal@kernel.org>
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 053/123] mac80211_hwsim: Fix possible null-pointer dereferences in hwsim_dump_radio_nl()
+Date:   Tue, 13 Aug 2019 22:09:37 -0400
+Message-Id: <20190814021047.14828-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -61,46 +62,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit a0d57a552b836206ad7705a1060e6e1ce5a38203 ]
+[ Upstream commit b55f3b841099e641bdb2701d361a4c304e2dbd6f ]
 
-In start_isoc_chain(), usb_alloc_urb() on line 1392 may fail
-and return NULL. At this time, fifo->iso[i].urb is assigned to NULL.
-
-Then, fifo->iso[i].urb is used at some places, such as:
-LINE 1405:    fill_isoc_urb(fifo->iso[i].urb, ...)
-                  urb->number_of_packets = num_packets;
-                  urb->transfer_flags = URB_ISO_ASAP;
-                  urb->actual_length = 0;
-                  urb->interval = interval;
-LINE 1416:    fifo->iso[i].urb->...
-LINE 1419:    fifo->iso[i].urb->...
+In hwsim_dump_radio_nl(), when genlmsg_put() on line 3617 fails, hdr is
+assigned to NULL. Then hdr is used on lines 3622 and 3623:
+    genl_dump_check_consistent(cb, hdr);
+    genlmsg_end(skb, hdr);
 
 Thus, possible null-pointer dereferences may occur.
 
-To fix these bugs, "continue" is added to avoid using fifo->iso[i].urb
-when it is NULL.
+To fix these bugs, hdr is used here when it is not NULL.
 
-These bugs are found by a static analysis tool STCheck written by us.
+This bug is found by a static analysis tool STCheck written by us.
 
 Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lore.kernel.org/r/20190729082332.28895-1-baijiaju1990@gmail.com
+[put braces on all branches]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/hardware/mISDN/hfcsusb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/mac80211_hwsim.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
-index 0e224232f7464..8fb7c5dea07fc 100644
---- a/drivers/isdn/hardware/mISDN/hfcsusb.c
-+++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
-@@ -1394,6 +1394,7 @@ start_isoc_chain(struct usb_fifo *fifo, int num_packets_per_urb,
- 				printk(KERN_DEBUG
- 				       "%s: %s: alloc urb for fifo %i failed",
- 				       hw->name, __func__, fifo->fifonum);
-+				continue;
- 			}
- 			fifo->iso[i].owner_fifo = (struct usb_fifo *) fifo;
- 			fifo->iso[i].indx = i;
+diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
+index 1c699a9fa8661..faec05ab42754 100644
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -3615,10 +3615,12 @@ static int hwsim_dump_radio_nl(struct sk_buff *skb,
+ 		hdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid,
+ 				  cb->nlh->nlmsg_seq, &hwsim_genl_family,
+ 				  NLM_F_MULTI, HWSIM_CMD_GET_RADIO);
+-		if (!hdr)
++		if (hdr) {
++			genl_dump_check_consistent(cb, hdr);
++			genlmsg_end(skb, hdr);
++		} else {
+ 			res = -EMSGSIZE;
+-		genl_dump_check_consistent(cb, hdr);
+-		genlmsg_end(skb, hdr);
++		}
+ 	}
+ 
+ done:
 -- 
 2.20.1
 
