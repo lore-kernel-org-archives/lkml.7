@@ -2,135 +2,97 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D969DC0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51090C0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B244B2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:05:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565769936;
-	bh=pTQSGTdzIIoMiaaYCTWwqikXH5i1BUm0em2XxwiWslM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SsA5ncqOxES5EAqo6+6oJzuH7iz97DPA2N2b3fjoc1OFDrtfH+fVaR8XB9eyI3ap2
-	 RhQpUEWvAIyOOIrr5cuQwZVcfOIAxMLQUNHHzrNYiP/nnjDyXZt+uliVl+I+zXXrUN
-	 lEPtEV/46q6IFgEBo/Zgj7mvs+WZDjsP1GfnIKV4=
+	by mail.kernel.org (Postfix) with ESMTP id 1BC8B205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:05:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Snb5qobQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfHNIFf (ORCPT
+        id S1727283AbfHNIFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 04:05:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36094 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725265AbfHNIFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 04:05:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 818D6AFB0;
-        Wed, 14 Aug 2019 08:05:32 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 10:05:31 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     khlebnikov@yandex-team.ru, linux-kernel@vger.kernel.org,
-        Minchan Kim <minchan@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Mike Rapoport <rppt@linux.ibm.com>, namhyung@google.com,
-        paulmck@linux.ibm.com, Robin Murphy <robin.murphy@arm.com>,
-        Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v5 2/6] mm/page_idle: Add support for handling swapped
- PG_Idle pages
-Message-ID: <20190814080531.GP17933@dhcp22.suse.cz>
-References: <20190807171559.182301-1-joel@joelfernandes.org>
- <20190807171559.182301-2-joel@joelfernandes.org>
- <20190813150450.GN17933@dhcp22.suse.cz>
- <20190813153659.GD14622@google.com>
+        Wed, 14 Aug 2019 04:05:40 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36653 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725265AbfHNIFi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 04:05:38 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r3so16452946wrt.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 01:05:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=PLbj/cRfB0orCu783WjMRb1h5axtcBLCE8j3IraGBs0=;
+        b=Snb5qobQ+qtvJ5RsHxg7EB9FGMlBhUx+89I25tL3WcmUK+/mSKb510zE41kepM/xAN
+         adCx8Dla/B+iijq/hfALrsOglvPselgEIAUQeuqrYTCuVOWI3CpN2NRDtv80p4+5Ic6p
+         ljIOmFIYK6wom8K+1Bk6lXlYABd4RKMBuV4y9i9aGQQ5RYec5pxe1i2DfbrpDsikB6Y/
+         gBTDijySCazqcgeBqx2SOQXe2hxC9F4qKzjBFwTIKVHdcCbGYlhrj4IyDenxYWrv791Z
+         vcbI+4VUvgpdYA1cCLmmDk1fTh001mpU1DGEStBTC+QTvOmDIHgAett9bryvfGd4PI+B
+         9UrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=PLbj/cRfB0orCu783WjMRb1h5axtcBLCE8j3IraGBs0=;
+        b=XnZwUcFGPIlW+o1Fqv5rg0r202kZQr6ilcNnG+/1w2zXch3DcNdllTaM+AK2uQAKW3
+         Oph7ML7a7Hj6N6DW1vGb/UOo6WnK1aNl7BGvoHYCNNx3dHC0Pj/H01GqxK92il17pAar
+         TYLJ5N4A5NyX2O0UWW3kxtA+jGWJ5Zwdze3/+bpicLdv7jLX3n6NYcvmRUeY5ByGM8Ec
+         Cn7+hw3fPtZ9nfcqwV0iS85Q8y/9qa4U2uq0Ji8A2aVmgD41LB3Ee75Io2/mA6u4oH7e
+         SHNeWBUHItdXPcfygwNVDxHtKLw9u7oBGSyphideMp3vN1UGZZx/dzxdRJ1KBZ/udi/7
+         HXTg==
+X-Gm-Message-State: APjAAAU/GYa8z9im5e3jrWopb3dsn8Nbdp1enf4Rt0NtwEbLPdimsRm2
+        drU0roXsXvfZSM3NvSYWbuDqT7Mz01A=
+X-Google-Smtp-Source: APXvYqycZT7wE5HUkJxX8/Tlt6oyT9tbJW5SMpUCe0+rrJwKCHoAFFvUh7Nl9d/twrHfF1xAWJ+YlQ==
+X-Received: by 2002:adf:fdd0:: with SMTP id i16mr37157747wrs.260.1565769936682;
+        Wed, 14 Aug 2019 01:05:36 -0700 (PDT)
+Received: from dell ([2.27.35.255])
+        by smtp.gmail.com with ESMTPSA id y7sm2631387wmm.19.2019.08.14.01.05.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 14 Aug 2019 01:05:35 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 09:05:34 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Paul Parsons <lost.distance@yahoo.com>
+Subject: Re: [PATCH] mfd: asic3: Include the right header
+Message-ID: <20190814080534.GD26727@dell>
+References: <20190814072403.6294-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190813153659.GD14622@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190814072403.6294-1-linus.walleij@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 13-08-19 11:36:59, Joel Fernandes wrote:
-> On Tue, Aug 13, 2019 at 05:04:50PM +0200, Michal Hocko wrote:
-> > On Wed 07-08-19 13:15:55, Joel Fernandes (Google) wrote:
-> > > Idle page tracking currently does not work well in the following
-> > > scenario:
-> > >  1. mark page-A idle which was present at that time.
-> > >  2. run workload
-> > >  3. page-A is not touched by workload
-> > >  4. *sudden* memory pressure happen so finally page A is finally swapped out
-> > >  5. now see the page A - it appears as if it was accessed (pte unmapped
-> > >     so idle bit not set in output) - but it's incorrect.
-> > > 
-> > > To fix this, we store the idle information into a new idle bit of the
-> > > swap PTE during swapping of anonymous pages.
-> > >
-> > > Also in the future, madvise extensions will allow a system process
-> > > manager (like Android's ActivityManager) to swap pages out of a process
-> > > that it knows will be cold. To an external process like a heap profiler
-> > > that is doing idle tracking on another process, this procedure will
-> > > interfere with the idle page tracking similar to the above steps.
-> > 
-> > This could be solved by checking the !present/swapped out pages
-> > right? Whoever decided to put the page out to the swap just made it
-> > idle effectively.  So the monitor can make some educated guess for
-> > tracking. If that is fundamentally not possible then please describe
-> > why.
+On Wed, 14 Aug 2019, Linus Walleij wrote:
+
+> This is a GPIO driver, use the appropriate header
+> <linux/gpio/driver.h> rather than the legacy <linux/gpio.h>
+> header.
 > 
-> But the monitoring process (profiler) does not have control over the 'whoever
-> made it effectively idle' process.
+> Cc: Paul Parsons <lost.distance@yahoo.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  drivers/mfd/asic3.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Why does that matter? Whether it is a global/memcg reclaim or somebody
-calling MADV_PAGEOUT or whatever it is a decision to make the page not
-hot. Sure you could argue that a missing idle bit on swap entries might
-mean that the swap out decision was pre-mature/sub-optimal/wrong but is
-this the aim of the interface?
-
-> As you said it will be a guess, it will not be accurate.
-
-Yes and the point I am trying to make is that having some space and not
-giving a guarantee sounds like a safer option for this interface because
-...
-> 
-> I am curious what is your concern with using a bit in the swap PTE?
-
-... It is a promiss of the semantic I find limiting for future. The bit
-in the pte might turn out insufficient (e.g. pte reclaim) so teaching
-the userspace to consider this a hard guarantee is a ticket to problems
-later on. Maybe I am overly paranoid because I have seen so many "nice
-to have" features turning into a maintenance burden in the past.
-
-If this is really considered mostly debugging purpouse interface then a
-certain level of imprecision should be tolerateable. If there is a
-really strong real world usecase that simply has no other way to go
-then this might be added later. Adding an information is always safer
-than take it away.
-
-That being said, if I am a minority voice here then I will not really
-stand in the way and won't nack the patch. I will not ack it neither
-though.
+Applied, thanks.
 
 -- 
-Michal Hocko
-SUSE Labs
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
