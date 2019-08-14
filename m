@@ -2,151 +2,93 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2070C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A790C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5F4F20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C62214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803378;
-	bh=1PjyB53SE5ISTW3kYQPPKdvQAcURDsEDX3z1n5W5Ncs=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=b8/wG7eGE3fKi1eGCtePPEeDklGiLs+WwDDWFdeb+JCTGxya/imVt8OIHuqaor2Gx
-	 Mi+vsDvzYNX0eeu2pdozrEqy4JF9v02DDeBbc9i0pSLfQd2oVMt9ROhiLJiZz61Dtx
-	 0pVEnljDEWsDs6q0P1Rbnjz+Au7h/i5ytJr5x3xo=
+	s=default; t=1565803382;
+	bh=8obzKNZ7UGz3iDjYP52sVheyg1q6J65532QJ2C+znhw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tgweVnTD43X6Xbs8j0zdppC4Zpg/ppqqtF0ge+JdFky/2h0+cKMco7QyP5dMxkFLC
+	 Dt8vSE4kGrqDryXKEtBIpgew2/Op85rzDZ6+xp7ud1Wy8VX+X0Qt2pVL1LFYdo8Bmf
+	 Li8e9cXkIoSUVzm0JiNYil1K7gqRx7axmwqjtOrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbfHNRIK (ORCPT
+        id S1730098AbfHNRXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:08:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57900 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:23:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730049AbfHNRIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:08:05 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1730062AbfHNRII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:08:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEFCC214DA;
-        Wed, 14 Aug 2019 17:08:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91FE521721;
+        Wed, 14 Aug 2019 17:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802484;
-        bh=1PjyB53SE5ISTW3kYQPPKdvQAcURDsEDX3z1n5W5Ncs=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=RCCzAshXp3+krsNHFGqQiq5XI5PlLhffpj2vyugoA1i9+VSgSe1Ab6xaCzPLzrRRq
-         jgwPdVi/ErGjUXC4wM0jK/zzTYfsgsCAB6tt8aqNcZlA1bGaJg8EtieSfirhKXAbcs
-         xXHddlF/sHlSVloSOI09+Gg8f63YnINcVE/9i+GI=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1565802488;
+        bh=8obzKNZ7UGz3iDjYP52sVheyg1q6J65532QJ2C+znhw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mqZmvdXNSTWkWNQfn+6IFAJFOAvGjbrehInst+/Hvf4b9VbgT60dwTRtqXAzL4NXs
+         T33wbGFD30SoLnKsUjLAjliDuQyMdllveecVMzFJJwdS3XQ0SeeKXQpVf3RPnoAbko
+         8rzQEliS6Any4p/B2C4Fcu2PNhnAfIUV5FaXGKkw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.2 119/144] ALSA: usb-audio: fix a memory leak bug
+Date:   Wed, 14 Aug 2019 19:01:15 +0200
+Message-Id: <20190814165804.907321722@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
+References: <20190814165759.466811854@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190814125012.8700-11-vkoul@kernel.org>
-References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-11-vkoul@kernel.org>
-Subject: Re: [PATCH 10/22] arm64: dts: qcom: pm8150b: Add pon and adc nodes
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        sibis@codeaurora.org, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 14 Aug 2019 10:08:02 -0700
-Message-Id: <20190814170803.DEFCC214DA@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-08-14 05:50:00)
-> Add the pon and adc nodes found in pm8150b PMIC.
->=20
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  arch/arm64/boot/dts/qcom/pm8150b.dtsi | 54 +++++++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-Squash?
+commit a67060201b746a308b1674f66bf289c9faef6d09 upstream.
 
->=20
-> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/=
-qcom/pm8150b.dtsi
-> index c0a678b0f159..846197bd65cd 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> @@ -2,6 +2,7 @@
->  // Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
->  // Copyright (c) 2019, Linaro Limited
-> =20
-> +#include <dt-bindings/iio/qcom,spmi-vadc.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/spmi/spmi.h>
-> =20
-> @@ -11,6 +12,59 @@
->                 reg =3D <0x2 SPMI_USID>;
->                 #address-cells =3D <1>;
->                 #size-cells =3D <0>;
-> +
-> +               pon@800 {
+In snd_usb_get_audioformat_uac3(), a structure for channel maps 'chmap' is
+allocated through kzalloc() before the execution goto 'found_clock'.
+However, this structure is not deallocated if the memory allocation for
+'pd' fails, leading to a memory leak bug.
 
-Maybe pon node name should be 'key' or 'power-on'?
+To fix the above issue, free 'fp->chmap' before returning NULL.
 
-> +                       compatible =3D "qcom,pm8916-pon";
-> +                       reg =3D <0x0800>;
-> +               };
-> +
-> +               adc@3100 {
-> +                       compatible =3D "qcom,spmi-adc5";
-> +                       reg =3D <0x3100>;
-> +                       #address-cells =3D <1>;
-> +                       #size-cells =3D <0>;
-> +                       #io-channel-cells =3D <1>;
-> +                       interrupts =3D <0x2 0x31 0x0 IRQ_TYPE_EDGE_RISING=
->;
-> +
-> +                       ref-gnd@0 {
-> +                               reg =3D <ADC5_REF_GND>;
-> +                               qcom,pre-scaling =3D <1 1>;
-> +                               label =3D "ref_gnd";
-> +                       };
-> +
-> +                       vref-1p25@1 {
-> +                               reg =3D <ADC5_1P25VREF>;
-> +                               qcom,pre-scaling =3D <1 1>;
-> +                               label =3D "vref_1p25";
-> +                       };
-> +
-> +                       die-temp@6 {
-> +                               reg =3D <ADC5_DIE_TEMP>;
-> +                               qcom,pre-scaling =3D <1 1>;
-> +                               label =3D "die_temp";
-> +                       };
-> +
-> +                       chg-temp@9 {
-> +                               reg =3D <ADC5_CHG_TEMP>;
-> +                               qcom,pre-scaling =3D <1 1>;
-> +                               label =3D "chg_temp";
-> +                       };
-> +
-> +                       smb1390-therm@14 {
-> +                               reg =3D <ADC5_AMUX_THM2>;
-> +                               qcom,hw-settle-time =3D <200>;
-> +                               qcom,pre-scaling =3D <1 1>;
-> +                               label =3D "smb1390_therm";
-> +                       };
-> +
-> +                       smb1355-therm@78 {
-> +                               reg =3D <ADC5_AMUX_THM2_100K_PU>;
-> +                               qcom,ratiometric;
-> +                               qcom,hw-settle-time =3D <200>;
-> +                               qcom,pre-scaling =3D <1 1>;
-> +                               label =3D "smb1355_therm";
-> +                       };
+Fixes: 7edf3b5e6a45 ("ALSA: usb-audio: AudioStreaming Power Domain parsing")
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Again, are these board level details? Maybe should be provided here with
-status =3D "disabled" and then added by the boards that use these ADCs.
+---
+ sound/usb/stream.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-> +               };
->         };
+--- a/sound/usb/stream.c
++++ b/sound/usb/stream.c
+@@ -1043,6 +1043,7 @@ found_clock:
+ 
+ 		pd = kzalloc(sizeof(*pd), GFP_KERNEL);
+ 		if (!pd) {
++			kfree(fp->chmap);
+ 			kfree(fp->rate_table);
+ 			kfree(fp);
+ 			return NULL;
+
+
