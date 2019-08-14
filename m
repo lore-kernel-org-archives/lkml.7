@@ -2,98 +2,115 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED1AC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966A1C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F40DB214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69495208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:36:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="U2w1Iv45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfHNMfn (ORCPT
+        id S1727723AbfHNMgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 08:35:43 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55090 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfHNMfn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 08:35:43 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p74so4461361wme.4;
-        Wed, 14 Aug 2019 05:35:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=o3+1DGCI+40iCgNQeNraT+W9gH7K4q3+/wyAXdj74H0=;
-        b=Y/utA6970bNuf57jmahnslU0JUuQeOYYamV9KPLj7UtwsWa3hJnwyB0gt4kpatWFHL
-         rZ8eRue5rrF7RgO1UgTTjp+bB4iYsMHDAzqeKDlL0iFzbUPQUbIoCT54ErrsZqAjdTiz
-         63apVmn+5WstAbbkM/Qi+DuGYbB9Jxkycq04BNoTLuwmKXlB5zP7mDtZGMZLFiCUJ+Vi
-         fbrQWva8uXvPlX9RahqigeXde4fKhVjXkTnwziKlaBD/XM8OT4QBaHckydcKcSoPf+4H
-         kUL/7vvC2VgxCjOSAc/8sCqjJYlvB1Vi9T8cABzsyBuhrMQVoQ2N00//MsIUCgytJyW/
-         TAfg==
-X-Gm-Message-State: APjAAAWbFGSpC5pFeouBuQOmLRb5TFISN5gSW3adkO1TSV25GHBIbct+
-        yEM8EUBgJdt9K6wzLF6ELBoGm/sQ7FQ=
-X-Google-Smtp-Source: APXvYqy2OoJyBEUvH6yudeOQVJ8pnaYwbYPqS1dOWBGxCOQfCQWCjBMRvHokvOsd0MJqwKajAkwP2A==
-X-Received: by 2002:a1c:a957:: with SMTP id s84mr8429998wme.65.1565786141198;
-        Wed, 14 Aug 2019 05:35:41 -0700 (PDT)
-Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
-        by smtp.googlemail.com with ESMTPSA id g14sm23289656wrb.38.2019.08.14.05.35.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 05:35:40 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
-        linux-kernel@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Juanjo Ciarlante <jjciarla@raiz.uncu.edu.ar>,
-        netfilter-devel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Remove IP MASQUERADING record
-Date:   Wed, 14 Aug 2019 15:35:02 +0300
-Message-Id: <20190814123502.12863-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190813085818.4yfcaxfk2xqy32fx@salvia>
-References: <20190813085818.4yfcaxfk2xqy32fx@salvia>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 14 Aug 2019 08:36:12 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:40469 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726575AbfHNMgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 08:36:12 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 467pwT32gPz9v0dK;
+        Wed, 14 Aug 2019 14:36:09 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=U2w1Iv45; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id pH6aw3bPfSq4; Wed, 14 Aug 2019 14:36:09 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 467pwT20mVz9v0dJ;
+        Wed, 14 Aug 2019 14:36:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1565786169; bh=x4QYzhKgvTlm6zZvQQfzyv6zEBi/dLidRDqMdAm2N1g=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=U2w1Iv45hSz3xYUsyxWicQkh36fkxhITJhxilnDGUv8Tq5yKIxV3SdyHXa2drdReG
+         GJHN4O6GVOPEkKTMKxoESCS3Jsw6VB3MQiaP1wQj4z3O/qCTk/T/uuayWvgUegr4CK
+         gJKfmG7Wi6wR+mlSghP8PJc6aAHI+s/bqklr2Vxg=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B9CCE8B7F5;
+        Wed, 14 Aug 2019 14:36:10 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id lALxzmVyFtil; Wed, 14 Aug 2019 14:36:10 +0200 (CEST)
+Received: from pc17473vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9F0198B761;
+        Wed, 14 Aug 2019 14:36:10 +0200 (CEST)
+Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 9C1636B6C0; Wed, 14 Aug 2019 12:36:10 +0000 (UTC)
+Message-Id: <5aa2ac513295f594cce8ddb1c649f61947bd063d.1565786091.git.christophe.leroy@c-s.fr>
+In-Reply-To: <eb4d626514e22f85814830012642329018ef6af9.1565786091.git.christophe.leroy@c-s.fr>
+References: <eb4d626514e22f85814830012642329018ef6af9.1565786091.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 2/5] powerpc/ptdump: fix walk_pagetables() address mismatch
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Wed, 14 Aug 2019 12:36:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This entry is in MAINTAINERS for historical purpose.
-It doesn't match current sources since the commit
-adf82accc5f5 ("netfilter: x_tables: merge ip and
-ipv6 masquerade modules") moved the module.
-The net/netfilter/xt_MASQUERADE.c module is already under
-the netfilter section. Thus, there is no purpose to keep this
-separate entry in MAINTAINERS.
+walk_pagetables() always walk the entire pgdir from address 0
+but considers PAGE_OFFSET or KERN_VIRT_START as the starting
+address of the walk, resulting in a possible mismatch in the
+displayed addresses.
 
-Cc: Florian Westphal <fw@strlen.de>
-Cc: Juanjo Ciarlante <jjciarla@raiz.uncu.edu.ar>
-Cc: netfilter-devel@vger.kernel.org
-Suggested-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Denis Efremov <efremov@linux.com>
+Ex: on PPC32, when KERN_VIRT_START was locally defined as
+PAGE_OFFSET, ptdump displayed 0x80000000
+instead of 0xc0000000 for the first kernel page,
+because 0xc0000000 + 0xc0000000 = 0x80000000
+
+Start the walk at st->start_address instead of starting at 0.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- MAINTAINERS | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/powerpc/mm/ptdump/ptdump.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2b03d2d4bfca..2ab292d1fa0e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8429,11 +8429,6 @@ S:	Maintained
- F:	fs/io_uring.c
- F:	include/uapi/linux/io_uring.h
+diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
+index 3ad64fc11419..74ff2bff4ea0 100644
+--- a/arch/powerpc/mm/ptdump/ptdump.c
++++ b/arch/powerpc/mm/ptdump/ptdump.c
+@@ -299,17 +299,15 @@ static void walk_pud(struct pg_state *st, pgd_t *pgd, unsigned long start)
  
--IP MASQUERADING
--M:	Juanjo Ciarlante <jjciarla@raiz.uncu.edu.ar>
--S:	Maintained
--F:	net/ipv4/netfilter/ipt_MASQUERADE.c
+ static void walk_pagetables(struct pg_state *st)
+ {
+-	pgd_t *pgd = pgd_offset_k(0UL);
+ 	unsigned int i;
+-	unsigned long addr;
 -
- IPMI SUBSYSTEM
- M:	Corey Minyard <minyard@acm.org>
- L:	openipmi-developer@lists.sourceforge.net (moderated for non-subscribers)
+-	addr = st->start_address;
++	unsigned long addr = st->start_address & PGDIR_MASK;
++	pgd_t *pgd = pgd_offset_k(addr);
+ 
+ 	/*
+ 	 * Traverse the linux pagetable structure and dump pages that are in
+ 	 * the hash pagetable.
+ 	 */
+-	for (i = 0; i < PTRS_PER_PGD; i++, pgd++, addr += PGDIR_SIZE) {
++	for (i = pgd_index(addr); i < PTRS_PER_PGD; i++, pgd++, addr += PGDIR_SIZE) {
+ 		if (!pgd_none(*pgd) && !pgd_is_leaf(*pgd))
+ 			/* pgd exists */
+ 			walk_pud(st, pgd, addr);
 -- 
-2.21.0
+2.13.3
 
