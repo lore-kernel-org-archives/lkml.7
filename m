@@ -2,52 +2,52 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CB7C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FD1C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D557220665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB4C620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803127;
-	bh=KiEVuCajG6GpVFGPlWaNJx/ktmaP2LF0JrnC/5Q3VBw=;
+	s=default; t=1565803133;
+	bh=L+qeEKzA9GLPmmim2nacHjtP7EpGVaAj+yDAOQ+yr4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GFSE0cpqy4PAQjm0+qOvgVloM7tGb2bp6exXQ6ORQYgn5nAw9nDObZPVtfdt0B8j2
-	 vEa6oOaVnO8YdlzS9g9BDMKR+qzNTbrdTxZgIfA84vQafQ6rKlZ3OBONSEzoOL2dsK
-	 n3dbCi9yFagOuGZIj8yix85EIlMGKaII5+pfUNbk=
+	b=NhawlVuLk/1Vp4NIY8eOB0zHF4kSTB298/y4xLURjIbkmlpfL1daI0x0lbzNXH0Hj
+	 E++D8SOs9XRV3d5io+KaJKvcnYFIAxPauhs64WnxWM8czCqq5Sh7+WmUhEv+teZyYe
+	 caAck2imGMHKfyh3JPPMFLeej59EXKCQApc8D3yA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730711AbfHNRMW (ORCPT
+        id S1730514AbfHNRSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:12:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36104 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:18:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729206AbfHNRMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:12:19 -0400
+        id S1730690AbfHNRMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:12:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FB302084D;
-        Wed, 14 Aug 2019 17:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0B7A2133F;
+        Wed, 14 Aug 2019 17:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802738;
-        bh=KiEVuCajG6GpVFGPlWaNJx/ktmaP2LF0JrnC/5Q3VBw=;
+        s=default; t=1565802733;
+        bh=L+qeEKzA9GLPmmim2nacHjtP7EpGVaAj+yDAOQ+yr4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fzyz+oDs8J5iGpg2sVkHi8hnvRUKs8yxO7UTipnGKuLok/y5qcpjlfJQS7x9lC6Wj
-         36HeGNeo4yg00w22FG1PFThPHDWULwLBGsvS5dlCrkneSN6HZCLGB4qPZFI1I3mQqt
-         uwUQQXrSIrJH5k/eBy8Xyid+YMz70f4cI+3HsNxM=
+        b=qzC/FULYhK5s6sjcMHT4A01kILnHzXOeTIDyDVRnby0puYp8dgO9tWYzHBvbz/VZ9
+         YiwruT9CcGIjgWTdKsodH/0CdWsXpne1rkQS50dOpkxmzUzMlTmTg92eQ3cvvz2taE
+         ckcBlVVOcHx7lIl7UqJRzFAWb990ndL9bbHpRRiw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 62/91] ARM: dts: bcm: bcm47094: add missing #cells for mdio-bus-mux
-Date:   Wed, 14 Aug 2019 19:01:25 +0200
-Message-Id: <20190814165752.249652028@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Roderick Colenbrander <roderick.colenbrander@sony.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.19 70/91] HID: sony: Fix race condition between rumble and device remove.
+Date:   Wed, 14 Aug 2019 19:01:33 +0200
+Message-Id: <20190814165752.654373877@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -60,45 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3a9d2569e45cb02769cda26fee4a02126867c934 ]
+From: Roderick Colenbrander <roderick@gaikai.com>
 
-The mdio-bus-mux has no #address-cells/#size-cells property,
-which causes a few dtc warnings:
+commit e0f6974a54d3f7f1b5fdf5a593bd43ce9206ec04 upstream.
 
-arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning (reg_format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #address-cells value
-arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #size-cells value
+Valve reported a kernel crash on Ubuntu 18.04 when disconnecting a DS4
+gamepad while rumble is enabled. This issue is reproducible with a
+frequency of 1 in 3 times in the game Borderlands 2 when using an
+automatic weapon, which triggers many rumble operations.
 
-Add the normal cell numbers.
+We found the issue to be a race condition between sony_remove and the
+final device destruction by the HID / input system. The problem was
+that sony_remove didn't clean some of its work_item state in
+"struct sony_sc". After sony_remove work, the corresponding evdev
+node was around for sufficient time for applications to still queue
+rumble work after "sony_remove".
 
-Link: https://lore.kernel.org/r/20190722145618.1155492-1-arnd@arndb.de
-Fixes: 2bebdfcdcd0f ("ARM: dts: BCM5301X: Add support for Linksys EA9500")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+On pre-4.19 kernels the race condition caused a kernel crash due to a
+NULL-pointer dereference as "sc->output_report_dmabuf" got freed during
+sony_remove. On newer kernels this crash doesn't happen due the buffer
+now being allocated using devm_kzalloc. However we can still queue work,
+while the driver is an undefined state.
+
+This patch fixes the described problem, by guarding the work_item
+"state_worker" with an initialized variable, which we are setting back
+to 0 on cleanup.
+
+Signed-off-by: Roderick Colenbrander <roderick.colenbrander@sony.com>
+CC: stable@vger.kernel.org
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm/boot/dts/bcm47094-linksys-panamera.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hid/hid-sony.c |   15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
-index 36efe410dcd71..9e33c41f54112 100644
---- a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
-+++ b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
-@@ -125,6 +125,9 @@
- 	};
- 
- 	mdio-bus-mux {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
+--- a/drivers/hid/hid-sony.c
++++ b/drivers/hid/hid-sony.c
+@@ -587,10 +587,14 @@ static void sony_set_leds(struct sony_sc
+ static inline void sony_schedule_work(struct sony_sc *sc,
+ 				      enum sony_worker which)
+ {
++	unsigned long flags;
 +
- 		/* BIT(9) = 1 => external mdio */
- 		mdio_ext: mdio@200 {
- 			reg = <0x200>;
--- 
-2.20.1
-
+ 	switch (which) {
+ 	case SONY_WORKER_STATE:
+-		if (!sc->defer_initialization)
++		spin_lock_irqsave(&sc->lock, flags);
++		if (!sc->defer_initialization && sc->state_worker_initialized)
+ 			schedule_work(&sc->state_worker);
++		spin_unlock_irqrestore(&sc->lock, flags);
+ 		break;
+ 	case SONY_WORKER_HOTPLUG:
+ 		if (sc->hotplug_worker_initialized)
+@@ -2553,13 +2557,18 @@ static inline void sony_init_output_repo
+ 
+ static inline void sony_cancel_work_sync(struct sony_sc *sc)
+ {
++	unsigned long flags;
++
+ 	if (sc->hotplug_worker_initialized)
+ 		cancel_work_sync(&sc->hotplug_worker);
+-	if (sc->state_worker_initialized)
++	if (sc->state_worker_initialized) {
++		spin_lock_irqsave(&sc->lock, flags);
++		sc->state_worker_initialized = 0;
++		spin_unlock_irqrestore(&sc->lock, flags);
+ 		cancel_work_sync(&sc->state_worker);
++	}
+ }
+ 
+-
+ static int sony_input_configured(struct hid_device *hdev,
+ 					struct hid_input *hidinput)
+ {
 
 
