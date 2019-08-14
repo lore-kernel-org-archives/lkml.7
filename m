@@ -2,93 +2,130 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16B9C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E40C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC8F2133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565822972;
-	bh=jivfAMepI0RUEpSZlQtSBIqThWImtRCXpi21oTCQTL4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jctcTv5e+yQlYcApLm9wbSfIMXFhZ1ocFgMFiRjrG26JcCqzBsO1sjmB52fvYOwPY
-	 F7C3K25hlCSpzny4UVkPF96CUsWGJavzbI/CR2Y0eV43GpDTiDIl3wQ8TPKQSkvnNY
-	 Am6JCdNV2u1miMcHKe+Y1tsTQNSsfDYxkqfI4lQQ=
+	by mail.kernel.org (Postfix) with ESMTP id 75290214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:53:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Lxv3421X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbfHNWta (ORCPT
+        id S1729080AbfHNWx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 18:49:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbfHNWta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 18:49:30 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A59C9208C2;
-        Wed, 14 Aug 2019 22:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565822969;
-        bh=jivfAMepI0RUEpSZlQtSBIqThWImtRCXpi21oTCQTL4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AEyC3bO50FxmVPrQA2snFZCblJWdXrtODi/2F368XEFE6EwllYrn61TVyVwiklr+M
-         41FZYVj3/ITFicX9hQXRcaNzdphMeDFeC9pxp15jEgjtlDBTdxgeedz4+0+3rtiX+V
-         SY8knh1Dj7cuDUsu2alp1f4KqD/Yd05rMFu6yrpU=
-Date:   Wed, 14 Aug 2019 15:49:29 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [patch] mm, page_alloc: move_freepages should not examine
- struct page of reserved memory
-Message-Id: <20190814154929.f050d937f2bd2c4d80c7f772@linux-foundation.org>
-In-Reply-To: <alpine.DEB.2.21.1908131625310.224017@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1908122036560.10779@chino.kir.corp.google.com>
-        <20190813141630.bd8cee48e6a83ca77eead6ad@linux-foundation.org>
-        <alpine.DEB.2.21.1908131625310.224017@chino.kir.corp.google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 14 Aug 2019 18:53:58 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57970 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728692AbfHNWx6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 18:53:58 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3CDF42B2;
+        Thu, 15 Aug 2019 00:53:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1565823236;
+        bh=CL84GQStNil7GZQgqIhkQ2ibX45iAPYQVUl32fqY34g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lxv3421XVhXPBCrb/G2YQqWu1tUXBmTyodkTiTzktnWgYp7LzrNR66ZJzRp5NHns7
+         UulmXilClz/bllnLRrnfwMZbex0/y9RzAHFfKsFtbyqM7OHFKV8lau6zRSww0K5Nd0
+         aoRNQtGkhlPpwMHGp8Jpfh+ijUVnsa7y2s5tE4Q4=
+Date:   Thu, 15 Aug 2019 01:53:53 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 3/5] media: v4l2-ctrls: Add support for V4L2_CID_LOCATION
+Message-ID: <20190814225353.GE5015@pendragon.ideasonboard.com>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-4-jacopo@jmondi.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190814202815.32491-4-jacopo@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 13 Aug 2019 16:31:35 -0700 (PDT) David Rientjes <rientjes@google.com> wrote:
+Hi Jacopo,
 
-> > > Move the debug checks to after verifying PageBuddy is true.  This isolates
-> > > the scope of the checks to only be for buddy pages which are on the zone's
-> > > freelist which move_freepages_block() is operating on.  In this case, an
-> > > incorrect node or zone is a bug worthy of being warned about (and the
-> > > examination of struct page is acceptable bcause this memory is not
-> > > reserved).
-> > 
-> > I'm thinking Fixes:907ec5fca3dc and Cc:stable?  But 907ec5fca3dc is
-> > almost a year old, so you were doing something special to trigger this?
-> > 
+Thank you for the patch.
+
+On Wed, Aug 14, 2019 at 10:28:13PM +0200, Jacopo Mondi wrote:
+> Add support for the newly defined V4L2_CID_LOCATION read-only control
+> used to report the camera device mounting position.
 > 
-> We noticed it almost immediately after bringing 907ec5fca3dc in on 
-> CONFIG_DEBUG_VM builds.  It depends on finding specific free pages in the 
-> per-zone free area where the math in move_freepages() will bring the start 
-> or end pfn into reserved memory and wanting to claim that entire pageblock 
-> as a new migratetype.  So the path will be rare, require CONFIG_DEBUG_VM, 
-> and require fallback to a different migratetype.
+> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> ---
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 7 +++++++
+>  include/uapi/linux/v4l2-controls.h   | 4 ++++
+>  2 files changed, 11 insertions(+)
 > 
-> Some struct pages were already zeroed from reserve pages before 
-> 907ec5fca3c so it theoretically could trigger before this commit.  I think 
-> it's rare enough under a config option that most people don't run that 
-> others may not have noticed.  I wouldn't argue against a stable tag and 
-> the backport should be easy enough, but probably wouldn't single out a 
-> commit that this is fixing.
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 7d3a33258748..8ab0857df59a 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -943,6 +943,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
+>  	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
+>  	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
+> +	case V4L2_CID_LOCATION:			return "Location";
 
-OK, thanks.  I added the above two paragraphs to the changelog and
-removed the Fixes:
+Depending on what we decide to name the control (see review of 2/5), you
+should adjust the description accordingly.
 
-Hopefully Mel will be able to review this for us.
+>  
+>  	/* FM Radio Modulator controls */
+>  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+> @@ -1300,6 +1301,12 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  		break;
+>  	case V4L2_CID_MPEG_VIDEO_FWHT_PARAMS:
+>  		*type = V4L2_CTRL_TYPE_FWHT_PARAMS;
+> +	case V4L2_CID_LOCATION:
+> +		*type = V4L2_CTRL_TYPE_INTEGER;
+> +		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> +		*min = V4L2_LOCATION_FRONT;
+> +		*max = V4L2_LOCATION_BACK;
+
+I don't think the control should have a min and a max different than the
+current value, as it's a fully static control. I'd drop those two lines
+here, and drivers will have to set value = min = max = V4L2_LOCATION_xxx
+when creating the control. That why you should be able to collapse this
+with V4L2_CID_MIN_BUFFERS_FOR_OUTPUT.
+
+> +		*step = 1;
+>  		break;
+>  	default:
+>  		*type = V4L2_CTRL_TYPE_INTEGER;
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index 37807f23231e..5c4c7b245921 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -889,6 +889,10 @@ enum v4l2_auto_focus_range {
+>  #define V4L2_CID_PAN_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+32)
+>  #define V4L2_CID_TILT_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+33)
+>  
+> +#define V4L2_CID_LOCATION			(V4L2_CID_CAMERA_CLASS_BASE+34)
+> +#define V4L2_LOCATION_FRONT			(0 << 0)
+> +#define V4L2_LOCATION_BACK			(1 << 0)
+
+Why not just 0 and 1 ?
+
+> +
+>  /* FM Modulator class control IDs */
+>  
+>  #define V4L2_CID_FM_TX_CLASS_BASE		(V4L2_CTRL_CLASS_FM_TX | 0x900)
+
+-- 
+Regards,
+
+Laurent Pinchart
