@@ -2,101 +2,123 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A891C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC83C32757
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9B32084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D45208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:07:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="m4NbZWWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbfHNQHO (ORCPT
+        id S1728316AbfHNQHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:07:14 -0400
-Received: from sauhun.de ([88.99.104.3]:50418 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfHNQHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:07:13 -0400
-Received: from localhost (p54B33326.dip0.t-ipconnect.de [84.179.51.38])
-        by pokefinder.org (Postfix) with ESMTPSA id 9C6BA2C311C;
-        Wed, 14 Aug 2019 18:07:11 +0200 (CEST)
-Date:   Wed, 14 Aug 2019 18:07:11 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Jean Delvare <jdelvare@suse.de>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Andrew Cooks <acooks@rationali.st>,
-        linux-acpi@vger.kernel.org, platypus-sw@opengear.com,
-        "Tobin C . Harding" <me@tobin.cc>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Will Wagner <willw@carallon.com>
-Subject: Re: [PATCH v5 0/3] Enable ACPI-defined peripherals on i2c-piix4 SMBus
-Message-ID: <20190814160711.GA5816@kunai>
-References: <20190802145109.38dd4045@endymion>
- <b013c33b-da11-ce5e-08d4-0b24a8575109@metux.net>
- <20190809103340.2ef24523@endymion>
- <01de7b0c-7579-048b-312c-122dddc23c64@metux.net>
+        Wed, 14 Aug 2019 12:07:49 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36717 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfHNQHt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 12:07:49 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z4so110755163qtc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 09:07:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uSze5gwW1/nHV7sdPnwR3jTf0rLBBMNUn/+CnX7OfxQ=;
+        b=m4NbZWWvLvFaknX0xdkPpgAtWEaAV8BPlNsV0QPnc6RgrYDmgG7AIsCG9ZHupO1OhY
+         MK5GQaw5bosgo81D9cY6GHmq179L4OqwHK3M6QUinKEJeDqx/XxsudgIdbj6JCJJ8Mx4
+         OEfKzvMu4bctJ4ELd7APkdehLFO1/45kAPB31gtLMFMBegBd1BaTmuRtXRxfaqmbb9j/
+         7gcKiA8oYZgHtUpbyJxdB8Pj0Jf2ZLMQcL7IdGdjMoAq6vEQba2nasxNHi3QIdWTLTQH
+         d/4ioF5GVIgVwgwhmehLPTTzbIryOo6apF1QStiPEI+ww2ZIZ0Kt7coH71+5OeY3wmmM
+         wQUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uSze5gwW1/nHV7sdPnwR3jTf0rLBBMNUn/+CnX7OfxQ=;
+        b=jb9bt7Dw56M6xZ1BHX4gRlheV9zzKbxZGqqFdldc8sN2s46DO1dwBh8PX5WsIZfJ1l
+         vaMW6F9YKtGn15gJq1axU+PI7vGAV/fcp6xFaV9yRSE+e1gqEigL92jPuXH/zIn8hEQq
+         E6zP6DrEBXFs4luw/n5o+hJTYj1L+juozDJp0FX94aOnaIdfb/OeKLxt/kWCsQqQ7se+
+         fjouwtrKRVUUSa8aB6iIXsmV/+l9uD8fHpvTggPXCPbeVwVvzNfg7OZO8MhpK3/2NwOO
+         LnQVbiqHoS5qDFoC02m+0piPwEMLiP9E6Rhs3geUOp6WQ9Doi4hOrPIp7Sw+dlezhLB4
+         Vmpw==
+X-Gm-Message-State: APjAAAWMtW5FWprZE5uxtjsDsGssdoBD2lA3wqocC1SME5m9QBR0WAAG
+        CMVkEjqQMY8vQZ+ypUTsZTivZg==
+X-Google-Smtp-Source: APXvYqyb9m87zjH3q35GhpgQm6CNCVSjTDXOgvHlJfjkQScATNdsG/TvzCk00mXmdZUVCVz5HTGwYA==
+X-Received: by 2002:a0c:af33:: with SMTP id i48mr323000qvc.185.1565798867959;
+        Wed, 14 Aug 2019 09:07:47 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id h26sm52286qta.58.2019.08.14.09.07.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 14 Aug 2019 09:07:47 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hxvoR-0001J4-0D; Wed, 14 Aug 2019 13:07:47 -0300
+Date:   Wed, 14 Aug 2019 13:07:46 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     linux-mm@kvack.org
+Cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Dimitri Sivanich <sivanich@sgi.com>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH v3 hmm 08/11] drm/radeon: use mmu_notifier_get/put for
+ struct radeon_mn
+Message-ID: <20190814160746.GA4926@ziepe.ca>
+References: <20190806231548.25242-1-jgg@ziepe.ca>
+ <20190806231548.25242-9-jgg@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <01de7b0c-7579-048b-312c-122dddc23c64@metux.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190806231548.25242-9-jgg@ziepe.ca>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 06, 2019 at 08:15:45PM -0300, Jason Gunthorpe wrote:
+> From: Jason Gunthorpe <jgg@mellanox.com>
+> 
+> radeon is using a device global hash table to track what mmu_notifiers
+> have been registered on struct mm. This is better served with the new
+> get/put scheme instead.
+> 
+> radeon has a bug where it was not blocking notifier release() until all
+> the BO's had been invalidated. This could result in a use after free of
+> pages the BOs. This is tied into a second bug where radeon left the
+> notifiers running endlessly even once the interval tree became
+> empty. This could result in a use after free with module unload.
+> 
+> Both are fixed by changing the lifetime model, the BOs exist in the
+> interval tree with their natural lifetimes independent of the mm_struct
+> lifetime using the get/put scheme. The release runs synchronously and just
+> does invalidate_start across the entire interval tree to create the
+> required DMA fence.
+> 
+> Additions to the interval tree after release are already impossible as
+> only current->mm is used during the add.
+> 
+> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+>  drivers/gpu/drm/radeon/radeon.h        |   3 -
+>  drivers/gpu/drm/radeon/radeon_device.c |   2 -
+>  drivers/gpu/drm/radeon/radeon_drv.c    |   2 +
+>  drivers/gpu/drm/radeon/radeon_mn.c     | 157 ++++++-------------------
+>  4 files changed, 38 insertions(+), 126 deletions(-)
 
---LZvS9be/3tNcYl/X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+AMD team: Are you OK with this patch?
 
-
-> > Unfortunately not. I only picked up from where Andrew Cooks left, due
-> > to me being way too slow to review his patches.
->=20
-> @Andrew: can you tell us more about this ?
-
-Was the info Andrew supplied helpful to you?
-
->=20
-> > I was able to test the first 2 patches which fix bugs, but
-> > not the 3rd one which deals with ACPI devices. There does not seem to
-> > be any such device on the 2 test machines I have remotely access to.
->=20
-> Did you already test on apu2/apu3 ?
-> If not, maybe you could prepare a queue that I could test.
-
-Maybe I am missing something but can't you just apply these patches on a
-recent kernel?
-
-So, the discussion stalled, but I think the series is fine as is? If
-someone disagrees, please speak up. I want to apply patch 1 to
-for-current soon and the others to for-next, too.
-
-
---LZvS9be/3tNcYl/X
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1UMaoACgkQFA3kzBSg
-KbZfHg/+PtVFnMuKKJxRrrr+D7Xz5UzKEh38nshbA37TJVz+nIbzDVVD7c+OoZav
-sAGEgKPEskjpmZUlC823T18Z25hOY3PCysPNs+3yr0QlfXk1G2rdvnDzfJQYyV1O
-QEhVeDqpGf92XKcX3dhshkev7CE524uAZtNs7fhUoz97ckcb+CMN+CrJnFVhA4lj
-HdDRQ2os8ys82wAbxkRhcif+SP6Qvb/rzMHHEaUhbFjAXs/awy5cLVEHhdNgDabB
-gnGPyXmg0F668DB5B0ZAMbWup8CJbVuUxg37usl4VsDN2HpTmUkfwWYqtdycDRUz
-B2S2CPv39PYQQyhTzXqTUctg/g3hYd+HfKXLwEh2+da7UWK7OjEFpnVmhNc4dCcH
-+0nEkBUfMox8t4G5/lRZrt9m1TiHPEbdMP+ZdeHYpoPMdmkZKb9vwiz6dZRa554I
-Qyjquwg6IOmeGrbEeqPLu0ypeoS76sOJJ/pNQa2cePyqP53BC953Qpqo1cKGfSzJ
-NjU5qQJiTivAxE9g7I5A3cIXq0SqwjW68keNWSphMY/9cboeDabzprP4eqqCWjXj
-eR/AQcocWeQtyApSxzA1kmAF0oEcwQ4dwX04AvmKnQEpQSVEO7lQTif9Zh+Y6C3M
-81PFi6pjHFsaIaw2oehutcitFwHGefowMlMSYFdmciY9/ZMwbsE=
-=ebsn
------END PGP SIGNATURE-----
-
---LZvS9be/3tNcYl/X--
+Jason
