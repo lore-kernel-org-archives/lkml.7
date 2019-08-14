@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFC8C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FB1C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C70E214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6219F214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802586;
-	bh=uZx/YxYl0pu1bln3sAog1+mlRjc9Q0jlUpMBSFc9XU8=;
+	s=default; t=1565802591;
+	bh=UA/Qg49npwevYF1Z6UcRLmqGtITlBDjcFMc7R9mYah0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lyg86FGmI7xMVYl4LvYzgS7ijMNYqXApqblAgDZfK0Mg5zaOWSnbvBWaL/3HzlOLa
-	 tUZq4szy2HaeV2pmcO+ODW/2oj6V3jw/2cGLgQ9D21kqdTlWSgt80qbBl+tpTfCgPs
-	 KUSCDYhxsHS/u2aq/tPUUfs5ZRnGQQYnyeHgMNGc=
+	b=SWatlcmTfup5faqI25u6rorIpVN7ZfKZEv41IQjWk7OM9hmhMn7E8MXNhHhOUML6n
+	 c54nbcpjSBCIDQ5SFjViB42D+MBJqz/u1DKdvJbHeypGfgx2eI+UKo8JV0HRApqYp5
+	 N2MsKzujAZLent6fyRJmL7roKRLnbbk6vM9HwJ60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730387AbfHNRJp (ORCPT
+        id S1729685AbfHNRJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:09:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60246 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:09:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730372AbfHNRJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:09:42 -0400
+        id S1730388AbfHNRJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:09:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F9B6214DA;
-        Wed, 14 Aug 2019 17:09:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D5C52084D;
+        Wed, 14 Aug 2019 17:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802582;
-        bh=uZx/YxYl0pu1bln3sAog1+mlRjc9Q0jlUpMBSFc9XU8=;
+        s=default; t=1565802585;
+        bh=UA/Qg49npwevYF1Z6UcRLmqGtITlBDjcFMc7R9mYah0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SBPorsrP0zt/cKa4Npe/v0hUT8GdHQkXkXX3Vl1eRY2gDatggSX3gsbRCtym4ZCra
-         nU4fLQfAWScNd5V8D0U2VTOno/tg9P+F8mZWnVS+cQzfaTkXjqVscTRoB1WG4m41kC
-         FT9YHmlTBx4fmP/lJ8jaKP0gIlCpokdwh15IvVPo=
+        b=wOsdVI1vw2KZeL5235jZMQY9vhSd2l1xd29oOTdfcL4QWAr/z0vipVeEX17U8YirY
+         mnkaBroDDr+e9jiUbPz2zJvEsbPUtcffgRwp0st/4KcmsGJrbqel6yHcii1O8tSsrg
+         Qg+JOPALcn4xMBSKqgoHfHORHeHFeUCiQe1nOaZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gavin Li <git@thegavinli.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 4.19 08/91] usb: usbfs: fix double-free of usb memory upon submiturb error
-Date:   Wed, 14 Aug 2019 19:00:31 +0200
-Message-Id: <20190814165749.494054788@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.19 09/91] usb: iowarrior: fix deadlock on disconnect
+Date:   Wed, 14 Aug 2019 19:00:32 +0200
+Message-Id: <20190814165749.924852896@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -59,34 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gavin Li <git@thegavinli.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit c43f28dfdc4654e738aa6d3fd08a105b2bee758d upstream.
+commit c468a8aa790e0dfe0a7f8a39db282d39c2c00b46 upstream.
 
-Upon an error within proc_do_submiturb(), dec_usb_memory_use_count()
-gets called once by the error handling tail and again by free_async().
-Remove the first call.
+We have to drop the mutex before we close() upon disconnect()
+as close() needs the lock. This is safe to do by dropping the
+mutex as intfdata is already set to NULL, so open() will fail.
 
-Signed-off-by: Gavin Li <git@thegavinli.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Fixes: 03f36e885fc26 ("USB: open disconnect race in iowarrior")
+Reported-by: syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190804235044.22327-1-gavinli@thegavinli.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20190808092728.23417-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/devio.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/usb/misc/iowarrior.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/core/devio.c
-+++ b/drivers/usb/core/devio.c
-@@ -1792,8 +1792,6 @@ static int proc_do_submiturb(struct usb_
- 	return 0;
+--- a/drivers/usb/misc/iowarrior.c
++++ b/drivers/usb/misc/iowarrior.c
+@@ -866,19 +866,20 @@ static void iowarrior_disconnect(struct
+ 	dev = usb_get_intfdata(interface);
+ 	mutex_lock(&iowarrior_open_disc_lock);
+ 	usb_set_intfdata(interface, NULL);
++	/* prevent device read, write and ioctl */
++	dev->present = 0;
  
-  error:
--	if (as && as->usbm)
--		dec_usb_memory_use_count(as->usbm, &as->usbm->urb_use_count);
- 	kfree(isopkt);
- 	kfree(dr);
- 	if (as)
+ 	minor = dev->minor;
++	mutex_unlock(&iowarrior_open_disc_lock);
++	/* give back our minor - this will call close() locks need to be dropped at this point*/
+ 
+-	/* give back our minor */
+ 	usb_deregister_dev(interface, &iowarrior_class);
+ 
+ 	mutex_lock(&dev->mutex);
+ 
+ 	/* prevent device read, write and ioctl */
+-	dev->present = 0;
+ 
+ 	mutex_unlock(&dev->mutex);
+-	mutex_unlock(&iowarrior_open_disc_lock);
+ 
+ 	if (dev->opened) {
+ 		/* There is a process that holds a filedescriptor to the device ,
 
 
