@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4E8C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9CDC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375142084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E251A2133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802810;
-	bh=a7K/CS+9KoiJHQSFEdbPGxqR6o8sHxo9UoNAUT75B/s=;
+	s=default; t=1565802814;
+	bh=mys8FQso6TzX4lHjO1asflVuGbZOM4DUn8kKeE0Momg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dJmGmpQQlKTDANk/p3YJT2o0wkceu2y8XIMNL6Ux71R4NamOXdmV/JUDErTn7lIhY
-	 nJx1m4FMGwWcz88xeApMItmLmIca98eiut1WS9nbMsXtDyXlAFvFsWnZlHjaA8UemP
-	 kxTjxJO6W1utuoNV51hpBxLi6++Vc5dwNx/QuB/o=
+	b=SvmV4jOPraggcm2B5yqvxeiF24fdBMsu+5Te0yfWrRnK4lMQNRa5MVKZ326L/YKom
+	 TYIHOqu5Q87HVUV6kJN5P0mmoQC6VAu4I1zHI75WHA+5xpItY5kkWQHU1R6asGaj74
+	 CmiI77pfdRUZvIDfJ8PlIF6TBZE8iRZBRA+Lk8Ik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730910AbfHNRN3 (ORCPT
+        id S1730921AbfHNRNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:13:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37682 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:13:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730888AbfHNRNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:13:25 -0400
+        id S1730888AbfHNRNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:13:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D30AB2063F;
-        Wed, 14 Aug 2019 17:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7C8220665;
+        Wed, 14 Aug 2019 17:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802805;
-        bh=a7K/CS+9KoiJHQSFEdbPGxqR6o8sHxo9UoNAUT75B/s=;
+        s=default; t=1565802810;
+        bh=mys8FQso6TzX4lHjO1asflVuGbZOM4DUn8kKeE0Momg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2TRUSEzQPFZwXpFOJbumQ/r3yFD6UUBlz7+riRwszFHM13KqwoRWwtEZQ/JIEJTFS
-         rMymaiEetTJNnmDSVq5U7AMzL5ilrF9kvYtUUOk6Qp+zSRnSN+a5h9wgJnvOIsPpiq
-         YEDvZ6sjr1E854uu/wjE9Jc4kDylTn8+oT3h6n5o=
+        b=l+2/ozER0xfy88szvhOFtIbIIVdkOd9s5a41z8nogm4Duic8s12YvBEzGCLPfe0Am
+         wtkjKLktE54nJ69BJjdC+LfoURz2+sVrvPstFJDsXJ0L6S6TGiv2/MO90AGoxTU58K
+         RxwEexgg047stXtBOLwLJnFGODQMnlu7Hane0oLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjoern Gerhart <gerhart@posteo.de>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 32/69] hwmon: (nct6775) Fix register address and added missed tolerance for nct6106
-Date:   Wed, 14 Aug 2019 19:01:30 +0200
-Message-Id: <20190814165747.750908238@linuxfoundation.org>
+Subject: [PATCH 4.14 34/69] cpufreq/pasemi: fix use-after-free in pas_cpufreq_cpu_init()
+Date:   Wed, 14 Aug 2019 19:01:32 +0200
+Message-Id: <20190814165747.834330702@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -60,40 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f3d43e2e45fd9d44ba52d20debd12cd4ee9c89bf ]
+[ Upstream commit e0a12445d1cb186d875410d093a00d215bec6a89 ]
 
-Fixed address of third NCT6106_REG_WEIGHT_DUTY_STEP, and
-added missed NCT6106_REG_TOLERANCE_H.
+The cpu variable is still being used in the of_get_property() call
+after the of_node_put() call, which may result in use-after-free.
 
-Fixes: 6c009501ff200 ("hwmon: (nct6775) Add support for NCT6102D/6106D")
-Signed-off-by: Bjoern Gerhart <gerhart@posteo.de>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: a9acc26b75f6 ("cpufreq/pasemi: fix possible object reference leak")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/nct6775.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/cpufreq/pasemi-cpufreq.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
-index ca9941fa741b7..7e14143ed1191 100644
---- a/drivers/hwmon/nct6775.c
-+++ b/drivers/hwmon/nct6775.c
-@@ -769,7 +769,7 @@ static const u16 NCT6106_REG_TARGET[] = { 0x111, 0x121, 0x131 };
- static const u16 NCT6106_REG_WEIGHT_TEMP_SEL[] = { 0x168, 0x178, 0x188 };
- static const u16 NCT6106_REG_WEIGHT_TEMP_STEP[] = { 0x169, 0x179, 0x189 };
- static const u16 NCT6106_REG_WEIGHT_TEMP_STEP_TOL[] = { 0x16a, 0x17a, 0x18a };
--static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x17c };
-+static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x18b };
- static const u16 NCT6106_REG_WEIGHT_TEMP_BASE[] = { 0x16c, 0x17c, 0x18c };
- static const u16 NCT6106_REG_WEIGHT_DUTY_BASE[] = { 0x16d, 0x17d, 0x18d };
+diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
+index 8456492124f0c..d1bdd8f622476 100644
+--- a/drivers/cpufreq/pasemi-cpufreq.c
++++ b/drivers/cpufreq/pasemi-cpufreq.c
+@@ -145,10 +145,18 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	int err = -ENODEV;
  
-@@ -3592,6 +3592,7 @@ static int nct6775_probe(struct platform_device *pdev)
- 		data->REG_FAN_TIME[0] = NCT6106_REG_FAN_STOP_TIME;
- 		data->REG_FAN_TIME[1] = NCT6106_REG_FAN_STEP_UP_TIME;
- 		data->REG_FAN_TIME[2] = NCT6106_REG_FAN_STEP_DOWN_TIME;
-+		data->REG_TOLERANCE_H = NCT6106_REG_TOLERANCE_H;
- 		data->REG_PWM[0] = NCT6106_REG_PWM;
- 		data->REG_PWM[1] = NCT6106_REG_FAN_START_OUTPUT;
- 		data->REG_PWM[2] = NCT6106_REG_FAN_STOP_OUTPUT;
+ 	cpu = of_get_cpu_node(policy->cpu, NULL);
++	if (!cpu)
++		goto out;
+ 
++	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
+ 	of_node_put(cpu);
+-	if (!cpu)
++	if (!max_freqp) {
++		err = -EINVAL;
+ 		goto out;
++	}
++
++	/* we need the freq in kHz */
++	max_freq = *max_freqp / 1000;
+ 
+ 	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
+ 	if (!dn)
+@@ -185,16 +193,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	}
+ 
+ 	pr_debug("init cpufreq on CPU %d\n", policy->cpu);
+-
+-	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
+-	if (!max_freqp) {
+-		err = -EINVAL;
+-		goto out_unmap_sdcpwr;
+-	}
+-
+-	/* we need the freq in kHz */
+-	max_freq = *max_freqp / 1000;
+-
+ 	pr_debug("max clock-frequency is at %u kHz\n", max_freq);
+ 	pr_debug("initializing frequency table\n");
+ 
+@@ -212,9 +210,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 
+ 	return cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
+ 
+-out_unmap_sdcpwr:
+-	iounmap(sdcpwr_mapbase);
+-
+ out_unmap_sdcasr:
+ 	iounmap(sdcasr_mapbase);
+ out:
 -- 
 2.20.1
 
