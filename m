@@ -2,132 +2,200 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69998C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA11C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F2D32083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:15:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tZ+HKRJp"
+	by mail.kernel.org (Postfix) with ESMTP id B2ACB2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbfHNQPp (ORCPT
+        id S1728204AbfHNQRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:15:45 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42240 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfHNQPo (ORCPT
+        Wed, 14 Aug 2019 12:17:36 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43909 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727909AbfHNQRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:15:44 -0400
-Received: by mail-ed1-f65.google.com with SMTP id m44so7546072edd.9
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 09:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8o9aIlCo3mpiOSnSj5arXqF2puBzCrXsQ6oC+NpAyV0=;
-        b=tZ+HKRJpMp6FIVMsf7o5+PbNE/FCT6+0SQQSCPqVFcw1JwdH2wCsxVa74p7WBEgC5g
-         jrVqSX3R/MWO7Tm8mrkP0X4znPQCXJ9JFxA887NEMRpu4J/KM9Tr+L1chHpnjsFShhfD
-         kjqzrNxc68sHtN/8jLDDY1fyH2axmJPwxAWrFyrSfuoGL7mRWlJXFROYkaaNWvZWFGUU
-         IdyQ+CskuJCoE+TM3+Af8bUT3Cv0tMVgwlsDId56+UTv9IGyeT1AlWgcdmRwFPZXs/qC
-         5OJDP0G7gku518XBm35mFw6VAQojAFdgZwmVunnsc8tGwgo7C51wCDlI0JIKZH94IBar
-         zRvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8o9aIlCo3mpiOSnSj5arXqF2puBzCrXsQ6oC+NpAyV0=;
-        b=nwKELMgpQ/NBHTC8QGWHYIUu37GLB8XJ3VP9A42/PzvijA7wRYMRoHAh4RS/XOKDoG
-         ShgLxMoxwLcTABB8C9lqPg0Gh7xX5CKOb6tYnJypRurkY4YQyM0W7WbNr6aXy2cQCrEY
-         +cgpgwDJ7MIxIbN3jCYTh6eL0u50qrkseGZpmSmlHI3EKG3apRoVqO7IXw2SS0ngfATQ
-         sgwcLgz4BGjOuCcLbGtUnosXlFuFVtHTS1UX6w01cIznJ0nwdvDK4ErN/10ySgtmQmbP
-         zWtSq31ebTDC99Lc8yIT44UeBFwT/WKlvUSNujfRgZX2lIZrxZgD4BBwz7O3gzee5mYO
-         KsGQ==
-X-Gm-Message-State: APjAAAXZa7tli8LUW+u6C2ltgA1JY7C7c0UcWeGy5DedJMrYQbP/JT5W
-        7ULsO4W+IqbcJuW9zNXHFWs=
-X-Google-Smtp-Source: APXvYqxF+Mu09EjcK1cYN7o4EzQDOnpp2ECuyGdYpYyTAKemcC9zcK2q6cKF2FOFqzmjJ8+JqHjp1A==
-X-Received: by 2002:a50:b3cb:: with SMTP id t11mr374805edd.203.1565799343284;
-        Wed, 14 Aug 2019 09:15:43 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id e24sm11734ejb.53.2019.08.14.09.15.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 09:15:42 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 16:15:41 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH v2 1/5] resource: Use PFN_UP / PFN_DOWN in
- walk_system_ram_range()
-Message-ID: <20190814161541.ho5b6ju4t23vruff@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20190814154109.3448-1-david@redhat.com>
- <20190814154109.3448-2-david@redhat.com>
+        Wed, 14 Aug 2019 12:17:36 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxvxo-0007I3-Ko; Wed, 14 Aug 2019 18:17:28 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxvxn-0003CC-LB; Wed, 14 Aug 2019 18:17:27 +0200
+Date:   Wed, 14 Aug 2019 18:17:27 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
+Subject: Are the requirements of the PWM API sensible?
+Message-ID: <20190814161727.ahfh6mlcbaozle3v@pengutronix.de>
+References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+ <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
+ <20190813151612.v6x6e6kzxflkpu7b@pengutronix.de>
+ <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
+ <20190814092339.73ybj5mycklvpnrq@pengutronix.de>
+ <3181509c-a167-28c8-fb8b-947b7c72a65c@ysoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190814154109.3448-2-david@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3181509c-a167-28c8-fb8b-947b7c72a65c@ysoft.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 05:41:05PM +0200, David Hildenbrand wrote:
->This makes it clearer that we will never call func() with duplicate PFNs
->in case we have multiple sub-page memory resources. All unaligned parts
->of PFNs are completely discarded.
->
->Cc: Dan Williams <dan.j.williams@intel.com>
->Cc: Borislav Petkov <bp@suse.de>
->Cc: Andrew Morton <akpm@linux-foundation.org>
->Cc: Bjorn Helgaas <bhelgaas@google.com>
->Cc: Ingo Molnar <mingo@kernel.org>
->Cc: Dave Hansen <dave.hansen@linux.intel.com>
->Cc: Nadav Amit <namit@vmware.com>
->Cc: Wei Yang <richardw.yang@linux.intel.com>
->Cc: Oscar Salvador <osalvador@suse.de>
->Acked-by: Michal Hocko <mhocko@suse.com>
->Signed-off-by: David Hildenbrand <david@redhat.com>
+Hello Michal,
 
-Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
+[adapted the Subject to the actual topic of this mail]
 
->---
-> kernel/resource.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->
->diff --git a/kernel/resource.c b/kernel/resource.c
->index 7ea4306503c5..88ee39fa9103 100644
->--- a/kernel/resource.c
->+++ b/kernel/resource.c
->@@ -487,8 +487,8 @@ int walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
-> 	while (start < end &&
-> 	       !find_next_iomem_res(start, end, flags, IORES_DESC_NONE,
-> 				    false, &res)) {
->-		pfn = (res.start + PAGE_SIZE - 1) >> PAGE_SHIFT;
->-		end_pfn = (res.end + 1) >> PAGE_SHIFT;
->+		pfn = PFN_UP(res.start);
->+		end_pfn = PFN_DOWN(res.end + 1);
-> 		if (end_pfn > pfn)
-> 			ret = (*func)(pfn, end_pfn - pfn, arg);
-> 		if (ret)
->-- 
->2.21.0
+On Wed, Aug 14, 2019 at 04:07:21PM +0200, Michal Vokáč wrote:
+> > Honestly I think most pwm users won't mind and they should get the
+> > possibility to tell they prefer pwm_apply_state to return immediately
+> > even if this could result in a spike. But we're not there yet.
+> > (Actually there are three things a PWM consumer might want:
+> > 
+> >   a) stop immediately;
+> >   b) complete the currently running period, then stop and return
+> >   only
+> >      when the period is completed; or
+> >   c) complete the currently running period and then stop, return
+> >   immediately if
+> >      possible.
+> > 
+> > Currently the expected semantic is b).
+> 
+> I am sorry for interrupting your discussion. From my (last year or so)
+> observation of the PWM mailing list I see this as a common pattern in
+> almost every submission of a new PWM driver. That is PWM driver authors
+> keep submitting solution a) and you tell them the expected behavior
+> is b).
+
+The history is that there was a discussion about something related to
+the pwm-imx27 or the pwm-mxs driver between Thierry and me. I don't
+remember the exact issue though. My impression back then was that
+Thierry had a conception of how a PWM should work that was idealised and
+hard to implement with a big part of the actually available hardware
+implementations. In the end Thierry ended the discussion saying
+something like: "I'm not aware that the available drivers don't fulfill
+the requirements so I must assume they are right. If you know otherwise,
+please tell us. I'm not willing to change the API's requirements just
+because of one or two drivers having problems." (I didn't look up the
+mail thread, so this is not an exact quote.)
+
+One of these requirements was b) from above. So if you notice a common
+pattern here on the list that most new drivers have problems to
+implement b) I'm happy. I let you decide what this probably means for
+the existing drivers.
+
+> Why is that? I hope that the fact that implementing a) is simpler
+> than b) is not the main reason. I believe that people think a)
+> is the correct solution.
+
+Honestly I think people are not aware of the requirements and/or don't
+care enough about these details instead of actively being convinced that
+a) is right. Their test cases are most of the time quite limited and if
+the LED's brightness reacts according to the expectations the driver is
+considered done.
+
+And I agree with Thierry that in some situations it is sane to require
+that periods are completed to prevent spikes. (I'm not a hardware guy,
+but I think controlling a step motor is such a situation where you'd want
+to prevent spikes.)
+
+> I agree that smooth transition from one period/duty setting to
+> different setting makes sense. But I also believe the expected
+> behavior of setting enabled=0 is different. That is to stop
+> immediately the technology that is fed by the PWM signal.
+> Otherwise the concept of enabled/disabled does not make sense
+> because setting duty=0 would have the same effect.
+
+That's approximately my argumentation from back then. I asked several
+times what was the difference between duty=0 and enabled=0. Thierry was
+unable to come up with a better explanation but insisted there was a
+difference. (Later I became aware that there is a difference, i.e. with
+duty=0 the inactive time still has to be a multiple of the configured
+period. So disabled is actually equivalent to duty=0 with an
+infinitesimal period. Unless I missed something of course.)
+
+I even questioned if consumers really care about a PWM going to it's
+inactive level on disable and suggested to introduce something to the
+PWM API to let consumers express they don't care. But the discussion
+led nowhere. In my eyes the PWM framework would become better if
+consumers were able to specify their intentions in a more detailed way.
+Thierry didn't agree.
+
+I think allowing lowlevel drivers to act immediately on enabled=0 would
+be fine. Consumers who'd want to disable only after completion of the
+currently running period could then do:
+
+	pwm_apply(pwm, duty=0, period=dontcare, enabled=1);
+	pwm_apply(pwm, duty=0, period=dontcare, enabled=0);
+
+to achieve this completion. So after all consumers are converted the API
+is more powerful than before because consumers have the choice between
+the above and a single
+
+	pwm_apply(pwm, duty=0, period=dontcare, enabled=0);
+
+The net benefit is that consumers don't have to wait if they don't
+actually care about completing the period. The downside is that all
+consumers must be reviewed and maybe fixed and maybe that people's
+expectations are not met anymore. (But I doubt the latter a bit because
+I'm not sure that most people actually expect that pwm_apply() blocks
+until the output reached its disabled state.)
+
+And we could even go further and tell consumers who care about the
+output's level should not disable the pwm but instead do
+
+	pwm_apply(pwm, duty=0, period=1, enabled=1);
+
+which has effectively the same semantic as enabled=0 today. This would
+give at least two (probably more) PWM drivers the freedom to really
+disable the hardware which might result in something different than
+"inactive level" without taking the possibility from consumers to
+actually request what they want.
+
+> So I still wonder where the expectation for b) is coming from.
+> What would be the physical/electrical reasoning for b)?
+> Why/how it can be dangerous/harmful for any device to stop the
+> PWM signal immediately?
+
+Maybe you can get Thierry to answer this. He is the source of this
+requirement.
+
+> Would be great to finally reach consensus on that so the expected
+> behavior can be documented. I know you already attempted that [1].
+> I think you have done a great job but I still consider the part
+> about state changes little controversial and unresolved.
+
+I'm completely open to document the expectations. I'm also open to shift
+the expectations to something that is saner and/or gives consumers more
+possibilities. But it's Thierry's responsibility to go forward here or
+at least stop the blockade.
+
+Best regards
+Uwe
 
 -- 
-Wei Yang
-Help you, Help me
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
