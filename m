@@ -2,59 +2,110 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E46DC32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8B1C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3113320665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB27F20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:24:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565803492;
+	bh=/GYUwQmMt3TZzvvyIXHLIjoxIxXw+Hbgpp4fz82lAf4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0K7bUNjT/wS4l5omVs0zGHPhOl7o+oIJ5YomEG0qxgiTuNPvqe3OSkSt5Svu1rmjf
+	 ZpqRtQzuyJ5AVNq5yvuqoxwNvo9DY8qrvqkWmnn2Ctgv5MzUqypy/fJ0Wys15y6qQo
+	 u17UXDQxcHDRM2fPUUQucvm7VNVVMwMep2ZlkDcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729862AbfHNRYo (ORCPT
+        id S1729618AbfHNRGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:24:44 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56720 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729237AbfHNRYl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:24:41 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::202])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3A582154EA06E;
-        Wed, 14 Aug 2019 10:24:41 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 13:24:37 -0400 (EDT)
-Message-Id: <20190814.132437.1179749424846743135.davem@davemloft.net>
-To:     efremov@linux.com
-Cc:     linux-kernel@vger.kernel.org, joe@perches.com,
-        sridhar.samudrala@intel.com, netdev@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: net_failover: Fix typo in a filepath
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190813060530.13138-1-efremov@linux.com>
-References: <20190325212732.27253-1-joe@perches.com>
-        <20190813060530.13138-1-efremov@linux.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 14 Aug 2019 10:24:41 -0700 (PDT)
+        Wed, 14 Aug 2019 13:06:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55252 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729601AbfHNRGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:06:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A8442173E;
+        Wed, 14 Aug 2019 17:06:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565802370;
+        bh=/GYUwQmMt3TZzvvyIXHLIjoxIxXw+Hbgpp4fz82lAf4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qe881WzX1/aC+R0JhXCYmzCXqWA45ip2r2x1435QrSDtI07C+E8bUkDogsPsueIKw
+         d1BsbLPFL3z9HTm9dCDQQUxxDXYC7hshyxdqcJGnU2tPVACvQgQXFCpsVSPgQjmh3j
+         F5f/InSb7+J2RdCTjIyNpfbGo5ic3JaYSOmSgQqE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 100/144] perf probe: Avoid calling freeing routine multiple times for same pointer
+Date:   Wed, 14 Aug 2019 19:00:56 +0200
+Message-Id: <20190814165804.067203232@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
+References: <20190814165759.466811854@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@linux.com>
-Date: Tue, 13 Aug 2019 09:05:30 +0300
+[ Upstream commit d95daf5accf4a72005daa13fbb1d1bd8709f2861 ]
 
-> Replace "driver" with "drivers" in the filepath to net_failover.c
-> 
-> Cc: Sridhar Samudrala <sridhar.samudrala@intel.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: netdev@vger.kernel.org
-> Fixes: cfc80d9a1163 ("net: Introduce net_failover driver")
-> Signed-off-by: Denis Efremov <efremov@linux.com>
+When perf_add_probe_events() we call cleanup_perf_probe_events() for the
+pev pointer it receives, then, as part of handling this failure the main
+'perf probe' goes on and calls cleanup_params() and that will again call
+cleanup_perf_probe_events()for the same pointer, so just set nevents to
+zero when handling the failure of perf_add_probe_events() to avoid the
+double free.
 
-Applied.
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-x8qgma4g813z96dvtw9w219q@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/builtin-probe.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 8bb124e55c6d2..2c376f5b21200 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -698,6 +698,16 @@ __cmd_probe(int argc, const char **argv)
+ 
+ 		ret = perf_add_probe_events(params.events, params.nevents);
+ 		if (ret < 0) {
++
++			/*
++			 * When perf_add_probe_events() fails it calls
++			 * cleanup_perf_probe_events(pevs, npevs), i.e.
++			 * cleanup_perf_probe_events(params.events, params.nevents), which
++			 * will call clear_perf_probe_event(), so set nevents to zero
++			 * to avoid cleanup_params() to call clear_perf_probe_event() again
++			 * on the same pevs.
++			 */
++			params.nevents = 0;
+ 			pr_err_with_code("  Error: Failed to add events.", ret);
+ 			return ret;
+ 		}
+-- 
+2.20.1
+
+
+
