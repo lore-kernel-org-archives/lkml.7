@@ -2,134 +2,94 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C28D9C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 19:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C2DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 19:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A28F206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 19:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6271B2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 19:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NIUd46jp"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Qez5sgL7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfHNTE4 (ORCPT
+        id S1728917AbfHNTHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 15:04:56 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:47101 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbfHNTE4 (ORCPT
+        Wed, 14 Aug 2019 15:07:23 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:45053 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbfHNTHX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 15:04:56 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w3so19185pgt.13;
-        Wed, 14 Aug 2019 12:04:55 -0700 (PDT)
+        Wed, 14 Aug 2019 15:07:23 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d79so83366250qke.11
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 12:07:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=vseqSnSbN0/CqanKomWBzaCIiF5jTd1dDC+ZOTFJoRU=;
-        b=NIUd46jprVTVWb3fgGd29jnISTwMC3sQLMBzqbzBx5/C/GbBaRyCyZuIZG4f8Uch80
-         XGuLIqfmPvQ6z82mGFrCsuSFrROVu1t9z3XyMwxTEMjTlKIV5FkXdjanZh7Dd0POtN+S
-         BwA9JU2VOATUXFcUNJCTHbhzp1EW/NnqqUw7VjKYbTpSAYfCV4lvoYfL37oM4x5RCCMG
-         dgbSOh5K2P9x6Kw3+5rYztkqapb02op3DEUgrh3ZanrRGjq8F7MZomVPda30Ty7lY3/N
-         Cl3ePLIn0U+V3+NOqwAJ1FHRAHOL21IJvANqGqrKfbgscg2sJCL035S3EbBpdmHZQxNX
-         8NFQ==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=zyoIBpx7/gJHmaFznO/SH+g+uzVx91CUA54PVlAZVQY=;
+        b=Qez5sgL7Apb/YnWIWGP6n/H3UhluSnVb84n0he9o4TL9RE8ltVbcBfNG/xA2RN5PRe
+         CxZlUXpa5olpCIqZCzTY39l5YnAKrhvzrPMnVAuAbXwhSL5bcAp4E+u2sPHlZ13XSgeZ
+         XgIB1ZyqYnq7G1H/nZESNIKSaalDfqsRMHzKwhxU/uhBupDEKxl3ORnPAA7CLoKlPmD4
+         zzkgESxXZ0pCsLJFpadok+GE8Seg79IG4xy/rAqcWrj46ZPU1ENXgUpX7TTzTzywxMkR
+         SCld4EdYriuaE7RMeuBBkbe8yiMPW6mCqcKo6QcF9sdZaac4mnFNqJY1DTERJOFkBv3i
+         L33A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=vseqSnSbN0/CqanKomWBzaCIiF5jTd1dDC+ZOTFJoRU=;
-        b=kBaaWnSuMBAkP4iBSxWC/2x419kfy356vwy7Js0ke8F5eC3+S0x5PIRzaQGqFhnN9v
-         5SaDNOFgyc3cRTyc7PMsljMrH2bBBgs/7Y27vlEeH2lEET7F1dkxXw9CzfJ8ZzZ3xRwT
-         kNUeuK29pz2l4z4GKwlCLPhxqtYElvU/hfDfM5qKOfM0Vnk1wP4MSUjYrE/Tpg2BnEbZ
-         fauEEbV2cwMKGKQM6U61y+fK9+fzKleseYKFZZ9fKCKnlVxQ26qbMn71QvIuOIOAboOY
-         sZWioBxHI2KOpAfvERcFSvC2gZ/SjXymdImc1lpe5adf/P1nbOzksVsgh03fTkXhXnq6
-         TSyg==
-X-Gm-Message-State: APjAAAVgOaG1JWFnANpcCLeWsfb1/R7oQ0J06VgmjO9nK/+FlQV52xsT
-        neCmtB3FA4NVpIGTkbIoij0=
-X-Google-Smtp-Source: APXvYqxPvTpGzpOkdo/g/K4RNLCTrEvQmHU4pCu/ZH1U09LHKXfy4gAnJ648mZN9j/inAzh8Er9WwQ==
-X-Received: by 2002:a17:90a:cc13:: with SMTP id b19mr1108603pju.117.1565809495303;
-        Wed, 14 Aug 2019 12:04:55 -0700 (PDT)
-Received: from [172.30.88.90] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
-        by smtp.gmail.com with ESMTPSA id t15sm702679pfc.47.2019.08.14.12.04.44
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zyoIBpx7/gJHmaFznO/SH+g+uzVx91CUA54PVlAZVQY=;
+        b=Wtf46WCZK7hfI2disGDzaZr+MUb8M1I98p9MjL8ABmRYE0Dewhu5VJzqjah3rjS3lw
+         /zeOz/SbzwJLOcs1FkXMYObBKMr2I+ZKJjo8amKn5p60CU1B4KHnNvXrYumw0l45ts/H
+         SsdwKJy4xDWQnkGfpKveGs6+0MAmrRWUXAwOL0k67HQxLNErRSHiBl+ooI1uYG4eNP4S
+         T/etqYNyBeepdK9hUkF9GMReVZnOWuiSmyQKxsH62BGXL94YgWj9FIyAENpeMza5aPad
+         iRPOD1hTiK1bmDj0yKbnJuRBJOoPNA7H1H2KbZyw+pWsC2T0yJbbyHT0CW2LyXqkFpDD
+         gjQQ==
+X-Gm-Message-State: APjAAAXpoGzooIQn6EyP+RVOWwx6jp6UGzIJsNT4bpxmblk8A3o6xypv
+        SdCcl9GQOrdxFN3XdDID81Xse0Mg2Cc=
+X-Google-Smtp-Source: APXvYqw1P6cMwe1NTa1gC092e9XveAA2gGUcbg3V1W2zUhtNyuO6/ml0oHYwyBVlorz5snc/utKykA==
+X-Received: by 2002:a37:a16:: with SMTP id 22mr959766qkk.85.1565809642155;
+        Wed, 14 Aug 2019 12:07:22 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id o33sm312969qtd.72.2019.08.14.12.07.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 12:04:54 -0700 (PDT)
-Subject: Re: [PATCH 04/22] media: Move v4l2_fwnode_parse_link from v4l2 to
- driver base
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Len Brown <lenb@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "moderated list:ARM/ZYNQ ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Enrico Weigelt <info@metux.net>
-References: <20190805233505.21167-1-slongerbeam@gmail.com>
- <20190805233505.21167-5-slongerbeam@gmail.com>
- <CAHp75VcOh8bOf_s6t0ehwGtcYn64QFGj303SVvpHrztEOhTRgg@mail.gmail.com>
- <4750b347-b421-6569-600f-0ced8406460e@gmail.com>
- <20190814103054.GI13294@shell.armlinux.org.uk>
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-Message-ID: <e0a19469-af9d-d9de-499f-4ffbf04542b3@gmail.com>
-Date:   Wed, 14 Aug 2019 12:04:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190814103054.GI13294@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Wed, 14 Aug 2019 12:07:21 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     catalin.marinas@arm.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] mm/kmemleak: record the current memory pool size
+Date:   Wed, 14 Aug 2019 15:07:11 -0400
+Message-Id: <1565809631-28933-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The only way to obtain the current memory pool size for a running kernel
+is to check back the kernel config file which is inconvenient. Record it
+in the kernel messages.
 
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ mm/kmemleak.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On 8/14/19 3:30 AM, Russell King - ARM Linux admin wrote:
-> On Tue, Aug 06, 2019 at 09:53:41AM -0700, Steve Longerbeam wrote:
->> The full patchset doesn't seem to be up yet, but see [1] for the cover
->> letter.
-> Was the entire series copied to the mailing lists, or just selected
-> patches?  I only saw 4, 9, 11 and 13-22 via lakml.
+diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+index b8bbe9ac5472..1f74f8bcb4eb 100644
+--- a/mm/kmemleak.c
++++ b/mm/kmemleak.c
+@@ -1967,7 +1967,8 @@ static int __init kmemleak_late_init(void)
+ 		mutex_unlock(&scan_mutex);
+ 	}
+ 
+-	pr_info("Kernel memory leak detector initialized\n");
++	pr_info("Kernel memory leak detector initialized (mem pool size: %d)\n",
++		mem_pool_free_count);
+ 
+ 	return 0;
+ }
+-- 
+1.8.3.1
 
-The whole series was posted to the linux-media ML, see [1]. At the time, 
-none of the linux-media ML archives had the whole series.
-
-> In the absence of the other patches, will this solve imx-media binding
-> the internal subdevs of sensor devices to the CSI2 interface?
-
-"internal subdevs of sensor devices" ?? That doesn't make any sense.
-
-Sensors are external to the SoC, there are no "internal" sensor devices.
-
-Not sure what you mean by "binding" either in this context, but external 
-sensors can connect via fwnode endpoint, and later translated to media 
-link, to the receiver CSI-2 sink.
-
-Steve
-
-[1] https://www.spinics.net/lists/linux-media/msg155160.html
