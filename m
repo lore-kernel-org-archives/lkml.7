@@ -2,93 +2,122 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA54C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 304DEC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39FA62083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09B1C2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfHNMlz (ORCPT
+        id S1727637AbfHNMn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 08:41:55 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40246 "EHLO
+        Wed, 14 Aug 2019 08:43:27 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36170 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbfHNMly (ORCPT
+        with ESMTP id S1726865AbfHNMn0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 08:41:54 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c3so2694143wrd.7
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 05:41:53 -0700 (PDT)
+        Wed, 14 Aug 2019 08:43:26 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r3so17229085wrt.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 05:43:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=7qa+OQc+EfgC/AsxQHiSyd8uUAoFVOGXxd9MGXVO4gQ=;
-        b=JJabtwVSSLGSiBooC+jN2PvAnzqFadg5gX/oPY/gDt6C8MgcdZiUq131kv7va6Jxyp
-         eP239f+qmBUGnK72WTD9CuD/Vaw/H4WvMbRU4KQKJbHZFCiOJCKbZBZJnwppNdb7SKBi
-         dvwdyTMQ4x8J0FbMBcHmitpQ39DYiet1/2gaPrjTzX01JKayrxz4j2371hJsFB6gRwyt
-         IiIYv8U1RnGsuvtpvTeR/rkxbcwpPUZwveeWwfSuJlcFqOW5a6oLsYMr8U6rPlxrMMft
-         +tyvl8DErmJTnpckbjC7J0abNBKoKE9JtRw0tSlyeoJ2PWu5NG0cnZJtxtQr6RKZ3VUV
-         GFaQ==
-X-Gm-Message-State: APjAAAX1PaYgFwIaBIrHMBXKN102vYGpaSPF6QgmyScXq6lhN18Dk+4F
-        Q2Fozn20hxQzRvCx5SQxUU87lQ==
-X-Google-Smtp-Source: APXvYqyFfdmqgMJPuWJLiLxbPu3wBmT00xVThG/XUqZUJSxYCcYrkDMswuc970cUCzcCLjdzY5jv+w==
-X-Received: by 2002:a5d:528d:: with SMTP id c13mr51718475wrv.247.1565786512550;
-        Wed, 14 Aug 2019 05:41:52 -0700 (PDT)
+        bh=M5hsYK/rzm8ReV5S4YkxsSgW2EXo1cijbAwHAUlpP8k=;
+        b=m4ivLcUSs3v2JTDFdEKtXhZVNZ3zhE1/OHzPKhWZ8ZAZ2osqjAwyu13bCTUGVB4hK8
+         ijRrmuUVIz5GKCu8ahwQQMSoWmL7oWBwWT8GbLyEZ2XSKl8rQE2DhoFHbaMdwe5AkZcm
+         Zy27LFmmsBb1PUn29NYqXkPyuq3wx+OldpwlYv5jlkqK3C6GKuQat6oqPfRIwfbdejQQ
+         tSkEBlMXpMbzWhZZyJ8P0QyxZ590tzJEy4GE+Lcq7wFtJYeyYn2lKZ+mHXbse/WEa3bY
+         Rc3q2XNH1o39zQUlxhDo0vddgLlJXXJNZBBib5FWGzrkzOM5tY1HPSJ/lWsKwzYab9Z9
+         CSBw==
+X-Gm-Message-State: APjAAAUmWB5rYN96aZWRtANCnUb0X/VdE3TCmmsJvJGtn2Z7oN4HXCPT
+        quOrECUsp53mOydMl6WIwaULqA==
+X-Google-Smtp-Source: APXvYqyfLWqL8rHcLOstM/hvMlhYrfpItQbxvR1GSfn9A5q80g1cvbmp7iAW23OHiije7dIDH2+FHQ==
+X-Received: by 2002:adf:e2cb:: with SMTP id d11mr46732872wrj.66.1565786604592;
+        Wed, 14 Aug 2019 05:43:24 -0700 (PDT)
 Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id a26sm3507255wmg.45.2019.08.14.05.41.51
+        by smtp.gmail.com with ESMTPSA id e11sm28754114wrc.4.2019.08.14.05.43.23
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 05:41:51 -0700 (PDT)
-Subject: Re: [PATCH] KVM : remove redundant assignment of var new_entry
-To:     Miaohe Lin <linmiaohe@huawei.com>, joro@8bytes.org,
-        rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     mingfangsen@huawei.com
-References: <20190812023300.20153-1-linmiaohe@huawei.com>
+        Wed, 14 Aug 2019 05:43:24 -0700 (PDT)
+Subject: Re: [PATCH] KVM/nSVM: properly map nested VMCB
+To:     Jiri Palecek <jpalecek@web.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        KarimAllah Ahmed <karahmed@amazon.de>
+References: <20190604160939.17031-1-vkuznets@redhat.com>
+ <b46872ce-5305-aa25-9593-d882da3c0872@redhat.com>
+ <6282e1bf-1eaa-450d-7f6a-b868ebab09d0@web.de>
 From:   Paolo Bonzini <pbonzini@redhat.com>
 Openpgp: preference=signencrypt
-Message-ID: <ce3a477a-d323-32ce-b950-470e50e0811d@redhat.com>
-Date:   Wed, 14 Aug 2019 14:41:50 +0200
+Message-ID: <9bade306-5229-5744-48f6-bab022cdf27b@redhat.com>
+Date:   Wed, 14 Aug 2019 14:43:23 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190812023300.20153-1-linmiaohe@huawei.com>
+In-Reply-To: <6282e1bf-1eaa-450d-7f6a-b868ebab09d0@web.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/08/19 04:33, Miaohe Lin wrote:
-> new_entry is reassigned a new value next line. So
-> it's redundant and remove it.
+On 10/08/19 20:35, Jiri Palecek wrote:
+> Hello,
 > 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  arch/x86/kvm/svm.c | 1 -
->  1 file changed, 1 deletion(-)
+> On 04. 06. 19 19:27, Paolo Bonzini wrote:
+>> On 04/06/19 18:09, Vitaly Kuznetsov wrote:
+>>> Commit 8c5fbf1a7231 ("KVM/nSVM: Use the new mapping API for mapping
+>>> guest
+>>> memory") broke nested SVM completely: kvm_vcpu_map()'s second
+>>> parameter is
+>>> GFN so vmcb_gpa needs to be converted with gpa_to_gfn(), not the
+>>> other way
+>>> around.
+>>>
+>>> Fixes: 8c5fbf1a7231 ("KVM/nSVM: Use the new mapping API for mapping
+>>> guest memory")
+>>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>>> ---
+>>>   arch/x86/kvm/svm.c | 4 ++--
+>>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+>>> index 735b8c01895e..5beca1030c9a 100644
+>>> --- a/arch/x86/kvm/svm.c
+>>> +++ b/arch/x86/kvm/svm.c
+>>> @@ -3293,7 +3293,7 @@ static int nested_svm_vmexit(struct vcpu_svm *svm)
+>>>                          vmcb->control.exit_int_info_err,
+>>>                          KVM_ISA_SVM);
+>>>
+>>> -    rc = kvm_vcpu_map(&svm->vcpu, gfn_to_gpa(svm->nested.vmcb), &map);
+>>> +    rc = kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(svm->nested.vmcb), &map);
+>>>       if (rc) {
+>>>           if (rc == -EINVAL)
+>>>               kvm_inject_gp(&svm->vcpu, 0);
+>>> @@ -3583,7 +3583,7 @@ static bool nested_svm_vmrun(struct vcpu_svm *svm)
+>>>
+>>>       vmcb_gpa = svm->vmcb->save.rax;
+>>>
+>>> -    rc = kvm_vcpu_map(&svm->vcpu, gfn_to_gpa(vmcb_gpa), &map);
+>>> +    rc = kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb_gpa), &map);
+>>>       if (rc) {
+>>>           if (rc == -EINVAL)
+>>>               kvm_inject_gp(&svm->vcpu, 0);
+>>>
+>> Oops.  Queued, thanks.
 > 
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index d685491fce4d..e3d3b2128f2b 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -1714,7 +1714,6 @@ static int avic_init_backing_page(struct kvm_vcpu *vcpu)
->  	if (!entry)
->  		return -EINVAL;
->  
-> -	new_entry = READ_ONCE(*entry);
->  	new_entry = __sme_set((page_to_phys(svm->avic_backing_page) &
->  			      AVIC_PHYSICAL_ID_ENTRY_BACKING_PAGE_MASK) |
->  			      AVIC_PHYSICAL_ID_ENTRY_VALID_MASK);
-> 
+> Given that this fix didn't make it to 5.2, and its straightforwardness,
+> could you send it to stable for inclusion?
 
-Queued, thanks.
+Done, thanks for the reminder!
 
 Paolo
+
