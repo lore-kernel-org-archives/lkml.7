@@ -7,85 +7,124 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9E0C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291D8C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF4EC2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7A72067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:11:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfHNKJd (ORCPT
+        id S1727022AbfHNKLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:09:33 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:45251 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725888AbfHNKJd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:09:33 -0400
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 9E531240007;
-        Wed, 14 Aug 2019 10:09:30 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 12:09:30 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     a.zummo@towertech.it, leoyang.li@nxp.com,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: rtc: pcf85363/pcf85263: fix error that failed to run hwclock -w
-Message-ID: <20190814100930.GI3600@piout.net>
-References: <20190814093249.40065-1-biwen.li@nxp.com>
+        Wed, 14 Aug 2019 06:11:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:51474 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725888AbfHNKLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:11:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A79F3344;
+        Wed, 14 Aug 2019 03:11:06 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6EC253F706;
+        Wed, 14 Aug 2019 03:11:05 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 11:11:00 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv6 1/2] PCI: layerscape: Add the bar_fixed_64bit property
+ in EP driver.
+Message-ID: <20190814101100.GA29414@e121166-lin.cambridge.arm.com>
+References: <20190814020330.12133-1-xiaowei.bao@nxp.com>
+ <20190814092952.GA26840@e121166-lin.cambridge.arm.com>
+ <AM5PR04MB32994A55A2951DD071C19F66F5AD0@AM5PR04MB3299.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190814093249.40065-1-biwen.li@nxp.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM5PR04MB32994A55A2951DD071C19F66F5AD0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 14/08/2019 17:32:49+0800, Biwen Li wrote:
-> Issue:
->     # hwclock -w
->     hwclock: RTC_SET_TIME: Invalid argument
+On Wed, Aug 14, 2019 at 09:48:00AM +0000, Xiaowei Bao wrote:
 > 
-> The patch fixes error when run command hwclock -w
-> with rtc pcf85363/pcf85263
 > 
+> > -----Original Message-----
+> > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Sent: 2019年8月14日 17:30
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: M.h. Lian <minghuan.lian@nxp.com>; Mingkai Hu
+> > <mingkai.hu@nxp.com>; Roy Zang <roy.zang@nxp.com>;
+> > bhelgaas@google.com; linuxppc-dev@lists.ozlabs.org;
+> > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCHv6 1/2] PCI: layerscape: Add the bar_fixed_64bit property
+> > in EP driver.
 
-Could you describe a bit more the issue and what causes it?
+Do not quote the email header in your replies.
 
-IIRC I wrote that code and it works on my pcf85363.
+> > I asked you to remove the period at the end of the patch $SUBJECT and you
+> > did not, either you do not read what I write or explain me what's going on.
+> Sorry, I didn't understand the meaning of period correctly before. 
+> > 
+> > On Wed, Aug 14, 2019 at 10:03:29AM +0800, Xiaowei Bao wrote:
+> > > The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1 is
+> > > 32bit, BAR2 and BAR4 is 64bit, this is determined by hardware, so set
+> > > the bar_fixed_64bit with 0x14.
+> > >
+> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > 
+> > Kishon ACK'ed this patch and you have not carried his tag.
+> > 
+> > I will make these changes but that's the last time I do that for you.
+> Thanks a lot, your means is that I don't need to send the v7 patch and you help me to
+> Correct this patch, yes? Thanks a lot for your help about the rules of the upstream. I will
+> Correct this error next time. ^.^ 
 
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
->  drivers/rtc/rtc-pcf85363.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/rtc/rtc-pcf85363.c b/drivers/rtc/rtc-pcf85363.c
-> index a075e77617dc..3450d615974d 100644
-> --- a/drivers/rtc/rtc-pcf85363.c
-> +++ b/drivers/rtc/rtc-pcf85363.c
-> @@ -166,7 +166,12 @@ static int pcf85363_rtc_set_time(struct device *dev, struct rtc_time *tm)
->  	buf[DT_YEARS] = bin2bcd(tm->tm_year % 100);
->  
->  	ret = regmap_bulk_write(pcf85363->regmap, CTRL_STOP_EN,
-> -				tmp, sizeof(tmp));
-> +				tmp, 2);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_bulk_write(pcf85363->regmap, DT_100THS,
-> +				buf, sizeof(tmp) - 2);
->  	if (ret)
->  		return ret;
->  
-> -- 
-> 2.17.1
-> 
+I fixed that up and pushed out, pci/layerscape, for v5.4.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
+Lorenzo
+
+> > Lorenzo
+> > 
+> > > ---
+> > > v2:
+> > >  - Replace value 0x14 with a macro.
+> > > v3:
+> > >  - No change.
+> > > v4:
+> > >  - send the patch again with '--to'.
+> > > v5:
+> > >  - fix the commit message.
+> > > v6:
+> > >  - remove the [EXT] tag of the $SUBJECT in email.
+> > >
+> > >  drivers/pci/controller/dwc/pci-layerscape-ep.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > index be61d96..ca9aa45 100644
+> > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > @@ -44,6 +44,7 @@ static const struct pci_epc_features
+> > ls_pcie_epc_features = {
+> > >  	.linkup_notifier = false,
+> > >  	.msi_capable = true,
+> > >  	.msix_capable = false,
+> > > +	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+> > >  };
+> > >
+> > >  static const struct pci_epc_features*
+> > > --
+> > > 2.9.5
+> > >
