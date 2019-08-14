@@ -6,63 +6,64 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBB2C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD370C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE1B214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A5E214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565822104;
-	bh=FlnPkqgHy5T6T3OPFXc7nhSpwpi5ci6Jdc5n4cQTtpQ=;
+	s=default; t=1565822108;
+	bh=+XFoGOE8vFi2OMlqKzNPrlgZuGbhcK6T9DiWxiyJzdk=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=sF8fd0iNfe1QmEBipvI5m2XMQeuU0gU76ibZ8toJV9aRuFq4G0j7DyCM53wkYKpUS
-	 +bfyLMMOc7I0vHd8B2RG3u9oGBM1ZESEo4uSPxvyDnN8R89X25JhD+87SNMrfWJbG6
-	 aFMZbkk8gJPx0Jhs6A0RLAcTfJpaVzmK/VNNUB6w=
+	b=Tyy6DM72oMbLNC6/n8RaThViruMUdua3KwFUV5580PkAdzL6oEsoSfUaI5FFjLaZa
+	 NC2lWKrToQFdkwnERzO+GW/lI90BUJfj7dlFQIszPpUB+9qKysDDSIANI822sltjdb
+	 a/9Q24IvMI1eNU00xpAk+x5C47GE6pqF63M2b3rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbfHNWfD (ORCPT
+        id S1729505AbfHNWfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 18:35:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34424 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 18:35:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728981AbfHNWfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 18:35:02 -0400
-Subject: Re: [GIT PULL] afs: Fixes
+        id S1727217AbfHNWfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 18:35:06 -0400
+Subject: Re: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565822101;
-        bh=FlnPkqgHy5T6T3OPFXc7nhSpwpi5ci6Jdc5n4cQTtpQ=;
+        s=default; t=1565822106;
+        bh=+XFoGOE8vFi2OMlqKzNPrlgZuGbhcK6T9DiWxiyJzdk=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=HHsKo1NEpfGB+Gn9JzGrxbObTriGKoIrYgqswSI8kfca6K+srVGP5XvswXcvnW0NO
-         13uihYXFMyCNusYNmbuTsNmzRLtIaO27Ibe2uahyBb+9z1arTIScio5Itx3UZilKhM
-         2mFFepY37At+Qh5w1Jc3WKIYSD/hQCvtNmQCXVx4=
+        b=vVvwssPt7kbMSQISv6bwePtnLBAN8E2VIwPunq8TNFIjHHsSH83YhYTnv0ykuD3zF
+         Uay6T0LyfBmJ9S8+BxsRZHU+R3eZGPV6QuLJnhSRF54HgOwwDx+NqBcNUVtYiQUABT
+         hFDp47NoLIhQtqDYt8TH12EO9TPbioxibuWvxVFQ=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <13851.1565792320@warthog.procyon.org.uk>
-References: <13851.1565792320@warthog.procyon.org.uk>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <13851.1565792320@warthog.procyon.org.uk>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
- tags/afs-fixes-20190814
-X-PR-Tracked-Commit-Id: 9dd0b82ef530cdfe805c9f7079c99e104be59a14
+In-Reply-To: <20190814184901.GA16709@embeddedor>
+References: <20190814184901.GA16709@embeddedor>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190814184901.GA16709@embeddedor>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git
+ tags/Wimplicit-fallthrough-5.3-rc5
+X-PR-Tracked-Commit-Id: 1ee1119d184bb06af921b48c3021d921bbd85bac
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e22a97a2a85d2a0bdfb134cbbc7ff856ae67edba
-Message-Id: <156582210191.11528.8553610434794038321.pr-tracker-bot@kernel.org>
-Date:   Wed, 14 Aug 2019 22:35:01 +0000
-To:     David Howells <dhowells@redhat.com>
-Cc:     torvalds@linux-foundation.org, dhowells@redhat.com,
-        marc.dionne@auristor.com, baijiaju1990@gmail.com,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 41de59634046b19cd53a1983594a95135c656997
+Message-Id: <156582210598.11528.2788392621579499903.pr-tracker-bot@kernel.org>
+Date:   Wed, 14 Aug 2019 22:35:05 +0000
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 14 Aug 2019 15:18:40 +0100:
+The pull request you sent on Wed, 14 Aug 2019 13:49:01 -0500:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-fixes-20190814
+> git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wimplicit-fallthrough-5.3-rc5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e22a97a2a85d2a0bdfb134cbbc7ff856ae67edba
+https://git.kernel.org/torvalds/c/41de59634046b19cd53a1983594a95135c656997
 
 Thank you!
 
