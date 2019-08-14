@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968C0C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D80DC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6966721721
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2EA2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802654;
-	bh=xgE+15QcMdwoAnFrAPREzcsQF9PufS+fugmS0e/+Dtw=;
+	s=default; t=1565802657;
+	bh=zguiC8HP/MFooApydEOtzHjcprr/7Fmez4iab1u41pM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YWm3YgLseAdEuC7G5le7QbjzlVuuqBNud5gAordSCzK5piMTQ36vk614e7DESpiGd
-	 D8q5663UZtlAWfWqcuw8wCwZLHxttvksXnYb1OvTki/KAlDw6+ZfPvheGWIFc/dWdO
-	 ys2+2tU0m2cMAG0SY80j6PJeGhdxwUDh232+iZj8=
+	b=darlt+n8Y/Jy3J0ToHAh9M/397SsQsgLCN6mIymqqyNUqIk9Vee6RzJhYBsY4mGmv
+	 Dy7XFLqCl3ZobsOggX+RrgNDcwFZDLqnX2xGd9mwgMviLjOWY8sLRStNvx9Afxl65f
+	 +V62bLQAYZl2Y+FOIPKgtD2QFqncryA/0IvLGjcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730523AbfHNRKx (ORCPT
+        id S1729120AbfHNRK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:10:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33732 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:10:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730508AbfHNRKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:10:44 -0400
+        id S1730507AbfHNRKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:10:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CC4A2084D;
-        Wed, 14 Aug 2019 17:10:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07FF2214DA;
+        Wed, 14 Aug 2019 17:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802644;
-        bh=xgE+15QcMdwoAnFrAPREzcsQF9PufS+fugmS0e/+Dtw=;
+        s=default; t=1565802646;
+        bh=zguiC8HP/MFooApydEOtzHjcprr/7Fmez4iab1u41pM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QnFmRjfQa4XJOkiKt30cS7rqLLLABDael162iBlPjgKxn6D+yJRDqMjedYe/6equV
-         6bYEDgSLIYHKL8RJqp/wZGeumduBlIjEy9wG7R4C/Nrvks8HizlFAYAXo+Rsp7F+qW
-         38uSs9M3dSi0xf1WQCu8t3dUZAN48shfAMf6qmhA=
+        b=UJeqtW1kyawAwUizZsX4nV68roHre98XkeUon5WD+mFUgWhbHkgzns3x0LNDrHt+q
+         XYf2lS5XIMx4dQib0ecBZL7JbqUpoSesoEEC5RMaU9vTYuxLUKhsU04i79UYl/gZBF
+         Q3DL0ViXmaSCg26RIPTrxAMr068EzB+gCXSi00SM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        stable@vger.kernel.org, Laura Garcia Liebana <nevola@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 61/91] ARM: davinci: fix sleep.S build error on ARMv4
-Date:   Wed, 14 Aug 2019 19:01:24 +0200
-Message-Id: <20190814165752.208167332@linuxfoundation.org>
+Subject: [PATCH 4.19 37/91] netfilter: nft_hash: fix symhash with modulus one
+Date:   Wed, 14 Aug 2019 19:01:00 +0200
+Message-Id: <20190814165751.247450065@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -60,38 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d64b212ea960db4276a1d8372bd98cb861dfcbb0 ]
+[ Upstream commit 28b1d6ef53e3303b90ca8924bb78f31fa527cafb ]
 
-When building a multiplatform kernel that includes armv4 support,
-the default target CPU does not support the blx instruction,
-which leads to a build failure:
+The rule below doesn't work as the kernel raises -ERANGE.
 
-arch/arm/mach-davinci/sleep.S: Assembler messages:
-arch/arm/mach-davinci/sleep.S:56: Error: selected processor does not support `blx ip' in ARM mode
+nft add rule netdev nftlb lb01 ip daddr set \
+	symhash mod 1 map { 0 : 192.168.0.10 } fwd to "eth0"
 
-Add a .arch statement in the sources to make this file build.
+This patch allows to use the symhash modulus with one
+element, in the same way that the other types of hashes and
+algorithms that uses the modulus parameter.
 
-Link: https://lore.kernel.org/r/20190722145211.1154785-1-arnd@arndb.de
-Acked-by: Sekhar Nori <nsekhar@ti.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Laura Garcia Liebana <nevola@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-davinci/sleep.S | 1 +
- 1 file changed, 1 insertion(+)
+ net/netfilter/nft_hash.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-davinci/sleep.S b/arch/arm/mach-davinci/sleep.S
-index cd350dee4df37..efcd400b2abb3 100644
---- a/arch/arm/mach-davinci/sleep.S
-+++ b/arch/arm/mach-davinci/sleep.S
-@@ -37,6 +37,7 @@
- #define DEEPSLEEP_SLEEPENABLE_BIT	BIT(31)
+diff --git a/net/netfilter/nft_hash.c b/net/netfilter/nft_hash.c
+index c2d237144f747..b8f23f75aea6c 100644
+--- a/net/netfilter/nft_hash.c
++++ b/net/netfilter/nft_hash.c
+@@ -196,7 +196,7 @@ static int nft_symhash_init(const struct nft_ctx *ctx,
+ 	priv->dreg = nft_parse_register(tb[NFTA_HASH_DREG]);
  
- 	.text
-+	.arch	armv5te
- /*
-  * Move DaVinci into deep sleep state
-  *
+ 	priv->modulus = ntohl(nla_get_be32(tb[NFTA_HASH_MODULUS]));
+-	if (priv->modulus <= 1)
++	if (priv->modulus < 1)
+ 		return -ERANGE;
+ 
+ 	if (priv->offset + priv->modulus - 1 < priv->offset)
 -- 
 2.20.1
 
