@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C50EC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF290C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDCE72085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8201E20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749666;
-	bh=3XWtZEdk/jCI6CjF04iO/UxmbvT/Ken4lpg30kwtLSc=;
+	s=default; t=1565749678;
+	bh=Zm7OUAr663szjshPoyCXHmWGlb2W+d8ZOnUhMFYWhDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2D68dSIzoUYXrPPiJPkP5RwLCbNo0dhDcwY0i7izbzSs7JVzOnDVnYYvptlWf/aVO
-	 XngnkfDOTS+A5BcJVuB9Do976MKvZ1R5C58aYIGD0DY0CgzJKmZopV8ggIe60HPZQC
-	 rZ0PKPQL5GQELi6WZYJmV7cyQoDEuPcuPlTT1Tpg=
+	b=TMT5Wo1Q1F9r4doxEPFLU+XyNMJ0XuGxZMPDraQgE29/1KE0kYpsekc52YGeJTrYO
+	 up1exwLqXa4h5nm3i3tsfzS29Pguv6n8dF0w9jgjBTZkq414/8T7dkE+yDxxa4Vbbh
+	 KQesm7Hmo2gHMqTmz7LTzSCPYfvRy/gILq5l42Ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730262AbfHNC0T (ORCPT
+        id S1729410AbfHNC15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:26:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54370 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:27:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729471AbfHNC0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:26:17 -0400
+        id S1730141AbfHNC0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:26:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DEA120679;
-        Wed, 14 Aug 2019 02:26:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9E5920679;
+        Wed, 14 Aug 2019 02:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749576;
-        bh=3XWtZEdk/jCI6CjF04iO/UxmbvT/Ken4lpg30kwtLSc=;
+        s=default; t=1565749571;
+        bh=Zm7OUAr663szjshPoyCXHmWGlb2W+d8ZOnUhMFYWhDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hHTZpVnjLE97x9NbqV5RqujDPkiHT5Ip0GLh7tn9fgi97qsljVF6LnzVSaVC7R5RG
-         XKgIbi9V5MuEJWNmJnZqMS5Ll30hY1fAQa1kv0E3KcFckGmcONQRVNKSn3bySDGntB
-         zo4Cu+D6x/d1mCKw3GldkCuQP/OxyP0ovcG46hk0=
+        b=riX9oy9+YGGxbecZkxPqlSVojoAOClmZnL51wcsnooq3WDRdyH+rFIuDNtRNGTTk5
+         yow8gDVOq5xVwTKt9/0kSy8VqfbVJMyMeqTzJXVufcmtCRMI6Bd1WNonYVV7um1iQf
+         3ve2DYA1DPLS5pMG4lQjO4GRHtk61fX9MX03fTkw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 14/28] Input: kbtab - sanity check for endpoint type
-Date:   Tue, 13 Aug 2019 22:25:36 -0400
-Message-Id: <20190814022550.17463-14-sashal@kernel.org>
+Cc:     Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 12/28] isdn: hfcsusb: Fix mISDN driver crash caused by transfer buffer on the stack
+Date:   Tue, 13 Aug 2019 22:25:34 -0400
+Message-Id: <20190814022550.17463-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022550.17463-1-sashal@kernel.org>
 References: <20190814022550.17463-1-sashal@kernel.org>
@@ -60,45 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
 
-[ Upstream commit c88090dfc84254fa149174eb3e6a8458de1912c4 ]
+[ Upstream commit d8a1de3d5bb881507602bc02e004904828f88711 ]
 
-The driver should check whether the endpoint it uses has the correct
-type.
+Since linux 4.9 it is not possible to use buffers on the stack for DMA transfers.
 
-Reported-by: syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+During usb probe the driver crashes with "transfer buffer is on stack" message.
+
+This fix k-allocates a buffer to be used on "read_reg_atomic", which is a macro
+that calls "usb_control_msg" under the hood.
+
+Kernel 4.19 backtrace:
+
+usb_hcd_submit_urb+0x3e5/0x900
+? sched_clock+0x9/0x10
+? log_store+0x203/0x270
+? get_random_u32+0x6f/0x90
+? cache_alloc_refill+0x784/0x8a0
+usb_submit_urb+0x3b4/0x550
+usb_start_wait_urb+0x4e/0xd0
+usb_control_msg+0xb8/0x120
+hfcsusb_probe+0x6bc/0xb40 [hfcsusb]
+usb_probe_interface+0xc2/0x260
+really_probe+0x176/0x280
+driver_probe_device+0x49/0x130
+__driver_attach+0xa9/0xb0
+? driver_probe_device+0x130/0x130
+bus_for_each_dev+0x5a/0x90
+driver_attach+0x14/0x20
+? driver_probe_device+0x130/0x130
+bus_add_driver+0x157/0x1e0
+driver_register+0x51/0xe0
+usb_register_driver+0x5d/0x120
+? 0xf81ed000
+hfcsusb_drv_init+0x17/0x1000 [hfcsusb]
+do_one_initcall+0x44/0x190
+? free_unref_page_commit+0x6a/0xd0
+do_init_module+0x46/0x1c0
+load_module+0x1dc1/0x2400
+sys_init_module+0xed/0x120
+do_fast_syscall_32+0x7a/0x200
+entry_SYSENTER_32+0x6b/0xbe
+
+Signed-off-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/tablet/kbtab.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/isdn/hardware/mISDN/hfcsusb.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/input/tablet/kbtab.c b/drivers/input/tablet/kbtab.c
-index 2812f9236b7d0..0ccc120a0f145 100644
---- a/drivers/input/tablet/kbtab.c
-+++ b/drivers/input/tablet/kbtab.c
-@@ -125,6 +125,10 @@ static int kbtab_probe(struct usb_interface *intf, const struct usb_device_id *i
- 	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
- 		return -ENODEV;
+diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
+index 6f19530ba2a93..726fba452f5f6 100644
+--- a/drivers/isdn/hardware/mISDN/hfcsusb.c
++++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
+@@ -1701,13 +1701,23 @@ hfcsusb_stop_endpoint(struct hfcsusb *hw, int channel)
+ static int
+ setup_hfcsusb(struct hfcsusb *hw)
+ {
++	void *dmabuf = kmalloc(sizeof(u_char), GFP_KERNEL);
+ 	u_char b;
++	int ret;
  
-+	endpoint = &intf->cur_altsetting->endpoint[0].desc;
-+	if (!usb_endpoint_is_int_in(endpoint))
-+		return -ENODEV;
+ 	if (debug & DBG_HFC_CALL_TRACE)
+ 		printk(KERN_DEBUG "%s: %s\n", hw->name, __func__);
+ 
++	if (!dmabuf)
++		return -ENOMEM;
 +
- 	kbtab = kzalloc(sizeof(struct kbtab), GFP_KERNEL);
- 	input_dev = input_allocate_device();
- 	if (!kbtab || !input_dev)
-@@ -164,8 +168,6 @@ static int kbtab_probe(struct usb_interface *intf, const struct usb_device_id *i
- 	input_set_abs_params(input_dev, ABS_Y, 0, 0x1750, 4, 0);
- 	input_set_abs_params(input_dev, ABS_PRESSURE, 0, 0xff, 0, 0);
- 
--	endpoint = &intf->cur_altsetting->endpoint[0].desc;
--
- 	usb_fill_int_urb(kbtab->irq, dev,
- 			 usb_rcvintpipe(dev, endpoint->bEndpointAddress),
- 			 kbtab->data, 8,
++	ret = read_reg_atomic(hw, HFCUSB_CHIP_ID, dmabuf);
++
++	memcpy(&b, dmabuf, sizeof(u_char));
++	kfree(dmabuf);
++
+ 	/* check the chip id */
+-	if (read_reg_atomic(hw, HFCUSB_CHIP_ID, &b) != 1) {
++	if (ret != 1) {
+ 		printk(KERN_DEBUG "%s: %s: cannot read chip id\n",
+ 		       hw->name, __func__);
+ 		return 1;
 -- 
 2.20.1
 
