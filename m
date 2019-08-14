@@ -2,129 +2,116 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C693C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6557C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D15E52133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:29:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ac6RBWFx"
+	by mail.kernel.org (Postfix) with ESMTP id B237D206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbfHNN3H (ORCPT
+        id S1728140AbfHNN3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 09:29:07 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:37494 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbfHNN3G (ORCPT
+        Wed, 14 Aug 2019 09:29:24 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43514 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727755AbfHNN3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:29:06 -0400
-Received: by mail-yb1-f196.google.com with SMTP id t5so7681773ybt.4;
-        Wed, 14 Aug 2019 06:29:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=feHFiHeHvTpFde0tn91rp6H0MBIr1sa1sTvgeV402JM=;
-        b=ac6RBWFxnGnpiZqQA/EYd//8dG4n8myv7wQGfVHqiBTTGPRbII9ak3Bp7Uu3XUlkdr
-         85xhvuyQ5gR0apLrD1GDoHYw7xLKKr8sq8n5JixRq6kv89QGu2+dnhoaW1896Rk7R1yV
-         LlymwQSaAtL3yaPo3MiAM4mAsXeULIqyhk9sCUJ54d3a/s1kR/Tkd55oWfc4fza3kbDe
-         ZBZx+RlHTH6yhNR92OVxL2UEhSG4tMuB7uESR8P+DxZNzoDfWH30MCSzmUm2DCL4noCQ
-         DfPDKTa4NIO3TcXsWtc6QVxjJdutnyur5T7BLkORpKL4RFpXjTk1kzcQNYO5z5h5dyVB
-         6m0A==
+        Wed, 14 Aug 2019 09:29:24 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y8so5154001wrn.10
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 06:29:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=feHFiHeHvTpFde0tn91rp6H0MBIr1sa1sTvgeV402JM=;
-        b=kD4N+IlujKXuZ6Iz0TQfOWGEYhOyydZloLS4mknU1d4hGyXeNfOXmXehr5vJKGg/8G
-         a8O91B7lRyFUNAVor3vklg0n0Lj6p+iMMdOhfWh6YE3QaoXv4aBjPkuP6CvmMMqRDUHI
-         T+EcZSItqJPXWU146SEPefEqLUvesAuWCNz/Nmsr3HnaoUU10GS5cl692vA9kVCtPmB9
-         31IgiZ5doM4fZF1JHpej+tILbJjerCzXKhKNj/bH+9WV6ctjhdMniiP1otlgN2A7LaFH
-         8GfFLLZyM4V9TP2kaBefwxz8UlDRaW365OFL6Ak29bUMEnYc1mW8W2MWxVEK6zaCHfMG
-         7CEw==
-X-Gm-Message-State: APjAAAWJ005S4VGFjNie9JP9xw8RAOqBJfIQ46T+zm6iByl7OrcLG/Q8
-        +yff1e0EionnGgLHp3H9ElqdwT25JJ4MV4f0efE=
-X-Google-Smtp-Source: APXvYqy3AqQMungyg/xB+l2qARditdM8VXFFojcSBu1UaUOjytXLxcZJavyaAwTWZx/3F8rjkKQpTLcSWn/ANfaZArk=
-X-Received: by 2002:a25:790a:: with SMTP id u10mr29982888ybc.379.1565789345382;
- Wed, 14 Aug 2019 06:29:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190808084253.10573-1-clabbe.montjoie@gmail.com>
- <1648748.TWHgARQioU@jernej-laptop> <20190814132001.GC24324@Red>
-In-Reply-To: <20190814132001.GC24324@Red>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Wed, 14 Aug 2019 15:28:53 +0200
-Message-ID: <CAJiuCcfASQriPLMuwuDCn9bU=_8q4jL+KkPo8NmMrrYpOqy2qA@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH] ARM64: dts: allwinner: Add devicetree for
- pine H64 modelA evaluation board
-To:     clabbe.montjoie@gmail.com
-Cc:     =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Vt6M8evguG8mza7xAGCORpRNGIMSe6MxiCbo5YivOBk=;
+        b=UYGoYC5ppE5KXUoH1bdk8CffqUVC/Mclu4YIcExJOqa/4C4NR0/2HU6weePxYJIuMg
+         V1/q4ZFuEYROY//CwYR8miJDZtM0KektVRGhLXRUlj6bod9PGmJUUcj7j9F/c/D08jRI
+         0mlK6EW9fGu/MhJXENi8u1T/p3IQZs1hMGjbH6sR6MJBu+hl/ht1RYjcOIS5zT5ZOapT
+         0iEQCsuKV1vR6RT5HksESYDO47O1i56r+IkYX1D8fVk3h4u1JKVCK5oHT983Hgl9LMQq
+         TeldOhHUDkhtiLC24ueD76dfx7ksF9u6vWeqITEsQf3jE+CptTe2Goa6xqNxb3U8ykSS
+         sUqw==
+X-Gm-Message-State: APjAAAVKh6D3/4EQSlWFm0kylw+Pr+tpC9B5s+qndZsRPGAYhfj17mii
+        I9nuf6dd6xZdlg+YtZ2mfTm4Is1f3hE=
+X-Google-Smtp-Source: APXvYqwGUCBvQIFvJWsaQjWF1pIdbcTuoqLxKp8M4Us+qFA7PbNgUf7dCVRKH2NabDANH5yzssaA8g==
+X-Received: by 2002:adf:fc87:: with SMTP id g7mr48053642wrr.319.1565789362015;
+        Wed, 14 Aug 2019 06:29:22 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:2cae:66cd:dd43:92d9? ([2001:b07:6468:f312:2cae:66cd:dd43:92d9])
+        by smtp.gmail.com with ESMTPSA id f18sm8245770wrx.85.2019.08.14.06.29.21
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 06:29:21 -0700 (PDT)
+Subject: Re: [PATCH] kvm: x86: skip populating logical dest map if apic is not
+ sw enabled
+To:     Bandan Das <bsd@redhat.com>, kvm <kvm@vger.kernel.org>
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
         linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <jpgv9v076ym.fsf@linux.bootlegged.copy>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <aee50952-144d-78da-9036-045bd3838b59@redhat.com>
+Date:   Wed, 14 Aug 2019 15:29:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <jpgv9v076ym.fsf@linux.bootlegged.copy>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 14/08/19 05:37, Bandan Das wrote:
+> 
+> recalculate_apic_map does not santize ldr and it's possible that
+> multiple bits are set. In that case, a previous valid entry
+> can potentially be overwritten by an invalid one.
+> 
+> This condition is hit when booting a 32 bit, >8 CPU, RHEL6 guest and then
+> triggering a crash to boot a kdump kernel. This is the sequence of
+> events:
+> 1. Linux boots in bigsmp mode and enables PhysFlat, however, it still
+> writes to the LDR which probably will never be used.
+> 2. However, when booting into kdump, the stale LDR values remain as
+> they are not cleared by the guest and there isn't a apic reset.
+> 3. kdump boots with 1 cpu, and uses Logical Destination Mode but the
+> logical map has been overwritten and points to an inactive vcpu.
+> 
+> Signed-off-by: Radim Krcmar <rkrcmar@redhat.com>
+> Signed-off-by: Bandan Das <bsd@redhat.com>
+> ---
+>  arch/x86/kvm/lapic.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 685d17c11461..e904ff06a83d 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -216,6 +216,9 @@ static void recalculate_apic_map(struct kvm *kvm)
+>  		if (!apic_x2apic_mode(apic) && !new->phys_map[xapic_id])
+>  			new->phys_map[xapic_id] = apic;
+>  
+> +		if (!kvm_apic_sw_enabled(apic))
+> +			continue;
+> +
+>  		ldr = kvm_lapic_get_reg(apic, APIC_LDR);
+>  
+>  		if (apic_x2apic_mode(apic)) {
+> @@ -258,6 +261,8 @@ static inline void apic_set_spiv(struct kvm_lapic *apic, u32 val)
+>  			static_key_slow_dec_deferred(&apic_sw_disabled);
+>  		else
+>  			static_key_slow_inc(&apic_sw_disabled.key);
+> +
+> +		recalculate_apic_map(apic->vcpu->kvm);
+>  	}
+>  }
+>  
+> 
 
-On Wed, 14 Aug 2019 at 15:20, Corentin Labbe <clabbe.montjoie@gmail.com> wr=
-ote:
->
-> On Mon, Aug 12, 2019 at 12:56:56PM +0200, Jernej =C5=A0krabec wrote:
-> > Dne =C4=8Detrtek, 08. avgust 2019 ob 10:42:53 CEST je Corentin Labbe na=
-pisal(a):
-> > > This patch adds the evaluation variant of the model A of the PineH64.
-> > > The model A has the same size of the pine64 and has a PCIE slot.
-> > >
-> > > The only devicetree difference with current pineH64, is the PHY
-> > > regulator.
-> >
-> > I have Model A board which also needs ddc-en-gpios property for HDMI co=
-nnector
-> > in order for HDMI to work correctly. Otherwise it will just use 1024x76=
-8
-> > resolution. Can you confirm that?
+Queued, thanks.
 
-Schematics Rev A:
-http://files.pine64.org/doc/Pine%20H64/Pine%20H64%20Ver1.1-20180104.pdf
-
-Rev B:
-http://files.pine64.org/doc/Pine%20H64/PINE-H6-model-B-20181212-schematic.p=
-df
-
-There is a DDC_EN on REV A not on REV B
-
-Regards,
-Cl=C3=A9ment
-
-> >
-> > Best regards,
-> > Jernej
-> >
->
-> Sorry I didnt use at all video stuff (like HDMI), so I cannot answer now.
->
-> Could you send me a patch against my future v2 and I could test with/with=
-out.
->
-> Regards
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msg=
-id/linux-sunxi/20190814132001.GC24324%40Red.
+Paolo
