@@ -2,181 +2,184 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FADFC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAFDC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10262084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 665942084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:23:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kXx160LR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EyoQZE1u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfHNMXv (ORCPT
+        id S1727744AbfHNMX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 08:23:51 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34693 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfHNMXv (ORCPT
+        Wed, 14 Aug 2019 08:23:58 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41065 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfHNMX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 08:23:51 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c7so9227480otp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 05:23:50 -0700 (PDT)
+        Wed, 14 Aug 2019 08:23:57 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m24so2153977ljg.8;
+        Wed, 14 Aug 2019 05:23:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sbhZKzd7vqgNoDW9IPEpnkuIB5y4bFHuIKfmylQ9ll0=;
-        b=kXx160LRH9QDQOZSXk5f4o5HFMgGsRvlUfSAsPvCa/x6+JZeo7ppHWHkpOYDsdim1C
-         G6zRki1QOA6llZRI7ETuDe4GDrBsEnOG524umjIJ7b5aTs+ukAMCwpXk1xgRzpwEkYra
-         E78npoAFRclNUrECdq9KWjYqBWJIzpShBVNHr1w4gCemsdM6IDFQpS1CeR6MWhAanwVD
-         8VdqTXbjSWEoc9uFxIJanQQg8b1OUMT1Sa8S+q0XDyd8oTvtyWMZMEzL3SIllg26eBdH
-         kTj/wUuu0uVXuvf97uwr+9kEYZ4US0SJaQS+95SX/28uj/aRzTZcXcFN530q+BIGN6sp
-         9ZJQ==
+         :cc;
+        bh=AolNVl1SiyR512yaUNd2gmXbn0Nylbkvufqr+Z0gL08=;
+        b=EyoQZE1uJLpHHbghs66h89Na5MI6s00n49ipob2glBEKKgu1o9ouM1JfjIV7fF4LGO
+         B+cBX1uwcuVafrdcVWA8XlP91dhuxGHFPyKWq4iM2rjiqxcmuNKkLJYOJ8XBox6Jdspp
+         oWcoer4i9gNYMovhzfcfN7tFP4qtSuFVotcFDKBq+QNPesLJHNfS/HC7288A5AqMW+k+
+         xh33EjcWXro//v9oiJe6pa810HIbJ+tP7uxfSlI2eSSJul0FlciI58/8FY0wMROLICHy
+         4a1qajwDugtYFeabsqj4NYB6gLmELnWFY+yEfb07X0S38SoC+AkYUp7g6hYkvsBucbMO
+         an7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sbhZKzd7vqgNoDW9IPEpnkuIB5y4bFHuIKfmylQ9ll0=;
-        b=tn2jP+JHEgm79NU4DUX4w/Xwi9e7XXJn9qo7IervEKe1/+ml0Z22TKLC22an8a/hgI
-         qnDAfcYlxsUHe2jzsf6XfSMjU0dnJWO5Yr3SsHVVnY8JD/f+EPInq0l5DNkh1kQoQoRn
-         Qy1kC3eZYSMuWRhDcpNQIogzI3RZ1ra0kH7jYpqW+nROimvijMZmcROgnmR+J5Yt4dNG
-         0nVcAh8/a3jl+vv1NusFuTPAE9bOUNk6tDmeJ3pBW3kwSGJQRPewRiNq72wSmENUs8WP
-         2kzzxYIExT/C4VY0UJKR1y6MA5abB8jspoQyG/lnwjTZ0qGUKjLsZVgmC1LUExGDB1qS
-         ThMg==
-X-Gm-Message-State: APjAAAUNQnqX3r3CSQbDqJhZEoD76i5MSSnGmKWvgwbfci6f9V/QHqwT
-        50RVSFYs0D8KJ4N046fmEvaXgNfIS60sD0S0OllabQ==
-X-Google-Smtp-Source: APXvYqyWNYBLV4BC5Sv5fLkv9GmqJnZaQDbjj5Qtse3dhDZOPkGzz+SdDYrUQWZeJfzXJwYOCdFroOvUXMpRCwlQUYE=
-X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr26526583otk.145.1565785430200;
- Wed, 14 Aug 2019 05:23:50 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=AolNVl1SiyR512yaUNd2gmXbn0Nylbkvufqr+Z0gL08=;
+        b=oAu+Apr0cvjCNLIJAR+C/GKTzmpI+bBNPeSv+xim1ntzrjVkx1+qzyqjDJnxJwBXQo
+         LiiF7gWe7EBjQ8qspoNgLx7cZjM5fJezdKRL8BQnOiHU3o1GtobF/CboWLYRubKg2Ao6
+         hY5EvRPOg6Km9AhchByvfzqXBuTeC/KJCJRqScJ5S/eRlA6GhYg8FQZ6nsd0we9V0/Jq
+         c1BEgA17AHrHdpnF4C/4TUUwkfhFhECpdvBxIcVLIaJOY++DhuqeiaVG3tQvvX43GlYA
+         hrOokJH/UbHBe55u0tHQkR7+HLrGTDvVRs9eSeyMBeS+S7qXdbwyXAiYMO0uFqvheYzY
+         AfeA==
+X-Gm-Message-State: APjAAAXvp9hkuWBCMdrQyscaaxoP2eKwfdLF67peOPtvNxbz6VERasSq
+        6PqnL9t4rI8jQ+BUkwmJgXU8v3lKSt6igpYeuNM=
+X-Google-Smtp-Source: APXvYqxkyCp7vFsrjJSIDpKqXAn9uDLjPT0VbzMFs9lf3GyT0bRhmvBGiTElQpr+TV3SPbhWua2msp9bOqyXGMiTPaI=
+X-Received: by 2002:a05:651c:153:: with SMTP id c19mr16325169ljd.152.1565785434927;
+ Wed, 14 Aug 2019 05:23:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
- <20190813151612.v6x6e6kzxflkpu7b@pengutronix.de> <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
- <20190814092339.73ybj5mycklvpnrq@pengutronix.de> <CAMz4ku+3txx5kO-u_+_pxFwoovnX81WFF-moNBasUUgEpvQb+Q@mail.gmail.com>
- <20190814105535.svslc57qp3wx5lub@pengutronix.de>
-In-Reply-To: <20190814105535.svslc57qp3wx5lub@pengutronix.de>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Wed, 14 Aug 2019 20:23:37 +0800
-Message-ID: <CAMz4ku+H1++pzZ9pAw2N6Z342j3NMBwfRj9VZTdsihtZYzuFOw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] pwm: sprd: Add Spreadtrum PWM support
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
+References: <1564514053-4571-1-git-send-email-jrdr.linux@gmail.com> <CAFqt6zZMgowAd-UvdEjydF=9HPY7bvXpWuzCqBLS7+3j_Dkgig@mail.gmail.com>
+In-Reply-To: <CAFqt6zZMgowAd-UvdEjydF=9HPY7bvXpWuzCqBLS7+3j_Dkgig@mail.gmail.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Wed, 14 Aug 2019 17:53:43 +0530
+Message-ID: <CAFqt6zaQEX60_KL-m+K7VYQU=z144u=yfeVjPtGVaiAj5NbBaQ@mail.gmail.com>
+Subject: Re: [PATCH] video/fbdev/aty128fb: Remove dead code
+To:     Paul Mackerras <paulus@samba.org>, b.zolnierkie@samsung.com,
+        "David S. Miller" <davem@davemloft.net>, mpatocka@redhat.com,
+        syrjala@sci.fi, sam@ravnborg.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
-
-On Wed, 14 Aug 2019 at 18:55, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+On Wed, Aug 7, 2019 at 2:12 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
 >
-> Hello Baolin,
->
-> On Wed, Aug 14, 2019 at 06:01:50PM +0800, Baolin Wang wrote:
-> > On Wed, 14 Aug 2019 at 17:23, Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > > On Wed, Aug 14, 2019 at 04:42:28PM +0800, Baolin Wang wrote:
-> > > > On Tue, 13 Aug 2019 at 23:16, Uwe Kleine-K=C3=B6nig
-> > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > On Tue, Aug 13, 2019 at 09:46:41PM +0800, Baolin Wang wrote:
-> > > > > [...]
-> > > > Not really, our hardware's method is, when you changed a new
-> > > > configuration (MOD or duty is changed) , the hardware will wait for=
- a
-> > > > while to complete current period, then change to the new period.
-> > >
-> > > Can you describe that in more detail? This doesn't explain why MOD mu=
-st be
-> > > configured before DUTY. Is there another reason for that?
+> On Wed, Jul 31, 2019 at 12:38 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
 > >
-> > Sorry, I did not explain this explicitly. When we change a new PWM
-> > configuration, the PWM controller will make sure the current period is
-> > completed before changing to a new period. Once setting the MOD
-> > register (since we always set MOD firstly), that will tell the
-> > hardware that a new period need to change.
+> > This is dead code since 3.15. If there is no plan to use it
+> > further, this can be removed forever.
 >
-> So if the current period just ended after you reconfigured MOD but
-> before you wrote to DUTY we'll see a bogus period, right? I assume the
-> same holds true for writing the prescale value?
+> Any comment on this patch ?
 
-I confirmed again, I am sorry I missed something before. Yes, like you
-said before, writing DUTY triggers the hardware to actually apply the
-values written to MOD and DUTY to the output. So write DUTY last. I
-will update the comments and change the PWM configure like:
-
-sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PRESCALE, prescale);
-sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_MOD, SPRD_PWM_MOD_MAX);
-sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_DUTY, duty);
+Any comment on this patch ?
 
 >
-> > The reason MOD must be configured before DUTY is that, if we
-> > configured DUTY firstly, the PWM can work abnormally if the current
-> > DUTY is larger than previous MOD. That is also our hardware's
-> > limitation.
->
-> OK, so you must not get into a situation where DUTY > MOD, right?
->
-> Now if the hardware was configured for
->
->         period =3D 8s, duty =3D 4s
->
-> and now you are supposed to change to
->
->         period =3D 2s, duty =3D 1s
->
-> you'd need to write DUTY first, don't you?
->
-> > > > > > +static int sprd_pwm_remove(struct platform_device *pdev)
-> > > > > > +{
-> > > > > > +     struct sprd_pwm_chip *spc =3D platform_get_drvdata(pdev);
-> > > > > > +     int ret, i;
-> > > > > > +
-> > > > > > +     ret =3D pwmchip_remove(&spc->chip);
-> > > > > > +
-> > > > > > +     for (i =3D 0; i < spc->num_pwms; i++) {
-> > > > > > +             struct sprd_pwm_chn *chn =3D &spc->chn[i];
-> > > > > > +
-> > > > > > +             clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn=
-->clks);
-> > > > >
-> > > > > If a PWM was still running you're effectively stopping it here, r=
-ight?
-> > > > > Are you sure you don't disable once more than you enabled?
-> > > >
-> > > > Yes, you are right. I should check current enable status of the PWM=
- channel.
-> > > > Thanks for your comments.
-> > >
-> > > I didn't recheck, but I think the right approach is to not fiddle wit=
-h
-> > > the clocks at all and rely on the PWM framework to not let someone ca=
-ll
-> > > sprd_pwm_remove when a PWM is still in use.
 > >
-> > So you mean just return pwmchip_remove(&spc->chip); ?
->
-> right.
->
-> I just rechecked: If there is still a pwm in use, pwmchip_remove returns
-> -EBUSY. So this should be safe.
-
-Yes. Thanks for your comments.
-
-
---
-Baolin Wang
-Best Regards
+> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> > ---
+> >  drivers/video/fbdev/aty/aty128fb.c   | 18 ------------------
+> >  drivers/video/fbdev/aty/atyfb_base.c | 29 -----------------------------
+> >  2 files changed, 47 deletions(-)
+> >
+> > diff --git a/drivers/video/fbdev/aty/aty128fb.c b/drivers/video/fbdev/aty/aty128fb.c
+> > index 8504e19..fc1e45d 100644
+> > --- a/drivers/video/fbdev/aty/aty128fb.c
+> > +++ b/drivers/video/fbdev/aty/aty128fb.c
+> > @@ -487,11 +487,6 @@ static int aty128_encode_var(struct fb_var_screeninfo *var,
+> >                               const struct aty128fb_par *par);
+> >  static int aty128_decode_var(struct fb_var_screeninfo *var,
+> >                               struct aty128fb_par *par);
+> > -#if 0
+> > -static void aty128_get_pllinfo(struct aty128fb_par *par, void __iomem *bios);
+> > -static void __iomem *aty128_map_ROM(struct pci_dev *pdev,
+> > -                                   const struct aty128fb_par *par);
+> > -#endif
+> >  static void aty128_timings(struct aty128fb_par *par);
+> >  static void aty128_init_engine(struct aty128fb_par *par);
+> >  static void aty128_reset_engine(const struct aty128fb_par *par);
+> > @@ -1665,19 +1660,6 @@ static void aty128_st_pal(u_int regno, u_int red, u_int green, u_int blue,
+> >                           struct aty128fb_par *par)
+> >  {
+> >         if (par->chip_gen == rage_M3) {
+> > -#if 0
+> > -               /* Note: For now, on M3, we set palette on both heads, which may
+> > -                * be useless. Can someone with a M3 check this ?
+> > -                *
+> > -                * This code would still be useful if using the second CRTC to
+> > -                * do mirroring
+> > -                */
+> > -
+> > -               aty_st_le32(DAC_CNTL, aty_ld_le32(DAC_CNTL) |
+> > -                           DAC_PALETTE_ACCESS_CNTL);
+> > -               aty_st_8(PALETTE_INDEX, regno);
+> > -               aty_st_le32(PALETTE_DATA, (red<<16)|(green<<8)|blue);
+> > -#endif
+> >                 aty_st_le32(DAC_CNTL, aty_ld_le32(DAC_CNTL) &
+> >                             ~DAC_PALETTE_ACCESS_CNTL);
+> >         }
+> > diff --git a/drivers/video/fbdev/aty/atyfb_base.c b/drivers/video/fbdev/aty/atyfb_base.c
+> > index 72bcfbe..6dda5d8 100644
+> > --- a/drivers/video/fbdev/aty/atyfb_base.c
+> > +++ b/drivers/video/fbdev/aty/atyfb_base.c
+> > @@ -1188,19 +1188,6 @@ static int aty_crtc_to_var(const struct crtc *crtc,
+> >                 (c_sync ? FB_SYNC_COMP_HIGH_ACT : 0);
+> >
+> >         switch (pix_width) {
+> > -#if 0
+> > -       case CRTC_PIX_WIDTH_4BPP:
+> > -               bpp = 4;
+> > -               var->red.offset = 0;
+> > -               var->red.length = 8;
+> > -               var->green.offset = 0;
+> > -               var->green.length = 8;
+> > -               var->blue.offset = 0;
+> > -               var->blue.length = 8;
+> > -               var->transp.offset = 0;
+> > -               var->transp.length = 0;
+> > -               break;
+> > -#endif
+> >         case CRTC_PIX_WIDTH_8BPP:
+> >                 bpp = 8;
+> >                 var->red.offset = 0;
+> > @@ -1466,11 +1453,6 @@ static int atyfb_set_par(struct fb_info *info)
+> >                 var->bits_per_pixel,
+> >                 par->crtc.vxres * var->bits_per_pixel / 8);
+> >  #endif /* CONFIG_BOOTX_TEXT */
+> > -#if 0
+> > -       /* switch to accelerator mode */
+> > -       if (!(par->crtc.gen_cntl & CRTC_EXT_DISP_EN))
+> > -               aty_st_le32(CRTC_GEN_CNTL, par->crtc.gen_cntl | CRTC_EXT_DISP_EN, par);
+> > -#endif
+> >  #ifdef DEBUG
+> >  {
+> >         /* dump non shadow CRTC, pll, LCD registers */
+> > @@ -2396,17 +2378,6 @@ static int aty_init(struct fb_info *info)
+> >                         par->pll_ops = &aty_pll_ibm514;
+> >                         break;
+> >  #endif
+> > -#if 0 /* dead code */
+> > -               case CLK_STG1703:
+> > -                       par->pll_ops = &aty_pll_stg1703;
+> > -                       break;
+> > -               case CLK_CH8398:
+> > -                       par->pll_ops = &aty_pll_ch8398;
+> > -                       break;
+> > -               case CLK_ATT20C408:
+> > -                       par->pll_ops = &aty_pll_att20c408;
+> > -                       break;
+> > -#endif
+> >                 default:
+> >                         PRINTKI("aty_init: CLK type not implemented yet!");
+> >                         par->pll_ops = &aty_pll_unsupported;
+> > --
+> > 1.9.1
+> >
