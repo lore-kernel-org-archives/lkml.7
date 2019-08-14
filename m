@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71032C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718EBC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C572063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CAA52063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749300;
-	bh=Mm77/aK0ac5gI7zfVRlaxC40rA5h78qryTB6OtwhIeA=;
+	s=default; t=1565749305;
+	bh=A959iDBz6axkDGYmFedeS7BeuaZ4FIDNHH7HQ1vGz1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bjNCb2DlelpfzDVnyTR+/jsvqiy/PO/xQa8h8u4JxkTrTP2OsTrGkit/awEyXBDMf
-	 kgbfnfXlOh7wsdPYhKyb6W3JL2zw0vikcdLxcYL61sxldW8hQplmPHCVkFFo9GNyUr
-	 SrSHKXvdVNw7m0B7cqrbaqog+qQlgIzurnw8kx6E=
+	b=nrhJHDs0/2v0uFbkSseZOzY9XMa3X/NSTo9zHxqlCuiCQ4cdRX+9BpoFfpy3UI+O+
+	 cMh9I5kZiLoXH3ih3HX6fIbJH5Z6av3bFk6F7fUf1PKo4HoP1LN5i/i+nawy2Hl/iL
+	 22y5pNvif/DmEv3/EUH/7o7JwkvSLAqqiQS7TRSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfHNCVj (ORCPT
+        id S1729636AbfHNCTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:21:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729635AbfHNCTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 13 Aug 2019 22:19:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729560AbfHNCSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:18:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21676208C2;
-        Wed, 14 Aug 2019 02:19:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAA8F2085A;
+        Wed, 14 Aug 2019 02:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749145;
-        bh=Mm77/aK0ac5gI7zfVRlaxC40rA5h78qryTB6OtwhIeA=;
+        s=default; t=1565749132;
+        bh=A959iDBz6axkDGYmFedeS7BeuaZ4FIDNHH7HQ1vGz1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W2myTlzgZBznxMWCx3uy/vVj/oZbodTvfGwJYB/Y22WB5Ze/1CxQkrT9oRianyvn0
-         xSygAxN+Z1+dmEJI+mrqDlJs0t2SOYoz6U1faIHdPB8kshMsX6w6Wk+G+QEPIck3kk
-         G/VNWzuVpBZfKL63amgASZ1Yc+i02SwbtprNKN8c=
+        b=QlsIgM3fCuAr5WFmUGkn+SsSK8cuq9O+tymRJfWnZRffTvvlHyMpB2rXKcI4zPx58
+         KmwxGvGfNJFEhn/lIMZ98dH8+hvPFDk721MYaSue4uzNqzBaQmhyI4t4fd/cWJ4EI1
+         CXNQBhSrzkWNKv0e0azP4W2Z0pmXA87lo5fsbayU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 19/44] isdn: hfcsusb: Fix mISDN driver crash caused by transfer buffer on the stack
-Date:   Tue, 13 Aug 2019 22:18:08 -0400
-Message-Id: <20190814021834.16662-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 11/44] st_nci_hci_connectivity_event_received: null check the allocation
+Date:   Tue, 13 Aug 2019 22:18:00 -0400
+Message-Id: <20190814021834.16662-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021834.16662-1-sashal@kernel.org>
 References: <20190814021834.16662-1-sashal@kernel.org>
@@ -59,85 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit d8a1de3d5bb881507602bc02e004904828f88711 ]
+[ Upstream commit 3008e06fdf0973770370f97d5f1fba3701d8281d ]
 
-Since linux 4.9 it is not possible to use buffers on the stack for DMA transfers.
+devm_kzalloc may fail and return NULL. So the null check is needed.
 
-During usb probe the driver crashes with "transfer buffer is on stack" message.
-
-This fix k-allocates a buffer to be used on "read_reg_atomic", which is a macro
-that calls "usb_control_msg" under the hood.
-
-Kernel 4.19 backtrace:
-
-usb_hcd_submit_urb+0x3e5/0x900
-? sched_clock+0x9/0x10
-? log_store+0x203/0x270
-? get_random_u32+0x6f/0x90
-? cache_alloc_refill+0x784/0x8a0
-usb_submit_urb+0x3b4/0x550
-usb_start_wait_urb+0x4e/0xd0
-usb_control_msg+0xb8/0x120
-hfcsusb_probe+0x6bc/0xb40 [hfcsusb]
-usb_probe_interface+0xc2/0x260
-really_probe+0x176/0x280
-driver_probe_device+0x49/0x130
-__driver_attach+0xa9/0xb0
-? driver_probe_device+0x130/0x130
-bus_for_each_dev+0x5a/0x90
-driver_attach+0x14/0x20
-? driver_probe_device+0x130/0x130
-bus_add_driver+0x157/0x1e0
-driver_register+0x51/0xe0
-usb_register_driver+0x5d/0x120
-? 0xf81ed000
-hfcsusb_drv_init+0x17/0x1000 [hfcsusb]
-do_one_initcall+0x44/0x190
-? free_unref_page_commit+0x6a/0xd0
-do_init_module+0x46/0x1c0
-load_module+0x1dc1/0x2400
-sys_init_module+0xed/0x120
-do_fast_syscall_32+0x7a/0x200
-entry_SYSENTER_32+0x6b/0xbe
-
-Signed-off-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/hardware/mISDN/hfcsusb.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/nfc/st-nci/se.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
-index 163bc482b2a78..87588198d68fc 100644
---- a/drivers/isdn/hardware/mISDN/hfcsusb.c
-+++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
-@@ -1701,13 +1701,23 @@ hfcsusb_stop_endpoint(struct hfcsusb *hw, int channel)
- static int
- setup_hfcsusb(struct hfcsusb *hw)
- {
-+	void *dmabuf = kmalloc(sizeof(u_char), GFP_KERNEL);
- 	u_char b;
-+	int ret;
+diff --git a/drivers/nfc/st-nci/se.c b/drivers/nfc/st-nci/se.c
+index 56f2112e0cd84..85df2e0093109 100644
+--- a/drivers/nfc/st-nci/se.c
++++ b/drivers/nfc/st-nci/se.c
+@@ -344,6 +344,8 @@ static int st_nci_hci_connectivity_event_received(struct nci_dev *ndev,
  
- 	if (debug & DBG_HFC_CALL_TRACE)
- 		printk(KERN_DEBUG "%s: %s\n", hw->name, __func__);
+ 		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
+ 					    skb->len - 2, GFP_KERNEL);
++		if (!transaction)
++			return -ENOMEM;
  
-+	if (!dmabuf)
-+		return -ENOMEM;
-+
-+	ret = read_reg_atomic(hw, HFCUSB_CHIP_ID, dmabuf);
-+
-+	memcpy(&b, dmabuf, sizeof(u_char));
-+	kfree(dmabuf);
-+
- 	/* check the chip id */
--	if (read_reg_atomic(hw, HFCUSB_CHIP_ID, &b) != 1) {
-+	if (ret != 1) {
- 		printk(KERN_DEBUG "%s: %s: cannot read chip id\n",
- 		       hw->name, __func__);
- 		return 1;
+ 		transaction->aid_len = skb->data[1];
+ 		memcpy(transaction->aid, &skb->data[2], transaction->aid_len);
 -- 
 2.20.1
 
