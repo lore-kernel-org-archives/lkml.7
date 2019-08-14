@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40445C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31049C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA672084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF0172084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748765;
-	bh=4MX2/PTirb/OgWFk2jV0anRpJB1pi6iJw/XO7jS2/uA=;
+	s=default; t=1565748770;
+	bh=NScOqo+/Xnzi6GbYOIe5OX0ISrm1MWRJGyj0x9zIYUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n8V9nJjVpopTLJOpxL+tUNE6xU5UPyMjdu9nDBp8o06XE+VmLwHxQC18wapIcT0b+
-	 nSx3WbqcwoRSBipzftH0ftagg/kp3qoPtpWlfC16OOtYF6QImS9PgL4O0r9eDGaJFS
-	 QVDVtZTiFqA4MXLYOYziI49HfID4cwvjvjQK9B6w=
+	b=MBH1eAk4bP7CZRjipJujIZjml/JczVQAeg4MwPZTy6GPZubWS9KLFhV+Z0THJ6hf5
+	 N0J1D5h7oca19ZQK+su2c2IBG+LxoQAyoPRHBLT6vHEAlojPDSuh+4zbj7vGtfh2a6
+	 iEbmLAaIJ4kNKL7gSYGWVRm4Bxw9T0QQzMiOEDP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfHNCMn (ORCPT
+        id S1728026AbfHNCMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:12:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44716 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:12:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727138AbfHNCMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:12:35 -0400
+        id S1727954AbfHNCMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:12:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5AD520842;
-        Wed, 14 Aug 2019 02:12:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5379220842;
+        Wed, 14 Aug 2019 02:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748754;
-        bh=4MX2/PTirb/OgWFk2jV0anRpJB1pi6iJw/XO7jS2/uA=;
+        s=default; t=1565748758;
+        bh=NScOqo+/Xnzi6GbYOIe5OX0ISrm1MWRJGyj0x9zIYUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KomRsLAZ5Tmz7ErlUWVMZcVCDdDqecrZfDqtsZi27z9BRzereuoI7w0EIBJB5kWFn
-         yf7yA2JATziUQ/iOBG7f8egszDSGWEVDPIeeFB8Ri8zaEWs1YZh3v3PngJEu+JhLPN
-         2412vOb/EUDfDHZ2dnIO21ZVIom6ciMHtTnT3p+U=
+        b=HimVR5MHpCCOzF9syvVPi025pw8mUOlblVFjOyD8pAXQ3em17aTW0lzRRdcylbGXq
+         ZqPW0rVP36bjWFByQPUfRweyNlzYjA+2JTBmWM7Coc8/PGDqKmOhU9A0RZElyb5mmT
+         ShIiX3chAF5tfPkxJkEmrC50BQPg0FnCpY13SJlM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Ham <bob.ham@puri.sm>, Angus Ainslie <angus@akkea.ca>,
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 049/123] net: usb: qmi_wwan: Add the BroadMobi BM818 card
-Date:   Tue, 13 Aug 2019 22:09:33 -0400
-Message-Id: <20190814021047.14828-49-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 051/123] isdn: mISDN: hfcsusb: Fix possible null-pointer dereferences in start_isoc_chain()
+Date:   Tue, 13 Aug 2019 22:09:35 -0400
+Message-Id: <20190814021047.14828-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -60,32 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Ham <bob.ham@puri.sm>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 9a07406b00cdc6ec689dc142540739575c717f3c ]
+[ Upstream commit a0d57a552b836206ad7705a1060e6e1ce5a38203 ]
 
-The BroadMobi BM818 M.2 card uses the QMI protocol
+In start_isoc_chain(), usb_alloc_urb() on line 1392 may fail
+and return NULL. At this time, fifo->iso[i].urb is assigned to NULL.
 
-Signed-off-by: Bob Ham <bob.ham@puri.sm>
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Then, fifo->iso[i].urb is used at some places, such as:
+LINE 1405:    fill_isoc_urb(fifo->iso[i].urb, ...)
+                  urb->number_of_packets = num_packets;
+                  urb->transfer_flags = URB_ISO_ASAP;
+                  urb->actual_length = 0;
+                  urb->interval = interval;
+LINE 1416:    fifo->iso[i].urb->...
+LINE 1419:    fifo->iso[i].urb->...
+
+Thus, possible null-pointer dereferences may occur.
+
+To fix these bugs, "continue" is added to avoid using fifo->iso[i].urb
+when it is NULL.
+
+These bugs are found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 1 +
+ drivers/isdn/hardware/mISDN/hfcsusb.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 8b4ad10cf9402..26c5207466afc 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1294,6 +1294,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x2001, 0x7e35, 4)},	/* D-Link DWM-222 */
- 	{QMI_FIXED_INTF(0x2020, 0x2031, 4)},	/* Olicard 600 */
- 	{QMI_FIXED_INTF(0x2020, 0x2033, 4)},	/* BroadMobi BM806U */
-+	{QMI_FIXED_INTF(0x2020, 0x2060, 4)},	/* BroadMobi BM818 */
- 	{QMI_FIXED_INTF(0x0f3d, 0x68a2, 8)},    /* Sierra Wireless MC7700 */
- 	{QMI_FIXED_INTF(0x114f, 0x68a2, 8)},    /* Sierra Wireless MC7750 */
- 	{QMI_FIXED_INTF(0x1199, 0x68a2, 8)},	/* Sierra Wireless MC7710 in QMI mode */
+diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
+index 0e224232f7464..8fb7c5dea07fc 100644
+--- a/drivers/isdn/hardware/mISDN/hfcsusb.c
++++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
+@@ -1394,6 +1394,7 @@ start_isoc_chain(struct usb_fifo *fifo, int num_packets_per_urb,
+ 				printk(KERN_DEBUG
+ 				       "%s: %s: alloc urb for fifo %i failed",
+ 				       hw->name, __func__, fifo->fifonum);
++				continue;
+ 			}
+ 			fifo->iso[i].owner_fifo = (struct usb_fifo *) fifo;
+ 			fifo->iso[i].indx = i;
 -- 
 2.20.1
 
