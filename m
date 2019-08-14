@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871CEC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C310C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 550FC20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2358F20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749428;
-	bh=SQ9l5mnNRcN636V0IPLjwe8BB4ri/ZSdtxwPHxqey10=;
+	s=default; t=1565749433;
+	bh=Zm7OUAr663szjshPoyCXHmWGlb2W+d8ZOnUhMFYWhDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eHmqqVXF5qYwOmZy+etN6FIINoZmegC0HSboNg+ZJSNRF3FRg6q6WXusg8gsl63ak
-	 khJWv+sFmFdZWRmUJ3m1bX+92cL9XFZQtKknpwYwE5xY9vPL2LCgUr2s9UTcqoFXUo
-	 UUpiWtphuzYRh7VLD2I9g72aqhbyIkjOMfDE5XS8=
+	b=zPZa6Mug2UG4PE7Lkp+98aMjaSMmqNzhjtcASZgz6qj/zpOceaVYAVWrkkD26PbJ8
+	 PfCrDJlYbQeMAOpEQTcLIu36uMshw6qyBx7wOL5X/7Cw2wHhIPq/YZjDMzPx1sRhSV
+	 NC5EMz314NtPnHMgHBAQNnTfjXBuOmmEx4HjFRbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729951AbfHNCXq (ORCPT
+        id S1729977AbfHNCXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:23:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52688 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:23:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729904AbfHNCXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:23:42 -0400
+        id S1729947AbfHNCXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:23:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B7392084F;
-        Wed, 14 Aug 2019 02:23:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A1A520679;
+        Wed, 14 Aug 2019 02:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749421;
-        bh=SQ9l5mnNRcN636V0IPLjwe8BB4ri/ZSdtxwPHxqey10=;
+        s=default; t=1565749426;
+        bh=Zm7OUAr663szjshPoyCXHmWGlb2W+d8ZOnUhMFYWhDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fIEsckv/lWzuQ8btvikQJSi3+JVEx0AdfyR6iUa+I1O1qPEuThhZLvWY5YofDetKx
-         BzZl+KdD0XeRvwkH9bsWY20vRb9KXqh6/LUq4t7CTE9QZDRgzIR4HNec+6eAAiHsLu
-         yofro9zB8kSYn9AwYEGSjOAYt2RKuqtSVdfItnFQ=
+        b=IC36DJmVJZuoa7E+/fHOplvgnKh8QutjRM4VHX0IXt35b7NYahpYOsHBom7bw7ZRL
+         gFMYEUey9jQNqxXxl8d/vZSav4PYgXyAT0T6BJacAhXdxCd9v6377Qc3AE9qbYFZ9e
+         W0xOy6klTSii/4AhmNAht/4Kb1Jvs4ug+h/7EOhg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Ham <bob.ham@puri.sm>, Angus Ainslie <angus@akkea.ca>,
+Cc:     Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/33] net: usb: qmi_wwan: Add the BroadMobi BM818 card
-Date:   Tue, 13 Aug 2019 22:23:01 -0400
-Message-Id: <20190814022323.17111-11-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 13/33] isdn: hfcsusb: Fix mISDN driver crash caused by transfer buffer on the stack
+Date:   Tue, 13 Aug 2019 22:23:03 -0400
+Message-Id: <20190814022323.17111-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022323.17111-1-sashal@kernel.org>
 References: <20190814022323.17111-1-sashal@kernel.org>
@@ -60,32 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Ham <bob.ham@puri.sm>
+From: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
 
-[ Upstream commit 9a07406b00cdc6ec689dc142540739575c717f3c ]
+[ Upstream commit d8a1de3d5bb881507602bc02e004904828f88711 ]
 
-The BroadMobi BM818 M.2 card uses the QMI protocol
+Since linux 4.9 it is not possible to use buffers on the stack for DMA transfers.
 
-Signed-off-by: Bob Ham <bob.ham@puri.sm>
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+During usb probe the driver crashes with "transfer buffer is on stack" message.
+
+This fix k-allocates a buffer to be used on "read_reg_atomic", which is a macro
+that calls "usb_control_msg" under the hood.
+
+Kernel 4.19 backtrace:
+
+usb_hcd_submit_urb+0x3e5/0x900
+? sched_clock+0x9/0x10
+? log_store+0x203/0x270
+? get_random_u32+0x6f/0x90
+? cache_alloc_refill+0x784/0x8a0
+usb_submit_urb+0x3b4/0x550
+usb_start_wait_urb+0x4e/0xd0
+usb_control_msg+0xb8/0x120
+hfcsusb_probe+0x6bc/0xb40 [hfcsusb]
+usb_probe_interface+0xc2/0x260
+really_probe+0x176/0x280
+driver_probe_device+0x49/0x130
+__driver_attach+0xa9/0xb0
+? driver_probe_device+0x130/0x130
+bus_for_each_dev+0x5a/0x90
+driver_attach+0x14/0x20
+? driver_probe_device+0x130/0x130
+bus_add_driver+0x157/0x1e0
+driver_register+0x51/0xe0
+usb_register_driver+0x5d/0x120
+? 0xf81ed000
+hfcsusb_drv_init+0x17/0x1000 [hfcsusb]
+do_one_initcall+0x44/0x190
+? free_unref_page_commit+0x6a/0xd0
+do_init_module+0x46/0x1c0
+load_module+0x1dc1/0x2400
+sys_init_module+0xed/0x120
+do_fast_syscall_32+0x7a/0x200
+entry_SYSENTER_32+0x6b/0xbe
+
+Signed-off-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/isdn/hardware/mISDN/hfcsusb.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index d51ad140f46d2..05953e14a064e 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -892,6 +892,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x2001, 0x7e35, 4)},	/* D-Link DWM-222 */
- 	{QMI_FIXED_INTF(0x2020, 0x2031, 4)},	/* Olicard 600 */
- 	{QMI_FIXED_INTF(0x2020, 0x2033, 4)},	/* BroadMobi BM806U */
-+	{QMI_FIXED_INTF(0x2020, 0x2060, 4)},	/* BroadMobi BM818 */
- 	{QMI_FIXED_INTF(0x0f3d, 0x68a2, 8)},    /* Sierra Wireless MC7700 */
- 	{QMI_FIXED_INTF(0x114f, 0x68a2, 8)},    /* Sierra Wireless MC7750 */
- 	{QMI_FIXED_INTF(0x1199, 0x68a2, 8)},	/* Sierra Wireless MC7710 in QMI mode */
+diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
+index 6f19530ba2a93..726fba452f5f6 100644
+--- a/drivers/isdn/hardware/mISDN/hfcsusb.c
++++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
+@@ -1701,13 +1701,23 @@ hfcsusb_stop_endpoint(struct hfcsusb *hw, int channel)
+ static int
+ setup_hfcsusb(struct hfcsusb *hw)
+ {
++	void *dmabuf = kmalloc(sizeof(u_char), GFP_KERNEL);
+ 	u_char b;
++	int ret;
+ 
+ 	if (debug & DBG_HFC_CALL_TRACE)
+ 		printk(KERN_DEBUG "%s: %s\n", hw->name, __func__);
+ 
++	if (!dmabuf)
++		return -ENOMEM;
++
++	ret = read_reg_atomic(hw, HFCUSB_CHIP_ID, dmabuf);
++
++	memcpy(&b, dmabuf, sizeof(u_char));
++	kfree(dmabuf);
++
+ 	/* check the chip id */
+-	if (read_reg_atomic(hw, HFCUSB_CHIP_ID, &b) != 1) {
++	if (ret != 1) {
+ 		printk(KERN_DEBUG "%s: %s: cannot read chip id\n",
+ 		       hw->name, __func__);
+ 		return 1;
 -- 
 2.20.1
 
