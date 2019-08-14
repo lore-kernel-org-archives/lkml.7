@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31F1C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5635BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E44F20842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD202085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748790;
-	bh=lqGwCjPgydFZ6txMoyYeKha62yorusUGtlBCYkLLjKo=;
+	s=default; t=1565748796;
+	bh=WQN/2CG7EqwekK1fcgDFFFV37yfP91JJmvNcjKYLxrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ni1AgSdLrRYhgmYSuBRHz1O+dgijqP4wMlLM8gZR+z5RwTd/Rv/n4hepMNP2NdkI0
-	 m50zMHQy5JodbGH/c9Ht3S89r4e6EVD7rYPcVcXgDu9RjO+xQeEyCBGlt7X3EHlxSC
-	 kQDErwb97N08NXaFgnJ2gkaBOw5x9xfpQ3b0W2tQ=
+	b=dJWGMidTS+59mCVDUoj+4BV/vtPpd8vaBviq/nRhicCTDMjeIj/84uRT4ElI/k65M
+	 0X04NPxCVE3ajjHxhnvUtQ78Thm6XtMPM6jdrCceHLGXp8R1QPcL7PebC3qpvjWyZ2
+	 Qr/gGkEUwq11BoPu6tLmY+FL0JkM4Wu2n5FXHNq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbfHNCNJ (ORCPT
+        id S1728229AbfHNCNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:13:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45140 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728058AbfHNCNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:05 -0400
+        id S1728177AbfHNCNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4F02214C6;
-        Wed, 14 Aug 2019 02:13:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B15E020842;
+        Wed, 14 Aug 2019 02:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748784;
-        bh=lqGwCjPgydFZ6txMoyYeKha62yorusUGtlBCYkLLjKo=;
+        s=default; t=1565748788;
+        bh=WQN/2CG7EqwekK1fcgDFFFV37yfP91JJmvNcjKYLxrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GuwB7Sj0OKJ0GrQj8R0/5NfYOObgWbo/YebAqBmFpKKC/OuBMmry87dsPNPbd/0B6
-         iXjmJveDp5kKANY9pGvgB51zeJUGMXO1Xin3RaIaMn9EMJaZZNSnLzVLWqfzHYw7Yj
-         PDz0EZnldfFt1D07RyjvZI6ivVDl8SAK6bSbp1kU=
+        b=o6L7SEAot05d9kGRJFMCckW3C85p0JrWwpWbuNWRDrUUwRUcwJbasbSwKfc8I/x+S
+         45YfhuhuVR0QTOHx+6SY2zdMQvHexPKRETIKylIRiOMlXqEXMjlgnVT9geqH6EMtRZ
+         lV7arqPruRw4zkW8NYEQHdF2PJ8Xgfbbk/SmGSXA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+Cc:     Johannes Berg <johannes.berg@intel.com>,
         Luca Coelho <luciano.coelho@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 063/123] iwlwifi: dbg_ini: move iwl_dbg_tlv_load_bin out of debug override ifdef
-Date:   Tue, 13 Aug 2019 22:09:47 -0400
-Message-Id: <20190814021047.14828-63-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 065/123] iwlwifi: fix locking in delayed GTK setting
+Date:   Tue, 13 Aug 2019 22:09:49 -0400
+Message-Id: <20190814021047.14828-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -61,34 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shahar S Matityahu <shahar.s.matityahu@intel.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 072b30642f90b01d139131ec7bf763778a3a3f41 ]
+[ Upstream commit 6569e7d36773956298ec1d5f4e6a2487913d2752 ]
 
-ini debug mode should work even if debug override is not defined.
+This code clearly never could have worked, since it locks
+while already locked. Add an unlocked __iwl_mvm_mac_set_key()
+variant that doesn't do locking to fix that.
 
-Signed-off-by: Shahar S Matityahu <shahar.s.matityahu@intel.com>
-Fixes: 68f6f492c4fa ("iwlwifi: trans: support loading ini TLVs from external file")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../net/wireless/intel/iwlwifi/mvm/mac80211.c | 39 ++++++++++++-------
+ 1 file changed, 26 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-index fba242284507b..efd4bf04d0162 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-@@ -1627,6 +1627,8 @@ struct iwl_drv *iwl_drv_start(struct iwl_trans *trans)
- 	init_completion(&drv->request_firmware_complete);
- 	INIT_LIST_HEAD(&drv->list);
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+index 964c7baabede3..edffae3741e00 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+@@ -207,11 +207,11 @@ static const struct cfg80211_pmsr_capabilities iwl_mvm_pmsr_capa = {
+ 	},
+ };
  
-+	iwl_load_fw_dbg_tlv(drv->trans->dev, drv->trans);
+-static int iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
+-			       enum set_key_cmd cmd,
+-			       struct ieee80211_vif *vif,
+-			       struct ieee80211_sta *sta,
+-			       struct ieee80211_key_conf *key);
++static int __iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
++				 enum set_key_cmd cmd,
++				 struct ieee80211_vif *vif,
++				 struct ieee80211_sta *sta,
++				 struct ieee80211_key_conf *key);
+ 
+ void iwl_mvm_ref(struct iwl_mvm *mvm, enum iwl_mvm_ref_type ref_type)
+ {
+@@ -2725,7 +2725,7 @@ static int iwl_mvm_start_ap_ibss(struct ieee80211_hw *hw,
+ 
+ 		mvmvif->ap_early_keys[i] = NULL;
+ 
+-		ret = iwl_mvm_mac_set_key(hw, SET_KEY, vif, NULL, key);
++		ret = __iwl_mvm_mac_set_key(hw, SET_KEY, vif, NULL, key);
+ 		if (ret)
+ 			goto out_quota_failed;
+ 	}
+@@ -3493,11 +3493,11 @@ static int iwl_mvm_mac_sched_scan_stop(struct ieee80211_hw *hw,
+ 	return ret;
+ }
+ 
+-static int iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
+-			       enum set_key_cmd cmd,
+-			       struct ieee80211_vif *vif,
+-			       struct ieee80211_sta *sta,
+-			       struct ieee80211_key_conf *key)
++static int __iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
++				 enum set_key_cmd cmd,
++				 struct ieee80211_vif *vif,
++				 struct ieee80211_sta *sta,
++				 struct ieee80211_key_conf *key)
+ {
+ 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
+ 	struct iwl_mvm *mvm = IWL_MAC80211_GET_MVM(hw);
+@@ -3552,8 +3552,6 @@ static int iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
+ 			return -EOPNOTSUPP;
+ 	}
+ 
+-	mutex_lock(&mvm->mutex);
+-
+ 	switch (cmd) {
+ 	case SET_KEY:
+ 		if ((vif->type == NL80211_IFTYPE_ADHOC ||
+@@ -3699,7 +3697,22 @@ static int iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
+ 		ret = -EINVAL;
+ 	}
+ 
++	return ret;
++}
 +
- #ifdef CONFIG_IWLWIFI_DEBUGFS
- 	/* Create the device debugfs entries. */
- 	drv->dbgfs_drv = debugfs_create_dir(dev_name(trans->dev),
++static int iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
++			       enum set_key_cmd cmd,
++			       struct ieee80211_vif *vif,
++			       struct ieee80211_sta *sta,
++			       struct ieee80211_key_conf *key)
++{
++	struct iwl_mvm *mvm = IWL_MAC80211_GET_MVM(hw);
++	int ret;
++
++	mutex_lock(&mvm->mutex);
++	ret = __iwl_mvm_mac_set_key(hw, cmd, vif, sta, key);
+ 	mutex_unlock(&mvm->mutex);
++
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
