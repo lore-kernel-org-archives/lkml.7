@@ -2,108 +2,80 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03348C0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8E2C0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0AA8214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:27:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="a+2XvMTB"
+	by mail.kernel.org (Postfix) with ESMTP id 3CE2B2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfHNH15 (ORCPT
+        id S1727418AbfHNHcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:27:57 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:50366 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbfHNH14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:27:56 -0400
-Received: from zn.tnic (p200300EC2F0BD0001434546E6F7AC9DD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:d000:1434:546e:6f7a:c9dd])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0C72D1EC02FE;
-        Wed, 14 Aug 2019 09:27:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565767675;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=S0pdHUrMZlxeH9o5UwMMdUNK7RCa7z7enuUZ3T7dyxs=;
-        b=a+2XvMTBAV+kdnpbaxN0Sigc8m4vhX0OYPSlG8AU1aS+2M9vD6TsMMsb5+OGv0j5RZU0to
-        b8Kwi73ybojH8SC051Zc330H6/dDjhb+Z9FUnhrIOEnoiBi2TOXgFik1iUAftMyEABQZus
-        jfnyKD47r7Ub1s1LnreXItaO0wuVX2g=
-Date:   Wed, 14 Aug 2019 09:28:44 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Josh Boyer <jwboyer@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Young <dyoung@redhat.com>, linux-acpi@vger.kernel.org,
-        x86-ml <x86@kernel.org>
-Subject: Re: [PATCH V38 15/29] acpi: Ignore acpi_rsdp kernel param when the
- kernel has been locked down
-Message-ID: <20190814072844.GB27836@zn.tnic>
-References: <20190808000721.124691-1-matthewgarrett@google.com>
- <20190808000721.124691-16-matthewgarrett@google.com>
+        Wed, 14 Aug 2019 03:32:00 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:53274 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfHNHb7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:31:59 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7E7Vj8v012646, This message is accepted by code: ctloc85258
+Received: from RS-CAS02.realsil.com.cn (ms1.realsil.com.cn[172.29.17.3](maybeforged))
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7E7Vj8v012646
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 14 Aug 2019 15:31:46 +0800
+Received: from RS-MBS01.realsil.com.cn ([::1]) by RS-CAS02.realsil.com.cn
+ ([::1]) with mapi id 14.03.0439.000; Wed, 14 Aug 2019 15:31:45 +0800
+From:   =?utf-8?B?6ZmG5pyx5Lyf?= <alex_lu@realsil.com.cn>
+To:     Marcel Holtmann <marcel@holtmann.org>
+CC:     Johan Hedberg <johan.hedberg@gmail.com>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Max Chou <max.chou@realtek.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjJdIEJsdWV0b290aDogYnRydGw6IFNhdmUgZmly?= =?utf-8?Q?mware_and_config?=
+Thread-Topic: [PATCH v2] Bluetooth: btrtl: Save firmware and config
+Thread-Index: AQHVSzrgIOMMDCbw+0u3p878+lh/Rab3O0oAgAMP67A=
+Date:   Wed, 14 Aug 2019 07:31:44 +0000
+Message-ID: <0551C926975A174EA8972327741C7889EE81187B@RS-MBS01.realsil.com.cn>
+References: <20190805030733.GA11069@toshiba>
+ <1BB38E27-5FAD-4402-86C1-6AA47E6BA08A@holtmann.org>
+In-Reply-To: <1BB38E27-5FAD-4402-86C1-6AA47E6BA08A@holtmann.org>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.29.36.107]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190808000721.124691-16-matthewgarrett@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 05:07:07PM -0700, Matthew Garrett wrote:
-> From: Josh Boyer <jwboyer@redhat.com>
-> 
-> This option allows userspace to pass the RSDP address to the kernel, which
-> makes it possible for a user to modify the workings of hardware. Reject
-> the option when the kernel is locked down. This requires some reworking
-> of the existing RSDP command line logic, since the early boot code also
-> makes use of a command-line passed RSDP when locating the SRAT table
-> before the lockdown code has been initialised. This is achieved by
-> separating the command line RSDP path in the early boot code from the
-> generic RSDP path, and then copying the command line RSDP into boot
-> params in the kernel proper if lockdown is not enabled. If lockdown is
-> enabled and an RSDP is provided on the command line, this will only be
-> used when parsing SRAT (which shouldn't permit kernel code execution)
-> and will be ignored in the rest of the kernel.
-> 
-> (Modified by Matthew Garrett in order to handle the early boot RSDP
-> environment)
-> 
-> Signed-off-by: Josh Boyer <jwboyer@redhat.com>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> cc: Dave Young <dyoung@redhat.com>
-> cc: linux-acpi@vger.kernel.org
-> ---
->  arch/x86/boot/compressed/acpi.c | 19 +++++++++++++------
->  arch/x86/include/asm/acpi.h     |  9 +++++++++
->  arch/x86/include/asm/x86_init.h |  2 ++
->  arch/x86/kernel/acpi/boot.c     |  5 +++++
->  arch/x86/kernel/x86_init.c      |  1 +
->  drivers/acpi/osl.c              | 14 +++++++++++++-
->  include/linux/acpi.h            |  6 ++++++
->  7 files changed, 49 insertions(+), 7 deletions(-)
-
-Also, why isn't an x86 person CCed here? This clearly needs an x86
-maintainer's ACK before it goes in?
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+SGkgTWFyY2VsLA0KSXQgb25seSBzYXZlcyB0aGUgbGF0ZXN0IGZ3IGFuZCBjb25maWcgZm9yIG9u
+bHkgb25lIGRldmljZS4NCkkgd2lsbCBkaWcgdGhlIGNhY2hpbmcgY2FwYWJpbGl0eSBvZiByZXF1
+ZXN0X2Zpcm13YXJlIGZpcnN0Lg0KDQpUaGFua3MsDQpCUnMsDQoNCj4gU3ViamVjdDogUmU6IFtQ
+QVRDSCB2Ml0gQmx1ZXRvb3RoOiBidHJ0bDogU2F2ZSBmaXJtd2FyZSBhbmQgY29uZmlnDQo+IA0K
+PiBIaSBBbGV4LA0KPiANCj4gPiB1c2IgcmVzZXQgcmVzdW1lIHdpbGwgY2F1c2UgZG93bmxvYWRp
+bmcgZmlybXdhcmUgYWdhaW4gYW5kDQo+ID4gcmVxdWVzdGluZyBmaXJtd2FyZSBtYXkgYmUgZmFp
+bGVkIHdoaWxlIGhvc3QgaXMgcmVzdW1pbmcNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFsZXgg
+THUgPGFsZXhfbHVAcmVhbHNpbC5jb20uY24+DQo+ID4gLS0tDQo+ID4gZHJpdmVycy9ibHVldG9v
+dGgvYnRydGwuYyB8IDEwMQ0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKyst
+LQ0KPiA+IDEgZmlsZSBjaGFuZ2VkLCA5NyBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0K
+PiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYmx1ZXRvb3RoL2J0cnRsLmMgYi9kcml2ZXJz
+L2JsdWV0b290aC9idHJ0bC5jDQo+ID4gaW5kZXggMjA4ZmVlZjYzZGU0Li40MTZhNWNiNjc2ZTMg
+MTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9ibHVldG9vdGgvYnRydGwuYw0KPiA+ICsrKyBiL2Ry
+aXZlcnMvYmx1ZXRvb3RoL2J0cnRsLmMNCj4gPiBAQCAtNTYsNiArNTYsOCBAQCBzdHJ1Y3QgYnRy
+dGxfZGV2aWNlX2luZm8gew0KPiA+IAlpbnQgY2ZnX2xlbjsNCj4gPiB9Ow0KPiA+DQo+ID4gK3N0
+YXRpYyBzdHJ1Y3QgYnRydGxfZGV2aWNlX2luZm8gZGV2X2luZm87DQo+ID4gKw0KPiANCj4gTm8u
+IFdlIGFyZSBhcmUgbm90IHVzaW5nIG1hZ2ljIGdsb2JhbCB2YXJpYWJsZXMuIFdoYXQgaGFwcGVu
+cyBpZiB5b3UgYXR0YWNoDQo+IG1vcmUgdGhhbiBvbmUgZGV2aWNlPyBBbHNvIEkgYXNzdW1lZCB0
+aGF0IHJlcXVlc3RfZmlybXdhcmUgaGFzIGEgY2FjaGluZw0KPiBjYXBhYmlsaXR5IG9mIHNvcnRz
+IHNvIHRoYXQgZHJpdmVycyBkb27igJl0IGhhdmUgdG8gcmUtaW1wbGVtZW50IGNhY2hpbmcgb2Yg
+dGhlDQo+IGZpcm13YXJlLg0KPiANCj4gUmVnYXJkcw0KPiANCj4gTWFyY2VsDQo+IA0KPiANCj4g
+LS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhp
+cyBlLW1haWwuDQo=
