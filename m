@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2B0C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F592C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E52A214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F8D12133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:49:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfHNKtI (ORCPT
+        id S1728123AbfHNKtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:49:08 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:51830 "EHLO inva021.nxp.com"
+        Wed, 14 Aug 2019 06:49:46 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:52082 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727890AbfHNKtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:49:05 -0400
+        id S1727964AbfHNKtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:49:07 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AE348200376;
-        Wed, 14 Aug 2019 12:49:03 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F080F200352;
+        Wed, 14 Aug 2019 12:49:05 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AB48F2003CB;
-        Wed, 14 Aug 2019 12:49:03 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EE0D02007FC;
+        Wed, 14 Aug 2019 12:49:05 +0200 (CEST)
 Received: from fsr-ub1664-120.ea.freescale.net (fsr-ub1664-120.ea.freescale.net [10.171.82.81])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id AD1482060E;
-        Wed, 14 Aug 2019 12:49:02 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D782D2060E;
+        Wed, 14 Aug 2019 12:49:04 +0200 (CEST)
 From:   Robert Chiras <robert.chiras@nxp.com>
 To:     =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
         Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
@@ -42,9 +42,9 @@ Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 07/15] drm/mxsfb: Fix the vblank events
-Date:   Wed, 14 Aug 2019 13:48:43 +0300
-Message-Id: <1565779731-1300-8-git-send-email-robert.chiras@nxp.com>
+Subject: [PATCH v2 09/15] dt-bindings: display: Add max-res property for mxsfb
+Date:   Wed, 14 Aug 2019 13:48:45 +0300
+Message-Id: <1565779731-1300-10-git-send-email-robert.chiras@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
 References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
@@ -54,68 +54,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the vblank support is not correctly implemented in MXSFB_DRM
-driver. The call to drm_vblank_init is made with mode_config.num_crtc
-which at that time is 0. Because of this, vblank is not activated, so
-there won't be any vblank event submitted.
-For example, when running modetest with the '-v' parameter will result
-in an astronomical refresh rate (10000+ Hz), because of that.
+Add new optional property 'max-res', to limit the maximum supported
+resolution by the MXSFB_DRM driver.
 
 Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 ---
- drivers/gpu/drm/mxsfb/mxsfb_drv.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/display/mxsfb.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 2743975..829abec 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -38,6 +38,9 @@
- #include "mxsfb_drv.h"
- #include "mxsfb_regs.h"
+diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt b/Documentation/devicetree/bindings/display/mxsfb.txt
+index 472e1ea..55e22ed 100644
+--- a/Documentation/devicetree/bindings/display/mxsfb.txt
++++ b/Documentation/devicetree/bindings/display/mxsfb.txt
+@@ -17,6 +17,12 @@ Required properties:
+ Required sub-nodes:
+   - port: The connection to an encoder chip.
  
-+/* The eLCDIF max possible CRTCs */
-+#define MAX_CRTCS 1
++Optional properties:
++- max-res:	an array with a maximum of two integers, representing the
++		maximum supported resolution, in the form of
++		<maxX>, <maxY>; if one of the item is <0>, the default
++		driver-defined maximum resolution for that axis is used
 +
- enum mxsfb_devtype {
- 	MXSFB_V3,
- 	MXSFB_V4,
-@@ -138,6 +141,8 @@ static void mxsfb_pipe_enable(struct drm_simple_display_pipe *pipe,
- 		mxsfb->connector = &mxsfb->panel_connector;
- 	}
+ Example:
  
-+	drm_crtc_vblank_on(&pipe->crtc);
-+
- 	pm_runtime_get_sync(drm->dev);
- 	drm_panel_prepare(mxsfb->panel);
- 	mxsfb_crtc_enable(mxsfb);
-@@ -164,6 +169,8 @@ static void mxsfb_pipe_disable(struct drm_simple_display_pipe *pipe)
- 	}
- 	spin_unlock_irq(&drm->event_lock);
- 
-+	drm_crtc_vblank_off(&pipe->crtc);
-+
- 	if (mxsfb->connector != &mxsfb->panel_connector)
- 		mxsfb->connector = NULL;
- }
-@@ -246,7 +253,7 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
- 
- 	pm_runtime_enable(drm->dev);
- 
--	ret = drm_vblank_init(drm, drm->mode_config.num_crtc);
-+	ret = drm_vblank_init(drm, MAX_CRTCS);
- 	if (ret < 0) {
- 		dev_err(drm->dev, "Failed to initialise vblank\n");
- 		goto err_vblank;
-@@ -269,6 +276,8 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
- 		goto err_vblank;
- 	}
- 
-+	drm_crtc_vblank_off(&mxsfb->pipe.crtc);
-+
- 	/*
- 	 * Attach panel only if there is one.
- 	 * If there is no panel attach, it must be a bridge. In this case, we
+ 	lcdif1: display-controller@2220000 {
 -- 
 2.7.4
 
