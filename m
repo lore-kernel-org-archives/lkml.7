@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5523DC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E717CC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A87920842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC76B2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749494;
-	bh=F2a66BrkEVyGhNSvb1kB9Zv2DS2OO/cKt0GNCFausaM=;
+	s=default; t=1565749502;
+	bh=IOPdm9k3VPoaPXeXZ9z/V6zcLHMRjbCmVT1iw1qRiZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wzx+8YNsUZ7TFaiobuEuFClYvTsfGQF+en94PUSJ4TL0FcW96khxil0yzQLbYhBM9
-	 lSQmExdzX3ngi/au1TF2TkpwRf3gUyBlnhIjxjzCGMOW2lYfEOXW9IXPB89rNrdbDZ
-	 FQeZHDx9u6T+jRZYN+t931ZGGBZ77COSAJubcqew=
+	b=ZeHTHPZnPu1NzkUmTFrsDwt8rjQz1CXmtorxUGFR6IlrMWHgr1Q+N5nY5Tsv5HAi/
+	 cGhjoRkAMmQA8rCQ/MhIkUWFSpF4PD6LpND6CTqOcnaZYceum4EA/lrteJvffg1yR3
+	 AcWorFyDPRv5y+Vebkx7lvRrm1wDAOV6r09k8zYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730118AbfHNCYx (ORCPT
+        id S1730082AbfHNCYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:24:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53066 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:24:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730097AbfHNCYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:24:11 -0400
+        id S1730013AbfHNCYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:24:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B6B92084F;
-        Wed, 14 Aug 2019 02:24:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C297B20842;
+        Wed, 14 Aug 2019 02:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749449;
-        bh=F2a66BrkEVyGhNSvb1kB9Zv2DS2OO/cKt0GNCFausaM=;
+        s=default; t=1565749440;
+        bh=IOPdm9k3VPoaPXeXZ9z/V6zcLHMRjbCmVT1iw1qRiZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WUtBz2YNZpntN3VoKCS+Um0sXzXxAgNmDXMAF1Z1mjhDNsgfIWbJDbfQ6SDZlO+Mm
-         l4Iyo71Nuam5b1mOQ9rj9acj0bcQs0rfGuPX2piUNC5WcNFw2VdvPdNODsdc2MQlVN
-         0g8rOBcOupU4I/gRb2bAbpXKzEuOQd30z1q0iDCQ=
+        b=z40gwbWswNlF7/4PIM4VdxyICK4V0hk/I4zP+YztiAre1ZmoPw2MiI6QSYO5um+wq
+         MY52bSwqPHCqWKR1gbcP81o5oH5m4VZY7QmS57+9UqjMcRhzeLzO1HdHx7g7ZsLE8H
+         qJ1M4ZKfAFoyi7fB+qFIWABPnkZtvv28CdPu/dtk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 28/33] net: hisilicon: Fix dma_map_single failed on arm64
-Date:   Tue, 13 Aug 2019 22:23:18 -0400
-Message-Id: <20190814022323.17111-28-sashal@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 21/33] HID: input: fix a4tech horizontal wheel custom usage
+Date:   Tue, 13 Aug 2019 22:23:11 -0400
+Message-Id: <20190814022323.17111-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022323.17111-1-sashal@kernel.org>
 References: <20190814022323.17111-1-sashal@kernel.org>
@@ -59,107 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit 96a50c0d907ac8f5c3d6b051031a19eb8a2b53e3 ]
+[ Upstream commit 1c703b53e5bfb5c2205c30f0fb157ce271fd42fb ]
 
-On the arm64 platform, executing "ifconfig eth0 up" will fail,
-returning "ifconfig: SIOCSIFFLAGS: Input/output error."
+Some a4tech mice use the 'GenericDesktop.00b8' usage to inform whether
+the previous wheel report was horizontal or vertical. Before
+c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key") this
+usage was being mapped to 'Relative.Misc'. After the patch it's simply
+ignored (usage->type == 0 & usage->code == 0). Which ultimately makes
+hid-a4tech ignore the WHEEL/HWHEEL selection event, as it has no
+usage->type.
 
-ndev->dev is not initialized, dma_map_single->get_dma_ops->
-dummy_dma_ops->__dummy_map_page will return DMA_ERROR_CODE
-directly, so when we use dma_map_single, the first parameter
-is to use the device of platform_device.
+We shouldn't rely on a mapping for that usage as it's nonstandard and
+doesn't really map to an input event. So we bypass the mapping and make
+sure the custom event handling properly handles both reports.
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ drivers/hid/hid-a4tech.c | 30 +++++++++++++++++++++++++++---
+ 1 file changed, 27 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index c7e0b246cfdca..f7882c1fde16d 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -157,6 +157,7 @@ struct hip04_priv {
- 	unsigned int reg_inten;
+diff --git a/drivers/hid/hid-a4tech.c b/drivers/hid/hid-a4tech.c
+index 9428ea7cdf8a0..c52bd163abb3e 100644
+--- a/drivers/hid/hid-a4tech.c
++++ b/drivers/hid/hid-a4tech.c
+@@ -26,12 +26,36 @@
+ #define A4_2WHEEL_MOUSE_HACK_7	0x01
+ #define A4_2WHEEL_MOUSE_HACK_B8	0x02
  
- 	struct napi_struct napi;
-+	struct device *dev;
- 	struct net_device *ndev;
++#define A4_WHEEL_ORIENTATION	(HID_UP_GENDESK | 0x000000b8)
++
+ struct a4tech_sc {
+ 	unsigned long quirks;
+ 	unsigned int hw_wheel;
+ 	__s32 delayed_value;
+ };
  
- 	struct tx_desc *tx_desc;
-@@ -387,7 +388,7 @@ static int hip04_tx_reclaim(struct net_device *ndev, bool force)
++static int a4_input_mapping(struct hid_device *hdev, struct hid_input *hi,
++			    struct hid_field *field, struct hid_usage *usage,
++			    unsigned long **bit, int *max)
++{
++	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
++
++	if (a4->quirks & A4_2WHEEL_MOUSE_HACK_B8 &&
++	    usage->hid == A4_WHEEL_ORIENTATION) {
++		/*
++		 * We do not want to have this usage mapped to anything as it's
++		 * nonstandard and doesn't really behave like an HID report.
++		 * It's only selecting the orientation (vertical/horizontal) of
++		 * the previous mouse wheel report. The input_events will be
++		 * generated once both reports are recorded in a4_event().
++		 */
++		return -1;
++	}
++
++	return 0;
++
++}
++
+ static int a4_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+ 		struct hid_field *field, struct hid_usage *usage,
+ 		unsigned long **bit, int *max)
+@@ -53,8 +77,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+ 	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
+ 	struct input_dev *input;
+ 
+-	if (!(hdev->claimed & HID_CLAIMED_INPUT) || !field->hidinput ||
+-			!usage->type)
++	if (!(hdev->claimed & HID_CLAIMED_INPUT) || !field->hidinput)
+ 		return 0;
+ 
+ 	input = field->hidinput->input;
+@@ -65,7 +88,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+ 			return 1;
  		}
  
- 		if (priv->tx_phys[tx_tail]) {
--			dma_unmap_single(&ndev->dev, priv->tx_phys[tx_tail],
-+			dma_unmap_single(priv->dev, priv->tx_phys[tx_tail],
- 					 priv->tx_skb[tx_tail]->len,
- 					 DMA_TO_DEVICE);
- 			priv->tx_phys[tx_tail] = 0;
-@@ -437,8 +438,8 @@ static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 		return NETDEV_TX_BUSY;
- 	}
- 
--	phys = dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
--	if (dma_mapping_error(&ndev->dev, phys)) {
-+	phys = dma_map_single(priv->dev, skb->data, skb->len, DMA_TO_DEVICE);
-+	if (dma_mapping_error(priv->dev, phys)) {
- 		dev_kfree_skb(skb);
- 		return NETDEV_TX_OK;
- 	}
-@@ -508,7 +509,7 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
- 			goto refill;
- 		}
- 
--		dma_unmap_single(&ndev->dev, priv->rx_phys[priv->rx_head],
-+		dma_unmap_single(priv->dev, priv->rx_phys[priv->rx_head],
- 				 RX_BUF_SIZE, DMA_FROM_DEVICE);
- 		priv->rx_phys[priv->rx_head] = 0;
- 
-@@ -537,9 +538,9 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
- 		buf = netdev_alloc_frag(priv->rx_buf_size);
- 		if (!buf)
- 			goto done;
--		phys = dma_map_single(&ndev->dev, buf,
-+		phys = dma_map_single(priv->dev, buf,
- 				      RX_BUF_SIZE, DMA_FROM_DEVICE);
--		if (dma_mapping_error(&ndev->dev, phys))
-+		if (dma_mapping_error(priv->dev, phys))
- 			goto done;
- 		priv->rx_buf[priv->rx_head] = buf;
- 		priv->rx_phys[priv->rx_head] = phys;
-@@ -642,9 +643,9 @@ static int hip04_mac_open(struct net_device *ndev)
- 	for (i = 0; i < RX_DESC_NUM; i++) {
- 		dma_addr_t phys;
- 
--		phys = dma_map_single(&ndev->dev, priv->rx_buf[i],
-+		phys = dma_map_single(priv->dev, priv->rx_buf[i],
- 				      RX_BUF_SIZE, DMA_FROM_DEVICE);
--		if (dma_mapping_error(&ndev->dev, phys))
-+		if (dma_mapping_error(priv->dev, phys))
- 			return -EIO;
- 
- 		priv->rx_phys[i] = phys;
-@@ -678,7 +679,7 @@ static int hip04_mac_stop(struct net_device *ndev)
- 
- 	for (i = 0; i < RX_DESC_NUM; i++) {
- 		if (priv->rx_phys[i]) {
--			dma_unmap_single(&ndev->dev, priv->rx_phys[i],
-+			dma_unmap_single(priv->dev, priv->rx_phys[i],
- 					 RX_BUF_SIZE, DMA_FROM_DEVICE);
- 			priv->rx_phys[i] = 0;
- 		}
-@@ -829,6 +830,7 @@ static int hip04_mac_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	priv = netdev_priv(ndev);
-+	priv->dev = d;
- 	priv->ndev = ndev;
- 	platform_set_drvdata(pdev, ndev);
- 
+-		if (usage->hid == 0x000100b8) {
++		if (usage->hid == A4_WHEEL_ORIENTATION) {
+ 			input_event(input, EV_REL, value ? REL_HWHEEL :
+ 					REL_WHEEL, a4->delayed_value);
+ 			return 1;
+@@ -129,6 +152,7 @@ MODULE_DEVICE_TABLE(hid, a4_devices);
+ static struct hid_driver a4_driver = {
+ 	.name = "a4tech",
+ 	.id_table = a4_devices,
++	.input_mapping = a4_input_mapping,
+ 	.input_mapped = a4_input_mapped,
+ 	.event = a4_event,
+ 	.probe = a4_probe,
 -- 
 2.20.1
 
