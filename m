@@ -2,101 +2,86 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB3FC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EE2C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE43720844
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:01:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ivJ+lZc4"
+	by mail.kernel.org (Postfix) with ESMTP id 4717B2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfHNCBV (ORCPT
+        id S1726900AbfHNCDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:01:21 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40639 "EHLO ozlabs.org"
+        Tue, 13 Aug 2019 22:03:11 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:43180 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbfHNCBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:01:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 467Xqx58cyz9sP8;
-        Wed, 14 Aug 2019 12:01:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565748078;
-        bh=e2nkYYq6Zq5d2uClkqO0wjWirioLnmBJr/FHSnA5vBU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ivJ+lZc4dP8lOWFiI4tGLU9KOJ2WXKizgsTMGEf5D/xHYobrJ7V8Fkf4uYOAFAIzR
-         kiaZ5EdDUTqpRNTb9pahWg2DEZLgNz/QydvuvLHvOhmu1M9waR/M0vJhuLyGsOfe7B
-         ObYbMNAWQeowyWdqhZetaPH+QEF1YSscOGTljcYVzQZCC3YKsizRKc+r568Wybpwo7
-         k91U/mIlppiyC8nJLgTxwu8o+Y9Bav/afjq6CqDd9E92DDaRA2KFyDxrvCgXS26xV2
-         SjNDomdWZclP5KaKMGmheVerNDL6Y3wsqo5DjLDVS1GQ5xaAPlBHqqRiO5FfxbJeo+
-         27RUB9t+A7AUw==
-Date:   Wed, 14 Aug 2019 12:01:10 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeremy Sowden <jeremy@azazel.net>
-Subject: linux-next: build warnings after merge of the netfilter-next tree
-Message-ID: <20190814120110.3c17ddec@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//VAFaF+b02F0AzB+9QlMd5h";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        id S1726659AbfHNCDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:03:10 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6641F2002E4;
+        Wed, 14 Aug 2019 04:03:08 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 222E620027A;
+        Wed, 14 Aug 2019 04:03:02 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3507340293;
+        Wed, 14 Aug 2019 10:02:54 +0800 (SGT)
+From:   peng.fan@nxp.com
+To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, abel.vesa@nxp.com, ping.bai@nxp.com,
+        peng.fan@nxp.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: imx8mn: fix int pll clk gate
+Date:   Wed, 14 Aug 2019 09:53:12 +0800
+Message-Id: <20190814015312.11711-1-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//VAFaF+b02F0AzB+9QlMd5h
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Peng Fan <peng.fan@nxp.com>
 
-Hi all,
+To Frac pll, the gate shift is 13, however to Int PLL the gate shift
+is 11.
 
-After merging the netfilter-next tree, today's linux-next build (x86_64
-allmodconfig) produced these warnings:
+Cc: <stable@vger.kernel.org>
+Fixes: 96d6392b54db ("clk: imx: Add support for i.MX8MN clock driver")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Reviewed-by: Jacky Bai <ping.bai@nxp.com>
+---
+ drivers/clk/imx/clk-imx8mn.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-In file included from <command-line>:
-include/uapi/linux/netfilter_ipv6/ip6t_LOG.h:5:2: warning: #warning "Please=
- update iptables, this file will be removed soon!" [-Wcpp]
- #warning "Please update iptables, this file will be removed soon!"
-  ^~~~~~~
-In file included from <command-line>:
-include/uapi/linux/netfilter_ipv4/ipt_LOG.h:5:2: warning: #warning "Please =
-update iptables, this file will be removed soon!" [-Wcpp]
- #warning "Please update iptables, this file will be removed soon!"
-  ^~~~~~~
+diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
+index ecd1062f6847..c5838710e1d8 100644
+--- a/drivers/clk/imx/clk-imx8mn.c
++++ b/drivers/clk/imx/clk-imx8mn.c
+@@ -436,12 +436,12 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
+ 	clks[IMX8MN_AUDIO_PLL2_OUT] = imx_clk_gate("audio_pll2_out", "audio_pll2_bypass", base + 0x14, 13);
+ 	clks[IMX8MN_VIDEO_PLL1_OUT] = imx_clk_gate("video_pll1_out", "video_pll1_bypass", base + 0x28, 13);
+ 	clks[IMX8MN_DRAM_PLL_OUT] = imx_clk_gate("dram_pll_out", "dram_pll_bypass", base + 0x50, 13);
+-	clks[IMX8MN_GPU_PLL_OUT] = imx_clk_gate("gpu_pll_out", "gpu_pll_bypass", base + 0x64, 13);
+-	clks[IMX8MN_VPU_PLL_OUT] = imx_clk_gate("vpu_pll_out", "vpu_pll_bypass", base + 0x74, 13);
+-	clks[IMX8MN_ARM_PLL_OUT] = imx_clk_gate("arm_pll_out", "arm_pll_bypass", base + 0x84, 13);
+-	clks[IMX8MN_SYS_PLL1_OUT] = imx_clk_gate("sys_pll1_out", "sys_pll1_bypass", base + 0x94, 13);
+-	clks[IMX8MN_SYS_PLL2_OUT] = imx_clk_gate("sys_pll2_out", "sys_pll2_bypass", base + 0x104, 13);
+-	clks[IMX8MN_SYS_PLL3_OUT] = imx_clk_gate("sys_pll3_out", "sys_pll3_bypass", base + 0x114, 13);
++	clks[IMX8MN_GPU_PLL_OUT] = imx_clk_gate("gpu_pll_out", "gpu_pll_bypass", base + 0x64, 11);
++	clks[IMX8MN_VPU_PLL_OUT] = imx_clk_gate("vpu_pll_out", "vpu_pll_bypass", base + 0x74, 11);
++	clks[IMX8MN_ARM_PLL_OUT] = imx_clk_gate("arm_pll_out", "arm_pll_bypass", base + 0x84, 11);
++	clks[IMX8MN_SYS_PLL1_OUT] = imx_clk_gate("sys_pll1_out", "sys_pll1_bypass", base + 0x94, 11);
++	clks[IMX8MN_SYS_PLL2_OUT] = imx_clk_gate("sys_pll2_out", "sys_pll2_bypass", base + 0x104, 11);
++	clks[IMX8MN_SYS_PLL3_OUT] = imx_clk_gate("sys_pll3_out", "sys_pll3_bypass", base + 0x114, 11);
+ 
+ 	/* SYS PLL fixed output */
+ 	clks[IMX8MN_SYS_PLL1_40M] = imx_clk_fixed_factor("sys_pll1_40m", "sys_pll1_out", 1, 20);
+-- 
+2.16.4
 
-Introduced by commit
-
-  2a475c409fe8 ("kbuild: remove all netfilter headers from header-test blac=
-klist.")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_//VAFaF+b02F0AzB+9QlMd5h
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Ta2YACgkQAVBC80lX
-0GxcTgf/adyYODk8/1pjyxD0WSdoSVJWS9BkQ2vM9cIgzCgCgxOAWvPXDUY5Ca6V
-WBBWPTy26zVMT9I5LUarGRTymeeMOY84lvkol5l9CWKe/k34yNTVwvrH/4j1XoC+
-UOKUqHrFNG4ENIz2ZYMfe7Ej6AErg7G4vvSL4ALX0GhmO8tuz4HER9JrHKkaOgCZ
-TF7/rIjq18CsV0hECH+zkfYQM9k376CKYyVQe4kG5jav0Hn1F6Xe6DkzDqG5Jyq/
-q0oE08tqBxOiDgUFX78Wgk+F675+zAfJSMio6x4l507zIDZsE0JDlXedHPQNTsjs
-D2n2ZeMROzmDvKWuAqvG9svN9lb6pA==
-=fckG
------END PGP SIGNATURE-----
-
---Sig_//VAFaF+b02F0AzB+9QlMd5h--
