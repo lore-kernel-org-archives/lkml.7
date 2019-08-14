@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13499C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147FBC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59E520842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9AA22085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750077;
-	bh=BFAM/OpfzNz2arFnoqYAr08U99/SP+2B+z5l1hDy4Ls=;
+	s=default; t=1565750083;
+	bh=i7Ocf+qJG+fOjTgyN2RQDqKvto61n137YBK6Yznys0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tM+oOZVtOPummMVDUGROF8eEKRRAzMaIOZwar4c5KuMCIwdemQY4ykpy2uvpClq48
-	 kwQufmIeRuCaGdhbTBVbcNq/aQhzmtcBrd1WwmvLTNo3TzMJ6k3rrI+JutzMnsJL2F
-	 1LazrXJ3FLsjm//prp+z/SlRU0fLzukeHYIHw+jw=
+	b=YtdYwb+7gsmF25NiVwRh24U/enBvfgj1fM/XzO2lr27bPq6CbUW1oablvqb3/xg8z
+	 hn44YvKUOM1u/mv0epTkIC5M2wwuRtbVpkbEgqcm4wh5ewOei7EL8g0EGu2KRBHOHP
+	 BEs0c6JfKvrJU80+S365Ck6zNU5vNh4qvl/kjTo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfHNCef (ORCPT
+        id S1728415AbfHNCem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:34:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45882 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:34:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728442AbfHNCNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:50 -0400
+        id S1728429AbfHNCNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B80A2084D;
-        Wed, 14 Aug 2019 02:13:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57F7620844;
+        Wed, 14 Aug 2019 02:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748829;
-        bh=BFAM/OpfzNz2arFnoqYAr08U99/SP+2B+z5l1hDy4Ls=;
+        s=default; t=1565748826;
+        bh=i7Ocf+qJG+fOjTgyN2RQDqKvto61n137YBK6Yznys0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bUR0XuYji11OLpCEVniNYOjrlWy7oeN/WLJ2HMyeEYILbBTHmwupj8G3Ba1Xpgut1
-         extjacMGcVzuCscFrR6bxnxEA7Ew3wQBuEuo3PF5WbILR+Oa4RQvS9qsScyo9TXEIN
-         58UedVjLhc5RJi4ngztR7BuRnHtfgFeXC0aqx58s=
+        b=obXYKNfOneJxmHSn7rgvcWF7ldS9XKFQHp42V0w2JbMi18bgb6Q7qZtYh/wDSJZoj
+         dpuyDy1a0m1F/tNDP0RTofWHVlL8+6ey+gVigtBHK8AHmCaIhw0qCbXrbjPAMgGiZR
+         /QONzF9vs1zEdVXwjrhmOL1IUmfpF5fZOP6Lv3A8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 089/123] drm/rockchip: Suspend DP late
-Date:   Tue, 13 Aug 2019 22:10:13 -0400
-Message-Id: <20190814021047.14828-89-sashal@kernel.org>
+Cc:     =?UTF-8?q?Istv=C3=A1n=20V=C3=A1radi?= <ivaradi@varadiistvan.hu>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 086/123] HID: quirks: Set the INCREMENT_USAGE_ON_DUPLICATE quirk on Saitek X52
+Date:   Tue, 13 Aug 2019 22:10:10 -0400
+Message-Id: <20190814021047.14828-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,44 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: István Váradi <ivaradi@varadiistvan.hu>
 
-[ Upstream commit f7ccbed656f78212593ca965d9a8f34bf24e0aab ]
+[ Upstream commit 7bc74853fd61432ec59f812a40425bf6d8c986a4 ]
 
-In commit fe64ba5c6323 ("drm/rockchip: Resume DP early") we moved
-resume to be early but left suspend at its normal time.  This seems
-like it could be OK, but casues problems if a suspend gets interrupted
-partway through.  The OS only balances matching suspend/resume levels.
-...so if suspend was called then resume will be called.  If suspend
-late was called then resume early will be called.  ...but if suspend
-was called resume early might not get called.  This leads to an
-unbalance in the clock enables / disables.
+The Saitek X52 joystick has a pair of axes that are originally
+(by the Windows driver) used as mouse pointer controls. The corresponding
+usage->hid values are 0x50024 and 0x50026. Thus they are handled
+as unknown axes and both get mapped to ABS_MISC. The quirk makes
+the second axis to be mapped to ABS_MISC1 and thus made available
+separately.
 
-Lets take the simple fix and just move suspend to be late to match.
-This makes the PM core take proper care in keeping things balanced.
-
-Fixes: fe64ba5c6323 ("drm/rockchip: Resume DP early")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190802184616.44822-1-dianders@chromium.org
+[jkosina@suse.cz: squashed two patches into one]
+Signed-off-by: István Váradi <ivaradi@varadiistvan.hu>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/analogix_dp-rockchip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-index 95e5c517a15f7..9aae3d8e99ef4 100644
---- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-@@ -432,7 +432,7 @@ static int rockchip_dp_resume(struct device *dev)
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 34a812025b948..76aa474e92c15 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -990,6 +990,7 @@
+ #define USB_DEVICE_ID_SAITEK_RAT7	0x0cd7
+ #define USB_DEVICE_ID_SAITEK_RAT9	0x0cfa
+ #define USB_DEVICE_ID_SAITEK_MMO7	0x0cd0
++#define USB_DEVICE_ID_SAITEK_X52	0x075c
  
- static const struct dev_pm_ops rockchip_dp_pm_ops = {
- #ifdef CONFIG_PM_SLEEP
--	.suspend = rockchip_dp_suspend,
-+	.suspend_late = rockchip_dp_suspend,
- 	.resume_early = rockchip_dp_resume,
- #endif
- };
+ #define USB_VENDOR_ID_SAMSUNG		0x0419
+ #define USB_DEVICE_ID_SAMSUNG_IR_REMOTE	0x0001
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 5b669f7d653fa..4fe2c3ab76f9c 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -141,6 +141,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_RETROUSB, USB_DEVICE_ID_RETROUSB_SNES_RETROPAD), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_RETROUSB, USB_DEVICE_ID_RETROUSB_SNES_RETROPORT), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_RUMBLEPAD), HID_QUIRK_BADPAD },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_X52), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SEMICO, USB_DEVICE_ID_SEMICO_USB_KEYKOARD2), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SEMICO, USB_DEVICE_ID_SEMICO_USB_KEYKOARD), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SENNHEISER, USB_DEVICE_ID_SENNHEISER_BTD500USB), HID_QUIRK_NOGET },
 -- 
 2.20.1
 
