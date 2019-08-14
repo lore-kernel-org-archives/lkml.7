@@ -2,115 +2,115 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E2AC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A53C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BBD120843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:46:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Bz43zrqY"
+	by mail.kernel.org (Postfix) with ESMTP id A3E1920578
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbfHNJqq (ORCPT
+        id S1726852AbfHNJsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:46:46 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:42568 "EHLO pegase1.c-s.fr"
+        Wed, 14 Aug 2019 05:48:01 -0400
+Received: from muru.com ([72.249.23.125]:57496 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725265AbfHNJqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:46:45 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 467l8z42V2z9v0Ff;
-        Wed, 14 Aug 2019 11:46:43 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Bz43zrqY; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id duYmpjDDdGb3; Wed, 14 Aug 2019 11:46:43 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 467l8z2ylKz9v0Fd;
-        Wed, 14 Aug 2019 11:46:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1565776003; bh=BrHb6kuTC/Mg9gOVpCVXDn+9cEW6zECD+XrYrLBGZrw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Bz43zrqY6DkHgepmrZy8IMGoI34HYy7ngYk/QDdrVa/3/cNyEfkk+dUlEujLzqUKf
-         65mt+1P9h2PsIv2PPQQoyXcW5E5hkentK4YunvZzNJ71IUqFnu4S83t/SOnKl4bYub
-         Z8I/IiFZHGpk019jmVlId2/HuMYNjwcbVZbJnHwE=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 950A68B7A3;
-        Wed, 14 Aug 2019 11:46:44 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id vROh-KTZERmY; Wed, 14 Aug 2019 11:46:44 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 94A1C8B761;
-        Wed, 14 Aug 2019 11:46:43 +0200 (CEST)
-Subject: Re: [PATCH 1/2] powerpc: rewrite LOAD_REG_IMMEDIATE() as an
- intelligent macro
-To:     Paul Mackerras <paulus@ozlabs.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        segher@kernel.crashing.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-References: <61d2a0b6f0c89b1ee546851ce9b6bd345e5ec968.1565690241.git.christophe.leroy@c-s.fr>
- <20190814020803.it7i7mjxyruu4vy3@oak.ozlabs.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <3d4e757f-84cd-7a48-0b5a-d39c44ea33ea@c-s.fr>
-Date:   Wed, 14 Aug 2019 11:46:41 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725955AbfHNJsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 05:48:01 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 83CA380C8;
+        Wed, 14 Aug 2019 09:48:26 +0000 (UTC)
+Date:   Wed, 14 Aug 2019 02:47:55 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Merlijn Wajer <merlijn@wizzup.org>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Philipp Rossak <embed3d@gmail.com>,
+        moaz korena <moaz@korena.xyz>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
+        Adam Ford <aford173@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        kernel@pyra-handheld.com,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
+ OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
+Message-ID: <20190814094755.GC52127@atomide.com>
+References: <CAKpie0RXM1UC33YFeFy-kAxfGhYGNkw4vUgNTThf-ZCAhPTVXw@mail.gmail.com>
+ <BE23C1E4-2877-49FA-B230-F9C10691B805@goldelico.com>
+ <CAKpie0TSo-8gmDm9_Zw4Sd+kjVVEomp8yA9Vu8qY2U2AcrQc=w@mail.gmail.com>
+ <8A069D96-C65F-43F5-8F54-20019CFB1A8D@goldelico.com>
+ <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org>
+ <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com>
+ <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
+ <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
+ <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
+ <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <20190814020803.it7i7mjxyruu4vy3@oak.ozlabs.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 14/08/2019 à 04:08, Paul Mackerras a écrit :
-> On Tue, Aug 13, 2019 at 09:59:35AM +0000, Christophe Leroy wrote:
+* H. Nikolaus Schaller <hns@goldelico.com> [190814 08:57]:
+> I also have pushed good news to
 > 
-> [snip]
+> 	https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/tree/letux-pvr
 > 
->> +.macro __LOAD_REG_IMMEDIATE r, x
->> +	.if \x & ~0xffffffff != 0
->> +		__LOAD_REG_IMMEDIATE_32 \r, (\x) >> 32
->> +		rldicr	\r, \r, 32, 31
->> +		.if (\x) & 0xffff0000 != 0
->> +			oris \r, \r, (\x)@__AS_ATHIGH
->> +		.endif
->> +		.if (\x) & 0xffff != 0
->> +			oris \r, \r, (\x)@l
->> +		.endif
->> +	.else
->> +		__LOAD_REG_IMMEDIATE_32 \r, \x
->> +	.endif
->> +.endm
+> Thanks to the help from the Pyra community, I was able to get a (binary) reference
+> implementation using DRM that works on Pyra/OMAP5. At least the gles1test1.
 > 
-> Doesn't this force all negative constants, even small ones, to use
-> the long sequence?  For example, __LOAD_REG_IMMEDIATE r3, -1 will
-> generate (as far as I can see):
+> With that reference setup I was able to fix my Makefiles for the staging/pvr implementation.
 > 
-> 	li	r3, -1
-> 	rldicr	r3, r3, 32, 31
-> 	oris	r3, r3, 0xffff
-> 	ori	r3, r3, 0xffff
+> I have tested that it works with v4.19.66 and v5.3-rc4 (LPAE build of the LetuxOS kernel tree)
+> on the Pyra.
 > 
-> which seems suboptimal.
+> In which areas does this tree go beyond the TI SDK/IMG DDK 1.14?
+> 
+> * includes internal API fixes for kernels up to v5.3
+> * lives in drivers/staging/pvr/1.14.3699939 - so that we can ask for inclusion in linux-next
+> * has Kconfig and Makefiles for in-kernel configuration (no separate build system)
+> * builds separate kernel modules for omap3430, omap3630, am335x, omap4, omap5, dra7 etc.
+>   pvrsrvkm
+>   e.g. pvrsrvkm_omap_omap5_sgx544_116
+> * the correct kernel module is automatically probed by matching .compatible in device tree
+>   so that the code is multi-platform friendly
+> * includes SoC integration for OMAP3/4/5 and has some preliminary bindings documentation
+> * code base should also support JZ4780/CI20 and some Intel Atom processors (CedarView, Poulsbo)
+> * has got a ToDo to describe what should be done during staging phase
+> 
+> 	https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/blob/letux/latest-pvr/drivers/staging/pvr/TODO
+> 
+> My plans for the next steps are:
+> 
+> * do more testing (e.g. X11, kmscube)
+> * check if and/or how it can run on am335x (BeagleBone) or OMAP3 (e.g. GTA04, OpenPandora)
+> * try a JZ480/CI20 build (unfortuantely I have no HDMI there with mainline kernels and I am
+>   missing the user-space libraries for MIPS).
 
-Ah yes, thanks. And it is also buggy when \x is over 0x80000000 because 
-lis is a signed ops
+That sounds good to me, just one comment. Before getting these into
+staging, I'd like to have omap variants use proper interconnect
+target module in devicetree like we already have in omap4.dtsi
+as target-module@56000000. This should simplify things further
+as the module child device driver(s) can just enable things with
+runtime PM and we can leave out all the legacy hwmod platform data
+that sounds like you're still carrying.
 
-I'll send v2
+I have patches here to add similar interconnect target modules for
+at least omap34xx, omap36xx, omap5, and am335x that I'll try to post
+later on today to play with. For am335x, things still depend on the
+recentely posted prm rstctrl patches. I'm not sure if I already
+did a dts patch for dra7 yet, need to check.
 
-Christophe
+Regards,
+
+Tony
