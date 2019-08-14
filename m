@@ -2,182 +2,117 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88979C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1819C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F2C20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:02:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pxcnvuyy"
+	by mail.kernel.org (Postfix) with ESMTP id 89C6B20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:03:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565787804;
+	bh=3OUlSHJn0lTrnJ5fKTpkrRdkhD4r845rbCuZ5nFCWHQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hQ1elShzy2qlY97AhHZrFmZwulegSPbC7uicRlpKotrIhrSfio5P8ezdHLBS6UVs0
+	 OEwO0WMrjlYkdqfCqlwx6C4ijwEET/gSohe+iSuAFSJoPSEXvQcT/gR4Dp/XdvhMmF
+	 pGPZE5FNs7JfY8Wad4vl4+9t+ehoH2F6nURyQzkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfHNNCf (ORCPT
+        id S1727945AbfHNNDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 09:02:35 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:60545 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbfHNNCe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:02:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1565787753; x=1597323753;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=ahedc4jUDKTjKYr/t9LKGSVGXplFx3U807P6YTr2BXY=;
-  b=pxcnvuyy+e6NkEQZRmNvsII4zW0P1AEo78w3dH5gpd5a/LuIQNFJEbUS
-   Gjoxz5a005sd9YSda+v/yy9DcRaWUd0b6jCQJxy8uirvoNJ/0I23+4DOt
-   QN55pPqNb6/499xTAbRv8tJwV3Fp2q1mIB9yF4JR+CF/krABI1QC+w9ji
-   w=;
-X-IronPort-AV: E=Sophos;i="5.64,385,1559520000"; 
-   d="scan'208";a="409587587"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-8549039f.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 14 Aug 2019 13:02:30 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-8549039f.us-west-2.amazon.com (Postfix) with ESMTPS id C0243A227C;
-        Wed, 14 Aug 2019 13:02:29 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 14 Aug 2019 13:02:29 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.160.211) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 14 Aug 2019 13:02:26 +0000
-Subject: Re: [PATCH 0/9] arm64: Stolen time support
-To:     Steven Price <steven.price@arm.com>, Marc Zyngier <maz@kernel.org>
-CC:     <kvm@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
-        <linux-doc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>,
-        <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Will Deacon" <will@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190802145017.42543-1-steven.price@arm.com>
- <20190803190522.5fec8f7d@why> <6789f477-8ab5-cc54-1ad2-8627917b07c9@arm.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <8ca5c106-7c12-4c6e-6d81-a90f281a9894@amazon.com>
-Date:   Wed, 14 Aug 2019 15:02:25 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Wed, 14 Aug 2019 09:03:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726865AbfHNNDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:03:23 -0400
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70CFC206C2;
+        Wed, 14 Aug 2019 13:03:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565787801;
+        bh=3OUlSHJn0lTrnJ5fKTpkrRdkhD4r845rbCuZ5nFCWHQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EDCnd1iWrMYY5eTCyl2C4OcbbG7hwyR/yBNNl1DEgM7rxl2JhllcRp+qc1n1e3wQn
+         5m9Cif0BRl33bPWPSpZjlT1ETGRv6XhqJe/99+FqhpGmSNPd3P9/Fkl2Pv/6NY/aJ+
+         36HbweNwXt3W5499mCcC2xN0FGArisPikhNobVWE=
+Received: by mail-lf1-f44.google.com with SMTP id b29so72023750lfq.1;
+        Wed, 14 Aug 2019 06:03:21 -0700 (PDT)
+X-Gm-Message-State: APjAAAU84prkwE67YXO9KMSNCfUEUL5OEuW2YWcNB+6G54CcRK09v+pN
+        5hZNHDBJJADedFmKc4qS1fbNOJ54BovJan1OSkc=
+X-Google-Smtp-Source: APXvYqz10vuC20rP+LQQhwdjZM0MrWzEZ/evwZm1M1ZsrA4lt+zFV303rcMeni4yzkxrQ0voupVR/up/rPG64KZGaEE=
+X-Received: by 2002:a19:f512:: with SMTP id j18mr21053059lfb.159.1565787799622;
+ Wed, 14 Aug 2019 06:03:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6789f477-8ab5-cc54-1ad2-8627917b07c9@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.160.211]
-X-ClientProxiedBy: EX13D03UWA002.ant.amazon.com (10.43.160.144) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+References: <CGME20190813150842eucas1p2c248537d9cd593073e12abeac2cacab5@eucas1p2.samsung.com>
+ <20190813150827.31972-1-s.nawrocki@samsung.com>
+In-Reply-To: <20190813150827.31972-1-s.nawrocki@samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 14 Aug 2019 15:03:08 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdm2qj_GDR4NQriuOjPFyAxf_CdH_hXEsQNDp4qGHaUZA@mail.gmail.com>
+Message-ID: <CAJKOXPdm2qj_GDR4NQriuOjPFyAxf_CdH_hXEsQNDp4qGHaUZA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/9] Exynos Adaptive Supply Voltage support
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
+        kgene@kernel.org, pankaj.dubey@samsung.com,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 13 Aug 2019 at 17:08, Sylwester Nawrocki <s.nawrocki@samsung.com> w=
+rote:
+>
+> This is third iteration of my patch series adding ASV (Adaptive Supply
+> Voltage) support for Exynos SoCs. The previous one can be found at:
+> https://lore.kernel.org/lkml/20190718143044.25066-1-s.nawrocki@samsung.co=
+m
+>
+> There is no major changes in this series comparing to v2, only minor
+> corrections addressing review comments.
+>
+> I was not sure it was a good idea to try to extend the OPP binding
+> so as to include the ASV data tables in DT, so the tables are left
+> in the driver.
+>
+> This patch set includes Exynos CHIPID driver posted by Pankaj Dubey and
+> futher improved by Bart=C5=82omiej =C5=BBo=C5=82nierkiewicz [1].
+>
+> Tested on Odroid XU3, XU3 Lite, XU4.
+>
+> One of the things on TODO list is support for the Adaptive Body Bias.
+> This will require modifications on the cpufreq driver side in order to
+> support multiple voltage regulators and changes in the OPP framework
+> to support adding OPPs with multiple voltages.
+>
+> [1] https://lkml.org/lkml/2018/11/15/908
+>
+> Pankaj Dubey (3):
+>   soc: samsung: Add exynos chipid driver support
+>   ARM: EXYNOS: enable exynos_chipid for ARCH_EXYNOS
+>   ARM64: EXYNOS: enable exynos_chipid for ARCH_EXYNOS
+>
+> Sylwester Nawrocki (6):
+>   soc: samsung: Convert exynos-chipid driver to use the regmap API
+>   soc: samsung: Add Exynos Adaptive Supply Voltage driver
+>   ARM: EXYNOS: Enable exynos-asv driver for ARCH_EXYNOS
+>   soc: samsung: Update the CHIP ID DT binding documentation
+>   ARM: dts: Add "syscon" compatible string to chipid node
+>   ARM: dts: Add samsung,asv-bin property for odroidxu3-lite
 
+All look good to me but I need acks for bindings before applying.
 
-On 05.08.19 15:06, Steven Price wrote:
-> On 03/08/2019 19:05, Marc Zyngier wrote:
->> On Fri,  2 Aug 2019 15:50:08 +0100
->> Steven Price <steven.price@arm.com> wrote:
->>
->> Hi Steven,
->>
->>> This series add support for paravirtualized time for arm64 guests and
->>> KVM hosts following the specification in Arm's document DEN 0057A:
->>>
->>> https://developer.arm.com/docs/den0057/a
->>>
->>> It implements support for stolen time, allowing the guest to
->>> identify time when it is forcibly not executing.
->>>
->>> It doesn't implement support for Live Physical Time (LPT) as there are
->>> some concerns about the overheads and approach in the above
->>> specification, and I expect an updated version of the specification to
->>> be released soon with just the stolen time parts.
->>
->> Thanks for posting this.
->>
->> My current concern with this series is around the fact that we allocate
->> memory from the kernel on behalf of the guest. It is the first example
->> of such thing in the ARM port, and I can't really say I'm fond of it.
->>
->> x86 seems to get away with it by having the memory allocated from
->> userspace, why I tend to like more. Yes, put_user is more
->> expensive than a straight store, but this isn't done too often either.
->>
->> What is the rational for your current approach?
-> 
-> As I see it there are 3 approaches that can be taken here:
-> 
-> 1. Hypervisor allocates memory and adds it to the virtual machine. This
-> means that everything to do with the 'device' is encapsulated behind the
-> KVM_CREATE_DEVICE / KVM_[GS]ET_DEVICE_ATTR ioctls. But since we want the
-> stolen time structure to be fast it cannot be a trapping region and has
-> to be backed by real memory - in this case allocated by the host kernel.
-> 
-> 2. Host user space allocates memory. Similar to above, but this time
-> user space needs to manage the memory region as well as the usual
-> KVM_CREATE_DEVICE dance. I've no objection to this, but it means
-> kvmtool/QEMU needs to be much more aware of what is going on (e.g. how
-> to size the memory region).
-
-You ideally want to get the host overhead for a VM to as little as you 
-can. I'm not terribly fond of the idea of reserving a full page just 
-because we're too afraid of having the guest donate memory.
-
-> 
-> 3. Guest kernel "donates" the memory to the hypervisor for the
-> structure. As far as I'm aware this is what x86 does. The problems I see
-> this approach are:
-> 
->   a) kexec becomes much more tricky - there needs to be a disabling
-> mechanism for the guest to stop the hypervisor scribbling on memory
-> before starting the new kernel.
-
-I wouldn't call "quiesce a device" much more tricky. We have to do that 
-for other devices as well today.
-
->   b) If there is more than one entity that is interested in the
-> information (e.g. firmware and kernel) then this requires some form of
-> arbitration in the guest because the hypervisor doesn't want to have to
-> track an arbitrary number of regions to update.
-
-Why would FW care?
-
->   c) Performance can suffer if the host kernel doesn't have a suitably
-> aligned/sized area to use. As you say - put_user() is more expensive.
-
-Just define the interface to always require natural alignment when 
-donating a memory location?
-
-> The structure is updated on every return to the VM.
-
-If you really do suffer from put_user(), there are alternatives. You 
-could just map the page on the registration hcall and then leave it 
-pinned until the vcpu gets destroyed again.
-
-> Of course x86 does prove the third approach can work, but I'm not sure
-> which is actually better. Avoid the kexec cancellation requirements was
-> the main driver of the current approach. Although many of the
-
-I really don't understand the problem with kexec cancellation. Worst 
-case, let guest FW set it up for you and propagate only the address down 
-via ACPI/DT. That way you can mark the respective memory as reserved too.
-
-But even with a Linux only mechanism, just take a look at 
-arch/x86/kernel/kvmclock.c. All they do to remove the map is to hook 
-into machine_crash_shutdown() and machine_shutdown().
-
-
-Alex
-
-> conversations about this were also tied up with Live Physical Time which
-> adds its own complications.
-> 
-> Steve
-> _______________________________________________
-> kvmarm mailing list
-> kvmarm@lists.cs.columbia.edu
-> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
-> 
+Best regards,
+Krzysztof
