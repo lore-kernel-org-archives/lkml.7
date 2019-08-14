@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB17C0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6996EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF2D2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38EFD20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565768197;
-	bh=4gUdvc1R/SkhKt0c/k8X3fUa4eb+pWbIovDugLNh6nY=;
+	s=default; t=1565768225;
+	bh=SKBQaFc4Q5zl/E5j5JlhupCht0lrjDfZZhljPGhc81c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EpZ0hH0SpQ9BZl3/UYg734abOP1IFNlTjmD5pUjUJ+oS4DH1CoXczUx11LvzGVeCC
-	 8/+4DfYGQV5kLW1UythG5ArndaA5VTJ4wyxqbJsy8Kl6gPMAc6subAmQMWwUiyY9JY
-	 2+lJkXnhRQFGduVtKCUft+E2kwFWabZ0xi5avHQE=
+	b=QkoA34Z2RQgWZDQ871/mbjIvNfSEba8njF53l5CIJNLw2NQipLel4qaS/caVGFTor
+	 Z2L/0KkkeLeRVdRJUWjVzJuukBwD+8SItR+a0phTUTa0Y8n9ZgDLxmz8zI5DRVjGnT
+	 GCu1yYhLpIHZ7vRZuuLQZG3nxk5VRQCHZ+soMlOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbfHNHgf (ORCPT
+        id S1727738AbfHNHhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:36:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58188 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 03:37:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726575AbfHNHgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:36:35 -0400
+        id S1726575AbfHNHhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:37:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FEAD2084F;
-        Wed, 14 Aug 2019 07:36:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C48B20843;
+        Wed, 14 Aug 2019 07:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565768194;
-        bh=4gUdvc1R/SkhKt0c/k8X3fUa4eb+pWbIovDugLNh6nY=;
+        s=default; t=1565768222;
+        bh=SKBQaFc4Q5zl/E5j5JlhupCht0lrjDfZZhljPGhc81c=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f4PP8BUV3X5pFs77WWaCtlwIyScAzh+EhlEvbuyuN4OMcH89f9b/pawwXdKuKQAOL
-         4fO6+FovVnj5gDuvQmibpY6HVdz7a8qPFUc8V3rzxTTvxEG7Hs/ognaXfvdJMqE3xG
-         RXC6A0wejzL1oNl/8URj/WJue9tRQf9iTxF0PIpM=
-Date:   Wed, 14 Aug 2019 09:36:32 +0200
+        b=qLOo/1C06zWNgUSfBFHKHbYbmkh4JtUhONJGppc5+t5SRB9Jx0C4ytR66wpc/zSt2
+         UUcD+ZhEmPbVAGbpYOsbV3fMJqKfjiJFkMZGDGPA6y3JYCmelDL20jAQZA49zJtxvF
+         FsU146PQld082QNNaPMFe7RUs3c6Gl/g/BjkLwO8=
+Date:   Wed, 14 Aug 2019 09:37:00 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Sasha Levin <sashal@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
         Muchun Song <smuchun@gmail.com>,
         Mukesh Ojha <mojha@codeaurora.org>,
         Prateek Sood <prsood@codeaurora.org>
-Subject: Re: [PATCH AUTOSEL 4.19 31/68] driver core: Fix use-after-free and
+Subject: Re: [PATCH AUTOSEL 4.14 18/44] driver core: Fix use-after-free and
  double free on glue directory
-Message-ID: <20190814073632.GB23414@kroah.com>
-References: <20190814021548.16001-1-sashal@kernel.org>
- <20190814021548.16001-31-sashal@kernel.org>
+Message-ID: <20190814073700.GC23414@kroah.com>
+References: <20190814021834.16662-1-sashal@kernel.org>
+ <20190814021834.16662-18-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190814021548.16001-31-sashal@kernel.org>
+In-Reply-To: <20190814021834.16662-18-sashal@kernel.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 10:15:09PM -0400, Sasha Levin wrote:
+On Tue, Aug 13, 2019 at 10:18:07PM -0400, Sasha Levin wrote:
 > From: Muchun Song <smuchun@gmail.com>
 > 
 > [ Upstream commit ac43432cb1f5c2950408534987e57c2071e24d8f ]
@@ -162,10 +162,10 @@ On Tue, Aug 13, 2019 at 10:15:09PM -0400, Sasha Levin wrote:
 >  1 file changed, 52 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index e1a8d5c06f65e..fcda6313e7def 100644
+> index 1c67bf24bc23c..2ec9af90cd28e 100644
 > --- a/drivers/base/core.c
 > +++ b/drivers/base/core.c
-> @@ -1648,12 +1648,63 @@ static inline struct kobject *get_glue_dir(struct device *dev)
+> @@ -1572,12 +1572,63 @@ static inline struct kobject *get_glue_dir(struct device *dev)
 >   */
 >  static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
 >  {
@@ -230,8 +230,13 @@ On Tue, Aug 13, 2019 at 10:15:09PM -0400, Sasha Levin wrote:
 >  		kobject_del(glue_dir);
 >  	kobject_put(glue_dir);
 >  	mutex_unlock(&gdp_mutex);
+> -- 
+> 2.20.1
+> 
 
-Same here, please drop for now.
+Also drop here :)
+
+and just everywhere else too please.
 
 thanks,
 
