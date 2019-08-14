@@ -2,79 +2,83 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71493C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24229C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EACC20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:12:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="IewXAZIF"
+	by mail.kernel.org (Postfix) with ESMTP id ECC0A20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbfHNJMF (ORCPT
+        id S1726500AbfHNJRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:12:05 -0400
-Received: from mx1.riseup.net ([198.252.153.129]:58372 "EHLO mx1.riseup.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfHNJME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:12:04 -0400
-Received: from capuchin.riseup.net (capuchin-pn.riseup.net [10.0.1.176])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "*.riseup.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (verified OK))
-        by mx1.riseup.net (Postfix) with ESMTPS id D67AC1B91B1;
-        Wed, 14 Aug 2019 02:12:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-        t=1565773922; bh=oW9fbXdkjx9OcEYJVruSc0eYgJA1NnILKtEzwNxUvIk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:Reply-To:From;
-        b=IewXAZIFcj0DVjhSQ9klLUWPW5KnV+DCfwG2fSiwFjE3zPrUEHzrg9LAmj3dmnPXW
-         XyF0fZQeWxywgXbUrfsiQQd21GRM2O7+elA03F0CTiXrgTvrMgadc995/Y57iW2BDu
-         MfGwLc9p2MGcWoIGknK/mwBrBFBKvf7ueacOZn4k=
-X-Riseup-User-ID: D21A026486371A7AB26BE3B4C633D8C2FAE9D2EA9EAA6509300DB21F4C84058E
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-         by capuchin.riseup.net (Postfix) with ESMTPSA id 17CB71202AD;
-        Wed, 14 Aug 2019 02:12:00 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 12:11:54 +0300
-From:   Kernel User <linux-kernel@riseup.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     mhocko@suse.com, x86@kernel.org
-Subject: Re: /sys/devices/system/cpu/vulnerabilities/ doesn't show all known
- CPU vulnerabilities
-Message-ID: <20190814121154.12f488f7@localhost>
-In-Reply-To: <20190814070457.GA26456@zn.tnic>
-References: <20190813232829.3a1962cc@localhost>
- <20190813212115.GO16770@zn.tnic>
- <20190814010041.098fe4be@localhost>
- <20190814070457.GA26456@zn.tnic>
-Reply-To: linux-kernel@vger.kernel.org
+        Wed, 14 Aug 2019 05:17:48 -0400
+Received: from gardel.0pointer.net ([85.214.157.71]:34924 "EHLO
+        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbfHNJRr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 05:17:47 -0400
+X-Greylist: delayed 489 seconds by postgrey-1.27 at vger.kernel.org; Wed, 14 Aug 2019 05:17:47 EDT
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
+        by gardel.0pointer.net (Postfix) with ESMTP id EF34CE80937;
+        Wed, 14 Aug 2019 11:09:36 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id 950C2160102; Wed, 14 Aug 2019 11:09:36 +0200 (CEST)
+Date:   Wed, 14 Aug 2019 11:09:36 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Karel Zak <kzak@redhat.com>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: New kernel interface for sys_tz and timewarp?
+Message-ID: <20190814090936.GB10516@gardel-login>
+References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
+ <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
+ <20190814000622.GB20365@mit.edu>
+ <CAK8P3a1CXRETxn6Gh_cOxM3rZ-wUwVDu-7=yEwjqOY=uEdC6OQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1CXRETxn6Gh_cOxM3rZ-wUwVDu-7=yEwjqOY=uEdC6OQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 09:04:57 +0200 Borislav Petkov wrote:
+On Mi, 14.08.19 10:31, Arnd Bergmann (arnd@arndb.de) wrote:
 
-> IMO, what you want does not belong in sysfs but in documentation.
+> - glibc stops passing the caller timezone argument to the kernel
+> - the distro kernel disables CONFIG_RTC_HCTOSYS,
+>   CONFIG_RTC_SYSTOHC  and CONFIG_GENERIC_CMOS_UPDATE
 
-How would documentation (a fixed static text file) tell whether a
-particular system is vulnerable or not?
+What's the benefit of letting userspace do this? It sounds a lot more
+fragile to leave this syncing to userspace if the kernel can do this
+trivially on its own.
 
-> I partially see your point that a table of sorts mapping all those CPU
-> vulnerability names to (possible) mitigations is needed for users
-> which would like to know whether they're covered, without having to
-> run some scripts from github,
+IIRC there are uses in kernel that use CLOCK_REALTIME already before
+userspace starts. e.g. iirc networking generally prefers
+CLOCK_REALTIME timestamps over CLOCK_MONOTONIC timestamps
+(i.e. SO_TIMESTAMP and friends are still CLOCK_REALTIME only so far,
+unless I am missing something). If the kernel comes up with a
+CLOCK_REALTIME that starts at 0 this is pretty annoying I
+figure... Hence, so far I suggested to distros to continue turning on
+the options above, and let the kernel do this on its own without
+involving userspace in that.
 
-Correct.
+Lennart
 
-> but sysfs just ain't the place.
-
-Then why is it currently used for some of the vulnerabilities?
-
-I am not an expert and I don't know if it is the place. My only concern
-is to have that information which we currently don't regardless of
-where it may be placed.
+--
+Lennart Poettering, Berlin
