@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7F2C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FA3C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10D58206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFD23206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803216;
-	bh=Lqu+Gb6MJgsXC8tH+vHrPCLUN56KFzybm5bfgYB8sV0=;
+	s=default; t=1565803221;
+	bh=lD3fAztCuiappqaFlZBVJ9ZQCe7cohMY22oCWk0byLE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mvswkzw3HCIytICHOFO15SVmJEVQW7tJK7AbfPTuFmwfMyRGMTSxgHHMgHRmP62AA
-	 37Jh71p/1HBmPmBe199EbcPN9qcemzYTeuXlIHSJlLaDTvDHgczAXdGHPS867++O9R
-	 h0R6ovVJhPXDC7COlhJGqoGsVmiQeOTwfbX922Us=
+	b=pQAjBNkkUFSmcYfiQShj3Ei47my6bYpuHs2OmxG6U3s0GVRRsm/TYcbrqFSdVCN5g
+	 BtPotONkxV/DppyIovWkEnOwbZYtAsF5OLtIvu+biaoonjwaVr/HWqgo/1o6yM+HkU
+	 efKwcjcfWnuI6t5QwPk9hOm0vHT7XqPOBJq9OqPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730539AbfHNRUP (ORCPT
+        id S1730522AbfHNRKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:20:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33946 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:10:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730538AbfHNRKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:10:54 -0400
+        id S1730501AbfHNRKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:10:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B52BC2084D;
-        Wed, 14 Aug 2019 17:10:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC044208C2;
+        Wed, 14 Aug 2019 17:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802654;
-        bh=Lqu+Gb6MJgsXC8tH+vHrPCLUN56KFzybm5bfgYB8sV0=;
+        s=default; t=1565802641;
+        bh=lD3fAztCuiappqaFlZBVJ9ZQCe7cohMY22oCWk0byLE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YZynM/+IqnAo28LohK3c2pnk0okH/zoGBfILl/Ktyu2M1JbcJVoiD8RQOkJmAKzFi
-         8vLHL8iwQ0AS71FbWSAEoVy5LFTBEb7qNLlfS6v18YE9CW9R6viz0lolvhXb/qwDiU
-         3w427o3S23jgftWSBMa6UreBSyhKuR7CnKdjXTLs=
+        b=Fm348XfLHgXXw4WeAu9ItNYE6rj1HMR4aWlDO20o95qBC11wtdCSqUbHDI4Pjgvx0
+         8N8exltq+PkYj7Ab811KOEonn/5sBvK8ItIllVHEVo4MVT/SxVbWGLndf/eaQHB5yC
+         QRIKbnqWjy2OSJ9dtbvmV7PmTn/H8XGsFrs3zcC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tai Man <taiman.wong@amd.com>,
-        Charlene Liu <Charlene.Liu@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 40/91] drm/amd/display: use encoders engine id to find matched free audio device
-Date:   Wed, 14 Aug 2019 19:01:03 +0200
-Message-Id: <20190814165751.345796527@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marta Rybczynska <marta.rybczynska@kalray.eu>,
+        Jean-Baptiste Riaux <jbriaux@kalray.eu>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 60/91] nvme: fix multipath crash when ANA is deactivated
+Date:   Wed, 14 Aug 2019 19:01:23 +0200
+Message-Id: <20190814165752.121913117@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -62,54 +61,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 74eda776d7a4e69ec7aa1ce30a87636f14220fbb ]
+[ Upstream commit 66b20ac0a1a10769d059d6903202f53494e3d902 ]
 
-[Why]
-On some platforms, the encoder id 3 is not populated. So the encoders
-are not stored in right order as index (id: 0, 1, 2, 4, 5) at pool. This
-would cause encoders id 4 & id 5 to fail when finding corresponding
-audio device, defaulting to the first available audio device. As result,
-we cannot stream audio into two DP ports with encoders id 4 & id 5.
+Fix a crash with multipath activated. It happends when ANA log
+page is larger than MDTS and because of that ANA is disabled.
+The driver then tries to access unallocated buffer when connecting
+to a nvme target. The signature is as follows:
 
-[How]
-It need to create enough audio device objects (0 - 5) to perform matching.
-Then use encoder engine id to find matched audio device.
+[  300.433586] nvme nvme0: ANA log page size (8208) larger than MDTS (8192).
+[  300.435387] nvme nvme0: disabling ANA support.
+[  300.437835] nvme nvme0: creating 4 I/O queues.
+[  300.459132] nvme nvme0: new ctrl: NQN "nqn.0.0.0", addr 10.91.0.1:8009
+[  300.464609] BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+[  300.466342] #PF error: [normal kernel read fault]
+[  300.467385] PGD 0 P4D 0
+[  300.467987] Oops: 0000 [#1] SMP PTI
+[  300.468787] CPU: 3 PID: 50 Comm: kworker/u8:1 Not tainted 5.0.20kalray+ #4
+[  300.470264] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+[  300.471532] Workqueue: nvme-wq nvme_scan_work [nvme_core]
+[  300.472724] RIP: 0010:nvme_parse_ana_log+0x21/0x140 [nvme_core]
+[  300.474038] Code: 45 01 d2 d8 48 98 c3 66 90 0f 1f 44 00 00 41 57 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b af 20 0a 00 00 48 89 34 24 <66> 83 7d 08 00 0f 84 c6 00 00 00 44 8b 7d 14 49 89 d5 8b 55 10 48
+[  300.477374] RSP: 0018:ffffa50e80fd7cb8 EFLAGS: 00010296
+[  300.478334] RAX: 0000000000000001 RBX: ffff9130f1872258 RCX: 0000000000000000
+[  300.479784] RDX: ffffffffc06c4c30 RSI: ffff9130edad4280 RDI: ffff9130f1872258
+[  300.481488] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000044
+[  300.483203] R10: 0000000000000220 R11: 0000000000000040 R12: ffff9130f18722c0
+[  300.484928] R13: ffff9130f18722d0 R14: ffff9130edad4280 R15: ffff9130f18722c0
+[  300.486626] FS:  0000000000000000(0000) GS:ffff9130f7b80000(0000) knlGS:0000000000000000
+[  300.488538] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  300.489907] CR2: 0000000000000008 CR3: 00000002365e6000 CR4: 00000000000006e0
+[  300.491612] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  300.493303] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  300.494991] Call Trace:
+[  300.495645]  nvme_mpath_add_disk+0x5c/0xb0 [nvme_core]
+[  300.496880]  nvme_validate_ns+0x2ef/0x550 [nvme_core]
+[  300.498105]  ? nvme_identify_ctrl.isra.45+0x6a/0xb0 [nvme_core]
+[  300.499539]  nvme_scan_work+0x2b4/0x370 [nvme_core]
+[  300.500717]  ? __switch_to_asm+0x35/0x70
+[  300.501663]  process_one_work+0x171/0x380
+[  300.502340]  worker_thread+0x49/0x3f0
+[  300.503079]  kthread+0xf8/0x130
+[  300.503795]  ? max_active_store+0x80/0x80
+[  300.504690]  ? kthread_bind+0x10/0x10
+[  300.505502]  ret_from_fork+0x35/0x40
+[  300.506280] Modules linked in: nvme_tcp nvme_rdma rdma_cm iw_cm ib_cm ib_core nvme_fabrics nvme_core xt_physdev ip6table_raw ip6table_mangle ip6table_filter ip6_tables xt_comment iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 xt_CHECKSUM iptable_mangle iptable_filter veth ebtable_filter ebtable_nat ebtables iptable_raw vxlan ip6_udp_tunnel udp_tunnel sunrpc joydev pcspkr virtio_balloon br_netfilter bridge stp llc ip_tables xfs libcrc32c ata_generic pata_acpi virtio_net virtio_console net_failover virtio_blk failover ata_piix serio_raw libata virtio_pci virtio_ring virtio
+[  300.514984] CR2: 0000000000000008
+[  300.515569] ---[ end trace faa2eefad7e7f218 ]---
+[  300.516354] RIP: 0010:nvme_parse_ana_log+0x21/0x140 [nvme_core]
+[  300.517330] Code: 45 01 d2 d8 48 98 c3 66 90 0f 1f 44 00 00 41 57 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b af 20 0a 00 00 48 89 34 24 <66> 83 7d 08 00 0f 84 c6 00 00 00 44 8b 7d 14 49 89 d5 8b 55 10 48
+[  300.520353] RSP: 0018:ffffa50e80fd7cb8 EFLAGS: 00010296
+[  300.521229] RAX: 0000000000000001 RBX: ffff9130f1872258 RCX: 0000000000000000
+[  300.522399] RDX: ffffffffc06c4c30 RSI: ffff9130edad4280 RDI: ffff9130f1872258
+[  300.523560] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000044
+[  300.524734] R10: 0000000000000220 R11: 0000000000000040 R12: ffff9130f18722c0
+[  300.525915] R13: ffff9130f18722d0 R14: ffff9130edad4280 R15: ffff9130f18722c0
+[  300.527084] FS:  0000000000000000(0000) GS:ffff9130f7b80000(0000) knlGS:0000000000000000
+[  300.528396] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  300.529440] CR2: 0000000000000008 CR3: 00000002365e6000 CR4: 00000000000006e0
+[  300.530739] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  300.531989] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  300.533264] Kernel panic - not syncing: Fatal exception
+[  300.534338] Kernel Offset: 0x17c00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[  300.536227] ---[ end Kernel panic - not syncing: Fatal exception ]---
 
-Signed-off-by: Tai Man <taiman.wong@amd.com>
-Reviewed-by: Charlene Liu <Charlene.Liu@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Condition check refactoring from Christoph Hellwig.
+
+Signed-off-by: Marta Rybczynska <marta.rybczynska@kalray.eu>
+Tested-by: Jean-Baptiste Riaux <jbriaux@kalray.eu>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_resource.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/nvme/host/multipath.c | 8 ++------
+ drivers/nvme/host/nvme.h      | 6 +++++-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-index e0a96abb3c46c..06d5988dff723 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-@@ -222,7 +222,7 @@ bool resource_construct(
- 		 * PORT_CONNECTIVITY == 1 (as instructed by HW team).
- 		 */
- 		update_num_audio(&straps, &num_audio, &pool->audio_support);
--		for (i = 0; i < pool->pipe_count && i < num_audio; i++) {
-+		for (i = 0; i < caps->num_audio; i++) {
- 			struct audio *aud = create_funcs->create_audio(ctx, i);
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 260248fbb8feb..a11e210d173e4 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -20,11 +20,6 @@ module_param(multipath, bool, 0444);
+ MODULE_PARM_DESC(multipath,
+ 	"turn on native support for multiple controllers per subsystem");
  
- 			if (aud == NULL) {
-@@ -1713,6 +1713,12 @@ static struct audio *find_first_free_audio(
- 			return pool->audios[i];
- 		}
- 	}
+-inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
+-{
+-	return multipath && ctrl->subsys && (ctrl->subsys->cmic & (1 << 3));
+-}
+-
+ /*
+  * If multipathing is enabled we need to always use the subsystem instance
+  * number for numbering our devices to avoid conflicts between subsystems that
+@@ -516,7 +511,8 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ {
+ 	int error;
+ 
+-	if (!nvme_ctrl_use_ana(ctrl))
++	/* check if multipath is enabled and we have the capability */
++	if (!multipath || !ctrl->subsys || !(ctrl->subsys->cmic & (1 << 3)))
+ 		return 0;
+ 
+ 	ctrl->anacap = id->anacap;
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index e82cdaec81c9c..d5e29b57eb340 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -464,7 +464,11 @@ extern const struct attribute_group nvme_ns_id_attr_group;
+ extern const struct block_device_operations nvme_ns_head_ops;
+ 
+ #ifdef CONFIG_NVME_MULTIPATH
+-bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl);
++static inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
++{
++	return ctrl->ana_log_buf != NULL;
++}
 +
-+    /* use engine id to find free audio */
-+	if ((id < pool->audio_count) && (res_ctx->is_audio_acquired[id] == false)) {
-+		return pool->audios[id];
-+	}
-+
- 	/*not found the matching one, first come first serve*/
- 	for (i = 0; i < pool->audio_count; i++) {
- 		if (res_ctx->is_audio_acquired[i] == false) {
+ void nvme_set_disk_name(char *disk_name, struct nvme_ns *ns,
+ 			struct nvme_ctrl *ctrl, int *flags);
+ void nvme_failover_req(struct request *req);
 -- 
 2.20.1
 
