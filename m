@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A89DC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE0DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A2721743
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F6E21744
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:09:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DB2uNyqK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LDjG+Z8m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbfHNGJn (ORCPT
+        id S1727762AbfHNGJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 14 Aug 2019 02:09:43 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39082 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727602AbfHNGJO (ORCPT
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39810 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727552AbfHNGJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 02:09:14 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x4so11572727ljj.6
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 23:09:13 -0700 (PDT)
+        Wed, 14 Aug 2019 02:09:15 -0400
+Received: by mail-lf1-f67.google.com with SMTP id x3so24697353lfn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 23:09:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=go+1BvHiZ551s7lZZtvzU+7HaWl7o/QBHe+MvPdzMnE=;
-        b=DB2uNyqKpzDzXvdgtr4TdYqx4FJ1xEsqNOfYwtyOdiyN8bmElVFNz5Y0QHN1tZwHJL
-         ZXY6ddKq6RNyTtLEScnryGITuQ2rSc7wS22yci9vy2R9CSaQkY8MKwQFjpeteP/M/Omw
-         tFid6mUmH+6ES71/fxOTcUTKhdvsMaMffcuT3R5VQabk+OkUA2QSwkWXOOuWJv5KDTW0
-         6116/1ms5skkFH9i9nYOIHmFg9rbrfrl9fNN29VHkWjywexztmApeKsSGr0jpCHcZTk2
-         dDqGTu0sAKnTbkJI25Cx1tuShn5R9x6mjRiPrbgg/FTD4nmEJRMr+CHxt3UqAKqmfSXN
-         yzOg==
+        bh=8xlhGnlcLyXPojY0bRPSDLMcy+hJZFPi39TOyTS/wBU=;
+        b=LDjG+Z8mIhS5zgHxWzmnF037zhntmBJl5zKjHirJ7skqEwESZ/9TPssPMun9VHd2gJ
+         paoyDg16Hp50SSAZN7dwo2ODWuSrTe3rFjXzjteC4kXfai6KEhoTk5mEPSbXAOmNftnk
+         mXGruXqtXay0ByyQKbpWP+ihz0ogwxrIp6ZmEKdCPOwSl0tYSW0pcFhNKIQ8vlbnPl3T
+         5W8QHXnGS/Q9C/oSNSp9ON/H+4+u67fPjkyRotDsZDaGrizdtLuzOBuxd2VnHjgEjYrr
+         Ovzwa8TmuLte801MqTa06cGHKe8YtzbV1XAPsjES+LYOL3nA7flEEaNGdXfEFp/gY6ws
+         Yk3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=go+1BvHiZ551s7lZZtvzU+7HaWl7o/QBHe+MvPdzMnE=;
-        b=CbBo3+iY4527N4MPSLSWvdd9X1Hmch3uayAAE4heomW9Lf9xHjz+tdGQj1MTMt2VEL
-         AYM6UBBFDDMYE4bOdnK8Q4lWORqn+cuSLXurmaTXk+n6wGqlfbKhaClRFZLMRX9QMcF6
-         c/GuUt5K+e0P1lAQA5slK2HLZ7cwEgkwT4dCyJsVLp7YgY0aPwXqQutfdLq5Ws4ZMEAG
-         yZPaPcV60cRFUAW8SnZ1TtkvVV7NKIzkiu+rc/s0PdZlqPIsZsnZ0ITx+xbjNyRmMDUc
-         8qa2UQOJGC73vL0HoHr/h4i0djqIaUedKJMgqw6NiF5h6+xSEOxjFbJ7zdfIJ8Iqq2Xz
-         nksQ==
-X-Gm-Message-State: APjAAAU9oRgdND15/mJzOsfLtSREEIOwxqB+N5A4aCc3K0ZdwDUTniFD
-        mjacPzaTflq37kLTvrQF8zA=
-X-Google-Smtp-Source: APXvYqxke6on79/JFb/mW5nqF0uOU5tx+pV8+KsdaUpiYfd+xIeG5MpxPdARsgAB0SJSFsZtf1z0sw==
-X-Received: by 2002:a2e:9b84:: with SMTP id z4mr24044973lji.75.1565762952729;
-        Tue, 13 Aug 2019 23:09:12 -0700 (PDT)
+        bh=8xlhGnlcLyXPojY0bRPSDLMcy+hJZFPi39TOyTS/wBU=;
+        b=YIFJLhiiwFDLkzTBFtSPpftZzDluEymYl3CMwuaTgFLLhDXTQILtMBjiPYjeOqjgcb
+         FU79TzxlRL0J4dN2t/KGb7K0LIN2tHGlMYarSVHDhZh58umFhkRUirNsS+oREXBLtg5X
+         qwT/iZAZrYTgnMXzsaduX3Pi55WCsLwLLLqlLpAss4WTZkDDz/Yfb3OwKytzEaRdfefX
+         KC0QNalJaKGL5FWpgnCYvneqMTnEB95Cgi3XDlA7/rSDdaWn8/Giz9R3lcmDkD2S0wVw
+         9mzRZ7HrcqA61thORxF/kq9S2VorcgpmOpJeG4Mmd6on8B1Rnj6Xt0H5tBjcFm1UqDrs
+         J/EQ==
+X-Gm-Message-State: APjAAAUAkteItgQTfE3cQturQD2SwMekcQFwKnAjIKe2gdyKl/iSYtbr
+        v7S3Dv4dZKI1bxWy4/BWGkA=
+X-Google-Smtp-Source: APXvYqyZgq101jMRdi4NBQz/E+rmMXrIu0bWV/oCYTnoMBDnWs6w3jX6We+jj/pMt68nDXYjRzfYqw==
+X-Received: by 2002:ac2:48bc:: with SMTP id u28mr26657795lfg.126.1565762954043;
+        Tue, 13 Aug 2019 23:09:14 -0700 (PDT)
 Received: from localhost.localdomain (c213-102-74-69.bredband.comhem.se. [213.102.74.69])
-        by smtp.gmail.com with ESMTPSA id s10sm3124235ljm.35.2019.08.13.23.09.11
+        by smtp.gmail.com with ESMTPSA id s10sm3124235ljm.35.2019.08.13.23.09.13
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 23:09:11 -0700 (PDT)
+        Tue, 13 Aug 2019 23:09:13 -0700 (PDT)
 From:   codekipper@gmail.com
 To:     maxime.ripard@free-electrons.com, wens@csie.org,
         linux-sunxi@googlegroups.com
@@ -64,9 +64,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, lgirdwood@gmail.com,
         broonie@kernel.org, linux-kernel@vger.kernel.org,
         alsa-devel@alsa-project.org, be17068@iperbole.bo.it,
         Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: [PATCH v5 09/15] clk: sunxi-ng: h6: Allow I2S to change parent rate
-Date:   Wed, 14 Aug 2019 08:08:48 +0200
-Message-Id: <20190814060854.26345-10-codekipper@gmail.com>
+Subject: [PATCH v5 10/15] dt-bindings: ASoC: sun4i-i2s: Add H6 compatible
+Date:   Wed, 14 Aug 2019 08:08:49 +0200
+Message-Id: <20190814060854.26345-11-codekipper@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814060854.26345-1-codekipper@gmail.com>
 References: <20190814060854.26345-1-codekipper@gmail.com>
@@ -79,56 +79,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-I2S doesn't work if parent rate couldn't be change. Difference between
-wanted and actual rate is too big.
-
-Fix this by adding CLK_SET_RATE_PARENT flag to I2S clocks.
+H6 I2S is very similar to H3, except that it supports up to 16 channels
+and thus few registers have fields on different position.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- drivers/clk/sunxi-ng/ccu-sun50i-h6.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml      | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-index aebef4af9861..d89353a3cdec 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-@@ -505,7 +505,7 @@ static struct ccu_div i2s3_clk = {
- 		.hw.init	= CLK_HW_INIT_PARENTS("i2s3",
- 						      audio_parents,
- 						      &ccu_div_ops,
--						      0),
-+						      CLK_SET_RATE_PARENT),
- 	},
- };
+diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
+index eb3992138eec..6928d0a1dcc8 100644
+--- a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
++++ b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
+@@ -24,6 +24,7 @@ properties:
+       - items:
+           - const: allwinner,sun50i-a64-i2s
+           - const: allwinner,sun8i-h3-i2s
++      - const: allwinner,sun50i-h6-i2s
  
-@@ -518,7 +518,7 @@ static struct ccu_div i2s0_clk = {
- 		.hw.init	= CLK_HW_INIT_PARENTS("i2s0",
- 						      audio_parents,
- 						      &ccu_div_ops,
--						      0),
-+						      CLK_SET_RATE_PARENT),
- 	},
- };
+   reg:
+     maxItems: 1
+@@ -59,6 +60,7 @@ allOf:
+               - allwinner,sun8i-a83t-i2s
+               - allwinner,sun8i-h3-i2s
+               - allwinner,sun50i-a64-codec-i2s
++              - allwinner,sun50i-h6-i2s
  
-@@ -531,7 +531,7 @@ static struct ccu_div i2s1_clk = {
- 		.hw.init	= CLK_HW_INIT_PARENTS("i2s1",
- 						      audio_parents,
- 						      &ccu_div_ops,
--						      0),
-+						      CLK_SET_RATE_PARENT),
- 	},
- };
- 
-@@ -544,7 +544,7 @@ static struct ccu_div i2s2_clk = {
- 		.hw.init	= CLK_HW_INIT_PARENTS("i2s2",
- 						      audio_parents,
- 						      &ccu_div_ops,
--						      0),
-+						      CLK_SET_RATE_PARENT),
- 	},
- };
- 
+     then:
+       required:
 -- 
 2.22.0
 
