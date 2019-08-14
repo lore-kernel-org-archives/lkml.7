@@ -2,91 +2,92 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2EAC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C18EC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D9420665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF025206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565803567;
+	bh=I6jrD+9sEDG0rP0Kpf9ZIM/0DZYLCKuF5SL2Mdn9uKI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=M3syDd/EcF4KfD4Htwl1SCMHMXSGcfLp9aIv1uGZQb+VjtiBx+d+xNWQzGXjtspVh
+	 xb4epmKqSXeShtB/hOzNfhPpiU57iCgPKnhpBsZtiNyM0TiFKPHpY5ffq2YtBfEeVd
+	 bezesy7OGoJZ4THGLnkADOjtbNU8SZQbX5JIbPc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbfHNR0B convert rfc822-to-8bit (ORCPT
+        id S1729388AbfHNRFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:26:01 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45619 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729398AbfHNRFP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:05:15 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y8so8848838plr.12;
-        Wed, 14 Aug 2019 10:05:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GTqeZQuB5IgM+FmX9PwW5NoGtvVH2NCZhDAITGesyDI=;
-        b=V4BknI/9PTqQybKoUCZBxz9U/b5ss9/oMzwfXviFWJQvjysp2n0UMUxS4FpgjCLXNC
-         72470W68kb3LTbYUsJih/SDba9IqNn0ofADPWaJ966SEiVPgF78wx2OJfRwp/yIB2QQ5
-         qzPM8Ofh149MJk+AuTxTGqfu/1gyYBBJc7zJb0mvK16xoWGgSRqq7nNe/UOopunAuGXl
-         rwdSx6g1dloV4QulTqGLbsw4t9cwXL6aAAEOzRXGc4Dzp5Jw7PpShCS0vdUgdImPmFUH
-         FlxekAu7Er1Z52PVHAq7HsTdPq6GvUwQM7+xYXZZHcHOEOxGztHVf/Vikv/VaPTmjgL8
-         jHNA==
-X-Gm-Message-State: APjAAAV3ciIb0fHybDZhn8ptyDFsaapNXBdwukteY4FH0ct5nMbcOUFV
-        djIwVtzpMtm3jTQydCpQ3Klfc9WrCXo=
-X-Google-Smtp-Source: APXvYqyY7dMRw94QInx53Q43ZHoQCxgqlpv6Xz4f7o17+uQhWoBsE2UtI2jpEFYNuEjRmoBdpNZKug==
-X-Received: by 2002:a17:902:8345:: with SMTP id z5mr406730pln.29.1565802314643;
-        Wed, 14 Aug 2019 10:05:14 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:fb9c:664d:d2ad:c9b5? ([2620:15c:2c1:200:fb9c:664d:d2ad:c9b5])
-        by smtp.gmail.com with ESMTPSA id c70sm359640pfb.163.2019.08.14.10.05.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Aug 2019 10:05:13 -0700 (PDT)
-Subject: Re: [5.3.0-rc4-next][bisected 882632][qla2xxx] WARNING: CPU: 10 PID:
- 425 at drivers/scsi/qla2xxx/qla_isr.c:2784 qla2x00_status_entry.isra
-To:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc:     linux-next <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        martin.petersen@oracle.com, hmadhani@marvell.com,
-        sachinp <sachinp@linux.vnet.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Himanshu Madhani <hmadhani@marvell.com>
-References: <1565801523.6908.6.camel@abdul>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <cafb1d40-a11e-c137-db06-4564e5f5caf5@acm.org>
-Date:   Wed, 14 Aug 2019 10:05:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 14 Aug 2019 13:05:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729366AbfHNRFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:05:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4852208C2;
+        Wed, 14 Aug 2019 17:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565802307;
+        bh=I6jrD+9sEDG0rP0Kpf9ZIM/0DZYLCKuF5SL2Mdn9uKI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Dp3lLOU6s4vCPOKqKjcLblL72Zgl/qLbyFLO3GMBQtObjb3q7gDQKzYWuY9ANWczX
+         aOIz6HtkyBUei32WL0wTAHuO7Jp2doH7ts4NssPHa2YwJBXHGsgG7DQDR5UeOBWV+S
+         3nkYIVX6wCR9wsLrmvzJNV/OgImUa7ZUU0nIQwPA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 057/144] scripts/sphinx-pre-install: fix script for RHEL/CentOS
+Date:   Wed, 14 Aug 2019 19:00:13 +0200
+Message-Id: <20190814165802.219114463@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
+References: <20190814165759.466811854@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <1565801523.6908.6.camel@abdul>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/19 9:52 AM, Abdul Haleem wrote:
-> Greeting's
-> 
-> Today's linux-next kernel (5.3.0-rc4-next-20190813)  booted with warning on my powerpc power 8 lpar
-> 
-> The WARN_ON_ONCE() was introduced by commit 88263208 (scsi: qla2xxx: Complain if sp->done() is not...)
-> 
-> boot logs:
-> 
-> WARNING: CPU: 10 PID: 425 at drivers/scsi/qla2xxx/qla_isr.c:2784
+[ Upstream commit b308467c916aa7acc5069802ab76a9f657434701 ]
 
-Hi Abdul,
+There's a missing parenthesis at the script, with causes it to
+fail to detect non-Fedora releases (e. g. RHEL/CentOS).
 
-Thank you for having reported this. Is that the only warning reported on your setup by the qla2xxx
-driver? If that warning is commented out, does the qla2xxx driver work as expected?
+Tested with Centos 7.6.1810.
 
-Thanks,
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ scripts/sphinx-pre-install | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Bart.
+diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+index 9be208db88d3a..778f3ae918775 100755
+--- a/scripts/sphinx-pre-install
++++ b/scripts/sphinx-pre-install
+@@ -364,7 +364,7 @@ sub give_redhat_hints()
+ 	#
+ 	# Checks valid for RHEL/CentOS version 7.x.
+ 	#
+-	if (! $system_release =~ /Fedora/) {
++	if (!($system_release =~ /Fedora/)) {
+ 		$map{"virtualenv"} = "python-virtualenv";
+ 	}
+ 
+-- 
+2.20.1
+
+
 
