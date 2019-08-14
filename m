@@ -2,81 +2,124 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E994C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC34C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32AC2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B99A92084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbfHNP3V (ORCPT
+        id S1727893AbfHNP3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 11:29:21 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36858 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfHNP3U (ORCPT
+        Wed, 14 Aug 2019 11:29:53 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42613 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbfHNP3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 11:29:20 -0400
-Received: by mail-qt1-f196.google.com with SMTP id z4so110608145qtc.3;
-        Wed, 14 Aug 2019 08:29:20 -0700 (PDT)
+        Wed, 14 Aug 2019 11:29:53 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y1so475551plp.9;
+        Wed, 14 Aug 2019 08:29:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hkxXFxsppAjXcN3Fnw0Ysp3XgDoee+JKNoPUXSqHEM4=;
-        b=SipexNLQTdiqQNlEHJbGyAE3AnuyNLioPesL8ndijjGQV39XVg6qP7TDc8bmQVmGNC
-         VsTuWgPlGcQvGZon+ZRlM91lhj4JyGHOEKt1GN7/7pKuEqS2cbSRKQ0gCC4tYhe5uChJ
-         oOFQT2s7bRGdJbHlSi2lgucUQdCSMJMQze4uvWWTsqdlhoZzu1fWrLUNDLiFN790dWue
-         ywfmCBLNs6drSKoMHyZzjmbAtWXZjcHOsaucD7U8TP+MfgxqFwqYHTC5XVLA9X9AvzYX
-         FzHER/W5TthAQ6g9dFcxZsEgLlR5KnbnpKktl3S2lfEdbjbb9QvZN6QepG3IMh7m8jst
-         7Hsw==
-X-Gm-Message-State: APjAAAVSTknwJ6wDNixg65MosHJEpn0AFb3PjWANwPmW46a+qGY0+mRB
-        FqZvJssExL6JWuSGHHkpcoZJqy5s/bIYQ6Hfyhc=
-X-Google-Smtp-Source: APXvYqwLKjmuLo6RfGCS8yr97bmaozdgfj78fh2TDXsp3KO1WrajwArEwxXrcfFgURj+QRlR1VEJ90KRLcwY3cq6bcA=
-X-Received: by 2002:ac8:f99:: with SMTP id b25mr38079380qtk.142.1565796559558;
- Wed, 14 Aug 2019 08:29:19 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=z0MSIiaazH9n7y7CjJIuJYZjOBI8O+Eixsa8yK04afk=;
+        b=DxhHyYorrFq464afg13l8v1x1ObZHZg+aLoaFmrI7JEOE1OpRWhhkOR4q9hAsMLsFJ
+         8/McjeGm5SjviNaFStnnU8Fe7PYFm3RJgSauPva4PyO/nnbC9G60bhq6O20WuCCj5BuI
+         gK0ofaHkihrYpI5/tguMYHj+OFEW/NMal64I4patefMVTj8CcJxlvd3UZuXKxXdErCIB
+         o5RTm8lnjc5LfBTvBhmrWwZjDHzefC7bdWBo6/U1mkHHcObm9UTkYq/VQCOGqV2/jgxl
+         vTRxGKC+8G9c6KLvvy2YqtY36jNxVKSYERpjyi+hQfkujB/OA70Oqa3xaYZkXVglty9f
+         n2rw==
+X-Gm-Message-State: APjAAAX236z8N4GwAeXU6OFibC7owjir/dacqhIeLw2YQXpnrbG486By
+        4NRdnMtVeSSPjALGYKpnbhE7C8Nz
+X-Google-Smtp-Source: APXvYqyBcsaRNq53NqWG4y44GJZwnDO3p5ZWxzkVNewTfu1WFnt5wQuXPgiVE5Ekgev7iAsC+xfD6Q==
+X-Received: by 2002:a17:902:8489:: with SMTP id c9mr43796601plo.327.1565796592611;
+        Wed, 14 Aug 2019 08:29:52 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id y128sm45301pgy.41.2019.08.14.08.29.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Aug 2019 08:29:51 -0700 (PDT)
+Subject: Re: [PATCH] RFC: loop: Avoid calling blk_mq_freeze_queue() when
+ possible.
+To:     Martijn Coenen <maco@android.com>, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, kernel-team@android.com,
+        narayan@google.com, dariofreni@google.com, ioffe@google.com,
+        jiyong@google.com, maco@google.com
+References: <20190814103244.92518-1-maco@android.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <29990045-b05e-1411-a5c2-32e735265a04@acm.org>
+Date:   Wed, 14 Aug 2019 08:29:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190809162956.488941-1-arnd@arndb.de> <20190809163334.489360-1-arnd@arndb.de>
- <20190809163334.489360-2-arnd@arndb.de> <20190813043324.GN12733@vkoul-mobl.Dlink>
-In-Reply-To: <20190813043324.GN12733@vkoul-mobl.Dlink>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 14 Aug 2019 17:29:03 +0200
-Message-ID: <CAK8P3a0jWunQFvt4bVn0GtqN5xwcnO2a1jO0EaqxWqw4VMGL5Q@mail.gmail.com>
-Subject: Re: [PATCH 2/7] dma: iop-adma: include prefetch.h
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     soc@kernel.org, Russell King <linux@armlinux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190814103244.92518-1-maco@android.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 6:34 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 09-08-19, 18:33, Arnd Bergmann wrote:
-> > Compile-testing this driver fails on m68k without the
-> > extra header inclusion.
->
-> Please change title to "dmaengine: iop-adma: include prefetch.h"
->
-> After that:
->
-> Acked-by: Vinod Koul <vkoul@kernel.org>
+On 8/14/19 3:32 AM, Martijn Coenen wrote:
+> Since Android Q, the creation and configuration of loop devices is in
+> the critical path of device boot. We found that the configuration of
+> loop devices is pretty slow, because many ioctl()'s involve freezing the
+> block queue, which in turn needs to wait for an RCU grace period. On
+> Android devices we've observed up to 60ms for the creation and
+> configuration of a single loop device; as we anticipate creating many
+> more in the future, we'd like to avoid this delay.
+> 
+> This allows LOOP_SET_BLOCK_SIZE to be called before the loop device has
+> been bound; since the block queue is not running at that point, we can
+> avoid the expensive freezing of the queue.
+> 
+> On a recent x86, this patch yields the following results:
+> 
+> ===
+> Call LOOP_SET_BLOCK_SIZE on /dev/loop0 before being bound
+> ===
+> ~# time ./set_block_size
+> 
+> real 0m0.002s
+> user 0m0.000s
+> sys  0m0.002s
+> 
+> ===
+> Call LOOP_SET_BLOCK_SIZE on /dev/loop0 after being bound
+> ===
+> ~# losetup /dev/loop0 fs.img
+> ~# time ./set_block_size
+> 
+> real 0m0.008s
+> user 0m0.000s
+> sys  0m0.002s
+> 
+> Over many runs, this is a 4x improvement.
+> 
+> This is RFC because technically it is a change in behavior; before,
+> calling LOOP_SET_BLOCK_SIZE on an unbound device would return ENXIO, and
+> userspace programs that left it in their code despite the returned
+> error, would now suddenly see the requested value effectuated. I'm not
+> sure whether this is acceptable.
+> 
+> An alternative might be a CONFIG option to set the default block size to
+> another value than 512. Another alternative I considered is allowing the
+> block device to be created with a "frozen" queue, where we can manually
+> unfreeze the queue when all the configuration is done. This would be a
+> much larger code change, though.
 
-Ok, thanks!
+Hi Martijn,
 
-One day I will remember all the subsystem prefixes. ;-)
+Is the loop driver used in Android Q to make a file on a filesystem 
+visible as a block device or rather to make a subset of a block device 
+visible as a block device? In the latter case, have you considered to 
+use the dm-linear driver instead? I expect that the overhead per I/O of 
+dm-linear will be lower than that of the loop driver.
 
-       Arnd
+Bart.
