@@ -2,120 +2,142 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA46C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC941C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B572084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C17216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:36:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565750168;
+	bh=+swnYQtTC60El5g8koEpcOiNRFLnXArpyw2F+nuZu3Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YKtF/F+gDRL15thBYXNeaoR1XsuGz0ppazyrkyP6DIrG3qzbSdG5pFnp3u2ZVHsVd
+	 qezIKq32jg84y61HzV/7SJHWEf0g+Kzde50aD2/lXMhHptpAOOxdTT/dI6hiFt8ZQS
+	 9GilM0MV+SZdaPco6mZebsVJ0q++L3KDekZmkehU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729020AbfHNCf6 (ORCPT
+        id S1729549AbfHNCgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:35:58 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:57528 "EHLO inva021.nxp.com"
+        Tue, 13 Aug 2019 22:36:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727245AbfHNCNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:21 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EBEC420027A;
-        Wed, 14 Aug 2019 04:13:19 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 46BC1200162;
-        Wed, 14 Aug 2019 04:13:15 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 40CC940293;
-        Wed, 14 Aug 2019 10:13:09 +0800 (SGT)
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCHv6 2/2] PCI: layerscape: Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately
-Date:   Wed, 14 Aug 2019 10:03:30 +0800
-Message-Id: <20190814020330.12133-2-xiaowei.bao@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190814020330.12133-1-xiaowei.bao@nxp.com>
-References: <20190814020330.12133-1-xiaowei.bao@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727496AbfHNCNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:20 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DA0C20874;
+        Wed, 14 Aug 2019 02:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565748800;
+        bh=+swnYQtTC60El5g8koEpcOiNRFLnXArpyw2F+nuZu3Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rXWFLat5rBP9+jQ5cX3NQX0267Zl6V2vVfIVX+K0Wl5kYLtAkJvS3e5qENYlI95t2
+         NBXYGbz6GXQuO9vhIEOpGbOc72m5pJPGv01fG7bKkHibzIgt8b6m9KHXP07B4S1eiN
+         E0Ljk6jN8C5IXgYD6Q09nyJCDC6aT5WA4UfEAZCc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 069/123] isdn: hfcsusb: Fix mISDN driver crash caused by transfer buffer on the stack
+Date:   Tue, 13 Aug 2019 22:09:53 -0400
+Message-Id: <20190814021047.14828-69-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
+References: <20190814021047.14828-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately.
+From: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+[ Upstream commit d8a1de3d5bb881507602bc02e004904828f88711 ]
+
+Since linux 4.9 it is not possible to use buffers on the stack for DMA transfers.
+
+During usb probe the driver crashes with "transfer buffer is on stack" message.
+
+This fix k-allocates a buffer to be used on "read_reg_atomic", which is a macro
+that calls "usb_control_msg" under the hood.
+
+Kernel 4.19 backtrace:
+
+usb_hcd_submit_urb+0x3e5/0x900
+? sched_clock+0x9/0x10
+? log_store+0x203/0x270
+? get_random_u32+0x6f/0x90
+? cache_alloc_refill+0x784/0x8a0
+usb_submit_urb+0x3b4/0x550
+usb_start_wait_urb+0x4e/0xd0
+usb_control_msg+0xb8/0x120
+hfcsusb_probe+0x6bc/0xb40 [hfcsusb]
+usb_probe_interface+0xc2/0x260
+really_probe+0x176/0x280
+driver_probe_device+0x49/0x130
+__driver_attach+0xa9/0xb0
+? driver_probe_device+0x130/0x130
+bus_for_each_dev+0x5a/0x90
+driver_attach+0x14/0x20
+? driver_probe_device+0x130/0x130
+bus_add_driver+0x157/0x1e0
+driver_register+0x51/0xe0
+usb_register_driver+0x5d/0x120
+? 0xf81ed000
+hfcsusb_drv_init+0x17/0x1000 [hfcsusb]
+do_one_initcall+0x44/0x190
+? free_unref_page_commit+0x6a/0xd0
+do_init_module+0x46/0x1c0
+load_module+0x1dc1/0x2400
+sys_init_module+0xed/0x120
+do_fast_syscall_32+0x7a/0x200
+entry_SYSENTER_32+0x6b/0xbe
+
+Signed-off-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-v2:
- - No change.
-v3:
- - modify the commit message.
-v4:
- - send the patch again with '--to'.
-v5:
- - No change.
-v6:
- - remove the [EXT] tag of the $SUBJECT in email.
+ drivers/isdn/hardware/mISDN/hfcsusb.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
- drivers/pci/controller/dwc/Kconfig  | 20 ++++++++++++++++++--
- drivers/pci/controller/dwc/Makefile |  3 ++-
- 2 files changed, 20 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 6ea778a..869c645 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -131,13 +131,29 @@ config PCI_KEYSTONE_EP
- 	  DesignWare core functions to implement the driver.
+diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
+index 8fb7c5dea07fc..008a74a1ed444 100644
+--- a/drivers/isdn/hardware/mISDN/hfcsusb.c
++++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
+@@ -1693,13 +1693,23 @@ hfcsusb_stop_endpoint(struct hfcsusb *hw, int channel)
+ static int
+ setup_hfcsusb(struct hfcsusb *hw)
+ {
++	void *dmabuf = kmalloc(sizeof(u_char), GFP_KERNEL);
+ 	u_char b;
++	int ret;
  
- config PCI_LAYERSCAPE
--	bool "Freescale Layerscape PCIe controller"
-+	bool "Freescale Layerscape PCIe controller - Host mode"
- 	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select MFD_SYSCON
- 	select PCIE_DW_HOST
- 	help
--	  Say Y here if you want PCIe controller support on Layerscape SoCs.
-+	  Say Y here if you want to enable PCIe controller support on Layerscape
-+	  SoCs to work in Host mode.
-+	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-+	  determines which PCIe controller works in EP mode and which PCIe
-+	  controller works in RC mode.
+ 	if (debug & DBG_HFC_CALL_TRACE)
+ 		printk(KERN_DEBUG "%s: %s\n", hw->name, __func__);
+ 
++	if (!dmabuf)
++		return -ENOMEM;
 +
-+config PCI_LAYERSCAPE_EP
-+	bool "Freescale Layerscape PCIe controller - Endpoint mode"
-+	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
-+	depends on PCI_ENDPOINT
-+	select PCIE_DW_EP
-+	help
-+	  Say Y here if you want to enable PCIe controller support on Layerscape
-+	  SoCs to work in Endpoint mode.
-+	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-+	  determines which PCIe controller works in EP mode and which PCIe
-+	  controller works in RC mode.
- 
- config PCI_HISI
- 	depends on OF && (ARM64 || COMPILE_TEST)
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index b085dfd..824fde7 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -8,7 +8,8 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
- obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
- obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
- obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
--obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
-+obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
-+obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
- obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
++	ret = read_reg_atomic(hw, HFCUSB_CHIP_ID, dmabuf);
++
++	memcpy(&b, dmabuf, sizeof(u_char));
++	kfree(dmabuf);
++
+ 	/* check the chip id */
+-	if (read_reg_atomic(hw, HFCUSB_CHIP_ID, &b) != 1) {
++	if (ret != 1) {
+ 		printk(KERN_DEBUG "%s: %s: cannot read chip id\n",
+ 		       hw->name, __func__);
+ 		return 1;
 -- 
-2.9.5
+2.20.1
 
