@@ -2,101 +2,236 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 406D0C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DFFC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 125D52084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:08:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565791688;
-	bh=9qd7WZWkxjZdPlBqJg3lWGrPvYLLoS3ilLpPgaHmXIc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=laVkMSThNuWszlWIQkGfseTzzxRMHRwuAwAjk4Psiwq0jF3Ozm2aWAs8PPVuI5zHW
-	 A6y8e0LVIyCFP2bu0k3nxQ57CTlhBcdKR7sIFjcBa6D/URz1AwOPili5MDT9FBV1HK
-	 +hr3kAX4LsZAt+xpep+kzw8gL6HUGnh8/TdcUcsY=
+	by mail.kernel.org (Postfix) with ESMTP id 91DCD206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:08:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbfHNOIH (ORCPT
+        id S1727649AbfHNOIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 10:08:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57790 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726551AbfHNOIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 10:08:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8A6B0ADCC;
-        Wed, 14 Aug 2019 14:08:05 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 16:08:05 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Arun KS <arunks@codeaurora.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v1 2/4] mm/memory_hotplug: Handle unaligned start and
- nr_pages in online_pages_blocks()
-Message-ID: <20190814140805.GA17933@dhcp22.suse.cz>
-References: <20190809125701.3316-1-david@redhat.com>
- <20190809125701.3316-3-david@redhat.com>
+        Wed, 14 Aug 2019 10:08:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54958 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfHNOIp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 10:08:45 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id B007B28A214
+Message-ID: <48aa33392e81cc5b3a0a7eed403ecb91c89ac320.camel@collabora.com>
+Subject: Re: [PATCH v5 03/11] media: uapi: h264: Add the concept of decoding
+ mode
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Date:   Wed, 14 Aug 2019 11:08:31 -0300
+In-Reply-To: <20190814122323.GC4687@aptenodytes>
+References: <20190812193522.10911-1-ezequiel@collabora.com>
+         <20190812193522.10911-4-ezequiel@collabora.com>
+         <20190814122323.GC4687@aptenodytes>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809125701.3316-3-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 09-08-19 14:56:59, David Hildenbrand wrote:
-> Take care of nr_pages not being a power of two and start not being
-> properly aligned. Essentially, what walk_system_ram_range() could provide
-> to us. get_order() will round-up in case it's not a power of two.
+On Wed, 2019-08-14 at 14:23 +0200, Paul Kocialkowski wrote:
+> Hi,
 > 
-> This should only apply to memory blocks that contain strange memory
-> resources (especially with holes), not to ordinary DIMMs.
-
-I would really like to see an example of such setup before making the
-code hard to read. Because I am not really sure something like that
-exists at all.
-
-> Fixes: a9cd410a3d29 ("mm/page_alloc.c: memory hotplug: free pages as higher order")
-> Cc: Arun KS <arunks@codeaurora.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/memory_hotplug.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> On Mon 12 Aug 19, 16:35, Ezequiel Garcia wrote:
+> > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > 
+> > Some stateless decoders don't support per-slice decoding granularity
+> > (or at least not in a way that would make them efficient or easy to use).
+> > 
+> > Expose a menu to control the supported decoding modes. Drivers are
+> > allowed to support only one decoding but they can support both too.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > ---
+> > Changes in v5:
+> > * Improve specification as suggested by Hans.
+> > Changes in v4:
+> > * Typos/rewording fixes
+> > Changes in v3:
+> > * s/per-{slice,frame} decoding/{slice,frame}-based decoding/
+> > * Add Paul's R-b
+> > Changes in v2:
+> > * Allow decoding multiple slices in per-slice decoding mode
+> > * Minor doc improvement/fixes
+> > ---
+> >  .../media/uapi/v4l/ext-ctrls-codec.rst        | 47 ++++++++++++++++++-
+> >  .../media/uapi/v4l/pixfmt-compressed.rst      |  3 +-
+> >  drivers/media/v4l2-core/v4l2-ctrls.c          |  9 ++++
+> >  include/media/h264-ctrls.h                    | 11 +++++
+> >  4 files changed, 68 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> > index c5f39dd50043..568390273fde 100644
+> > --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> > +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> > @@ -1747,6 +1747,11 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> >      * - __u32
+> >        - ``size``
+> >        -
+> > +    * - __u32
+> > +      - ``start_byte_offset``
+> > +      - Where the slice payload starts in the output buffer. Useful when the
+> > +        OUTPUT buffer contains more than one slice (some codecs need to know
+> > +        where each slice starts in this buffer).
 > 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 3706a137d880..2abd938c8c45 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -640,6 +640,10 @@ static int online_pages_blocks(unsigned long start, unsigned long nr_pages)
->  	while (start < end) {
->  		order = min(MAX_ORDER - 1,
->  			get_order(PFN_PHYS(end) - PFN_PHYS(start)));
-> +		/* make sure the PFN is aligned and we don't exceed the range */
-> +		while (!IS_ALIGNED(start, 1ul << order) ||
-> +		       (1ul << order) > end - start)
-> +			order--;
->  		(*online_page_callback)(pfn_to_page(start), order);
->  
->  		onlined_pages += (1UL << order);
-> -- 
-> 2.21.0
+> I think there is a possibility for misunderstanding here: does the
+> "slice payload" include the start code when it (annex-b) is selected?
+> 
+> I'd suspect that the hardware needs to know where the start code begings rather
+> than where the NAL unit starts when there is a start code. So I'd suggest
+> specifying it as the offset to the beginning of the start code (if present) or
+> to the slice NAL unit start otherwise.
+> 
 
--- 
-Michal Hocko
-SUSE Labs
+Yes, start_byte_offset is the offset in bytes from the beginning
+of the OUTPUT buffer to the start of this slice (which may start
+with a start code as per the start code control).
+
+I guess the field could be named simply "offset", but at the same
+time, this is bikeshedding.
+
+> The clarification should probably also concern header_bit_size, to make it clear
+> where it is counted from. I think it makes sense to count it starting from
+> the start_byte_offset position.
+> 
+
+The header_bit_size is currently counted from the start of slice.
+It seems this needs to be better documented, but not necessarily
+as part of this patch.
+
+> >      * - __u32
+> >        - ``header_bit_size``
+> >        -
+> > @@ -1930,7 +1935,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> >        -
+> >      * - __u16
+> >        - ``num_slices``
+> > -      - Number of slices needed to decode the current frame
+> > +      - Number of slices needed to decode the current frame/field. When
+> > +        operating in slice-based decoding mode (see
+> > +        :c:type:`v4l2_mpeg_video_h264_decoding_mode`), this field
+> > +        should always be set to one.
+> 
+> I am fine with the current proposal for now, but I believe that we should keep
+> discussing whether we want per-slice mode to strictly enforce having a
+> single-slice, outside of this series.
+> 
+
+Sounds good.
+
+> One reason for that would be to gather multiple slices (up to what amounts to
+> a frame) for efficient use of OUTPUT buffers and to avoid allocating a huge
+> number of small ones (which is certainly quite inefficient due to CMA
+> alignment).
+> 
+> Apparently, passing multiple slice_params controls is an issue so per-frame mode
+> currently has to rely on the hardware being able to parse the slice header on
+> its own. The issue exists in the V4L2 API, where we need to know in advance
+> the maximum number of slices we want to use to make the control an array and
+> copy all the controls with each request, even if only a single-one is used.
+> 
+> Maybe one way to solve that would be to use multiple requests with the same
+> OUTPUT buffer, one per slice, so that we only have to pass a single slice_params
+> control per-request. And the first slice of the frame would get the other
+> controls too, while the others wouldn't (assuming we can trust that controls
+> won't change in-between and I'm not sure how true that is). Worst case, all
+> the controls have to be attached with each request, which is maybe still better
+> than passing a big number of unused slice_params controls each time.
+> 
+> Again, I believe the current proposal is good to go for now as it allows the
+> hantro driver to get-in staging, which is the priority.
+> 
+> But the issue I'm discussing should certainly be fixed before unstaging the API.
+> 
+
+Totally, I think the next step is to add multi-slice support to the cedrus
+driver. It will help consolidate the API.
+
+> >      * - __u16
+> >        - ``nal_ref_idc``
+> >        - NAL reference ID value coming from the NAL Unit header
+> > @@ -2021,6 +2029,43 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> >        - 0x00000004
+> >        - The DPB entry is a long term reference frame
+> >  
+> > +``V4L2_CID_MPEG_VIDEO_H264_DECODING_MODE (enum)``
+> > +    Specifies the decoding mode to use. Currently exposes slice-based and
+> > +    frame-based decoding but new modes might be added later on.
+> > +    This control is used to complement V4L2_PIX_FMT_H264_SLICE
+> > +    pixel format. Applications that support V4L2_PIX_FMT_H264_SLICE
+> > +    are required to set this control in order to specify the decoding mode
+> > +    that is expected for the buffer.
+> > +    Drivers may expose a single or multiple decoding modes, depending
+> > +    on what they can support.
+> > +
+> > +    .. note::
+> > +
+> > +       This menu control is not yet part of the public kernel API and
+> > +       it is expected to change.
+> > +
+> > +.. c:type:: v4l2_mpeg_video_h264_decoding_mode
+> > +
+> > +.. cssclass:: longtable
+> > +
+> > +.. flat-table::
+> > +    :header-rows:  0
+> > +    :stub-columns: 0
+> > +    :widths:       1 1 2
+> > +
+> > +    * - ``V4L2_MPEG_VIDEO_H264_SLICE_BASED_DECODING``
+> > +      - 0
+> > +      - The decoding is done at the slice granularity.
+> > +        v4l2_ctrl_h264_decode_params->num_slices should be set to 1.
+> > +        The OUTPUT buffer must contain a single slice.
+> > +    * - ``V4L2_MPEG_VIDEO_H264_FRAME_BASED_DECODING``
+> > +      - 1
+> > +      - The decoding is done at the frame granularity.
+> > +        v4l2_ctrl_h264_decode_params->num_slices should be set to the number of
+> > +        slices forming a frame.
+> > +        The OUTPUT buffer must contain all slices needed to decode the
+> > +        frame. The OUTPUT buffer must also contain both fields.
+> > +
+> 
+> Nitpick/suggestion here: could we use the name of the enum as a prefix for the
+> modes, like:
+> - V4L2_MPEG_VIDEO_H264_DECODING_MODE_PER_SLICE
+> - V4L2_MPEG_VIDEO_H264_DECODING_MODE_PER_FRAME
+> 
+> or
+> - V4L2_MPEG_VIDEO_H264_DECODING_MODE_SLICE_BASED
+> - V4L2_MPEG_VIDEO_H264_DECODING_MODE_FRAME_BASED
+> 
+> I personally find it more readable this way, since the same prefix is kept.
+> 
+
+Yes, that looks better.
+
+Thanks for reviewing,
+Ezequiel
+
