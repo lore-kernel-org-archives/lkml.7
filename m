@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D332C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DE5C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCB9206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00575206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803671;
-	bh=kkUe3JrHtt33qgnokR/O4h/ujXrDTTyDNjLo5bGc2XQ=;
+	s=default; t=1565803679;
+	bh=a0BZRsJPSZLXdum6dP3S6nZ4tj4eiaaRbI+0p0ZpcSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wrvQ7fXCiwpEq6NWYkW5XEHuWhK0rhNLQTTukkQojILhBqKthuID6+nAyhIEJHSVz
-	 tM6YEyJFpeoxFujz+O7irDlj0E4uFjnLWyhp/DZsRQxOTP8h6LXqW9kMNoItisEfeg
-	 bKE1eyUHyzUjX2ea4GtezPlbXNEKI8Ou00OqkXzg=
+	b=fitnG0Sos1w1GRK9VAytS1bzpJ4OmPpLeCplypQkqrI0c8MeDJT55+WrGu4oJNqQJ
+	 FBcDr+XR1f1YEyjVlA9RZOscr2ay2YvHmJZkw/0fos8FyaZO0IeOrjn+eD6BVPD8Sg
+	 HtqCAs1CRy43o4OlTNkDdMXl9LsxO6ceHzuI3lqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbfHNR1u (ORCPT
+        id S1729163AbfHNR16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:27:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51804 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:27:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728864AbfHNRDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:03:12 -0400
+        id S1728811AbfHNRDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:03:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A9582084D;
-        Wed, 14 Aug 2019 17:03:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B742421721;
+        Wed, 14 Aug 2019 17:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802191;
-        bh=kkUe3JrHtt33qgnokR/O4h/ujXrDTTyDNjLo5bGc2XQ=;
+        s=default; t=1565802181;
+        bh=a0BZRsJPSZLXdum6dP3S6nZ4tj4eiaaRbI+0p0ZpcSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VHDxhv+gaTJWeD0fdHAO4t2e4F7N5nFEdZZpcLhsgIz+P6SqcfVwPjINh4RcY187s
-         4+jv7oZE7fc2uYqQf2HssUbBAG4MoDuqH4DP7cSokLJilSdSbYzUL8BAFFVdJidhiO
-         94bR62hZoj4OWTFVrX7BaAWGoUa2/BzTui/o56wE=
+        b=Mq9l13cqvuONEvxa9dhUhbxxHGHci/+wuLZd07W5FOAfkU4lxqF74SShIAqk1xvAR
+         W0deRHbwkjxEK2ZVe2j/Ow2e7NpRgYp6r5BWE7Py7qty73D00iIq5gfc9kPRpO9BEQ
+         jtxwZ5R/HobAUGtRFNm9P89kw0TxdGdYCRIdW0Q4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.2 005/144] iio: adc: gyroadc: fix uninitialized return code
-Date:   Wed, 14 Aug 2019 18:59:21 +0200
-Message-Id: <20190814165759.707144215@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.2 025/144] Input: elantech - enable SMBus on new (2018+) systems
+Date:   Wed, 14 Aug 2019 18:59:41 +0200
+Message-Id: <20190814165800.898710379@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -60,48 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 90c6260c1905a68fb596844087f2223bd4657fee upstream.
+commit 883a2a80f79ca5c0c105605fafabd1f3df99b34c upstream.
 
-gcc-9 complains about a blatant uninitialized variable use that
-all earlier compiler versions missed:
+There are some new HP laptops with Elantech touchpad that don't support
+multitouch.
 
-drivers/iio/adc/rcar-gyroadc.c:510:5: warning: 'ret' may be used uninitialized in this function [-Wmaybe-uninitialized]
+Currently we use ETP_NEW_IC_SMBUS_HOST_NOTIFY() to check if SMBus is supported,
+but in addition to firmware version, the bus type also informs us whether the IC
+can support SMBus. To avoid breaking old ICs, we will only enable SMbus support
+based the bus type on systems manufactured after 2018.
 
-Return -EINVAL instead here and a few lines above it where
-we accidentally return 0 on failure.
+Lastly, let's consolidate all checks into elantech_use_host_notify() and use it
+to determine whether to use PS/2 or SMBus.
 
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Cc: stable@vger.kernel.org
-Fixes: 059c53b32329 ("iio: adc: Add Renesas GyroADC driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/rcar-gyroadc.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/mouse/elantech.c |   54 ++++++++++++++++++-----------------------
+ 1 file changed, 25 insertions(+), 29 deletions(-)
 
---- a/drivers/iio/adc/rcar-gyroadc.c
-+++ b/drivers/iio/adc/rcar-gyroadc.c
-@@ -382,7 +382,7 @@ static int rcar_gyroadc_parse_subdevs(st
- 				dev_err(dev,
- 					"Only %i channels supported with %pOFn, but reg = <%i>.\n",
- 					num_channels, child, reg);
--				return ret;
-+				return -EINVAL;
- 			}
- 		}
+--- a/drivers/input/mouse/elantech.c
++++ b/drivers/input/mouse/elantech.c
+@@ -1807,6 +1807,30 @@ static int elantech_create_smbus(struct
+ 				  leave_breadcrumbs);
+ }
  
-@@ -391,7 +391,7 @@ static int rcar_gyroadc_parse_subdevs(st
- 			dev_err(dev,
- 				"Channel %i uses different ADC mode than the rest.\n",
- 				reg);
--			return ret;
-+			return -EINVAL;
- 		}
++static bool elantech_use_host_notify(struct psmouse *psmouse,
++				     struct elantech_device_info *info)
++{
++	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
++		return true;
++
++	switch (info->bus) {
++	case ETP_BUS_PS2_ONLY:
++		/* expected case */
++		break;
++	case ETP_BUS_SMB_HST_NTFY_ONLY:
++	case ETP_BUS_PS2_SMB_HST_NTFY:
++		/* SMbus implementation is stable since 2018 */
++		if (dmi_get_bios_year() >= 2018)
++			return true;
++	default:
++		psmouse_dbg(psmouse,
++			    "Ignoring SMBus bus provider %d\n", info->bus);
++		break;
++	}
++
++	return false;
++}
++
+ /**
+  * elantech_setup_smbus - called once the PS/2 devices are enumerated
+  * and decides to instantiate a SMBus InterTouch device.
+@@ -1826,7 +1850,7 @@ static int elantech_setup_smbus(struct p
+ 		 * i2c_blacklist_pnp_ids.
+ 		 * Old ICs are up to the user to decide.
+ 		 */
+-		if (!ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version) ||
++		if (!elantech_use_host_notify(psmouse, info) ||
+ 		    psmouse_matches_pnp_id(psmouse, i2c_blacklist_pnp_ids))
+ 			return -ENXIO;
+ 	}
+@@ -1846,34 +1870,6 @@ static int elantech_setup_smbus(struct p
+ 	return 0;
+ }
  
- 		/* Channel is valid, grab the regulator. */
+-static bool elantech_use_host_notify(struct psmouse *psmouse,
+-				     struct elantech_device_info *info)
+-{
+-	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
+-		return true;
+-
+-	switch (info->bus) {
+-	case ETP_BUS_PS2_ONLY:
+-		/* expected case */
+-		break;
+-	case ETP_BUS_SMB_ALERT_ONLY:
+-		/* fall-through  */
+-	case ETP_BUS_PS2_SMB_ALERT:
+-		psmouse_dbg(psmouse, "Ignoring SMBus provider through alert protocol.\n");
+-		break;
+-	case ETP_BUS_SMB_HST_NTFY_ONLY:
+-		/* fall-through  */
+-	case ETP_BUS_PS2_SMB_HST_NTFY:
+-		return true;
+-	default:
+-		psmouse_dbg(psmouse,
+-			    "Ignoring SMBus bus provider %d.\n",
+-			    info->bus);
+-	}
+-
+-	return false;
+-}
+-
+ int elantech_init_smbus(struct psmouse *psmouse)
+ {
+ 	struct elantech_device_info info;
 
 
