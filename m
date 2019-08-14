@@ -2,162 +2,170 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4290AC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB78C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDEC2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:04:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c8WaEs0g"
+	by mail.kernel.org (Postfix) with ESMTP id 41EEE206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbfHNSEq (ORCPT
+        id S1728534AbfHNSIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 14:04:46 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39011 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbfHNSEp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 14:04:45 -0400
-Received: by mail-ot1-f66.google.com with SMTP id b1so40299otp.6
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 11:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fre2yC1vMIg/Ij78+LtkTPs0yDzqDgWHdQaFD72Ay5k=;
-        b=c8WaEs0gX1vkjN0sz8yITmdD0epqeCGI9JTG8KM5bgB0UgZPBGAMS/52zXuwINa7PF
-         Zq55ouRXA2at27mYggoXxEu5betH2SU1k8k86RQ5YEvyOi+ySgd8d0YF40JIloaUl7pg
-         r0waHNmZr+006um7SjxpIaCgr/kFWl/U1c/DN+zFuN5y0XolPOgD+lI8Z6u5zf8PDI2g
-         c4m3QFEvVOOgC5lexEG/lhhdZMNTcyi+qee4NOhsuzfhma3iiAO3yfiTUCJVsvOQlTtk
-         ZxSMFtmK7Wza50DHp7orALP+H66VUKsJ9/ekXlx0Y7rhuTg1T3T8PQpKIsel6/ScaPgF
-         0mHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fre2yC1vMIg/Ij78+LtkTPs0yDzqDgWHdQaFD72Ay5k=;
-        b=hUqVyMPcU/NWXgHod0WID0L2RE6VHjrErfTXwOIytsPtVGf73+KOX+V2LLUQcWvL0i
-         ihIIybe3VoIa+uvV5mg8f6wgEqnDT6z0I4Cv4nyYup65XnKo64i7BhTa/YV+UJEQ6DYn
-         YZcp7HgiE8hxUFsxWN4hJqD+dPRKvwCeE8pcX9fk0sca2UDeKVOAXHYah5d2Qvv+Dg7r
-         CaRAnTgeewom8JIv3jeZ2E+S1mGoVQE7poY7U08Tc37AZra5YoUwFmimRvfNlLYoUJ/D
-         Mwy2ftXIQUmo4vbDlXQtXOAsRw6DxLoA0TpF4JfjKdaiFsEJa3Lr87PnErnjCNyx0J9H
-         AyOQ==
-X-Gm-Message-State: APjAAAUc3aTqhkNMf+7l8WABgu7l+R39cnVbt1v22bESmdq4ysSgzk6/
-        jF3D1MdSLxFe/4pBRhGW/mPragSuLd6AbffvBus6fw==
-X-Google-Smtp-Source: APXvYqyF6QAjCvLdwmaPHuxijiZA4sSwGBMmI5G/Jyqgb3QpoKsmhl6M6l6c5naR8I/d5DEBmigS5GeVcoPQVqAXfRc=
-X-Received: by 2002:a6b:720e:: with SMTP id n14mr1241464ioc.139.1565805884486;
- Wed, 14 Aug 2019 11:04:44 -0700 (PDT)
+        Wed, 14 Aug 2019 14:08:51 -0400
+Received: from mga18.intel.com ([134.134.136.126]:51018 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726166AbfHNSIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 14:08:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 11:08:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,386,1559545200"; 
+   d="scan'208";a="376130035"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Aug 2019 11:08:49 -0700
+Date:   Wed, 14 Aug 2019 11:08:49 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+Message-ID: <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190814101714.GA26273@quack2.suse.cz>
 MIME-Version: 1.0
-References: <cover.1565188228.git.ilubashe@akamai.com> <291d2cda6ee75b4cd4c9ce717c177db18bf03a31.1565188228.git.ilubashe@akamai.com>
-In-Reply-To: <291d2cda6ee75b4cd4c9ce717c177db18bf03a31.1565188228.git.ilubashe@akamai.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Wed, 14 Aug 2019 12:04:33 -0600
-Message-ID: <CANLsYkxZE0CQJKQ-bFi=zFV5vTCbL2v76+x1fmCpqNruqWiFXg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] perf: Use CAP_SYSLOG with kptr_restrict checks
-To:     Igor Lubashev <ilubashe@akamai.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        James Morris <jmorris@namei.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814101714.GA26273@quack2.suse.cz>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 7 Aug 2019 at 08:44, Igor Lubashev <ilubashe@akamai.com> wrote:
->
-> Kernel is using CAP_SYSLOG capability instead of uid==0 and euid==0 when
-> checking kptr_restrict. Make perf do the same.
->
-> Also, the kernel is a more restrictive than "no restrictions" in case of
-> kptr_restrict==0, so add the same logic to perf.
->
-> Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
-> ---
->  tools/perf/util/symbol.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 173f3378aaa0..046271103499 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -4,6 +4,7 @@
->  #include <stdlib.h>
->  #include <stdio.h>
->  #include <string.h>
-> +#include <linux/capability.h>
->  #include <linux/kernel.h>
->  #include <linux/mman.h>
->  #include <linux/time64.h>
-> @@ -15,8 +16,10 @@
->  #include <inttypes.h>
->  #include "annotate.h"
->  #include "build-id.h"
-> +#include "cap.h"
->  #include "util.h"
->  #include "debug.h"
-> +#include "event.h"
->  #include "machine.h"
->  #include "map.h"
->  #include "symbol.h"
-> @@ -890,7 +893,11 @@ bool symbol__restricted_filename(const char *filename,
->  {
->         bool restricted = false;
->
-> -       if (symbol_conf.kptr_restrict) {
-> +       /* Per kernel/kallsyms.c:
-> +        * we also restrict when perf_event_paranoid > 1 w/o CAP_SYSLOG
-> +        */
-> +       if (symbol_conf.kptr_restrict ||
-> +           (perf_event_paranoid() > 1 && !perf_cap__capable(CAP_SYSLOG))) {
->                 char *r = realpath(filename, NULL);
->
+On Wed, Aug 14, 2019 at 12:17:14PM +0200, Jan Kara wrote:
+> Hello!
+> 
+> On Fri 09-08-19 15:58:14, ira.weiny@intel.com wrote:
+> > Pre-requisites
+> > ==============
+> > 	Based on mmotm tree.
+> > 
+> > Based on the feedback from LSFmm, the LWN article, the RFC series since
+> > then, and a ton of scenarios I've worked in my mind and/or tested...[1]
+> > 
+> > Solution summary
+> > ================
+> > 
+> > The real issue is that there is no use case for a user to have RDMA pinn'ed
+> > memory which is then truncated.  So really any solution we present which:
+> > 
+> > A) Prevents file system corruption or data leaks
+> > ...and...
+> > B) Informs the user that they did something wrong
+> > 
+> > Should be an acceptable solution.
+> > 
+> > Because this is slightly new behavior.  And because this is going to be
+> > specific to DAX (because of the lack of a page cache) we have made the user
+> > "opt in" to this behavior.
+> > 
+> > The following patches implement the following solution.
+> > 
+> > 0) Registrations to Device DAX char devs are not affected
+> > 
+> > 1) The user has to opt in to allowing page pins on a file with an exclusive
+> >    layout lease.  Both exclusive and layout lease flags are user visible now.
+> > 
+> > 2) page pins will fail if the lease is not active when the file back page is
+> >    encountered.
+> > 
+> > 3) Any truncate or hole punch operation on a pinned DAX page will fail.
+> 
+> So I didn't fully grok the patch set yet but by "pinned DAX page" do you
+> mean a page which has corresponding file_pin covering it? Or do you mean a
+> page which has pincount increased? If the first then I'd rephrase this to
+> be less ambiguous, if the second then I think it is wrong. 
 
-# echo 0 > /proc/sys/kernel/kptr_restrict
-# ./tools/perf/perf record -e instructions:k uname
-perf: Segmentation fault
-Obtained 10 stack frames.
-./tools/perf/perf(sighandler_dump_stack+0x44) [0x55af9e5da5d4]
-/lib/x86_64-linux-gnu/libc.so.6(+0x3ef20) [0x7fd31efb6f20]
-./tools/perf/perf(perf_event__synthesize_kernel_mmap+0xa7) [0x55af9e590337]
-./tools/perf/perf(+0x1cf5be) [0x55af9e50c5be]
-./tools/perf/perf(cmd_record+0x1022) [0x55af9e50dff2]
-./tools/perf/perf(+0x23f98d) [0x55af9e57c98d]
-./tools/perf/perf(+0x23fc9e) [0x55af9e57cc9e]
-./tools/perf/perf(main+0x369) [0x55af9e4f6bc9]
-/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7) [0x7fd31ef99b97]
-./tools/perf/perf(_start+0x2a) [0x55af9e4f704a]
-Segmentation fault
+I mean the second.  but by "fail" I mean hang.  Right now the "normal" page
+pincount processing will hang the truncate.  Given the discussion with John H
+we can make this a bit better if we use something like FOLL_PIN and the page
+count bias to indicate this type of pin.  Then I could fail the truncate
+outright.  but that is not done yet.
 
-I can reproduce this on both x86 and ARM64.
+so... I used the word "fail" to be a bit more vague as the final implementation
+may return ETXTBUSY or hang as noted.
 
->                 if (r != NULL) {
-> @@ -2190,9 +2197,9 @@ static bool symbol__read_kptr_restrict(void)
->                 char line[8];
->
->                 if (fgets(line, sizeof(line), fp) != NULL)
-> -                       value = ((geteuid() != 0) || (getuid() != 0)) ?
-> -                                       (atoi(line) != 0) :
-> -                                       (atoi(line) == 2);
-> +                       value = perf_cap__capable(CAP_SYSLOG) ?
-> +                                       (atoi(line) >= 2) :
-> +                                       (atoi(line) != 0);
->
->                 fclose(fp);
->         }
-> --
-> 2.7.4
->
+> 
+> > 4) The user has the option of holding the lease or releasing it.  If they
+> >    release it no other pin calls will work on the file.
+> 
+> Last time we spoke the plan was that the lease is kept while the pages are
+> pinned (and an attempt to release the lease would block until the pages are
+> unpinned). That also makes it clear that the *lease* is what is making
+> truncate and hole punch fail with ETXTBUSY and the file_pin structure is
+> just an implementation detail how the existence is efficiently tracked (and
+> what keeps the backing file for the pages open so that the lease does not
+> get auto-destroyed). Why did you change this?
+
+closing the file _and_ unmaping it will cause the lease to be released
+regardless of if we allow this or not.
+
+As we discussed preventing the close seemed intractable.
+
+I thought about failing the munmap but that seemed wrong as well.  But more
+importantly AFAIK RDMA can pass its memory pins to other processes via FD
+passing...  This means that one could pin this memory, pass it to another
+process and exit.  The file lease on the pin'ed file is lost.
+
+The file lease is just a key to get the memory pin.  Once unlocked the procfs
+tracking keeps track of where that pin goes and which processes need to be
+killed to get rid of it.
+
+> 
+> > 5) Closing the file is ok.
+> > 
+> > 6) Unmapping the file is ok
+> > 
+> > 7) Pins against the files are tracked back to an owning file or an owning mm
+> >    depending on the internal subsystem needs.  With RDMA there is an owning
+> >    file which is related to the pined file.
+> > 
+> > 8) Only RDMA is currently supported
+> 
+> If you currently only need "owning file" variant in your patch set, then
+> I'd just implement that and leave "owning mm" variant for later if it
+> proves to be necessary. The things are complex enough as is...
+
+I can do that...  I was trying to get io_uring working as well with the
+owning_mm but I should save that for later.
+
+> 
+> > 9) Truncation of pages which are not actively pinned nor covered by a lease
+> >    will succeed.
+> 
+> Otherwise I like the design.
+
+Thanks,
+Ira
+
+> 
+> 								Honza
+> 
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
