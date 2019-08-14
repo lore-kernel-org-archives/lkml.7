@@ -2,81 +2,119 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E36FC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A52C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35372208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565796627;
-	bh=CX48mP1/qs/V0WIfEuGbZqpNO4Jo433GaILdRZ/JeEM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Qz1o8t5p5cv96LpuPV1IETg1tbkwB7QaPCa1c18lW5KvpgrybpsarMMtPPlPKTd/I
-	 ln6KMm9n471ni1Bz3lk+pZ6rBE1qqRnx7rIETyhdeFNMa3aI7DbL+t+OZ2BgingWb0
-	 26E62rNA8H+ZGEB68o1o1jj+QSX+d/U9CuvO22Vo=
+	by mail.kernel.org (Postfix) with ESMTP id B2D4C208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:30:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbfHNPa0 (ORCPT
+        id S1728168AbfHNPa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 14 Aug 2019 11:30:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42255 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727983AbfHNPa0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 14 Aug 2019 11:30:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfHNPaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 11:30:25 -0400
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01F702084F;
-        Wed, 14 Aug 2019 15:30:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565796624;
-        bh=CX48mP1/qs/V0WIfEuGbZqpNO4Jo433GaILdRZ/JeEM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PGQUpwQFn9e0omqFaTUYm7VbpW+lXW0bU9M+B2FR7aU67oDqxmiEmiBjnW9MulJx/
-         T/qx3MWZHfn9hU+trpxwu/BTwz32PdAXz9bgi9ZQTHzoU/zlJ6Sohx0ZZfOhnK/Leq
-         wdI/Ln1KlneQc+SVrWr0dvUwdu0+FV6Oi5R8bxfA=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     linux-clk@vger.kernel.org
-Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com, stable@vger.kernel.org
-Subject: [PATCH] clk: socfpga: stratix10: fix rate caclulationg for cnt_clks
-Date:   Wed, 14 Aug 2019 10:30:14 -0500
-Message-Id: <20190814153014.12962-1-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.20.0
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1hxvEG-0004eJ-M8; Wed, 14 Aug 2019 15:30:24 +0000
+Date:   Wed, 14 Aug 2019 17:30:23 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, libc-alpha@sourceware.org,
+        alistair23@gmail.com, ebiederm@xmission.com, arnd@arndb.de,
+        dalias@libc.org, torvalds@linux-foundation.org,
+        adhemerval.zanella@linaro.org, fweimer@redhat.com,
+        palmer@sifive.com, macro@wdc.com, zongbox@gmail.com,
+        akpm@linux-foundation.org, viro@zeniv.linux.org.uk, hpa@zytor.com
+Subject: Re: [PATCH v2 1/1] waitid: Add support for waiting for the current
+ process group
+Message-ID: <20190814153023.ruf6m3kxiskhefsv@wittgenstein>
+References: <CAKmqyKMJPQAOKn11xepzAwXOd4e9dU0Cyz=A0T-uMEgUp5yJjA@mail.gmail.com>
+ <20190814130732.23572-1-christian.brauner@ubuntu.com>
+ <20190814130732.23572-2-christian.brauner@ubuntu.com>
+ <20190814141956.GC11595@redhat.com>
+ <20190814143545.tu6xfp2mxmnzwkx4@wittgenstein>
+ <20190814152712.GE11595@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190814152712.GE11595@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Checking bypass_reg is incorrect for calculating the cnt_clk rates.
-Instead we should be checking that there is a proper hardware register
-that holds the clock divider.
+On Wed, Aug 14, 2019 at 05:27:12PM +0200, Oleg Nesterov wrote:
+> On 08/14, Christian Brauner wrote:
+> >
+> > On Wed, Aug 14, 2019 at 04:19:57PM +0200, Oleg Nesterov wrote:
+> > > On 08/14, Christian Brauner wrote:
+> > > >
+> > > > +static struct pid *find_get_pgrp(pid_t nr)
+> > > > +{
+> > > > +	struct pid *pid;
+> > > > +
+> > > > +	if (nr)
+> > > > +		return find_get_pid(nr);
+> > > > +
+> > > > +	rcu_read_lock();
+> > > > +	pid = get_pid(task_pgrp(current));
+> > > > +	rcu_read_unlock();
+> > > > +
+> > > > +	return pid;
+> > > > +}
+> > >
+> > > I can't say I like this helper... even its name doesn't look good to me.
+> >
+> > Well, naming scheme obviously stolen from find_get_pid(). Not sure if
+> > that doesn't look good as well. ;)
+> 
+> find_get_pid() actually tries to find a pid. The helper above does "find"
+> or "use current" depending on nr != 0.
+> 
+> > > I forgot that we already have get_task_pid() when I replied to the previous
+> > > version... How about
+> > >
+> > > 	case P_PGID:
+> > >
+> > > 		if (upid)
+> > > 			pid = find_get_pid(upid);
+> > > 		else
+> > > 			pid = get_task_pid(current, PIDTYPE_PGID);
+> > >
+> > > ?
+> >
+> > Hmyeah, that works but wouldn't it still be nicer to simply have:
+> >
+> > static struct pid *get_pgrp(pid_t nr)
+> > {
+> > 	if (nr)
+> > 		return find_get_pid(nr);
+> >
+> > 	return get_task_pid(current, PIDTYPE_PGID);
+> > }
+> 
+> Who else can ever use it?
+> 
+> It saves 4 lines in kernel_waitid() but adds 7 lines outside, and you
+> need another ^] to see these lines if you try to understand what
+> PIDTYPE_PGID actually does. IOW, I think this helper will make waitid
+> less readable for no reason.
+> 
+> 
+> Christian, I try to never argue when it comes to cosmetic issues, and
+> in this case I won't insist too.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
- drivers/clk/socfpga/clk-periph-s10.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yeah, I know. I'm not insisisting either. We can do your thing since you
+do after all seem to care at least a tiny bit. ;)
 
-diff --git a/drivers/clk/socfpga/clk-periph-s10.c b/drivers/clk/socfpga/clk-periph-s10.c
-index 5c50e723ecae..1a191eeeebba 100644
---- a/drivers/clk/socfpga/clk-periph-s10.c
-+++ b/drivers/clk/socfpga/clk-periph-s10.c
-@@ -38,7 +38,7 @@ static unsigned long clk_peri_cnt_clk_recalc_rate(struct clk_hw *hwclk,
- 	if (socfpgaclk->fixed_div) {
- 		div = socfpgaclk->fixed_div;
- 	} else {
--		if (!socfpgaclk->bypass_reg)
-+		if (socfpgaclk->hw.reg)
- 			div = ((readl(socfpgaclk->hw.reg) & 0x7ff) + 1);
- 	}
- 
--- 
-2.20.0
-
+Christian
