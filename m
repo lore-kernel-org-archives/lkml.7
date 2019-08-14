@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA57C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A159AC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D92320842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4DE20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749726;
-	bh=Ifj00gfVsgvP+iQz6eKGgCcOciA1KGPr8g0npFZqP+o=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=d4OKYMwtcR+0Ao2siv7tz+fW+2FdBaVlET9hEsHtGbn+EL3S5E7KjkvVxs6/VJFJc
-	 3fJ24e9EMaWCA5qYAOtMFfO33pUfcR2hAzHPflp3HJDJKtH0OtRssx0iT+ZIpwv4UC
-	 gJSdrJ58Iv8pcDApy8ljDYD5FBOLkelA27Zevv0M=
+	s=default; t=1565749738;
+	bh=A959iDBz6axkDGYmFedeS7BeuaZ4FIDNHH7HQ1vGz1s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=taIoVz2V/hG70ZHhaBKLimbLU1Q7Ch2k1CuR7LCG3yZnKoz9qps0qX5YrDSy3rjSD
+	 dWQAcaiv3Ki1jEKzkCccBY4iSxtTgMh7AFB86ZBFazzAXwgFbSjMvDVcR8KwjKOeHE
+	 5C3+EeFINck6s3FC7Cm0mAGwnbq4YqytDF+eWSTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbfHNC2p (ORCPT
+        id S1729922AbfHNCXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:28:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54040 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:23:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729570AbfHNCZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:25:53 -0400
+        id S1729890AbfHNCXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:23:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0B7020842;
-        Wed, 14 Aug 2019 02:25:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DA7820679;
+        Wed, 14 Aug 2019 02:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749552;
-        bh=Ifj00gfVsgvP+iQz6eKGgCcOciA1KGPr8g0npFZqP+o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gK8IVvazbe/v5mfz3BsRoiqwU+zB006Osjo3hDoJk5NBS+ZCiORfFsJXMuwlUowYQ
-         R96jnGtM9dQ01prDEUdig1aixyuf42JaP+8gz1MQLskRQFNrrkip60yHSphaW+ApfC
-         wz9gnlHhrDa9VJSj4GsA28RJvMrjvDKuWE3UTbS4=
+        s=default; t=1565749417;
+        bh=A959iDBz6axkDGYmFedeS7BeuaZ4FIDNHH7HQ1vGz1s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=z9R0Iwi10Djq3nYv/jkbXMRRk8HZhL8E5hvZKPfUJmMgn5TdSWGfscEMylPIqRAvZ
+         Frho5wbb+ATJz3Bd4BXV0gkird2057tPcsmnEbwtHF9uLTLN2BqZ8SV2w8Exj7+yNI
+         k8tIKDf+1SZRVdRgibHyjjW/fs2MRS6jF8eW3xqk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Trukhanov <lahvuun@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 01/28] HID: Add 044f:b320 ThrustMaster, Inc. 2 in 1 DT
-Date:   Tue, 13 Aug 2019 22:25:23 -0400
-Message-Id: <20190814022550.17463-1-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 09/33] st_nci_hci_connectivity_event_received: null check the allocation
+Date:   Tue, 13 Aug 2019 22:22:59 -0400
+Message-Id: <20190814022323.17111-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190814022323.17111-1-sashal@kernel.org>
+References: <20190814022323.17111-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,65 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Trukhanov <lahvuun@gmail.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 65f11c72780fa9d598df88def045ccb6a885cf80 ]
+[ Upstream commit 3008e06fdf0973770370f97d5f1fba3701d8281d ]
 
-Enable force feedback for the Thrustmaster Dual Trigger 2 in 1 Rumble Force
-gamepad. Compared to other Thrustmaster devices, left and right rumble
-motors here are swapped.
+devm_kzalloc may fail and return NULL. So the null check is needed.
 
-Signed-off-by: Ilya Trukhanov <lahvuun@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-tmff.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/nfc/st-nci/se.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hid/hid-tmff.c b/drivers/hid/hid-tmff.c
-index b83376077d722..cfa0cb22c9b3c 100644
---- a/drivers/hid/hid-tmff.c
-+++ b/drivers/hid/hid-tmff.c
-@@ -34,6 +34,8 @@
+diff --git a/drivers/nfc/st-nci/se.c b/drivers/nfc/st-nci/se.c
+index 56f2112e0cd84..85df2e0093109 100644
+--- a/drivers/nfc/st-nci/se.c
++++ b/drivers/nfc/st-nci/se.c
+@@ -344,6 +344,8 @@ static int st_nci_hci_connectivity_event_received(struct nci_dev *ndev,
  
- #include "hid-ids.h"
+ 		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
+ 					    skb->len - 2, GFP_KERNEL);
++		if (!transaction)
++			return -ENOMEM;
  
-+#define THRUSTMASTER_DEVICE_ID_2_IN_1_DT	0xb320
-+
- static const signed short ff_rumble[] = {
- 	FF_RUMBLE,
- 	-1
-@@ -88,6 +90,7 @@ static int tmff_play(struct input_dev *dev, void *data,
- 	struct hid_field *ff_field = tmff->ff_field;
- 	int x, y;
- 	int left, right;	/* Rumbling */
-+	int motor_swap;
- 
- 	switch (effect->type) {
- 	case FF_CONSTANT:
-@@ -112,6 +115,13 @@ static int tmff_play(struct input_dev *dev, void *data,
- 					ff_field->logical_minimum,
- 					ff_field->logical_maximum);
- 
-+		/* 2-in-1 strong motor is left */
-+		if (hid->product == THRUSTMASTER_DEVICE_ID_2_IN_1_DT) {
-+			motor_swap = left;
-+			left = right;
-+			right = motor_swap;
-+		}
-+
- 		dbg_hid("(left,right)=(%08x, %08x)\n", left, right);
- 		ff_field->value[0] = left;
- 		ff_field->value[1] = right;
-@@ -238,6 +248,8 @@ static const struct hid_device_id tm_devices[] = {
- 		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb304),   /* FireStorm Dual Power 2 (and 3) */
- 		.driver_data = (unsigned long)ff_rumble },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, THRUSTMASTER_DEVICE_ID_2_IN_1_DT),   /* Dual Trigger 2-in-1 */
-+		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb323),   /* Dual Trigger 3-in-1 (PC Mode) */
- 		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb324),   /* Dual Trigger 3-in-1 (PS3 Mode) */
+ 		transaction->aid_len = skb->data[1];
+ 		memcpy(transaction->aid, &skb->data[2], transaction->aid_len);
 -- 
 2.20.1
 
