@@ -2,131 +2,134 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605E3C41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A228C32757
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4C32133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC412067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:19:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfHNKRS (ORCPT
+        id S1727409AbfHNKTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:17:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48234 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726019AbfHNKRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:17:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6A4C8AC8C;
-        Wed, 14 Aug 2019 10:17:15 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id B08BB1E4200; Wed, 14 Aug 2019 12:17:14 +0200 (CEST)
-Date:   Wed, 14 Aug 2019 12:17:14 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     ira.weiny@intel.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-Message-ID: <20190814101714.GA26273@quack2.suse.cz>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
+        Wed, 14 Aug 2019 06:19:13 -0400
+Received: from mail.thelounge.net ([91.118.73.15]:25791 "EHLO
+        mail.thelounge.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfHNKTN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:19:13 -0400
+Received: from srv-rhsoft.rhsoft.net  (Authenticated sender: h.reindl@thelounge.net) by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 467ltL60M1zXMk;
+        Wed, 14 Aug 2019 12:19:06 +0200 (CEST)
+Subject: Re: [PATCH AUTOSEL 4.19 04/42] netfilter: conntrack: always store
+ window size un-scaled
+To:     Thomas Jarosch <thomas.jarosch@intra2net.com>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Florian Westphal <fw@strlen.de>,
+        Jakub Jankowski <shasta@toxcorp.com>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+References: <20190802132302.13537-1-sashal@kernel.org>
+ <20190802132302.13537-4-sashal@kernel.org>
+ <20190808090209.wb63n6ibii4ivvba@intra2net.com>
+From:   Reindl Harald <h.reindl@thelounge.net>
+Openpgp: id=9D2B46CDBC140A36753AE4D733174D5A5892B7B8;
+ url=https://arrakis-tls.thelounge.net/gpg/h.reindl_thelounge.net.pub.txt
+Organization: the lounge interactive design
+Message-ID: <41ce587d-dfaa-fe6b-66a8-58ba1a3a2872@thelounge.net>
+Date:   Wed, 14 Aug 2019 12:19:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809225833.6657-1-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190808090209.wb63n6ibii4ivvba@intra2net.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-CH
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+that's still not in 5.2.8
 
-On Fri 09-08-19 15:58:14, ira.weiny@intel.com wrote:
-> Pre-requisites
-> ==============
-> 	Based on mmotm tree.
-> 
-> Based on the feedback from LSFmm, the LWN article, the RFC series since
-> then, and a ton of scenarios I've worked in my mind and/or tested...[1]
-> 
-> Solution summary
-> ================
-> 
-> The real issue is that there is no use case for a user to have RDMA pinn'ed
-> memory which is then truncated.  So really any solution we present which:
-> 
-> A) Prevents file system corruption or data leaks
-> ...and...
-> B) Informs the user that they did something wrong
-> 
-> Should be an acceptable solution.
-> 
-> Because this is slightly new behavior.  And because this is going to be
-> specific to DAX (because of the lack of a page cache) we have made the user
-> "opt in" to this behavior.
-> 
-> The following patches implement the following solution.
-> 
-> 0) Registrations to Device DAX char devs are not affected
-> 
-> 1) The user has to opt in to allowing page pins on a file with an exclusive
->    layout lease.  Both exclusive and layout lease flags are user visible now.
-> 
-> 2) page pins will fail if the lease is not active when the file back page is
->    encountered.
-> 
-> 3) Any truncate or hole punch operation on a pinned DAX page will fail.
+without the exception and "nf_conntrack_tcp_timeout_max_retrans = 60" a
+vnc-over-ssh session having the VNC view in the background freezes
+within 60 secods
 
-So I didn't fully grok the patch set yet but by "pinned DAX page" do you
-mean a page which has corresponding file_pin covering it? Or do you mean a
-page which has pincount increased? If the first then I'd rephrase this to
-be less ambiguous, if the second then I think it is wrong. 
+-----------------------------------------------------------------------------------------------
+IPV4 TABLE MANGLE (STATEFUL PRE-NAT/FILTER)
+-----------------------------------------------------------------------------------------------
+Chain PREROUTING (policy ACCEPT 100 packets, 9437 bytes)
+num   pkts bytes target     prot opt in     out     source
+ destination
+1     6526 3892K ACCEPT     all  --  *      *       0.0.0.0/0
+ 0.0.0.0/0            ctstate RELATED,ESTABLISHED
+2      125  6264 ACCEPT     all  --  lo     *       0.0.0.0/0
+ 0.0.0.0/0
+3       64  4952 ACCEPT     all  --  vmnet8 *       0.0.0.0/0
+ 0.0.0.0/0
+4        1    40 DROP       all  --  *      *       0.0.0.0/0
+ 0.0.0.0/0            ctstate INVALID
 
-> 4) The user has the option of holding the lease or releasing it.  If they
->    release it no other pin calls will work on the file.
+-------- Weitergeleitete Nachricht --------
+Betreff: [PATCH AUTOSEL 5.2 07/76] netfilter: conntrack: always store
+window size un-scaled
 
-Last time we spoke the plan was that the lease is kept while the pages are
-pinned (and an attempt to release the lease would block until the pages are
-unpinned). That also makes it clear that the *lease* is what is making
-truncate and hole punch fail with ETXTBUSY and the file_pin structure is
-just an implementation detail how the existence is efficiently tracked (and
-what keeps the backing file for the pages open so that the lease does not
-get auto-destroyed). Why did you change this?
-
-> 5) Closing the file is ok.
+Am 08.08.19 um 11:02 schrieb Thomas Jarosch:
+> Hello together,
 > 
-> 6) Unmapping the file is ok
+> You wrote on Fri, Aug 02, 2019 at 09:22:24AM -0400:
+>> From: Florian Westphal <fw@strlen.de>
+>>
+>> [ Upstream commit 959b69ef57db00cb33e9c4777400ae7183ebddd3 ]
+>>
+>> Jakub Jankowski reported following oddity:
+>>
+>> After 3 way handshake completes, timeout of new connection is set to
+>> max_retrans (300s) instead of established (5 days).
+>>
+>> shortened excerpt from pcap provided:
+>> 25.070622 IP (flags [DF], proto TCP (6), length 52)
+>> 10.8.5.4.1025 > 10.8.1.2.80: Flags [S], seq 11, win 64240, [wscale 8]
+>> 26.070462 IP (flags [DF], proto TCP (6), length 48)
+>> 10.8.1.2.80 > 10.8.5.4.1025: Flags [S.], seq 82, ack 12, win 65535, [wscale 3]
+>> 27.070449 IP (flags [DF], proto TCP (6), length 40)
+>> 10.8.5.4.1025 > 10.8.1.2.80: Flags [.], ack 83, win 512, length 0
+>>
+>> Turns out the last_win is of u16 type, but we store the scaled value:
+>> 512 << 8 (== 0x20000) becomes 0 window.
+>>
+>> The Fixes tag is not correct, as the bug has existed forever, but
+>> without that change all that this causes might cause is to mistake a
+>> window update (to-nonzero-from-zero) for a retransmit.
+>>
+>> Fixes: fbcd253d2448b8 ("netfilter: conntrack: lower timeout to RETRANS seconds if window is 0")
+>> Reported-by: Jakub Jankowski <shasta@toxcorp.com>
+>> Tested-by: Jakub Jankowski <shasta@toxcorp.com>
+>> Signed-off-by: Florian Westphal <fw@strlen.de>
+>> Acked-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+>> Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
 > 
-> 7) Pins against the files are tracked back to an owning file or an owning mm
->    depending on the internal subsystem needs.  With RDMA there is an owning
->    file which is related to the pined file.
+> Also:
+> Tested-by: Thomas Jarosch <thomas.jarosch@intra2net.com>
 > 
-> 8) Only RDMA is currently supported
-
-If you currently only need "owning file" variant in your patch set, then
-I'd just implement that and leave "owning mm" variant for later if it
-proves to be necessary. The things are complex enough as is...
-
-> 9) Truncation of pages which are not actively pinned nor covered by a lease
->    will succeed.
-
-Otherwise I like the design.
-
-								Honza
-
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> ;)
+> 
+> We've hit the issue with the wrong conntrack timeout at two different sites,
+> long-lived connections to a SAP server over IPSec VPN were constantly dropping.
+> 
+> For us this was a regression after updating from kernel 3.14 to 4.19.
+> Yesterday I've applied the patch to kernel 4.19.57 and the problem is fixed.
+> 
+> The issue was extra hard to debug as we could just boot the new kernel
+> for twenty minutes in the evening on these productive systems.
+> 
+> The stable kernel patch from last Friday came right on time. I was just
+> about the replay the TCP connection with tcpreplay, so this saved
+> me from another week of debugging. Thanks everyone!
