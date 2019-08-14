@@ -2,129 +2,186 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C65CAC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CD5C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C51E206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4590206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:09:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565741355;
+	bh=NGCjQUMppzGC46S5+/+MwbDqpRJ6D0XRhJjiDj5cviU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MPouONC7RGdHoTX/+yRHkIdOOQAukVmI5Nxy7o/irJRaS1GymM2oVqh/7hpTF2rDk
+	 iu4H+au68ZMA+oCRweVt62flnNlMlG3S/PlXz65xIld0L+iKUfgJ2sXl1LrawN2VbO
+	 8UNqnFCnx5wky0CVFTwIPqsmrX/lYfk4JwXDd8hM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbfHNAG0 (ORCPT
+        id S1726783AbfHNAJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 20:06:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59556 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726102AbfHNAGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 20:06:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B7E88ACC6;
-        Wed, 14 Aug 2019 00:06:23 +0000 (UTC)
-Date:   Tue, 13 Aug 2019 17:06:16 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] augmented rbtree: add new
- RB_DECLARE_CALLBACKS_MAX macro
-Message-ID: <20190814000616.sd4mxwsewhqqz6ra@linux-r8p5>
-References: <20190702075819.34787-1-walken@google.com>
- <20190702075819.34787-3-walken@google.com>
- <20190702160913.ptg4p2jyb6ih43hb@linux-r8p5>
- <CANN689HVDJXKEwB80yPAVwvRwnV4HfiucQVAho=dupKM_iKozw@mail.gmail.com>
+        Tue, 13 Aug 2019 20:09:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726155AbfHNAJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 20:09:13 -0400
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8891420844;
+        Wed, 14 Aug 2019 00:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565741352;
+        bh=NGCjQUMppzGC46S5+/+MwbDqpRJ6D0XRhJjiDj5cviU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=vgaW+4fGXXlQYWi3ipOqfpuiyxg/c4cx4aTK5d0appRa+6m/AN5HvQkgbNiT1ADtP
+         3kL/zUdYLztowLI7bmCUX0uqcehExCUJS8JkB4IEHuUKdpN0DA3yFIBjfX9UTkms6B
+         ykPMUYCxU/Ocp/LGrfVvG4Ut0J1y/dl8CLOIlQOQ=
+Received: by mail-wr1-f43.google.com with SMTP id t16so19262905wra.6;
+        Tue, 13 Aug 2019 17:09:12 -0700 (PDT)
+X-Gm-Message-State: APjAAAWtXAf8VZ0m/HKZlqlElNo+7QX+k0ly1kgkSL/khswu/41iC1cj
+        OMKtj+aUB8uCKrTFdktoA7KaglBW2hYDXs8JM3A=
+X-Google-Smtp-Source: APXvYqwivDoGxxCEPO2MQaT8j3ps33eTCZBUFumiEdTK3SM4Cy+U4YNRbjoczyh07Yjigp07HYQZ2T437ukacnKbfZ0=
+X-Received: by 2002:adf:f90e:: with SMTP id b14mr489711wrr.124.1565741351010;
+ Tue, 13 Aug 2019 17:09:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CANN689HVDJXKEwB80yPAVwvRwnV4HfiucQVAho=dupKM_iKozw@mail.gmail.com>
-User-Agent: NeoMutt/20180323
+References: <1565686400-5711-1-git-send-email-light.hsieh@mediatek.com> <1565686400-5711-3-git-send-email-light.hsieh@mediatek.com>
+In-Reply-To: <1565686400-5711-3-git-send-email-light.hsieh@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Tue, 13 Aug 2019 17:08:59 -0700
+X-Gmail-Original-Message-ID: <CAGp9Lzr+cHZ5Ki6u1LP5LeOkuBZhbZR-xfDUHn24-w7xM2YSmg@mail.gmail.com>
+Message-ID: <CAGp9Lzr+cHZ5Ki6u1LP5LeOkuBZhbZR-xfDUHn24-w7xM2YSmg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/5] pinctrl: mediatek: Supporting driving setting
+ without mapping current to register value
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 02 Jul 2019, Michel Lespinasse wrote:
->Ehhh, I have my own list of gripes about interval tree (I'm
->responsible for some of these too):
+Hi, Light
 
-Sorry just getting back to this.
+a few nitpicks, but the overall changes look good to me
 
+On Tue, Aug 13, 2019 at 1:53 AM Light Hsieh <light.hsieh@mediatek.com> wrote:
 >
->- The majority of interval tree users (though either the
->interval_tree.h or the interval_tree_generic.h API) do not store any
->overlapping intervals, and as such they really don't have any reason
->to use an augmented rbtree in the first place. This seems to be true
->for at least drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c,
->drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c, drivers/gpu/drm/drm_mm.c,
->drivers/gpu/drm/radeon/radeon_mn.c,
->drivers/infiniband/hw/usnic/usnic_uiom_interval_tree.c, and probably
->(not 100% sure) also drivers/infiniband/hw/hfi1/mmu_rb.c and
->drivers/vhost/vhost.c. I think the reason they do that is because they
->like to have the auto-generated insert / remove / iter functions
->rather than writing their own as they would have to do through the
->base rbtree API. Not necessarily a huge problem but it is annoying
->when working on inteval tree to consider that the data structure is
->not optimal for most of its users.
-
-I think the patch I sent earlier will add to your unhappiness.
-
+> From: Light Hsieh <light.hsieh@mediatek.com>
 >
->- The intervals are represented as [start, last], where most
->everything else in the kernel uses [start, end[ (with last == end -
->1). The reason it was done that way was for stabbing queries - I
->thought these would be nicer to represent as a [stab, stab] interval
->rather than [stab, stab+1[. But, things didn't turn out that way
->because of huge pages, and we end up with stabbing queries in the
->[stab, stab + page_size - 1] format, at which point we could just as
->easily go for [stab, stab + page_size[ representation. Having looked
->into it, my understanding is that *all* current users of the interval
->tree API would be better served if the intervals were represented as
->[start, end[ like everywhere else in the kernel.
+> Mediatek's smarphone project actual usage does need to know current value
+> (in mA) in procedure of finding the best driving setting.
+> The steps in the procedure is like as follow:
 >
->- interval_tree_generic.h refers to interval_tree.h as being the
->generic one. I think this is quite confusing. To me
->interval_tree_generic is the generic implementation (it works with any
->scalar ITTYPE), and interval_tree.h is the specialized version (it
->works with unsigned long keys only). Fun fact, interval_tree.[c,h] was
->initially only meant as sample / test code - I thought everyone would
->use the generic version. Not a big deal, it's probably better for
->everyone to use the specialized version when applicable (unless they
->don't really need overlapping intervals in the first place, but that's
->a separate gripe).
+> 1. set driving setting field in setting register as 0, measure waveform,
+>    perform test, and etc.
+> 2. set driving setting field in setting register as 1, measure waveform,
+>    perform test, and etc.
+> ...
+> n. set driving setting field in setting register as n-1, measure
+>    waveform, perform test, and etc.
+> Check the results of steps 1~n and adopt the setting that get best result.
 >
->- I don't like that interval tree API forces rb_leftmost caching on
->its users. I'm not sure what was the use case that motivated it, but I
->don' think it's a relevant optimization for most users - I can only
->see a benefit if people are frequently calling the iter_first function
->with a search interval that is to the left of the leftmost entry, and
->that doesn't seem to be relevant to the general case (in the general
->case, maintaining leftmost has a O(1) cost and its benefit is only
->expected to show up in 1/N cases, ....)
-
-Right, so this was done originally for optimizing range locking which
-needed to do the iter_first a lot. fwiw pat_rbtree tree could also use
-it before insertion. While I did not examine the other users of interval_tree,
-I considered it overall worthwhile having; it comes at pretty
-much no cost and the extra footprint has not been a problem so far for
-users.
-
+> This procedure does need to know the mapping between current to register
+> value.
+> Therefore, setting driving without mapping current is more pratical for
+> Mediatek's smartphone usage.
 >
->Going back to your specific pat_rbtree.c comment, I think using
->interval trees could still work. The issue with end is the typical one
->([start, last] vs [start, end[) which can be worked around by
->adjusting the end by 1 (still hate having to do that though). The
->issue with insertion order may possibly not matter, as
->memtype_rb_check_conflict verifies that any overlapping ranges will
->have the same configured memory type. So maybe the order doesn't
->matter in the end ??? Not 100% sure about that one.
+> Change-Id: Iacdabf0cada230fc5acad96673810c12a6c4556d
 
-I've sent out a patch.
+remove change-id
 
-Thanks,
-Davidlohr
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-mt6765.c        |  4 ++--
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 21 +++++++++++++++++++++
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |  5 +++++
+>  drivers/pinctrl/mediatek/pinctrl-paris.c         |  1 +
+>  4 files changed, 29 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6765.c b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> index 32451e8..e024ebc 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> @@ -1077,8 +1077,8 @@
+>         .bias_disable_get = mtk_pinconf_bias_disable_get,
+>         .bias_set = mtk_pinconf_bias_set,
+>         .bias_get = mtk_pinconf_bias_get,
+> -       .drive_set = mtk_pinconf_drive_set_rev1,
+> -       .drive_get = mtk_pinconf_drive_get_rev1,
+> +       .drive_set = mtk_pinconf_drive_set_direct_val,
+> +       .drive_get = mtk_pinconf_drive_get_direct_val,
 
+I prefer to mtk_pinconf_drive_[get,set]_raw_val that would be better
+to understand.
 
+>         .adv_pull_get = mtk_pinconf_adv_pull_get,
+>         .adv_pull_set = mtk_pinconf_adv_pull_set,
+>  };
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> index 4687f63..23a9529 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> @@ -607,6 +607,27 @@ int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
+>         return 0;
+>  }
+>
+> +/* Revision direct value */
+> +int mtk_pinconf_drive_set_direct_val(struct mtk_pinctrl *hw,
+> +                              const struct mtk_pin_desc *desc, u32 arg)
+> +{
+> +       int err;
+> +
+> +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV, arg);
+> +
+> +       return err;
+> +}
+> +
+> +int mtk_pinconf_drive_get_direct_val(struct mtk_pinctrl *hw,
+> +                              const struct mtk_pin_desc *desc, int *val)
+> +{
+> +       int err;
+> +
+> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV, val);
+> +
+> +       return err;
+> +}
+> +
+>  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
+>                              const struct mtk_pin_desc *desc, bool pullup,
+>                              u32 arg)
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> index 1b7da42..b3bada0 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> @@ -288,6 +288,11 @@ int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
+>  int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
+>                                const struct mtk_pin_desc *desc, int *val);
+>
+> +int mtk_pinconf_drive_set_direct_val(struct mtk_pinctrl *hw,
+> +                              const struct mtk_pin_desc *desc, u32 arg);
+> +int mtk_pinconf_drive_get_direct_val(struct mtk_pinctrl *hw,
+> +                              const struct mtk_pin_desc *desc, int *val);
+> +
+>  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
+>                              const struct mtk_pin_desc *desc, bool pullup,
+>                              u32 arg);
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> index 28b4951..71c94b2 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> @@ -964,3 +964,4 @@ static int mtk_paris_pinctrl_resume(struct device *device)
+>         .suspend_noirq = mtk_paris_pinctrl_suspend,
+>         .resume_noirq = mtk_paris_pinctrl_resume,
+>  };
+> +
+
+remove unnecessary the empty line
+
+> --
+> 1.8.1.1.dirty
+>
