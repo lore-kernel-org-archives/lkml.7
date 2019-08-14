@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C69C32759
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA57C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D9A2085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D92320842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749717;
-	bh=fDEtZsFIYm5HYRGuh/FkCw7ClI9UfM2kYm/fzPXNZ8w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ypcoDpYatdFdh//j7IR9R1EnSk6nrt+SNGsA3DFrmG2e3B0nYHTH1MIrfga6n5rRt
-	 KDeCd3MyvLruv9EdixTipvB+xkot8PrIUK84yx6atE7rmkhsQ+BKRgPxKNzSwbwOzf
-	 qXmUAW43vXU6M5vnb8N5fFpcQL8S40Pi+xBmRsW8=
+	s=default; t=1565749726;
+	bh=Ifj00gfVsgvP+iQz6eKGgCcOciA1KGPr8g0npFZqP+o=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=d4OKYMwtcR+0Ao2siv7tz+fW+2FdBaVlET9hEsHtGbn+EL3S5E7KjkvVxs6/VJFJc
+	 3fJ24e9EMaWCA5qYAOtMFfO33pUfcR2hAzHPflp3HJDJKtH0OtRssx0iT+ZIpwv4UC
+	 gJSdrJ58Iv8pcDApy8ljDYD5FBOLkelA27Zevv0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729871AbfHNCZ7 (ORCPT
+        id S1729439AbfHNC2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54052 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:28:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728775AbfHNCZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:25:55 -0400
+        id S1729570AbfHNCZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:25:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D908820679;
-        Wed, 14 Aug 2019 02:25:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0B7020842;
+        Wed, 14 Aug 2019 02:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749554;
-        bh=fDEtZsFIYm5HYRGuh/FkCw7ClI9UfM2kYm/fzPXNZ8w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CLZjCJgrkDpGj8gmcDu77MTiwuY3ooFmsHSnIh2vjigKBPzqJxKGSc1hdTGvzrfx0
-         IwfGDMclcxpTuj4LWbgXSBOHw8ByNFwn1ZVpTIN6YFdHzTkfaFT7OPxl/UBtncEnK+
-         HdtMJoE4fr3jOBwW/Uh4LBoWeYYaVwXIlj8VrbL4=
+        s=default; t=1565749552;
+        bh=Ifj00gfVsgvP+iQz6eKGgCcOciA1KGPr8g0npFZqP+o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gK8IVvazbe/v5mfz3BsRoiqwU+zB006Osjo3hDoJk5NBS+ZCiORfFsJXMuwlUowYQ
+         R96jnGtM9dQ01prDEUdig1aixyuf42JaP+8gz1MQLskRQFNrrkip60yHSphaW+ApfC
+         wz9gnlHhrDa9VJSj4GsA28RJvMrjvDKuWE3UTbS4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 02/28] MIPS: kernel: only use i8253 clocksource with periodic clockevent
-Date:   Tue, 13 Aug 2019 22:25:24 -0400
-Message-Id: <20190814022550.17463-2-sashal@kernel.org>
+Cc:     Ilya Trukhanov <lahvuun@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 01/28] HID: Add 044f:b320 ThrustMaster, Inc. 2 in 1 DT
+Date:   Tue, 13 Aug 2019 22:25:23 -0400
+Message-Id: <20190814022550.17463-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190814022550.17463-1-sashal@kernel.org>
-References: <20190814022550.17463-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,38 +56,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+From: Ilya Trukhanov <lahvuun@gmail.com>
 
-[ Upstream commit a07e3324538a989b7cdbf2c679be6a7f9df2544f ]
+[ Upstream commit 65f11c72780fa9d598df88def045ccb6a885cf80 ]
 
-i8253 clocksource needs a free running timer. This could only
-be used, if i8253 clockevent is set up as periodic.
+Enable force feedback for the Thrustmaster Dual Trigger 2 in 1 Rumble Force
+gamepad. Compared to other Thrustmaster devices, left and right rumble
+motors here are swapped.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Ilya Trukhanov <lahvuun@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/i8253.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hid/hid-tmff.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/mips/kernel/i8253.c b/arch/mips/kernel/i8253.c
-index c5bc344fc745c..73039746ae364 100644
---- a/arch/mips/kernel/i8253.c
-+++ b/arch/mips/kernel/i8253.c
-@@ -31,7 +31,8 @@ void __init setup_pit_timer(void)
+diff --git a/drivers/hid/hid-tmff.c b/drivers/hid/hid-tmff.c
+index b83376077d722..cfa0cb22c9b3c 100644
+--- a/drivers/hid/hid-tmff.c
++++ b/drivers/hid/hid-tmff.c
+@@ -34,6 +34,8 @@
  
- static int __init init_pit_clocksource(void)
- {
--	if (num_possible_cpus() > 1) /* PIT does not scale! */
-+	if (num_possible_cpus() > 1 || /* PIT does not scale! */
-+	    !clockevent_state_periodic(&i8253_clockevent))
- 		return 0;
+ #include "hid-ids.h"
  
- 	return clocksource_i8253_init();
++#define THRUSTMASTER_DEVICE_ID_2_IN_1_DT	0xb320
++
+ static const signed short ff_rumble[] = {
+ 	FF_RUMBLE,
+ 	-1
+@@ -88,6 +90,7 @@ static int tmff_play(struct input_dev *dev, void *data,
+ 	struct hid_field *ff_field = tmff->ff_field;
+ 	int x, y;
+ 	int left, right;	/* Rumbling */
++	int motor_swap;
+ 
+ 	switch (effect->type) {
+ 	case FF_CONSTANT:
+@@ -112,6 +115,13 @@ static int tmff_play(struct input_dev *dev, void *data,
+ 					ff_field->logical_minimum,
+ 					ff_field->logical_maximum);
+ 
++		/* 2-in-1 strong motor is left */
++		if (hid->product == THRUSTMASTER_DEVICE_ID_2_IN_1_DT) {
++			motor_swap = left;
++			left = right;
++			right = motor_swap;
++		}
++
+ 		dbg_hid("(left,right)=(%08x, %08x)\n", left, right);
+ 		ff_field->value[0] = left;
+ 		ff_field->value[1] = right;
+@@ -238,6 +248,8 @@ static const struct hid_device_id tm_devices[] = {
+ 		.driver_data = (unsigned long)ff_rumble },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb304),   /* FireStorm Dual Power 2 (and 3) */
+ 		.driver_data = (unsigned long)ff_rumble },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, THRUSTMASTER_DEVICE_ID_2_IN_1_DT),   /* Dual Trigger 2-in-1 */
++		.driver_data = (unsigned long)ff_rumble },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb323),   /* Dual Trigger 3-in-1 (PC Mode) */
+ 		.driver_data = (unsigned long)ff_rumble },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb324),   /* Dual Trigger 3-in-1 (PS3 Mode) */
 -- 
 2.20.1
 
