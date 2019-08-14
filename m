@@ -2,136 +2,100 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BEAC32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56693C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE9ED214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:25:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aVjpnrjN"
+	by mail.kernel.org (Postfix) with ESMTP id 2D1C72133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565807560;
+	bh=C2o5ZAFLsqWimnvESYqZdPxFV9HgXk+KXy8Ai5lAhjQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FcF+cR+2YZ+ORINaGqyQ9SwCksSTUqy/S2z7jEAEXjsexMfN/u9T75npZkz2YzqpJ
+	 IwDMVRwQd6jO6IgH1kcXdz22TXgsSh+E+hdtPav/cJkUlsT5dngK9O8Jnf+lGtNeZl
+	 JGKocHhA3nNYsXxdYDgj4d4OI29awBozg6T2iIOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbfHNSZW (ORCPT
+        id S1728676AbfHNSci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 14:25:22 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42339 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729109AbfHNSZV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 14:25:21 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i30so5354125pfk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 11:25:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dj4KAX4oiOlHlXT1vUtLuT1vYXvby2UL10kTcUOrNVU=;
-        b=aVjpnrjNjtev+v0rOvs8haZujsIS+SKSncIJWkjkfISt434mYvH9ZXTPW8wBD5bGPC
-         o8SRuLOWToAWroJNjgL9mzkUg7pZL0rg9adAlql+R+78AjCyhV+sU3P0rmKZnNHhDq+Y
-         cEVrmLlVbqJ8RvxQU6HF1D7onDXD6y79XuyZ3wBbiBgOCGGad+d2p7DoBN0YkWVjtRv8
-         cXA/Tx/2iGDkeuY0xn6JOEzKk9UW/gSVIlOE4AeQfT6Nx8/GYwWEGSP/Oo++j+VyTGNj
-         hEtA5/sv1Nv3mH/GumYlvjJsqc92BETeL6d2WiboFtAgkgTSaiGT3u7TkLGJ7IJ9RIRF
-         L3lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dj4KAX4oiOlHlXT1vUtLuT1vYXvby2UL10kTcUOrNVU=;
-        b=jY1CzoY+QEkhab912kHpgzP9gLL6EJTTO7FUlz/013zGKlbBahGOORT+TXprOdChVu
-         kHNytqgH2N8TIv4khK982FSsUvGYG7QA/ejhWjsdTuCnvsDm6e71ODHF7VvH4qk9M0V6
-         /Qz2YbS4X9viRaAXh3rP2oNhyMHAa0maJRoVKzmw949vPsUKdEYGvy/aNt1XvTnfiimA
-         MActVsF1OJDWhHL+xQIcPAxLY42zfl2vGGr5MPvcMfh2L1SXlbn6ilVBeN6h4039qiyv
-         sZZl63k+dgodwAfF/EAH5hIvGB73wax3BPxHwj6FPD3t41QIWjGI6SCx61SkRpSmK2Ph
-         C0ww==
-X-Gm-Message-State: APjAAAU/cQOdT7vsqH0euLVmYKJ1h/5m0RYEcejh25vyxQZzdXcXztFZ
-        VdbvH3gHATHgNV13EDwJ31e/nwZNW9FiGIXBt3fMWBhNlig=
-X-Google-Smtp-Source: APXvYqz/twTfpGfqt66xJCwQIFEHEknWQOpgXq5rPtScTXaG6QgAeHl3K1Dxc6WBbeihQAjQJx847aX1lF7z3cIPudw=
-X-Received: by 2002:aa7:984a:: with SMTP id n10mr1326537pfq.3.1565807120061;
- Wed, 14 Aug 2019 11:25:20 -0700 (PDT)
+        Wed, 14 Aug 2019 14:32:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50678 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726522AbfHNSci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 14:32:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 512CEAF5B;
+        Wed, 14 Aug 2019 18:32:37 +0000 (UTC)
+Date:   Wed, 14 Aug 2019 20:32:35 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Arun KS <arunks@codeaurora.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2 4/5] mm/memory_hotplug: Make sure the pfn is aligned
+ to the order when onlining
+Message-ID: <20190814183235.GJ17933@dhcp22.suse.cz>
+References: <20190814154109.3448-1-david@redhat.com>
+ <20190814154109.3448-5-david@redhat.com>
+ <b47ebf69-77eb-4a77-0fbc-631175aca979@redhat.com>
 MIME-Version: 1.0
-References: <20190814165809.46421-1-natechancellor@gmail.com>
-In-Reply-To: <20190814165809.46421-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 14 Aug 2019 11:25:08 -0700
-Message-ID: <CAKwvOdmvBkXu3JTp6c9yRKgPTv6pQ=_jrCsBzU5dJLD2xRvVxg@mail.gmail.com>
-Subject: Re: [PATCH] netfilter: nft_bitwise: Adjust parentheses to fix memcmp
- size argument
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b47ebf69-77eb-4a77-0fbc-631175aca979@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 9:58 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> clang warns:
->
-> net/netfilter/nft_bitwise.c:138:50: error: size argument in 'memcmp'
-> call is a comparison [-Werror,-Wmemsize-comparison]
->         if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
->                                       ~~~~~~~~~~~~~~~~~~^~
-> net/netfilter/nft_bitwise.c:138:6: note: did you mean to compare the
-> result of 'memcmp' instead?
->         if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
->             ^
->                                                        )
-> net/netfilter/nft_bitwise.c:138:32: note: explicitly cast the argument
-> to size_t to silence this warning
->         if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
->                                       ^
->                                       (size_t)(
-> 1 error generated.
->
-> Adjust the parentheses so that the result of the sizeof is used for the
-> size argument in memcmp, rather than the result of the comparison (which
-> would always be true because sizeof is a non-zero number).
->
-> Fixes: bd8699e9e292 ("netfilter: nft_bitwise: add offload support")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/638
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+On Wed 14-08-19 18:09:16, David Hildenbrand wrote:
+> On 14.08.19 17:41, David Hildenbrand wrote:
+> > Commit a9cd410a3d29 ("mm/page_alloc.c: memory hotplug: free pages as higher
+> > order") assumed that any PFN we get via memory resources is aligned to
+> > to MAX_ORDER - 1, I am not convinced that is always true. Let's play safe,
+> > check the alignment and fallback to single pages.
+> > 
+> > Cc: Arun KS <arunks@codeaurora.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Oscar Salvador <osalvador@suse.de>
+> > Cc: Michal Hocko <mhocko@suse.com>
+> > Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Signed-off-by: David Hildenbrand <david@redhat.com>
+> > ---
+> >  mm/memory_hotplug.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> > index 63b1775f7cf8..f245fb50ba7f 100644
+> > --- a/mm/memory_hotplug.c
+> > +++ b/mm/memory_hotplug.c
+> > @@ -646,6 +646,9 @@ static int online_pages_range(unsigned long start_pfn, unsigned long nr_pages,
+> >  	 */
+> >  	for (pfn = start_pfn; pfn < end_pfn; pfn += 1ul << order) {
+> >  		order = min(MAX_ORDER - 1, get_order(PFN_PHYS(end_pfn - pfn)));
+> > +		/* __free_pages_core() wants pfns to be aligned to the order */
+> > +		if (unlikely(!IS_ALIGNED(pfn, 1ul << order)))
+> > +			order = 0;
+> >  		(*online_page_callback)(pfn_to_page(pfn), order);
+> >  	}
+> >  
+> > 
+> 
+> @Michal, if you insist, we can drop this patch. "break first and fix
+> later" is not part of my DNA :)
 
-oh no! thanks for the patch.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-> ---
->  net/netfilter/nft_bitwise.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/net/netfilter/nft_bitwise.c b/net/netfilter/nft_bitwise.c
-> index 1f04ed5c518c..974300178fa9 100644
-> --- a/net/netfilter/nft_bitwise.c
-> +++ b/net/netfilter/nft_bitwise.c
-> @@ -135,8 +135,8 @@ static int nft_bitwise_offload(struct nft_offload_ctx *ctx,
->  {
->         const struct nft_bitwise *priv = nft_expr_priv(expr);
->
-> -       if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
-> -           priv->sreg != priv->dreg))
-> +       if (memcmp(&priv->xor, &zero, sizeof(priv->xor)) ||
-> +           priv->sreg != priv->dreg)
->                 return -EOPNOTSUPP;
->
->         memcpy(&ctx->regs[priv->dreg].mask, &priv->mask, sizeof(priv->mask));
-> --
-> 2.23.0.rc2
->
+I do not insist but have already expressed that I am not a fan of this
+change. Also I think that "break first" is quite an over statement here.
 
 -- 
-Thanks,
-~Nick Desaulniers
+Michal Hocko
+SUSE Labs
