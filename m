@@ -4,141 +4,191 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD80C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52718C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D687C208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F34214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:46:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JpSL21bC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O7+xZW9b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfHNKp7 (ORCPT
+        id S1727870AbfHNKqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:45:59 -0400
-Received: from mail-yb1-f201.google.com ([209.85.219.201]:43144 "EHLO
-        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbfHNKp6 (ORCPT
+        Wed, 14 Aug 2019 06:46:05 -0400
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:33972 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727466AbfHNKqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:45:58 -0400
-Received: by mail-yb1-f201.google.com with SMTP id 16so19492267ybn.10
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 03:45:58 -0700 (PDT)
+        Wed, 14 Aug 2019 06:46:03 -0400
+Received: by mail-qt1-f202.google.com with SMTP id i1so3775926qtm.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 03:46:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=rNr4ZPVQiRY9460rK+p/RjWfP2XiBB6EuRKjHiRo/qQ=;
-        b=JpSL21bCCCvwbK2FjwB7E/jnKcDm9D41KjRfUN/ZMV7CAuObTU2sAjHT/9QBhYs1vA
-         I0O2sbz4SZhkiL3bvhimKAowi+0b9jhvA+I9Qoyx0qUQxXPKNMHSGGg6PAoC31fKpGDk
-         FaHmng7SEUEvXHHxyzi2lpMXoBFZK/QNPB3aEwjAnDzaTOQ/oiT1Ex7XJAR8Z0EEt+uA
-         eZP4Vgt9tLhRZySmfka/MsnvyU6VjakU63Vc0P/Jcq03iFvt8kJ1LEwzecXQN9yLJa8z
-         wJzSIzXSAO3eKnLA1Tbl6K0ZnzkKBZpHSkmkivhlLZOryY7AcVuDJ21jFv9c4oyt82L+
-         6nww==
+        bh=oqxTqOJ6wCf7PGIZgAVYYI7HoO4jjy5hivlKoMqmAi8=;
+        b=O7+xZW9bVaxSWLElxmDAgFZSh2+lPWcqmgSViEd8bkRDj0bp4mgJ3aKj3/JJReW7M6
+         8W8L4XAfcY2PE/zXAxS2HQ6+seXxNiEQ0uDRM6mocKWiWwTtUN74Dpf+YJXhJ0Xz0xW8
+         UpsEzUith0hcInJf/ShGRE4oqG8QWIdbiNAUjVFAk3TyU9U6m62E3fwx83wmmjGudsno
+         0DmGq9PspzDOZFKaK+30voK1ou3xLzWx4HKHvwIngGUSEmmkZ67xQNLD/ex+PxU25Lr9
+         w30JZzYLpxT5+gh/lXRWhqew3KtFUSydGxrEtLswNpHpEQv8o5DRYcyEEXqaHHr4lSOf
+         c6hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=rNr4ZPVQiRY9460rK+p/RjWfP2XiBB6EuRKjHiRo/qQ=;
-        b=ZgBuo3JPiLMvkEakFcBBXLbJI29m5HPq/Ft868c1bEEfz/bGoqNxWE2ZjR4mYoDEnR
-         AwisPhk0H2Bj9oipuFMXFlwk7xBz+j6tmkpSPO9O82Vm7ueEkvVvvjFJSJhpLplJkCRe
-         z6i8Zh6fFqcXM1cKfMEZPYJ1nXzBNQjLRfihd2XhP1sFyMJ09hxNsUiv7Tm8FTWHUHts
-         nhuYceBAVKbXP1BzDUotlB7oskCVTb3IgcxEul9C9z98zU1+JIWMTpiR0a5wNuQcqxb0
-         aC00H2vBZ2ZSREY9Rq3gojj6yUvO95B8/EUo/aNWTacJiFAVfFCk3xQwkd4/KBVnlMcx
-         VVdw==
-X-Gm-Message-State: APjAAAVRlgMFrVlOjsDe2JxpWu1w31ngQ64fsT6J2dkqfSLg97FjIVbe
-        26smAZT3U9rd43ggnXJQSW+ueuRgHzA=
-X-Google-Smtp-Source: APXvYqz8wuc7rzzPcMc9pN4pp2/JhTt0TqdoYblYW39TykuwcgtmhPOpuh0zTFZfEq05jYjRSZf+uFC6HSU=
-X-Received: by 2002:a81:70c7:: with SMTP id l190mr20647337ywc.280.1565779557384;
- Wed, 14 Aug 2019 03:45:57 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 12:45:02 +0200
+        bh=oqxTqOJ6wCf7PGIZgAVYYI7HoO4jjy5hivlKoMqmAi8=;
+        b=rZXWhQa6/qIVoL8dVQ1xduJuJaRkR4MPfut8rwvo/d3xYwD1/fTQAk4uLITW0jIBj6
+         CIiKoosBE3TuBvnsC2wLDe0Q7C48ompBzB6h1fF+O5xAQwhyJ3lc65CKIn6m3eUh/GZb
+         U+3mwAo1JlYNuCTCzbM/MeRJiYqfoWJycXveHoGRROZVwIvS0nT6E9s7lj7DDmzLygbY
+         8Po0W9bCwqYIe5qhX4noYlUFcB9VqO1OQ8m1MZEF+xxy0JJZDSVV3EropG9gIntYWRME
+         hzmvyo+/KxHcLeVZ7J8bYl9USroHV9BuBtIG8P3LYHhtTquDLDzAbhULcT+9BmTwOMFP
+         kLvg==
+X-Gm-Message-State: APjAAAUTSc1SmL8rOPgC90lM0NKuZ3B5P3CBD10FUuTnnL+wDPR+zOH2
+        b75PN8gTSKDPtHTfTzkMH9UoERF4ImA=
+X-Google-Smtp-Source: APXvYqxndkg4Q+ED4/lezsuSHat0LDTAfINlPw7TAr+Ihx0C8cuCGXv8RYvMevn8UpDiFGyUQnXhsJKUyCk=
+X-Received: by 2002:ae9:efc6:: with SMTP id d189mr36226585qkg.323.1565779561325;
+ Wed, 14 Aug 2019 03:46:01 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 12:45:03 +0200
 In-Reply-To: <20190814104520.6001-1-darekm@google.com>
-Message-Id: <20190814104520.6001-5-darekm@google.com>
+Message-Id: <20190814104520.6001-6-darekm@google.com>
 Mime-Version: 1.0
 References: <20190814104520.6001-1-darekm@google.com>
 X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-Subject: [PATCH v7 4/9] tda9950: use cec_notifier_cec_adap_(un)register
+Subject: [PATCH v7 5/9] drm: tda998x: use cec_notifier_conn_(un)register
 From:   Dariusz Marcinkiewicz <darekm@google.com>
 To:     dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
         hverkuil-cisco@xs4all.nl
 Cc:     Dariusz Marcinkiewicz <darekm@google.com>,
+        Russell King <linux@armlinux.org.uk>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-kernel@vger.kernel.org
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new cec_notifier_cec_adap_(un)register() functions to
-(un)register the notifier for the CEC adapter.
+Use the new cec_notifier_conn_(un)register() functions to
+(un)register the notifier for the HDMI connector, and fill
+in the cec_connector_info.
+
+Changes since v6:
+        - move cec_notifier_conn_unregister to tda998x_bridge_detach,
+	- add a mutex protecting accesses to a CEC notifier.
+Changes since v2:
+	- cec_notifier_phys_addr_invalidate where appropriate,
+	- don't check for NULL notifier before calling
+	cec_notifier_conn_unregister.
+Changes since v1:
+	Add memory barrier to make sure that the notifier
+	becomes visible to the irq thread once it is
+	fully constructed.
 
 Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 ---
- drivers/gpu/drm/i2c/tda9950.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/i2c/tda998x_drv.c | 36 +++++++++++++++++++++----------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/i2c/tda9950.c b/drivers/gpu/drm/i2c/tda9950.c
-index 8039fc0d83db4..a5a75bdeb7a5f 100644
---- a/drivers/gpu/drm/i2c/tda9950.c
-+++ b/drivers/gpu/drm/i2c/tda9950.c
-@@ -420,7 +420,8 @@ static int tda9950_probe(struct i2c_client *client,
- 		priv->hdmi = glue->parent;
+diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
+index 61e042918a7fc..643480415473f 100644
+--- a/drivers/gpu/drm/i2c/tda998x_drv.c
++++ b/drivers/gpu/drm/i2c/tda998x_drv.c
+@@ -82,6 +82,8 @@ struct tda998x_priv {
+ 	u8 audio_port_enable[AUDIO_ROUTE_NUM];
+ 	struct tda9950_glue cec_glue;
+ 	struct gpio_desc *calib;
++
++	struct mutex cec_notifiy_mutex;
+ 	struct cec_notifier *cec_notify;
+ };
  
- 	priv->adap = cec_allocate_adapter(&tda9950_cec_ops, priv, "tda9950",
--					  CEC_CAP_DEFAULTS,
-+					  CEC_CAP_DEFAULTS |
-+					  CEC_CAP_CONNECTOR_INFO,
- 					  CEC_MAX_LOG_ADDRS);
- 	if (IS_ERR(priv->adap))
- 		return PTR_ERR(priv->adap);
-@@ -457,13 +458,14 @@ static int tda9950_probe(struct i2c_client *client,
- 	if (ret < 0)
+@@ -805,8 +807,11 @@ static irqreturn_t tda998x_irq_thread(int irq, void *data)
+ 				tda998x_edid_delay_start(priv);
+ 			} else {
+ 				schedule_work(&priv->detect_work);
+-				cec_notifier_set_phys_addr(priv->cec_notify,
+-						   CEC_PHYS_ADDR_INVALID);
++
++				mutex_lock(&priv->cec_notifiy_mutex);
++				cec_notifier_phys_addr_invalidate(
++						priv->cec_notify);
++				mutex_unlock(&priv->cec_notifiy_mutex);
+ 			}
+ 
+ 			handled = true;
+@@ -1331,6 +1336,8 @@ static int tda998x_connector_init(struct tda998x_priv *priv,
+ 				  struct drm_device *drm)
+ {
+ 	struct drm_connector *connector = &priv->connector;
++	struct cec_connector_info conn_info;
++	struct cec_notifier *notifier;
+ 	int ret;
+ 
+ 	connector->interlace_allowed = 1;
+@@ -1347,6 +1354,16 @@ static int tda998x_connector_init(struct tda998x_priv *priv,
+ 	if (ret)
  		return ret;
  
--	priv->notify = cec_notifier_get(priv->hdmi);
-+	priv->notify = cec_notifier_cec_adap_register(priv->hdmi, NULL,
-+						      priv->adap);
- 	if (!priv->notify)
- 		return -ENOMEM;
++	cec_fill_conn_info_from_drm(&conn_info, connector);
++
++	notifier = cec_notifier_conn_register(priv->cec_glue.parent,
++					      NULL, &conn_info);
++		return -ENOMEM;
++
++	mutex_lock(&priv->cec_notifiy_mutex);
++	priv->cec_notify = notifier;
++	mutex_unlock(&priv->cec_notifiy_mutex);
++
+ 	drm_connector_attach_encoder(&priv->connector,
+ 				     priv->bridge.encoder);
  
- 	ret = cec_register_adapter(priv->adap, priv->hdmi);
- 	if (ret < 0) {
--		cec_notifier_put(priv->notify);
-+		cec_notifier_cec_adap_unregister(priv->notify);
- 		return ret;
+@@ -1366,6 +1383,11 @@ static void tda998x_bridge_detach(struct drm_bridge *bridge)
+ {
+ 	struct tda998x_priv *priv = bridge_to_tda998x_priv(bridge);
+ 
++	mutex_lock(&priv->cec_notifiy_mutex);
++	cec_notifier_conn_unregister(priv->cec_notify);
++	priv->cec_notify = NULL;
++	mutex_unlock(&priv->cec_notifiy_mutex);
++
+ 	drm_connector_cleanup(&priv->connector);
+ }
+ 
+@@ -1789,9 +1811,6 @@ static void tda998x_destroy(struct device *dev)
+ 	cancel_work_sync(&priv->detect_work);
+ 
+ 	i2c_unregister_device(priv->cec);
+-
+-	if (priv->cec_notify)
+-		cec_notifier_put(priv->cec_notify);
+ }
+ 
+ static int tda998x_create(struct device *dev)
+@@ -1812,6 +1831,7 @@ static int tda998x_create(struct device *dev)
+ 	mutex_init(&priv->mutex);	/* protect the page access */
+ 	mutex_init(&priv->audio_mutex); /* protect access from audio thread */
+ 	mutex_init(&priv->edid_mutex);
++	mutex_init(&priv->cec_notifiy_mutex);
+ 	INIT_LIST_HEAD(&priv->bridge.list);
+ 	init_waitqueue_head(&priv->edid_delay_waitq);
+ 	timer_setup(&priv->edid_delay_timer, tda998x_edid_delay_done, 0);
+@@ -1916,12 +1936,6 @@ static int tda998x_create(struct device *dev)
+ 		cec_write(priv, REG_CEC_RXSHPDINTENA, CEC_RXSHPDLEV_HPD);
  	}
  
-@@ -473,8 +475,6 @@ static int tda9950_probe(struct i2c_client *client,
- 	 */
- 	devm_remove_action(dev, tda9950_cec_del, priv);
- 
--	cec_register_cec_notifier(priv->adap, priv->notify);
+-	priv->cec_notify = cec_notifier_get(dev);
+-	if (!priv->cec_notify) {
+-		ret = -ENOMEM;
+-		goto fail;
+-	}
 -
- 	return 0;
- }
- 
-@@ -482,8 +482,8 @@ static int tda9950_remove(struct i2c_client *client)
- {
- 	struct tda9950_priv *priv = i2c_get_clientdata(client);
- 
-+	cec_notifier_cec_adap_unregister(priv->notify);
- 	cec_unregister_adapter(priv->adap);
--	cec_notifier_put(priv->notify);
- 
- 	return 0;
- }
+ 	priv->cec_glue.parent = dev;
+ 	priv->cec_glue.data = priv;
+ 	priv->cec_glue.init = tda998x_cec_hook_init;
 -- 
 2.23.0.rc1.153.gdeed80330f-goog
 
