@@ -2,181 +2,144 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F93EC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93711C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD8FE2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 675FA2063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:25:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PkjU82I1"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="H+/3PUDR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfHNLYm (ORCPT
+        id S1727533AbfHNLZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 07:24:42 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42500 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbfHNLYm (ORCPT
+        Wed, 14 Aug 2019 07:25:10 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:36132 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbfHNLZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 07:24:42 -0400
-Received: by mail-lj1-f195.google.com with SMTP id l14so1771488ljj.9
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:24:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HUGbXBrBjsmS+Ai2+iPeBZiJZJaEtCScpBr1KbEOROc=;
-        b=PkjU82I1Mi3dtcdhxyT5h+6hb39AQ7Nnc5myOYqUYUr53jt48ZbCascD3VQOPe2Smj
-         I/9PI6CJfvkk2WhoN0gcrFQoW/LQM79KlXTQH+E+F1QCeDUggRHsl7nX2i9l3S/4MB2k
-         OOw7gEQJZVJbWzTrNTaXGt31ef7zKCW5v9CUgEGFask9fTpgdMR0zEbCNF1BIFifTA7U
-         xsaHsj8IHNtg+3SfpY/6bYIBAlgFWC1ovm+4vKdPYZ5NQp0OeK5kuO/cIzgqB7W3rFA9
-         bFALrkGAmT8rc70l4IPUENm/VIr9YHIIldmT8r4ZTST4D8oF/DzX0+fU6TLOY6Cm3wZ5
-         9yFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HUGbXBrBjsmS+Ai2+iPeBZiJZJaEtCScpBr1KbEOROc=;
-        b=Zk7rZOzxSq3YEk+9MzZDippu0cBl6H6+ipOrYvnkTuX1OJgbvzLeYTNHkioLwECnE6
-         K9CBLFFpMZJDxIo1+Vz03k32SI0KUDRI1D8QIYCNzKzHwrrpDA14NztXkjeuBhMsNJCu
-         wmYaA2s3TSyh1bsTsjqYaG0jgnPBZJieX1MrotfhVmoyEj6v1CXr83/sctVR48/We2WZ
-         2+LQKfcfdU6a6KGIwFouCLwE0C1iuwkx/aiH/7WOXnReJ6nkG20CcsoCKy8nJITW4Die
-         IFsaGPgmTEjrMYNWEkkIowbIsDQDRs4S7rhklJTH2ZjNDl2RLyXHOiI0HFj9V4cb9zcu
-         eA6A==
-X-Gm-Message-State: APjAAAUinpRpbBVSyTNvHDlCk1dQEIybf187VpJAbUxlIQasTRMTkWO+
-        8Tig40efknVC1ATz3CV2V2SmVnudJfF1/iQKSpo=
-X-Google-Smtp-Source: APXvYqxgpEOi0jWRp6ACiKPS+q5uwzg9P1kAtJ9h5fBMJgydx1ovY5LAQpvUapPlQtRQlyypTZYcDEFB68Ahw1aBhyo=
-X-Received: by 2002:a2e:720c:: with SMTP id n12mr997564ljc.53.1565781877676;
- Wed, 14 Aug 2019 04:24:37 -0700 (PDT)
+        Wed, 14 Aug 2019 07:25:10 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 345585C0169;
+        Wed, 14 Aug 2019 13:25:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1565781907;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AG3FIHoSz/S/uC8/2eFW2H8gDg4D2SCe14To8Yfg+Dc=;
+        b=H+/3PUDRznE2MvEVCJ5i3mZVSiO4GwePtNPLn4NWficXmss/i5diEK5m3mkjt5qX0Ju6yu
+        GkhmLHk283XOhZHygHsQocrGKqzw27AO6z8k/NMDjvfGc8tJXvetkDJfB4BPxsOXi5K9w6
+        FSbI/3pQ9LjeqkIWGG9nWJp7TJP01Yk=
 MIME-Version: 1.0
-References: <20190814060854.26345-1-codekipper@gmail.com> <20190814060854.26345-2-codekipper@gmail.com>
- <20190814064339.lgfngdkiaalygolk@flea>
-In-Reply-To: <20190814064339.lgfngdkiaalygolk@flea>
-From:   Code Kipper <codekipper@gmail.com>
-Date:   Wed, 14 Aug 2019 13:24:26 +0200
-Message-ID: <CAEKpxBkDGFUQTZXKUda71P02n2f4eDHJS0D4DdgbQN_JJE10cQ@mail.gmail.com>
-Subject: Re: [PATCH v5 01/15] ASoC: sun4i-i2s: Add regmap field to sign extend sample
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 14 Aug 2019 13:25:05 +0200
+From:   Stefan Agner <stefan@agner.ch>
+To:     Robert Chiras <robert.chiras@nxp.com>
+Cc:     mark.rutland@arm.com, robh+dt@kernel.org,
+        dl-linux-imx <linux-imx@nxp.com>, marex@denx.de,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        agx@sigxcpu.org, festevam@gmail.com, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, shawnguo@kernel.org,
+        linux-arm-kernel@lists.infradead.org, airlied@linux.ie,
+        kernel@pengutronix.de, s.hauer@pengutronix.de
+Subject: Re: [EXT] Re: [PATCH v2 09/15] dt-bindings: display: Add max-res
+ property for mxsfb
+In-Reply-To: <1565781243.3209.55.camel@nxp.com>
+References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
+ <1565779731-1300-10-git-send-email-robert.chiras@nxp.com>
+ <491aff3d08f24ab4d79a4f8c139d2e44@agner.ch>
+ <1565781243.3209.55.camel@nxp.com>
+Message-ID: <33feedd20e0fc154c5b736f882d24569@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 at 13:08, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi,
->
-> On Wed, Aug 14, 2019 at 08:08:40AM +0200, codekipper@gmail.com wrote:
-> > From: Marcus Cooper <codekipper@gmail.com>
-> >
-> > On the newer SoCs such as the H3 and A64 this is set by default
-> > to transfer a 0 after each sample in each slot. However the A10
-> > and A20 SoCs that this driver was developed on had a default
-> > setting where it padded the audio gain with zeros.
-> >
-> > This isn't a problem whilst we have only support for 16bit audio
-> > but with larger sample resolution rates in the pipeline then SEXT
-> > bits should be cleared so that they also pad at the LSB. Without
-> > this the audio gets distorted.
-> >
-> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > ---
-> >  sound/soc/sunxi/sun4i-i2s.c | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> >
-> > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> > index 793457394efe..8201334a059b 100644
-> > --- a/sound/soc/sunxi/sun4i-i2s.c
-> > +++ b/sound/soc/sunxi/sun4i-i2s.c
-> > @@ -135,6 +135,7 @@ struct sun4i_i2s;
-> >   * @field_fmt_bclk: regmap field to set clk polarity.
-> >   * @field_fmt_lrclk: regmap field to set frame polarity.
-> >   * @field_fmt_mode: regmap field to set the operational mode.
-> > + * @field_fmt_sext: regmap field to set the sign extension.
-> >   * @field_txchanmap: location of the tx channel mapping register.
-> >   * @field_rxchanmap: location of the rx channel mapping register.
-> >   * @field_txchansel: location of the tx channel select bit fields.
-> > @@ -159,6 +160,7 @@ struct sun4i_i2s_quirks {
-> >       struct reg_field                field_fmt_bclk;
-> >       struct reg_field                field_fmt_lrclk;
-> >       struct reg_field                field_fmt_mode;
-> > +     struct reg_field                field_fmt_sext;
-> >       struct reg_field                field_txchanmap;
-> >       struct reg_field                field_rxchanmap;
-> >       struct reg_field                field_txchansel;
-> > @@ -186,6 +188,7 @@ struct sun4i_i2s {
-> >       struct regmap_field     *field_fmt_bclk;
-> >       struct regmap_field     *field_fmt_lrclk;
-> >       struct regmap_field     *field_fmt_mode;
-> > +     struct regmap_field     *field_fmt_sext;
-> >       struct regmap_field     *field_txchanmap;
-> >       struct regmap_field     *field_rxchanmap;
-> >       struct regmap_field     *field_txchansel;
-> > @@ -345,6 +348,9 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
-> >                                  SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
-> >                                  SUN8I_I2S_FMT0_LRCK_PERIOD(32));
-> >
-> > +     /* Set sign extension to pad out LSB with 0 */
-> > +     regmap_field_write(i2s->field_fmt_sext, 0);
-> > +
-> >       return 0;
-> >  }
-> >
-> > @@ -917,6 +923,7 @@ static const struct sun4i_i2s_quirks sun4i_a10_i2s_quirks = {
-> >       .field_fmt_lrclk        = REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
-> >       .has_slave_select_bit   = true,
-> >       .field_fmt_mode         = REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 1),
-> > +     .field_fmt_sext         = REG_FIELD(SUN4I_I2S_FMT1_REG, 8, 8),
-> >       .field_txchanmap        = REG_FIELD(SUN4I_I2S_TX_CHAN_MAP_REG, 0, 31),
-> >       .field_rxchanmap        = REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
-> >       .field_txchansel        = REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
-> > @@ -936,6 +943,7 @@ static const struct sun4i_i2s_quirks sun6i_a31_i2s_quirks = {
-> >       .field_fmt_lrclk        = REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
-> >       .has_slave_select_bit   = true,
-> >       .field_fmt_mode         = REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 1),
-> > +     .field_fmt_sext         = REG_FIELD(SUN4I_I2S_FMT1_REG, 8, 8),
-> >       .field_txchanmap        = REG_FIELD(SUN4I_I2S_TX_CHAN_MAP_REG, 0, 31),
-> >       .field_rxchanmap        = REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
-> >       .field_txchansel        = REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
-> > @@ -979,6 +987,7 @@ static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
-> >       .field_fmt_bclk         = REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
-> >       .field_fmt_lrclk        = REG_FIELD(SUN4I_I2S_FMT0_REG, 19, 19),
-> >       .field_fmt_mode         = REG_FIELD(SUN4I_I2S_CTRL_REG, 4, 5),
-> > +     .field_fmt_sext         = REG_FIELD(SUN4I_I2S_FMT1_REG, 4, 5),
-> >       .field_txchanmap        = REG_FIELD(SUN8I_I2S_TX_CHAN_MAP_REG, 0, 31),
-> >       .field_rxchanmap        = REG_FIELD(SUN8I_I2S_RX_CHAN_MAP_REG, 0, 31),
-> >       .field_txchansel        = REG_FIELD(SUN8I_I2S_TX_CHAN_SEL_REG, 0, 2),
-> > @@ -998,6 +1007,7 @@ static const struct sun4i_i2s_quirks sun50i_a64_codec_i2s_quirks = {
-> >       .field_fmt_bclk         = REG_FIELD(SUN4I_I2S_FMT0_REG, 6, 6),
-> >       .field_fmt_lrclk        = REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
-> >       .field_fmt_mode         = REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 1),
-> > +     .field_fmt_sext         = REG_FIELD(SUN4I_I2S_FMT1_REG, 8, 8),
-> >       .field_txchanmap        = REG_FIELD(SUN4I_I2S_TX_CHAN_MAP_REG, 0, 31),
-> >       .field_rxchanmap        = REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
-> >       .field_txchansel        = REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
->
-> You're missing the A83t here
+On 2019-08-14 13:14, Robert Chiras wrote:
+> Hi Stefan,
+> On Mi, 2019-08-14 at 13:03 +0200, Stefan Agner wrote:
+>> On 2019-08-14 12:48, Robert Chiras wrote:
+>> >
+>> > Add new optional property 'max-res', to limit the maximum supported
+>> > resolution by the MXSFB_DRM driver.
+>> I would also mention the reason why we need this.
+>>
+>> I guess this needs a vendor prefix as well (fsl,max-res). I also
+>> would
+>> like to have the ack of the device tree folks here.
+> Rob Herring also aked be about this, and I'll copy here the reply, with
+> explanations:
+> 
+> Indeed, this limitation is actually due to bandwidth limitation, but
+> the problem is that this limitation comes on i.MX8M (known as mScale
+> 850D), where the memory bandwidth cannot support: GPU/VPU workload in
+> the same time with both DCSS driving 4k@60 and eLCDIF driving 1080p@60.
+> Since eLCDIF is a secondary display we though to add the posibility to
+> limit it's bandwidth by limiting the resolution.
+> If you say that more details are needed, I can add them in the
+> description.
 
-ARRGGGHHHHH...ACK...thanks,
-CK
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Oh sorry I missed that.
+
+Rob Herring also wrote:
+> I suppose what you are after is bandwidth limits? IIRC, there's already 
+> some bindings expressing such limits. Also, wouldn't you need to account 
+> for bpp and using the 2nd plane (IIRC that there is one).
+
+I guess the binding he refers to is max-memory-bandwidth, which is used
+in multiple driver already. It makes sense to reuse this property
+instead of inventing a new set of property which is also not taking bpp
+into account...
+
+The pl111 driver implements this property, it should be fairly easy to
+adopt that code.
+
+--
+Stefan
+
+
+
+>>
+>> --
+>> Stefan
+>>
+>> >
+>> >
+>> > Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+>> > ---
+>> >  Documentation/devicetree/bindings/display/mxsfb.txt | 6 ++++++
+>> >  1 file changed, 6 insertions(+)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt
+>> > b/Documentation/devicetree/bindings/display/mxsfb.txt
+>> > index 472e1ea..55e22ed 100644
+>> > --- a/Documentation/devicetree/bindings/display/mxsfb.txt
+>> > +++ b/Documentation/devicetree/bindings/display/mxsfb.txt
+>> > @@ -17,6 +17,12 @@ Required properties:
+>> >  Required sub-nodes:
+>> >    - port: The connection to an encoder chip.
+>> >
+>> > +Optional properties:
+>> > +- max-res:   an array with a maximum of two integers, representing
+>> > the
+>> > +             maximum supported resolution, in the form of
+>> > +             <maxX>, <maxY>; if one of the item is <0>, the
+>> > default
+>> > +             driver-defined maximum resolution for that axis is
+>> > used
+>> > +
+>> >  Example:
+>> >
+>> >       lcdif1: display-controller@2220000 {
+> 
+> Thanks,
+> Robert
