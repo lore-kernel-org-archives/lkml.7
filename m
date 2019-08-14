@@ -2,52 +2,58 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3209EC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88546C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F34B920665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E178216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802831;
-	bh=2YBuIsDcMpoL0U/IBSf8khny7Yz77o+fjErHr9vIHBM=;
+	s=default; t=1565802832;
+	bh=Yy44GzBlOhNX+cRH3VDEQOL4SygaJSzEKGBGdEzPOQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fnO1m0LxfuN7/cKA2GTcGn9KLWXhI8xTGm3FhcJQv79tzSBRAufYxVOfcFr5R6oSY
-	 wFxLlErLT0k/RCDhmhVojTt9J5sy3ovVT2+XybHT/DUf3/TlS0KIDPN2+n3ZDiE14u
-	 kX+CDmDwzVy35eekifuPYPKPk3cI88eqAbEDWkf8=
+	b=k3vB40DbGq/w04VtxlSFnd7oN3/tW2kgkXjiALj7p3jdbhU/OCUdFG57vqgLXYNIo
+	 4HwEXv4xl/UW2YMAEze43gAkA8yXblEvpLf4QvPjGr6+DrEQ6xLYRQYUBmz6bzRnED
+	 UETw7xoR6rlircBUnlaplMNhdXlTqDvBWK6nc8zw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730958AbfHNRNu (ORCPT
+        id S1730966AbfHNRNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:13:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38178 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:13:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728900AbfHNRNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:13:48 -0400
+        id S1729421AbfHNRNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:13:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A0CA2133F;
-        Wed, 14 Aug 2019 17:13:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 151852063F;
+        Wed, 14 Aug 2019 17:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802828;
-        bh=2YBuIsDcMpoL0U/IBSf8khny7Yz77o+fjErHr9vIHBM=;
+        s=default; t=1565802825;
+        bh=Yy44GzBlOhNX+cRH3VDEQOL4SygaJSzEKGBGdEzPOQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nh98G+MfpEpEbXPehZ44xm8x5A8fAaujT09W69QOjckNPjA5Om+0rA8vZeEtXqHKs
-         xt6ttBkyAIORd8t+dC/eGXSHugON74nddwCQZNEKXQHB5rWxzXTZM03G9i2aEssgzs
-         Vb38A5uaGLd5YGS8/L3wFCG1OcJuqNf2dMJhSRuo=
+        b=Cz/oqRzxZNtxykNQyIC0ob4ZhGUymXbQgG5slpVqmA6SIOqMw8Jd5KJumb6Jekdw6
+         x9xi7NmLLbZflBY/QODua39qyDrTvTPKZfIU+bkAHnejxbtQ2UTaFL6XZaomHxjpaL
+         EzX/9GBh5vmO0RPqz+JxGwZ6g3Otj/7IXU7M8BqI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH 4.14 15/69] x86/mm: Check for pfn instead of page in vmalloc_sync_one()
-Date:   Wed, 14 Aug 2019 19:01:13 +0200
-Message-Id: <20190814165746.553852707@linuxfoundation.org>
+        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        David Carrillo-Cisneros <davidcc@google.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 40/69] perf tools: Fix proper buffer size for feature processing
+Date:   Wed, 14 Aug 2019 19:01:38 +0200
+Message-Id: <20190814165748.156633204@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -60,35 +66,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+[ Upstream commit 79b2fe5e756163897175a8f57d66b26cd9befd59 ]
 
-commit 51b75b5b563a2637f9d8dc5bd02a31b2ff9e5ea0 upstream.
+After Song Liu's segfault fix for pipe mode, Arnaldo reported following
+error:
 
-Do not require a struct page for the mapped memory location because it
-might not exist. This can happen when an ioremapped region is mapped with
-2MB pages.
+  # perf record -o - | perf script
+  0x514 [0x1ac]: failed to process type: 80
 
-Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lkml.kernel.org/r/20190719184652.11391-2-joro@8bytes.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It's caused by wrong buffer size setup in feature processing, which
+makes cpu topology feature fail, because it's using buffer size to
+recognize its header version.
 
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Carrillo-Cisneros <davidcc@google.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Fixes: e9def1b2e74e ("perf tools: Add feature header record to pipe-mode")
+Link: http://lkml.kernel.org/r/20190715140426.32509-1-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/fault.c |    2 +-
+ tools/perf/util/header.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -266,7 +266,7 @@ static inline pmd_t *vmalloc_sync_one(pg
- 	if (!pmd_present(*pmd))
- 		set_pmd(pmd, *pmd_k);
- 	else
--		BUG_ON(pmd_page(*pmd) != pmd_page(*pmd_k));
-+		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 26437143c9406..c892a28e7b048 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3081,7 +3081,7 @@ int perf_event__process_feature(struct perf_tool *tool,
+ 		return 0;
  
- 	return pmd_k;
- }
+ 	ff.buf  = (void *)fe->data;
+-	ff.size = event->header.size - sizeof(event->header);
++	ff.size = event->header.size - sizeof(*fe);
+ 	ff.ph = &session->header;
+ 
+ 	if (feat_ops[feat].process(&ff, NULL))
+-- 
+2.20.1
+
 
 
