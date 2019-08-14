@@ -2,54 +2,52 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3802BC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A30C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 103DC214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 450F3206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803585;
-	bh=pj+wkDPVO5SjIcDRmC1kkJGApAvAt413xZlwsZDQK9w=;
+	s=default; t=1565803592;
+	bh=1R8u4ELJOb4HRqVwp+Btv5QXt5t8TpFp1VVgY+cFNwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JpdYCjA4yG/rskXuh/fLPHzZ3dsHYN3NU62qs9KS+ijyh8rEeD6FfIfL2YQ1yWJE2
-	 xHHKmjBTMDYEVl+9Vjd2v7yIqidyDOFxr5DHm3I3/C7fH5TmdEIoT0jRY2Jpk+oBzL
-	 Pv68VDpIGwOUbdLox+GVdTYcWF8e5pCGEgUjT87g=
+	b=y0nDfa1/7ks8w3YmDNOenVYOMy8usx85Twfyobqtgi72/IwV7eE3u53hW1nKUjoTC
+	 Z9Xy9PAHBH3IitS/KocoqYMIk9Nmi3LAHtK5NKHb2fgB/rP30dZ3nuWxBxnIQWOJU1
+	 0XoKopSBpP7jbXjjZ4aHB16gJRYlbuQcgETjKM6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbfHNR0X (ORCPT
+        id S1729264AbfHNREj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:26:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53692 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:04:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728741AbfHNREu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:04:50 -0400
+        id S1728599AbfHNREh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:04:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDCE9214DA;
-        Wed, 14 Aug 2019 17:04:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 022512173E;
+        Wed, 14 Aug 2019 17:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802289;
-        bh=pj+wkDPVO5SjIcDRmC1kkJGApAvAt413xZlwsZDQK9w=;
+        s=default; t=1565802276;
+        bh=1R8u4ELJOb4HRqVwp+Btv5QXt5t8TpFp1VVgY+cFNwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=15SCLeI1CrmW9gfhkkjyGwejN/oJCc+ZY6WD2HftPfyTEeCHyuIqRZwTR0eVl2i0c
-         yE/1bJs1Gef7mfc96idBiwYKaTHe3rpn630uQX7xkGES/ftLRvYW6SF4UJbmAMNYBE
-         mh+o3fxOanOvBwWai/8ktg0orFXJ22B2nQXmH1oI=
+        b=Fv56AkfAg7HmSP2t/DBooDDKsiHO5k2EQyS7Q0aSjopQDzgVb0OyxmlZllZr0WY1H
+         w/xFlrg1H6ft05E//47ahLmlEo7QdCypdbFimcdRVdive/Evr/Zoxm30jsX3Xn6hLB
+         hwYF9DkqrCak/2kEsLu0njlrNZmmHdhDp6LJejBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tai Man <taiman.wong@amd.com>,
-        Charlene Liu <Charlene.Liu@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 068/144] drm/amd/display: use encoders engine id to find matched free audio device
-Date:   Wed, 14 Aug 2019 19:00:24 +0200
-Message-Id: <20190814165802.690615448@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH 5.2 027/144] x86/mm: Check for pfn instead of page in vmalloc_sync_one()
+Date:   Wed, 14 Aug 2019 18:59:43 +0200
+Message-Id: <20190814165800.978102562@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -62,56 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 74eda776d7a4e69ec7aa1ce30a87636f14220fbb ]
+From: Joerg Roedel <jroedel@suse.de>
 
-[Why]
-On some platforms, the encoder id 3 is not populated. So the encoders
-are not stored in right order as index (id: 0, 1, 2, 4, 5) at pool. This
-would cause encoders id 4 & id 5 to fail when finding corresponding
-audio device, defaulting to the first available audio device. As result,
-we cannot stream audio into two DP ports with encoders id 4 & id 5.
+commit 51b75b5b563a2637f9d8dc5bd02a31b2ff9e5ea0 upstream.
 
-[How]
-It need to create enough audio device objects (0 - 5) to perform matching.
-Then use encoder engine id to find matched audio device.
+Do not require a struct page for the mapped memory location because it
+might not exist. This can happen when an ioremapped region is mapped with
+2MB pages.
 
-Signed-off-by: Tai Man <taiman.wong@amd.com>
-Reviewed-by: Charlene Liu <Charlene.Liu@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/20190719184652.11391-2-joro@8bytes.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_resource.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/x86/mm/fault.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-index 12142d13f22f2..6ad7b54812f1c 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-@@ -254,7 +254,7 @@ bool resource_construct(
- 		 * PORT_CONNECTIVITY == 1 (as instructed by HW team).
- 		 */
- 		update_num_audio(&straps, &num_audio, &pool->audio_support);
--		for (i = 0; i < pool->pipe_count && i < num_audio; i++) {
-+		for (i = 0; i < caps->num_audio; i++) {
- 			struct audio *aud = create_funcs->create_audio(ctx, i);
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -200,7 +200,7 @@ static inline pmd_t *vmalloc_sync_one(pg
+ 	if (!pmd_present(*pmd))
+ 		set_pmd(pmd, *pmd_k);
+ 	else
+-		BUG_ON(pmd_page(*pmd) != pmd_page(*pmd_k));
++		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
  
- 			if (aud == NULL) {
-@@ -1702,6 +1702,12 @@ static struct audio *find_first_free_audio(
- 			return pool->audios[i];
- 		}
- 	}
-+
-+    /* use engine id to find free audio */
-+	if ((id < pool->audio_count) && (res_ctx->is_audio_acquired[id] == false)) {
-+		return pool->audios[id];
-+	}
-+
- 	/*not found the matching one, first come first serve*/
- 	for (i = 0; i < pool->audio_count; i++) {
- 		if (res_ctx->is_audio_acquired[i] == false) {
--- 
-2.20.1
-
+ 	return pmd_k;
+ }
 
 
