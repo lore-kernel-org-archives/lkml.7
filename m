@@ -2,127 +2,154 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808DAC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2617C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54852216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8940F216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802194;
-	bh=CxvDG9zCWBcJ812reKgHR+JSRHBdcJUP+rEPiz+YCcg=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=Wh+ZUmw6LREXVLdTOi8PbdFcZuUgNbAE0OAWEGTmzx7rfcf8jX78z2b7DHPIeL4WH
-	 erUglgsWRaltL+93cY/qadbs0+tiLGP+dQ37lNWeMO1yuqpZ3lOrotIx+72eE/VleZ
-	 jQwhjRl4PkZmdX4ZD0xf3RyB1XqkoM6mCH6PBiDA=
+	s=default; t=1565802196;
+	bh=F+60tqhuY03iGuu52cR7AYByFohaAhwPrPdcbZan4M4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=U2DpkzEPWtvIhMCCA97xPsa0/87nXVG8LH4jrXO9mszA4Sq9zBZWzdEtkzgvfiluX
+	 0ndpkfZt64vL7EbJ4Zh+vh6brTtHmCHgBJmr0vHEhsS0pGnlqjiXTuR56YiHWNujfA
+	 GR/B1ldelOcTGJ7JtQyy5cS7hQZmshl+w2LDMi+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbfHNRDN (ORCPT
+        id S1728889AbfHNRDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:03:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51702 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:03:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728855AbfHNRDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728857AbfHNRDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 14 Aug 2019 13:03:10 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EF3D21721;
-        Wed, 14 Aug 2019 17:03:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3FFA216F4;
+        Wed, 14 Aug 2019 17:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1565802189;
-        bh=CxvDG9zCWBcJ812reKgHR+JSRHBdcJUP+rEPiz+YCcg=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=NJ4K9dUAH+t+UIQvAHVJFiRbRzhHLGejThFYXNc9CX5R6DksIoGG7XHUrbfzF9jwX
-         kfR6DJb5Gb3Ke06rKLCw+Zabi0EuAngzPLUuhN3SIEzI0HHUKDo/N4SFbMOCc0fMPR
-         S+Leo21cz7twxJopaDlRCeqiCdGyViIV0rs4l758=
-Content-Type: text/plain; charset="utf-8"
+        bh=F+60tqhuY03iGuu52cR7AYByFohaAhwPrPdcbZan4M4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ukXYq9JekUxpZENSiNB+hfHr6NQ3PHtvqx2IyOht5SuJXdEay2M+jN494yDJ0Moh2
+         Q06sEoa0zVDKRFgqTyPtBglx6UpQmrCNRylBeOdTPB7nfjkpPMcSq+8/SPDqyRkQ9I
+         B56/N/3mAC6EY/jE/ziNuG7t0fqZqA5nu4QYMEMg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.2 004/144] iio: imu: mpu6050: add missing available scan masks
+Date:   Wed, 14 Aug 2019 18:59:20 +0200
+Message-Id: <20190814165759.662568983@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
+References: <20190814165759.466811854@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190814125012.8700-7-vkoul@kernel.org>
-References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-7-vkoul@kernel.org>
-Subject: Re: [PATCH 06/22] arm64: dts: qcom: pm8150: Add Base DTS file
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        sibis@codeaurora.org, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 14 Aug 2019 10:03:08 -0700
-Message-Id: <20190814170309.0EF3D21721@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-08-14 05:49:56)
-> Add base DTS file for pm8150 along with GPIOs
->=20
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  arch/arm64/boot/dts/qcom/pm8150.dtsi | 41 ++++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/pm8150.dtsi
->=20
-> diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/q=
-com/pm8150.dtsi
-> new file mode 100644
-> index 000000000000..b533e254a203
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-> @@ -0,0 +1,41 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +// Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-> +// Copyright (c) 2019, Linaro Limited
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/spmi/spmi.h>
-> +
-> +&spmi_bus {
-> +       pm8150_0: pm8150@0 {
+From: Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
 
-I think node name should be 'pmic'
+commit 1244a720572fd1680ac8d6b8a4235f2e8557b810 upstream.
 
-> +               compatible =3D "qcom,spmi-pmic";
+Driver only supports 3-axis gyro and/or 3-axis accel.
+For icm20602, temp data is mandatory for all configurations.
 
-This should also have the model number? "qcom,pm8150"?
+Fix all single and double axis configurations (almost never used) and more
+importantly fix 3-axis gyro and 6-axis accel+gyro buffer on icm20602 when
+temp data is not enabled.
 
-> +               reg =3D <0x0 SPMI_USID>;
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +
-> +               pm8150_gpios: gpio@c000 {
-> +                       compatible =3D "qcom,pm8150-gpio";
-> +                       reg =3D <0xc000>;
-> +                       gpio-controller;
-> +                       #gpio-cells =3D <2>;
-> +                       interrupts =3D <0 0xc0 0 IRQ_TYPE_NONE>,
-> +                                    <0 0xc1 0 IRQ_TYPE_NONE>,
-> +                                    <0 0xc2 0 IRQ_TYPE_NONE>,
-> +                                    <0 0xc3 0 IRQ_TYPE_NONE>,
-> +                                    <0 0xc4 0 IRQ_TYPE_NONE>,
-> +                                    <0 0xc5 0 IRQ_TYPE_NONE>,
-> +                                    <0 0xc6 0 IRQ_TYPE_NONE>,
-> +                                    <0 0xc7 0 IRQ_TYPE_NONE>,
-> +                                    <0 0xc8 0 IRQ_TYPE_NONE>,
-> +                                    <0 0xc9 0 IRQ_TYPE_NONE>,
-> +                                    <0 0xca 0 IRQ_TYPE_NONE>,
-> +                                    <0 0xcb 0 IRQ_TYPE_NONE>;
-> +               };
-> +       };
-> +
-> +       qcom,pm8150@1 {
+Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+Fixes: 1615fe41a195 ("iio: imu: mpu6050: Fix FIFO layout for ICM20602")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Same comment, pmic@1.
+---
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c |   43 +++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-> +               compatible =3D"qcom,spmi-pmic";
-> +               reg =3D <0x1 SPMI_USID>;
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +       };
-> +};
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+@@ -845,6 +845,25 @@ static const struct iio_chan_spec inv_mp
+ 	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_Z, INV_MPU6050_SCAN_ACCL_Z),
+ };
+ 
++static const unsigned long inv_mpu_scan_masks[] = {
++	/* 3-axis accel */
++	BIT(INV_MPU6050_SCAN_ACCL_X)
++		| BIT(INV_MPU6050_SCAN_ACCL_Y)
++		| BIT(INV_MPU6050_SCAN_ACCL_Z),
++	/* 3-axis gyro */
++	BIT(INV_MPU6050_SCAN_GYRO_X)
++		| BIT(INV_MPU6050_SCAN_GYRO_Y)
++		| BIT(INV_MPU6050_SCAN_GYRO_Z),
++	/* 6-axis accel + gyro */
++	BIT(INV_MPU6050_SCAN_ACCL_X)
++		| BIT(INV_MPU6050_SCAN_ACCL_Y)
++		| BIT(INV_MPU6050_SCAN_ACCL_Z)
++		| BIT(INV_MPU6050_SCAN_GYRO_X)
++		| BIT(INV_MPU6050_SCAN_GYRO_Y)
++		| BIT(INV_MPU6050_SCAN_GYRO_Z),
++	0,
++};
++
+ static const struct iio_chan_spec inv_icm20602_channels[] = {
+ 	IIO_CHAN_SOFT_TIMESTAMP(INV_ICM20602_SCAN_TIMESTAMP),
+ 	{
+@@ -871,6 +890,28 @@ static const struct iio_chan_spec inv_ic
+ 	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_Z, INV_ICM20602_SCAN_ACCL_Z),
+ };
+ 
++static const unsigned long inv_icm20602_scan_masks[] = {
++	/* 3-axis accel + temp (mandatory) */
++	BIT(INV_ICM20602_SCAN_ACCL_X)
++		| BIT(INV_ICM20602_SCAN_ACCL_Y)
++		| BIT(INV_ICM20602_SCAN_ACCL_Z)
++		| BIT(INV_ICM20602_SCAN_TEMP),
++	/* 3-axis gyro + temp (mandatory) */
++	BIT(INV_ICM20602_SCAN_GYRO_X)
++		| BIT(INV_ICM20602_SCAN_GYRO_Y)
++		| BIT(INV_ICM20602_SCAN_GYRO_Z)
++		| BIT(INV_ICM20602_SCAN_TEMP),
++	/* 6-axis accel + gyro + temp (mandatory) */
++	BIT(INV_ICM20602_SCAN_ACCL_X)
++		| BIT(INV_ICM20602_SCAN_ACCL_Y)
++		| BIT(INV_ICM20602_SCAN_ACCL_Z)
++		| BIT(INV_ICM20602_SCAN_GYRO_X)
++		| BIT(INV_ICM20602_SCAN_GYRO_Y)
++		| BIT(INV_ICM20602_SCAN_GYRO_Z)
++		| BIT(INV_ICM20602_SCAN_TEMP),
++	0,
++};
++
+ /*
+  * The user can choose any frequency between INV_MPU6050_MIN_FIFO_RATE and
+  * INV_MPU6050_MAX_FIFO_RATE, but only these frequencies are matched by the
+@@ -1130,9 +1171,11 @@ int inv_mpu_core_probe(struct regmap *re
+ 	if (chip_type == INV_ICM20602) {
+ 		indio_dev->channels = inv_icm20602_channels;
+ 		indio_dev->num_channels = ARRAY_SIZE(inv_icm20602_channels);
++		indio_dev->available_scan_masks = inv_icm20602_scan_masks;
+ 	} else {
+ 		indio_dev->channels = inv_mpu_channels;
+ 		indio_dev->num_channels = ARRAY_SIZE(inv_mpu_channels);
++		indio_dev->available_scan_masks = inv_mpu_scan_masks;
+ 	}
+ 
+ 	indio_dev->info = &mpu_info;
+
+
