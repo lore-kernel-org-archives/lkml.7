@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228D7C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58736C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC311216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 242452084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565808366;
-	bh=xBPbmPSZXj1LlbVnIU8SSLHn6OPqGOsx85Qbhzul7SU=;
+	s=default; t=1565808373;
+	bh=du1uD+QtMWBJW0ocCm9w3dUEW309UDTXQtkK1+GrMsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ycNynvKvVw4dkB1imhpmuH/UkoLSX0wUNfNED5b550+vMeXTABs3npe/n5+oqzqql
-	 dH/14ooVC6LzD833Sqim4fUVlXeA5aAzANWkv9+q0xpDwZ3Vq6FU4R1s8aP87cH17B
-	 jSlfG8KjSR5JZnhOm+dKUHeN2Dzj4aq63CHUmc1A=
+	b=ZwiePMgV9ITrmwALl0CzN4uzMDZ3j1N9oF6/gnKyskPdjjxa90ew9SWWIT26aUrcy
+	 l4puRYIhDtSsu94f2TTdak30gjQm/dwMvRZEzIdtXQiB15di7i0286tCQz7Pze2zVw
+	 O1jehhetSjis1AWvP/K1AVD+JClv29vi1AF+CrD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbfHNSqE (ORCPT
+        id S1728737AbfHNSqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 14:46:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55106 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 14:46:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbfHNSqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 14:46:03 -0400
+        id S1725828AbfHNSqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 14:46:11 -0400
 Received: from quaco.ghostprotocols.net (unknown [177.195.212.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03C182173B;
-        Wed, 14 Aug 2019 18:45:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 291BC2064A;
+        Wed, 14 Aug 2019 18:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565808362;
-        bh=xBPbmPSZXj1LlbVnIU8SSLHn6OPqGOsx85Qbhzul7SU=;
+        s=default; t=1565808370;
+        bh=du1uD+QtMWBJW0ocCm9w3dUEW309UDTXQtkK1+GrMsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2bm75WJbAPH28AD9fvu/xUCV/SmJzTwhWMhNictBb4AnHsmOahRaXy1EEU6+ZBOa9
-         7QjP31JFIPu6t6ylT6ZPzq5KA0WCW4WBFC1QV6vARn2dRIcXnQSMnSrwSbhXGjjnS9
-         dtb3uAt9Rjw9Cn5UR/fxBMi3LUebc0Y34s+vqA0E=
+        b=DwP5ewykspCSaHVC+ryQNOdU5u6TzIis+IG0UVupkNL7kWa3ogj5bTKJuouTIQenZ
+         9nnJWXdTyPKUmehS/OWW/3WvXD88RWgTPg5m4Br5dW1dnUL01iHraZxwtVtXZn4k3c
+         OfxT5bDGCktLRYAsghN0YQVxoA7tlJS5IfSin0nE=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -50,9 +50,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 22/28] perf tools: Add aux-output config term
-Date:   Wed, 14 Aug 2019 15:40:45 -0300
-Message-Id: <20190814184051.3125-23-acme@kernel.org>
+Subject: [PATCH 23/28] perf intel-pt: Add brief documentation for PEBS via Intel PT
+Date:   Wed, 14 Aug 2019 15:40:46 -0300
+Message-Id: <20190814184051.3125-24-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190814184051.3125-1-acme@kernel.org>
 References: <20190814184051.3125-1-acme@kernel.org>
@@ -65,139 +65,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Expose the aux_output attribute flag to the user to configure, by adding a
-config term 'aux-output'. For events that support it, selection of
-'aux-output' causes the generation of AUX records instead of event records.
-This requires that an AUX area event is also provided.
+Document how to select PEBS via Intel PT and how to display synthesized
+PEBS samples.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190806084606.4021-7-alexander.shishkin@linux.intel.com
+Link: http://lkml.kernel.org/r/20190806084606.4021-8-alexander.shishkin@linux.intel.com
 Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+[ Update the example to use a group with intel_pt// as the group leader, as per Alex comment ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-record.txt | 2 ++
- tools/perf/util/evsel.c                  | 3 +++
- tools/perf/util/evsel.h                  | 2 ++
- tools/perf/util/parse-events.c           | 8 ++++++++
- tools/perf/util/parse-events.h           | 1 +
- tools/perf/util/parse-events.l           | 1 +
- 6 files changed, 17 insertions(+)
+ tools/perf/Documentation/intel-pt.txt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index d5e58e0a2bca..c6f9f31b6039 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -60,6 +60,8 @@ OPTIONS
- 	  - 'name' : User defined event name. Single quotes (') may be used to
- 		    escape symbols in the name from parsing by shell and tool
- 		    like this: name=\'CPU_CLK_UNHALTED.THREAD:cmask=0x1\'.
-+	  - 'aux-output': Generate AUX records instead of events. This requires
-+			  that an AUX area event is also provided.
+diff --git a/tools/perf/Documentation/intel-pt.txt b/tools/perf/Documentation/intel-pt.txt
+index 50c5b60101bd..e0d9e7dd4f17 100644
+--- a/tools/perf/Documentation/intel-pt.txt
++++ b/tools/perf/Documentation/intel-pt.txt
+@@ -919,3 +919,18 @@ amended to take the number of elements as a parameter.
  
-           See the linkperf:perf-list[1] man page for more parameters.
- 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 897a97af2d81..5da40511546b 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -833,6 +833,9 @@ static void apply_config_terms(struct evsel *evsel,
- 			break;
- 		case PERF_EVSEL__CONFIG_TERM_PERCORE:
- 			break;
-+		case PERF_EVSEL__CONFIG_TERM_AUX_OUTPUT:
-+			attr->aux_output = term->val.aux_output ? 1 : 0;
-+			break;
- 		default:
- 			break;
- 		}
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 3cf35aa782b9..8a316dd54cd0 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -52,6 +52,7 @@ enum term_type {
- 	PERF_EVSEL__CONFIG_TERM_DRV_CFG,
- 	PERF_EVSEL__CONFIG_TERM_BRANCH,
- 	PERF_EVSEL__CONFIG_TERM_PERCORE,
-+	PERF_EVSEL__CONFIG_TERM_AUX_OUTPUT,
- };
- 
- struct perf_evsel_config_term {
-@@ -70,6 +71,7 @@ struct perf_evsel_config_term {
- 		char	*branch;
- 		unsigned long max_events;
- 		bool	percore;
-+		bool	aux_output;
- 	} val;
- 	bool weak;
- };
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 2cfec3b7a982..9101568946d2 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -963,6 +963,7 @@ static const char *config_term_names[__PARSE_EVENTS__TERM_TYPE_NR] = {
- 	[PARSE_EVENTS__TERM_TYPE_NOOVERWRITE]		= "no-overwrite",
- 	[PARSE_EVENTS__TERM_TYPE_DRV_CFG]		= "driver-config",
- 	[PARSE_EVENTS__TERM_TYPE_PERCORE]		= "percore",
-+	[PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT]		= "aux-output",
- };
- 
- static bool config_term_shrinked;
-@@ -1083,6 +1084,9 @@ do {									   \
- 			return -EINVAL;
- 		}
- 		break;
-+	case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
-+		CHECK_TYPE_VAL(NUM);
-+		break;
- 	default:
- 		err->str = strdup("unknown term");
- 		err->idx = term->err_term;
-@@ -1133,6 +1137,7 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
- 	case PARSE_EVENTS__TERM_TYPE_MAX_EVENTS:
- 	case PARSE_EVENTS__TERM_TYPE_OVERWRITE:
- 	case PARSE_EVENTS__TERM_TYPE_NOOVERWRITE:
-+	case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
- 		return config_term_common(attr, term, err);
- 	default:
- 		if (err) {
-@@ -1225,6 +1230,9 @@ do {								\
- 			ADD_CONFIG_TERM(PERCORE, percore,
- 					term->val.num ? true : false);
- 			break;
-+		case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
-+			ADD_CONFIG_TERM(AUX_OUTPUT, aux_output, term->val.num ? 1 : 0);
-+			break;
- 		default:
- 			break;
- 		}
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 48111b8fc232..616ca1eda0eb 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -76,6 +76,7 @@ enum {
- 	PARSE_EVENTS__TERM_TYPE_OVERWRITE,
- 	PARSE_EVENTS__TERM_TYPE_DRV_CFG,
- 	PARSE_EVENTS__TERM_TYPE_PERCORE,
-+	PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT,
- 	__PARSE_EVENTS__TERM_TYPE_NR,
- };
- 
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index ca6098874fe2..7469497cd28e 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -284,6 +284,7 @@ no-inherit		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_NOINHERIT); }
- overwrite		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_OVERWRITE); }
- no-overwrite		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_NOOVERWRITE); }
- percore			{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_PERCORE); }
-+aux-output		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT); }
- ,			{ return ','; }
- "/"			{ BEGIN(INITIAL); return '/'; }
- {name_minus}		{ return str(yyscanner, PE_NAME); }
+ Note there is currently no advantage to using Intel PT instead of LBR, but
+ that may change in the future if greater use is made of the data.
++
++
++PEBS via Intel PT
++=================
++
++Some hardware has the feature to redirect PEBS records to the Intel PT trace.
++Recording is selected by using the aux-output config term e.g.
++
++	perf record -c 10000 -e '{intel_pt/branch=0/,cycles/aux-output/ppp}' uname
++
++Note that currently, software only supports redirecting at most one PEBS event.
++
++To display PEBS events from the Intel PT trace, use the itrace 'o' option e.g.
++
++	perf script --itrace=oe
 -- 
 2.21.0
 
