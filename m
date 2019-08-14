@@ -2,97 +2,122 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51090C0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975D4C0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC8B205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:05:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Snb5qobQ"
+	by mail.kernel.org (Postfix) with ESMTP id 79CA12133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:06:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfHNIFk (ORCPT
+        id S1727146AbfHNIG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 04:05:40 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36653 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbfHNIFi (ORCPT
+        Wed, 14 Aug 2019 04:06:57 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:55107 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725905AbfHNIG5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 04:05:38 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r3so16452946wrt.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 01:05:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=PLbj/cRfB0orCu783WjMRb1h5axtcBLCE8j3IraGBs0=;
-        b=Snb5qobQ+qtvJ5RsHxg7EB9FGMlBhUx+89I25tL3WcmUK+/mSKb510zE41kepM/xAN
-         adCx8Dla/B+iijq/hfALrsOglvPselgEIAUQeuqrYTCuVOWI3CpN2NRDtv80p4+5Ic6p
-         ljIOmFIYK6wom8K+1Bk6lXlYABd4RKMBuV4y9i9aGQQ5RYec5pxe1i2DfbrpDsikB6Y/
-         gBTDijySCazqcgeBqx2SOQXe2hxC9F4qKzjBFwTIKVHdcCbGYlhrj4IyDenxYWrv791Z
-         vcbI+4VUvgpdYA1cCLmmDk1fTh001mpU1DGEStBTC+QTvOmDIHgAett9bryvfGd4PI+B
-         9UrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=PLbj/cRfB0orCu783WjMRb1h5axtcBLCE8j3IraGBs0=;
-        b=XnZwUcFGPIlW+o1Fqv5rg0r202kZQr6ilcNnG+/1w2zXch3DcNdllTaM+AK2uQAKW3
-         Oph7ML7a7Hj6N6DW1vGb/UOo6WnK1aNl7BGvoHYCNNx3dHC0Pj/H01GqxK92il17pAar
-         TYLJ5N4A5NyX2O0UWW3kxtA+jGWJ5Zwdze3/+bpicLdv7jLX3n6NYcvmRUeY5ByGM8Ec
-         Cn7+hw3fPtZ9nfcqwV0iS85Q8y/9qa4U2uq0Ji8A2aVmgD41LB3Ee75Io2/mA6u4oH7e
-         SHNeWBUHItdXPcfygwNVDxHtKLw9u7oBGSyphideMp3vN1UGZZx/dzxdRJ1KBZ/udi/7
-         HXTg==
-X-Gm-Message-State: APjAAAU/GYa8z9im5e3jrWopb3dsn8Nbdp1enf4Rt0NtwEbLPdimsRm2
-        drU0roXsXvfZSM3NvSYWbuDqT7Mz01A=
-X-Google-Smtp-Source: APXvYqycZT7wE5HUkJxX8/Tlt6oyT9tbJW5SMpUCe0+rrJwKCHoAFFvUh7Nl9d/twrHfF1xAWJ+YlQ==
-X-Received: by 2002:adf:fdd0:: with SMTP id i16mr37157747wrs.260.1565769936682;
-        Wed, 14 Aug 2019 01:05:36 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id y7sm2631387wmm.19.2019.08.14.01.05.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 01:05:35 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 09:05:34 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Paul Parsons <lost.distance@yahoo.com>
-Subject: Re: [PATCH] mfd: asic3: Include the right header
-Message-ID: <20190814080534.GD26727@dell>
-References: <20190814072403.6294-1-linus.walleij@linaro.org>
+        Wed, 14 Aug 2019 04:06:57 -0400
+Received: from dread.disaster.area (pa49-195-190-67.pa.nsw.optusnet.com.au [49.195.190.67])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 044DB2AD83C;
+        Wed, 14 Aug 2019 18:06:53 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hxoHz-0000t6-39; Wed, 14 Aug 2019 18:05:47 +1000
+Date:   Wed, 14 Aug 2019 18:05:47 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 01/19] fs/locks: Export F_LAYOUT lease to user
+ space
+Message-ID: <20190814080547.GJ6129@dread.disaster.area>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-2-ira.weiny@intel.com>
+ <20190809235231.GC7777@dread.disaster.area>
+ <20190812173626.GB19746@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190814072403.6294-1-linus.walleij@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190812173626.GB19746@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
+        a=TR82T6zjGmBjdfWdGgpkDw==:117 a=TR82T6zjGmBjdfWdGgpkDw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=368o0BqEERmTqRvZ4WsA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019, Linus Walleij wrote:
-
-> This is a GPIO driver, use the appropriate header
-> <linux/gpio/driver.h> rather than the legacy <linux/gpio.h>
-> header.
+On Mon, Aug 12, 2019 at 10:36:26AM -0700, Ira Weiny wrote:
+> On Sat, Aug 10, 2019 at 09:52:31AM +1000, Dave Chinner wrote:
+> > On Fri, Aug 09, 2019 at 03:58:15PM -0700, ira.weiny@intel.com wrote:
+> > > +	/*
+> > > +	 * NOTE on F_LAYOUT lease
+> > > +	 *
+> > > +	 * LAYOUT lease types are taken on files which the user knows that
+> > > +	 * they will be pinning in memory for some indeterminate amount of
+> > > +	 * time.
+> > 
+> > Indeed, layout leases have nothing to do with pinning of memory.
 > 
-> Cc: Paul Parsons <lost.distance@yahoo.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/mfd/asic3.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Yep, Fair enough.  I'll rework the comment.
+> 
+> > That's something an application taht uses layout leases might do,
+> > but it largely irrelevant to the functionality layout leases
+> > provide. What needs to be done here is explain what the layout lease
+> > API actually guarantees w.r.t. the physical file layout, not what
+> > some application is going to do with a lease. e.g.
+> > 
+> > 	The layout lease F_RDLCK guarantees that the holder will be
+> > 	notified that the physical file layout is about to be
+> > 	changed, and that it needs to release any resources it has
+> > 	over the range of this lease, drop the lease and then
+> > 	request it again to wait for the kernel to finish whatever
+> > 	it is doing on that range.
+> > 
+> > 	The layout lease F_RDLCK also allows the holder to modify
+> > 	the physical layout of the file. If an operation from the
+> > 	lease holder occurs that would modify the layout, that lease
+> > 	holder does not get notification that a change will occur,
+> > 	but it will block until all other F_RDLCK leases have been
+> > 	released by their holders before going ahead.
+> > 
+> > 	If there is a F_WRLCK lease held on the file, then a F_RDLCK
+> > 	holder will fail any operation that may modify the physical
+> > 	layout of the file. F_WRLCK provides exclusive physical
+> > 	modification access to the holder, guaranteeing nothing else
+> > 	will change the layout of the file while it holds the lease.
+> > 
+> > 	The F_WRLCK holder can change the physical layout of the
+> > 	file if it so desires, this will block while F_RDLCK holders
+> > 	are notified and release their leases before the
+> > 	modification will take place.
+> > 
+> > We need to define the semantics we expose to userspace first.....
+> 
+> Agreed.  I believe I have implemented the semantics you describe above.  Do I
+> have your permission to use your verbiage as part of reworking the comment and
+> commit message?
 
-Applied, thanks.
+Of course. :)
 
+Cheers,
+
+Dave.
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Dave Chinner
+david@fromorbit.com
