@@ -2,135 +2,89 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BE3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE5FC0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5465208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:14:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RmdSOviw"
+	by mail.kernel.org (Postfix) with ESMTP id A1EB32133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfHNGO0 (ORCPT
+        id S1727363AbfHNGQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 02:14:26 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:38098 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbfHNGOX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 02:14:23 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190814061422euoutp020f8219a3dd41f78dcf552eed43ebca6f~6tWRA9Att2918229182euoutp02j
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 06:14:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190814061422euoutp020f8219a3dd41f78dcf552eed43ebca6f~6tWRA9Att2918229182euoutp02j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1565763262;
-        bh=A9qn6/3oZyPgTnSv23DYT0U0eyRPsOJWWLBTj6TWiQM=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=RmdSOviwAmmdIRWFzJh8tAxhjIJErg3XxhbdJ94Rz3MIotnDoJOU9MH7gD0WpvgT1
-         1sdCgirrkGV0lfAGUL7wy7NbTC3LoXv6MKN3RlolX1S+3m7xkkOAhFHpsp+trR9cfc
-         FV6zbof9WARCUh2gL59mN5YJYmTXi6Vpd/x32g2Q=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190814061421eucas1p1e7c13e50a9b36257d62a442c0fd97114~6tWQRUtXg2140121401eucas1p1Q;
-        Wed, 14 Aug 2019 06:14:21 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 69.80.04309.DB6A35D5; Wed, 14
-        Aug 2019 07:14:21 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190814061420eucas1p2dcce5e9b1c1aa3743d4c1ede2f01e737~6tWPDe0Pe2033720337eucas1p2E;
-        Wed, 14 Aug 2019 06:14:20 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190814061420eusmtrp2ce4d3a3f765a573b4b941546bb11f6cb~6tWOz3EPp3251532515eusmtrp2V;
-        Wed, 14 Aug 2019 06:14:20 +0000 (GMT)
-X-AuditID: cbfec7f4-ae1ff700000010d5-10-5d53a6bd9311
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5D.80.04166.CB6A35D5; Wed, 14
-        Aug 2019 07:14:20 +0100 (BST)
-Received: from [106.120.50.63] (unknown [106.120.50.63]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190814061419eusmtip22e85c745574f1bb7a680372a6e6bba54~6tWOd-FoX2191321913eusmtip2X;
-        Wed, 14 Aug 2019 06:14:19 +0000 (GMT)
-Subject: Re: linux-next: Tree for Aug 13
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        James Morris <jmorris@namei.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <c17d1844-7e13-aba5-0fc9-98c4b247c147@samsung.com>
-Date:   Wed, 14 Aug 2019 08:14:18 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Wed, 14 Aug 2019 02:16:30 -0400
+Received: from mga06.intel.com ([134.134.136.31]:54436 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726631AbfHNGQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 02:16:30 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 23:16:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,384,1559545200"; 
+   d="scan'208";a="167287654"
+Received: from buildpc-hp-z230.iind.intel.com (HELO buildpc-HP-Z230) ([10.223.89.34])
+  by orsmga007.jf.intel.com with ESMTP; 13 Aug 2019 23:16:25 -0700
+Date:   Wed, 14 Aug 2019 11:48:28 +0530
+From:   Sanyog Kale <sanyog.r.kale@intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com
+Subject: Re: [alsa-devel] [PATCH v2 0/3] soundwire: debugfs support for 5.4
+Message-ID: <20190814061827.GA21043@buildpc-HP-Z230>
+References: <20190812235942.7120-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190813105645.4ffba70c@gandalf.local.home>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju27nsaM0+5+3FosvMKCMvKbEoxKBs5B/R+lFelx5U1Ck7ztL+
-        LCvRZTkMLJeQZmQmXjAvqThvoWbmZiIMITBQNHUoaoqjNI8ny3/P87zP877fAx9DSKspdyZJ
-        lcGqVcoUGW1PNvetm053vAmP8s2fPiI3G1YpeW1dhUg+2lZKy7vLc5F8dsZLbsybEMmbOsbE
-        QWLFPYuFVjwwjosVZQ0ahf5VF1IUrMUplhsOhdI37S/EsylJmazaJzDWPnHBskmmm4g7ebXB
-        WmQT6ZAdAzgAqhvaKB2yZ6T4LYKVsUEkkBUEj9a1pECWEdhyLcROZNo0QAiDSgRzg/V/iRXB
-        8FT7VoRhnPAJmDJG8wFnHALdxR+3PQReRGBczaX5AY39QGfVbWMJDoSHNeuIz5LYE5YKZbzs
-        giOhdb6AECyO8KlkkuSxHT4HP79VUjwm8GFosZYSAnaD8cmXIv4W4GYxFLW/oPmdgC/BXJdG
-        KOAEs/2NYgEfhM3WHf99BN+Ha8QCKUAwmvMcCa7z0Ns/QvGLCHwS6tp8BPkiPK7PEQn7HcBi
-        dRTe4ABFzc8IQZZAXq5UcB8HQ3/tv7Pd5q+EHskMu5oZdrUx7Gpj+H+3DJHvkBur4VITWO6M
-        ir3tzSlTOY0qwTsuLbUBbX2hzxv9Kx9Q269bPQgzSLZPEtoYFiWllJlcVmoPAoaQOUv0I1uS
-        JF6Zlc2q02LUmhSW60EHGFLmJrm7ZyJCihOUGWwyy6az6p2piLFz16KyiNcjJVRhgJLKztdf
-        s9mI6fmgdtcqj3CZ/5eWTW1vSPnvJtHS0DH6fYzRz9fTe5F05WZwZ0zfwI+iaMPGfs3ZEnOF
-        h3pBnajtQ5FHaYuZNdkUl6+3VnkN7e2cjY8YNOZFudcHR+efKl5TXLmR4ZLs7/80lrqaMPyE
-        obPDZCSXqPTzItSc8g/JcY/KPgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLIsWRmVeSWpSXmKPExsVy+t/xe7p7lgXHGuy8IGBxYdY3Vot16xcz
-        WVzeNYfN4uDCNkaLVy+0LPZ1PGCy2Lr3KrsDu0fjjRtsHi37brF7LNhU6jFh0QFGj57vyR6f
-        N8kFsEXp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXo
-        Zby/8Z+l4DxzRcc6twbGX0xdjJwcEgImEs/Pn2DuYuTiEBJYyiix/tQ1RoiEjMTJaQ2sELaw
-        xJ9rXWwgtpDAa0aJvibHLkYODmEBDYmn++JAwiIC3hIHpx0Bm8Ms8IFR4uinVWwQQ98zSpz+
-        PhdsKJuAoUTXW4hBvAJ2Eq1rfzKCDGIRUJX41K8EEhYViJHYd2Y7O0SJoMTJmU9YQGxOAUuJ
-        r3eXg93DLGAmMW/zQ2YIW15i+9s5ULa4xK0n85kmMArNQtI+C0nLLCQts5C0LGBkWcUoklpa
-        nJueW2yoV5yYW1yal66XnJ+7iREYdduO/dy8g/HSxuBDjAIcjEo8vAFbgmKFWBPLiitzDzFK
-        cDArifBOuAgU4k1JrKxKLcqPLyrNSS0+xGgK9NtEZinR5HxgQsgriTc0NTS3sDQ0NzY3NrNQ
-        EuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cDI1FCzeZLluUWdM8okrtziPh2xb5lHNu+HM0W1
-        O7MfGvEd3T7xZani3L+7v11wuP1LpuIxM/cLo5oz36ZnFxX57bnxnFU2a+eEFY2z6vJ/plUW
-        zvN/eFenc2bZ0voAl2D9iaaG+UlR3ff145Zt6DMzLZzQ3HNOWKshfMOGI0cXLwlXvObEor5f
-        iaU4I9FQi7moOBEAcBJSrtACAAA=
-X-CMS-MailID: 20190814061420eucas1p2dcce5e9b1c1aa3743d4c1ede2f01e737
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190813145654epcas2p2981ea6b19b84470dc37825469cba91de
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190813145654epcas2p2981ea6b19b84470dc37825469cba91de
-References: <20190813191924.7c5310dd@canb.auug.org.au>
-        <your-ad-here.call-01565700115-ext-9407@work.hours>
-        <CGME20190813145654epcas2p2981ea6b19b84470dc37825469cba91de@epcas2p2.samsung.com>
-        <20190813105645.4ffba70c@gandalf.local.home>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812235942.7120-1-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven,
-
-On 2019-08-13 16:56, Steven Rostedt wrote:
-> This looks related to what Marek posted.
+On Mon, Aug 12, 2019 at 06:59:39PM -0500, Pierre-Louis Bossart wrote:
+> This patchset enables debugfs support and corrects all the feedback
+> provided on an earlier RFC ('soundwire: updates for 5.4')
+> 
+> There is one remaining hard-coded value in intel.c that will need to
+> be fixed in a follow-up patchset not specific to debugfs: we need to
+> remove hard-coded Intel-specific configurations from cadence_master.c
+> (PDI offsets, etc).
+> 
+> Changes since v1 (Feedback from GKH)
+> Handle debugfs in a more self-contained way (no dentry as return or parameter)
+> Used CONFIG_DEBUG_FS in structures and code to make it easier to
+> remove if need be.
+> No functional change for register dumps.
+> 
+> Changes since RFC (Feedback from GKH, Vinod, Guennadi, Cezary, Sanyog):
+> removed error checks
+> used DEFINE_SHOW_ATTRIBUTE and seq_file
+> fixed copyright dates
+> fixed SPDX license info to use GPL2.0 only
+> fixed Makefile to include debugfs only if CONFIG_DEBUG_FS is selected
+> used static inlines for fallback compilation
+> removed intermediate variables
+> removed hard-coded constants in loops (used registers offsets and
+> hardware capabilities)
+> squashed patch 3
 >
->    https://lore.kernel.org/linux-security-module/3028ed35-3b6d-459f-f3c8-103c5636fe95@samsung.com/
->
-> Care to apply the change he suggested to see if it fixes the issue for
-> you. If it does, Marek, can you make an official patch?
 
-Sure: https://lkml.org/lkml/2019/8/14/75
+Changes looks good to me.
 
-Best regards
+Acked-by: Sanyog Kale <sanyog.r.kale@intel.com>
+
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
