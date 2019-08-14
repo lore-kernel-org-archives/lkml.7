@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97EFC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40ED0C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97ADB20842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157DF2085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749565;
-	bh=udv1lL1kma3t9zZhkeiGxc80kuT7XqqSw/Pw50Vkm3I=;
+	s=default; t=1565749570;
+	bh=yGRFkWhHqamInXgTMi1Lv4nJJnKWiRaqptGfe92OLu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MJnDbcZgsiVIOoJxAIirfV+3HmyGNxfctTc9hzUzWv529jsYiofAIOsO1ntRSCgzm
-	 Ds9E/tkUVEcK/iYXe3SuT3wvaVBnFYHQ19LLY/IKTyZyNlHOSo8pV5ZWEIlqa7G5lf
-	 PEca26glESGypH4FVbx7Kjfw1QS8DX6wIrDFwae0=
+	b=d438WsWdYeacbnR4Z0ZyYP+x6pqUyPEXUGF3oe45d2A5V807N/CoQX+3vdOxeZE4Z
+	 c6uRhXGzG49FN5SW3qA6jFE4yXJyzWpJbX+lnXeKV77g98TKYnZ+ckYXWVSjpZv2d5
+	 L9zKQ3QH01L0zBbg/JpdWO9CIUsSADZTYjNCfoSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730040AbfHNC0E (ORCPT
+        id S1730175AbfHNC0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:26:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54130 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:26:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729822AbfHNCZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:25:59 -0400
+        id S1729007AbfHNC0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:26:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF6CC20874;
-        Wed, 14 Aug 2019 02:25:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63DE120679;
+        Wed, 14 Aug 2019 02:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749558;
-        bh=udv1lL1kma3t9zZhkeiGxc80kuT7XqqSw/Pw50Vkm3I=;
+        s=default; t=1565749566;
+        bh=yGRFkWhHqamInXgTMi1Lv4nJJnKWiRaqptGfe92OLu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PHfyPvom7RkN21r+JvNkJ4a7QZvW2hcrUccvQb8FRahBBDHZlpin+5rKPWDZBnMgP
-         USGZoQjJJzQGHqUfR5ZzHD0MqMyBZ92aY2xoatOOYkgJW/2yVBnc7ku2ynO5jpAKaX
-         ifmjaOdH5vGGCw75sqX528p/Pt3U7F729gxz9e90=
+        b=kmVcr77z1HdF4jg485vchPKMJat4jUPNwkIcISbtb6j9GAecTvqPDoGenbXveKQwB
+         fyyPIQuSIsH5IdonNDB4BIMQOaKGUf+CTHMcKO/IcGPDtIgEdlAP7AJAeAP1o7D4A0
+         /EiGtZVkp+ZoJmlXTV3EP2Aytgv3k1q8VzGj8rJY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Willem de Bruijn <willemb@google.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 05/28] can: dev: call netif_carrier_off() in register_candev()
-Date:   Tue, 13 Aug 2019 22:25:27 -0400
-Message-Id: <20190814022550.17463-5-sashal@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 09/28] ASoC: ti: davinci-mcasp: Correct slot_width posed constraint
+Date:   Tue, 13 Aug 2019 22:25:31 -0400
+Message-Id: <20190814022550.17463-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022550.17463-1-sashal@kernel.org>
 References: <20190814022550.17463-1-sashal@kernel.org>
@@ -61,38 +59,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit c63845609c4700488e5eacd6ab4d06d5d420e5ef ]
+[ Upstream commit 1e112c35e3c96db7c8ca6ddaa96574f00c06e7db ]
 
-CONFIG_CAN_LEDS is deprecated. When trying to use the generic netdev
-trigger as suggested, there's a small inconsistency with the link
-property: The LED is on initially, stays on when the device is brought
-up, and then turns off (as expected) when the device is brought down.
+The slot_width is a property for the bus while the constraint for
+SNDRV_PCM_HW_PARAM_SAMPLE_BITS is for the in memory format.
 
-Make sure the LED always reflects the state of the CAN device.
+Applying slot_width constraint to sample_bits works most of the time, but
+it will blacklist valid formats in some cases.
 
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+With slot_width 24 we can support S24_3LE and S24_LE formats as they both
+look the same on the bus, but a a 24 constraint on sample_bits would not
+allow S24_LE as it is stored in 32bits in memory.
+
+Implement a simple hw_rule function to allow all formats which require less
+or equal number of bits on the bus as slot_width (if configured).
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20190726064244.3762-2-peter.ujfalusi@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/dev.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/davinci/davinci-mcasp.c | 43 ++++++++++++++++++++++++-------
+ 1 file changed, 34 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
-index 8b7c6425b681d..9dd968ee792e0 100644
---- a/drivers/net/can/dev.c
-+++ b/drivers/net/can/dev.c
-@@ -1065,6 +1065,8 @@ static struct rtnl_link_ops can_link_ops __read_mostly = {
- int register_candev(struct net_device *dev)
- {
- 	dev->rtnl_link_ops = &can_link_ops;
-+	netif_carrier_off(dev);
-+
- 	return register_netdev(dev);
+diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
+index 512ec25c9ead1..2f7be6cee98e9 100644
+--- a/sound/soc/davinci/davinci-mcasp.c
++++ b/sound/soc/davinci/davinci-mcasp.c
+@@ -1128,6 +1128,28 @@ static int davinci_mcasp_trigger(struct snd_pcm_substream *substream,
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(register_candev);
+ 
++static int davinci_mcasp_hw_rule_slot_width(struct snd_pcm_hw_params *params,
++					    struct snd_pcm_hw_rule *rule)
++{
++	struct davinci_mcasp_ruledata *rd = rule->private;
++	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
++	struct snd_mask nfmt;
++	int i, slot_width;
++
++	snd_mask_none(&nfmt);
++	slot_width = rd->mcasp->slot_width;
++
++	for (i = 0; i <= SNDRV_PCM_FORMAT_LAST; i++) {
++		if (snd_mask_test(fmt, i)) {
++			if (snd_pcm_format_width(i) <= slot_width) {
++				snd_mask_set(&nfmt, i);
++			}
++		}
++	}
++
++	return snd_mask_refine(fmt, &nfmt);
++}
++
+ static const unsigned int davinci_mcasp_dai_rates[] = {
+ 	8000, 11025, 16000, 22050, 32000, 44100, 48000, 64000,
+ 	88200, 96000, 176400, 192000,
+@@ -1219,7 +1241,7 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 	struct davinci_mcasp_ruledata *ruledata =
+ 					&mcasp->ruledata[substream->stream];
+ 	u32 max_channels = 0;
+-	int i, dir;
++	int i, dir, ret;
+ 	int tdm_slots = mcasp->tdm_slots;
+ 
+ 	if (mcasp->tdm_mask[substream->stream])
+@@ -1244,6 +1266,7 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 			max_channels++;
+ 	}
+ 	ruledata->serializers = max_channels;
++	ruledata->mcasp = mcasp;
+ 	max_channels *= tdm_slots;
+ 	/*
+ 	 * If the already active stream has less channels than the calculated
+@@ -1269,20 +1292,22 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 				   0, SNDRV_PCM_HW_PARAM_CHANNELS,
+ 				   &mcasp->chconstr[substream->stream]);
+ 
+-	if (mcasp->slot_width)
+-		snd_pcm_hw_constraint_minmax(substream->runtime,
+-					     SNDRV_PCM_HW_PARAM_SAMPLE_BITS,
+-					     8, mcasp->slot_width);
++	if (mcasp->slot_width) {
++		/* Only allow formats require <= slot_width bits on the bus */
++		ret = snd_pcm_hw_rule_add(substream->runtime, 0,
++					  SNDRV_PCM_HW_PARAM_FORMAT,
++					  davinci_mcasp_hw_rule_slot_width,
++					  ruledata,
++					  SNDRV_PCM_HW_PARAM_FORMAT, -1);
++		if (ret)
++			return ret;
++	}
+ 
+ 	/*
+ 	 * If we rely on implicit BCLK divider setting we should
+ 	 * set constraints based on what we can provide.
+ 	 */
+ 	if (mcasp->bclk_master && mcasp->bclk_div == 0 && mcasp->sysclk_freq) {
+-		int ret;
+-
+-		ruledata->mcasp = mcasp;
+-
+ 		ret = snd_pcm_hw_rule_add(substream->runtime, 0,
+ 					  SNDRV_PCM_HW_PARAM_RATE,
+ 					  davinci_mcasp_hw_rule_rate,
 -- 
 2.20.1
 
