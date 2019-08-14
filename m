@@ -2,82 +2,97 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD66C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9207C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0165420679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B743D206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:56:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfHNMz4 (ORCPT
+        id S1727907AbfHNM4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 08:55:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34976 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726551AbfHNMz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 08:55:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 82919AC64;
-        Wed, 14 Aug 2019 12:55:55 +0000 (UTC)
-Subject: Re: [RESEND PATCH 1/2 -mm] mm: account lazy free pages separately
-To:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
-        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1565308665-24747-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190809083216.GM18351@dhcp22.suse.cz>
- <1a3c4185-c7ab-8d6f-8191-77dce02025a7@linux.alibaba.com>
- <20190809180238.GS18351@dhcp22.suse.cz>
- <79c90f6b-fcac-02e1-015a-0eaa4eafdf7d@linux.alibaba.com>
- <fb1f4958-5147-2fab-531f-d234806c2f37@linux.alibaba.com>
- <20190812093430.GD5117@dhcp22.suse.cz>
- <297aefa2-ba64-cb91-d2c8-733054db01a3@linux.alibaba.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <9d2e63c4-ebb6-1f14-b8fb-b39f2f67d916@suse.cz>
-Date:   Wed, 14 Aug 2019 14:55:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 14 Aug 2019 08:56:21 -0400
+Received: from sauhun.de ([88.99.104.3]:48626 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726551AbfHNM4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 08:56:21 -0400
+Received: from localhost (p54B33326.dip0.t-ipconnect.de [84.179.51.38])
+        by pokefinder.org (Postfix) with ESMTPSA id 6C4882C311C;
+        Wed, 14 Aug 2019 14:56:19 +0200 (CEST)
+Date:   Wed, 14 Aug 2019 14:56:19 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v2] i2c: replace i2c_new_secondary_device with an ERR_PTR
+ variant
+Message-ID: <20190814125619.GC9716@ninjato>
+References: <20190809154047.9897-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-In-Reply-To: <297aefa2-ba64-cb91-d2c8-733054db01a3@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yLVHuoLXiP9kZBkt"
+Content-Disposition: inline
+In-Reply-To: <20190809154047.9897-1-wsa+renesas@sang-engineering.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/12/19 7:00 PM, Yang Shi wrote:
->> I can see that memcg rss size was the primary problem David was looking
->> at. But MemAvailable will not help with that, right? Moreover is
-> 
-> Yes, but David actually would like to have memcg MemAvailable (the 
-> accounter like the global one), which should be counted like the global 
-> one and should account per memcg deferred split THP properly.
-> 
->> accounting the full THP correct? What if subpages are still mapped?
-> 
-> "Deferred split" definitely doesn't mean they are free. When memory 
-> pressure is hit, they would be split, then the unmapped normal pages 
-> would be freed. So, when calculating MemAvailable, they are not 
-> accounted 100%, but like "available += lazyfree - min(lazyfree / 2, 
-> wmark_low)", just like how page cache is accounted.
-> 
-> We could get more accurate account, i.e. checking each sub page's 
-> mapcount when accounting, but it may change before shrinker start 
-> scanning. So, just use the ballpark estimation to trade off the 
-> complexity for accurate accounting.
 
-If we know the mapcounts in the moment the deferred split is initiated (I
-suppose there has to be a iteration over all subpages already?), we could get
-the exact number to adjust the counter with, and also store the number somewhere
-(e.g. a unused field in first/second tail page, I think we already do that for
-something). Then in the shrinker we just read that number to adjust the counter
-back. Then we can ignore the subpage mapping changes before shrinking happens,
-they shouldn't change the situation significantly, and importantly we we will be
-safe from counter imbalance thanks to the stored number.
+--yLVHuoLXiP9kZBkt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Aug 09, 2019 at 05:40:47PM +0200, Wolfram Sang wrote:
+> In the general move to have i2c_new_*_device functions which return
+> ERR_PTR instead of NULL, this patch converts i2c_new_secondary_device().
+>=20
+> There are only few users, so this patch converts the I2C core and all
+> users in one go. The function gets renamed to i2c_new_ancillary_device()
+> so out-of-tree users will get a build failure to understand they need to
+> adapt their error checking code.
+>=20
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com> # a=
+dv748x
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com> # adv75=
+11
+
+Applied to for-next, thanks!
+
+
+--yLVHuoLXiP9kZBkt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1UBPIACgkQFA3kzBSg
+KbbkPA/+IIbLYkWm/OQkI8SkV2391hNcFVtK/8MfhFix9inrSXUhFvv3QL9ufhXN
+VtGLFasJvv1ET5mro5Qhwd1GS/Eml5NdP7WwRLYaWaHTLLRmwGsSSzIuS7TooTON
++2Ro3fI+bwQ1GL7hDGdF4ElpTpHvoP8j3ejZK9cQMpUm8u8Wxyj6YJwUy62pppdh
+EtuNem5mXmQc8RQ4nQweOTu42aEUEawbOnE3AxUl6NkE7MpT9bAK5so25kksNfra
+GzwHgfLaMmg4Aw0+GHPxGKIKDLTJqEShl/d8xB2Y97TmFSTgpZaXZsBy6T+i5gfc
+imtcSuL2j6z6vw+iKKlqnFqk0GUwPvSDH+dNGvi4FO1UOGkXj1gf2AZim+uJz9Ge
+DtRH57A4q21asK1QB2rPgVCmkSE33bsoZOLF0XqzucUdij+MH1Sgs3RR8D4KaoBJ
+KkpeJtgUHPlnky7Tr/FZcdV/+YZaQsiZ3RkUcJnNOKIJFCEuy7m6tbfneEKT/GWz
+SsuNKWIlGtNGnG8rGXmZD4a805J8IjMqGre7LYpO6UdYXmEIvARJXMl2BmmapUJq
+nk/dZSw7hQYFfyge/Yg3ZuxQqZvVU26ZdNXDbZ1qEar5u/SbvlSO4x48yMviSJu9
+vXE9MYBv8Krq1PrZdrFSjiMRAUQ/y6KqkzKfpyEN16ya5ZOu9ew=
+=8vIL
+-----END PGP SIGNATURE-----
+
+--yLVHuoLXiP9kZBkt--
