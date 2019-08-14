@@ -2,122 +2,210 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C611C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45A9C0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0487220843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:45:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="iKfT+qbs"
+	by mail.kernel.org (Postfix) with ESMTP id AB09A20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfHNHpG (ORCPT
+        id S1726950AbfHNHpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:45:06 -0400
-Received: from mout.gmx.net ([212.227.15.19]:50411 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726365AbfHNHpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:45:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565768699;
-        bh=WaUwZB8urvVG948whRzXPedtOy9zLbWOaIvo4IOnSXM=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=iKfT+qbsajQWRJXS6tU6c88gCLfCpVaMOPyIn/q+dhRRoGB3ckpCAe+rvRMkHFiNZ
-         H7x3ajCaNN9H+UMzI7x0hyiyMcQr+B+ClFmSFcl8weOqA4hUOMxlIW82lLvxhv14fT
-         VCCBo+3w+0YDZs6lgEYUoPVTUT/iw44YtfOAZMcw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx003
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0LkOeR-1iYEAy1qeJ-00cOG6; Wed, 14
- Aug 2019 09:44:59 +0200
-Date:   Wed, 14 Aug 2019 09:44:40 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, j.neuschaefer@gmx.net,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] powerpc/32s: fix boot failure with DEBUG_PAGEALLOC
- without KASAN.
-Message-ID: <20190814074440.GI1966@latitude>
-References: <8c83a4e1237658ed1acfb9a9891048a15f9ca36b.1565760495.git.christophe.leroy@c-s.fr>
+        Wed, 14 Aug 2019 03:45:23 -0400
+Received: from 59-120-53-16.HINET-IP.hinet.net ([59.120.53.16]:23793 "EHLO
+        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726347AbfHNHpW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:45:22 -0400
+Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
+        by ATCSQR.andestech.com with ESMTP id x7E7WkLS078787;
+        Wed, 14 Aug 2019 15:32:46 +0800 (GMT-8)
+        (envelope-from nickhu@andestech.com)
+Received: from andestech.com (10.0.15.65) by ATCPCS16.andestech.com
+ (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Wed, 14 Aug 2019
+ 15:44:17 +0800
+Date:   Wed, 14 Aug 2019 15:44:18 +0800
+From:   Nick Hu <nickhu@andestech.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Alan Quey-Liang =?utf-8?B?S2FvKOmrmOmtgeiJryk=?= 
+        <alankao@andestech.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "green.hu@gmail.com" <green.hu@gmail.com>,
+        "deanbo422@gmail.com" <deanbo422@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "aryabinin@virtuozzo.com" <aryabinin@virtuozzo.com>,
+        "glider@google.com" <glider@google.com>,
+        "dvyukov@google.com" <dvyukov@google.com>,
+        "Anup.Patel@wdc.com" <Anup.Patel@wdc.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        =?utf-8?B?6Zui6IG3Wm9uZyBab25nLVhpYW4gTGko5p2O5a6X5oayKQ==?= 
+        <zong@andestech.com>,
+        "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>
+Subject: Re: [PATCH 2/2] riscv: Add KASAN support
+Message-ID: <20190814074417.GA21929@andestech.com>
+References: <cover.1565161957.git.nickhu@andestech.com>
+ <88358ef8f7cfcb7fd01b6b989eccaddbe00a1e57.1565161957.git.nickhu@andestech.com>
+ <20190812151050.GJ26897@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="r5lq+205vWdkqwtk"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <8c83a4e1237658ed1acfb9a9891048a15f9ca36b.1565760495.git.christophe.leroy@c-s.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:wyxn0Wc5J5kp5Z+GclnMvwK33OhK308I1mfB8ka5lZnfMn/D6zH
- OnscyqIweg5eunew0cYK9tcc4f7dpYIUnqxgeEHzRiPb1esRj0Pdd2stcDywDm99Wt3dCC8
- STyRXCyWwsUiua9/L3bdpnncYy0IBd9ekhjYkpQ565vzvueP23h7/ANK9ZmZueN2LoJkZKQ
- KXhndwDzT5ijM3nNFZB1A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:neJsRt2cxfg=:Lc60XBE/kqWVVXTtFhg/2x
- t8msVasIPAzjntLkj0iTeR+N9bINS+Ww05k+ETai6T4ojeaRMQckXH6Zfq9oRuxlZIdilJoA7
- wgc5rETnsfUbTHCmua149cZSGz38ttjY99lIDzJ+61UC0QBUvYGXgGGNJLwxHx4BdoWC96dxn
- hJ8gZkj8MAiCkwN3HVJ9wJxODzceTK70g0A+/6JN+zhTJHdrTNDUFDYyljU7/3nxH6c9QjoaH
- 35pA6+XinF1PimCmXIr5sAApTFZNb/JeuCsSQLFqlCPBzc4spCCe/k83VpxUiBhUexWJEX3DT
- gO9IASUmJzPwgWcC/c4hdLQyzKijlhgIsaniNiWwdS3pVYWvnxVafy5LQxlI7lTZl5j3rkYbc
- oVIdWWOCbHemlADdW7f3B7k5KAPIOCnMxbAVAjYZldUJpM93ARWLuSja0yhHqfbLomx00Im2F
- c7edCfL3AAJ1yXPxHm9j2uu1/qU5Ud0XHYdpnqxSQeofW9QrjwWnBTZxah0Z/NRBNklWcXhmm
- KSZYDxHcL3by0E/Ejvq/XfP3mSmz81bNabYijwjTXvXmsvnp999wqShMvinVi8lH4iQKJO6QC
- pFvEO0ct29swJMMUq2CYmvF50w9NeuLU9RkhmkrA1r5HBwQbhHyRIG5nyCmkpwmXWa3omrhE4
- 5L865pjZrSOq2YpK/hc4fAPgoMwZdd1/xdqfSBK7BQBqqkoiEQz8F71/UZG2b4LAVSmJhQtNC
- xFQfyzZ3Q1gDJqfoyYAkY+EY9RK6NQ4QR8nEkPZDzvv5tRra0F3gCIVQo9hmOhizqogEAJnaI
- 515ZGAxp/oZqkqolkrXMxkaOKekLjW7d8EuZHE9QuHAmnjKHztSwP7xdTr0/UWwjp+B4vhAms
- bNF3vObH2PGMz/8Nh4Rh2QuE66k4lY1u386r5zMtS7CO8qr0/Ie5QYSZe6UA0afeQU95D+qmu
- dDoj8/k/2ksIpo+iw/kk0qZVk2oGJfb4ClTE6+LH4T92fEidzy4NkOV9AhXwvH2zhqQZYUsmD
- zFcCLurTw+/tx9Thk9EwOXnTAsjs6dQ+LI/wrQOiJavQdNlBQx1GtTzwMAuZPm9hcabLBFyoD
- vGlCl7cbwdAXClnx+9h8pqPM4NyJJLwmymOuLWrKXBYLwr/1hCuW8Vgqg==
+In-Reply-To: <20190812151050.GJ26897@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.0.15.65]
+X-DNSRBL: 
+X-MAIL: ATCSQR.andestech.com x7E7WkLS078787
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Christoph,
 
---r5lq+205vWdkqwtk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for your reply. I will answer one by one.
 
-On Wed, Aug 14, 2019 at 05:28:35AM +0000, Christophe Leroy wrote:
-> When KASAN is selected, the definitive hash table has to be
-> set up later, but there is already an early temporary one.
->=20
-> When KASAN is not selected, there is no early hash table,
-> so the setup of the definitive hash table cannot be delayed.
->=20
-> Reported-by: Jonathan Neuschafer <j.neuschaefer@gmx.net>
-> Fixes: 72f208c6a8f7 ("powerpc/32s: move hash code patching out of MMU_ini=
-t_hw()")
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
+Hi Alexander,
 
-Thanks. This does fix the DEBUG_PAGEALLOC-without-KASAN case.
+Would you help me for the question about SOFTIRQENTRY_TEXT?
 
-Tested-by: Jonathan Neuschafer <j.neuschaefer@gmx.net>
+On Mon, Aug 12, 2019 at 11:10:50PM +0800, Christoph Hellwig wrote:
+> > 2. KASAN can't debug the modules since the modules are allocated in VMALLOC
+> > area. We mapped the shadow memory, which corresponding to VMALLOC area,
+> > to the kasan_early_shadow_page because we don't have enough physical space
+> > for all the shadow memory corresponding to VMALLOC area.
+> 
+> How do other architectures solve this problem?
+> 
+Other archs like arm64 and x86 allocate modules in their module region.
 
---r5lq+205vWdkqwtk
-Content-Type: application/pgp-signature; name="signature.asc"
+> > @@ -54,6 +54,8 @@ config RISCV
+> >  	select EDAC_SUPPORT
+> >  	select ARCH_HAS_GIGANTIC_PAGE
+> >  	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
+> > +	select GENERIC_STRNCPY_FROM_USER if KASAN
+> 
+> Is there any reason why we can't always enabled this?  Also just
+> enabling the generic efficient strncpy_from_user should probably be
+> a separate patch.
+> 
+You're right, always enable it would be better.
 
------BEGIN PGP SIGNATURE-----
+> > +	select HAVE_ARCH_KASAN if MMU
+> 
+> Based on your cover letter this should be if MMU && 64BIT
+> 
+> >  #define __HAVE_ARCH_MEMCPY
+> >  extern asmlinkage void *memcpy(void *, const void *, size_t);
+> > +extern asmlinkage void *__memcpy(void *, const void *, size_t);
+> >  
+> >  #define __HAVE_ARCH_MEMMOVE
+> >  extern asmlinkage void *memmove(void *, const void *, size_t);
+> > +extern asmlinkage void *__memmove(void *, const void *, size_t);
+> > +
+> > +#define memcpy(dst, src, len) __memcpy(dst, src, len)
+> > +#define memmove(dst, src, len) __memmove(dst, src, len)
+> > +#define memset(s, c, n) __memset(s, c, n)
+> 
+> This looks weird and at least needs a very good comment.  Also
+> with this we effectively don't need the non-prefixed prototypes
+> anymore.  Also you probably want to split the renaming of the mem*
+> routines into a separate patch with a proper changelog.
+> 
+I made some mistakes on this porting, this would be better:
 
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl1Tu94ACgkQCDBEmo7z
-X9uE2BAAy8A3Rc4+Bt+NtsfU5ntpwFsT7xUp4RlfKnMWZwTDC8GBh2NqaBrPJ5Ob
-uMxgdv4pYpCB2JWQKEHerh7IWUUBE0BGyytakjrs5gSG5L1dIUNKO0x8tTv8Ew0Y
-+8pY+eizv4V/fUPKLhoINKRVLlwWlZQs3r2A6Nw/uFpsR4l+nWPT5XNjIirrdsJO
-afHYg52YyYpO/IhEI37+sGx0l94hY5y73twQs1nUc6MzEwFN+bp70PhbSHM1Bco1
-Nwlxd1gCO4ArMQMlzKs0wMxja9paup6ZvZul6CcaxpJiH1L6DFVVejGVTpv3Yhvk
-tw3yoAbfe3CywkqfBZFDuTanvkw3OS+ew1DD+3VcnclndyrB/OIwEohIEGC3XohD
-Y3cSmE5NFPQ+HKE7M8XaTuvo7jliY85GWbl86WalK9wn9lmDlqKchaELkxYkCOMY
-rf3oA3akchxEJgJygnlG30Y6r5FyrAMkePEq7ABmaFQatg0BnB/BKD0l+Bvxrisz
-cmt4WoU9PIqohSucLALSiYBFOfATqP90Lw0SRBWTAeWI4ZPH6b9fb7LzBjf4550h
-vZUHDq2tkk7LSXSxJZ8SJ300Ww/kFHWIZYzfrURyNIFKadx9HmBcP/Oa8ta95Ic1
-cV907yOmw8T4rKHfSC75px4kz0+CJcl+urmHmSHwInZUogRMadY=
-=pQtO
------END PGP SIGNATURE-----
+#define __HAVE_ARCH_MEMSET
+extern asmlinkage void *memset(void *, int, size_t);
+extern asmlinkage void *__memset(void *, int, size_t);
 
---r5lq+205vWdkqwtk--
+#define __HAVE_ARCH_MEMCPY
+extern asmlinkage void *memcpy(void *, const void *, size_t);
+extern asmlinkage void *__memcpy(void *, const void *, size_t);
+
+#define __HAVE_ARCH_MEMMOVE
+extern asmlinkage void *memmove(void *, const void *, size_t);
+extern asmlinkage void *__memmove(void *, const void *, size_t);
+
+#if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
+
+#define memcpy(dst, src, len) __memcpy(dst, src, len)
+#define memmove(dst, src, len) __memmove(dst, src, len)
+#define memset(s, c, n) __memset(s, c, n)
+
+#endif
+
+> >  #include <asm/tlbflush.h>
+> >  #include <asm/thread_info.h>
+> >  
+> > +#ifdef CONFIG_KASAN
+> > +#include <asm/kasan.h>
+> > +#endif
+> 
+> Any good reason to not just always include the header?
+>
+Nope, I would remove the '#ifdef CONFIG_KASAN', and do the logic in the header
+instead.
+
+> > +
+> >  #ifdef CONFIG_DUMMY_CONSOLE
+> >  struct screen_info screen_info = {
+> >  	.orig_video_lines	= 30,
+> > @@ -64,12 +68,17 @@ void __init setup_arch(char **cmdline_p)
+> >  
+> >  	setup_bootmem();
+> >  	paging_init();
+> > +
+> >  	unflatten_device_tree();
+> 
+> spurious whitespace change.
+> 
+> > diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+> > index 23cd1a9..9700980 100644
+> > --- a/arch/riscv/kernel/vmlinux.lds.S
+> > +++ b/arch/riscv/kernel/vmlinux.lds.S
+> > @@ -46,6 +46,7 @@ SECTIONS
+> >  		KPROBES_TEXT
+> >  		ENTRY_TEXT
+> >  		IRQENTRY_TEXT
+> > +		SOFTIRQENTRY_TEXT
+> 
+> Hmm.  What is the relation to kasan here?  Maybe we should add this
+> separately with a good changelog?
+> 
+There is a commit for it:
+
+Author: Alexander Potapenko <glider@google.com>
+Date:   Fri Mar 25 14:22:05 2016 -0700
+
+    arch, ftrace: for KASAN put hard/soft IRQ entries into separate sections
+
+    KASAN needs to know whether the allocation happens in an IRQ handler.
+    This lets us strip everything below the IRQ entry point to reduce the
+    number of unique stack traces needed to be stored.
+
+    Move the definition of __irq_entry to <linux/interrupt.h> so that the
+    users don't need to pull in <linux/ftrace.h>.  Also introduce the
+    __softirq_entry macro which is similar to __irq_entry, but puts the
+    corresponding functions to the .softirqentry.text section.
+
+After reading the patch I understand that soft/hard IRQ entries should be
+separated for KASAN to work, but why?
+
+Alexender, do you have any comments on this?
+
+> > +++ b/arch/riscv/mm/kasan_init.c
+> > @@ -0,0 +1,102 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> 
+> This probably also wants a copyright statement.
+> 
+> > +	// init for swapper_pg_dir
+> 
+> Please use /* */ style comments.
