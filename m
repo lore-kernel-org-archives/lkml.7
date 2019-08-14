@@ -2,184 +2,148 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAFDC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B40EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 665942084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF7562084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:24:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EyoQZE1u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TqzSu3r+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfHNMX6 (ORCPT
+        id S1727769AbfHNMY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 08:23:58 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41065 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfHNMX5 (ORCPT
+        Wed, 14 Aug 2019 08:24:59 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34085 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfHNMY5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 08:23:57 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m24so2153977ljg.8;
-        Wed, 14 Aug 2019 05:23:55 -0700 (PDT)
+        Wed, 14 Aug 2019 08:24:57 -0400
+Received: by mail-wm1-f67.google.com with SMTP id e8so3224848wme.1;
+        Wed, 14 Aug 2019 05:24:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AolNVl1SiyR512yaUNd2gmXbn0Nylbkvufqr+Z0gL08=;
-        b=EyoQZE1uJLpHHbghs66h89Na5MI6s00n49ipob2glBEKKgu1o9ouM1JfjIV7fF4LGO
-         B+cBX1uwcuVafrdcVWA8XlP91dhuxGHFPyKWq4iM2rjiqxcmuNKkLJYOJ8XBox6Jdspp
-         oWcoer4i9gNYMovhzfcfN7tFP4qtSuFVotcFDKBq+QNPesLJHNfS/HC7288A5AqMW+k+
-         xh33EjcWXro//v9oiJe6pa810HIbJ+tP7uxfSlI2eSSJul0FlciI58/8FY0wMROLICHy
-         4a1qajwDugtYFeabsqj4NYB6gLmELnWFY+yEfb07X0S38SoC+AkYUp7g6hYkvsBucbMO
-         an7w==
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=qvNyqHPxqM17Hgwfx7q6qGcw30LiEL2kP6HeS6GNFVk=;
+        b=TqzSu3r+JKdRwqwXMxKNEjktlIzFuuB5McOF228N/8JIw1F4JBLqzzcwneQE0o/cKd
+         5wICaY7S25HNHsrXXue6xGmC/UviD83CsaZUd5bmETUNFATYt+hI3S4aWmBtSy/tfrti
+         mLWrd/+elniaPpb8c2fO8Pacmccxbwnyj1zAT6xIhqUABTnFzaEyj5vUVry4ox1btx48
+         tZ07Sy+405SyHtQ836cmoYhbMr11W7XVn2IN28dRLJXmcMHcsRklcyxI3km9skDhRESw
+         7Kgu4fYoqdNCbWNoSslPkVJic79u2dD57kRyyGJg3Ru0/JWungE8E8+oing9AgfoHDIk
+         lmpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AolNVl1SiyR512yaUNd2gmXbn0Nylbkvufqr+Z0gL08=;
-        b=oAu+Apr0cvjCNLIJAR+C/GKTzmpI+bBNPeSv+xim1ntzrjVkx1+qzyqjDJnxJwBXQo
-         LiiF7gWe7EBjQ8qspoNgLx7cZjM5fJezdKRL8BQnOiHU3o1GtobF/CboWLYRubKg2Ao6
-         hY5EvRPOg6Km9AhchByvfzqXBuTeC/KJCJRqScJ5S/eRlA6GhYg8FQZ6nsd0we9V0/Jq
-         c1BEgA17AHrHdpnF4C/4TUUwkfhFhECpdvBxIcVLIaJOY++DhuqeiaVG3tQvvX43GlYA
-         hrOokJH/UbHBe55u0tHQkR7+HLrGTDvVRs9eSeyMBeS+S7qXdbwyXAiYMO0uFqvheYzY
-         AfeA==
-X-Gm-Message-State: APjAAAXvp9hkuWBCMdrQyscaaxoP2eKwfdLF67peOPtvNxbz6VERasSq
-        6PqnL9t4rI8jQ+BUkwmJgXU8v3lKSt6igpYeuNM=
-X-Google-Smtp-Source: APXvYqxkyCp7vFsrjJSIDpKqXAn9uDLjPT0VbzMFs9lf3GyT0bRhmvBGiTElQpr+TV3SPbhWua2msp9bOqyXGMiTPaI=
-X-Received: by 2002:a05:651c:153:: with SMTP id c19mr16325169ljd.152.1565785434927;
- Wed, 14 Aug 2019 05:23:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <1564514053-4571-1-git-send-email-jrdr.linux@gmail.com> <CAFqt6zZMgowAd-UvdEjydF=9HPY7bvXpWuzCqBLS7+3j_Dkgig@mail.gmail.com>
-In-Reply-To: <CAFqt6zZMgowAd-UvdEjydF=9HPY7bvXpWuzCqBLS7+3j_Dkgig@mail.gmail.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Wed, 14 Aug 2019 17:53:43 +0530
-Message-ID: <CAFqt6zaQEX60_KL-m+K7VYQU=z144u=yfeVjPtGVaiAj5NbBaQ@mail.gmail.com>
-Subject: Re: [PATCH] video/fbdev/aty128fb: Remove dead code
-To:     Paul Mackerras <paulus@samba.org>, b.zolnierkie@samsung.com,
-        "David S. Miller" <davem@davemloft.net>, mpatocka@redhat.com,
-        syrjala@sci.fi, sam@ravnborg.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=qvNyqHPxqM17Hgwfx7q6qGcw30LiEL2kP6HeS6GNFVk=;
+        b=XHXeIxApr10EKBelFAkbWrj3u2N2cqKW2+C7+yucFizkGQxx+fryj6ROmikB03k7YK
+         t4Wsi3Um6IY1vXRY3gHg4hMF3op4e5Yy5kR9W6Qhx/MeaiYWHqnwakXlbekzeLKaDAED
+         YSCs4e1eiPwo1oJxFZHaWXbZQEVgiVfwubQYewf9Jai8wQcAaQZsfk82eXgIcOVlqbA1
+         uzzV8QFz2kWuZXKS5PqXGSfuSPKTCy8pPH/Sfw+J2FyBpABl4siefU38Q1qCFS6IKFqh
+         pXxhU8zEutNWk0VNGHhfXIXuUoUj9OM2N+96ZxIQkkoD9+yCaRPwMJFgYoehM4T5WzWM
+         Wb5Q==
+X-Gm-Message-State: APjAAAURbE7sdhe+QE+skrjkz/2z7nXCEFNR8J6wbq1CmGpxt59fOsUU
+        RrZqCUzWR/yyuLgeaXcK/44=
+X-Google-Smtp-Source: APXvYqzkK3WQL9KYB1TyBBzuH6MQ5nCwZyYjF7EGNKE+AniVd85uZ9BfFF8sWaTFPPOyfIqxvfmzrg==
+X-Received: by 2002:a1c:e90d:: with SMTP id q13mr8649524wmc.89.1565785495404;
+        Wed, 14 Aug 2019 05:24:55 -0700 (PDT)
+Received: from [192.168.1.169] ([87.201.30.26])
+        by smtp.gmail.com with ESMTPSA id l62sm4544230wml.13.2019.08.14.05.24.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 05:24:54 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v3 0/6] Add support of New Amlogic temperature sensor for
+ G12 SoCs
+From:   Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <20190806130506.8753-1-glaroque@baylibre.com>
+Date:   Wed, 14 Aug 2019 16:24:51 +0400
+Cc:     daniel.lezcano@linaro.org, khilman@baylibre.com,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <357FACA6-6EAC-4E9D-B6F7-4D8D0D59A20A@gmail.com>
+References: <20190806130506.8753-1-glaroque@baylibre.com>
+To:     Guillaume La Roque <glaroque@baylibre.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 2:12 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
->
-> On Wed, Jul 31, 2019 at 12:38 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
-> >
-> > This is dead code since 3.15. If there is no plan to use it
-> > further, this can be removed forever.
->
-> Any comment on this patch ?
+On 6 Aug 2019, at 5:05 pm, Guillaume La Roque <glaroque@baylibre.com> =
+wrote:
+>=20
+> This patchs series add support of New Amlogic temperature sensor and =
+minimal
+> thermal zone for SEI510 and ODROID-N2 boards.
+>=20
+> First implementation was doing on IIO[1] but after comments i move on =
+thermal framework.
+> Formulas and calibration values come from amlogic.
+>=20
+> Changes since v2:
+>  - fix yaml documention=20
+>  - remove unneeded status variable for temperature-sensor node
+>  - rework driver after Martin review
+>  - add some information in commit message
+>=20
+> Changes since v1:
+>  - fix enum vs const in documentation
+>  - fix error with thermal-sensor-cells value set to 1 instead of 0
+>  - add some dependencies needed to add cooling-maps
+>=20
+> Dependencies :
+> - patch 3,4 & 5: depends on Neil's patch and series :
+>              - missing dwc2 phy-names[2]
+>              - patchsets to add DVFS on G12a[3] which have deps on [4] =
+and [5]
+>=20
+> [1] =
+https://lore.kernel.org/linux-amlogic/20190604144714.2009-1-glaroque@bayli=
+bre.com/
+> [2] =
+https://lore.kernel.org/linux-amlogic/20190625123647.26117-1-narmstrong@ba=
+ylibre.com/
+> [3] =
+https://lore.kernel.org/linux-amlogic/20190729132622.7566-1-narmstrong@bay=
+libre.com/
+> [4] =
+https://lore.kernel.org/linux-amlogic/20190731084019.8451-5-narmstrong@bay=
+libre.com/
+> [5] =
+https://lore.kernel.org/linux-amlogic/20190729132622.7566-3-narmstrong@bay=
+libre.com/
+>=20
+> Guillaume La Roque (6):
+>  dt-bindings: thermal: Add DT bindings documentation for Amlogic
+>    Thermal
+>  thermal: amlogic: Add thermal driver to support G12 SoCs
+>  arm64: dts: amlogic: g12: add temperature sensor
+>  arm64: dts: meson: sei510: Add minimal thermal zone
+>  arm64: dts: amlogic: odroid-n2: add minimal thermal zone
+>  MAINTAINERS: add entry for Amlogic Thermal driver
 
-Any comment on this patch ?
+Tested-by: Christian Hewitt <christianshewitt@gmail.com>
 
->
-> >
-> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> > ---
-> >  drivers/video/fbdev/aty/aty128fb.c   | 18 ------------------
-> >  drivers/video/fbdev/aty/atyfb_base.c | 29 -----------------------------
-> >  2 files changed, 47 deletions(-)
-> >
-> > diff --git a/drivers/video/fbdev/aty/aty128fb.c b/drivers/video/fbdev/aty/aty128fb.c
-> > index 8504e19..fc1e45d 100644
-> > --- a/drivers/video/fbdev/aty/aty128fb.c
-> > +++ b/drivers/video/fbdev/aty/aty128fb.c
-> > @@ -487,11 +487,6 @@ static int aty128_encode_var(struct fb_var_screeninfo *var,
-> >                               const struct aty128fb_par *par);
-> >  static int aty128_decode_var(struct fb_var_screeninfo *var,
-> >                               struct aty128fb_par *par);
-> > -#if 0
-> > -static void aty128_get_pllinfo(struct aty128fb_par *par, void __iomem *bios);
-> > -static void __iomem *aty128_map_ROM(struct pci_dev *pdev,
-> > -                                   const struct aty128fb_par *par);
-> > -#endif
-> >  static void aty128_timings(struct aty128fb_par *par);
-> >  static void aty128_init_engine(struct aty128fb_par *par);
-> >  static void aty128_reset_engine(const struct aty128fb_par *par);
-> > @@ -1665,19 +1660,6 @@ static void aty128_st_pal(u_int regno, u_int red, u_int green, u_int blue,
-> >                           struct aty128fb_par *par)
-> >  {
-> >         if (par->chip_gen == rage_M3) {
-> > -#if 0
-> > -               /* Note: For now, on M3, we set palette on both heads, which may
-> > -                * be useless. Can someone with a M3 check this ?
-> > -                *
-> > -                * This code would still be useful if using the second CRTC to
-> > -                * do mirroring
-> > -                */
-> > -
-> > -               aty_st_le32(DAC_CNTL, aty_ld_le32(DAC_CNTL) |
-> > -                           DAC_PALETTE_ACCESS_CNTL);
-> > -               aty_st_8(PALETTE_INDEX, regno);
-> > -               aty_st_le32(PALETTE_DATA, (red<<16)|(green<<8)|blue);
-> > -#endif
-> >                 aty_st_le32(DAC_CNTL, aty_ld_le32(DAC_CNTL) &
-> >                             ~DAC_PALETTE_ACCESS_CNTL);
-> >         }
-> > diff --git a/drivers/video/fbdev/aty/atyfb_base.c b/drivers/video/fbdev/aty/atyfb_base.c
-> > index 72bcfbe..6dda5d8 100644
-> > --- a/drivers/video/fbdev/aty/atyfb_base.c
-> > +++ b/drivers/video/fbdev/aty/atyfb_base.c
-> > @@ -1188,19 +1188,6 @@ static int aty_crtc_to_var(const struct crtc *crtc,
-> >                 (c_sync ? FB_SYNC_COMP_HIGH_ACT : 0);
-> >
-> >         switch (pix_width) {
-> > -#if 0
-> > -       case CRTC_PIX_WIDTH_4BPP:
-> > -               bpp = 4;
-> > -               var->red.offset = 0;
-> > -               var->red.length = 8;
-> > -               var->green.offset = 0;
-> > -               var->green.length = 8;
-> > -               var->blue.offset = 0;
-> > -               var->blue.length = 8;
-> > -               var->transp.offset = 0;
-> > -               var->transp.length = 0;
-> > -               break;
-> > -#endif
-> >         case CRTC_PIX_WIDTH_8BPP:
-> >                 bpp = 8;
-> >                 var->red.offset = 0;
-> > @@ -1466,11 +1453,6 @@ static int atyfb_set_par(struct fb_info *info)
-> >                 var->bits_per_pixel,
-> >                 par->crtc.vxres * var->bits_per_pixel / 8);
-> >  #endif /* CONFIG_BOOTX_TEXT */
-> > -#if 0
-> > -       /* switch to accelerator mode */
-> > -       if (!(par->crtc.gen_cntl & CRTC_EXT_DISP_EN))
-> > -               aty_st_le32(CRTC_GEN_CNTL, par->crtc.gen_cntl | CRTC_EXT_DISP_EN, par);
-> > -#endif
-> >  #ifdef DEBUG
-> >  {
-> >         /* dump non shadow CRTC, pll, LCD registers */
-> > @@ -2396,17 +2378,6 @@ static int aty_init(struct fb_info *info)
-> >                         par->pll_ops = &aty_pll_ibm514;
-> >                         break;
-> >  #endif
-> > -#if 0 /* dead code */
-> > -               case CLK_STG1703:
-> > -                       par->pll_ops = &aty_pll_stg1703;
-> > -                       break;
-> > -               case CLK_CH8398:
-> > -                       par->pll_ops = &aty_pll_ch8398;
-> > -                       break;
-> > -               case CLK_ATT20C408:
-> > -                       par->pll_ops = &aty_pll_att20c408;
-> > -                       break;
-> > -#endif
-> >                 default:
-> >                         PRINTKI("aty_init: CLK type not implemented yet!");
-> >                         par->pll_ops = &aty_pll_unsupported;
-> > --
-> > 1.9.1
-> >
+I=E2=80=99ve tested this series with Odroid N2 and Khadas VIM3, X96-Max. =
+Patches to add
+support for VIM3/X96-max will be submitted once the driver is merged.
+
+VIM3:~ # dmesg | grep thermal
+[    0.046375] thermal_sys: Registered thermal governor 'step_wise'
+
+VIM3:~ # cat /sys/devices/virtual/thermal/thermal_zone0/temp
+51300
+
+VIM3:~ # cat /sys/devices/virtual/thermal/thermal_zone1/temp
+52800
+
+Christian=
