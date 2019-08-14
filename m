@@ -2,225 +2,106 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E05D2C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AFFC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BABD8216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10249208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:03:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jPBf3uDu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbfHNU6r (ORCPT
+        id S1729891AbfHNVDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 16:58:47 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:54847 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729984AbfHNU6r (ORCPT
+        Wed, 14 Aug 2019 17:03:19 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44500 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728524AbfHNVDS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 16:58:47 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MWixU-1hmtSX2IDQ-00X2el; Wed, 14 Aug 2019 22:57:17 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org,
-        Doug Gilbert <dgilbert@interlog.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Hannes Reinecke <hare@suse.com>,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH v5 16/18] compat_ioctl: move SG_GET_REQUEST_TABLE handling
-Date:   Wed, 14 Aug 2019 22:54:51 +0200
-Message-Id: <20190814205521.122180-7-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190814204259.120942-1-arnd@arndb.de>
-References: <20190814204259.120942-1-arnd@arndb.de>
+        Wed, 14 Aug 2019 17:03:18 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k22so39548oiw.11
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 14:03:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fQvw6+Cysy9DNZAaud1joF+LzoMS/HD7HFa+/9L4GG0=;
+        b=jPBf3uDulUcoKNAc5FGbcIPpld5MB7MguGlABvefio2QnWvJq/obtoqu6LpahFZIkQ
+         rM/GMVkfcRxE3U1bulrtw0Zs/k9utF6dZSbCwlX6WycAAjJgYMSbiXmThaLHRA6xThco
+         HZWYFDFuZtVUJTvJgk524nTNZRqlxLibSrVV+70Nyx4Ob47dkyLqrBabX24h5YgReC+W
+         t0UblEXnsWwaot5BRaD5GakbpFUgKWjS0dCY/pj1V7gaFj+wT35TLpg0S7O+vFDCztih
+         CI9HH/dfo1Rjqicz02DtjCrRt8heoR+3fKr4BErk1UwzCeCQ4BdkjzhheZqxAUuD1PVj
+         0IEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fQvw6+Cysy9DNZAaud1joF+LzoMS/HD7HFa+/9L4GG0=;
+        b=J5bk6Q+XYGNScmBJMeMI8Tax5PVOh8U9ayNtv1HkdSF5KWZOuAbY85OYftJg/nUWS5
+         Ys9nd6qypsavX5kWivFK5OYlUyPn3Q5x8qK8mgOsKdD3CQ/wR7de5CpmeCnuwoTNj7xd
+         djnf/KbCkpPFtvZWLer6NEeB+H7gPTQAsFeqHWjvO0Zj/+tDpczan6svwLf4zn61PO9j
+         0Ul2joOsmxXBWffq+kq9R5a+NeHQHsuYk4zlbS/PTW4wiVnAnqvqwqNR5gjLTeRqKDc2
+         VNNXqY8grYOm5EoqJHVWUWSJolnfUdp9cpcwo3StrgKZonTvGUSIMoe5c9UPWnZEwyN9
+         nMBw==
+X-Gm-Message-State: APjAAAXzcvEWmnsd1nFzHDoT2iZDSVF5W9VQ1UELYvpROMeTa5N7eOjx
+        KGmZd5ZX4ux6UwRjm1lo90yL4cojyglT5UV5mvE58w==
+X-Google-Smtp-Source: APXvYqx3dcBMnUheir3gSBs9xUQOcTyId+C2d3MDO2QXd53RNomRiQfCtM0IPYyzSOLbYGH7WOVy7saGs2fKzMZzluQ=
+X-Received: by 2002:aca:6104:: with SMTP id v4mr1341676oib.172.1565816597247;
+ Wed, 14 Aug 2019 14:03:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Oh96NWxdPZEW/yuDMF44sbWZBSLaeWtZ7p1wHLQUZgKNUin6CaT
- SZsCIC9diZmfoU/GHahmeQsbLYDGVw9hBTHQoYo+YRxvApsSXI4/JvVsY94AYTDxLkf9CMi
- 5MpmJ74hVdE/JoAAlIpgiEZxJzKJTxI15YS2DiE/O5HamfDJ1XxqguJssl1WJOIVRNW2q/y
- cMHt+ifIU8CzvdCJuIrzw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0HxL3DcyvMs=:Z7H2CT2juldoHXDfO9q1XL
- Fgz7raKdxxOXC6ou7IDYER15xW5hebo9Q0WrHIgFrXoe9Nj09LOZE1qAlCjGZk3l4H5hu+aPC
- DRBYOuEgMjUMonLNSKQfT3dxF11JNbxlSq0mEnrnFMpXgApAd+ceoP1pA3vOZ1p8V6mifgx5y
- iuJmYinYWHp0IqrhSRR5l/fdfslGO2rNu/iCpFOhHgtieX/nSqSrtKSLR60j86VsSGeWmT5+q
- 0vI3NSoUcZ6kQCjQ0hJjyx0OiP01uuKF3TgD7KYEn7UwKwECabMZFKmttvOG9A2I0fuxLe7lR
- ZgKFifwRqHJbeaPq6nwLPdBM4t9EKIw6OdbCm5IfLTmgp2w3owSEADl/GmXt42+JvYrfVG4m5
- 61b6jOlUBMZ/qz9xqITSIjoYcmo5+y4BgawmhjaghExwj+xro2w6uk9N2firAF8FTlnK042Oc
- yzFt+sEqUOqNZo8xi2RRPVAtiCtOOwRVKX9DRwxGsUEm1YUfV2OQ0AgH3BEF604YwN+igSTYL
- +V+Fuv3yn/h5SZahPgmffvZOj2V0pir7DGuZlTR0jZq91fgX7Fe0BhOrzsSNOlEvK8bWYtoSk
- YuTGG5BRHL4sNjiBwmwngw/U5fYLuwCB7SF32u7MH+MgftGGEGOpXYR1dNzCdUYt0MGESyhFp
- ZODj5N5oLP+p5bGOenb2BwLCrsx3quIlcHQ3swWCy/EaLhDiUQP3DnY9DhbbdhRR8nDjr7s26
- bP625blLw14sfIHa1ovsph3fNpRQCgDMip3/n1ZXtiO2nlM95cS/5yeRoCpQ0hW1RP3HtfCU4
- sGHgQtIR0OEy5FPnN2XiGMCtWisrQ==
+References: <20190806192654.138605-1-saravanak@google.com> <20190806192654.138605-2-saravanak@google.com>
+ <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com> <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
+In-Reply-To: <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 14 Aug 2019 14:02:41 -0700
+Message-ID: <CAGETcx89sjoT0OWjhJyWtCfB_dBFTzwS9+bSSSXEbTUFygmuvw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] of/platform: Disable generic device linking code for PowerPC
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SG_GET_REQUEST_TABLE is now the last ioctl command that needs a conversion
-handler. This is only used in a single file, so the implementation should
-be there.
+On Tue, Aug 6, 2019 at 3:04 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Tue, Aug 6, 2019 at 2:27 PM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Tue, Aug 6, 2019 at 1:27 PM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > PowerPC platforms don't use the generic of/platform code to populate the
+> > > devices from DT.
+> >
+> > Yes, they do.
+>
+> No they don't. My wording could be better, but they don't use
+> of_platform_default_populate_init()
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/of/platform.c#n511
+>
+> >
+> > > Therefore the generic device linking code is never used
+> > > in PowerPC.  Compile it out to avoid warning about unused functions.
+> >
+> > I'd prefer this get disabled on PPC using 'if (IS_ENABLED(CONFIG_PPC))
+> > return' rather than #ifdefs.
+>
+> I'm just moving the existing ifndef some lines above. I don't want to
+> go change existing #ifndef in this patch. Maybe that should be a
+> separate patch series that goes and fixes all such code in drivers/of/
+> or driver/
 
-I'm trying to simplify it in the process, to get rid of
-the compat_alloc_user_space() and extra copy, by adding a
-put_compat_request_table() function instead, which copies the data in
-the right format to user space.
+Bump. Thoughts? I don't think changing the existing if(n)defs should
+be part of this patch series.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/scsi/sg.c | 40 ++++++++++++++++++++++++++++++-----
- fs/compat_ioctl.c | 54 +----------------------------------------------
- 2 files changed, 36 insertions(+), 58 deletions(-)
-
-diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
-index 8ae096af2667..9e4ef22b3579 100644
---- a/drivers/scsi/sg.c
-+++ b/drivers/scsi/sg.c
-@@ -889,6 +889,33 @@ sg_fill_request_table(Sg_fd *sfp, sg_req_info_t *rinfo)
- 	}
- }
- 
-+#ifdef CONFIG_COMPAT
-+struct compat_sg_req_info { /* used by SG_GET_REQUEST_TABLE ioctl() */
-+	char req_state;
-+	char orphan;
-+	char sg_io_owned;
-+	char problem;
-+	int pack_id;
-+	compat_uptr_t usr_ptr;
-+	unsigned int duration;
-+	int unused;
-+};
-+
-+static int put_compat_request_table(struct compat_sg_req_info __user *o,
-+				    struct sg_req_info *rinfo)
-+{
-+	int i;
-+	for (i = 0; i < SG_MAX_QUEUE; i++) {
-+		if (copy_to_user(o + i, rinfo + i, offsetof(sg_req_info_t, usr_ptr)) ||
-+		    put_user((uintptr_t)rinfo[i].usr_ptr, &o[i].usr_ptr) ||
-+		    put_user(rinfo[i].duration, &o[i].duration) ||
-+		    put_user(rinfo[i].unused, &o[i].unused))
-+			return -EFAULT;
-+	}
-+	return 0;
-+}
-+#endif
-+
- static long
- sg_ioctl(struct file *filp, unsigned int cmd_in, unsigned long arg)
- {
-@@ -1069,9 +1096,7 @@ sg_ioctl(struct file *filp, unsigned int cmd_in, unsigned long arg)
- 		val = (sdp->device ? 1 : 0);
- 		return put_user(val, ip);
- 	case SG_GET_REQUEST_TABLE:
--		if (!access_ok(p, SZ_SG_REQ_INFO * SG_MAX_QUEUE))
--			return -EFAULT;
--		else {
-+		{
- 			sg_req_info_t *rinfo;
- 
- 			rinfo = kcalloc(SG_MAX_QUEUE, SZ_SG_REQ_INFO,
-@@ -1081,8 +1106,13 @@ sg_ioctl(struct file *filp, unsigned int cmd_in, unsigned long arg)
- 			read_lock_irqsave(&sfp->rq_list_lock, iflags);
- 			sg_fill_request_table(sfp, rinfo);
- 			read_unlock_irqrestore(&sfp->rq_list_lock, iflags);
--			result = __copy_to_user(p, rinfo,
--						SZ_SG_REQ_INFO * SG_MAX_QUEUE);
-+	#ifdef CONFIG_COMPAT
-+			if (in_compat_syscall())
-+				result = put_compat_request_table(p, rinfo);
-+			else
-+	#endif
-+				result = copy_to_user(p, rinfo,
-+						      SZ_SG_REQ_INFO * SG_MAX_QUEUE);
- 			result = result ? -EFAULT : 0;
- 			kfree(rinfo);
- 			return result;
-diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index 3d127bb6357a..6837a3904b8c 100644
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -52,53 +52,6 @@
- 
- #include <linux/sort.h>
- 
--static int do_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
--{
--	int err;
--
--	err = security_file_ioctl(file, cmd, arg);
--	if (err)
--		return err;
--
--	return vfs_ioctl(file, cmd, arg);
--}
--
--#ifdef CONFIG_BLOCK
--struct compat_sg_req_info { /* used by SG_GET_REQUEST_TABLE ioctl() */
--	char req_state;
--	char orphan;
--	char sg_io_owned;
--	char problem;
--	int pack_id;
--	compat_uptr_t usr_ptr;
--	unsigned int duration;
--	int unused;
--};
--
--static int sg_grt_trans(struct file *file,
--		unsigned int cmd, struct compat_sg_req_info __user *o)
--{
--	int err, i;
--	sg_req_info_t __user *r;
--	r = compat_alloc_user_space(sizeof(sg_req_info_t)*SG_MAX_QUEUE);
--	err = do_ioctl(file, cmd, (unsigned long)r);
--	if (err < 0)
--		return err;
--	for (i = 0; i < SG_MAX_QUEUE; i++) {
--		void __user *ptr;
--		int d;
--
--		if (copy_in_user(o + i, r + i, offsetof(sg_req_info_t, usr_ptr)) ||
--		    get_user(ptr, &r[i].usr_ptr) ||
--		    get_user(d, &r[i].duration) ||
--		    put_user((u32)(unsigned long)(ptr), &o[i].usr_ptr) ||
--		    put_user(d, &o[i].duration))
--			return -EFAULT;
--	}
--	return err;
--}
--#endif /* CONFIG_BLOCK */
--
- /*
-  * simple reversible transform to make our table more evenly
-  * distributed after sorting.
-@@ -121,6 +74,7 @@ COMPATIBLE_IOCTL(SCSI_IOCTL_GET_PCI)
- #ifdef CONFIG_BLOCK
- /* SG stuff */
- COMPATIBLE_IOCTL(SG_IO)
-+COMPATIBLE_IOCTL(SG_GET_REQUEST_TABLE)
- COMPATIBLE_IOCTL(SG_SET_TIMEOUT)
- COMPATIBLE_IOCTL(SG_GET_TIMEOUT)
- COMPATIBLE_IOCTL(SG_EMULATED_HOST)
-@@ -156,13 +110,7 @@ COMPATIBLE_IOCTL(SG_GET_KEEP_ORPHAN)
- static long do_ioctl_trans(unsigned int cmd,
- 		 unsigned long arg, struct file *file)
- {
--	void __user *argp = compat_ptr(arg);
--
- 	switch (cmd) {
--#ifdef CONFIG_BLOCK
--	case SG_GET_REQUEST_TABLE:
--		return sg_grt_trans(file, cmd, argp);
--#endif
- 	}
- 
- 	return -ENOIOCTLCMD;
--- 
-2.20.0
-
+-Saravana
