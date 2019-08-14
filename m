@@ -2,115 +2,146 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A53C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8C0C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E1920578
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478B620844
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:48:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JFGDgndU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfHNJsB (ORCPT
+        id S1726976AbfHNJsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:48:01 -0400
-Received: from muru.com ([72.249.23.125]:57496 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfHNJsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:48:01 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 83CA380C8;
-        Wed, 14 Aug 2019 09:48:26 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 02:47:55 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Merlijn Wajer <merlijn@wizzup.org>,
-        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
-        Adam Ford <aford173@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        kernel@pyra-handheld.com,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
- OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-Message-ID: <20190814094755.GC52127@atomide.com>
-References: <CAKpie0RXM1UC33YFeFy-kAxfGhYGNkw4vUgNTThf-ZCAhPTVXw@mail.gmail.com>
- <BE23C1E4-2877-49FA-B230-F9C10691B805@goldelico.com>
- <CAKpie0TSo-8gmDm9_Zw4Sd+kjVVEomp8yA9Vu8qY2U2AcrQc=w@mail.gmail.com>
- <8A069D96-C65F-43F5-8F54-20019CFB1A8D@goldelico.com>
- <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org>
- <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com>
- <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
- <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
- <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
- <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
+        Wed, 14 Aug 2019 05:48:05 -0400
+Received: from mail-eopbgr140048.outbound.protection.outlook.com ([40.107.14.48]:59719
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725955AbfHNJsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 05:48:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Bwkwpaawxu1ym0E7wQUUX6fOFksPdn/tK+awmcHqL5zEJHE0Y6Th3kAHQvJCKAXkWJKYqakKJyjENo5GFfflBqi1A5it3GoBvAP3lRtAPS1vSsOVzs878b3xcX1R5brzwSSjGdTkejo2yiiDhuP5vutsBI5XMrxcnv+xeGHWGPMDirT48iliRRMXzwagzW7VFzeq+ftwltE9v76JkTuTf+MN+QAIeDgZg/urQ91wiaD8vsa/hS7fDEuwOBy/giG1HHWIcvcuYeTi6EOCAZE+r+XtSFQsVfHeHFrhvYddZ5kszNJ0VyWvyAD4IVlH4WOIUmv6/n+ovRjbEfTnLA+ETQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=znncMx6vllCfJyxWkEqGwlGZhaNvryEUZOqe1Jjrcd0=;
+ b=L0Coq4SyFL5R4lZAkMmN4C0QcIF8LshE54h6YjWjfXzcBq1QAvcbxit43jyxwfghIYoFQ2WdLJli9/UXH8s+A6UcheeOU/KG4IYtxmomtV6K9KjJYyesqR+Mg4S3/k8jB7FY0DCQmG483qRE7G2ThK1eUH/700k2Q3mZH7DeTFyViE6Mfa+NMA6P+9a+wOD66Fuo7VFI9oZDpKBca+juAJOPWceez26lQ+KWTvp2SyW/MJCnGS+V8wEASmS2LfhylkJfsUqMrpPvAIdscz2qvv0DdvvHFj5rZnKzPMQIojgpyUqLQBbhAZHOSjbe7XRB1pcHBmz8R1o0mHbMBJskyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=znncMx6vllCfJyxWkEqGwlGZhaNvryEUZOqe1Jjrcd0=;
+ b=JFGDgndUsMc97MhxjLtbPFC9uKb0Sm14mZo+hhxLraAFTXQMiI0yzV8a4wQVZsDXzTEmQoPJxiE7uv8p6bESqTECq1t8Pje3NzlSJWE2sS++I9n7npn54zIHEYobpxoq3MHd7Ym6gWFZX0iUPh9M4kjkXUgZOEGz4K26L2bFwb0=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3297.eurprd04.prod.outlook.com (10.167.168.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.21; Wed, 14 Aug 2019 09:48:01 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::5012:d47a:1f5d:9b84]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::5012:d47a:1f5d:9b84%5]) with mapi id 15.20.2157.022; Wed, 14 Aug 2019
+ 09:48:01 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCHv6 1/2] PCI: layerscape: Add the bar_fixed_64bit property
+ in EP driver.
+Thread-Topic: [PATCHv6 1/2] PCI: layerscape: Add the bar_fixed_64bit property
+ in EP driver.
+Thread-Index: AQHVUkXX4F7jGdZiC0eiDW46LdzUUKb6YRoAgAABy8A=
+Date:   Wed, 14 Aug 2019 09:48:00 +0000
+Message-ID: <AM5PR04MB32994A55A2951DD071C19F66F5AD0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190814020330.12133-1-xiaowei.bao@nxp.com>
+ <20190814092952.GA26840@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190814092952.GA26840@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 032b63a8-b94d-4125-2196-08d7209c7eec
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3297;
+x-ms-traffictypediagnostic: AM5PR04MB3297:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR04MB32976EABAFAF0D81F000D736F5AD0@AM5PR04MB3297.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 01294F875B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(136003)(376002)(346002)(189003)(199004)(13464003)(99286004)(25786009)(53936002)(54906003)(478600001)(55016002)(5660300002)(316002)(6246003)(71190400001)(33656002)(256004)(81166006)(81156014)(8676002)(71200400001)(4326008)(9686003)(305945005)(74316002)(14454004)(26005)(52536014)(66446008)(76176011)(53546011)(6506007)(186003)(476003)(66476007)(6916009)(64756008)(66556008)(2906002)(7736002)(229853002)(86362001)(66946007)(8936002)(486006)(102836004)(76116006)(44832011)(66066001)(446003)(6436002)(11346002)(7696005)(3846002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3297;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BintUsxUwyYfBwckeoBu+OFlqDFsxSIAnuXdOTAYVrrZTWpckI3i4NqhN4OpuXX9GEhwh3bedmU2tie9YnY4A3m1OgUNzJHgMIpJqu40T3NI8NzAdJPDY7qdSGC8ZkoJ/20XQf60z+X/vZBoVWj85su8NYoauJKuMp7gRc59kYmXoF7VbRskwPGpc2z8c896KCgqop9TvBpsXwOFekRZG/gJ4c+fqNLrKEpjxqbq47800VjMAAccJ0V6hloKFRJevZ1jyVKCbp7Y/G18EDfrYXTJIQYoHXuHQht2iZYB5bQDmRFk+26MOxnFYpxN61WC2RPPEl1hyTZeyEHEXgBBqHT1QoX34EoJQVbcQWZ6c59bVm9qlVxpzrgRsfdrSxrj6XxlQRVY3Qb1kQQvPavhR5UiazaIvmlll5cWimigZb4=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 032b63a8-b94d-4125-2196-08d7209c7eec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 09:48:01.0497
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1cJup7C74HSirz/J66OznZIM1P/EwIGFvZsok3ZPDe6olYwbwdaMWNnUERoEVibIJ/bUri7b1oM6WCPZiXEAcQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3297
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [190814 08:57]:
-> I also have pushed good news to
-> 
-> 	https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/tree/letux-pvr
-> 
-> Thanks to the help from the Pyra community, I was able to get a (binary) reference
-> implementation using DRM that works on Pyra/OMAP5. At least the gles1test1.
-> 
-> With that reference setup I was able to fix my Makefiles for the staging/pvr implementation.
-> 
-> I have tested that it works with v4.19.66 and v5.3-rc4 (LPAE build of the LetuxOS kernel tree)
-> on the Pyra.
-> 
-> In which areas does this tree go beyond the TI SDK/IMG DDK 1.14?
-> 
-> * includes internal API fixes for kernels up to v5.3
-> * lives in drivers/staging/pvr/1.14.3699939 - so that we can ask for inclusion in linux-next
-> * has Kconfig and Makefiles for in-kernel configuration (no separate build system)
-> * builds separate kernel modules for omap3430, omap3630, am335x, omap4, omap5, dra7 etc.
->   pvrsrvkm
->   e.g. pvrsrvkm_omap_omap5_sgx544_116
-> * the correct kernel module is automatically probed by matching .compatible in device tree
->   so that the code is multi-platform friendly
-> * includes SoC integration for OMAP3/4/5 and has some preliminary bindings documentation
-> * code base should also support JZ4780/CI20 and some Intel Atom processors (CedarView, Poulsbo)
-> * has got a ToDo to describe what should be done during staging phase
-> 
-> 	https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/blob/letux/latest-pvr/drivers/staging/pvr/TODO
-> 
-> My plans for the next steps are:
-> 
-> * do more testing (e.g. X11, kmscube)
-> * check if and/or how it can run on am335x (BeagleBone) or OMAP3 (e.g. GTA04, OpenPandora)
-> * try a JZ480/CI20 build (unfortuantely I have no HDMI there with mainline kernels and I am
->   missing the user-space libraries for MIPS).
-
-That sounds good to me, just one comment. Before getting these into
-staging, I'd like to have omap variants use proper interconnect
-target module in devicetree like we already have in omap4.dtsi
-as target-module@56000000. This should simplify things further
-as the module child device driver(s) can just enable things with
-runtime PM and we can leave out all the legacy hwmod platform data
-that sounds like you're still carrying.
-
-I have patches here to add similar interconnect target modules for
-at least omap34xx, omap36xx, omap5, and am335x that I'll try to post
-later on today to play with. For am335x, things still depend on the
-recentely posted prm rstctrl patches. I'm not sure if I already
-did a dts patch for dra7 yet, need to check.
-
-Regards,
-
-Tony
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
+c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnE6jjUwjE0yNUgMTc6
+MzANCj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogTS5oLiBM
+aWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1DQo+IDxtaW5na2FpLmh1QG54
+cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47DQo+IGJoZWxnYWFzQGdvb2dsZS5j
+b207IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOw0KPiBsaW51eC1wY2lAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4LWtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSHY2IDEvMl0gUENJOiBs
+YXllcnNjYXBlOiBBZGQgdGhlIGJhcl9maXhlZF82NGJpdCBwcm9wZXJ0eQ0KPiBpbiBFUCBkcml2
+ZXIuDQo+IA0KPiBJIGFza2VkIHlvdSB0byByZW1vdmUgdGhlIHBlcmlvZCBhdCB0aGUgZW5kIG9m
+IHRoZSBwYXRjaCAkU1VCSkVDVCBhbmQgeW91DQo+IGRpZCBub3QsIGVpdGhlciB5b3UgZG8gbm90
+IHJlYWQgd2hhdCBJIHdyaXRlIG9yIGV4cGxhaW4gbWUgd2hhdCdzIGdvaW5nIG9uLg0KU29ycnks
+IEkgZGlkbid0IHVuZGVyc3RhbmQgdGhlIG1lYW5pbmcgb2YgcGVyaW9kIGNvcnJlY3RseSBiZWZv
+cmUuIA0KPiANCj4gT24gV2VkLCBBdWcgMTQsIDIwMTkgYXQgMTA6MDM6MjlBTSArMDgwMCwgWGlh
+b3dlaSBCYW8gd3JvdGU6DQo+ID4gVGhlIFBDSWUgY29udHJvbGxlciBvZiBsYXllcnNjYXBlIGp1
+c3QgaGF2ZSA0IEJBUnMsIEJBUjAgYW5kIEJBUjEgaXMNCj4gPiAzMmJpdCwgQkFSMiBhbmQgQkFS
+NCBpcyA2NGJpdCwgdGhpcyBpcyBkZXRlcm1pbmVkIGJ5IGhhcmR3YXJlLCBzbyBzZXQNCj4gPiB0
+aGUgYmFyX2ZpeGVkXzY0Yml0IHdpdGggMHgxNC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFhp
+YW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiANCj4gS2lzaG9uIEFDSydlZCB0aGlz
+IHBhdGNoIGFuZCB5b3UgaGF2ZSBub3QgY2FycmllZCBoaXMgdGFnLg0KPiANCj4gSSB3aWxsIG1h
+a2UgdGhlc2UgY2hhbmdlcyBidXQgdGhhdCdzIHRoZSBsYXN0IHRpbWUgSSBkbyB0aGF0IGZvciB5
+b3UuDQpUaGFua3MgYSBsb3QsIHlvdXIgbWVhbnMgaXMgdGhhdCBJIGRvbid0IG5lZWQgdG8gc2Vu
+ZCB0aGUgdjcgcGF0Y2ggYW5kIHlvdSBoZWxwIG1lIHRvDQpDb3JyZWN0IHRoaXMgcGF0Y2gsIHll
+cz8gVGhhbmtzIGEgbG90IGZvciB5b3VyIGhlbHAgYWJvdXQgdGhlIHJ1bGVzIG9mIHRoZSB1cHN0
+cmVhbS4gSSB3aWxsDQpDb3JyZWN0IHRoaXMgZXJyb3IgbmV4dCB0aW1lLiBeLl4gDQo+IA0KPiBM
+b3JlbnpvDQo+IA0KPiA+IC0tLQ0KPiA+IHYyOg0KPiA+ICAtIFJlcGxhY2UgdmFsdWUgMHgxNCB3
+aXRoIGEgbWFjcm8uDQo+ID4gdjM6DQo+ID4gIC0gTm8gY2hhbmdlLg0KPiA+IHY0Og0KPiA+ICAt
+IHNlbmQgdGhlIHBhdGNoIGFnYWluIHdpdGggJy0tdG8nLg0KPiA+IHY1Og0KPiA+ICAtIGZpeCB0
+aGUgY29tbWl0IG1lc3NhZ2UuDQo+ID4gdjY6DQo+ID4gIC0gcmVtb3ZlIHRoZSBbRVhUXSB0YWcg
+b2YgdGhlICRTVUJKRUNUIGluIGVtYWlsLg0KPiA+DQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xs
+ZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMgfCAxICsNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEg
+aW5zZXJ0aW9uKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxl
+ci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9k
+d2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+IGluZGV4IGJlNjFkOTYuLmNhOWFhNDUgMTAwNjQ0
+DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAu
+Yw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVw
+LmMNCj4gPiBAQCAtNDQsNiArNDQsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9lcGNfZmVh
+dHVyZXMNCj4gbHNfcGNpZV9lcGNfZmVhdHVyZXMgPSB7DQo+ID4gIAkubGlua3VwX25vdGlmaWVy
+ID0gZmFsc2UsDQo+ID4gIAkubXNpX2NhcGFibGUgPSB0cnVlLA0KPiA+ICAJLm1zaXhfY2FwYWJs
+ZSA9IGZhbHNlLA0KPiA+ICsJLmJhcl9maXhlZF82NGJpdCA9ICgxIDw8IEJBUl8yKSB8ICgxIDw8
+IEJBUl80KSwNCj4gPiAgfTsNCj4gPg0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9lcGNf
+ZmVhdHVyZXMqDQo+ID4gLS0NCj4gPiAyLjkuNQ0KPiA+DQo=
