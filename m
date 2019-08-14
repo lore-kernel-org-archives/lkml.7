@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEF6C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E91C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B63C92084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7F4208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802818;
-	bh=kR9+YXvfV2CdPfmskRIsMT9PpxhGNnm4bOzX5JEVLOI=;
+	s=default; t=1565802821;
+	bh=z851h45O7JFYDbYorJHDPsmBa98oYdmzXl0lcIKxDjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iS4zuF8XZ3JR3O6KMf2mB+iDGx5wgUv/pxbfridcnpwoJk+ejbgFUj5/uxrCtQbEo
-	 ki8wvipWb/JtT1tVVGz3d1zxIXYnZdS/vopn9NbfEHk6c1SweYnsOavuhwDs92VEta
-	 vJ1JUhGLyemKkepYjDkIMUNBiNRG4bsQmMFi3Jwc=
+	b=GkRQviRTQSRY4qgCyHxWVGFjccGwGUbvFiRw9s5a6keclMm7Z5KQ02NntpUipmroz
+	 fbhFY2dRFsZy7czptGASgp5vOZwM+ASNAXN03Ew626rGsnkoWnfo4q23PLzX0Ka0sE
+	 WFneTt288swTEEtPujg8d48bMpjuKNUPjBHXmmjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730927AbfHNRNh (ORCPT
+        id S1729510AbfHNRNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:13:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37812 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:13:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730888AbfHNRNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:13:33 -0400
+        id S1730888AbfHNRNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:13:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BA0F2084D;
-        Wed, 14 Aug 2019 17:13:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4B1620665;
+        Wed, 14 Aug 2019 17:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802813;
-        bh=kR9+YXvfV2CdPfmskRIsMT9PpxhGNnm4bOzX5JEVLOI=;
+        s=default; t=1565802818;
+        bh=z851h45O7JFYDbYorJHDPsmBa98oYdmzXl0lcIKxDjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P4vTL27UvV2wMe8O+21m41zwDNqHesGqsV5BPS+/+zWPlkzQBWfJFLe4dN/fts8jo
-         xhjiFPjDnEVYa0/UNvtwJOA9X0bGUsuXeRuEQeUO+uRzP6IRy6Cq2y6tLgxsXZ0dkh
-         ervS2fcCO010ChryC4fKK0LztJ80MpruVaFn/JF8=
+        b=jnPPFBp1czrqjxw3FzO5CrrxAP0ei/ksEM4coT6kDLTUVrcVUe2uMWW2ihGIq5c0I
+         4skc+RRqoRUrhkQNM+JarHm9MkgowoWiVs6/2bjxyfjYIYdeUr67ALfZqLMHBXG2vq
+         cqkwqXTcnw3RHeYH8MuVm3woUWNlx3789vql+UiM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 35/69] s390/qdio: add sanity checks to the fast-requeue path
-Date:   Wed, 14 Aug 2019 19:01:33 +0200
-Message-Id: <20190814165747.868696497@linuxfoundation.org>
+Subject: [PATCH 4.14 37/69] ALSA: compress: Prevent bypasses of set_params
+Date:   Wed, 14 Aug 2019 19:01:35 +0200
+Message-Id: <20190814165747.987235739@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -61,48 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a6ec414a4dd529eeac5c3ea51c661daba3397108 ]
+[ Upstream commit 26c3f1542f5064310ad26794c09321780d00c57d ]
 
-If the device driver were to send out a full queue's worth of SBALs,
-current code would end up discovering the last of those SBALs as PRIMED
-and erroneously skip the SIGA-w. This immediately stalls the queue.
+Currently, whilst in SNDRV_PCM_STATE_OPEN it is possible to call
+snd_compr_stop, snd_compr_drain and snd_compr_partial_drain, which
+allow a transition to SNDRV_PCM_STATE_SETUP. The stream should
+only be able to move to the setup state once it has received a
+SNDRV_COMPRESS_SET_PARAMS ioctl. Fix this issue by not allowing
+those ioctls whilst in the open state.
 
-Add a check to not attempt fast-requeue in this case. While at it also
-make sure that the state of the previous SBAL was successfully extracted
-before inspecting it.
-
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/qdio_main.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ sound/core/compress_offload.c | 30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
-index ab8dd81fbc2b1..1a40c73961b83 100644
---- a/drivers/s390/cio/qdio_main.c
-+++ b/drivers/s390/cio/qdio_main.c
-@@ -1577,13 +1577,13 @@ static int handle_outbound(struct qdio_q *q, unsigned int callflags,
- 		rc = qdio_kick_outbound_q(q, phys_aob);
- 	} else if (need_siga_sync(q)) {
- 		rc = qdio_siga_sync_q(q);
-+	} else if (count < QDIO_MAX_BUFFERS_PER_Q &&
-+		   get_buf_state(q, prev_buf(bufnr), &state, 0) > 0 &&
-+		   state == SLSB_CU_OUTPUT_PRIMED) {
-+		/* The previous buffer is not processed yet, tack on. */
-+		qperf_inc(q, fast_requeue);
- 	} else {
--		/* try to fast requeue buffers */
--		get_buf_state(q, prev_buf(bufnr), &state, 0);
--		if (state != SLSB_CU_OUTPUT_PRIMED)
--			rc = qdio_kick_outbound_q(q, 0);
--		else
--			qperf_inc(q, fast_requeue);
-+		rc = qdio_kick_outbound_q(q, 0);
- 	}
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index cf1317546b0ff..1538fbc7562b8 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -712,9 +712,15 @@ static int snd_compr_stop(struct snd_compr_stream *stream)
+ {
+ 	int retval;
  
- 	/* in case of SIGA errors we must process the error immediately */
+-	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
+-			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
++	switch (stream->runtime->state) {
++	case SNDRV_PCM_STATE_OPEN:
++	case SNDRV_PCM_STATE_SETUP:
++	case SNDRV_PCM_STATE_PREPARED:
+ 		return -EPERM;
++	default:
++		break;
++	}
++
+ 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_STOP);
+ 	if (!retval) {
+ 		snd_compr_drain_notify(stream);
+@@ -802,9 +808,14 @@ static int snd_compr_drain(struct snd_compr_stream *stream)
+ {
+ 	int retval;
+ 
+-	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
+-			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
++	switch (stream->runtime->state) {
++	case SNDRV_PCM_STATE_OPEN:
++	case SNDRV_PCM_STATE_SETUP:
++	case SNDRV_PCM_STATE_PREPARED:
+ 		return -EPERM;
++	default:
++		break;
++	}
+ 
+ 	retval = stream->ops->trigger(stream, SND_COMPR_TRIGGER_DRAIN);
+ 	if (retval) {
+@@ -841,9 +852,16 @@ static int snd_compr_next_track(struct snd_compr_stream *stream)
+ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
+ {
+ 	int retval;
+-	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
+-			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
++
++	switch (stream->runtime->state) {
++	case SNDRV_PCM_STATE_OPEN:
++	case SNDRV_PCM_STATE_SETUP:
++	case SNDRV_PCM_STATE_PREPARED:
+ 		return -EPERM;
++	default:
++		break;
++	}
++
+ 	/* stream can be drained only when next track has been signalled */
+ 	if (stream->next_track == false)
+ 		return -EPERM;
 -- 
 2.20.1
 
