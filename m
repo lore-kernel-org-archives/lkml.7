@@ -2,145 +2,166 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C44C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071BDC32759
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B562084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C85F82084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:33:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="hSientgC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfHNPdB (ORCPT
+        id S1728021AbfHNPdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 11:33:01 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36500 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfHNPdB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 11:33:01 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r3so17780105wrt.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 08:32:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=wezvNzsbPOdhs76UIe/x9RS+uf1SoYjspj4YsVpNZmg=;
-        b=AirFkJQL9TN5jDGBDQouT4zwR7HAbWVT5xV7x+lji8a4syzp0o8HEmuNr8IaGOMQFz
-         bexjRDiTWTae5dI/FZUZ6D2BoEw0x1GnkMsEvECHhmM0bmH+5QRaGcy3ydRoJZsEVesQ
-         l64N1XsWWDjZviiH6i+uHc4gSJlp65RZ91q9V7CzZ4/UUUa+WUK/b4TEtcA9EKEg6uG4
-         1uViS4ftmxgeUW9rphkF0FO4x9c3ngBuz0asiGPIvrC4tTLV90XUmHpFrgL3ct5JJFaM
-         txgOaUUiX/0N4a373q//VNVVv8AvH6r89ZufI0u4uW29Pv70cjrys7cyxyQ0kNGN5vLA
-         qSnw==
-X-Gm-Message-State: APjAAAXXLhvXmMFt/W6oFHnNg2RPD61J0rMAw/xTo/xIJ03PqBCAX0Io
-        HNzXKJoQU+l4Dc9MGzHVrZawMQ==
-X-Google-Smtp-Source: APXvYqyOqEDB5t53jRfZrYv/H24aoTGfHsRiquBPqEEx+NkHh83e/p0MfWTCyYkV/5EtCai7VdbETA==
-X-Received: by 2002:adf:a48f:: with SMTP id g15mr335053wrb.172.1565796778631;
-        Wed, 14 Aug 2019 08:32:58 -0700 (PDT)
-Received: from localhost.localdomain ([151.36.169.182])
-        by smtp.gmail.com with ESMTPSA id q18sm212768wrw.36.2019.08.14.08.32.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 08:32:57 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 17:32:54 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [RT] LTP perf_event_open02 fails on v4.19.59-rt24
-Message-ID: <20190814153254.GE5834@localhost.localdomain>
+        Wed, 14 Aug 2019 11:33:16 -0400
+Received: from mail-eopbgr800135.outbound.protection.outlook.com ([40.107.80.135]:35657
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726121AbfHNPdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 11:33:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nmE/kzzYaUI02dx5ODiectrkjlF/5fid527XrphHb6PC4dvp43SVGboj2+Qs3SW4AL+KVqdf7YGwo2vyRgVLHNa94J4K1DREwyee4bOa0fQ0luXtYdXZdnp7c2kCWXHglfwvEkAMLVggabRGX88FYkrBYEN8xQHZ+TexErS4h7Ey/7Fs+LV37aOotlFgw4DVcShzrYQ3qRZ9thj+EsM0lcVQlHxlBiXEqQzW2TmWgTS53c639peVApVJH1kBUG+6Idmb+mxipm3r9mu9nmo8aJT0djD78xnN4h8xSkkK1ob7wHvJS9vhIk6iAIy8tYKoHlU7zNntSCXr43l9aZNIjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dIhTOy2cuOIX2kHNoItxXfeaYTyKydVXhyGXAaEwkmc=;
+ b=npEqYD5A2bcZs/eUexWc6JAMJ8+6aCNn9//0sP/FfZyYJuk+9yS1hmBfbRi4y+Dr+2bqKJ54Ol/uhUIHUUnwU7ufWp+DDTd82nchU0Ut2WFQXGmC2V0KsPOKLuxeFnuqSQ7FXSmsgGOVBrVXueAhBU5bJixj29uDxMDHBWBrsPmZYmYLluZ5uQQJRsbNBb79n1nTbgpr5ULE+SkiiuIkEDv8dB+DihajQka+3+kBm40ludQ5RFeHdw0PgEUPJ0K8uQO58PMFpFCQLhOTLWVe3aAddMRM222nntNMPj8GWvhY8QOvDh9tIuZxur281eu/x7h3jCIvukmO5a5lF5+++A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dIhTOy2cuOIX2kHNoItxXfeaYTyKydVXhyGXAaEwkmc=;
+ b=hSientgCm3JxkGMbTM3X9gkYi+gE5/3z8e7N1XddC699yL0NHupx1Mx3xyTJjlf5eW/NGUrN2lAlRv0HsO7GQ2TiQHW3dQxxYaNwDaPCqy9Nz6FTIwe93gfVgY86Te2XQ1tWGAsMPHi18sDsgXHIgL24aaGAxwdww+zNGukmx3M=
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
+ DM6PR21MB1451.namprd21.prod.outlook.com (20.180.23.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.6; Wed, 14 Aug 2019 15:32:34 +0000
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::257a:6f7f:1126:a61d]) by DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::257a:6f7f:1126:a61d%6]) with mapi id 15.20.2178.006; Wed, 14 Aug 2019
+ 15:32:34 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "sashal@kernel.org" <sashal@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Thread-Topic: [PATCH v4,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Thread-Index: AQHVUjimvM3UBIvJXEiYaEn5NujA56b6DqwAgAC1WWA=
+Date:   Wed, 14 Aug 2019 15:32:34 +0000
+Message-ID: <DM6PR21MB133729FAFEBF5588F07C6F1ECAAD0@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <1565743084-2069-1-git-send-email-haiyangz@microsoft.com>
+ <20190814043428.GC206171@google.com>
+In-Reply-To: <20190814043428.GC206171@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-14T15:32:32.3665756Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b78d3f55-dc9e-4578-9b76-462eae9ee97a;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 87838a0e-b350-4d7f-0f69-08d720cca0e9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1451;
+x-ms-traffictypediagnostic: DM6PR21MB1451:|DM6PR21MB1451:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM6PR21MB1451729E9A1BA786E4408522CAAD0@DM6PR21MB1451.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01294F875B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(136003)(376002)(346002)(366004)(13464003)(51444003)(189003)(199004)(76116006)(66946007)(64756008)(66446008)(229853002)(76176011)(66476007)(66556008)(10290500003)(54906003)(81156014)(81166006)(6436002)(55016002)(8676002)(9686003)(10090500001)(8990500004)(5660300002)(7696005)(8936002)(99286004)(486006)(6246003)(22452003)(11346002)(4326008)(476003)(25786009)(316002)(53936002)(74316002)(446003)(186003)(14454004)(66066001)(33656002)(478600001)(102836004)(53546011)(6506007)(14444005)(2906002)(26005)(86362001)(7736002)(305945005)(52536014)(6116002)(3846002)(256004)(71190400001)(6916009)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1451;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ESsc+VxkU28p8DVtivOQBtOsn0KdklLLHGGItZ+Y7NGiHuR9p/Yr3pNj1yqaHdyO/VZBdZvxwLYMS9nTsor9XZpzLnbGfUaAW53Gg7accdyHtd9+/u8472A9T/SM6ckV1DyTTv8xQW3eFKLZOxe7iduYSR4FQ7F1oHmjbCw2ngL8oLy34gNRSfgI2kr8O+AjM2txFiG4Pli1H8Uai5SUUbUtDzqe7dTQb1n2whv/Z2aBWkd44s3b41MIk4r/IW+067QcYXfCkI8cW/b3eC0474wozU3eMDCH9FRf4YmyIkGjTrKSRN1n4oiOIAbFClYH8Guw6PDJ0ibuIUF7hwNxGcDOQGjIpzvfhTYvtY+55rpCb19G0xJXOAxyHO9mDL+2kcJYAgynFG/B3eWpqDvqrQNKZgEDNtWRWj43s2vwXxU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87838a0e-b350-4d7f-0f69-08d720cca0e9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 15:32:34.0722
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xZ93NglMh/A/P7kl7lvCH3pecYHfHZ6PZeUf2QbkR60+A6tkXjgsOcZBQB9ID3Ux2mNLF7jD/zixiY86P6lZxg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1451
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-Not sure if this has been reported before, but we noticed that LTP test
-perf_event_open02 [1] fails on 4.19.59-rt24 (and of course passes on the
-corresponding stable kernel):
 
---- 4.19.59 ---
-# /mnt/tests/ltp-full-20190517/testcases/kernel/syscalls/perf_event_open/perf_event_open02 -v
-at iteration:0 value:300248705 time_enabled:59735349 time_running:59735349
-at iteration:1 value:300257285 time_enabled:61370669 time_running:61370669
-at iteration:2 value:300270267 time_enabled:65415976 time_running:65415976
-at iteration:3 value:300275002 time_enabled:65775683 time_running:65775683
-at iteration:4 value:300279509 time_enabled:67043153 time_running:67043153
-at iteration:5 value:300271722 time_enabled:64872370 time_running:64872370
-at iteration:6 value:300272600 time_enabled:65373637 time_running:65373637
-at iteration:7 value:300269069 time_enabled:63948439 time_running:63948439
-at iteration:8 value:300286123 time_enabled:67285143 time_running:67285143
-at iteration:9 value:265004128 time_enabled:50212657 time_running:44998204
-max hwctrs=9
-perf_event_open02    0  TINFO  :  overall task clock: 44753322
-perf_event_open02    0  TINFO  :  hw sum: 2702062269, task clock sum: 402442898
-hw counters: 194164023 191715624 195214062 201992170 208770596 215560607 218849512 218851570 218851437 217860513 213522050 206742793 199967312
-task clock counters: 28725966 28724910 29224060 30220734 31216660 32211515 32706172 32700336 32693327 32503365 31504015 30505413 29506425
-perf_event_open02    0  TINFO  :  ratio: 8.992470
-perf_event_open02    1  TPASS  :  test passed
----
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Wednesday, August 14, 2019 12:34 AM
+> To: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: sashal@kernel.org; lorenzo.pieralisi@arm.com; linux-
+> hyperv@vger.kernel.org; linux-pci@vger.kernel.org; KY Srinivasan
+> <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> olaf@aepfle.de; vkuznets <vkuznets@redhat.com>; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH v4,1/2] PCI: hv: Detect and fix Hyper-V PCI domain
+> number collision
+>=20
+> Thanks for splitting these; I think that makes more sense.
+>=20
+> On Wed, Aug 14, 2019 at 12:38:54AM +0000, Haiyang Zhang wrote:
+> > Currently in Azure cloud, for passthrough devices including GPU, the ho=
+st
+> > sets the device instance ID's bytes 8 - 15 to a value derived from the =
+host
+> > HWID, which is the same on all devices in a VM. So, the device instance
+> > ID's bytes 8 and 9 provided by the host are no longer unique. This can
+> > cause device passthrough to VMs to fail because the bytes 8 and 9 are u=
+sed
+> > as PCI domain number. Collision of domain numbers will cause the second
+> > device with the same domain number fail to load.
+>=20
+> I think this patch is fine.  I could be misunderstanding the commit
+> log, but when you say "the ID bytes 8 and 9 are *no longer* unique",
+> that suggests that they *used* to be unique but stopped being unique
+> at some point, which of course raises the question of *when* they
+> became non-unique.
+>=20
+> The specific information about that point would be useful to have in
+> the commit log, e.g., is this related to a specific version of Azure,
+> a configuration change, etc?
+The host side change happened last year, rolled out to all azure hosts.
+I will put "all current azure hosts" in the commit log.
 
---- 4.19.59-rt24 ---
-# /mnt/tests/ltp-full-20190517/testcases/kernel/syscalls/perf_event_open/perf_event_open02 -v
-at iteration:0 value:308782766 time_enabled:69987925 time_running:69987925
-at iteration:1 value:307230646 time_enabled:66629165 time_running:66629165
-at iteration:2 value:307127853 time_enabled:64519500 time_running:64519500
-at iteration:3 value:306408195 time_enabled:57616719 time_running:57616719
-at iteration:4 value:306473441 time_enabled:57184704 time_running:57184704
-at iteration:5 value:306324296 time_enabled:56319529 time_running:56319529
-at iteration:6 value:307060120 time_enabled:62417456 time_running:62417456
-at iteration:7 value:307666551 time_enabled:58920211 time_running:58920211
-at iteration:8 value:306415586 time_enabled:56617543 time_running:56617543
-at iteration:9 value:308025740 time_enabled:62503263 time_running:59956753
-max hwctrs=9
-perf_event_open02    0  TINFO  :  overall task clock: 49178216
-perf_event_open02    0  TINFO  :  hw sum: 2773035141, task clock sum: 451529028
-hw counters: 66671274 199200415 204422748 236485504 307467135 307472701 307478266 307483830 307489394 242524983 110001408 104784638 71552845
-task clock counters: 11982838 33102129 33990719 38442306 49748594 49734632 49716493 49695178 49670953 39049846 17924067 17029183 11442090
-perf_event_open02    0  TINFO  :  ratio: 9.181485
-perf_event_open02    1  TFAIL  :  perf_event_open02.c:370: test failed (ratio was greater than )
----
+> Does this problem affect GPUs more than other passthrough devices?  If
+> all passthrough devices are affected, why mention GPUs in particular?
+> I can't tell whether that information is relevant or superfluous.
 
---- Box info ---
-Architecture:        x86_64
-CPU op-mode(s):      32-bit, 64-bit
-Byte Order:          Little Endian
-CPU(s):              36
-On-line CPU(s) list: 0-35
-Thread(s) per core:  1
-Core(s) per socket:  18
-Socket(s):           2
-NUMA node(s):        2
-Vendor ID:           GenuineIntel
-CPU family:          6
-Model:               63
-Model name:          Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz
-Stepping:            2
-CPU MHz:             1237.805
-BogoMIPS:            4594.31
-Virtualization:      VT-x
-L1d cache:           32K
-L1i cache:           32K
-L2 cache:            256K
-L3 cache:            46080K
-NUMA node0 CPU(s):   0-8,18-26
-NUMA node1 CPU(s):   9-17,27-35
----
+We found this issue initially on multiple passthrough GPUs, I mentioned thi=
+s
+just as an example. I will remove this word, because any PCI devices may
+be affected.
 
-I just started looking into this issue, but thought to report early as
-to have more eyes on it.
-
-Best,
-
-Juri
-
-1 - https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/perf_event_open/perf_event_open02.c#L21
+Thanks,
+- Haiyang
