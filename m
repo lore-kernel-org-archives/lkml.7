@@ -2,123 +2,97 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA86C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB159C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1116D21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4D7208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:47:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Qk99QL3m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHvoGp4J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbfHNWnp (ORCPT
+        id S1728937AbfHNWrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 18:43:45 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:57924 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbfHNWnp (ORCPT
+        Wed, 14 Aug 2019 18:47:48 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41971 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728214AbfHNWrs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 18:43:45 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 604A82B2;
-        Thu, 15 Aug 2019 00:43:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1565822623;
-        bh=ICpj+cOqcRGmfFUWQfxuOIteGqOdKh0L3iEelT37IRI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Qk99QL3m2JnY5nuIw6NAQURbztsq3TN/Gnyv4QhkXT4JL0ObnTeKeYXEfaxFhdL+1
-         0TZcjb5fULoZUp8PGgrydO44c28SiYNfztWkwJK1z+8Dm4vNphz8Mv/oQcAH0Y++o/
-         Ef7eN0oHgeOSNbbMZlG/Ft0VC+GfwQuI8FXhTOX0=
-Date:   Thu, 15 Aug 2019 01:43:40 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
-Message-ID: <20190814224340.GD5015@pendragon.ideasonboard.com>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-3-jacopo@jmondi.org>
+        Wed, 14 Aug 2019 18:47:48 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 62so411970lfa.8;
+        Wed, 14 Aug 2019 15:47:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mh51nkxw4i+pECwFXd8sLzk2KvgQQNpCm3d01V5SCLc=;
+        b=CHvoGp4JQnh7/6igKiv8z9GCoTqJCrYoz+fxQiqhikcLHa4LSTrYMYcDueLpewcbV+
+         XsOLYC4hlEUMy0W06WPLP2pbxcMpuNK9WPEKX/Zuqe+ZkRn/7j4TgMFU+g/V3cititf/
+         R3VHGCxWAXQ1/UK7pzfhJAlwkcpcu3XDpiphxohzIWFBsDtc5qR7M6OWCkw2kpRVZth/
+         527/3uI4ddV8f8XuSpfFD2G7OPazB/kgxg+NKAS6+afixY4TRIJVJW2ReiPubd8TONAD
+         18iYDC3Oh3nd3IVbpy+yH1rjKpvDmbGNZgr5rsQcT/SST2W4tCDWuU+2vS7RViLWWnpV
+         KAEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mh51nkxw4i+pECwFXd8sLzk2KvgQQNpCm3d01V5SCLc=;
+        b=B6+0/zl6J+oHnJiXRYPtadXJalFyzVz+vV+uXjMceP+pHM+oXEFqA0ukPB4R2SOpqV
+         q9UgzztO6bFSawGLMCJl+MhAAkaOvJ1Asa8TkexfLvY6QxXM5Bs83SJZ/lXevsC8CWqY
+         M3Bsp+eY2/s/m4VX1Ari+EbtmJUV7VSjBtYgxnivLiN/0+1uN8dejVDRd3mq6EZrqjve
+         9KwBhTiGqJsjKAgkruz8WcPnArdrj5WXiXhekjJHqvQUDk3F+AwgqrQXdMdB3ugtcltd
+         zvBEhyhBv1I6BRcJ/C8IxuY4ba0txeDOVF3bBu+Cvlg9WoEiREzu98sxaQjzZrTro0IY
+         oAPA==
+X-Gm-Message-State: APjAAAUiHBWEFZOkwxF7LCXc7fChxM7oJa1nNzFNvoPAO6+TFALR+pO+
+        s6K8qjuO3ug5pAHeEW5988yugE+p5Tl++RGDc7M=
+X-Google-Smtp-Source: APXvYqzycF1dfTKo9tsYRCYMSL5GBTHA1deD7nwmys7qc3LSEcP6H7UGH3733ZypXdOc1Uci79kRpKsqDioFqjLAIa4=
+X-Received: by 2002:a19:f11a:: with SMTP id p26mr857848lfh.160.1565822866359;
+ Wed, 14 Aug 2019 15:47:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190814202815.32491-3-jacopo@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190814213118.28473-1-kherbst@redhat.com> <20190814213118.28473-2-kherbst@redhat.com>
+In-Reply-To: <20190814213118.28473-2-kherbst@redhat.com>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Thu, 15 Aug 2019 08:47:35 +1000
+Message-ID: <CAPM=9ty7yEUqKrcixV1tTuWCpyh6UikA3rxX8BF1E3fDb6WLQQ@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
+ enable dGPU direct output"
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Dave Airlie <airlied@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+On Thu, 15 Aug 2019 at 07:31, Karol Herbst <kherbst@redhat.com> wrote:
+>
+> This reverts commit 28586a51eea666d5531bcaef2f68e4abbd87242c.
+>
+> The original commit message didn't even make sense. AMD _does_ support it and
+> it works with Nouveau as well.
+>
+> Also what was the issue being solved here? No references to any bugs and not
+> even explaining any issue at all isn't the way we do things.
+>
+> And even if it means a muxed design, then the fix is to make it work inside the
+> driver, not adding some hacky workaround through ACPI tricks.
+>
+> And what out of tree drivers do or do not support we don't care one bit anyway.
+>
 
-Thank you for the patch.
+I think the reverts should be merged via Rafael's tree as the original
+patches went in via there, and we should get them in asap.
 
-On Wed, Aug 14, 2019 at 10:28:12PM +0200, Jacopo Mondi wrote:
-> Add documentation for the V4L2_CID_LOCATION camera control. The newly
-> added read-only control reports the camera device mounting position.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> ---
->  .../media/uapi/v4l/ext-ctrls-camera.rst       | 23 +++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> index 51c1d5c9eb00..fc0a02eee6d4 100644
-> --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
->      value down. A value of zero stops the motion if one is in progress
->      and has no effect otherwise.
-> 
-> +``V4L2_CID_LOCATION (integer)``
-
-Maybe V4L2_CID_CAMERA_SENSOR_LOCATION ? Same for the values below.
-
-> +    This read-only control describes the camera location by reporting its
-
-Here too I would mention camera sensor instead of just camera (or
-possibly imaging sensor).
-
-> +    mounting position on the device where the camera is installed. This
-> +    control is particularly meaningful for devices which have a well defined
-> +    orientation, such as phones, laptops and portable devices as the camera
-> +    location is expressed as a position relative to the device intended
-> +    usage position. In example, a camera installed on the user-facing side
-> +    of a phone device is said to be installed in the ``V4L2_LOCATION_FRONT``
-> +    position.
-
-The DT bindings could use such an example :-) I would extend this to
-tablets and laptops.
-
-> +
-> +
-> +
-
-Do we need three blank lines ?
-
-> +.. flat-table::
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +
-> +    * - ``V4L2_LOCATION_FRONT``
-> +      - The camera device is located on the front side of the device.
-> +    * - ``V4L2_LOCATION_BACK``
-> +      - The camera device is located on the back side of the device.
-> +
-> +
-> +
->  .. [#f1]
->     This control may be changed to a menu control in the future, if more
->     options are required.
-
--- 
-Regards,
-
-Laurent Pinchart
+Acked-by: Dave Airlie <airlied@redhat.com>
+Dave.
