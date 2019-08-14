@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4263C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80ADC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E7A208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1EE208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:30:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jVWJmx+y"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="IQDESnm0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbfHNOaJ (ORCPT
+        id S1728196AbfHNO3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 10:30:09 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46947 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728181AbfHNO3c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 14 Aug 2019 10:29:32 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z1so111309133wru.13
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 07:29:31 -0700 (PDT)
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38580 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728116AbfHNO3a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 10:29:30 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g17so111306444wrr.5
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 07:29:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VoiyEoznGsebSQriKSg2X1Svm8xxDWhM6W5MAaVlZfM=;
-        b=jVWJmx+y2kT3aUx0SBHcmJEyZLxN5wNHbfobgwLdEmu9GOF4E2zVIvj0kNud4Neakn
-         r4R7ia+Bd2OZkcCwGHL65pU7hUFJMgtqCT21SoS9wIonU1OYjghZkmWIp5LG5UhnMjy4
-         aphvTnLzuIjuzgZkMGHtcxjPODJxi/uVgkDuL4qTTHSM3AJQNhJDfW5eg8PDwNzLZL9H
-         xf5ShTMpRmYZO5y6lcdNjn8FjLI6BmNp43rDtnu5kmKrPZecoVStxfTI/C11YJp28bwu
-         wA6ZVmC4j8wJpBEpOOSTyYBEZb8STMFtzKYUHat6zc+01hNQb8bmQnOqU3xvByzrtftX
-         PUOg==
+        bh=sUeYe8BSGZYWQw5KBHRzy6qEBjOndmbbSL6rQBInc7k=;
+        b=IQDESnm0QeHd8PxFb+DODakqpsJeW8gEOHzHbnzOttRsosCnMlxmFW7+AMWQ/Fdow8
+         P1Uamy0iVppznk/vnkk+jkMO6G9Zf23VAoVx/hrGXF6Cw94j1BHYAuR67hLIlOBb9+OT
+         ax/zAEuXVqqNRxiZiuKqc1YBZGHm8tu4Tkh43lFHlaxdEV+t1h7kJUWpcj4iGMJVnBB7
+         w5v9Ert8LYp07L3wxHEU6i93Th3+2oLFnFpeMv/b6LNLZ0lPubbmKy85kj8ECrY3B/c0
+         Bu3XHE4R+/ecqoWWoie9T4z5katAo8GcsjwrbFJaOK+Ym62GOKlzwwT6sOGxK7UtC6w+
+         UfDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VoiyEoznGsebSQriKSg2X1Svm8xxDWhM6W5MAaVlZfM=;
-        b=iB2f+dSaB2Hludty4VorlT7Td/DvtHuDYgLafaBGPPhmgMrlT0aeWdx4Y6cTqS2mjP
-         M9Z4345ETI7uV3UaYwFDnxahwT9gC04+w5b05GrvDVLkM0MuQTJ9QXK+bT1d+vEvvHBd
-         ugaDPbVC1J+Kj5goaiwxcsXJJ6Ik1Ge0z51ssxSefXfR4DrcdzJxR6vAqtGID/WGqLWc
-         2Z5ZSNG0hu3Gnu+9SWF9R1+7ti124y7it5n+YE+HervWa1eb51XVdXyt5o2Oc5lfxZe/
-         8A1dpjSldvXiJ3c21c9AkoO2+BR0P9CkwNFyByByW4r48DNWdHTgl4Uw5VzUwpAZcuJt
-         gBnQ==
-X-Gm-Message-State: APjAAAX12cvtLYp/4PGJFpNjl5zW4oDFO8g6w7kY4CEeS+WnS374Omgw
-        azc+D1OxzHZI3moJr5jfYEWMBA==
-X-Google-Smtp-Source: APXvYqzxlOMYI2lLiopD9DUTgVJHaln/oI01siPstd8Ym3P4VYWq9U2IwostDoeJEXuI843drXHC1Q==
-X-Received: by 2002:adf:a2cd:: with SMTP id t13mr33117115wra.251.1565792971007;
-        Wed, 14 Aug 2019 07:29:31 -0700 (PDT)
+        bh=sUeYe8BSGZYWQw5KBHRzy6qEBjOndmbbSL6rQBInc7k=;
+        b=PtkiV74iB+1EP4bWZd9wbvc9LE0QgNgYe2wk5un77dOa30Fiv2UjJuFm/jzHdLZrxM
+         esCsiUQul6mu64lGIgrn3lNJ9BajfroLDVA4iKInhkiTMadH1/Lcu/VSMkfsQba0sqge
+         KKbRpDJhtVwl3drTFXEuAnFr6nbzMiv1S+gDgvJ0tBP/FjxPgPuOW1/WbA8riMvWtNZ8
+         myseUSpsGkXZmv5toKst+3aOwOOoCQFea4xhT2ZAElnKJmT/zuMzSGjcdGDjo9AaCV/p
+         3+KAALOHcmR4K78yPHs6XbMYzPcIjVPkcGCGbh3EBStX5SVS/CtdBROnzTqQgMgYvrt0
+         e67A==
+X-Gm-Message-State: APjAAAXVvibKiJMYCXHN+7hYL0VPjf2AE0Uxh5TqWNX8TzZas3wbaxRr
+        KDiDy2gFiPAzWnm6Q7g9lkDW9A==
+X-Google-Smtp-Source: APXvYqxxKH1Vq43+PK9iSDPYgqIOMfuab9ammjtTuWznJWzNy7m6bWGj8TCVArpoFQ4uJgdU68pT+g==
+X-Received: by 2002:a05:6000:104f:: with SMTP id c15mr25058503wrx.225.1565792968020;
+        Wed, 14 Aug 2019 07:29:28 -0700 (PDT)
 Received: from bender.baylibre.local (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id o7sm4202908wmc.36.2019.08.14.07.29.30
+        by smtp.gmail.com with ESMTPSA id o7sm4202908wmc.36.2019.08.14.07.29.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 07:29:30 -0700 (PDT)
+        Wed, 14 Aug 2019 07:29:27 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 08/14] arm64: dts: meson-gxl: fix internal phy compatible
-Date:   Wed, 14 Aug 2019 16:29:12 +0200
-Message-Id: <20190814142918.11636-9-narmstrong@baylibre.com>
+Subject: [PATCH 05/14] arm64: dts: meson-gx: fix watchdog compatible
+Date:   Wed, 14 Aug 2019 16:29:09 +0200
+Message-Id: <20190814142918.11636-6-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814142918.11636-1-narmstrong@baylibre.com>
 References: <20190814142918.11636-1-narmstrong@baylibre.com>
@@ -76,26 +76,27 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 This fixes the following DT schemas check errors:
-meson-gxl-s805x-libretech-ac.dt.yaml: ethernet-phy@8: compatible: ['ethernet-phy-id0181.4400', 'ethernet-phy-ieee802.3-c22'] is not valid under any of the given schemas
+meson-gxbb-nanopi-k2.dt.yaml: watchdog@98d0: compatible:0: 'amlogic,meson-gx-wdt' is not one of ['amlogic,meson-gxbb-wdt']
+meson-gxl-s805x-libretech-ac.dt.yaml: watchdog@98d0: compatible:0: 'amlogic,meson-gx-wdt' is not one of ['amlogic,meson-gxbb-wdt']
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index ee1ecdbcc958..43eb158bee24 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -709,7 +709,7 @@
- 			#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index e2cdc9fce21c..00215ece17c8 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -325,7 +325,7 @@
+ 			};
  
- 			internal_phy: ethernet-phy@8 {
--				compatible = "ethernet-phy-id0181.4400", "ethernet-phy-ieee802.3-c22";
-+				compatible = "ethernet-phy-id0181.4400";
- 				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
- 				reg = <8>;
- 				max-speed = <100>;
+ 			watchdog@98d0 {
+-				compatible = "amlogic,meson-gx-wdt", "amlogic,meson-gxbb-wdt";
++				compatible = "amlogic,meson-gxbb-wdt";
+ 				reg = <0x0 0x098d0 0x0 0x10>;
+ 				clocks = <&xtal>;
+ 			};
 -- 
 2.22.0
 
