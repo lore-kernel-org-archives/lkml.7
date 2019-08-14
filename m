@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 788BDC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB85EC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5065921721
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EDC0208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802176;
-	bh=bvXAwH0S25j0YdHglPqNUbLqwyWi3BxhSqRlgEfvOZA=;
+	s=default; t=1565802180;
+	bh=v1ncVUEw5omDh/lN+fYExxW5ZP8v8Cu9WRF1leWKklk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F5QseKhiD6XdDA801TjgGHjoucC2M3RIMXw2kv1dkvIA53XkuaDzJggAnfL9R/MRC
-	 86leHgCfunZ80lPDZvsmnsilNnbLapSg8D2XKx5dsrJvv2E0QBtA9C/OxRmUnZxkwE
-	 0NhNnjAcfvZe/++T2jbf050rEzpJNrBB0KYgOB10=
+	b=Q8ICYL3PrVjrfNYklN1XwmyN1v2fH0HMhtdlDSsI02GmRhPVhbQ+EHGns1mocaS4g
+	 mSNidpqxUpo2REgwCZLZGXShJ30a7VsrbCIP/A6yWAp+y5XB/oahJfAbC0p7ExwNvS
+	 32+EjkLRkXVdQen6gvra5DmkG8iorNDDHNu/7Rak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbfHNRCz (ORCPT
+        id S1728797AbfHNRC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:02:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51356 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:02:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728762AbfHNRCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:02:51 -0400
+        id S1728762AbfHNRC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:02:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 673DB208C2;
-        Wed, 14 Aug 2019 17:02:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89D9C208C2;
+        Wed, 14 Aug 2019 17:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802170;
-        bh=bvXAwH0S25j0YdHglPqNUbLqwyWi3BxhSqRlgEfvOZA=;
+        s=default; t=1565802176;
+        bh=v1ncVUEw5omDh/lN+fYExxW5ZP8v8Cu9WRF1leWKklk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NBDMOPT2htB3hwuJa2iklwrB5QkiDUAaHxS0S3NfNIbNR2fHgpxBcXgz93aInvHLD
-         1INLb7GwhxA5sb7e/GQto7/KSCKYWIpVDAr7YE1jp9UVQKM17gX+Wb5Qj8/7pjm+TY
-         ktShyG12ZIpJRakZt/9ONZx24+UysKzUnRdF6lqo=
+        b=H+eM4aJivF595pb/jSRzIJi2p7cE64nNHsiH/lR3Dagwbrm1zW0OqA2KaBm0jVc/I
+         9Kg1y13kAK1db9njgnmJcn4bwJU8AGMOwpH//tz6/nC26M6p/OtGr15M7xTN7Jzdg4
+         tGSkLTUxG7vyg+mKK3AMqQmByuIEo/7EwwKw+UcQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.2 021/144] mmc: cavium: Add the missing dma unmap when the dma has finished.
-Date:   Wed, 14 Aug 2019 18:59:37 +0200
-Message-Id: <20190814165800.743299135@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.2 023/144] bdev: Fixup error handling in blkdev_get()
+Date:   Wed, 14 Aug 2019 18:59:39 +0200
+Message-Id: <20190814165800.813745526@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -59,71 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Hao <haokexin@gmail.com>
+From: Jan Kara <jack@suse.cz>
 
-commit b803974a86039913d5280add083d730b2b9ed8ec upstream.
+commit e91455bad5cff40a8c232f2204a5104127e3fec2 upstream.
 
-This fixes the below calltrace when the CONFIG_DMA_API_DEBUG is enabled.
-  DMA-API: thunderx_mmc 0000:01:01.4: cpu touching an active dma mapped cacheline [cln=0x000000002fdf9800]
-  WARNING: CPU: 21 PID: 1 at kernel/dma/debug.c:596 debug_dma_assert_idle+0x1f8/0x270
-  Modules linked in:
-  CPU: 21 PID: 1 Comm: init Not tainted 5.3.0-rc1-next-20190725-yocto-standard+ #64
-  Hardware name: Marvell OcteonTX CN96XX board (DT)
-  pstate: 80400009 (Nzcv daif +PAN -UAO)
-  pc : debug_dma_assert_idle+0x1f8/0x270
-  lr : debug_dma_assert_idle+0x1f8/0x270
-  sp : ffff0000113cfc10
-  x29: ffff0000113cfc10 x28: 0000ffff8c880000
-  x27: ffff800bc72a0000 x26: ffff000010ff8000
-  x25: ffff000010ff8940 x24: ffff000010ff8968
-  x23: 0000000000000000 x22: ffff000010e83700
-  x21: ffff000010ea2000 x20: ffff000010e835c8
-  x19: ffff800bc2c73300 x18: ffffffffffffffff
-  x17: 0000000000000000 x16: 0000000000000000
-  x15: ffff000010e835c8 x14: 6d20616d64206576
-  x13: 69746361206e6120 x12: 676e696863756f74
-  x11: 20757063203a342e x10: 31303a31303a3030
-  x9 : 303020636d6d5f78 x8 : 3230303030303030
-  x7 : 00000000000002fd x6 : ffff000010fd57d0
-  x5 : 0000000000000000 x4 : ffff0000106c5210
-  x3 : 00000000ffffffff x2 : 0000800bee9c0000
-  x1 : 57d5843f4aa62800 x0 : 0000000000000000
-  Call trace:
-   debug_dma_assert_idle+0x1f8/0x270
-   wp_page_copy+0xb0/0x688
-   do_wp_page+0xa8/0x5b8
-   __handle_mm_fault+0x600/0xd00
-   handle_mm_fault+0x118/0x1e8
-   do_page_fault+0x200/0x500
-   do_mem_abort+0x50/0xb0
-   el0_da+0x20/0x24
-  ---[ end trace a005534bd23e109f ]---
-  DMA-API: Mapped at:
-   debug_dma_map_sg+0x94/0x350
-   cvm_mmc_request+0x3c4/0x988
-   __mmc_start_request+0x9c/0x1f8
-   mmc_start_request+0x7c/0xb0
-   mmc_blk_mq_issue_rq+0x5c4/0x7b8
+Commit 89e524c04fa9 ("loop: Fix mount(2) failure due to race with
+LOOP_SET_FD") converted blkdev_get() to use the new helpers for
+finishing claiming of a block device. However the conversion botched the
+error handling in blkdev_get() and thus the bdev has been marked as held
+even in case __blkdev_get() returned error. This led to occasional
+warnings with block/001 test from blktests like:
 
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Fixes: ba3869ff32e4 ("mmc: cavium: Add core MMC driver for Cavium SOCs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+kernel: WARNING: CPU: 5 PID: 907 at fs/block_dev.c:1899 __blkdev_put+0x396/0x3a0
+
+Correct the error handling.
+
+CC: stable@vger.kernel.org
+Fixes: 89e524c04fa9 ("loop: Fix mount(2) failure due to race with LOOP_SET_FD")
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/cavium.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/block_dev.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/mmc/host/cavium.c
-+++ b/drivers/mmc/host/cavium.c
-@@ -374,6 +374,7 @@ static int finish_dma_single(struct cvm_
- {
- 	data->bytes_xfered = data->blocks * data->blksz;
- 	data->error = 0;
-+	dma_unmap_sg(host->dev, data->sg, data->sg_len, get_dma_dir(data));
- 	return 1;
- }
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1723,7 +1723,10 @@ int blkdev_get(struct block_device *bdev
  
+ 		/* finish claiming */
+ 		mutex_lock(&bdev->bd_mutex);
+-		bd_finish_claiming(bdev, whole, holder);
++		if (!res)
++			bd_finish_claiming(bdev, whole, holder);
++		else
++			bd_abort_claiming(bdev, whole, holder);
+ 		/*
+ 		 * Block event polling for write claims if requested.  Any
+ 		 * write holder makes the write_holder state stick until
 
 
