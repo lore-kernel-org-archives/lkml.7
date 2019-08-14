@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8550CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D284C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFBD208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2BD2133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:22:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oP51eZQU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWTk3SUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbfHNQWn (ORCPT
+        id S1728380AbfHNQWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:22:43 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37220 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727110AbfHNQWk (ORCPT
+        Wed, 14 Aug 2019 12:22:46 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43181 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728265AbfHNQWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:22:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z23so4987180wmf.2;
-        Wed, 14 Aug 2019 09:22:38 -0700 (PDT)
+        Wed, 14 Aug 2019 12:22:42 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y8so5721356wrn.10;
+        Wed, 14 Aug 2019 09:22:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wZo+HAsrUj/Kw4UvtL/TEz9wPlQYNsu6PTm1383LfLY=;
-        b=oP51eZQUXMmLRbDeCYOkf4P47J1oJKUutGh4AX/7V34VD3Xz/++eNtMFBLRBZw9tr9
-         OISGpnQoBlkiAkQQxdmCeiL6+jY9KZFfu2Au+q5R6Jt0SygTlPP6rFXcTApEihP1KAt8
-         fG5JxbCNA1bgv9YkQGOmwsYSYYooAz8jfXeQREv0P9tBMZfQBLH5C+LERJDaQUCMV5xc
-         rAKzGqRbesEjbhCO1yf67HHOb7c2d0IB9pULgBEEUi+ze8NfIyufmKx6eDmln4DWt4Mq
-         S8m4OGN0JD8a+TbcjcN4SdCRym4vbNvb569u+hxGcxR34MgRJ9BF6QU7jK1ceWgpJhGl
-         NWPA==
+        bh=4b8CPfu268RbprWIAAnR9GOAkcKFH0eYu1KeRaQ2giI=;
+        b=dWTk3SUIh/kNncCDReLtOQwHXQpQ0xfR1S76OsgRRNd/jeWkhr3yCFHns4FFw9Rd7j
+         /+slB4R/F1jCtyAHpRJctNoXx4P0Y8hQfyTP/H5E/pWCfggJ/PKbk5/zm2ueZQIsiufC
+         XqZASQAV6s/tDldopfn57UAzrYPYmvnZqihTfPcPB5PTGd3M21ghg3fd0ziHOwnWCf8e
+         kAiTXDCrt0xRGyEM3MRIS7+ipcDAuXw0tMFGyT1UGd+HYBS9jihPhHpnqwKdR+wAOmpV
+         ZMa8wDerJcU2eHOilVYnmadtLIFpRlRoJ3S+jfPSzwTGTuQ16epZE8nS9nAPCrVAHXGt
+         QdFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=wZo+HAsrUj/Kw4UvtL/TEz9wPlQYNsu6PTm1383LfLY=;
-        b=bjwYJe9ePLLtgHg/vX0W9z7tTmybsLM5im5byMc4rqRnta+jP7FaUzzkB3X96V0jmd
-         XfT5CxGjfAC0c+BLfLkNufVFW4K1IarmghdVkqyTq58wfU8jgVkWtA5jbhHzOfIXiPlD
-         BXcn5RO89+4hEHzcSuR+uHRAgY+/k1yn+wUPgRwH2z+bvnEgST0+Egdxbpn8Iv8Dds46
-         KsDfYZSQQg1SZyXQ8MSsm/Dlenj3wPjE9PvWF7V6kLps9sp1UdJRUXhDH72Y7LdRSjbw
-         ZFoF7MBC7EsXI/sM1Pzq3YeS6ve8qayJH9ubi8DWvzM2fqRJh91cgPZaCIdGB/y8eYeT
-         W/9g==
-X-Gm-Message-State: APjAAAU8iso1U15gyvAPF2wAGRiiXH6uoFRxX3kC3/9TWWboKKECFBNz
-        qnIXm+883ibXfVb7YqLMH9+NEx2H
-X-Google-Smtp-Source: APXvYqxQ3LV9hhpjouPQzvw8y3xfnGyfDtK43vIvbpKIweDNLDlYskUTD/ziCK7fN9YRLFpvQz67zg==
-X-Received: by 2002:a05:600c:24cb:: with SMTP id 11mr904685wmu.94.1565799757758;
-        Wed, 14 Aug 2019 09:22:37 -0700 (PDT)
+        bh=4b8CPfu268RbprWIAAnR9GOAkcKFH0eYu1KeRaQ2giI=;
+        b=eBEqJZtycq+g+EyrPa342OfAg7UG8RLo0PQ2G1c6Q8doO/zgja9kjbByw/HFPWbV4W
+         YOqScFve2d3JozbNf2zzvZjPovXGMXHxoXt7rLmckQevOFaNXCeGy04zdPgJ94cKnwxG
+         1kgUB87Vhk/VKYKr0O43szUdrh+NZiGUJR5/vu5rgU5tu6Io8+P8dAXYPMENWd1d1qRz
+         m6QAKolS7CS0ngCIZh1qOsgxmtHL+TBXxsatlOM0Z9PqRCzBxfGsWkLHg7OdU1MavQaM
+         aKArQwRxLbz1ORCmqIHkWzbeWKTBRQ9U3ECCKT118xY2PH6PcKXp9CDtUx7jeSlc6aq4
+         hZng==
+X-Gm-Message-State: APjAAAVuJdgjpTyND94CkDP9TMPVrB3Rsbwh/tJ4Kfcilw83rtmtfrW6
+        zN7twP07QzND4nfiupcusPo5/OGo
+X-Google-Smtp-Source: APXvYqwtFHsgIM0uzf0KOtLFWQuzo9lLmz0HOpJ6Ty6hJRjWM6hfiLWyJyAC/2FESOH4PdVwFh9NUw==
+X-Received: by 2002:adf:ef07:: with SMTP id e7mr600507wro.242.1565799759725;
+        Wed, 14 Aug 2019 09:22:39 -0700 (PDT)
 Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id k124sm191620wmk.47.2019.08.14.09.22.36
+        by smtp.gmail.com with ESMTPSA id k124sm191620wmk.47.2019.08.14.09.22.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 09:22:37 -0700 (PDT)
+        Wed, 14 Aug 2019 09:22:39 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     vkuznets@redhat.com
-Subject: [PATCH 1/3] selftests: kvm: do not try running the VM in vmx_set_nested_state_test
-Date:   Wed, 14 Aug 2019 18:22:31 +0200
-Message-Id: <1565799753-3006-2-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 3/3] selftests: kvm: fix vmx_set_nested_state_test
+Date:   Wed, 14 Aug 2019 18:22:33 +0200
+Message-Id: <1565799753-3006-4-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1565799753-3006-1-git-send-email-pbonzini@redhat.com>
 References: <1565799753-3006-1-git-send-email-pbonzini@redhat.com>
@@ -69,56 +69,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This test is only covering various edge cases of the
-KVM_SET_NESTED_STATE ioctl.  Running the VM does not really
-add anything.
+vmx_set_nested_state_test is trying to use the KVM_STATE_NESTED_EVMCS without
+enabling enlightened VMCS first.  Correct the outcome of the test, and actually
+test that it succeeds after the capability is enabled.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- .../selftests/kvm/x86_64/vmx_set_nested_state_test.c      | 15 ---------------
- 1 file changed, 15 deletions(-)
+ .../selftests/kvm/x86_64/vmx_set_nested_state_test.c    | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
 diff --git a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-index ed7218d166da..a99fc66dafeb 100644
+index a99fc66dafeb..853e370e8a39 100644
 --- a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
 +++ b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-@@ -27,22 +27,13 @@
+@@ -25,6 +25,8 @@
+ #define VMCS12_REVISION 0x11e57ed0
+ #define VCPU_ID 5
  
++bool have_evmcs;
++
  void test_nested_state(struct kvm_vm *vm, struct kvm_nested_state *state)
  {
--	volatile struct kvm_run *run;
--
  	vcpu_nested_state_set(vm, VCPU_ID, state, false);
--	run = vcpu_state(vm, VCPU_ID);
--	vcpu_run(vm, VCPU_ID);
--	TEST_ASSERT(run->exit_reason == KVM_EXIT_SHUTDOWN,
--		"Got exit_reason other than KVM_EXIT_SHUTDOWN: %u (%s),\n",
--		run->exit_reason,
--		exit_reason_str(run->exit_reason));
- }
- 
- void test_nested_state_expect_errno(struct kvm_vm *vm,
- 				    struct kvm_nested_state *state,
- 				    int expected_errno)
+@@ -75,8 +77,9 @@ void set_default_vmx_state(struct kvm_nested_state *state, int size)
  {
--	volatile struct kvm_run *run;
- 	int rv;
+ 	memset(state, 0, size);
+ 	state->flags = KVM_STATE_NESTED_GUEST_MODE  |
+-			KVM_STATE_NESTED_RUN_PENDING |
+-			KVM_STATE_NESTED_EVMCS;
++			KVM_STATE_NESTED_RUN_PENDING;
++	if (have_evmcs)
++		state->flags |= KVM_STATE_NESTED_EVMCS;
+ 	state->format = 0;
+ 	state->size = size;
+ 	state->hdr.vmx.vmxon_pa = 0x1000;
+@@ -126,13 +129,19 @@ void test_vmx_nested_state(struct kvm_vm *vm)
+ 	/*
+ 	 * Setting vmxon_pa == -1ull and vmcs_pa == -1ull exits early without
+ 	 * setting the nested state but flags other than eVMCS must be clear.
++	 * The eVMCS flag can be set if the enlightened VMCS capability has
++	 * been enabled.
+ 	 */
+ 	set_default_vmx_state(state, state_sz);
+ 	state->hdr.vmx.vmxon_pa = -1ull;
+ 	state->hdr.vmx.vmcs12_pa = -1ull;
+ 	test_nested_state_expect_einval(vm, state);
  
- 	rv = vcpu_nested_state_set(vm, VCPU_ID, state, true);
-@@ -50,12 +41,6 @@ void test_nested_state_expect_errno(struct kvm_vm *vm,
- 		"Expected %s (%d) from vcpu_nested_state_set but got rv: %i errno: %s (%d)",
- 		strerror(expected_errno), expected_errno, rv, strerror(errno),
- 		errno);
--	run = vcpu_state(vm, VCPU_ID);
--	vcpu_run(vm, VCPU_ID);
--	TEST_ASSERT(run->exit_reason == KVM_EXIT_SHUTDOWN,
--		"Got exit_reason other than KVM_EXIT_SHUTDOWN: %u (%s),\n",
--		run->exit_reason,
--		exit_reason_str(run->exit_reason));
- }
+-	state->flags = KVM_STATE_NESTED_EVMCS;
++	state->flags &= KVM_STATE_NESTED_EVMCS;
++	if (have_evmcs) {
++		test_nested_state_expect_einval(vm, state);
++		vcpu_enable_evmcs(vm, VCPU_ID);
++	}
+ 	test_nested_state(vm, state);
  
- void test_nested_state_expect_einval(struct kvm_vm *vm,
+ 	/* It is invalid to have vmxon_pa == -1ull and SMM flags non-zero. */
+@@ -217,6 +226,8 @@ int main(int argc, char *argv[])
+ 	struct kvm_nested_state state;
+ 	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
+ 
++	have_evmcs = kvm_check_cap(KVM_CAP_HYPERV_ENLIGHTENED_VMCS);
++
+ 	if (!kvm_check_cap(KVM_CAP_NESTED_STATE)) {
+ 		printf("KVM_CAP_NESTED_STATE not available, skipping test\n");
+ 		exit(KSFT_SKIP);
 -- 
 1.8.3.1
-
 
