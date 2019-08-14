@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269E9C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E536C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE70020679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55B8120842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749382;
-	bh=FU7JrSjpDn+j5PtmdPsUX2jCP/x8aep9fWo+JQAylnw=;
+	s=default; t=1565749385;
+	bh=NSafegQqM6bZHr8DIYO0zVk1Y9lQxdXuReFFnkivw10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dnjwxw+F9ogceLfSoybYgSNV0asQYqZducrpDOFrrOUn141UXdQj16x/wZ3T4Dn1d
-	 JO2NMHPT+/AwWBPBeynQdqiZyEWS68L2DeqydxZb74QjndaRXpbmvav1/2JGMyi/cD
-	 YRu6NJBQkDzEhACtsI50JIacivnupfQAiTlMdbYo=
+	b=uGxu6xKyyIwTCIGANaU40vCjY3+vL/tweMkA0FUHdE3PQ50ZrnW8aTaVAPHyqKovQ
+	 1sxelSmZgNuK1XO3+wRP3wWt1Fl0Oc+DQDAQYovvchVSPAZT7gDevGivSq61M8O8SX
+	 hIlanD6kfb0TU07uuXXgwd7Dy9KO+9hUkbFFdyzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbfHNCXA (ORCPT
+        id S1729788AbfHNCXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:23:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48830 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:23:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727626AbfHNCRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:17:31 -0400
+        id S1729412AbfHNCRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:17:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2750208C2;
-        Wed, 14 Aug 2019 02:17:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6730F20843;
+        Wed, 14 Aug 2019 02:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749050;
-        bh=FU7JrSjpDn+j5PtmdPsUX2jCP/x8aep9fWo+JQAylnw=;
+        s=default; t=1565749049;
+        bh=NSafegQqM6bZHr8DIYO0zVk1Y9lQxdXuReFFnkivw10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eA/vMENHRIm9JIuTN0o2S7tXK0t6edL6VH5eZQ96ILEjhB9fUhT2iUWtmrnA/K9Rr
-         ryrGu34vWACC3sH5W+NmThN2eD2w9mvvC3ClHklmhyV9r948ASVnIZkvGu+sX9UZny
-         FEQr48RVoNyPhxK9Hc4vJnGtmLY3xSjyumqN4Bbo=
+        b=H5O2f+EU+ncEOfmjWcQk4UtAgQgqlXIsiroFTpCiMsxXq4PeHJQLSug235Qa7Pn8m
+         8MhjCLTOHGOB/6qvEY40V/AVRZ5T1DytWMw/KcvEoBhNhQMPC38X+X6Ms8l0nM2qPc
+         gLGytBrw4BZWKK3GD8G9Om6qYqLqHIzLHESygjUc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     He Zhe <zhe.he@windriver.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 63/68] perf ftrace: Fix failure to set cpumask when only one cpu is present
-Date:   Tue, 13 Aug 2019 22:15:41 -0400
-Message-Id: <20190814021548.16001-63-sashal@kernel.org>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        Hsin-Yi Wang <hsinyi@google.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 62/68] block, bfq: handle NULL return value by bfq_init_rq()
+Date:   Tue, 13 Aug 2019 22:15:40 -0400
+Message-Id: <20190814021548.16001-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -66,52 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: He Zhe <zhe.he@windriver.com>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit cf30ae726c011e0372fd4c2d588466c8b50a8907 ]
+[ Upstream commit fd03177c33b287c6541f4048f1d67b7b45a1abc9 ]
 
-The buffer containing the string used to set cpumask is overwritten at
-the end of the string later in cpu_map__snprint_mask due to not enough
-memory space, when there is only one cpu.
+As reported in [1], the call bfq_init_rq(rq) may return NULL in case
+of OOM (in particular, if rq->elv.icq is NULL because memory
+allocation failed in failed in ioc_create_icq()).
 
-And thus causes the following failure:
+This commit handles this circumstance.
 
-  $ perf ftrace ls
-  failed to reset ftrace
-  $
+[1] https://lkml.org/lkml/2019/7/22/824
 
-This patch fixes the calculation of the cpumask string size.
-
-Signed-off-by: He Zhe <zhe.he@windriver.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Fixes: dc23103278c5 ("perf ftrace: Add support for -a and -C option")
-Link: http://lkml.kernel.org/r/1564734592-15624-1-git-send-email-zhe.he@windriver.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Hsin-Yi Wang <hsinyi@google.com>
+Cc: Nicolas Boichat <drinkcat@chromium.org>
+Cc: Doug Anderson <dianders@chromium.org>
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Reported-by: Hsin-Yi Wang <hsinyi@google.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/bfq-iosched.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index f42f228e88992..137955197ba8d 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -174,7 +174,7 @@ static int set_tracing_cpumask(struct cpu_map *cpumap)
- 	int last_cpu;
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index becd793a258c8..d8d2ac294b0c0 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -1886,9 +1886,14 @@ static void bfq_request_merged(struct request_queue *q, struct request *req,
+ 	    blk_rq_pos(container_of(rb_prev(&req->rb_node),
+ 				    struct request, rb_node))) {
+ 		struct bfq_queue *bfqq = bfq_init_rq(req);
+-		struct bfq_data *bfqd = bfqq->bfqd;
++		struct bfq_data *bfqd;
+ 		struct request *prev, *next_rq;
  
- 	last_cpu = cpu_map__cpu(cpumap, cpumap->nr - 1);
--	mask_size = (last_cpu + 3) / 4 + 1;
-+	mask_size = last_cpu / 4 + 2; /* one more byte for EOS */
- 	mask_size += last_cpu / 32; /* ',' is needed for every 32th cpus */
++		if (!bfqq)
++			return;
++
++		bfqd = bfqq->bfqd;
++
+ 		/* Reposition request in its sort_list */
+ 		elv_rb_del(&bfqq->sort_list, req);
+ 		elv_rb_add(&bfqq->sort_list, req);
+@@ -1930,6 +1935,9 @@ static void bfq_requests_merged(struct request_queue *q, struct request *rq,
+ 	struct bfq_queue *bfqq = bfq_init_rq(rq),
+ 		*next_bfqq = bfq_init_rq(next);
  
- 	cpumask = malloc(mask_size);
++	if (!bfqq)
++		return;
++
+ 	/*
+ 	 * If next and rq belong to the same bfq_queue and next is older
+ 	 * than rq, then reposition rq in the fifo (by substituting next
+@@ -4590,12 +4598,12 @@ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ 
+ 	spin_lock_irq(&bfqd->lock);
+ 	bfqq = bfq_init_rq(rq);
+-	if (at_head || blk_rq_is_passthrough(rq)) {
++	if (!bfqq || at_head || blk_rq_is_passthrough(rq)) {
+ 		if (at_head)
+ 			list_add(&rq->queuelist, &bfqd->dispatch);
+ 		else
+ 			list_add_tail(&rq->queuelist, &bfqd->dispatch);
+-	} else { /* bfqq is assumed to be non null here */
++	} else {
+ 		idle_timer_disabled = __bfq_insert_request(bfqd, rq);
+ 		/*
+ 		 * Update bfqq, because, if a queue merge has occurred
 -- 
 2.20.1
 
