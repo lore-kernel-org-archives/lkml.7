@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11A1C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE66C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8404208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD64216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802481;
-	bh=7u6y6PJryD4iCbF2IuVqPiFbr3X04F7zJDSfs/jAL1M=;
+	s=default; t=1565802484;
+	bh=YFlaAVjmdVZ9XdNhwVjIZnJ4nRFc81vzqueGiTczBeA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f8DnTZ4fpYtOph+QTx2G1DHCOZxMKwXUh6BrzDyO3AAHq4Tsab+km6Vw1DQn72MMy
-	 nlhblCwMp1zUlT4n78NCqy0+Iuco3jYx2tDdMSiNIyHouyuCnPw6dJuKOwJ4LTIUwC
-	 8abL0n69iIxqJVwxY/EzLrTAVIajm9enaaqMnZIM=
+	b=kcnCZc5M3pjT5CDvLKkTIBFgxe7Xer4cx0z6/a/YKGifWB0bNZThsRyEAzWehuUfs
+	 ZN6Un6Lk77fAFIW8FpZlOla99YR7ZL/pKsFa3haGR4KLPzzowLUcTy05h142CiejXy
+	 v/FbKse3somcbGwkCrC4jpogaoUky8Qb1Lib947A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbfHNRIA (ORCPT
+        id S1729254AbfHNRID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:08:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57726 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:08:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730003AbfHNRH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:07:58 -0400
+        id S1730035AbfHNRIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:08:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55A9A214DA;
-        Wed, 14 Aug 2019 17:07:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA5EB214DA;
+        Wed, 14 Aug 2019 17:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802477;
-        bh=7u6y6PJryD4iCbF2IuVqPiFbr3X04F7zJDSfs/jAL1M=;
+        s=default; t=1565802480;
+        bh=YFlaAVjmdVZ9XdNhwVjIZnJ4nRFc81vzqueGiTczBeA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lO7CrVCGo+p0ddbYx6lCGvYiAvvkBXoyNZ5Cri8bv5TAZ+/DtfGNsARIDwPjlGoVO
-         82A2Ys72JaPTmmzv75sw0X1iqtBD2pXiQYzR1DsSvPPvHojp5Hsh5y52UPbE/0Axmu
-         Qazj/Nc6MPiWfmJrNh0sIXKNjQNybVxP9Zbc+5kY=
+        b=S4Gn9HEDOeFYRH+99yE/5QU+uGleMDnr6Sjr41EWny70wrU0A/MElvM9MgeIluGBs
+         oTurU3IAhVG+2PxAzzeK3sCuOcqiZ4VWm1t7PIj3p3G0HH1exDDZFGB+27qfQ0dWEM
+         Yupjj3tOIHZDIbh685zv5M9MxzPXmJIS59m4XpIo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
         Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.2 141/144] iwlwifi: mvm: fix an out-of-bound access
-Date:   Wed, 14 Aug 2019 19:01:37 +0200
-Message-Id: <20190814165805.863457330@linuxfoundation.org>
+Subject: [PATCH 5.2 142/144] iwlwifi: mvm: fix a use-after-free bug in iwl_mvm_tx_tso_segment
+Date:   Wed, 14 Aug 2019 19:01:38 +0200
+Message-Id: <20190814165805.908186196@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -62,36 +62,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 
-commit ba3224db78034435e9ff0247277cce7c7bb1756c upstream.
+commit 71b256f8f7a5c09810d2c3ed6165629c2cc0a652 upstream.
 
-The index for the elements of the ACPI object we dereference
-was static. This means that if we called the function twice
-we wouldn't start from 3 again, but rather from the latest
-index we reached in the previous call.
-This was dutifully reported by KASAN.
-
-Fix this.
+Accessing the hdr of an skb that was consumed already isn't
+a good idea.
+First ask if the skb is a QoS packet, then keep that data
+on stack, and then consume the skb.
+This was spotted by KASAN.
 
 Cc: stable@vger.kernel.org
-Fixes: 6996490501ed ("iwlwifi: mvm: add support for EWRD (Dynamic SAR) ACPI table")
+Fixes: 08f7d8b69aaf ("iwlwifi: mvm: bring back mvm GSO code")
 Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/tx.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -753,7 +753,7 @@ static int iwl_mvm_sar_get_ewrd_table(st
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+@@ -831,6 +831,7 @@ iwl_mvm_tx_tso_segment(struct sk_buff *s
+ 	unsigned int tcp_payload_len;
+ 	unsigned int mss = skb_shinfo(skb)->gso_size;
+ 	bool ipv4 = (skb->protocol == htons(ETH_P_IP));
++	bool qos = ieee80211_is_data_qos(hdr->frame_control);
+ 	u16 ip_base_id = ipv4 ? ntohs(ip_hdr(skb)->id) : 0;
  
- 	for (i = 0; i < n_profiles; i++) {
- 		/* the tables start at element 3 */
--		static int pos = 3;
-+		int pos = 3;
+ 	skb_shinfo(skb)->gso_size = num_subframes * mss;
+@@ -864,7 +865,7 @@ iwl_mvm_tx_tso_segment(struct sk_buff *s
+ 		if (tcp_payload_len > mss) {
+ 			skb_shinfo(tmp)->gso_size = mss;
+ 		} else {
+-			if (ieee80211_is_data_qos(hdr->frame_control)) {
++			if (qos) {
+ 				u8 *qc;
  
- 		/* The EWRD profiles officially go from 2 to 4, but we
- 		 * save them in sar_profiles[1-3] (because we don't
+ 				if (ipv4)
 
 
