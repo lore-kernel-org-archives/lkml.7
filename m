@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B51C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1847C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B6B206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6EF4206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803087;
-	bh=p5Y9kzAjEMD0RprhHspOGsqIuFJKbKuZ9hyXR0vS7WU=;
+	s=default; t=1565803092;
+	bh=8vACyV4HWZSpDIGeYsjVQviONxqVr7jlAcvVeMNcYis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E+aiKihEGhqjDo8Huz5gUD90NKbHjxE0rT52yuxn6EA/zU63NWDlTrfcQmiqC0y11
-	 KxWRh55L9/hxyc7t1oaavs+Mcikse7TXOSumRDWfJYhpW1HypMQ9TU57MVum9yndmB
-	 HTZokoPUPXtIFdWtCqV96FKs1oK7OdVRwkq2BsW4=
+	b=04EguxjcoD06ml1Zflrx0ELnCltSCFDvXKKNHoICNc4UbSKyD1PuXCUtMXyaYTTsL
+	 69/unuEyhl2a670H6wx5qpidFpamHeSderAYDcK9Xm3IePc5UIlUnzkQmEYpZc2hDM
+	 zpxlYUfGva2KPdUuppp/ISOgGkNxilbHDEAZuuqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731045AbfHNRSF (ORCPT
+        id S1731049AbfHNRSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:18:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37046 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:18:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728320AbfHNRM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:12:57 -0400
+        id S1730409AbfHNRMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:12:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F567214DA;
-        Wed, 14 Aug 2019 17:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3490214DA;
+        Wed, 14 Aug 2019 17:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802777;
-        bh=p5Y9kzAjEMD0RprhHspOGsqIuFJKbKuZ9hyXR0vS7WU=;
+        s=default; t=1565802769;
+        bh=8vACyV4HWZSpDIGeYsjVQviONxqVr7jlAcvVeMNcYis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RoHOY5/XfYmy9p2dD8vp8kuh/XMQ0+5d6fCzKpT0n8iAKHzpQOOhRh1DtdKAdHr77
-         3P1QuAz16yjRE8lsksPNhIkaPDro7P1LoI8HMZs9i+EoMtDTlTI83JC79Yc8qzHxhp
-         PwPM9xXQqH2akHGGhPjSibJlR8YshMMTxbHaq3kQ=
+        b=ByPY/uMzzQ0o7JwXe77I4CFocudkWoNpo9o1uUlUrKAU63DN7zlPgktRFmbqIzyS5
+         DwGut8i6YYgPLgAb+qWaP5LHbhgATIQVqt0RPgP9C/PyMeH0DYphPNN0ZVblMH6SZw
+         mhxBkkYKLgmuoUX5iFeJD1EpWrNM/3kPio1wkPX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
-        Tomoki Sekiyama <tomoki.sekiyama@gmail.com>,
-        Oliver Neukum <oneukum@suse.com>, andreyknvl@google.com,
-        Alan Stern <stern@rowland.harvard.edu>,
-        syzkaller-bugs@googlegroups.com, dtor@chromium.org,
-        syzbot+d1fedb1c1fdb07fca507@syzkaller.appspotmail.com,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 4.14 22/69] usb: yurex: Fix use-after-free in yurex_delete
-Date:   Wed, 14 Aug 2019 19:01:20 +0200
-Message-Id: <20190814165747.019089144@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 09/69] loop: set PF_MEMALLOC_NOIO for the worker thread
+Date:   Wed, 14 Aug 2019 19:01:07 +0200
+Message-Id: <20190814165746.162799150@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -64,154 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit fc05481b2fcabaaeccf63e32ac1baab54e5b6963 upstream.
+commit d0a255e795ab976481565f6ac178314b34fbf891 upstream.
 
-syzbot reported the following crash [0]:
+A deadlock with this stacktrace was observed.
 
-BUG: KASAN: use-after-free in usb_free_coherent+0x79/0x80
-drivers/usb/core/usb.c:928
-Read of size 8 at addr ffff8881b18599c8 by task syz-executor.4/16007
+The loop thread does a GFP_KERNEL allocation, it calls into dm-bufio
+shrinker and the shrinker depends on I/O completion in the dm-bufio
+subsystem.
 
-CPU: 0 PID: 16007 Comm: syz-executor.4 Not tainted 5.3.0-rc2+ #23
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x6a/0x32c mm/kasan/report.c:351
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
-  kasan_report+0xe/0x12 mm/kasan/common.c:612
-  usb_free_coherent+0x79/0x80 drivers/usb/core/usb.c:928
-  yurex_delete+0x138/0x330 drivers/usb/misc/yurex.c:100
-  kref_put include/linux/kref.h:65 [inline]
-  yurex_release+0x66/0x90 drivers/usb/misc/yurex.c:392
-  __fput+0x2d7/0x840 fs/file_table.c:280
-  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x413511
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48
-83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48
-89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007ffc424ea2e0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000007 RCX: 0000000000413511
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000006
-RBP: 0000000000000001 R08: 0000000029a2fc22 R09: 0000000029a2fc26
-R10: 00007ffc424ea3c0 R11: 0000000000000293 R12: 000000000075c9a0
-R13: 000000000075c9a0 R14: 0000000000761938 R15: ffffffffffffffff
+In order to fix the deadlock (and other similar ones), we set the flag
+PF_MEMALLOC_NOIO at loop thread entry.
 
-Allocated by task 2776:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:748 [inline]
-  usb_alloc_dev+0x51/0xf95 drivers/usb/core/usb.c:583
-  hub_port_connect drivers/usb/core/hub.c:5004 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x15c0/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
+   #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
+   #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
+   #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
+   #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
+   #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
+   #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
+   #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
+   #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
+   #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
+   #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
+  #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
+  #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
+  #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
+  #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
+  #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
 
-Freed by task 16007:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
-  slab_free_hook mm/slub.c:1423 [inline]
-  slab_free_freelist_hook mm/slub.c:1470 [inline]
-  slab_free mm/slub.c:3012 [inline]
-  kfree+0xe4/0x2f0 mm/slub.c:3953
-  device_release+0x71/0x200 drivers/base/core.c:1064
-  kobject_cleanup lib/kobject.c:693 [inline]
-  kobject_release lib/kobject.c:722 [inline]
-  kref_put include/linux/kref.h:65 [inline]
-  kobject_put+0x171/0x280 lib/kobject.c:739
-  put_device+0x1b/0x30 drivers/base/core.c:2213
-  usb_put_dev+0x1f/0x30 drivers/usb/core/usb.c:725
-  yurex_delete+0x40/0x330 drivers/usb/misc/yurex.c:95
-  kref_put include/linux/kref.h:65 [inline]
-  yurex_release+0x66/0x90 drivers/usb/misc/yurex.c:392
-  __fput+0x2d7/0x840 fs/file_table.c:280
-  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  PID: 14127  TASK: ffff881455749c00  CPU: 11  COMMAND: "loop1"
+   #0 [ffff88272f5af228] __schedule at ffffffff8173f405
+   #1 [ffff88272f5af280] schedule at ffffffff8173fa27
+   #2 [ffff88272f5af2a0] schedule_preempt_disabled at ffffffff8173fd5e
+   #3 [ffff88272f5af2b0] __mutex_lock_slowpath at ffffffff81741fb5
+   #4 [ffff88272f5af330] mutex_lock at ffffffff81742133
+   #5 [ffff88272f5af350] dm_bufio_shrink_count at ffffffffa03865f9 [dm_bufio]
+   #6 [ffff88272f5af380] shrink_slab at ffffffff811a86bd
+   #7 [ffff88272f5af470] shrink_zone at ffffffff811ad778
+   #8 [ffff88272f5af500] do_try_to_free_pages at ffffffff811adb34
+   #9 [ffff88272f5af590] try_to_free_pages at ffffffff811adef8
+  #10 [ffff88272f5af610] __alloc_pages_nodemask at ffffffff811a09c3
+  #11 [ffff88272f5af710] alloc_pages_current at ffffffff811e8b71
+  #12 [ffff88272f5af760] new_slab at ffffffff811f4523
+  #13 [ffff88272f5af7b0] __slab_alloc at ffffffff8173a1b5
+  #14 [ffff88272f5af880] kmem_cache_alloc at ffffffff811f484b
+  #15 [ffff88272f5af8d0] do_blockdev_direct_IO at ffffffff812535b3
+  #16 [ffff88272f5afb00] __blockdev_direct_IO at ffffffff81255dc3
+  #17 [ffff88272f5afb30] xfs_vm_direct_IO at ffffffffa01fe3fc [xfs]
+  #18 [ffff88272f5afb90] generic_file_read_iter at ffffffff81198994
+  #19 [ffff88272f5afc50] __dta_xfs_file_read_iter_2398 at ffffffffa020c970 [xfs]
+  #20 [ffff88272f5afcc0] lo_rw_aio at ffffffffa0377042 [loop]
+  #21 [ffff88272f5afd70] loop_queue_work at ffffffffa0377c3b [loop]
+  #22 [ffff88272f5afe60] kthread_worker_fn at ffffffff810a8a0c
+  #23 [ffff88272f5afec0] kthread at ffffffff810a8428
+  #24 [ffff88272f5aff50] ret_from_fork at ffffffff81745242
 
-The buggy address belongs to the object at ffff8881b1859980
-  which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 72 bytes inside of
-  2048-byte region [ffff8881b1859980, ffff8881b185a180)
-The buggy address belongs to the page:
-page:ffffea0006c61600 refcount:1 mapcount:0 mapping:ffff8881da00c000
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 0000000000000000 0000000100000001 ffff8881da00c000
-raw: 0000000000000000 00000000000f000f 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881b1859880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff8881b1859900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff8881b1859980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                               ^
-  ffff8881b1859a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881b1859a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-A quick look at the yurex_delete() shows that we drop the reference
-to the usb_device before releasing any buffers associated with the
-device. Delay the reference drop until we have finished the cleanup.
-
-[0] https://lore.kernel.org/lkml/0000000000003f86d8058f0bd671@google.com/
-
-Fixes: 6bc235a2e24a5e ("USB: add driver for Meywa-Denki & Kayac YUREX")
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Tomoki Sekiyama <tomoki.sekiyama@gmail.com>
-Cc: Oliver Neukum <oneukum@suse.com>
-Cc: andreyknvl@google.com
-Cc: gregkh@linuxfoundation.org
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: syzkaller-bugs@googlegroups.com
-Cc: dtor@chromium.org
-Reported-by: syzbot+d1fedb1c1fdb07fca507@syzkaller.appspotmail.com
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190805111528.6758-1-suzuki.poulose@arm.com
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/yurex.c |    2 +-
+ drivers/block/loop.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/misc/yurex.c
-+++ b/drivers/usb/misc/yurex.c
-@@ -96,7 +96,6 @@ static void yurex_delete(struct kref *kr
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -857,7 +857,7 @@ static void loop_unprepare_queue(struct
  
- 	dev_dbg(&dev->interface->dev, "%s\n", __func__);
- 
--	usb_put_dev(dev->udev);
- 	if (dev->cntl_urb) {
- 		usb_kill_urb(dev->cntl_urb);
- 		kfree(dev->cntl_req);
-@@ -112,6 +111,7 @@ static void yurex_delete(struct kref *kr
- 				dev->int_buffer, dev->urb->transfer_dma);
- 		usb_free_urb(dev->urb);
- 	}
-+	usb_put_dev(dev->udev);
- 	kfree(dev);
+ static int loop_kthread_worker_fn(void *worker_ptr)
+ {
+-	current->flags |= PF_LESS_THROTTLE;
++	current->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
+ 	return kthread_worker_fn(worker_ptr);
  }
  
 
