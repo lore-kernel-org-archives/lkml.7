@@ -5,50 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D00C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB44C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDCE21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A258A208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802635;
-	bh=thcy6Q/Hz7EBbae/VkotyQuplx0sNcmIZID/r/im+pU=;
+	s=default; t=1565802639;
+	bh=EFp/SMpBTVzWs3TIbzirQ1Eay6+G9GJO4+/DAOSrYgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HwWh12SjRqgQcpZfEMZDq3CuzBrmQgyWWNDSmiBLYH64PoplTKo64dxFmcRyt2YTr
-	 mmhS+f4MUGhOw9nfSDuHXhBAk63XQ0pp3pmNwBvwt9n66Wz1t1lv/FfVy1+YmGq8Q2
-	 idlwOrCVjqqJhgpX7AZtUl95zDQQcpg9Mpg5BiR0=
+	b=l7HJe5NNK9ObrULv1FwatVtAoI0r9ZR54MYqWMfkAYxqwRurb50h/iKhBimjdZqfe
+	 7+NmldywgzhR2x7c1OEmnzfiK/Wn5nPjmICBpXqfO8kXSuj+bT48VDr0AYKb8rGcH8
+	 2uWf16Ju1VHADrJpJTV+FmKSyye33kOBa3CkM/Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbfHNRKe (ORCPT
+        id S1730495AbfHNRKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:10:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33268 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:10:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730485AbfHNRK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:10:29 -0400
+        id S1730479AbfHNRKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:10:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 430B62084D;
-        Wed, 14 Aug 2019 17:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B43BF2084D;
+        Wed, 14 Aug 2019 17:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802628;
-        bh=thcy6Q/Hz7EBbae/VkotyQuplx0sNcmIZID/r/im+pU=;
+        s=default; t=1565802631;
+        bh=EFp/SMpBTVzWs3TIbzirQ1Eay6+G9GJO4+/DAOSrYgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mu2qXQo9vuYmary0325Vi0NCRTBuSYuMmJFkoh3UU8I9quRI1DwUgrH5yjFYcl7xF
-         CrZKLG72G3tb3kK+s0HV5T8N+ES8EeAAE+5ixvJa9knNai2XNjnjFPgZYdtD5RwpQc
-         NYJMvQ6s2I506sSYrxY0OLySxuQ+fWbcOCfiGtGY=
+        b=rBfSBxpYShlBKHt2IWZ6GjGvuw0Mfrd6YbHymAzMDZ1M2QUhOtE3ZqdErgtD61MCo
+         qYl4dtM1zBxQtjuQz4BHx9wh8uBHCAX6mzkB2lddAb5gFtdxweS5oq8h4dfVIM8m+W
+         lilLIBDjxPoI6UkecwN+X0c44tc1A2j7B6KTnOH8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        David Carrillo-Cisneros <davidcc@google.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 55/91] ALSA: compress: Be more restrictive about when a drain is allowed
-Date:   Wed, 14 Aug 2019 19:01:18 +0200
-Message-Id: <20190814165751.931921514@linuxfoundation.org>
+Subject: [PATCH 4.19 56/91] perf tools: Fix proper buffer size for feature processing
+Date:   Wed, 14 Aug 2019 19:01:19 +0200
+Message-Id: <20190814165751.965803459@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -61,47 +66,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b8179944cb0dd53e5223996966746cdc8a60657 ]
+[ Upstream commit 79b2fe5e756163897175a8f57d66b26cd9befd59 ]
 
-Draining makes little sense in the situation of hardware overrun, as the
-hardware will have consumed all its available samples. Additionally,
-draining whilst the stream is paused would presumably get stuck as no
-data is being consumed on the DSP side.
+After Song Liu's segfault fix for pipe mode, Arnaldo reported following
+error:
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+  # perf record -o - | perf script
+  0x514 [0x1ac]: failed to process type: 80
+
+It's caused by wrong buffer size setup in feature processing, which
+makes cpu topology feature fail, because it's using buffer size to
+recognize its header version.
+
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Carrillo-Cisneros <davidcc@google.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Fixes: e9def1b2e74e ("perf tools: Add feature header record to pipe-mode")
+Link: http://lkml.kernel.org/r/20190715140426.32509-1-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/compress_offload.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/util/header.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index 9c1684f01aca0..516ec35873256 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -812,7 +812,10 @@ static int snd_compr_drain(struct snd_compr_stream *stream)
- 	case SNDRV_PCM_STATE_OPEN:
- 	case SNDRV_PCM_STATE_SETUP:
- 	case SNDRV_PCM_STATE_PREPARED:
-+	case SNDRV_PCM_STATE_PAUSED:
- 		return -EPERM;
-+	case SNDRV_PCM_STATE_XRUN:
-+		return -EPIPE;
- 	default:
- 		break;
- 	}
-@@ -861,7 +864,10 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
- 	case SNDRV_PCM_STATE_OPEN:
- 	case SNDRV_PCM_STATE_SETUP:
- 	case SNDRV_PCM_STATE_PREPARED:
-+	case SNDRV_PCM_STATE_PAUSED:
- 		return -EPERM;
-+	case SNDRV_PCM_STATE_XRUN:
-+		return -EPIPE;
- 	default:
- 		break;
- 	}
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 7f2e3b1c746c9..a94bd6850a0b2 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3472,7 +3472,7 @@ int perf_event__process_feature(struct perf_tool *tool,
+ 		return 0;
+ 
+ 	ff.buf  = (void *)fe->data;
+-	ff.size = event->header.size - sizeof(event->header);
++	ff.size = event->header.size - sizeof(*fe);
+ 	ff.ph = &session->header;
+ 
+ 	if (feat_ops[feat].process(&ff, NULL))
 -- 
 2.20.1
 
