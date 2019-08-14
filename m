@@ -2,164 +2,147 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F155FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA7AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCBE6208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 142742063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:59:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kPcm6A8N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbfHNO7O (ORCPT
+        id S1727900AbfHNO7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 10:59:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59584 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726166AbfHNO7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 10:59:14 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C0BEB641C9;
-        Wed, 14 Aug 2019 14:59:13 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-57.rdu2.redhat.com [10.10.112.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CF0BA27BB8;
-        Wed, 14 Aug 2019 14:59:12 +0000 (UTC)
-Message-ID: <09bcafaab07dfde728357bfe61b6a7edfa3b25c9.camel@redhat.com>
-Subject: [PULL REQUEST] Please pull rdma.git
-From:   Doug Ledford <dledford@redhat.com>
-To:     "Torvalds, Linus" <torvalds@linux-foundation.org>
-Cc:     "Gunthorpe, Jason" <jgg@ziepe.ca>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Wed, 14 Aug 2019 10:59:07 -0400
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-9C7C2VeN3jiOYx/dWxTp"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Wed, 14 Aug 2019 10:59:32 -0400
+Received: from mail-eopbgr10077.outbound.protection.outlook.com ([40.107.1.77]:4164
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725828AbfHNO7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 10:59:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gGRY/c4s9TJCkPjS7n5vxd5La7Qy2XifzH8UQP1mBgU0v0OQETZ/ygHlrs7uY5CwTCNALKCtd4QtD01tdcnil+wS1e7zUd+lk2fc8/H6fupLPQy1x4SFU6GT4yApQKp9chBiFlQoSw3tO+fL1tlCQjfq4EemaI9NkxL3NrpfsBGWo6O9eVZ9MJnyTbpSxEfd2gLTDXt2tDDB/Bs0tj+ArqUuNABu8n3TxYwPKtClYuE5GCAzAP7EdL72LqaNgVKmQKDo/PFG5m1Z9dsvHJerI83qYB88o/0lzFIJuvRsNDPj08DAfAnOJ2z1sAhLumNNJ+NA+8sR8cEq8L1Ox1ck7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W0oUQ6jSxv5Smkcr89ImAj4PyISzroBMV+7ODF1K/JQ=;
+ b=PSGTsf6NmxthSYDiPLWGFoEeUf9CyX+pBiB2fNwl38ycLGsWo0pD3sx1BXhT+6VnrFR4Pm2TjjreEjPibPhFbq053qdAGQrjbsDRpbhOKyw5VCDEHm35Ucc2l8ONfMMKjnX/z11DgOz0i/GAI673rYqr+11kOhZgJviX9kA6AdL+OW0u9N0DN9DdhCGF3bMv+yN9zzFp5wR/qAsxy0dKDFp0QU3ByChz9B2V49k7mHEiLp6xnKj2aHvrTHGpP9iSGda7hZkt3AoPkyC43RvzV2oGTpZvEWznGi6ZFY4kbJ5eUUXJuN+aB80SExHUySa4zc/3d734/szRIPRIM7XydQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W0oUQ6jSxv5Smkcr89ImAj4PyISzroBMV+7ODF1K/JQ=;
+ b=kPcm6A8Nnr6yyKcHXXFgUi5blTgrAddy9jwPdjBrR0zNPuKA6jFPIAu5w2ihhJXFaXs5O8k3tgG19FcgRPfjOGWW3scdWvANH2AeABFQuubwauvJJUgE8u5xkuwBuNAxwpqTMKA6UHzloVk/NDIykq37CZIHaRe34xLuEfDJ5G4=
+Received: from DB8PR04MB6715.eurprd04.prod.outlook.com (20.179.251.14) by
+ DB8PR04MB6489.eurprd04.prod.outlook.com (20.179.249.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.14; Wed, 14 Aug 2019 14:58:47 +0000
+Received: from DB8PR04MB6715.eurprd04.prod.outlook.com
+ ([fe80::b0ab:d127:ca27:e1fa]) by DB8PR04MB6715.eurprd04.prod.outlook.com
+ ([fe80::b0ab:d127:ca27:e1fa%7]) with mapi id 15.20.2157.022; Wed, 14 Aug 2019
+ 14:58:47 +0000
+From:   Robert Chiras <robert.chiras@nxp.com>
+To:     "daniel@fooishbar.org" <daniel@fooishbar.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>, "marex@denx.de" <marex@denx.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Subject: Re: [EXT] Re: [PATCH v2 06/15] drm/mxsfb: Update mxsfb with
+ additional pixel formats
+Thread-Topic: [EXT] Re: [PATCH v2 06/15] drm/mxsfb: Update mxsfb with
+ additional pixel formats
+Thread-Index: AQHVUo3kZqU7u4W/l0qkPdsCk56cbab6hi0AgAA2QgA=
+Date:   Wed, 14 Aug 2019 14:58:47 +0000
+Message-ID: <1565794726.3209.77.camel@nxp.com>
+References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
+         <1565779731-1300-7-git-send-email-robert.chiras@nxp.com>
+         <CAPj87rMFG=RGmfVnawbE7qX4zU7vdYxLJB__K4E3B8jcJ764KQ@mail.gmail.com>
+In-Reply-To: <CAPj87rMFG=RGmfVnawbE7qX4zU7vdYxLJB__K4E3B8jcJ764KQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=robert.chiras@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 34c1c0e8-ce11-42ac-a5fe-08d720c7e8d0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB6489;
+x-ms-traffictypediagnostic: DB8PR04MB6489:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB6489E913B5B544222D0BEC38E3AD0@DB8PR04MB6489.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 01294F875B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(366004)(376002)(39860400002)(189003)(199004)(256004)(7736002)(4326008)(103116003)(102836004)(11346002)(66066001)(186003)(476003)(44832011)(446003)(2616005)(6506007)(8676002)(25786009)(14454004)(26005)(6116002)(486006)(76176011)(3846002)(2501003)(81156014)(99286004)(6512007)(478600001)(81166006)(6486002)(71200400001)(1730700003)(5660300002)(50226002)(66476007)(316002)(2906002)(64756008)(7416002)(54906003)(71190400001)(53936002)(2351001)(5640700003)(86362001)(6436002)(8936002)(36756003)(66446008)(305945005)(66556008)(76116006)(6246003)(91956017)(6916009)(66946007)(229853002)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6489;H:DB8PR04MB6715.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Qw7kpTRYztOyCHaHxJsYlA2K5vbMEc6hjIGFOwPk659FfV9ugoIbkC9E2qZlZd1JScLEsi4Zre81+IUyOhWX6w1OAvH2d+3Q4OTujzS7eM+A2QVOJLsr1YSNENKPCJrLQwRLw5iZSpJEWgi6clHDe2sKfn0PQFSuOhNfNVk+Oh1u6gB7Tlm7B/ux43E2DTi4hhF9DCe+doBpu5PMgBvcg8FpOV88ba5hox1SS8Rm5O4FVoOmArjWlbMUVNfVhTqtBAl62mE3ZRK3zTY8O0+xdJtUze7VZZM4HCxvGcDOlFWm1RKtp+5uTjZfqoHSFgjpUYAVPKSEt0Vcv+EW3GuIKyEjuD0ANs37D5Gqu59gGrPdWLrliyyhbxk6Bh19zk28/V7+wyiO7O+P/h82O0Qz1s11jjGC9LOStxz993rCfwU=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <337ECD9F9D598D4CA82689858D08C84D@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 14 Aug 2019 14:59:13 +0000 (UTC)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34c1c0e8-ce11-42ac-a5fe-08d720c7e8d0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 14:58:47.0954
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bYR6h7AYJ7yI/gGHW590P3ldgejfT7wvflEOD7V9z+VM/eeJbidc14GZ7hk8cWsQ5IeIlf7+fp0tqI23wemzMw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6489
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-9C7C2VeN3jiOYx/dWxTp
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Linus,
-
-Fairly small pull request for -rc3.  I'm out of town the rest of this
-week, so I made sure to clean out as much as possible from patchworks in
-enough time for 0-day to chew through it (Yay! for 0-day being back
-online! :-)).  Jason might send through any emergency stuff that could
-pop up, otherwise I'm back next week.
-
-The only real thing of note is the siw ABI change.  Since we just merged
-siw *this* release, there are no prior kernel releases to maintain
-kernel ABI with.  I told Bernard that if there is anything else about
-the siw ABI he thinks he might want to change before it goes set in
-stone, he should get it in ASAP.  The siw module was around for several
-years outside the kernel tree, and it had to be revamped considerably
-for inclusion upstream, so we are making no attempts to be backward
-compatible with the out of tree version.  Once 5.3 is actually released,
-we will have our baseline ABI to maintain.
-
-Here's the boiler plate:
-
-The following changes since commit e21a712a9685488f5ce80495b37b9fdbe96c230d=
-:
-
-  Linux 5.3-rc3 (2019-08-04 18:40:12 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linu=
-s
-
-for you to fetch changes up to 2c8ccb37b08fe364f02a9914daca474d43151453:
-
-  RDMA/siw: Change CQ flags from 64->32 bits (2019-08-13 12:22:06 -0400)
-
-----------------------------------------------------------------
-Pull request for 5.3-rc3
-
-- Fix a memory registration release flow issue that was causing a
-  WARN_ON (mlx5)
-- If the counters for a port aren't allocated, then we can't do
-  operations on the non-existent counters (core)
-- Check the right variable for error code result (mlx5)
-- Fix a use after free issue (mlx5)
-- Fix an off by one memory leak (siw)
-- Actually return an error code on error (core)
-- Allow siw to be built on 32bit arches (siw, ABI change, but OK since
-  siw was just merged this merge window and there is no prior released
-  kernel to maintain compatibility with and we also updated the
-  rdma-core user space package to match)
-
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-
-----------------------------------------------------------------
-Bernard Metzler (1):
-      RDMA/siw: Change CQ flags from 64->32 bits
-
-Dan Carpenter (3):
-      IB/mlx5: Check the correct variable in error handling code
-      RDMA/siw: Fix a memory leak in siw_init_cpulist()
-      RDMA/core: Fix error code in stat_get_doit_qp()
-
-Mark Zhang (1):
-      RDMA/counter: Prevent QP counter binding if counters unsupported
-
-Yishai Hadas (2):
-      IB/mlx5: Fix implicit MR release flow
-      IB/mlx5: Fix use-after-free error while accessing ev_file pointer
-
- drivers/infiniband/core/counters.c    |  6 ++++++
- drivers/infiniband/core/nldev.c       |  8 ++++++--
- drivers/infiniband/core/umem_odp.c    |  4 ----
- drivers/infiniband/hw/mlx5/devx.c     | 11 ++++++-----
- drivers/infiniband/hw/mlx5/odp.c      | 24 +++++++++---------------
- drivers/infiniband/sw/siw/Kconfig     |  2 +-
- drivers/infiniband/sw/siw/siw.h       |  2 +-
- drivers/infiniband/sw/siw/siw_main.c  |  4 +---
- drivers/infiniband/sw/siw/siw_qp.c    | 14 ++++++++++----
- drivers/infiniband/sw/siw/siw_verbs.c | 16 +++++++++++-----
- include/uapi/rdma/siw-abi.h           |  3 ++-
- 11 files changed, 53 insertions(+), 41 deletions(-)
-
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
-
---=-9C7C2VeN3jiOYx/dWxTp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1UIbsACgkQuCajMw5X
-L93Waw/7BBwYtlEzdT4fP+3PmeLNrqQ6jz+2uM0TMsBIR8ggOvXubpfnTv7+jqta
-scsZI1i4ClqNfPo397+aQyj/GHTJpieb+5EoUYg1aEYyOoLd0OElSGVKGbbQZsjr
-UZYZ//7iuKICpQ1H9bhWLWAA4kxwiYRj+8g9jFXplLwyyy/V571Ua5QCN6Noszhe
-pSei/VmzKbQVd0ZfUF4NmgntAzrOEVanFQAmZyAhi8cIWFK/9N/mOU6QtAewZ+Hw
-VRHyVx05Mycp5j0Z2B7HDSJFtGAxr8HXxL9RLwsl6PIG+akFo/PrCVtMkzT8Kz1z
-Kk29LJSvWPoh2lEVftxYRKqLUOBGQRl7YgxSsv1S64Yz7ccLIAx3khxb11Ss0BsK
-42m4Wb9NulY9ObtVnkz2XUaSQ6EDMoyXKrfZHI61HZN58LzY3CoDoy6TuugEdTHo
-q0ttcalAd/w8aHurhBzQVJ35Quv14akpgpUnUb+TlxeGAOLz8e7bCNfSvkQfb6+w
-kycEUXgNsOX0zbV/KkCU2r2a7jQuuI5oIT/+msCF3lJmdx7FkNssZNU5b8jJY70l
-ZlEuMTvmJkvPsGyIsR/JiOd/M1MzlpgAURp58Wa/Qenq4jl9vCje9Ud5fuhnesxK
-pjeX2DV+Xz/WOBuI1FOKrWp6f15+5tZCx01ycquX0/vV8tn2cto=
-=4r9B
------END PGP SIGNATURE-----
-
---=-9C7C2VeN3jiOYx/dWxTp--
-
+SGkgRGFuaWVsLA0KDQpPbiBNaSwgMjAxOS0wOC0xNCBhdCAxMjo0NCArMDEwMCwgRGFuaWVsIFN0
+b25lIHdyb3RlOg0KPiBIaSBSb2JlcnQsDQo+IA0KPiBPbiBXZWQsIDE0IEF1ZyAyMDE5IGF0IDEx
+OjQ5LCBSb2JlcnQgQ2hpcmFzIDxyb2JlcnQuY2hpcmFzQG54cC5jb20+DQo+IHdyb3RlOg0KPiA+
+IA0KPiA+ICvCoMKgwqDCoMKgwqDCoGNhc2UgRFJNX0ZPUk1BVF9CR1I1NjU6IC8qIEJHMTYgKi8N
+Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKG14c2ZiLT5kZXZkYXRhLT5p
+cHZlcnNpb24gPCA0KQ0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgZ290byBlcnI7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHdy
+aXRlbChDVFJMMl9PRERfTElORV9QQVRURVJOKENUUkwyX0xJTkVfUEFUVEVSTl9CRw0KPiA+IFIp
+IHwNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoENU
+UkwyX0VWRU5fTElORV9QQVRURVJOKENUUkwyX0xJTkVfUEFUVEVSTl8NCj4gPiBCR1IpLA0KPiA+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbXhzZmItPmJh
+c2UgKyBMQ0RDX1Y0X0NUUkwyICsgUkVHX1NFVCk7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoC8qIEZhbGwgdGhyb3VnaCAqLw0KPiA+ICvCoMKgwqDCoMKgwqDCoGNhc2UgRFJN
+X0ZPUk1BVF9SR0I1NjU6IC8qIFJHMTYgKi8NCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgY3RybCB8PSBDVFJMX1NFVF9XT1JEX0xFTkdUSCgwKTsNCj4gPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgY3RybCAmPSB+Q1RSTF9ERjE2Ow0KPiA+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqBjdHJsMSB8PSBDVFJMMV9TRVRfQllURV9QQUNLQUdJTkcoMHhmKTsN
+Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYnJlYWs7DQo+IEZvciBub24tQkdS
+IGZvcm1hdHMsIGRvIHlvdSBuZWVkIHRvIHdyaXRlIFJHQiBsaW5lLXBhdHRlcm4gYmFjayB0bw0K
+PiB0aGUNCj4gQ1RSTDIgcmVnaXN0ZXI/IE90aGVyd2lzZSwgaWYgeW91IHN0YXJ0IHdpdGggQkdS
+NTY1IHRoZW4gc3dpdGNoIGJhY2sNCj4gdG8gUkdCNTY1LCBwcmVzdW1hYmx5IENUUkwyIHdvdWxk
+IHN0aWxsIGJlIHByb2dyYW1tZWQgZm9yIEJHUiBzbyB5b3UNCj4gd291bGQgZGlzcGxheSBpbnZl
+cnRlZCBjaGFubmVscy4NClRoZSBMSU5FX1BBVFRFUk4gZnJvbcKgTENEQ19WNF9DVFJMMiByZWdp
+c3RlciBpcyBjbGVhcmVkIGFib3ZlLCB3aXRoDQp0aGlzIGNvZGU6DQorwqDCoMKgwqDCoMKgwqBp
+ZiAobXhzZmItPmRldmRhdGEtPmlwdmVyc2lvbiA+PSA0KQ0KK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoHdyaXRlbChDVFJMMl9PRERfTElORV9QQVRURVJOKENUUkwyX0xJTkVfUEFUVEVS
+Tl9DTFIpIHwNCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoENU
+UkwyX0VWRU5fTElORV9QQVRURVJOKENUUkwyX0xJTkVfUEFUVEVSTl9DTFIpLA0KK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbXhzZmItPmJhc2UgKyBMQ0RDX1Y0
+X0NUUkwyICsgUkVHX0NMUik7DQo+IA0KPiBTYW1lIGdvZXMgZm9yIGFsbCB0aGUgb3RoZXIgQkdS
+L1JHQiBmb3JtYXQgcGFpcnMgYmVsb3cuDQo+IA0KPiBDaGVlcnMsDQo+IERhbmllbA0KDQpUaGFu
+a3MsDQpSb2JlcnQ=
