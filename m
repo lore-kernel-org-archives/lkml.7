@@ -1,174 +1,99 @@
-Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6481CC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECE1C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3759320842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:54:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C/hffB2/"
+	by mail.kernel.org (Postfix) with ESMTP id BDB5020843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfHMXyo (ORCPT
+        id S1726755AbfHNAHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 19:54:44 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52144 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbfHMXyn (ORCPT
+        Tue, 13 Aug 2019 20:07:19 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:35470 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726102AbfHNAHT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 19:54:43 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DNs0ej159246;
-        Tue, 13 Aug 2019 23:54:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=8uoxkmua1OS2X8xhxw5mu7ScJfwZNdN5PSdmlkbyv8g=;
- b=C/hffB2/CGhrbY+ybbD2RdOJshB9uPQiYKhfH3UFDwszzYTQ66/GGB6XygmPp4PIwbVx
- bwHxOm4r/8KGxtRF8fItyF+Jy3nnc3Y29khBpxZlHY1GpfBLlQBOg85UTcwv1sHj+qSx
- azxMUtwbXSZWoJY/+gqDW5xJVuA04mg/gY2bOqdVedOjwV3swFgnyqGx4q37R476ZRTA
- MSiDd0TjLE39DhY4aQFKpsO988HPK2Nunhrx13KDNSSdYCLR5847XoABJDa4mLMY4atA
- 9kN4JZoJ6NtmGzbYtVv7dn79wantwW0ksPQalJ4VxXYiUfkmTum5rtCNjMt7Ula7zTkT lw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2u9nbthcfy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 23:54:37 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DNqqOF165505;
-        Tue, 13 Aug 2019 23:54:36 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2ubwrgk88d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 23:54:36 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7DNsZpC025046;
-        Tue, 13 Aug 2019 23:54:35 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 13 Aug 2019 16:54:35 -0700
-Subject: Re: [RFC PATCH v2 4/5] hugetlb_cgroup: Add accounting for shared
- mappings
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
-        gthelen@google.com, akpm@linux-foundation.org,
-        khalid.aziz@oracle.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-References: <20190808231340.53601-1-almasrymina@google.com>
- <20190808231340.53601-5-almasrymina@google.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <47cfc50d-bea3-0247-247e-888d2942f134@oracle.com>
-Date:   Tue, 13 Aug 2019 16:54:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 13 Aug 2019 20:07:19 -0400
+Received: from callcc.thunk.org (guestnat-104-133-9-109.corp.google.com [104.133.9.109] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x7E06OWr006647
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Aug 2019 20:06:26 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 2267D4218EF; Tue, 13 Aug 2019 20:06:23 -0400 (EDT)
+Date:   Tue, 13 Aug 2019 20:06:23 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Karel Zak <kzak@redhat.com>,
+        Lennart Poettering <lennart@poettering.net>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: New kernel interface for sys_tz and timewarp?
+Message-ID: <20190814000622.GB20365@mit.edu>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Karel Zak <kzak@redhat.com>,
+        Lennart Poettering <lennart@poettering.net>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
+ <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190808231340.53601-5-almasrymina@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908130227
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908130227
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/8/19 4:13 PM, Mina Almasry wrote:
-> For shared mappings, the pointer to the hugetlb_cgroup to uncharge lives
-> in the resv_map entries, in file_region->reservation_counter.
+On Tue, Aug 13, 2019 at 10:30:34AM -0700, Linus Torvalds wrote:
 > 
-> When a file_region entry is added to the resv_map via region_add, we
-> also charge the appropriate hugetlb_cgroup and put the pointer to that
-> in file_region->reservation_counter. This is slightly delicate since we
-> need to not modify the resv_map until we know that charging the
-> reservation has succeeded. If charging doesn't succeed, we report the
-> error to the caller, so that the kernel fails the reservation.
+> I suspect the only actual _valid_ use in the kernel for a time zone
+> setting is likely for RTC clock setting, but even that isn't really
+> "global", as much as "per RTC".
 
-I wish we did not need to modify these region_() routines as they are
-already difficult to understand.  However, I see no other way with the
-desired semantics.
+As I recall (and I may or may not have been original for the original
+sys_tz; it was many years ago, and my memories of 1992 are a bit
+fuzzy) the only reason why we added it was because x86 systems that
+were dual-booting with Windows had a RTC which ticked localtime, and
+originally, the system time was fetched from the RTC in early boot,
+and then when the timezone was set, the time would be warped so it
+would be correct.
 
-> On region_del, which is when the hugetlb memory is unreserved, we delete
-> the file_region entry in the resv_map, but also uncharge the
-> file_region->reservation_counter.
-> 
-> ---
->  mm/hugetlb.c | 208 +++++++++++++++++++++++++++++++++++++++++----------
->  1 file changed, 170 insertions(+), 38 deletions(-)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 235996aef6618..d76e3137110ab 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -242,8 +242,72 @@ struct file_region {
->  	struct list_head link;
->  	long from;
->  	long to;
-> +#ifdef CONFIG_CGROUP_HUGETLB
-> +	/*
-> +	 * On shared mappings, each reserved region appears as a struct
-> +	 * file_region in resv_map. These fields hold the info needed to
-> +	 * uncharge each reservation.
-> +	 */
-> +	struct page_counter *reservation_counter;
-> +	unsigned long pages_per_hpage;
-> +#endif
->  };
-> 
-> +/* Must be called with resv->lock held. Calling this with dry_run == true will
-> + * count the number of pages added but will not modify the linked list.
-> + */
-> +static long consume_regions_we_overlap_with(struct file_region *rg,
-> +		struct list_head *head, long f, long *t,
-> +		struct hugetlb_cgroup *h_cg,
-> +		struct hstate *h,
-> +		bool dry_run)
-> +{
-> +	long add = 0;
-> +	struct file_region *trg = NULL, *nrg = NULL;
-> +
-> +	/* Consume any regions we now overlap with. */
-> +	nrg = rg;
-> +	list_for_each_entry_safe(rg, trg, rg->link.prev, link) {
-> +		if (&rg->link == head)
-> +			break;
-> +		if (rg->from > *t)
-> +			break;
-> +
-> +		/* If this area reaches higher then extend our area to
-> +		 * include it completely.  If this is not the first area
-> +		 * which we intend to reuse, free it.
-> +		 */
-> +		if (rg->to > *t)
-> +			*t = rg->to;
-> +		if (rg != nrg) {
-> +			/* Decrement return value by the deleted range.
-> +			 * Another range will span this area so that by
-> +			 * end of routine add will be >= zero
-> +			 */
-> +			add -= (rg->to - rg->from);
-> +			if (!dry_run) {
-> +				list_del(&rg->link);
-> +				kfree(rg);
+Trying to use this for anything else is probably a bad idea, and in a
+world where we can have initrd's and reading the RTC gets done by
+userspace as opposed to kernel, it probably doesn't make any sence to
+keep it.
 
-Is it possible that the region struct we are deleting pointed to
-a reservation_counter?  Perhaps even for another cgroup?
-Just concerned with the way regions are coalesced that we may be
-deleting counters.
+Cheers,
 
--- 
-Mike Kravetz
+					- Ted
