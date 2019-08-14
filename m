@@ -2,348 +2,92 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E01C5C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43720C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3FC320651
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 090582173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:56:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565816172;
+	bh=/47vrJUcPnKmlW6QGCuX38MeKmclx+u9kcMLBRaqbs4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xT3vTrrhHqCf8D5DWobsrc4wl0HAiIspa6FGNxxFifR0xD9kJk62ZUWb13RL6wzW2
+	 yRIYnZHindCr8mXhtmcfWOmzLxmbLTf1M3hQU7pr9ZHP2ucsIv7+GuO9o4hoJb5Us6
+	 xvMNu5IyZgmGqOWyccnSEG2EzeWW9Rz/dnQ28x/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbfHNU4G (ORCPT
+        id S1730007AbfHNU4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 16:56:06 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:60957 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728443AbfHNU4G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 16:56:06 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M4K2r-1hyHIH0iDh-000MQ2; Wed, 14 Aug 2019 22:56:00 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-ppp@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH v5 12/18] compat_ioctl: unify copy-in of ppp filters
-Date:   Wed, 14 Aug 2019 22:54:47 +0200
-Message-Id: <20190814205521.122180-3-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190814204259.120942-1-arnd@arndb.de>
-References: <20190814204259.120942-1-arnd@arndb.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:gweRwe3qoOfci1cVCHomKaMjKCeIGffZck0PcdeiHARYsh64WGz
- upSLT8xxKvAMj7GeXMKh8qZRYj3HKzPwEtlBatIM5V0lJdkWWu++ZDiIQiqWKMKxQF528up
- diRaGWM7UeH9O7Ovc54jU3fY41LJbxW6jks8NGuvhbepvO3gMuTbwycWxAstgnQkLEWs5IL
- 2QFLdzKY58dgL7NzJLu7g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qbgXzQj+UpM=:nbb7CErS1GX4es59ymPfuC
- hKqDGMbDByRk6H8a/qM4epEHrtxYj3vUP2bIvviABQZXMrheOHOLMpQUQ/aZf1PJlsCN6pNxs
- yAq3JDSkqGcg5g8UGWYygW2wlZhbKM9LgyCZf3qAdeLbP405B+fuFGO+ocrwXc/DC4KD9REfm
- fXx6vyK7H3ilGKG/00ErzYhLgSLge+3yH/9RDw8IQNfbq1JH4M/BnrlbQdVgoN5NILd9oITbC
- 2yTXyRgnUi8LrA2uuKURV0P2t1yImAiTMZPqVUywP9V2CZYJbQX3wGmbuEkW56BYzcL8140vj
- j0nhZ2kTvZo2ADBcJ+50wF0i9mdvqNmFON2gWzG9IJCmXqsQdOf9TsT63S5AMits+gQ0FVGg/
- mV/va9xv0ZtOHfB0EeyCpEkBiCyKPK961+U0xcp5TRiRrxapcVm0a6si6xnZ2+HMfpdcxQcJK
- 4/wdQPRTBy9ec7rXvl4f/Ui9240L463MhLw3sigcLr91FCmJqe8Wpv16UgaGODTfPNNjmZomX
- SHIzG8Yujp2ClNw0VVSe6mlla++Kc0Si5aUyD8vkFna56GaZXDdBrGlzUsNKd5nwkjf3eENRY
- YSR4LwMq9suARgyqclDMiCgUaV1nYe84vyCZ9V/f6TfR5z+Jbz6h90j7M6OUnLJW++wNUsYHs
- SV0m709ZFcB8JkvIvDCiG6WcG5wNRAqnlcA9dblULrNtwK0bEub5dQN+I4fwmdMPMkQU4WZ3K
- p0pOKIa2dCzMyTozjBZZy+cHBQyWhgA1+N4QuA==
+        Wed, 14 Aug 2019 16:56:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37990 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728443AbfHNU4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 16:56:09 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFD9E20651;
+        Wed, 14 Aug 2019 20:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565816169;
+        bh=/47vrJUcPnKmlW6QGCuX38MeKmclx+u9kcMLBRaqbs4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pi6KnQedP5wNrNC9WqJkX3iCMipQiegirC5UJ923ryfPZa6rrSPNcrL5FvjWNzJXe
+         uEFWtt5gQsv862Iv7+Ak1EKlQ+6njDmiCuKvxWLGmoM9pJ6Yd4U9QopjJbdgxB9+VC
+         biiBIGKf53FEg32rV49NF8iWU1PTqPGbKbe77Sa0=
+Date:   Wed, 14 Aug 2019 13:56:08 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Arun KS <arunks@codeaurora.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2 4/5] mm/memory_hotplug: Make sure the pfn is aligned
+ to the order when onlining
+Message-Id: <20190814135608.a449ca5a75cd700e077a8d23@linux-foundation.org>
+In-Reply-To: <20190814154109.3448-5-david@redhat.com>
+References: <20190814154109.3448-1-david@redhat.com>
+        <20190814154109.3448-5-david@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Wed, 14 Aug 2019 17:41:08 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-Now that isdn4linux is gone, the is only one implementation of PPPIOCSPASS
-and PPPIOCSACTIVE in ppp_generic.c, so this is where the compat_ioctl
-support should be implemented.
+> Commit a9cd410a3d29 ("mm/page_alloc.c: memory hotplug: free pages as higher
+> order") assumed that any PFN we get via memory resources is aligned to
+> to MAX_ORDER - 1, I am not convinced that is always true. Let's play safe,
+> check the alignment and fallback to single pages.
+> 
+> ...
+>
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -646,6 +646,9 @@ static int online_pages_range(unsigned long start_pfn, unsigned long nr_pages,
+>  	 */
+>  	for (pfn = start_pfn; pfn < end_pfn; pfn += 1ul << order) {
+>  		order = min(MAX_ORDER - 1, get_order(PFN_PHYS(end_pfn - pfn)));
+> +		/* __free_pages_core() wants pfns to be aligned to the order */
+> +		if (unlikely(!IS_ALIGNED(pfn, 1ul << order)))
+> +			order = 0;
+>  		(*online_page_callback)(pfn_to_page(pfn), order);
+>  	}
 
-The two commands are implemented in very similar ways, so introduce
-new helpers to allow sharing between the two and between native and
-compat mode.
+We aren't sure if this occurs, but if it does, we silently handle it.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-[arnd: rebased, and added changelog text]
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/ppp/ppp_generic.c | 169 ++++++++++++++++++++++------------
- fs/compat_ioctl.c             |  37 --------
- 2 files changed, 108 insertions(+), 98 deletions(-)
+It seems a reasonable defensive thing to do, but should we add a
+WARN_ON_ONCE() so that we get to find out about it?  If we get such a
+report then we can remove the WARN_ON_ONCE() and add an illuminating
+comment.
 
-diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
-index a30e41a56085..e3f207767589 100644
---- a/drivers/net/ppp/ppp_generic.c
-+++ b/drivers/net/ppp/ppp_generic.c
-@@ -554,29 +554,58 @@ static __poll_t ppp_poll(struct file *file, poll_table *wait)
- }
- 
- #ifdef CONFIG_PPP_FILTER
--static int get_filter(void __user *arg, struct sock_filter **p)
-+static struct bpf_prog *get_filter(struct sock_fprog *uprog)
-+{
-+	struct sock_fprog_kern fprog;
-+	struct bpf_prog *res = NULL;
-+	int err;
-+
-+	if (!uprog->len)
-+		return NULL;
-+
-+	/* uprog->len is unsigned short, so no overflow here */
-+	fprog.len = uprog->len * sizeof(struct sock_filter);
-+	fprog.filter = memdup_user(uprog->filter, fprog.len);
-+	if (IS_ERR(fprog.filter))
-+		return ERR_CAST(fprog.filter);
-+
-+	err = bpf_prog_create(&res, &fprog);
-+	kfree(fprog.filter);
-+
-+	return err ? ERR_PTR(err) : res;
-+}
-+
-+static struct bpf_prog *ppp_get_filter(struct sock_fprog __user *p)
- {
- 	struct sock_fprog uprog;
--	struct sock_filter *code = NULL;
--	int len;
- 
--	if (copy_from_user(&uprog, arg, sizeof(uprog)))
--		return -EFAULT;
-+	if (copy_from_user(&uprog, p, sizeof(struct sock_fprog)))
-+		return ERR_PTR(-EFAULT);
-+	return get_filter(&uprog);
-+}
- 
--	if (!uprog.len) {
--		*p = NULL;
--		return 0;
--	}
-+#ifdef CONFIG_COMPAT
-+struct sock_fprog32 {
-+	unsigned short len;
-+	compat_caddr_t filter;
-+};
- 
--	len = uprog.len * sizeof(struct sock_filter);
--	code = memdup_user(uprog.filter, len);
--	if (IS_ERR(code))
--		return PTR_ERR(code);
-+#define PPPIOCSPASS32		_IOW('t', 71, struct sock_fprog32)
-+#define PPPIOCSACTIVE32		_IOW('t', 70, struct sock_fprog32)
- 
--	*p = code;
--	return uprog.len;
-+static struct bpf_prog *compat_ppp_get_filter(struct sock_fprog32 __user *p)
-+{
-+	struct sock_fprog32 uprog32;
-+	struct sock_fprog uprog;
-+
-+	if (copy_from_user(&uprog32, p, sizeof(struct sock_fprog32)))
-+		return ERR_PTR(-EFAULT);
-+	uprog.len = uprog32.len;
-+	uprog.filter = compat_ptr(uprog32.filter);
-+	return get_filter(&uprog);
- }
--#endif /* CONFIG_PPP_FILTER */
-+#endif
-+#endif
- 
- static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
-@@ -753,55 +782,25 @@ static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 
- #ifdef CONFIG_PPP_FILTER
- 	case PPPIOCSPASS:
--	{
--		struct sock_filter *code;
--
--		err = get_filter(argp, &code);
--		if (err >= 0) {
--			struct bpf_prog *pass_filter = NULL;
--			struct sock_fprog_kern fprog = {
--				.len = err,
--				.filter = code,
--			};
--
--			err = 0;
--			if (fprog.filter)
--				err = bpf_prog_create(&pass_filter, &fprog);
--			if (!err) {
--				ppp_lock(ppp);
--				if (ppp->pass_filter)
--					bpf_prog_destroy(ppp->pass_filter);
--				ppp->pass_filter = pass_filter;
--				ppp_unlock(ppp);
--			}
--			kfree(code);
--		}
--		break;
--	}
- 	case PPPIOCSACTIVE:
- 	{
--		struct sock_filter *code;
-+		struct bpf_prog *filter = ppp_get_filter(argp);
-+		struct bpf_prog **which;
- 
--		err = get_filter(argp, &code);
--		if (err >= 0) {
--			struct bpf_prog *active_filter = NULL;
--			struct sock_fprog_kern fprog = {
--				.len = err,
--				.filter = code,
--			};
--
--			err = 0;
--			if (fprog.filter)
--				err = bpf_prog_create(&active_filter, &fprog);
--			if (!err) {
--				ppp_lock(ppp);
--				if (ppp->active_filter)
--					bpf_prog_destroy(ppp->active_filter);
--				ppp->active_filter = active_filter;
--				ppp_unlock(ppp);
--			}
--			kfree(code);
-+		if (IS_ERR(filter)) {
-+			err = PTR_ERR(filter);
-+			break;
- 		}
-+		if (cmd == PPPIOCSPASS)
-+			which = &ppp->pass_filter;
-+		else
-+			which = &ppp->active_filter;
-+		ppp_lock(ppp);
-+		if (*which)
-+			bpf_prog_destroy(*which);
-+		*which = filter;
-+		ppp_unlock(ppp);
-+		err = 0;
- 		break;
- 	}
- #endif /* CONFIG_PPP_FILTER */
-@@ -827,6 +826,51 @@ static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	return err;
- }
- 
-+#ifdef CONFIG_COMPAT
-+static long ppp_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	struct ppp_file *pf;
-+	int err = -ENOIOCTLCMD;
-+	void __user *argp = (void __user *)arg;
-+
-+	mutex_lock(&ppp_mutex);
-+
-+	pf = file->private_data;
-+	if (pf && pf->kind == INTERFACE) {
-+		struct ppp *ppp = PF_TO_PPP(pf);
-+		switch (cmd) {
-+#ifdef CONFIG_PPP_FILTER
-+		case PPPIOCSPASS32:
-+		case PPPIOCSACTIVE32:
-+		{
-+			struct bpf_prog *filter = compat_ppp_get_filter(argp);
-+			struct bpf_prog **which;
-+
-+			if (IS_ERR(filter)) {
-+				err = PTR_ERR(filter);
-+				break;
-+			}
-+			if (cmd == PPPIOCSPASS32)
-+				which = &ppp->pass_filter;
-+			else
-+				which = &ppp->active_filter;
-+			ppp_lock(ppp);
-+			if (*which)
-+				bpf_prog_destroy(*which);
-+			*which = filter;
-+			ppp_unlock(ppp);
-+			err = 0;
-+			break;
-+		}
-+#endif /* CONFIG_PPP_FILTER */
-+		}
-+	}
-+	mutex_unlock(&ppp_mutex);
-+
-+	return err;
-+}
-+#endif
-+
- static int ppp_unattached_ioctl(struct net *net, struct ppp_file *pf,
- 			struct file *file, unsigned int cmd, unsigned long arg)
- {
-@@ -895,6 +939,9 @@ static const struct file_operations ppp_device_fops = {
- 	.write		= ppp_write,
- 	.poll		= ppp_poll,
- 	.unlocked_ioctl	= ppp_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl	= ppp_compat_ioctl,
-+#endif
- 	.open		= ppp_open,
- 	.release	= ppp_release,
- 	.llseek		= noop_llseek,
-diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index d537888f3660..eda41b2537f0 100644
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -99,40 +99,6 @@ static int sg_grt_trans(struct file *file,
- }
- #endif /* CONFIG_BLOCK */
- 
--struct sock_fprog32 {
--	unsigned short	len;
--	compat_caddr_t	filter;
--};
--
--#define PPPIOCSPASS32	_IOW('t', 71, struct sock_fprog32)
--#define PPPIOCSACTIVE32	_IOW('t', 70, struct sock_fprog32)
--
--static int ppp_sock_fprog_ioctl_trans(struct file *file,
--		unsigned int cmd, struct sock_fprog32 __user *u_fprog32)
--{
--	struct sock_fprog __user *u_fprog64 = compat_alloc_user_space(sizeof(struct sock_fprog));
--	void __user *fptr64;
--	u32 fptr32;
--	u16 flen;
--
--	if (get_user(flen, &u_fprog32->len) ||
--	    get_user(fptr32, &u_fprog32->filter))
--		return -EFAULT;
--
--	fptr64 = compat_ptr(fptr32);
--
--	if (put_user(flen, &u_fprog64->len) ||
--	    put_user(fptr64, &u_fprog64->filter))
--		return -EFAULT;
--
--	if (cmd == PPPIOCSPASS32)
--		cmd = PPPIOCSPASS;
--	else
--		cmd = PPPIOCSACTIVE;
--
--	return do_ioctl(file, cmd, (unsigned long) u_fprog64);
--}
--
- struct ppp_option_data32 {
- 	compat_caddr_t	ptr;
- 	u32			length;
-@@ -285,9 +251,6 @@ static long do_ioctl_trans(unsigned int cmd,
- 		return ppp_gidle(file, cmd, argp);
- 	case PPPIOCSCOMPRESS32:
- 		return ppp_scompress(file, cmd, argp);
--	case PPPIOCSPASS32:
--	case PPPIOCSACTIVE32:
--		return ppp_sock_fprog_ioctl_trans(file, cmd, argp);
- #ifdef CONFIG_BLOCK
- 	case SG_GET_REQUEST_TABLE:
- 		return sg_grt_trans(file, cmd, argp);
--- 
-2.20.0
 
