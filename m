@@ -2,193 +2,133 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E07C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1D3C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC7B20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:08:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="db/iiBZE"
+	by mail.kernel.org (Postfix) with ESMTP id 3EFBA20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565773743;
+	bh=nm3AZYQqg9bViUcvgRl1pV30pLA1C+5Glu61dF/KaxE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qNpUTa4W0FYFOyR8krOyJoJ4VZehS+iDyfNvA9JSsV0GN5SiMR68vVxhcjSiUKATb
+	 usZ49xYWyQnWdRE69UtIFBOPl1Odwf0JfrGcd+/Oz4T6hE85POfOc/l2y+fHvMq51R
+	 nYvLmjxWxPMtdB8cmBUwgPtX2WRnyjDsehHbpxFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbfHNJIQ (ORCPT
+        id S1726677AbfHNJJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:08:16 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:20196 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725800AbfHNJIP (ORCPT
+        Wed, 14 Aug 2019 05:09:02 -0400
+Received: from mail-wr1-f98.google.com ([209.85.221.98]:43922 "EHLO
+        mail-wr1-f98.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfHNJJB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:08:15 -0400
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7E93K5W013090;
-        Wed, 14 Aug 2019 05:08:04 -0400
-Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2057.outbound.protection.outlook.com [104.47.37.57])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2ubtf8uddj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 14 Aug 2019 05:08:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J1N+HmwYrHfJ8DFhab+hNKm7GUbD4/d16kPeD1rY6JtYtvOhlHNLV13sHCy04hIyhIbstSp43h0Lmcd9sxV75CtHyA3yF/0AhpHoR8k1JMpG0DOLYEu0V0CHPjqeYd7OBJlP79LTAe+2m2GMoQeUkkOE0FK9NDIGoIu5JdSv43ZNTwWhOIht6DeuZdwn5apNN64aJfDdTPGt3rCtulJFOQRb+LrFrZfGEqtI1JzVin0Ryxj7y2bYd/wmd9hqXUyjfzH1CfUmgaI6Sq/piCm49py8W84Zdfg6VyVspb21terKTXarPGd19y+IV4MA9w1lBP/AdkAQJaONDK3/10b31g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RtZTN/t1ucaspf0aM2E7Y7Wz8oNWMobuMKyNfWpOhLs=;
- b=hEgk5NXL2cEM4J3KuRTI6Vd02ycU64V+yASuaJrcswlR2kMCzY7IKcuY2z7ckvimBu+XPX59pGBeOp1lwm9TYMc4jCRN3hOrBBmXNXim6r0b1NSxvpMp2BaAcg3Ep+VvnEQXPl0jTsfyPNVHQJ/I2eBg1uMQWWT4qMDW+tMExTj/KgL2itb34nbCW6ZxhFeWtUUjEYOg48NeuM/wCou6vPaSvcGBX00NLJ66VuTwmNa7vFg1N2psVEaNMcS9DrCs+z15G76GcriKOPY0lF4gJ/COQIwN0aOa4fiHLMTccp+npsquLc7LYJ2SHwvbB8oRFcnMp+Y8w/6zyD42geZVZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RtZTN/t1ucaspf0aM2E7Y7Wz8oNWMobuMKyNfWpOhLs=;
- b=db/iiBZEhvPfCYbnVbENpMRFp2/qwxy8kX1+lbdYsV2ECyVpaWPaoTuAUQif5Us5zpX7r26wzRDFLotQBdWM+D4yV0j+qY05Wg7nkjODirRthIldJqMifcBUCG5Vj+TgxA1WWz/doCMAF7C3wURH8S0+6g69N+sfdV557xMP+Mo=
-Received: from BN6PR03CA0087.namprd03.prod.outlook.com (2603:10b6:405:6f::25)
- by SN6PR03MB4112.namprd03.prod.outlook.com (2603:10b6:805:be::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.23; Wed, 14 Aug
- 2019 09:08:02 +0000
-Received: from BL2NAM02FT014.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::205) by BN6PR03CA0087.outlook.office365.com
- (2603:10b6:405:6f::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2157.14 via Frontend
- Transport; Wed, 14 Aug 2019 09:08:02 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- BL2NAM02FT014.mail.protection.outlook.com (10.152.76.154) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2178.16
- via Frontend Transport; Wed, 14 Aug 2019 09:08:02 +0000
-Received: from NWD2HUBCAS8.ad.analog.com (nwd2hubcas8.ad.analog.com [10.64.69.108])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x7E981HB011016
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Wed, 14 Aug 2019 02:08:02 -0700
-Received: from NWD2MBX7.ad.analog.com ([fe80::190e:f9c1:9a22:9663]) by
- NWD2HUBCAS8.ad.analog.com ([fe80::90a0:b93e:53c6:afee%12]) with mapi id
- 14.03.0415.000; Wed, 14 Aug 2019 05:08:01 -0400
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "andrew@lunn.ch" <andrew@lunn.ch>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 13/14] net: phy: adin: add ethtool get_stats support
-Thread-Topic: [PATCH v4 13/14] net: phy: adin: add ethtool get_stats support
-Thread-Index: AQHVUQB9ToIHSOhtHEuH64MPKOTzBKb31s2AgAD/0ACAAcn1AA==
-Date:   Wed, 14 Aug 2019 09:08:00 +0000
-Message-ID: <2175a95d818172153e839f6bcf6d3d61a3e23dd8.camel@analog.com>
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
-         <20190812112350.15242-14-alexandru.ardelean@analog.com>
-         <20190812143315.GS14290@lunn.ch>
-         <c3fdb21c40900dae0e52b02b98fe27924a76c256.camel@analog.com>
-In-Reply-To: <c3fdb21c40900dae0e52b02b98fe27924a76c256.camel@analog.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.48.65.113]
-x-adiroutedonprem: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <801D42DBC9E2284CA5C33AF41B7E129C@analog.com>
-Content-Transfer-Encoding: base64
+        Wed, 14 Aug 2019 05:09:01 -0400
+Received: by mail-wr1-f98.google.com with SMTP id y8so4413189wrn.10
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 02:08:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nm3AZYQqg9bViUcvgRl1pV30pLA1C+5Glu61dF/KaxE=;
+        b=BGeZYxVWy2R58sArMqTJsQqhVtaw7rbDgpysr3RKmWMfm63FauzUo6IbXOQsae5aqv
+         /NGUpeZ3fw42zG/D88fKd/dIE5ViYHfndrPMTIescBsEEiKOLktIr9LP76L1eYDUf9Zw
+         VFl0AUL8P9crJozqcCVSb6Zl6mO/AnyurY3BlwvDue3/KG35Q1pkdIKmLCTybE0Op5aU
+         8In+SQ9DLPPV91bhSZ1l4RwIhtLymrzEYfZ8USgN5bSnsLcFunjZOamCCqlxepr4bbqc
+         ma7dfH7/CKMnPfkTUJc8OdDi7CS8tna3DQ3Ebqcb4fz6+esIasn4aA5OsjOwS3ila6zE
+         YT4Q==
+X-Gm-Message-State: APjAAAVIsJ5ykOE//u+hl19y2oHkty6omdWLxMC/CwwAiJzwOyONS+pk
+        n6jQDNuI+ixNotWqkyvvyMoxlt9x881a4WYOyKyeXakhywLJKJystkRQiyavvuW/jw==
+X-Google-Smtp-Source: APXvYqx09Vp6TVCKEOGeRGp2vPm76Veya96vzaDAvRDLPlwS7Ifbhnu0U5u4Sf7upuzG27awVEJE32T0GmlR
+X-Received: by 2002:adf:e2c1:: with SMTP id d1mr53838825wrj.283.1565773738885;
+        Wed, 14 Aug 2019 02:08:58 -0700 (PDT)
+Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
+        by smtp-relay.gmail.com with ESMTPS id y196sm36316wmd.41.2019.08.14.02.08.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 14 Aug 2019 02:08:58 -0700 (PDT)
+X-Relaying-Domain: sirena.org.uk
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hxpH8-0004cl-7R; Wed, 14 Aug 2019 09:08:58 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id D9C112742B4F; Wed, 14 Aug 2019 10:08:56 +0100 (BST)
+Date:   Wed, 14 Aug 2019 10:08:56 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, plai@codeaurora.org, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        spapothi@codeaurora.org
+Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
+ snd_soc_dai_get_sdw_stream()
+Message-ID: <20190814090856.GA4640@sirena.co.uk>
+References: <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
+ <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
+ <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
+ <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
+ <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
+ <f0228cb4-0a6f-17f3-fe03-9be7f5f2e59d@linux.intel.com>
+ <20190813191827.GI5093@sirena.co.uk>
+ <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
+ <20190813195804.GL5093@sirena.co.uk>
+ <20190814041142.GU12733@vkoul-mobl.Dlink>
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(39860400002)(376002)(396003)(346002)(2980300002)(54534003)(199004)(189003)(426003)(436003)(476003)(2616005)(70206006)(446003)(70586007)(14454004)(126002)(356004)(50466002)(11346002)(14444005)(102836004)(76176011)(118296001)(36756003)(336012)(486006)(186003)(5660300002)(2501003)(26005)(6116002)(316002)(246002)(2351001)(1730700003)(3846002)(54906003)(7696005)(305945005)(7736002)(7636002)(6246003)(8676002)(8936002)(106002)(23676004)(2486003)(4326008)(86362001)(478600001)(966005)(47776003)(229853002)(6916009)(6306002)(2906002)(5640700003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR03MB4112;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d0a301d6-7f15-48f2-4699-08d72096e92a
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(4709080)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SN6PR03MB4112;
-X-MS-TrafficTypeDiagnostic: SN6PR03MB4112:
-X-MS-Exchange-PUrlCount: 1
-X-Microsoft-Antispam-PRVS: <SN6PR03MB4112B0B99C67563AE4EE5915F9AD0@SN6PR03MB4112.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 01294F875B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: aiTwZvV0XwZ0HrPw/6I2deW9koYm7k7Q88DfVK8N09BpS3d2qTYS7u8eoG5Rl5/nvEosllCQTS30D6o1DMVTOt+dUYM4CZye6xNFtatplwFko6AbO33xXHh7TYCXxOAlRFVvCJdphA7xM3YW2wJGUnjFMNeRoOMVX9iDkFq1prgEigBv2L8SL5LlKn5cFCr36RtUYqL2HCZBtUaYyPWB4YDa2Mw5iQBB+HzqotRM5rS4H+dolYRiJBzMLms47CJs9ZmQJ5vp643A85LAU4Uwb+srg47P581iWlItpNs5JUV0eOr7jotYQn4BREcVkkqpSKR1k2NRTHVxgoVbCqyz3mb4TWGw7MnhRiKrQPbBeQnmbc4QkcDkxkANPM6+3+KMo/RGL3TKkBzofhV7Dulzx1hKr/Zdej0V1Wp07w9Uzqk=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2019 09:08:02.4298
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0a301d6-7f15-48f2-4699-08d72096e92a
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR03MB4112
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-14_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908140091
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+Content-Disposition: inline
+In-Reply-To: <20190814041142.GU12733@vkoul-mobl.Dlink>
+X-Cookie: Bridge ahead.  Pay troll.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA4LTEzIGF0IDA4OjQ4ICswMzAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3Jv
-dGU6DQo+IE9uIE1vbiwgMjAxOS0wOC0xMiBhdCAxNjozMyArMDIwMCwgQW5kcmV3IEx1bm4gd3Jv
-dGU6DQo+ID4gW0V4dGVybmFsXQ0KPiA+IA0KPiA+ID4gK3N0YXRpYyBpbnQgYWRpbl9yZWFkX21t
-ZF9zdGF0X3JlZ3Moc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRldiwNCj4gPiA+ICsJCQkJICAgc3Ry
-dWN0IGFkaW5faHdfc3RhdCAqc3RhdCwNCj4gPiA+ICsJCQkJICAgdTMyICp2YWwpDQo+ID4gPiAr
-ew0KPiA+ID4gKwlpbnQgcmV0Ow0KPiA+ID4gKw0KPiA+ID4gKwlyZXQgPSBwaHlfcmVhZF9tbWQo
-cGh5ZGV2LCBNRElPX01NRF9WRU5EMSwgc3RhdC0+cmVnMSk7DQo+ID4gPiArCWlmIChyZXQgPCAw
-KQ0KPiA+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiA+ICsNCj4gPiA+ICsJKnZhbCA9IChyZXQgJiAw
-eGZmZmYpOw0KPiA+ID4gKw0KPiA+ID4gKwlpZiAoc3RhdC0+cmVnMiA9PSAwKQ0KPiA+ID4gKwkJ
-cmV0dXJuIDA7DQo+ID4gPiArDQo+ID4gPiArCXJldCA9IHBoeV9yZWFkX21tZChwaHlkZXYsIE1E
-SU9fTU1EX1ZFTkQxLCBzdGF0LT5yZWcyKTsNCj4gPiA+ICsJaWYgKHJldCA8IDApDQo+ID4gPiAr
-CQlyZXR1cm4gcmV0Ow0KPiA+ID4gKw0KPiA+ID4gKwkqdmFsIDw8PSAxNjsNCj4gPiA+ICsJKnZh
-bCB8PSAocmV0ICYgMHhmZmZmKTsNCj4gPiA+ICsNCj4gPiA+ICsJcmV0dXJuIDA7DQo+ID4gPiAr
-fQ0KPiA+IA0KPiA+IEl0IHN0aWxsIGxvb2tzIGxpa2UgeW91IGhhdmUgbm90IGRlYWx0IHdpdGgg
-b3ZlcmZsb3cgZnJvbSB0aGUgTFNCIGludG8NCj4gPiB0aGUgTVNCIGJldHdlZW4gdGhlIHR3byBy
-ZWFkcy4NCj4gDQo+IEFwb2xvZ2llcyBmb3IgZm9yZ2V0dGluZyB0byBhZGRyZXNzIHRoaXMuDQo+
-IEkgZGlkIG5vdCBpbnRlbnRpb25hbGx5IGxlYXZlIGl0IG91dDsgdGhpcyBpdGVtIGdvdCBsb3N0
-IGFmdGVyIFYxIFt3aGljaCBoYWQgdGhlIG1vc3QgcmVtYXJrc10uDQo+IENoYW5nZWxvZyBWMSAt
-PiBWMiB3YXMgcXVpdGUgYnVsa3ksIGFuZCBJIGRpZCBub3QgbG9vayBhdCBWMSByZW1hcmtzIGFm
-dGVyIEkgZmluaXNoZWQgVjIuDQo+IA0KPiBUaGFua3MgZm9yIHNuaXBwZXQuDQoNClNvLCBJIGhh
-dmUgdG8gYXBvbG9naXplIGFnYWluIGhlcmUuDQpJIGd1ZXNzIEkgd2FzIGFuIGlkaW90L24wMGIg
-YWJvdXQgdGhpcy4NCg0KVGhlIFBIWSBzdGF0cyBkbyBzdXBwb3J0IHNuYXBzaG90LCBhbmQgSSBz
-eW5jLWVkIHdpdGggc29tZW9uZSBmcm9tIHRoZSBjaGlwLXRlYW0gdG8gY29uZmlybS4NCg0KQWxz
-bywgZnJvbSB0aGUgZGF0YXNoZWV0WzFdIChwYWdlIDI5IC0gRlJBTUUgR0VORVJBVE9SIEFORCBD
-SEVDS0VSIC0gNXRoIHBhcmFncmFwaCk6DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KVGhlIGZyYW1lIGNoZWNrZXIgY291bnRz
-IHRoZSBudW1iZXIgb2YgQ1JDIGVycm9ycyBhbmQgdGhlc2UgDQphcmUgcmVwb3J0ZWQgaW4gdGhl
-IHJlY2VpdmUgZXJyb3IgY291bnRlciByZWdpc3RlciAoUnhFcnJDbnQgDQpyZWdpc3RlciwgIGFk
-ZHJlc3MgMHgwMDE0KS4gVG8gZW5zdXJlIHN5bmNocm9uaXphdGlvbiBiZXR3ZWVuIA0KdGhlIGZy
-YW1lIGNoZWNrZXIgZXJyb3IgY291bnRlciBhbmQgZnJhbWUgY2hlY2tlciBmcmFtZSBjb3VudGVy
-cywNCmFsbCBvZiB0aGUgY291bnRlcnMgYXJlIGxhdGNoZWQgb25jZSB0aGUgcmVjZWl2ZSBlcnJv
-ciBjb3VudGVyDQpyZWdpc3RlciBpcyByZWFkLiBIZW5jZSB3aGVuIHVzaW5nIHRoZSBmcmFtZSBj
-aGVja2VyLCB0aGUNCnJlY2VpdmUgZXJyb3IgY291bnRlciBzaG91bGQgYmUgcmVhZCBmaXJzdCBh
-bmQgdGhlbiBhbGwgdGhlIG90aGVyDQpmcmFtZSBjb3VudGVycyBhbmQgZXJyb3IgY291bnRlcnMg
-c2hvdWxkIGJlIHJlYWQuIEEgbGF0Y2hlZCBjb3B5DQpvZiB0aGUgcmVjZWl2ZSBmcmFtZSBjb3Vu
-dGVyIHJlZ2lzdGVyIGlzIGF2YWlsYWJsZSBpbiB0aGUNCkZjRnJtQ250SCBhbmQgRmNGcm1DbnRM
-IHJlZ2lzdGVycyAocmVnaXN0ZXIgYWRkcmVzc2VzIDB4MUUuMHg5NDBBDQphbmQgMHgxRS4weDk0
-MEIpLg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLQ0KDQpUaGVuIGluIHRoZSBkZXNjcmlwdGlvbiBvZiB0aGVzZSByZWdzLCBpdCBt
-ZW50aW9ucyAocmVwZXRlYWRseSk6DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpUaGlzIHJlZ2lzdGVyIGlzIGEgbGF0Y2hlZCBj
-b3B5IG9mIGJpdHMgMzE6MTYgb2YgdGhlIDMyLWJpdA0KcmVjZWl2ZSBmcmFtZSBjb3VudGVyIHJl
-Z2lzdGVyLiBXaGVuIHRoZSByZWNlaXZlIGVycm9yIGNvdW50ZXINCihSeEVyckNudCByZWdpc3Rl
-ciBhZGRyZXNzIDB4MDAxNCkgaXMgcmVhZCwgdGhlIHJlY2VpdmUNCmZyYW1lDQpjb3VudGVyIHJl
-Z2lzdGVyIGlzIGxhdGNoZWQuIEEgY29weSBvZiB0aGUgcmVjZWl2ZSBmcmFtZSBjb3VudGVyDQpy
-ZWdpc3RlciBpcyBsYXRjaGVkIHdoZW4gUnhFcnJDbnQgaXMgcmVhZCBzbyB0aGF0DQp0aGUgZXJy
-b3IgY291bnQNCmFuZCByZWNlaXZlIGZyYW1lIGNvdW50IGFyZSBzeW5jaHJvbml6ZWQNCi0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0N
-Cg0KSSdsbCByZS1zcGluIHRoaXMgd2l0aCB0aGUgcmVuYW1lIG9mIHRoZSBzdHJpbmdzLCBhbmQg
-bWF5YmUgZG8gYSBtaW5vciBwb2xpc2ggb2YgdGhlIGNvZGUuDQoNClRoYW5rcyAmIHNvcnJ5IGZv
-ciB0aGUgbm9pc2UvdHJvdWJsZQ0KQWxleA0KDQpbMV0gaHR0cHM6Ly93d3cuYW5hbG9nLmNvbS9t
-ZWRpYS9lbi90ZWNobmljYWwtZG9jdW1lbnRhdGlvbi9kYXRhLXNoZWV0cy9BRElOMTMwMC5wZGYN
-Cg0KDQo+IA0KPiA+IAlkbyB7DQo+ID4gCQloaTEgPSBwaHlfcmVhZF9tbWQocGh5ZGV2LCBNRElP
-X01NRF9WRU5EMSwgc3RhdC0+cmVnMik7DQo+ID4gCQlpZiAoaGkxIDwgMCkNCj4gPiAJCQlyZXR1
-cm4gaGkxOw0KPiA+IAkJDQo+ID4gCQlsb3cgPSBwaHlfcmVhZF9tbWQocGh5ZGV2LCBNRElPX01N
-RF9WRU5EMSwgc3RhdC0+cmVnMSk7DQo+ID4gCQlpZiAobG93IDwgMCkNCj4gPiAJCQlyZXR1cm4g
-bG93Ow0KPiA+IA0KPiA+IAkJaGkyID0gcGh5X3JlYWRfbW1kKHBoeWRldiwgTURJT19NTURfVkVO
-RDEsIHN0YXQtPnJlZzIpOw0KPiA+IAkJaWYgKGhpMiA8IDApDQo+ID4gCQkJcmV0dXJuIGhpMTsN
-Cj4gPiAJfSB3aGlsZSAoaGkxICE9IGhpMikNCj4gPiANCj4gPiAJcmV0dXJuIGxvdyB8IChoaSA8
-PCAxNik7DQo+ID4gDQo+ID4gCUFuZHJldw0K
+
+--SUOF0GtieIMvvwua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Aug 14, 2019 at 09:41:42AM +0530, Vinod Koul wrote:
+> On 13-08-19, 20:58, Mark Brown wrote:
+
+> > There is something to be said for not abusing the TDM slot API if it can
+> > make things clearer by using bus-idiomatic mechanisms, but it does mean
+> > everything needs to know about each individual bus :/ .
+
+> Here ASoC doesn't need to know about sdw bus. As Srini explained, this
+> helps in the case for him to get the stream context and set the stream
+> context from the machine driver.
+
+Other drivers interoperating with the Soundwire DAI might want to do
+something, it looks like that's the case for SOF.
+
+> Nothing else is expected to be done from this API. We already do a set
+> using snd_soc_dai_set_sdw_stream(). Here we add the snd_soc_dai_get_sdw_stream() to query
+
+Well, if the API is not expected to do anything we can optimize it and
+just remove it!
+
+--SUOF0GtieIMvvwua
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1Tz6UACgkQJNaLcl1U
+h9B7fgf+PvYlFGtuBj37wZOpu/dVlS5vmQbNkNVdhUbDbjO5oYTemRTIB5PukA4R
+tO6idhVUsIlMWCvN6MZKJXPGgZfB7Heu84YAn3GvBmIFmY3J4c3QwsD1pIf1gmGH
+X+xV//bbiewRLrA7LvbQalQanUpCVVlCrjsJ8FeDg+PFs4wPO9gE2N7pevVhzknu
+tIaB6HO88+eAx0FfUUvXjWKo5qov/1LjhsI8Z2DJuKfpi9zfBatUz+/Q75d2WEJS
+0G8ATi/5aZueU+YB1T6xdQtkS/lPIFRYN7dyMZrLyidtwkttiii8UzStBh64F6QO
+MSoasP9IToaTUPdzqxcH3bIYBg2R3Q==
+=pxWA
+-----END PGP SIGNATURE-----
+
+--SUOF0GtieIMvvwua--
