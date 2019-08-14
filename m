@@ -2,87 +2,60 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5532C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E41AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5DF52067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082A62067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:16:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T4LZ3dc4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfHNFO4 (ORCPT
+        id S1727412AbfHNFQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 01:14:56 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:37629 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726888AbfHNFO4 (ORCPT
+        Wed, 14 Aug 2019 01:16:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59204 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725263AbfHNFQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 01:14:56 -0400
-Received: by mail-yb1-f194.google.com with SMTP id t5so7330080ybt.4;
-        Tue, 13 Aug 2019 22:14:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lD7K7srnZm3/fJdQ4MMUb4Yt0W08MUzcITPyxwLfAmA=;
-        b=F/2y41XZ9wTXeFlGtw9NZKW9mcDwUSKNEY4So/EHnzZXTmpvq5UBcLxYXEooiufna+
-         VUUKZaqnbwCQ4HUsw+0ssTAAwiqVDL3XOizKNuW8RuqV95IrEqmLnyND1ClfhBP5ECC6
-         hqBMkW8ys7zXKeTCVXO/Zbt8FBgBa0mHztSQbEUz7q84EDUgvaH99ysA0fBgo1FLq4QU
-         U3C93pogha4C78ySDpd7e4qOQeo+ATb/IM4jxdR6paFAkn2Y6Y+AyWTIdwSZbBa24lay
-         LrnAFTTxMFTDcQzQ56myfZVsSXiev9FySbHDVytXzqJHREHP1zxW6dTdJ/q/7u7SrTxG
-         dnIA==
-X-Gm-Message-State: APjAAAXcGCp9yUCtJcfU1cTcDYweyVO9BP7XHV1FhH1ygAt/BlemwPl+
-        uVHTdvqLRkBRtPvI4I6+MMB6eyZuKij8Tg==
-X-Google-Smtp-Source: APXvYqzT8hE17MvfcP5XewY94v3FyRcPTNoIlWorGPihtOeX+s/REcCAdX4DnuyIGSuxwUxOY6zUkQ==
-X-Received: by 2002:a25:9345:: with SMTP id g5mr1981247ybo.394.1565759695426;
-        Tue, 13 Aug 2019 22:14:55 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id z6sm25581704ywg.40.2019.08.13.22.14.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 13 Aug 2019 22:14:54 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Derek Chickles <dchickles@marvell.com>,
-        Satanand Burla <sburla@marvell.com>,
-        Felix Manlunas <fmanlunas@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev@vger.kernel.org (open list:CAVIUM LIQUIDIO NETWORK DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] liquidio: add cleanup in octeon_setup_iq()
-Date:   Wed, 14 Aug 2019 00:14:49 -0500
-Message-Id: <1565759689-5941-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        Wed, 14 Aug 2019 01:16:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=N5UgffLx0K9E7sg8gJhbNytPcPQiUdiEfXRwQzPYz8M=; b=T4LZ3dc4L7KIXFyNLJInPyudn
+        B/ntFTV2Au8ljYqdObvWwLB/8U2dwgaV7MhxXWpfSy6/RZJZCp7VJ0KDvTogqmgcIJWxOwVqGoqAm
+        d7WGhRVuSLvtFMzyYwrFSrbQj9kFsBzqw6OIxsmOTpcV2Y6C4drERFtKvvXDjoUll8X6l+XLz3Pks
+        59L/rbuv+kTE+bAgEWUSIfqbjl98Odw0hAS5k5xAvxgopQLYs7QHi5KWP50nV3XLonvnGLE4P0hwL
+        GCdw2ky9NRSES21nonHbSkpQTOAA8cEnMR80zexx1I8iiLsupG0ABL2/LZiVvhOSKQSRKS6pPttDP
+        O1OK21zQg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hxldr-0001tl-8b; Wed, 14 Aug 2019 05:16:11 +0000
+Date:   Tue, 13 Aug 2019 22:16:11 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        vbabka@suse.cz, osalvador@suse.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] mm/mmap.c: extract __vma_unlink_list as counter part
+ for __vma_link_list
+Message-ID: <20190814051611.GA1958@infradead.org>
+References: <20190814021755.1977-1-richardw.yang@linux.intel.com>
+ <20190814021755.1977-3-richardw.yang@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814021755.1977-3-richardw.yang@linux.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If oct->fn_list.enable_io_queues() fails, no cleanup is executed, leading
-to memory/resource leaks. To fix this issue, invoke
-octeon_delete_instr_queue() before returning from the function.
-
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- drivers/net/ethernet/cavium/liquidio/request_manager.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/cavium/liquidio/request_manager.c b/drivers/net/ethernet/cavium/liquidio/request_manager.c
-index 0322241..6dd65f9 100644
---- a/drivers/net/ethernet/cavium/liquidio/request_manager.c
-+++ b/drivers/net/ethernet/cavium/liquidio/request_manager.c
-@@ -237,8 +237,10 @@ int octeon_setup_iq(struct octeon_device *oct,
- 	}
- 
- 	oct->num_iqs++;
--	if (oct->fn_list.enable_io_queues(oct))
-+	if (oct->fn_list.enable_io_queues(oct)) {
-+		octeon_delete_instr_queue(oct, iq_no);
- 		return 1;
-+	}
- 
- 	return 0;
- }
--- 
-2.7.4
-
+Btw, is there any good reason we don't use a list_head for vma linkage?
