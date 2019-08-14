@@ -2,67 +2,98 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B4BC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253D5C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2CE2208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE44F2133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="nVKPV5Y2"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="BUATFTtS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfHNKyf (ORCPT
+        id S1727692AbfHNKyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:54:35 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:52503 "EHLO
+        Wed, 14 Aug 2019 06:54:37 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:52502 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbfHNKye (ORCPT
+        with ESMTP id S1727110AbfHNKyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:54:34 -0400
+        Wed, 14 Aug 2019 06:54:35 -0400
 Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x7EAs34X024567;
-        Wed, 14 Aug 2019 19:54:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7EAs34X024567
+        by conuserg-12.nifty.com with ESMTP id x7EAs34Z024567;
+        Wed, 14 Aug 2019 19:54:05 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7EAs34Z024567
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1565780044;
-        bh=3B0Eoe2uXzHeIIQDt22xl5xr4KiSl7c8jtKL7xard9w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nVKPV5Y2BbOn07Zuvy81OBAhjDxxKf1IroNtjOsLP6o/ArnU6UO+sLK9ql6svz1tB
-         8vmUSpLNu5guPd/Nl2w5anO5knfT79bny49JmL4GMejB9N7DkBpAf0xXUJWqItA141
-         /4LNzWFwqfw5VZXqlLLGO4IY/CdGrqGfHCMda/7L7bE+l0plasGZjT6dR36hFZjSNQ
-         ll9fVAc9eQtp1LNWtBXLukCLyhBXa2kgIOxANozicyzrIZGA9r7ZNPSA78NG7knZis
-         b6bMVa/UrjJx8KajJvAEOs/Yw0KCHJZgjsPv0Ate+t4+dNEbj3ZGJqVmb49dgG4KLO
-         bU78TS67j9dNQ==
+        s=dec2015msa; t=1565780045;
+        bh=Hfj4V/SBxgMk8U6X1oeV3V2ByVnCtLeD3aXokuYTB1c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BUATFTtS5AvC8UcDPz6n9Zj9WT0D6gRgAi+/ewDBpRFbUUu08HiVa0LeFInEI4ylJ
+         FR4qubC6Z2NH08PWOPzRKylDm+VaZS1qgpkO2PwPrPG6Zzyjry/vvyUi/dowm+0G/C
+         Jy3o5wQWqOnJlNmC5B8gXJNn4gHgtzTfY51QYvV7EBpE8cOysywhvLLnUMEIxdSTbl
+         HTID/JZomIaSP7c+lhSztnQSRWv6ngVNn/8jV9ZR4B7/o2E7Trh2/3z/MfF0sdy4hu
+         bnle3vHXyJTPDu5Rfu4L2PEQEKl5hCMgPhalgJk6y4pEqumiEUPWPJ46Y/+a5e068n
+         1lhb9Sv0xLdgA==
 X-Nifty-SrcIP: [126.125.143.222]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] docs: two fixes for Kbuild document after the ReST conversion
-Date:   Wed, 14 Aug 2019 19:53:58 +0900
-Message-Id: <20190814105400.1339-1-yamada.masahiro@socionext.com>
+Subject: [PATCH 2/2] docs: kbuild: remove cc-ldoption from document again
+Date:   Wed, 14 Aug 2019 19:54:00 +0900
+Message-Id: <20190814105400.1339-3-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190814105400.1339-1-yamada.masahiro@socionext.com>
+References: <20190814105400.1339-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ReST conversion was merged in the previous merge window.
-Iron out some issues.
+Commit 055efab3120b ("kbuild: drop support for cc-ldoption") correctly
+removed the cc-ldoption from Documentation/kbuild/makefiles.txt, but
+commit cd238effefa2 ("docs: kbuild: convert docs to ReST and rename
+to *.rst") revived it. I guess it was a rebase mistake.
 
+Remove it again.
 
+Fixes: cd238effefa2 ("docs: kbuild: convert docs to ReST and rename to *.rst")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Masahiro Yamada (2):
-  docs: kbuild: fix invalid ReST syntax
-  docs: kbuild: remove cc-ldoption from document again
+ Documentation/kbuild/makefiles.rst | 15 ---------------
+ 1 file changed, 15 deletions(-)
 
- Documentation/kbuild/makefiles.rst | 23 ++++-------------------
- 1 file changed, 4 insertions(+), 19 deletions(-)
-
+diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
+index b4c28c543d72..7971729d1fd4 100644
+--- a/Documentation/kbuild/makefiles.rst
++++ b/Documentation/kbuild/makefiles.rst
+@@ -471,21 +471,6 @@ more details, with real examples.
+ 	The second argument is optional, and if supplied will be used
+ 	if first argument is not supported.
+ 
+-    cc-ldoption
+-	cc-ldoption is used to check if $(CC) when used to link object files
+-	supports the given option.  An optional second option may be
+-	specified if first option are not supported.
+-
+-	Example::
+-
+-		#arch/x86/kernel/Makefile
+-		vsyscall-flags += $(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
+-
+-	In the above example, vsyscall-flags will be assigned the option
+-	-Wl$(comma)--hash-style=sysv if it is supported by $(CC).
+-	The second argument is optional, and if supplied will be used
+-	if first argument is not supported.
+-
+     as-instr
+ 	as-instr checks if the assembler reports a specific instruction
+ 	and then outputs either option1 or option2
 -- 
 2.17.1
 
