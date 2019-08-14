@@ -2,216 +2,106 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9BDC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D846C0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B3D2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374EC2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:35:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FuIOWtcH"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mKr4y7ub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727760AbfHNHfR (ORCPT
+        id S1727786AbfHNHf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:35:17 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46259 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbfHNHfO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:35:14 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q139so4787060pfc.13;
-        Wed, 14 Aug 2019 00:35:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RvOc0S7L+lCehYN7NwY8YVP/8Xm95XsVdVbZaeL90AA=;
-        b=FuIOWtcHEQM1Ce4fe65VIXjPpzEavnemStWVRXcRZw9p0bCZCvItlDnPuTnai2Bfqb
-         lEZ+sFyfqI1W0qSL5k8QvUMEFU8LFBrtqy4ygLs445cDbpnbeElBHqpwy7p1ow+Z7jdV
-         wbzC8iMUy4aEZOqXSc2t9sIxsuV8lbcbAwMqa5BIc4btvgRvOoZw0LWzOlj+4FhVzhkL
-         +quIxZSFl2rJAygCgREUM3hlCV5GFr7UPVAE8DUoJlFONPWuU9AqUwg9weoLTHnaei9G
-         3oRydj3g5K7XQ/tdV56ubk6RTAD5qvy4FCTpLrDuVMUrzFXPj0R8ZMcMxLnQDSdiMen5
-         AIlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=RvOc0S7L+lCehYN7NwY8YVP/8Xm95XsVdVbZaeL90AA=;
-        b=im3wNtYwjdHj/Yqn5IcLiwpbEx1ednzY1IGiyXVU/zMxe+2Plqx90d0D7F7uMzjMcZ
-         UtInkF5WrV6Hh6Mm+5r4A0Lh4Feq7xnSgjhLeHViva3PZAs83OKrghR5go66RE8AKxju
-         qhDeT23+gygKYDU7OXa5X2VLC4GYR1dwvXZUpSI7GuqCeoaTN+Cgh+UrfyJDSqMBLET7
-         hz6PWbPy29zS5DdT2lv9qhBmlPEyKa/eWf+EG/gVe6aG8dK5Pfqopmppr82cYK1Jo1Wh
-         4awpGp+jt4yov/IBVZAp13UVd7wF0pB+DRGb4h5X/0m9TpXUT5VstJVKBAdFiiioRbDK
-         UpQw==
-X-Gm-Message-State: APjAAAXE5vBh8Y8WxonYose7VzqNTwA3VvWa0Rxw0lFKb1Yv7wFCM/6a
-        parzT2Q73eccRF8/gIlH99E=
-X-Google-Smtp-Source: APXvYqwQ7bR1LWrbow273ffogtcqLSWiV9lZVAvH/FM1SUJBAoGZC/AtiPVi2hc5Maa9ZmUVzf+Rmw==
-X-Received: by 2002:a17:90a:c386:: with SMTP id h6mr5796971pjt.122.1565768113122;
-        Wed, 14 Aug 2019 00:35:13 -0700 (PDT)
-Received: from localhost.corp.microsoft.com ([167.220.255.114])
-        by smtp.googlemail.com with ESMTPSA id v184sm109639230pfb.82.2019.08.14.00.35.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 00:35:12 -0700 (PDT)
-From:   lantianyu1986@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, pbonzini@redhat.com,
-        rkrcmar@redhat.com, michael.h.kelley@microsoft.com
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Tianyu Lan <Tianyu.Lan@microsoft.com>
-Subject: [PATCH V2 3/3] KVM/Hyper-V/VMX: Add direct tlb flush support
-Date:   Wed, 14 Aug 2019 15:34:47 +0800
-Message-Id: <20190814073447.96141-4-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
-In-Reply-To: <20190814073447.96141-1-Tianyu.Lan@microsoft.com>
-References: <20190814073447.96141-1-Tianyu.Lan@microsoft.com>
+        Wed, 14 Aug 2019 03:35:26 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42821 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727017AbfHNHf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:35:26 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 467hFP5gLBz9sNx;
+        Wed, 14 Aug 2019 17:35:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565768123;
+        bh=AbhlP0YN/t21Gh6VHypds9xO7GALcd9PcpzEvbJBWLY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mKr4y7ubBT1RSL5MteT4KE5I6wGGlkimt2wrdzWZjTnXHZuelmhaAF0qg51WQBf0F
+         Ay/pHUiASdiZ4kfV206QP/fdJyucfmeYoLpFQy8MS8UkNTCq4aDGQee3nSIq+ZxP3W
+         8tZ8BkhBCcVif7e7iNc+nsc6CU15aPjtRNd3VxXtt1gEHA+GNySe+xhr2oePwAzHL2
+         MdrDb72Kpm6aCGotb5ij4O3lox8vek29gLNS5CQGeaUmjpLLOanllfsNjoZ4pi8/T0
+         a8k+YvwSF1wC/lBLI8J52j4v6WhCHTbtFGeonHn9kP6Pe0hKjvPOnEUPBkYhCgtcTv
+         Y+BN8QtTRJTyw==
+Date:   Wed, 14 Aug 2019 17:35:02 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        James Morris <jmorris@namei.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Tree for Aug 13
+Message-ID: <20190814173502.26849651@canb.auug.org.au>
+In-Reply-To: <c17d1844-7e13-aba5-0fc9-98c4b247c147@samsung.com>
+References: <20190813191924.7c5310dd@canb.auug.org.au>
+        <your-ad-here.call-01565700115-ext-9407@work.hours>
+        <CGME20190813145654epcas2p2981ea6b19b84470dc37825469cba91de@epcas2p2.samsung.com>
+        <20190813105645.4ffba70c@gandalf.local.home>
+        <c17d1844-7e13-aba5-0fc9-98c4b247c147@samsung.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/hKv=nLl41CRqYFReUFUYyDM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+--Sig_/hKv=nLl41CRqYFReUFUYyDM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This patch is to enable Hyper-V direct tlb flush function
-for vmx.
+Hi all,
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
- arch/x86/include/asm/hyperv-tlfs.h |  4 ++++
- arch/x86/kvm/vmx/evmcs.h           |  2 ++
- arch/x86/kvm/vmx/vmx.c             | 38 ++++++++++++++++++++++++++++++++++++++
- include/linux/kvm_host.h           |  1 +
- 4 files changed, 45 insertions(+)
+On Wed, 14 Aug 2019 08:14:18 +0200 Marek Szyprowski <m.szyprowski@samsung.c=
+om> wrote:
+>
+> On 2019-08-13 16:56, Steven Rostedt wrote:
+> > This looks related to what Marek posted.
+> >
+> >    https://lore.kernel.org/linux-security-module/3028ed35-3b6d-459f-f3c=
+8-103c5636fe95@samsung.com/
+> >
+> > Care to apply the change he suggested to see if it fixes the issue for
+> > you. If it does, Marek, can you make an official patch? =20
+>=20
+> Sure: https://lkml.org/lkml/2019/8/14/75
 
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-index cf0b2a04271d..d53d6e4a6210 100644
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -171,6 +171,7 @@
- #define HV_X64_ENLIGHTENED_VMCS_RECOMMENDED		BIT(14)
- 
- /* Nested features. These are HYPERV_CPUID_NESTED_FEATURES.EAX bits. */
-+#define HV_X64_NESTED_DIRECT_FLUSH			BIT(17)
- #define HV_X64_NESTED_GUEST_MAPPING_FLUSH		BIT(18)
- #define HV_X64_NESTED_MSR_BITMAP			BIT(19)
- 
-@@ -882,4 +883,7 @@ struct hv_tlb_flush_ex {
- 	u64 gva_list[];
- } __packed;
- 
-+struct hv_partition_assist_pg {
-+	u32 tlb_lock_count;
-+};
- #endif
-diff --git a/arch/x86/kvm/vmx/evmcs.h b/arch/x86/kvm/vmx/evmcs.h
-index 39a24eec8884..07ebf6882a45 100644
---- a/arch/x86/kvm/vmx/evmcs.h
-+++ b/arch/x86/kvm/vmx/evmcs.h
-@@ -178,6 +178,8 @@ static inline void evmcs_load(u64 phys_addr)
- 	struct hv_vp_assist_page *vp_ap =
- 		hv_get_vp_assist_page(smp_processor_id());
- 
-+	if (current_evmcs->hv_enlightenments_control.nested_flush_hypercall)
-+		vp_ap->nested_control.features.directhypercall = 1;
- 	vp_ap->current_nested_vmcs = phys_addr;
- 	vp_ap->enlighten_vmentry = 1;
- }
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 84f8d49a2fd2..a49be029864e 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -486,6 +486,34 @@ static int hv_remote_flush_tlb(struct kvm *kvm)
- 	return hv_remote_flush_tlb_with_range(kvm, NULL);
- }
- 
-+static int hv_enable_direct_tlbflush(struct kvm_vcpu *vcpu)
-+{
-+	struct hv_enlightened_vmcs *evmcs;
-+
-+	/*
-+	 * Synthetic VM-Exit is not enabled in current code and so All
-+	 * evmcs in singe VM shares same assist page.
-+	 */
-+	if (!vcpu->kvm->hv_pa_pg) {
-+		vcpu->kvm->hv_pa_pg = kzalloc(PAGE_SIZE, GFP_KERNEL);
-+		if (!vcpu->kvm->hv_pa_pg)
-+			return -ENOMEM;
-+		pr_debug("KVM: Hyper-V: allocated PA_PG for %llx\n",
-+		       (u64)&vcpu->kvm);
-+	}
-+
-+	evmcs = (struct hv_enlightened_vmcs *)to_vmx(vcpu)->loaded_vmcs->vmcs;
-+
-+	evmcs->partition_assist_page =
-+		__pa(vcpu->kvm->hv_pa_pg);
-+	evmcs->hv_vm_id = (u64)vcpu->kvm;
-+	evmcs->hv_enlightenments_control.nested_flush_hypercall = 1;
-+
-+	pr_debug("KVM: Hyper-V: enabled DIRECT flush for %llx\n",
-+		 (u64)vcpu->kvm);
-+	return 0;
-+}
-+
- #endif /* IS_ENABLED(CONFIG_HYPERV) */
- 
- /*
-@@ -6516,6 +6544,9 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 		current_evmcs->hv_clean_fields |=
- 			HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL;
- 
-+	if (static_branch_unlikely(&enable_evmcs))
-+		current_evmcs->hv_vp_id = vcpu->arch.hyperv.vp_index;
-+
- 	/* MSR_IA32_DEBUGCTLMSR is zeroed on vmexit. Restore it if needed */
- 	if (vmx->host_debugctlmsr)
- 		update_debugctlmsr(vmx->host_debugctlmsr);
-@@ -6583,6 +6614,7 @@ static struct kvm *vmx_vm_alloc(void)
- 
- static void vmx_vm_free(struct kvm *kvm)
- {
-+	kfree(kvm->hv_pa_pg);
- 	vfree(to_kvm_vmx(kvm));
- }
- 
-@@ -7815,6 +7847,7 @@ static void vmx_exit(void)
- 			if (!vp_ap)
- 				continue;
- 
-+			vp_ap->nested_control.features.directhypercall = 0;
- 			vp_ap->current_nested_vmcs = 0;
- 			vp_ap->enlighten_vmentry = 0;
- 		}
-@@ -7854,6 +7887,11 @@ static int __init vmx_init(void)
- 			pr_info("KVM: vmx: using Hyper-V Enlightened VMCS\n");
- 			static_branch_enable(&enable_evmcs);
- 		}
-+
-+		if (ms_hyperv.nested_features & HV_X64_NESTED_DIRECT_FLUSH)
-+			vmx_x86_ops.enable_direct_tlbflush
-+				= hv_enable_direct_tlbflush;
-+
- 	} else {
- 		enlightened_vmcs = false;
- 	}
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index c5da875f19e3..479ad76661e6 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -500,6 +500,7 @@ struct kvm {
- 	struct srcu_struct srcu;
- 	struct srcu_struct irq_srcu;
- 	pid_t userspace_pid;
-+	struct hv_partition_assist_pg *hv_pa_pg;
- };
- 
- #define kvm_err(fmt, ...) \
--- 
-2.14.5
+I have applied that to linux-next today.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/hKv=nLl41CRqYFReUFUYyDM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1TuaYACgkQAVBC80lX
+0GzxBwf/XZyO2R13ZCKJdXnXCGQnkbohwC1M6LrhuSQ6nGt1zyBClZ85ToZy/t2B
+2pn2uPEgAiJv6QtMhEt2Tza6Ch1PYhWsRqut19JfZZLzy1qpY2KEY4AiDH5Ywvur
+Y4l9iJcOnE80XifjzoXrO8tnBZnWZly0xxb7p1ERtIcatE2lNUCA9y/jUHI32sm3
+rdQjZ4PY5ex5QL2jCxjWC9ZNPbEmy+KqAvsdxkiKppTzEya4SSxIz8MS9pU3ZVtC
+QoSRYcSd9HGZxwwmWW1EUiRREXTAxFBo8y/ra/O0YYhjgoPmX1oDSkd2lIQD7lRv
+P6Tc0rNUgBbyQj8kKLR043OmE+qdHg==
+=Lk/j
+-----END PGP SIGNATURE-----
+
+--Sig_/hKv=nLl41CRqYFReUFUYyDM--
