@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C14C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C310DC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3838F216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84C1E2063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802848;
-	bh=/+s4HMn3sa4TeIGmpwGhMZ5kCW8zQtP0FeVr6XKuY+c=;
+	s=default; t=1565802850;
+	bh=wZGJe7e6Uqdpt4OkI4Z49JMwrq3Cg/4veuuSin50I8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xod7HYbPZ0RhIB7zvPbBKBh6QRmMzcpNqMpLDaYSYTxttfyRlBl7Cm3dxJ2Ydvokg
-	 01DDceIo53fzHq0uxlDE56/ufb+c+ShIM0SV85zgthHFGEcBJEoJN40dbz3n1Dwi90
-	 Jt7xwz8jJw+UlZapY8RdjCIt/Jq6U46W46zv3JAw=
+	b=O1sRASs0DoSWLv4y3JWmhShwxwi9hyNl92TwY7kPcRZLz9zhU/P1llKKQTAyqq4Vo
+	 riwzM0x36MaRRM64AA2PfX3OuRWYbWcCLuPcBnmB2PzEDh+KYwzhgfje6LgbJD6ZMy
+	 0key5Q5agY7fZ2RypAoZd5aCqTcohmD5GqXyQXiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731020AbfHNROH (ORCPT
+        id S1731031AbfHNROJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:14:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38470 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:14:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731003AbfHNROE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:14:04 -0400
+        id S1729347AbfHNROH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:14:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA3982063F;
-        Wed, 14 Aug 2019 17:14:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76B9D21721;
+        Wed, 14 Aug 2019 17:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802843;
-        bh=/+s4HMn3sa4TeIGmpwGhMZ5kCW8zQtP0FeVr6XKuY+c=;
+        s=default; t=1565802846;
+        bh=wZGJe7e6Uqdpt4OkI4Z49JMwrq3Cg/4veuuSin50I8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rAkyJNAoKQzL9vcPSXDoaRe2HYefS6/Ykq4VNWsAcH7XWSdTzi4YNoQb3nZFEnNE7
-         cjQcR2tJXkXFsNrn+ixektzjsOqaSPTHp3OGfsHU3igPp5ppOwTJBESSKWBA/PZD6Q
-         FSandpupP8RXlIQTXjNZN1mmku9mHZYq0PM7wFWQ=
+        b=Ua/JuCud7RlnmrTZt6ZKhEwx+nuz2r05sPp2CbuJx1BTVXmFD6XomS/7L8Fca0W7x
+         UGRRHmbtZLLJLUZ1JFl74Yt67av7QHQGN74va3OKTIsQyOrikSW9gUAvSypO1gpD4d
+         dl6DSyV1b/Tce7whfwJEgpX2RFTrymlqMym8GF9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 4.14 21/69] usb: host: xhci-rcar: Fix timeout in xhci_suspend()
-Date:   Wed, 14 Aug 2019 19:01:19 +0200
-Message-Id: <20190814165746.965617011@linuxfoundation.org>
+        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        Gary R Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 12/69] crypto: ccp - Validate buffer lengths for copy operations
+Date:   Wed, 14 Aug 2019 19:01:10 +0200
+Message-Id: <20190814165746.285884093@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -59,50 +61,264 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Gary R Hook <gary.hook@amd.com>
 
-commit 783bda5e41acc71f98336e1a402c180f9748e5dc upstream.
+commit b698a9f4c5c52317db486b069190c7e3d2b97e7e upstream.
 
-When a USB device is connected to the host controller and
-the system enters suspend, the following error happens
-in xhci_suspend():
+The CCP driver copies data between scatter/gather lists and DMA buffers.
+The length of the requested copy operation must be checked against
+the available destination buffer length.
 
-	xhci-hcd ee000000.usb: WARN: xHC CMD_RUN timeout
-
-Since the firmware/internal CPU control the USBSTS.STS_HALT
-and the process speed is down when the roothub port enters U3,
-long delay for the handshake of STS_HALT is neeed in xhci_suspend().
-So, this patch adds to set the XHCI_SLOW_SUSPEND.
-
-Fixes: 435cc1138ec9 ("usb: host: xhci-plat: set resume_quirk() for R-Car controllers")
-Cc: <stable@vger.kernel.org> # v4.12+
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/1564734815-17964-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Reported-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+Signed-off-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-rcar.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/crypto/ccp/ccp-ops.c |  108 +++++++++++++++++++++++++++++++------------
+ 1 file changed, 78 insertions(+), 30 deletions(-)
 
---- a/drivers/usb/host/xhci-rcar.c
-+++ b/drivers/usb/host/xhci-rcar.c
-@@ -231,10 +231,15 @@ int xhci_rcar_init_quirk(struct usb_hcd
- 	 * pointers. So, this driver clears the AC64 bit of xhci->hcc_params
- 	 * to call dma_set_coherent_mask(dev, DMA_BIT_MASK(32)) in
- 	 * xhci_gen_setup().
-+	 *
-+	 * And, since the firmware/internal CPU control the USBSTS.STS_HALT
-+	 * and the process speed is down when the roothub port enters U3,
-+	 * long delay for the handshake of STS_HALT is neeed in xhci_suspend().
- 	 */
- 	if (xhci_rcar_is_gen2(hcd->self.controller) ||
--			xhci_rcar_is_gen3(hcd->self.controller))
--		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
-+			xhci_rcar_is_gen3(hcd->self.controller)) {
-+		xhci->quirks |= XHCI_NO_64BIT_SUPPORT | XHCI_SLOW_SUSPEND;
-+	}
+--- a/drivers/crypto/ccp/ccp-ops.c
++++ b/drivers/crypto/ccp/ccp-ops.c
+@@ -178,14 +178,18 @@ static int ccp_init_dm_workarea(struct c
+ 	return 0;
+ }
  
- 	xhci->quirks |= XHCI_TRUST_TX_LENGTH;
- 	return xhci_rcar_download_firmware(hcd);
+-static void ccp_set_dm_area(struct ccp_dm_workarea *wa, unsigned int wa_offset,
+-			    struct scatterlist *sg, unsigned int sg_offset,
+-			    unsigned int len)
++static int ccp_set_dm_area(struct ccp_dm_workarea *wa, unsigned int wa_offset,
++			   struct scatterlist *sg, unsigned int sg_offset,
++			   unsigned int len)
+ {
+ 	WARN_ON(!wa->address);
+ 
++	if (len > (wa->length - wa_offset))
++		return -EINVAL;
++
+ 	scatterwalk_map_and_copy(wa->address + wa_offset, sg, sg_offset, len,
+ 				 0);
++	return 0;
+ }
+ 
+ static void ccp_get_dm_area(struct ccp_dm_workarea *wa, unsigned int wa_offset,
+@@ -205,8 +209,11 @@ static int ccp_reverse_set_dm_area(struc
+ 				   unsigned int len)
+ {
+ 	u8 *p, *q;
++	int	rc;
+ 
+-	ccp_set_dm_area(wa, wa_offset, sg, sg_offset, len);
++	rc = ccp_set_dm_area(wa, wa_offset, sg, sg_offset, len);
++	if (rc)
++		return rc;
+ 
+ 	p = wa->address + wa_offset;
+ 	q = p + len - 1;
+@@ -509,7 +516,9 @@ static int ccp_run_aes_cmac_cmd(struct c
+ 		return ret;
+ 
+ 	dm_offset = CCP_SB_BYTES - aes->key_len;
+-	ccp_set_dm_area(&key, dm_offset, aes->key, 0, aes->key_len);
++	ret = ccp_set_dm_area(&key, dm_offset, aes->key, 0, aes->key_len);
++	if (ret)
++		goto e_key;
+ 	ret = ccp_copy_to_sb(cmd_q, &key, op.jobid, op.sb_key,
+ 			     CCP_PASSTHRU_BYTESWAP_256BIT);
+ 	if (ret) {
+@@ -528,7 +537,9 @@ static int ccp_run_aes_cmac_cmd(struct c
+ 		goto e_key;
+ 
+ 	dm_offset = CCP_SB_BYTES - AES_BLOCK_SIZE;
+-	ccp_set_dm_area(&ctx, dm_offset, aes->iv, 0, aes->iv_len);
++	ret = ccp_set_dm_area(&ctx, dm_offset, aes->iv, 0, aes->iv_len);
++	if (ret)
++		goto e_ctx;
+ 	ret = ccp_copy_to_sb(cmd_q, &ctx, op.jobid, op.sb_ctx,
+ 			     CCP_PASSTHRU_BYTESWAP_256BIT);
+ 	if (ret) {
+@@ -556,8 +567,10 @@ static int ccp_run_aes_cmac_cmd(struct c
+ 				goto e_src;
+ 			}
+ 
+-			ccp_set_dm_area(&ctx, 0, aes->cmac_key, 0,
+-					aes->cmac_key_len);
++			ret = ccp_set_dm_area(&ctx, 0, aes->cmac_key, 0,
++					      aes->cmac_key_len);
++			if (ret)
++				goto e_src;
+ 			ret = ccp_copy_to_sb(cmd_q, &ctx, op.jobid, op.sb_ctx,
+ 					     CCP_PASSTHRU_BYTESWAP_256BIT);
+ 			if (ret) {
+@@ -669,7 +682,9 @@ static int ccp_run_aes_gcm_cmd(struct cc
+ 		return ret;
+ 
+ 	dm_offset = CCP_SB_BYTES - aes->key_len;
+-	ccp_set_dm_area(&key, dm_offset, aes->key, 0, aes->key_len);
++	ret = ccp_set_dm_area(&key, dm_offset, aes->key, 0, aes->key_len);
++	if (ret)
++		goto e_key;
+ 	ret = ccp_copy_to_sb(cmd_q, &key, op.jobid, op.sb_key,
+ 			     CCP_PASSTHRU_BYTESWAP_256BIT);
+ 	if (ret) {
+@@ -688,7 +703,9 @@ static int ccp_run_aes_gcm_cmd(struct cc
+ 		goto e_key;
+ 
+ 	dm_offset = CCP_AES_CTX_SB_COUNT * CCP_SB_BYTES - aes->iv_len;
+-	ccp_set_dm_area(&ctx, dm_offset, aes->iv, 0, aes->iv_len);
++	ret = ccp_set_dm_area(&ctx, dm_offset, aes->iv, 0, aes->iv_len);
++	if (ret)
++		goto e_ctx;
+ 
+ 	ret = ccp_copy_to_sb(cmd_q, &ctx, op.jobid, op.sb_ctx,
+ 			     CCP_PASSTHRU_BYTESWAP_256BIT);
+@@ -779,7 +796,9 @@ static int ccp_run_aes_gcm_cmd(struct cc
+ 		goto e_dst;
+ 	}
+ 
+-	ccp_set_dm_area(&ctx, dm_offset, aes->iv, 0, aes->iv_len);
++	ret = ccp_set_dm_area(&ctx, dm_offset, aes->iv, 0, aes->iv_len);
++	if (ret)
++		goto e_dst;
+ 
+ 	ret = ccp_copy_to_sb(cmd_q, &ctx, op.jobid, op.sb_ctx,
+ 			     CCP_PASSTHRU_BYTESWAP_256BIT);
+@@ -829,7 +848,9 @@ static int ccp_run_aes_gcm_cmd(struct cc
+ 					   DMA_BIDIRECTIONAL);
+ 		if (ret)
+ 			goto e_tag;
+-		ccp_set_dm_area(&tag, 0, p_tag, 0, AES_BLOCK_SIZE);
++		ret = ccp_set_dm_area(&tag, 0, p_tag, 0, AES_BLOCK_SIZE);
++		if (ret)
++			goto e_tag;
+ 
+ 		ret = crypto_memneq(tag.address, final_wa.address,
+ 				    AES_BLOCK_SIZE) ? -EBADMSG : 0;
+@@ -924,7 +945,9 @@ static int ccp_run_aes_cmd(struct ccp_cm
+ 		return ret;
+ 
+ 	dm_offset = CCP_SB_BYTES - aes->key_len;
+-	ccp_set_dm_area(&key, dm_offset, aes->key, 0, aes->key_len);
++	ret = ccp_set_dm_area(&key, dm_offset, aes->key, 0, aes->key_len);
++	if (ret)
++		goto e_key;
+ 	ret = ccp_copy_to_sb(cmd_q, &key, op.jobid, op.sb_key,
+ 			     CCP_PASSTHRU_BYTESWAP_256BIT);
+ 	if (ret) {
+@@ -945,7 +968,9 @@ static int ccp_run_aes_cmd(struct ccp_cm
+ 	if (aes->mode != CCP_AES_MODE_ECB) {
+ 		/* Load the AES context - convert to LE */
+ 		dm_offset = CCP_SB_BYTES - AES_BLOCK_SIZE;
+-		ccp_set_dm_area(&ctx, dm_offset, aes->iv, 0, aes->iv_len);
++		ret = ccp_set_dm_area(&ctx, dm_offset, aes->iv, 0, aes->iv_len);
++		if (ret)
++			goto e_ctx;
+ 		ret = ccp_copy_to_sb(cmd_q, &ctx, op.jobid, op.sb_ctx,
+ 				     CCP_PASSTHRU_BYTESWAP_256BIT);
+ 		if (ret) {
+@@ -1123,8 +1148,12 @@ static int ccp_run_xts_aes_cmd(struct cc
+ 		 * big endian to little endian.
+ 		 */
+ 		dm_offset = CCP_SB_BYTES - AES_KEYSIZE_128;
+-		ccp_set_dm_area(&key, dm_offset, xts->key, 0, xts->key_len);
+-		ccp_set_dm_area(&key, 0, xts->key, xts->key_len, xts->key_len);
++		ret = ccp_set_dm_area(&key, dm_offset, xts->key, 0, xts->key_len);
++		if (ret)
++			goto e_key;
++		ret = ccp_set_dm_area(&key, 0, xts->key, xts->key_len, xts->key_len);
++		if (ret)
++			goto e_key;
+ 	} else {
+ 		/* Version 5 CCPs use a 512-bit space for the key: each portion
+ 		 * occupies 256 bits, or one entire slot, and is zero-padded.
+@@ -1133,9 +1162,13 @@ static int ccp_run_xts_aes_cmd(struct cc
+ 
+ 		dm_offset = CCP_SB_BYTES;
+ 		pad = dm_offset - xts->key_len;
+-		ccp_set_dm_area(&key, pad, xts->key, 0, xts->key_len);
+-		ccp_set_dm_area(&key, dm_offset + pad, xts->key, xts->key_len,
+-				xts->key_len);
++		ret = ccp_set_dm_area(&key, pad, xts->key, 0, xts->key_len);
++		if (ret)
++			goto e_key;
++		ret = ccp_set_dm_area(&key, dm_offset + pad, xts->key,
++				      xts->key_len, xts->key_len);
++		if (ret)
++			goto e_key;
+ 	}
+ 	ret = ccp_copy_to_sb(cmd_q, &key, op.jobid, op.sb_key,
+ 			     CCP_PASSTHRU_BYTESWAP_256BIT);
+@@ -1154,7 +1187,9 @@ static int ccp_run_xts_aes_cmd(struct cc
+ 	if (ret)
+ 		goto e_key;
+ 
+-	ccp_set_dm_area(&ctx, 0, xts->iv, 0, xts->iv_len);
++	ret = ccp_set_dm_area(&ctx, 0, xts->iv, 0, xts->iv_len);
++	if (ret)
++		goto e_ctx;
+ 	ret = ccp_copy_to_sb(cmd_q, &ctx, op.jobid, op.sb_ctx,
+ 			     CCP_PASSTHRU_BYTESWAP_NOOP);
+ 	if (ret) {
+@@ -1297,12 +1332,18 @@ static int ccp_run_des3_cmd(struct ccp_c
+ 	dm_offset = CCP_SB_BYTES - des3->key_len; /* Basic offset */
+ 
+ 	len_singlekey = des3->key_len / 3;
+-	ccp_set_dm_area(&key, dm_offset + 2 * len_singlekey,
+-			des3->key, 0, len_singlekey);
+-	ccp_set_dm_area(&key, dm_offset + len_singlekey,
+-			des3->key, len_singlekey, len_singlekey);
+-	ccp_set_dm_area(&key, dm_offset,
+-			des3->key, 2 * len_singlekey, len_singlekey);
++	ret = ccp_set_dm_area(&key, dm_offset + 2 * len_singlekey,
++			      des3->key, 0, len_singlekey);
++	if (ret)
++		goto e_key;
++	ret = ccp_set_dm_area(&key, dm_offset + len_singlekey,
++			      des3->key, len_singlekey, len_singlekey);
++	if (ret)
++		goto e_key;
++	ret = ccp_set_dm_area(&key, dm_offset,
++			      des3->key, 2 * len_singlekey, len_singlekey);
++	if (ret)
++		goto e_key;
+ 
+ 	/* Copy the key to the SB */
+ 	ret = ccp_copy_to_sb(cmd_q, &key, op.jobid, op.sb_key,
+@@ -1330,7 +1371,10 @@ static int ccp_run_des3_cmd(struct ccp_c
+ 
+ 		/* Load the context into the LSB */
+ 		dm_offset = CCP_SB_BYTES - des3->iv_len;
+-		ccp_set_dm_area(&ctx, dm_offset, des3->iv, 0, des3->iv_len);
++		ret = ccp_set_dm_area(&ctx, dm_offset, des3->iv, 0,
++				      des3->iv_len);
++		if (ret)
++			goto e_ctx;
+ 
+ 		if (cmd_q->ccp->vdata->version == CCP_VERSION(3, 0))
+ 			load_mode = CCP_PASSTHRU_BYTESWAP_NOOP;
+@@ -1614,8 +1658,10 @@ static int ccp_run_sha_cmd(struct ccp_cm
+ 		}
+ 	} else {
+ 		/* Restore the context */
+-		ccp_set_dm_area(&ctx, 0, sha->ctx, 0,
+-				sb_count * CCP_SB_BYTES);
++		ret = ccp_set_dm_area(&ctx, 0, sha->ctx, 0,
++				      sb_count * CCP_SB_BYTES);
++		if (ret)
++			goto e_ctx;
+ 	}
+ 
+ 	ret = ccp_copy_to_sb(cmd_q, &ctx, op.jobid, op.sb_ctx,
+@@ -1937,7 +1983,9 @@ static int ccp_run_passthru_cmd(struct c
+ 		if (ret)
+ 			return ret;
+ 
+-		ccp_set_dm_area(&mask, 0, pt->mask, 0, pt->mask_len);
++		ret = ccp_set_dm_area(&mask, 0, pt->mask, 0, pt->mask_len);
++		if (ret)
++			goto e_mask;
+ 		ret = ccp_copy_to_sb(cmd_q, &mask, op.jobid, op.sb_key,
+ 				     CCP_PASSTHRU_BYTESWAP_NOOP);
+ 		if (ret) {
 
 
