@@ -2,29 +2,29 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780ADC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0B4C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D27E208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C9802054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbfHNPqP (ORCPT
+        id S1728034AbfHNPqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 11:46:15 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42729 "EHLO
+        Wed, 14 Aug 2019 11:46:14 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42727 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbfHNPqO (ORCPT
+        with ESMTP id S1727110AbfHNPqO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 14 Aug 2019 11:46:14 -0400
 Received: from [213.220.153.21] (helo=localhost.localdomain)
         by youngberry.canonical.com with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
         (Exim 4.76)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1hxvTY-0005XX-TB; Wed, 14 Aug 2019 15:46:13 +0000
+        id 1hxvTY-0005XX-2o; Wed, 14 Aug 2019 15:46:12 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
 Cc:     oleg@redhat.com, alistair23@gmail.com, ebiederm@xmission.com,
@@ -33,13 +33,12 @@ Cc:     oleg@redhat.com, alistair23@gmail.com, ebiederm@xmission.com,
         palmer@sifive.com, macro@wdc.com, zongbox@gmail.com,
         akpm@linux-foundation.org, viro@zeniv.linux.org.uk, hpa@zytor.com,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v3 1/1] waitid: Add support for waiting for the current process group
-Date:   Wed, 14 Aug 2019 17:44:00 +0200
-Message-Id: <20190814154400.6371-2-christian.brauner@ubuntu.com>
+Subject: [PATCH v3 0/1] waitid: process group enhancement
+Date:   Wed, 14 Aug 2019 17:43:59 +0200
+Message-Id: <20190814154400.6371-1-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190814154400.6371-1-christian.brauner@ubuntu.com>
+In-Reply-To: <CAKmqyKMJPQAOKn11xepzAwXOd4e9dU0Cyz=A0T-uMEgUp5yJjA@mail.gmail.com>
 References: <CAKmqyKMJPQAOKn11xepzAwXOd4e9dU0Cyz=A0T-uMEgUp5yJjA@mail.gmail.com>
- <20190814154400.6371-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,109 +46,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+Hey everyone,
 
-It was recently discovered that the linux version of waitid is not a
-superset of the other wait functions because it does not include
-support for waiting for the current process group.  This has two
-downsides.  An extra system call is needed to get the current process
-group, and a signal could come in between the system call that
-retrieved the process gorup and the call to waitid that changes the
-current process group.
+This patch adds support for waiting on the current process group by
+specifying waitid(P_PGID, 0, ...) as discussed in [1]. The details why
+we need to do this are in the commit message of [PATCH 1/1] so I won't
+repeat them here.
 
-Allow userspace to avoid both of those issues by defining
-idtype == P_PGID and id == 0 to mean wait for the caller's process
-group at the time of the call.
+I've picked this up since the thread has gone stale and parts of
+userspace are actually blocked by this.
 
-Arguments can be made for using a different choice of idtype and id
-for this case but the BSDs already use this P_PGID and 0 to indicate
-waiting for the current process's process group.  So be nice to user
-space programmers and don't introduce an unnecessary incompatibility.
+Note that the patch has been changed to be more closely aligned with the
+P_PIDFD changes to waitid() I have sitting in my for-next branch (cf. [2]).
+This makes the merge conflict a little simpler and picks up on the
+coding style discussions that guided the P_PIDFD patchset.
 
-Some people have noted that the posix description is that
-waitpid will wait for the current process group, and that in
-the presence of pthreads that process group can change.  To get
-clarity on this issue I looked at XNU, FreeBSD, and Luminos.  All of
-those flavors of unix waited for the current process group at the
-time of call and as written could not adapt to the process group
-changing after the call.
+There was some desire to get this feature in with 5.3 (cf. [3]).
+But given that this is a new feature for waitid() and for the sake of
+avoiding any merge conflicts I would prefer to land this in the 5.4
+merge window together with the P_PIDFD changes.
 
-At one point Linux did adapt to the current process group changing but
-that stopped in 161550d74c07 ("pid: sys_wait... fixes").  It has been
-over 11 years since Linux has that behavior, no programs that fail
-with the change in behavior have been reported, and I could not
-find any other unix that does this.  So I think it is safe to clarify
-the definition of current process group, to current process group
-at the time of the wait function.
+Thanks!
+Christian
 
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Rich Felker <dalias@libc.org>
-Cc: Alistair Francis <alistair23@gmail.com>
-Cc: Zong Li <zongbox@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: Adhemerval Zanella <adhemerval.zanella@linaro.org>
-Cc: GNU C Library <libc-alpha@sourceware.org>
----
-v1:
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - move find_get_pid() calls into the switch statements to minimize
-    merge conflicts with P_PIDFD changes and adhere to coding style
-    discussions we had for P_PIDFD
+/* v0 */
+Link: https://www.sourceware.org/ml/libc-alpha/2019-07/msg00587.html
 
-v2:
-- Oleg Nesterov <oleg@redhat.com>:
-  - take rcu_read_lock() around task_pgrp() so that we don't race with
-    another thread changing the pgrp
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - introduce find_get_pgrp()
+/* v1 */
+Link: https://lore.kernel.org/lkml/20190814113822.9505-1-christian.brauner@ubuntu.com/
 
-v3:
-- Oleg Nesterov <oleg@redhat.com>:
-  - use get_task_pid()
----
+/* v2 */
+Link: https://lore.kernel.org/lkml/20190814130732.23572-1-christian.brauner@ubuntu.com/
+
+/* References */
+[1]: https://www.sourceware.org/ml/libc-alpha/2019-07/msg00587.html
+[2]: https://lore.kernel.org/lkml/20190727222229.6516-1-christian@brauner.io/
+[3]: https://www.sourceware.org/ml/libc-alpha/2019-08/msg00304.html
+
+Eric W. Biederman (1):
+  waitid: Add support for waiting for the current process group
+
  kernel/exit.c | 12 ++++++++----
  1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 5b4a5dcce8f8..8e4e357fddc8 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -1576,19 +1576,23 @@ static long kernel_waitid(int which, pid_t upid, struct waitid_info *infop,
- 		type = PIDTYPE_PID;
- 		if (upid <= 0)
- 			return -EINVAL;
-+
-+		pid = find_get_pid(upid);
- 		break;
- 	case P_PGID:
- 		type = PIDTYPE_PGID;
--		if (upid <= 0)
-+		if (upid < 0)
- 			return -EINVAL;
-+
-+		if (upid)
-+			pid = find_get_pid(upid);
-+		else
-+			pid = get_task_pid(current, PIDTYPE_PGID);
- 		break;
- 	default:
- 		return -EINVAL;
- 	}
- 
--	if (type < PIDTYPE_MAX)
--		pid = find_get_pid(upid);
--
- 	wo.wo_type	= type;
- 	wo.wo_pid	= pid;
- 	wo.wo_flags	= options;
 -- 
 2.22.0
 
