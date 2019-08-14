@@ -2,58 +2,52 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88546C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF29C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E178216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1BD9217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802832;
-	bh=Yy44GzBlOhNX+cRH3VDEQOL4SygaJSzEKGBGdEzPOQc=;
+	s=default; t=1565802835;
+	bh=4Lq1f7vlDb2mq8tU9e2/0cm39cCB3sKcfvHsdSwMk1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k3vB40DbGq/w04VtxlSFnd7oN3/tW2kgkXjiALj7p3jdbhU/OCUdFG57vqgLXYNIo
-	 4HwEXv4xl/UW2YMAEze43gAkA8yXblEvpLf4QvPjGr6+DrEQ6xLYRQYUBmz6bzRnED
-	 UETw7xoR6rlircBUnlaplMNhdXlTqDvBWK6nc8zw=
+	b=rxv95S+/lwlhbBLGcTxzARJAViUywBEMPvN66srxE6SteiDpIlyFCpFi3QSz+wLU1
+	 WNQymi2rjs+kLmF3bH60oDy5wez+9wJqmrOmY03x4Kw1tRquk+EAG0mDvNcHm1G2RT
+	 Duc+47oQG9f3qAQGfOMcNlnTuVeuKVB/IYpwstxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730966AbfHNRNv (ORCPT
+        id S1730973AbfHNRNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:13:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38088 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:13:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729421AbfHNRNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:13:46 -0400
+        id S1730963AbfHNRNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:13:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 151852063F;
-        Wed, 14 Aug 2019 17:13:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DCA92063F;
+        Wed, 14 Aug 2019 17:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802825;
-        bh=Yy44GzBlOhNX+cRH3VDEQOL4SygaJSzEKGBGdEzPOQc=;
+        s=default; t=1565802830;
+        bh=4Lq1f7vlDb2mq8tU9e2/0cm39cCB3sKcfvHsdSwMk1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cz/oqRzxZNtxykNQyIC0ob4ZhGUymXbQgG5slpVqmA6SIOqMw8Jd5KJumb6Jekdw6
-         x9xi7NmLLbZflBY/QODua39qyDrTvTPKZfIU+bkAHnejxbtQ2UTaFL6XZaomHxjpaL
-         EzX/9GBh5vmO0RPqz+JxGwZ6g3Otj/7IXU7M8BqI=
+        b=hMeF4iV2OHkEdtkD/zh/DGWNpN8CkmeeDK/ZaVTngze8fmK3aBo8a7gApt83mUspX
+         KvoPSIP9R4OfMxj9QOWNER3UqJHmPFhbfOp+OpXYsXAVNvCDSsLWfDSK3jcog2tGKy
+         ZkMo6c3Bq6BEKOVWKE1wN8ScbR7Ly7fvRUrnADLQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        David Carrillo-Cisneros <davidcc@google.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 40/69] perf tools: Fix proper buffer size for feature processing
-Date:   Wed, 14 Aug 2019 19:01:38 +0200
-Message-Id: <20190814165748.156633204@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH 4.14 16/69] x86/mm: Sync also unmappings in vmalloc_sync_all()
+Date:   Wed, 14 Aug 2019 19:01:14 +0200
+Message-Id: <20190814165746.624744275@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -66,50 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 79b2fe5e756163897175a8f57d66b26cd9befd59 ]
+From: Joerg Roedel <jroedel@suse.de>
 
-After Song Liu's segfault fix for pipe mode, Arnaldo reported following
-error:
+commit 8e998fc24de47c55b47a887f6c95ab91acd4a720 upstream.
 
-  # perf record -o - | perf script
-  0x514 [0x1ac]: failed to process type: 80
+With huge-page ioremap areas the unmappings also need to be synced between
+all page-tables. Otherwise it can cause data corruption when a region is
+unmapped and later re-used.
 
-It's caused by wrong buffer size setup in feature processing, which
-makes cpu topology feature fail, because it's using buffer size to
-recognize its header version.
+Make the vmalloc_sync_one() function ready to sync unmappings and make sure
+vmalloc_sync_all() iterates over all page-tables even when an unmapped PMD
+is found.
 
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Carrillo-Cisneros <davidcc@google.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Fixes: e9def1b2e74e ("perf tools: Add feature header record to pipe-mode")
-Link: http://lkml.kernel.org/r/20190715140426.32509-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/20190719184652.11391-3-joro@8bytes.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/perf/util/header.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/mm/fault.c |   13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 26437143c9406..c892a28e7b048 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3081,7 +3081,7 @@ int perf_event__process_feature(struct perf_tool *tool,
- 		return 0;
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -260,11 +260,12 @@ static inline pmd_t *vmalloc_sync_one(pg
  
- 	ff.buf  = (void *)fe->data;
--	ff.size = event->header.size - sizeof(event->header);
-+	ff.size = event->header.size - sizeof(*fe);
- 	ff.ph = &session->header;
+ 	pmd = pmd_offset(pud, address);
+ 	pmd_k = pmd_offset(pud_k, address);
+-	if (!pmd_present(*pmd_k))
+-		return NULL;
  
- 	if (feat_ops[feat].process(&ff, NULL))
--- 
-2.20.1
-
+-	if (!pmd_present(*pmd))
++	if (pmd_present(*pmd) != pmd_present(*pmd_k))
+ 		set_pmd(pmd, *pmd_k);
++
++	if (!pmd_present(*pmd_k))
++		return NULL;
+ 	else
+ 		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
+ 
+@@ -286,17 +287,13 @@ void vmalloc_sync_all(void)
+ 		spin_lock(&pgd_lock);
+ 		list_for_each_entry(page, &pgd_list, lru) {
+ 			spinlock_t *pgt_lock;
+-			pmd_t *ret;
+ 
+ 			/* the pgt_lock only for Xen */
+ 			pgt_lock = &pgd_page_get_mm(page)->page_table_lock;
+ 
+ 			spin_lock(pgt_lock);
+-			ret = vmalloc_sync_one(page_address(page), address);
++			vmalloc_sync_one(page_address(page), address);
+ 			spin_unlock(pgt_lock);
+-
+-			if (!ret)
+-				break;
+ 		}
+ 		spin_unlock(&pgd_lock);
+ 	}
 
 
