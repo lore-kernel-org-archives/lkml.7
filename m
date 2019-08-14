@@ -2,72 +2,93 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C55C7C32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BA3C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970212063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:15:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802945;
-	bh=1xSMuykuomvNB3TtezQsMbHc6fU8Wwbv0cdYSMqcmg8=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=Neuc2Kkz24DLDfnsjMAPXPmtkqms78vskOrDAn473OdWZnFrhlSvo8JqYuoHwjhBC
-	 RLyiYR9Uquq2pX+FrMkxMdt/P+Jl+QM18qw7rugIdcI73DJM++2azX8WrwDLQKOZC5
-	 H0Cp8hB6AFweEFvta15DAWAtm45K5vjIs4rMNKUU=
+	by mail.kernel.org (Postfix) with ESMTP id 395842084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:15:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cUY4bV8z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731054AbfHNRPo (ORCPT
+        id S1730961AbfHNRPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:15:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730961AbfHNRPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:15:41 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88A79208C2;
-        Wed, 14 Aug 2019 17:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802940;
-        bh=1xSMuykuomvNB3TtezQsMbHc6fU8Wwbv0cdYSMqcmg8=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=2kWmBZlaWvd1pkpXMut/dOBeV2tQnStSIR68yjNn81EcCIuru0WhwJOAyTr2wEcn1
-         SjD2oAIi0BgXkeKbPV0YkA9F/Wq7S+zb5zxVNCY5oa2tpO4Qc9IuW8xxInfFG+6OlZ
-         fBZAxgLz+P/TqHwPINqixEp7fjAJmfA7N5u6AFtM=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 14 Aug 2019 13:15:50 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41223 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730952AbfHNRPH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:15:07 -0400
+Received: by mail-ot1-f68.google.com with SMTP id o101so31215705ota.8
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 10:15:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=01Ayf9LgEcMv7V+WI2AsTnek5WUaEhOAgw1TLPT5Lg8=;
+        b=cUY4bV8z98fFrOSFWWEdErQVDghtf844gc08EquK79TWPwgrs8cts9QORhUbmj84w6
+         f6m4/lvh33jikA+ZGM+tRxQ7toWhgXNf/hwvBLPgnKwiBbxG/hNFcYj9+6y8trNIYobL
+         ilhTnpmaW/fEejmEK013Y8FFlYqMK/zF/v1CwFP79IdFl+ufYbogIYsXzDf8W3I4UxKF
+         r8v0YXlyRRhd1ggXnCn4S6QZLyTNrwzaOdCaJg1+ES5vnUy0kZjxLEi49f9BB2aexwxP
+         eHVzRfwa+CreiMnCsgeyIj4Uq36gE0EIt5XlCqU8y22UxzWojnwOuHQRKsdXe9SxFPNa
+         DIWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=01Ayf9LgEcMv7V+WI2AsTnek5WUaEhOAgw1TLPT5Lg8=;
+        b=r1OkDezx5Mlmz/w03JhAFnv0bS1bEaaP4p25aEDtb52uEAdsK6OVLHTDvVzoO6iM+J
+         u6946ByeKLe5Si4YTuNrstKqmnGhSeCnhyaScDUP540ZlJNDJRJLU7QfyR4XuzGsQe5U
+         imlOR4aFo+lCgFhj+tChjm7tpbWPOyZJv/6yppk+Dr/UoDVH4AlM/HuK+hH33W0dY5qa
+         3E4gmWRX1Xp+DXV4vlmrYnfLAmDjqqwjEV42S8yzzlQvzvu9l3Mw3RG0rkp9MyCpbxgX
+         I7d2CiCIGAQUoE/RaqAuDWQ1rBrxeJOR/4C4EvBgtcHUwj6IVXLHEdupYjwfRZ4okDzc
+         G0Rw==
+X-Gm-Message-State: APjAAAWSRHR5hOyo5VgaSruUnA9w4qSp5ZoxlAPKO74+nBABomN99yGS
+        VYv6Fg8bMfjTNi9h14MN6rvZjNbbkDlyKgeVdP1IFA==
+X-Google-Smtp-Source: APXvYqx0J+BLly1ZtoTkIyMRX0f+EWksHL1efdejnhvFvA6o4jTrFb7cWvdHrOwDDKU8F7aJNPtUW/N21twPL0yxhHI=
+X-Received: by 2002:a6b:8f47:: with SMTP id r68mr1046835iod.204.1565802905873;
+ Wed, 14 Aug 2019 10:15:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190814125012.8700-21-vkoul@kernel.org>
-References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-21-vkoul@kernel.org>
-Subject: Re: [PATCH 20/22] arm64: dts: qcom: sm8150: Add pmu node to SM8150 SoC
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>
-To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 14 Aug 2019 10:15:39 -0700
-Message-Id: <20190814171540.88A79208C2@mail.kernel.org>
+References: <20190808000721.124691-1-matthewgarrett@google.com>
+ <20190808000721.124691-16-matthewgarrett@google.com> <20190814072602.GA27836@zn.tnic>
+In-Reply-To: <20190814072602.GA27836@zn.tnic>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Wed, 14 Aug 2019 10:14:54 -0700
+Message-ID: <CACdnJuuOhuw71GDwQOrPQxUexpvpZNJocr6m0dYzJw+MMaVKWQ@mail.gmail.com>
+Subject: Re: [PATCH V38 15/29] acpi: Ignore acpi_rsdp kernel param when the
+ kernel has been locked down
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Josh Boyer <jwboyer@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Young <dyoung@redhat.com>, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-08-14 05:50:10)
-> From: Sibi Sankar <sibis@codeaurora.org>
->=20
-> Add the CPU PMU on SM8150 to get perf support for hardware events.
->=20
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
+On Wed, Aug 14, 2019 at 12:25 AM Borislav Petkov <bp@alien8.de> wrote:
+> #if defined(CONFIG_RANDOMIZE_BASE) && defined(CONFIG_MEMORY_HOTREMOVE)
+>
+> false and thus not available to early code anymore.
 
-Squash it?
+We explicitly don't want to pay attention to the acpi_rsdp kernel
+parameter in early boot except for the case of finding the SRAT table,
+and we only need that if CONFIG_RANDOMIZE_BASE and
+CONFIG_MEMORY_HOTREMOVE are set. However, we *do* want to tell the
+actual kernel where the RSDP is if we found it via some other means,
+so we can't just clear the boot parameters value. The kernel proper
+will parse the command line again and will then (if lockdown isn't
+enabled) override the actual value we passed up in boot params. So I
+think this is ok?
 
+(Sorry for not Cc:ing x86, clear oversight on my part)
