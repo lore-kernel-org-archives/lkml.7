@@ -2,53 +2,54 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B02C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFCBC32757
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8F7F20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6FC2206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803029;
-	bh=r9w7miScZdmWFyZcTYDiMP1IwH1WZO9gDwXNl10KY8w=;
+	s=default; t=1565803034;
+	bh=ybXdM9q+D0assHnEXTbPJ7lFEhy1R43tnhHrQ5xnTmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a93H/maxNcFU+bz86ZV/mrzlepPPvvH2K8AnJ9NUVlK2ZWoaZSKdCnRak2f/t9VM0
-	 jK7LK8WJdKrus+PyVaF4Lu2ZJ8ufqh+7Y+vKaA14bYwhdpH/DBcX3mmM1Vo9+0DIQA
-	 5hRoAMbYt4umuaYWctFKnWxiHnfKoxQIOH3lYK5o=
+	b=L4ey5D89kGW5gdkdSm9gooIEotPKa945cyVOcd7Gzq2CpbOFagHPFXSxtn+YTeRLF
+	 AzTpkVBtg8F0DP/utXNjjYh70W9zWHb+4IqcwbeoIiM6TBJIKnt8yMKR5JkOKZT5EW
+	 AiD+N2jnzQ58nf3dNfEjk/09mSVqfUdB/HgRGvuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730696AbfHNRRJ (ORCPT
+        id S1730899AbfHNRN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:17:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37870 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:13:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729449AbfHNRNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:13:36 -0400
+        id S1730869AbfHNRNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:13:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 162DF2133F;
-        Wed, 14 Aug 2019 17:13:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4150D20665;
+        Wed, 14 Aug 2019 17:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802815;
-        bh=r9w7miScZdmWFyZcTYDiMP1IwH1WZO9gDwXNl10KY8w=;
+        s=default; t=1565802802;
+        bh=ybXdM9q+D0assHnEXTbPJ7lFEhy1R43tnhHrQ5xnTmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gu3F3T59Xvo5/poc5a/VB5B5mpL+4/K6nK2X9NcDoHuT4hAIFRyBlIAMs13TqqIVy
-         /ObwPqbs0BXXONDjuX8+xVifyqU0gVO7+3vWqkyj/5BykumHVa4fL3/HbsJBB+e+B8
-         //VH6U3Zu/tloLUdniHGeqsH375rJ6ySGh0q0Dic=
+        b=Dm8TqVNjc9xMkcFw77UPzeUikXfjeoRZNA+9u0rKnU8zhieOPFyi8QDFOTQSROybs
+         n+IrlM1W93L9kfC5M0vqz0ESErrKH87SZ/56zdsfQGbN1nPs/oLif2oqk31UApBasc
+         j3TMjYEec8ZPW/RrIii4C2zvkPYbjVL+ZRYeM6rE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 36/69] ALSA: compress: Fix regression on compressed capture streams
-Date:   Wed, 14 Aug 2019 19:01:34 +0200
-Message-Id: <20190814165747.897532300@linuxfoundation.org>
+        Denis Andzakovic <denis.andzakovic@pulsesecurity.co.nz>,
+        Eric Dumazet <edumazet@google.com>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Salvatore Bonaccorso <carnil@debian.org>
+Subject: [PATCH 4.14 14/69] tcp: Clear sk_send_head after purging the write queue
+Date:   Wed, 14 Aug 2019 19:01:12 +0200
+Message-Id: <20190814165746.523313498@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -61,82 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4475f8c4ab7b248991a60d9c02808dbb813d6be8 ]
+From: Ben Hutchings <ben@decadent.org.uk>
 
-A previous fix to the stop handling on compressed capture streams causes
-some knock on issues. The previous fix updated snd_compr_drain_notify to
-set the state back to PREPARED for capture streams. This causes some
-issues however as the handling for snd_compr_poll differs between the
-two states and some user-space applications were relying on the poll
-failing after the stream had been stopped.
+Denis Andzakovic discovered a potential use-after-free in older kernel
+versions, using syzkaller.  tcp_write_queue_purge() frees all skbs in
+the TCP write queue and can leave sk->sk_send_head pointing to freed
+memory.  tcp_disconnect() clears that pointer after calling
+tcp_write_queue_purge(), but tcp_connect() does not.  It is
+(surprisingly) possible to add to the write queue between
+disconnection and reconnection, so this needs to be done in both
+places.
 
-To correct this regression whilst still fixing the original problem the
-patch was addressing, update the capture handling to skip the PREPARED
-state rather than skipping the SETUP state as it has done until now.
+This bug was introduced by backports of commit 7f582b248d0a ("tcp:
+purge write queue in tcp_connect_init()") and does not exist upstream
+because of earlier changes in commit 75c119afe14f ("tcp: implement
+rb-tree based retransmit queue").  The latter is a major change that's
+not suitable for stable.
 
-Fixes: 4f2ab5e1d13d ("ALSA: compress: Fix stop handling on compressed capture streams")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Denis Andzakovic <denis.andzakovic@pulsesecurity.co.nz>
+Bisected-by: Salvatore Bonaccorso <carnil@debian.org>
+Fixes: 7f582b248d0a ("tcp: purge write queue in tcp_connect_init()")
+Cc: <stable@vger.kernel.org> # before 4.15
+Cc: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/sound/compress_driver.h |  5 +----
- sound/core/compress_offload.c   | 16 +++++++++++-----
- 2 files changed, 12 insertions(+), 9 deletions(-)
+ include/net/tcp.h |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/sound/compress_driver.h b/include/sound/compress_driver.h
-index 392bac18398ba..33a07c3badf01 100644
---- a/include/sound/compress_driver.h
-+++ b/include/sound/compress_driver.h
-@@ -186,10 +186,7 @@ static inline void snd_compr_drain_notify(struct snd_compr_stream *stream)
- 	if (snd_BUG_ON(!stream))
- 		return;
- 
--	if (stream->direction == SND_COMPRESS_PLAYBACK)
--		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
--	else
--		stream->runtime->state = SNDRV_PCM_STATE_PREPARED;
-+	stream->runtime->state = SNDRV_PCM_STATE_SETUP;
- 
- 	wake_up(&stream->runtime->sleep);
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1613,6 +1613,8 @@ static inline void tcp_init_send_head(st
+ 	sk->sk_send_head = NULL;
  }
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index 555df64d46ffc..cf1317546b0ff 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -575,10 +575,7 @@ snd_compr_set_params(struct snd_compr_stream *stream, unsigned long arg)
- 		stream->metadata_set = false;
- 		stream->next_track = false;
  
--		if (stream->direction == SND_COMPRESS_PLAYBACK)
--			stream->runtime->state = SNDRV_PCM_STATE_SETUP;
--		else
--			stream->runtime->state = SNDRV_PCM_STATE_PREPARED;
-+		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
- 	} else {
- 		return -EPERM;
- 	}
-@@ -694,8 +691,17 @@ static int snd_compr_start(struct snd_compr_stream *stream)
- {
- 	int retval;
- 
--	if (stream->runtime->state != SNDRV_PCM_STATE_PREPARED)
-+	switch (stream->runtime->state) {
-+	case SNDRV_PCM_STATE_SETUP:
-+		if (stream->direction != SND_COMPRESS_CAPTURE)
-+			return -EPERM;
-+		break;
-+	case SNDRV_PCM_STATE_PREPARED:
-+		break;
-+	default:
- 		return -EPERM;
-+	}
++static inline void tcp_init_send_head(struct sock *sk);
 +
- 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_START);
- 	if (!retval)
- 		stream->runtime->state = SNDRV_PCM_STATE_RUNNING;
--- 
-2.20.1
-
+ /* write queue abstraction */
+ static inline void tcp_write_queue_purge(struct sock *sk)
+ {
+@@ -1621,6 +1623,7 @@ static inline void tcp_write_queue_purge
+ 	tcp_chrono_stop(sk, TCP_CHRONO_BUSY);
+ 	while ((skb = __skb_dequeue(&sk->sk_write_queue)) != NULL)
+ 		sk_wmem_free_skb(sk, skb);
++	tcp_init_send_head(sk);
+ 	sk_mem_reclaim(sk);
+ 	tcp_clear_all_retrans_hints(tcp_sk(sk));
+ 	tcp_init_send_head(sk);
 
 
