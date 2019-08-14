@@ -2,172 +2,220 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A941C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED74C0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EFD82054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:52:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZF66mpLc"
+	by mail.kernel.org (Postfix) with ESMTP id 08D122054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565769146;
+	bh=VEIUnUsaQjNlfr6AKllGq3O2H3xQBx57LCb9iAtalOo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OWSEuAoMfx04EQrR9/plFo8mUp/O9MGVN0lhf8bWH60CeNXseM0S8xoHx6wIJ8luW
+	 p580sR4zBCsTDaMQ3EYORzq8p4aElwrpDFltoQi81xhCaPzFY4KoEPzKXJkroXAB0u
+	 RMiF66/4yurtkfuNjyzJcFxFk4iPvZ3qjfNEOXKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbfHNHwL (ORCPT
+        id S1726856AbfHNHwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:52:11 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33868 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfHNHwK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:52:10 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c7so7687712otp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 00:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=A3FwTQnzXQxQ1tn9puJCL/AccobFRlvOfxXdkmMzNAc=;
-        b=ZF66mpLco25PsHUC0Z45Wlas+FiEdMC3mkgmrVy7hzyZGD5YPGjRWRW1CYEAkiei3o
-         46MauRHGSRVvFr9uDrdyzuKzaFAtK1YqNdWoJdiF3XHZ+1Rta3dPk3igQlqu+duPJs7n
-         pT80bDQF5HDD8IX56+4VUF/v8Pg6dMuY7ZPET0yDJMT3YfA0BVCa7nSlfVRHP5JtFCvC
-         71KJPTmobIYH+qGf7HtfsXqHWq3CCGo7joebkNOymI+b3mCibWaoTa3dX4t8ntJR6FiC
-         Alqfy5mLpEQmKRBdzxyOMjLhVRupV+nTad5JKv5YELt2yEsfraOg4wsExz6ZM0nd9jj6
-         BkHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=A3FwTQnzXQxQ1tn9puJCL/AccobFRlvOfxXdkmMzNAc=;
-        b=UTP87vmIdH7krhrC+yVHM5LTLk9klSUnScDmdQ90o/Bbkwu8OxUi+E/Ip293E+R2yi
-         Q+rbgFrFbN9J6ROQKbtcBi1dLzWe7cpsbuQ51eNg2SkeFwUz0/qY4Wc708Zo3kU4jn4j
-         qL2i8lFTzW5QnZSWoAQjnrh8DxTGEuEanMeEEFNitHMvrTb9d87jI2hHlrfD0aV4AS4b
-         8iYXOvklgwcrvhWvdLs5n1sq3CCPZMObtQf2nSghbGYVr/Y2t2obeeJgpnvb3IRfqz7O
-         t+5JwoC4iTUn89CDsd0Iw4RMBTrVphtsizHVtGE+qMRSR2TQm4AFW/QPjv9SVsu6xDea
-         YD2w==
-X-Gm-Message-State: APjAAAXV6N7o0BC8rHF3vpqsP/lEep1CS4Q3vsfJk6mQnGgA22L+nUkD
-        XSBQxvD6gWi6jEOytKPUtVaHN6JxbRHxVcDJNyAA4w==
-X-Google-Smtp-Source: APXvYqwrX6eHcXHI70cXxsMFdQLH7Cii35FC5m0TSKZOvb6P4BNQxKbxI0LV5NtKmv0hV1QJkvyKm0Ux1HO9+tNcy3g=
-X-Received: by 2002:a05:6830:1e05:: with SMTP id s5mr22188129otr.247.1565769128779;
- Wed, 14 Aug 2019 00:52:08 -0700 (PDT)
+        Wed, 14 Aug 2019 03:52:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726373AbfHNHwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:52:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5679D2054F;
+        Wed, 14 Aug 2019 07:52:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565769142;
+        bh=VEIUnUsaQjNlfr6AKllGq3O2H3xQBx57LCb9iAtalOo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DOehqR9ZU7HxqCy4p8GxhasAJU4UHJr0zEo6FsOpZ2XhzXRNV/A+JNOqM2JMnpsiO
+         TVIgpCEmvja89xakF1cbjEn+mQBTbjkb03Qne2d0urUvyF39q8RohRUPDbU+qikJdR
+         s0IODItWkEdDvUO6XsuxQ515lrXTrAiBcluqWFpU=
+Date:   Wed, 14 Aug 2019 09:52:20 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v2 1/3] PCI: sysfs: Define device
+ attributes with DEVICE_ATTR*()
+Message-ID: <20190814075220.GA4067@kroah.com>
+References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
+ <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+ <20190813204513.4790-2-skunberg.kelsey@gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a9d:6a:0:0:0:0:0 with HTTP; Wed, 14 Aug 2019 00:52:08 -0700 (PDT)
-In-Reply-To: <20190814073939.ubgzysmkmmel5h4y@pengutronix.de>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <20190813141256.jnbrfld42rtigek3@pengutronix.de> <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
- <20190814070121.o53tj2mtky4hcy3n@pengutronix.de> <CAMz4ku+55O6ORVM9xDv4R954QG4PXV8EkcGypSTB5wKni+Dq+Q@mail.gmail.com>
- <20190814073939.ubgzysmkmmel5h4y@pengutronix.de>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Wed, 14 Aug 2019 15:52:08 +0800
-Message-ID: <CAMz4ku+Q7CV+0dP1P0hAPJR7KiG0HOkZbT_LPXY4Q03hMuvS8A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM documentation
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813204513.4790-2-skunberg.kelsey@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
+On Tue, Aug 13, 2019 at 02:45:11PM -0600, Kelsey Skunberg wrote:
+> Defining device attributes should be done through the helper
+> DEVICE_ATTR*(_name, _mode, _show, _store). Change all instances using
+> __ATTR*() to now use DEVICE_ATTR*().
+> 
+> Example of old:
+> 
+> struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show,
+> 						  _store)
+> 
+> Example of new:
+> 
+> static DEVICE_ATTR(foo, S_IWUSR | S_IRUGO, show_foo, store_foo)
 
-On 14/08/2019, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> wrote=
-:
-> On Wed, Aug 14, 2019 at 03:25:53PM +0800, Baolin Wang wrote:
->> Hi Uwe,
->>
->> On Wed, 14 Aug 2019 at 15:01, Uwe Kleine-K=C3=B6nig
->> <u.kleine-koenig@pengutronix.de> wrote:
->> >
->> > Hello Baolin,
->> >
->> > On Wed, Aug 14, 2019 at 09:51:34AM +0800, Baolin Wang wrote:
->> > > On Tue, 13 Aug 2019 at 22:13, Uwe Kleine-K=C3=B6nig
->> > > <u.kleine-koenig@pengutronix.de> wrote:
->> > > > On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
->> > > > > +- assigned-clock-parents: The phandle of the parent clock of PW=
-M
->> > > > > clock.
->> > > >
->> > > > I'm not sure you need to point out assigned-clocks and
->> > > > assigned-clock-parents as this is general clk stuff. Also I wonder
->> > > > if
->> > > > these should be "required properties".
->> > >
->> > > I think I should describe any properties used by PWM node, like
->> > > 'clocks' and 'clock-names' properties, though they are common clock
->> > > properties.
->> >
->> > Then you might want to describe also "status", "assigned-clock-rates",
->> > "pinctrl-$n", "pinctrl-names", "power-domains", "power-domain-names"
->> > and
->> > probably another dozen I'm not aware of.
->>
->> We usually do not describe 'status', but if your device node used
->> "pinctrl-$n", "pinctrl-names" ... common properties, yes, you should
->> describe them to let users know what is the purpose of these
->> properties. That's also asked by DT maintainer Rob.
->
-> Does this convince you that you should also describe "pinctrl-$n" and
-> the others? If not, why not? We also usually don't describe
+Why not DEVICE_ATTR_RO() and DEVICE_ATTR_RW() and friends?  "Raw"
+DEVICE_ATTR() should almost never be used unless the files have a very
+strange mode setting.  And if that is true, they should be audited to
+find out why their permissions are so strange from the rest of the
+kernel defaults.
 
-Our PWM device node did not use "pinctrl-$n" things, why I should
-describe "pinctrl-$n"?
-If some devices use pinctrl, yes, they should describe what is the
-purpose of pinctrl, see:
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Do=
-cumentation/devicetree/bindings/mmc/sdhci-sprd.txt
+> 
+> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> ---
+>  drivers/pci/pci-sysfs.c | 59 +++++++++++++++++++----------------------
+>  1 file changed, 27 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 965c72104150..8af7944fdccb 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -464,9 +464,7 @@ static ssize_t dev_rescan_store(struct device *dev,
+>  	}
+>  	return count;
+>  }
+> -static struct device_attribute dev_rescan_attr = __ATTR(rescan,
+> -							(S_IWUSR|S_IWGRP),
+> -							NULL, dev_rescan_store);
+> +static DEVICE_ATTR(rescan, (S_IWUSR | S_IWGRP), NULL, dev_rescan_store);
 
-> assigned-clock-parents. For me these are all in the same catagory:
+DEVICE_ATTR_WO()?
 
-Lots of dt bindings describe 'assigned-clock-parents',:
-./Documentation/devicetree/bindings/display/msm/dsi.txt
-./Documentation/devicetree/bindings/display/msm/dsi.txt
-./Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt
-./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-./Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
-./Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-./Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
-./Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
-......
+>  static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+>  			    const char *buf, size_t count)
+> @@ -480,9 +478,8 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+>  		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
+>  	return count;
+>  }
+> -static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
+> -							(S_IWUSR|S_IWGRP),
+> -							NULL, remove_store);
+> +static DEVICE_ATTR_IGNORE_LOCKDEP(remove, (S_IWUSR | S_IWGRP), NULL,
+> +				  remove_store);
 
-> Common properties supported for each devicetree node that represents a
-> device. The only difference is that on your board you make use of some
-> but not some others.
+DEVICE_ATTR_WO()?
 
-Fine, let's decide this by PWM maintainer or DT maintainer Rob.
+Ugh, no lockdep?  ick, ok, leave this as-is, crazy "remove" files...
 
->
->> > > Yes, they are required. Thanks for your comments.
->> >
->> > required in which sense? Why can a Spreadtrum PWM not work when the
->> > clock parents are unspecified?
->>
->> On some Spreadtrum platforms, the default source clock of PWM may not
->> be enabled, so we should force users to select one available source
->> clock for PWM output clock.
->
-> Sounds like a bug in the clk tree of your SoC that shouldn't affect how
-> the PWM is described in the device tree. After all a parent of a clock
-> is supposed to become enabled when the clock gets enabled.
+>  
+>  static ssize_t dev_bus_rescan_store(struct device *dev,
+>  				    struct device_attribute *attr,
+> @@ -504,7 +501,7 @@ static ssize_t dev_bus_rescan_store(struct device *dev,
+>  	}
+>  	return count;
+>  }
+> -static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
+> +static DEVICE_ATTR(bus_rescan, (S_IWUSR | S_IWGRP), NULL, dev_bus_rescan_store);
 
-That's not a bug, that's like a MUX, the default source clock of PWM
-can be disabled, since we usually do not use the default source clock.
-Then we can select a available source clock by the MUX.
+DEVICE_ATTR_WO()?
 
---=20
-Baolin Wang
-Best Regards
+>  
+>  #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
+>  static ssize_t d3cold_allowed_store(struct device *dev,
+> @@ -687,16 +684,14 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
+>  	return count;
+>  }
+>  
+> -static struct device_attribute sriov_totalvfs_attr = __ATTR_RO(sriov_totalvfs);
+> -static struct device_attribute sriov_numvfs_attr =
+> -		__ATTR(sriov_numvfs, (S_IRUGO|S_IWUSR|S_IWGRP),
+> -		       sriov_numvfs_show, sriov_numvfs_store);
+> -static struct device_attribute sriov_offset_attr = __ATTR_RO(sriov_offset);
+> -static struct device_attribute sriov_stride_attr = __ATTR_RO(sriov_stride);
+> -static struct device_attribute sriov_vf_device_attr = __ATTR_RO(sriov_vf_device);
+> -static struct device_attribute sriov_drivers_autoprobe_attr =
+> -		__ATTR(sriov_drivers_autoprobe, (S_IRUGO|S_IWUSR|S_IWGRP),
+> -		       sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
+> +static DEVICE_ATTR_RO(sriov_totalvfs);
+> +static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
+> +				  sriov_numvfs_show, sriov_numvfs_store);
+
+DEVICE_ATTR_RW()?
+
+> +static DEVICE_ATTR_RO(sriov_offset);
+> +static DEVICE_ATTR_RO(sriov_stride);
+> +static DEVICE_ATTR_RO(sriov_vf_device);
+> +static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
+> +		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
+
+DEVICE_ATTR_RW()?
+
+>  #endif /* CONFIG_PCI_IOV */
+>  
+>  static ssize_t driver_override_store(struct device *dev,
+> @@ -792,7 +787,7 @@ static struct attribute *pcie_dev_attrs[] = {
+>  };
+>  
+>  static struct attribute *pcibus_attrs[] = {
+> -	&dev_attr_rescan.attr,
+> +	&dev_attr_bus_rescan.attr,
+>  	&dev_attr_cpuaffinity.attr,
+>  	&dev_attr_cpulistaffinity.attr,
+>  	NULL,
+> @@ -820,7 +815,7 @@ static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
+>  		!!(pdev->resource[PCI_ROM_RESOURCE].flags &
+>  		   IORESOURCE_ROM_SHADOW));
+>  }
+> -static struct device_attribute vga_attr = __ATTR_RO(boot_vga);
+> +static DEVICE_ATTR_RO(boot_vga);
+>  
+>  static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
+>  			       struct bin_attribute *bin_attr, char *buf,
+> @@ -1458,7 +1453,7 @@ static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
+>  	return count;
+>  }
+>  
+> -static struct device_attribute reset_attr = __ATTR(reset, 0200, NULL, reset_store);
+> +static DEVICE_ATTR(reset, 0200, NULL, reset_store);
+
+DEVICE_ATTR_WO()?  Hm, root only, maybe not :(
+
+>  
+>  static int pci_create_capabilities_sysfs(struct pci_dev *dev)
+>  {
+> @@ -1468,7 +1463,7 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
+>  	pcie_aspm_create_sysfs_dev_files(dev);
+>  
+>  	if (dev->reset_fn) {
+> -		retval = device_create_file(&dev->dev, &reset_attr);
+> +		retval = device_create_file(&dev->dev, &dev_attr_reset);
+
+odds are this needs to be fixed up later to use attribute groups
+properly.  But that's better left for another patch.
+
+>  		if (retval)
+>  			goto error;
+>  	}
+> @@ -1553,7 +1548,7 @@ static void pci_remove_capabilities_sysfs(struct pci_dev *dev)
+>  	pcie_vpd_remove_sysfs_dev_files(dev);
+>  	pcie_aspm_remove_sysfs_dev_files(dev);
+>  	if (dev->reset_fn) {
+> -		device_remove_file(&dev->dev, &reset_attr);
+> +		device_remove_file(&dev->dev, &dev_attr_reset);
+
+Same here, attribute groups will handle this.
+
+thanks,
+
+greg k-h
