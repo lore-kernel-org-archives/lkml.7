@@ -2,182 +2,229 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B163DC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52CEC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C058206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:32:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="k/gxraMc"
+	by mail.kernel.org (Postfix) with ESMTP id 8C588206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbfHNRcB (ORCPT
+        id S1728659AbfHNRc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:32:01 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45203 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728487AbfHNRcB (ORCPT
+        Wed, 14 Aug 2019 13:32:28 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39949 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728358AbfHNRc2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:32:01 -0400
-Received: by mail-ed1-f67.google.com with SMTP id x19so104669087eda.12
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 10:31:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Qm6tCEyYHljYJCx+l7YOn3eiOVSI2Q6xsqKk/Szr8xk=;
-        b=k/gxraMcIYfFKbabTJ1uwZwJ8VES3yQLUNViHQMA+d1o/fXBUmn8Xlra/WXeXV9OK6
-         oIRMcB4HXQV1z1V493ABRs1dndtGFVbP9eicDVkQRWohVqSbxdWxsF3LaxECADogDqgb
-         PIOsIK/y/ZmlDZ6O+dGhdkqTrvL9DfZPgNEz8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Qm6tCEyYHljYJCx+l7YOn3eiOVSI2Q6xsqKk/Szr8xk=;
-        b=l5OtkinyNgJkwMcPhafJvBHDQgw/K1LeYF1vGBsfam9huA5LAlbfPmPLNtggZ4ixTp
-         SIsumarloaqC6uviYI1tRAcRyW3vOe+UQilbQ1GfDPI8vnho85byLUD/Oz2htDlTCTO5
-         76YTDujvd3Btg0cHd9nGljbaKWL3k7SIvKfT4bFTc+0LHUtGo3qiVfz52qd3HmFHywUb
-         5mMHBMFlwJzgB/g4hVQSFQjOim1G5RPLcye4Sor4/6kGFJ81q3Uc1gH3X/O0fuAH/WQ/
-         yDNpgTGDFpwVMZWK1Oz0ccFvAK7hOkAn9zeQ4XkVA9FOeevPZ3MFPmm+9pIWFI5R7hvV
-         /5Gg==
-X-Gm-Message-State: APjAAAVFadQpwtpy3pd5DKuHXjuJPIpwwlwp7oeI0ZCKdPnP6ZgBF3uZ
-        /TJqaCdaCa42eEpVunimHTFFoQ==
-X-Google-Smtp-Source: APXvYqwRn9v1KmyAl7iLql4TVsuC4BlSbySrQOJ2/+/4v8L1EDdXOOJ8MyXwatv64FQ4zcha8koF8Q==
-X-Received: by 2002:aa7:c353:: with SMTP id j19mr858899edr.292.1565803918776;
-        Wed, 14 Aug 2019 10:31:58 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id f6sm74361edn.63.2019.08.14.10.31.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 10:31:58 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 19:31:55 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Robert Chiras <robert.chiras@nxp.com>
-Cc:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 07/15] drm/mxsfb: Fix the vblank events
-Message-ID: <20190814173155.GR7444@phenom.ffwll.local>
-Mail-Followup-To: Robert Chiras <robert.chiras@nxp.com>,
-        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
-        David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
- <1565779731-1300-8-git-send-email-robert.chiras@nxp.com>
+        Wed, 14 Aug 2019 13:32:28 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxx8H-000772-PS; Wed, 14 Aug 2019 19:32:21 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxx8E-0005XC-W2; Wed, 14 Aug 2019 19:32:18 +0200
+Date:   Wed, 14 Aug 2019 19:32:18 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH 4/7] pwm: jz4740: Improve algorithm of clock calculation
+Message-ID: <20190814173218.zhg4se3pppano5m3@pengutronix.de>
+References: <20190812061520.lwzk3us4ginwwxov@pengutronix.de>
+ <1565642590.2007.1@crapouillou.net>
+ <20190812214838.e5hyhnlcyykjfvsb@pengutronix.de>
+ <1565648183.2007.3@crapouillou.net>
+ <20190813052726.g37upws5rlvrszc4@pengutronix.de>
+ <1565694066.1856.1@crapouillou.net>
+ <20190813123331.m4ttfhcgt6wyrcfi@pengutronix.de>
+ <1565700448.1856.2@crapouillou.net>
+ <20190813140903.rdwy7p3mhwetmlnt@pengutronix.de>
+ <1565799035.1984.0@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1565779731-1300-8-git-send-email-robert.chiras@nxp.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1565799035.1984.0@crapouillou.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 01:48:43PM +0300, Robert Chiras wrote:
-> Currently, the vblank support is not correctly implemented in MXSFB_DRM
-> driver. The call to drm_vblank_init is made with mode_config.num_crtc
-> which at that time is 0. Because of this, vblank is not activated, so
-> there won't be any vblank event submitted.
-> For example, when running modetest with the '-v' parameter will result
-> in an astronomical refresh rate (10000+ Hz), because of that.
+Hello Paul,
 
-Uh, that sounds a bit like a bug somewhere. If vblank doesn't work, we
-should give userspace an error back.
-
-Maybe we need more checks in drm_vblank_init()? Can you pls look into
-that?
-
+On Wed, Aug 14, 2019 at 06:10:35PM +0200, Paul Cercueil wrote:
+> Le mar. 13 août 2019 à 16:09, Uwe =?iso-8859-1?q?Kleine-K=F6nig?= a écrit :
+> > On Tue, Aug 13, 2019 at 02:47:28PM +0200, Paul Cercueil wrote:
+> > > Le mar. 13 août 2019 à 14:33, Uwe Kleine-König a écrit :
+> > > > On Tue, Aug 13, 2019 at 01:01:06PM +0200, Paul Cercueil wrote:
+> > > > > Well, you said that I shouln't rely on the fact that clk_round_rate() will
+> > > > > round down. That completely defeats the previous algorithm. So please tell
+> > > > > me how to use it correctly, because I don't see it.
+> > > >
+> > > > Using clk_round_rate correctly without additional knowledge is hard. If
+> > > > you assume at least some sane behaviour you'd still have to call it
+> > > > multiple times. Assuming maxrate is the maximal rate you can handle
+> > > > without overflowing your PWM registers you have to do:
+> > > >
+> > > > 	rate = maxrate;
+> > > > 	rounded_rate = clk_round_rate(clk, rate);
+> > > > 	while (rounded_rate > rate) {
+> > > > 		if (rate < rounded_rate - rate) {
+> > > > 			/*
+> > > > 			 * clk doesn't support a rate smaller than
+> > > > 			 * maxrate (or the round_rate callback doesn't
+> > > > 			 * round consistently).
+> > > > 			 */
+> > > > 			 return -ESOMETHING;
+> > > > 		}
+> > > > 		rate = rate - (rounded_rate - rate)
+> > > > 		rounded_rate = clk_round_rate(clk, rate);
+> > > > 	}
+> > > >
+> > > > 	return rate;
+> > > >
+> > > > Probably it would be sensible to put that in a function provided by the
+> > > > clk framework (maybe call it clk_round_rate_down and maybe with
+> > > > additional checks).
+> > > 
+> > >  clk_round_rate_down() has been refused multiple times in the past for
+> > >  reasons that Stephen can explain.
+> > 
+> > I'd be really interested in these reasons as I think the clk framework
+> > should make it easy to solve common tasks related to clocks. And finding
+> > out the biggest supported rate not bigger than a given maxrate is
+> > something I consider such a common task.
+> > 
+> > The first hit I found when searching was
+> > https://lkml.org/lkml/2010/7/14/260 . In there Stephen suggested that
+> > clk_round_rate with the current semantic is hardly useful and suggested
+> > clk_round_rate_up() and clk_round_rate_down() himself.
 > 
-> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-> ---
->  drivers/gpu/drm/mxsfb/mxsfb_drv.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+> That's from 2010, though.
+
+If you have a better link please tell me.
+
+> I agree that clk_round_rate_up() and clk_round_rate_down() should exist.
+> Even if they return -ENOSYS if it's not implemented for a given clock
+> controller.
+
+ack.
+
+> > > > > I came up with a much smarter alternative, that doesn't rely on the rounding
+> > > > > method of clk_round_rate, and which is better overall (no loop needed). It
+> > > > > sounds to me like you're bashing the code without making the effort to
+> > > > > understand what it does.
+> > > > >
+> > > > > Thierry called it a "neat trick"
+> > > > > (https://patchwork.kernel.org/patch/10836879/) so it cannot be as bad as you
+> > > > > say.
+> > > >
+> > > > Either that or Thierry failed to see the downside. The obvious downside
+> > > > is that once you set the period to something long (and so the clk was
+> > > > limited to a small frequency) you never make the clock any faster
+> > > > afterwards.
+> > >
+> > >  Read the algorithm again.
+> > 
+> > I indeed missed a call to clk_set_rate(clk, parent_rate). I thought I
+> > grepped for clk_set_rate before claiming the code was broken. Sorry.
+> > 
+> > So I think the code works indeed, but it feels like abusing
+> > clk_set_max_rate. So I'd like to see some words from Stephen about this
+> > procedure.
+> > 
+> > Also I think this is kind of inelegant to set the maximal rate twice. At
+> > least call clk_set_max_rate only once please.
 > 
-> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> index 2743975..829abec 100644
-> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> @@ -38,6 +38,9 @@
->  #include "mxsfb_drv.h"
->  #include "mxsfb_regs.h"
->  
-> +/* The eLCDIF max possible CRTCs */
-> +#define MAX_CRTCS 1
-> +
->  enum mxsfb_devtype {
->  	MXSFB_V3,
->  	MXSFB_V4,
-> @@ -138,6 +141,8 @@ static void mxsfb_pipe_enable(struct drm_simple_display_pipe *pipe,
->  		mxsfb->connector = &mxsfb->panel_connector;
->  	}
->  
-> +	drm_crtc_vblank_on(&pipe->crtc);
-> +
->  	pm_runtime_get_sync(drm->dev);
->  	drm_panel_prepare(mxsfb->panel);
->  	mxsfb_crtc_enable(mxsfb);
-> @@ -164,6 +169,8 @@ static void mxsfb_pipe_disable(struct drm_simple_display_pipe *pipe)
->  	}
->  	spin_unlock_irq(&drm->event_lock);
->  
-> +	drm_crtc_vblank_off(&pipe->crtc);
-> +
->  	if (mxsfb->connector != &mxsfb->panel_connector)
->  		mxsfb->connector = NULL;
->  }
-> @@ -246,7 +253,7 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
->  
->  	pm_runtime_enable(drm->dev);
->  
-> -	ret = drm_vblank_init(drm, drm->mode_config.num_crtc);
-> +	ret = drm_vblank_init(drm, MAX_CRTCS);
->  	if (ret < 0) {
->  		dev_err(drm->dev, "Failed to initialise vblank\n");
->  		goto err_vblank;
-> @@ -269,6 +276,8 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
->  		goto err_vblank;
->  	}
->  
-> +	drm_crtc_vblank_off(&mxsfb->pipe.crtc);
+> Ok. I can do that.
 
-Are you sure you need this one here? vblanks should be off after
-drm_vblank_init() is called.
-
-Thanks, Daniel
-
-> +
->  	/*
->  	 * Attach panel only if there is one.
->  	 * If there is no panel attach, it must be a bridge. In this case, we
-> -- 
-> 2.7.4
+I would still prefer to hear from Stephen about this approach. It seems
+wrong to have two different ways to achieve the same goal and my
+impression is that clk_round_rate is the function designed for this use
+case.
+ 
+> > > > > > > > > E.g. if at a rate of 12 MHz your computed hardware value for the period
+> > > > > > > > > is 0xf000, then at a rate of 24 MHz it won't fit in 16 bits. So the clock
+> > > > > > > > > rate must be reduced to the highest possible that will still give you a
+> > > > > > > > > < 16-bit value.
+> > > > > > > > >
+> > > > > > > > > We always want the highest possible clock rate that works, for the sake of
+> > > > > > > > > precision.
+> > > > > > > >
+> > > > > > > > This is dubious; but ok to keep the driver simple.> (Consider a PWM that
+> > > > > > > > can run at i MHz for i in [1, .. 30]. If a period of 120 ns and a duty
+> > > > > > > > cycle of 40 ns is requested you can get an exact match with 25 MHz, but
+> > > > > > > > not with 30 MHz.)
+> > > > > > >
+> > > > > > > The clock rate is actually (parent_rate >> (2 * x) )
+> > > > > > > for x = 0, 1, 2, ...
+> > > > > > >
+> > > > > > > So if your parent_rate is 30 MHz the next valid one is 7.5 MHz, and the
+> > > > > > > next one is 1.875 MHz. It'd be very unlikely that you get a better match at
+> > > > > > > a lower clock.
+> > > > > >
+> > > > > > If the smaller freqs are all dividers of the fastest that's fine. Please
+> > > > > > note in a code comment that you're assuming this.
+> > > > >
+> > > > >  No, I am not assuming this. The current driver just picks the highest clock
+> > > > >  rate that works. We're not changing the behaviour here.
+> > > >
+> > > > But you hide it behind clk API functions that don't guarantee this
+> > > > behaviour. And even if it works for you it might not for the next person
+> > > > who copies your code to support another hardware.
+> > > 
+> > >  Again, I'm not *trying* to guarantee this behaviour.
+> > 
+> > I didn't request you should guarantee this behaviour. I want you to make
+> > it obvious for readers of your code that you rely on something that
+> > isn't guaranteed. That your code works today isn't a good enough excuse.
+> > There are various examples like these. If you want a few:
+> > 
+> >  - printf("string: %s\n", NULL); works fine with glibc, but segfaults on
+> >    other libcs.
+> >  - setenv("MYVAR", NULL) used to work (and was equivalent to
+> >    setenv("MYVAR", "")) but that was never guaranteed. Then at some
+> >    point of time it started to segfault.
+> >  - Look into commits like a4435febd4c0f14b25159dca249ecf91301c7c76. This
+> >    used to work fine until compilers were changed to optimize more
+> >    aggressively.
+> > 
+> > Now if you use a clk and know that all rates smaller than the requested
+> > one are divisors of the fast one and your code only works (here: is
+> > optimal) when this condition is given, you're walking on thin ice just
+> > because this fact it's not guaranteed.
+> > The least you can do is to add a code comment to make people aware who
+> > debug the breakage or copy your code.
 > 
+> If I was assuming something, it's not that the requested clock rates are
+> always integer dividers of the parent rate - but rather that the difference
+> in precision between two possible clock rates (even non-integer-dividers) is
+> so tiny that we just don't care.
+
+I'm more exacting here. If you are asked for X and can provide X - 2 you
+shouldn't provide X - 12. Depending on the use case the consumer is happy
+about every bit of accuracy they can get. So if you deliberately provide
+X - 12 because it is easier to do and good enough for you, at least
+document this laziness to not waste other people's time more than
+necessary.
+
+Best regards
+Uwe
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
