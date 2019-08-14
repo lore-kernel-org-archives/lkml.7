@@ -2,103 +2,131 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D8CC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724BDC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21186214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:11:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565820662;
-	bh=2YQMr9WmohFL+xkk50uFprdKReR2E7JTnbbbO1059oA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fbO8FtRKyguzYQ94SwVe1kl3Htvx5bFCPbZFM/PC1bK4bvNiezVKzVitXE12zRDeM
-	 cu0I4fyKWXdQlFctTE9SO6LJM93KaR2f0TVu9XK6Q86AhqCTZs6gc8cOfZhS163xBt
-	 Mx1atEozvlRtiBR+9G/N+qRRXjcB7mTp4yPp/m1Y=
+	by mail.kernel.org (Postfix) with ESMTP id 459E521721
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:12:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzFVJ5u6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbfHNWLA (ORCPT
+        id S1729803AbfHNWMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 18:11:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbfHNWLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 18:11:00 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5BF32064A;
-        Wed, 14 Aug 2019 22:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565820660;
-        bh=2YQMr9WmohFL+xkk50uFprdKReR2E7JTnbbbO1059oA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nni+87chGmQaQDK8GYduslnDr78IJ75iX/jjJzdja8FuHyonKkGVJ9TJbqa+1r2+g
-         Bj5z2EZ9x7Tu4dLBvT9FHLLid9v0DUT5RTzPuYXwyKdKNIbsFi6X0YF5iUvKb5JNAj
-         EqADKsB5cz+e0n1z7exbiuiRittpuRoGaNTXA404=
-Date:   Wed, 14 Aug 2019 15:10:59 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Arun KS <arunks@codeaurora.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v2 4/5] mm/memory_hotplug: Make sure the pfn is aligned
- to the order when onlining
-Message-Id: <20190814151059.54618c4f86b7e0c613ab7413@linux-foundation.org>
-In-Reply-To: <784cba14-e0ad-cfea-8ffc-bfbf855ceb10@redhat.com>
-References: <20190814154109.3448-1-david@redhat.com>
-        <20190814154109.3448-5-david@redhat.com>
-        <20190814135608.a449ca5a75cd700e077a8d23@linux-foundation.org>
-        <784cba14-e0ad-cfea-8ffc-bfbf855ceb10@redhat.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 14 Aug 2019 18:12:45 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44852 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728378AbfHNWMp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 18:12:45 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k22so284558oiw.11
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 15:12:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fyqtiLbzf0B7EEuufXwlvVGQQuhpbnOj2sCLQecaeOA=;
+        b=BzFVJ5u6T9n90c7pBUGG2W/PYxhbxig7Uj4ekhFiygJPJOXLLgkQH0CnbSKqfH/8ZC
+         UE2W5h8jX9oSA377C53B1im+o74UWsm+XKOxd6726LqaaWGPDBgxwNhE3mUHX1w1qIC9
+         /nkyM1FFI7mtW+uuEV4QB8p74qCRBZmjT9lb375mw15aVkMx9MqLgfyohNQSZdNXfLzY
+         /lT7HKO0DymhH/Oazl37LYmfVMDy+mAlM3PXmUlF93mCJrk1GCVE92gUFRfHzZnqz4DS
+         PwNk5o/PjFLJHddu4yEUrroPsJC1TR4CVCsGF9vx1u09TgKO+44P+IHGrenLVd9rsZPu
+         Xkbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fyqtiLbzf0B7EEuufXwlvVGQQuhpbnOj2sCLQecaeOA=;
+        b=EpvHKwZyYiJ9Cl9QCC9/uandbK+ctcmto5XcQVtdrDDvlImAtYGVzwqvOn7Apk6Lf2
+         cR73RkUNiIgthVIiFloUOzpn2dx9APg/g6k2EwZRpI4owSfRBPc5DYanBvzFicZXqtYJ
+         IsHKwLTcefHrrzTMdLPyWap8Di8MvmkEqBa1J/ELj5EvzZEvTW/sGankF52jnE2km22U
+         Soso/Iisn8WYA4OWWv2RNUGBEg2BLKAzIZboML8HZ39BttDnjg4sR5b7maBlRRj3Ypbb
+         nkdVLjjUZqJhLKrZHEH14mwCdLPbR4SXtaAt4FhhxVzGP/Ec+UQM43XKHDdLjOfcqxLh
+         OhTg==
+X-Gm-Message-State: APjAAAWrPmvgOmmml4h2tXkiUXJ7KlWWxuUnGOvEqcmVYEeX2LTcgrQr
+        L060zCpNnHta1m2ZmVLLvRPh4/l14C5pxu7Rgw8=
+X-Google-Smtp-Source: APXvYqwlvuw12f5lw9fJpzGHCs9IjxCkWVfv0r3UGHD3THhT3ik9lOmV+44RtNITkDQKYXIEMzjTe97zwNxCpTzDqYc=
+X-Received: by 2002:a02:9981:: with SMTP id a1mr1736754jal.17.1565820764529;
+ Wed, 14 Aug 2019 15:12:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190814193536.15088-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20190814193536.15088-1-andrew.smirnov@gmail.com>
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Wed, 14 Aug 2019 15:12:32 -0700
+Message-ID: <CAFXsbZoRhy1OtsybHJQDef09gS1UGBhU8a+ZrF31O1THBGgeCA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: vf610-zii-cfu1: Add node for switch watchdog
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Cory Tusar <cory.tusar@zii.aero>, Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 23:47:24 +0200 David Hildenbrand <david@redhat.com> wrote:
+Tested-by: Chris Healy <cphealy@gmail.com>
 
-> >> --- a/mm/memory_hotplug.c
-> >> +++ b/mm/memory_hotplug.c
-> >> @@ -646,6 +646,9 @@ static int online_pages_range(unsigned long start_pfn, unsigned long nr_pages,
-> >>  	 */
-> >>  	for (pfn = start_pfn; pfn < end_pfn; pfn += 1ul << order) {
-> >>  		order = min(MAX_ORDER - 1, get_order(PFN_PHYS(end_pfn - pfn)));
-> >> +		/* __free_pages_core() wants pfns to be aligned to the order */
-> >> +		if (unlikely(!IS_ALIGNED(pfn, 1ul << order)))
-> >> +			order = 0;
-> >>  		(*online_page_callback)(pfn_to_page(pfn), order);
-> >>  	}
-> > 
-> > We aren't sure if this occurs, but if it does, we silently handle it.
-> > 
-> > It seems a reasonable defensive thing to do, but should we add a
-> > WARN_ON_ONCE() so that we get to find out about it?  If we get such a
-> > report then we can remove the WARN_ON_ONCE() and add an illuminating
-> > comment.
-> > 
-> > 
-> 
-> Makes sense, do you want to add the WARN_ON_ONCE() or shall I resend?
 
---- a/mm/memory_hotplug.c~mm-memory_hotplug-make-sure-the-pfn-is-aligned-to-the-order-when-onlining-fix
-+++ a/mm/memory_hotplug.c
-@@ -647,7 +647,7 @@ static int online_pages_range(unsigned l
- 	for (pfn = start_pfn; pfn < end_pfn; pfn += 1ul << order) {
- 		order = min(MAX_ORDER - 1, get_order(PFN_PHYS(end_pfn - pfn)));
- 		/* __free_pages_core() wants pfns to be aligned to the order */
--		if (unlikely(!IS_ALIGNED(pfn, 1ul << order)))
-+		if (WARN_ON_ONCE(!IS_ALIGNED(pfn, 1ul << order)))
- 			order = 0;
- 		(*online_page_callback)(pfn_to_page(pfn), order);
- 	}
-_
-
+On Wed, Aug 14, 2019 at 12:35 PM Andrey Smirnov
+<andrew.smirnov@gmail.com> wrote:
+>
+> Add I2C child node for switch watchdog present on CFU1.
+>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Signed-off-by: Cory Tusar <cory.tusar@zii.aero>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  arch/arm/boot/dts/vf610-zii-cfu1.dts | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/vf610-zii-cfu1.dts b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+> index 7267873b5369..18c19c092dd1 100644
+> --- a/arch/arm/boot/dts/vf610-zii-cfu1.dts
+> +++ b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+> @@ -239,6 +239,18 @@
+>         };
+>  };
+>
+> +&i2c1 {
+> +       clock-frequency = <100000>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_i2c1>;
+> +       status = "okay";
+> +
+> +       watchdog@38 {
+> +               compatible = "zii,rave-wdt";
+> +               reg = <0x38>;
+> +       };
+> +};
+> +
+>  &snvsrtc {
+>         status = "disabled";
+>  };
+> @@ -324,6 +336,13 @@
+>                 >;
+>         };
+>
+> +       pinctrl_i2c1: i2c1grp {
+> +               fsl,pins = <
+> +                       VF610_PAD_PTB16__I2C1_SCL               0x37ff
+> +                       VF610_PAD_PTB17__I2C1_SDA               0x37ff
+> +               >;
+> +       };
+> +
+>         pinctrl_leds_debug: pinctrl-leds-debug {
+>                 fsl,pins = <
+>                         VF610_PAD_PTD3__GPIO_82                 0x31c2
+> --
+> 2.21.0
+>
