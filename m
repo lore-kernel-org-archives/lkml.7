@@ -2,273 +2,84 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E65EC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A04BDC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12F3D206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:06:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="nAJ9ybkg"
+	by mail.kernel.org (Postfix) with ESMTP id 7EFC82133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbfHNQGr (ORCPT
+        id S1728298AbfHNQG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:06:47 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:30776 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfHNQGq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:06:46 -0400
-Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x7EG6O97024737;
-        Thu, 15 Aug 2019 01:06:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7EG6O97024737
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1565798787;
-        bh=gRWmtsYFUwXEvYPaQ9AZkEAa91zIEUkH9nocubkMAYU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nAJ9ybkgY+C3zCEzj6r2GGRwDO2LVm4pcNEx8uWfBtie9iRwptgDvbLn6WDk7MfOP
-         uBp89VLOTveKi0MZlr3K9ZFBYlJHlKSma/cX/u3pKqFHnyuS4FE/AHSyYURIesMizt
-         4Bbj+s9iuu0DN/0roA7X8UaaDW/l2wWRqpk/Wmb2QMjv3Ch+awyI78UzBMW0cQtpoO
-         FsxdHWRXYZOR/zJ/tV+SIiN+bb7kXhVQZfCj8nEkNUM0V4XSqXdcuqlTDe9JwiuKxF
-         YX+hqPcjUySmU3+cbw2jZSqQE+G9aa61rxF2reNil+lVvzw4VYvNyreeQYj+o0baHr
-         yFkgUb4OO6moA==
-X-Nifty-SrcIP: [126.125.143.222]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] kbuild: split final module linking out into Makefile.modfinal
-Date:   Thu, 15 Aug 2019 01:06:23 +0900
-Message-Id: <20190814160623.24802-3-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190814160623.24802-1-yamada.masahiro@socionext.com>
-References: <20190814160623.24802-1-yamada.masahiro@socionext.com>
+        Wed, 14 Aug 2019 12:06:59 -0400
+Received: from mga17.intel.com ([192.55.52.151]:38992 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726047AbfHNQG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 12:06:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 09:06:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,385,1559545200"; 
+   d="scan'208";a="184358026"
+Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 Aug 2019 09:06:58 -0700
+Message-ID: <84fc1b3bb2dbcf52ca79cb1141a431e087f082b5.camel@intel.com>
+Subject: Re: [PATCH v8 01/27] Documentation/x86: Add CET description
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Wed, 14 Aug 2019 08:57:19 -0700
+In-Reply-To: <87tvakgofi.fsf@oldenburg2.str.redhat.com>
+References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
+         <20190813205225.12032-2-yu-cheng.yu@intel.com>
+         <87tvakgofi.fsf@oldenburg2.str.redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I think splitting the modpost and linking modules into separate
-Makefiles will be useful especially when more complex build steps
-come in. The main motivation of this patch is to integrate the
-proposed klp-convert feature cleanly.
+On Wed, 2019-08-14 at 10:07 +0200, Florian Weimer wrote:
+> * Yu-cheng Yu:
+> 
+> > +ENDBR
+> > +    The compiler inserts an ENDBR at all valid branch targets.  Any
+> > +    CALL/JMP to a target without an ENDBR triggers a control
+> > +    protection fault.
+> 
+> Is this really correct?  I think ENDBR is needed only for indirect
+> branch targets where the jump/call does not have a NOTRACK prefix.
 
-I moved the logging 'Building modules, stage 2.' to Makefile.modpost
-to avoid the code duplication although I do not know whether or not
-this message is needed in the first place.
+You are right.  I will fix the wording.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- Makefile                  |  2 --
- scripts/Makefile.modfinal | 60 +++++++++++++++++++++++++++++++
- scripts/Makefile.modpost  | 76 +++++----------------------------------
- 3 files changed, 69 insertions(+), 69 deletions(-)
- create mode 100644 scripts/Makefile.modfinal
-
-diff --git a/Makefile b/Makefile
-index af808837a1f2..bc55f366677d 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1307,7 +1307,6 @@ all: modules
- 
- PHONY += modules
- modules: $(if $(KBUILD_BUILTIN),vmlinux) modules.order modules.builtin
--	@$(kecho) '  Building modules, stage 2.';
- 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
- 	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/modules-check.sh
- 
-@@ -1627,7 +1626,6 @@ $(objtree)/Module.symvers:
- build-dirs := $(KBUILD_EXTMOD)
- PHONY += modules
- modules: descend $(objtree)/Module.symvers
--	@$(kecho) '  Building modules, stage 2.';
- 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
- 
- PHONY += modules_install
-diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-new file mode 100644
-index 000000000000..2e49d536a9b3
---- /dev/null
-+++ b/scripts/Makefile.modfinal
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+# ===========================================================================
-+# Module final link
-+# ===========================================================================
-+
-+PHONY := __modfinal
-+__modfinal:
-+
-+include scripts/Kbuild.include
-+
-+# for c_flags
-+include scripts/Makefile.lib
-+
-+# find all modules listed in modules.order
-+modules := $(sort $(shell cat $(MODORDER)))
-+
-+__modfinal: $(modules)
-+	@:
-+
-+# modname is set to make c_flags define KBUILD_MODNAME
-+modname = $(notdir $(@:.mod.o=))
-+
-+quiet_cmd_cc_o_c = CC [M]  $@
-+      cmd_cc_o_c = $(CC) $(c_flags) $(KBUILD_CFLAGS_MODULE) $(CFLAGS_MODULE) \
-+		   -c -o $@ $<
-+
-+%.mod.o: %.mod.c FORCE
-+	$(call if_changed_dep,cc_o_c)
-+
-+ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
-+
-+quiet_cmd_ld_ko_o = LD [M]  $@
-+      cmd_ld_ko_o =                                                     \
-+	$(LD) -r $(KBUILD_LDFLAGS)					\
-+		$(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)		\
-+		$(addprefix -T , $(KBUILD_LDS_MODULE))			\
-+		-o $@ $(filter %.o, $^);				\
-+	$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
-+
-+$(modules): %.ko: %.o %.mod.o $(KBUILD_LDS_MODULE) FORCE
-+	+$(call if_changed,ld_ko_o)
-+
-+targets += $(modules) $(modules:.ko=.mod.o)
-+
-+# Add FORCE to the prequisites of a target to force it to be always rebuilt.
-+# ---------------------------------------------------------------------------
-+
-+PHONY += FORCE
-+FORCE:
-+
-+# Read all saved command lines and dependencies for the $(targets) we
-+# may be building above, using $(if_changed{,_dep}). As an
-+# optimization, we don't need to read them if the target does not
-+# exist, we will rebuild anyway in that case.
-+
-+existing-targets := $(wildcard $(sort $(targets)))
-+
-+-include $(foreach f,$(existing-targets),$(dir $(f)).$(notdir $(f)).cmd)
-+
-+.PHONY: $(PHONY)
-diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index 905db30d6622..673f68e5f15d 100644
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@ -15,8 +15,6 @@
- # 2) modpost is then used to
- # 3)  create one <module>.mod.c file pr. module
- # 4)  create one Module.symvers file with CRC for all exported symbols
--# 5) compile all <module>.mod.c files
--# 6) final link of the module to a <module.ko> file
- 
- # Step 3 is used to place certain information in the module's ELF
- # section, including information such as:
-@@ -60,13 +58,10 @@ MODPOST = scripts/mod/modpost						\
- 
- ifdef MODPOST_VMLINUX
- 
--__modpost: vmlinux.o
-+quiet_cmd_modpost = MODPOST vmlinux.o
-+      cmd_modpost = $(MODPOST) vmlinux.o
- 
--quiet_cmd_modpost = MODPOST $@
--      cmd_modpost = $(MODPOST) $@
--
--PHONY += vmlinux.o
--vmlinux.o:
-+__modpost:
- 	$(call cmd,modpost)
- 
- else
-@@ -83,74 +78,21 @@ include $(if $(wildcard $(KBUILD_EXTMOD)/Kbuild), \
-              $(KBUILD_EXTMOD)/Kbuild, $(KBUILD_EXTMOD)/Makefile)
- endif
- 
--include scripts/Makefile.lib
-+MODPOST += $(subst -i,-n,$(filter -i,$(MAKEFLAGS))) -s -T - $(wildcard vmlinux)
- 
- # find all modules listed in modules.order
- modules := $(sort $(shell cat $(MODORDER)))
- 
--# Stop after building .o files if NOFINAL is set. Makes compile tests quicker
--__modpost: $(if $(KBUILD_MODPOST_NOFINAL), $(modules:.ko:.o),$(modules))
--	@:
--
--MODPOST += $(subst -i,-n,$(filter -i,$(MAKEFLAGS))) -s -T - $(wildcard vmlinux)
--
- # We can go over command line length here, so be careful.
- quiet_cmd_modpost = MODPOST $(words $(modules)) modules
-       cmd_modpost = sed 's/ko$$/o/' $(MODORDER) | $(MODPOST)
- 
--PHONY += modules-modpost
--modules-modpost:
-+__modpost:
-+	@$(kecho) '  Building modules, stage 2.'
- 	$(call cmd,modpost)
--
--# Declare generated files as targets for modpost
--$(modules:.ko=.mod.c): modules-modpost
--
--# Step 5), compile all *.mod.c files
--
--# modname is set to make c_flags define KBUILD_MODNAME
--modname = $(notdir $(@:.mod.o=))
--
--quiet_cmd_cc_o_c = CC [M]  $@
--      cmd_cc_o_c = $(CC) $(c_flags) $(KBUILD_CFLAGS_MODULE) $(CFLAGS_MODULE) \
--		   -c -o $@ $<
--
--$(modules:.ko=.mod.o): %.mod.o: %.mod.c FORCE
--	$(call if_changed_dep,cc_o_c)
--
--targets += $(modules:.ko=.mod.o)
--
--ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
--
--# Step 6), final link of the modules with optional arch pass after final link
--quiet_cmd_ld_ko_o = LD [M]  $@
--      cmd_ld_ko_o =                                                     \
--	$(LD) -r $(KBUILD_LDFLAGS)                                      \
--                 $(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)             \
--                 $(addprefix -T , $(KBUILD_LDS_MODULE))                 \
--                 -o $@ $(filter %.o, $^);                               \
--	$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
--
--$(modules): %.ko :%.o %.mod.o $(KBUILD_LDS_MODULE) FORCE
--	+$(call if_changed,ld_ko_o)
--
--targets += $(modules)
--
--
--# Add FORCE to the prequisites of a target to force it to be always rebuilt.
--# ---------------------------------------------------------------------------
--
--PHONY += FORCE
--
--FORCE:
--
--# Read all saved command lines and dependencies for the $(targets) we
--# may be building above, using $(if_changed{,_dep}). As an
--# optimization, we don't need to read them if the target does not
--# exist, we will rebuild anyway in that case.
--
--existing-targets := $(wildcard $(sort $(targets)))
--
---include $(foreach f,$(existing-targets),$(dir $(f)).$(notdir $(f)).cmd)
-+ifneq ($(KBUILD_MODPOST_NOFINAL),1)
-+	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modfinal
-+endif
- 
- endif
- 
--- 
-2.17.1
-
+Yu-cheng
