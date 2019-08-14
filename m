@@ -2,63 +2,121 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335F8C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616FDC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD332133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408022084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfHNHi7 (ORCPT
+        id S1727614AbfHNHjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:38:59 -0400
-Received: from verein.lst.de ([213.95.11.211]:35522 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725265AbfHNHi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:38:59 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 17B9F68B20; Wed, 14 Aug 2019 09:38:55 +0200 (CEST)
-Date:   Wed, 14 Aug 2019 09:38:54 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@mellanox.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct
- hmm_vma_walk
-Message-ID: <20190814073854.GA27249@lst.de>
-References: <20190806160554.14046-1-hch@lst.de> <20190806160554.14046-5-hch@lst.de> <20190807174548.GJ1571@mellanox.com> <CAPcyv4hPCuHBLhSJgZZEh0CbuuJNPLFDA3f-79FX5uVOO0yubA@mail.gmail.com> <20190808065933.GA29382@lst.de> <CAPcyv4hMUzw8vyXFRPe2pdwef0npbMm9tx9wiZ9MWkHGhH1V6w@mail.gmail.com>
+        Wed, 14 Aug 2019 03:39:45 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54539 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725265AbfHNHjp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:39:45 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxnsi-00054p-8u; Wed, 14 Aug 2019 09:39:40 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxnsh-0000zL-2k; Wed, 14 Aug 2019 09:39:39 +0200
+Date:   Wed, 14 Aug 2019 09:39:39 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM
+ documentation
+Message-ID: <20190814073939.ubgzysmkmmel5h4y@pengutronix.de>
+References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+ <20190813141256.jnbrfld42rtigek3@pengutronix.de>
+ <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
+ <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
+ <CAMz4ku+55O6ORVM9xDv4R954QG4PXV8EkcGypSTB5wKni+Dq+Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4hMUzw8vyXFRPe2pdwef0npbMm9tx9wiZ9MWkHGhH1V6w@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMz4ku+55O6ORVM9xDv4R954QG4PXV8EkcGypSTB5wKni+Dq+Q@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 06:36:33PM -0700, Dan Williams wrote:
-> Section alignment constraints somewhat save us here. The only example
-> I can think of a PMD not containing a uniform pgmap association for
-> each pte is the case when the pgmap overlaps normal dram, i.e. shares
-> the same 'struct memory_section' for a given span. Otherwise, distinct
-> pgmaps arrange to manage their own exclusive sections (and now
-> subsections as of v5.3). Otherwise the implementation could not
-> guarantee different mapping lifetimes.
+On Wed, Aug 14, 2019 at 03:25:53PM +0800, Baolin Wang wrote:
+> Hi Uwe,
 > 
-> That said, this seems to want a better mechanism to determine "pfn is
-> ZONE_DEVICE".
+> On Wed, 14 Aug 2019 at 15:01, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > Hello Baolin,
+> >
+> > On Wed, Aug 14, 2019 at 09:51:34AM +0800, Baolin Wang wrote:
+> > > On Tue, 13 Aug 2019 at 22:13, Uwe Kleine-König
+> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
+> > > > > +- assigned-clock-parents: The phandle of the parent clock of PWM clock.
+> > > >
+> > > > I'm not sure you need to point out assigned-clocks and
+> > > > assigned-clock-parents as this is general clk stuff. Also I wonder if
+> > > > these should be "required properties".
+> > >
+> > > I think I should describe any properties used by PWM node, like
+> > > 'clocks' and 'clock-names' properties, though they are common clock
+> > > properties.
+> >
+> > Then you might want to describe also "status", "assigned-clock-rates",
+> > "pinctrl-$n", "pinctrl-names", "power-domains", "power-domain-names" and
+> > probably another dozen I'm not aware of.
+> 
+> We usually do not describe 'status', but if your device node used
+> "pinctrl-$n", "pinctrl-names" ... common properties, yes, you should
+> describe them to let users know what is the purpose of these
+> properties. That's also asked by DT maintainer Rob.
 
-So I guess this patch is fine for now, and once you provide a better
-mechanism we can switch over to it?
+Does this convince you that you should also describe "pinctrl-$n" and
+the others? If not, why not? We also usually don't describe
+assigned-clock-parents. For me these are all in the same catagory:
+Common properties supported for each devicetree node that represents a
+device. The only difference is that on your board you make use of some
+but not some others.
+
+> > > Yes, they are required. Thanks for your comments.
+> >
+> > required in which sense? Why can a Spreadtrum PWM not work when the
+> > clock parents are unspecified?
+> 
+> On some Spreadtrum platforms, the default source clock of PWM may not
+> be enabled, so we should force users to select one available source
+> clock for PWM output clock.
+
+Sounds like a bug in the clk tree of your SoC that shouldn't affect how
+the PWM is described in the device tree. After all a parent of a clock
+is supposed to become enabled when the clock gets enabled.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
