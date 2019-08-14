@@ -2,108 +2,108 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3344C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009ECC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 978F5208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D64208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:51:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sUjGo9yX"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KJ6GRRsA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbfHNVtz (ORCPT
+        id S1729619AbfHNVvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 17:49:55 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37276 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728252AbfHNVtz (ORCPT
+        Wed, 14 Aug 2019 17:51:10 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:11034 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729091AbfHNVvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 17:49:55 -0400
-Received: by mail-lf1-f67.google.com with SMTP id c9so347485lfh.4
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 14:49:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=quNqjepPTnacbRHb7c2eVenKYgne2iNuWND1D+zRC8U=;
-        b=sUjGo9yXU26Huey71Nv31NVxbfEQLci9On0kv2+ROoSDiFng0MELV4XmPa++4r0itW
-         S5eWusmIAQMYTWT+1aGb4zEKFcnCYhWdDl+pGNDkM1RSxyeMjCdvmcu3q2o/2pUdi6UF
-         DYPar1pHFv5KdFyV+Bu9Y501HsDE6mDRsdR39XWmJJhDySt3K/BsWTkoKw3Xh7QQYFj/
-         O6req7zP9ZrhPa3rgIPBNu/n5wLAByRkzhzjvucDhDsLct1uEYj0qsmdcKIcxsqpsH6C
-         ujz1gIvbPaMPB4Prv16krM7VDSlAFA4YPLD8H7yInX2sgJNZFZ4ySRsnEAfODauihknM
-         tNSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=quNqjepPTnacbRHb7c2eVenKYgne2iNuWND1D+zRC8U=;
-        b=EygyzoEs7TfBqO6FbruCIVgFepEa2KYP/eSCOC66un0pIPQEKQsrCF5tjtbvDveTmo
-         xd8ow/GQ5gYyHAZSX8M0bhFw8P+OItRrIgeQ/9gfJJLyzof1/MKd0eW2tj32PZ7kwOzM
-         B9+kwITepEaibtL66eqytp9ZczUjEb2CFPZKWLf1wt6Ifw9n6taQatNFydEsf5kivGfK
-         KxSCqSVob15AwX0MssUL+9AYPeoGDTZfzpSl6rG5ceJhrL2Q60bvYcuQlx43k8mECoGv
-         Mxe3+rUmqt5kJlwfYkNt7SBNP5mOxuInrsYdriQsnuI0PH96yIFKREzUbqt3Oi5x7S7Y
-         oBUA==
-X-Gm-Message-State: APjAAAUlwsnYBebqlLUOCF/iOsP0v3QMN16FzGYGJpE/X8z76FfBN/zE
-        KqBcciUmDauQ94+X3R5U4y2jdqmEsFgejw==
-X-Google-Smtp-Source: APXvYqx5hCgL1mgFSNzMB6K9DMlwFxrQNrI/rXad6WZ66DwVgNjvwjQt1QrWhgbNk0bmmtTuTQ7enQ==
-X-Received: by 2002:ac2:484e:: with SMTP id 14mr783405lfy.50.1565819393263;
-        Wed, 14 Aug 2019 14:49:53 -0700 (PDT)
-Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
-        by smtp.gmail.com with ESMTPSA id z30sm132722lfj.63.2019.08.14.14.49.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 14:49:52 -0700 (PDT)
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     davem@davemloft.net, shuah@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH] selftests: net: tcp_fastopen_backup_key.sh: fix shellcheck issue
-Date:   Wed, 14 Aug 2019 23:49:48 +0200
-Message-Id: <20190814214948.5571-1-anders.roxell@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 14 Aug 2019 17:51:10 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d54824f0003>; Wed, 14 Aug 2019 14:51:11 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 14 Aug 2019 14:51:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 14 Aug 2019 14:51:09 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 14 Aug
+ 2019 21:51:02 +0000
+Subject: Re: [PATCH v3 hmm 05/11] hmm: use mmu_notifier_get/put for 'struct
+ hmm'
+To:     Jason Gunthorpe <jgg@ziepe.ca>, <linux-mm@kvack.org>
+CC:     Andrea Arcangeli <aarcange@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        "Alex Deucher" <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Dimitri Sivanich <sivanich@sgi.com>,
+        <dri-devel@lists.freedesktop.org>, <amd-gfx@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>,
+        <intel-gfx@lists.freedesktop.org>,
+        Gavin Shan <shangw@linux.vnet.ibm.com>,
+        Andrea Righi <andrea@betterlinux.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+References: <20190806231548.25242-1-jgg@ziepe.ca>
+ <20190806231548.25242-6-jgg@ziepe.ca>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <66053b82-18d8-217a-b8fd-91981f66f512@nvidia.com>
+Date:   Wed, 14 Aug 2019 14:51:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190806231548.25242-6-jgg@ziepe.ca>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565819471; bh=P9RT5vwQ9P2MNi7AtBxwKiWdi93Rh+sGeCthaUvRAGA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=KJ6GRRsAe+RAr5rTMPCCaxloTQYWmrR/WBzP+8kr7gip16nYfBHAmUHPXlbhEEm72
+         FR+1qaXQZT7vWEhXvkKhupPjaHOEDSaXlGsl5ePt7QdDbrhYX1ZOOgzO3bUjs5eGS9
+         +3p2cWPTV3vO98Xq4pfl3VknjdwX2ZPJG9es6I7cnO7o2mLiRqWlViag4cGHvpwwm6
+         fRmMqyawH4eX8IYtQuk53VGwfUdLDby5fwgRdPtR6hKzhsePeybHVahWLcd8M89osz
+         g43SKAfGSqwbLLkjdR3VJhZ4Z+aymGB3ltZywUlmcAZGnriaqzx9Dpc0q6MDtbY5EG
+         961klO2uRvQ9A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running tcp_fastopen_backup_key.sh the following issue was seen in
-a busybox environment.
-./tcp_fastopen_backup_key.sh: line 33: [: -ne: unary operator expected
 
-Shellcheck showed the following issue.
-$ shellcheck tools/testing/selftests/net/tcp_fastopen_backup_key.sh
+On 8/6/19 4:15 PM, Jason Gunthorpe wrote:
+> From: Jason Gunthorpe <jgg@mellanox.com>
+> 
+> This is a significant simplification, it eliminates all the remaining
+> 'hmm' stuff in mm_struct, eliminates krefing along the critical notifier
+> paths, and takes away all the ugly locking and abuse of page_table_lock.
+> 
+> mmu_notifier_get() provides the single struct hmm per struct mm which
+> eliminates mm->hmm.
+> 
+> It also directly guarantees that no mmu_notifier op callback is callable
+> while concurrent free is possible, this eliminates all the krefs inside
+> the mmu_notifier callbacks.
+> 
+> The remaining krefs in the range code were overly cautious, drivers are
+> already not permitted to free the mirror while a range exists.
+> 
+> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 
-In tools/testing/selftests/net/tcp_fastopen_backup_key.sh line 33:
-        if [ $val -ne 0 ]; then
-             ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-Rework to add double quotes around the variable 'val' that shellcheck
-recommends.
-
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
----
- tools/testing/selftests/net/tcp_fastopen_backup_key.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/net/tcp_fastopen_backup_key.sh b/tools/testing/selftests/net/tcp_fastopen_backup_key.sh
-index 41476399e184..ba5ec3eb314e 100755
---- a/tools/testing/selftests/net/tcp_fastopen_backup_key.sh
-+++ b/tools/testing/selftests/net/tcp_fastopen_backup_key.sh
-@@ -30,7 +30,7 @@ do_test() {
- 	ip netns exec "${NETNS}" ./tcp_fastopen_backup_key "$1"
- 	val=$(ip netns exec "${NETNS}" nstat -az | \
- 		grep TcpExtTCPFastOpenPassiveFail | awk '{print $2}')
--	if [ $val -ne 0 ]; then
-+	if [ "$val" -ne 0 ]; then
- 		echo "FAIL: TcpExtTCPFastOpenPassiveFail non-zero"
- 		return 1
- 	fi
--- 
-2.20.1
-
+Looks good.
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
