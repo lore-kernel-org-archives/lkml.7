@@ -2,124 +2,226 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E62C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C89C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCDA4206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6810206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:06:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="jFM71Zc3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfHNLGR (ORCPT
+        id S1727383AbfHNLGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 07:06:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33460 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725800AbfHNLGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 07:06:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F07B2AE5A;
-        Wed, 14 Aug 2019 11:06:14 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 13:06:09 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     jikos@kernel.org, pmladek@suse.com, joe.lawrence@redhat.com,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-In-Reply-To: <20190728200427.dbrojgu7hafphia7@treble>
-Message-ID: <alpine.LSU.2.21.1908141256150.16696@pobox.suse.cz>
-References: <20190719122840.15353-1-mbenes@suse.cz> <20190719122840.15353-3-mbenes@suse.cz> <20190728200427.dbrojgu7hafphia7@treble>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 14 Aug 2019 07:06:34 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:35820 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfHNLGe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 07:06:34 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id D2A405C2B10;
+        Wed, 14 Aug 2019 13:06:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1565780790;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kYGuMxiSxeUl5Au06aq8bOF9rLtDhjPE68Kq7sDH1l0=;
+        b=jFM71Zc3y5nYl+eWHhNtRbvhMoGUt8Rx7isKmlOFcbj/a+bdXTfLk57PZb8HVZXnQBdaXe
+        9Gt9pmA/CEhpr243vAvDGGbeirq52vmtEgjbh8QOXGaHrF4O7/udLmleKO6DxUI6KW0EFY
+        bysmEAtgEvRoEQS6+KW1bJU0sw1/Flg=
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 14 Aug 2019 13:06:30 +0200
+From:   Stefan Agner <stefan@agner.ch>
+To:     Robert Chiras <robert.chiras@nxp.com>
+Cc:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        Marek Vasut <marex@denx.de>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 12/15] drm/mxsfb: Improve the axi clock usage
+In-Reply-To: <1565779731-1300-13-git-send-email-robert.chiras@nxp.com>
+References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
+ <1565779731-1300-13-git-send-email-robert.chiras@nxp.com>
+Message-ID: <425a854f41248b083ff0c6c93673d696@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 28 Jul 2019, Josh Poimboeuf wrote:
+On 2019-08-14 12:48, Robert Chiras wrote:
+> Currently, the enable of the axi clock return status is ignored, causing
+> issues when the enable fails then we try to disable it. Therefore, it is
+> better to check the return status and disable it only when enable
+> succeeded.
 
-> On Fri, Jul 19, 2019 at 02:28:40PM +0200, Miroslav Benes wrote:
-> > Josh reported a bug:
-> > 
-> >   When the object to be patched is a module, and that module is
-> >   rmmod'ed and reloaded, it fails to load with:
-> > 
-> >   module: x86/modules: Skipping invalid relocation target, existing value is nonzero for type 2, loc 00000000ba0302e9, val ffffffffa03e293c
-> >   livepatch: failed to initialize patch 'livepatch_nfsd' for module 'nfsd' (-8)
-> >   livepatch: patch 'livepatch_nfsd' failed for module 'nfsd', refusing to load module 'nfsd'
-> > 
-> >   The livepatch module has a relocation which references a symbol
-> >   in the _previous_ loading of nfsd. When apply_relocate_add()
-> >   tries to replace the old relocation with a new one, it sees that
-> >   the previous one is nonzero and it errors out.
-> > 
-> >   On ppc64le, we have a similar issue:
-> > 
-> >   module_64: livepatch_nfsd: Expected nop after call, got e8410018 at e_show+0x60/0x548 [livepatch_nfsd]
-> >   livepatch: failed to initialize patch 'livepatch_nfsd' for module 'nfsd' (-8)
-> >   livepatch: patch 'livepatch_nfsd' failed for module 'nfsd', refusing to load module 'nfsd'
-> > 
-> > He also proposed three different solutions. We could remove the error
-> > check in apply_relocate_add() introduced by commit eda9cec4c9a1
-> > ("x86/module: Detect and skip invalid relocations"). However the check
-> > is useful for detecting corrupted modules.
-> > 
-> > We could also deny the patched modules to be removed. If it proved to be
-> > a major drawback for users, we could still implement a different
-> > approach. The solution would also complicate the existing code a lot.
-> > 
-> > We thus decided to reverse the relocation patching (clear all relocation
-> > targets on x86_64, or return back nops on powerpc). The solution is not
-> > universal and is too much arch-specific, but it may prove to be simpler
-> > in the end.
+Is this actually the case in real world sometimes? Why is it failing?
+
+I guess if we do this in one place, we should do it in all places (e.g.
+also in mxsfb_crtc_enable, mxsfb_plane_atomic_update..)
+
+--
+Stefan
+
+> Also, remove the helper functions around clk_axi, since we can directly
+> use the clk API function for enable/disable the clock. Those functions
+> are already checking for NULL clk and returning 0 if that's the case.
+
+
 > 
-> Thanks for the patch Miroslav.
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> Acked-by: Leonard Crestez <leonard.crestez@nxp.com>
+> ---
+>  drivers/gpu/drm/mxsfb/mxsfb_crtc.c |  8 ++++----
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.c  | 32 +++++++++++++-------------------
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.h  |  3 ---
+>  3 files changed, 17 insertions(+), 26 deletions(-)
 > 
-> However, I really don't like it.  All this extra convoluted
-> arch-specific code, just so users can unload a patched module.
-
-Yes, it is unfortunate.
- 
-> Remind me why we didn't do the "deny the patched modules to be removed"
-> option?
-
-Petr came with a couple of issues in the patch. Nothing unfixable, but it 
-would complicate the code a bit, so we wanted to explore arch-specific 
-approach first. I'll return to it, fix it and we'll see the outcome.
-
-> Really, we should be going in the opposite direction, by creating module
-> dependencies, like all other kernel modules do, ensuring that a module
-> is loaded *before* we patch it.  That would also eliminate this bug.
-
-Yes, but it is not ideal either with cumulative one-fixes-all patch 
-modules. It would load also modules which are not necessary for a 
-customer and I know that at least some customers care about this. They 
-want to deploy only things which are crucial for their systems.
-
-We could split patch modules as you proposed in the past, but that have 
-issues as well.
-
-Anyway, that is why I proposed "Rethinking late module patching" talk at 
-LPC and we should try to come up with a solution there.
-
-> And I think it would also help us remove a lot of nasty code, like the
-> coming/going notifiers and the .klp.arch mess.  Which, BTW, seem to be
-> the sources of most of our bugs...
-
-Yes.
-
-> Yes, there's the "but it's less flexible!" argument.  Does anybody
-> really need the flexibility?  I strongly doubt it.  I would love to see
-> an RFC patch which enforces that restriction, to see all the nasty code
-> we could remove.  I would much rather live patching be stable than
-> flexible.
-
-I agree that unloading a module does not make sense much (famous last 
-words), so we could try.
-
-Miroslav
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> index a4ba368..e727f5e 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> @@ -408,7 +408,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
+>  {
+>  	dma_addr_t paddr;
+>  
+> -	mxsfb_enable_axi_clk(mxsfb);
+> +	clk_prepare_enable(mxsfb->clk_axi);
+>  	writel(0, mxsfb->base + LCDC_CTRL);
+>  	mxsfb_crtc_mode_set_nofb(mxsfb);
+>  
+> @@ -425,7 +425,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
+>  void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb)
+>  {
+>  	mxsfb_disable_controller(mxsfb);
+> -	mxsfb_disable_axi_clk(mxsfb);
+> +	clk_disable_unprepare(mxsfb->clk_axi);
+>  }
+>  
+>  void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
+> @@ -451,8 +451,8 @@ void mxsfb_plane_atomic_update(struct
+> mxsfb_drm_private *mxsfb,
+>  
+>  	paddr = mxsfb_get_fb_paddr(mxsfb);
+>  	if (paddr) {
+> -		mxsfb_enable_axi_clk(mxsfb);
+> +		clk_prepare_enable(mxsfb->clk_axi);
+>  		writel(paddr, mxsfb->base + mxsfb->devdata->next_buf);
+> -		mxsfb_disable_axi_clk(mxsfb);
+> +		clk_disable_unprepare(mxsfb->clk_axi);
+>  	}
+>  }
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> index 6dae2bd..694b287 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> @@ -97,18 +97,6 @@ drm_pipe_to_mxsfb_drm_private(struct
+> drm_simple_display_pipe *pipe)
+>  	return container_of(pipe, struct mxsfb_drm_private, pipe);
+>  }
+>  
+> -void mxsfb_enable_axi_clk(struct mxsfb_drm_private *mxsfb)
+> -{
+> -	if (mxsfb->clk_axi)
+> -		clk_prepare_enable(mxsfb->clk_axi);
+> -}
+> -
+> -void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb)
+> -{
+> -	if (mxsfb->clk_axi)
+> -		clk_disable_unprepare(mxsfb->clk_axi);
+> -}
+> -
+>  /**
+>   * mxsfb_atomic_helper_check - validate state object
+>   * @dev: DRM device
+> @@ -229,25 +217,31 @@ static void mxsfb_pipe_update(struct
+> drm_simple_display_pipe *pipe,
+>  static int mxsfb_pipe_enable_vblank(struct drm_simple_display_pipe *pipe)
+>  {
+>  	struct mxsfb_drm_private *mxsfb = drm_pipe_to_mxsfb_drm_private(pipe);
+> +	int ret = 0;
+> +
+> +	ret = clk_prepare_enable(mxsfb->clk_axi);
+> +	if (ret)
+> +		return ret;
+>  
+>  	/* Clear and enable VBLANK IRQ */
+> -	mxsfb_enable_axi_clk(mxsfb);
+>  	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+>  	writel(CTRL1_CUR_FRAME_DONE_IRQ_EN, mxsfb->base + LCDC_CTRL1 + REG_SET);
+> -	mxsfb_disable_axi_clk(mxsfb);
+> +	clk_disable_unprepare(mxsfb->clk_axi);
+>  
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  static void mxsfb_pipe_disable_vblank(struct drm_simple_display_pipe *pipe)
+>  {
+>  	struct mxsfb_drm_private *mxsfb = drm_pipe_to_mxsfb_drm_private(pipe);
+>  
+> +	if (clk_prepare_enable(mxsfb->clk_axi))
+> +		return;
+> +
+>  	/* Disable and clear VBLANK IRQ */
+> -	mxsfb_enable_axi_clk(mxsfb);
+>  	writel(CTRL1_CUR_FRAME_DONE_IRQ_EN, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+>  	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+> -	mxsfb_disable_axi_clk(mxsfb);
+> +	clk_disable_unprepare(mxsfb->clk_axi);
+>  }
+>  
+>  static struct drm_simple_display_pipe_funcs mxsfb_funcs = {
+> @@ -413,7 +407,7 @@ static irqreturn_t mxsfb_irq_handler(int irq, void *data)
+>  	struct mxsfb_drm_private *mxsfb = drm->dev_private;
+>  	u32 reg;
+>  
+> -	mxsfb_enable_axi_clk(mxsfb);
+> +	clk_prepare_enable(mxsfb->clk_axi);
+>  
+>  	reg = readl(mxsfb->base + LCDC_CTRL1);
+>  
+> @@ -422,7 +416,7 @@ static irqreturn_t mxsfb_irq_handler(int irq, void *data)
+>  
+>  	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+>  
+> -	mxsfb_disable_axi_clk(mxsfb);
+> +	clk_disable_unprepare(mxsfb->clk_axi);
+>  
+>  	return IRQ_HANDLED;
+>  }
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> index 8fb65d3..d6df8fe 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> @@ -37,9 +37,6 @@ struct mxsfb_drm_private {
+>  int mxsfb_setup_crtc(struct drm_device *dev);
+>  int mxsfb_create_output(struct drm_device *dev);
+>  
+> -void mxsfb_enable_axi_clk(struct mxsfb_drm_private *mxsfb);
+> -void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb);
+> -
+>  void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb);
+>  void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb);
+>  void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
