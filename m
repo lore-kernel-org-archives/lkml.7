@@ -2,72 +2,74 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A788C0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB44C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBB4320843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A79A3208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="avbdMWC6"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="v4fvDBec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfHNGX5 (ORCPT
+        id S1727306AbfHNGbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 02:23:57 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:33162 "EHLO pegase1.c-s.fr"
+        Wed, 14 Aug 2019 02:31:07 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:64666 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725265AbfHNGX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 02:23:57 -0400
+        id S1726855AbfHNGbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 02:31:06 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 467ffy4tKYz9vBn1;
-        Wed, 14 Aug 2019 08:23:54 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 467fqC1T99z9vBnC;
+        Wed, 14 Aug 2019 08:31:03 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=avbdMWC6; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=v4fvDBec; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id a4nZaAJs1IUV; Wed, 14 Aug 2019 08:23:54 +0200 (CEST)
+        with ESMTP id OFXo1Dmho6YZ; Wed, 14 Aug 2019 08:31:03 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 467ffy3jSmz9vBn0;
-        Wed, 14 Aug 2019 08:23:54 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 467fqC0JdJz9vBn6;
+        Wed, 14 Aug 2019 08:31:03 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1565763834; bh=riZMoyaCD1+ZQ3eW9ssk+3+aGprxE6J0aY0oTm8WUHk=;
+        t=1565764263; bh=o0Ho+62546nbF6sTKppM2s/M3fQa2Iw6rs5C/Kza5oo=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=avbdMWC6gc6VxruvxXJGtYUHAYWYzSiS4yb5QNH+51hPcJHVoUSm6e/d/DNpYKicI
-         vS8BErZ65r9GgWrakVITqUbxe3MQx1YDyYqkEDsIDZE0uQCzGij7OUCEWw2XfNC49T
-         7TCdqwMlO5wSet+PmpAdKey3vLAnVDf8FPuOq+Uc=
+        b=v4fvDBecJnGu3IBMhD6I0eiVnfWdBEsRvUzNX/d4GbnaFiqgHchGI8bNd9Cc6NIS9
+         T3xPOiYGKPMLyzVyCUNlsQC7aO1cpwqasiqNc0coKJv1xo42HkxFRArnbH1hzFbiPo
+         IxdFvApZ9FSsrG/9NjQWZ+weHyQOMyO7Wk/Jq3gA=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 828FD8B780;
-        Wed, 14 Aug 2019 08:23:55 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1131F8B780;
+        Wed, 14 Aug 2019 08:31:04 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ApWTthVaOqfG; Wed, 14 Aug 2019 08:23:55 +0200 (CEST)
+        with ESMTP id xnRS7rzmM81g; Wed, 14 Aug 2019 08:31:04 +0200 (CEST)
 Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5FC4F8B761;
-        Wed, 14 Aug 2019 08:23:55 +0200 (CEST)
-Subject: Re: [PATCH v1 10/10] powerpc/mm: refactor ioremap_range() and use
- ioremap_page_range()
-To:     Christoph Hellwig <hch@infradead.org>
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E1D788B761;
+        Wed, 14 Aug 2019 08:31:03 +0200 (CEST)
+Subject: Re: [PATCH v4 1/2] powerpc/time: Only set
+ CONFIG_ARCH_HAS_SCALED_CPUTIME on PPC64
+To:     Nicholas Piggin <npiggin@gmail.com>
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <6bc35eca507359075528bc0e55938bc1ce8ee485.1565726867.git.christophe.leroy@c-s.fr>
- <bd784c8091cbf41231a862f73b52fd2a356ec8f1.1565726867.git.christophe.leroy@c-s.fr>
- <20190814054941.GC27497@infradead.org>
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Segher Boessenkool <segher@kernel.crashing.org>
+References: <d9ac8da98f53debb4758b98d0227979aca9196f7.1528292284.git.christophe.leroy@c-s.fr>
+ <20180607114304.327c4ab5@roar.ozlabs.ibm.com>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <3f866bc8-7cc3-cb09-92f3-016dfb906526@c-s.fr>
-Date:   Wed, 14 Aug 2019 08:23:54 +0200
+Message-ID: <26969bb5-c01b-0674-5773-027f1851bd44@c-s.fr>
+Date:   Wed, 14 Aug 2019 08:31:02 +0200
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190814054941.GC27497@infradead.org>
+In-Reply-To: <20180607114304.327c4ab5@roar.ozlabs.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: fr
 Content-Transfer-Encoding: 8bit
@@ -76,19 +78,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Nick,
 
 
-Le 14/08/2019 à 07:49, Christoph Hellwig a écrit :
-> Somehow this series is missing a cover letter.
+Le 07/06/2018 à 03:43, Nicholas Piggin a écrit :
+> On Wed,  6 Jun 2018 14:21:08 +0000 (UTC)
+> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 > 
-> While you are touching all this "fun" can you also look into killing
-> __ioremap?  It seems to be a weird non-standard version of ioremap_prot
-> (probably predating ioremap_prot) that is missing a few lines of code
-> setting attributes that might not even be applicable for the two drivers
-> calling it.
-> 
+>> scaled cputime is only meaningfull when the processor has
+>> SPURR and/or PURR, which means only on PPC64.
+>>
 
-ocm_init_node() [arch/powerpc/platforms/4xx/ocm.c] calls __ioremap() 
-with _PAGE_EXEC set while ioremap_prot() clears _PAGE_EXEC
+[...]
+
+> 
+> I wonder if we could make this depend on PPC_PSERIES or even
+> PPC_SPLPAR as well? (That would be for a later patch)
+
+Can we go further on this ?
+
+Do we know exactly which configuration support scaled cputime, in 
+extenso have SPRN_SPURR and/or SPRN_PURR ?
+
+Ref https://github.com/linuxppc/issues/issues/171
 
 Christophe
