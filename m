@@ -2,188 +2,196 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB0EC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB32CC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEDF7206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F58206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:07:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0JrRL8h"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="GNjQSy8C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfHNBBR (ORCPT
+        id S1726884AbfHNBHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 21:01:17 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37551 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbfHNBBR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 21:01:17 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d1so19344880pgp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 18:01:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NlE3r34RdoAVkEFP5Qhq0Z6vIQcskLB+6Ufwy9SSFTI=;
-        b=j0JrRL8hUVa8eSrWSd015kpUe5PnEgpSdofsQeNyBnm5Y5CvJ1+Y9TonRPe3X16nIP
-         Ht9o5VyuaIJ70Tq0slcqVnNfawSj9nVbjaxyT34apHEniHberD68us9KLKInA3396QkH
-         L1W2GX4/pv5gelAE125H78NI1KqoVWabWuO0p9uJwmZGcJBgUjfFcgURSIDNl4/SaWuc
-         kfmWz4JluAP/yxgopVTC9QTewX5OJtQ1sZd7jiRxviyS6rLljc3djHMU66sUg8imQBxL
-         fVwSYGotTNCgEJcqokBDwewTlY9WBArfirzWjFBqAUQr11Mq+1wvheIgEo7C6TnydriM
-         9nWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NlE3r34RdoAVkEFP5Qhq0Z6vIQcskLB+6Ufwy9SSFTI=;
-        b=IqlQVu7Ug+OK+wSijVUC+wkePAoMbXC3fa/ZjcKVD7grGQ8e4C55gTv9l6U9yA3qaZ
-         vun0ko4M/xSo0BBfhPnwnQIE+/LWB3IBku8xUYwxI73QfZ3OWtYpBv9cRZomMYEGXoFQ
-         MMVyfUYUO6tdO/NjDowWXyuYBdLOWRjuFzNS2xCiwbAUuCqaxDgXrdlmrW0mdEcgx1IJ
-         SRiTXWwoQFSL1vzyHX/6zaYAnw4gbIx1Jz/bjOnVIY3uLlIhlHvK5R6sBR/oUmkLv+7R
-         ODZpCIeneyw7TBjozjbVduRXdLpmZaSLGlz7bo1YqDuILjFmD0nLwSkj4oB8NefgFxU0
-         1KZg==
-X-Gm-Message-State: APjAAAU3qW+e5RcOYwNtHJPViaj+6KZySRGlxgkS4EWJ3IJFegoeH2gk
-        vYumfTgLAWklo+jLaMAcy9W3fU7w
-X-Google-Smtp-Source: APXvYqzwfcjX+A+jDK0pw8ha0TvDPFYa5JXWs5wev6iBxZ44rRGrF2DtI/VKTBQtAxYn6lFDxzxsIg==
-X-Received: by 2002:a63:a35e:: with SMTP id v30mr35393993pgn.129.1565744476044;
-        Tue, 13 Aug 2019 18:01:16 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id h9sm120983074pgk.10.2019.08.13.18.01.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 13 Aug 2019 18:01:15 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 18:02:15 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     broonie@kernel.org, festevam@gmail.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, Viorel Suman <viorel.suman@nxp.com>
-Subject: Re: [PATCH] ASoC: fsl_sai: Handle slave mode per TX/RX direction
-Message-ID: <20190814010215.GA13398@Asurada-Nvidia.nvidia.com>
-References: <20190811194517.19314-1-daniel.baluta@nxp.com>
+        Tue, 13 Aug 2019 21:07:04 -0400
+Received: from mail-eopbgr1300122.outbound.protection.outlook.com ([40.107.130.122]:59808
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726231AbfHNBHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 21:07:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZiINn5dt8HQCvl6R8SgKLct0TFsgAxP3/pNBODeSDM7YmyJpb3YrhNaxif/NhIk7Hbocw71+ljY5oOndZcB0MUs+KpslMsMouQ4n+B6JFWPFBfAH1cti85Vhhnl4ExYBFjsNePvWpDpOCerOH1n4l8WkdhFSDvr9l+uuggPkm+FI3cVbSGMATamz+rR5e22CSIx+g55lHV2cH8cuWDSY1pPkFW1PH8J6hQjo5XJm2Iuxl657cIBiKOytyyL7twPQY1ifsmQInxLLbkhu/YyWFR55SLEceKmDBrM1ahmKwq22TVy6qHU0XCYl+yc+NGEdNAhSvTc9zUiYFZ6D3oPhaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=itLC2RPsekQuJVazpsDF3QvsNHrKsHdmzg8ixYRIRzY=;
+ b=HXFWPMYjPvoP1yqwtzbgokgR3OcDpoVUygNugP8nT9PRHV+Pa/wDDYdfzmhUtRM9mKCIngP9KsTkb/xN7vQBvCq/3bQc14A5yuIRGNG7eh3d6tyigSJD7KvNjzP4Sr25jhaY9vDfJeQYGQkp4N+mBvuROuhfqNWXkdpjIJgVpVcZMUPyyblFYUNTTKYNx4i8vZsWrdA9AO9Zk8RvVhqxGqMOjVn9FPBNJDggz93Q7lSRX871+1mSqis2yh6WmTeR0swvzc1QA7Cgu4AJfWeynuXPu4+20gu+KSvthY31JEUlMcDTxoH5Ol8RomsYKf5s3F76jRBWMKPfaWiJA7L6Dw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=itLC2RPsekQuJVazpsDF3QvsNHrKsHdmzg8ixYRIRzY=;
+ b=GNjQSy8C7wmYA6ncnQGAQPCkwH9zEkPF51oBddw8fkhx06jqGIryBjzCdR4G6chr/nBrXcpxyPEmUEGwm3S5H8KRgTN8RtCds5YGmZ4nUDLtj2e0DAdU7NsIxEMUr2jOnG7wriHkhwzTx7v2aj30UiIDXpgDtAZIb8Wwj4eTl9o=
+Received: from KU1P153MB0166.APCP153.PROD.OUTLOOK.COM (10.170.173.13) by
+ KU1P153MB0134.APCP153.PROD.OUTLOOK.COM (10.170.172.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.6; Wed, 14 Aug 2019 01:06:55 +0000
+Received: from KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
+ ([fe80::4045:2f8d:e15b:343f]) by KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
+ ([fe80::4045:2f8d:e15b:343f%6]) with mapi id 15.20.2178.006; Wed, 14 Aug 2019
+ 01:06:55 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v2] PCI: PM: Move to D0 before calling
+ pci_legacy_resume_early()
+Thread-Topic: [PATCH v2] PCI: PM: Move to D0 before calling
+ pci_legacy_resume_early()
+Thread-Index: AdVSPER5d22rbcvgTV28JV77HSffhg==
+Date:   Wed, 14 Aug 2019 01:06:55 +0000
+Message-ID: <KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-14T01:06:51.2322584Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ab25360d-4a75-4436-9390-ec9b2f112f8b;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:8:8845:6657:9e4:58a7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bef09af2-aa2a-4293-76c0-08d72053b343
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:KU1P153MB0134;
+x-ms-traffictypediagnostic: KU1P153MB0134:|KU1P153MB0134:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <KU1P153MB0134BD13FA97C55C18DB7872BFAD0@KU1P153MB0134.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01294F875B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(396003)(346002)(376002)(366004)(54534003)(189003)(199004)(76116006)(66946007)(66476007)(66446008)(64756008)(486006)(107886003)(476003)(66556008)(10290500003)(81156014)(6506007)(2906002)(81166006)(478600001)(102836004)(186003)(14454004)(7416002)(10090500001)(4326008)(74316002)(46003)(33656002)(305945005)(7736002)(53936002)(25786009)(7696005)(8936002)(8676002)(22452003)(71200400001)(52536014)(316002)(2501003)(256004)(8990500004)(14444005)(9686003)(6116002)(6436002)(71190400001)(99286004)(110136005)(86362001)(55016002)(54906003)(2201001)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:KU1P153MB0134;H:KU1P153MB0166.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qOEW4ryiaevi4J9/6Tmmxf8mwexOMh/84L5yojvgCXK1AhoK9ZdpDY7VSZXxitDLEc5JWtbRECQrRpsZYrpoL7D5a3XrVc+4R5WPgBdr8caPVfZUR37nAz5egsPrv19Q1j0bBehrPLlDh4ebSFFxIzmd2eitLFeJYEFDjOyfUT4yxECz1hOx+7QTf88nv+i7+apzdFG1i4x08PbhW+3Wgx3UYfptow2thWtv/KNWkLp7A9Ca3ddvCVYOqw1ogXvlhBTcsGyoc/3SqaWExNDif4fsupqyTxrBvkT9XjTWUdA4f62cYTBSccj6KMUih3Z5e2ohRLh+wKQqS2cP/X/c7oEr05Cb6DI1thaiVBIrdtHHMIvU2GKxvlHm8uRWGimLr0Vc3NGSy7k6C2A9EW9c9h9Q18r22+S9azBoGFt3AY0=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190811194517.19314-1-daniel.baluta@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bef09af2-aa2a-4293-76c0-08d72053b343
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 01:06:55.2655
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rL4KkKwdMkrJbN7h8XAeQJz2iBwjxtax2RhMUxv+E2Y2vPV3wcX3XjChBQ6kwLDt44YICso0CXUSiGyZp5b+0w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KU1P153MB0134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 10:45:17PM +0300, Daniel Baluta wrote:
-> From: Viorel Suman <viorel.suman@nxp.com>
-> 
-> The SAI interface can be a clock supplier or consumer
-> as a function of stream direction. e.g SAI can be master
-> for Tx and slave for Rx.
-> 
-> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  sound/soc/fsl/fsl_sai.c | 18 +++++++++---------
->  sound/soc/fsl/fsl_sai.h |  2 +-
->  2 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-> index 4a346fcb5630..69cf3678c859 100644
-> --- a/sound/soc/fsl/fsl_sai.c
-> +++ b/sound/soc/fsl/fsl_sai.c
-> @@ -273,18 +273,18 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
 
-This function is called for both TX and RX at the same time from
-fsl_sai_set_dai_fmt() so I don't actually see how it can operate
-in two opposite directions from this change alone. Anything that
-I have missed?
+In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
 
-Thanks
-Nicolin
+In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D0,
+but the current code misses the pci_legacy_resume_early() path, so the
+state remains in PCI_UNKNOWN in that path. As a result, in the resume
+phase of hibernation, this causes an error for the Mellanox VF driver,
+which fails to enable MSI-X because pci_msi_supported() is false due
+to dev->current_state !=3D PCI_D0:
 
->  	case SND_SOC_DAIFMT_CBS_CFS:
->  		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
->  		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
-> -		sai->is_slave_mode = false;
-> +		sai->is_slave_mode[tx] = false;
->  		break;
->  	case SND_SOC_DAIFMT_CBM_CFM:
-> -		sai->is_slave_mode = true;
-> +		sai->is_slave_mode[tx] = true;
->  		break;
->  	case SND_SOC_DAIFMT_CBS_CFM:
->  		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
-> -		sai->is_slave_mode = false;
-> +		sai->is_slave_mode[tx] = false;
->  		break;
->  	case SND_SOC_DAIFMT_CBM_CFS:
->  		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
-> -		sai->is_slave_mode = true;
-> +		sai->is_slave_mode[tx] = true;
->  		break;
->  	default:
->  		return -EINVAL;
-> @@ -326,7 +326,7 @@ static int fsl_sai_set_bclk(struct snd_soc_dai *dai, bool tx, u32 freq)
->  	int ret = 0;
->  
->  	/* Don't apply to slave mode */
-> -	if (sai->is_slave_mode)
-> +	if (sai->is_slave_mode[tx])
->  		return 0;
->  
->  	for (id = 0; id < FSL_SAI_MCLK_MAX; id++) {
-> @@ -422,7 +422,7 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
->  	if (sai->slot_width)
->  		slot_width = sai->slot_width;
->  
-> -	if (!sai->is_slave_mode) {
-> +	if (!sai->is_slave_mode[tx]) {
->  		ret = fsl_sai_set_bclk(cpu_dai, tx,
->  				slots * slot_width * params_rate(params));
->  		if (ret)
-> @@ -458,7 +458,7 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
->  	 * error.
->  	 */
->  
-> -	if (!sai->is_slave_mode) {
-> +	if (!sai->is_slave_mode[tx]) {
->  		if (!sai->synchronous[TX] && sai->synchronous[RX] && !tx) {
->  			regmap_update_bits(sai->regmap, FSL_SAI_TCR4(ofs),
->  				FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
-> @@ -497,7 +497,7 @@ static int fsl_sai_hw_free(struct snd_pcm_substream *substream,
->  	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
->  	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
->  
-> -	if (!sai->is_slave_mode &&
-> +	if (!sai->is_slave_mode[tx] &&
->  			sai->mclk_streams & BIT(substream->stream)) {
->  		clk_disable_unprepare(sai->mclk_clk[sai->mclk_id[tx]]);
->  		sai->mclk_streams &= ~BIT(substream->stream);
-> @@ -581,7 +581,7 @@ static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
->  			 * This is a hardware bug, and will be fix in the
->  			 * next sai version.
->  			 */
-> -			if (!sai->is_slave_mode) {
-> +			if (!sai->is_slave_mode[tx]) {
->  				/* Software Reset for both Tx and Rx */
->  				regmap_write(sai->regmap, FSL_SAI_TCSR(ofs),
->  					     FSL_SAI_CSR_SR);
-> diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
-> index b89b0ca26053..c2c43a7d9ba1 100644
-> --- a/sound/soc/fsl/fsl_sai.h
-> +++ b/sound/soc/fsl/fsl_sai.h
-> @@ -167,7 +167,7 @@ struct fsl_sai {
->  	struct clk *bus_clk;
->  	struct clk *mclk_clk[FSL_SAI_MCLK_MAX];
->  
-> -	bool is_slave_mode;
-> +	bool is_slave_mode[2];
->  	bool is_lsb_first;
->  	bool is_dsp_mode;
->  	bool synchronous[2];
-> -- 
-> 2.17.1
-> 
+mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mode
+mlx4_core a6d1:00:02.0: Sending reset
+mlx4_core a6d1:00:02.0: Sending vhcr0
+mlx4_core a6d1:00:02.0: HCA minimum page size:512
+mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
+mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode, abort=
+ing
+PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
+PM: Device a6d1:00:02.0 failed to thaw: error -95
+
+To be more accurate, the "resume" phase means the "thaw" callbacks which
+run before the system enters hibernation: when the user runs the command
+"echo disk > /sys/power/state" for hibernation, first the kernel "freezes"
+all the devices and creates a hibernation image, then the kernel "thaws"
+the devices including the disk/NIC, writes the memory to the disk, and
+powers down. This patch fixes the error message for the Mellanox VF driver
+in this phase.
+
+When the system starts again, a fresh kernel starts to run, and when the
+kernel detects that a hibernation image was saved, the kernel "quiesces"
+the devices, and then "restores" the devices from the saved image. In this
+path:
+device_resume_noirq() -> ... ->
+  pci_pm_restore_noirq() ->
+    pci_pm_default_resume_early() ->
+      pci_power_up() moves the device states back to PCI_D0. This path is
+not broken and doesn't need my patch.
+
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+
+changes in v2:
+	Updated the changelog with more details.
+
+ drivers/pci/pci-driver.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 36dbe960306b..27dfc68db9e7 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device *dev)
+ 			return error;
+ 	}
+=20
+-	if (pci_has_legacy_pm_support(pci_dev))
+-		return pci_legacy_resume_early(dev);
+-
+ 	/*
+ 	 * pci_restore_state() requires the device to be in D0 (because of MSI
+ 	 * restoration among other things), so force it into D0 in case the
+ 	 * driver's "freeze" callbacks put it into a low-power state directly.
+ 	 */
+ 	pci_set_power_state(pci_dev, PCI_D0);
++
++	if (pci_has_legacy_pm_support(pci_dev))
++		return pci_legacy_resume_early(dev);
++
+ 	pci_restore_state(pci_dev);
+=20
+ 	if (drv && drv->pm && drv->pm->thaw_noirq)
+--=20
+2.19.1
+
