@@ -2,88 +2,126 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A37C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FB8C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C78F120842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hjIYO+1d"
+	by mail.kernel.org (Postfix) with ESMTP id B2BE620842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565749470;
+	bh=sml/q+TWg4pt2Fx4C/8hXbbtwxpBWZ1jBQwrz6SBUFE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=D8hKtYFGKzn0YpeqjXr7LAkPgDfwOfZCVZp6M3yTmCRXkdolV0PKqOQ6IENgifv9f
+	 SfaHzMR3R1KVEByWM4dE6p2fOiMRlqbtIvLXVKbqfeysoPwfhjxXkf4r7J2WsBsBB1
+	 H6iO4SsatPU4i0koFU4g/jbvGbG+iHWQf6+W62pE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbfHNCYY (ORCPT
+        id S1730155AbfHNCY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:24:24 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42549 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729534AbfHNCYV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:24:21 -0400
-Received: by mail-oi1-f193.google.com with SMTP id o6so1629031oic.9
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 19:24:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=1G/a7WS8pUpL1zmvbKTHzrkVwD487e3W+2smn5ktODc=;
-        b=hjIYO+1dYGPbiBq+dHbXBz3TuAYU415ba+1qYeiXmxFN4NqMFXVq7AezPzQ5RozDKt
-         OhVMOWSsix2AGx/5/KosEclzeVG+q4u4QX6T9v01GB2WbUHzhz+qKUgSqqvElDNcxguA
-         QAdWWDM0D9Fj4YUN2+SKnPEtgzLmRpQ3y6nT6JZdgsFTmheqoPdPSl710HrUWFxn1xx2
-         3sxXG13GhNUL+0YVJq/Fz2comXRXfon8+AUK8elZg51t2o8dQcKuUAKho0OPCl9ISl/l
-         LSkGWZOSVuTWk5+OCzWwwN5CH7GdzBhxogTwKdH9DHY/CN1agrEx5q/hdh32dTkjHcql
-         9KzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=1G/a7WS8pUpL1zmvbKTHzrkVwD487e3W+2smn5ktODc=;
-        b=VL4oAVUaeobnM4up0rRuQU9U7QIWzVYEp7D2sUEZXy8+P4lfJAnUt3HlcCkXV76AqJ
-         L8VtbRvyc+Bo2Yi9PNydcAtrm6+FMYusYNS8uzVsfQnNUgMB9MzkS3tshnI613rAH8np
-         V91iPUOrNQkCZYXg0xY8aurIphSVlyFEwNo74ITTpmlTB0NZd31U9GLP0JzTjdHSJzSM
-         kVxaRUw+nc2AF1R8ooqBV8/YHPgBWHWe0GpsTc6N52+D9UaOda46mxUf61jKciYoQD5d
-         lyKlPGyJQ6TxCj/hrAbF6cmhsuQBgUVIVyiLrzc8AT0+P/2bgMjl4Gl7GfUOv6RzPksL
-         kC5w==
-X-Gm-Message-State: APjAAAXdx1jLJLBsL9gcC3CD4xZjbH083rJfwfDA7zyD7GZ7BX5nK9xQ
-        x1NTMoMV2Gy7uaxVcLtlEefwtg==
-X-Google-Smtp-Source: APXvYqx1NahTVPRWa7m2oJ0W4YhsQAxXbI6gehhVtgk+OAiDDzj+CshHjmVcVPHC2vZxZqmTXgtrNg==
-X-Received: by 2002:a02:a18e:: with SMTP id n14mr980021jah.84.1565749459743;
-        Tue, 13 Aug 2019 19:24:19 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id y5sm114834811ioc.86.2019.08.13.19.24.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2019 19:24:19 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 19:24:18 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Alistair Francis <alistair.francis@wdc.com>
-cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        alistair23@gmail.com
-Subject: Re: [PATCH 1/2] riscv: rv32_defconfig: Update the defconfig
-In-Reply-To: <20190813233230.21804-1-alistair.francis@wdc.com>
-Message-ID: <alpine.DEB.2.21.9999.1908131924100.19217@viisi.sifive.com>
-References: <20190813233230.21804-1-alistair.francis@wdc.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Tue, 13 Aug 2019 22:24:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730139AbfHNCYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:24:16 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58EEB216F4;
+        Wed, 14 Aug 2019 02:24:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565749456;
+        bh=sml/q+TWg4pt2Fx4C/8hXbbtwxpBWZ1jBQwrz6SBUFE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Xa1WSjIGln2iaXkhWBqT9Yfu+Rq7znpPksHiMNxpguseO0jf90LXsHZwb5FmyTYqE
+         bgA8kmQYhxL4b4YVqDni/Y4kcQVn6MGirDepYcgRYjIFmh7LqGw2J6cv8T6+peRVqS
+         PyIc3pVeKu0HC4NUv+euJ/wXyLo07wajuxI5sKFk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jin Yao <yao.jin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 32/33] perf pmu-events: Fix missing "cpu_clk_unhalted.core" event
+Date:   Tue, 13 Aug 2019 22:23:22 -0400
+Message-Id: <20190814022323.17111-32-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190814022323.17111-1-sashal@kernel.org>
+References: <20190814022323.17111-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 13 Aug 2019, Alistair Francis wrote:
+From: Jin Yao <yao.jin@linux.intel.com>
 
-> Update the rv32_defconfig:
->  - Add 'CONFIG_DEVTMPFS_MOUNT=y' to match the RISC-V defconfig
->  - Add CONFIG_HW_RANDOM=y and CONFIG_HW_RANDOM_VIRTIO=y to enable
->    VirtIORNG when running on QEMU
-> 
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+[ Upstream commit 8e6e5bea2e34c61291d00cb3f47560341aa84bc3 ]
 
-Thanks, queued for v5.3-rc.
+The events defined in pmu-events JSON are parsed and added into perf
+tool. For fixed counters, we handle the encodings between JSON and perf
+by using a static array fixed[].
 
+But the fixed[] has missed an important event "cpu_clk_unhalted.core".
 
-- Paul
+For example, on the Tremont platform,
+
+  [root@localhost ~]# perf stat -e cpu_clk_unhalted.core -a
+  event syntax error: 'cpu_clk_unhalted.core'
+                       \___ parser error
+
+With this patch, the event cpu_clk_unhalted.core can be parsed.
+
+  [root@localhost perf]# ./perf stat -e cpu_clk_unhalted.core -a -vvv
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4
+    size                             112
+    config                           0x3c
+    sample_type                      IDENTIFIER
+    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+    disabled                         1
+    inherit                          1
+    exclude_guest                    1
+  ------------------------------------------------------------
+...
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190729072755.2166-1-yao.jin@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/pmu-events/jevents.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 41611d7f9873c..016d12af68773 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -315,6 +315,7 @@ static struct fixed {
+ 	{ "inst_retired.any_p", "event=0xc0" },
+ 	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
+ 	{ "cpu_clk_unhalted.thread", "event=0x3c" },
++	{ "cpu_clk_unhalted.core", "event=0x3c" },
+ 	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
+ 	{ NULL, NULL},
+ };
+-- 
+2.20.1
+
