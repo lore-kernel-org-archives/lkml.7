@@ -2,53 +2,51 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C0FC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2B0C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D78206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6691D20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803625;
-	bh=dcNlIq3Uf0l0lx13G3Fyg5C2xZf/pldIfA1pAiWLhjo=;
+	s=default; t=1565803632;
+	bh=7oC41y1/DvvtuaK/R0aXPzmQz9Z45akuQkvn+dDeXj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WXr/6H9nKYqVqG/HTnPX5rRKiU+yEaVXZawyF1lOWyWJPo/MgSuFtMDXCBmu+EoPB
-	 WI8/TvmipISWyb0+kztOp9qhsTrokBIMZlcF/K8Nel7ZLWROxE3vzycSlGzLE729Dm
-	 mXDTw2HzdTuDQ2T7ZygwOdqddcLD60aIKASEQlV0=
+	b=D7JqqsYw3BbM4su7hSVryNsz+8dp9MF/sHuiYkpxD98xaEwUn/UYyFuWhNAwkQ68z
+	 b2iKu/MOUGZyLbCO7Burr4RuCEMCvEyhfhyeJakKxUIhHIj1ZXIcDiusZReCJZXCSH
+	 Svj/d4PzxcX77Ubnf5zPnXCn24SEmJXVZAs2KpBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbfHNREL (ORCPT
+        id S1729462AbfHNR1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:04:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52952 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:27:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729127AbfHNREJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:04:09 -0400
+        id S1729036AbfHNRDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:03:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAB2F208C2;
-        Wed, 14 Aug 2019 17:04:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E66321721;
+        Wed, 14 Aug 2019 17:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802248;
-        bh=dcNlIq3Uf0l0lx13G3Fyg5C2xZf/pldIfA1pAiWLhjo=;
+        s=default; t=1565802233;
+        bh=7oC41y1/DvvtuaK/R0aXPzmQz9Z45akuQkvn+dDeXj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=laj6tMLrxxoX6/VMhNT+f3OowbXoXsGg0fBgMwkqrnceIhkeM2PEDa2BrCgJaR06w
-         FqWfEZ3rrU4RkcSaXe6SkOwHG0N+UaUf9ZeprtzBvzNEb54s06It3maQUDlz9vxG8H
-         NRuUpcpFDMT/jm6JdCZWS1AF1zeYMxRewjNEZYvo=
+        b=cWYytbReroHPVcsn+MvFHhHwST7A/uYDaMO3cOfcf+bkYUlEYwi/S1EleqM9+I65N
+         gt5DonQB0aG83BvRT9NMjU5ZsNqjIsiCt2lFbW6OBv6L+aaZFHg5wmRyejvIoU+70b
+         66+t8JVPmrNWb529ubu7s+UJVmSQTZdHmi7s9Xfg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 051/144] vfio-ccw: Set pa_nr to 0 if memory allocation fails for pa_iova_pfn
-Date:   Wed, 14 Aug 2019 19:00:07 +0200
-Message-Id: <20190814165801.962212682@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: [PATCH 5.2 046/144] can: flexcan: fix stop mode acknowledgment
+Date:   Wed, 14 Aug 2019 19:00:02 +0200
+Message-Id: <20190814165801.752037420@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -61,39 +59,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c1ab69268d124ebdbb3864580808188ccd3ea355 ]
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
 
-So we don't call try to call vfio_unpin_pages() incorrectly.
+commit 5f186c257fa4808bb7f14e643b9fba3e11f08a30 upstream.
 
-Fixes: 0a19e61e6d4c ("vfio: ccw: introduce channel program interfaces")
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-Reviewed-by: Eric Farman <farman@linux.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Message-Id: <33a89467ad6369196ae6edf820cbcb1e2d8d050c.1562854091.git.alifm@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+To enter stop mode, the CPU should manually assert a global Stop Mode
+request and check the acknowledgment asserted by FlexCAN. The CPU must
+only consider the FlexCAN in stop mode when both request and
+acknowledgment conditions are satisfied.
+
+Fixes: de3578c198c6 ("can: flexcan: add self wakeup support")
+Reported-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: linux-stable <stable@vger.kernel.org> # >= v5.0
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/s390/cio/vfio_ccw_cp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/can/flexcan.c |   31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
-index 0e79799e9a719..79eb40bdaf9f4 100644
---- a/drivers/s390/cio/vfio_ccw_cp.c
-+++ b/drivers/s390/cio/vfio_ccw_cp.c
-@@ -89,8 +89,10 @@ static int pfn_array_alloc_pin(struct pfn_array *pa, struct device *mdev,
- 				  sizeof(*pa->pa_iova_pfn) +
- 				  sizeof(*pa->pa_pfn),
- 				  GFP_KERNEL);
--	if (unlikely(!pa->pa_iova_pfn))
-+	if (unlikely(!pa->pa_iova_pfn)) {
-+		pa->pa_nr = 0;
- 		return -ENOMEM;
-+	}
- 	pa->pa_pfn = pa->pa_iova_pfn + pa->pa_nr;
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -400,9 +400,10 @@ static void flexcan_enable_wakeup_irq(st
+ 	priv->write(reg_mcr, &regs->mcr);
+ }
  
- 	pa->pa_iova_pfn[0] = pa->pa_iova >> PAGE_SHIFT;
--- 
-2.20.1
-
+-static inline void flexcan_enter_stop_mode(struct flexcan_priv *priv)
++static inline int flexcan_enter_stop_mode(struct flexcan_priv *priv)
+ {
+ 	struct flexcan_regs __iomem *regs = priv->regs;
++	unsigned int ackval;
+ 	u32 reg_mcr;
+ 
+ 	reg_mcr = priv->read(&regs->mcr);
+@@ -412,20 +413,37 @@ static inline void flexcan_enter_stop_mo
+ 	/* enable stop request */
+ 	regmap_update_bits(priv->stm.gpr, priv->stm.req_gpr,
+ 			   1 << priv->stm.req_bit, 1 << priv->stm.req_bit);
++
++	/* get stop acknowledgment */
++	if (regmap_read_poll_timeout(priv->stm.gpr, priv->stm.ack_gpr,
++				     ackval, ackval & (1 << priv->stm.ack_bit),
++				     0, FLEXCAN_TIMEOUT_US))
++		return -ETIMEDOUT;
++
++	return 0;
+ }
+ 
+-static inline void flexcan_exit_stop_mode(struct flexcan_priv *priv)
++static inline int flexcan_exit_stop_mode(struct flexcan_priv *priv)
+ {
+ 	struct flexcan_regs __iomem *regs = priv->regs;
++	unsigned int ackval;
+ 	u32 reg_mcr;
+ 
+ 	/* remove stop request */
+ 	regmap_update_bits(priv->stm.gpr, priv->stm.req_gpr,
+ 			   1 << priv->stm.req_bit, 0);
+ 
++	/* get stop acknowledgment */
++	if (regmap_read_poll_timeout(priv->stm.gpr, priv->stm.ack_gpr,
++				     ackval, !(ackval & (1 << priv->stm.ack_bit)),
++				     0, FLEXCAN_TIMEOUT_US))
++		return -ETIMEDOUT;
++
+ 	reg_mcr = priv->read(&regs->mcr);
+ 	reg_mcr &= ~FLEXCAN_MCR_SLF_WAK;
+ 	priv->write(reg_mcr, &regs->mcr);
++
++	return 0;
+ }
+ 
+ static inline void flexcan_error_irq_enable(const struct flexcan_priv *priv)
+@@ -1612,7 +1630,9 @@ static int __maybe_unused flexcan_suspen
+ 		 */
+ 		if (device_may_wakeup(device)) {
+ 			enable_irq_wake(dev->irq);
+-			flexcan_enter_stop_mode(priv);
++			err = flexcan_enter_stop_mode(priv);
++			if (err)
++				return err;
+ 		} else {
+ 			err = flexcan_chip_disable(priv);
+ 			if (err)
+@@ -1662,10 +1682,13 @@ static int __maybe_unused flexcan_noirq_
+ {
+ 	struct net_device *dev = dev_get_drvdata(device);
+ 	struct flexcan_priv *priv = netdev_priv(dev);
++	int err;
+ 
+ 	if (netif_running(dev) && device_may_wakeup(device)) {
+ 		flexcan_enable_wakeup_irq(priv, false);
+-		flexcan_exit_stop_mode(priv);
++		err = flexcan_exit_stop_mode(priv);
++		if (err)
++			return err;
+ 	}
+ 
+ 	return 0;
 
 
