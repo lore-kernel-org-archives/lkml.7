@@ -2,52 +2,52 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A30C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4508C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450F3206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD22120665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803592;
-	bh=1R8u4ELJOb4HRqVwp+Btv5QXt5t8TpFp1VVgY+cFNwA=;
+	s=default; t=1565803595;
+	bh=+bHoaEyut0jt8XpJIrpUFxCbGOTtiDFobi2WIvPHMWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y0nDfa1/7ks8w3YmDNOenVYOMy8usx85Twfyobqtgi72/IwV7eE3u53hW1nKUjoTC
-	 Z9Xy9PAHBH3IitS/KocoqYMIk9Nmi3LAHtK5NKHb2fgB/rP30dZ3nuWxBxnIQWOJU1
-	 0XoKopSBpP7jbXjjZ4aHB16gJRYlbuQcgETjKM6Y=
+	b=0rboeU+YopKacWrhvffsGxuUNw94Hspil1GtkQsqSP1911b5QhTeqWIhsFJPxnli2
+	 BSNrQ25QFwMYg8dQ9ij5rZ8FcSa1wsE2z4/KfZkxzoBhVqloZLycXDthCmce4avGO9
+	 A8VizuEp/kvxbRg+6lEUvQAZJdJcPNB8lPhqLiOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbfHNREj (ORCPT
+        id S1729527AbfHNR0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:04:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53476 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:26:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728599AbfHNREh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:04:37 -0400
+        id S1729275AbfHNREj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:04:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 022512173E;
-        Wed, 14 Aug 2019 17:04:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ABBA2084D;
+        Wed, 14 Aug 2019 17:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802276;
-        bh=1R8u4ELJOb4HRqVwp+Btv5QXt5t8TpFp1VVgY+cFNwA=;
+        s=default; t=1565802279;
+        bh=+bHoaEyut0jt8XpJIrpUFxCbGOTtiDFobi2WIvPHMWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fv56AkfAg7HmSP2t/DBooDDKsiHO5k2EQyS7Q0aSjopQDzgVb0OyxmlZllZr0WY1H
-         w/xFlrg1H6ft05E//47ahLmlEo7QdCypdbFimcdRVdive/Evr/Zoxm30jsX3Xn6hLB
-         hwYF9DkqrCak/2kEsLu0njlrNZmmHdhDp6LJejBA=
+        b=rfQWcmsIqysVZLCjNe/TXNZTnI4azphL8ZpW/sV1bzCS1/kf88wlaiQ0dqj9LOmcN
+         LtGLczMwgKnyU4Pm259ZvcHvTj5KJTNhjB8Jh1m7IWs1Q2HV65c2UIOgXGn3cyzFxR
+         fsGYQuFEFHr9s2zc+A8iA8TEV+9NrogvH7Pd4b9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH 5.2 027/144] x86/mm: Check for pfn instead of page in vmalloc_sync_one()
-Date:   Wed, 14 Aug 2019 18:59:43 +0200
-Message-Id: <20190814165800.978102562@linuxfoundation.org>
+        stable@vger.kernel.org, Laura Garcia Liebana <nevola@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 056/144] netfilter: nft_hash: fix symhash with modulus one
+Date:   Wed, 14 Aug 2019 19:00:12 +0200
+Message-Id: <20190814165802.173677704@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -60,35 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+[ Upstream commit 28b1d6ef53e3303b90ca8924bb78f31fa527cafb ]
 
-commit 51b75b5b563a2637f9d8dc5bd02a31b2ff9e5ea0 upstream.
+The rule below doesn't work as the kernel raises -ERANGE.
 
-Do not require a struct page for the mapped memory location because it
-might not exist. This can happen when an ioremapped region is mapped with
-2MB pages.
+nft add rule netdev nftlb lb01 ip daddr set \
+	symhash mod 1 map { 0 : 192.168.0.10 } fwd to "eth0"
 
-Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lkml.kernel.org/r/20190719184652.11391-2-joro@8bytes.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch allows to use the symhash modulus with one
+element, in the same way that the other types of hashes and
+algorithms that uses the modulus parameter.
 
+Signed-off-by: Laura Garcia Liebana <nevola@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/fault.c |    2 +-
+ net/netfilter/nft_hash.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -200,7 +200,7 @@ static inline pmd_t *vmalloc_sync_one(pg
- 	if (!pmd_present(*pmd))
- 		set_pmd(pmd, *pmd_k);
- 	else
--		BUG_ON(pmd_page(*pmd) != pmd_page(*pmd_k));
-+		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
+diff --git a/net/netfilter/nft_hash.c b/net/netfilter/nft_hash.c
+index fe93e731dc7fb..b836d550b9199 100644
+--- a/net/netfilter/nft_hash.c
++++ b/net/netfilter/nft_hash.c
+@@ -129,7 +129,7 @@ static int nft_symhash_init(const struct nft_ctx *ctx,
+ 	priv->dreg = nft_parse_register(tb[NFTA_HASH_DREG]);
  
- 	return pmd_k;
- }
+ 	priv->modulus = ntohl(nla_get_be32(tb[NFTA_HASH_MODULUS]));
+-	if (priv->modulus <= 1)
++	if (priv->modulus < 1)
+ 		return -ERANGE;
+ 
+ 	if (priv->offset + priv->modulus - 1 < priv->offset)
+-- 
+2.20.1
+
 
 
