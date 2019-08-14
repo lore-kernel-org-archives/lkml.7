@@ -2,147 +2,374 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA7AC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC21C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 142742063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:59:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kPcm6A8N"
+	by mail.kernel.org (Postfix) with ESMTP id A1A972063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:03:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbfHNO7c (ORCPT
+        id S1727671AbfHNPDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 10:59:32 -0400
-Received: from mail-eopbgr10077.outbound.protection.outlook.com ([40.107.1.77]:4164
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725828AbfHNO7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 10:59:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gGRY/c4s9TJCkPjS7n5vxd5La7Qy2XifzH8UQP1mBgU0v0OQETZ/ygHlrs7uY5CwTCNALKCtd4QtD01tdcnil+wS1e7zUd+lk2fc8/H6fupLPQy1x4SFU6GT4yApQKp9chBiFlQoSw3tO+fL1tlCQjfq4EemaI9NkxL3NrpfsBGWo6O9eVZ9MJnyTbpSxEfd2gLTDXt2tDDB/Bs0tj+ArqUuNABu8n3TxYwPKtClYuE5GCAzAP7EdL72LqaNgVKmQKDo/PFG5m1Z9dsvHJerI83qYB88o/0lzFIJuvRsNDPj08DAfAnOJ2z1sAhLumNNJ+NA+8sR8cEq8L1Ox1ck7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W0oUQ6jSxv5Smkcr89ImAj4PyISzroBMV+7ODF1K/JQ=;
- b=PSGTsf6NmxthSYDiPLWGFoEeUf9CyX+pBiB2fNwl38ycLGsWo0pD3sx1BXhT+6VnrFR4Pm2TjjreEjPibPhFbq053qdAGQrjbsDRpbhOKyw5VCDEHm35Ucc2l8ONfMMKjnX/z11DgOz0i/GAI673rYqr+11kOhZgJviX9kA6AdL+OW0u9N0DN9DdhCGF3bMv+yN9zzFp5wR/qAsxy0dKDFp0QU3ByChz9B2V49k7mHEiLp6xnKj2aHvrTHGpP9iSGda7hZkt3AoPkyC43RvzV2oGTpZvEWznGi6ZFY4kbJ5eUUXJuN+aB80SExHUySa4zc/3d734/szRIPRIM7XydQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W0oUQ6jSxv5Smkcr89ImAj4PyISzroBMV+7ODF1K/JQ=;
- b=kPcm6A8Nnr6yyKcHXXFgUi5blTgrAddy9jwPdjBrR0zNPuKA6jFPIAu5w2ihhJXFaXs5O8k3tgG19FcgRPfjOGWW3scdWvANH2AeABFQuubwauvJJUgE8u5xkuwBuNAxwpqTMKA6UHzloVk/NDIykq37CZIHaRe34xLuEfDJ5G4=
-Received: from DB8PR04MB6715.eurprd04.prod.outlook.com (20.179.251.14) by
- DB8PR04MB6489.eurprd04.prod.outlook.com (20.179.249.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.14; Wed, 14 Aug 2019 14:58:47 +0000
-Received: from DB8PR04MB6715.eurprd04.prod.outlook.com
- ([fe80::b0ab:d127:ca27:e1fa]) by DB8PR04MB6715.eurprd04.prod.outlook.com
- ([fe80::b0ab:d127:ca27:e1fa%7]) with mapi id 15.20.2157.022; Wed, 14 Aug 2019
- 14:58:47 +0000
-From:   Robert Chiras <robert.chiras@nxp.com>
-To:     "daniel@fooishbar.org" <daniel@fooishbar.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>, "marex@denx.de" <marex@denx.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [EXT] Re: [PATCH v2 06/15] drm/mxsfb: Update mxsfb with
- additional pixel formats
-Thread-Topic: [EXT] Re: [PATCH v2 06/15] drm/mxsfb: Update mxsfb with
- additional pixel formats
-Thread-Index: AQHVUo3kZqU7u4W/l0qkPdsCk56cbab6hi0AgAA2QgA=
-Date:   Wed, 14 Aug 2019 14:58:47 +0000
-Message-ID: <1565794726.3209.77.camel@nxp.com>
-References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
-         <1565779731-1300-7-git-send-email-robert.chiras@nxp.com>
-         <CAPj87rMFG=RGmfVnawbE7qX4zU7vdYxLJB__K4E3B8jcJ764KQ@mail.gmail.com>
-In-Reply-To: <CAPj87rMFG=RGmfVnawbE7qX4zU7vdYxLJB__K4E3B8jcJ764KQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=robert.chiras@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 34c1c0e8-ce11-42ac-a5fe-08d720c7e8d0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB6489;
-x-ms-traffictypediagnostic: DB8PR04MB6489:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB6489E913B5B544222D0BEC38E3AD0@DB8PR04MB6489.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01294F875B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(366004)(376002)(39860400002)(189003)(199004)(256004)(7736002)(4326008)(103116003)(102836004)(11346002)(66066001)(186003)(476003)(44832011)(446003)(2616005)(6506007)(8676002)(25786009)(14454004)(26005)(6116002)(486006)(76176011)(3846002)(2501003)(81156014)(99286004)(6512007)(478600001)(81166006)(6486002)(71200400001)(1730700003)(5660300002)(50226002)(66476007)(316002)(2906002)(64756008)(7416002)(54906003)(71190400001)(53936002)(2351001)(5640700003)(86362001)(6436002)(8936002)(36756003)(66446008)(305945005)(66556008)(76116006)(6246003)(91956017)(6916009)(66946007)(229853002)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6489;H:DB8PR04MB6715.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Qw7kpTRYztOyCHaHxJsYlA2K5vbMEc6hjIGFOwPk659FfV9ugoIbkC9E2qZlZd1JScLEsi4Zre81+IUyOhWX6w1OAvH2d+3Q4OTujzS7eM+A2QVOJLsr1YSNENKPCJrLQwRLw5iZSpJEWgi6clHDe2sKfn0PQFSuOhNfNVk+Oh1u6gB7Tlm7B/ux43E2DTi4hhF9DCe+doBpu5PMgBvcg8FpOV88ba5hox1SS8Rm5O4FVoOmArjWlbMUVNfVhTqtBAl62mE3ZRK3zTY8O0+xdJtUze7VZZM4HCxvGcDOlFWm1RKtp+5uTjZfqoHSFgjpUYAVPKSEt0Vcv+EW3GuIKyEjuD0ANs37D5Gqu59gGrPdWLrliyyhbxk6Bh19zk28/V7+wyiO7O+P/h82O0Qz1s11jjGC9LOStxz993rCfwU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <337ECD9F9D598D4CA82689858D08C84D@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 14 Aug 2019 11:03:12 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50551 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfHNPDM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 11:03:12 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxunp-00088e-Ak; Wed, 14 Aug 2019 17:03:05 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxuno-0000fe-8G; Wed, 14 Aug 2019 17:03:04 +0200
+Date:   Wed, 14 Aug 2019 17:03:04 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        vincent.guittot@linaro.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] pwm: sprd: Add Spreadtrum PWM support
+Message-ID: <20190814150304.x44lalde3cwp67ge@pengutronix.de>
+References: <65a34dd943b0260bfe45ec76dcf414a67e5d8343.1565785291.git.baolin.wang@linaro.org>
+ <446eb284a096a1fd8998765669b1c9a2f78d7d22.1565785291.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 34c1c0e8-ce11-42ac-a5fe-08d720c7e8d0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 14:58:47.0954
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bYR6h7AYJ7yI/gGHW590P3ldgejfT7wvflEOD7V9z+VM/eeJbidc14GZ7hk8cWsQ5IeIlf7+fp0tqI23wemzMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6489
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <446eb284a096a1fd8998765669b1c9a2f78d7d22.1565785291.git.baolin.wang@linaro.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRGFuaWVsLA0KDQpPbiBNaSwgMjAxOS0wOC0xNCBhdCAxMjo0NCArMDEwMCwgRGFuaWVsIFN0
-b25lIHdyb3RlOg0KPiBIaSBSb2JlcnQsDQo+IA0KPiBPbiBXZWQsIDE0IEF1ZyAyMDE5IGF0IDEx
-OjQ5LCBSb2JlcnQgQ2hpcmFzIDxyb2JlcnQuY2hpcmFzQG54cC5jb20+DQo+IHdyb3RlOg0KPiA+
-IA0KPiA+ICvCoMKgwqDCoMKgwqDCoGNhc2UgRFJNX0ZPUk1BVF9CR1I1NjU6IC8qIEJHMTYgKi8N
-Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKG14c2ZiLT5kZXZkYXRhLT5p
-cHZlcnNpb24gPCA0KQ0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgZ290byBlcnI7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHdy
-aXRlbChDVFJMMl9PRERfTElORV9QQVRURVJOKENUUkwyX0xJTkVfUEFUVEVSTl9CRw0KPiA+IFIp
-IHwNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoENU
-UkwyX0VWRU5fTElORV9QQVRURVJOKENUUkwyX0xJTkVfUEFUVEVSTl8NCj4gPiBCR1IpLA0KPiA+
-ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbXhzZmItPmJh
-c2UgKyBMQ0RDX1Y0X0NUUkwyICsgUkVHX1NFVCk7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoC8qIEZhbGwgdGhyb3VnaCAqLw0KPiA+ICvCoMKgwqDCoMKgwqDCoGNhc2UgRFJN
-X0ZPUk1BVF9SR0I1NjU6IC8qIFJHMTYgKi8NCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgY3RybCB8PSBDVFJMX1NFVF9XT1JEX0xFTkdUSCgwKTsNCj4gPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgY3RybCAmPSB+Q1RSTF9ERjE2Ow0KPiA+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqBjdHJsMSB8PSBDVFJMMV9TRVRfQllURV9QQUNLQUdJTkcoMHhmKTsN
-Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYnJlYWs7DQo+IEZvciBub24tQkdS
-IGZvcm1hdHMsIGRvIHlvdSBuZWVkIHRvIHdyaXRlIFJHQiBsaW5lLXBhdHRlcm4gYmFjayB0bw0K
-PiB0aGUNCj4gQ1RSTDIgcmVnaXN0ZXI/IE90aGVyd2lzZSwgaWYgeW91IHN0YXJ0IHdpdGggQkdS
-NTY1IHRoZW4gc3dpdGNoIGJhY2sNCj4gdG8gUkdCNTY1LCBwcmVzdW1hYmx5IENUUkwyIHdvdWxk
-IHN0aWxsIGJlIHByb2dyYW1tZWQgZm9yIEJHUiBzbyB5b3UNCj4gd291bGQgZGlzcGxheSBpbnZl
-cnRlZCBjaGFubmVscy4NClRoZSBMSU5FX1BBVFRFUk4gZnJvbcKgTENEQ19WNF9DVFJMMiByZWdp
-c3RlciBpcyBjbGVhcmVkIGFib3ZlLCB3aXRoDQp0aGlzIGNvZGU6DQorwqDCoMKgwqDCoMKgwqBp
-ZiAobXhzZmItPmRldmRhdGEtPmlwdmVyc2lvbiA+PSA0KQ0KK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoHdyaXRlbChDVFJMMl9PRERfTElORV9QQVRURVJOKENUUkwyX0xJTkVfUEFUVEVS
-Tl9DTFIpIHwNCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoENU
-UkwyX0VWRU5fTElORV9QQVRURVJOKENUUkwyX0xJTkVfUEFUVEVSTl9DTFIpLA0KK8KgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbXhzZmItPmJhc2UgKyBMQ0RDX1Y0
-X0NUUkwyICsgUkVHX0NMUik7DQo+IA0KPiBTYW1lIGdvZXMgZm9yIGFsbCB0aGUgb3RoZXIgQkdS
-L1JHQiBmb3JtYXQgcGFpcnMgYmVsb3cuDQo+IA0KPiBDaGVlcnMsDQo+IERhbmllbA0KDQpUaGFu
-a3MsDQpSb2JlcnQ=
+On Wed, Aug 14, 2019 at 08:46:11PM +0800, Baolin Wang wrote:
+> This patch adds the Spreadtrum PWM support, which provides maximum 4
+> channels.
+> 
+> Signed-off-by: Neo Hou <neo.hou@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+> Changes from v2:
+>  - Optimize some macors' name.
+>  - Improve some comments.
+>  - Optimize the calculation of prescale.
+>  - Do not print error log if error numeber is EPROBE_DEFER.
+>  - Return -ENODEV if no available PWM channels.
+>  - Simplify the logics in sprd_pwm_clk_init().
+>  - Remove disabling PWM clocks in sprd_pwm_remove().
+>  - Remove pwm_get_state().
+> 
+> Changes from v1:
+>  - Add depending on HAS_IOMEM.
+>  - Rename parameters' names.
+>  - Implement .apply() instead of .config(), .enable() and .disable().
+>  - Use NSEC_PER_SEC instead of 1000000000ULL.
+>  - Add some comments to make code more readable.
+>  - Remove some redundant operation.
+>  - Use standard clock properties to set clock parent.
+>  - Other coding style optimization.
+> ---
+>  drivers/pwm/Kconfig    |   11 ++
+>  drivers/pwm/Makefile   |    1 +
+>  drivers/pwm/pwm-sprd.c |  309 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 321 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-sprd.c
+> 
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index a7e5751..31dfc88 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -423,6 +423,17 @@ config PWM_SPEAR
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-spear.
+>  
+> +config PWM_SPRD
+> +	tristate "Spreadtrum PWM support"
+> +	depends on ARCH_SPRD || COMPILE_TEST
+> +	depends on HAS_IOMEM
+> +	help
+> +	  Generic PWM framework driver for the PWM controller on
+> +	  Spreadtrum SoCs.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-sprd.
+> +
+>  config PWM_STI
+>  	tristate "STiH4xx PWM support"
+>  	depends on ARCH_STI
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 76b555b..26326ad 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -41,6 +41,7 @@ obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
+>  obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
+>  obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
+>  obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
+> +obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
+>  obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
+>  obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
+>  obj-$(CONFIG_PWM_STM32_LP)	+= pwm-stm32-lp.o
+> diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
+> new file mode 100644
+> index 0000000..68c2d9f
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-sprd.c
+> @@ -0,0 +1,309 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 Spreadtrum Communications Inc.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/math64.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +
+> +#define SPRD_PWM_PRESCALE	0x0
+> +#define SPRD_PWM_MOD		0x4
+> +#define SPRD_PWM_DUTY		0x8
+> +#define SPRD_PWM_ENABLE		0x18
+> +
+> +#define SPRD_PWM_MOD_MAX	GENMASK(7, 0)
+> +#define SPRD_PWM_DUTY_MSK	GENMASK(15, 0)
+> +#define SPRD_PWM_PRESCALE_MSK	GENMASK(7, 0)
+> +#define SPRD_PWM_ENABLE_BIT	BIT(0)
+> +
+> +#define SPRD_PWM_CHN_NUM	4
+> +#define SPRD_PWM_REGS_SHIFT	5
+> +#define SPRD_PWM_CHN_CLKS_NUM	2
+> +#define SPRD_PWM_CHN_OUTPUT_CLK	1
+> +
+> +struct sprd_pwm_chn {
+> +	struct clk_bulk_data clks[SPRD_PWM_CHN_CLKS_NUM];
+> +	u32 clk_rate;
+> +};
+> +
+> +struct sprd_pwm_chip {
+> +	void __iomem *base;
+> +	struct device *dev;
+> +	struct pwm_chip chip;
+> +	int num_pwms;
+> +	struct sprd_pwm_chn chn[SPRD_PWM_CHN_NUM];
+> +};
+> +
+> +/*
+> + * The list of clocks required by PWM channels, and each channel has 2 clocks:
+> + * enable clock and pwm clock.
+> + */
+> +static const char * const sprd_pwm_clks[] = {
+> +	"enable0", "pwm0",
+> +	"enable1", "pwm1",
+> +	"enable2", "pwm2",
+> +	"enable3", "pwm3",
+> +};
+> +
+> +static u32 sprd_pwm_read(struct sprd_pwm_chip *spc, u32 hwid, u32 reg)
+> +{
+> +	u32 offset = reg + (hwid << SPRD_PWM_REGS_SHIFT);
+> +
+> +	return readl_relaxed(spc->base + offset);
+> +}
+> +
+> +static void sprd_pwm_write(struct sprd_pwm_chip *spc, u32 hwid,
+> +			   u32 reg, u32 val)
+> +{
+> +	u32 offset = reg + (hwid << SPRD_PWM_REGS_SHIFT);
+> +
+> +	writel_relaxed(val, spc->base + offset);
+> +}
+> +
+> +static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			       struct pwm_state *state)
+> +{
+> +	struct sprd_pwm_chip *spc =
+> +		container_of(chip, struct sprd_pwm_chip, chip);
+> +	struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
+> +	u32 val, duty, prescale;
+> +	u64 tmp;
+> +	int ret;
+> +
+> +	/*
+> +	 * The clocks to PWM channel has to be enabled first before
+> +	 * reading to the registers.
+> +	 */
+> +	ret = clk_bulk_prepare_enable(SPRD_PWM_CHN_CLKS_NUM, chn->clks);
+> +	if (ret) {
+> +		dev_err(spc->dev, "failed to enable pwm%u clocks\n",
+> +			pwm->hwpwm);
+> +		return;
+> +	}
+> +
+> +	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_ENABLE);
+> +	if (val & SPRD_PWM_ENABLE_BIT)
+> +		state->enabled = true;
+> +	else
+> +		state->enabled = false;
+> +
+> +	/*
+> +	 * The hardware provides a counter that is feed by the source clock.
+> +	 * The period length is (PRESCALE + 1) * MOD counter steps.
+> +	 * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
+> +	 * Thus the period_ns and duty_ns calculation formula should be:
+> +	 * period_ns = NSEC_PER_SEC * (prescale + 1) * mod / clk_rate
+> +	 * duty_ns = NSEC_PER_SEC * (prescale + 1) * duty / clk_rate
+> +	 */
+> +	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE);
+> +	prescale = val & SPRD_PWM_PRESCALE_MSK;
+> +	tmp = (prescale + 1) * NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
+> +	state->period = DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
+> +
+> +	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY);
+> +	duty = val & SPRD_PWM_DUTY_MSK;
+> +	tmp = (prescale + 1) * NSEC_PER_SEC * duty;
+> +	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
+> +
+> +	/* Disable PWM clocks if the PWM channel is not in enable state. */
+> +	if (!state->enabled)
+> +		clk_bulk_disable_unprepare(SPRD_PWM_CHN_CLKS_NUM, chn->clks);
+> +}
+> +
+> +static int sprd_pwm_config(struct sprd_pwm_chip *spc, struct pwm_device *pwm,
+> +			   int duty_ns, int period_ns)
+> +{
+> +	struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
+> +	u32 prescale, duty;
+> +	u64 tmp;
+> +
+> +	/*
+> +	 * The hardware provides a counter that is feed by the source clock.
+> +	 * The period length is (PRESCALE + 1) * MOD counter steps.
+> +	 * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
+> +	 *
+> +	 * To keep the maths simple we're always using MOD = SPRD_PWM_MOD_MAX.
+
+Did you spend some thoughts about how wrong your period can get because
+of that "lazyness"?
+
+Let's assume a clk rate of 100/3 MHz. Then the available period lengths
+are:
+
+	PRESCALE =  0  ->  period =   7.65 µs
+	PRESCALE =  1  ->  period =  15.30 µs
+	...
+	PRESCALE = 17  ->  period = 137.70 µs
+	PRESCALE = 18  ->  period = 145.35 µs
+
+So the error can be up to (nearly) 7.65 µs (or in general 
+255 / clk_rate) because if 145.34 µs is requested you configure
+PRESCALE = 17 and so yield a period of 137.70 µs. If however you'd pick
+PRESCALE = 18 and MOD = 254 you get a period of 144.78 µs and so the
+error is only 0.56 µs which is a factor of 13 better.
+
+Hmm.
+
+> +	 * The value for PRESCALE is selected such that the resulting period
+> +	 * gets the maximal length not bigger than the requested one with the
+> +	 * given settings (MOD = SPRD_PWM_MOD_MAX and input clock).
+> +	 */
+> +	duty = duty_ns * SPRD_PWM_MOD_MAX / period_ns;
+
+I wonder if you loose some precision here as you use period_ns but might
+actually implement a shorter period.
+
+Quick example, again consider clk_rate = 100 / 3 MHz,
+period_ns = 145340, duty_ns = 72670. Then you end up with
+
+	PRESCALE = 17
+	MOD = 255
+	DUTY = 127
+
+That corresponds to period_ns = 137700, duty_ns = 68580. With DUTY = 134
+you get 72360 ns which is still smaller than the requested 72670 ns.
+(But then again it is not obvious which of the two is the "better"
+approximation because Thierry doesn't seem to see the necessity to
+discuss or define a policy here.)
+
+(And to pick up the thoughts about not using SPRD_PWM_MOD_MAX
+unconditionally, you could also use
+
+	PRESCALE = 18
+	MOD = 254
+	DUTY = 127
+
+yielding period_ns = 144780 and duty_ns = 72390. Summary:
+
+	Request:                 72670 / 145340
+	your result:             68580 / 137700
+	also possible:           72390 / 144780
+
+Judge yourself.)
+
+> +	tmp = (u64)chn->clk_rate * period_ns;
+> +	do_div(tmp, NSEC_PER_SEC);
+> +	prescale = DIV_ROUND_CLOSEST_ULL(tmp, SPRD_PWM_MOD_MAX) - 1;
+
+Now that you use DIV_ROUND_CLOSEST_ULL the comment is wrong because you
+might provide a period bigger than the requested one. Also you divide
+twice instead of once before. (I don't know what architecture your SoC
+uses, but compared to a multiplication a division is usually expensive.)
+Also the math is more complicated now as you have a round-down div and a
+round-closest div.
+
+My preference for how to fix that is to restore the behaviour of v2 that
+matches the comment and adapt .get_state() instead.
+
+For .get_state() this should then be:
+
+	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE);
+	prescale = FIELD_GET(SPRD_PWM_PRESCALE_MSK, val);
+
+	tmp = (prescale + 1) * NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
+	state->period = DIV_ROUND_UP_ULL(tmp, chn->clk_rate);
+
+> +	if (prescale > SPRD_PWM_PRESCALE_MSK)
+> +		prescale = SPRD_PWM_PRESCALE_MSK;
+> +
+> +	/*
+> +	 * Note: Writing DUTY triggers the hardware to actually apply the
+> +	 * values written to MOD and DUTY to the output, so must keep writing
+> +	 * DUTY last.
+> +	 *
+> +	 * The hardware can ensures that current running period is completed
+> +	 * before changing a new configuration to avoid mixed settings.
+
+I'm not a native English speaker, but I would write:
+
+	* The hardware ensures that currently running period is
+	* completed before changing to the new configuration to avoid
+	* mixed settings.
+
+Does this mechanism also apply to PRESCALE? If yes, please include it in
+your description. If not there is still a possibility for a wrong
+period.
+
+> +	 */
+> +	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PRESCALE, prescale);
+> +	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_MOD, SPRD_PWM_MOD_MAX);
+> +	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_DUTY, duty);
+> +
+> +	return 0;
+> +}
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
