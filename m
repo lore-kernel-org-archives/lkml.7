@@ -5,54 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8A1C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53199C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B738208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28778206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803237;
-	bh=wGnkXI/H79nU+O0BqQv0kJhREjEJ1fz8u7j98i5eA+0=;
+	s=default; t=1565803246;
+	bh=tOPneCiU3dnJ2IqXOI7xEijvZxNxzuf6Zmq9V0z+500=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WC8WLXuVcGYycPAv6xQ9TSN3grhba+UZZFMaWU53znUFPzW1uBCq3NCtZ721CfzrD
-	 Fz4uoFRQkzFY96MlJiyIGm7wRRe/b9oajaDzdJFwadXIwj0np81G0ojgLZVXOJyA/K
-	 ElfKW2HIGH8pA4iF9n9BPOXexEcN526Y8/8zFuJE=
+	b=Lc2cMlt7UXW0/g50BeMNo7Up8eOCPJrSOo3vD3gVWEidx5gPLEzwoI7jsRV6accvN
+	 Ni+dYIa7OpUdrA2b7LNswtnfoW5WqR1OHxkAPo42I1pfT9nPjfsC2RaKO6vhTJB4et
+	 7Abhl9MN0EklVyrtgc8RUO1sV6x7vSv01zh3dorw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbfHNRUg (ORCPT
+        id S1730486AbfHNRUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:20:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33604 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:20:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730496AbfHNRKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:10:39 -0400
+        id S1730129AbfHNRKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:10:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 652E02084D;
-        Wed, 14 Aug 2019 17:10:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17CF82133F;
+        Wed, 14 Aug 2019 17:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802638;
-        bh=wGnkXI/H79nU+O0BqQv0kJhREjEJ1fz8u7j98i5eA+0=;
+        s=default; t=1565802623;
+        bh=tOPneCiU3dnJ2IqXOI7xEijvZxNxzuf6Zmq9V0z+500=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mQ9KieIVVnDnsBc6rlWTW1K1zRlB8XzyW+0Acv+IbaQhD8GC1AwnZI1bJT7mcGJxg
-         LzWBjsK1Zwy9zsGmcFyrzJi7c/RUXNmz42zBjGLVhRoZD9KyodDAc05iQmYlZsneXT
-         nYYwMFeBRnagyyxZ28MSsvENaXhP7NuNvyb3VPzM=
+        b=W+/xf697LYG1jPcDt5YdmdQGGPNqz994osqzmDzMY/++B7USTYPXtrxAjjZaWgo/B
+         AnD58qHpZX9rHRClgeEvm8MoKdOcDejZrNunUYk8oC/NBFCegdzPZe3crpuC1CVLTB
+         Fldg8C3kAlwjxLzTXG2/KJOXz0wCGi5X1KB20Gvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hanjun Guo <guohanjun@huawei.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
+        stable@vger.kernel.org, Jakub Jankowski <shasta@toxcorp.com>,
+        Florian Westphal <fw@strlen.de>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 59/91] ACPI/IORT: Fix off-by-one check in iort_dev_find_its_id()
-Date:   Wed, 14 Aug 2019 19:01:22 +0200
-Message-Id: <20190814165752.092367336@linuxfoundation.org>
+Subject: [PATCH 4.19 36/91] netfilter: conntrack: always store window size un-scaled
+Date:   Wed, 14 Aug 2019 19:00:59 +0200
+Message-Id: <20190814165751.214416473@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -65,46 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5a46d3f71d5e5a9f82eabc682f996f1281705ac7 ]
+[ Upstream commit 959b69ef57db00cb33e9c4777400ae7183ebddd3 ]
 
-Static analysis identified that index comparison against ITS entries in
-iort_dev_find_its_id() is off by one.
+Jakub Jankowski reported following oddity:
 
-Update the comparison condition and clarify the resulting error
-message.
+After 3 way handshake completes, timeout of new connection is set to
+max_retrans (300s) instead of established (5 days).
 
-Fixes: 4bf2efd26d76 ("ACPI: Add new IORT functions to support MSI domain handling")
-Link: https://lore.kernel.org/linux-arm-kernel/20190613065410.GB16334@mwanda/
-Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Hanjun Guo <guohanjun@huawei.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+shortened excerpt from pcap provided:
+25.070622 IP (flags [DF], proto TCP (6), length 52)
+10.8.5.4.1025 > 10.8.1.2.80: Flags [S], seq 11, win 64240, [wscale 8]
+26.070462 IP (flags [DF], proto TCP (6), length 48)
+10.8.1.2.80 > 10.8.5.4.1025: Flags [S.], seq 82, ack 12, win 65535, [wscale 3]
+27.070449 IP (flags [DF], proto TCP (6), length 40)
+10.8.5.4.1025 > 10.8.1.2.80: Flags [.], ack 83, win 512, length 0
+
+Turns out the last_win is of u16 type, but we store the scaled value:
+512 << 8 (== 0x20000) becomes 0 window.
+
+The Fixes tag is not correct, as the bug has existed forever, but
+without that change all that this causes might cause is to mistake a
+window update (to-nonzero-from-zero) for a retransmit.
+
+Fixes: fbcd253d2448b8 ("netfilter: conntrack: lower timeout to RETRANS seconds if window is 0")
+Reported-by: Jakub Jankowski <shasta@toxcorp.com>
+Tested-by: Jakub Jankowski <shasta@toxcorp.com>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Acked-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/arm64/iort.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/netfilter/nf_conntrack_proto_tcp.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index 43c2615434b48..e11b5da6f828f 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -616,8 +616,8 @@ static int iort_dev_find_its_id(struct device *dev, u32 req_id,
+diff --git a/net/netfilter/nf_conntrack_proto_tcp.c b/net/netfilter/nf_conntrack_proto_tcp.c
+index 842f3f86fb2e7..7011ab27c4371 100644
+--- a/net/netfilter/nf_conntrack_proto_tcp.c
++++ b/net/netfilter/nf_conntrack_proto_tcp.c
+@@ -480,6 +480,7 @@ static bool tcp_in_window(const struct nf_conn *ct,
+ 	struct ip_ct_tcp_state *receiver = &state->seen[!dir];
+ 	const struct nf_conntrack_tuple *tuple = &ct->tuplehash[dir].tuple;
+ 	__u32 seq, ack, sack, end, win, swin;
++	u16 win_raw;
+ 	s32 receiver_offset;
+ 	bool res, in_recv_win;
  
- 	/* Move to ITS specific data */
- 	its = (struct acpi_iort_its_group *)node->node_data;
--	if (idx > its->its_count) {
--		dev_err(dev, "requested ITS ID index [%d] is greater than available [%d]\n",
-+	if (idx >= its->its_count) {
-+		dev_err(dev, "requested ITS ID index [%d] overruns ITS entries [%d]\n",
- 			idx, its->its_count);
- 		return -ENXIO;
- 	}
+@@ -488,7 +489,8 @@ static bool tcp_in_window(const struct nf_conn *ct,
+ 	 */
+ 	seq = ntohl(tcph->seq);
+ 	ack = sack = ntohl(tcph->ack_seq);
+-	win = ntohs(tcph->window);
++	win_raw = ntohs(tcph->window);
++	win = win_raw;
+ 	end = segment_seq_plus_len(seq, skb->len, dataoff, tcph);
+ 
+ 	if (receiver->flags & IP_CT_TCP_FLAG_SACK_PERM)
+@@ -663,14 +665,14 @@ static bool tcp_in_window(const struct nf_conn *ct,
+ 			    && state->last_seq == seq
+ 			    && state->last_ack == ack
+ 			    && state->last_end == end
+-			    && state->last_win == win)
++			    && state->last_win == win_raw)
+ 				state->retrans++;
+ 			else {
+ 				state->last_dir = dir;
+ 				state->last_seq = seq;
+ 				state->last_ack = ack;
+ 				state->last_end = end;
+-				state->last_win = win;
++				state->last_win = win_raw;
+ 				state->retrans = 0;
+ 			}
+ 		}
 -- 
 2.20.1
 
