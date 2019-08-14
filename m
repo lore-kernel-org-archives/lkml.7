@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10880C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E085EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D150C20842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A80A220842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:33:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749989;
-	bh=gdO0swjJ28YedzX8e/R8tHVRo8A3I/mriBHldzkfYHw=;
+	s=default; t=1565750000;
+	bh=mGv52XAZ3d+fAhOzX8m/aRfvStfvvZXLxF0cpc/IqOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PIeAwztbhoMWsnKxODizYxw9WFWUO5A/H0NetAGmNNGp1/t8A3QWTOq8OAXEMrVL9
-	 8jLdpzGPBvrTtaPlvK6X2l+mM6dm96eMuvj6wdcmPqqlTFMf8O25p43cYjAJ8DCp1F
-	 8GeQW8hDyc536JZ6CSkxVilB12314L1EfakJZzts=
+	b=RhcG38WufhSwKISJcE0SqNZxt0NYAsZf71/OrOzP/z0WmB+6aVXgxZTrPgDx0l0/7
+	 uQ9P05zvFPlzNAeLNFgqDiAdinbjl4YvgNaVtEpWTIA+vNn9wgnoM13Bbg1rPAILWy
+	 iMbIDkk9svTdI+U2ytLFMlj4ikQkyj+xoY08qhFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbfHNCdI (ORCPT
+        id S1729167AbfHNCdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:33:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47524 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:33:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728870AbfHNCQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:16:00 -0400
+        id S1728840AbfHNCPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:15:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81C19208C2;
-        Wed, 14 Aug 2019 02:15:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5471208C2;
+        Wed, 14 Aug 2019 02:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748959;
-        bh=gdO0swjJ28YedzX8e/R8tHVRo8A3I/mriBHldzkfYHw=;
+        s=default; t=1565748952;
+        bh=mGv52XAZ3d+fAhOzX8m/aRfvStfvvZXLxF0cpc/IqOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d6D8oDpe23vVAuT9Szms9YuWC4wtk5BVQV85XXYv2alYB177Ln9uIH9qd3/QWAF4n
-         KcC3xGQluijYJx3gSXRJ9KLp3zTkAg5qRv4izp902KkLZmBebmarYDff1PgbmwK170
-         r84QLbIPk5urQsW5HOgDUfKuXSIdIU8LRkO0e/BM=
+        b=ObR0Ptin4aRTgOsnJGHVvvtOkm1YX9grqyPTz3DruwnW4TmKY8OfsqAKEAdzEiV3X
+         CXb+YMO97vj7u/iejK0rQsJq4Nq1V+5bRDXWCv5v0pwv5VhCiaqSxwox2r/dHyanIO
+         Ix0Q0FYA4pyAI7NwPpBnfk0DHxig907OqTPCyF+w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/68] netfilter: ebtables: fix a memory leak bug in compat
-Date:   Tue, 13 Aug 2019 22:14:44 -0400
-Message-Id: <20190814021548.16001-6-sashal@kernel.org>
+Cc:     Gwendal Grignou <gwendal@chromium.org>, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 02/68] iio: cros_ec_accel_legacy: Fix incorrect channel setting
+Date:   Tue, 13 Aug 2019 22:14:40 -0400
+Message-Id: <20190814021548.16001-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -61,44 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Gwendal Grignou <gwendal@chromium.org>
 
-[ Upstream commit 15a78ba1844a8e052c1226f930133de4cef4e7ad ]
+[ Upstream commit 6cdff99c9f7d7d28b87cf05dd464f7c7736332ae ]
 
-In compat_do_replace(), a temporary buffer is allocated through vmalloc()
-to hold entries copied from the user space. The buffer address is firstly
-saved to 'newinfo->entries', and later on assigned to 'entries_tmp'. Then
-the entries in this temporary buffer is copied to the internal kernel
-structure through compat_copy_entries(). If this copy process fails,
-compat_do_replace() should be terminated. However, the allocated temporary
-buffer is not freed on this path, leading to a memory leak.
+INFO_SCALE is set both for each channel and all channels.
+iio is using all channel setting, so the error was not user visible.
 
-To fix the bug, free the buffer before returning from compat_do_replace().
-
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Reviewed-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/netfilter/ebtables.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iio/accel/cros_ec_accel_legacy.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index 0bb4d712b80cb..57856f8bc22dd 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -2268,8 +2268,10 @@ static int compat_do_replace(struct net *net, void __user *user,
- 	state.buf_kern_len = size64;
- 
- 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
--	if (WARN_ON(ret < 0))
-+	if (WARN_ON(ret < 0)) {
-+		vfree(entries_tmp);
- 		goto out_unlock;
-+	}
- 
- 	vfree(entries_tmp);
- 	tmp.entries_size = size64;
+diff --git a/drivers/iio/accel/cros_ec_accel_legacy.c b/drivers/iio/accel/cros_ec_accel_legacy.c
+index 063e89eff791a..c776a3509a717 100644
+--- a/drivers/iio/accel/cros_ec_accel_legacy.c
++++ b/drivers/iio/accel/cros_ec_accel_legacy.c
+@@ -328,7 +328,6 @@ static const struct iio_chan_spec_ext_info cros_ec_accel_legacy_ext_info[] = {
+ 		.modified = 1,					        \
+ 		.info_mask_separate =					\
+ 			BIT(IIO_CHAN_INFO_RAW) |			\
+-			BIT(IIO_CHAN_INFO_SCALE) |			\
+ 			BIT(IIO_CHAN_INFO_CALIBBIAS),			\
+ 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SCALE),	\
+ 		.ext_info = cros_ec_accel_legacy_ext_info,		\
 -- 
 2.20.1
 
