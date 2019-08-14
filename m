@@ -2,108 +2,101 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0F9C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5757DC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC1AA206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565826093;
-	bh=1xAGrO3tCA2lHlAJp4Fm0h66zxQfNwCtYkfuqN1U4gY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2Nll56hdt7KrHsnkzZD6Ct9nHLFb1+z+BQDRujWYf7cfDy8DEj7eFjK96FFz+j9HU
-	 NFagTBgdWwGQ1haJJS2i5d3IRFLKclFs2gWA3NUvdtDgDxmHLPGDbaTPZ+E8J187sH
-	 TAMlbNP9XezfUtn4IQT5gHKBeopGGtM3etFlXAT4=
+	by mail.kernel.org (Postfix) with ESMTP id 2BF4F216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:50:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729730AbfHNXlc (ORCPT
+        id S1729746AbfHNXuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 19:41:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50326 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 19:50:01 -0400
+Received: from mga11.intel.com ([192.55.52.93]:12480 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727217AbfHNXlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 19:41:32 -0400
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 365F12171F;
-        Wed, 14 Aug 2019 23:41:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565826091;
-        bh=1xAGrO3tCA2lHlAJp4Fm0h66zxQfNwCtYkfuqN1U4gY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cSFw9E+RsKmm3M7P/t3mGOjpmQdYjqfCy31u66Zd19mh5XnuV23+02WHGSSNmK2Mk
-         GsBA07siSIhoYnhU876eS4oKSc6BHs1jG01A81MoWA8HXPJq9GlLLDI2K52hEYrZrH
-         FVure5Ye/Nq/uKtOiS0JFI+z/q1Ioai2pCYAaT24=
-Received: by mail-qk1-f180.google.com with SMTP id r6so606725qkc.0;
-        Wed, 14 Aug 2019 16:41:31 -0700 (PDT)
-X-Gm-Message-State: APjAAAWGYFmjZ4yxJm/6Hq6nLxEuzZG6zUMAeg9JMWEJKGTTUwD4gjzX
-        vNje3bObb2lOIbq18t3nJeArPwsqfI08QPMGpQ==
-X-Google-Smtp-Source: APXvYqw2OeisYG5A7xl9GVLooBLoJrJfk95eHJXxcQk/oUP5wx23kS4geUog+3gewNeNZwbzZ1lkq/RXyBZ9Gj/iOQo=
-X-Received: by 2002:a37:a44a:: with SMTP id n71mr1607622qke.393.1565826090406;
- Wed, 14 Aug 2019 16:41:30 -0700 (PDT)
+        id S1728262AbfHNXuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 19:50:01 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 16:50:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,387,1559545200"; 
+   d="scan'208";a="184468157"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 Aug 2019 16:50:00 -0700
+Date:   Wed, 14 Aug 2019 16:50:00 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
+Message-ID: <20190814234959.GA463@iweiny-DESK2.sc.intel.com>
+References: <20190812015044.26176-1-jhubbard@nvidia.com>
+ <20190812015044.26176-3-jhubbard@nvidia.com>
+ <20190812234950.GA6455@iweiny-DESK2.sc.intel.com>
+ <38d2ff2f-4a69-e8bd-8f7c-41f1dbd80fae@nvidia.com>
+ <20190813210857.GB12695@iweiny-DESK2.sc.intel.com>
+ <a1044a0d-059c-f347-bd68-38be8478bf20@nvidia.com>
+ <90e5cd11-fb34-6913-351b-a5cc6e24d85d@nvidia.com>
 MIME-Version: 1.0
-References: <20190806192654.138605-1-saravanak@google.com> <20190806192654.138605-2-saravanak@google.com>
- <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com> <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
-In-Reply-To: <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 14 Aug 2019 17:41:19 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLdcn5aZdenLs3RSVCOE1PRNK_qYNmQR=fXPV+ZOQ9+PQ@mail.gmail.com>
-Message-ID: <CAL_JsqLdcn5aZdenLs3RSVCOE1PRNK_qYNmQR=fXPV+ZOQ9+PQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] of/platform: Disable generic device linking code for PowerPC
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <90e5cd11-fb34-6913-351b-a5cc6e24d85d@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 4:04 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Tue, Aug 6, 2019 at 2:27 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Tue, Aug 6, 2019 at 1:27 PM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > PowerPC platforms don't use the generic of/platform code to populate the
-> > > devices from DT.
-> >
-> > Yes, they do.
->
-> No they don't. My wording could be better, but they don't use
-> of_platform_default_populate_init()
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/of/platform.c#n511
+On Tue, Aug 13, 2019 at 05:56:31PM -0700, John Hubbard wrote:
+> On 8/13/19 5:51 PM, John Hubbard wrote:
+> > On 8/13/19 2:08 PM, Ira Weiny wrote:
+> >> On Mon, Aug 12, 2019 at 05:07:32PM -0700, John Hubbard wrote:
+> >>> On 8/12/19 4:49 PM, Ira Weiny wrote:
+> >>>> On Sun, Aug 11, 2019 at 06:50:44PM -0700, john.hubbard@gmail.com wrote:
+> >>>>> From: John Hubbard <jhubbard@nvidia.com>
+> >>> ...
+> >> Finally, I struggle with converting everyone to a new call.  It is more
+> >> overhead to use vaddr_pin in the call above because now the GUP code is going
+> >> to associate a file pin object with that file when in ODP we don't need that
+> >> because the pages can move around.
+> > 
+> > What if the pages in ODP are file-backed? 
+> > 
+> 
+> oops, strike that, you're right: in that case, even the file system case is covered.
+> Don't mind me. :)
 
-Right, but the rest of the of/platform code is used (guess where it
-got moved here from?).
+Ok so are we agreed we will drop the patch to the ODP code?  I'm going to keep
+the FOLL_PIN flag and addition in the vaddr_pin_pages.
 
-> > > Therefore the generic device linking code is never used
-> > > in PowerPC.  Compile it out to avoid warning about unused functions.
-> >
-> > I'd prefer this get disabled on PPC using 'if (IS_ENABLED(CONFIG_PPC))
-> > return' rather than #ifdefs.
->
-> I'm just moving the existing ifndef some lines above. I don't want to
-> go change existing #ifndef in this patch. Maybe that should be a
-> separate patch series that goes and fixes all such code in drivers/of/
-> or driver/
+Ira
 
-So the initcall was originally just supposed to call
-of_platform_default_populate(), but it's grown beyond that. That could
-make things fragile as it is possible for platforms to call
-of_platform_populate() (directly or indirectly) before
-of_platform_default_populate_init(). That was supposed to work, but
-now I think it's getting more fragile.
-
-Anyways, I guess this patch is fine for now.
-
-Rob
+> 
+> >>
+> >> This overhead may be fine, not sure in this case, but I don't see everyone
+> >> wanting it.
+> 
+> So now I see why you said that, but I will note that ODP hardware is rare,
+> and will likely remain rare: replayable page faults require really special 
+> hardware, and after all this time, we still only have CPUs, GPUs, and the
+> Mellanox cards that do it.
+> 
+> That leaves a lot of other hardware to take care of.
+> 
+> thanks,
+> -- 
+> John Hubbard
+> NVIDIA
+> 
