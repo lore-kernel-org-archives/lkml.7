@@ -2,228 +2,120 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99727C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C154CC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F6B2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 955BE2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:18:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R7Kyn+eq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfHNIMF (ORCPT
+        id S1727100AbfHNISH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 04:12:05 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29080 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727371AbfHNIMD (ORCPT
+        Wed, 14 Aug 2019 04:18:07 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42371 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726575AbfHNISG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 04:12:03 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7E8C1Fi130541
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:12:02 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ucdgmax6t-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:12:02 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <mahesh@linux.vnet.ibm.com>;
-        Wed, 14 Aug 2019 09:12:00 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 14 Aug 2019 09:11:57 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7E8BtJB36634886
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 14 Aug 2019 08:11:55 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70C44A404D;
-        Wed, 14 Aug 2019 08:11:55 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 78BC2A4057;
-        Wed, 14 Aug 2019 08:11:51 +0000 (GMT)
-Received: from [9.109.198.140] (unknown [9.109.198.140])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 14 Aug 2019 08:11:51 +0000 (GMT)
-Subject: Re: [PATCH v9 6/7] powerpc/mce: Handle UE event for memcpy_mcsafe
-To:     Santosh Sivaraj <santosh@fossix.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        christophe leroy <christophe.leroy@c-s.fr>
-References: <20190812092236.16648-1-santosh@fossix.org>
- <20190812092236.16648-7-santosh@fossix.org>
-From:   Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
-Date:   Wed, 14 Aug 2019 13:41:50 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 14 Aug 2019 04:18:06 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i30so4423157pfk.9
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 01:18:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vQ2pr3Cls72t2h2tsGZZ35CLiWwC2wgAdBlRAFpgySo=;
+        b=R7Kyn+equxgntT6XPosUWdGuRy3AD+4jLQsjf6tSHnWD0lLbaHelvOeW5nhL2rJ87p
+         tnXlsuUJW+q2AuzeoilkudENc95XbbKiHsz2pEXn9OPSq7CS+8WC51siM6fL1dXTyMNp
+         gwQ7ALwj2I+COTYxyCGdA1QgusKda1euBkyHY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vQ2pr3Cls72t2h2tsGZZ35CLiWwC2wgAdBlRAFpgySo=;
+        b=USMhCbuUtj/7eY4LEteV6kjVld6dlhZn4dUey4LURtlM5kJIFp6Nh7Zw93rAbZ/38I
+         4lVkjNIp2kj+BuBlBHy3L3Q9upQTVbs7FeBdGB5J4N72FOJq51eZGiIk7H3W8KLFRYZd
+         dHbHMIOJ6TeaONAOcpcTV4dtp3PBEppG1yBkwkazWJuJLF5aJufZn7MBPpu+un2WBPFZ
+         4pLKvg3fn68clr1u6Aql6k9G6tkQe9iITZvtqVuB9DlxnowUZ21yQqeR2lHBufAGAcIf
+         wOt7g67gJPwDeqvN+D2VV0TeRebEcQQYvkz+CKxNE4rSs9BzY5uzs3Z4flQjuDcFJxu/
+         A47g==
+X-Gm-Message-State: APjAAAWuXo36E/1tPk4Dew4C/MWK4V/9yvjVHLqg9lcnzWKClIdrF0b2
+        0FNdaKjxfU5DXB46be0JVnfV8YR39Aw=
+X-Google-Smtp-Source: APXvYqx4bPRXa+kR2ABoEbrdX4duOpckAD+9E+8PZMdTgBc4vZrv59GuyMr8gWbIQN/dGIuRmYpAxg==
+X-Received: by 2002:a65:6284:: with SMTP id f4mr35970405pgv.416.1565770686132;
+        Wed, 14 Aug 2019 01:18:06 -0700 (PDT)
+Received: from localhost ([2401:fa00:1:10:e122:3674:c42c:2698])
+        by smtp.gmail.com with ESMTPSA id q126sm74303369pfb.56.2019.08.14.01.18.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 01:18:05 -0700 (PDT)
+From:   Yilun Lin <yllin@chromium.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     pihsun@chromium.org, Yilun Lin <yllin@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>
+Subject: [PATCH] platform/chrome: cros_ec_rpmsg: Add host command AP sleep state support
+Date:   Wed, 14 Aug 2019 16:17:57 +0800
+Message-Id: <20190814081757.65056-1-yllin@chromium.org>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
 MIME-Version: 1.0
-In-Reply-To: <20190812092236.16648-7-santosh@fossix.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19081408-4275-0000-0000-0000035905CB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081408-4276-0000-0000-0000386B17EF
-Message-Id: <7228295c-c4c3-4aa1-1b1a-60b3844705db@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-14_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908140081
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/12/19 2:52 PM, Santosh Sivaraj wrote:
-> If we take a UE on one of the instructions with a fixup entry, set nip
-> to continue execution at the fixup entry. Stop processing the event
-> further or print it.
-> 
-> Co-developed-by: Reza Arbab <arbab@linux.ibm.com>
-> Signed-off-by: Reza Arbab <arbab@linux.ibm.com>
-> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-> Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
+Add EC host command to inform EC of AP suspend/resume status.
 
-Looks good to me.
+Signed-off-by: Yilun Lin <yllin@chromium.org>
+---
 
-Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+ drivers/platform/chrome/cros_ec_rpmsg.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-Thanks,
--Mahesh.
-
-> ---
->  arch/powerpc/include/asm/mce.h  |  4 +++-
->  arch/powerpc/kernel/mce.c       | 16 ++++++++++++++++
->  arch/powerpc/kernel/mce_power.c | 15 +++++++++++++--
->  3 files changed, 32 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/mce.h b/arch/powerpc/include/asm/mce.h
-> index f3a6036b6bc0..e1931c8c2743 100644
-> --- a/arch/powerpc/include/asm/mce.h
-> +++ b/arch/powerpc/include/asm/mce.h
-> @@ -122,7 +122,8 @@ struct machine_check_event {
->  			enum MCE_UeErrorType ue_error_type:8;
->  			u8		effective_address_provided;
->  			u8		physical_address_provided;
-> -			u8		reserved_1[5];
-> +			u8		ignore_event;
-> +			u8		reserved_1[4];
->  			u64		effective_address;
->  			u64		physical_address;
->  			u8		reserved_2[8];
-> @@ -193,6 +194,7 @@ struct mce_error_info {
->  	enum MCE_Initiator	initiator:8;
->  	enum MCE_ErrorClass	error_class:8;
->  	bool			sync_error;
-> +	bool			ignore_event;
->  };
->  
->  #define MAX_MC_EVT	100
-> diff --git a/arch/powerpc/kernel/mce.c b/arch/powerpc/kernel/mce.c
-> index a3b122a685a5..ec4b3e1087be 100644
-> --- a/arch/powerpc/kernel/mce.c
-> +++ b/arch/powerpc/kernel/mce.c
-> @@ -149,6 +149,7 @@ void save_mce_event(struct pt_regs *regs, long handled,
->  		if (phys_addr != ULONG_MAX) {
->  			mce->u.ue_error.physical_address_provided = true;
->  			mce->u.ue_error.physical_address = phys_addr;
-> +			mce->u.ue_error.ignore_event = mce_err->ignore_event;
->  			machine_check_ue_event(mce);
->  		}
->  	}
-> @@ -266,8 +267,17 @@ static void machine_process_ue_event(struct work_struct *work)
->  		/*
->  		 * This should probably queued elsewhere, but
->  		 * oh! well
-> +		 *
-> +		 * Don't report this machine check because the caller has a
-> +		 * asked us to ignore the event, it has a fixup handler which
-> +		 * will do the appropriate error handling and reporting.
->  		 */
->  		if (evt->error_type == MCE_ERROR_TYPE_UE) {
-> +			if (evt->u.ue_error.ignore_event) {
-> +				__this_cpu_dec(mce_ue_count);
-> +				continue;
-> +			}
-> +
->  			if (evt->u.ue_error.physical_address_provided) {
->  				unsigned long pfn;
->  
-> @@ -301,6 +311,12 @@ static void machine_check_process_queued_event(struct irq_work *work)
->  	while (__this_cpu_read(mce_queue_count) > 0) {
->  		index = __this_cpu_read(mce_queue_count) - 1;
->  		evt = this_cpu_ptr(&mce_event_queue[index]);
-> +
-> +		if (evt->error_type == MCE_ERROR_TYPE_UE &&
-> +		    evt->u.ue_error.ignore_event) {
-> +			__this_cpu_dec(mce_queue_count);
-> +			continue;
-> +		}
->  		machine_check_print_event_info(evt, false, false);
->  		__this_cpu_dec(mce_queue_count);
->  	}
-> diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_power.c
-> index e74816f045f8..1dd87f6f5186 100644
-> --- a/arch/powerpc/kernel/mce_power.c
-> +++ b/arch/powerpc/kernel/mce_power.c
-> @@ -11,6 +11,7 @@
->  
->  #include <linux/types.h>
->  #include <linux/ptrace.h>
-> +#include <linux/extable.h>
->  #include <asm/mmu.h>
->  #include <asm/mce.h>
->  #include <asm/machdep.h>
-> @@ -18,6 +19,7 @@
->  #include <asm/pte-walk.h>
->  #include <asm/sstep.h>
->  #include <asm/exception-64s.h>
-> +#include <asm/extable.h>
->  
->  /*
->   * Convert an address related to an mm to a physical address.
-> @@ -559,9 +561,18 @@ static int mce_handle_derror(struct pt_regs *regs,
->  	return 0;
->  }
->  
-> -static long mce_handle_ue_error(struct pt_regs *regs)
-> +static long mce_handle_ue_error(struct pt_regs *regs,
-> +				struct mce_error_info *mce_err)
->  {
->  	long handled = 0;
-> +	const struct exception_table_entry *entry;
-> +
-> +	entry = search_kernel_exception_table(regs->nip);
-> +	if (entry) {
-> +		mce_err->ignore_event = true;
-> +		regs->nip = extable_fixup(entry);
-> +		return 1;
-> +	}
->  
->  	/*
->  	 * On specific SCOM read via MMIO we may get a machine check
-> @@ -594,7 +605,7 @@ static long mce_handle_error(struct pt_regs *regs,
->  				&phys_addr);
->  
->  	if (!handled && mce_err.error_type == MCE_ERROR_TYPE_UE)
-> -		handled = mce_handle_ue_error(regs);
-> +		handled = mce_handle_ue_error(regs, &mce_err);
->  
->  	save_mce_event(regs, handled, &mce_err, regs->nip, addr, phys_addr);
->  
-> 
+diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
+index 5d3fb2abad1d..6f34fe629e2c 100644
+--- a/drivers/platform/chrome/cros_ec_rpmsg.c
++++ b/drivers/platform/chrome/cros_ec_rpmsg.c
+@@ -236,6 +236,25 @@ static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
+ 	cancel_work_sync(&ec_rpmsg->host_event_work);
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
++static int cros_ec_rpmsg_suspend(struct device *dev)
++{
++	struct cros_ec_device *ec_dev = dev_get_drvdata(dev);
++
++	return cros_ec_suspend(ec_dev);
++}
++
++static int cros_ec_rpmsg_resume(struct device *dev)
++{
++	struct cros_ec_device *ec_dev = dev_get_drvdata(dev);
++
++	return cros_ec_resume(ec_dev);
++}
++#endif
++
++static SIMPLE_DEV_PM_OPS(cros_ec_rpmsg_pm_ops, cros_ec_rpmsg_suspend,
++			 cros_ec_rpmsg_resume);
++
+ static const struct of_device_id cros_ec_rpmsg_of_match[] = {
+ 	{ .compatible = "google,cros-ec-rpmsg", },
+ 	{ }
+@@ -246,6 +265,7 @@ static struct rpmsg_driver cros_ec_driver_rpmsg = {
+ 	.drv = {
+ 		.name   = "cros-ec-rpmsg",
+ 		.of_match_table = cros_ec_rpmsg_of_match,
++		.pm	= &cros_ec_rpmsg_pm_ops,
+ 	},
+ 	.probe		= cros_ec_rpmsg_probe,
+ 	.remove		= cros_ec_rpmsg_remove,
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
 
