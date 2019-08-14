@@ -2,126 +2,111 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C137AC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C8FC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 966A220665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:19:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803141;
-	bh=nEHSbTGvTEplwCrmU8NaBv47TnXpMbycW9HXlPkObTA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r/e2bIcyLFO9PMeFubkUCBYZSMvf5w51tHzyNHGvVxjN2BwfA35chapYZDNhAWtvA
-	 zKDxR8dPjKAB2svQvmXZNcPxrAMqaqKJRp6LKi0/8gwLe0kbBaiTE/LSqoCIDkiJmh
-	 UKAeIMaMkwZBntDWuaCxuZAr08ZDxQDQ8WFZghyY=
+	by mail.kernel.org (Postfix) with ESMTP id 319E320665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:19:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730672AbfHNRTA (ORCPT
+        id S1730489AbfHNRTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:19:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35820 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730272AbfHNRMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:12:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2F252184B;
-        Wed, 14 Aug 2019 17:12:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802728;
-        bh=nEHSbTGvTEplwCrmU8NaBv47TnXpMbycW9HXlPkObTA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xd+fM4t2GBJdq3EaCTJNFD2fwXFw171h82Eoq/9O+JjPFS1ukIqzUOIhVgjFF87Z5
-         1NnvLywO6tfAkrEmg+q+n5Dicx4+nIRfgGwhqVkDXruwnkjKmbT1hFJXuOrzZcs/6D
-         mJkSgyCxWIeeYjy3PsGsjkWhp7ShR4jdQoQ1v0Ks=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Frank Li <Frank.li@nxp.com>, Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 68/91] perf/core: Fix creating kernel counters for PMUs that override event->cpu
-Date:   Wed, 14 Aug 2019 19:01:31 +0200
-Message-Id: <20190814165752.489133454@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
-References: <20190814165748.991235624@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Wed, 14 Aug 2019 13:19:08 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11048 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728776AbfHNRTG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:19:06 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7EGr4o1001880;
+        Wed, 14 Aug 2019 13:18:51 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ucp47s3vu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 14 Aug 2019 13:18:51 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7EGtZYC006002;
+        Wed, 14 Aug 2019 17:18:50 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03wdc.us.ibm.com with ESMTP id 2u9nj648pe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 14 Aug 2019 17:18:50 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7EHIn2S52232660
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 14 Aug 2019 17:18:49 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 97EBBC605B;
+        Wed, 14 Aug 2019 17:18:49 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1204FC6059;
+        Wed, 14 Aug 2019 17:18:45 +0000 (GMT)
+Received: from [9.85.86.184] (unknown [9.85.86.184])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 14 Aug 2019 17:18:44 +0000 (GMT)
+Message-ID: <1565803123.6908.10.camel@abdul>
+Subject: Re: [5.3.0-rc4-next][bisected 882632][qla2xxx] WARNING: CPU: 10
+ PID: 425 at drivers/scsi/qla2xxx/qla_isr.c:2784 qla2x00_status_entry.isra
+From:   Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-next <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        martin.petersen@oracle.com, hmadhani@marvell.com,
+        sachinp <sachinp@linux.vnet.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Wed, 14 Aug 2019 22:48:43 +0530
+In-Reply-To: <cafb1d40-a11e-c137-db06-4564e5f5caf5@acm.org>
+References: <1565801523.6908.6.camel@abdul>
+         <cafb1d40-a11e-c137-db06-4564e5f5caf5@acm.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-14_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=850 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908140158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4ce54af8b33d3e21ca935fc1b89b58cbba956051 ]
+On Wed, 2019-08-14 at 10:05 -0700, Bart Van Assche wrote:
+> On 8/14/19 9:52 AM, Abdul Haleem wrote:
+> > Greeting's
+> > 
+> > Today's linux-next kernel (5.3.0-rc4-next-20190813)  booted with warning on my powerpc power 8 lpar
+> > 
+> > The WARN_ON_ONCE() was introduced by commit 88263208 (scsi: qla2xxx: Complain if sp->done() is not...)
+> > 
+> > boot logs:
+> > 
+> > WARNING: CPU: 10 PID: 425 at drivers/scsi/qla2xxx/qla_isr.c:2784
+> 
+> Hi Abdul,
+> 
+> Thank you for having reported this. Is that the only warning reported on your setup by the qla2xxx
+> driver? If that warning is commented out, does the qla2xxx driver work as expected?
 
-Some hardware PMU drivers will override perf_event.cpu inside their
-event_init callback. This causes a lockdep splat when initialized through
-the kernel API:
+boot warning did not show up when the commit is reverted.
 
- WARNING: CPU: 0 PID: 250 at kernel/events/core.c:2917 ctx_sched_out+0x78/0x208
- pc : ctx_sched_out+0x78/0x208
- Call trace:
-  ctx_sched_out+0x78/0x208
-  __perf_install_in_context+0x160/0x248
-  remote_function+0x58/0x68
-  generic_exec_single+0x100/0x180
-  smp_call_function_single+0x174/0x1b8
-  perf_install_in_context+0x178/0x188
-  perf_event_create_kernel_counter+0x118/0x160
+should I comment out only the WARN_ON_ONCE() which is causing the issue,
+and not the other one ?
 
-Fix this by calling perf_install_in_context with event->cpu, just like
-perf_event_open
-
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Frank Li <Frank.li@nxp.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/r/c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index e8979c72514be..7ca44b8523c81 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10957,7 +10957,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
- 		goto err_unlock;
- 	}
- 
--	perf_install_in_context(ctx, event, cpu);
-+	perf_install_in_context(ctx, event, event->cpu);
- 	perf_unpin_context(ctx);
- 	mutex_unlock(&ctx->mutex);
- 
 -- 
-2.20.1
+Regard's
+
+Abdul Haleem
+IBM Linux Technology Centre
 
 
 
