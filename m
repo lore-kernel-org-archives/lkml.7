@@ -2,198 +2,92 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE65C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 659F8C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1A7216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:47:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eZzQFn1v"
+	by mail.kernel.org (Postfix) with ESMTP id 3FC2C216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565808452;
+	bh=4sgLjmnTO7CXBqVDep4HdViPQQ11wQ5oh3DTj7yzDrs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=a4GGOJ0kHtCElIgWzISRpWEIKPE1yxSYuxfNePDpF14mb8ols1fpM9zm6lI64+emM
+	 tRbQJftALyDBotREgNzdW4RGzt6s8CyCiTA7TYXXiHP7iOhNFyN6TsTlYX/h7tkYqX
+	 sWrqwnE5S27Rg7lcWAX8e+CYFGDOzSUPxHVM2VtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbfHNSr2 (ORCPT
+        id S1729442AbfHNSrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 14:47:28 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37661 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729191AbfHNSr0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 14:47:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729404AbfHNSr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 14 Aug 2019 14:47:26 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d1so22026pgp.4
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 11:47:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wKlIaA25olU11BOMfTs22yk2wQhbHWnGWzmK5Nr5c8g=;
-        b=eZzQFn1vrMPxI+c/iYaHjDFjdZqtfub5KdhWWCpMgIT90qc4LcH6QPySnBMnKqR1RJ
-         hWFUlAp61oTrgfMmqMwVWrLDY3uwozkSqtAfucJDuU6oeJex9OI7lG0TKSrZC8t/+sC7
-         01P64SsD7fNSJ1fg1G5K9qXI0autzHTOrULBojThGkp/bgYTBYBa8OrdYy09/tid3Pnz
-         BMO0eQKBVdfcT99VfcCVYGNbxzc0RsJc5lTLl6njbbQlHkgbOFN5RJPixCjbNmsdV0oT
-         EJ46CZsKSnu+joJf8KYeWOviuK1PlsrCh7YHL94bkMPJNauTwDcq4UAB4xWnJYDqELDC
-         GxVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=wKlIaA25olU11BOMfTs22yk2wQhbHWnGWzmK5Nr5c8g=;
-        b=UNvXuQW3N/NNTJ9Cpx8wZ35JRfR8topvLGabJSWz/ZMRVJb3Xdi9essvt0rvc2pAlL
-         DAk77KTtafFga07dVLd+rCAfblv92o3+QAYNgc0nS/nJ+9M7/YtJnwT1WPA0QFfgWber
-         BUNjMRLtQF8f6PqUP7SjEtFguYfrX5PaS4gF+SRhea0RuYewMcM4SDczw23Pl3PRz5db
-         r+KCPVKTfhKWhEf6WprAll/9Pn2JBjFJRypfraZVyVduXrTgLb4qlqFWm1B5sbGWGLxy
-         +aaG0OqwQ8LVIWQkpLkU8VGY5KVhHxoL0o4ugM7WxKL8mc24hf7Snc3lQG20lEnKtlCG
-         dHEQ==
-X-Gm-Message-State: APjAAAUWquLR92gCJ6VEVrqoeK1bhW7JX5V85+lHknhW9IiUpUpVgM1a
-        2k7vdwhORW1bQNjswD+CBbucczJ2qKc=
-X-Google-Smtp-Source: APXvYqzHEij/L3W78cYXzvyGC77DpNrqOmQ3aeVR5dxILgGVVx40Tz9jy8wBE2fteMZvJQgodyXz5A==
-X-Received: by 2002:a17:90a:1916:: with SMTP id 22mr695571pjg.62.1565808445560;
-        Wed, 14 Aug 2019 11:47:25 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id y16sm610855pfc.36.2019.08.14.11.47.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 11:47:24 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Xu YiPing <xuyiping@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [RESEND][PATCH v3 12/26] drm: kirin: Move kirin_crtc, kirin_plane, kirin_format to kirin_drm_drv.h
-Date:   Wed, 14 Aug 2019 18:46:48 +0000
-Message-Id: <20190814184702.54275-13-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190814184702.54275-1-john.stultz@linaro.org>
-References: <20190814184702.54275-1-john.stultz@linaro.org>
+Received: from quaco.ghostprotocols.net (unknown [177.195.212.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A0372084F;
+        Wed, 14 Aug 2019 18:47:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565808446;
+        bh=4sgLjmnTO7CXBqVDep4HdViPQQ11wQ5oh3DTj7yzDrs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gVe/rDjt3hXO3O9u26UDtC8NZWEjheqeUiKxRFzN9ezXTZD9Z8Lnm7zbJnAfHu3va
+         QiYltiJNzMqGJV5HtVhH750Og9BDH6lVyUKejRM9l2zOdU9POoBy7e0y1sBWKxgpOS
+         7Gz5BViRmljBnbBpOL4U8TKrizW9uwtKUuFHZ9Wc=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 28/28] perf ui: No need to set ui_browser to 1 twice
+Date:   Wed, 14 Aug 2019 15:40:51 -0300
+Message-Id: <20190814184051.3125-29-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190814184051.3125-1-acme@kernel.org>
+References: <20190814184051.3125-1-acme@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xu YiPing <xuyiping@hisilicon.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-As part of refactoring the kirin driver to better support
-different hardware revisions, this patch moves some shared
-structures and helpers to the common kirin_drm_drv.h
+We need to do it only when fallbacking from GTK to the TUI.
 
-These structures will later used by both kirin620 and
-future kirin960 driver
-
-Cc: Rongrong Zou <zourongrong@gmail.com>
-Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Xu YiPing <xuyiping@hisilicon.com>
-[jstultz: reworded commit message]
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-dda0acxqef1k72n9z4myjbjt@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../gpu/drm/hisilicon/kirin/kirin_drm_ade.c   | 27 ++-----------------
- .../gpu/drm/hisilicon/kirin/kirin_drm_drv.h   | 24 +++++++++++++++++
- 2 files changed, 26 insertions(+), 25 deletions(-)
+ tools/perf/ui/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-index ec4857e45b6e..3ad1e290bf58 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-@@ -38,12 +38,6 @@
- #define OUT_OVLY	ADE_OVLY2 /* output overlay compositor */
- #define ADE_DEBUG	1
- 
--#define to_kirin_crtc(crtc) \
--	container_of(crtc, struct kirin_crtc, base)
--
--#define to_kirin_plane(plane) \
--	container_of(plane, struct kirin_plane, base)
--
- 
- struct ade_hw_ctx {
- 	void __iomem  *base;
-@@ -59,18 +53,6 @@ struct ade_hw_ctx {
- 	struct drm_crtc *crtc;
- };
- 
--struct kirin_crtc {
--	struct drm_crtc base;
--	void *hw_ctx;
--	bool enable;
--};
--
--struct kirin_plane {
--	struct drm_plane base;
--	void *hw_ctx;
--	u32 ch;
--};
--
- struct ade_data {
- 	struct kirin_crtc crtc;
- 	struct kirin_plane planes[ADE_CH_NUM];
-@@ -78,12 +60,7 @@ struct ade_data {
- };
- 
- /* ade-format info: */
--struct ade_format {
--	u32 pixel_format;
--	enum ade_fb_format ade_format;
--};
--
--static const struct ade_format ade_formats[] = {
-+static const struct kirin_format ade_formats[] = {
- 	/* 16bpp RGB: */
- 	{ DRM_FORMAT_RGB565, ADE_RGB_565 },
- 	{ DRM_FORMAT_BGR565, ADE_BGR_565 },
-@@ -127,7 +104,7 @@ static u32 ade_get_format(u32 pixel_format)
- 
- 	for (i = 0; i < ARRAY_SIZE(ade_formats); i++)
- 		if (ade_formats[i].pixel_format == pixel_format)
--			return ade_formats[i].ade_format;
-+			return ade_formats[i].hw_format;
- 
- 	/* not found */
- 	DRM_ERROR("Not found pixel format!!fourcc_format= %d\n",
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-index 22d1291668cd..d47cbb427979 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-@@ -9,6 +9,30 @@
- 
- #define MAX_CRTC	2
- 
-+#define to_kirin_crtc(crtc) \
-+	container_of(crtc, struct kirin_crtc, base)
-+
-+#define to_kirin_plane(plane) \
-+	container_of(plane, struct kirin_plane, base)
-+
-+/* kirin-format translate table */
-+struct kirin_format {
-+	u32 pixel_format;
-+	u32 hw_format;
-+};
-+
-+struct kirin_crtc {
-+	struct drm_crtc base;
-+	void *hw_ctx;
-+	bool enable;
-+};
-+
-+struct kirin_plane {
-+	struct drm_plane base;
-+	void *hw_ctx;
-+	u32 ch;
-+};
-+
- /* display controller init/cleanup ops */
- struct kirin_dc_ops {
- 	int (*init)(struct platform_device *pdev);
+diff --git a/tools/perf/ui/setup.c b/tools/perf/ui/setup.c
+index 44fe824e96cd..3bc7c9a6fae9 100644
+--- a/tools/perf/ui/setup.c
++++ b/tools/perf/ui/setup.c
+@@ -89,9 +89,9 @@ void setup_browser(bool fallback_to_pager)
+ 		printf("GTK browser requested but could not find %s\n",
+ 		       PERF_GTK_DSO);
+ 		sleep(1);
++		use_browser = 1;
+ 		/* fall through */
+ 	case 1:
+-		use_browser = 1;
+ 		if (ui__init() == 0)
+ 			break;
+ 		/* fall through */
 -- 
-2.17.1
+2.21.0
 
