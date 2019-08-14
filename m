@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B8BC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A14C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B682085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C862085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748963;
-	bh=+G6YI7uCiWl5NzsZjlF0cb+BjDlIwDypveGYVOUdif8=;
+	s=default; t=1565748964;
+	bh=UH7bhnZYehzr0hz6D8xZ8k87NCcJgqpNxVXXdqKhKMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cI9lsmFEjv2tWRdUW20GGnDTojXXh4sTze2vtGZG3R3H0jlKOHRVHgesU1P1E42Z4
-	 mRj3FbnMl2N+UyJJ+KH2MKvmlSXMTQOFWo5N8JyTjP4ISxPJefV/zxtNPy3TLWZtB3
-	 CLJFeTQ0PKjo0OPAmRLv9qt21VeU0cDq0YqSuduc=
+	b=WlP3J8Rze/gf/wn4hrR8S4aWJQWfZi5VUw4h8nPaYrsCq7ZLbAcrUfQnXq/yczkol
+	 BV3Bnzw56VXuVJZd63zD+s7HJkyY0vSX1WX+QR+gHqWGM8tAq2RqCu40n46DwDJGvZ
+	 LqiV0HL9wDBwxVd2dlJmbDHV9Q3jewYRymuAoKTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbfHNCQC (ORCPT
+        id S1728903AbfHNCQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47510 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:16:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbfHNCP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:15:59 -0400
+        id S1728534AbfHNCQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:16:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 543BE20842;
-        Wed, 14 Aug 2019 02:15:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C416B2084D;
+        Wed, 14 Aug 2019 02:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748958;
-        bh=+G6YI7uCiWl5NzsZjlF0cb+BjDlIwDypveGYVOUdif8=;
+        s=default; t=1565748960;
+        bh=UH7bhnZYehzr0hz6D8xZ8k87NCcJgqpNxVXXdqKhKMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EhrYYbphQhZXS/KiENKi+GFMBJzNRfap4P5AyRmxs78FJBM90BU4fo+nNv+AHMnn6
-         4WbfH2L/wfohtUKgv3j8siUGLLoJnGaKGutr5N1hb7IcoleFv+uiw78ED6oZkGfVGr
-         TiZl9mmXjl4eqSab4biQ0B95rBovLyKHzxZYubio=
+        b=J9grGTqNLuXmD1bEo0LqrR/DUgnc+c/0qiCTWx9sl9IIWFg4s/PkFMgxQUoCAsjEH
+         2c4Rf/Wafr3rVxvPHLl77g7Cv4cANDpt6Lz8dQf9pT3vA2QYkq6qJo3eJV+qwrDL7D
+         b6BSKLiE7xv+anTQGhybyZ/T06NjcW5O2oY166GE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 05/68] mips: fix cacheinfo
-Date:   Tue, 13 Aug 2019 22:14:43 -0400
-Message-Id: <20190814021548.16001-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 07/68] ASoC: dapm: Fix handling of custom_stop_condition on DAPM graph walks
+Date:   Tue, 13 Aug 2019 22:14:45 -0400
+Message-Id: <20190814021548.16001-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -61,47 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit b8bea8a5e5d942e62203416ab41edecaed4fda02 ]
+[ Upstream commit 8dd26dff00c0636b1d8621acaeef3f6f3a39dd77 ]
 
-Because CONFIG_OF defined for MIPS, cacheinfo attempts to fill information
-from DT, ignoring data filled by architecture routine. This leads to error
-reported
+DPCM uses snd_soc_dapm_dai_get_connected_widgets to build a
+list of the widgets connected to a specific front end DAI so it
+can search through this list for available back end DAIs. The
+custom_stop_condition was added to is_connected_ep to facilitate this
+list not containing more widgets than is necessary. Doing so both
+speeds up the DPCM handling as less widgets need to be searched and
+avoids issues with CODEC to CODEC links as these would be confused
+with back end DAIs if they appeared in the list of available widgets.
 
- cacheinfo: Unable to detect cache hierarchy for CPU 0
+custom_stop_condition was implemented by aborting the graph walk
+when the condition is triggered, however there is an issue with this
+approach. Whilst walking the graph is_connected_ep should update the
+endpoints cache on each widget, if the walk is aborted the number
+of attached end points is unknown for that sub-graph. When the stop
+condition triggered, the original patch ignored the triggering widget
+and returned zero connected end points; a later patch updated this
+to set the triggering widget's cache to 1 and return that. Both of
+these approaches result in inaccurate values being stored in various
+end point caches as the values propagate back through the graph,
+which can result in later issues with widgets powering/not powering
+unexpectedly.
 
-Way to fix this provided in
-commit fac51482577d ("drivers: base: cacheinfo: fix x86 with
- CONFIG_OF enabled")
+As the original goal was to reduce the size of the widget list passed
+to the DPCM code, the simplest solution is to limit the functionality
+of the custom_stop_condition to the widget list. This means the rest
+of the graph will still be processed resulting in correct end point
+caches, but only widgets up to the stop condition will be added to the
+returned widget list.
 
-Utilize same mechanism to report that cacheinfo set by architecture
-specific function
-
-Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Fixes: 6742064aef7f ("ASoC: dapm: support user-defined stop condition in dai_get_connected_widgets")
+Fixes: 5fdd022c2026 ("ASoC: dpcm: play nice with CODEC<->CODEC links")
+Fixes: 09464974eaa8 ("ASoC: dapm: Fix to return correct path list in is_connected_ep.")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20190718084333.15598-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/cacheinfo.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/soc-dapm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/mips/kernel/cacheinfo.c b/arch/mips/kernel/cacheinfo.c
-index 97d5239ca47ba..428ef21892039 100644
---- a/arch/mips/kernel/cacheinfo.c
-+++ b/arch/mips/kernel/cacheinfo.c
-@@ -80,6 +80,8 @@ static int __populate_cache_leaves(unsigned int cpu)
- 	if (c->tcache.waysize)
- 		populate_cache(tcache, this_leaf, 3, CACHE_TYPE_UNIFIED);
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index 3bfc788372f31..4ce57510b6236 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -1145,8 +1145,8 @@ static __always_inline int is_connected_ep(struct snd_soc_dapm_widget *widget,
+ 		list_add_tail(&widget->work_list, list);
  
-+	this_cpu_ci->cpu_map_populated = true;
-+
- 	return 0;
- }
+ 	if (custom_stop_condition && custom_stop_condition(widget, dir)) {
+-		widget->endpoints[dir] = 1;
+-		return widget->endpoints[dir];
++		list = NULL;
++		custom_stop_condition = NULL;
+ 	}
  
+ 	if ((widget->is_ep & SND_SOC_DAPM_DIR_TO_EP(dir)) && widget->connected) {
+@@ -1183,8 +1183,8 @@ static __always_inline int is_connected_ep(struct snd_soc_dapm_widget *widget,
+  *
+  * Optionally, can be supplied with a function acting as a stopping condition.
+  * This function takes the dapm widget currently being examined and the walk
+- * direction as an arguments, it should return true if the walk should be
+- * stopped and false otherwise.
++ * direction as an arguments, it should return true if widgets from that point
++ * in the graph onwards should not be added to the widget list.
+  */
+ static int is_connected_output_ep(struct snd_soc_dapm_widget *widget,
+ 	struct list_head *list,
 -- 
 2.20.1
 
