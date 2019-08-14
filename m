@@ -2,123 +2,108 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC90C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3344C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B41B208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978F5208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:49:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sUjGo9yX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbfHNVtr (ORCPT
+        id S1729508AbfHNVtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 17:49:47 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51452 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728683AbfHNVtr (ORCPT
+        Wed, 14 Aug 2019 17:49:55 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37276 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728252AbfHNVtz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 17:49:47 -0400
-Received: from mail-qk1-f200.google.com ([209.85.222.200])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <alex.hung@canonical.com>)
-        id 1hy19M-0002lm-EC
-        for linux-kernel@vger.kernel.org; Wed, 14 Aug 2019 21:49:44 +0000
-Received: by mail-qk1-f200.google.com with SMTP id d203so274979qke.4
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 14:49:44 -0700 (PDT)
+        Wed, 14 Aug 2019 17:49:55 -0400
+Received: by mail-lf1-f67.google.com with SMTP id c9so347485lfh.4
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 14:49:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=quNqjepPTnacbRHb7c2eVenKYgne2iNuWND1D+zRC8U=;
+        b=sUjGo9yXU26Huey71Nv31NVxbfEQLci9On0kv2+ROoSDiFng0MELV4XmPa++4r0itW
+         S5eWusmIAQMYTWT+1aGb4zEKFcnCYhWdDl+pGNDkM1RSxyeMjCdvmcu3q2o/2pUdi6UF
+         DYPar1pHFv5KdFyV+Bu9Y501HsDE6mDRsdR39XWmJJhDySt3K/BsWTkoKw3Xh7QQYFj/
+         O6req7zP9ZrhPa3rgIPBNu/n5wLAByRkzhzjvucDhDsLct1uEYj0qsmdcKIcxsqpsH6C
+         ujz1gIvbPaMPB4Prv16krM7VDSlAFA4YPLD8H7yInX2sgJNZFZ4ySRsnEAfODauihknM
+         tNSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w1D8Zv52DMVI+1tJMrYZUNsEQ+/Ls5xmkyTop5o1js0=;
-        b=YgJgQ1u6bPgwMDqWQwxV60iuyOg0U/r2PqYUZ86BmSKArxkDzrHhGPK39Zic9g3ylC
-         fRqLTsEBAgz1xUihh4C30XfycWhSokMGhsktkcdasUyr3O0U087UlJNU8eSwOsQIzorf
-         C7PDpqUsmHLZHg0UCC4NPOZf7XydQyOSnGlFMn6kU5+8sP9LMmsuIGMi4MOdtg2o3xnO
-         h7cHtM5Za7BGoZTzl1LZKhgF/MOSKGIh6y5M6rzJrs01zyBPygsFUSsVK1EDoAtEkdzT
-         z2jYHJoe2cSw09D3qQSYpUgo2zgJw0Q660ygWau8jChEsNZbNjTVSgaj5pHzVNP1Dx9f
-         Q0LQ==
-X-Gm-Message-State: APjAAAV10XEhl/Cyht+6X+xKVcZEsexOvUlegjorl7AQ9A+t+rpjXQkE
-        7ebTn7zQiZJF2Cc6KchtYH36Ax0O6nrfwtHJe8dwX468faJXdxCrGXrIBqX0FbaiO9TrO2K1DHo
-        Gqa5vMvSacno6m6Xel4Ff/eL4c5648IcsxXEY7BHvHNZrCB43Pr5gYAzT0w==
-X-Received: by 2002:a0c:f706:: with SMTP id w6mr1203589qvn.98.1565819383589;
-        Wed, 14 Aug 2019 14:49:43 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzcGzXZYUfIv5JuhgEy8csgt/G/+sxp+oSBTO1E+31KuR6LKUls9RsfxiIM2IRCFHVyk/GRcm+GmCe9i0bILN4=
-X-Received: by 2002:a0c:f706:: with SMTP id w6mr1203573qvn.98.1565819383322;
- Wed, 14 Aug 2019 14:49:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=quNqjepPTnacbRHb7c2eVenKYgne2iNuWND1D+zRC8U=;
+        b=EygyzoEs7TfBqO6FbruCIVgFepEa2KYP/eSCOC66un0pIPQEKQsrCF5tjtbvDveTmo
+         xd8ow/GQ5gYyHAZSX8M0bhFw8P+OItRrIgeQ/9gfJJLyzof1/MKd0eW2tj32PZ7kwOzM
+         B9+kwITepEaibtL66eqytp9ZczUjEb2CFPZKWLf1wt6Ifw9n6taQatNFydEsf5kivGfK
+         KxSCqSVob15AwX0MssUL+9AYPeoGDTZfzpSl6rG5ceJhrL2Q60bvYcuQlx43k8mECoGv
+         Mxe3+rUmqt5kJlwfYkNt7SBNP5mOxuInrsYdriQsnuI0PH96yIFKREzUbqt3Oi5x7S7Y
+         oBUA==
+X-Gm-Message-State: APjAAAUlwsnYBebqlLUOCF/iOsP0v3QMN16FzGYGJpE/X8z76FfBN/zE
+        KqBcciUmDauQ94+X3R5U4y2jdqmEsFgejw==
+X-Google-Smtp-Source: APXvYqx5hCgL1mgFSNzMB6K9DMlwFxrQNrI/rXad6WZ66DwVgNjvwjQt1QrWhgbNk0bmmtTuTQ7enQ==
+X-Received: by 2002:ac2:484e:: with SMTP id 14mr783405lfy.50.1565819393263;
+        Wed, 14 Aug 2019 14:49:53 -0700 (PDT)
+Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
+        by smtp.gmail.com with ESMTPSA id z30sm132722lfj.63.2019.08.14.14.49.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 14:49:52 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     davem@davemloft.net, shuah@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] selftests: net: tcp_fastopen_backup_key.sh: fix shellcheck issue
+Date:   Wed, 14 Aug 2019 23:49:48 +0200
+Message-Id: <20190814214948.5571-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190814213118.28473-1-kherbst@redhat.com> <20190814213118.28473-2-kherbst@redhat.com>
-In-Reply-To: <20190814213118.28473-2-kherbst@redhat.com>
-From:   Alex Hung <alex.hung@canonical.com>
-Date:   Wed, 14 Aug 2019 15:49:32 -0600
-Message-ID: <CAJ=jquaoA+_WmTJtcGq4b0A_Sb=Aw_3_TsUR-8nxJ+rJTdoFPA@mail.gmail.com>
-Subject: Re: [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to enable
- dGPU direct output"
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Lyude Paul <lyude@redhat.com>, Ben Skeggs <bskeggs@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the series of fixes. I will check whether these fixes work
-on the original intended systems.
+When running tcp_fastopen_backup_key.sh the following issue was seen in
+a busybox environment.
+./tcp_fastopen_backup_key.sh: line 33: [: -ne: unary operator expected
 
-On Wed, Aug 14, 2019 at 3:31 PM Karol Herbst <kherbst@redhat.com> wrote:
->
-> This reverts commit 28586a51eea666d5531bcaef2f68e4abbd87242c.
->
-> The original commit message didn't even make sense. AMD _does_ support it and
-> it works with Nouveau as well.
->
-> Also what was the issue being solved here? No references to any bugs and not
-> even explaining any issue at all isn't the way we do things.
->
-> And even if it means a muxed design, then the fix is to make it work inside the
-> driver, not adding some hacky workaround through ACPI tricks.
->
-> And what out of tree drivers do or do not support we don't care one bit anyway.
->
-> Signed-off-by: Karol Herbst <kherbst@redhat.com>
-> CC: Alex Hung <alex.hung@canonical.com>
-> CC: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> CC: Dave Airlie <airlied@redhat.com>
-> CC: Lyude Paul <lyude@redhat.com>
-> CC: Ben Skeggs <bskeggs@redhat.com>
-> ---
->  drivers/acpi/osi.c | 7 -------
->  1 file changed, 7 deletions(-)
->
-> diff --git a/drivers/acpi/osi.c b/drivers/acpi/osi.c
-> index bec0bebc7f52..9b20ac4d79a0 100644
-> --- a/drivers/acpi/osi.c
-> +++ b/drivers/acpi/osi.c
-> @@ -61,13 +61,6 @@ osi_setup_entries[OSI_STRING_ENTRIES_MAX] __initdata = {
->          * a BIOS workaround.
->          */
->         {"Linux-Lenovo-NV-HDMI-Audio", true},
-> -       /*
-> -        * Linux-HPI-Hybrid-Graphics is used by BIOS to enable dGPU to
-> -        * output video directly to external monitors on HP Inc. mobile
-> -        * workstations as Nvidia and AMD VGA drivers provide limited
-> -        * hybrid graphics supports.
-> -        */
-> -       {"Linux-HPI-Hybrid-Graphics", true},
->  };
->
->  static u32 acpi_osi_handler(acpi_string interface, u32 supported)
-> --
-> 2.21.0
->
+Shellcheck showed the following issue.
+$ shellcheck tools/testing/selftests/net/tcp_fastopen_backup_key.sh
 
+In tools/testing/selftests/net/tcp_fastopen_backup_key.sh line 33:
+        if [ $val -ne 0 ]; then
+             ^-- SC2086: Double quote to prevent globbing and word splitting.
 
+Rework to add double quotes around the variable 'val' that shellcheck
+recommends.
+
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+---
+ tools/testing/selftests/net/tcp_fastopen_backup_key.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/net/tcp_fastopen_backup_key.sh b/tools/testing/selftests/net/tcp_fastopen_backup_key.sh
+index 41476399e184..ba5ec3eb314e 100755
+--- a/tools/testing/selftests/net/tcp_fastopen_backup_key.sh
++++ b/tools/testing/selftests/net/tcp_fastopen_backup_key.sh
+@@ -30,7 +30,7 @@ do_test() {
+ 	ip netns exec "${NETNS}" ./tcp_fastopen_backup_key "$1"
+ 	val=$(ip netns exec "${NETNS}" nstat -az | \
+ 		grep TcpExtTCPFastOpenPassiveFail | awk '{print $2}')
+-	if [ $val -ne 0 ]; then
++	if [ "$val" -ne 0 ]; then
+ 		echo "FAIL: TcpExtTCPFastOpenPassiveFail non-zero"
+ 		return 1
+ 	fi
 -- 
-Cheers,
-Alex Hung
+2.20.1
+
