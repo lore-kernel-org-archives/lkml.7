@@ -2,52 +2,57 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA638C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 050F1C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF6A2133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D030A2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802879;
-	bh=JDqGp7ficmkhH3OHfXmiMvWvv77TF/w7o7o0AB9EMSQ=;
+	s=default; t=1565802882;
+	bh=P+xKZoykRFBIK1haPKkOyTqNdvkHle2512pqLR/TUUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K1YxCUMVeI2s/dfve+K6+cB0VM8ACZngDjMPTDPM/2iW7UTapDInfi9w0Ltlgw+dZ
-	 tI9ujGhwoYPDHcWCl2pJY10sqwTVRrg1nNreD2Y2Wwy6F+HH0VIO0+usUOb5oGWvbx
-	 tidgPoGg3dVjIWdfZ6bUCZpYqJKAG/j0iBs++Shc=
+	b=Y1x0gLS0OpMAJjnEYtOcXKlzF+db7awUYON97jduE5j+DyoqFvq2xSL4VekbjCIlc
+	 0j4Yc7UhZgWhRthq0yfhSaqoXlMol3gkJgjNj40AJobGp3YIxShoVCDE8bsiD4+SaY
+	 Ebjl2I48KYNnXHM096XwfYt8jMRxc2aIq+EM7D3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731114AbfHNROi (ORCPT
+        id S1731121AbfHNROl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:14:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39074 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:14:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729485AbfHNROe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:14:34 -0400
+        id S1731106AbfHNROg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:14:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E1662133F;
-        Wed, 14 Aug 2019 17:14:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 063CB20665;
+        Wed, 14 Aug 2019 17:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802874;
-        bh=JDqGp7ficmkhH3OHfXmiMvWvv77TF/w7o7o0AB9EMSQ=;
+        s=default; t=1565802876;
+        bh=P+xKZoykRFBIK1haPKkOyTqNdvkHle2512pqLR/TUUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bLQ4R8AznmozEMUHu6rQIT1BxVnU7mI3GbD6M04H+EfBgNUsHF4W41oU/mMAopZwY
-         /Uk3Re2mhFIGuENnoqj9gx2ZYW5b5CXZz/KfBQC0fhqJeHcOZqRIEfDu6tnQ9TLHrd
-         hgpInMSfP4J4gQgcglcs0mnSfADELm31jHJ4GXww=
+        b=P9dtLkmX5bI1hrnuIinbendSJsM9uU4XY7/8+2AuNb0sdb3KLMW5zsA1DVyzyCX2x
+         KqdTiFTLYmNoPJerpHMN2mnN5W9z12+i/KfwjfBg6A1R/9JhvzZWv4m4wPxT5fZZaO
+         rwfPwMOLGLIa8cMdEHu6NUCzXwR1sEfD2ji7PLPA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: [PATCH 4.14 60/69] SMB3: Fix deadlock in validate negotiate hits reconnect
-Date:   Wed, 14 Aug 2019 19:01:58 +0200
-Message-Id: <20190814165749.957581495@linuxfoundation.org>
+        stable@vger.kernel.org, Hanjun Guo <guohanjun@huawei.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 43/69] ACPI/IORT: Fix off-by-one check in iort_dev_find_its_id()
+Date:   Wed, 14 Aug 2019 19:01:41 +0200
+Message-Id: <20190814165748.359949427@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -60,38 +65,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+[ Upstream commit 5a46d3f71d5e5a9f82eabc682f996f1281705ac7 ]
 
-commit e99c63e4d86d3a94818693147b469fa70de6f945 upstream.
+Static analysis identified that index comparison against ITS entries in
+iort_dev_find_its_id() is off by one.
 
-Currently we skip SMB2_TREE_CONNECT command when checking during
-reconnect because Tree Connect happens when establishing
-an SMB session. For SMB 3.0 protocol version the code also calls
-validate negotiate which results in SMB2_IOCL command being sent
-over the wire. This may deadlock on trying to acquire a mutex when
-checking for reconnect. Fix this by skipping SMB2_IOCL command
-when doing the reconnect check.
+Update the comparison condition and clarify the resulting error
+message.
 
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 4bf2efd26d76 ("ACPI: Add new IORT functions to support MSI domain handling")
+Link: https://lore.kernel.org/linux-arm-kernel/20190613065410.GB16334@mwanda/
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2pdu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/arm64/iort.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -166,7 +166,7 @@ smb2_reconnect(__le16 smb2_command, stru
- 	if (tcon == NULL)
- 		return 0;
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index ca414910710ea..b0a7afd4e7d35 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -506,8 +506,8 @@ static int iort_dev_find_its_id(struct device *dev, u32 req_id,
  
--	if (smb2_command == SMB2_TREE_CONNECT)
-+	if (smb2_command == SMB2_TREE_CONNECT || smb2_command == SMB2_IOCTL)
- 		return 0;
- 
- 	if (tcon->tidStatus == CifsExiting) {
+ 	/* Move to ITS specific data */
+ 	its = (struct acpi_iort_its_group *)node->node_data;
+-	if (idx > its->its_count) {
+-		dev_err(dev, "requested ITS ID index [%d] is greater than available [%d]\n",
++	if (idx >= its->its_count) {
++		dev_err(dev, "requested ITS ID index [%d] overruns ITS entries [%d]\n",
+ 			idx, its->its_count);
+ 		return -ENXIO;
+ 	}
+-- 
+2.20.1
+
 
 
