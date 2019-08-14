@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5ABC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21C4C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7011E20842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D9FB20842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748731;
-	bh=0HlWfxswIPlg8A6rSxBmDoI0nkOD224Bq+62Bi3I0xU=;
+	s=default; t=1565748736;
+	bh=yIk9PQxdyju4Bzm9qNkxx1EFIuAWgj5Im7e/vA8jlwE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L8DJLR0bVNzq7BtkBgy0EOr9I4BPEiMpR5TTPYzWmQVuZCPWURRAUc9DsZktFej9/
-	 YcDMEUMm0lxLyEeaQAFR+9YIhg8EOSuSPsKrfcNoMaOnws+sjBbYft+ssb6fTlSrwB
-	 y64lTnvCEejNxV2aVNfmzf8I2LPBXq9UKa6NNC6M=
+	b=vXVZ8wNUITGmd9RA3XfWb6Ny6TSpmrpMB5z8SwgBTT73qlSCUDHzLm7enA9JpcLKb
+	 yy/JRHHoPCFlGaCr4VRTfHOX8bsMiAd7KMJA41O6Kqhlze+gn/U7rnYN3hpVhUF7o3
+	 ETcAiV/hrQjmwXP6Q0mKyNrcFFYFQRQgb0TiPjD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbfHNCMK (ORCPT
+        id S1727838AbfHNCMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:12:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44252 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:12:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbfHNCMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:12:05 -0400
+        id S1727807AbfHNCMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:12:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4455720842;
-        Wed, 14 Aug 2019 02:12:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD2872084F;
+        Wed, 14 Aug 2019 02:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748724;
-        bh=0HlWfxswIPlg8A6rSxBmDoI0nkOD224Bq+62Bi3I0xU=;
+        s=default; t=1565748726;
+        bh=yIk9PQxdyju4Bzm9qNkxx1EFIuAWgj5Im7e/vA8jlwE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DizytlGFt8x6+trDWvxQQLKMPnoLtQNcs2sanm7Wu9SDVCl/TahRkh2Tu3RhUwHMX
-         7JCWHr3XnDv0Z29nDzhZQ6Fm216bV0KEge037M9Oh+o+oCU0eoMNGmJxyxDDkYF2X9
-         1/6OFoXiSQclODEGSrru9DUnRHyZ9vEUFze7UXBo=
+        b=zc1rz5a4WtJAcmjOfGUC0DAPVB9TKCbfY6UZhaYg911UyRe9tiQuxHD70pHNbGebm
+         F1tHtXLzD2Qm5xNGbU7ng56Q6ibDPmLTwNNm1J6rt7JTGUidhzbitHjC2AxNFG9kY9
+         IRciuCdmhPU4PWAwRKlKUgsWQB9dqCLZJNfvES9s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Weitao Hou <houweitaoo@gmail.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Sean Nyekjaer <sean@geanix.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 038/123] can: mcp251x: add error check when wq alloc failed
-Date:   Tue, 13 Aug 2019 22:09:22 -0400
-Message-Id: <20190814021047.14828-38-sashal@kernel.org>
+Cc:     Ricard Wanderlof <ricard.wanderlof@axis.com>,
+        Ricard Wanderlof <ricardw@axis.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 040/123] ASoC: Fail card instantiation if DAI format setup fails
+Date:   Tue, 13 Aug 2019 22:09:24 -0400
+Message-Id: <20190814021047.14828-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -62,105 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weitao Hou <houweitaoo@gmail.com>
+From: Ricard Wanderlof <ricard.wanderlof@axis.com>
 
-[ Upstream commit 375f755899b8fc21196197e02aab26257df26e85 ]
+[ Upstream commit 40aa5383e393d72f6aa3943a4e7b1aae25a1e43b ]
 
-add error check when workqueue alloc failed, and remove redundant code
-to make it clear.
+If the DAI format setup fails, there is no valid communication format
+between CPU and CODEC, so fail card instantiation, rather than continue
+with a card that will most likely not function properly.
 
-Fixes: e0000163e30e ("can: Driver for the Microchip MCP251x SPI CAN controllers")
-Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Tested-by: Sean Nyekjaer <sean@geanix.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Ricard Wanderlof <ricardw@axis.com>
+Link: https://lore.kernel.org/r/alpine.DEB.2.20.1907241132350.6338@lnxricardw1.se.axis.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/spi/mcp251x.c | 49 ++++++++++++++++-------------------
- 1 file changed, 22 insertions(+), 27 deletions(-)
+ sound/soc/soc-core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
-index 44e99e3d71348..2aec934fab0cd 100644
---- a/drivers/net/can/spi/mcp251x.c
-+++ b/drivers/net/can/spi/mcp251x.c
-@@ -664,17 +664,6 @@ static int mcp251x_power_enable(struct regulator *reg, int enable)
- 		return regulator_disable(reg);
- }
- 
--static void mcp251x_open_clean(struct net_device *net)
--{
--	struct mcp251x_priv *priv = netdev_priv(net);
--	struct spi_device *spi = priv->spi;
--
--	free_irq(spi->irq, priv);
--	mcp251x_hw_sleep(spi);
--	mcp251x_power_enable(priv->transceiver, 0);
--	close_candev(net);
--}
--
- static int mcp251x_stop(struct net_device *net)
- {
- 	struct mcp251x_priv *priv = netdev_priv(net);
-@@ -940,37 +929,43 @@ static int mcp251x_open(struct net_device *net)
- 				   flags | IRQF_ONESHOT, DEVICE_NAME, priv);
- 	if (ret) {
- 		dev_err(&spi->dev, "failed to acquire irq %d\n", spi->irq);
--		mcp251x_power_enable(priv->transceiver, 0);
--		close_candev(net);
--		goto open_unlock;
-+		goto out_close;
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 6aeba0d66ec50..dd0f43a1c5e14 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -1605,8 +1605,11 @@ static int soc_probe_link_dais(struct snd_soc_card *card,
+ 		}
  	}
  
- 	priv->wq = alloc_workqueue("mcp251x_wq", WQ_FREEZABLE | WQ_MEM_RECLAIM,
- 				   0);
-+	if (!priv->wq) {
-+		ret = -ENOMEM;
-+		goto out_clean;
+-	if (dai_link->dai_fmt)
+-		snd_soc_runtime_set_dai_fmt(rtd, dai_link->dai_fmt);
++	if (dai_link->dai_fmt) {
++		ret = snd_soc_runtime_set_dai_fmt(rtd, dai_link->dai_fmt);
++		if (ret)
++			return ret;
 +	}
- 	INIT_WORK(&priv->tx_work, mcp251x_tx_work_handler);
- 	INIT_WORK(&priv->restart_work, mcp251x_restart_work_handler);
  
- 	ret = mcp251x_hw_reset(spi);
--	if (ret) {
--		mcp251x_open_clean(net);
--		goto open_unlock;
--	}
-+	if (ret)
-+		goto out_free_wq;
- 	ret = mcp251x_setup(net, spi);
--	if (ret) {
--		mcp251x_open_clean(net);
--		goto open_unlock;
--	}
-+	if (ret)
-+		goto out_free_wq;
- 	ret = mcp251x_set_normal_mode(spi);
--	if (ret) {
--		mcp251x_open_clean(net);
--		goto open_unlock;
--	}
-+	if (ret)
-+		goto out_free_wq;
- 
- 	can_led_event(net, CAN_LED_EVENT_OPEN);
- 
- 	netif_wake_queue(net);
-+	mutex_unlock(&priv->mcp_lock);
- 
--open_unlock:
-+	return 0;
-+
-+out_free_wq:
-+	destroy_workqueue(priv->wq);
-+out_clean:
-+	free_irq(spi->irq, priv);
-+	mcp251x_hw_sleep(spi);
-+out_close:
-+	mcp251x_power_enable(priv->transceiver, 0);
-+	close_candev(net);
- 	mutex_unlock(&priv->mcp_lock);
- 	return ret;
- }
+ 	ret = soc_post_component_init(rtd, dai_link->name);
+ 	if (ret)
 -- 
 2.20.1
 
