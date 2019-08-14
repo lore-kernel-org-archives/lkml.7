@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E085EC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D093C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80A220842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ABEC20842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750000;
-	bh=mGv52XAZ3d+fAhOzX8m/aRfvStfvvZXLxF0cpc/IqOU=;
+	s=default; t=1565750009;
+	bh=B+IPkXxshQqbOeMagZZ5V+KJPiLO1RLJXzGs+eQk/Vw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RhcG38WufhSwKISJcE0SqNZxt0NYAsZf71/OrOzP/z0WmB+6aVXgxZTrPgDx0l0/7
-	 uQ9P05zvFPlzNAeLNFgqDiAdinbjl4YvgNaVtEpWTIA+vNn9wgnoM13Bbg1rPAILWy
-	 iMbIDkk9svTdI+U2ytLFMlj4ikQkyj+xoY08qhFs=
+	b=GUz8qA6S6BShnPQvZj+sPnuL+Q67UjcXbAjf9Vy89EBGeP2u2x4WGmh4haEHKYAUA
+	 tRB3UQubltv/jRx5AiKW8hBD/D7/STpEtP8uFaZXiXu6mPLnw3NeYrCMR2I5KFRRv3
+	 M5hBprWkkgqOhH2HDcQSm5zUwiPmAR4m/QcwVmqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbfHNCdT (ORCPT
+        id S1728679AbfHNCOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:33:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47412 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:14:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728840AbfHNCPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:15:52 -0400
+        id S1728653AbfHNCOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:14:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5471208C2;
-        Wed, 14 Aug 2019 02:15:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE0B520874;
+        Wed, 14 Aug 2019 02:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748952;
-        bh=mGv52XAZ3d+fAhOzX8m/aRfvStfvvZXLxF0cpc/IqOU=;
+        s=default; t=1565748851;
+        bh=B+IPkXxshQqbOeMagZZ5V+KJPiLO1RLJXzGs+eQk/Vw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ObR0Ptin4aRTgOsnJGHVvvtOkm1YX9grqyPTz3DruwnW4TmKY8OfsqAKEAdzEiV3X
-         CXb+YMO97vj7u/iejK0rQsJq4Nq1V+5bRDXWCv5v0pwv5VhCiaqSxwox2r/dHyanIO
-         Ix0Q0FYA4pyAI7NwPpBnfk0DHxig907OqTPCyF+w=
+        b=Wigm5IDd3iC5fFpiHmWDpkOOivHE4ADdy64WflXQdAMcOvSG4oLzwpU6w5zGSrTVI
+         Ht9nyT8SQ/SJnonZmFnY9CA6Wt3N6Reu8nUOkPT/yTi/CCEFlfuLC+DhR7HLo73aLL
+         rqRkpGsE1iOFmFmuMAuhj/2MD/kmDhdP2X1rhQzM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gwendal Grignou <gwendal@chromium.org>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/68] iio: cros_ec_accel_legacy: Fix incorrect channel setting
-Date:   Tue, 13 Aug 2019 22:14:40 -0400
-Message-Id: <20190814021548.16001-2-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 102/123] net: cxgb3_main: Fix a resource leak in a error path in 'init_one()'
+Date:   Tue, 13 Aug 2019 22:10:26 -0400
+Message-Id: <20190814021047.14828-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
-References: <20190814021548.16001-1-sashal@kernel.org>
+In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
+References: <20190814021047.14828-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,33 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gwendal Grignou <gwendal@chromium.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 6cdff99c9f7d7d28b87cf05dd464f7c7736332ae ]
+[ Upstream commit debea2cd3193ac868289e8893c3a719c265b0612 ]
 
-INFO_SCALE is set both for each channel and all channels.
-iio is using all channel setting, so the error was not user visible.
+A call to 'kfree_skb()' is missing in the error handling path of
+'init_one()'.
+This is already present in 'remove_one()' but is missing here.
 
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/accel/cros_ec_accel_legacy.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/accel/cros_ec_accel_legacy.c b/drivers/iio/accel/cros_ec_accel_legacy.c
-index 063e89eff791a..c776a3509a717 100644
---- a/drivers/iio/accel/cros_ec_accel_legacy.c
-+++ b/drivers/iio/accel/cros_ec_accel_legacy.c
-@@ -328,7 +328,6 @@ static const struct iio_chan_spec_ext_info cros_ec_accel_legacy_ext_info[] = {
- 		.modified = 1,					        \
- 		.info_mask_separate =					\
- 			BIT(IIO_CHAN_INFO_RAW) |			\
--			BIT(IIO_CHAN_INFO_SCALE) |			\
- 			BIT(IIO_CHAN_INFO_CALIBBIAS),			\
- 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SCALE),	\
- 		.ext_info = cros_ec_accel_legacy_ext_info,		\
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
+index 1e82b9efe4471..58f89f6a040fe 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
+@@ -3269,7 +3269,7 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (!adapter->regs) {
+ 		dev_err(&pdev->dev, "cannot map device registers\n");
+ 		err = -ENOMEM;
+-		goto out_free_adapter;
++		goto out_free_adapter_nofail;
+ 	}
+ 
+ 	adapter->pdev = pdev;
+@@ -3397,6 +3397,9 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		if (adapter->port[i])
+ 			free_netdev(adapter->port[i]);
+ 
++out_free_adapter_nofail:
++	kfree_skb(adapter->nofail_skb);
++
+ out_free_adapter:
+ 	kfree(adapter);
+ 
 -- 
 2.20.1
 
