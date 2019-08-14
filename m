@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFB1C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6907BC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D78C205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 476AA205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbfHNL04 (ORCPT
+        id S1727557AbfHNL15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 07:26:56 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42224 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbfHNL0z (ORCPT
+        Wed, 14 Aug 2019 07:27:57 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40180 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfHNL14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 07:26:55 -0400
-Received: by mail-oi1-f193.google.com with SMTP id o6so3170911oic.9
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:26:55 -0700 (PDT)
+        Wed, 14 Aug 2019 07:27:56 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c34so41460098otb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:27:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=f4v4qkIfH3jO9OemUkVOmNfKO3Ze07me/8dLA6V285s=;
-        b=qp2YZAgUARaGwnSC3WaD/s+m7gH6iQ/mf2Ido2LNqjEPLf7p8mAPotLR2UjRvHngmx
-         ymMItW2wqMXUphf3YTbXIfytDe0l3E2OSDPRpIaU+FbjuVY+XMtzhQ4gDT2maIR6Y4rn
-         FHmSgs72LtlZEftEDNCR98aSjpPJDJ+sXaJ3Ktdx1IB+P/BXBIOxtOe/PK7qSCOY8vcy
-         uI6TFkGcwZLfBBdd9FEHHk7oeyPQQhRBoC3WOuyf+WnfUUsih5u4BravJ2mURAZoKKlX
-         UGtxJzyLFu+b0/a2bQVjpyHvd9dQVyxwaLxUYIZhXeNq717+i9fbaEgZmJdiqtF97ks4
-         5dEg==
-X-Gm-Message-State: APjAAAWt+8LSzzZsBJoDThEyvcMYCZ8Y2pwvAf4Ln2W92zutHv3wxTjU
-        9QLB0I2V0vLcq0NQW77n98KPaWQtSxFwN+Sf6Cc=
-X-Google-Smtp-Source: APXvYqw9xnb/rL5SZzZcbLmA1koBCQkAzjM/18IlUnfBbaC+B/pqAWLIhE56InNBDawbI3Q0s6UnN07wPGIrSD8KIbw=
-X-Received: by 2002:aca:3bc6:: with SMTP id i189mr4507576oia.153.1565782014777;
- Wed, 14 Aug 2019 04:26:54 -0700 (PDT)
+        bh=eHJv3mBwdvxIqxRvBcDhwQC/E4iNX17l5fHFn/2pxlg=;
+        b=tMrHSMKRQO65M5VX2KCTM4rzANVZsV/fwzUUPowZqMAug3YBf/yqzqHau1d8TW0jn2
+         ntRYtBlLnelSfiGuTRWDxSEk1W3adamQiMbtRY4vfCPDd0P0wAbnmnqoYnvmQGnsAzZ1
+         AFAEU3ic7OOrZUtxP79XDuNVAZIjbV+P6UMbGTuKXvgVxN/ibI3VFCSA9HC1N8RGAMMx
+         Ze7ZgldWd6axORvpnv6VcF+CewX1ngAGePT18TOH0ZfVh1H1JqN2NPyyXzfffwmW0+5s
+         Q8+HwYNZ6NYOFWmeo87SA0NMI4ICNlqIcUrwDxMoQ1N1q26BdwahCMwMncN3UPc/5O1h
+         ogKg==
+X-Gm-Message-State: APjAAAXJ0yn4MUZpjq29697VrmyMe7Tln/rW/X4d69k5Wrn2knz7lwY7
+        iUC8HQk16NqTV4QAB4tXZ0tNiGgza7SDawPZXqAAdA==
+X-Google-Smtp-Source: APXvYqz0tmE1NdQyHIxkApv4Apv7/kFajZZswy1BxlRQJKik8AGuMMWgrI0l/n9TEs2X36e4jLiY3taT1Uz+YIn90GY=
+X-Received: by 2002:a9d:5c11:: with SMTP id o17mr35152868otk.107.1565782075936;
+ Wed, 14 Aug 2019 04:27:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190814104131.20190-1-mark.rutland@arm.com> <20190814104131.20190-2-mark.rutland@arm.com>
-In-Reply-To: <20190814104131.20190-2-mark.rutland@arm.com>
+References: <20190814104131.20190-1-mark.rutland@arm.com> <20190814104131.20190-3-mark.rutland@arm.com>
+In-Reply-To: <20190814104131.20190-3-mark.rutland@arm.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 14 Aug 2019 13:26:43 +0200
-Message-ID: <CAMuHMdV_hZ-uMmKdqEutLL5+XkhhcKdSaurMUS2N46AhZwDNKQ@mail.gmail.com>
-Subject: Re: [PATCH 1/9] sched/core: add is_kthread() helper
+Date:   Wed, 14 Aug 2019 13:27:45 +0200
+Message-ID: <CAMuHMdWEq69VAwNZsWN_8OUZ1S1m0uFrG6ET_iH3c9peiCLyDA@mail.gmail.com>
+Subject: Re: [PATCH 2/9] sched: treewide: use is_kthread()
 To:     Mark Rutland <mark.rutland@arm.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
@@ -67,52 +67,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Hi Mark,
 
 On Wed, Aug 14, 2019 at 12:43 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> Code checking whether a task is a kthread isn't very consistent. Some
-> code correctly tests task->flags & PF_THREAD, while other code checks
-> task->mm (which can be true for a kthread which calls use_mm()).
+> Now that we have is_kthread(), let's convert existing open-coded checks
+> of the form:
 >
-> So that we can clean this up and keep the code easy to follow, let's add
-> an obvious helper function to test whether a task is a kthread.
-> Subsequent patches will use this as part of cleaning up and correcting
-> open-coded tests.
+>   task->flags & PF_KTHREAD
 >
-> At the same time, let's fix up the kerneldoc for is_idle_task() for
-> consistency with the new helper, using true/false rather than 0/1, given
-> the functions return bool.
+> ... over to the new helper, which makes things a little easier to read,
+> and sets a consistent example for new code to follow.
+>
+> Generated with coccinelle:
+>
+>   ----
+>   virtual patch
+>
+>   @ depends on patch @
+>   expression E;
+>   @@
+>
+>   - (E->flags & PF_KTHREAD)
+>   + is_kthread(E)
+>   ----
+>
+> ... though this didn't pick up the instance in <linux/cgroup.h>, which I
+> fixed up manually.
+>
+> Instances checking multiple PF_* flags at ocne are left as-is for now.
+>
+> There should be no functional change as a result of this patch.
 >
 > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
 
-Thanks for your patch!
+>  arch/m68k/kernel/process.c       | 2 +-
 
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1621,13 +1621,24 @@ extern struct task_struct *idle_task(int cpu);
->   * is_idle_task - is the specified task an idle task?
->   * @p: the task in question.
->   *
-> - * Return: 1 if @p is an idle task. 0 otherwise.
-> + * Return: true if @p is an idle task, false otherwise.
->   */
->  static inline bool is_idle_task(const struct task_struct *p)
->  {
->         return !!(p->flags & PF_IDLE);
->  }
->
-> +/**
-> + * is_kthread - is the specified task a kthread
-> + * @p: the task in question.
-> + *
-> + * Return: true if @p is a kthread, false otherwise.
-> + */
-> +static inline bool is_kthread(const struct task_struct *p)
-> +{
-> +       return !!(p->flags & PF_KTHREAD);
-
-The !! is not really needed.
-Probably you followed is_idle_task() above (where it's also not needed).
-
-> +}
-> +
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
 Gr{oetje,eeting}s,
 
