@@ -2,94 +2,150 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78803C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC710C0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57BD3205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3BFC208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:03:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aBPUev9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfHNIBp (ORCPT
+        id S1727049AbfHNIDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 04:01:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57874 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725928AbfHNIBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 04:01:44 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8CF023001839;
-        Wed, 14 Aug 2019 08:01:44 +0000 (UTC)
-Received: from gondolin (dhcp-192-232.str.redhat.com [10.33.192.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E88E808D0;
-        Wed, 14 Aug 2019 08:01:38 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 10:01:35 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cjia@nvidia.com" <cjia@nvidia.com>
-Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Message-ID: <20190814100135.1f60aa42.cohuck@redhat.com>
-In-Reply-To: <AM0PR05MB4866D40F8EBB382C78193C91D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190802065905.45239-1-parav@mellanox.com>
-        <20190808141255.45236-1-parav@mellanox.com>
-        <20190808170247.1fc2c4c4@x1.home>
-        <77ffb1f8-e050-fdf5-e306-0a81614f7a88@nvidia.com>
-        <AM0PR05MB4866993536C0C8ACEA2F92DBD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190813085246.1d642ae5@x1.home>
-        <AM0PR05MB48663579A340E6597B3D01BCD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190813111149.027c6a3c@x1.home>
-        <AM0PR05MB4866D40F8EBB382C78193C91D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Organization: Red Hat GmbH
+        Wed, 14 Aug 2019 04:03:17 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52445 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbfHNIDP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 04:03:15 -0400
+Received: by mail-wm1-f66.google.com with SMTP id o4so3585172wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 01:03:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=u1kTruUi3YdB800wT1pXkaOjMSivOUWKVyyY/Zt731g=;
+        b=aBPUev9Ze7ZpXmccQd1KFcRQ9+YZEvEIJ2mXE7D/eE4mW0NWELCy32Z9swdThfnFBF
+         uwtFZsx0n+nZPSfcdbUAoi2maYUPyAGE6VZvX1lxXucBNdBbPTrKrpL+APlXG6nq0usR
+         7T3hKQZ8OfkYXRqYiqYd86anCcfqziM9dMWWG97DVfu1X0mjwovdY+J6TV25XUuh6Vhq
+         Xi3Ng7NKhUr4M0lpXoNBdpFRyjhTf0YlPodDH3z4Nge4kVC3ptXr9zrGX9HD6K0+NbYi
+         EuCHR8LyYsg3WfxgBZyJ7LK6acjuYTK/s2Uy/3kWehj3pEeX80Z6NVS08CjMjM7+MPUt
+         6B4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=u1kTruUi3YdB800wT1pXkaOjMSivOUWKVyyY/Zt731g=;
+        b=gym7DH7Rv6B8SuM9Kq+tNR1CFxC8cfB7BJIPRG3Qb6XmmTv4ipQ01VBac+DCTCNGyw
+         DUiD70zuhpRiXWbBbdy6O7g/U5lYicu4WR5apkot5G1v7IaEdEb3z6amyuapQwU/YAd9
+         6J3r8VW5KURtuwze6hPUVJluzQZ/Z6xqYaszQToT15OrcNVGvKkdCtQTIHFpppcz5VI3
+         8LNlq07GQnfaRgDKPgl8ORM3PY8eFB9GUFCgBD3z/rnqOjS15Qh2rl2ogbGYel+KMeMf
+         uqY2faVJZnHRrvw6flMxFJU1+R4DHZRpS7PDIYB4+1npjKnF1UHXQTEJV6L7xUEiUCDN
+         Vn4Q==
+X-Gm-Message-State: APjAAAWXX6H37oqzuLU9Yp1DFf+80YfbVRE7tjtLOsWvrsJlDyOe0HCX
+        Oiun7irIrdx/7qNVBn+YLDHMuA==
+X-Google-Smtp-Source: APXvYqyO4XowUPOEjHkeHqWq8ZGkAY6pJn5+D2BnJD4VZsQpxWmvikwHKafPm0DLCyolBG2iDeLJ6w==
+X-Received: by 2002:a7b:ca5a:: with SMTP id m26mr6573824wml.134.1565769792542;
+        Wed, 14 Aug 2019 01:03:12 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id 39sm28546562wrc.45.2019.08.14.01.03.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 01:03:11 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 09:03:07 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Himanshu Jha <himanshujha199640@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, maco@android.com,
+        kstewart@linuxfoundation.org, linux-m68k@vger.kernel.org,
+        oneukum@suse.com,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        usb-storage@lists.one-eyed-alien.net, hpa@zytor.com,
+        joel@joelfernandes.org, sam@ravnborg.org, cocci@systeme.lip6.fr,
+        linux-arch@vger.kernel.org, linux-scsi@vger.kernel.org,
+        x86@kernel.org, lucas.de.marchi@gmail.com, mingo@redhat.com,
+        geert@linux-m68k.org, stern@rowland.harvard.edu,
+        kernel-team@android.com, sspatil@google.com, arnd@arndb.de,
+        linux-kbuild@vger.kernel.org,
+        Nicolas Palix <nicolas.palix@imag.fr>, jeyu@kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        tglx@linutronix.de, michal.lkml@markovi.net,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>, maco@google.com,
+        pombredanne@nexb.com, "David S. Miller" <davem@davemloft.net>,
+        linux-modules@vger.kernel.org
+Subject: Re: [Cocci] [PATCH v2 08/10] scripts: Coccinelle script for
+ namespace dependencies.
+Message-ID: <20190814080307.GA2911@google.com>
+References: <20180716122125.175792-1-maco@android.com>
+ <20190813121733.52480-1-maennich@google.com>
+ <20190813121733.52480-9-maennich@google.com>
+ <20190814063611.GA22387@himanshu-Vostro-3559>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 14 Aug 2019 08:01:44 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190814063611.GA22387@himanshu-Vostro-3559>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 05:54:36 +0000
-Parav Pandit <parav@mellanox.com> wrote:
+On Wed, Aug 14, 2019 at 12:06:11PM +0530, Himanshu Jha wrote:
+>On Tue, Aug 13, 2019 at 01:17:05PM +0100, Matthias Maennich wrote:
+>> A script that uses the '<module>.ns_deps' file generated by modpost to
+>> automatically add the required symbol namespace dependencies to each
+>> module.
+>>
+>> Usage:
+>> 1) Move some symbols to a namespace with EXPORT_SYMBOL_NS() or define
+>>    DEFAULT_SYMBOL_NAMESPACE
+>> 2) Run 'make' (or 'make modules') and get warnings about modules not
+>>    importing that namespace.
+>> 3) Run 'make nsdeps' to automatically add required import statements
+>>    to said modules.
+>>
+>> This makes it easer for subsystem maintainers to introduce and maintain
+>> symbol namespaces into their codebase.
+>>
+>> Co-developed-by: Martijn Coenen <maco@android.com>
+>> Signed-off-by: Martijn Coenen <maco@android.com>
+>> Signed-off-by: Matthias Maennich <maennich@google.com>
+>> ---
+>
+>[]
+>
+>>  MAINTAINERS                                 |  5 ++
+>>  Makefile                                    | 12 +++++
+>>  scripts/Makefile.modpost                    |  4 +-
+>>  scripts/coccinelle/misc/add_namespace.cocci | 23 +++++++++
+>>  scripts/nsdeps                              | 54 +++++++++++++++++++++
+>>  5 files changed, 97 insertions(+), 1 deletion(-)
+>>  create mode 100644 scripts/coccinelle/misc/add_namespace.cocci
+>>  create mode 100644 scripts/nsdeps
+>
+>[]
+>
+>> +if [ "$SPATCH_VERSION_NUM" -lt "$SPATCH_REQ_VERSION_NUM" ] ; then
+>> +    echo 'spatch needs to be version 1.06 or higher'
+>
+>Nitpick: 1.0.6
+>
 
-> > > I get that part. I prefer to remove the UUID itself from the structure
-> > > and therefore removing this API makes lot more sense?  
-> > 
-> > Mdev and support tools around mdev are based on UUIDs because it's defined
-> > in the documentation.    
-> When we introduce newer device naming scheme, it will update the documentation also.
-> May be that is the time to move to .rst format too.
+Good catch! Thanks!
+Actually it needs to be even 1.0.4, so I will just use
+$SPATCH_REQ_VERSION from above.
 
-You are aware that there are existing tools that expect a uuid naming
-scheme, right?
-
-> 
-> > I don't think it's as simple as saying "voila, UUID
-> > dependencies are removed, users are free to use arbitrary strings".  We'd need
-> > to create some kind of naming policy, what characters are allows so that we
-> > can potentially expand the creation parameters as has been proposed a couple
-> > times, how do we deal with collisions and races, and why should we make such
-> > a change when a UUID is a perfectly reasonable devices name.  Thanks,
-> >  
-> Sure, we should define a policy on device naming to be more relaxed.
-> We have enough examples in-kernel.
-> Few that I am aware of are netdev (vxlan, macvlan, ipvlan, lot more), rdma etc which has arbitrary device names and ID based device names.
->  
-> Collisions and race is already taken care today in the mdev core. Same unique device names continue.
-
-I'm still completely missing a rationale _why_ uuids are supposedly
-bad/restricting/etc. We want to uniquely identify a device, across
-different types of vendor drivers. An uuid is a unique identifier and
-even a well-defined one. Tools (e.g. mdevctl) are relying on it for
-mdev devices today.
-
-What is the problem you're trying to solve?
+>> +    exit 1
+>> +fi
+>
+>
+>-- 
+>Himanshu Jha
+>Undergraduate Student
+>Department of Electronics & Communication
+>Guru Tegh Bahadur Institute of Technology
