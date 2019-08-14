@@ -2,126 +2,132 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFF7C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F927C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9DE20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA9220843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfHNIbm (ORCPT
+        id S1727578AbfHNIbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 04:31:42 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:42159 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbfHNIbl (ORCPT
+        Wed, 14 Aug 2019 04:31:51 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42444 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725265AbfHNIbv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 04:31:41 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 88B9F2000B;
-        Wed, 14 Aug 2019 08:31:38 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 10:31:38 +0200
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     Igor Russkikh <Igor.Russkikh@aquantia.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "sd@queasysnail.net" <sd@queasysnail.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
-        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
-        Simon Edelhaus <Simon.Edelhaus@aquantia.com>,
-        Pavel Belous <Pavel.Belous@aquantia.com>
-Subject: Re: [PATCH net-next v2 6/9] net: macsec: hardware offloading
- infrastructure
-Message-ID: <20190814083138.GE3200@kwain>
-References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
- <20190808140600.21477-7-antoine.tenart@bootlin.com>
- <e96fa4ae-1f2c-c1be-b2d8-060217d8e151@aquantia.com>
- <20190813085817.GA3200@kwain>
- <20190813131706.GE15047@lunn.ch>
- <2e3c2307-d414-a531-26cb-064e05fa01fc@aquantia.com>
+        Wed, 14 Aug 2019 04:31:51 -0400
+Received: by mail-qt1-f195.google.com with SMTP id t12so20700427qtp.9
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 01:31:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=Ynk/jW9Vb1735IlArNmWYpmV/2cD+KS6CksYAP1WBT4=;
+        b=SY23sl4IGAtBV5QPu/2oyisqHhCbve4erfv9734frddPxYTNP48+MnVB7tjSW/PBSR
+         vNZlYQmkNm8M/SvxNZ4FmjkZxZqCwwLuwS2L0dbxdNhZawxr72R05sNWVrABffQB8YHq
+         QzXil9WtoJr6PBZuH1RYAgBIJ+sAYplqEAwkLXg11uMtRik5mQLMCsVO4KpcrHjwAKmI
+         W4Yh+t/KOQmEWscDn+9s/wR+TkenK67nqYAHcD7JlqyMyriyaBULKlhOE/BObp7lXMVZ
+         csUE2CJWmi7KP2wD9uwtrkSgIKtWV0uwtKxpX6JqHfL2lpo/3DCTwycaWHNU47sKZjfm
+         DfGw==
+X-Gm-Message-State: APjAAAUaXORkmUmGgUaTRTwk7VIEM1LF72RBdBx6kDIKCLe4T2kwF4Kk
+        d/xmkT1rvUK9GWKAcQmLszZ6yDB0uMZxeSHJrec=
+X-Google-Smtp-Source: APXvYqxfiAEJ1NSovRCpZIxSvWc5sEsLpBMye8i2PaF25oymSkZwmjEhvJiD5cBJF8SwZsk4KB7f9ZBnEpMlwDwX0mc=
+X-Received: by 2002:ac8:239d:: with SMTP id q29mr8243044qtq.304.1565771509953;
+ Wed, 14 Aug 2019 01:31:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2e3c2307-d414-a531-26cb-064e05fa01fc@aquantia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
+ <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com> <20190814000622.GB20365@mit.edu>
+In-Reply-To: <20190814000622.GB20365@mit.edu>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 14 Aug 2019 10:31:33 +0200
+Message-ID: <CAK8P3a1CXRETxn6Gh_cOxM3rZ-wUwVDu-7=yEwjqOY=uEdC6OQ@mail.gmail.com>
+Subject: Re: New kernel interface for sys_tz and timewarp?
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Karel Zak <kzak@redhat.com>,
+        Lennart Poettering <lennart@poettering.net>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Igor,
+On Wed, Aug 14, 2019 at 2:06 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+> On Tue, Aug 13, 2019 at 10:30:34AM -0700, Linus Torvalds wrote:
+> >
+> > I suspect the only actual _valid_ use in the kernel for a time zone
+> > setting is likely for RTC clock setting, but even that isn't really
+> > "global", as much as "per RTC".
+>
+> As I recall (and I may or may not have been original for the original
+> sys_tz; it was many years ago, and my memories of 1992 are a bit
+> fuzzy) the only reason why we added it was because x86 systems that
+> were dual-booting with Windows had a RTC which ticked localtime, and
+> originally, the system time was fetched from the RTC in early boot,
+> and then when the timezone was set, the time would be warped so it
+> would be correct.
 
-On Tue, Aug 13, 2019 at 04:18:40PM +0000, Igor Russkikh wrote:
-> On 13.08.2019 16:17, Andrew Lunn wrote:
-> > On Tue, Aug 13, 2019 at 10:58:17AM +0200, Antoine Tenart wrote:
-> >> I think this question is linked to the use of a MACsec virtual interface
-> >> when using h/w offloading. The starting point for me was that I wanted
-> >> to reuse the data structures and the API exposed to the userspace by the
-> >> s/w implementation of MACsec. I then had two choices: keeping the exact
-> >> same interface for the user (having a virtual MACsec interface), or
-> >> registering the MACsec genl ops onto the real net devices (and making
-> >> the s/w implementation a virtual net dev and a provider of the MACsec
-> >> "offloading" ops).
-> >>
-> >> The advantages of the first option were that nearly all the logic of the
-> >> s/w implementation could be kept and especially that it would be
-> >> transparent for the user to use both implementations of MACsec.
-> > 
-> > We have always talked about offloading operations to the hardware,
-> > accelerating what the linux stack can do by making use of hardware
-> > accelerators. The basic user API should not change because of
-> > acceleration. Those are the general guidelines.
-> > 
-> > It would however be interesting to get comments from those who did the
-> > software implementation and what they think of this architecture. I've
-> > no personal experience with MACSec, so it is hard for me to say if the
-> > current architecture makes sense when using accelerators.
-> 
-> In terms of overall concepts, I'd add the following:
-> 
-> 1) With current implementation it's impossible to install SW macsec engine onto
-> the device which supports HW offload. That could be a strong limitation in
-> cases when user sees HW macsec offload is broken or work differently, and he/she
-> wants to replace it with SW one.
-> MACSec is a complex feature, and it may happen something is missing in HW.
-> Trivial example is 256bit encryption, which is not always a musthave in HW
-> implementations.
+I think this was the case from 1992 to commit 84e345e4e209 ("time,
+Fix setting of hardware clock in NTP code") in 2013, when we started
+taking the time warp into account during the periodic sync_cmos_clock()
+call from kernel/time/ntp.c.
 
-Agreed. I'm not sure it would be possible to have both used at the same
-time but there should be a way to switch between the two
-implementations. That is not supported for now, but I think that would
-be a good thing, and can probably come later on.
+> Trying to use this for anything else is probably a bad idea, and in a
+> world where we can have initrd's and reading the RTC gets done by
+> userspace as opposed to kernel, it probably doesn't make any sence to
+> keep it.
 
-> 2) I think, Antoine, its not totally true that otherwise the user macsec API
-> will be broken/changed. netlink api is the same, the only thing we may want to
-> add is an optional parameter to force selection of SW macsec engine.
+As Alexandre keeps pointing out, we really ought to do this from user
+space, but in systemd today still relies on the kernel setting the
+initial time using CONFIG_RTC_HCTOSYS, but this breaks e.g.
+when the rtc driver itself is a loadable module.
 
-I meant that we can either have a virtual net device representing the
-MACsec feature and being the iface used to configure it, or we could
-have it only when s/w MACsec is used. That to me is part of the "API",
-or at least part of what's exposed to the user.
+From what I understand it would be easy for systemd to sync the
+rtc to system time at boot and let distros disable CONFIG_RTC_HCTOSYS,
+but it still has to do the initial settimeofday(NULL, tz) call to
+ensure the correct offset is used for sync_hw_clock() in case
+CONFIG_GENERIC_CMOS_UPDATE or CONFIG_RTC_SYSTOHC
+are set (which they tend to be at the moment).
 
-> I'm also eager to hear from sw macsec users/devs on whats better here.
+In the long run, a distro can decide to avoid this all, once these
+bits come together:
 
-I'd like more comments as well :)
+- glibc stops passing the caller timezone argument to the kernel
+- the distro kernel disables CONFIG_RTC_HCTOSYS,
+  CONFIG_RTC_SYSTOHC  and CONFIG_GENERIC_CMOS_UPDATE
+- systemd reads the RTC at boot and sets the system
+  time according to the configuration in /etc/localtime and /etc/adjtime
+- systemd, ntp or something else in user space takes care of the periodic
+  rtc update, again taking configuration into account.
 
-Thanks!
-Antoine
+When someone mixes today's glibc/systemd/kernel with other
+components past that migration, things can go wrong somewhat
+annoying but non-fatal ways:
+- Users that dual-boot with windows may have to force Windows
+  to set the RTC to UTC mode rather than setting Linux to
+  localtime.
+- if neither the kernel not user space do the periodic RTC update,
+  it may be out of sync and cause a larger time jump after the
+  next boot time ntp synchronization
 
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Creating a kernel interface for systemd to see or contol how the
+11-minute update is done in the kernel would help part of that
+transition.
+
+      Arnd
