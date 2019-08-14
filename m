@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C276DC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2D2C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 905CE20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EFC120665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802957;
-	bh=AGQBOIpQCF8aITkhXyPVwPEzllyvkhX+pQqakyPz/uQ=;
+	s=default; t=1565802962;
+	bh=Qv50IEdhAdQ+YPsNhDeNXdQwrntJtPebEZKiD6idsXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=toU6j1xfohK4QmSbtz9TFbKZgPoKH5r+C7g2gLcnDMVH4EMFFHIFFoMfXpXpK4u8x
-	 yecWyJQzdzNql7+GgmIIvubjNidCigYxE/yD0kcdHleRzAv9NW25d85NI0ueYS4XW2
-	 6A/4dQEfTdSVJyPGO7O7jIyRSUzWFHm1fs6napDg=
+	b=W316rv+lJ+LmxXSk0PYnjnojHYe/odQE0girgFTn4u1UdcLa8Ve7wTXI8NviC3upR
+	 nKo0lEnlps0aIvRRb218jEPaJtPfZufOzaJkGuSITo7zmaNuihvZpy7qkHIuB42b3f
+	 mvQ86L7CLtaoQQ2/lxWUVVuxxSxm/XmhA+lEpDog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbfHNROx (ORCPT
+        id S1731025AbfHNRQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:14:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39328 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:16:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730907AbfHNROu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:14:50 -0400
+        id S1730855AbfHNROw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:14:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D260A2084D;
-        Wed, 14 Aug 2019 17:14:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 698572084D;
+        Wed, 14 Aug 2019 17:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802889;
-        bh=AGQBOIpQCF8aITkhXyPVwPEzllyvkhX+pQqakyPz/uQ=;
+        s=default; t=1565802891;
+        bh=Qv50IEdhAdQ+YPsNhDeNXdQwrntJtPebEZKiD6idsXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OHcxlqCOHKkY8ZHZkQtkOygNsR9v+mzKU9JXfUzYF/GBDhwkyXylzq2x2jm+5BYyh
-         ig4Z5dVSPzVImCzwO/f/edl0ZF5XBPfs7m3ieDcxLpyKJ0/ilJcD07a7P8IWypiqs4
-         odz3p55SFxSO24AdhSC9BfKIBg9/boyxkOWTvvW4=
+        b=Rcy94BfTlApXb+Eiu5U19VT/XluvuAC6jwIljZ9gdTlRjt7g8hUVK+HmNztQkwOWH
+         RtQN5QqIpODhe8pTRl1l1Qk0J1b05QGBocYco7eElZjLqzdd+vutvRqPo7IX8mlQE3
+         olfrIhijxupBgCpl4yBuJ3XMr7snMButmpOYtvuQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 65/69] mwifiex: fix 802.11n/WPA detection
-Date:   Wed, 14 Aug 2019 19:02:03 +0200
-Message-Id: <20190814165750.429515291@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.14 66/69] iwlwifi: dont unmap as page memory that was mapped as single
+Date:   Wed, 14 Aug 2019 19:02:04 +0200
+Message-Id: <20190814165750.465849264@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -59,52 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 
-commit df612421fe2566654047769c6852ffae1a31df16 upstream.
+commit 87e7e25aee6b59fef740856f4e86d4b60496c9e1 upstream.
 
-Commit 63d7ef36103d ("mwifiex: Don't abort on small, spec-compliant
-vendor IEs") adjusted the ieee_types_vendor_header struct, which
-inadvertently messed up the offsets used in
-mwifiex_is_wpa_oui_present(). Add that offset back in, mirroring
-mwifiex_is_rsn_oui_present().
+In order to remember how to unmap a memory (as single or
+as page), we maintain a bit per Transmit Buffer (TBs) in
+the meta data (structure iwl_cmd_meta).
+We maintain a bitmap: 1 bit per TB.
+If the TB is set, we will free the memory as a page.
+This bitmap was never cleared. Fix this.
 
-As it stands, commit 63d7ef36103d breaks compatibility with WPA (not
-WPA2) 802.11n networks, since we hit the "info: Disable 11n if AES is
-not supported by AP" case in mwifiex_is_network_compatible().
-
-Fixes: 63d7ef36103d ("mwifiex: Don't abort on small, spec-compliant vendor IEs")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: stable@vger.kernel.org
+Fixes: 3cd1980b0cdf ("iwlwifi: pcie: introduce new tfd and tb formats")
+Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/marvell/mwifiex/main.h |    1 +
- drivers/net/wireless/marvell/mwifiex/scan.c |    3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/tx.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/wireless/marvell/mwifiex/main.h
-+++ b/drivers/net/wireless/marvell/mwifiex/main.h
-@@ -122,6 +122,7 @@ enum {
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
+@@ -401,6 +401,8 @@ static void iwl_pcie_tfd_unmap(struct iw
+ 					 DMA_TO_DEVICE);
+ 	}
  
- #define MWIFIEX_MAX_TOTAL_SCAN_TIME	(MWIFIEX_TIMER_10S - MWIFIEX_TIMER_1S)
++	meta->tbs = 0;
++
+ 	if (trans->cfg->use_tfh) {
+ 		struct iwl_tfh_tfd *tfd_fh = (void *)tfd;
  
-+#define WPA_GTK_OUI_OFFSET				2
- #define RSN_GTK_OUI_OFFSET				2
- 
- #define MWIFIEX_OUI_NOT_PRESENT			0
---- a/drivers/net/wireless/marvell/mwifiex/scan.c
-+++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-@@ -181,7 +181,8 @@ mwifiex_is_wpa_oui_present(struct mwifie
- 	u8 ret = MWIFIEX_OUI_NOT_PRESENT;
- 
- 	if (has_vendor_hdr(bss_desc->bcn_wpa_ie, WLAN_EID_VENDOR_SPECIFIC)) {
--		iebody = (struct ie_body *) bss_desc->bcn_wpa_ie->data;
-+		iebody = (struct ie_body *)((u8 *)bss_desc->bcn_wpa_ie->data +
-+					    WPA_GTK_OUI_OFFSET);
- 		oui = &mwifiex_wpa_oui[cipher][0];
- 		ret = mwifiex_search_oui_in_ie(iebody, oui);
- 		if (ret)
 
 
