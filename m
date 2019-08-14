@@ -2,169 +2,106 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78381C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A92C32757
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF142083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F0DA2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:31:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="vVh2LAgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfHNKaJ (ORCPT
+        id S1727031AbfHNKbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:30:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36274 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbfHNKaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:30:09 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0EB3F30083EE;
-        Wed, 14 Aug 2019 10:30:07 +0000 (UTC)
-Received: from gondolin (dhcp-192-232.str.redhat.com [10.33.192.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 59F6C1001B35;
-        Wed, 14 Aug 2019 10:29:52 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 12:29:49 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
-        wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
-        david@redhat.com, mst@redhat.com, dodgen@google.com,
-        konrad.wilk@oracle.com, dhildenb@redhat.com, aarcange@redhat.com,
-        alexander.duyck@gmail.com, john.starks@microsoft.com,
-        dave.hansen@intel.com, mhocko@suse.com
-Subject: Re: [RFC][Patch v12 2/2] virtio-balloon: interface to support free
- page reporting
-Message-ID: <20190814122949.4946f438.cohuck@redhat.com>
-In-Reply-To: <20190812131235.27244-3-nitesh@redhat.com>
-References: <20190812131235.27244-1-nitesh@redhat.com>
-        <20190812131235.27244-3-nitesh@redhat.com>
-Organization: Red Hat GmbH
+        Wed, 14 Aug 2019 06:31:19 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:51240 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfHNKbS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:31:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vIn3VrH7ocwDZwAAstv4Z1w3Iw6dyOjCurgY/OY+iMg=; b=vVh2LAglzEG++FwqN4KSlYc3e
+        r1btgKmDEiOv85fXEZ+HfeiKQBXj02w1pCssYPOmHUYKWhHS2i274oG8l7lzAZQyzqLikkkKa2/cn
+        WqMl1l0IGoprA+wUx5VYjOFf8yY23van8tZYvi6GupNDAe5pITc2JQ3GiWymo+Kc7VaMu2DZ6jqsM
+        2q0ZsPP+7DcgBWAlSUisioPDmWaF5tS9lO/A5V44fXMDcQMBLxm+bdNYuCMutScF2l2wOZXilNUAC
+        Y22OnCoc77oDHHMtZ+EIAfsKBwK6Mcu/2EPbieFfdGiXbXawu/8aRhm05G6xCnRbCDDFMmJ3m/ak/
+        ulXIvjO9w==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56468)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hxqYb-0005uy-JR; Wed, 14 Aug 2019 11:31:05 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hxqYR-0008OC-2C; Wed, 14 Aug 2019 11:30:55 +0100
+Date:   Wed, 14 Aug 2019 11:30:55 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Steve Longerbeam <slongerbeam@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Len Brown <lenb@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "moderated list:ARM/ZYNQ ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Enrico Weigelt <info@metux.net>
+Subject: Re: [PATCH 04/22] media: Move v4l2_fwnode_parse_link from v4l2 to
+ driver base
+Message-ID: <20190814103054.GI13294@shell.armlinux.org.uk>
+References: <20190805233505.21167-1-slongerbeam@gmail.com>
+ <20190805233505.21167-5-slongerbeam@gmail.com>
+ <CAHp75VcOh8bOf_s6t0ehwGtcYn64QFGj303SVvpHrztEOhTRgg@mail.gmail.com>
+ <4750b347-b421-6569-600f-0ced8406460e@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 14 Aug 2019 10:30:09 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4750b347-b421-6569-600f-0ced8406460e@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019 09:12:35 -0400
-Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+On Tue, Aug 06, 2019 at 09:53:41AM -0700, Steve Longerbeam wrote:
+> The full patchset doesn't seem to be up yet, but see [1] for the cover
+> letter.
 
-> Enables the kernel to negotiate VIRTIO_BALLOON_F_REPORTING feature with
-> the host. If it is available and page_reporting_flag is set to true,
-> page_reporting is enabled and its callback is configured along with
-> the max_pages count which indicates the maximum number of pages that
-> can be isolated and reported at a time. Currently, only free pages of
-> order >= (MAX_ORDER - 2) are reported. To prevent any false OOM
-> max_pages count is set to 16.
-> 
-> By default page_reporting feature is enabled and gets loaded as soon
-> as the virtio-balloon driver is loaded. However, it could be disabled
-> by writing the page_reporting_flag which is a virtio-balloon parameter.
-> 
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> ---
->  drivers/virtio/Kconfig              |  1 +
->  drivers/virtio/virtio_balloon.c     | 64 ++++++++++++++++++++++++++++-
->  include/uapi/linux/virtio_balloon.h |  1 +
->  3 files changed, 65 insertions(+), 1 deletion(-)
-> 
+Was the entire series copied to the mailing lists, or just selected
+patches?  I only saw 4, 9, 11 and 13-22 via lakml.
 
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> index 226fbb995fb0..defec00d4ee2 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
+In the absence of the other patches, will this solve imx-media binding
+the internal subdevs of sensor devices to the CSI2 interface?
 
-(...)
+Thanks.
 
-> +static void virtballoon_page_reporting_setup(struct virtio_balloon *vb)
-> +{
-> +	struct device *dev = &vb->vdev->dev;
-> +	int err;
-> +
-> +	vb->page_reporting_conf.report = virtballoon_report_pages;
-> +	vb->page_reporting_conf.max_pages = PAGE_REPORTING_MAX_PAGES;
-> +	err = page_reporting_enable(&vb->page_reporting_conf);
-> +	if (err < 0) {
-> +		dev_err(dev, "Failed to enable reporting, err = %d\n", err);
-> +		page_reporting_flag = false;
-
-Should we clear the feature bit in this case as well?
-
-> +		vb->page_reporting_conf.report = NULL;
-> +		vb->page_reporting_conf.max_pages = 0;
-> +		return;
-> +	}
-> +}
-> +
->  static void set_page_pfns(struct virtio_balloon *vb,
->  			  __virtio32 pfns[], struct page *page)
->  {
-> @@ -476,6 +524,7 @@ static int init_vqs(struct virtio_balloon *vb)
->  	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
->  	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
->  	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
-> +	names[VIRTIO_BALLOON_VQ_REPORTING] = NULL;
->  
->  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
->  		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
-> @@ -487,11 +536,18 @@ static int init_vqs(struct virtio_balloon *vb)
->  		callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
->  	}
->  
-> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
-> +		names[VIRTIO_BALLOON_VQ_REPORTING] = "reporting_vq";
-> +		callbacks[VIRTIO_BALLOON_VQ_REPORTING] = balloon_ack;
-
-Do we even want to try to set up the reporting queue if reporting has
-been disabled via module parameter? Might make more sense to not even
-negotiate the feature bit in that case.
-
-> +	}
->  	err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
->  					 vqs, callbacks, names, NULL, NULL);
->  	if (err)
->  		return err;
->  
-> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
-> +		vb->reporting_vq = vqs[VIRTIO_BALLOON_VQ_REPORTING];
-> +
->  	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
->  	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
->  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
-> @@ -924,6 +980,9 @@ static int virtballoon_probe(struct virtio_device *vdev)
->  		if (err)
->  			goto out_del_balloon_wq;
->  	}
-> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING) &&
-> +	    page_reporting_flag)
-> +		virtballoon_page_reporting_setup(vb);
-
-In that case, you'd only need to check for the feature bit here.
-
->  	virtio_device_ready(vdev);
->  
->  	if (towards_target(vb))
-> @@ -971,6 +1030,8 @@ static void virtballoon_remove(struct virtio_device *vdev)
->  		destroy_workqueue(vb->balloon_wq);
->  	}
->  
-> +	if (page_reporting_flag)
-> +		page_reporting_disable(&vb->page_reporting_conf);
-
-I think you should not disable it if the feature bit was never offered
-in the first place, right?
-
->  	remove_common(vb);
->  #ifdef CONFIG_BALLOON_COMPACTION
->  	if (vb->vb_dev_info.inode)
-
-(...)
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
