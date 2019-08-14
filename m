@@ -7,107 +7,97 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776EEC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4F6C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422432084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 657C320843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749075;
-	bh=Ru6KRlanO+UUuQwjsRGwQlGUiWu1aOFlwpYd+M1QXaI=;
+	s=default; t=1565749080;
+	bh=sNjcijFzaiXPZDlUW/SriUVtBEx8J/jXHdLIfW3jKQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cqAAVYnV4S5SVcMGBxS80unWItsAZUuGPaZKXsbVpZ+0PCchHRhFy95QnP1pDFcP0
-	 uXg+q3oJvtFD25O1ovbfnTJktBrkZtLqbsdWYJO+S2gz1ZNNfmrSvXdzpj/3M1YBrC
-	 GvgXDxGisX12/p6qUFCLPYwiyZsxw7iowez+tSbE=
+	b=c8ChNy/nrI+fSNQoxynpJJAstnwV0rrwNr1sS6zNEhCZPAEzPWwN/MlHC0slFpFA/
+	 rxuQKQmlVXY2glreJlXbbCaATbmhbL/Yp+fz/x0f7SjYzB3RzpGyf1a9MP+1YF2m3c
+	 oV+f9Qvzc+C3h5r+EiM7gTkCo9pNGc0lDjkPf/g4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbfHNCRq (ORCPT
+        id S1729481AbfHNCRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:17:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48874 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:17:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729419AbfHNCRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:17:34 -0400
+        id S1729403AbfHNCR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:17:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 511852085A;
-        Wed, 14 Aug 2019 02:17:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B68D20842;
+        Wed, 14 Aug 2019 02:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749053;
-        bh=Ru6KRlanO+UUuQwjsRGwQlGUiWu1aOFlwpYd+M1QXaI=;
+        s=default; t=1565749046;
+        bh=sNjcijFzaiXPZDlUW/SriUVtBEx8J/jXHdLIfW3jKQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xROW/LKxDbYJSV0/9lFkdyprp+1lLPiVWNNEycmBdadoPXyBVmXayXIbfhzSAkjb5
-         JE30nB++p1R/1rSjfZpoGbj4fqFDtKqNd4PAv5sTe/VOFx9ON8DkS9henmn1QLeMck
-         W5VYgZJtu4joQZl3JApxDo00QjYhtCwH9bpkRXu8=
+        b=ch3dxpQuUOqjaLi+TuFf9/9SB0IVHirnr56S6ioMAWLGEnc+cdlW6ETcUMxko36HU
+         98VbsH7ijhOdp5Gp0ceoteK/d0w9VTbpgpKizvT/efYCrpvy2sHv534RZCL5ebaN9D
+         nhwZpqe4ia3VzYWABofn+Pi4zdFNVNy8Ykae9cYU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     He Zhe <zhe.he@windriver.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Cc:     =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 64/68] perf cpumap: Fix writing to illegal memory in handling cpumap mask
-Date:   Tue, 13 Aug 2019 22:15:42 -0400
-Message-Id: <20190814021548.16001-64-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 60/68] x86/lib/cpu: Address missing prototypes warning
+Date:   Tue, 13 Aug 2019 22:15:38 -0400
+Message-Id: <20190814021548.16001-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: He Zhe <zhe.he@windriver.com>
+From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
 
-[ Upstream commit 5f5e25f1c7933a6e1673515c0b1d5acd82fea1ed ]
+[ Upstream commit 04f5bda84b0712d6f172556a7e8dca9ded5e73b9 ]
 
-cpu_map__snprint_mask() would write to illegal memory pointed by
-zalloc(0) when there is only one cpu.
+When building with W=1, warnings about missing prototypes are emitted:
 
-This patch fixes the calculation and adds sanity check against the input
-parameters.
+  CC      arch/x86/lib/cpu.o
+arch/x86/lib/cpu.c:5:14: warning: no previous prototype for 'x86_family' [-Wmissing-prototypes]
+    5 | unsigned int x86_family(unsigned int sig)
+      |              ^~~~~~~~~~
+arch/x86/lib/cpu.c:18:14: warning: no previous prototype for 'x86_model' [-Wmissing-prototypes]
+   18 | unsigned int x86_model(unsigned int sig)
+      |              ^~~~~~~~~
+arch/x86/lib/cpu.c:33:14: warning: no previous prototype for 'x86_stepping' [-Wmissing-prototypes]
+   33 | unsigned int x86_stepping(unsigned int sig)
+      |              ^~~~~~~~~~~~
 
-Signed-off-by: He Zhe <zhe.he@windriver.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Fixes: 4400ac8a9a90 ("perf cpumap: Introduce cpu_map__snprint_mask()")
-Link: http://lkml.kernel.org/r/1564734592-15624-2-git-send-email-zhe.he@windriver.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Add the proper include file so the prototypes are there.
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/42513.1565234837@turing-police
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/cpumap.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/lib/cpu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 383674f448fcd..f93846edc1e0d 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -701,7 +701,10 @@ size_t cpu_map__snprint_mask(struct cpu_map *map, char *buf, size_t size)
- 	unsigned char *bitmap;
- 	int last_cpu = cpu_map__cpu(map, map->nr - 1);
+diff --git a/arch/x86/lib/cpu.c b/arch/x86/lib/cpu.c
+index 2dd1fe13a37b3..19f707992db22 100644
+--- a/arch/x86/lib/cpu.c
++++ b/arch/x86/lib/cpu.c
+@@ -1,5 +1,6 @@
+ #include <linux/types.h>
+ #include <linux/export.h>
++#include <asm/cpu.h>
  
--	bitmap = zalloc((last_cpu + 7) / 8);
-+	if (buf == NULL)
-+		return 0;
-+
-+	bitmap = zalloc(last_cpu / 8 + 1);
- 	if (bitmap == NULL) {
- 		buf[0] = '\0';
- 		return 0;
+ unsigned int x86_family(unsigned int sig)
+ {
 -- 
 2.20.1
 
