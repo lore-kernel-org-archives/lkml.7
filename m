@@ -6,89 +6,85 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB800C0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0501C0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C68F020843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0F82084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565761241;
-	bh=BcTVOpWjejlJQLRKMOuwLxgamclM2LKtYDZAFC7tU0E=;
+	s=default; t=1565761638;
+	bh=sGSEpLFwxSA+wPTlqNmCouxrUR10WybyiEQw8oFiCeQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yJrz5eu8M0Go8/9d2nfHzcZuOVbQ3xS1uByquOEb0K5soQR5TqtJHE+xn3WkOevvd
-	 uGSWqUeN4l1CtMTaj3V0JgI6GQcQyAKxVhDrv6imy5uidEHxFpIX62liSIvSyNxuo4
-	 kdpW5jgR4YRuzf1xKSpZPr0RUI6eLckbfgacUdg0=
+	b=wLdv51bCBQ7veytSoDs5rlXsyAOvKyja/4QafnDkU6VxwbyIxnDkljWxwTqB83hQW
+	 nba653CxIdtOKBjUlqaxuEzwxNc0mZP1LgwetZ575OuvPJKYSLXqXEESjDxuUTJG7K
+	 t2Rm2hGPt09RoanLGzmuaJ2GlbVv99fyWG2hiXSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfHNFkk (ORCPT
+        id S1727124AbfHNFrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 01:40:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60836 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 01:47:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726882AbfHNFkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 01:40:40 -0400
-Received: from localhost (c-73-15-1-175.hsd1.ca.comcast.net [73.15.1.175])
+        id S1725263AbfHNFrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 01:47:17 -0400
+Received: from localhost (unknown [106.51.111.160])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F3B120843;
-        Wed, 14 Aug 2019 05:40:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0319820843;
+        Wed, 14 Aug 2019 05:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565761239;
-        bh=BcTVOpWjejlJQLRKMOuwLxgamclM2LKtYDZAFC7tU0E=;
+        s=default; t=1565761637;
+        bh=sGSEpLFwxSA+wPTlqNmCouxrUR10WybyiEQw8oFiCeQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EMzCqMDBjkofqdOZx59ict1Fr6TMdqw0s4RuTCigOU3/xywNMLDhFt/E1awRwhuyH
-         uZLmCsD58zb1pfz1g2Ya3zLjA6sl+alQU9UVYjLYzSovK6pEHohGXcB58juvbRNMqS
-         p35vDmmxYK6fDlwB4gNiGKRYkRG5S3pVk5mBODfY=
-Date:   Wed, 14 Aug 2019 00:40:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 0/3] PCI: pci-sysfs.c cleanup
-Message-ID: <20190814054038.GB253360@google.com>
-References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+        b=nmUZ55RmgNLBGCLo2iWsovHMXWinQFV+E8dH5Rban/fSxGQogjKDHrS6VslJfQLBc
+         4zacY6la89zK0RNkjNlyqAmsDUWxobYWOzGCDWaL6JtGS0Ml8P3pml1sVgxHswtuVC
+         xys1QuksyRR7jd/EBug5SMhf5VFFcCo6jx5RDzAM=
+Date:   Wed, 14 Aug 2019 11:16:04 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        clang-built-linux@googlegroups.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [alsa-devel] [PATCH] soundwire: Don't build sound.o without
+ CONFIG_ACPI
+Message-ID: <20190814054604.GW12733@vkoul-mobl.Dlink>
+References: <20190813061014.45015-1-natechancellor@gmail.com>
+ <445d16e1-6b00-6797-82df-42a49a5e79e3@linux.intel.com>
+ <20190814035947.GS12733@vkoul-mobl.Dlink>
+ <20190814042428.GA125416@archlinux-threadripper>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190814042428.GA125416@archlinux-threadripper>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Greg]
+On 13-08-19, 21:24, Nathan Chancellor wrote:
+> On Wed, Aug 14, 2019 at 09:29:47AM +0530, Vinod Koul wrote:
+> > On 13-08-19, 09:22, Pierre-Louis Bossart wrote:
+> > > On 8/13/19 1:10 AM, Nathan Chancellor wrote:
+ 
+> > > I am fine with the change, but we might as well rename the file acpi_slave.c
+> > > then?
+> > 
+> > Srini's change add support for DT for the same file, so It does not make
+> > sense to rename. Yes this patch tries to fix a warn which is there due
+> > to DT being not supported but with Srini's patches this warn should go
+> > away as sdw_slave_add() will be invoked by the DT counterpart
+> > 
+> > Sorry Nathan, we would have to live with the warn for few more days till
+> > I apply Srini's changes. So I am not taking this (or v2) patch
+> > 
+> 
+> That is fine as I can apply this locally. Could you point me to these
+> patches so that I can take a look at them?
 
-On Tue, Aug 13, 2019 at 02:45:10PM -0600, Kelsey Skunberg wrote:
-> This series is designed to clean up device attributes and permissions in
-> pci-sysfs.c. Then move the sysfs SR-IOV functions from pci-sysfs.c to
-> iov.c for better organization. Patches build off of each other.
-> 
-> Patch 1: Define device attributes with DEVICE_ATTR*() instead of __ATTR*().
-> 
-> Patch 2: Change permissions from symbolic to the preferred octal.
-> 
-> Patch 3: Move sysfs SR-IOV functions to iov.c to keep the feature's code
-> together.
-> 
-> Changes since v1:
->         Add patch 1 and 2 to fix the way device attributes are defined
->         and change permissions from symbolic to octal. Patch 3 which moves
->         sysfs SR-IOV functions to iov.c will then apply cleaner.
-> 
-> 
-> Kelsey Skunberg (3):
->   PCI: sysfs: Define device attributes with DEVICE_ATTR*()
->   PCI: sysfs: Change permissions from symbolic to octal
->   PCI/IOV: Move sysfs SR-IOV functions to iov.c
-> 
->  drivers/pci/iov.c       | 168 +++++++++++++++++++++++++++++++
->  drivers/pci/pci-sysfs.c | 217 ++++------------------------------------
->  drivers/pci/pci.h       |   2 +-
->  3 files changed, 188 insertions(+), 199 deletions(-)
+Here you go:
 
-Applied to pci/virtualization for v5.4, thanks!
+https://lore.kernel.org/lkml/20190808144504.24823-3-srinivas.kandagatla@linaro.org/
 
-Beginning of thread:
-https://lore.kernel.org/r/20190813204513.4790-1-skunberg.kelsey@gmail.com
+-- 
+~Vinod
