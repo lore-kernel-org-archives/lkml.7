@@ -2,132 +2,121 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF07C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3070C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF62216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81503216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:57:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730096AbfHNU5H (ORCPT
+        id S1729958AbfHNU5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 16:57:07 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:49863 "EHLO
+        Wed, 14 Aug 2019 16:57:35 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:50785 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728871AbfHNU5H (ORCPT
+        with ESMTP id S1726166AbfHNU5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 16:57:07 -0400
+        Wed, 14 Aug 2019 16:57:35 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M9FSx-1htJE10LW3-006Opc; Wed, 14 Aug 2019 22:57:02 +0200
+ 1MPowd-1hckJz13UB-00MpFs; Wed, 14 Aug 2019 22:57:32 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-ppp@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH v5 15/18] compat_ioctl: ppp: move simple commands into ppp_generic.c
-Date:   Wed, 14 Aug 2019 22:54:50 +0200
-Message-Id: <20190814205521.122180-6-arnd@arndb.de>
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Hannes Reinecke <hare@suse.de>
+Subject: [PATCH v5 17/18] pktcdvd: add compat_ioctl handler
+Date:   Wed, 14 Aug 2019 22:54:52 +0200
+Message-Id: <20190814205521.122180-8-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190814204259.120942-1-arnd@arndb.de>
 References: <20190814204259.120942-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:fmDVahZ4CcjhOs+KQjFGAeeFwENq4LRdyWsKv0rqtggtBQdCebQ
- wWbcsq8NgjYrZwRjTsGXv1s7bwGqvAJ46xqweMWH/L+s61fs2bS+CYMfTP3CEAM38d/CkcJ
- CzWkG5VjpQaNdncFVHciiRkjivY5K925E6YiGJKoRpEBDbm2C0W2MErGEpJ7IJ8zYIDamTA
- en2pP+DG2us+rODng1uBA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KdTmbrqSBxg=:7w6RP3+jpxgmEpOORfKjlK
- gA+ONjUM2BroK9CLZO4Yxbj1fimuLY+ync6FY/qLOZgahDHdFVskTUQWJbMlNrhuI6fLivyYb
- fe3BfGtukX4tiBfkyP4w6QV146OOpJj3ZaqKwHxyUfrFHMV9dpWmMKg5KUKsHINwIRKmjsZmD
- YpwYar1PCu/Fzyz3J1f45w5iLdJEKqM8hKP8H0dIW1fhqas9XCWbCMe/ACcrU19oz+oJhg4js
- 4ml32miZfdKjspapG2BJeCu0lLlUZ5V4TiCusWT6CGWF94kTue8F5pQ5P2HcfouOAaUDTMThs
- pzmJFWcbY1bXrtRkqOzn+EQJYKtZKP8ZxEBgmst5mWHkd9NMUpCO2SMBX/c/kD4Sl0JZdmq/w
- 7gW3Z/Wlre4fjGTJTzB22msi1HB8D2K7Jod6wwW9MICJQ5VU09YIrApjAUy5lRa5mcjMVZBU3
- Ly0YOn5HCYEH8RK6iRPE29frvDvNlKvIG5NNCi2/XNBn3SFl3DsP2M/IlUUygUMT/oNg5Nndy
- binfmvbsmwtUNftdXBGj9k9qdH1ldhvkoGQGTPeZWxJZgKmOmAaaapN5yT7mbVBqlX4sSFMa6
- wzVC5Wyp7nGpnKpijQ2XNIDd0jHUYejKM19MnbL8MXZK/cfeVMRjKY/b3ff3Ypa6bMtZLad0g
- +LqExuQ/M+TXYKLfyn61CFS7QjlzjbDOKY+qM2M+PfpMZUp+hjqI2GvuHB9uueKRsWMs7v3st
- R78SOXOPSGvt3SP+JW7IfhpEL+0T9QQNraQIK1xP2it4ovzDNJsFFhxyq5iLJp2xod3nYYyO3
- MrY+PZ5DBc49CXAXtdnT1vhN5m4AA==
+X-Provags-ID: V03:K1:vtBRrSTbxRM+4N7JG/SqINjMT8OwhCCnfEV9GLfJMlj7zzHmXqL
+ wFcQBgM7/r/60w0dHWdIX39QTgYM4f/6oLGxqnTXmb0CHbl9e834v0p2Rmzje1ZTzLFB0d4
+ ArUarrUL7+s3fgxa94yevKS1w3wmtdSr7o3Jo/MviF7gzdbq7Vr5Sa0PLjOc3+0XsDb7ayd
+ Im2A9aO8g12wUfvh63IzQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oXxoA9Saf5U=:wn2CxSLASoltE+VPtsKsmS
+ DbM3bcSOL5toXC7kI5Wz6RafyaM3cAUqLlE3zjj3c2paNf19x+xqkxDbfmVmBPA63QSHuNvlo
+ aNikgXHDUJ8bhRVl3ntnHP/QQQhffoJlfbuIOka54SfVt754KI6HKMfBnl1uLRKT5k4+4ItGZ
+ /itPTJ3SDZA1hRH4ZojXudrHRYkPWnJmzt4GYzIPq3Ewf2uH0vIg2s4swG5LPGrVV4gMiUiXf
+ 3b3TQPCWgpHmS4mBiAigr/vnrj7Ps7Lr3BVqSAR8ioWfzXjnFesSIO3H8YHlIB5VZCYnozlpK
+ rpXwIG8gGgfZejIX2FD5CW+2QCT766pjpVsSiQlCWlsREd7u4WNA+CcS3CX7WaAIKx0z8vSe5
+ 7obgtro6nmMuqzOTcjPLrfLt4NQNPitX7upsF5WWyhUiMBqMnhBb95qBmr61t1yaR30GgYaKa
+ nmKXPddvpCL8Dx+/T2jw2Eh7FDG5rr/H6Sh/ti8cH0/L0PBate4GA8OTM6yV3dwtOdSIMJEmO
+ GcI941L57d5nOl7fZDJe2DxZyjKA6RG9kcEr17w+Ff/hJ6CbTGBAhwHDt9WMZsplcRj7LdJoO
+ yv14a5pkTALtpSrjJd9JhqIn1MVYvyoTPee7UiU5MUtw366JG52QkMRjoDzcC7CBKlnrDDJDX
+ 47JwnZHHclHBGahHLCJehDayQgvWpgjncjEbJpYMi5AVfW8LQrzJZ1Ue1XnaOM4sMLkd2HJJb
+ zRdDmZjFRSEBmUUiGjtz5uyZGpGQ34zVToeIOg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All ppp commands that are not already handled in ppp_compat_ioctl()
-are compatible, so they can now handled by calling the native
-ppp_ioctl() directly.
+pkt_ioctl() implements the generic SCSI_IOCTL_SEND_COMMAND
+and some cdrom ioctls by forwarding to the underlying block
+device. For compat_ioctl handling, this always takes a
+roundtrip through fs/compat_ioctl.c that we should try
+to avoid, at least for the compatible commands.
+
+CDROM_SEND_PACKET is an exception here, it requires special
+translation in compat_blkdev_driver_ioctl().
+
+CDROM_LAST_WRITTEN has no compat handling at the moment.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/net/ppp/ppp_generic.c |  4 ++++
- fs/compat_ioctl.c             | 32 --------------------------------
- 2 files changed, 4 insertions(+), 32 deletions(-)
+ drivers/block/pktcdvd.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
-index 6b4e227cb002..ea1507c7c40e 100644
---- a/drivers/net/ppp/ppp_generic.c
-+++ b/drivers/net/ppp/ppp_generic.c
-@@ -903,6 +903,10 @@ static long ppp_compat_ioctl(struct file *file, unsigned int cmd, unsigned long
- 	}
- 	mutex_unlock(&ppp_mutex);
- 
-+	/* all other commands have compatible arguments */
-+	if (err == -ENOIOCTLCMD)
-+		err = ppp_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
-+
- 	return err;
+diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
+index 024060165afa..b5950b7851b0 100644
+--- a/drivers/block/pktcdvd.c
++++ b/drivers/block/pktcdvd.c
+@@ -2664,6 +2664,28 @@ static int pkt_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd,
+ 	return ret;
  }
- #endif
-diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index f97cf698cfdd..3d127bb6357a 100644
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -144,38 +144,6 @@ COMPATIBLE_IOCTL(SG_GET_REQUEST_TABLE)
- COMPATIBLE_IOCTL(SG_SET_KEEP_ORPHAN)
- COMPATIBLE_IOCTL(SG_GET_KEEP_ORPHAN)
- #endif
--/* PPP stuff */
--COMPATIBLE_IOCTL(PPPIOCGFLAGS)
--COMPATIBLE_IOCTL(PPPIOCSFLAGS)
--COMPATIBLE_IOCTL(PPPIOCGASYNCMAP)
--COMPATIBLE_IOCTL(PPPIOCSASYNCMAP)
--COMPATIBLE_IOCTL(PPPIOCGUNIT)
--COMPATIBLE_IOCTL(PPPIOCGRASYNCMAP)
--COMPATIBLE_IOCTL(PPPIOCSRASYNCMAP)
--COMPATIBLE_IOCTL(PPPIOCGMRU)
--COMPATIBLE_IOCTL(PPPIOCSMRU)
--COMPATIBLE_IOCTL(PPPIOCSMAXCID)
--COMPATIBLE_IOCTL(PPPIOCGXASYNCMAP)
--COMPATIBLE_IOCTL(PPPIOCSXASYNCMAP)
--COMPATIBLE_IOCTL(PPPIOCXFERUNIT)
--/* PPPIOCSCOMPRESS is translated */
--COMPATIBLE_IOCTL(PPPIOCGNPMODE)
--COMPATIBLE_IOCTL(PPPIOCSNPMODE)
--COMPATIBLE_IOCTL(PPPIOCGDEBUG)
--COMPATIBLE_IOCTL(PPPIOCSDEBUG)
--/* PPPIOCSPASS is translated */
--/* PPPIOCSACTIVE is translated */
--COMPATIBLE_IOCTL(PPPIOCGIDLE32)
--COMPATIBLE_IOCTL(PPPIOCGIDLE64)
--COMPATIBLE_IOCTL(PPPIOCNEWUNIT)
--COMPATIBLE_IOCTL(PPPIOCATTACH)
--COMPATIBLE_IOCTL(PPPIOCDETACH)
--COMPATIBLE_IOCTL(PPPIOCSMRRU)
--COMPATIBLE_IOCTL(PPPIOCCONNECT)
--COMPATIBLE_IOCTL(PPPIOCDISCONN)
--COMPATIBLE_IOCTL(PPPIOCATTCHAN)
--COMPATIBLE_IOCTL(PPPIOCGCHAN)
--COMPATIBLE_IOCTL(PPPIOCGL2TPSTATS)
+ 
++#ifdef CONFIG_COMPAT
++static int pkt_compat_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd, unsigned long arg)
++{
++	switch (cmd) {
++	/* compatible */
++	case CDROMEJECT:
++	case CDROMMULTISESSION:
++	case CDROMREADTOCENTRY:
++	case SCSI_IOCTL_SEND_COMMAND:
++		return pkt_ioctl(bdev, mode, cmd, (unsigned long)compat_ptr(arg));
++
++
++	/* FIXME: no handler so far */
++	case CDROM_LAST_WRITTEN:
++	/* handled in compat_blkdev_driver_ioctl */
++	case CDROM_SEND_PACKET:
++	default:
++		return -ENOIOCTLCMD;
++	}
++}
++#endif
++
+ static unsigned int pkt_check_events(struct gendisk *disk,
+ 				     unsigned int clearing)
+ {
+@@ -2685,6 +2707,9 @@ static const struct block_device_operations pktcdvd_ops = {
+ 	.open =			pkt_open,
+ 	.release =		pkt_close,
+ 	.ioctl =		pkt_ioctl,
++#ifdef CONFIG_COMPAT
++	.ioctl =		pkt_compat_ioctl,
++#endif
+ 	.check_events =		pkt_check_events,
  };
  
- /*
 -- 
 2.20.0
 
