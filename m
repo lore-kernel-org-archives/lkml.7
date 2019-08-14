@@ -2,229 +2,157 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52CEC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CB6C32759
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C588206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D707206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:35:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J/RX89Sf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbfHNRc2 (ORCPT
+        id S1728563AbfHNRfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:32:28 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39949 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbfHNRc2 (ORCPT
+        Wed, 14 Aug 2019 13:35:22 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40694 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728128AbfHNRfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:32:28 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxx8H-000772-PS; Wed, 14 Aug 2019 19:32:21 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxx8E-0005XC-W2; Wed, 14 Aug 2019 19:32:18 +0200
-Date:   Wed, 14 Aug 2019 19:32:18 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH 4/7] pwm: jz4740: Improve algorithm of clock calculation
-Message-ID: <20190814173218.zhg4se3pppano5m3@pengutronix.de>
-References: <20190812061520.lwzk3us4ginwwxov@pengutronix.de>
- <1565642590.2007.1@crapouillou.net>
- <20190812214838.e5hyhnlcyykjfvsb@pengutronix.de>
- <1565648183.2007.3@crapouillou.net>
- <20190813052726.g37upws5rlvrszc4@pengutronix.de>
- <1565694066.1856.1@crapouillou.net>
- <20190813123331.m4ttfhcgt6wyrcfi@pengutronix.de>
- <1565700448.1856.2@crapouillou.net>
- <20190813140903.rdwy7p3mhwetmlnt@pengutronix.de>
- <1565799035.1984.0@crapouillou.net>
+        Wed, 14 Aug 2019 13:35:21 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c34so44302385otb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 10:35:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fOFmALBZr12NwAFqPH4bz0Snzh0MYv/4Oy/ALTRaZDA=;
+        b=J/RX89SfeoHR3tNRvGakoeZptZJRFt1aGCoCGLanpgjt6kzr4VpQHXuOeq/XIub7h3
+         dtaz/Elri9LmCCrz1cJasmWNTs/t3B2DIMrEzFtcDd5S3T5Z7qW0x6VQtzyPUT8xX0Dr
+         tpBoGVGOFhjt5t/gsPYut79dUKJV/zOUYBE0KuVDsrJAB63xmL9rkN5sW1B/mX17RfT8
+         s7uhch2pStQ0Q6kOmXjpTKpW17nIDOPnBvNsIuNp6/qFxNyKoezYoApT9paR+P+AAJP+
+         1YlKwUJfVlXI0OJvPm/r92hOejmHZfRewJNJIhMYRbj46Pt2aVShyKZOOJ23qQt+gnU7
+         ycMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fOFmALBZr12NwAFqPH4bz0Snzh0MYv/4Oy/ALTRaZDA=;
+        b=rgaMUP9K35WEsPcR9RBec7T6TbGr1zzCqcn637I8CLrK1F9D+NFtzYibj5ekc7Uv+4
+         OkNyc32jmkh306pWfavqsWRK7Y26eacOnpdeHKspHMGH4pKZoomgFWyzrMkEpB7c5SAr
+         2mrHHuzSh+7FTqPgqSFDP1VAs62SnxpxUNZKvPD+k5p50RzdKcwktdAl8XQWg2gyLy/x
+         cc6jMRfJXE/jHUzb/MjsF1g9RESMCQiRoXjf32i5amB8DyFJ+LpsDBqh0LX+S3iI93Bd
+         Kouqt89N+MfHuLZkv/wPo9nzjUPjyK4QAsnXI4A3EiGXRA9mUTyzTON4t854yNWz7ZRV
+         8FTg==
+X-Gm-Message-State: APjAAAUptoQFdFD/vU9t+jJTcwYsQ/OWHfeMtTXoEaZFPm87itxuUn87
+        xbizE+aKGK3IwQIweCQIxsPmaX0FgV9/bQ7Ra3Cgtw==
+X-Google-Smtp-Source: APXvYqyjolYUGNDko/RtbeKAldUB4mXc2vz0kBg/ilppWohKo/GY5H6usCosoBEpZ0JF43wMzvRMaDIYk6L2L/batEg=
+X-Received: by 2002:a05:6830:1e0f:: with SMTP id s15mr177324otr.231.1565804120275;
+ Wed, 14 Aug 2019 10:35:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1565799035.1984.0@crapouillou.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20180716122125.175792-1-maco@android.com> <20190813121733.52480-1-maennich@google.com>
+ <20190813121733.52480-6-maennich@google.com> <CAGETcx_LQDdnaU+3JVGw+6=DJ8tRoQ00+3rD2gOiHHkWomt8jg@mail.gmail.com>
+ <20190814125427.GA72826@google.com>
+In-Reply-To: <20190814125427.GA72826@google.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 14 Aug 2019 10:34:43 -0700
+Message-ID: <CAGETcx99Xx7aRPS-2Pw8h7O5D_+3T+1hbqja=p-gLN2wXApaEQ@mail.gmail.com>
+Subject: Re: [PATCH v2 05/10] module: add config option MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
+To:     Matthias Maennich <maennich@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, maco@android.com,
+        Android Kernel Team <kernel-team@android.com>, arnd@arndb.de,
+        geert@linux-m68k.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hpa@zytor.com,
+        jeyu@kernel.org,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-modules@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+        lucas.de.marchi@gmail.com, Martijn Coenen <maco@google.com>,
+        michal.lkml@markovi.net, mingo@redhat.com, oneukum@suse.com,
+        Philippe Ombredanne <pombredanne@nexb.com>, sam@ravnborg.org,
+        Sandeep Patil <sspatil@google.com>, stern@rowland.harvard.edu,
+        tglx@linutronix.de, usb-storage@lists.one-eyed-alien.net,
+        x86@kernel.org, yamada.masahiro@socionext.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Richard Guy Briggs <rgb@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Paul,
+On Wed, Aug 14, 2019 at 5:54 AM 'Matthias Maennich' via kernel-team
+<kernel-team@android.com> wrote:
+>
+> On Tue, Aug 13, 2019 at 01:15:44PM -0700, Saravana Kannan wrote:
+> >On Tue, Aug 13, 2019 at 5:19 AM 'Matthias Maennich' via kernel-team
+> ><kernel-team@android.com> wrote:
+> >>
+> >> If MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS is enabled (default=n), the
+> >> requirement for modules to import all namespaces that are used by
+> >> the module is relaxed.
+> >>
+> >> Enabling this option effectively allows (invalid) modules to be loaded
+> >> while only a warning is emitted.
+> >>
+> >> Disabling this option keeps the enforcement at module loading time and
+> >> loading is denied if the module's imports are not satisfactory.
+> >>
+> >> Reviewed-by: Martijn Coenen <maco@android.com>
+> >> Signed-off-by: Matthias Maennich <maennich@google.com>
+> >> ---
+> >>  init/Kconfig    | 14 ++++++++++++++
+> >>  kernel/module.c | 11 +++++++++--
+> >>  2 files changed, 23 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/init/Kconfig b/init/Kconfig
+> >> index bd7d650d4a99..b3373334cdf1 100644
+> >> --- a/init/Kconfig
+> >> +++ b/init/Kconfig
+> >> @@ -2119,6 +2119,20 @@ config MODULE_COMPRESS_XZ
+> >>
+> >>  endchoice
+> >>
+> >> +config MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
+> >> +       bool "Allow loading of modules with missing namespace imports"
+> >> +       default n
+> >> +       help
+> >> +         Symbols exported with EXPORT_SYMBOL_NS*() are considered exported in
+> >> +         a namespace. A module that makes use of a symbol exported with such a
+> >> +         namespace is required to import the namespace via MODULE_IMPORT_NS().
+> >> +         This option relaxes this requirement when loading a module.
+> >
+> >> While
+> >> +         technically there is no reason to enforce correct namespace imports,
+> >> +         it creates consistency between symbols defining namespaces and users
+> >> +         importing namespaces they make use of.
+> >
+> >I'm confused by this sentence. It sounds like it's the opposite of
+> >what the config is doing? Can you please reword it for clarify?
+>
+> How about:
+>
+>   Symbols exported with EXPORT_SYMBOL_NS*() are considered exported in
+>   a namespace. A module that makes use of a symbol exported with such a
+>   namespace is required to import the namespace via MODULE_IMPORT_NS().
+>   There is no technical reason to enforce correct namespace imports,
+>   but it creates consistency between symbols defining namespaces and
+>   users importing namespaces they make use of. This option relaxes this
+>   requirement and lifts the enforcement when loading a module.
 
-On Wed, Aug 14, 2019 at 06:10:35PM +0200, Paul Cercueil wrote:
-> Le mar. 13 août 2019 à 16:09, Uwe =?iso-8859-1?q?Kleine-K=F6nig?= a écrit :
-> > On Tue, Aug 13, 2019 at 02:47:28PM +0200, Paul Cercueil wrote:
-> > > Le mar. 13 août 2019 à 14:33, Uwe Kleine-König a écrit :
-> > > > On Tue, Aug 13, 2019 at 01:01:06PM +0200, Paul Cercueil wrote:
-> > > > > Well, you said that I shouln't rely on the fact that clk_round_rate() will
-> > > > > round down. That completely defeats the previous algorithm. So please tell
-> > > > > me how to use it correctly, because I don't see it.
-> > > >
-> > > > Using clk_round_rate correctly without additional knowledge is hard. If
-> > > > you assume at least some sane behaviour you'd still have to call it
-> > > > multiple times. Assuming maxrate is the maximal rate you can handle
-> > > > without overflowing your PWM registers you have to do:
-> > > >
-> > > > 	rate = maxrate;
-> > > > 	rounded_rate = clk_round_rate(clk, rate);
-> > > > 	while (rounded_rate > rate) {
-> > > > 		if (rate < rounded_rate - rate) {
-> > > > 			/*
-> > > > 			 * clk doesn't support a rate smaller than
-> > > > 			 * maxrate (or the round_rate callback doesn't
-> > > > 			 * round consistently).
-> > > > 			 */
-> > > > 			 return -ESOMETHING;
-> > > > 		}
-> > > > 		rate = rate - (rounded_rate - rate)
-> > > > 		rounded_rate = clk_round_rate(clk, rate);
-> > > > 	}
-> > > >
-> > > > 	return rate;
-> > > >
-> > > > Probably it would be sensible to put that in a function provided by the
-> > > > clk framework (maybe call it clk_round_rate_down and maybe with
-> > > > additional checks).
-> > > 
-> > >  clk_round_rate_down() has been refused multiple times in the past for
-> > >  reasons that Stephen can explain.
-> > 
-> > I'd be really interested in these reasons as I think the clk framework
-> > should make it easy to solve common tasks related to clocks. And finding
-> > out the biggest supported rate not bigger than a given maxrate is
-> > something I consider such a common task.
-> > 
-> > The first hit I found when searching was
-> > https://lkml.org/lkml/2010/7/14/260 . In there Stephen suggested that
-> > clk_round_rate with the current semantic is hardly useful and suggested
-> > clk_round_rate_up() and clk_round_rate_down() himself.
-> 
-> That's from 2010, though.
+That's a lot better. Especially moving the "This option relaxes..." to
+the bottom. Thanks.
 
-If you have a better link please tell me.
-
-> I agree that clk_round_rate_up() and clk_round_rate_down() should exist.
-> Even if they return -ENOSYS if it's not implemented for a given clock
-> controller.
-
-ack.
-
-> > > > > I came up with a much smarter alternative, that doesn't rely on the rounding
-> > > > > method of clk_round_rate, and which is better overall (no loop needed). It
-> > > > > sounds to me like you're bashing the code without making the effort to
-> > > > > understand what it does.
-> > > > >
-> > > > > Thierry called it a "neat trick"
-> > > > > (https://patchwork.kernel.org/patch/10836879/) so it cannot be as bad as you
-> > > > > say.
-> > > >
-> > > > Either that or Thierry failed to see the downside. The obvious downside
-> > > > is that once you set the period to something long (and so the clk was
-> > > > limited to a small frequency) you never make the clock any faster
-> > > > afterwards.
-> > >
-> > >  Read the algorithm again.
-> > 
-> > I indeed missed a call to clk_set_rate(clk, parent_rate). I thought I
-> > grepped for clk_set_rate before claiming the code was broken. Sorry.
-> > 
-> > So I think the code works indeed, but it feels like abusing
-> > clk_set_max_rate. So I'd like to see some words from Stephen about this
-> > procedure.
-> > 
-> > Also I think this is kind of inelegant to set the maximal rate twice. At
-> > least call clk_set_max_rate only once please.
-> 
-> Ok. I can do that.
-
-I would still prefer to hear from Stephen about this approach. It seems
-wrong to have two different ways to achieve the same goal and my
-impression is that clk_round_rate is the function designed for this use
-case.
- 
-> > > > > > > > > E.g. if at a rate of 12 MHz your computed hardware value for the period
-> > > > > > > > > is 0xf000, then at a rate of 24 MHz it won't fit in 16 bits. So the clock
-> > > > > > > > > rate must be reduced to the highest possible that will still give you a
-> > > > > > > > > < 16-bit value.
-> > > > > > > > >
-> > > > > > > > > We always want the highest possible clock rate that works, for the sake of
-> > > > > > > > > precision.
-> > > > > > > >
-> > > > > > > > This is dubious; but ok to keep the driver simple.> (Consider a PWM that
-> > > > > > > > can run at i MHz for i in [1, .. 30]. If a period of 120 ns and a duty
-> > > > > > > > cycle of 40 ns is requested you can get an exact match with 25 MHz, but
-> > > > > > > > not with 30 MHz.)
-> > > > > > >
-> > > > > > > The clock rate is actually (parent_rate >> (2 * x) )
-> > > > > > > for x = 0, 1, 2, ...
-> > > > > > >
-> > > > > > > So if your parent_rate is 30 MHz the next valid one is 7.5 MHz, and the
-> > > > > > > next one is 1.875 MHz. It'd be very unlikely that you get a better match at
-> > > > > > > a lower clock.
-> > > > > >
-> > > > > > If the smaller freqs are all dividers of the fastest that's fine. Please
-> > > > > > note in a code comment that you're assuming this.
-> > > > >
-> > > > >  No, I am not assuming this. The current driver just picks the highest clock
-> > > > >  rate that works. We're not changing the behaviour here.
-> > > >
-> > > > But you hide it behind clk API functions that don't guarantee this
-> > > > behaviour. And even if it works for you it might not for the next person
-> > > > who copies your code to support another hardware.
-> > > 
-> > >  Again, I'm not *trying* to guarantee this behaviour.
-> > 
-> > I didn't request you should guarantee this behaviour. I want you to make
-> > it obvious for readers of your code that you rely on something that
-> > isn't guaranteed. That your code works today isn't a good enough excuse.
-> > There are various examples like these. If you want a few:
-> > 
-> >  - printf("string: %s\n", NULL); works fine with glibc, but segfaults on
-> >    other libcs.
-> >  - setenv("MYVAR", NULL) used to work (and was equivalent to
-> >    setenv("MYVAR", "")) but that was never guaranteed. Then at some
-> >    point of time it started to segfault.
-> >  - Look into commits like a4435febd4c0f14b25159dca249ecf91301c7c76. This
-> >    used to work fine until compilers were changed to optimize more
-> >    aggressively.
-> > 
-> > Now if you use a clk and know that all rates smaller than the requested
-> > one are divisors of the fast one and your code only works (here: is
-> > optimal) when this condition is given, you're walking on thin ice just
-> > because this fact it's not guaranteed.
-> > The least you can do is to add a code comment to make people aware who
-> > debug the breakage or copy your code.
-> 
-> If I was assuming something, it's not that the requested clock rates are
-> always integer dividers of the parent rate - but rather that the difference
-> in precision between two possible clock rates (even non-integer-dividers) is
-> so tiny that we just don't care.
-
-I'm more exacting here. If you are asked for X and can provide X - 2 you
-shouldn't provide X - 12. Depending on the use case the consumer is happy
-about every bit of accuracy they can get. So if you deliberately provide
-X - 12 because it is easier to do and good enough for you, at least
-document this laziness to not waste other people's time more than
-necessary.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+-Saravana
