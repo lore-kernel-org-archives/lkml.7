@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB08BC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236D9C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C24172085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBFA120842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749775;
-	bh=VwqIu6Zs5et+zIwo6WWfsCX9KCS+VO+NChuttBxxm/o=;
+	s=default; t=1565749790;
+	bh=rCua/pLOOHJl0VYn10QbalqPgvgVWTDCJN4WKv8VjDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Bz4cuUmxvynAmsqQJ1sBHnCnSxSRA09+H04vExwJiqhvnjtUqI0POKYoM7XIsDmY
-	 Cax8FzGDO2adX2JtaZrV75ftdgxTP0eD02nN3C8zGTxZYL//pY/Xym2zXDjYCO4WDI
-	 AF+7Coe9gDZfTHWlnTTUlXIN3cnf25H2Ch9qyzlw=
+	b=mC4sT40VxglhmsgKjqS5Jti2PZjk+0l816xMg6HHDtMap2/Nv4wSJRw+cPDXBQGyn
+	 RuRqNTb929P03wvXYY3CAQ+4p8Mp+dwt7H5/OwnfqahgPzTrxj07/inEQe/ghcXe/i
+	 kDLM3olWolbkL4y/ZjW0o9SFz/CDGu2OkUDisVeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbfHNC3e (ORCPT
+        id S1729800AbfHNCXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:29:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52564 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:23:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729856AbfHNCXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:23:31 -0400
+        id S1729384AbfHNCRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:17:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA40B216F4;
-        Wed, 14 Aug 2019 02:23:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F93B2085A;
+        Wed, 14 Aug 2019 02:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749410;
-        bh=VwqIu6Zs5et+zIwo6WWfsCX9KCS+VO+NChuttBxxm/o=;
+        s=default; t=1565749044;
+        bh=rCua/pLOOHJl0VYn10QbalqPgvgVWTDCJN4WKv8VjDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F7pIwrkxZ2I4Y+9j6FVXNDWujAXAZZvhAVW2bCmYk5DtefD5xug0I+ff3cfZFW6p9
-         RAetzlFDq0loEcHH5JG3fOcnG04wNIlSwaqCZ+PiKXRjSQ8CSvjJFVwR+ytcoJ2lSu
-         V05DbjcFz4Exiq+hOfV/fX6d3D5iM+kifoZWR1yA=
+        b=br2j1rCX69xuhFOP31WXeRNXlABeEz31Yl2K29U90Me9XvRZsuNEJJetHFWkw9Hnx
+         KGWbdZXTxgOaKwSruX/rURjrYX8X2+8wZ8PpDVpLIvf3GVwTcW5yYfAw5m2ipYTqQt
+         Wj3TxKTVwW/5hAr7vC7MqKJs5ytHP3Sdnfgkylc4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
-        Jarod Wilson <jarod@redhat.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 05/33] bonding: Force slave speed check after link state recovery for 802.3ad
-Date:   Tue, 13 Aug 2019 22:22:55 -0400
-Message-Id: <20190814022323.17111-5-sashal@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Krishna Ram Prakash R <krp@gtux.in>,
+        Kees Cook <keescook@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 58/68] libata: have ata_scsi_rw_xlat() fail invalid passthrough requests
+Date:   Tue, 13 Aug 2019 22:15:36 -0400
+Message-Id: <20190814021548.16001-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190814022323.17111-1-sashal@kernel.org>
-References: <20190814022323.17111-1-sashal@kernel.org>
+In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
+References: <20190814021548.16001-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,72 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 12185dfe44360f814ac4ead9d22ad2af7511b2e9 ]
+[ Upstream commit 2d7271501720038381d45fb3dcbe4831228fc8cc ]
 
-The following scenario was encountered during testing of logical
-partition mobility on pseries partitions with bonded ibmvnic
-adapters in LACP mode.
+For passthrough requests, libata-scsi takes what the user passes in
+as gospel. This can be problematic if the user fills in the CDB
+incorrectly. One example of that is in request sizes. For read/write
+commands, the CDB contains fields describing the transfer length of
+the request. These should match with the SG_IO header fields, but
+libata-scsi currently does no validation of that.
 
-1. Driver receives a signal that the device has been
-   swapped, and it needs to reset to initialize the new
-   device.
+Check that the number of blocks in the CDB for passthrough requests
+matches what was mapped into the request. If the CDB asks for more
+data then the validated SG_IO header fields, error it.
 
-2. Driver reports loss of carrier and begins initialization.
-
-3. Bonding driver receives NETDEV_CHANGE notifier and checks
-   the slave's current speed and duplex settings. Because these
-   are unknown at the time, the bond sets its link state to
-   BOND_LINK_FAIL and handles the speed update, clearing
-   AD_PORT_LACP_ENABLE.
-
-4. Driver finishes recovery and reports that the carrier is on.
-
-5. Bond receives a new notification and checks the speed again.
-   The speeds are valid but miimon has not altered the link
-   state yet.  AD_PORT_LACP_ENABLE remains off.
-
-Because the slave's link state is still BOND_LINK_FAIL,
-no further port checks are made when it recovers. Though
-the slave devices are operational and have valid speed
-and duplex settings, the bond will not send LACPDU's. The
-simplest fix I can see is to force another speed check
-in bond_miimon_commit. This way the bond will update
-AD_PORT_LACP_ENABLE if needed when transitioning from
-BOND_LINK_FAIL to BOND_LINK_UP.
-
-CC: Jarod Wilson <jarod@redhat.com>
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Krishna Ram Prakash R <krp@gtux.in>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/ata/libata-scsi.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 5b116ec756b4e..0c96dabeb7f86 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2129,6 +2129,15 @@ static void bond_miimon_commit(struct bonding *bond)
- 	bond_for_each_slave(bond, slave, iter) {
- 		switch (slave->new_link) {
- 		case BOND_LINK_NOCHANGE:
-+			/* For 802.3ad mode, check current slave speed and
-+			 * duplex again in case its port was disabled after
-+			 * invalid speed/duplex reporting but recovered before
-+			 * link monitoring could make a decision on the actual
-+			 * link status
-+			 */
-+			if (BOND_MODE(bond) == BOND_MODE_8023AD &&
-+			    slave->link == BOND_LINK_UP)
-+				bond_3ad_adapter_speed_duplex_changed(slave);
- 			continue;
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index 1984fc78c750b..3a64fa4aaf7e3 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -1803,6 +1803,21 @@ static unsigned int ata_scsi_verify_xlat(struct ata_queued_cmd *qc)
+ 	return 1;
+ }
  
- 		case BOND_LINK_UP:
++static bool ata_check_nblocks(struct scsi_cmnd *scmd, u32 n_blocks)
++{
++	struct request *rq = scmd->request;
++	u32 req_blocks;
++
++	if (!blk_rq_is_passthrough(rq))
++		return true;
++
++	req_blocks = blk_rq_bytes(rq) / scmd->device->sector_size;
++	if (n_blocks > req_blocks)
++		return false;
++
++	return true;
++}
++
+ /**
+  *	ata_scsi_rw_xlat - Translate SCSI r/w command into an ATA one
+  *	@qc: Storage for translated ATA taskfile
+@@ -1847,6 +1862,8 @@ static unsigned int ata_scsi_rw_xlat(struct ata_queued_cmd *qc)
+ 		scsi_10_lba_len(cdb, &block, &n_block);
+ 		if (cdb[1] & (1 << 3))
+ 			tf_flags |= ATA_TFLAG_FUA;
++		if (!ata_check_nblocks(scmd, n_block))
++			goto invalid_fld;
+ 		break;
+ 	case READ_6:
+ 	case WRITE_6:
+@@ -1861,6 +1878,8 @@ static unsigned int ata_scsi_rw_xlat(struct ata_queued_cmd *qc)
+ 		 */
+ 		if (!n_block)
+ 			n_block = 256;
++		if (!ata_check_nblocks(scmd, n_block))
++			goto invalid_fld;
+ 		break;
+ 	case READ_16:
+ 	case WRITE_16:
+@@ -1871,6 +1890,8 @@ static unsigned int ata_scsi_rw_xlat(struct ata_queued_cmd *qc)
+ 		scsi_16_lba_len(cdb, &block, &n_block);
+ 		if (cdb[1] & (1 << 3))
+ 			tf_flags |= ATA_TFLAG_FUA;
++		if (!ata_check_nblocks(scmd, n_block))
++			goto invalid_fld;
+ 		break;
+ 	default:
+ 		DPRINTK("no-byte command\n");
 -- 
 2.20.1
 
