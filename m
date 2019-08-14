@@ -2,77 +2,228 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0101DC0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99727C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF93A208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:11:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565770318;
-	bh=5mfpOg839URSXNCxe5eSFa1DqCnAesx9cmIqMfnQcqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ETeiEz4O7XSWYQFkBr11a3z4aPKBzklJNBrDXh0XD7hyfFDM0Yl4eSWRU6KSYlGNq
-	 O66q9YN+4usbdf2F1AJKzPHNX8VGN1s4oSLuhdqRWGeqvkVL99R5HOHZlk2emk6LEP
-	 LR+8Y2QlWh6CZ77drU6ruwO8+vNkB9LCC8ByZQr0=
+	by mail.kernel.org (Postfix) with ESMTP id 61F6B2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfHNIL5 (ORCPT
+        id S1726560AbfHNIMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 04:11:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38490 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726555AbfHNIL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 04:11:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EA6AAAF98;
-        Wed, 14 Aug 2019 08:11:55 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 10:11:55 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm: vmscan: do not share cgroup iteration between
- reclaimers
-Message-ID: <20190814081155.GQ17933@dhcp22.suse.cz>
-References: <20190812192316.13615-1-hannes@cmpxchg.org>
- <20190813132938.GJ17933@dhcp22.suse.cz>
- <20190813171237.GA21743@cmpxchg.org>
+        Wed, 14 Aug 2019 04:12:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29080 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727371AbfHNIMD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 04:12:03 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7E8C1Fi130541
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:12:02 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ucdgmax6t-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:12:02 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <mahesh@linux.vnet.ibm.com>;
+        Wed, 14 Aug 2019 09:12:00 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 14 Aug 2019 09:11:57 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7E8BtJB36634886
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 14 Aug 2019 08:11:55 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 70C44A404D;
+        Wed, 14 Aug 2019 08:11:55 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 78BC2A4057;
+        Wed, 14 Aug 2019 08:11:51 +0000 (GMT)
+Received: from [9.109.198.140] (unknown [9.109.198.140])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 14 Aug 2019 08:11:51 +0000 (GMT)
+Subject: Re: [PATCH v9 6/7] powerpc/mce: Handle UE event for memcpy_mcsafe
+To:     Santosh Sivaraj <santosh@fossix.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Reza Arbab <arbab@linux.ibm.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        christophe leroy <christophe.leroy@c-s.fr>
+References: <20190812092236.16648-1-santosh@fossix.org>
+ <20190812092236.16648-7-santosh@fossix.org>
+From:   Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
+Date:   Wed, 14 Aug 2019 13:41:50 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813171237.GA21743@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190812092236.16648-7-santosh@fossix.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19081408-4275-0000-0000-0000035905CB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081408-4276-0000-0000-0000386B17EF
+Message-Id: <7228295c-c4c3-4aa1-1b1a-60b3844705db@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-14_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908140081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 13-08-19 13:12:37, Johannes Weiner wrote:
-> On Tue, Aug 13, 2019 at 03:29:38PM +0200, Michal Hocko wrote:
-> > On Mon 12-08-19 15:23:16, Johannes Weiner wrote:
-[...]
-> > > This change completely eliminates the OOM kills on our service, while
-> > > showing no signs of overreclaim - no increased scan rates, %sys time,
-> > > or abrupt free memory spikes. I tested across 100 machines that have
-> > > 64G of RAM and host about 300 cgroups each.
-> > 
-> > What is the usual direct reclaim involvement on those machines?
+On 8/12/19 2:52 PM, Santosh Sivaraj wrote:
+> If we take a UE on one of the instructions with a fixup entry, set nip
+> to continue execution at the fixup entry. Stop processing the event
+> further or print it.
 > 
-> 80-200 kb/s. In general we try to keep this low to non-existent on our
-> hosts due to the latency implications. So it's fair to say that kswapd
-> does page reclaim, and direct reclaim is a sign of overload.
+> Co-developed-by: Reza Arbab <arbab@linux.ibm.com>
+> Signed-off-by: Reza Arbab <arbab@linux.ibm.com>
+> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+> Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
 
-Well, there are workloads which are much more direct reclaim heavier.
-How much they rely on large memcg trees remains to be seen. Your
-changelog should state that the above workload is very light on direct
-reclaim, though, because the above paragraph suggests that a risk of
-longer stalls is really non-issue while I think this is not really all
-that clear.
--- 
-Michal Hocko
-SUSE Labs
+Looks good to me.
+
+Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+
+Thanks,
+-Mahesh.
+
+> ---
+>  arch/powerpc/include/asm/mce.h  |  4 +++-
+>  arch/powerpc/kernel/mce.c       | 16 ++++++++++++++++
+>  arch/powerpc/kernel/mce_power.c | 15 +++++++++++++--
+>  3 files changed, 32 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/mce.h b/arch/powerpc/include/asm/mce.h
+> index f3a6036b6bc0..e1931c8c2743 100644
+> --- a/arch/powerpc/include/asm/mce.h
+> +++ b/arch/powerpc/include/asm/mce.h
+> @@ -122,7 +122,8 @@ struct machine_check_event {
+>  			enum MCE_UeErrorType ue_error_type:8;
+>  			u8		effective_address_provided;
+>  			u8		physical_address_provided;
+> -			u8		reserved_1[5];
+> +			u8		ignore_event;
+> +			u8		reserved_1[4];
+>  			u64		effective_address;
+>  			u64		physical_address;
+>  			u8		reserved_2[8];
+> @@ -193,6 +194,7 @@ struct mce_error_info {
+>  	enum MCE_Initiator	initiator:8;
+>  	enum MCE_ErrorClass	error_class:8;
+>  	bool			sync_error;
+> +	bool			ignore_event;
+>  };
+>  
+>  #define MAX_MC_EVT	100
+> diff --git a/arch/powerpc/kernel/mce.c b/arch/powerpc/kernel/mce.c
+> index a3b122a685a5..ec4b3e1087be 100644
+> --- a/arch/powerpc/kernel/mce.c
+> +++ b/arch/powerpc/kernel/mce.c
+> @@ -149,6 +149,7 @@ void save_mce_event(struct pt_regs *regs, long handled,
+>  		if (phys_addr != ULONG_MAX) {
+>  			mce->u.ue_error.physical_address_provided = true;
+>  			mce->u.ue_error.physical_address = phys_addr;
+> +			mce->u.ue_error.ignore_event = mce_err->ignore_event;
+>  			machine_check_ue_event(mce);
+>  		}
+>  	}
+> @@ -266,8 +267,17 @@ static void machine_process_ue_event(struct work_struct *work)
+>  		/*
+>  		 * This should probably queued elsewhere, but
+>  		 * oh! well
+> +		 *
+> +		 * Don't report this machine check because the caller has a
+> +		 * asked us to ignore the event, it has a fixup handler which
+> +		 * will do the appropriate error handling and reporting.
+>  		 */
+>  		if (evt->error_type == MCE_ERROR_TYPE_UE) {
+> +			if (evt->u.ue_error.ignore_event) {
+> +				__this_cpu_dec(mce_ue_count);
+> +				continue;
+> +			}
+> +
+>  			if (evt->u.ue_error.physical_address_provided) {
+>  				unsigned long pfn;
+>  
+> @@ -301,6 +311,12 @@ static void machine_check_process_queued_event(struct irq_work *work)
+>  	while (__this_cpu_read(mce_queue_count) > 0) {
+>  		index = __this_cpu_read(mce_queue_count) - 1;
+>  		evt = this_cpu_ptr(&mce_event_queue[index]);
+> +
+> +		if (evt->error_type == MCE_ERROR_TYPE_UE &&
+> +		    evt->u.ue_error.ignore_event) {
+> +			__this_cpu_dec(mce_queue_count);
+> +			continue;
+> +		}
+>  		machine_check_print_event_info(evt, false, false);
+>  		__this_cpu_dec(mce_queue_count);
+>  	}
+> diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_power.c
+> index e74816f045f8..1dd87f6f5186 100644
+> --- a/arch/powerpc/kernel/mce_power.c
+> +++ b/arch/powerpc/kernel/mce_power.c
+> @@ -11,6 +11,7 @@
+>  
+>  #include <linux/types.h>
+>  #include <linux/ptrace.h>
+> +#include <linux/extable.h>
+>  #include <asm/mmu.h>
+>  #include <asm/mce.h>
+>  #include <asm/machdep.h>
+> @@ -18,6 +19,7 @@
+>  #include <asm/pte-walk.h>
+>  #include <asm/sstep.h>
+>  #include <asm/exception-64s.h>
+> +#include <asm/extable.h>
+>  
+>  /*
+>   * Convert an address related to an mm to a physical address.
+> @@ -559,9 +561,18 @@ static int mce_handle_derror(struct pt_regs *regs,
+>  	return 0;
+>  }
+>  
+> -static long mce_handle_ue_error(struct pt_regs *regs)
+> +static long mce_handle_ue_error(struct pt_regs *regs,
+> +				struct mce_error_info *mce_err)
+>  {
+>  	long handled = 0;
+> +	const struct exception_table_entry *entry;
+> +
+> +	entry = search_kernel_exception_table(regs->nip);
+> +	if (entry) {
+> +		mce_err->ignore_event = true;
+> +		regs->nip = extable_fixup(entry);
+> +		return 1;
+> +	}
+>  
+>  	/*
+>  	 * On specific SCOM read via MMIO we may get a machine check
+> @@ -594,7 +605,7 @@ static long mce_handle_error(struct pt_regs *regs,
+>  				&phys_addr);
+>  
+>  	if (!handled && mce_err.error_type == MCE_ERROR_TYPE_UE)
+> -		handled = mce_handle_ue_error(regs);
+> +		handled = mce_handle_ue_error(regs, &mce_err);
+>  
+>  	save_mce_event(regs, handled, &mce_err, regs->nip, addr, phys_addr);
+>  
+> 
+
