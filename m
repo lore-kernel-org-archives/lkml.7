@@ -4,98 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA24C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0410C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2992520843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0779216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748879;
-	bh=yZiJ8rf/cHJGFNppWirptWcXt6eDQ6i695avXVJEEl0=;
+	s=default; t=1565748882;
+	bh=qPljFjfzVV2IuTN5C2UhNmlCS8XRfpIO6pW5yls2C+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HqOD7nT4ikmbZ++hJcaBtPBBbU6pk6rJPCUvcS2qLYhO7V/P8ifghC7w+OvlRAEia
-	 xoq9QYJXq6pQAdZJGf+K0l7ePU7DIkz+x2LXD4au1LJvqevyY37AI2FrfTW+PeGQgp
-	 dYB3hdKGuz/pU3uibmEBFGoTNYzOhz7sdp9Niyj4=
+	b=NpERpUxuAJNFXSJVwZfsO1dUB/ZhSu9K4OvmGgd9po/6mnNx1Xp7e+KSULF9tojor
+	 tixpNv9o20phmM9BCZjp71L3iTTF+ELoPS5S1CYyrBuYRzzyF1YeCA/TSid4HpWq77
+	 pncBGLGKW6XyhcAUopkOm1xVe+dQH/Ai7zgKyIMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbfHNCOi (ORCPT
+        id S1727655AbfHNCOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:14:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46380 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:14:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727885AbfHNCO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:14:28 -0400
+        id S1728742AbfHNCO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:14:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6595D20874;
-        Wed, 14 Aug 2019 02:14:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72B3220842;
+        Wed, 14 Aug 2019 02:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748868;
-        bh=yZiJ8rf/cHJGFNppWirptWcXt6eDQ6i695avXVJEEl0=;
+        s=default; t=1565748867;
+        bh=qPljFjfzVV2IuTN5C2UhNmlCS8XRfpIO6pW5yls2C+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZUWDc0tn2IFZ5wqscoG42pVxrGFWGpxx68NE1HEwddKkbbiB9F9jrNOhcJFJ+cDxd
-         jXJpSRqFg6nb12Xip3DRI6nV68W4dPWbL2NEt2hqzVM/vhzyB3e9QJSPRoE/05WGQT
-         HABDdPjWIjSssIfM6R42LZEP6ETjVSLm4IQtbgiA=
+        b=mbbcz0+DNYy62rHazaZEKdq1NaSPfiKFM8Yp+xKbf/fbZmY9PjIRY8NkpHF0gZMEO
+         qfTDgiOpD3Elm7pzmu/+c3wOWmh0n0wVDXZOwvEPWIhxWkdxmgYaDAwn3wo9BgQTgS
+         pbLPMjdfsgxG87p8tnZN3WHA+/QqZjvjut6dus9o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Deepak Rawat <drawat@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 114/123] drm/vmwgfx: fix memory leak when too many retries have occurred
-Date:   Tue, 13 Aug 2019 22:10:38 -0400
-Message-Id: <20190814021047.14828-114-sashal@kernel.org>
+Cc:     =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 113/123] x86/lib/cpu: Address missing prototypes warning
+Date:   Tue, 13 Aug 2019 22:10:37 -0400
+Message-Id: <20190814021047.14828-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
 
-[ Upstream commit 6b7c3b86f0b63134b2ab56508921a0853ffa687a ]
+[ Upstream commit 04f5bda84b0712d6f172556a7e8dca9ded5e73b9 ]
 
-Currently when too many retries have occurred there is a memory
-leak on the allocation for reply on the error return path. Fix
-this by kfree'ing reply before returning.
+When building with W=1, warnings about missing prototypes are emitted:
 
-Addresses-Coverity: ("Resource leak")
-Fixes: a9cd9c044aa9 ("drm/vmwgfx: Add a check to handle host message failure")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Deepak Rawat <drawat@vmware.com>
-Signed-off-by: Deepak Rawat <drawat@vmware.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+  CC      arch/x86/lib/cpu.o
+arch/x86/lib/cpu.c:5:14: warning: no previous prototype for 'x86_family' [-Wmissing-prototypes]
+    5 | unsigned int x86_family(unsigned int sig)
+      |              ^~~~~~~~~~
+arch/x86/lib/cpu.c:18:14: warning: no previous prototype for 'x86_model' [-Wmissing-prototypes]
+   18 | unsigned int x86_model(unsigned int sig)
+      |              ^~~~~~~~~
+arch/x86/lib/cpu.c:33:14: warning: no previous prototype for 'x86_stepping' [-Wmissing-prototypes]
+   33 | unsigned int x86_stepping(unsigned int sig)
+      |              ^~~~~~~~~~~~
+
+Add the proper include file so the prototypes are there.
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/42513.1565234837@turing-police
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/lib/cpu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-index e4e09d47c5c0e..59e9d05ab928b 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-@@ -389,8 +389,10 @@ static int vmw_recv_msg(struct rpc_channel *channel, void **msg,
- 		break;
- 	}
+diff --git a/arch/x86/lib/cpu.c b/arch/x86/lib/cpu.c
+index 04967cdce5d12..7ad68917a51e8 100644
+--- a/arch/x86/lib/cpu.c
++++ b/arch/x86/lib/cpu.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/types.h>
+ #include <linux/export.h>
++#include <asm/cpu.h>
  
--	if (retries == RETRIES)
-+	if (retries == RETRIES) {
-+		kfree(reply);
- 		return -EINVAL;
-+	}
- 
- 	*msg_len = reply_len;
- 	*msg     = reply;
+ unsigned int x86_family(unsigned int sig)
+ {
 -- 
 2.20.1
 
