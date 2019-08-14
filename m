@@ -2,230 +2,161 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6756DC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAC6C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37EBE206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CAA020679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:54:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a214pvbW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbfHNMyf (ORCPT
+        id S1728155AbfHNMyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 08:54:35 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45425 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbfHNMye (ORCPT
+        Wed, 14 Aug 2019 08:54:36 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37008 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727993AbfHNMyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 08:54:34 -0400
-Received: by mail-ed1-f66.google.com with SMTP id x19so103902668eda.12
+        Wed, 14 Aug 2019 08:54:35 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z11so9056985wrt.4
         for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 05:54:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/HqwVHo+/VGU/O3Ao2yHcSMYTRRkF5dGkjofFJ4lQDI=;
+        b=a214pvbWsUYqE7gFah0NDcz7JM2UYBy76uQcdIF2EkF002SXmrJWUGewBWbFk/2SA+
+         YUtGYjT48o6iTu5GykHi2ODU4FThxYcbsQdQc0xdD7uHoB8yf+oispewNpo8rzLPOUio
+         S67e2fNzvfOzCGAN9Y6qxipWccwRr5vHIR8ykTNcwP3KsJhc3d9k17Tds78XuI66px6+
+         D8rNX2s/Jnk2pVrAQoCAj5Am5Y/TyHPkOKoTomK0JdBDMU0ioLWBdoNAlfKE3cTYNcsP
+         rKem4Pk+x1q2rKdqQ87as+E/PkdUnfo7GDTHbDBG7fkMACdUIM/tx9rjyww93IMEH/TV
+         8lGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VhOtcUs6qecW9A5Ku6t6s7+WyBSfMvyZ0VSLJHIcnmU=;
-        b=TNdWJENz3Ot9nC8zCWp00REH4oLgmz7Gk74Qy9F9eE5ocrd8TjqHtz7L40wXk80yQu
-         djbnucK7bXcRrIEXThfNMFCpyNEdprpa4XZkezMS3VT9bVyduwa33Uw7JqGlfkSdoGBQ
-         b9efp0huXKpsppJUkQgnrRbnZ2OMhZQwweDsC3Kepi18dxPwBe8V0uWWS6QcDczPy1Cf
-         DnAnGny8vXE5HRPBlCqUAt1elCr69izML7J3EY7AFee+oMK3gKJTrHBdKSMd1NKwwz3x
-         8LQinFjOUozGcNUf7bTbCO1sN9HVYx2Qfa73KCAPm+ztj8wbfWSLoNFnEMbIbjXvGOqV
-         sHEA==
-X-Gm-Message-State: APjAAAWpHViFFVfoL/4q6l3lbu0XO2Go1daqqE5JCXwX7MpwWccthh7l
-        1eoJbdPG1YzH84wczzNuPgprcw==
-X-Google-Smtp-Source: APXvYqwHMa7CKohDcZxGXolr6aOboQawDOqzt7xdmk0Fs4g+/LFuohCkiGITZ0UNicDhSJh1b747Vw==
-X-Received: by 2002:a50:fb82:: with SMTP id e2mr2969241edq.15.1565787272521;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/HqwVHo+/VGU/O3Ao2yHcSMYTRRkF5dGkjofFJ4lQDI=;
+        b=rIhzRmxZb37nAnX2/60fwRZVqi3rNA1hXeQbjIhPIUNRFAHGdZeyaNVJepSsnliQ4+
+         5YQ2V2b75slvYuwoYdTeU2hGbQsDcvUxyrO8oq35vp78LFG4RJLZVEXzXtXwOpmunrlY
+         mJcquhCdd+GPqos2S3u2rRvsLFJT/MC2HDBs93a0oemIRkuKLAZYydpYuxOvTlLc6Fua
+         yO34hoSz+/fPQP/olcXAOSHfuOW7t65mjs2NziAIx7Ytg+/tb1s81+xm8u45geJFjazK
+         qIcqRBXpg6HmAG8RItx7h33OCmX8uc3ABdvmRs1OTFXxu9UcUlUJARZnGNcRPeeNUbNi
+         DGZg==
+X-Gm-Message-State: APjAAAUQwehRTS3EYtRLqm0ga+eN7TQvzX7c2Nz3f5LIWWqkyAte0XZc
+        hPh6hfSSSHZ3B0owjCwed77H+g==
+X-Google-Smtp-Source: APXvYqxkrHVC6b0ZSbTKxO4CqracBUS6OzqIGTAg1coGZhxQ2Dg7Lj2RxDEodMoA9y4fuBbu63dSdw==
+X-Received: by 2002:adf:d1b4:: with SMTP id w20mr46171829wrc.301.1565787272814;
         Wed, 14 Aug 2019 05:54:32 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id ng6sm10794969ejb.13.2019.08.14.05.54.31
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 05:54:31 -0700 (PDT)
-Subject: Re: [PATCH] usb: xhci-pci: reorder removal to avoid use-after-free
-To:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-Cc:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <1565782781938.37795@mentor.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <15aa45c7-6e45-d03f-9336-4291f8b2dc66@redhat.com>
-Date:   Wed, 14 Aug 2019 14:54:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id n9sm163817113wrp.54.2019.08.14.05.54.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 05:54:32 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 13:54:27 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, maco@android.com,
+        Android Kernel Team <kernel-team@android.com>, arnd@arndb.de,
+        geert@linux-m68k.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hpa@zytor.com,
+        jeyu@kernel.org,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
+        maco@google.com, michal.lkml@markovi.net, mingo@redhat.com,
+        oneukum@suse.com, pombredanne@nexb.com, sam@ravnborg.org,
+        Sandeep Patil <sspatil@google.com>, stern@rowland.harvard.edu,
+        tglx@linutronix.de, usb-storage@lists.one-eyed-alien.net,
+        x86@kernel.org, yamada.masahiro@socionext.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Richard Guy Briggs <rgb@redhat.com>
+Subject: Re: [PATCH v2 05/10] module: add config option
+ MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
+Message-ID: <20190814125427.GA72826@google.com>
+References: <20180716122125.175792-1-maco@android.com>
+ <20190813121733.52480-1-maennich@google.com>
+ <20190813121733.52480-6-maennich@google.com>
+ <CAGETcx_LQDdnaU+3JVGw+6=DJ8tRoQ00+3rD2gOiHHkWomt8jg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1565782781938.37795@mentor.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAGETcx_LQDdnaU+3JVGw+6=DJ8tRoQ00+3rD2gOiHHkWomt8jg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Aug 13, 2019 at 01:15:44PM -0700, Saravana Kannan wrote:
+>On Tue, Aug 13, 2019 at 5:19 AM 'Matthias Maennich' via kernel-team
+><kernel-team@android.com> wrote:
+>>
+>> If MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS is enabled (default=n), the
+>> requirement for modules to import all namespaces that are used by
+>> the module is relaxed.
+>>
+>> Enabling this option effectively allows (invalid) modules to be loaded
+>> while only a warning is emitted.
+>>
+>> Disabling this option keeps the enforcement at module loading time and
+>> loading is denied if the module's imports are not satisfactory.
+>>
+>> Reviewed-by: Martijn Coenen <maco@android.com>
+>> Signed-off-by: Matthias Maennich <maennich@google.com>
+>> ---
+>>  init/Kconfig    | 14 ++++++++++++++
+>>  kernel/module.c | 11 +++++++++--
+>>  2 files changed, 23 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/init/Kconfig b/init/Kconfig
+>> index bd7d650d4a99..b3373334cdf1 100644
+>> --- a/init/Kconfig
+>> +++ b/init/Kconfig
+>> @@ -2119,6 +2119,20 @@ config MODULE_COMPRESS_XZ
+>>
+>>  endchoice
+>>
+>> +config MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
+>> +       bool "Allow loading of modules with missing namespace imports"
+>> +       default n
+>> +       help
+>> +         Symbols exported with EXPORT_SYMBOL_NS*() are considered exported in
+>> +         a namespace. A module that makes use of a symbol exported with such a
+>> +         namespace is required to import the namespace via MODULE_IMPORT_NS().
+>> +         This option relaxes this requirement when loading a module.
+>
+>> While
+>> +         technically there is no reason to enforce correct namespace imports,
+>> +         it creates consistency between symbols defining namespaces and users
+>> +         importing namespaces they make use of.
+>
+>I'm confused by this sentence. It sounds like it's the opposite of
+>what the config is doing? Can you please reword it for clarify?
 
-On 14-08-19 13:39, Schmid, Carsten wrote:
-> On driver removal, the platform_device_unregister call
-> attached through devm_add_action_or_reset was executed
-> after usb_hcd_pci_remove.
-> This lead to a use-after-free for the iomem resorce of
-> the xhci-ext-caps driver in the platform removal
-> because the parent of the resource was freed earlier.
-> 
-> Fix this by reordering of the removal sequence.
-> 
-> Signed-off-by: Carsten Schmid <carsten_schmid@mentor.com>
+How about:
 
-Assuming this has been tested, overal this looks good to me.
+  Symbols exported with EXPORT_SYMBOL_NS*() are considered exported in
+  a namespace. A module that makes use of a symbol exported with such a
+  namespace is required to import the namespace via MODULE_IMPORT_NS().
+  There is no technical reason to enforce correct namespace imports,
+  but it creates consistency between symbols defining namespaces and
+  users importing namespaces they make use of. This option relaxes this
+  requirement and lifts the enforcement when loading a module.
 
-But there are 2 things to fix:
-
-1) Maybe pick a more descriptive struct member name then pdev.
-    pdev with pci-devices often points to a pci_device ...
-    How about: role_switch_pdev ?
-
-2) xhci_ext_cap_init() is not the last call which can fail in
-    xhci_pci_probe(), since you now no longer use devm_add_action_or_reset
-    for auto-cleanup, you must now manually cleanup by calling
-    xhci_ext_cap_remove() when later steps of xhci_pci_probe() fail.
-    it looks like you will need a new ext_cap_remove error-exit label
-    for this put above the put_usb3_hcd label and goto this new label
-    instead of to put_usb3_hcd in all error paths after a successful call
-    to xhci_ext_cap_init()
-
-Regards,
-
-Hans
-
-
-> ---
->   drivers/usb/host/xhci-ext-caps.c | 22 ++++++++++++----------
->   drivers/usb/host/xhci-pci.c      |  4 ++++
->   drivers/usb/host/xhci-pci.h      | 19 +++++++++++++++++++
->   drivers/usb/host/xhci.h          |  1 +
->   4 files changed, 36 insertions(+), 10 deletions(-)
->   create mode 100644 drivers/usb/host/xhci-pci.h
-> 
-> diff --git a/drivers/usb/host/xhci-ext-caps.c b/drivers/usb/host/xhci-ext-caps.c
-> index 399113f9fc5c..d2ab1e2a39c0 100644
-> --- a/drivers/usb/host/xhci-ext-caps.c
-> +++ b/drivers/usb/host/xhci-ext-caps.c
-> @@ -7,21 +7,19 @@
->   
->   #include <linux/platform_device.h>
->   #include "xhci.h"
-> +#include "xhci-pci.h"
->   
->   #define USB_SW_DRV_NAME		"intel_xhci_usb_sw"
->   #define USB_SW_RESOURCE_SIZE	0x400
->   
-> -static void xhci_intel_unregister_pdev(void *arg)
-> -{
-> -	platform_device_unregister(arg);
-> -}
-> -
->   static int xhci_create_intel_xhci_sw_pdev(struct xhci_hcd *xhci, u32 cap_offset)
->   {
->   	struct usb_hcd *hcd = xhci_to_hcd(xhci);
->   	struct device *dev = hcd->self.controller;
->   	struct platform_device *pdev;
->   	struct resource	res = { 0, };
-> +	struct xhci_pci_priv *priv = (struct xhci_pci_priv *)xhci->priv;
-> +
->   	int ret;
->   
->   	pdev = platform_device_alloc(USB_SW_DRV_NAME, PLATFORM_DEVID_NONE);
-> @@ -52,11 +50,7 @@ static int xhci_create_intel_xhci_sw_pdev(struct xhci_hcd *xhci, u32 cap_offset)
->   		return ret;
->   	}
->   
-> -	ret = devm_add_action_or_reset(dev, xhci_intel_unregister_pdev, pdev);
-> -	if (ret) {
-> -		dev_err(dev, "couldn't add unregister action for intel_xhci_usb_sw pdev\n");
-> -		return ret;
-> -	}
-> +	priv->pdev = pdev;
->   
->   	return 0;
->   }
-> @@ -88,3 +82,11 @@ int xhci_ext_cap_init(struct xhci_hcd *xhci)
->   	return 0;
->   }
->   EXPORT_SYMBOL_GPL(xhci_ext_cap_init);
-> +
-> +void xhci_ext_cap_remove(struct xhci_hcd *xhci)
-> +{
-> +	struct xhci_pci_priv *priv = (struct xhci_pci_priv *)xhci->priv;
-> +	if (priv->pdev)
-> +		platform_device_unregister(priv->pdev);
-> +}
-> +EXPORT_SYMBOL_GPL(xhci_ext_cap_remove);
-> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> index c2fe218e051f..a4d094df56f7 100644
-> --- a/drivers/usb/host/xhci-pci.c
-> +++ b/drivers/usb/host/xhci-pci.c
-> @@ -14,6 +14,7 @@
->   #include <linux/acpi.h>
->   
->   #include "xhci.h"
-> +#include "xhci-pci.h"
->   #include "xhci-trace.h"
->   
->   #define SSIC_PORT_NUM		2
-> @@ -62,6 +63,7 @@ static struct hc_driver __read_mostly xhci_pci_hc_driver;
->   static int xhci_pci_setup(struct usb_hcd *hcd);
->   
->   static const struct xhci_driver_overrides xhci_pci_overrides __initconst = {
-> +	.extra_priv_size = sizeof(struct xhci_pci_priv),
->   	.reset = xhci_pci_setup,
->   };
->   
-> @@ -393,6 +395,8 @@ static void xhci_pci_remove(struct pci_dev *dev)
->   		xhci->shared_hcd = NULL;
->   	}
->   
-> +	xhci_ext_cap_remove(xhci);
-> +
->   	/* Workaround for spurious wakeups at shutdown with HSW */
->   	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
->   		pci_set_power_state(dev, PCI_D3hot);
-> diff --git a/drivers/usb/host/xhci-pci.h b/drivers/usb/host/xhci-pci.h
-> new file mode 100644
-> index 000000000000..ead9618d7368
-> --- /dev/null
-> +++ b/drivers/usb/host/xhci-pci.h
-> @@ -0,0 +1,19 @@
-> +/*
-> + * xhci-pci.h - xHCI extended capability handling platform Glue.
-> + *
-> + * Copyright (C) 2019 Mentor Graphics (Deutschland) GmbH
-> + * Derived from xhci-plat.h
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * version 2 as published by the Free Software Foundation.
-> + */
-> +
-> +#ifndef _XHCI_PCI_H
-> +#define _XHCI_PCI_H
-> +
-> +struct xhci_pci_priv {
-> +	struct platform_device *pdev;
-> +};
-> +
-> +#endif	/* _XHCI_PCI_H */
-> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-> index fabbce1c542a..847d2021fc2c 100644
-> --- a/drivers/usb/host/xhci.h
-> +++ b/drivers/usb/host/xhci.h
-> @@ -2052,6 +2052,7 @@ void xhci_init_driver(struct hc_driver *drv,
->   		      const struct xhci_driver_overrides *over);
->   int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id);
->   int xhci_ext_cap_init(struct xhci_hcd *xhci);
-> +void xhci_ext_cap_remove(struct xhci_hcd *xhci);
->   
->   int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup);
->   int xhci_resume(struct xhci_hcd *xhci, bool hibernated);
-> 
+-- 
+Cheers,
+Matthias
