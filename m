@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C957EC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE7AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F0C20842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587DA20989
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748853;
-	bh=k8yonzpNdAgceiEG578aqiAgYJnAWLHIoNXeqkcJjYA=;
+	s=default; t=1565748861;
+	bh=aZ38rz6VCA8Q/RCMofW28uLSJZbLCjFdNmOmpsDIwmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u7fbbXubheyRalqoUiOsvzdzby3W0zAA+HUqNZPWAc3mrNRbz9ti3fy9DYMl3c5S4
-	 YP8rJ9zKUX1diFvoB7pJyNnbsq4QALu+zk3FBtTgyD/tV8Vv/wRM7ENTCBvp/6SKy/
-	 /GShoPmc2e7ZGaGWqFiQ8hj72lBVCVjc4bLhXCJI=
+	b=JtcgAYOQ3fByKgVc/Db4w2qRH9usOgGLDS85LLvUlq5hahEJL+DzHdF03egz/v8EX
+	 v12aJtmMI6eFJ8LMNAA9QAtlMX5sL3fKrDg7GrtJoXTS5k9FBCo40SQJloMp2+e/AM
+	 Nq/+nfbKTTuO4gAeJcUstNGvjKSRr175X2cVbENE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbfHNCOM (ORCPT
+        id S1728711AbfHNCOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:14:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46136 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:14:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728571AbfHNCOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:14:08 -0400
+        id S1728667AbfHNCOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:14:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5293E20842;
-        Wed, 14 Aug 2019 02:14:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D69CC2133F;
+        Wed, 14 Aug 2019 02:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748847;
-        bh=k8yonzpNdAgceiEG578aqiAgYJnAWLHIoNXeqkcJjYA=;
+        s=default; t=1565748853;
+        bh=aZ38rz6VCA8Q/RCMofW28uLSJZbLCjFdNmOmpsDIwmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lWwOWYKLoOIQqHrC0N7cDCGqRgfkkYQwIY5cbfktJgnlrQv4L58LabknSSPci63gX
-         aS6TvioRz530yDMXJl/4t853igm31JnVdsfae7LipVTL1LuKyrZ5FGUPjSo+Gqsq6k
-         lU/YkkibZFooiY1lmQvcQWv04INd/ERzwtWtJdqs=
+        b=PemHWOWOQAfcq5l2Uu2GYun3fpyI87IeZcSB5CZJ5Xe3HMpP6RWyvhr6B6QY3urdQ
+         G7JaTz4bE8vS50Td3/PikLK4fL0TjN86ZdU9GpNGNnGb9ZyqtS4vj7e+Wg5Tihvvkl
+         ZEENFkTfR52TkxNQCQrvJOnrej4hZQaWYuBna3dk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Andreas Krebbel <krebbel@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 099/123] s390: put _stext and _etext into .text section
-Date:   Tue, 13 Aug 2019 22:10:23 -0400
-Message-Id: <20190814021047.14828-99-sashal@kernel.org>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 104/123] net: stmmac: tc: Do not return a fragment entry
+Date:   Tue, 13 Aug 2019 22:10:28 -0400
+Message-Id: <20190814021047.14828-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -60,57 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 24350fdadbdec780406a1ef988e6cd3875e374a8 ]
+[ Upstream commit 4a6a1385a4db5f42258a40fcd497cbfd22075968 ]
 
-Perf relies on _etext and _stext symbols being one of 't', 'T', 'v' or
-'V'. Put them into .text section to guarantee that.
+Do not try to return a fragment entry from TC list. Otherwise we may not
+clean properly allocated entries.
 
-Also moves padding to page boundary inside .text which has an effect that
-.text section is now padded with nops rather than 0's, which apparently
-has been the initial intention for specifying 0x0700 fill expression.
-
-Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/vmlinux.lds.S | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
-index 49d55327de0bc..7e0eb40209177 100644
---- a/arch/s390/kernel/vmlinux.lds.S
-+++ b/arch/s390/kernel/vmlinux.lds.S
-@@ -32,10 +32,9 @@ PHDRS {
- SECTIONS
- {
- 	. = 0x100000;
--	_stext = .;		/* Start of text section */
- 	.text : {
--		/* Text and read-only data */
--		_text = .;
-+		_stext = .;		/* Start of text section */
-+		_text = .;		/* Text and read-only data */
- 		HEAD_TEXT
- 		TEXT_TEXT
- 		SCHED_TEXT
-@@ -47,11 +46,10 @@ SECTIONS
- 		*(.text.*_indirect_*)
- 		*(.fixup)
- 		*(.gnu.warning)
-+		. = ALIGN(PAGE_SIZE);
-+		_etext = .;		/* End of text section */
- 	} :text = 0x0700
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+index 58ea18af9813a..37c0bc699cd9c 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+@@ -37,7 +37,7 @@ static struct stmmac_tc_entry *tc_find_entry(struct stmmac_priv *priv,
+ 		entry = &priv->tc_entries[i];
+ 		if (!entry->in_use && !first && free)
+ 			first = entry;
+-		if (entry->handle == loc && !free)
++		if ((entry->handle == loc) && !free && !entry->is_frag)
+ 			dup = entry;
+ 	}
  
--	. = ALIGN(PAGE_SIZE);
--	_etext = .;		/* End of text section */
--
- 	NOTES :text :note
- 
- 	.dummy : { *(.dummy) } :data
 -- 
 2.20.1
 
