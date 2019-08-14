@@ -2,126 +2,77 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44520C0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0101DC0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E67B2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF93A208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:11:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565770318;
+	bh=5mfpOg839URSXNCxe5eSFa1DqCnAesx9cmIqMfnQcqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ETeiEz4O7XSWYQFkBr11a3z4aPKBzklJNBrDXh0XD7hyfFDM0Yl4eSWRU6KSYlGNq
+	 O66q9YN+4usbdf2F1AJKzPHNX8VGN1s4oSLuhdqRWGeqvkVL99R5HOHZlk2emk6LEP
+	 LR+8Y2QlWh6CZ77drU6ruwO8+vNkB9LCC8ByZQr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfHNILl (ORCPT
+        id S1727120AbfHNIL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 04:11:41 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:32803 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725306AbfHNILl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 04:11:41 -0400
-Received: from [IPv6:2001:420:44c1:2579:6c2e:a3d:2bd:ee96] ([IPv6:2001:420:44c1:2579:6c2e:a3d:2bd:ee96])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id xoN6hRmGlqTdhxoNAhCccS; Wed, 14 Aug 2019 10:11:37 +0200
-Subject: Re: [PATCH v5 04/11] media: uapi: h264: Add the concept of start code
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
-References: <20190812193522.10911-1-ezequiel@collabora.com>
- <20190812193522.10911-5-ezequiel@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <f88d144f-e0fe-6974-efe5-77b5ed5c6e09@xs4all.nl>
-Date:   Wed, 14 Aug 2019 10:11:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 14 Aug 2019 04:11:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38490 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726555AbfHNIL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 04:11:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EA6AAAF98;
+        Wed, 14 Aug 2019 08:11:55 +0000 (UTC)
+Date:   Wed, 14 Aug 2019 10:11:55 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm: vmscan: do not share cgroup iteration between
+ reclaimers
+Message-ID: <20190814081155.GQ17933@dhcp22.suse.cz>
+References: <20190812192316.13615-1-hannes@cmpxchg.org>
+ <20190813132938.GJ17933@dhcp22.suse.cz>
+ <20190813171237.GA21743@cmpxchg.org>
 MIME-Version: 1.0
-In-Reply-To: <20190812193522.10911-5-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfG8Jzg4iwcPYhjaE3e0D1MzS/fTJ/eDl4AEQI2qX+XOCPw8tnWB5Y+HXAymMpC8EyabKscl/GIMDy/RJARU23MJZNq76ZSSM/xEECsPalo31ZWSBNCQe
- OiVJ1xF4NFcmHOVZa9JLq/xylYBGiJZLhwKx6OEJ29QQLrY5H3YWgXdHMLYd+L+bjMVzzdMXXmUevf0w2cwmjB+eAmLcrkxPsXJ4Zh2V0WYULRIMVzE1a0Ze
- ta8b89PWo00P5NlPW/aeg2BDTGaJzXFuUnjWrhu37Pf+NtrYt917QYI1HD2LIpUwOhVzCX2FTyYBakPMz/jcIJbJ+4c4RVQQdmuO3923M7tS1kWNzTu2leBn
- HoC6MDyCFUrT9aLlVhta7saGxI5nJnqYGKNJkDmavufWEhoRp4eUV9lwf682O5YerUzuScE++kne0/gOuD7fLY4CH6ZrAsZwPS317wIUhJ/HIUAx8MZjCfIo
- SeucqXmdwOPDQ6eNUBpXsyvfKrwQRk4zXrCRlmTXRA58Xb94D+bbRvixzBtwlSrbeSbp8jlluguU6CIfKnq+TXRarsR+mKMvzP+tueYbunp00BqTpR1Gua7w
- 479IGDcBjLac8AOsAMZVJ0zODF6y4kODYqZxBS/pFCcPiUJIBoYpiM5PSzIGlz6LXkoedT5fx4Pc9u15HRjD7j0EP0wu0bBXm5rqUfiNpwreDvPdIFEHjhhJ
- CixfdwKkLAt+KwA5kr3da35dbZPC/sATPI2z5zMIrsnmDN34sRdJoA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813171237.GA21743@cmpxchg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/12/19 9:35 PM, Ezequiel Garcia wrote:
-> Stateless decoders have different expectations about the
-> start code that is prepended on H264 slices. Add a
-> menu control to express the supported start code types
-> (including no start code).
+On Tue 13-08-19 13:12:37, Johannes Weiner wrote:
+> On Tue, Aug 13, 2019 at 03:29:38PM +0200, Michal Hocko wrote:
+> > On Mon 12-08-19 15:23:16, Johannes Weiner wrote:
+[...]
+> > > This change completely eliminates the OOM kills on our service, while
+> > > showing no signs of overreclaim - no increased scan rates, %sys time,
+> > > or abrupt free memory spikes. I tested across 100 machines that have
+> > > 64G of RAM and host about 300 cgroups each.
+> > 
+> > What is the usual direct reclaim involvement on those machines?
 > 
-> Drivers are allowed to support only one start code type,
-> but they can support both too.
-> 
-> Note that this is independent of the H264 decoding mode,
-> which specifies the granularity of the decoding operations.
-> Either in frame-based or slice-based mode, this new control
-> will allow to define the start code expected on H264 slices.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
-> Changes in v5:
-> * Improve specification as suggested by Hans.
-> Changes in v4:
-> * New patch.
-> ---
->  .../media/uapi/v4l/ext-ctrls-codec.rst        | 33 +++++++++++++++++++
->  .../media/uapi/v4l/pixfmt-compressed.rst      |  3 +-
->  drivers/media/v4l2-core/v4l2-ctrls.c          |  9 +++++
->  include/media/h264-ctrls.h                    |  6 ++++
->  4 files changed, 50 insertions(+), 1 deletion(-)
-> 
+> 80-200 kb/s. In general we try to keep this low to non-existent on our
+> hosts due to the latency implications. So it's fair to say that kswapd
+> does page reclaim, and direct reclaim is a sign of overload.
 
-<snip>
-
-> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> index e6c510877f67..31555c99f64a 100644
-> --- a/include/media/h264-ctrls.h
-> +++ b/include/media/h264-ctrls.h
-> @@ -27,6 +27,7 @@
->  #define V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS	(V4L2_CID_MPEG_BASE+1003)
->  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS	(V4L2_CID_MPEG_BASE+1004)
->  #define V4L2_CID_MPEG_VIDEO_H264_DECODING_MODE	(V4L2_CID_MPEG_BASE+1005)
-> +#define V4L2_CID_MPEG_VIDEO_H264_STARTCODE	(V4L2_CID_MPEG_BASE+1006)
-
-I almost forgot: can you change this to _START_CODE? Since it is two words?
-
-Thanks!
-
-	Hans
-
->  
->  /* enum v4l2_ctrl_type type values */
->  #define V4L2_CTRL_TYPE_H264_SPS			0x0110
-> @@ -41,6 +42,11 @@ enum v4l2_mpeg_video_h264_decoding_mode {
->  	V4L2_MPEG_VIDEO_H264_FRAME_BASED_DECODING,
->  };
->  
-> +enum v4l2_mpeg_video_h264_start_code {
-> +	V4L2_MPEG_VIDEO_H264_NO_STARTCODE,
-> +	V4L2_MPEG_VIDEO_H264_ANNEX_B_STARTCODE,
-> +};
-> +
->  #define V4L2_H264_SPS_CONSTRAINT_SET0_FLAG			0x01
->  #define V4L2_H264_SPS_CONSTRAINT_SET1_FLAG			0x02
->  #define V4L2_H264_SPS_CONSTRAINT_SET2_FLAG			0x04
-> 
-
+Well, there are workloads which are much more direct reclaim heavier.
+How much they rely on large memcg trees remains to be seen. Your
+changelog should state that the above workload is very light on direct
+reclaim, though, because the above paragraph suggests that a risk of
+longer stalls is really non-issue while I think this is not really all
+that clear.
+-- 
+Michal Hocko
+SUSE Labs
