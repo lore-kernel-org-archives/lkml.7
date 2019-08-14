@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32186C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CFEC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5C020679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9710B2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749696;
-	bh=BfmG4lrGqdqkzoDHYHNnDYZJryGrxYsFnNNr8ZPGoRU=;
+	s=default; t=1565749699;
+	bh=yeJR7cO4Zm75DFnFyx8fn39bxXmBqbbnSjxIHDAP7I4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nAPoalEPt40J9z54qjKXJ8ApzUphEmf1ml6NglXI6cUwGHlgeVl2/kFYIu2N1X+7/
-	 3YbA+kb5iSJwr9kYOb/a1DAtXxjmKiBR1LxuJNF/PgdtqUSFzXJQrJDyExzr7CERly
-	 quJdaeu7bFvRfwoKdB1wzJsPBcnPlJ0+46oiRRsk=
+	b=hShPz6pwnRJj7XuBXHmlfcOhopmFkFj9grieTBAalEdnqMH2oG4D/8hCg4F7xGiru
+	 d+08hAek5aa2707+4+Dt1kuewmeOS4jTEQa8kDmRU5QLqcklEtmlFLHtOsr8XCOY8C
+	 lK6xPCwCPXJNFO8HjpYxA7RnQa7X6AhEhS+LDbu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbfHNC0H (ORCPT
+        id S1729403AbfHNC2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54146 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:28:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729841AbfHNCZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:25:59 -0400
+        id S1730173AbfHNC0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:26:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB1B7208C2;
-        Wed, 14 Aug 2019 02:25:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5733A20842;
+        Wed, 14 Aug 2019 02:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749559;
-        bh=BfmG4lrGqdqkzoDHYHNnDYZJryGrxYsFnNNr8ZPGoRU=;
+        s=default; t=1565749564;
+        bh=yeJR7cO4Zm75DFnFyx8fn39bxXmBqbbnSjxIHDAP7I4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=snYBcWS/pwFeYWwYOH6693cZs51j1VVn3N+t7VmsD1o/hbmWpYH6R0a1CSIdbQcOB
-         9QaxohtBRemx+sNh3ES8GDupNXWKkAEnk/hctdYMTvpA+QNnS36BcXj7aY53tTXlA6
-         u8+dMGd+BPMPeEQKejtTg4yzsUNpOuVHPQqfZ1l8=
+        b=dQLgUwXMQv9ggS2fBJg8xZgrqC7O6uk8X8WmOwAZUwe6I/TpsNZR1AoPBoP4OXl3V
+         BHwQ15/g6PNh1QBZQqGi9gJWiMYUhYTA9qBTNIHUBU4Gmp+yWohxXbnqXiuRkOd1BH
+         kh3K7YkrznHW9v9O0VV+avT+afdMconr7ly2Ch+w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ricard Wanderlof <ricard.wanderlof@axis.com>,
-        Ricard Wanderlof <ricardw@axis.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 06/28] ASoC: Fail card instantiation if DAI format setup fails
-Date:   Tue, 13 Aug 2019 22:25:28 -0400
-Message-Id: <20190814022550.17463-6-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 08/28] st_nci_hci_connectivity_event_received: null check the allocation
+Date:   Tue, 13 Aug 2019 22:25:30 -0400
+Message-Id: <20190814022550.17463-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022550.17463-1-sashal@kernel.org>
 References: <20190814022550.17463-1-sashal@kernel.org>
@@ -60,40 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricard Wanderlof <ricard.wanderlof@axis.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 40aa5383e393d72f6aa3943a4e7b1aae25a1e43b ]
+[ Upstream commit 3008e06fdf0973770370f97d5f1fba3701d8281d ]
 
-If the DAI format setup fails, there is no valid communication format
-between CPU and CODEC, so fail card instantiation, rather than continue
-with a card that will most likely not function properly.
+devm_kzalloc may fail and return NULL. So the null check is needed.
 
-Signed-off-by: Ricard Wanderlof <ricardw@axis.com>
-Link: https://lore.kernel.org/r/alpine.DEB.2.20.1907241132350.6338@lnxricardw1.se.axis.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/nfc/st-nci/se.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index b927f9c81d922..8d10a24d38e06 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -1357,8 +1357,11 @@ static int soc_probe_link_dais(struct snd_soc_card *card, int num, int order)
- 		}
- 	}
+diff --git a/drivers/nfc/st-nci/se.c b/drivers/nfc/st-nci/se.c
+index dbab722a06546..6f9d9b90ac645 100644
+--- a/drivers/nfc/st-nci/se.c
++++ b/drivers/nfc/st-nci/se.c
+@@ -346,6 +346,8 @@ static int st_nci_hci_connectivity_event_received(struct nci_dev *ndev,
  
--	if (dai_link->dai_fmt)
--		snd_soc_runtime_set_dai_fmt(rtd, dai_link->dai_fmt);
-+	if (dai_link->dai_fmt) {
-+		ret = snd_soc_runtime_set_dai_fmt(rtd, dai_link->dai_fmt);
-+		if (ret)
-+			return ret;
-+	}
+ 		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
+ 					    skb->len - 2, GFP_KERNEL);
++		if (!transaction)
++			return -ENOMEM;
  
- 	ret = soc_post_component_init(rtd, dai_link->name);
- 	if (ret)
+ 		transaction->aid_len = skb->data[1];
+ 		memcpy(transaction->aid, &skb->data[2], transaction->aid_len);
 -- 
 2.20.1
 
