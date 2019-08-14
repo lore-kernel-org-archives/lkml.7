@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FA5C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE29C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1988B2085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C85B420843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749065;
-	bh=yZiJ8rf/cHJGFNppWirptWcXt6eDQ6i695avXVJEEl0=;
+	s=default; t=1565749068;
+	bh=da4oIfD+CGAK0HzB9KRvNT3HgKwkI1tu3i9EptXEmHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YRsCFJet/KYFjjGvRDGMWH/SQAgyg9TSoDcIEVWq4S8H1NBCq5i3E9VgvgOa0bbRf
-	 0OX00PKntyk0G/yRH52KCg1snFV397vVWfRql0NiE1UAg9awQkJHXJY0c4TL5BUFFD
-	 6F2a1DPjHdtTvaSbfsEViE6JafU98KoL7b1lGNt8=
+	b=ThXjR275tBEQ9XNd/NQygJMpfOXrEmJnqL1BvlS4+/HHx23hqOQhKmP2qDZz6wdyQ
+	 +UY2IDBaM4JNNGlRbxMxLq4mZzrC9jVDEBhLeMFXehWxid+KvPRO2/yG/vo2lO9IXw
+	 ooEr3WldePbvIkKa4Gj8S9PrNi/XU64dbQnfSk0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbfHNCRo (ORCPT
+        id S1729504AbfHNCRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:17:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48772 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:17:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729313AbfHNCR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:17:29 -0400
+        id S1729439AbfHNCRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:17:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DDF72085A;
-        Wed, 14 Aug 2019 02:17:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D38D720842;
+        Wed, 14 Aug 2019 02:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749048;
-        bh=yZiJ8rf/cHJGFNppWirptWcXt6eDQ6i695avXVJEEl0=;
+        s=default; t=1565749056;
+        bh=da4oIfD+CGAK0HzB9KRvNT3HgKwkI1tu3i9EptXEmHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hLSoiaPUxnfZpSPvqtpd4ZjdpTrilnIXj3ZLzeuYDjpvp/W5DdZs30RSo/gNP5SnU
-         Szuzp/Q3+Dwaf3WeFCqR1exQT5DGhl6PwzXywqx9ZoNrP1TXBjSBbNbRnXo1UcyH7n
-         LGTRtGdn9amyhADMnyGYGWevvtao81af3YJmLmoY=
+        b=xSxr71o6bcCNgns65gJJRt0iBsC7Lj5kktn7FQwiKkRmb2wwGZJ/2HjqCbpOOBE3l
+         TMkT/Nm7vzImKPJOiHmTVluwIGwEUbGGRcV0GnuEirz47fM1JM+YvG0vwengFVKqCa
+         BoYOd9/cjdBHdpqZKL4z1JScrOa974PtfzfG/oAU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Deepak Rawat <drawat@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 61/68] drm/vmwgfx: fix memory leak when too many retries have occurred
-Date:   Tue, 13 Aug 2019 22:15:39 -0400
-Message-Id: <20190814021548.16001-61-sashal@kernel.org>
+Cc:     Jin Yao <yao.jin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 65/68] perf pmu-events: Fix missing "cpu_clk_unhalted.core" event
+Date:   Tue, 13 Aug 2019 22:15:43 -0400
+Message-Id: <20190814021548.16001-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -61,41 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-[ Upstream commit 6b7c3b86f0b63134b2ab56508921a0853ffa687a ]
+[ Upstream commit 8e6e5bea2e34c61291d00cb3f47560341aa84bc3 ]
 
-Currently when too many retries have occurred there is a memory
-leak on the allocation for reply on the error return path. Fix
-this by kfree'ing reply before returning.
+The events defined in pmu-events JSON are parsed and added into perf
+tool. For fixed counters, we handle the encodings between JSON and perf
+by using a static array fixed[].
 
-Addresses-Coverity: ("Resource leak")
-Fixes: a9cd9c044aa9 ("drm/vmwgfx: Add a check to handle host message failure")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Deepak Rawat <drawat@vmware.com>
-Signed-off-by: Deepak Rawat <drawat@vmware.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+But the fixed[] has missed an important event "cpu_clk_unhalted.core".
+
+For example, on the Tremont platform,
+
+  [root@localhost ~]# perf stat -e cpu_clk_unhalted.core -a
+  event syntax error: 'cpu_clk_unhalted.core'
+                       \___ parser error
+
+With this patch, the event cpu_clk_unhalted.core can be parsed.
+
+  [root@localhost perf]# ./perf stat -e cpu_clk_unhalted.core -a -vvv
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4
+    size                             112
+    config                           0x3c
+    sample_type                      IDENTIFIER
+    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+    disabled                         1
+    inherit                          1
+    exclude_guest                    1
+  ------------------------------------------------------------
+...
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190729072755.2166-1-yao.jin@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/pmu-events/jevents.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-index e4e09d47c5c0e..59e9d05ab928b 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-@@ -389,8 +389,10 @@ static int vmw_recv_msg(struct rpc_channel *channel, void **msg,
- 		break;
- 	}
- 
--	if (retries == RETRIES)
-+	if (retries == RETRIES) {
-+		kfree(reply);
- 		return -EINVAL;
-+	}
- 
- 	*msg_len = reply_len;
- 	*msg     = reply;
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 68c92bb599eef..6b36b71106695 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -450,6 +450,7 @@ static struct fixed {
+ 	{ "inst_retired.any_p", "event=0xc0" },
+ 	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
+ 	{ "cpu_clk_unhalted.thread", "event=0x3c" },
++	{ "cpu_clk_unhalted.core", "event=0x3c" },
+ 	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
+ 	{ NULL, NULL},
+ };
 -- 
 2.20.1
 
