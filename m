@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9339C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33547C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 966CD2085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23D020989
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748798;
-	bh=m9sBYGnmv53rPv9LLP7lEr4T1EH5recboZhvcMtI5ig=;
+	s=default; t=1565748804;
+	bh=m3n4qYP2wjJnIbaUjpskt2z+wMq7OZCU1tih6v4NOTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o6lRv7NZo1YzqBwpn+ldW9IsWwo8K469KOtUPzL3sTjGg9ERiNhtnhI31gfZ9RzMb
-	 Z1PMgPRaBgoDzXTfltRn2ucIw0saNS+yoRxvICysfgVF5wwugT6jDy4NNliglWl32H
-	 UpmjCuW9kzTAHiqYxyd+iB85mqH5xAoH424bZX5E=
+	b=evM3WCfhrB5w1+QVSYBS/2zF0070TzZPrTpF73CQpVBSnNqr+AIZDyk1hqPvAJRq5
+	 wfIQF4qsamB3dfDABZR0DZ1X/PCOQDAr1UCHH/CAJVxUSR/gq799glcn+B1DNqIbnj
+	 1ziSqu9kLI914k4Fmoc8xowWhF4AZKnOKYTcLfFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbfHNCNN (ORCPT
+        id S1727538AbfHNCNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:13:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45134 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:13:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728125AbfHNCNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:04 -0400
+        id S1727416AbfHNCNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9652120842;
-        Wed, 14 Aug 2019 02:13:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA2E820842;
+        Wed, 14 Aug 2019 02:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748783;
-        bh=m9sBYGnmv53rPv9LLP7lEr4T1EH5recboZhvcMtI5ig=;
+        s=default; t=1565748795;
+        bh=m3n4qYP2wjJnIbaUjpskt2z+wMq7OZCU1tih6v4NOTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K2wC9ZTqk7yBn8uTOxJyrdwDSi2DgB9VnWM6zDz4RvvCHFkYjtkTWwv7LGjmoOB5u
-         ueaFUVQLd7ti5uPUb/qnQj4qLBPm01PBGEIXkhyTBBPVKVqxCd7+v//NFouD2zLZXK
-         GUCXOMlSgNjXia2DuycjZrmerHiLYho/XZ2jolzg=
+        b=1dOyfsXYFMO1vKiRjR2CODojNBskPNzoldA+ASHEAiDYkkY9tCz/Yhsup+AEB/dAF
+         6dElg6q5iiZ1DVsCQWwplt51pYHq5JJJkaZxQcG9yXfnN29LE/Zsltcn/wa5tvQgcA
+         BlymuF+75Z3TWePpD0hLb+4reeg6E4rpzKil9PaY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mordechay Goodstein <mordechay.goodstein@intel.com>,
+Cc:     Gregory Greenman <gregory.greenman@intel.com>,
         Luca Coelho <luciano.coelho@intel.com>,
         Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 062/123] iwlwifi: mvm: avoid races in rate init and rate perform
-Date:   Tue, 13 Aug 2019 22:09:46 -0400
-Message-Id: <20190814021047.14828-62-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 066/123] iwlwifi: mvm: send LQ command always ASYNC
+Date:   Tue, 13 Aug 2019 22:09:50 -0400
+Message-Id: <20190814021047.14828-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -61,181 +61,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mordechay Goodstein <mordechay.goodstein@intel.com>
+From: Gregory Greenman <gregory.greenman@intel.com>
 
-[ Upstream commit 0f8084cdc1f9d4a6693ef4168167febb0918c6f6 ]
+[ Upstream commit cd4d6b0bcd51580efda9ae54ab7b2d630b4147dc ]
 
-Rate perform uses the lq_sta table to calculate the next rate to scale
-while rate init resets the same table,
+The only place where the command was sent as SYNC is during
+init and this is not really critical. This change is required
+for replacing RS mutex with a spinlock (in the subsequent patch),
+since SYNC comamnd requres sleeping and thus the flow cannot
+be done when holding a spinlock.
 
-Rate perform is done in soft irq context in parallel to rate init
-that can be called in case we are doing changes like AP changes BW
-or moving state for auth to assoc.
-
-Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
+Signed-off-by: Gregory Greenman <gregory.greenman@intel.com>
 Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/rs.c  | 42 ++++++++++++++++++--
- drivers/net/wireless/intel/iwlwifi/mvm/rs.h  |  7 +++-
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c |  6 +++
- drivers/net/wireless/intel/iwlwifi/mvm/sta.h |  1 +
- 4 files changed, 51 insertions(+), 5 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/mvm.h  |  2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/rs.c   | 23 ++++++++++---------
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c  |  2 +-
+ .../net/wireless/intel/iwlwifi/mvm/utils.c    |  4 ++--
+ 4 files changed, 16 insertions(+), 15 deletions(-)
 
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
+index 88af1f0ba3f0f..31c8636b2a3f8 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
+@@ -1806,7 +1806,7 @@ iwl_mvm_vif_dbgfs_clean(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
+ #endif /* CONFIG_IWLWIFI_DEBUGFS */
+ 
+ /* rate scaling */
+-int iwl_mvm_send_lq_cmd(struct iwl_mvm *mvm, struct iwl_lq_cmd *lq, bool sync);
++int iwl_mvm_send_lq_cmd(struct iwl_mvm *mvm, struct iwl_lq_cmd *lq);
+ void iwl_mvm_update_frame_stats(struct iwl_mvm *mvm, u32 rate, bool agg);
+ int rs_pretty_print_rate(char *buf, int bufsz, const u32 rate);
+ void rs_update_last_rssi(struct iwl_mvm *mvm,
 diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rs.c b/drivers/net/wireless/intel/iwlwifi/mvm/rs.c
-index 63fdb4e68e9d7..836541caa3167 100644
+index 836541caa3167..01b032f18bc8b 100644
 --- a/drivers/net/wireless/intel/iwlwifi/mvm/rs.c
 +++ b/drivers/net/wireless/intel/iwlwifi/mvm/rs.c
-@@ -1197,6 +1197,27 @@ static u8 rs_get_tid(struct ieee80211_hdr *hdr)
- 	return tid;
- }
+@@ -1326,7 +1326,7 @@ void iwl_mvm_rs_tx_status(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
+ 			IWL_DEBUG_RATE(mvm,
+ 				       "Too many rates mismatch. Send sync LQ. rs_state %d\n",
+ 				       lq_sta->rs_state);
+-			iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq, false);
++			iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq);
+ 		}
+ 		/* Regardless, ignore this status info for outdated rate */
+ 		return;
+@@ -1388,7 +1388,8 @@ void iwl_mvm_rs_tx_status(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
+ 		if (info->status.ampdu_ack_len == 0)
+ 			info->status.ampdu_len = 1;
  
-+void iwl_mvm_rs_init_wk(struct work_struct *wk)
-+{
-+	struct iwl_mvm_sta *mvmsta = container_of(wk, struct iwl_mvm_sta,
-+						  rs_init_wk);
-+	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(mvmsta->vif);
-+	struct ieee80211_sta *sta;
-+
-+	rcu_read_lock();
-+
-+	sta = rcu_dereference(mvmvif->mvm->fw_id_to_mac_id[mvmsta->sta_id]);
-+	if (WARN_ON_ONCE(IS_ERR_OR_NULL(sta))) {
-+		rcu_read_unlock();
-+		return;
-+	}
-+
-+	iwl_mvm_rs_rate_init(mvmvif->mvm, sta, mvmvif->phy_ctxt->channel->band,
-+			     true);
-+
-+	rcu_read_unlock();
-+}
-+
- void iwl_mvm_rs_tx_status(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
- 			  int tid, struct ieee80211_tx_info *info, bool ndp)
+-		rs_collect_tlc_data(mvm, mvmsta, tid, curr_tbl, tx_resp_rate.index,
++		rs_collect_tlc_data(mvm, mvmsta, tid, curr_tbl,
++				    tx_resp_rate.index,
+ 				    info->status.ampdu_len,
+ 				    info->status.ampdu_ack_len);
+ 
+@@ -1823,7 +1824,7 @@ static void rs_update_rate_tbl(struct iwl_mvm *mvm,
+ 			       struct iwl_scale_tbl_info *tbl)
  {
-@@ -1269,7 +1290,7 @@ void iwl_mvm_rs_tx_status(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
- 		       (unsigned long)(lq_sta->last_tx +
- 				       (IWL_MVM_RS_IDLE_TIMEOUT * HZ)))) {
- 		IWL_DEBUG_RATE(mvm, "Tx idle for too long. reinit rs\n");
--		iwl_mvm_rs_rate_init(mvm, sta, info->band, true);
-+		schedule_work(&mvmsta->rs_init_wk);
- 		return;
- 	}
- 	lq_sta->last_tx = jiffies;
-@@ -1442,16 +1463,24 @@ static void rs_drv_mac80211_tx_status(void *mvm_r,
- 	struct iwl_op_mode *op_mode = mvm_r;
- 	struct iwl_mvm *mvm = IWL_OP_MODE_GET_MVM(op_mode);
- 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
-+	struct iwl_mvm_sta *mvmsta = iwl_mvm_sta_from_mac80211(sta);
- 
--	if (!iwl_mvm_sta_from_mac80211(sta)->vif)
-+	if (!mvmsta->vif)
- 		return;
- 
- 	if (!ieee80211_is_data(hdr->frame_control) ||
- 	    info->flags & IEEE80211_TX_CTL_NO_ACK)
- 		return;
- 
-+	/* If it's locked we are in middle of init flow
-+	 * just wait for next tx status to update the lq_sta data
-+	 */
-+	if (!mutex_trylock(&mvmsta->lq_sta.rs_drv.mutex))
-+		return;
-+
- 	iwl_mvm_rs_tx_status(mvm, sta, rs_get_tid(hdr), info,
- 			     ieee80211_is_qos_nullfunc(hdr->frame_control));
-+	mutex_unlock(&mvmsta->lq_sta.rs_drv.mutex);
+ 	rs_fill_lq_cmd(mvm, sta, lq_sta, &tbl->rate);
+-	iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq, false);
++	iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq);
  }
  
- /*
-@@ -4136,10 +4165,15 @@ static const struct rate_control_ops rs_mvm_ops_drv = {
- void iwl_mvm_rs_rate_init(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
- 			  enum nl80211_band band, bool update)
+ static bool rs_tweak_rate_tbl(struct iwl_mvm *mvm,
+@@ -2925,7 +2926,7 @@ void rs_update_last_rssi(struct iwl_mvm *mvm,
+ static void rs_initialize_lq(struct iwl_mvm *mvm,
+ 			     struct ieee80211_sta *sta,
+ 			     struct iwl_lq_sta *lq_sta,
+-			     enum nl80211_band band, bool update)
++			     enum nl80211_band band)
  {
--	if (iwl_mvm_has_tlc_offload(mvm))
-+	if (iwl_mvm_has_tlc_offload(mvm)) {
- 		rs_fw_rate_init(mvm, sta, band, update);
--	else
-+	} else {
-+		struct iwl_mvm_sta *mvmsta = iwl_mvm_sta_from_mac80211(sta);
-+
-+		mutex_lock(&mvmsta->lq_sta.rs_drv.mutex);
- 		rs_drv_rate_init(mvm, sta, band, update);
-+		mutex_unlock(&mvmsta->lq_sta.rs_drv.mutex);
-+	}
+ 	struct iwl_scale_tbl_info *tbl;
+ 	struct rs_rate *rate;
+@@ -2955,7 +2956,7 @@ static void rs_initialize_lq(struct iwl_mvm *mvm,
+ 	rs_set_expected_tpt_table(lq_sta, tbl);
+ 	rs_fill_lq_cmd(mvm, sta, lq_sta, rate);
+ 	/* TODO restore station should remember the lq cmd */
+-	iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq, !update);
++	iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq);
  }
  
- int iwl_mvm_rate_control_register(void)
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rs.h b/drivers/net/wireless/intel/iwlwifi/mvm/rs.h
-index f7eb60dbaf202..086f47e2a4f0c 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rs.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rs.h
-@@ -4,7 +4,7 @@
-  * Copyright(c) 2003 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018 Intel Corporation
-+ * Copyright(c) 2018 - 2019 Intel Corporation
-  *
-  * Contact Information:
-  *  Intel Linux Wireless <linuxwifi@intel.com>
-@@ -376,6 +376,9 @@ struct iwl_lq_sta {
- 	/* tx power reduce for this sta */
- 	int tpc_reduce;
- 
-+	/* avoid races of reinit and update table from rx_tx */
-+	struct mutex mutex;
-+
- 	/* persistent fields - initialized only once - keep last! */
- 	struct lq_sta_pers {
- #ifdef CONFIG_MAC80211_DEBUGFS
-@@ -440,6 +443,8 @@ struct iwl_mvm_sta;
- int iwl_mvm_tx_protection(struct iwl_mvm *mvm, struct iwl_mvm_sta *mvmsta,
- 			  bool enable);
- 
-+void iwl_mvm_rs_init_wk(struct work_struct *wk);
-+
+ static void rs_drv_get_rate(void *mvm_r, struct ieee80211_sta *sta,
+@@ -3208,7 +3209,7 @@ void iwl_mvm_update_frame_stats(struct iwl_mvm *mvm, u32 rate, bool agg)
+  * Called after adding a new station to initialize rate scaling
+  */
+ static void rs_drv_rate_init(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
+-			     enum nl80211_band band, bool update)
++			     enum nl80211_band band)
+ {
+ 	int i, j;
+ 	struct ieee80211_hw *hw = mvm->hw;
+@@ -3288,7 +3289,7 @@ static void rs_drv_rate_init(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
  #ifdef CONFIG_IWLWIFI_DEBUGFS
- void iwl_mvm_reset_frame_stats(struct iwl_mvm *mvm);
+ 	iwl_mvm_reset_frame_stats(mvm);
  #endif
+-	rs_initialize_lq(mvm, sta, lq_sta, band, update);
++	rs_initialize_lq(mvm, sta, lq_sta, band);
+ }
+ 
+ static void rs_drv_rate_update(void *mvm_r,
+@@ -3602,7 +3603,7 @@ static void rs_set_lq_ss_params(struct iwl_mvm *mvm,
+ 
+ 		bfersta_ss_params &= ~LQ_SS_BFER_ALLOWED;
+ 		bfersta_lq_cmd->ss_params = cpu_to_le32(bfersta_ss_params);
+-		iwl_mvm_send_lq_cmd(mvm, bfersta_lq_cmd, false);
++		iwl_mvm_send_lq_cmd(mvm, bfersta_lq_cmd);
+ 
+ 		ss_params |= LQ_SS_BFER_ALLOWED;
+ 		IWL_DEBUG_RATE(mvm,
+@@ -3768,7 +3769,7 @@ static void rs_program_fix_rate(struct iwl_mvm *mvm,
+ 
+ 	if (lq_sta->pers.dbg_fixed_rate) {
+ 		rs_fill_lq_cmd(mvm, NULL, lq_sta, NULL);
+-		iwl_mvm_send_lq_cmd(lq_sta->pers.drv, &lq_sta->lq, false);
++		iwl_mvm_send_lq_cmd(lq_sta->pers.drv, &lq_sta->lq);
+ 	}
+ }
+ 
+@@ -4171,7 +4172,7 @@ void iwl_mvm_rs_rate_init(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
+ 		struct iwl_mvm_sta *mvmsta = iwl_mvm_sta_from_mac80211(sta);
+ 
+ 		mutex_lock(&mvmsta->lq_sta.rs_drv.mutex);
+-		rs_drv_rate_init(mvm, sta, band, update);
++		rs_drv_rate_init(mvm, sta, band);
+ 		mutex_unlock(&mvmsta->lq_sta.rs_drv.mutex);
+ 	}
+ }
+@@ -4203,7 +4204,7 @@ static int rs_drv_tx_protection(struct iwl_mvm *mvm, struct iwl_mvm_sta *mvmsta,
+ 			lq->flags &= ~LQ_FLAG_USE_RTS_MSK;
+ 	}
+ 
+-	return iwl_mvm_send_lq_cmd(mvm, lq, false);
++	return iwl_mvm_send_lq_cmd(mvm, lq);
+ }
+ 
+ /**
 diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-index f545a737a92df..ac9bc65c4d156 100644
+index ac9bc65c4d156..22715cdb83171 100644
 --- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
 +++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -1684,6 +1684,10 @@ int iwl_mvm_add_sta(struct iwl_mvm *mvm,
- 	 */
- 	if (iwl_mvm_has_tlc_offload(mvm))
- 		iwl_mvm_rs_add_sta(mvm, mvm_sta);
-+	else
-+		mutex_init(&mvm_sta->lq_sta.rs_drv.mutex);
-+
-+	INIT_WORK(&mvm_sta->rs_init_wk, iwl_mvm_rs_init_wk);
+@@ -2978,7 +2978,7 @@ int iwl_mvm_sta_tx_agg_oper(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
+ 	IWL_DEBUG_HT(mvm, "Tx aggregation enabled on ra = %pM tid = %d\n",
+ 		     sta->addr, tid);
  
- 	iwl_mvm_toggle_tx_ant(mvm, &mvm_sta->tx_ant);
+-	return iwl_mvm_send_lq_cmd(mvm, &mvmsta->lq_sta.rs_drv.lq, false);
++	return iwl_mvm_send_lq_cmd(mvm, &mvmsta->lq_sta.rs_drv.lq);
+ }
  
-@@ -1846,6 +1850,8 @@ int iwl_mvm_rm_sta(struct iwl_mvm *mvm,
- 	if (ret)
- 		return ret;
+ static void iwl_mvm_unreserve_agg_queue(struct iwl_mvm *mvm,
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/utils.c b/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
+index cc56ab88fb439..a71277de2e0eb 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
+@@ -641,12 +641,12 @@ int iwl_mvm_reconfig_scd(struct iwl_mvm *mvm, int queue, int fifo, int sta_id,
+  * this case to clear the state indicating that station creation is in
+  * progress.
+  */
+-int iwl_mvm_send_lq_cmd(struct iwl_mvm *mvm, struct iwl_lq_cmd *lq, bool sync)
++int iwl_mvm_send_lq_cmd(struct iwl_mvm *mvm, struct iwl_lq_cmd *lq)
+ {
+ 	struct iwl_host_cmd cmd = {
+ 		.id = LQ_CMD,
+ 		.len = { sizeof(struct iwl_lq_cmd), },
+-		.flags = sync ? 0 : CMD_ASYNC,
++		.flags = CMD_ASYNC,
+ 		.data = { lq, },
+ 	};
  
-+	cancel_work_sync(&mvm_sta->rs_init_wk);
-+
- 	/* flush its queues here since we are freeing mvm_sta */
- 	ret = iwl_mvm_flush_sta(mvm, mvm_sta, false, 0);
- 	if (ret)
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.h b/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
-index b4d4071b865db..6e93c30492b78 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
-@@ -421,6 +421,7 @@ struct iwl_mvm_sta {
- 		struct iwl_lq_sta_rs_fw rs_fw;
- 		struct iwl_lq_sta rs_drv;
- 	} lq_sta;
-+	struct work_struct rs_init_wk;
- 	struct ieee80211_vif *vif;
- 	struct iwl_mvm_key_pn __rcu *ptk_pn[4];
- 	struct iwl_mvm_rxq_dup_data *dup_data;
 -- 
 2.20.1
 
