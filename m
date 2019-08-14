@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA84C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B71C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD87C20989
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01592084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748822;
-	bh=g+lK8Z/Z/UZ8/bn39BG/TWJYQxoXxoVxHm6GkJ/2ilM=;
+	s=default; t=1565748825;
+	bh=kExvK5XJy3kOSZcfaVrBsAKrSed5Fx2Sr9lNz2OakCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1z8cFSckL9wDl6T+llJv3mfwPbKVbRodsxaX99Ue27FUnLUxbhSrVNaUrg2Adedi8
-	 jj2uJ/h6Nb3vZp/lsVRJT/oyggSIB6lUKXM6yAHVgww06lFKOZR9gP0pVCZPjBIq3p
-	 eCTdp1XnCqdpYOH6dRfnmv2nYNKX2CpVAwuaKU94=
+	b=HSebUUaRzC03et7rACtwOXzCvdhPlaXL7wB3q4yGluRJ8HdDKueLl0bTdVMuo0ql4
+	 KcvyWgCK0X8ilFeKFR3oHRh5bGzTvGI+L3LOVvy64aapUaoDHqsv5ceQkhued8WAwV
+	 zICkV1R9Sa78NS2e3IWRyH/fktBrVB0lj+KKEQRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbfHNCNk (ORCPT
+        id S1728396AbfHNCNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:13:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45628 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:13:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728353AbfHNCNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:37 -0400
+        id S1728398AbfHNCNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FECB20874;
-        Wed, 14 Aug 2019 02:13:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 258ED20989;
+        Wed, 14 Aug 2019 02:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748816;
-        bh=g+lK8Z/Z/UZ8/bn39BG/TWJYQxoXxoVxHm6GkJ/2ilM=;
+        s=default; t=1565748822;
+        bh=kExvK5XJy3kOSZcfaVrBsAKrSed5Fx2Sr9lNz2OakCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pKTbpGsNmsl2OuF3+OZdvNoltGXrTKgdgn3thJggd4F1dZsmicny/7fBnlJnrsz3T
-         3sXQfOPHJHVqgk/avCmURJ3mZTHI+iCVtNrhWMLe7CNawef+34uXwC6fc44vyWgz/4
-         AGRborCkBRAScsnd/lukOUAJFRRqQswXinPl8bpg=
+        b=GERjbELciteTif9fz4DsmeRSeMiA1sbM21Z+vjKfU+qSpqs4Z0o6nV22rDjjLHcQT
+         xtFgIpS6mKUfL6I8s8uJ773UwrlD0knfmmA/6IRjmTW4Wcka1RVrP/Kqf/fIAWCdwN
+         IfwpOpldr97fCL/Za4vuLvvK6MOEPReFhqdQRS7g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        Vijendar Mukunda <vijendar.mukunda@amd.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 077/123] ASoC: amd: acp3x: use dma_ops of parent device for acp3x dma driver
-Date:   Tue, 13 Aug 2019 22:10:01 -0400
-Message-Id: <20190814021047.14828-77-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 083/123] NFSv4.1: Only reap expired delegations
+Date:   Tue, 13 Aug 2019 22:10:07 -0400
+Message-Id: <20190814021047.14828-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -60,43 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 88639051017fb61a414b636dd0fc490da2b62b64 ]
+[ Upstream commit ad11408970df79d5f481aa9964e91f183133424c ]
 
-AMD platform device acp3x_rv_i2s created by parent PCI device
-driver. Pass struct device of the parent to
-snd_pcm_lib_preallocate_pages() so dma_alloc_coherent() can use
-correct dma_ops. Otherwise, it will use default dma_ops which
-is nommu_dma_ops on x86_64 even when IOMMU is enabled and
-set to non passthrough mode.
+Fix nfs_reap_expired_delegations() to ensure that we only reap delegations
+that are actually expired, rather than triggering on random errors.
 
-Signed-off-by: Vijendar Mukunda <vijendar.mukunda@amd.com>
-Link: https://lore.kernel.org/r/1564753899-17124-1-git-send-email-Vijendar.Mukunda@amd.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 45870d6909d5a ("NFSv4.1: Test delegation stateids when server...")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/amd/raven/acp3x-pcm-dma.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/nfs/delegation.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-index 9775bda2a4ca3..d8aa6ab3f68bc 100644
---- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-+++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-@@ -367,9 +367,11 @@ static snd_pcm_uframes_t acp3x_dma_pointer(struct snd_pcm_substream *substream)
- 
- static int acp3x_dma_new(struct snd_soc_pcm_runtime *rtd)
- {
-+	struct snd_soc_component *component = snd_soc_rtdcom_lookup(rtd,
-+								    DRV_NAME);
-+	struct device *parent = component->dev->parent;
- 	snd_pcm_lib_preallocate_pages_for_all(rtd->pcm, SNDRV_DMA_TYPE_DEV,
--					      rtd->pcm->card->dev,
--					      MIN_BUFFER, MAX_BUFFER);
-+					      parent, MIN_BUFFER, MAX_BUFFER);
- 	return 0;
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 0ff3facf81dac..be22ab982d256 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -1046,6 +1046,22 @@ void nfs_test_expired_all_delegations(struct nfs_client *clp)
+ 	nfs4_schedule_state_manager(clp);
  }
  
++static void
++nfs_delegation_test_free_expired(struct inode *inode,
++		nfs4_stateid *stateid,
++		const struct cred *cred)
++{
++	struct nfs_server *server = NFS_SERVER(inode);
++	const struct nfs4_minor_version_ops *ops = server->nfs_client->cl_mvops;
++	int status;
++
++	if (!cred)
++		return;
++	status = ops->test_and_free_expired(server, stateid, cred);
++	if (status == -NFS4ERR_EXPIRED || status == -NFS4ERR_BAD_STATEID)
++		nfs_remove_bad_delegation(inode, stateid);
++}
++
+ /**
+  * nfs_reap_expired_delegations - reap expired delegations
+  * @clp: nfs_client to process
+@@ -1057,7 +1073,6 @@ void nfs_test_expired_all_delegations(struct nfs_client *clp)
+  */
+ void nfs_reap_expired_delegations(struct nfs_client *clp)
+ {
+-	const struct nfs4_minor_version_ops *ops = clp->cl_mvops;
+ 	struct nfs_delegation *delegation;
+ 	struct nfs_server *server;
+ 	struct inode *inode;
+@@ -1088,11 +1103,7 @@ void nfs_reap_expired_delegations(struct nfs_client *clp)
+ 			nfs4_stateid_copy(&stateid, &delegation->stateid);
+ 			clear_bit(NFS_DELEGATION_TEST_EXPIRED, &delegation->flags);
+ 			rcu_read_unlock();
+-			if (cred != NULL &&
+-			    ops->test_and_free_expired(server, &stateid, cred) < 0) {
+-				nfs_revoke_delegation(inode, &stateid);
+-				nfs_inode_find_state_and_recover(inode, &stateid);
+-			}
++			nfs_delegation_test_free_expired(inode, &stateid, cred);
+ 			put_cred(cred);
+ 			if (nfs4_server_rebooted(clp)) {
+ 				nfs_inode_mark_test_expired_delegation(server,inode);
 -- 
 2.20.1
 
