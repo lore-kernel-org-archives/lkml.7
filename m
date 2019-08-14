@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FB1C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5396C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A378E2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D76420874
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748687;
-	bh=tp/TihEb7M9Z4ZC/KrwWjm0E5mpt+2qt7/njaZiu8yg=;
+	s=default; t=1565748692;
+	bh=6FhRZtXSpJc/zn/HxIqcub7tqXgLzqXCTfx7VUmNxXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fYpaY5AwH82Ju7xyCu64qnBtDuMWOAZWJUSMflA+BHE5Ta/XQhTkQxTrxFeiuXF45
-	 /cTno73F3TVAzmcN4eGtKnfs/noWvseYG64PzQ1GnMPJ3VYYAiPjv6pwtFE3ONxafD
-	 qZW6r7/HUjbKmaBYUF7IYiHEvZSKAOonwpPmafIg=
+	b=pDiCnPJyF5a634NrqOFCuaKXFGFMtm/6JwlYJvmK5XtPOop5KFkdRa3W7CbuzS4vz
+	 ympvNJn2UG2JxcZ5Kt6gZ9wYIxVUO2iG6RwmApSGCzhs6BMk/D44GTmG3mQUcuM6v7
+	 yDH641oBvOLdyxMybxewyuDohNIrYWanNpBQCWkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfHNCL0 (ORCPT
+        id S1727514AbfHNCLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43620 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:11:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727333AbfHNCLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:11:23 -0400
+        id S1727427AbfHNCL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:11:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C87C20844;
-        Wed, 14 Aug 2019 02:11:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 687BF20843;
+        Wed, 14 Aug 2019 02:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748682;
-        bh=tp/TihEb7M9Z4ZC/KrwWjm0E5mpt+2qt7/njaZiu8yg=;
+        s=default; t=1565748685;
+        bh=6FhRZtXSpJc/zn/HxIqcub7tqXgLzqXCTfx7VUmNxXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bq0ODtPHzagId2SqTIK0FZ2DQgwqgOWZRfsDP4XTP21zXNKmTtODInCobS8FHZLzF
-         /w1pM/dGPLlGaO327xFvwpibvUFNY1/AowHQVcVUtbq/ghrSOO8OvvX/RJxQYNE1NC
-         iGr8pjZOS8f7m75sh7LacLrEcEkXl5Z7G/QZBPzM=
+        b=kOWSjBC/R11qW8zhxb2ckepapAfjrf3KtTNXU8fewQS9zTVNNvQ8zMo+yMuTMdNeT
+         NKbtgsY3ODbTbsppbb338gtKY9YXCe/XK8DGybqFA4j7Y38vE6i4x6zU6skzkGG6rn
+         SiPgIyO1bWo8AXb3WSKcdXgcILeH1SY+eIRCQf30=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 019/123] mips: fix cacheinfo
-Date:   Tue, 13 Aug 2019 22:09:03 -0400
-Message-Id: <20190814021047.14828-19-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 021/123] netfilter: ebtables: fix a memory leak bug in compat
+Date:   Tue, 13 Aug 2019 22:09:05 -0400
+Message-Id: <20190814021047.14828-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -61,47 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit b8bea8a5e5d942e62203416ab41edecaed4fda02 ]
+[ Upstream commit 15a78ba1844a8e052c1226f930133de4cef4e7ad ]
 
-Because CONFIG_OF defined for MIPS, cacheinfo attempts to fill information
-from DT, ignoring data filled by architecture routine. This leads to error
-reported
+In compat_do_replace(), a temporary buffer is allocated through vmalloc()
+to hold entries copied from the user space. The buffer address is firstly
+saved to 'newinfo->entries', and later on assigned to 'entries_tmp'. Then
+the entries in this temporary buffer is copied to the internal kernel
+structure through compat_copy_entries(). If this copy process fails,
+compat_do_replace() should be terminated. However, the allocated temporary
+buffer is not freed on this path, leading to a memory leak.
 
- cacheinfo: Unable to detect cache hierarchy for CPU 0
+To fix the bug, free the buffer before returning from compat_do_replace().
 
-Way to fix this provided in
-commit fac51482577d ("drivers: base: cacheinfo: fix x86 with
- CONFIG_OF enabled")
-
-Utilize same mechanism to report that cacheinfo set by architecture
-specific function
-
-Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/cacheinfo.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/bridge/netfilter/ebtables.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/kernel/cacheinfo.c b/arch/mips/kernel/cacheinfo.c
-index e0dd66881da68..f777e44653d57 100644
---- a/arch/mips/kernel/cacheinfo.c
-+++ b/arch/mips/kernel/cacheinfo.c
-@@ -69,6 +69,8 @@ static int __populate_cache_leaves(unsigned int cpu)
- 	if (c->tcache.waysize)
- 		populate_cache(tcache, this_leaf, 3, CACHE_TYPE_UNIFIED);
+diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
+index 963dfdc148272..fd84b48e48b57 100644
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -2261,8 +2261,10 @@ static int compat_do_replace(struct net *net, void __user *user,
+ 	state.buf_kern_len = size64;
  
-+	this_cpu_ci->cpu_map_populated = true;
-+
- 	return 0;
- }
+ 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
+-	if (WARN_ON(ret < 0))
++	if (WARN_ON(ret < 0)) {
++		vfree(entries_tmp);
+ 		goto out_unlock;
++	}
  
+ 	vfree(entries_tmp);
+ 	tmp.entries_size = size64;
 -- 
 2.20.1
 
