@@ -2,62 +2,93 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72157C0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EB0C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1EB208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA0F32063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfHNG53 (ORCPT
+        id S1727215AbfHNHB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 02:57:29 -0400
-Received: from mga11.intel.com ([192.55.52.93]:51786 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbfHNG53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 02:57:29 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 23:57:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,384,1559545200"; 
-   d="scan'208";a="188028665"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga002.jf.intel.com with ESMTP; 13 Aug 2019 23:57:26 -0700
-Date:   Wed, 14 Aug 2019 14:57:03 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz, osalvador@suse.de, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] mm/mmap.c: extract __vma_unlink_list as counter part
- for __vma_link_list
-Message-ID: <20190814065703.GA6433@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20190814021755.1977-1-richardw.yang@linux.intel.com>
- <20190814021755.1977-3-richardw.yang@linux.intel.com>
- <20190814051611.GA1958@infradead.org>
+        Wed, 14 Aug 2019 03:01:29 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51093 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbfHNHB3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:01:29 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxnHf-0001Go-1r; Wed, 14 Aug 2019 09:01:23 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxnHd-0008VU-W0; Wed, 14 Aug 2019 09:01:21 +0200
+Date:   Wed, 14 Aug 2019 09:01:21 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM
+ documentation
+Message-ID: <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
+References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+ <20190813141256.jnbrfld42rtigek3@pengutronix.de>
+ <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190814051611.GA1958@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 10:16:11PM -0700, Christoph Hellwig wrote:
->Btw, is there any good reason we don't use a list_head for vma linkage?
+Hello Baolin,
 
-Not sure, maybe there is some historical reason?
+On Wed, Aug 14, 2019 at 09:51:34AM +0800, Baolin Wang wrote:
+> On Tue, 13 Aug 2019 at 22:13, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
+> > > +- assigned-clock-parents: The phandle of the parent clock of PWM clock.
+> >
+> > I'm not sure you need to point out assigned-clocks and
+> > assigned-clock-parents as this is general clk stuff. Also I wonder if
+> > these should be "required properties".
+> 
+> I think I should describe any properties used by PWM node, like
+> 'clocks' and 'clock-names' properties, though they are common clock
+> properties.
+
+Then you might want to describe also "status", "assigned-clock-rates",
+"pinctrl-$n", "pinctrl-names", "power-domains", "power-domain-names" and
+probably another dozen I'm not aware of.
+
+> Yes, they are required. Thanks for your comments.
+
+required in which sense? Why can a Spreadtrum PWM not work when the
+clock parents are unspecified?
+
+Best regards
+Uwe
 
 -- 
-Wei Yang
-Help you, Help me
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
