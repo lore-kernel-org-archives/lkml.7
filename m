@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436E4C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B091C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1142920679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5447920679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749858;
-	bh=74kf31WKB8TAzNkFDtwz19nehlsq6lwa1J68G1k6gpA=;
+	s=default; t=1565749860;
+	bh=NTaqqm92cOkmlbRPc1q2Q+ceOZfVwUYTuYq6ViZ1JQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vTs5MHNmEeH2PMq3GHKGUFYkDpVNVN5UhOx94HF9sTKvER8uY60Q7tB2ptGndSYRh
-	 xVJHHBcQoCADvvmd4Ss+2Xn6D5wqoEk7k267Y02kHiV9uJoce9bVmNoNHYmXEbOOCN
-	 DyRWZ1QeSyFM3FP7oKIPExxRUH6YnBVsBGJ8YcWg=
+	b=op7u+Tm1JoLn/Xppnf/Ret3yfKMtiV42GVvHARh2dZy89EKdIT+/LwozayKlzpnxs
+	 Jkj73qyWFVpstuaVFT78ldeqyBX0PlngRCL+qJKt+2JKxW99CEVIR1NBvAvq00b2XW
+	 sdVCoZJD/gj5nBDN5ZtyQc4ZjqEJTGw34TBqJ6x0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbfHNCQz (ORCPT
+        id S1729637AbfHNCa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:16:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48208 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:30:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729174AbfHNCQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:16:49 -0400
+        id S1729224AbfHNCQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:16:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50CBF2084D;
-        Wed, 14 Aug 2019 02:16:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F6E82133F;
+        Wed, 14 Aug 2019 02:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749008;
-        bh=74kf31WKB8TAzNkFDtwz19nehlsq6lwa1J68G1k6gpA=;
+        s=default; t=1565749013;
+        bh=NTaqqm92cOkmlbRPc1q2Q+ceOZfVwUYTuYq6ViZ1JQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CGhjkweVp9giWDSYcRZSuiCbMzWEvbyhAF/VFWlGfB75ciDwvy+aDWAT8VXS0Vcws
-         vwVgARLIICR71QomNrVFoiNudqc2VlICYLBon4pnhWlizmUHCuxZzX0NZNY5p1cuOE
-         rHqYDZqE38N3rv5Ml26VoT1U1Jhh2nVp2gMe8VvU=
+        b=YUrItBfWuJaAir6mM/WGGhCL0iFo1FVNoAbyOkvdeZUFrAQZ4FqULbXL1gu1Frbpz
+         IeOQKbFgfEZSr2Tu/2ZMtbHqIi0vwwvyN3x/xdMPOCQnp69PUwd1gMGIHO2D7ukmN1
+         HE61lOmrCJecdyADjm9XDyDRJluEJWxdUpE97dds=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 33/68] net: phy: phy_led_triggers: Fix a possible null-pointer dereference in phy_led_trigger_change_speed()
-Date:   Tue, 13 Aug 2019 22:15:11 -0400
-Message-Id: <20190814021548.16001-33-sashal@kernel.org>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 35/68] Input: kbtab - sanity check for endpoint type
+Date:   Tue, 13 Aug 2019 22:15:13 -0400
+Message-Id: <20190814021548.16001-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -59,47 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 271da132e29b5341c31eca6ba6a72ea1302ebac8 ]
+[ Upstream commit c88090dfc84254fa149174eb3e6a8458de1912c4 ]
 
-In phy_led_trigger_change_speed(), there is an if statement on line 48
-to check whether phy->last_triggered is NULL:
-    if (!phy->last_triggered)
+The driver should check whether the endpoint it uses has the correct
+type.
 
-When phy->last_triggered is NULL, it is used on line 52:
-    led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
-
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, led_trigger_event(&phy->last_triggered->trigger,
-LED_OFF) is called when phy->last_triggered is not NULL.
-
-This bug is found by a static analysis tool STCheck written by
-the OSLAB group in Tsinghua University.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_led_triggers.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/input/tablet/kbtab.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/phy_led_triggers.c b/drivers/net/phy/phy_led_triggers.c
-index 491efc1bf5c48..7278eca70f9f3 100644
---- a/drivers/net/phy/phy_led_triggers.c
-+++ b/drivers/net/phy/phy_led_triggers.c
-@@ -58,8 +58,9 @@ void phy_led_trigger_change_speed(struct phy_device *phy)
- 		if (!phy->last_triggered)
- 			led_trigger_event(&phy->led_link_trigger->trigger,
- 					  LED_FULL);
-+		else
-+			led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
+diff --git a/drivers/input/tablet/kbtab.c b/drivers/input/tablet/kbtab.c
+index 75b500651e4e4..b1cf0c9712740 100644
+--- a/drivers/input/tablet/kbtab.c
++++ b/drivers/input/tablet/kbtab.c
+@@ -116,6 +116,10 @@ static int kbtab_probe(struct usb_interface *intf, const struct usb_device_id *i
+ 	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
+ 		return -ENODEV;
  
--		led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
- 		led_trigger_event(&plt->trigger, LED_FULL);
- 		phy->last_triggered = plt;
- 	}
++	endpoint = &intf->cur_altsetting->endpoint[0].desc;
++	if (!usb_endpoint_is_int_in(endpoint))
++		return -ENODEV;
++
+ 	kbtab = kzalloc(sizeof(struct kbtab), GFP_KERNEL);
+ 	input_dev = input_allocate_device();
+ 	if (!kbtab || !input_dev)
+@@ -154,8 +158,6 @@ static int kbtab_probe(struct usb_interface *intf, const struct usb_device_id *i
+ 	input_set_abs_params(input_dev, ABS_Y, 0, 0x1750, 4, 0);
+ 	input_set_abs_params(input_dev, ABS_PRESSURE, 0, 0xff, 0, 0);
+ 
+-	endpoint = &intf->cur_altsetting->endpoint[0].desc;
+-
+ 	usb_fill_int_urb(kbtab->irq, dev,
+ 			 usb_rcvintpipe(dev, endpoint->bEndpointAddress),
+ 			 kbtab->data, 8,
 -- 
 2.20.1
 
