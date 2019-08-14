@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8877AC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F3DC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541D020665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF24520665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749928;
-	bh=3Jcrcw9zMF/w/pzPYXFJ/upmtZXRNjEPEoCWMrlpXRk=;
+	s=default; t=1565749935;
+	bh=ch4sW9kFKIQNeLNsVYgUacK+Hl+BFLM+LXX19iKx7e8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LyRuHIwLH+0XBLgEfE9hVVefymGOBfF569A9q29ZyCl4IhlP4Xr4pCV4Ine5e4anI
-	 wDL6yCpgkcNoCWajrqZvKcUVPc+Up6puBEc+UUsMlhXcswEW6iwmdF9n/FMYfCOFhK
-	 ZgxrDsLo3AWqKGcw7XtIdGwyEsE9ot0EOfwQVsVw=
+	b=xEuCIELS7Z2sOV64GIPhdSfxGeZIneJX74wg9VAT0H5IQF71URPnh4WihZtpHbCot
+	 PGRBsY7nO+X/62b8fVruVxqLMNG2pgBmV/wAO95WQudR4oO5LMwcCW/DPPc9ljcXY4
+	 Juc9W2mhzwakf9xbguaVfZGYGkqlRXGr72VodLbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbfHNCQY (ORCPT
+        id S1729280AbfHNCcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:16:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47856 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:32:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728173AbfHNCQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:16:20 -0400
+        id S1729022AbfHNCQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:16:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B95B2085A;
-        Wed, 14 Aug 2019 02:16:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E295D20874;
+        Wed, 14 Aug 2019 02:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748979;
-        bh=3Jcrcw9zMF/w/pzPYXFJ/upmtZXRNjEPEoCWMrlpXRk=;
+        s=default; t=1565748982;
+        bh=ch4sW9kFKIQNeLNsVYgUacK+Hl+BFLM+LXX19iKx7e8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cZ/CIWA/+jHEycDnrwZvDWu0zOR0I+Qsv8pm5l8/2Fkd0mhvz6x7f47oWoaxhwLxM
-         oOxWInyo/ahqzj2pw7c+kG9xVZT9zhcw7pmx75SCDniCXWuHxGkRWQnrU1Ct35VpP2
-         jHct3MAfTZ7U9wxeCrXJoUIx9GiJ4/zr+KRF9S0A=
+        b=hUjggKwhoZZkNBUtyf6G+TrYDfRkDxAOmZlKPUBR1gm2s+iX8uB2plXv5iAnyDY8Z
+         Tw+Hgr6QHZpFEafHMLUJgzRqMOhXQ1L3NK04U3ix3nAHd9lZ/r4DX68lKcmp4SYBrC
+         IgQ3L0eZelhdKXXBhi8W1wLi0WavU8qSyIYcZ3SA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 17/68] st21nfca_connectivity_event_received: null check the allocation
-Date:   Tue, 13 Aug 2019 22:14:55 -0400
-Message-Id: <20190814021548.16001-17-sashal@kernel.org>
+Cc:     Cheng-Yi Chiang <cychiang@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 19/68] ASoC: rockchip: Fix mono capture
+Date:   Tue, 13 Aug 2019 22:14:57 -0400
+Message-Id: <20190814021548.16001-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -59,32 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Cheng-Yi Chiang <cychiang@chromium.org>
 
-[ Upstream commit 9891d06836e67324c9e9c4675ed90fc8b8110034 ]
+[ Upstream commit 789e162a6255325325bd321ab0cd51dc7e285054 ]
 
-devm_kzalloc may fail and return null. So the null check is needed.
+This reverts commit db51707b9c9aeedd310ebce60f15d5bb006567e0.
+Revert "ASoC: rockchip: i2s: Support mono capture"
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Previous discussion in
+
+https://patchwork.kernel.org/patch/10147153/
+
+explains the issue of the patch.
+While device is configured as 1-ch, hardware is still
+generating a 2-ch stream.
+When user space reads the data and assumes it is a 1-ch stream,
+the rate will be slower by 2x.
+
+Revert the change so 1-ch is not supported.
+User space can selectively take one channel data out of two channel
+if 1-ch is preferred.
+Currently, both channels record identical data.
+
+Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Link: https://lore.kernel.org/r/20190726044202.26866-1-cychiang@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/st21nfca/se.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/rockchip/rockchip_i2s.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nfc/st21nfca/se.c b/drivers/nfc/st21nfca/se.c
-index 4bed9e842db38..fd967a38a94a5 100644
---- a/drivers/nfc/st21nfca/se.c
-+++ b/drivers/nfc/st21nfca/se.c
-@@ -328,6 +328,8 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
+diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
+index 60d43d53a8f5e..11399f81c92f9 100644
+--- a/sound/soc/rockchip/rockchip_i2s.c
++++ b/sound/soc/rockchip/rockchip_i2s.c
+@@ -329,7 +329,6 @@ static int rockchip_i2s_hw_params(struct snd_pcm_substream *substream,
+ 		val |= I2S_CHN_4;
+ 		break;
+ 	case 2:
+-	case 1:
+ 		val |= I2S_CHN_2;
+ 		break;
+ 	default:
+@@ -462,7 +461,7 @@ static struct snd_soc_dai_driver rockchip_i2s_dai = {
+ 	},
+ 	.capture = {
+ 		.stream_name = "Capture",
+-		.channels_min = 1,
++		.channels_min = 2,
+ 		.channels_max = 2,
+ 		.rates = SNDRV_PCM_RATE_8000_192000,
+ 		.formats = (SNDRV_PCM_FMTBIT_S8 |
+@@ -662,7 +661,7 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
+ 	}
  
- 		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
- 						   skb->len - 2, GFP_KERNEL);
-+		if (!transaction)
-+			return -ENOMEM;
+ 	if (!of_property_read_u32(node, "rockchip,capture-channels", &val)) {
+-		if (val >= 1 && val <= 8)
++		if (val >= 2 && val <= 8)
+ 			soc_dai->capture.channels_max = val;
+ 	}
  
- 		transaction->aid_len = skb->data[1];
- 		memcpy(transaction->aid, &skb->data[2],
 -- 
 2.20.1
 
