@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BB9C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919C3C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA3C216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649C620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750253;
-	bh=A4y1ARP/e8BbnlPNPU2pwntKCCChXAtXGo+CGADsbV0=;
+	s=default; t=1565750265;
+	bh=qIvFu4dS1gerDv/hz0IBOs0engmXnXmF/k6htcL/Gac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AzJROm+7IParlqJoNfzY/StEx7I7v1jOsoMV6RyieGcUfJHkUNbCTE/VibDdebCth
-	 T02X9XlaMVFnDzjYikrvoD2ajJb8rPJTSpv2akWbxzIiPSVg6ISw/wLg3Cp7K3EagN
-	 L7zfC8TN0s6TyTokRdSsn4uvR3ILO2WgNKGgkYtA=
+	b=0KW3PRuN0oPEcX3KoSbo2nGvIFG+rSqgFTrEnKsO+W/vb3Ktp0PPnynsYBQbW+ALF
+	 3mCHShMZ4XZ9HYHcBQhoGW8mgTEsNaXzULRh6mEZlFP07RRWxbruy4MLlHaRGpfonL
+	 1zBXGWf4JWjX6N5BrMs7KdGNwWBp6DNaCzhz6+eI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbfHNChc (ORCPT
+        id S1727976AbfHNCMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:37:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44852 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:12:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728002AbfHNCMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:12:44 -0400
+        id S1727910AbfHNCMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:12:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9194620842;
-        Wed, 14 Aug 2019 02:12:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D85D0216F4;
+        Wed, 14 Aug 2019 02:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748763;
-        bh=A4y1ARP/e8BbnlPNPU2pwntKCCChXAtXGo+CGADsbV0=;
+        s=default; t=1565748753;
+        bh=qIvFu4dS1gerDv/hz0IBOs0engmXnXmF/k6htcL/Gac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hdovAA/itkTWZxWQCPYFDuXETfTU6cPhdCVX4O5DidU6rrIB1e2C7HHg+jIww5827
-         7aaYJK9uRrC52w0LZW0JRiwaoYHrL7pwwDmo102UCpvMFEvMBSUgCWQFt4U3LSSqPL
-         OznNCav7okOeQXqrqCCZ6WCrWohOXi//z7HOi77k=
+        b=OD3FtkWjCTv7BGmVE7yKjQ7ngH6zu4slTceckbrlx5LNbNuXOD6Mbr+TbjEhrrPAf
+         HEFPatcVubJgYtWMTYcvCoPwzFyKxDdZkaP66EjjrUo3aPLLgPsFIEBVD9azv498bH
+         OqEQWdNw/HaAsgmvwScJAjI1DEKP7uI66nnaXaho=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefano Brivio <sbrivio@redhat.com>, Chen Yi <yiche@redhat.com>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 055/123] netfilter: ipset: Actually allow destination MAC address for hash:ip,mac sets too
-Date:   Tue, 13 Aug 2019 22:09:39 -0400
-Message-Id: <20190814021047.14828-55-sashal@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 048/123] ASoC: ti: davinci-mcasp: Correct slot_width posed constraint
+Date:   Tue, 13 Aug 2019 22:09:32 -0400
+Message-Id: <20190814021047.14828-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -61,42 +59,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Brivio <sbrivio@redhat.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit b89d15480d0cacacae1a0fe0b3da01b529f2914f ]
+[ Upstream commit 1e112c35e3c96db7c8ca6ddaa96574f00c06e7db ]
 
-In commit 8cc4ccf58379 ("ipset: Allow matching on destination MAC address
-for mac and ipmac sets"), ipset.git commit 1543514c46a7, I removed the
-KADT check that prevents matching on destination MAC addresses for
-hash:mac sets, but forgot to remove the same check for hash:ip,mac set.
+The slot_width is a property for the bus while the constraint for
+SNDRV_PCM_HW_PARAM_SAMPLE_BITS is for the in memory format.
 
-Drop this check: functionality is now commented in man pages and there's
-no reason to restrict to source MAC address matching anymore.
+Applying slot_width constraint to sample_bits works most of the time, but
+it will blacklist valid formats in some cases.
 
-Reported-by: Chen Yi <yiche@redhat.com>
-Fixes: 8cc4ccf58379 ("ipset: Allow matching on destination MAC address for mac and ipmac sets")
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+With slot_width 24 we can support S24_3LE and S24_LE formats as they both
+look the same on the bus, but a a 24 constraint on sample_bits would not
+allow S24_LE as it is stored in 32bits in memory.
+
+Implement a simple hw_rule function to allow all formats which require less
+or equal number of bits on the bus as slot_width (if configured).
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20190726064244.3762-2-peter.ujfalusi@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipset/ip_set_hash_ipmac.c | 4 ----
- 1 file changed, 4 deletions(-)
+ sound/soc/ti/davinci-mcasp.c | 43 ++++++++++++++++++++++++++++--------
+ 1 file changed, 34 insertions(+), 9 deletions(-)
 
-diff --git a/net/netfilter/ipset/ip_set_hash_ipmac.c b/net/netfilter/ipset/ip_set_hash_ipmac.c
-index faf59b6a998fe..eb14434083203 100644
---- a/net/netfilter/ipset/ip_set_hash_ipmac.c
-+++ b/net/netfilter/ipset/ip_set_hash_ipmac.c
-@@ -89,10 +89,6 @@ hash_ipmac4_kadt(struct ip_set *set, const struct sk_buff *skb,
- 	struct hash_ipmac4_elem e = { .ip = 0, { .foo[0] = 0, .foo[1] = 0 } };
- 	struct ip_set_ext ext = IP_SET_INIT_KEXT(skb, opt, set);
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index dc01bbca0ff69..56009d1472084 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -1254,6 +1254,28 @@ static int davinci_mcasp_trigger(struct snd_pcm_substream *substream,
+ 	return ret;
+ }
  
--	 /* MAC can be src only */
--	if (!(opt->flags & IPSET_DIM_TWO_SRC))
--		return 0;
++static int davinci_mcasp_hw_rule_slot_width(struct snd_pcm_hw_params *params,
++					    struct snd_pcm_hw_rule *rule)
++{
++	struct davinci_mcasp_ruledata *rd = rule->private;
++	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
++	struct snd_mask nfmt;
++	int i, slot_width;
++
++	snd_mask_none(&nfmt);
++	slot_width = rd->mcasp->slot_width;
++
++	for (i = 0; i <= SNDRV_PCM_FORMAT_LAST; i++) {
++		if (snd_mask_test(fmt, i)) {
++			if (snd_pcm_format_width(i) <= slot_width) {
++				snd_mask_set(&nfmt, i);
++			}
++		}
++	}
++
++	return snd_mask_refine(fmt, &nfmt);
++}
++
+ static const unsigned int davinci_mcasp_dai_rates[] = {
+ 	8000, 11025, 16000, 22050, 32000, 44100, 48000, 64000,
+ 	88200, 96000, 176400, 192000,
+@@ -1361,7 +1383,7 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 	struct davinci_mcasp_ruledata *ruledata =
+ 					&mcasp->ruledata[substream->stream];
+ 	u32 max_channels = 0;
+-	int i, dir;
++	int i, dir, ret;
+ 	int tdm_slots = mcasp->tdm_slots;
+ 
+ 	/* Do not allow more then one stream per direction */
+@@ -1390,6 +1412,7 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 			max_channels++;
+ 	}
+ 	ruledata->serializers = max_channels;
++	ruledata->mcasp = mcasp;
+ 	max_channels *= tdm_slots;
+ 	/*
+ 	 * If the already active stream has less channels than the calculated
+@@ -1415,20 +1438,22 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 				   0, SNDRV_PCM_HW_PARAM_CHANNELS,
+ 				   &mcasp->chconstr[substream->stream]);
+ 
+-	if (mcasp->slot_width)
+-		snd_pcm_hw_constraint_minmax(substream->runtime,
+-					     SNDRV_PCM_HW_PARAM_SAMPLE_BITS,
+-					     8, mcasp->slot_width);
++	if (mcasp->slot_width) {
++		/* Only allow formats require <= slot_width bits on the bus */
++		ret = snd_pcm_hw_rule_add(substream->runtime, 0,
++					  SNDRV_PCM_HW_PARAM_FORMAT,
++					  davinci_mcasp_hw_rule_slot_width,
++					  ruledata,
++					  SNDRV_PCM_HW_PARAM_FORMAT, -1);
++		if (ret)
++			return ret;
++	}
+ 
+ 	/*
+ 	 * If we rely on implicit BCLK divider setting we should
+ 	 * set constraints based on what we can provide.
+ 	 */
+ 	if (mcasp->bclk_master && mcasp->bclk_div == 0 && mcasp->sysclk_freq) {
+-		int ret;
 -
- 	if (skb_mac_header(skb) < skb->head ||
- 	    (skb_mac_header(skb) + ETH_HLEN) > skb->data)
- 		return -EINVAL;
+-		ruledata->mcasp = mcasp;
+-
+ 		ret = snd_pcm_hw_rule_add(substream->runtime, 0,
+ 					  SNDRV_PCM_HW_PARAM_RATE,
+ 					  davinci_mcasp_hw_rule_rate,
 -- 
 2.20.1
 
