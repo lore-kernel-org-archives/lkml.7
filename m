@@ -2,104 +2,120 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF30C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA46C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9B52085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:35:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750150;
-	bh=+U60twviNfO6eXyzcfXAa1yYbK17knaDCcj3fyQ0ht8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zADHUFV4kF2huu33GFXa1LqBwCtstAwq2Vk+7LICMumvIhX53bF6JtyguWRwqI0bQ
-	 /lU9lg9YNYiktx+lKBgdsoEReGtTStbLGNibmzwLUVz5nSu49CrR1Gp4Kt8vQby7bB
-	 tL3z45w1YZFXSuYM21bME45YH0KX1e/3NQwEkcAI=
+	by mail.kernel.org (Postfix) with ESMTP id 40B572084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:35:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbfHNCft (ORCPT
+        id S1729020AbfHNCf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:35:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45366 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:35:58 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:57528 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728236AbfHNCNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:22 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 910BD2133F;
-        Wed, 14 Aug 2019 02:13:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748801;
-        bh=+U60twviNfO6eXyzcfXAa1yYbK17knaDCcj3fyQ0ht8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dg4E8OsSvhAYMH15AxbsPLEE4ni/vn+rcZJo8qAVnyZxcJjrCxgq4mxWE7lLtibof
-         A3rEBLhbbD5VrTFY+5/tvyjZ+4TH9rg43QhOGh+3z8HVICbyqhN06zFTmvVo966N66
-         tF7aXPWhWK2sc4dPwlg6tUnA5xMycoLvd3lZLa/8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 070/123] net: phy: phy_led_triggers: Fix a possible null-pointer dereference in phy_led_trigger_change_speed()
-Date:   Tue, 13 Aug 2019 22:09:54 -0400
-Message-Id: <20190814021047.14828-70-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
-References: <20190814021047.14828-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S1727245AbfHNCNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:21 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EBEC420027A;
+        Wed, 14 Aug 2019 04:13:19 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 46BC1200162;
+        Wed, 14 Aug 2019 04:13:15 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 40CC940293;
+        Wed, 14 Aug 2019 10:13:09 +0800 (SGT)
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCHv6 2/2] PCI: layerscape: Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately
+Date:   Wed, 14 Aug 2019 10:03:30 +0800
+Message-Id: <20190814020330.12133-2-xiaowei.bao@nxp.com>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20190814020330.12133-1-xiaowei.bao@nxp.com>
+References: <20190814020330.12133-1-xiaowei.bao@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately.
 
-[ Upstream commit 271da132e29b5341c31eca6ba6a72ea1302ebac8 ]
-
-In phy_led_trigger_change_speed(), there is an if statement on line 48
-to check whether phy->last_triggered is NULL:
-    if (!phy->last_triggered)
-
-When phy->last_triggered is NULL, it is used on line 52:
-    led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
-
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, led_trigger_event(&phy->last_triggered->trigger,
-LED_OFF) is called when phy->last_triggered is not NULL.
-
-This bug is found by a static analysis tool STCheck written by
-the OSLAB group in Tsinghua University.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 ---
- drivers/net/phy/phy_led_triggers.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+v2:
+ - No change.
+v3:
+ - modify the commit message.
+v4:
+ - send the patch again with '--to'.
+v5:
+ - No change.
+v6:
+ - remove the [EXT] tag of the $SUBJECT in email.
 
-diff --git a/drivers/net/phy/phy_led_triggers.c b/drivers/net/phy/phy_led_triggers.c
-index b86a4b2116f81..59a94e07e7c55 100644
---- a/drivers/net/phy/phy_led_triggers.c
-+++ b/drivers/net/phy/phy_led_triggers.c
-@@ -48,8 +48,9 @@ void phy_led_trigger_change_speed(struct phy_device *phy)
- 		if (!phy->last_triggered)
- 			led_trigger_event(&phy->led_link_trigger->trigger,
- 					  LED_FULL);
-+		else
-+			led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
+ drivers/pci/controller/dwc/Kconfig  | 20 ++++++++++++++++++--
+ drivers/pci/controller/dwc/Makefile |  3 ++-
+ 2 files changed, 20 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 6ea778a..869c645 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -131,13 +131,29 @@ config PCI_KEYSTONE_EP
+ 	  DesignWare core functions to implement the driver.
  
--		led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
- 		led_trigger_event(&plt->trigger, LED_FULL);
- 		phy->last_triggered = plt;
- 	}
+ config PCI_LAYERSCAPE
+-	bool "Freescale Layerscape PCIe controller"
++	bool "Freescale Layerscape PCIe controller - Host mode"
+ 	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select MFD_SYSCON
+ 	select PCIE_DW_HOST
+ 	help
+-	  Say Y here if you want PCIe controller support on Layerscape SoCs.
++	  Say Y here if you want to enable PCIe controller support on Layerscape
++	  SoCs to work in Host mode.
++	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
++	  determines which PCIe controller works in EP mode and which PCIe
++	  controller works in RC mode.
++
++config PCI_LAYERSCAPE_EP
++	bool "Freescale Layerscape PCIe controller - Endpoint mode"
++	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
++	depends on PCI_ENDPOINT
++	select PCIE_DW_EP
++	help
++	  Say Y here if you want to enable PCIe controller support on Layerscape
++	  SoCs to work in Endpoint mode.
++	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
++	  determines which PCIe controller works in EP mode and which PCIe
++	  controller works in RC mode.
+ 
+ config PCI_HISI
+ 	depends on OF && (ARM64 || COMPILE_TEST)
+diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+index b085dfd..824fde7 100644
+--- a/drivers/pci/controller/dwc/Makefile
++++ b/drivers/pci/controller/dwc/Makefile
+@@ -8,7 +8,8 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+ obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+ obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
+ obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
+-obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
++obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
++obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
+ obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
+ obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
+ obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
 -- 
-2.20.1
+2.9.5
 
