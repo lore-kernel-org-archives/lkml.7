@@ -2,227 +2,152 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D00C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0EAC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026DC2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E8E32063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:34:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d5M3AT10"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TElvV3A0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfHNJdj (ORCPT
+        id S1726571AbfHNJei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:33:39 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36101 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfHNJdi (ORCPT
+        Wed, 14 Aug 2019 05:34:38 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:47016 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfHNJeh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:33:38 -0400
-Received: by mail-oi1-f193.google.com with SMTP id c15so16557057oic.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 02:33:37 -0700 (PDT)
+        Wed, 14 Aug 2019 05:34:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w3so15596843pgt.13
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 02:34:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=z3K6SWbM7px/n5gKPd1KAWBDHaZFHlu80p3kmOyIsGk=;
-        b=d5M3AT10QcaE7MW1oMDKR9t9+SJhHwYmI4wyXzGa6u8kTuQJ2fz0Y6ZFc1IPaSYI+H
-         9ZJy6KfMqLRUZUr7VV+VT9Pw8SyGRSPCyfr3VPQK4md+tHyBnNxu8YDTn6tqKBp3i07D
-         HWyyJApnaXXy2mP4zvZTutjZ+XEF9r5rcZkTAn0DahAMcGIZgjk8Vg+DSq8LDoylOcao
-         kejK0ZDomi4vfug+XWSYPo7TgfdO6rOiRQ5KnESGZPp1PQg/06SL60a8f8x1oKa8HqWm
-         PHOK8SpzduqrAgAr+DD4KtSl43THXSMebzoTQeV/I+0+5oBkUSLjdohxyEUq7Glea9JQ
-         g56Q==
+        h=from:to:cc:subject:date:message-id;
+        bh=sBTOwsLej+6SFYj/3oga2SYDOf+AJErrS9OoJV4ZWCU=;
+        b=TElvV3A0gQCRT1a910QA7MFN/a1b31NtBoBXka4GAvmJ3MVna7Jt6D4nJzrRjgdEKw
+         XRkVbqFo2fDsGYnUlXYggJAZU785xmfMO6PeC9mp5qJU/zGIodHmLX5KIWQRfQdEmEur
+         rpppwemvPjaht8s0Xt6UEaL0NrD+8jkW33TEFS7g89UGbJD26mifLAV/tQM89xrw3LBa
+         YNhwzwDNCAplVTx/csnMz6MT0jaunsd44v0nJdxWz4Ib3uqtN9YFf0BAqNe4vjokvNh0
+         4WA2/5vps95maWoq0Twr0nt1BSvmfO11vFEeaD9E/CBl2v6Pmc5IdDvZZfj80P88/hcQ
+         vlRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=z3K6SWbM7px/n5gKPd1KAWBDHaZFHlu80p3kmOyIsGk=;
-        b=RzcEEDjbq3ZzspiWl9JSrzRR4g57Nsciiaokf+LsY6qthvUH6gYtXUL5fP8n+AxBkd
-         Dl5Pd3U7BDFJbNEisbSW03MExujSbOZWH7d4j2LZqGn9gN63UHmHH3PFmvHDPHin0QL9
-         /aHy5wwtRnMSD/x+j1MP+TOynNlH9g+oS0ytX/06AWGaVO6UGbdITAkG+k7DC5FhMn76
-         L5lc7YE+qIsPn8GGTDDBtvxrFgJsxCdIQgMMoW8Xnq4TDI0sVqbX3MxnnKPAx4ECS/L2
-         sbTHZ1RrSOzjh5FpMLBeW6UD7no4uShPNvT17YX+wmSgJvL1bd6/96/IiBEB3Z3La7Sf
-         YU3Q==
-X-Gm-Message-State: APjAAAVttkxU5eaRzPcgoOOQBZ+unZupp+aEt9eDv6hnc3xEkTqC2q7P
-        NGFvepwLFF2kXnoCizs12M329PqjYESxCz5LBpy1jA==
-X-Google-Smtp-Source: APXvYqx6uqGsIpp0vjayRb0X/q7brAjdHSmV4gh1mkY/a93D75pf4MXvYlguFjUiakwqoDw0MmG63UPVYNApBX/6vRc=
-X-Received: by 2002:aca:6056:: with SMTP id u83mr4713522oib.27.1565775217355;
- Wed, 14 Aug 2019 02:33:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <20190813141256.jnbrfld42rtigek3@pengutronix.de> <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
- <20190814070121.o53tj2mtky4hcy3n@pengutronix.de> <CAMz4ku+55O6ORVM9xDv4R954QG4PXV8EkcGypSTB5wKni+Dq+Q@mail.gmail.com>
- <20190814073939.ubgzysmkmmel5h4y@pengutronix.de> <CAMz4ku+Q7CV+0dP1P0hAPJR7KiG0HOkZbT_LPXY4Q03hMuvS8A@mail.gmail.com>
- <20190814084929.q3uy7cpf4ullpevo@pengutronix.de>
-In-Reply-To: <20190814084929.q3uy7cpf4ullpevo@pengutronix.de>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Wed, 14 Aug 2019 17:33:25 +0800
-Message-ID: <CAMz4kuLFeg2OyzgxZLp4Ks5ucTptOBTrxod5yVFXQ+q8ttKjcw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM documentation
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sBTOwsLej+6SFYj/3oga2SYDOf+AJErrS9OoJV4ZWCU=;
+        b=Rh/KpV5+3sIeo7k476VOKoOM+Z+fCZci3E4dcP/Z2cnHdees6Txr1KdhSHsVWQx9U5
+         U5wPi5Z4Psg4SCuu0KtNH+oYUXIzsVkgovHhqq6C4jTEeiC2VANE35AAvnC2uYGmmBSR
+         w7hojmtVjtS/LLmtFjlS81ryVYjYSeC+54Dv1bqq1SgnAFAG9Iz861FtPcbcq8LKSUH7
+         JBW0ChwoJU410HWssB02A/5zWcpB1Blu9xNOmG7BRi3BZvGfjWyignvNv3Zeg+aZP+d7
+         jVUbW9vgaDiXvBPBak4oYPxw0OlnC3tuVfm0p42R06k2/n5DastNnV6vdjD4/84HUz10
+         pCiQ==
+X-Gm-Message-State: APjAAAUJSHVFRsedP9BLb6xVnZoU8A0zY39W5wX+SofmLDMSL+jAHVcq
+        D6Rj+8TgQFbrHXdRQR+Lc/Yu/w==
+X-Google-Smtp-Source: APXvYqxBKQBXXvtbDIcv7Ji3oexdy3WJHcNNpEfE7+lnnEx60GiC/pfFtalLge7Hblo4oisAHfOamA==
+X-Received: by 2002:a17:90a:4c:: with SMTP id 12mr6099188pjb.40.1565775276670;
+        Wed, 14 Aug 2019 02:34:36 -0700 (PDT)
+Received: from localhost.localdomain ([193.187.117.228])
+        by smtp.gmail.com with ESMTPSA id v12sm3419815pjk.13.2019.08.14.02.34.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 14 Aug 2019 02:34:35 -0700 (PDT)
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH 0/2] A General Accelerator Framework, WarpDrive
+Date:   Wed, 14 Aug 2019 17:34:23 +0800
+Message-Id: <1565775265-21212-1-git-send-email-zhangfei.gao@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 at 16:49, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> Hello,
->
-> On Wed, Aug 14, 2019 at 03:52:08PM +0800, Baolin Wang wrote:
-> > On 14/08/2019, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> w=
-rote:
-> > > On Wed, Aug 14, 2019 at 03:25:53PM +0800, Baolin Wang wrote:
-> > >> On Wed, 14 Aug 2019 at 15:01, Uwe Kleine-K=C3=B6nig
-> > >> <u.kleine-koenig@pengutronix.de> wrote:
-> > >> > On Wed, Aug 14, 2019 at 09:51:34AM +0800, Baolin Wang wrote:
-> > >> > > On Tue, 13 Aug 2019 at 22:13, Uwe Kleine-K=C3=B6nig
-> > >> > > <u.kleine-koenig@pengutronix.de> wrote:
-> > >> > > > On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
-> > >> > > > > +- assigned-clock-parents: The phandle of the parent clock o=
-f PWM
-> > >> > > > > clock.
-> > >> > > >
-> > >> > > > I'm not sure you need to point out assigned-clocks and
-> > >> > > > assigned-clock-parents as this is general clk stuff. Also I wo=
-nder if
-> > >> > > > these should be "required properties".
-> > >> > >
-> > >> > > I think I should describe any properties used by PWM node, like
-> > >> > > 'clocks' and 'clock-names' properties, though they are common cl=
-ock
-> > >> > > properties.
-> > >> >
-> > >> > Then you might want to describe also "status", "assigned-clock-rat=
-es",
-> > >> > "pinctrl-$n", "pinctrl-names", "power-domains", "power-domain-name=
-s"
-> > >> > and
-> > >> > probably another dozen I'm not aware of.
-> > >>
-> > >> We usually do not describe 'status', but if your device node used
-> > >> "pinctrl-$n", "pinctrl-names" ... common properties, yes, you should
-> > >> describe them to let users know what is the purpose of these
-> > >> properties. That's also asked by DT maintainer Rob.
-> > >
-> > > Does this convince you that you should also describe "pinctrl-$n" and
-> > > the others? If not, why not? We also usually don't describe
-> >
-> > Our PWM device node did not use "pinctrl-$n" things, why I should
-> > describe "pinctrl-$n"?
->
-> The binding you implemented supports "pinctrl-$n". And this is described
-> somewhere in the generic pinctrl binding docs. The same applies to
-> "assigned-clock-parents".
->
-> That you happen to use assigned-clock-parents but not pinctrl-$n on the
-> board you used to develop your driver is a detail that IMHO shouldn't
-> decide about being listed in the binding doc for your PWM type.
->
-> > If some devices use pinctrl, yes, they should describe what is the
-> > purpose of pinctrl, see:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tre=
-e/Documentation/devicetree/bindings/mmc/sdhci-sprd.txt
->
-> I agree that if the driver assumes special pinctrl names this is worth
-> mentioning. If however there is nothing special and just some generic
-> stuff is used that is described in some other location then I'd chose to
-> not add this redundant information to the binding document. So if I
-> reviewed the patch that created
-> Documentation/devicetree/bindings/mmc/sdhci-sprd.txt I would have
-> suggested to drop "assigned-clocks" and "assigned-clock-parents" there,
-> too.
->
-> > > assigned-clock-parents. For me these are all in the same catagory:
-> >
-> > Lots of dt bindings describe 'assigned-clock-parents',:
-> > ./Documentation/devicetree/bindings/display/msm/dsi.txt
-> > ./Documentation/devicetree/bindings/display/msm/dsi.txt
-> > ./Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt
-> > ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-> > ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-> > ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-> > ./Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
-> > ./Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-> > ./Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
-> > ./Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
-> > ......
->
-> I didn't check each of them, but I assume the same applies here, too.
-> Please don't copy blindly but think before using other people's stuff as
+*WarpDrive* is a general accelerator framework for the user application to
+access the hardware without going through the kernel in data path.
 
-I did not  copy blindly.
+WarpDrive is the name for the whole framework. The component in kernel
+is called uacce, meaning "Unified/User-space-access-intended Accelerator
+Framework". It makes use of the capability of IOMMU to maintain a
+unified virtual address space between the hardware and the process.
 
-> reference. Even in the Linux kernel where reviews seem and are told to
-> catch non-optimal stuff, there are places where this doesn't work. IMHO
-> the key question is: Does it add value to describe "assigned-clocks" in
-> the binding for your PWM device given that you're only using this
-> generic and well documented construct?
+WarpDrive is intended to be used with Jean Philippe Brucker's SVA
+patchset[1], which enables IO side page fault and PASID support. 
+We have keep verifying with Jean's sva/current [2]
+We also keep verifying with Eric's SMMUv3 Nested Stage patch [3]
 
-I just want to remind users that they should set the parent clock for
-PWMs, otherwise the PWM source clock can be not available.
+This series and related zip & qm driver as well as dummy driver for qemu test:
+https://github.com/Linaro/linux-kernel-warpdrive/tree/5.3-rc1-warpdrive-v1
+zip driver already been upstreamed.
+zip supporting uacce will be the next step.
 
->
-> > > Common properties supported for each devicetree node that represents =
-a
-> > > device. The only difference is that on your board you make use of som=
-e
-> > > but not some others.
-> >
-> > Fine, let's decide this by PWM maintainer or DT maintainer Rob.
->
-> Fine for me.
->
-> > >> > > Yes, they are required. Thanks for your comments.
-> > >> >
-> > >> > required in which sense? Why can a Spreadtrum PWM not work when th=
-e
-> > >> > clock parents are unspecified?
-> > >>
-> > >> On some Spreadtrum platforms, the default source clock of PWM may no=
-t
-> > >> be enabled, so we should force users to select one available source
-> > >> clock for PWM output clock.
-> > >
-> > > Sounds like a bug in the clk tree of your SoC that shouldn't affect h=
-ow
-> > > the PWM is described in the device tree. After all a parent of a cloc=
-k
-> > > is supposed to become enabled when the clock gets enabled.
-> >
-> > That's not a bug, that's like a MUX, the default source clock of PWM
-> > can be disabled, since we usually do not use the default source clock.
-> > Then we can select a available source clock by the MUX.
->
-> In my eyes there is a difference between a) The way the clocks are
-> implemented in the XZ SoC implies that to actually use the PWM you need
-> to reparent some clock; and b) Each "sprd,ums512-pwm" device really
-> needs an "assigned-clock" property, otherwise it cannot work.
->
-> If you write "required" in the binding doc the semantic should be b) but
-> the motivation here seems to be a). Legal questions aside someone could
-> implement a PWM that has the same register layout and behaviour as the
-> PWM in your SoC but with a different clock tree. Should they use a
-> different compatible just because they don't need "assigned-clock"?
+The library and user application:
+https://github.com/Linaro/warpdrive/tree/wdprd-v1-current
 
-Fair enough, I move them to be optional.
+Change History:
+v4 changed from V3
+1. Rebase to 5.3-rc1
+2. Build on iommu interface
+3. Verifying with Jean's sva and Eric's nested mode iommu.
+4. User library has developed a lot: support zlib, openssl etc.
+5. Move to misc first
 
---=20
-Baolin Wang
-Best Regards
+V3 changed from V2:
+https://lkml.org/lkml/2018/11/12/1951
+1. Build uacce from original IOMMU interface. V2 is built on VFIO.
+   But the VFIO way locking the user memory in place will not
+   work properly if the process fork a child. Because the
+   copy-on-write strategy will make the parent process lost its
+   page. This is not acceptable to accelerator user.
+2. The kernel component is renamed to uacce from sdmdev accordingly
+3. Document is updated for the new design. The Static Shared
+   Virtual Memory concept is introduced to replace the User
+	Memory Sharing concept.
+4. Rebase to the lastest kernel (4.20.0-rc1)
+5. As an RFC, this version is tested only with "test-to-pass"
+   test case and not tested with Jean's SVA patch.
+
+V2 changed from V1:
+https://lwn.net/Articles/763990/
+1. Change kernel framework name from SPIMDEV (Share Parent IOMMU
+   Mdev) to SDMDEV (Share Domain Mdev).
+2. Allocate Hardware Resource when a new mdev is created (While
+   it is allocated when the mdev is openned)
+3. Unmap pages from the shared domain when the sdmdev iommu group is
+   detached. (This procedure is necessary, but missed in V1)
+4. Update document accordingly.
+5. Rebase to the latest kernel (4.19.0-rc1)
+
+References:
+[1] http://jpbrucker.net/sva/
+[2] http://www.linux-arm.org/git?p=linux-jpb.git;a=shortlog;h=refs/heads/sva/current
+[3] https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9
+
+Kenneth Lee (2):
+  uacce: Add documents for WarpDrive/uacce
+  uacce: add uacce module
+
+ Documentation/misc-devices/warpdrive.rst |  351 +++++++++
+ drivers/misc/Kconfig                     |    1 +
+ drivers/misc/Makefile                    |    1 +
+ drivers/misc/uacce/Kconfig               |   13 +
+ drivers/misc/uacce/Makefile              |    2 +
+ drivers/misc/uacce/uacce.c               | 1186 ++++++++++++++++++++++++++++++
+ include/linux/uacce.h                    |  109 +++
+ include/uapi/misc/uacce.h                |   44 ++
+ 8 files changed, 1707 insertions(+)
+ create mode 100644 Documentation/misc-devices/warpdrive.rst
+ create mode 100644 drivers/misc/uacce/Kconfig
+ create mode 100644 drivers/misc/uacce/Makefile
+ create mode 100644 drivers/misc/uacce/uacce.c
+ create mode 100644 include/linux/uacce.h
+ create mode 100644 include/uapi/misc/uacce.h
+
+-- 
+2.7.4
+
