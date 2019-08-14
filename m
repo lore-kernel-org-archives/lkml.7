@@ -2,120 +2,79 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD88C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3982BC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C79DD20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A8120665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfHNBTI (ORCPT
+        id S1726974AbfHNBUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 21:19:08 -0400
-Received: from mga07.intel.com ([134.134.136.100]:45614 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726373AbfHNBTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 21:19:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 18:19:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="170575833"
-Received: from tsduncan-ubuntu.jf.intel.com ([10.7.169.130])
-  by orsmga008.jf.intel.com with ESMTP; 13 Aug 2019 18:19:07 -0700
-From:   "Terry S. Duncan" <terry.s.duncan@linux.intel.com>
-To:     Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        William Kennington <wak@google.com>,
-        Joel Stanley <joel@jms.id.au>
-Cc:     "Terry S. Duncan" <terry.s.duncan@linux.intel.com>
-Subject: [PATCH] net/ncsi: Ensure 32-bit boundary for data cksum
-Date:   Tue, 13 Aug 2019 18:18:40 -0700
-Message-Id: <20190814011840.9387-1-terry.s.duncan@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 13 Aug 2019 21:20:35 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3937 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726597AbfHNBUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 21:20:34 -0400
+Received: from dggemi404-hub.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id D99AD20CFFE8B555D744;
+        Wed, 14 Aug 2019 09:20:32 +0800 (CST)
+Received: from DGGEMI524-MBX.china.huawei.com ([169.254.7.6]) by
+ dggemi404-hub.china.huawei.com ([10.3.17.142]) with mapi id 14.03.0439.000;
+ Wed, 14 Aug 2019 09:20:24 +0800
+From:   chengzhihao <chengzhihao1@huawei.com>
+To:     Richard Weinberger <richard.weinberger@gmail.com>
+CC:     Richard Weinberger <richard@nod.at>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIHViaWZzOiB1Ymlmc190bmNfc3RhcnRfY29tbWl0?=
+ =?utf-8?B?OiBGaXggT09CIGluIGxheW91dF9pbl9nYXBz?=
+Thread-Topic: [PATCH] ubifs: ubifs_tnc_start_commit: Fix OOB in
+ layout_in_gaps
+Thread-Index: AQHVPsBTBWetoNcJ1UaytZ+21M4VxabhWCiAgAETrKCAFtDaAIAAv90Q
+Date:   Wed, 14 Aug 2019 01:20:23 +0000
+Message-ID: <0B80F9D4116B2F4484E7279D5A66984F7BD738@dggemi524-mbx.china.huawei.com>
+References: <1563602720-113903-1-git-send-email-chengzhihao1@huawei.com>
+ <CAFLxGvxEAGtQDFm4G3orY+M9yuthDA4j0+u=HbE9DKuo7H8WCg@mail.gmail.com>
+ <0B80F9D4116B2F4484E7279D5A66984F7A7472@dggemi524-mbx.china.huawei.com>
+ <CAFLxGvz__aw+BnfmGS3XXGqT6n6q-9miLPoVcL9KuvaZ2QbVUQ@mail.gmail.com>
+In-Reply-To: <CAFLxGvz__aw+BnfmGS3XXGqT6n6q-9miLPoVcL9KuvaZ2QbVUQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.177.224.82]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The NCSI spec indicates that if the data does not end on a 32 bit
-boundary, one to three padding bytes equal to 0x00 shall be present to
-align the checksum field to a 32-bit boundary.
-
-Signed-off-by: Terry S. Duncan <terry.s.duncan@linux.intel.com>
----
- net/ncsi/internal.h |  1 +
- net/ncsi/ncsi-cmd.c |  2 +-
- net/ncsi/ncsi-rsp.c | 12 ++++++++----
- 3 files changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/net/ncsi/internal.h b/net/ncsi/internal.h
-index 0b3f0673e1a2..468a19fdfd88 100644
---- a/net/ncsi/internal.h
-+++ b/net/ncsi/internal.h
-@@ -185,6 +185,7 @@ struct ncsi_package;
- #define NCSI_TO_CHANNEL(p, c)	(((p) << NCSI_PACKAGE_SHIFT) | (c))
- #define NCSI_MAX_PACKAGE	8
- #define NCSI_MAX_CHANNEL	32
-+#define NCSI_ROUND32(x)		(((x) + 3) & ~3) /* Round to 32 bit boundary */
- 
- struct ncsi_channel {
- 	unsigned char               id;
-diff --git a/net/ncsi/ncsi-cmd.c b/net/ncsi/ncsi-cmd.c
-index 5c3fad8cba57..c12f2183b460 100644
---- a/net/ncsi/ncsi-cmd.c
-+++ b/net/ncsi/ncsi-cmd.c
-@@ -54,7 +54,7 @@ static void ncsi_cmd_build_header(struct ncsi_pkt_hdr *h,
- 	checksum = ncsi_calculate_checksum((unsigned char *)h,
- 					   sizeof(*h) + nca->payload);
- 	pchecksum = (__be32 *)((void *)h + sizeof(struct ncsi_pkt_hdr) +
--		    nca->payload);
-+		    NCSI_ROUND32(nca->payload));
- 	*pchecksum = htonl(checksum);
- }
- 
-diff --git a/net/ncsi/ncsi-rsp.c b/net/ncsi/ncsi-rsp.c
-index 7581bf919885..10a142d0422f 100644
---- a/net/ncsi/ncsi-rsp.c
-+++ b/net/ncsi/ncsi-rsp.c
-@@ -47,7 +47,8 @@ static int ncsi_validate_rsp_pkt(struct ncsi_request *nr,
- 	if (ntohs(h->code) != NCSI_PKT_RSP_C_COMPLETED ||
- 	    ntohs(h->reason) != NCSI_PKT_RSP_R_NO_ERROR) {
- 		netdev_dbg(nr->ndp->ndev.dev,
--			   "NCSI: non zero response/reason code\n");
-+			   "NCSI: non zero response/reason code %04xh, %04xh\n",
-+			    ntohs(h->code), ntohs(h->reason));
- 		return -EPERM;
- 	}
- 
-@@ -55,15 +56,18 @@ static int ncsi_validate_rsp_pkt(struct ncsi_request *nr,
- 	 * sender doesn't support checksum according to NCSI
- 	 * specification.
- 	 */
--	pchecksum = (__be32 *)((void *)(h + 1) + payload - 4);
-+	pchecksum = (__be32 *)((void *)(h + 1) + NCSI_ROUND32(payload) - 4);
- 	if (ntohl(*pchecksum) == 0)
- 		return 0;
- 
- 	checksum = ncsi_calculate_checksum((unsigned char *)h,
--					   sizeof(*h) + payload - 4);
-+					   sizeof(*h) +
-+					       NCSI_ROUND32(payload) - 4);
- 
- 	if (*pchecksum != htonl(checksum)) {
--		netdev_dbg(nr->ndp->ndev.dev, "NCSI: checksum mismatched\n");
-+		netdev_dbg(nr->ndp->ndev.dev,
-+			   "NCSI: checksum mismatched; recd: %08x calc: %08x\n",
-+			   *pchecksum, htonl(checksum));
- 		return -EINVAL;
- 	}
- 
--- 
-2.17.1
-
+U3VyZSwgSSdsbCBkbyBtb3JlIHRlc3RzIG9uIGRpZmZlcmVudCBtYWNoaW5lcyB0byBjaGVjayB0
+aGUgYXNzZXJ0aW9uLiBJJ20gdHJ5aW5nIHRvIHVuZGVyc3RhbmQgd2hlbiB0aGlzIGFzc2VydGlv
+biB3aWxsIGJlIHRyaWdnZXJlZC4gQWx0aG91Z2ggSSBoYXZlbid0IGZvdW5kIHRoaXMgYXNzZXJ0
+aW9uIGJlIHRyaWdnZXJlZCBzbyBmYXIgaW4gc2V2ZXJhbCB0ZXN0cyBvbiB4ODZfNjQocWVtdSku
+DQoNCi0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCuWPkeS7tuS6ujogUmljaGFyZCBXZWluYmVyZ2Vy
+IFttYWlsdG86cmljaGFyZC53ZWluYmVyZ2VyQGdtYWlsLmNvbV0gDQrlj5HpgIHml7bpl7Q6IDIw
+MTnlubQ45pyIMTTml6UgNTo0NA0K5pS25Lu25Lq6OiBjaGVuZ3poaWhhbyA8Y2hlbmd6aGloYW8x
+QGh1YXdlaS5jb20+DQrmioTpgIE6IFJpY2hhcmQgV2VpbmJlcmdlciA8cmljaGFyZEBub2QuYXQ+
+OyBTYXNjaGEgSGF1ZXIgPHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU+OyBBcnRlbSBCaXR5dXRza2l5
+IDxkZWRla2luZDFAZ21haWwuY29tPjsgemhhbmd5aSAoRikgPHlpLnpoYW5nQGh1YXdlaS5jb20+
+OyBsaW51eC1tdGRAbGlzdHMuaW5mcmFkZWFkLm9yZzsgTEtNTCA8bGludXgta2VybmVsQHZnZXIu
+a2VybmVsLm9yZz4NCuS4u+mimDogUmU6IFtQQVRDSF0gdWJpZnM6IHViaWZzX3RuY19zdGFydF9j
+b21taXQ6IEZpeCBPT0IgaW4gbGF5b3V0X2luX2dhcHMNCg0KT24gVHVlLCBKdWwgMzAsIDIwMTkg
+YXQgMzoyMSBBTSBjaGVuZ3poaWhhbyA8Y2hlbmd6aGloYW8xQGh1YXdlaS5jb20+IHdyb3RlOg0K
+Pg0KPiBPSywgdGhhdCdzIGZpbmUsIGFuZCBJIHdpbGwgY29udGludWUgdG8gdW5kZXJzdGFuZCBt
+b3JlIGltcGxlbWVudGF0aW9uIGNvZGUgcmVsYXRlZCB0byB0aGlzIHBhcnQuDQoNCkkgdGhpbmsg
+d2UgY2FuIGdvIHdpdGggdGhlIHJlYWxsb2MoKSBhcHByb2FjaCBmb3Igbm93Lg0KQ2FuIHlvdSBw
+bGVhc2UgY2hlY2sgd2hldGhlciB0aGUgYXNzZXJ0KCkgdHJpZ2dlcnM/DQoNCi0tIA0KVGhhbmtz
+LA0KLy9yaWNoYXJkDQo=
