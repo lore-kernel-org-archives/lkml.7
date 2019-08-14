@@ -2,141 +2,175 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAC4C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78690C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9142C20644
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54438206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:15:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="b1+hpPls"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbfHNSL2 (ORCPT
+        id S1728677AbfHNSPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 14:11:28 -0400
-Received: from enpas.org ([46.38.239.100]:58846 "EHLO mail.enpas.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727975AbfHNSL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 14:11:28 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        by mail.enpas.org (Postfix) with ESMTPSA id 6F2A1100073;
-        Wed, 14 Aug 2019 18:11:23 +0000 (UTC)
-Subject: Re: [PATCH v2 3/4] hwmon/ltc2990: Add platform_data support
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>, linux-m68k@vger.kernel.org,
-        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
-References: <20190812235237.21797-1-max@enpas.org>
- <20190812235237.21797-3-max@enpas.org> <20190813080237.GA29986@roeck-us.net>
- <6912362a-1f58-a9d6-f86b-d16930aa359c@enpas.org>
- <275c42b3-9a91-a73a-0696-3c5a0a344509@roeck-us.net>
-From:   Max Staudt <max@enpas.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=max@enpas.org; prefer-encrypt=mutual; keydata=
- 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
- urZIw0nz8zec+73Bv/qF4GHHftLYfA==
-Message-ID: <a35b87c2-6bcd-fc27-ceb5-6a18c06f5cc2@enpas.org>
-Date:   Wed, 14 Aug 2019 20:11:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 14 Aug 2019 14:15:32 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46972 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728394AbfHNSPc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 14:15:32 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j15so17559863qtl.13
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 11:15:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yv3o7B3UHsHqSeSF1eawcreZUewpnoCKBkRqVbvZv+Y=;
+        b=b1+hpPlsUllmS55yStmayLIczHkh/gs2U6xTQjHLoJzP6BS9rrpQYU/Q+zjEtqYpZJ
+         bUfdxFnv/io/njD4H81VOrB5HpxoX0UpCfWVJE3iMK6BRX+7xz2/qyYNYBY1s0aQv9oC
+         57OzZnbd2E8pHcIPyMI3M38ltO867icv9pCABQ2nRkA4GhB4x8TTEWzbIIEp3I5Bu9v8
+         1j7u4CiNFmqOJmrgun4bWFv3s4L2PKJsY5MMwj8yq7JCEFqVNh4FZN9aCdeS6xLd4vsG
+         tzdz7jPh3keJQnQMNdxfDM5IWfs75T0jwE2SLAPsGzMCYk/egYJiAQxgc739HbYg2Btp
+         tbAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yv3o7B3UHsHqSeSF1eawcreZUewpnoCKBkRqVbvZv+Y=;
+        b=AwWzdAjwNQ+ltRhGaTThOAjmFwHPxNtSdZdIJ+YZenP7+Y57L60u8QRgwQsS3cgoD3
+         k+KFp9JsHNyMM74Au+VIA91ZSBcFj3PpFxqIZGamMjHpivSJEZEIazizTmza/KcBdhV4
+         iZu9NUmRRGMXVQrvQW/DJbKrVl0Lvmc14CoNQV0B64pU6jH3Bl21kxby0k859Y/I/y0O
+         jKt/EpFVdsNGwl7SpB+qkeQI3FuN00mi1CPqI3pSG6D0QmtDiBqIKI7yWK+rXNIWxCBg
+         KFMx+/94oHtkIGPzuB6hE+t98cOl7OIqld1WH20NVd4LoaVHN5iAdkPV2EDp2EK7Y0MQ
+         08bQ==
+X-Gm-Message-State: APjAAAWf0FXj1b83pWwzJWVvgfopxdS/DRfvX7AOh3gnQvvkygBj5mFu
+        dkaCHb0tiqnXCrqGCl5eN7QxPQ==
+X-Google-Smtp-Source: APXvYqwQg84mNfjabrjxPWgnQFA0kP85o9/bjBwuu/n1RL4RSpA12tlrWJldmQ90D3a9zEfF7PDYNg==
+X-Received: by 2002:ac8:34ea:: with SMTP id x39mr609754qtb.311.1565806530924;
+        Wed, 14 Aug 2019 11:15:30 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id h66sm253461qke.61.2019.08.14.11.15.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 14 Aug 2019 11:15:30 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hxxo2-00028Y-0t; Wed, 14 Aug 2019 15:15:30 -0300
+Date:   Wed, 14 Aug 2019 15:15:30 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 16/19] RDMA/uverbs: Add back pointer to system
+ file object
+Message-ID: <20190814181529.GD13770@ziepe.ca>
+References: <20190812130039.GD24457@ziepe.ca>
+ <20190812172826.GA19746@iweiny-DESK2.sc.intel.com>
+ <20190812175615.GI24457@ziepe.ca>
+ <20190812211537.GE20634@iweiny-DESK2.sc.intel.com>
+ <20190813114842.GB29508@ziepe.ca>
+ <20190813174142.GB11882@iweiny-DESK2.sc.intel.com>
+ <20190813180022.GF29508@ziepe.ca>
+ <20190813203858.GA12695@iweiny-DESK2.sc.intel.com>
+ <20190814122308.GB13770@ziepe.ca>
+ <20190814175045.GA31490@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <275c42b3-9a91-a73a-0696-3c5a0a344509@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814175045.GA31490@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
+On Wed, Aug 14, 2019 at 10:50:45AM -0700, Ira Weiny wrote:
+> On Wed, Aug 14, 2019 at 09:23:08AM -0300, Jason Gunthorpe wrote:
+> > On Tue, Aug 13, 2019 at 01:38:59PM -0700, Ira Weiny wrote:
+> > > On Tue, Aug 13, 2019 at 03:00:22PM -0300, Jason Gunthorpe wrote:
+> > > > On Tue, Aug 13, 2019 at 10:41:42AM -0700, Ira Weiny wrote:
+> > > > 
+> > > > > And I was pretty sure uverbs_destroy_ufile_hw() would take care of (or ensure
+> > > > > that some other thread is) destroying all the MR's we have associated with this
+> > > > > FD.
+> > > > 
+> > > > fd's can't be revoked, so destroy_ufile_hw() can't touch them. It
+> > > > deletes any underlying HW resources, but the FD persists.
+> > > 
+> > > I misspoke.  I should have said associated with this "context".  And of course
+> > > uverbs_destroy_ufile_hw() does not touch the FD.  What I mean is that the
+> > > struct file which had file_pins hanging off of it would be getting its file
+> > > pins destroyed by uverbs_destroy_ufile_hw().  Therefore we don't need the FD
+> > > after uverbs_destroy_ufile_hw() is done.
+> > > 
+> > > But since it does not block it may be that the struct file is gone before the
+> > > MR is actually destroyed.  Which means I think the GUP code would blow up in
+> > > that case...  :-(
+> > 
+> > Oh, yes, that is true, you also can't rely on the struct file living
+> > longer than the HW objects either, that isn't how the lifetime model
+> > works.
+> > 
+> > If GUP consumes the struct file it must allow the struct file to be
+> > deleted before the GUP pin is released.
+> 
+> I may have to think about this a bit.  But I'm starting to lean toward my
+> callback method as a solution...
+> 
+> > 
+> > > The drivers could provide some generic object (in RDMA this could be the
+> > > uverbs_attr_bundle) which represents their "context".
+> > 
+> > For RDMA the obvious context is the struct ib_mr *
+> 
+> Not really, but maybe.  See below regarding tracking this across processes.
+> 
+> > 
+> > > But for the procfs interface, that context then needs to be associated with any
+> > > file which points to it...  For RDMA, or any other "FD based pin mechanism", it
+> > > would be up to the driver to "install" a procfs handler into any struct file
+> > > which _may_ point to this context.  (before _or_ after memory pins).
+> > 
+> > Is this all just for debugging? Seems like a lot of complication just
+> > to print a string
+> 
+> No, this is a requirement to allow an admin to determine why their truncates
+> may be failing.  As per our discussion here:
+> 
+> https://lkml.org/lkml/2019/6/7/982
 
-Thanks for your feedback!
-Reply below.
+visibility/debugging..
 
+I don't see any solution here with the struct file - we apparently
+have a problem with deadlock if the uverbs close() waits as mmput()
+can trigger a call close() - see the comment on top of
+uverbs_destroy_ufile_hw()
 
-On 08/13/2019 03:24 PM, Guenter Roeck wrote:
-> Sorry, I don't understand. Why exactly can't you replace of_property_read_u32_array()
-> with device_property_read_u32_array() and use fwnode_create_software_node()
-> in the calling code to set the properties ?
+However, I wonder if that is now old information since commit
+4a9d4b024a31 ("switch fput to task_work_add") makes fput deferred, so
+mmdrop() should not drop waiting on fput??
 
-Thanks for this hint.
+If you could unwrap this mystery, probably with some testing proof,
+then we could make uverbs_destroy_ufile_hw() a fence even for close
+and your task is much simpler.
 
-Turns out wcove is the only user of fwnode_create_software_node(), and intel_cht_int33fe is the only other driver to contain the string "software_node". Please bear with us if we didn't know about this handy trick yet. And handy it is!
+The general flow to trigger is to have a process that has mmap'd
+something from the uverbs fd, then trigger both device disassociate
+and process exit with just the right race so that the process has
+exited enough that the mmdrop on the disassociate threda does the
+final cleanup triggering the VMAs inside the mm to do the final fput
+on their FDs, triggering final fput() for uverbs inside the thread of
+disassociate.
 
-device_property_read_*() is also really helpful to know about, as it covers both the DT case, as well as other firmware interfaces - thanks for the hint. Is there any reason to ever use of_property_read_*() anymore?
-
-I've applied your suggested changes, and will send another patch round soon (I want to try one last thing). Please let me/us know what you think once it's on the list.
-
-
-Max
+Jason
