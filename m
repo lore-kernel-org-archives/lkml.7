@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA380C32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2A2C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A82D320665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4118D20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803551;
-	bh=jHUzRvX08OP472lu/v3sf61M1yuGyiy6QeG3rZC/FUo=;
+	s=default; t=1565803554;
+	bh=JLGDd8bsW7iM4fXbpOOdEbG+zT1Q3Zdh9IXZ5jbNYuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UG+730lpTFbpEHQf0B2UPy5cDgBrYCeD20piYdN85h8GzNk5AypSCDekt7WtVXasO
-	 BMhL/v5OHvVA6dbZ8RjYBFzJXiSKM44zXCWugKPAWwF/kv1GAvEvBxAwaCcVas35rP
-	 cQVhaAsMmcy7ySwwqx0u0XCzaXBrrbm9LflFnMwE=
+	b=OWkERlLnneMHGf/Z69bJyYfgQrabuX2EkXBa2vcM4VKsK78eWFIP2DKNYsl8BpxFw
+	 xiTheU0/qSfAGRUvIBrYoRMF5JjlBa+1Wr3gckgsL/BCzAuRug+BCed7j4/QhZFsrM
+	 s+Pqpx0qj4MzXMizg06zjG0X+hZAYNRIJdG9VZQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbfHNRZv (ORCPT
+        id S1729811AbfHNRZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54306 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729416AbfHNRFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:05:22 -0400
+        id S1728882AbfHNRFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:05:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2FCB2084D;
-        Wed, 14 Aug 2019 17:05:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 649C3208C2;
+        Wed, 14 Aug 2019 17:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802322;
-        bh=jHUzRvX08OP472lu/v3sf61M1yuGyiy6QeG3rZC/FUo=;
+        s=default; t=1565802319;
+        bh=JLGDd8bsW7iM4fXbpOOdEbG+zT1Q3Zdh9IXZ5jbNYuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DcS8mfuskJ6PScAzSz8t3sXds87RJWTa/ooL2Q+f64q6uWUNInYeFdZhKAR8yF+JF
-         fhjcVdPo79UQ+wJKzCYStwoMU+G1MEMqd/OEJ3YyJsOTzHKO2I5NfaHQzHjZGcBLCC
-         itCtQfL7zmcXN8Q/JkDL4MhKP0LlYDzQSqtdg0I8=
+        b=0KEpdsLhkO7dRQGFPBn3mJ8bUqZlzfpb2oOH7R3naHn4cPP/s+uQ5cs15fIoWFLLW
+         gNAmnVlGix6DGhMbSB/54LMt0vdk8CSWel/ZYSfIGnx8FxKtTZrQSiX1ZzNKJa3mjo
+         L2+BUhyGYNqh+AOn+qt1XyjE0z4JzkhLEG7G2aaQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjoern Gerhart <gerhart@posteo.de>,
+        stable@vger.kernel.org, Lei YU <mine260309@gmail.com>,
+        Eddie James <eajames@linux.ibm.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 080/144] hwmon: (nct6775) Fix register address and added missed tolerance for nct6106
-Date:   Wed, 14 Aug 2019 19:00:36 +0200
-Message-Id: <20190814165803.212456156@linuxfoundation.org>
+Subject: [PATCH 5.2 079/144] hwmon: (occ) Fix division by zero issue
+Date:   Wed, 14 Aug 2019 19:00:35 +0200
+Message-Id: <20190814165803.163212709@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -60,40 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f3d43e2e45fd9d44ba52d20debd12cd4ee9c89bf ]
+[ Upstream commit 211186cae14de09573b062e478eb9fe215aed8d9 ]
 
-Fixed address of third NCT6106_REG_WEIGHT_DUTY_STEP, and
-added missed NCT6106_REG_TOLERANCE_H.
+The code in occ_get_powr_avg() invokes div64_u64() without checking the
+divisor. In case the divisor is zero, kernel gets an "Division by zero
+in kernel" error.
 
-Fixes: 6c009501ff200 ("hwmon: (nct6775) Add support for NCT6102D/6106D")
-Signed-off-by: Bjoern Gerhart <gerhart@posteo.de>
+Check the divisor and make it return 0 if the divisor is 0.
+
+Fixes: c10e753d43eb ("hwmon (occ): Add sensor types and versions")
+Signed-off-by: Lei YU <mine260309@gmail.com>
+Reviewed-by: Eddie James <eajames@linux.ibm.com>
+Link: https://lore.kernel.org/r/1562813088-23708-1-git-send-email-mine260309@gmail.com
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/nct6775.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hwmon/occ/common.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
-index e7dff5febe161..d42bc0883a32b 100644
---- a/drivers/hwmon/nct6775.c
-+++ b/drivers/hwmon/nct6775.c
-@@ -852,7 +852,7 @@ static const u16 NCT6106_REG_TARGET[] = { 0x111, 0x121, 0x131 };
- static const u16 NCT6106_REG_WEIGHT_TEMP_SEL[] = { 0x168, 0x178, 0x188 };
- static const u16 NCT6106_REG_WEIGHT_TEMP_STEP[] = { 0x169, 0x179, 0x189 };
- static const u16 NCT6106_REG_WEIGHT_TEMP_STEP_TOL[] = { 0x16a, 0x17a, 0x18a };
--static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x17c };
-+static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x18b };
- static const u16 NCT6106_REG_WEIGHT_TEMP_BASE[] = { 0x16c, 0x17c, 0x18c };
- static const u16 NCT6106_REG_WEIGHT_DUTY_BASE[] = { 0x16d, 0x17d, 0x18d };
+diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
+index 13a6290c8d254..f02aa403332c2 100644
+--- a/drivers/hwmon/occ/common.c
++++ b/drivers/hwmon/occ/common.c
+@@ -402,8 +402,10 @@ static ssize_t occ_show_power_1(struct device *dev,
  
-@@ -3764,6 +3764,7 @@ static int nct6775_probe(struct platform_device *pdev)
- 		data->REG_FAN_TIME[0] = NCT6106_REG_FAN_STOP_TIME;
- 		data->REG_FAN_TIME[1] = NCT6106_REG_FAN_STEP_UP_TIME;
- 		data->REG_FAN_TIME[2] = NCT6106_REG_FAN_STEP_DOWN_TIME;
-+		data->REG_TOLERANCE_H = NCT6106_REG_TOLERANCE_H;
- 		data->REG_PWM[0] = NCT6106_REG_PWM;
- 		data->REG_PWM[1] = NCT6106_REG_FAN_START_OUTPUT;
- 		data->REG_PWM[2] = NCT6106_REG_FAN_STOP_OUTPUT;
+ static u64 occ_get_powr_avg(u64 *accum, u32 *samples)
+ {
+-	return div64_u64(get_unaligned_be64(accum) * 1000000ULL,
+-			 get_unaligned_be32(samples));
++	u64 divisor = get_unaligned_be32(samples);
++
++	return (divisor == 0) ? 0 :
++		div64_u64(get_unaligned_be64(accum) * 1000000ULL, divisor);
+ }
+ 
+ static ssize_t occ_show_power_2(struct device *dev,
 -- 
 2.20.1
 
