@@ -2,200 +2,268 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA11C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C81C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2ACB2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0921A2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:17:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="pAFX90xV";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="KP2PrdBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbfHNQRg (ORCPT
+        id S1728310AbfHNQRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:17:36 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43909 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727909AbfHNQRg (ORCPT
+        Wed, 14 Aug 2019 12:17:40 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:20188 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727909AbfHNQRj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:17:36 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxvxo-0007I3-Ko; Wed, 14 Aug 2019 18:17:28 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxvxn-0003CC-LB; Wed, 14 Aug 2019 18:17:27 +0200
-Date:   Wed, 14 Aug 2019 18:17:27 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
-Subject: Are the requirements of the PWM API sensible?
-Message-ID: <20190814161727.ahfh6mlcbaozle3v@pengutronix.de>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
- <20190813151612.v6x6e6kzxflkpu7b@pengutronix.de>
- <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
- <20190814092339.73ybj5mycklvpnrq@pengutronix.de>
- <3181509c-a167-28c8-fb8b-947b7c72a65c@ysoft.com>
+        Wed, 14 Aug 2019 12:17:39 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7EGD8fl022953;
+        Wed, 14 Aug 2019 09:17:13 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=v9pBALoVkA8e+LDkKPT9mk/mWAqQW5o/V2MwR7qa+no=;
+ b=pAFX90xVld7z57hQdiBgPOn/xzu135ZjJRs96ExOASiXYh44FFaKUXd8iE5enPdiA8Ut
+ Rq4WammNY2fuFqmKRofpFYeLdtpwLgS7/RNyhgBKlYFjG2r3vaCWcfrY4PAVLiDMOt2h
+ QRP3JlFKjKEAOCHar82pHHTtifa/evUYjaY= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2ucmc08dhd-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 14 Aug 2019 09:17:13 -0700
+Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
+ prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 14 Aug 2019 09:17:11 -0700
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Wed, 14 Aug 2019 09:17:11 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MzMDIPh361Q2hEuHaTzi2ne0lPxra401iKMCLMUC8q6q+P9swg4b28DJ7+MfJLDg0zjgF0CH1wNP1eDUqLWllSrDRmZxOvtI9m4FiIUv1lr8+1oFFS5Las5fXqOn//2Zy8sCT6MvL9kVGiWlwdRdFDedkVbQ2AgO4Nl6ttUiw1hmUbzTdX8E5KnWrRjSzIuY1c8/UALsVPwdAMTe2rpEsz+ccGrqL9ndSeBrWmbrfBN9rYC6lzrKN+aKE0ti26pXHz76L9WmecVDTxLUqkbgSZD1BBKcsg2SzsidaJNLaLsebCVtos5Sg3zRbBe4BGohHaVXnOuyaK1DEh6bKOz2nQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v9pBALoVkA8e+LDkKPT9mk/mWAqQW5o/V2MwR7qa+no=;
+ b=UxuYrs8f7/1fzCij5+Irw7VnglcpucGQWehX8C9gwTdJfKAyp3Lvk0/xrtvg0q12vi4HTRcA5d6AkDCPWQIXOaI2IYvWZUC1pqeLBDPn3P1kCFPDrFOvhCP7Lu023JcQGynscLTVCOHFWfVnswEGssAdUW5iGAHnHC6JYqlq70ByXNpJyKBxG7X/SNMOOmkQCk8lqKRYw5n0MY3h8Xnh6mn6bzfn1lD4/edBG5TTiJjFBa6SaHTHT5HREeWb8+9Xdg2iATluGmH4yNOGSWJL40vpbh+kXfgBIQtPv5+BBAMlSQBDRCj9CsCaOpP/VDoDDvKfLtlocXuvAyk0PLt7KQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v9pBALoVkA8e+LDkKPT9mk/mWAqQW5o/V2MwR7qa+no=;
+ b=KP2PrdBUqpiQB3oAGZlV5vnDxDnFNx8nJbLHJcxRgHeL6atnkHpSZIzhqW3TRApjDbajT+CPxS8vQz3vzw16WkvIO5+UbzXIzT/lb6tWDkDjR7Fj5mi0egs/EeLX0Z7dXwpIu1okoZcI8MA6AfRozyNSc53m65mvvtru+V6FUms=
+Received: from BYAPR15MB3384.namprd15.prod.outlook.com (20.179.59.17) by
+ BYAPR15MB2246.namprd15.prod.outlook.com (52.135.196.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.23; Wed, 14 Aug 2019 16:17:09 +0000
+Received: from BYAPR15MB3384.namprd15.prod.outlook.com
+ ([fe80::d95b:271:fa7e:e978]) by BYAPR15MB3384.namprd15.prod.outlook.com
+ ([fe80::d95b:271:fa7e:e978%5]) with mapi id 15.20.2157.022; Wed, 14 Aug 2019
+ 16:17:09 +0000
+From:   Yonghong Song <yhs@fb.com>
+To:     =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        "john fastabend" <john.fastabend@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Xdp <xdp-newbies@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf-next 1/3] libbpf: add asm/unistd.h to xsk to get
+ __NR_mmap2
+Thread-Topic: [PATCH bpf-next 1/3] libbpf: add asm/unistd.h to xsk to get
+ __NR_mmap2
+Thread-Index: AQHVUoIEKyrT2yAIekOTwiyoLftnBKb6ib+AgAAapgCAAC4GgA==
+Date:   Wed, 14 Aug 2019 16:17:09 +0000
+Message-ID: <8e8db765-cb2d-ca59-6712-5dd51ca83baf@fb.com>
+References: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
+ <20190813102318.5521-2-ivan.khoronzhuk@linaro.org>
+ <CAEf4BzZ2y_DmTXkVqFh6Hdcquo6UvntvCygw5h5WwrWYXRRg_g@mail.gmail.com>
+ <20190814092403.GA4142@khorivan> <20190814115659.GC4142@khorivan>
+ <CAJ+HfNiqu7WEoBFnfK3znU4tVyAmpPVabTjTSKH1ZVo2W1rrXg@mail.gmail.com>
+In-Reply-To: <CAJ+HfNiqu7WEoBFnfK3znU4tVyAmpPVabTjTSKH1ZVo2W1rrXg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR1701CA0022.namprd17.prod.outlook.com
+ (2603:10b6:301:14::32) To BYAPR15MB3384.namprd15.prod.outlook.com
+ (2603:10b6:a03:10e::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::2:b5df]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 598ce849-83d5-469e-1b1e-08d720d2db88
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR15MB2246;
+x-ms-traffictypediagnostic: BYAPR15MB2246:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BYAPR15MB224639C473EAF61B8BB6A35FD3AD0@BYAPR15MB2246.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01294F875B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(366004)(396003)(39860400002)(346002)(52314003)(199004)(189003)(102836004)(14454004)(86362001)(46003)(2616005)(99286004)(476003)(966005)(53936002)(8676002)(6306002)(31696002)(446003)(11346002)(66574012)(486006)(52116002)(76176011)(478600001)(305945005)(6506007)(386003)(25786009)(186003)(53546011)(7736002)(6246003)(110136005)(81166006)(81156014)(36756003)(66946007)(316002)(7416002)(66446008)(64756008)(66476007)(31686004)(6436002)(2906002)(66556008)(8936002)(71200400001)(71190400001)(5660300002)(6486002)(256004)(6116002)(6512007)(229853002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2246;H:BYAPR15MB3384.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3CLGnUKUnJaD0B4GdWqduxUulMlW00brvpRxSnQ0daZ65kxeMCVKQHLPgm8WcFnzE0I6g/3QDyiyhh3qtku31h0ohCT9HwErBJ8F5gXbixKHRikXb+0aRqMvvw1g7POUejyr3YmmVVO9VjmheXhp2erYJXObvinzf3jW+SeiQ+heVmbFVn9dh2A56lKVz67ZxUJl6hxXJSS4OyIliGOk7JrOHBlfayBziIvtW9xhRAykSDDd+8l4mUM1Ottjek4z86q1l0TBhFQoOgQ4yWtY/Bi03nzs3zzAn2YrSkOPyuPH0on17sv2mIvxHcD6wUrkQynHkjlpbYXAkyk/Icm/O1MCETigU0kpJ2fta1IVwK74uYxFoCFpnA7JmlqzxeTE3R4QVxJXAey6ghm8l3ecCUb0oOyAC436GHXtkxtkJfk=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <272FBCED56A08A4998F027F0A8B683B2@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3181509c-a167-28c8-fb8b-947b7c72a65c@ysoft.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-MS-Exchange-CrossTenant-Network-Message-Id: 598ce849-83d5-469e-1b1e-08d720d2db88
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 16:17:09.6804
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /lvm4ntFO+cipUwDsoI2oFJfam+vlZ8YzsUCS9HLsd4ZBoncAqjqEriGb/uQ3NmL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2246
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-14_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908140156
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Michal,
-
-[adapted the Subject to the actual topic of this mail]
-
-On Wed, Aug 14, 2019 at 04:07:21PM +0200, Michal Vokáč wrote:
-> > Honestly I think most pwm users won't mind and they should get the
-> > possibility to tell they prefer pwm_apply_state to return immediately
-> > even if this could result in a spike. But we're not there yet.
-> > (Actually there are three things a PWM consumer might want:
-> > 
-> >   a) stop immediately;
-> >   b) complete the currently running period, then stop and return
-> >   only
-> >      when the period is completed; or
-> >   c) complete the currently running period and then stop, return
-> >   immediately if
-> >      possible.
-> > 
-> > Currently the expected semantic is b).
-> 
-> I am sorry for interrupting your discussion. From my (last year or so)
-> observation of the PWM mailing list I see this as a common pattern in
-> almost every submission of a new PWM driver. That is PWM driver authors
-> keep submitting solution a) and you tell them the expected behavior
-> is b).
-
-The history is that there was a discussion about something related to
-the pwm-imx27 or the pwm-mxs driver between Thierry and me. I don't
-remember the exact issue though. My impression back then was that
-Thierry had a conception of how a PWM should work that was idealised and
-hard to implement with a big part of the actually available hardware
-implementations. In the end Thierry ended the discussion saying
-something like: "I'm not aware that the available drivers don't fulfill
-the requirements so I must assume they are right. If you know otherwise,
-please tell us. I'm not willing to change the API's requirements just
-because of one or two drivers having problems." (I didn't look up the
-mail thread, so this is not an exact quote.)
-
-One of these requirements was b) from above. So if you notice a common
-pattern here on the list that most new drivers have problems to
-implement b) I'm happy. I let you decide what this probably means for
-the existing drivers.
-
-> Why is that? I hope that the fact that implementing a) is simpler
-> than b) is not the main reason. I believe that people think a)
-> is the correct solution.
-
-Honestly I think people are not aware of the requirements and/or don't
-care enough about these details instead of actively being convinced that
-a) is right. Their test cases are most of the time quite limited and if
-the LED's brightness reacts according to the expectations the driver is
-considered done.
-
-And I agree with Thierry that in some situations it is sane to require
-that periods are completed to prevent spikes. (I'm not a hardware guy,
-but I think controlling a step motor is such a situation where you'd want
-to prevent spikes.)
-
-> I agree that smooth transition from one period/duty setting to
-> different setting makes sense. But I also believe the expected
-> behavior of setting enabled=0 is different. That is to stop
-> immediately the technology that is fed by the PWM signal.
-> Otherwise the concept of enabled/disabled does not make sense
-> because setting duty=0 would have the same effect.
-
-That's approximately my argumentation from back then. I asked several
-times what was the difference between duty=0 and enabled=0. Thierry was
-unable to come up with a better explanation but insisted there was a
-difference. (Later I became aware that there is a difference, i.e. with
-duty=0 the inactive time still has to be a multiple of the configured
-period. So disabled is actually equivalent to duty=0 with an
-infinitesimal period. Unless I missed something of course.)
-
-I even questioned if consumers really care about a PWM going to it's
-inactive level on disable and suggested to introduce something to the
-PWM API to let consumers express they don't care. But the discussion
-led nowhere. In my eyes the PWM framework would become better if
-consumers were able to specify their intentions in a more detailed way.
-Thierry didn't agree.
-
-I think allowing lowlevel drivers to act immediately on enabled=0 would
-be fine. Consumers who'd want to disable only after completion of the
-currently running period could then do:
-
-	pwm_apply(pwm, duty=0, period=dontcare, enabled=1);
-	pwm_apply(pwm, duty=0, period=dontcare, enabled=0);
-
-to achieve this completion. So after all consumers are converted the API
-is more powerful than before because consumers have the choice between
-the above and a single
-
-	pwm_apply(pwm, duty=0, period=dontcare, enabled=0);
-
-The net benefit is that consumers don't have to wait if they don't
-actually care about completing the period. The downside is that all
-consumers must be reviewed and maybe fixed and maybe that people's
-expectations are not met anymore. (But I doubt the latter a bit because
-I'm not sure that most people actually expect that pwm_apply() blocks
-until the output reached its disabled state.)
-
-And we could even go further and tell consumers who care about the
-output's level should not disable the pwm but instead do
-
-	pwm_apply(pwm, duty=0, period=1, enabled=1);
-
-which has effectively the same semantic as enabled=0 today. This would
-give at least two (probably more) PWM drivers the freedom to really
-disable the hardware which might result in something different than
-"inactive level" without taking the possibility from consumers to
-actually request what they want.
-
-> So I still wonder where the expectation for b) is coming from.
-> What would be the physical/electrical reasoning for b)?
-> Why/how it can be dangerous/harmful for any device to stop the
-> PWM signal immediately?
-
-Maybe you can get Thierry to answer this. He is the source of this
-requirement.
-
-> Would be great to finally reach consensus on that so the expected
-> behavior can be documented. I know you already attempted that [1].
-> I think you have done a great job but I still consider the part
-> about state changes little controversial and unresolved.
-
-I'm completely open to document the expectations. I'm also open to shift
-the expectations to something that is saner and/or gives consumers more
-possibilities. But it's Thierry's responsibility to go forward here or
-at least stop the blockade.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+DQoNCk9uIDgvMTQvMTkgNjozMiBBTSwgQmrDtnJuIFTDtnBlbCB3cm90ZToNCj4gT24gV2VkLCAx
+NCBBdWcgMjAxOSBhdCAxMzo1NywgSXZhbiBLaG9yb256aHVrDQo+IDxpdmFuLmtob3JvbnpodWtA
+bGluYXJvLm9yZz4gd3JvdGU6DQo+Pg0KPj4gT24gV2VkLCBBdWcgMTQsIDIwMTkgYXQgMTI6MjQ6
+MDVQTSArMDMwMCwgSXZhbiBLaG9yb256aHVrIHdyb3RlOg0KPj4+IE9uIFR1ZSwgQXVnIDEzLCAy
+MDE5IGF0IDA0OjM4OjEzUE0gLTA3MDAsIEFuZHJpaSBOYWtyeWlrbyB3cm90ZToNCj4+Pg0KPj4+
+IEhpLCBBbmRyaWkNCj4+Pg0KPj4+PiBPbiBUdWUsIEF1ZyAxMywgMjAxOSBhdCAzOjI0IEFNIEl2
+YW4gS2hvcm9uemh1aw0KPj4+PiA8aXZhbi5raG9yb256aHVrQGxpbmFyby5vcmc+IHdyb3RlOg0K
+Pj4+Pj4NCj4+Pj4+IFRoYXQncyBuZWVkZWQgdG8gZ2V0IF9fTlJfbW1hcDIgd2hlbiBtbWFwMiBz
+eXNjYWxsIGlzIHVzZWQuDQo+Pj4+Pg0KPj4+Pj4gU2lnbmVkLW9mZi1ieTogSXZhbiBLaG9yb256
+aHVrIDxpdmFuLmtob3JvbnpodWtAbGluYXJvLm9yZz4NCj4+Pj4+IC0tLQ0KPj4+Pj4gdG9vbHMv
+bGliL2JwZi94c2suYyB8IDEgKw0KPj4+Pj4gMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCsp
+DQo+Pj4+Pg0KPj4+Pj4gZGlmZiAtLWdpdCBhL3Rvb2xzL2xpYi9icGYveHNrLmMgYi90b29scy9s
+aWIvYnBmL3hzay5jDQo+Pj4+PiBpbmRleCA1MDA3YjVkNGZkMmMuLmYyZmM0MGY5ODA0YyAxMDA2
+NDQNCj4+Pj4+IC0tLSBhL3Rvb2xzL2xpYi9icGYveHNrLmMNCj4+Pj4+ICsrKyBiL3Rvb2xzL2xp
+Yi9icGYveHNrLmMNCj4+Pj4+IEBAIC0xMiw2ICsxMiw3IEBADQo+Pj4+PiAjaW5jbHVkZSA8c3Rk
+bGliLmg+DQo+Pj4+PiAjaW5jbHVkZSA8c3RyaW5nLmg+DQo+Pj4+PiAjaW5jbHVkZSA8dW5pc3Rk
+Lmg+DQo+Pj4+PiArI2luY2x1ZGUgPGFzbS91bmlzdGQuaD4NCj4+Pj4NCj4+Pj4gYXNtL3VuaXN0
+ZC5oIGlzIG5vdCBwcmVzZW50IGluIEdpdGh1YiBsaWJicGYgcHJvamVjdGlvbi4gSXMgdGhlcmUg
+YW55DQo+Pj4NCj4+PiBMb29rIG9uIGluY2x1ZGVzIGZyb20NCj4+PiB0b29scy9saWIvYnBmL2xp
+YnBmLmMNCj4+PiB0b29scy9saWIvYnBmL2JwZi5jDQo+Pj4NCj4+PiBUaGF0J3MgaG93IGl0J3Mg
+ZG9uZS4uLiBDb3BwaW5nIGhlYWRlcnMgdG8gYXJjaC9hcm0gd2lsbCBub3QNCj4+PiBzb2x2ZSB0
+aGlzLCBpdCBpbmNsdWRlcyBib3RoIG9mIHRoZW0gYW55d2F5LCBhbmQgYW55d2F5IGl0IG5lZWRz
+DQo+Pj4gYXNtL3VuaXN0ZC5oIGluY2x1c2lvbiBoZXJlLCBvbmx5IGJlY2F1c2UgeHNrLmMgbmVl
+ZHMgX19OUl8qDQo+Pj4NCj4+Pg0KPj4NCj4+IFRoZXJlIGlzIG9uZSBtb3JlIHJhZGljYWwgc29s
+dXRpb24gZm9yIHRoaXMgSSBjYW4gc2VuZCwgYnV0IEknbSBub3Qgc3VyZSBob3cgaXQNCj4+IGNh
+biBpbXBhY3Qgb24gb3RoZXIgc3lzY2Fscy9hcmNoZXMuLi4NCj4+DQo+PiBMb29rcyBsaWtlOg0K
+Pj4NCj4+DQo+PiBkaWZmIC0tZ2l0IGEvdG9vbHMvbGliL2JwZi9NYWtlZmlsZSBiL3Rvb2xzL2xp
+Yi9icGYvTWFrZWZpbGUNCj4+IGluZGV4IDkzMTIwNjZhMWFlMy4uOGIyZjhmZjdjZTQ0IDEwMDY0
+NA0KPj4gLS0tIGEvdG9vbHMvbGliL2JwZi9NYWtlZmlsZQ0KPj4gKysrIGIvdG9vbHMvbGliL2Jw
+Zi9NYWtlZmlsZQ0KPj4gQEAgLTExMyw2ICsxMTMsNyBAQCBvdmVycmlkZSBDRkxBR1MgKz0gLVdl
+cnJvciAtV2FsbA0KPj4gICBvdmVycmlkZSBDRkxBR1MgKz0gLWZQSUMNCj4+ICAgb3ZlcnJpZGUg
+Q0ZMQUdTICs9ICQoSU5DTFVERVMpDQo+PiAgIG92ZXJyaWRlIENGTEFHUyArPSAtZnZpc2liaWxp
+dHk9aGlkZGVuDQo+PiArb3ZlcnJpZGUgQ0ZMQUdTICs9IC1EX0ZJTEVfT0ZGU0VUX0JJVFM9NjQN
+Cj4+DQo+IA0KPiBIbW0sIGlzbid0IHRoaXMgZ2xpYmMtaXNtPyBEb2VzIGlzIGl0IHdvcmsgZm9y
+LCBzYXksIG11c2wgb3IgYmlvbmljPw0KPiANCj4gSWYgdGhpcyBpcyBwb3J0YWJsZSwgYW5kIHdv
+cmtzIG9uIDMyLSwgYW5kIDY0LWJpdCBhcmNocywgSSdtIGhhcHB5DQo+IHdpdGggdGhlIHBhdGNo
+LiA6LSkNCg0KU2Vjb25kIGhlcmUuIExvb2tzIGRlZmluaW5nIC1EX0ZJTEVfT0ZGU0VUX0JJVFM9
+NjQgaXMgYSB3ZWxsIGtub3duDQpmaXggZm9yIDMyYml0IHN5c3RlbSB0byBkZWFsIHdpdGggZmls
+ZXMgPiAyR0IuDQpJIHJlbWVtYmVyZWQgSSB1c2VkIGl0IGluIGRpc3RhbnQgcGFzdC4gVGhlIGJl
+bG93IGxpbmsNCmFsc28gZXhwbGFpbnMgdGhlIGNhc2UuDQpodHRwczovL2RpZ2l0YWwtZG9tYWlu
+Lm5ldC9sYXJnZWZpbGVzLmh0bWwNCg0KVGVzdGluZyBvbiBtdXNsIGlzIG5lY2Vzc2FyeSBhcyBB
+cm5hbGRvJ3MgcGVyZiB0ZXN0IHN1aXRlDQppbmRlZWQgdGVzdGVkIGl0LiBQcm9iYWJseSBiaW9u
+aWMgdG9vLCBub3QgcmVhbGx5IGZhbWlsaWFyIHdpdGggdGhhdC4NCg0KPiANCj4gDQo+IEJqw7Zy
+bg0KPiANCj4+ICAgaWZlcSAoJChWRVJCT1NFKSwxKQ0KPj4gICAgIFEgPQ0KPj4gZGlmZiAtLWdp
+dCBhL3Rvb2xzL2xpYi9icGYveHNrLmMgYi90b29scy9saWIvYnBmL3hzay5jDQo+PiBpbmRleCBm
+MmZjNDBmOTgwNGMuLmZmMmQwM2I4MzgwZCAxMDA2NDQNCj4+IC0tLSBhL3Rvb2xzL2xpYi9icGYv
+eHNrLmMNCj4+ICsrKyBiL3Rvb2xzL2xpYi9icGYveHNrLmMNCj4+IEBAIC03NSwyMyArNzUsNiBA
+QCBzdHJ1Y3QgeHNrX25sX2luZm8gew0KPj4gICAgICAgICAgaW50IGZkOw0KPj4gICB9Ow0KPj4N
+Cj4+IC0vKiBGb3IgMzItYml0IHN5c3RlbXMsIHdlIG5lZWQgdG8gdXNlIG1tYXAyIGFzIHRoZSBv
+ZmZzZXRzIGFyZSA2NC1iaXQuDQo+PiAtICogVW5mb3J0dW5hdGVseSwgaXQgaXMgbm90IHBhcnQg
+b2YgZ2xpYmMuDQo+PiAtICovDQo+PiAtc3RhdGljIGlubGluZSB2b2lkICp4c2tfbW1hcCh2b2lk
+ICphZGRyLCBzaXplX3QgbGVuZ3RoLCBpbnQgcHJvdCwgaW50IGZsYWdzLA0KPj4gLSAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBpbnQgZmQsIF9fdTY0IG9mZnNldCkNCj4+IC17DQo+PiAtI2lm
+ZGVmIF9fTlJfbW1hcDINCj4+IC0gICAgICAgdW5zaWduZWQgaW50IHBhZ2Vfc2hpZnQgPSBfX2J1
+aWx0aW5fZmZzKGdldHBhZ2VzaXplKCkpIC0gMTsNCj4+IC0gICAgICAgbG9uZyByZXQgPSBzeXNj
+YWxsKF9fTlJfbW1hcDIsIGFkZHIsIGxlbmd0aCwgcHJvdCwgZmxhZ3MsIGZkLA0KPj4gLSAgICAg
+ICAgICAgICAgICAgICAgICAgICAgKG9mZl90KShvZmZzZXQgPj4gcGFnZV9zaGlmdCkpOw0KPj4g
+LQ0KPj4gLSAgICAgICByZXR1cm4gKHZvaWQgKilyZXQ7DQo+PiAtI2Vsc2UNCj4+IC0gICAgICAg
+cmV0dXJuIG1tYXAoYWRkciwgbGVuZ3RoLCBwcm90LCBmbGFncywgZmQsIG9mZnNldCk7DQo+PiAt
+I2VuZGlmDQo+PiAtfQ0KPj4gLQ0KPj4gICBpbnQgeHNrX3VtZW1fX2ZkKGNvbnN0IHN0cnVjdCB4
+c2tfdW1lbSAqdW1lbSkNCj4+ICAgew0KPj4gICAgICAgICAgcmV0dXJuIHVtZW0gPyB1bWVtLT5m
+ZCA6IC1FSU5WQUw7DQo+PiBAQCAtMjExLDEwICsxOTQsOSBAQCBpbnQgeHNrX3VtZW1fX2NyZWF0
+ZShzdHJ1Y3QgeHNrX3VtZW0gKip1bWVtX3B0ciwgdm9pZCAqdW1lbV9hcmVhLCBfX3U2NCBzaXpl
+LA0KPj4gICAgICAgICAgICAgICAgICBnb3RvIG91dF9zb2NrZXQ7DQo+PiAgICAgICAgICB9DQo+
+Pg0KPj4gLSAgICAgICBtYXAgPSB4c2tfbW1hcChOVUxMLCBvZmYuZnIuZGVzYyArDQo+PiAtICAg
+ICAgICAgICAgICAgICAgICAgIHVtZW0tPmNvbmZpZy5maWxsX3NpemUgKiBzaXplb2YoX191NjQp
+LA0KPj4gLSAgICAgICAgICAgICAgICAgICAgICBQUk9UX1JFQUQgfCBQUk9UX1dSSVRFLCBNQVBf
+U0hBUkVEIHwgTUFQX1BPUFVMQVRFLA0KPj4gLSAgICAgICAgICAgICAgICAgICAgICB1bWVtLT5m
+ZCwgWERQX1VNRU1fUEdPRkZfRklMTF9SSU5HKTsNCj4+ICsgICAgICAgbWFwID0gbW1hcChOVUxM
+LCBvZmYuZnIuZGVzYyArIHVtZW0tPmNvbmZpZy5maWxsX3NpemUgKiBzaXplb2YoX191NjQpLA0K
+Pj4gKyAgICAgICAgICAgICAgICAgIFBST1RfUkVBRCB8IFBST1RfV1JJVEUsIE1BUF9TSEFSRUQg
+fCBNQVBfUE9QVUxBVEUsIHVtZW0tPmZkLA0KPj4gKyAgICAgICAgICAgICAgICAgIFhEUF9VTUVN
+X1BHT0ZGX0ZJTExfUklORyk7DQo+PiAgICAgICAgICBpZiAobWFwID09IE1BUF9GQUlMRUQpIHsN
+Cj4+ICAgICAgICAgICAgICAgICAgZXJyID0gLWVycm5vOw0KPj4gICAgICAgICAgICAgICAgICBn
+b3RvIG91dF9zb2NrZXQ7DQo+PiBAQCAtMjI4LDEwICsyMTAsOSBAQCBpbnQgeHNrX3VtZW1fX2Ny
+ZWF0ZShzdHJ1Y3QgeHNrX3VtZW0gKip1bWVtX3B0ciwgdm9pZCAqdW1lbV9hcmVhLCBfX3U2NCBz
+aXplLA0KPj4gICAgICAgICAgZmlsbC0+cmluZyA9IG1hcCArIG9mZi5mci5kZXNjOw0KPj4gICAg
+ICAgICAgZmlsbC0+Y2FjaGVkX2NvbnMgPSB1bWVtLT5jb25maWcuZmlsbF9zaXplOw0KPj4NCj4+
+IC0gICAgICAgbWFwID0geHNrX21tYXAoTlVMTCwNCj4+IC0gICAgICAgICAgICAgICAgICAgICAg
+b2ZmLmNyLmRlc2MgKyB1bWVtLT5jb25maWcuY29tcF9zaXplICogc2l6ZW9mKF9fdTY0KSwNCj4+
+IC0gICAgICAgICAgICAgICAgICAgICAgUFJPVF9SRUFEIHwgUFJPVF9XUklURSwgTUFQX1NIQVJF
+RCB8IE1BUF9QT1BVTEFURSwNCj4+IC0gICAgICAgICAgICAgICAgICAgICAgdW1lbS0+ZmQsIFhE
+UF9VTUVNX1BHT0ZGX0NPTVBMRVRJT05fUklORyk7DQo+PiArICAgICAgIG1hcCA9IG1tYXAoTlVM
+TCwgb2ZmLmNyLmRlc2MgKyB1bWVtLT5jb25maWcuY29tcF9zaXplICogc2l6ZW9mKF9fdTY0KSwN
+Cj4+ICsgICAgICAgICAgICAgICAgICBQUk9UX1JFQUQgfCBQUk9UX1dSSVRFLCBNQVBfU0hBUkVE
+IHwgTUFQX1BPUFVMQVRFLCB1bWVtLT5mZCwNCj4+ICsgICAgICAgICAgICAgICAgICBYRFBfVU1F
+TV9QR09GRl9DT01QTEVUSU9OX1JJTkcpOw0KPj4gICAgICAgICAgaWYgKG1hcCA9PSBNQVBfRkFJ
+TEVEKSB7DQo+PiAgICAgICAgICAgICAgICAgIGVyciA9IC1lcnJubzsNCj4+ICAgICAgICAgICAg
+ICAgICAgZ290byBvdXRfbW1hcDsNCj4+IEBAIC01NTIsMTEgKzUzMywxMCBAQCBpbnQgeHNrX3Nv
+Y2tldF9fY3JlYXRlKHN0cnVjdCB4c2tfc29ja2V0ICoqeHNrX3B0ciwgY29uc3QgY2hhciAqaWZu
+YW1lLA0KPj4gICAgICAgICAgfQ0KPj4NCj4+ICAgICAgICAgIGlmIChyeCkgew0KPj4gLSAgICAg
+ICAgICAgICAgIHJ4X21hcCA9IHhza19tbWFwKE5VTEwsIG9mZi5yeC5kZXNjICsNCj4+IC0gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB4c2stPmNvbmZpZy5yeF9zaXplICogc2l6ZW9m
+KHN0cnVjdCB4ZHBfZGVzYyksDQo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+UFJPVF9SRUFEIHwgUFJPVF9XUklURSwNCj4+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBNQVBfU0hBUkVEIHwgTUFQX1BPUFVMQVRFLA0KPj4gLSAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHhzay0+ZmQsIFhEUF9QR09GRl9SWF9SSU5HKTsNCj4+ICsgICAgICAgICAg
+ICAgICByeF9tYXAgPSBtbWFwKE5VTEwsIG9mZi5yeC5kZXNjICsNCj4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHhzay0+Y29uZmlnLnJ4X3NpemUgKiBzaXplb2Yoc3RydWN0IHhkcF9k
+ZXNjKSwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFBST1RfUkVBRCB8IFBST1Rf
+V1JJVEUsIE1BUF9TSEFSRUQgfCBNQVBfUE9QVUxBVEUsDQo+PiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB4c2stPmZkLCBYRFBfUEdPRkZfUlhfUklORyk7DQo+PiAgICAgICAgICAgICAg
+ICAgIGlmIChyeF9tYXAgPT0gTUFQX0ZBSUxFRCkgew0KPj4gICAgICAgICAgICAgICAgICAgICAg
+ICAgIGVyciA9IC1lcnJubzsNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICBnb3RvIG91dF9z
+b2NrZXQ7DQo+PiBAQCAtNTcxLDExICs1NTEsMTAgQEAgaW50IHhza19zb2NrZXRfX2NyZWF0ZShz
+dHJ1Y3QgeHNrX3NvY2tldCAqKnhza19wdHIsIGNvbnN0IGNoYXIgKmlmbmFtZSwNCj4+ICAgICAg
+ICAgIHhzay0+cnggPSByeDsNCj4+DQo+PiAgICAgICAgICBpZiAodHgpIHsNCj4+IC0gICAgICAg
+ICAgICAgICB0eF9tYXAgPSB4c2tfbW1hcChOVUxMLCBvZmYudHguZGVzYyArDQo+PiAtICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgeHNrLT5jb25maWcudHhfc2l6ZSAqIHNpemVvZihz
+dHJ1Y3QgeGRwX2Rlc2MpLA0KPj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFBS
+T1RfUkVBRCB8IFBST1RfV1JJVEUsDQo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgTUFQX1NIQVJFRCB8IE1BUF9QT1BVTEFURSwNCj4+IC0gICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB4c2stPmZkLCBYRFBfUEdPRkZfVFhfUklORyk7DQo+PiArICAgICAgICAgICAg
+ICAgdHhfbWFwID0gbW1hcChOVUxMLCBvZmYudHguZGVzYyArDQo+PiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB4c2stPmNvbmZpZy50eF9zaXplICogc2l6ZW9mKHN0cnVjdCB4ZHBfZGVz
+YyksDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBQUk9UX1JFQUQgfCBQUk9UX1dS
+SVRFLCBNQVBfU0hBUkVEIHwgTUFQX1BPUFVMQVRFLA0KPj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgeHNrLT5mZCwgWERQX1BHT0ZGX1RYX1JJTkcpOw0KPj4gICAgICAgICAgICAgICAg
+ICBpZiAodHhfbWFwID09IE1BUF9GQUlMRUQpIHsNCj4+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICBlcnIgPSAtZXJybm87DQo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgZ290byBvdXRfbW1h
+cF9yeDsNCj4+DQo+Pg0KPj4gSWYgbWFpbnRhaW5lcnMgYXJlIHJlYWR5IHRvIGFjY2VwdCB0aGlz
+IEkgY2FuIHNlbmQuDQo+PiBXaGF0IGRvIHlvdSBzYXk/DQo+Pg0KPj4gLS0NCj4+IFJlZ2FyZHMs
+DQo+PiBJdmFuIEtob3JvbnpodWsNCg==
