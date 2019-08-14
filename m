@@ -2,120 +2,143 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F56C32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBF8C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FEDE206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:54:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SdT02fPi"
+	by mail.kernel.org (Postfix) with ESMTP id 8C944206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfHNKyq (ORCPT
+        id S1727564AbfHNKzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:54:46 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50544 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbfHNKym (ORCPT
+        Wed, 14 Aug 2019 06:55:42 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50547 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbfHNKzm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:54:42 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v15so4190998wml.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 03:54:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=tT1WBkErjAogTXzuIr64b4Ipw6zSwCNCCPdgxI3cPic=;
-        b=SdT02fPizF4VsboyubypNXDpHVLnbdZbIsuPH+ovAlV5oBYyfxf+IqaHkW/lXVSOgg
-         kwC+GscgHbhE+BM34hlIzT1cHQV6ngH7tNC6TG6DmwZgNBLe2MCZ3Jmg07GXmPHYOjbr
-         k8NQN/NtlfNnCZyMXOYOJxsiWf1JmP53Mq5BITPOgRDzYyO3Cs8pF9uq2ZIMQNO8QJF9
-         o884eKSq00ZGTYrgQWUjcD9Rs6p7yHWWqjEpnGMmjiHchQLPx/2yM62XgRZYSEQ7tqg2
-         rDfQ/uBtjTxdZcZUQXerWQzzjolGQb0sTjZZnUuqFYftQRe7QZM7gpY1vADKoRV3FXTd
-         puUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=tT1WBkErjAogTXzuIr64b4Ipw6zSwCNCCPdgxI3cPic=;
-        b=k9gqmjypYOG6E3wzWNDBEGxyLrqc1M8ESbVKML/x4tz1Mc5pxFgxbuWj4GLocapefL
-         uEhzLE0Fgp6RLFuO+mflu3QrhoseYrEdKorC1uQOKaOqtdFX5+aNKMcAsw66GwBTyIa+
-         p+/eyVdCaK6GshaAPfEVP+KGeGns43UH6JLy5oDUwlC86gQ6U9AT+SQBtAY3z5H/WITm
-         3d4SoKdloB2FqqcbBVlrl0Z7IYqDDDvvhX8v/nUEp1+N4nuOprkd4eX6oObw8uSRqDys
-         SOl1QidERP51f4OEYmkzvW06GzUB5TjwI/g9WVgcf4YEBjlV6gffST7xQuyOFhYG6q6c
-         3E+g==
-X-Gm-Message-State: APjAAAW5e3nuGMQqXrR+QEi582L0oSwDpqwDocbnmkhlXHxcnW6ssziI
-        Q+ID4llAlHp06cr8GNaiNSpZkQ==
-X-Google-Smtp-Source: APXvYqyKLin58q1G/qvQ8vEt+Ct9hq4RH5l/rpi6T0U8tdIutWirP+pgkhY/ww5FQqvj81PeYCpPOA==
-X-Received: by 2002:a1c:a8c9:: with SMTP id r192mr8019337wme.43.1565780080798;
-        Wed, 14 Aug 2019 03:54:40 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id e9sm2998336wrm.43.2019.08.14.03.54.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 03:54:39 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 11:54:37 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Wed, 14 Aug 2019 06:55:42 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxqwK-00058t-Au; Wed, 14 Aug 2019 12:55:36 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxqwJ-0008Ni-1w; Wed, 14 Aug 2019 12:55:35 +0200
+Date:   Wed, 14 Aug 2019 12:55:35 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: aspeed: Remove mention of deprecated
- compatibles
-Message-ID: <20190814105437.GE26727@dell>
-References: <20190724081313.12934-1-andrew@aj.id.au>
- <20190724081313.12934-4-andrew@aj.id.au>
- <CACRpkdZCJWeZO6CFvkq4uhnX+o_q_AfkDZ=a2kmUgbS3JtDqfA@mail.gmail.com>
- <20190812101504.GF26727@dell>
- <CACRpkdapA_-yp4ihY3S+CHMmDMKU2b0u=sj2UhJ-cvv39Dji_g@mail.gmail.com>
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
+Subject: Re: [PATCH v2 2/2] pwm: sprd: Add Spreadtrum PWM support
+Message-ID: <20190814105535.svslc57qp3wx5lub@pengutronix.de>
+References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+ <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
+ <20190813151612.v6x6e6kzxflkpu7b@pengutronix.de>
+ <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
+ <20190814092339.73ybj5mycklvpnrq@pengutronix.de>
+ <CAMz4ku+3txx5kO-u_+_pxFwoovnX81WFF-moNBasUUgEpvQb+Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdapA_-yp4ihY3S+CHMmDMKU2b0u=sj2UhJ-cvv39Dji_g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAMz4ku+3txx5kO-u_+_pxFwoovnX81WFF-moNBasUUgEpvQb+Q@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019, Linus Walleij wrote:
+Hello Baolin,
 
-> On Mon, Aug 12, 2019 at 12:15 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > On Mon, 05 Aug 2019, Linus Walleij wrote:
+On Wed, Aug 14, 2019 at 06:01:50PM +0800, Baolin Wang wrote:
+> On Wed, 14 Aug 2019 at 17:23, Uwe Kleine-Kˆnig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Wed, Aug 14, 2019 at 04:42:28PM +0800, Baolin Wang wrote:
+> > > On Tue, 13 Aug 2019 at 23:16, Uwe Kleine-Kˆnig
+> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > On Tue, Aug 13, 2019 at 09:46:41PM +0800, Baolin Wang wrote:
+> > > > [...]
+> > > Not really, our hardware's method is, when you changed a new
+> > > configuration (MOD or duty is changed) , the hardware will wait for a
+> > > while to complete current period, then change to the new period.
 > >
-> > > On Wed, Jul 24, 2019 at 10:13 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> > >
-> > > > Guide readers away from using the aspeed,g[45].* compatible patterns.
+> > Can you describe that in more detail? This doesn't explain why MOD must be
+> > configured before DUTY. Is there another reason for that?
+> 
+> Sorry, I did not explain this explicitly. When we change a new PWM
+> configuration, the PWM controller will make sure the current period is
+> completed before changing to a new period. Once setting the MOD
+> register (since we always set MOD firstly), that will tell the
+> hardware that a new period need to change.
+
+So if the current period just ended after you reconfigured MOD but
+before you wrote to DUTY we'll see a bogus period, right? I assume the
+same holds true for writing the prescale value?
+
+> The reason MOD must be configured before DUTY is that, if we
+> configured DUTY firstly, the PWM can work abnormally if the current
+> DUTY is larger than previous MOD. That is also our hardware's
+> limitation.
+
+OK, so you must not get into a situation where DUTY > MOD, right?
+
+Now if the hardware was configured for
+
+	period = 8s, duty = 4s
+
+and now you are supposed to change to
+
+	period = 2s, duty = 1s
+
+you'd need to write DUTY first, don't you?
+
+> > > > > +static int sprd_pwm_remove(struct platform_device *pdev)
+> > > > > +{
+> > > > > +     struct sprd_pwm_chip *spc = platform_get_drvdata(pdev);
+> > > > > +     int ret, i;
+> > > > > +
+> > > > > +     ret = pwmchip_remove(&spc->chip);
+> > > > > +
+> > > > > +     for (i = 0; i < spc->num_pwms; i++) {
+> > > > > +             struct sprd_pwm_chn *chn = &spc->chn[i];
+> > > > > +
+> > > > > +             clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->clks);
 > > > >
-> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > > If a PWM was still running you're effectively stopping it here, right?
+> > > > Are you sure you don't disable once more than you enabled?
 > > >
-> > > Patch applied to the pinctrl tree.
+> > > Yes, you are right. I should check current enable status of the PWM channel.
+> > > Thanks for your comments.
 > >
-> > With my Ack?
+> > I didn't recheck, but I think the right approach is to not fiddle with
+> > the clocks at all and rely on the PWM framework to not let someone call
+> > sprd_pwm_remove when a PWM is still in use.
 > 
-> Sorry no. :( Was I too trigger-happy?
-> 
-> Usually I take Rob's ACK as authoritative for anything under
-> Documentation/devicetree but if you have concerns about the
-> patch from an MFD point of view I will revert it pending further
-> discussion.
+> So you mean just return pwmchip_remove(&spc->chip); ?
 
-No need.  I would have Acked it.
+right.
+
+I just rechecked: If there is still a pwm in use, pwmchip_remove returns
+-EBUSY. So this should be safe.
+
+Best regards
+Uwe
 
 -- 
-Lee Jones [ÊùéÁêºÊñØ]
-Linaro Services Technical Lead
-Linaro.org ‚îÇ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Pengutronix e.K.                           | Uwe Kleine-Kˆnig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
