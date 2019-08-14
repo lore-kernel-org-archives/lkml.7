@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7213C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B717EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFDEF214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8570D214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749157;
-	bh=G73h3hyn60e8WBVTxkyp0DOlyih+PHC/HzJC/EH1UJM=;
+	s=default; t=1565749159;
+	bh=N05KwxBBON9wZR6VzW1kSG+0jp+4y/di9RoKzzO4QyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kj3V+X4VePi7jdEQfrc1EOnztuw8x6tGXPXU2YTZ21ud7OWncrEO/JJc9Rq9/jumd
-	 J4ZsI10KCo4T7ydb57clMp+GDbX4NCEfwVU+c4zMKbXjOsHZI2IoDAIArGJu6eKuX7
-	 julWuc0cYKuxwjGiGSDyNh11OaxGlDApA7Dj2Nvw=
+	b=SBvr7pIKboEQHUzq425BMXEYF7jf5UOzZBVBo6TSGvqJbCmIYfQ9XtQ/z51u7rn/9
+	 GdFg0rkRgPSfBWvTuIOLmBxIAPR8VnkI13wHijxK2MiYFCN/YHqTW+7HSu42X1oIoT
+	 6UOCeS4+kQqMMNxlXfbjvrVklrG3e3yfjJQ+2CRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729674AbfHNCTQ (ORCPT
+        id S1729686AbfHNCTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:19:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49946 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:19:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729203AbfHNCTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:19:02 -0400
+        id S1729648AbfHNCTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:19:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83DC42084D;
-        Wed, 14 Aug 2019 02:19:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA1112084D;
+        Wed, 14 Aug 2019 02:19:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749142;
-        bh=G73h3hyn60e8WBVTxkyp0DOlyih+PHC/HzJC/EH1UJM=;
+        s=default; t=1565749150;
+        bh=N05KwxBBON9wZR6VzW1kSG+0jp+4y/di9RoKzzO4QyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xsr/SkPVBxw+VixXgnnzL5yFvTHTLtrZ3gXCwdfOyYYdVZl1r6RdiX1LSPSo2RWNl
-         Z2aFBScPbqIYDrAspvhSW/DNuJ8oBGuY2vwlq49avxVpoEBjp5Fv74kd1ZU59je+3t
-         azrwjcAq0iwue9cnxbUy1fg59ugPDGy7XpkGRjg4=
+        b=vHPZ+iA+G6XU0uTxgHHqSg7J8ujgHNn0z9zp/mmKEHnt+HusuD286vlR816jT3MA9
+         6OBvtH1oOHl5/BWu6HVBCm/iq36vVAC5Qn+7mjEYWBFKGVIVzo4JcvCgiWZv5BR8ZZ
+         Ghjt1WeRvLRXZruKvBpMeaYd3n0w++SCoecZs32M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        syzbot+276ddebab3382bbf72db@syzkaller.appspotmail.com,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 17/44] netfilter: ebtables: also count base chain policies
-Date:   Tue, 13 Aug 2019 22:18:06 -0400
-Message-Id: <20190814021834.16662-17-sashal@kernel.org>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 21/44] Input: kbtab - sanity check for endpoint type
+Date:   Tue, 13 Aug 2019 22:18:10 -0400
+Message-Id: <20190814021834.16662-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021834.16662-1-sashal@kernel.org>
 References: <20190814021834.16662-1-sashal@kernel.org>
@@ -62,81 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 3b48300d5cc7c7bed63fddb006c4046549ed4aec ]
+[ Upstream commit c88090dfc84254fa149174eb3e6a8458de1912c4 ]
 
-ebtables doesn't include the base chain policies in the rule count,
-so we need to add them manually when we call into the x_tables core
-to allocate space for the comapt offset table.
+The driver should check whether the endpoint it uses has the correct
+type.
 
-This lead syzbot to trigger:
-WARNING: CPU: 1 PID: 9012 at net/netfilter/x_tables.c:649
-xt_compat_add_offset.cold+0x11/0x36 net/netfilter/x_tables.c:649
-
-Reported-by: syzbot+276ddebab3382bbf72db@syzkaller.appspotmail.com
-Fixes: 2035f3ff8eaa ("netfilter: ebtables: compat: un-break 32bit setsockopt when no rules are present")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reported-by: syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/netfilter/ebtables.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ drivers/input/tablet/kbtab.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index 48e364b11e067..100b4f88179a2 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -1779,20 +1779,28 @@ static int compat_calc_entry(const struct ebt_entry *e,
- 	return 0;
- }
+diff --git a/drivers/input/tablet/kbtab.c b/drivers/input/tablet/kbtab.c
+index a41c3ff7c9afa..705f38c12acb8 100644
+--- a/drivers/input/tablet/kbtab.c
++++ b/drivers/input/tablet/kbtab.c
+@@ -125,6 +125,10 @@ static int kbtab_probe(struct usb_interface *intf, const struct usb_device_id *i
+ 	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
+ 		return -ENODEV;
  
-+static int ebt_compat_init_offsets(unsigned int number)
-+{
-+	if (number > INT_MAX)
-+		return -EINVAL;
++	endpoint = &intf->cur_altsetting->endpoint[0].desc;
++	if (!usb_endpoint_is_int_in(endpoint))
++		return -ENODEV;
 +
-+	/* also count the base chain policies */
-+	number += NF_BR_NUMHOOKS;
-+
-+	return xt_compat_init_offsets(NFPROTO_BRIDGE, number);
-+}
+ 	kbtab = kzalloc(sizeof(struct kbtab), GFP_KERNEL);
+ 	input_dev = input_allocate_device();
+ 	if (!kbtab || !input_dev)
+@@ -163,8 +167,6 @@ static int kbtab_probe(struct usb_interface *intf, const struct usb_device_id *i
+ 	input_set_abs_params(input_dev, ABS_Y, 0, 0x1750, 4, 0);
+ 	input_set_abs_params(input_dev, ABS_PRESSURE, 0, 0xff, 0, 0);
  
- static int compat_table_info(const struct ebt_table_info *info,
- 			     struct compat_ebt_replace *newinfo)
- {
- 	unsigned int size = info->entries_size;
- 	const void *entries = info->entries;
-+	int ret;
- 
- 	newinfo->entries_size = size;
--	if (info->nentries) {
--		int ret = xt_compat_init_offsets(NFPROTO_BRIDGE,
--						 info->nentries);
--		if (ret)
--			return ret;
--	}
-+	ret = ebt_compat_init_offsets(info->nentries);
-+	if (ret)
-+		return ret;
- 
- 	return EBT_ENTRY_ITERATE(entries, size, compat_calc_entry, info,
- 							entries, newinfo);
-@@ -2240,11 +2248,9 @@ static int compat_do_replace(struct net *net, void __user *user,
- 
- 	xt_compat_lock(NFPROTO_BRIDGE);
- 
--	if (tmp.nentries) {
--		ret = xt_compat_init_offsets(NFPROTO_BRIDGE, tmp.nentries);
--		if (ret < 0)
--			goto out_unlock;
--	}
-+	ret = ebt_compat_init_offsets(tmp.nentries);
-+	if (ret < 0)
-+		goto out_unlock;
- 
- 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
- 	if (ret < 0)
+-	endpoint = &intf->cur_altsetting->endpoint[0].desc;
+-
+ 	usb_fill_int_urb(kbtab->irq, dev,
+ 			 usb_rcvintpipe(dev, endpoint->bEndpointAddress),
+ 			 kbtab->data, 8,
 -- 
 2.20.1
 
