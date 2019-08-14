@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C18DC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7BFC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 498E620843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B70C620843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748676;
-	bh=MaduVF6iNpXvWde2fkiZMZmprgBmsNqK0M2M43kp2M8=;
+	s=default; t=1565748681;
+	bh=7lqU3VISHW01Tu5PdJRQx1nmhBG8wakGY9Gmcmw4DG8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nF72rLHQ43TbZEqgNCuH4vwtbloaqMOBxvl3dT8AgNC2/047M8/0/cPh8SBifPYFu
-	 t8ulKB9eSUOqvFRVYuXcn6AS6yIcy2DRQqvySandvgIGKQXzheEkr2+hVd44iibbYe
-	 KEdpZh0VpsXgjw/6Ddp91Bg970bJYZhIlGX7h3Hc=
+	b=j62arJf7XZGAg9TnbH94dztVTjMggjGb96HDdAPx9FFUUn74/MUgvgeCq848t+f+p
+	 xtdGyzV8qjCVfI767XyaYF4OjrmH3VucCJx5xMiDOjTG/gZMxs2DeolCaYVTIHbI1U
+	 xHKIvdt8iUrw7f1UMdZjGbZGfa2dlTUFvxrLs37c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfHNCLO (ORCPT
+        id S1727376AbfHNCLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:11:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43384 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:11:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727228AbfHNCLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:11:11 -0400
+        id S1727283AbfHNCLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:11:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 732F020843;
-        Wed, 14 Aug 2019 02:11:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5742B20989;
+        Wed, 14 Aug 2019 02:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748670;
-        bh=MaduVF6iNpXvWde2fkiZMZmprgBmsNqK0M2M43kp2M8=;
+        s=default; t=1565748672;
+        bh=7lqU3VISHW01Tu5PdJRQx1nmhBG8wakGY9Gmcmw4DG8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CZbvEJtCTpDhzo4wj4iQXlAE8OaXO6UWFM8I2KAsVdXtNB8LMsTXG1QJZVEYDRShJ
-         ksoXAcEQi/eN7EP9Q4yOALMZm2MC6HjY3RDn2xAyte+hkD8OFb51q/ulJEuyvEILF9
-         Gk4++ThwPxKDSVC8+IjX1yO7Ai2Roku8uv1lf7VM=
+        b=AIp3n+Gfqy4CuYqa0DjhKGoxYjKr2rKZcKYhf7qn05FCElGN3ub80jhYOdBHNJFwZ
+         EqhBqQfsY8yWlva8kHIY/U02nSJrhUDyGn11R6Lfv89l0cgcC/9rLom3lsGg62JEr0
+         HPD8a8E+5KWIkhhUFrPOlGSqAZhLNN5XtxcYgcTc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 011/123] regulator: axp20x: fix DCDCA and DCDCD for AXP806
-Date:   Tue, 13 Aug 2019 22:08:55 -0400
-Message-Id: <20190814021047.14828-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 013/123] ASoC: samsung: odroid: fix an use-after-free issue for codec
+Date:   Tue, 13 Aug 2019 22:08:57 -0400
+Message-Id: <20190814021047.14828-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -59,53 +65,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 1ef55fed9219963359a7b3bc7edca8517c6e45ac ]
+[ Upstream commit 9b6d104a6b150bd4d3e5b039340e1f6b20c2e3c1 ]
 
-Refactoring of the driver introduced bugs in AXP806's DCDCA and DCDCD
-regulator definitions.
+The codec variable is still being used after the of_node_put() call,
+which may result in use-after-free.
 
-In DCDCA case, AXP806_DCDCA_1120mV_STEPS was obtained by subtracting
-0x47 and 0x33. This should be 0x14 (hex) and not 14 (dec).
-
-In DCDCD case, axp806_dcdcd_ranges[] contains two ranges with same
-start and end macros, which is clearly wrong. Second range starts at
-1.6V so it should use AXP806_DCDCD_1600mV_[START|END] macros. They are
-already defined but unused.
-
-Fixes: db4a555f7c4c ("regulator: axp20x: use defines for masks")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Link: https://lore.kernel.org/r/20190713090717.347-2-jernej.skrabec@siol.net
+Fixes: bc3cf17b575a ("ASoC: samsung: odroid: Add support for secondary CPU DAI")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Sangbeom Kim <sbkim73@samsung.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linux-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/1562989575-33785-2-git-send-email-wen.yang99@zte.com.cn
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/axp20x-regulator.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/samsung/odroid.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 152053361862d..c951568994a11 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -240,7 +240,7 @@
- #define AXP806_DCDCA_600mV_END		\
- 	(AXP806_DCDCA_600mV_START + AXP806_DCDCA_600mV_STEPS)
- #define AXP806_DCDCA_1120mV_START	0x33
--#define AXP806_DCDCA_1120mV_STEPS	14
-+#define AXP806_DCDCA_1120mV_STEPS	20
- #define AXP806_DCDCA_1120mV_END		\
- 	(AXP806_DCDCA_1120mV_START + AXP806_DCDCA_1120mV_STEPS)
- #define AXP806_DCDCA_NUM_VOLTAGES	72
-@@ -774,8 +774,8 @@ static const struct regulator_linear_range axp806_dcdcd_ranges[] = {
- 			       AXP806_DCDCD_600mV_END,
- 			       20000),
- 	REGULATOR_LINEAR_RANGE(1600000,
--			       AXP806_DCDCD_600mV_START,
--			       AXP806_DCDCD_600mV_END,
-+			       AXP806_DCDCD_1600mV_START,
-+			       AXP806_DCDCD_1600mV_END,
- 			       100000),
- };
+diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
+index e688169ff12ab..95c35e3ff3303 100644
+--- a/sound/soc/samsung/odroid.c
++++ b/sound/soc/samsung/odroid.c
+@@ -275,9 +275,8 @@ static int odroid_audio_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	of_node_put(cpu);
+-	of_node_put(codec);
+ 	if (ret < 0)
+-		return ret;
++		goto err_put_node;
+ 
+ 	ret = snd_soc_of_get_dai_link_codecs(dev, codec, codec_link);
+ 	if (ret < 0)
+@@ -308,6 +307,7 @@ static int odroid_audio_probe(struct platform_device *pdev)
+ 		goto err_put_clk_i2s;
+ 	}
+ 
++	of_node_put(codec);
+ 	return 0;
+ 
+ err_put_clk_i2s:
+@@ -317,6 +317,8 @@ static int odroid_audio_probe(struct platform_device *pdev)
+ err_put_cpu_dai:
+ 	of_node_put(cpu_dai);
+ 	snd_soc_of_put_dai_link_codecs(codec_link);
++err_put_node:
++	of_node_put(codec);
+ 	return ret;
+ }
  
 -- 
 2.20.1
