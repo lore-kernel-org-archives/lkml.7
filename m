@@ -2,188 +2,110 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1575BC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD2FC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32B7216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376F5216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:47:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P0DnvGoS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbfHNUqK (ORCPT
+        id S1729691AbfHNUr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 16:46:10 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:44517 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729252AbfHNUqE (ORCPT
+        Wed, 14 Aug 2019 16:47:29 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46830 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728309AbfHNUr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 16:46:04 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1McXwD-1iYj0E0IkX-00d0se; Wed, 14 Aug 2019 22:45:19 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, Tyler Hicks <tyhicks@canonical.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        yangerkun <yangerkun@huawei.com>, Jan Kara <jack@suse.cz>,
-        Wang Shilong <wshilong@ddn.com>,
-        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
-        Eric Biggers <ebiggers@google.com>, ecryptfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-nilfs@vger.kernel.org, ocfs2-devel@oss.oracle.com
-Subject: [PATCH v5 04/18] fs: compat_ioctl: move FITRIM emulation into file systems
-Date:   Wed, 14 Aug 2019 22:42:31 +0200
-Message-Id: <20190814204259.120942-5-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190814204259.120942-1-arnd@arndb.de>
-References: <20190814204259.120942-1-arnd@arndb.de>
+        Wed, 14 Aug 2019 16:47:28 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c2so116034plz.13
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 13:47:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hnJUpTOtemwk5nBGxuXtKYKIGvqrFiWTsA3kFNPOc2U=;
+        b=P0DnvGoSrwfK7tVGPup1a5QgMqgGVOt4UFe/u0p4K9g7TrpXKxi9m6Swq7g9g9vvjF
+         2y3UX12z3KOcwtga/K5WtTsRxa37WTRgu87XC5b+XfFI2QxdLpDRHayK9ceLwZ/kv0YW
+         A+NznsUcBkM4ETkmjzF1dJj3H7/POGWxzBOANsjCJGnxD1EW8OVxCx90fn2Jfn0vx6Xg
+         9LSx9h+lH4CLtsJL9jgZTHp2rHycRVUdmSiOFybzoVpEbOpB88wRj75IFfKU7Clo59XS
+         ptaOFWqGwmCErkwBtZVcNowatCYII7mle0/2SmXPIZcmp24sKnvPJrXdfby9Mt7+bKUl
+         DDIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hnJUpTOtemwk5nBGxuXtKYKIGvqrFiWTsA3kFNPOc2U=;
+        b=HODdMm6U0OkqQJSn87QvPA8xz2OdyujfSAKVKLDMzT7maEMvtRt3jYDnIQHYIDausB
+         zPICbu7UDkIhDsYRfB5E4umpM9mdD1lWTVeIH0Vt8ME+KlJ4IpcpjFPeI85ZWZVoAu/M
+         0JzTFhnHwF8Ls2BMvYNnwFf3J93vI6MVbXPW7WYb5Mx4Wah7L8Uz/J4iaJnlcTugm1bR
+         AYCT80xeysGGWpE9UYivKAf2+sR0+GYq/vrpS6Syzor67mWcd3exFkySUkkWCytWXrrT
+         wC18vhRQpf6cFlSlO5dNenVJK+i3NYTSfRI5o8dRBY+E6K3TZWYYsWZi1sOHsRi/e21h
+         Tkwg==
+X-Gm-Message-State: APjAAAXIe0wa+mJ4TDd82I/AafxwJB1thLq+Pc2GpbzJYHs6VtPWMe4t
+        14SDWU9k50MPXJDYIG2r0+y777ku9JFs5mqVQse9JA==
+X-Google-Smtp-Source: APXvYqwFwL73FewY+t6WDHifLlHyJxqFoVB+Q/M8GXQlj0cCdI9a3zg5ZvS4Xu5Wpk+usZGn7RB7Q3TyzCyeQrr2U3U=
+X-Received: by 2002:a17:902:3363:: with SMTP id a90mr1108882plc.119.1565815647717;
+ Wed, 14 Aug 2019 13:47:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:z3dV4EMHHVTIqB6irmOt7mALlth6pUBx39cxp1q/MXyyb5my9TD
- Ei9tu/20oLbXQdeGubAGFUglD7gSy7sRkwU20qqoaC5wM3V/cZvdLqBCQqcct//zQrEBTpY
- PgotaPI/UqE9QOt6pD+oJC4mYA33c2x1Cmk05o5y4PekAgaxo/Ot1QZSZphz0pO284DyXEV
- DWM5bnpXU7W9zHwvWm6+g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qJAN7Jtr+50=:Hn6FCDiPj6NPOBPlxdGPcD
- u/sYhAF03jaoyRBk1JTzPSJhVA6sz1jenvAB2hCYhY8rJaynQ1wNziuco+p8X1rl9Kp67cMlD
- 1KGuR6lzD1ZizOXIPdQ4gceT+kxjp8IdGN7ZrpkS0gKq9MoqQi3B0PxS5ThXI0Ng2kg6OLgdw
- j63zI6RZs2sN2dyRoehSpkkplSL3gjKQ0ehTyzU4LRVfqWnqjCX3UVgTgPTMZc8mfZmVMthy8
- cANIHtG1l+urhmm4NAoZd6sPkIeYchZlep67j9X/ZJ2+NNctF1pMbqGirTbZuMTPDtqAmCGhM
- OJ3oW67vdkpUTnkySAOptMGqDCEuDkcVM7GWrRCs/sWNmrmxIuoRZh4uN5zlnY+iZh8soANqG
- U4MZd09RCFAlvrtX/5sWC17n9SnT4LwmejHRG8lW6W/Q4cKOSEdsZSOsu93ymdZinsB5vTfuW
- E28Jz9wFCu5Lw4QArUqwVjq5OYs0Cwrsx572RE2TgpMNPCg2vyehiqTcJ5RtlVG2yJW8IG5kH
- +BqVGr47E8eINr6zbAHdgUVVu/MREg9NCspFJfr/kBeroTLhDyhys0jz/ewjHdYOY78CoFamB
- Er8mGksHdLDynfrxBPfQGKoypEd2p1tUAebqYCMwga+G6h9oScx/lOvsvxPbWr8rBG+/9EJtl
- gGAZjlTxh6MhDvFAH+dCwH4+fMDRQDlQ8lxqtUxTCBJ4VdpHcV+rzDKHjAz4Vflex8v/o40te
- v8sereCDav9jt6NTEZnegE8b/RzQevTpcA27uQ==
+References: <20190813050731.57131-1-matthew@mjdsystems.ca>
+In-Reply-To: <20190813050731.57131-1-matthew@mjdsystems.ca>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 14 Aug 2019 13:47:16 -0700
+Message-ID: <CAKwvOdkVToVYnpWbvK65izUFG7KVX7J+h4NhsseHsiVU3Dpz9Q@mail.gmail.com>
+Subject: Re: [PATCH] tools build: Fix clang detection with clang >= 8.0
+To:     Matthew Dawson <matthew@mjdsystems.ca>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the special case for FITRIM, and make file systems
-handle that like all other ioctl commands with their own
-handlers.
+On Mon, Aug 12, 2019 at 10:07 PM Matthew Dawson <matthew@mjdsystems.ca> wrote:
+>
+> The 8.0 release of clang/llvm moved the VirtualFileSystem.h header
+> to from clang to llvm.  This change causes a compile error, causing
+> perf to not detect clang/llvm.
+>
+> Fix by including the right header for the different versions of llvm,
+> using the older header for llvm < 8, and the new header for llvm >= 8.
+>
+> Signed-off-by: Matthew Dawson <matthew@mjdsystems.ca>
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/compat_ioctl.c  | 2 --
- fs/ecryptfs/file.c | 1 +
- fs/ext4/ioctl.c    | 1 +
- fs/f2fs/file.c     | 1 +
- fs/hpfs/dir.c      | 1 +
- fs/hpfs/file.c     | 1 +
- fs/nilfs2/ioctl.c  | 1 +
- fs/ocfs2/ioctl.c   | 1 +
- 8 files changed, 7 insertions(+), 2 deletions(-)
+Specifically the header was moved in svn revision r344140.
+llvmorg-8.0.0 was tagged off of r356365, while llvmorg-7.0.0 is tagged
+off of r342383.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index 1e740f4406d3..b20228c19ccd 100644
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -345,8 +345,6 @@ static int ppp_scompress(struct file *file, unsigned int cmd,
- static unsigned int ioctl_pointer[] = {
- /* Little t */
- COMPATIBLE_IOCTL(TIOCOUTQ)
--/* 'X' - originally XFS but some now in the VFS */
--COMPATIBLE_IOCTL(FITRIM)
- #ifdef CONFIG_BLOCK
- /* Big S */
- COMPATIBLE_IOCTL(SCSI_IOCTL_GET_IDLUN)
-diff --git a/fs/ecryptfs/file.c b/fs/ecryptfs/file.c
-index feecb57defa7..5fb45d865ce5 100644
---- a/fs/ecryptfs/file.c
-+++ b/fs/ecryptfs/file.c
-@@ -378,6 +378,7 @@ ecryptfs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		return rc;
- 
- 	switch (cmd) {
-+	case FITRIM:
- 	case FS_IOC32_GETFLAGS:
- 	case FS_IOC32_SETFLAGS:
- 	case FS_IOC32_GETVERSION:
-diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-index 442f7ef873fc..7a6e0f0f69e2 100644
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -1227,6 +1227,7 @@ long ext4_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	}
- 	case EXT4_IOC_MOVE_EXT:
- 	case EXT4_IOC_RESIZE_FS:
-+	case FITRIM:
- 	case EXT4_IOC_PRECACHE_EXTENTS:
- 	case EXT4_IOC_SET_ENCRYPTION_POLICY:
- 	case EXT4_IOC_GET_ENCRYPTION_PWSALT:
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 3e58a6f697dd..befd2692160c 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -3216,6 +3216,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	case F2FS_IOC_RELEASE_VOLATILE_WRITE:
- 	case F2FS_IOC_ABORT_VOLATILE_WRITE:
- 	case F2FS_IOC_SHUTDOWN:
-+	case FITRIM:
- 	case F2FS_IOC_SET_ENCRYPTION_POLICY:
- 	case F2FS_IOC_GET_ENCRYPTION_PWSALT:
- 	case F2FS_IOC_GET_ENCRYPTION_POLICY:
-diff --git a/fs/hpfs/dir.c b/fs/hpfs/dir.c
-index d85230c84ef2..f32f15669996 100644
---- a/fs/hpfs/dir.c
-+++ b/fs/hpfs/dir.c
-@@ -325,4 +325,5 @@ const struct file_operations hpfs_dir_ops =
- 	.release	= hpfs_dir_release,
- 	.fsync		= hpfs_file_fsync,
- 	.unlocked_ioctl	= hpfs_ioctl,
-+	.compat_ioctl	= compat_ptr_ioctl,
- };
-diff --git a/fs/hpfs/file.c b/fs/hpfs/file.c
-index 1ecec124e76f..b36abf9cb345 100644
---- a/fs/hpfs/file.c
-+++ b/fs/hpfs/file.c
-@@ -215,6 +215,7 @@ const struct file_operations hpfs_file_ops =
- 	.fsync		= hpfs_file_fsync,
- 	.splice_read	= generic_file_splice_read,
- 	.unlocked_ioctl	= hpfs_ioctl,
-+	.compat_ioctl	= compat_ptr_ioctl,
- };
- 
- const struct inode_operations hpfs_file_iops =
-diff --git a/fs/nilfs2/ioctl.c b/fs/nilfs2/ioctl.c
-index 91b9dac6b2cc..4ba73dbf3e8d 100644
---- a/fs/nilfs2/ioctl.c
-+++ b/fs/nilfs2/ioctl.c
-@@ -1354,6 +1354,7 @@ long nilfs_compat_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 	case NILFS_IOCTL_SYNC:
- 	case NILFS_IOCTL_RESIZE:
- 	case NILFS_IOCTL_SET_ALLOC_RANGE:
-+	case FITRIM:
- 		break;
- 	default:
- 		return -ENOIOCTLCMD;
-diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
-index d6f7b299eb23..2d517b5ec6ac 100644
---- a/fs/ocfs2/ioctl.c
-+++ b/fs/ocfs2/ioctl.c
-@@ -985,6 +985,7 @@ long ocfs2_compat_ioctl(struct file *file, unsigned cmd, unsigned long arg)
- 			return -EFAULT;
- 
- 		return ocfs2_info_handle(inode, &info, 1);
-+	case FITRIM:
- 	case OCFS2_IOC_MOVE_EXT:
- 		break;
- 	default:
+> ---
+>  tools/build/feature/test-clang.cpp | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/build/feature/test-clang.cpp b/tools/build/feature/test-clang.cpp
+> index a2b3f092d2f0..313ef1568880 100644
+> --- a/tools/build/feature/test-clang.cpp
+> +++ b/tools/build/feature/test-clang.cpp
+> @@ -1,10 +1,14 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#include "clang/Basic/VirtualFileSystem.h"
+>  #include "clang/Driver/Driver.h"
+>  #include "clang/Frontend/TextDiagnosticPrinter.h"
+>  #include "llvm/ADT/IntrusiveRefCntPtr.h"
+>  #include "llvm/Support/ManagedStatic.h"
+>  #include "llvm/Support/raw_ostream.h"
+> +#if LLVM_VERSION_MAJOR >= 8
+> +#include "llvm/Support/VirtualFileSystem.h"
+> +#else
+> +#include "clang/Basic/VirtualFileSystem.h"
+> +#endif
+
 -- 
-2.20.0
-
+Thanks,
+~Nick Desaulniers
