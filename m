@@ -2,1025 +2,151 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2CEC0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 04:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7CAC0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 04:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF122084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 04:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565756552;
-	bh=EHLZnD03RGfNgTJKhv56+d6GSX+I5lON6OpWZ77uUy4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=RQwldzT26dHxf3VkXFAeGB198YyYAxc21YHdODzub9KiHoKLUzhfHEzj6fBXlVQkx
-	 QFgBtR2Vk+2+ICUboLPzITZH8sudc3mPhqzR3oORXR5S5GF4q/55W2WZcu0WpavBWJ
-	 wJnqff2kxt51jkb84pZNG+gJPGAuU9JN/3RZhqFY=
+	by mail.kernel.org (Postfix) with ESMTP id 749AB2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 04:24:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8vgyNxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfHNEWb (ORCPT
+        id S1727159AbfHNEYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 00:22:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725263AbfHNEWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 00:22:30 -0400
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BACFC2064A;
-        Wed, 14 Aug 2019 04:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565756549;
-        bh=EHLZnD03RGfNgTJKhv56+d6GSX+I5lON6OpWZ77uUy4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wHprp1d/BnH4ttXOkO9ASHwT1F3WUalkHzw1EB6/28t9cOKd0VVUQXszgzWf0XUQ7
-         WW3oNHy5ny4DHeCNsGGl8H3J8hDjYLVgbUN4hsTd3mJK6b9S2r2v2dnqLIMUaH7Kst
-         1Or0Wzp8rEzgRj/3cHPJmgTukBqZr8vzVsZoJm6M=
-Received: by wens.tw (Postfix, from userid 1000)
-        id E1C395F9B4; Wed, 14 Aug 2019 12:22:25 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: sunxi: Add mdio bus sub-node to GMAC
-Date:   Wed, 14 Aug 2019 12:22:08 +0800
-Message-Id: <20190814042208.9646-1-wens@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 14 Aug 2019 00:24:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35006 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725263AbfHNEYc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 00:24:32 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k2so23894044wrq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 21:24:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y97MxFgoBqjees+drSVKeA6Szdi0VlvTHwvx0CSVO1o=;
+        b=Z8vgyNxN1/96cju2HdSvgfCTLSIOfSiDeQdM25KCwud1GJn0mSUuNbobkxEJNSS1my
+         QMcH8MW8j3HePQ+3lVx5dtnm1phfslKegw81BTBr46hr5pZC5SSmAI5/7SgPrnOUf73j
+         XT5zLFeR7myXlMKWya90DstB4WULDrVqFBqw+N6DFI+NRueyQ8bcYunasX+uM1oEZF17
+         ay+fLAuuhmH4J4HcxczCaHU6KW78UIw7xwAPFClxvpRg+k09UIbeDUajvYirLXp+IZck
+         u64kJ3KAjiR+XQP0d9W5JvK2PKw/Cxn99GJYhlII+r585WtwZqbHYPHSkZEGZPmnP1lI
+         148A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y97MxFgoBqjees+drSVKeA6Szdi0VlvTHwvx0CSVO1o=;
+        b=FPiG9a4UmxYGiM+HExl3Kao5ArvmLL6KuFqLAZV/D6uTXHx3CX+2OKxWrk/sAXLbCH
+         lFM/ULpUYCQjvWyJv6bXZq9zaM731zjBAUi83B4dvB/R5JXI+kDKrOenzZD+QlbNrLm/
+         ZhddfQ8pP3iUOqO1f+ocNbfoslcYiPdqOtTYXrH4ZEr2+kuxkPuqhnE0ahWsH2OQ0Gf6
+         E7hcqswRFctFPhstEZQ8JDxO6fOwoTht4yEqSZ9kpQl/KMqega1ALxfVTLS/6esgdHk5
+         atjT9y37GCxkBTwObq9FQ2I+TqS4J3qsYB94+rhgkHFCBHYEgRqhnY+C5JkF5rp7Ne78
+         JJTA==
+X-Gm-Message-State: APjAAAV8E/QFuO3qJcfGPlkXy2i616k12stuKIv6+4C1aokURe/DdH9n
+        SkNwje7EUhK5+sAl7P8uiHo=
+X-Google-Smtp-Source: APXvYqwQCWsT9X5GSB/vfPatoxfMcZpIswxj18GJjMsqWR17Abi56/0ywNRUwzWqagGutEH97pd76w==
+X-Received: by 2002:adf:f206:: with SMTP id p6mr51871123wro.216.1565756670312;
+        Tue, 13 Aug 2019 21:24:30 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id j2sm2741135wmh.43.2019.08.13.21.24.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 13 Aug 2019 21:24:29 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 21:24:28 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        clang-built-linux@googlegroups.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [alsa-devel] [PATCH] soundwire: Don't build sound.o without
+ CONFIG_ACPI
+Message-ID: <20190814042428.GA125416@archlinux-threadripper>
+References: <20190813061014.45015-1-natechancellor@gmail.com>
+ <445d16e1-6b00-6797-82df-42a49a5e79e3@linux.intel.com>
+ <20190814035947.GS12733@vkoul-mobl.Dlink>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814035947.GS12733@vkoul-mobl.Dlink>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+On Wed, Aug 14, 2019 at 09:29:47AM +0530, Vinod Koul wrote:
+> On 13-08-19, 09:22, Pierre-Louis Bossart wrote:
+> > On 8/13/19 1:10 AM, Nathan Chancellor wrote:
+> > > clang warns when CONFIG_ACPI is unset:
+> > > 
+> > > ../drivers/soundwire/slave.c:16:12: warning: unused function
+> > > 'sdw_slave_add' [-Wunused-function]
+> > > static int sdw_slave_add(struct sdw_bus *bus,
+> > >             ^
+> > > 1 warning generated.
+> > > 
+> > > Before commit 8676b3ca4673 ("soundwire: fix regmap dependencies and
+> > > align with other serial links"), this code would only be compiled when
+> > > ACPI was set because it was only selected by SOUNDWIRE_INTEL, which
+> > > depends on ACPI.
+> > > 
+> > > Now, this code can be compiled without CONFIG_ACPI, which causes the
+> > > above warning. The IS_ENABLED(CONFIG_ACPI) guard could be moved to avoid
+> > > compiling the function; however, slave.c only contains three functions,
+> > > two of which are static. Only compile slave.o when CONFIG_ACPI is set,
+> > > where it will actually be used. bus.h contains a stub for
+> > > sdw_acpi_find_slaves so there will be no issues with an undefined
+> > > function.
+> > > 
+> > > This has been build tested with CONFIG_ACPI set and unset in combination
+> > > with CONFIG_SOUNDWIRE unset, built in, and a module.
+> > 
+> > Thanks for the patch. Do you have a .config you can share offline so that we
+> > add it to our tests?
+> > 
+> > > 
+> > > Fixes: 8676b3ca4673 ("soundwire: fix regmap dependencies and align with other serial links")
+> > > Link: https://github.com/ClangBuiltLinux/linux/issues/637
+> > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > ---
+> > >   drivers/soundwire/Makefile | 6 +++++-
+> > >   drivers/soundwire/slave.c  | 3 ---
+> > >   2 files changed, 5 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
+> > > index 45b7e5001653..226090902716 100644
+> > > --- a/drivers/soundwire/Makefile
+> > > +++ b/drivers/soundwire/Makefile
+> > > @@ -4,9 +4,13 @@
+> > >   #
+> > >   #Bus Objs
+> > > -soundwire-bus-objs := bus_type.o bus.o slave.o mipi_disco.o stream.o
+> > > +soundwire-bus-objs := bus_type.o bus.o mipi_disco.o stream.o
+> > >   obj-$(CONFIG_SOUNDWIRE) += soundwire-bus.o
+> > > +ifdef CONFIG_ACPI
+> > > +soundwire-bus-objs += slave.o
+> > > +endif
+> > 
+> > I am fine with the change, but we might as well rename the file acpi_slave.c
+> > then?
+> 
+> Srini's change add support for DT for the same file, so It does not make
+> sense to rename. Yes this patch tries to fix a warn which is there due
+> to DT being not supported but with Srini's patches this warn should go
+> away as sdw_slave_add() will be invoked by the DT counterpart
+> 
+> Sorry Nathan, we would have to live with the warn for few more days till
+> I apply Srini's changes. So I am not taking this (or v2) patch
+> 
 
-The DWMAC binding never supported having the Ethernet PHY node as a
-direct child to the controller, nor did it support the "phy" property
-as a way to specify which Ethernet PHY to use. What seemed to work
-was simply the implementation ignoring the "phy" property and instead
-probing all addresses on the MDIO bus and using the first available
-one.
+That is fine as I can apply this locally. Could you point me to these
+patches so that I can take a look at them?
 
-The recent switch from "phy" to "phy-handle" breaks the assumptions
-of the implementation, and does not match what the binding requires.
-The binding requires that if an MDIO bus is described, it shall be
-a sub-node with the "snps,dwmac-mdio" compatible string.
-
-Add a device node for the MDIO bus, and move the Ethernet PHY node
-under it. Also fix up the #address-cells and #size-cells properties
-where needed.
-
-Fixes: de332de26d19 ("ARM: dts: sunxi: Switch from phy to phy-handle")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm/boot/dts/sun6i-a31-colombus.dts       | 10 ++++++----
- arch/arm/boot/dts/sun6i-a31-hummingbird.dts    | 16 +++++++++-------
- arch/arm/boot/dts/sun6i-a31-i7.dts             | 10 ++++++----
- arch/arm/boot/dts/sun6i-a31-m9.dts             | 10 ++++++----
- .../boot/dts/sun6i-a31-mele-a1000g-quad.dts    | 10 ++++++----
- arch/arm/boot/dts/sun6i-a31.dtsi               |  8 ++++++--
- arch/arm/boot/dts/sun6i-a31s-cs908.dts         |  9 ++++++---
- arch/arm/boot/dts/sun6i-a31s-sina31s.dts       | 10 ++++++----
- .../boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts    | 14 ++++++++------
- .../boot/dts/sun7i-a20-bananapi-m1-plus.dts    | 10 ++++++----
- arch/arm/boot/dts/sun7i-a20-bananapi.dts       | 10 ++++++----
- arch/arm/boot/dts/sun7i-a20-bananapro.dts      | 10 ++++++----
- arch/arm/boot/dts/sun7i-a20-cubieboard2.dts    | 10 ++++++----
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts     | 10 ++++++----
- arch/arm/boot/dts/sun7i-a20-hummingbird.dts    | 18 ++++++++++--------
- arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts      | 10 ++++++----
- arch/arm/boot/dts/sun7i-a20-icnova-swac.dts    | 10 ++++++----
- arch/arm/boot/dts/sun7i-a20-itead-ibox.dts     |  2 ++
- arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts      |  2 --
- arch/arm/boot/dts/sun7i-a20-m3.dts             | 10 ++++++----
- arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 10 ++++++----
- .../boot/dts/sun7i-a20-olimex-som204-evb.dts   | 18 ++++++++++--------
- arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts | 10 ++++++----
- .../arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 10 ++++++----
- .../arm/boot/dts/sun7i-a20-olinuxino-micro.dts | 10 ++++++----
- arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts  | 10 ++++++----
- arch/arm/boot/dts/sun7i-a20-orangepi.dts       | 10 ++++++----
- arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts  | 10 ++++++----
- arch/arm/boot/dts/sun7i-a20-pcduino3.dts       | 10 ++++++----
- .../boot/dts/sun7i-a20-wits-pro-a20-dkt.dts    | 10 ++++++----
- arch/arm/boot/dts/sun7i-a20.dtsi               |  8 ++++++--
- arch/arm/boot/dts/sun9i-a80-cubieboard4.dts    | 10 ++++++----
- arch/arm/boot/dts/sun9i-a80-optimus.dts        |  2 ++
- arch/arm/boot/dts/sun9i-a80.dtsi               |  8 ++++++--
- 34 files changed, 203 insertions(+), 132 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun6i-a31-colombus.dts b/arch/arm/boot/dts/sun6i-a31-colombus.dts
-index 50092b0bd0fe..93a15eaaa8cb 100644
---- a/arch/arm/boot/dts/sun6i-a31-colombus.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-colombus.dts
-@@ -79,10 +79,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "rgmii";
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &i2c0 {
-@@ -104,6 +100,12 @@
- 	};
- };
- 
-+&mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v0>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-index 7c611ddbaf2f..049e6ab3cf56 100644
---- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-@@ -156,13 +156,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "rgmii";
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--		reset-gpios = <&pio 0 21 GPIO_ACTIVE_LOW>;
--		reset-assert-us = <10000>;
--		reset-deassert-us = <30000>;
--	};
- };
- 
- &hdmi {
-@@ -199,6 +192,15 @@
- 	status = "okay";
- };
- 
-+&mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+		reset-gpios = <&pio 0 21 GPIO_ACTIVE_LOW>;
-+		reset-assert-us = <10000>;
-+		reset-deassert-us = <30000>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_dcdc1>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun6i-a31-i7.dts b/arch/arm/boot/dts/sun6i-a31-i7.dts
-index ebb0b4710afb..6cc8ccf53d88 100644
---- a/arch/arm/boot/dts/sun6i-a31-i7.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-i7.dts
-@@ -120,10 +120,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "mii";
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &hdmi {
-@@ -142,6 +138,12 @@
- 	status = "okay";
- };
- 
-+&mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun6i-a31-m9.dts b/arch/arm/boot/dts/sun6i-a31-m9.dts
-index 4910c6ccf2f7..a645c8f4257c 100644
---- a/arch/arm/boot/dts/sun6i-a31-m9.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-m9.dts
-@@ -88,10 +88,6 @@
- 	phy-mode = "mii";
- 	phy-supply = <&reg_dldo1>;
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &ir {
-@@ -100,6 +96,12 @@
- 	status = "okay";
- };
- 
-+&mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_dcdc1>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts b/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
-index 703e1c19b407..648f24746234 100644
---- a/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
-@@ -88,10 +88,6 @@
- 	phy-mode = "mii";
- 	phy-supply = <&reg_dldo1>;
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &ir {
-@@ -100,6 +96,12 @@
- 	status = "okay";
- };
- 
-+&mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_dcdc1>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 9ddde111f675..8d0db8a2f9d1 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -939,8 +939,12 @@
- 			snps,fixed-burst;
- 			snps,force_sf_dma_mode;
- 			status = "disabled";
--			#address-cells = <1>;
--			#size-cells = <0>;
-+
-+			mdio: mdio {
-+				compatible = "snps,dwmac-mdio";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 		};
- 
- 		crypto: crypto-engine@1c15000 {
-diff --git a/arch/arm/boot/dts/sun6i-a31s-cs908.dts b/arch/arm/boot/dts/sun6i-a31s-cs908.dts
-index 6e9ec3f1695e..1d15e15011c6 100644
---- a/arch/arm/boot/dts/sun6i-a31s-cs908.dts
-+++ b/arch/arm/boot/dts/sun6i-a31s-cs908.dts
-@@ -70,9 +70,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "mii";
- 	status = "okay";
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &ir {
-@@ -81,6 +78,12 @@
- 	status = "okay";
- };
- 
-+&mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &ohci1 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun6i-a31s-sina31s.dts b/arch/arm/boot/dts/sun6i-a31s-sina31s.dts
-index c92779bc8f85..0af48e143b66 100644
---- a/arch/arm/boot/dts/sun6i-a31s-sina31s.dts
-+++ b/arch/arm/boot/dts/sun6i-a31s-sina31s.dts
-@@ -119,10 +119,6 @@
- 	phy-mode = "mii";
- 	phy-supply = <&reg_dldo1>;
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &hdmi {
-@@ -160,6 +156,12 @@
- 	};
- };
- 
-+&mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_dcdc1>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts b/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
-index e993b2d8ddd0..708caee52425 100644
---- a/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
-+++ b/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
-@@ -96,7 +96,15 @@
- 	phy-mode = "rgmii";
- 	phy-supply = <&reg_dldo1>;
- 	status = "okay";
-+};
-+
-+&ir {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&s_ir_rx_pin>;
-+	status = "okay";
-+};
- 
-+&mdio {
- 	phy1: ethernet-phy@1 {
- 		reg = <1>;
- 		reset-gpios = <&pio 0 21 GPIO_ACTIVE_LOW>; /* PA21 */
-@@ -105,12 +113,6 @@
- 	};
- };
- 
--&ir {
--	pinctrl-names = "default";
--	pinctrl-0 = <&s_ir_rx_pin>;
--	status = "okay";
--};
--
- &mmc0 {
- 	vmmc-supply = <&reg_dcdc1>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-index c601ecf5ab35..32d5d45a35c0 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-@@ -133,10 +133,6 @@
- 	phy-mode = "rgmii";
- 	phy-supply = <&reg_gmac_3v3>;
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &hdmi {
-@@ -171,6 +167,12 @@
- 	status = "okay";
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-index c5730b30a15d..bb3987e101c2 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-@@ -135,10 +135,6 @@
- 	phy-mode = "rgmii";
- 	phy-supply = <&reg_gmac_3v3>;
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &hdmi {
-@@ -171,6 +167,12 @@
- 	status = "okay";
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapro.dts b/arch/arm/boot/dts/sun7i-a20-bananapro.dts
-index 86f4ebb77703..01ccff756996 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapro.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapro.dts
-@@ -113,10 +113,6 @@
- 	phy-mode = "rgmii";
- 	phy-supply = <&reg_gmac_3v3>;
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &i2c0 {
-@@ -143,6 +139,12 @@
- 	status = "okay";
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-index e322f0f06003..b8203e4ef21c 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-@@ -118,10 +118,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "mii";
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &hdmi {
-@@ -161,6 +157,12 @@
- 	status = "okay";
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &ohci0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index a8f7f63fdde1..8c8dee6ea461 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -153,10 +153,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "rgmii";
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &hdmi {
-@@ -194,6 +190,12 @@
- 	status = "okay";
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-hummingbird.dts b/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
-index 322717cb0b9a..3def2a330598 100644
---- a/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
-@@ -104,14 +104,6 @@
- 	phy-mode = "rgmii";
- 	phy-supply = <&reg_gmac_vdd>;
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--		reset-gpios = <&pio 0 17 GPIO_ACTIVE_LOW>; /* PA17 */
--		reset-assert-us = <10000>;
--		/* wait 1s after reset, otherwise fail to read phy id */
--		reset-deassert-us = <1000000>;
--	};
- };
- 
- &i2c0 {
-@@ -145,6 +137,16 @@
- 	status = "okay";
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+		reset-gpios = <&pio 0 17 GPIO_ACTIVE_LOW>; /* PA17 */
-+		reset-assert-us = <10000>;
-+		/* wait 1s after reset, otherwise fail to read phy id */
-+		reset-deassert-us = <1000000>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v0>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts b/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts
-index 8a610dacb983..358ed5f1b1c1 100644
---- a/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts
-@@ -119,10 +119,6 @@
- 	phy-mode = "mii";
- 	phy-supply = <&reg_gmac_3v3>;
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &i2c0 {
-@@ -145,6 +141,12 @@
- 	status = "okay";
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-icnova-swac.dts b/arch/arm/boot/dts/sun7i-a20-icnova-swac.dts
-index a20e91c8dbe5..413505f45a81 100644
---- a/arch/arm/boot/dts/sun7i-a20-icnova-swac.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-icnova-swac.dts
-@@ -79,10 +79,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "mii";
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &i2c0 {
-@@ -99,6 +95,12 @@
- 	status = "okay";
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
-index c27567c0b027..946c27278321 100644
---- a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
-@@ -100,7 +100,9 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "mii";
- 	status = "okay";
-+};
- 
-+&gmac_mdio {
- 	phy1: ethernet-phy@1 {
- 		reg = <1>;
- 	};
-diff --git a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-index 3e170cfac86a..17fa8901fc00 100644
---- a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-@@ -123,8 +123,6 @@
- 	phy-mode = "rgmii";
- 	phy-supply = <&reg_gmac_3v3>;
- 	status = "okay";
--	/delete-property/#address-cells;
--	/delete-property/#size-cells;
- 
- 	fixed-link {
- 		speed = <1000>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-m3.dts b/arch/arm/boot/dts/sun7i-a20-m3.dts
-index bde0ef783e71..6bff9e731fc3 100644
---- a/arch/arm/boot/dts/sun7i-a20-m3.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-m3.dts
-@@ -85,10 +85,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "mii";
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &i2c0 {
-@@ -111,6 +107,12 @@
- 	status = "okay";
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-index f419b9ee9d1e..6f9c54b8e49a 100644
---- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-@@ -114,10 +114,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "rgmii";
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &hdmi {
-@@ -202,6 +198,12 @@
- 	};
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts
-index d3d03b7ffb1a..230d62a6b8f1 100644
---- a/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts
-@@ -109,14 +109,6 @@
- 	phy-mode = "rgmii";
- 	phy-supply = <&reg_vcc3v3>;
- 	status = "okay";
--
--	phy3: ethernet-phy@3 {
--		reg = <3>;
--		reset-gpios = <&pio 0 17 GPIO_ACTIVE_LOW>; /* PA17 */
--		reset-assert-us = <10000>;
--		/* wait 1s after reset, otherwise fail to read phy id */
--		reset-deassert-us = <1000000>;
--	};
- };
- 
- &hdmi {
-@@ -161,6 +153,16 @@
- 	status = "okay";
- };
- 
-+&gmac_mdio {
-+	phy3: ethernet-phy@3 {
-+		reg = <3>;
-+		reset-gpios = <&pio 0 17 GPIO_ACTIVE_LOW>; /* PA17 */
-+		reset-assert-us = <10000>;
-+		/* wait 1s after reset, otherwise fail to read phy id */
-+		reset-deassert-us = <1000000>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
-index 70a883276d34..2adbac860119 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
-@@ -109,10 +109,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "mii";
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &hdmi {
-@@ -149,6 +145,12 @@
- 	};
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-index 0fe657e062a7..9ba62774e89a 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-@@ -114,10 +114,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "rgmii";
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &hdmi {
-@@ -154,6 +150,12 @@
- 	vref-supply = <&reg_vcc3v0>;
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-index 559736961b54..359bd0d5b3b1 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-@@ -121,10 +121,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "mii";
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &hdmi {
-@@ -215,6 +211,12 @@
- 	};
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts b/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
-index a94ff50bcf73..2e328d2cefc1 100644
---- a/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
-@@ -124,10 +124,6 @@
- 	phy-mode = "rgmii";
- 	phy-supply = <&reg_gmac_3v3>;
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &hdmi {
-@@ -158,6 +154,12 @@
- 	status = "okay";
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-orangepi.dts b/arch/arm/boot/dts/sun7i-a20-orangepi.dts
-index 956579a10b5f..d75b2e2bab28 100644
---- a/arch/arm/boot/dts/sun7i-a20-orangepi.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-orangepi.dts
-@@ -100,10 +100,6 @@
- 	phy-mode = "rgmii";
- 	phy-supply = <&reg_gmac_3v3>;
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &i2c0 {
-@@ -124,6 +120,12 @@
- 	status = "okay";
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
-index 993fb97d19df..fce2f7fcd084 100644
---- a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
-@@ -117,10 +117,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "rgmii";
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &hdmi {
-@@ -149,6 +145,12 @@
- 	status = "okay";
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-pcduino3.dts b/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
-index 02e321523d0e..cc8271d777b8 100644
---- a/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
-@@ -125,10 +125,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "mii";
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &i2c0 {
-@@ -149,6 +145,12 @@
- 	status = "okay";
- };
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
-index 9dfe7e2a08cc..3bfae98f3cc3 100644
---- a/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
-@@ -84,10 +84,6 @@
- 	phy-handle = <&phy1>;
- 	phy-mode = "rgmii";
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &i2c0 {
-@@ -110,6 +106,12 @@
- 
- #include "axp209.dtsi"
- 
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 9ad8e445b240..651d7fe6b8ba 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -1437,8 +1437,12 @@
- 			snps,fixed-burst;
- 			snps,force_sf_dma_mode;
- 			status = "disabled";
--			#address-cells = <1>;
--			#size-cells = <0>;
-+
-+			gmac_mdio: mdio {
-+				compatible = "snps,dwmac-mdio";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 		};
- 
- 		hstimer@1c60000 {
-diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-index 650890b049e2..d3b337b043a1 100644
---- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-+++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-@@ -132,10 +132,6 @@
- 	phy-mode = "rgmii";
- 	phy-supply = <&reg_cldo1>;
- 	status = "okay";
--
--	phy1: ethernet-phy@1 {
--		reg = <1>;
--	};
- };
- 
- &i2c3 {
-@@ -144,6 +140,12 @@
- 	status = "okay";
- };
- 
-+&mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
-diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-index 03ad25534f20..bbc6335e5631 100644
---- a/arch/arm/boot/dts/sun9i-a80-optimus.dts
-+++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-@@ -127,7 +127,9 @@
- 	phy-mode = "rgmii";
- 	phy-supply = <&reg_cldo1>;
- 	status = "okay";
-+};
- 
-+&mdio {
- 	phy1: ethernet-phy@1 {
- 		reg = <1>;
- 	};
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index 310cd972ee5b..c34d505c7efe 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -331,8 +331,12 @@
- 			snps,fixed-burst;
- 			snps,force_sf_dma_mode;
- 			status = "disabled";
--			#address-cells = <1>;
--			#size-cells = <0>;
-+
-+			mdio: mdio {
-+				compatible = "snps,dwmac-mdio";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 		};
- 
- 		ehci0: usb@a00000 {
--- 
-2.20.1
-
+Thanks for the reply!
+Nathan
