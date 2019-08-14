@@ -2,160 +2,273 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EDCC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E54BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E172064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC63B2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:34:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="M2x3Lm7C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbfHNWdq (ORCPT
+        id S1729246AbfHNWeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 18:33:46 -0400
-Received: from enpas.org ([46.38.239.100]:59260 "EHLO mail.enpas.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728597AbfHNWdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 18:33:45 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        by mail.enpas.org (Postfix) with ESMTPSA id E5DFD10016E;
-        Wed, 14 Aug 2019 22:33:40 +0000 (UTC)
-Subject: Re: [PATCH v2 1/4] i2c/busses: Add i2c-icy for I2C on m68k/Amiga
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-m68k@vger.kernel.org,
-        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
-References: <20190812235237.21797-1-max@enpas.org>
- <20190814194714.GB9756@kunai>
-From:   Max Staudt <max@enpas.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=max@enpas.org; prefer-encrypt=mutual; keydata=
- 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
- urZIw0nz8zec+73Bv/qF4GHHftLYfA==
-Message-ID: <f33ef44e-61e8-0392-7f5c-5a0bd7b42fff@enpas.org>
-Date:   Thu, 15 Aug 2019 00:33:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 14 Aug 2019 18:34:17 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39254 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbfHNWeR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 18:34:17 -0400
+Received: by mail-pl1-f195.google.com with SMTP id z3so250876pln.6
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 15:34:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=P47TDuRTyb4CTcChk4uKRWf5tpIOxFmUJ6D7+RADtYo=;
+        b=M2x3Lm7CFOMXtOC79ogniyQQEDRqCpNlYjaZNzCuXhVjeQYuKgD+SNsCBQ8tFoBDcB
+         91PCVHFy9XsArKaAs6S7pipslLdcyN5rDy9gemdNddoN88SunkS5Gl1WTla/FdH6MzZe
+         KoC2+zz/M9Eo7iEW7Dc+jNnTGiuvaLRv17Yjs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=P47TDuRTyb4CTcChk4uKRWf5tpIOxFmUJ6D7+RADtYo=;
+        b=bTbY5S24/XhILw12KpcINpGgNgj6ZuCP8Hff+jKMmADXkIw5qL4U5P8uV3/GLUewkz
+         CNBy+9CO4PkTBzt8x6mHuTVTzqFjyFmQnEB+ZRHYp2vFoIJyU4EnWAWTrv9lxtA5kuOU
+         beQLirSOUqWu9AkkKImgjL6p9Z1Oj9GrwTzJOE01zSWSoFneicW2xPvmXcY/jxADflfj
+         H/KfRDRczPQsnvsTZellcckwJCclaLg3x4UZpW1nrALUv5dYbf8cyta+zg8SjQ6Z4kEu
+         V+1gByL9XUbOKev0fa3ViO2k4u7w9PMAYW4KKzlV9UgRy8wjgt4kYJEJSllGuYQL1zL6
+         BMQQ==
+X-Gm-Message-State: APjAAAX/11ODgWV5IDiN5z4aTN3nUqqU/h602Byt5jZiTIjXOU+8WyBy
+        Q9HojMuRELw1bDdzaRBldP2xZA==
+X-Google-Smtp-Source: APXvYqyB8uTK4c4CzFde17hlAvp2SoyFZ6korIE0B42TuaiK9xhuzlbI0Urmfviqv4gAvDB6Ub0urw==
+X-Received: by 2002:a17:902:44f:: with SMTP id 73mr1575891ple.192.1565822055899;
+        Wed, 14 Aug 2019 15:34:15 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id c13sm935755pfi.17.2019.08.14.15.34.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 15:34:14 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 18:34:13 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
+        max.byungchul.park@gmail.com, byungchul.park@lge.com,
+        kernel-team@android.com, kernel-team@lge.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kees Cook <keescook@chromium.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v3 1/2] rcu/tree: Add basic support for kfree_rcu batching
+Message-ID: <20190814223413.GB69375@google.com>
+References: <20190813170046.81707-1-joel@joelfernandes.org>
+ <20190813190738.GH28441@linux.ibm.com>
+ <20190814143817.GA253999@google.com>
+ <20190814172233.GA68498@google.com>
+ <20190814184429.GV28441@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190814194714.GB9756@kunai>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814184429.GV28441@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
-
-Thanks for your input!
-Replies below.
-
-
-On 08/14/2019 09:47 PM, Wolfram Sang wrote:
->> +static int clock = 0x1c;
->> +module_param(clock, int, 0444);
+On Wed, Aug 14, 2019 at 11:44:29AM -0700, Paul E. McKenney wrote:
+> On Wed, Aug 14, 2019 at 01:22:33PM -0400, Joel Fernandes wrote:
+> > On Wed, Aug 14, 2019 at 10:38:17AM -0400, Joel Fernandes wrote:
+> > > On Tue, Aug 13, 2019 at 12:07:38PM -0700, Paul E. McKenney wrote:
+> >  [snip]
+> > > > > - * Queue an RCU callback for lazy invocation after a grace period.
+> > > > > - * This will likely be later named something like "call_rcu_lazy()",
+> > > > > - * but this change will require some way of tagging the lazy RCU
+> > > > > - * callbacks in the list of pending callbacks. Until then, this
+> > > > > - * function may only be called from __kfree_rcu().
+> > > > > + * Maximum number of kfree(s) to batch, if this limit is hit then the batch of
+> > > > > + * kfree(s) is queued for freeing after a grace period, right away.
+> > > > >   */
+> > > > > -void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > > > > +struct kfree_rcu_cpu {
+> > > > > +	/* The rcu_work node for queuing work with queue_rcu_work(). The work
+> > > > > +	 * is done after a grace period.
+> > > > > +	 */
+> > > > > +	struct rcu_work rcu_work;
+> > > > > +
+> > > > > +	/* The list of objects being queued in a batch but are not yet
+> > > > > +	 * scheduled to be freed.
+> > > > > +	 */
+> > > > > +	struct rcu_head *head;
+> > > > > +
+> > > > > +	/* The list of objects that have now left ->head and are queued for
+> > > > > +	 * freeing after a grace period.
+> > > > > +	 */
+> > > > > +	struct rcu_head *head_free;
+> > > > 
+> > > > So this is not yet the one that does multiple batches concurrently
+> > > > awaiting grace periods, correct?  Or am I missing something subtle?
+> > > 
+> > > Yes, it is not. I honestly, still did not understand that idea. Or how it
+> > > would improve things. May be we can discuss at LPC on pen and paper? But I
+> > > think that can also be a follow-up optimization.
+> > 
+> > I got it now. Basically we can benefit a bit more by having another list
+> > (that is have multiple kfree_rcu batches in flight). I will think more about
+> > it - but hopefully we don't need to gate this patch by that.
 > 
-> 'clock' determines the bus speed?
-
-Yes, but it also determines the frequency of the oscillator driving the PCF8584. It doesn't usually need to be touched, the current setting drives at the maximum I2C bus speed, with the maximum oscillator (12 MHz).
-I kept it in because i2c-elektor also exposes it in the same way, and it seems useful.
-
-
->> +	i2c->adapter.class = I2C_CLASS_DEPRECATED;
+> I am willing to take this as a later optimization.
 > 
-> This is only needed for drivers which used to have a class and decided
-> to drop it. You can leave it empty.
-
-Thanks, I'll drop it.
-
-
->> +	algo_data->data = (void *)i2c;
+> > It'll be interesting to see what rcuperf says about such an improvement :)
 > 
-> You don't need the cast, do you?
+> Indeed, no guarantees either way.  The reason for hope assumes a busy
+> system where each grace period is immediately followed by another
+> grace period.  On such a system, the current setup allows each CPU to
+> make use only of every second grace period for its kfree_rcu() work.
+> The hope would therefore be that this would reduce the memory footprint
+> substantially with no increase in overhead.
 
-True. Dropped, thanks.
+Good news! I was able to bring down memory foot print by almost 30% by adding
+another batch. Below is the patch. Thanks for the suggestion!
 
+I can add this as a patch on top of the initial one, for easier review.
 
->> +MODULE_LICENSE("GPL");
-> 
-> Your SPDX header says GPL 2.0 only.
+The memory consumed drops from 300-350MB to 200-250MB. Increasing
+KFREE_N_BATCHES did not cause a reduction in memory, though.
 
-Thanks! I'll change it to "GPL v2", but unfortunately there is no option for "only" in include/linux/module.h.
+---8<-----------------------
 
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH] WIP: Multiple batches
 
-Cheers
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ kernel/rcu/tree.c | 58 +++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 41 insertions(+), 17 deletions(-)
 
-Max
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 1d1847cadea2..a272c893dbdc 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2596,26 +2596,35 @@ EXPORT_SYMBOL_GPL(call_rcu);
+ 
+ /* Maximum number of jiffies to wait before draining a batch. */
+ #define KFREE_DRAIN_JIFFIES (HZ / 50)
++#define KFREE_N_BATCHES 2
++
++struct kfree_rcu_work {
++	/* The rcu_work node for queuing work with queue_rcu_work(). The work
++	 * is done after a grace period.
++	 */
++	struct rcu_work rcu_work;
++
++	/* The list of objects that have now left ->head and are queued for
++	 * freeing after a grace period.
++	 */
++	struct rcu_head *head_free;
++
++	struct kfree_rcu_cpu *krc;
++};
++static DEFINE_PER_CPU(__typeof__(struct kfree_rcu_work)[KFREE_N_BATCHES], krw);
+ 
+ /*
+  * Maximum number of kfree(s) to batch, if this limit is hit then the batch of
+  * kfree(s) is queued for freeing after a grace period, right away.
+  */
+ struct kfree_rcu_cpu {
+-	/* The rcu_work node for queuing work with queue_rcu_work(). The work
+-	 * is done after a grace period.
+-	 */
+-	struct rcu_work rcu_work;
+ 
+ 	/* The list of objects being queued in a batch but are not yet
+ 	 * scheduled to be freed.
+ 	 */
+ 	struct rcu_head *head;
+ 
+-	/* The list of objects that have now left ->head and are queued for
+-	 * freeing after a grace period.
+-	 */
+-	struct rcu_head *head_free;
++	struct kfree_rcu_work *krw;
+ 
+ 	/* Protect concurrent access to this structure. */
+ 	spinlock_t lock;
+@@ -2638,12 +2647,15 @@ static void kfree_rcu_work(struct work_struct *work)
+ {
+ 	unsigned long flags;
+ 	struct rcu_head *head, *next;
+-	struct kfree_rcu_cpu *krcp = container_of(to_rcu_work(work),
+-					struct kfree_rcu_cpu, rcu_work);
++	struct kfree_rcu_work *krw = container_of(to_rcu_work(work),
++					struct kfree_rcu_work, rcu_work);
++	struct kfree_rcu_cpu *krcp;
++
++	krcp = krw->krc;
+ 
+ 	spin_lock_irqsave(&krcp->lock, flags);
+-	head = krcp->head_free;
+-	krcp->head_free = NULL;
++	head = krw->head_free;
++	krw->head_free = NULL;
+ 	spin_unlock_irqrestore(&krcp->lock, flags);
+ 
+ 	/*
+@@ -2666,19 +2678,30 @@ static void kfree_rcu_work(struct work_struct *work)
+  */
+ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
+ {
++	int i = 0;
++	struct kfree_rcu_work *krw = NULL;
++
+ 	lockdep_assert_held(&krcp->lock);
++	while (i < KFREE_N_BATCHES) {
++		if (!krcp->krw[i].head_free) {
++			krw = &(krcp->krw[i]);
++			break;
++		}
++		i++;
++	}
+ 
+-	/* If a previous RCU batch work is already in progress, we cannot queue
++	/* If both RCU batches are already in progress, we cannot queue
+ 	 * another one, just refuse the optimization and it will be retried
+ 	 * again in KFREE_DRAIN_JIFFIES time.
+ 	 */
+-	if (krcp->head_free)
++	if (!krw)
+ 		return false;
+ 
+-	krcp->head_free = krcp->head;
++	krw->head_free = krcp->head;
++	krw->krc = krcp;   /* Should need to do only once, optimize later. */
+ 	krcp->head = NULL;
+-	INIT_RCU_WORK(&krcp->rcu_work, kfree_rcu_work);
+-	queue_rcu_work(system_wq, &krcp->rcu_work);
++	INIT_RCU_WORK(&krw->rcu_work, kfree_rcu_work);
++	queue_rcu_work(system_wq, &krw->rcu_work);
+ 
+ 	return true;
+ }
+@@ -3631,6 +3654,7 @@ static void __init kfree_rcu_batch_init(void)
+ 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+ 
+ 		spin_lock_init(&krcp->lock);
++		krcp->krw = &(per_cpu(krw, cpu)[0]);
+ 		INIT_DELAYED_WORK(&krcp->monitor_work, kfree_rcu_monitor);
+ 	}
+ }
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
+
