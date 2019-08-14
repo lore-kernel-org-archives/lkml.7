@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72A3C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FE1C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E74B21744
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF230216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802330;
-	bh=PUyFxrcVthlkabGxOQQnuyoYVkuAX2bU9CJWCzsAqXU=;
+	s=default; t=1565802332;
+	bh=hmSajdmKr2B6HT2ANTVnU2oQwelq7dK2who+JUuB7mE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t6RZrwgdS419rUsvMI5LH9mTNBsuvOROCWF7v1VAJzPFUbOXy8wObrzJC2a1rrp/0
-	 StP9nQyPwRcdIVEpWK4qmp+cY3eZkd9KFIeDspPz0WqL+xzjeqpM3nc60KQ1cDTr7P
-	 GwCmxHlsaBYDapfNr8oDooz2DP1Fpc+uEBYWtTPY=
+	b=w3oM5+GCSP0jZM7wrKO1XCKO45r2HG7qF/EaOH0dgGTp9bvBx1/CGb078PLEPS4Ma
+	 pFc+BD9p/j7xTTYHJI5oM1QcTkwyANkAxoaIGo6fj8bmEOT/hQqF2fismwdNsgAzCg
+	 u75G5ld2t/6aEKrXIuadZiDGZ5+xEESN+x+TZ6V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbfHNRF3 (ORCPT
+        id S1729461AbfHNRFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:05:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54338 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:05:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729433AbfHNRFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:05:25 -0400
+        id S1729443AbfHNRF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:05:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B56221721;
-        Wed, 14 Aug 2019 17:05:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C8212173B;
+        Wed, 14 Aug 2019 17:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802325;
-        bh=PUyFxrcVthlkabGxOQQnuyoYVkuAX2bU9CJWCzsAqXU=;
+        s=default; t=1565802327;
+        bh=hmSajdmKr2B6HT2ANTVnU2oQwelq7dK2who+JUuB7mE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e8c6y3J3S4UlTh3u2WLMObVTE3fdgKiIHACv1GWZSlWI2pmVvpAMZ4efXW6HS5KtC
-         NLutc7eLaG1nCcXBy+yy138i2EDW8PwqOxnAhHyx45Bc/YfwV5o82fnPFbuJppRLYL
-         pLdqz/sV3ZKeoumizD2z8/OsQYGyAfN3VtcX1fKI=
+        b=joQy/Pe/M0PWQ4qu0AfztENq7UsktiMG1RZeKcJO/5lAogDxBVjTevHzf4TWNxvG9
+         sooKaZSVj1QkHiHKOEvJwKzCYHmAWSpoR9u63tVlW6HYkGquNfVuxT0SP7dphngvZQ
+         5umjNNSh81Y7m/ExQwg0xH4jnhQ7EcE/NXeu3aZs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, "Oliver OHalloran" <oohall@gmail.com>,
+        Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 081/144] ARM: dts: imx6ul: fix clock frequency property name of I2C buses
-Date:   Wed, 14 Aug 2019 19:00:37 +0200
-Message-Id: <20190814165803.255675140@linuxfoundation.org>
+Subject: [PATCH 5.2 082/144] powerpc/papr_scm: Force a scm-unbind if initial scm-bind fails
+Date:   Wed, 14 Aug 2019 19:00:38 +0200
+Message-Id: <20190814165803.298596347@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -63,97 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2ca99396333999b9b5c5b91b36cbccacfe571aaf ]
+[ Upstream commit 3a855b7ac7d5021674aa3e1cc9d3bfd6b604e9c0 ]
 
-A few boards set clock frequency of their I2C buses with
-"clock_frequency" property. The right property is "clock-frequency".
+In some cases initial bind of scm memory for an lpar can fail if
+previously it wasn't released using a scm-unbind hcall. This situation
+can arise due to panic of the previous kernel or forced lpar
+fadump. In such cases the H_SCM_BIND_MEM return a H_OVERLAP error.
 
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+To mitigate such cases the patch updates papr_scm_probe() to force a
+call to drc_pmem_unbind() in case the initial bind of scm memory fails
+with EBUSY error. In case scm-bind operation again fails after the
+forced scm-unbind then we follow the existing error path. We also
+update drc_pmem_bind() to handle the H_OVERLAP error returned by phyp
+and indicate it as a EBUSY error back to the caller.
+
+Suggested-by: "Oliver O'Halloran" <oohall@gmail.com>
+Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190629160610.23402-4-vaibhav@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6ul-14x14-evk.dtsi  | 2 +-
- arch/arm/boot/dts/imx6ul-geam.dts        | 2 +-
- arch/arm/boot/dts/imx6ul-isiot.dtsi      | 2 +-
- arch/arm/boot/dts/imx6ul-pico-hobbit.dts | 2 +-
- arch/arm/boot/dts/imx6ul-pico-pi.dts     | 4 ++--
- 5 files changed, 6 insertions(+), 6 deletions(-)
+ arch/powerpc/platforms/pseries/papr_scm.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-index 9207d5d071f11..d556f7c541ce6 100644
---- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-@@ -112,7 +112,7 @@
- };
+diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+index 96c53b23e58f9..dad9825e40874 100644
+--- a/arch/powerpc/platforms/pseries/papr_scm.c
++++ b/arch/powerpc/platforms/pseries/papr_scm.c
+@@ -42,8 +42,9 @@ struct papr_scm_priv {
+ static int drc_pmem_bind(struct papr_scm_priv *p)
+ {
+ 	unsigned long ret[PLPAR_HCALL_BUFSIZE];
+-	uint64_t rc, token;
+ 	uint64_t saved = 0;
++	uint64_t token;
++	int64_t rc;
  
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-geam.dts b/arch/arm/boot/dts/imx6ul-geam.dts
-index bc77f26a2f1de..6157a058feec9 100644
---- a/arch/arm/boot/dts/imx6ul-geam.dts
-+++ b/arch/arm/boot/dts/imx6ul-geam.dts
-@@ -156,7 +156,7 @@
- };
+ 	/*
+ 	 * When the hypervisor cannot map all the requested memory in a single
+@@ -63,6 +64,10 @@ static int drc_pmem_bind(struct papr_scm_priv *p)
+ 	} while (rc == H_BUSY);
  
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-index 213e802bf35c5..23e6e2e7ace9d 100644
---- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-@@ -148,7 +148,7 @@
- };
+ 	if (rc) {
++		/* H_OVERLAP needs a separate error path */
++		if (rc == H_OVERLAP)
++			return -EBUSY;
++
+ 		dev_err(&p->pdev->dev, "bind err: %lld\n", rc);
+ 		return -ENXIO;
+ 	}
+@@ -316,6 +321,14 @@ static int papr_scm_probe(struct platform_device *pdev)
  
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
-index 39eeeddac39e3..09f7ffa9ad8c4 100644
---- a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
-+++ b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
-@@ -43,7 +43,7 @@
- };
+ 	/* request the hypervisor to bind this region to somewhere in memory */
+ 	rc = drc_pmem_bind(p);
++
++	/* If phyp says drc memory still bound then force unbound and retry */
++	if (rc == -EBUSY) {
++		dev_warn(&pdev->dev, "Retrying bind after unbinding\n");
++		drc_pmem_unbind(p);
++		rc = drc_pmem_bind(p);
++	}
++
+ 	if (rc)
+ 		goto err;
  
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-pico-pi.dts b/arch/arm/boot/dts/imx6ul-pico-pi.dts
-index de07357b27fc2..6cd7d5877d20c 100644
---- a/arch/arm/boot/dts/imx6ul-pico-pi.dts
-+++ b/arch/arm/boot/dts/imx6ul-pico-pi.dts
-@@ -43,7 +43,7 @@
- };
- 
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-@@ -58,7 +58,7 @@
- };
- 
- &i2c3 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c3>;
- 	status = "okay";
 -- 
 2.20.1
 
