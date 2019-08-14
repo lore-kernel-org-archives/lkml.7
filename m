@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F4FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B8BC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7AD208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B682085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748957;
-	bh=rTNhkl76RP/ujF/fQB2pB/gVZR7PBK+TVykfHp/xycY=;
+	s=default; t=1565748963;
+	bh=+G6YI7uCiWl5NzsZjlF0cb+BjDlIwDypveGYVOUdif8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZjcP1CP/AbPmLDg4BtbMDiKiFeYY86vj+XtLoQ7AhwgmDiZxVZIH5RfO/LW48TA7V
-	 x0DW4T5Sn14KI6E270jfianxqEEHicLIoh3X7MCSNuUbB3vf8lfDRnlJx571LjTRmJ
-	 Q7/bSXC5/KrvN06JMhE9gnBcwqfUFa/FacRl4OTE=
+	b=cI9lsmFEjv2tWRdUW20GGnDTojXXh4sTze2vtGZG3R3H0jlKOHRVHgesU1P1E42Z4
+	 mRj3FbnMl2N+UyJJ+KH2MKvmlSXMTQOFWo5N8JyTjP4ISxPJefV/zxtNPy3TLWZtB3
+	 CLJFeTQ0PKjo0OPAmRLv9qt21VeU0cDq0YqSuduc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbfHNCPz (ORCPT
+        id S1728888AbfHNCQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:15:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47426 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:16:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728853AbfHNCPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:15:54 -0400
+        id S1726007AbfHNCP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:15:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E16C920842;
-        Wed, 14 Aug 2019 02:15:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 543BE20842;
+        Wed, 14 Aug 2019 02:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748953;
-        bh=rTNhkl76RP/ujF/fQB2pB/gVZR7PBK+TVykfHp/xycY=;
+        s=default; t=1565748958;
+        bh=+G6YI7uCiWl5NzsZjlF0cb+BjDlIwDypveGYVOUdif8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qMpmk1s8h0ZVL7q3R5qTeCyNT/OqYQvFA4uUosndA3S0l5EYpOZ0DidyxRbS/P7jJ
-         Aa5uTuA8ml6cOjTI+y3L/tmk+Xx8mEqvjpvXrmjUl9R+liDEGRlHVRxrbn9xcCaTDx
-         hQEcSxuZa5q1+zHK/Bi3FJe4iLDJzeiY4w3nYksI=
+        b=EhrYYbphQhZXS/KiENKi+GFMBJzNRfap4P5AyRmxs78FJBM90BU4fo+nNv+AHMnn6
+         4WbfH2L/wfohtUKgv3j8siUGLLoJnGaKGutr5N1hb7IcoleFv+uiw78ED6oZkGfVGr
+         TiZl9mmXjl4eqSab4biQ0B95rBovLyKHzxZYubio=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Trukhanov <lahvuun@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 03/68] HID: Add 044f:b320 ThrustMaster, Inc. 2 in 1 DT
-Date:   Tue, 13 Aug 2019 22:14:41 -0400
-Message-Id: <20190814021548.16001-3-sashal@kernel.org>
+Cc:     Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 05/68] mips: fix cacheinfo
+Date:   Tue, 13 Aug 2019 22:14:43 -0400
+Message-Id: <20190814021548.16001-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -58,65 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Trukhanov <lahvuun@gmail.com>
+From: Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>
 
-[ Upstream commit 65f11c72780fa9d598df88def045ccb6a885cf80 ]
+[ Upstream commit b8bea8a5e5d942e62203416ab41edecaed4fda02 ]
 
-Enable force feedback for the Thrustmaster Dual Trigger 2 in 1 Rumble Force
-gamepad. Compared to other Thrustmaster devices, left and right rumble
-motors here are swapped.
+Because CONFIG_OF defined for MIPS, cacheinfo attempts to fill information
+from DT, ignoring data filled by architecture routine. This leads to error
+reported
 
-Signed-off-by: Ilya Trukhanov <lahvuun@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+ cacheinfo: Unable to detect cache hierarchy for CPU 0
+
+Way to fix this provided in
+commit fac51482577d ("drivers: base: cacheinfo: fix x86 with
+ CONFIG_OF enabled")
+
+Utilize same mechanism to report that cacheinfo set by architecture
+specific function
+
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-tmff.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/mips/kernel/cacheinfo.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hid/hid-tmff.c b/drivers/hid/hid-tmff.c
-index bea8def64f437..30b8c3256c991 100644
---- a/drivers/hid/hid-tmff.c
-+++ b/drivers/hid/hid-tmff.c
-@@ -34,6 +34,8 @@
+diff --git a/arch/mips/kernel/cacheinfo.c b/arch/mips/kernel/cacheinfo.c
+index 97d5239ca47ba..428ef21892039 100644
+--- a/arch/mips/kernel/cacheinfo.c
++++ b/arch/mips/kernel/cacheinfo.c
+@@ -80,6 +80,8 @@ static int __populate_cache_leaves(unsigned int cpu)
+ 	if (c->tcache.waysize)
+ 		populate_cache(tcache, this_leaf, 3, CACHE_TYPE_UNIFIED);
  
- #include "hid-ids.h"
- 
-+#define THRUSTMASTER_DEVICE_ID_2_IN_1_DT	0xb320
++	this_cpu_ci->cpu_map_populated = true;
 +
- static const signed short ff_rumble[] = {
- 	FF_RUMBLE,
- 	-1
-@@ -88,6 +90,7 @@ static int tmff_play(struct input_dev *dev, void *data,
- 	struct hid_field *ff_field = tmff->ff_field;
- 	int x, y;
- 	int left, right;	/* Rumbling */
-+	int motor_swap;
+ 	return 0;
+ }
  
- 	switch (effect->type) {
- 	case FF_CONSTANT:
-@@ -112,6 +115,13 @@ static int tmff_play(struct input_dev *dev, void *data,
- 					ff_field->logical_minimum,
- 					ff_field->logical_maximum);
- 
-+		/* 2-in-1 strong motor is left */
-+		if (hid->product == THRUSTMASTER_DEVICE_ID_2_IN_1_DT) {
-+			motor_swap = left;
-+			left = right;
-+			right = motor_swap;
-+		}
-+
- 		dbg_hid("(left,right)=(%08x, %08x)\n", left, right);
- 		ff_field->value[0] = left;
- 		ff_field->value[1] = right;
-@@ -238,6 +248,8 @@ static const struct hid_device_id tm_devices[] = {
- 		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb304),   /* FireStorm Dual Power 2 (and 3) */
- 		.driver_data = (unsigned long)ff_rumble },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, THRUSTMASTER_DEVICE_ID_2_IN_1_DT),   /* Dual Trigger 2-in-1 */
-+		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb323),   /* Dual Trigger 3-in-1 (PC Mode) */
- 		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb324),   /* Dual Trigger 3-in-1 (PS3 Mode) */
 -- 
 2.20.1
 
