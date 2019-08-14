@@ -2,67 +2,98 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4666EC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFA2C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2898F206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27257206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565789270;
+	bh=x7mdKvWLxMd/R2+emM7IDljJoGkEVQ8qgJIieKj8u60=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=dG4jlaXi5MXf0RRDmYxPDa4tFuljXZR6lUJ9ZXR9yUmIO44S1z2+NBlWCrS9qMvm/
+	 0N7F7Eaxq/dW0bbBfIjCYuK7lIJWNMRbwrADg3fwz5hlI5ONSkB/PmdAQYkwC7GDq7
+	 ppen/6YPb3A4pUf5ZFzkfjegKjo5Pj0CiMgCjSm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbfHNN0U (ORCPT
+        id S1727879AbfHNN1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 09:26:20 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38016 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727697AbfHNN0T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:26:19 -0400
-Received: by mail-wm1-f65.google.com with SMTP id m125so4456972wmm.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 06:26:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xAZiPJjmd3PI+GZoBuvq/KNF0BWtwepJ9HhFWDTukEY=;
-        b=rLj5VzwHdIuPJ/XOJ44IgNtjTmcEMfZQAB0QMh49e1PCVO8ntJhx+I8FbX2RS47oZ6
-         0cbDjS1YZmyNyEUWP5m/xxWJs9y0ti8Cx2ODiH1is6unV3d1nBT/UuLss6QtNkE/4gOM
-         8RtdnttGLQ1r/YhpjoF+2RQd7Zmmrk37/+yBb2s0QMJ5Ln2AExLd5+F9KXrLKnY/bEQE
-         JwfwcYg8tVFsGlraELlqQaHODV+QvVZFK4a+OoyTlXvKSMmx9v7o7MWEX4h32bwZ1JJr
-         4SoC0xJKqx5CM8HG+NQN62G7Ce7DW/9UHxPYyA/hAcioqk8jnpCC7WWFFJ8l1AMM9GiS
-         SSow==
-X-Gm-Message-State: APjAAAXiJre++UTBMf0bRS3fEfQrUBgCwapoR0Sz4wwaZl3idInTYeY7
-        hSbD3e5WAhZwG56jkZuZa6VVaw==
-X-Google-Smtp-Source: APXvYqw5R7ojamwpGp9GNDYM/3FlDkueNtnfQMNYbHyZwrsXb2PfA9JrdUUz9Jm+0mWhZEM/oEFv/w==
-X-Received: by 2002:a1c:3587:: with SMTP id c129mr8953730wma.90.1565789177208;
-        Wed, 14 Aug 2019 06:26:17 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:2cae:66cd:dd43:92d9? ([2001:b07:6468:f312:2cae:66cd:dd43:92d9])
-        by smtp.gmail.com with ESMTPSA id z6sm25300600wre.76.2019.08.14.06.26.16
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 06:26:16 -0700 (PDT)
-Subject: Re: [PATCH V2 1/3] x86/Hyper-V: Fix definition of struct
- hv_vp_assist_page
-To:     lantianyu1986@gmail.com, rkrcmar@redhat.com, corbet@lwn.net,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, vkuznets@redhat.com
-References: <20190814073447.96141-1-Tianyu.Lan@microsoft.com>
- <20190814073447.96141-2-Tianyu.Lan@microsoft.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
+        Wed, 14 Aug 2019 09:27:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55310 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726551AbfHNN1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:27:48 -0400
+Received: from [192.168.1.31] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F96D206C1;
+        Wed, 14 Aug 2019 13:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565789266;
+        bh=x7mdKvWLxMd/R2+emM7IDljJoGkEVQ8qgJIieKj8u60=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WDuyKCFGBd7tB36ZQm59oQ03cURtX1lPeOYheXDnNn1m0aJeQdHM7sCm0FVHIZ2xh
+         fQfLGoEhDvmllBIO/0zBS5PvKKs86gJVyRs2n5kERwI6gYfPFtsJJDJay2KtSX9+AZ
+         bB2FVFF+V+XhW7YqezaGbS0dYWbxx8rYnkdbOog8=
+Subject: Re: [PATCH] clk: socfpga: deindent code to proper indentation
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+References: <20190814002402.18154-1-sboyd@kernel.org>
+From:   Dinh Nguyen <dinguyen@kernel.org>
 Openpgp: preference=signencrypt
-Message-ID: <a73173b2-da31-b5fc-394f-462c7e0bf1d4@redhat.com>
-Date:   Wed, 14 Aug 2019 15:26:15 +0200
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ mQINBFEnvWwBEAC44OQqJjuetSRuOpBMIk3HojL8dY1krl8T8GJjfgc/Gh97CfVbrqhV5yQ3
+ Sk/MW9mxO9KNvQCbZtthfn62YHmroNwipjZ6wKOMfKdtJR4+8JW/ShIJYnrMfwN8Wki6O+5a
+ yPNNCeENHleV0FLVXw3aACxOcjEzGJHYmg4UC+56rfoxPEhKF6aGBTV5aGKMtQy77ywuqt12
+ c+hlRXHODmXdIeT2V4/u/AsFNAq6UFUEvHrVj+dMIyv2VhjRvkcESIGnG12ifPdU7v/+wom/
+ smtfOAGojgTCqpwd0Ay2xFzgGnSCIFRHp0I/OJqhUcwAYEAdgHSBVwiyTQx2jP+eDu3Q0jI3
+ K/x5qrhZ7lj8MmJPJWQOSYC4fYSse2oVO+2msoMTvMi3+Jy8k+QNH8LhB6agq7wTgF2jodwO
+ yij5BRRIKttp4U62yUgfwbQtEUvatkaBQlG3qSerOzcdjSb4nhRPxasRqNbgkBfs7kqH02qU
+ LOAXJf+y9Y1o6Nk9YCqb5EprDcKCqg2c8hUya8BYqo7y+0NkBU30mpzhaJXncbCMz3CQZYgV
+ 1TR0qEzMv/QtoVuuPtWH9RCC83J5IYw1uFUG4RaoL7Z03fJhxGiXx3/r5Kr/hC9eMl2he6vH
+ 8rrEpGGDm/mwZOEoG5D758WQHLGH4dTAATg0+ZzFHWBbSnNaSQARAQABtCFEaW5oIE5ndXll
+ biA8ZGluZ3V5ZW5Aa2VybmVsLm9yZz6JAjgEEwECACIFAlbG5oQCGwMGCwkIBwMCBhUIAgkK
+ CwQWAgMBAh4BAheAAAoJEBmUBAuBoyj0fIgQAICrZ2ceRWpkZv1UPM/6hBkWwOo3YkzSQwL+
+ AH15hf9xx0D5mvzEtZ97ZoD0sAuB+aVIFwolet+nw49Q8HA3E/3j0DT7sIAqJpcPx3za+kKT
+ twuQ4NkQTTi4q5WCpA5b6e2qzIynB50b3FA6bCjJinN06PxhdOixJGv1qDDmJ01fq2lA7/PL
+ cny/1PIo6PVMWo9nf77L6iXVy8sK/d30pa1pjhMivfenIleIPYhWN1ZdRAkH39ReDxdqjQXN
+ NHanNtsnoCPFsqeCLmuUwcG+XSTo/gEM6l2sdoMF4qSkD4DdrVf5rsOyN4KJAY9Uqytn4781
+ n6l1NAQSRr0LPT5r6xdQ3YXIbwUfrBWh2nDPm0tihuHoH0CfyJMrFupSmjrKXF84F3cq0DzC
+ yasTWUKyW/YURbWeGMpQH3ioDLvBn0H3AlVoSloaRzPudQ6mP4O8mY0DZQASGf6leM82V3t0
+ Gw8MxY9tIiowY7Yl2bHqXCorPlcEYXjzBP32UOxIK7y7AQ1JQkcv6pZ0/6lX6hMshzi9Ydw0
+ m8USfFRZb48gsp039gODbSMCQ2NfxBEyUPw1O9nertCMbIO/0bHKkP9aiHwg3BPwm3YL1UvM
+ ngbze/8cyjg9pW3Eu1QAzMQHYkT1iiEjJ8fTssqDLjgJyp/I3YHYUuAf3i8SlcZTusIwSqnD
+ uQINBFEnvWwBEADZqma4LI+vMqJYe15fxnX8ANw+ZuDeYHy17VXqQ7dA7n8E827ndnoXoBKB
+ 0n7smz1C0I9StarHQPYTUciMLsaUpedEfpYgqLa7eRLFPvk/cVXxmY8Pk+aO8zHafr8yrFB1
+ cYHO3Ld8d/DvF2DuC3iqzmgXzaRQhvQZvJ513nveCa2zTPPCj5w4f/Qkq8OgCz9fOrf/CseM
+ xcP3Jssyf8qTZ4CTt1L6McRZPA/oFNTTgS/KA22PMMP9i8E6dF0Nsj0MN0R7261161PqfA9h
+ 5c+BBzKZ6IHvmfwY+Fb0AgbqegOV8H/wQYCltPJHeA5y1kc/rqplw5I5d8Q6B29p0xxXSfaP
+ UQ/qmXUkNQPNhsMnlL3wRoCol60IADiEyDJHVZRIl6U2K54LyYE1vkf14JM670FsUH608Hmk
+ 30FG8bxax9i+8Muda9ok/KR4Z/QPQukmHIN9jVP1r1C/aAEvjQ2PK9aqrlXCKKenQzZ8qbeC
+ rOTXSuJgWmWnPWzDrMxyEyy+e84bm+3/uPhZjjrNiaTzHHSRnF2ffJigu9fDKAwSof6SwbeH
+ eZcIM4a9Dy+Ue0REaAqFacktlfELeu1LVzMRvpIfPua8izTUmACTgz2kltTaeSxAXZwIziwY
+ prPU3cfnAjqxFHO2TwEpaQOMf8SH9BSAaCXArjfurOF+Pi3lKwARAQABiQIfBBgBAgAJBQJR
+ J71sAhsMAAoJEBmUBAuBoyj0MnIQAI+bcNsfTNltf5AbMJptDgzISZJrYCXuzOgv4+d1CubD
+ 83s0k6VJgsiCIEpvELQJsr58xB6l+o3yTBZRo/LViNLk0jF4CmCdXWjTyaQAIceEdlaeeTGH
+ d5GqAud9rv9q1ERHTcvmoEX6pwv3m66ANK/dHdBV97vXacl+BjQ71aRiAiAFySbJXnqj+hZQ
+ K8TCI/6TOtWJ9aicgiKpmh/sGmdeJCwZ90nxISvkxDXLEmJ1prvbGc74FGNVNTW4mmuNqj/p
+ oNr0iHan8hjPNXwoyLNCtj3I5tBmiHZcOiHDUufHDyKQcsKsKI8kqW3pJlDSACeNpKkrjrib
+ 3KLQHSEhTQCt3ZUDf5xNPnFHOnBjQuGkumlmhkgD5RVguki39AP2BQYp/mdk1NCRQxz5PR1B
+ 2w0QaTgPY24chY9PICcMw+VeEgHZJAhuARKglxiYj9szirPd2kv4CFu2w6a5HNMdVT+i5Hov
+ cJEJNezizexE0dVclt9OS2U9Xwb3VOjs1ITMEYUf8T1j83iiCCFuXqH4U3Eji0nDEiEN5Ac0
+ Jn/EGOBG2qGyKZ4uOec9j5ABF7J6hyO7H6LJaX5bLtp0Z7wUbyVaR4UIGdIOchNgNQk4stfm
+ JiyuXyoFl/1ihREfvUG/e7+VAAoOBnMjitE5/qUERDoEkkuQkMcAHyEyd+XZMyXY
+Message-ID: <8e2a3d84-9b6c-be16-e404-3df367aaf344@kernel.org>
+Date:   Wed, 14 Aug 2019 08:27:45 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190814073447.96141-2-Tianyu.Lan@microsoft.com>
+In-Reply-To: <20190814002402.18154-1-sboyd@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -71,61 +102,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/08/19 09:34, lantianyu1986@gmail.com wrote:
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+
+
+On 8/13/19 7:24 PM, Stephen Boyd wrote:
+> This code is indented oddly, causing checkpatch to complain. Indent it
+> properly.
 > 
-> The struct hv_vp_assist_page was defined incorrectly.
-> The "vtl_control" should be u64[3], "nested_enlightenments
-> _control" should be a u64 and there is 7 reserved bytes
-> following "enlighten_vmentry". This patch is to fix it.
-
-How did the assignment to vp_ap->current_nested_vmcs work then?  Does
-the guest simply not care?
-
-Paolo
-
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> --
-> Change since v1:
->        Move definition of struct hv_nested_enlightenments_control
->        into this patch to fix offset issue.
+> Cc: Dinh Nguyen <dinguyen@kernel.org>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 > ---
->  arch/x86/include/asm/hyperv-tlfs.h | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
+>  drivers/clk/socfpga/clk-gate.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> index af78cd72b8f3..cf0b2a04271d 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -514,14 +514,24 @@ struct hv_timer_message_payload {
->  	__u64 delivery_time;	/* When the message was delivered */
->  } __packed;
->  
-> +struct hv_nested_enlightenments_control {
-> +	struct {
-> +		__u32 directhypercall:1;
-> +		__u32 reserved:31;
-> +	} features;
-> +	struct {
-> +		__u32 reserved;
-> +	} hypercallControls;
-> +} __packed;
-> +
->  /* Define virtual processor assist page structure. */
->  struct hv_vp_assist_page {
->  	__u32 apic_assist;
-> -	__u32 reserved;
-> -	__u64 vtl_control[2];
-> -	__u64 nested_enlightenments_control[2];
-> -	__u32 enlighten_vmentry;
-> -	__u32 padding;
-> +	__u32 reserved1;
-> +	__u64 vtl_control[3];
-> +	struct hv_nested_enlightenments_control nested_control;
-> +	__u8 enlighten_vmentry;
-> +	__u8 reserved2[7];
->  	__u64 current_nested_vmcs;
->  } __packed;
->  
-> 
+
+Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+
 
