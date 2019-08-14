@@ -2,233 +2,230 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B814C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BBFC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9DE22084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:32:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQvxaCSl"
+	by mail.kernel.org (Postfix) with ESMTP id 08AF22084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfHNMch (ORCPT
+        id S1727466AbfHNMdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 08:32:37 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36915 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfHNMch (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 08:32:37 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d1so20202833pgp.4;
-        Wed, 14 Aug 2019 05:32:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yRBqiCdvpXqOkL/WM9A4HqBy4MpVKKMPnymNrlH0bgE=;
-        b=bQvxaCSlgO0OHvR5lamJbX8KAEZPgsvcoCmQAIorMCFkQWDgZDLJO7/2A43mKVACHE
-         cJHBtvwYQN77jHGyc9fs7ZnK+5DnkqVDsLHOvAzCT0V82sCAz3mXfb0K0Gv/Na5RDLqW
-         evO9of2oY35uEdTuYtCEd2sxsghvYWqCaynhUUTTUuflS0N59Wk7wgSjLU3ps8xMY9i+
-         HSbY8jyg06SbimoRe0DDwzTFhI0UXSwJKaxp3kfyVqBgBkeUp5aarr9YXAhgLzhcK89v
-         e3TdS2Hgk+Ih9l46EbW1TwvUgghHRCOloJ3mJ0lYiKOV/KK0V/wVkwma31zLC1cS1BvT
-         E5cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=yRBqiCdvpXqOkL/WM9A4HqBy4MpVKKMPnymNrlH0bgE=;
-        b=hoZpLHOsSW7aOZpg8MmgptqkjgKUu7o4F0cA4TNVSLiTRDf63qgqYcb75oO9egLVUI
-         9XX35H9EVnpd4PdULYPHL22zV1sNsBMG6UNf/8CBPUEQLh5M4AY+0O0V7VxQLBjeQDPW
-         vDDKI3C1547sVTeD2SZAwmUmeGqCT0RDTN01qPFhPWl4zxUEVQP36LKAkoV6mSczkQh2
-         W7gNk4eC6vjSULP0ttNQH/J7DUt0KOvqKtlK8IMgqQYGcrngBplesoubFj1xCBKW/MUc
-         OIIu/Xb6KUOrmNczcrWBUTEHFTjmlZzuOn9PH92L+J9N+rXbjjl/MrDn4+iWAYjUDT1v
-         dgMw==
-X-Gm-Message-State: APjAAAWujTzwnL56hd/I4paWxYShj/+6Ky3RgmmaLtAP7vwv5dDG1axT
-        qYv5PKmGXv1hx5nrjUTs3cQ=
-X-Google-Smtp-Source: APXvYqwmxV8GqjiaZErHdEmtH3XJNXU3OtVOcDARB7OoNEfI0kwU6mw2I/AGyCSeal8g1n8jdf/blw==
-X-Received: by 2002:a63:9245:: with SMTP id s5mr39611419pgn.123.1565785956014;
-        Wed, 14 Aug 2019 05:32:36 -0700 (PDT)
-Received: from localhost.corp.microsoft.com ([167.220.255.52])
-        by smtp.googlemail.com with ESMTPSA id u69sm135276430pgu.77.2019.08.14.05.32.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 05:32:35 -0700 (PDT)
-From:   lantianyu1986@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        daniel.lezcano@linaro.org, arnd@arndb.de,
-        michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH V2 2/2] clocksource/Hyper-V:  Add Hyper-V specific sched clock function
-Date:   Wed, 14 Aug 2019 20:32:16 +0800
-Message-Id: <20190814123216.32245-3-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
-In-Reply-To: <20190814123216.32245-1-Tianyu.Lan@microsoft.com>
-References: <20190814123216.32245-1-Tianyu.Lan@microsoft.com>
+        Wed, 14 Aug 2019 08:33:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56832 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726575AbfHNMds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 08:33:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BAE19AECA;
+        Wed, 14 Aug 2019 12:33:46 +0000 (UTC)
+Date:   Wed, 14 Aug 2019 14:33:41 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Petr Mladek <pmladek@suse.com>
+cc:     jikos@kernel.org, jpoimboe@redhat.com, joe.lawrence@redhat.com,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
+ removal
+In-Reply-To: <20190722093314.reobkfhdzqb7ch2d@pathway.suse.cz>
+Message-ID: <alpine.LSU.2.21.1908141427560.16696@pobox.suse.cz>
+References: <20190719122840.15353-1-mbenes@suse.cz> <20190719122840.15353-3-mbenes@suse.cz> <20190722093314.reobkfhdzqb7ch2d@pathway.suse.cz>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On Mon, 22 Jul 2019, Petr Mladek wrote:
 
-Hyper-V guests use the default native_sched_clock() in pv_ops.time.sched_clock
-on x86.  But native_sched_clock() directly uses the raw TSC value, which
-can be discontinuous in a Hyper-V VM. Add the generic hv_setup_sched_clock()
-to set the sched clock function appropriately. On x86, this sets pv_ops.time.
-sched_clock to read the Hyper-V reference TSC value that is scaled and adjusted
-to be continuous.
+> On Fri 2019-07-19 14:28:40, Miroslav Benes wrote:
+> > Josh reported a bug:
+> > 
+> >   When the object to be patched is a module, and that module is
+> >   rmmod'ed and reloaded, it fails to load with:
+> > 
+> >   module: x86/modules: Skipping invalid relocation target, existing value is nonzero for type 2, loc 00000000ba0302e9, val ffffffffa03e293c
+> >   livepatch: failed to initialize patch 'livepatch_nfsd' for module 'nfsd' (-8)
+> >   livepatch: patch 'livepatch_nfsd' failed for module 'nfsd', refusing to load module 'nfsd'
+> > 
+> >   The livepatch module has a relocation which references a symbol
+> >   in the _previous_ loading of nfsd. When apply_relocate_add()
+> >   tries to replace the old relocation with a new one, it sees that
+> >   the previous one is nonzero and it errors out.
+> > 
+> >   On ppc64le, we have a similar issue:
+> > 
+> >   module_64: livepatch_nfsd: Expected nop after call, got e8410018 at e_show+0x60/0x548 [livepatch_nfsd]
+> >   livepatch: failed to initialize patch 'livepatch_nfsd' for module 'nfsd' (-8)
+> >   livepatch: patch 'livepatch_nfsd' failed for module 'nfsd', refusing to load module 'nfsd'
+> > 
+> > He also proposed three different solutions. We could remove the error
+> > check in apply_relocate_add() introduced by commit eda9cec4c9a1
+> > ("x86/module: Detect and skip invalid relocations"). However the check
+> > is useful for detecting corrupted modules.
+> > 
+> > We could also deny the patched modules to be removed. If it proved to be
+> > a major drawback for users, we could still implement a different
+> > approach. The solution would also complicate the existing code a lot.
+> > 
+> > We thus decided to reverse the relocation patching (clear all relocation
+> > targets on x86_64, or return back nops on powerpc). The solution is not
+> > universal and is too much arch-specific, but it may prove to be simpler
+> > in the end.
+> > 
+> > Reported-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+> > ---
+> >  arch/powerpc/kernel/Makefile    |  1 +
+> >  arch/powerpc/kernel/livepatch.c | 75 +++++++++++++++++++++++++++++++++
+> >  arch/powerpc/kernel/module.h    | 15 +++++++
+> >  arch/powerpc/kernel/module_64.c |  7 +--
+> >  arch/x86/kernel/livepatch.c     | 67 +++++++++++++++++++++++++++++
+> >  include/linux/livepatch.h       |  5 +++
+> >  kernel/livepatch/core.c         | 17 +++++---
+> >  7 files changed, 176 insertions(+), 11 deletions(-)
+> >  create mode 100644 arch/powerpc/kernel/livepatch.c
+> >  create mode 100644 arch/powerpc/kernel/module.h
+> > 
+> > diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> > index 0ea6c4aa3a20..639000f78dc3 100644
+> > --- a/arch/powerpc/kernel/Makefile
+> > +++ b/arch/powerpc/kernel/Makefile
+> > @@ -154,6 +154,7 @@ endif
+> >  
+> >  obj-$(CONFIG_EPAPR_PARAVIRT)	+= epapr_paravirt.o epapr_hcalls.o
+> >  obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvm_emul.o
+> > +obj-$(CONFIG_LIVEPATCH)	+= livepatch.o
+> >  
+> >  # Disable GCOV, KCOV & sanitizers in odd or sensitive code
+> >  GCOV_PROFILE_prom_init.o := n
+> > diff --git a/arch/powerpc/kernel/livepatch.c b/arch/powerpc/kernel/livepatch.c
+> > new file mode 100644
+> > index 000000000000..6f2468c60695
+> > --- /dev/null
+> > +++ b/arch/powerpc/kernel/livepatch.c
+> > @@ -0,0 +1,75 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/*
+> > + * livepatch.c - powerpc-specific Kernel Live Patching Core
+> > + */
+> > +
+> > +#include <linux/livepatch.h>
+> > +#include <asm/code-patching.h>
+> > +#include "module.h"
+> > +
+> > +void arch_klp_free_object_loaded(struct klp_patch *patch,
+> > +				 struct klp_object *obj)
+> 
+> If I get it correctly then this functions reverts changes done by
+> klp_write_object_relocations(). Therefore it should get called
+> klp_clear_object_relocations() or so.
 
-Also move the Hyper-V reference TSC initialization much earlier in the boot
-process so no discontinuity is observed when pv_ops.time.sched_clock
-calculates its offset.
+Good point. Especially when we want to split the function to 
+arch-independent and arch-specific parts.
+ 
+> There is also arch_klp_init_object_loaded() but it does different
+> things, for example it applies alternatives or paravirt instructions.
+> Do we need to revert these as well?
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
- arch/x86/hyperv/hv_init.c          |  2 --
- arch/x86/kernel/cpu/mshyperv.c     |  8 ++++++++
- drivers/clocksource/hyperv_timer.c | 22 ++++++++++++----------
- include/asm-generic/mshyperv.h     |  1 +
- 4 files changed, 21 insertions(+), 12 deletions(-)
+No, I don't think so. They should not change because the patch module 
+stays loaded.
+ 
+> > +{
+> > +	const char *objname, *secname, *symname;
+> > +	char sec_objname[MODULE_NAME_LEN];
+> > +	struct klp_modinfo *info;
+> > +	Elf64_Shdr *s;
+> > +	Elf64_Rela *rel;
+> > +	Elf64_Sym *sym;
+> > +	void *loc;
+> > +	u32 *instruction;
+> > +	int i, cnt;
+> > +
+> > +	info = patch->mod->klp_info;
+> > +	objname = klp_is_module(obj) ? obj->name : "vmlinux";
+> > +
+> > +	/* See livepatch core code for BUILD_BUG_ON() explanation */
+> > +	BUILD_BUG_ON(MODULE_NAME_LEN < 56 || KSYM_NAME_LEN != 128);
+> > +
+> > +	/* For each klp relocation section */
+> > +	for (s = info->sechdrs; s < info->sechdrs + info->hdr.e_shnum; s++) {
+> > +		if (!(s->sh_flags & SHF_RELA_LIVEPATCH))
+> > +			continue;
+> > +
+> > +		/*
+> > +		 * Format: .klp.rela.sec_objname.section_name
+> > +		 */
+> > +		secname = info->secstrings + s->sh_name;
+> > +		cnt = sscanf(secname, ".klp.rela.%55[^.]", sec_objname);
+> > +		if (cnt != 1) {
+> > +			pr_err("section %s has an incorrectly formatted name\n",
+> > +			       secname);
+> > +			continue;
+> > +		}
+> > +
+> > +		if (strcmp(objname, sec_objname))
+> > +			continue;
+> 
+> The above code seems to be arch-independent. Please, move it into
+> klp_clear_object_relocations() or so.
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 0d258688c8cf..866dfb3dca48 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -301,8 +301,6 @@ void __init hyperv_init(void)
+Yes.
  
- 	x86_init.pci.arch_init = hv_pci_init;
- 
--	/* Register Hyper-V specific clocksource */
--	hv_init_clocksource();
- 	return;
- 
- remove_cpuhp_state:
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 062f77279ce3..53afd33990eb 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -29,6 +29,7 @@
- #include <asm/timer.h>
- #include <asm/reboot.h>
- #include <asm/nmi.h>
-+#include <clocksource/hyperv_timer.h>
- 
- struct ms_hyperv_info ms_hyperv;
- EXPORT_SYMBOL_GPL(ms_hyperv);
-@@ -338,9 +339,16 @@ static void __init ms_hyperv_init_platform(void)
- 		x2apic_phys = 1;
- # endif
- 
-+	/* Register Hyper-V specific clocksource */
-+	hv_init_clocksource();
- #endif
- }
- 
-+void hv_setup_sched_clock(void *sched_clock)
-+{
-+	pv_ops.time.sched_clock = sched_clock;
-+}
-+
- const __initconst struct hypervisor_x86 x86_hyper_ms_hyperv = {
- 	.name			= "Microsoft Hyper-V",
- 	.detect			= ms_hyperv_platform,
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index 432aa331df04..dad8af198e20 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -215,6 +215,7 @@ EXPORT_SYMBOL_GPL(hyperv_cs);
- #ifdef CONFIG_HYPERV_TSCPAGE
- 
- static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
-+static u64 hv_sched_clock_offset __ro_after_init;
- 
- struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
- {
-@@ -222,7 +223,7 @@ struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
- }
- EXPORT_SYMBOL_GPL(hv_get_tsc_page);
- 
--static u64 notrace read_hv_sched_clock_tsc(void)
-+static u64 notrace read_hv_clock_tsc(struct clocksource *arg)
- {
- 	u64 current_tick = hv_read_tsc_page(&tsc_pg);
- 
-@@ -232,9 +233,9 @@ static u64 notrace read_hv_sched_clock_tsc(void)
- 	return current_tick;
- }
- 
--static u64 read_hv_clock_tsc(struct clocksource *arg)
-+static u64 read_hv_sched_clock_tsc(void)
- {
--	return read_hv_sched_clock_tsc();
-+	return read_hv_clock_tsc(NULL) - hv_sched_clock_offset;
- }
- 
- static struct clocksource hyperv_cs_tsc = {
-@@ -246,7 +247,7 @@ static struct clocksource hyperv_cs_tsc = {
- };
- #endif
- 
--static u64 notrace read_hv_sched_clock_msr(void)
-+static u64 notrace read_hv_clock_msr(struct clocksource *arg)
- {
- 	u64 current_tick;
- 	/*
-@@ -258,9 +259,9 @@ static u64 notrace read_hv_sched_clock_msr(void)
- 	return current_tick;
- }
- 
--static u64 read_hv_clock_msr(struct clocksource *arg)
-+static u64 read_hv_sched_clock_msr(void)
- {
--	return read_hv_sched_clock_msr();
-+	return read_hv_clock_msr(NULL) - hv_sched_clock_offset;
- }
- 
- static struct clocksource hyperv_cs_msr = {
-@@ -298,8 +299,9 @@ static bool __init hv_init_tsc_clocksource(void)
- 	hv_set_clocksource_vdso(hyperv_cs_tsc);
- 	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
- 
--	/* sched_clock_register is needed on ARM64 but is a no-op on x86 */
--	sched_clock_register(read_hv_sched_clock_tsc, 64, HV_CLOCK_HZ);
-+	hv_sched_clock_offset = hyperv_cs->read(hyperv_cs);
-+	hv_setup_sched_clock(read_hv_sched_clock_tsc);
-+
- 	return true;
- }
- #else
-@@ -329,7 +331,7 @@ void __init hv_init_clocksource(void)
- 	hyperv_cs = &hyperv_cs_msr;
- 	clocksource_register_hz(&hyperv_cs_msr, NSEC_PER_SEC/100);
- 
--	/* sched_clock_register is needed on ARM64 but is a no-op on x86 */
--	sched_clock_register(read_hv_sched_clock_msr, 64, HV_CLOCK_HZ);
-+	hv_sched_clock_offset = hyperv_cs->read(hyperv_cs);
-+	hv_setup_sched_clock(read_hv_sched_clock_msr);
- }
- EXPORT_SYMBOL_GPL(hv_init_clocksource);
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index 0becb7d9704d..18d8e2d8210f 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -167,6 +167,7 @@ void hyperv_report_panic(struct pt_regs *regs, long err);
- void hyperv_report_panic_msg(phys_addr_t pa, size_t size);
- bool hv_is_hyperv_initialized(void);
- void hyperv_cleanup(void);
-+void hv_setup_sched_clock(void *sched_clock);
- #else /* CONFIG_HYPERV */
- static inline bool hv_is_hyperv_initialized(void) { return false; }
- static inline void hyperv_cleanup(void) {}
--- 
-2.14.5
+> > +		rel = (void *)s->sh_addr;
+> > +		for (i = 0; i < s->sh_size / sizeof(*rel); i++) {
+> > +			loc = (void *)info->sechdrs[s->sh_info].sh_addr
+> > +				+ rel[i].r_offset;
+> > +			sym = (Elf64_Sym *)info->sechdrs[info->symndx].sh_addr
+> > +				+ ELF64_R_SYM(rel[i].r_info);
+> > +			symname = patch->mod->core_kallsyms.strtab
+> > +				+ sym->st_name;
+> > +
+> > +			if (ELF64_R_TYPE(rel[i].r_info) != R_PPC_REL24)
+> > +				continue;
+> > +
+> > +			if (sym->st_shndx != SHN_UNDEF &&
+> > +			    sym->st_shndx != SHN_LIVEPATCH)
+> > +				continue;
+> 
+> The above check is livepatch-specific. But in principle, this should
+> revert changes done by apply_relocate_add(). I would implement
+> apply_relocation_clear() or apply_relocation_del() or ...
+> and call it from the generic klp_clear_object_relocations().
+> 
+> The code should be put into the same source files as
+> apply_relocate_add(). It will increase the chance that
+> any changes will be in sync.
 
+Yes, it would be more consistent. It also shows how much code have to be 
+introduced to fix the issue :/
+ 
+> Of course, it is possible that there was a reason for the
+> livepatch-specific filtering that I am not aware of.
+> 
+> > +
+> > +			instruction = (u32 *)loc;
+> > +			if (is_mprofile_mcount_callsite(symname, instruction))
+> > +				continue;
+> > +
+> > +			if (!instr_is_relative_link_branch(*instruction))
+> > +				continue;
+> > +
+> > +			instruction += 1;
+> > +			*instruction = PPC_INST_NOP;
+> > +		}
+> > +	}
+> > +}
+> 
+> Otherwise, this approach looks fine to me. I believe that this area
+> is pretty stable and the maintenance should be rather cheap.
+
+Thanks for the review. I'll try to fix the first approach (which denies 
+the modules to be removed) now so we can compare.
+
+Miroslav
