@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F63C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3F5C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFAD2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4105320989
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750389;
-	bh=hTsSvV4d5LbSjyK/Y6RguugAz95F6OasRmMZczi0FoU=;
+	s=default; t=1565750392;
+	bh=NWEhux/shzzHGahBym2neo05PMTgvEskeKI4ohuns9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lGC3AmAcfPqoIZ7MjK8mWtgC06e6hAg9rO/n7G6rD2LwLe6AjVrJ774/s0ZVIA3aU
-	 hfsbL1ad5I6OgExb7xg3dUU+Zyv5sIBjCoDsGg7t0edbFzk56PN2vlbm9m4KJ3fWR5
-	 ZP0eSnlg9D3aY10DvdSHfQAQB821y8OKlVdyAehw=
+	b=bUcaz0MeEEPxWntJVRe3PcbFkNOxUQJRjkYNFMPS3PsXEoly5XAcQE4NXkv08Wpt8
+	 eoMOh41Wz3qneqZHfG97PVhNd90uRTtIx5xJZsjechU8VMhrxU/aHWn3dsgsshrxJj
+	 CghNCu2XWShq3jqS05VQ1DAESTmR/dIKPXonsCSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbfHNCjs (ORCPT
+        id S1728419AbfHNCjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:39:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43500 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:39:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727228AbfHNCLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:11:17 -0400
+        id S1727330AbfHNCLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:11:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA93520844;
-        Wed, 14 Aug 2019 02:11:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAF112084D;
+        Wed, 14 Aug 2019 02:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748676;
-        bh=hTsSvV4d5LbSjyK/Y6RguugAz95F6OasRmMZczi0FoU=;
+        s=default; t=1565748678;
+        bh=NWEhux/shzzHGahBym2neo05PMTgvEskeKI4ohuns9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H65YzqBs5wHs3r3J1pjCA5XmBWjCZQRwVLD4bbUg4xAu9oWjWjrdliBQwSmAnGXhg
-         Rwsf3fE1OjbwFO8+58U7RSwFcpPYzCtrrTn6DJv6EdVacBLh6piBpEXd9ynQLF6xpt
-         FSir5xAjF5UwKR0os5o9nMJXSYajiau4QXlW1qUM=
+        b=QWDzKrKy0tQA/OSKCfENcLDYnG/iBwtrjixeSP0qeZs68fpvm9uGk0YNBGBpF8zOo
+         xSDMn8c9RmMKBFrc6o4490jSJFj6Y33KPyEdl6moY6BFt7bhRZNtTo4cdZY1F82MyF
+         Ha16VmxfQoqny/JPJ50GA4xN81p6ovK2R3Sj+Stw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>, russianneuromancer@ya.ru,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 015/123] ASoC: Intel: bytcht_es8316: Add quirk for Irbis NB41 netbook
-Date:   Tue, 13 Aug 2019 22:08:59 -0400
-Message-Id: <20190814021047.14828-15-sashal@kernel.org>
+Cc:     Ilya Trukhanov <lahvuun@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 017/123] HID: Add 044f:b320 ThrustMaster, Inc. 2 in 1 DT
+Date:   Tue, 13 Aug 2019 22:09:01 -0400
+Message-Id: <20190814021047.14828-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -59,42 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Ilya Trukhanov <lahvuun@gmail.com>
 
-[ Upstream commit aa2ba991c4206d5b778dcaa7b4997396e79f8e90 ]
+[ Upstream commit 65f11c72780fa9d598df88def045ccb6a885cf80 ]
 
-The Irbis NB41 netbook has its internal mic on IN2, inverted jack-detect
-and stereo speakers, add a quirk for this.
+Enable force feedback for the Thrustmaster Dual Trigger 2 in 1 Rumble Force
+gamepad. Compared to other Thrustmaster devices, left and right rumble
+motors here are swapped.
 
-Cc: russianneuromancer@ya.ru
-Reported-and-tested-by: russianneuromancer@ya.ru
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20190712112708.25327-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Ilya Trukhanov <lahvuun@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/bytcht_es8316.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/hid/hid-tmff.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/sound/soc/intel/boards/bytcht_es8316.c b/sound/soc/intel/boards/bytcht_es8316.c
-index 2fe1ce8791235..c360ebc3ccc7f 100644
---- a/sound/soc/intel/boards/bytcht_es8316.c
-+++ b/sound/soc/intel/boards/bytcht_es8316.c
-@@ -436,6 +436,14 @@ static const struct acpi_gpio_mapping byt_cht_es8316_gpios[] = {
+diff --git a/drivers/hid/hid-tmff.c b/drivers/hid/hid-tmff.c
+index e12f2588ddebb..bdfc5ff3b2c5c 100644
+--- a/drivers/hid/hid-tmff.c
++++ b/drivers/hid/hid-tmff.c
+@@ -22,6 +22,8 @@
  
- /* Please keep this list alphabetically sorted */
- static const struct dmi_system_id byt_cht_es8316_quirk_table[] = {
-+	{	/* Irbis NB41 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "IRBIS"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "NB41"),
-+		},
-+		.driver_data = (void *)(BYT_CHT_ES8316_INTMIC_IN2_MAP
-+					| BYT_CHT_ES8316_JD_INVERTED),
-+	},
- 	{	/* Teclast X98 Plus II */
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "TECLAST"),
+ #include "hid-ids.h"
+ 
++#define THRUSTMASTER_DEVICE_ID_2_IN_1_DT	0xb320
++
+ static const signed short ff_rumble[] = {
+ 	FF_RUMBLE,
+ 	-1
+@@ -76,6 +78,7 @@ static int tmff_play(struct input_dev *dev, void *data,
+ 	struct hid_field *ff_field = tmff->ff_field;
+ 	int x, y;
+ 	int left, right;	/* Rumbling */
++	int motor_swap;
+ 
+ 	switch (effect->type) {
+ 	case FF_CONSTANT:
+@@ -100,6 +103,13 @@ static int tmff_play(struct input_dev *dev, void *data,
+ 					ff_field->logical_minimum,
+ 					ff_field->logical_maximum);
+ 
++		/* 2-in-1 strong motor is left */
++		if (hid->product == THRUSTMASTER_DEVICE_ID_2_IN_1_DT) {
++			motor_swap = left;
++			left = right;
++			right = motor_swap;
++		}
++
+ 		dbg_hid("(left,right)=(%08x, %08x)\n", left, right);
+ 		ff_field->value[0] = left;
+ 		ff_field->value[1] = right;
+@@ -226,6 +236,8 @@ static const struct hid_device_id tm_devices[] = {
+ 		.driver_data = (unsigned long)ff_rumble },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb304),   /* FireStorm Dual Power 2 (and 3) */
+ 		.driver_data = (unsigned long)ff_rumble },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, THRUSTMASTER_DEVICE_ID_2_IN_1_DT),   /* Dual Trigger 2-in-1 */
++		.driver_data = (unsigned long)ff_rumble },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb323),   /* Dual Trigger 3-in-1 (PC Mode) */
+ 		.driver_data = (unsigned long)ff_rumble },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb324),   /* Dual Trigger 3-in-1 (PS3 Mode) */
 -- 
 2.20.1
 
