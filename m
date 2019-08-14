@@ -2,54 +2,55 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A883EC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E84C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750E5208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E02621721
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802546;
-	bh=YEuwsiOPbmEY4UEHEL+C4JDBIzmOVxcNTaAVUFAyJ+w=;
+	s=default; t=1565802549;
+	bh=Uwe+dtt/0iBpNzLmzdON8En8wRrrxYjX+o1mHPdpdtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e0EYO6HBoH46z9Q0M8DX0fumB24mXt3e/VZHYOMepYhLtIG4SUSOaleE04EdhUxzu
-	 vX3x2LXRY9i2tfMX0S7q8aBBsGhVRpEpH7yTTGblWsaEdDP+5t3eM7Zr97wPHHVmpw
-	 ZRvGKzcOFu5z0Kn4d+02QYA/a9zxDvaNB7OL9coY=
+	b=vUUTUuvilp5Og+udW2XE6y7Z4yebDV+iykuTL3BOIpiBEp1j2EHUIaqN9RJu58oPp
+	 1dVTHvB22NBrsDLyvMOU6mF6hgQl6z+c8ISA/ebWND55wO8mr8MkaiDPu6TEw5ANnV
+	 jA/1Vbn5AD4QaBf814SLn+KuPsT96ZzkildtNy+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbfHNRJF (ORCPT
+        id S1727110AbfHNRJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:09:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59276 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:09:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730257AbfHNRJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:09:01 -0400
+        id S1730261AbfHNRJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:09:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2A72208C2;
-        Wed, 14 Aug 2019 17:09:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90E0B2084D;
+        Wed, 14 Aug 2019 17:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802541;
-        bh=YEuwsiOPbmEY4UEHEL+C4JDBIzmOVxcNTaAVUFAyJ+w=;
+        s=default; t=1565802544;
+        bh=Uwe+dtt/0iBpNzLmzdON8En8wRrrxYjX+o1mHPdpdtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GISj+ZyX8rBeh4zgvNQcFbzP5fd9sID46mXQUoInKyqgVkBcSMyRrUlyeKH+zTwEA
-         Bd21PmQTn5aS/s7WtaenzxuzWghMrZz6EvwJwe+k69yp2FoM2MuSaEkKB/oqlqvpsl
-         VIvCYobw6I7CFWCcr9i51MAPfsm4QL8GWN/X0qPM=
+        b=hBMD1+RqUAgR/2HfgCcxqf/TbXQZhJg+YhKUCe31hl81kXkSbGfUjIQ228J1RxQ+1
+         hjrT1IVIHw7Li/pGnyL+sUCoOwdDSJ/cgHqmC7Q29EKw1PAM+cYKAOnio246zDx8or
+         m29R06W44L2297Gb3VWspQBA1HxYjPVRL38+AWHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH 4.19 04/91] staging: android: ion: Bail out upon SIGKILL when allocating memory.
-Date:   Wed, 14 Aug 2019 19:00:27 +0200
-Message-Id: <20190814165749.236426007@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Liebler <stli@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.19 22/91] perf record: Fix module size on s390
+Date:   Wed, 14 Aug 2019 19:00:45 +0200
+Message-Id: <20190814165750.660266790@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -62,44 +63,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-commit 8f9e86ee795971eabbf372e6d804d6b8578287a7 upstream.
+commit 12a6d2940b5f02b4b9f71ce098e3bb02bc24a9ea upstream.
 
-syzbot found that a thread can stall for minutes inside
-ion_system_heap_allocate() after that thread was killed by SIGKILL [1].
-Let's check for SIGKILL before doing memory allocation.
+On s390 the modules loaded in memory have the text segment located after
+the GOT and Relocation table. This can be seen with this output:
 
-[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
+  [root@m35lp76 perf]# fgrep qeth /proc/modules
+  qeth 151552 1 qeth_l2, Live 0x000003ff800b2000
+  ...
+  [root@m35lp76 perf]# cat /sys/module/qeth/sections/.text
+  0x000003ff800b3990
+  [root@m35lp76 perf]#
 
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: stable <stable@vger.kernel.org>
-Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
-Acked-by: Laura Abbott <labbott@redhat.com>
-Acked-by: Sumit Semwal <sumit.semwal@linaro.org>
-Link: https://lore.kernel.org/r/d088f188-5f32-d8fc-b9a0-0b404f7501cc@I-love.SAKURA.ne.jp
+There is an offset of 0x1990 bytes. The size of the qeth module is
+151552 bytes (0x25000 in hex).
+
+The location of the GOT/relocation table at the beginning of a module is
+unique to s390.
+
+commit 203d8a4aa6ed ("perf s390: Fix 'start' address of module's map")
+adjusts the start address of a module in the map structures, but does
+not adjust the size of the modules. This leads to overlapping of module
+maps as this example shows:
+
+[root@m35lp76 perf] # ./perf report -D
+     0 0 0xfb0 [0xa0]: PERF_RECORD_MMAP -1/0: [0x3ff800b3990(0x25000)
+          @ 0]:  x /lib/modules/.../qeth.ko.xz
+     0 0 0x1050 [0xb0]: PERF_RECORD_MMAP -1/0: [0x3ff800d85a0(0x8000)
+          @ 0]:  x /lib/modules/.../ip6_tables.ko.xz
+
+The module qeth.ko has an adjusted start address modified to b3990, but
+its size is unchanged and the module ends at 0x3ff800d8990.  This end
+address overlaps with the next modules start address of 0x3ff800d85a0.
+
+When the size of the leading GOT/Relocation table stored in the
+beginning of the text segment (0x1990 bytes) is subtracted from module
+qeth end address, there are no overlaps anymore:
+
+   0x3ff800d8990 - 0x1990 = 0x0x3ff800d7000
+
+which is the same as
+
+   0x3ff800b2000 + 0x25000 = 0x0x3ff800d7000.
+
+To fix this issue, also adjust the modules size in function
+arch__fix_module_text_start(). Add another function parameter named size
+and reduce the size of the module when the text segment start address is
+changed.
+
+Output after:
+     0 0 0xfb0 [0xa0]: PERF_RECORD_MMAP -1/0: [0x3ff800b3990(0x23670)
+          @ 0]:  x /lib/modules/.../qeth.ko.xz
+     0 0 0x1050 [0xb0]: PERF_RECORD_MMAP -1/0: [0x3ff800d85a0(0x7a60)
+          @ 0]:  x /lib/modules/.../ip6_tables.ko.xz
+
+Reported-by: Stefan Liebler <stli@linux.ibm.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: stable@vger.kernel.org
+Fixes: 203d8a4aa6ed ("perf s390: Fix 'start' address of module's map")
+Link: http://lkml.kernel.org/r/20190724122703.3996-1-tmricht@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/android/ion/ion_page_pool.c |    3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/arch/s390/util/machine.c |   14 +++++++++++++-
+ tools/perf/util/machine.c           |    3 ++-
+ tools/perf/util/machine.h           |    2 +-
+ 3 files changed, 16 insertions(+), 3 deletions(-)
 
---- a/drivers/staging/android/ion/ion_page_pool.c
-+++ b/drivers/staging/android/ion/ion_page_pool.c
-@@ -8,11 +8,14 @@
- #include <linux/list.h>
- #include <linux/slab.h>
- #include <linux/swap.h>
-+#include <linux/sched/signal.h>
+--- a/tools/perf/arch/s390/util/machine.c
++++ b/tools/perf/arch/s390/util/machine.c
+@@ -8,7 +8,7 @@
+ #include "debug.h"
+ #include "symbol.h"
  
- #include "ion.h"
- 
- static inline struct page *ion_page_pool_alloc_pages(struct ion_page_pool *pool)
+-int arch__fix_module_text_start(u64 *start, const char *name)
++int arch__fix_module_text_start(u64 *start, u64 *size, const char *name)
  {
-+	if (fatal_signal_pending(current))
-+		return NULL;
- 	return alloc_pages(pool->gfp_mask, pool->order);
+ 	u64 m_start = *start;
+ 	char path[PATH_MAX];
+@@ -18,6 +18,18 @@ int arch__fix_module_text_start(u64 *sta
+ 	if (sysfs__read_ull(path, (unsigned long long *)start) < 0) {
+ 		pr_debug2("Using module %s start:%#lx\n", path, m_start);
+ 		*start = m_start;
++	} else {
++		/* Successful read of the modules segment text start address.
++		 * Calculate difference between module start address
++		 * in memory and module text segment start address.
++		 * For example module load address is 0x3ff8011b000
++		 * (from /proc/modules) and module text segment start
++		 * address is 0x3ff8011b870 (from file above).
++		 *
++		 * Adjust the module size and subtract the GOT table
++		 * size located at the beginning of the module.
++		 */
++		*size -= (*start - m_start);
+ 	}
+ 
+ 	return 0;
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1295,6 +1295,7 @@ static int machine__set_modules_path(str
+ 	return map_groups__set_modules_path_dir(&machine->kmaps, modules_path, 0);
  }
+ int __weak arch__fix_module_text_start(u64 *start __maybe_unused,
++				u64 *size __maybe_unused,
+ 				const char *name __maybe_unused)
+ {
+ 	return 0;
+@@ -1306,7 +1307,7 @@ static int machine__create_module(void *
+ 	struct machine *machine = arg;
+ 	struct map *map;
+ 
+-	if (arch__fix_module_text_start(&start, name) < 0)
++	if (arch__fix_module_text_start(&start, &size, name) < 0)
+ 		return -1;
+ 
+ 	map = machine__findnew_module_map(machine, start, name);
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -219,7 +219,7 @@ struct symbol *machine__find_kernel_symb
+ 
+ struct map *machine__findnew_module_map(struct machine *machine, u64 start,
+ 					const char *filename);
+-int arch__fix_module_text_start(u64 *start, const char *name);
++int arch__fix_module_text_start(u64 *start, u64 *size, const char *name);
+ 
+ int machine__load_kallsyms(struct machine *machine, const char *filename);
  
 
 
