@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 215C6C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDF8C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B442063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77C94208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802748;
-	bh=ocwnyKs1rifK7iP2Y5EL/eziwLUfhU6jkrxnY1uaWtw=;
+	s=default; t=1565802750;
+	bh=S8IPL5fdFrB1YEC+xEAXvBeryNQRoErBMjsR/WoHJrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cJS6pFtYxun9tXv1Uaf+xSkDsbne9lColS51enKri8MOzPdkX+nTaG+feWIP+pbAD
-	 sOSSBl/xwZW+wuhNZhZXpmdf15Qs/iNXIokwp3Q0T5lppic18jsl718eyr3cvwpibn
-	 TrjMowMf+lNtPopLwR7Zx3vuKbK5UPb9Wj+rLjGw=
+	b=B2jBPQHSVtoZ3Jd1mQnNx+NaD2xtSZfclvD8FnmrJgqd1qA9izkXcmPHA80pPGsPq
+	 E98daK6pB9OaHYktHJNlCxXifHxlxqKIwpR6SV7XkTMrx2AE6gR6Eq155YdWN7hAOA
+	 GPCU2obJDSAjEnztVDYWXxBLHzQZL29ZVA9J2zOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730731AbfHNRM1 (ORCPT
+        id S1730741AbfHNRM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:12:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36218 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729616AbfHNRMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:12:24 -0400
+        id S1730729AbfHNRM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:12:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 513062063F;
-        Wed, 14 Aug 2019 17:12:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2D6A2084D;
+        Wed, 14 Aug 2019 17:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802743;
-        bh=ocwnyKs1rifK7iP2Y5EL/eziwLUfhU6jkrxnY1uaWtw=;
+        s=default; t=1565802746;
+        bh=S8IPL5fdFrB1YEC+xEAXvBeryNQRoErBMjsR/WoHJrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HKWwuPqcHNdeWO+fu0XvF5OyV65xw2Qt9lcv66HSMK7sftgsntAEy6wO242F3qoKU
-         QpRMVOPn26OqbVgQ6Ah/m1fePBrqMF6dvbP2Q+s06uUoDI0kIHbkdG/fVGd9otM2z3
-         K9nnejGYe+v0gTABD3V0Dq9HZw36aIgSeSKulBHg=
+        b=VW1mUpNLMQhxTW+JssxYdiXcgkIihXZs5BmRfeM3AYeQSg4pDCoMqTxCZ4YXcm3H3
+         W0+a2Y80ITDrlGmLUwf5qx/mTnoYGFdzNAGxtvODnGJ3pmdsoMyNq2wZa6WVeQax8q
+         dFKJ6k8EhVEML3H1Cf4w5yVZj/jDPgGFyC7t3Sro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.14 01/69] iio: adc: max9611: Fix misuse of GENMASK macro
-Date:   Wed, 14 Aug 2019 19:00:59 +0200
-Message-Id: <20190814165745.273353691@linuxfoundation.org>
+        stable@vger.kernel.org, Nate Graham <pointedstick@zoho.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 10/69] Input: synaptics - enable RMI mode for HP Spectre X360
+Date:   Wed, 14 Aug 2019 19:01:08 +0200
+Message-Id: <20190814165746.219529267@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,32 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches <joe@perches.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit ae8cc91a7d85e018c0c267f580820b2bb558cd48 upstream.
+commit 25f8c834e2a6871920cc1ca113f02fb301d007c3 upstream.
 
-Arguments are supposed to be ordered high then low.
+The 2016 kabylake HP Spectre X360 (model number 13-w013dx) works much better
+with psmouse.synaptics_intertouch=1 kernel parameter, so let's enable RMI4
+mode automatically.
 
-Signed-off-by: Joe Perches <joe@perches.com>
-Fixes: 69780a3bbc0b ("iio: adc: Add Maxim max9611 ADC driver")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204115
+Reported-by: Nate Graham <pointedstick@zoho.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/max9611.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/mouse/synaptics.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/iio/adc/max9611.c
-+++ b/drivers/iio/adc/max9611.c
-@@ -86,7 +86,7 @@
- #define MAX9611_TEMP_MAX_POS		0x7f80
- #define MAX9611_TEMP_MAX_NEG		0xff80
- #define MAX9611_TEMP_MIN_NEG		0xd980
--#define MAX9611_TEMP_MASK		GENMASK(7, 15)
-+#define MAX9611_TEMP_MASK		GENMASK(15, 7)
- #define MAX9611_TEMP_SHIFT		0x07
- #define MAX9611_TEMP_RAW(_r)		((_r) >> MAX9611_TEMP_SHIFT)
- #define MAX9611_TEMP_SCALE_NUM		1000000
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -185,6 +185,7 @@ static const char * const smbus_pnp_ids[
+ 	"LEN2055", /* E580 */
+ 	"SYN3052", /* HP EliteBook 840 G4 */
+ 	"SYN3221", /* HP 15-ay000 */
++	"SYN323d", /* HP Spectre X360 13-w013dx */
+ 	NULL
+ };
+ 
 
 
