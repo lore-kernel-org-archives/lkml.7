@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5B6C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 748F7C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6060720842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440652084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750089;
-	bh=gOFS9U04tzE8qMelp/6iVfyCDWUB09XjK+hvdznrUxY=;
+	s=default; t=1565750096;
+	bh=g43v1qWwCctTqaytwmXqEvCGCh3tRqeegcByztUxogY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tzwXlL3O/OkMEX1/KJIMrzAFABuuyaFFbUaYUfUmoPb3O2vJcbougWUeLPJhehXjy
-	 lrpde4m4s0e3kLkSeV5p5KGer8ysATbNqX8h6rFJoI8m8wP/w5aMEyuBaBM6LXDq0j
-	 ArIJkjjad72fBuICLjUhncbIWLOHyItDx/64yPwk=
+	b=k+qftStDW/JaV8lis5rpb3Nf9lJpipwsRYUZ5Ymb8WEBM/AMxMQuv06kkWKI3by3M
+	 lyomoF34YnDvA5uISkkuuFPkmITF7EXbEzlVKFVv7kgxF3OkuwOstnPiTuXtgn+T7b
+	 NcGPiFrV4Ke4fG6u7fo3J7arxP5kFwT2rkBm7qGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbfHNCes (ORCPT
+        id S1727747AbfHNCNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:34:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45762 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:13:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728425AbfHNCNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:45 -0400
+        id S1727729AbfHNCNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 395C120842;
-        Wed, 14 Aug 2019 02:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40F1021743;
+        Wed, 14 Aug 2019 02:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748824;
-        bh=gOFS9U04tzE8qMelp/6iVfyCDWUB09XjK+hvdznrUxY=;
+        s=default; t=1565748817;
+        bh=g43v1qWwCctTqaytwmXqEvCGCh3tRqeegcByztUxogY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HgzjotbH5Ej3OVLbp4m2lGv1m8pWOFNQLe1gnxF6rAoJln9zwRMEVjv9FfeHB9ZGs
-         o8n1u2D9yvfoZSzLIWohlkoos3Fp1bzDsCQL+2FCKYH5H0d3btPQvkNwtBC6DZvyEY
-         t87ZLohtGEf3QC1MUKwc1pzQIBwWbF1+RaZJrD3Q=
+        b=ZY1ggm3CgU1PpCBHsiR6w1Q4I+i1J9rtvjOEZ2ArBcEXYKHfF7BGxj1JEURvQio+U
+         1Df8R2HDrAg2/zprhP1nfe3GCxKHeC1HaK0THNNHyWnvE6o2s4/3NsH3yN4qms+uHa
+         nBuqIAdyAVWKMB4fbpnwWW3G9PPmhbzpX0P8h6UI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Steve Dickson <steved@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 085/123] NFS: Fix regression whereby fscache errors are appearing on 'nofsc' mounts
-Date:   Tue, 13 Aug 2019 22:10:09 -0400
-Message-Id: <20190814021047.14828-85-sashal@kernel.org>
+Cc:     Wang Xiayang <xywang.sjtu@sjtu.edu.cn>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 078/123] net/ethernet/qlogic/qed: force the string buffer NULL-terminated
+Date:   Tue, 13 Aug 2019 22:10:02 -0400
+Message-Id: <20190814021047.14828-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -60,85 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
 
-[ Upstream commit dea1bb35c5f35e0577cfc61f79261d80b8715221 ]
+[ Upstream commit 3690c8c9a8edff0db077a38783112d8fe12a7dd2 ]
 
-People are reporing seeing fscache errors being reported concerning
-duplicate cookies even in cases where they are not setting up fscache
-at all. The rule needs to be that if fscache is not enabled, then it
-should have no side effects at all.
+strncpy() does not ensure NULL-termination when the input string
+size equals to the destination buffer size 30.
+The output string is passed to qed_int_deassertion_aeu_bit()
+which calls DP_INFO() and relies NULL-termination.
 
-To ensure this is the case, we disable fscache completely on all superblocks
-for which the 'fsc' mount option was not set. In order to avoid issues
-with '-oremount', we also disable the ability to turn fscache on via
-remount.
+Use strlcpy instead. The other conditional branch above strncpy()
+needs no fix as snprintf() ensures NULL-termination.
 
-Fixes: f1fe29b4a02d ("NFS: Use i_writecount to control whether...")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=200145
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Steve Dickson <steved@redhat.com>
-Cc: David Howells <dhowells@redhat.com>
+This issue is identified by a Coccinelle script.
+
+Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/fscache.c | 7 ++++++-
- fs/nfs/fscache.h | 2 +-
- fs/nfs/super.c   | 1 +
- 3 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_int.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index 53507aa96b0b6..3800ab6f08fa8 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -114,6 +114,10 @@ void nfs_fscache_get_super_cookie(struct super_block *sb, const char *uniq, int
- 	struct rb_node **p, *parent;
- 	int diff;
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
+index fdfedbc8e4311..70a771cd87889 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_int.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
+@@ -1093,7 +1093,7 @@ static int qed_int_deassertion(struct qed_hwfn  *p_hwfn,
+ 						snprintf(bit_name, 30,
+ 							 p_aeu->bit_name, num);
+ 					else
+-						strncpy(bit_name,
++						strlcpy(bit_name,
+ 							p_aeu->bit_name, 30);
  
-+	nfss->fscache_key = NULL;
-+	nfss->fscache = NULL;
-+	if (!(nfss->options & NFS_OPTION_FSCACHE))
-+		return;
- 	if (!uniq) {
- 		uniq = "";
- 		ulen = 1;
-@@ -226,10 +230,11 @@ void nfs_fscache_release_super_cookie(struct super_block *sb)
- void nfs_fscache_init_inode(struct inode *inode)
- {
- 	struct nfs_fscache_inode_auxdata auxdata;
-+	struct nfs_server *nfss = NFS_SERVER(inode);
- 	struct nfs_inode *nfsi = NFS_I(inode);
- 
- 	nfsi->fscache = NULL;
--	if (!S_ISREG(inode->i_mode))
-+	if (!(nfss->fscache && S_ISREG(inode->i_mode)))
- 		return;
- 
- 	memset(&auxdata, 0, sizeof(auxdata));
-diff --git a/fs/nfs/fscache.h b/fs/nfs/fscache.h
-index 25a75e40d91d9..ad041cfbf9ec0 100644
---- a/fs/nfs/fscache.h
-+++ b/fs/nfs/fscache.h
-@@ -182,7 +182,7 @@ static inline void nfs_fscache_wait_on_invalidate(struct inode *inode)
-  */
- static inline const char *nfs_server_fscache_state(struct nfs_server *server)
- {
--	if (server->fscache && (server->options & NFS_OPTION_FSCACHE))
-+	if (server->fscache)
- 		return "yes";
- 	return "no ";
- }
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index f88ddac2dcdf3..4d375b517eda8 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -2239,6 +2239,7 @@ nfs_compare_remount_data(struct nfs_server *nfss,
- 	    data->acdirmin != nfss->acdirmin / HZ ||
- 	    data->acdirmax != nfss->acdirmax / HZ ||
- 	    data->timeo != (10U * nfss->client->cl_timeout->to_initval / HZ) ||
-+	    (data->options & NFS_OPTION_FSCACHE) != (nfss->options & NFS_OPTION_FSCACHE) ||
- 	    data->nfs_server.port != nfss->port ||
- 	    data->nfs_server.addrlen != nfss->nfs_client->cl_addrlen ||
- 	    !rpc_cmp_addr((struct sockaddr *)&data->nfs_server.address,
+ 					/* We now need to pass bitmask in its
 -- 
 2.20.1
 
