@@ -5,55 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E22C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20648C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A3321743
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C7221744
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802374;
-	bh=/2Wd/frythSl97MX/OTUSLUYw7DWSem4ThyOhhXUykA=;
+	s=default; t=1565802380;
+	bh=ZbcM41UZ5tJ59SBJKZ1nr0uuY0yD7jpy7OVAsJ3VS20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S9z36/VD+wX9A6wS/CqrYQT/wjLy6aPA4e9Y7uyG8HoZkpe1+OqzTKkkBV6JAgaBN
-	 KQh0N2GNKXb3HWUv3fXp1U+D1nRhsESmKQj6DVuuRJK3sDH3juLgjH8q6xjUXyUCZH
-	 z1+DBhRiphB1i3LPeyZxpSRvyXxepBaaM+DTbTUw=
+	b=VmF9S/mQifXtzF9+NNqCKplAJ08VJKULb4GAvrmEpjAoEUr0yOuU6U4avxu3IHg+c
+	 oVz4Lu+GoG2o2HHfgRuqk8PwlU6i6oJR2kly4yZkNe3gTZKB3+3aiyW9CnWBssk/HR
+	 zPM9tvpm8n8V8jHYBexsHWRZshdZgZbD+zCIB1p0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbfHNRGN (ORCPT
+        id S1729634AbfHNRGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:06:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55222 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:06:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbfHNRGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:06:09 -0400
+        id S1729137AbfHNRGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:06:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDAB021721;
-        Wed, 14 Aug 2019 17:06:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0E0D2173E;
+        Wed, 14 Aug 2019 17:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802368;
-        bh=/2Wd/frythSl97MX/OTUSLUYw7DWSem4ThyOhhXUykA=;
+        s=default; t=1565802373;
+        bh=ZbcM41UZ5tJ59SBJKZ1nr0uuY0yD7jpy7OVAsJ3VS20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UrW6tIg0Kw0GFEGSuV8PwqGHkYx0rDD1xB1VTCdwq2WnsXz10QLSMUbwKncPsl7Fr
-         T2peTPgM/DiWSFJduknzbkWIrsZO3DPDpuhoR7I7f3t/FJqGmesL2sGco+0oRp+9Oa
-         /6dNFYIfxRdN0Zy/xID1678+Krl6bMUxhDrlStpM=
+        b=qET4AeM5pTwFT7G3SE1uK3LB52Bh4dZByWVYb8W03ZH+m/zY7Thz+hKQq5Pd1S98T
+         febBDy7swdMXuZgeWtA1HAshhS98qBhUxOw0XhaMiYuebNQyTq480C4IiXHR62TVop
+         UwN65asV9ROofrG5MgyVYT74MHySGy2Pm1epyZ90=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Roland Kammerer <roland.kammerer@linbit.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 099/144] perf session: Fix loading of compressed data split across adjacent records
-Date:   Wed, 14 Aug 2019 19:00:55 +0200
-Message-Id: <20190814165804.025278784@linuxfoundation.org>
+Subject: [PATCH 5.2 101/144] drbd: dynamically allocate shash descriptor
+Date:   Wed, 14 Aug 2019 19:00:57 +0200
+Message-Id: <20190814165804.111912540@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -66,131 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 872c8ee8f0f47222f7b10da96eea84d0486540a3 ]
+[ Upstream commit 77ce56e2bfaa64127ae5e23ef136c0168b818777 ]
 
-Fix decompression failure found during the loading of compressed trace
-collected on larger scale systems (>48 cores).
+Building with clang and KASAN, we get a warning about an overly large
+stack frame on 32-bit architectures:
 
-The error happened due to lack of decompression space for a mmaped
-buffer data chunk split across adjacent PERF_RECORD_COMPRESSED records.
+drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
+      [-Werror,-Wframe-larger-than=]
 
-  $ perf report -i bt.16384.data --stats
-  failed to decompress (B): 63869 -> 0 : Destination buffer is too small
-  user stack dump failure
-  Can't parse sample, err = -14
-  0x2637e436 [0x4080]: failed to process type: 9
-  Error:
-  failed to process sample
+We already allocate other data dynamically in this function, so
+just do the same for the shash descriptor, which makes up most of
+this memory.
 
-  $ perf test 71
-  71: Zstd perf.data compression/decompression              : Ok
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/4d839e1b-9c48-89c4-9702-a12217420611@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: https://lore.kernel.org/lkml/20190617132440.2721536-1-arnd@arndb.de/
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Roland Kammerer <roland.kammerer@linbit.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/session.c | 22 ++++++++++++++--------
- tools/perf/util/session.h |  1 +
- tools/perf/util/zstd.c    |  4 ++--
- 3 files changed, 17 insertions(+), 10 deletions(-)
+ drivers/block/drbd/drbd_receiver.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 2e61dd6a3574e..d789840960444 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -36,10 +36,16 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 	void *src;
- 	size_t decomp_size, src_size;
- 	u64 decomp_last_rem = 0;
--	size_t decomp_len = session->header.env.comp_mmap_len;
-+	size_t mmap_len, decomp_len = session->header.env.comp_mmap_len;
- 	struct decomp *decomp, *decomp_last = session->decomp_last;
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 90ebfcae0ce6e..2b3103c308573 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -5417,7 +5417,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	unsigned int key_len;
+ 	char secret[SHARED_SECRET_MAX]; /* 64 byte */
+ 	unsigned int resp_size;
+-	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
++	struct shash_desc *desc;
+ 	struct packet_info pi;
+ 	struct net_conf *nc;
+ 	int err, rv;
+@@ -5430,6 +5430,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	memcpy(secret, nc->shared_secret, key_len);
+ 	rcu_read_unlock();
  
--	decomp = mmap(NULL, sizeof(struct decomp) + decomp_len, PROT_READ|PROT_WRITE,
-+	if (decomp_last) {
-+		decomp_last_rem = decomp_last->size - decomp_last->head;
-+		decomp_len += decomp_last_rem;
++	desc = kmalloc(sizeof(struct shash_desc) +
++		       crypto_shash_descsize(connection->cram_hmac_tfm),
++		       GFP_KERNEL);
++	if (!desc) {
++		rv = -1;
++		goto fail;
 +	}
-+
-+	mmap_len = sizeof(struct decomp) + decomp_len;
-+	decomp = mmap(NULL, mmap_len, PROT_READ|PROT_WRITE,
- 		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
- 	if (decomp == MAP_FAILED) {
- 		pr_err("Couldn't allocate memory for decompression\n");
-@@ -47,10 +53,10 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 	}
+ 	desc->tfm = connection->cram_hmac_tfm;
  
- 	decomp->file_pos = file_offset;
-+	decomp->mmap_len = mmap_len;
- 	decomp->head = 0;
+ 	rv = crypto_shash_setkey(connection->cram_hmac_tfm, (u8 *)secret, key_len);
+@@ -5571,7 +5578,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	kfree(peers_ch);
+ 	kfree(response);
+ 	kfree(right_response);
+-	shash_desc_zero(desc);
++	if (desc) {
++		shash_desc_zero(desc);
++		kfree(desc);
++	}
  
--	if (decomp_last) {
--		decomp_last_rem = decomp_last->size - decomp_last->head;
-+	if (decomp_last_rem) {
- 		memcpy(decomp->data, &(decomp_last->data[decomp_last->head]), decomp_last_rem);
- 		decomp->size = decomp_last_rem;
- 	}
-@@ -61,7 +67,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 	decomp_size = zstd_decompress_stream(&(session->zstd_data), src, src_size,
- 				&(decomp->data[decomp_last_rem]), decomp_len - decomp_last_rem);
- 	if (!decomp_size) {
--		munmap(decomp, sizeof(struct decomp) + decomp_len);
-+		munmap(decomp, mmap_len);
- 		pr_err("Couldn't decompress data\n");
- 		return -1;
- 	}
-@@ -255,15 +261,15 @@ static void perf_session__delete_threads(struct perf_session *session)
- static void perf_session__release_decomp_events(struct perf_session *session)
- {
- 	struct decomp *next, *decomp;
--	size_t decomp_len;
-+	size_t mmap_len;
- 	next = session->decomp;
--	decomp_len = session->header.env.comp_mmap_len;
- 	do {
- 		decomp = next;
- 		if (decomp == NULL)
- 			break;
- 		next = decomp->next;
--		munmap(decomp, decomp_len + sizeof(struct decomp));
-+		mmap_len = decomp->mmap_len;
-+		munmap(decomp, mmap_len);
- 	} while (1);
+ 	return rv;
  }
- 
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index dd8920b745bce..863dbad878496 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -46,6 +46,7 @@ struct perf_session {
- struct decomp {
- 	struct decomp *next;
- 	u64 file_pos;
-+	size_t mmap_len;
- 	u64 head;
- 	size_t size;
- 	char data[];
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index 23bdb98845760..d2202392ffdbb 100644
---- a/tools/perf/util/zstd.c
-+++ b/tools/perf/util/zstd.c
-@@ -99,8 +99,8 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
- 	while (input.pos < input.size) {
- 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
- 		if (ZSTD_isError(ret)) {
--			pr_err("failed to decompress (B): %ld -> %ld : %s\n",
--			       src_size, output.size, ZSTD_getErrorName(ret));
-+			pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
-+			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
- 			break;
- 		}
- 		output.dst  = dst + output.pos;
 -- 
 2.20.1
 
