@@ -7,49 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE08C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F359BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D776B21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF02E21721
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802431;
-	bh=VtbA8zZWqby0Q8Drx6N71oFgtMUHUf+gQidEJvzWYpE=;
+	s=default; t=1565802433;
+	bh=UGX9duJssUMBuCOetQaRW5I3+BrYmgSi/oc3xWLd2Lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jGkJttUu9ZHtZ5q5MwqRQh9mapnLP37TC11/rZQEk8jGsKdHrSERxHSw57cVys60e
-	 d0P9xvVLsgAjyiGiDt3r+jvzpbxhQjqtxddCj7fhuTQMykI5s3GA1Dj/ajdQYs/b/c
-	 zFF1/cQ/qJuUPa9r7/uhEHrGlz02ew0JYwsfszZw=
+	b=hvL/HaNPAphsyCAlqw4lFEqqDVDOnFnbd3KxHnoXTXlFCPuBcRLYNCjX4mSjGjmKR
+	 3KLixgaLqtFj5ddDZPq1nnISER6Da+LuUU64DRZ29wvvu/gIXL3ycDxzs4+Ptz4k7l
+	 621DvHbjA6uKszMrHHXUrt0H38CItjMihtjr+Es0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbfHNRHK (ORCPT
+        id S1729821AbfHNRHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:07:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56508 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:07:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729792AbfHNRHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:07:07 -0400
+        id S1729802AbfHNRHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:07:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AA8A21721;
-        Wed, 14 Aug 2019 17:07:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD4BE2173B;
+        Wed, 14 Aug 2019 17:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802426;
-        bh=VtbA8zZWqby0Q8Drx6N71oFgtMUHUf+gQidEJvzWYpE=;
+        s=default; t=1565802429;
+        bh=UGX9duJssUMBuCOetQaRW5I3+BrYmgSi/oc3xWLd2Lw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lnp9yVpXPh5Cme8FyTmYMW8iprfxEZnpk+NcOKdraPHnrDynq2QL43vXrf5h6NSaH
-         2VPEjrDrUiAbM4Ol4F8ixBKIiZD7C9pIe79jAWEoKLAumkZyamvRjGimpzewmNW3Ow
-         17C8sTSU3rCPvz3gtDm/rwkPui7cXOMgqujJMRGo=
+        b=SD+dzF3SPTsPpDsksPkpumPq6sD4BX4AGdR1fNULuTCN/vx4QKotiVK8uqhfQiMkS
+         Dn88R88qIap9v+jgFwW5siVNgBo6dG3Pi9INz/m1RrrJ4ge+JaFu7pt8mm7luz4udK
+         qZvSCZ9gtngnU1dUJvg7oVGjw9UXPoDin7V7dHDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org, Dmitry Safonov <dima@arista.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 085/144] iommu/vt-d: Check if domain->pgd was allocated
-Date:   Wed, 14 Aug 2019 19:00:41 +0200
-Message-Id: <20190814165803.429413517@linuxfoundation.org>
+        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Frank Li <Frank.li@nxp.com>, Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 115/144] perf/core: Fix creating kernel counters for PMUs that override event->cpu
+Date:   Wed, 14 Aug 2019 19:01:11 +0200
+Message-Id: <20190814165804.729937187@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -62,55 +68,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3ee9eca760e7d0b68c55813243de66bbb499dc3b ]
+[ Upstream commit 4ce54af8b33d3e21ca935fc1b89b58cbba956051 ]
 
-There is a couple of places where on domain_init() failure domain_exit()
-is called. While currently domain_init() can fail only if
-alloc_pgtable_page() has failed.
+Some hardware PMU drivers will override perf_event.cpu inside their
+event_init callback. This causes a lockdep splat when initialized through
+the kernel API:
 
-Make domain_exit() check if domain->pgd present, before calling
-domain_unmap(), as it theoretically should crash on clearing pte entries
-in dma_pte_clear_level().
+ WARNING: CPU: 0 PID: 250 at kernel/events/core.c:2917 ctx_sched_out+0x78/0x208
+ pc : ctx_sched_out+0x78/0x208
+ Call trace:
+  ctx_sched_out+0x78/0x208
+  __perf_install_in_context+0x160/0x248
+  remote_function+0x58/0x68
+  generic_exec_single+0x100/0x180
+  smp_call_function_single+0x174/0x1b8
+  perf_install_in_context+0x178/0x188
+  perf_event_create_kernel_counter+0x118/0x160
 
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: iommu@lists.linux-foundation.org
-Signed-off-by: Dmitry Safonov <dima@arista.com>
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fix this by calling perf_install_in_context with event->cpu, just like
+perf_event_open
+
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Frank Li <Frank.li@nxp.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will@kernel.org>
+Link: https://lkml.kernel.org/r/c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 2101601adf57d..1ad24367373f4 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1900,7 +1900,6 @@ static int domain_init(struct dmar_domain *domain, struct intel_iommu *iommu,
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f851934d55d48..4bc15cff1026a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11266,7 +11266,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+ 		goto err_unlock;
+ 	}
  
- static void domain_exit(struct dmar_domain *domain)
- {
--	struct page *freelist;
+-	perf_install_in_context(ctx, event, cpu);
++	perf_install_in_context(ctx, event, event->cpu);
+ 	perf_unpin_context(ctx);
+ 	mutex_unlock(&ctx->mutex);
  
- 	/* Remove associated devices and clear attached or cached domains */
- 	rcu_read_lock();
-@@ -1910,9 +1909,12 @@ static void domain_exit(struct dmar_domain *domain)
- 	/* destroy iovas */
- 	put_iova_domain(&domain->iovad);
- 
--	freelist = domain_unmap(domain, 0, DOMAIN_MAX_PFN(domain->gaw));
-+	if (domain->pgd) {
-+		struct page *freelist;
- 
--	dma_free_pagelist(freelist);
-+		freelist = domain_unmap(domain, 0, DOMAIN_MAX_PFN(domain->gaw));
-+		dma_free_pagelist(freelist);
-+	}
- 
- 	free_domain_mem(domain);
- }
 -- 
 2.20.1
 
