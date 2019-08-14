@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08664C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CD0C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7939208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9547521721
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749594;
-	bh=BvDBc8ULFIJ03Qy5ImvqS1zRetsqy50NWFJ2J/Aakvo=;
+	s=default; t=1565749596;
+	bh=oFL0YzgkpZCo1q/GBdWUqtS4Ewtcwddk9knkoj8WEsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TpJJlL6Vztv+ofQq5RQYVuNl5zgu2x+fAj9oXq36V8o0brhs5lyxloeubgw6Z6ynM
-	 n3c+giNHVABV8MrDajGFjQshMExMI7m5Fgx9iyjYjcBIpnT6qXULa1AznJZhWLNDNr
-	 rx+365qZgxGz5EsxMhr+GgRJit1NKAFuJc+0MCA0=
+	b=hs2/JbbFDHFxp1/061kUWygKTZIQBZH+VEJTSC8/MaWDvOZpnYV6pTVKs4yej4yEd
+	 Hhp3ZOAsoVILy0I3WAP6Hd4U8bUN9RPySieSzaSqq9JFt57chETXaQyT6doKYch089
+	 41woTw3/6ofaOitwVNWAbOxmn3XTWCeTzl3bL4X8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730362AbfHNC0d (ORCPT
+        id S1730375AbfHNC0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:26:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54544 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:26:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730312AbfHNC01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:26:27 -0400
+        id S1730333AbfHNC0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:26:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1030921721;
-        Wed, 14 Aug 2019 02:26:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98764208C2;
+        Wed, 14 Aug 2019 02:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749587;
-        bh=BvDBc8ULFIJ03Qy5ImvqS1zRetsqy50NWFJ2J/Aakvo=;
+        s=default; t=1565749590;
+        bh=oFL0YzgkpZCo1q/GBdWUqtS4Ewtcwddk9knkoj8WEsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kgHIS0j7EhH+QawRmcMXCwVrrJ1flhI1hjV/0yx/V9PYGm78GJ8YumA+0KUECzP7W
-         /UV0SKNtbLZ+8S9BNkNmAAMK6u6/gy9e4JI2xp/naC2m4PX2cd5qi+oFtOSiaoj9dh
-         yEPJl9XhGyrzeykDzrZI/WQ59i3Q5/iGzVyGoddc=
+        b=ZJbVO/nPngfc2+ftHiL15aDsjEcbLUqKXfDGF21f+DUdY1oTMLseNbsORX8x0OtP3
+         crSXhoZ6DaHzvsX2eWCd3+EIgftvvM19Pj66FSV43SZGMHwtPY/Gy+5MxyxHixV25i
+         +Kqv3/ZuyomBSQlUfEcgKuKzRsamAWUuxexORFX4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 21/28] HID: hiddev: do cleanup in failure of opening a device
-Date:   Tue, 13 Aug 2019 22:25:43 -0400
-Message-Id: <20190814022550.17463-21-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 23/28] net: cxgb3_main: Fix a resource leak in a error path in 'init_one()'
+Date:   Tue, 13 Aug 2019 22:25:45 -0400
+Message-Id: <20190814022550.17463-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022550.17463-1-sashal@kernel.org>
 References: <20190814022550.17463-1-sashal@kernel.org>
@@ -61,36 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hillf Danton <hdanton@sina.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 6d4472d7bec39917b54e4e80245784ea5d60ce49 ]
+[ Upstream commit debea2cd3193ac868289e8893c3a719c265b0612 ]
 
-Undo what we did for opening before releasing the memory slice.
+A call to 'kfree_skb()' is missing in the error handling path of
+'init_one()'.
+This is already present in 'remove_one()' but is missing here.
 
-Reported-by: syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/usbhid/hiddev.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
-index 0bfc2009e4071..8903ea09ac587 100644
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -330,6 +330,10 @@ static int hiddev_open(struct inode *inode, struct file *file)
- 	return 0;
- bail_unlock:
- 	mutex_unlock(&hiddev->existancelock);
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
+index 3dd4c39640dc4..bee615cddbdd8 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
+@@ -3260,7 +3260,7 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (!adapter->regs) {
+ 		dev_err(&pdev->dev, "cannot map device registers\n");
+ 		err = -ENOMEM;
+-		goto out_free_adapter;
++		goto out_free_adapter_nofail;
+ 	}
+ 
+ 	adapter->pdev = pdev;
+@@ -3378,6 +3378,9 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		if (adapter->port[i])
+ 			free_netdev(adapter->port[i]);
+ 
++out_free_adapter_nofail:
++	kfree_skb(adapter->nofail_skb);
 +
-+	spin_lock_irq(&list->hiddev->list_lock);
-+	list_del(&list->node);
-+	spin_unlock_irq(&list->hiddev->list_lock);
- bail:
- 	file->private_data = NULL;
- 	vfree(list);
+ out_free_adapter:
+ 	kfree(adapter);
+ 
 -- 
 2.20.1
 
