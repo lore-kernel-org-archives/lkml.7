@@ -2,100 +2,140 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488D2C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B817C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 178AD20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30FA620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803508;
-	bh=SUSCWt4xADsQMaH8+atQZsd7pBSYIKD5PVgyeC0Sc7E=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=G6ujBxg6AgG9HD0W/2hyUt1qE9v3S2rATbIDKFv4Oxe65JxX5Wm+7JL24l5JrDSHG
-	 Lfmhl99T9dccwL7KA68go+1ETb7qSsCMmawZw15k5T0DhNOt6VbTSGtpZXQfrOGPRB
-	 4p0H/hILYKwBvCTbeGR5KsMRNzkpIxxtc82yyFaQ=
+	s=default; t=1565803516;
+	bh=fyYJhajAG5edpUDBNypC3q65eVAZN2n/N9KBNEYaUC4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=j9pnAbJ48tvnFXLIHo/OpnADI8MJbII8K0YMmQSYncHYoTrlOVJcQ9rFnqeUAyz/p
+	 7+IdcXzVsHUhC0XZ6p/29ZUG9Dt8+nJDDD0RoDxPHXFk5e4t7ziEoGljBAcqoss8ih
+	 WIYygYhTAh62JF9fZ2ZEpnik9zR4FVGgv4wrbHcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbfHNRZH (ORCPT
+        id S1729785AbfHNRZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:25:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54992 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:25:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729547AbfHNRF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:05:59 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1729530AbfHNRFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:05:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB1F52084D;
-        Wed, 14 Aug 2019 17:05:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBB672084D;
+        Wed, 14 Aug 2019 17:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802358;
-        bh=SUSCWt4xADsQMaH8+atQZsd7pBSYIKD5PVgyeC0Sc7E=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=F3QEhYWRy8PZBbWJ9+3RRUXDylL5Jpml3gB5zrbcuc36EuLCXGqosdX3Z1f2CPIYR
-         BJtvqinnV/8D6Rd6T8nxleFg1Euqa98S5FYLIDYqsKpy9TmmSRQajcJKb81TEhtRYK
-         PXLmc4KeIkeKESHHjQbzl+95are40ZUT9I/CscLo=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1565802353;
+        bh=fyYJhajAG5edpUDBNypC3q65eVAZN2n/N9KBNEYaUC4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SkTnDRFTeMuKu6I8kMBKNqakmelLK8d98FlAH/bALLZIT6l89yIOcuLx16APPFHRJ
+         EUtUwXPJz+2BlZXOLDrk4P5beDw+zbyhjqgGcqNisyKUSb8dkw+wT6y5QzYipagY+d
+         eNx3c2+t7V1N3ih7TKtM0tWRi4X4jlPj5qvEJ1ww=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jakub Jankowski <shasta@toxcorp.com>,
+        Florian Westphal <fw@strlen.de>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 055/144] netfilter: conntrack: always store window size un-scaled
+Date:   Wed, 14 Aug 2019 19:00:11 +0200
+Message-Id: <20190814165802.133017542@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
+References: <20190814165759.466811854@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190814125012.8700-10-vkoul@kernel.org>
-References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-10-vkoul@kernel.org>
-Subject: Re: [PATCH 09/22] arm64: dts: qcom: pm8150b: Add Base DTS file
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        sibis@codeaurora.org, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 14 Aug 2019 10:05:57 -0700
-Message-Id: <20190814170557.DB1F52084D@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-08-14 05:49:59)
-> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/=
-qcom/pm8150b.dtsi
-> new file mode 100644
-> index 000000000000..c0a678b0f159
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> @@ -0,0 +1,22 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +// Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-> +// Copyright (c) 2019, Linaro Limited
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/spmi/spmi.h>
-> +
-> +&spmi_bus {
-> +       pm8150@2 {
+[ Upstream commit 959b69ef57db00cb33e9c4777400ae7183ebddd3 ]
 
-pmic.
+Jakub Jankowski reported following oddity:
 
-> +               compatible =3D "qcom,spmi-pmic";
-> +               reg =3D <0x2 SPMI_USID>;
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +       };
-> +
-> +       qcom,pm8150@3 {
+After 3 way handshake completes, timeout of new connection is set to
+max_retrans (300s) instead of established (5 days).
 
-pmic. Funny this one has qcom, prefix!
+shortened excerpt from pcap provided:
+25.070622 IP (flags [DF], proto TCP (6), length 52)
+10.8.5.4.1025 > 10.8.1.2.80: Flags [S], seq 11, win 64240, [wscale 8]
+26.070462 IP (flags [DF], proto TCP (6), length 48)
+10.8.1.2.80 > 10.8.5.4.1025: Flags [S.], seq 82, ack 12, win 65535, [wscale 3]
+27.070449 IP (flags [DF], proto TCP (6), length 40)
+10.8.5.4.1025 > 10.8.1.2.80: Flags [.], ack 83, win 512, length 0
 
-> +               compatible =3D"qcom,spmi-pmic";
-> +               reg =3D <0x3 SPMI_USID>;
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +       };
-> +};
-> --=20
-> 2.20.1
->=20
+Turns out the last_win is of u16 type, but we store the scaled value:
+512 << 8 (== 0x20000) becomes 0 window.
+
+The Fixes tag is not correct, as the bug has existed forever, but
+without that change all that this causes might cause is to mistake a
+window update (to-nonzero-from-zero) for a retransmit.
+
+Fixes: fbcd253d2448b8 ("netfilter: conntrack: lower timeout to RETRANS seconds if window is 0")
+Reported-by: Jakub Jankowski <shasta@toxcorp.com>
+Tested-by: Jakub Jankowski <shasta@toxcorp.com>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Acked-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/netfilter/nf_conntrack_proto_tcp.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/net/netfilter/nf_conntrack_proto_tcp.c b/net/netfilter/nf_conntrack_proto_tcp.c
+index 1e2cc83ff5da8..ae1f8c6b3a974 100644
+--- a/net/netfilter/nf_conntrack_proto_tcp.c
++++ b/net/netfilter/nf_conntrack_proto_tcp.c
+@@ -472,6 +472,7 @@ static bool tcp_in_window(const struct nf_conn *ct,
+ 	struct ip_ct_tcp_state *receiver = &state->seen[!dir];
+ 	const struct nf_conntrack_tuple *tuple = &ct->tuplehash[dir].tuple;
+ 	__u32 seq, ack, sack, end, win, swin;
++	u16 win_raw;
+ 	s32 receiver_offset;
+ 	bool res, in_recv_win;
+ 
+@@ -480,7 +481,8 @@ static bool tcp_in_window(const struct nf_conn *ct,
+ 	 */
+ 	seq = ntohl(tcph->seq);
+ 	ack = sack = ntohl(tcph->ack_seq);
+-	win = ntohs(tcph->window);
++	win_raw = ntohs(tcph->window);
++	win = win_raw;
+ 	end = segment_seq_plus_len(seq, skb->len, dataoff, tcph);
+ 
+ 	if (receiver->flags & IP_CT_TCP_FLAG_SACK_PERM)
+@@ -655,14 +657,14 @@ static bool tcp_in_window(const struct nf_conn *ct,
+ 			    && state->last_seq == seq
+ 			    && state->last_ack == ack
+ 			    && state->last_end == end
+-			    && state->last_win == win)
++			    && state->last_win == win_raw)
+ 				state->retrans++;
+ 			else {
+ 				state->last_dir = dir;
+ 				state->last_seq = seq;
+ 				state->last_ack = ack;
+ 				state->last_end = end;
+-				state->last_win = win;
++				state->last_win = win_raw;
+ 				state->retrans = 0;
+ 			}
+ 		}
+-- 
+2.20.1
+
+
+
