@@ -2,73 +2,86 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 085A6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C476BC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA4C2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9360B214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:31:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565785891;
+	bh=w9HQPoZIgpONwPkioEJV5bg1Lcnny8iuloWY0frHzRo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dhGJsrOHn04JJlL9Ow9ZTr2GQ1gvYy3Rs9DPeee6SXFZOH0znmB232zUyukd6dPzs
+	 e+C9MbOFNFh7Ww+eNel4709lxx+j32WWulyHshGgst5cQJxTMI1F7080oy0p6+iSbD
+	 zZhDp+uKCoUdtFJEL5Rbmz1v72PxSyOOMsFaNnRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727623AbfHNM3R (ORCPT
+        id S1727010AbfHNMba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 08:29:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38570 "EHLO mx1.redhat.com"
+        Wed, 14 Aug 2019 08:31:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbfHNM3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 08:29:17 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725800AbfHNMba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 08:31:30 -0400
+Received: from localhost.localdomain (unknown [171.76.115.97])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ED579300D209;
-        Wed, 14 Aug 2019 12:29:16 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7D88B80697;
-        Wed, 14 Aug 2019 12:29:11 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 14 Aug 2019 14:29:16 +0200 (CEST)
-Date:   Wed, 14 Aug 2019 14:29:10 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     christian.brauner@ubuntu.com
-Cc:     linux-kernel@vger.kernel.org, libc-alpha@sourceware.org,
-        alistair23@gmail.com, ebiederm@xmission.com, arnd@arndb.de,
-        dalias@libc.org, torvalds@linux-foundation.org,
-        adhemerval.zanella@linaro.org, fweimer@redhat.com,
-        palmer@sifive.com, macro@wdc.com, zongbox@gmail.com,
-        akpm@linux-foundation.org, viro@zeniv.linux.org.uk, hpa@zytor.com
-Subject: Re: [PATCH v1 1/1] waitid: Add support for waiting for the current
- process group
-Message-ID: <20190814122909.GA11595@redhat.com>
-References: <CAKmqyKMJPQAOKn11xepzAwXOd4e9dU0Cyz=A0T-uMEgUp5yJjA@mail.gmail.com>
- <20190814113822.9505-1-christian.brauner@ubuntu.com>
- <20190814113822.9505-2-christian.brauner@ubuntu.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 15E8D2084D;
+        Wed, 14 Aug 2019 12:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565785889;
+        bh=w9HQPoZIgpONwPkioEJV5bg1Lcnny8iuloWY0frHzRo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=L1693v/RQ38L2/soaB+G6KsLFJMf8wYLVrLOFmBnx3vYkKOTVkOwh2lMeEMOpCsUl
+         mnLmkXkPNWCRxhhh+YHB89VXypUhbEhpIDA/n/3sRTyPudeyJl1lofNTq2ilCIKR5T
+         eF6lV6OFKbrdoYZXNhBs4H9hmRVWDt20RGNW1k44=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: clock: Document SM8150 rpmh-clock compatible
+Date:   Wed, 14 Aug 2019 17:59:57 +0530
+Message-Id: <20190814122958.4981-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814113822.9505-2-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 14 Aug 2019 12:29:17 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/14, christian.brauner@ubuntu.com wrote:
->
->  	case P_PGID:
->  		type = PIDTYPE_PGID;
-> -		if (upid <= 0)
-> +		if (upid < 0)
->  			return -EINVAL;
-> +
-> +		if (upid == 0)
-> +			pid = get_pid(task_pgrp(current));
+Document the SM8150 rpmh-clock compatible for rpmh clock controller
+found on SM8150 platforms.
 
-this needs rcu lock or tasklist_lock, this can race with another thread
-doing sys_setpgid/setsid (see change_pid(PIDTYPE_PGID)).
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Oleg.
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+index 3c007653da31..82dee80cdbf3 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+@@ -6,7 +6,9 @@ some Qualcomm Technologies Inc. SoCs. It accepts clock requests from
+ other hardware subsystems via RSC to control clocks.
+ 
+ Required properties :
+-- compatible : shall contain "qcom,sdm845-rpmh-clk"
++- compatible : must be one of:
++	       "qcom,sdm845-rpmh-clk"
++	       "qcom,sm8150-rpmh-clk"
+ 
+ - #clock-cells : must contain 1
+ 
+-- 
+2.20.1
 
