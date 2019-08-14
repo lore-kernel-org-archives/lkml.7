@@ -4,49 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91513C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FCEC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1CF208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6C820665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802862;
-	bh=Z9vCoxmg1F0JBLGhQ5ys9J4j4m/T7XhF6spaclXJU8A=;
+	s=default; t=1565802865;
+	bh=6x8AFhRj1EO0tbyspskxethUmHszG//jXzxC6/aIAZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NcPX5Hu3Jov9x7WLOoaa846wtgr7ccdgRvsDDXNHWd5/FehQgLt+lAlnspDg8Y+ZR
-	 Lz1d/H6h5aFbcBH0bgSPUDKp/YdL0KpNCtUVgZAvvtlaNirXd4V3z5byHAHU0cvmGI
-	 c4kPN7PPt9lLFbqdKRkwJXCdkkb/uZr3kabr4a4w=
+	b=VLG3Y7tRQF0QhWhFP+Xt/od1xRAwKqLGcp6VSP9/fAv99kK3ZChLumYFvfmwE1ML5
+	 vC2aabnlGZc60cXRu2ejBKVDpWspCxYrzROZda0SePTjigNdGHVmAyXtpR1GK5mkK+
+	 /OEWsyiAoJZ8pjGB2oXSleri4Ehf3LMFLsu8Z4bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbfHNROV (ORCPT
+        id S1731074AbfHNROY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:14:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38770 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:14:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731038AbfHNROT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:14:19 -0400
+        id S1731064AbfHNROW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:14:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BF782084D;
-        Wed, 14 Aug 2019 17:14:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A46B8208C2;
+        Wed, 14 Aug 2019 17:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802858;
-        bh=Z9vCoxmg1F0JBLGhQ5ys9J4j4m/T7XhF6spaclXJU8A=;
+        s=default; t=1565802861;
+        bh=6x8AFhRj1EO0tbyspskxethUmHszG//jXzxC6/aIAZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yYN+FVTVurgHJBfVWv5FzvCTl7ZBHyof50KerFC6HCDHT9h9KbKpdvTf0P/6HTxOD
-         L2iJfMSeJwhutItHn5C0KYeKbAu4u+2zqV6zS26VOdul8rYD+xNDcxyaTKN3C7VQ8a
-         wWpr8c6EU0dtwy8ButUuOh2RVaJqPlvZCf1YFHSg=
+        b=MzidlgLApAojs+ubixfblFgL23Brmyr7xMf7thT3YW6aKrDVe5XhBd0SsyiA00Wlu
+         Dx99wFOc/6xMvCKaUNSJyw4m/9WVeLrGfW5FkHNA0ZzVl8ze0wE+II3hoUCuf+n8QK
+         t6209uqeKpdVVIWOh6CTSMNbT5EmufkmQyrx/ZhA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilles Buloz <Gilles.Buloz@kontron.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.14 54/69] hwmon: (nct7802) Fix wrong detection of in4 presence
-Date:   Wed, 14 Aug 2019 19:01:52 +0200
-Message-Id: <20190814165749.135205881@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>,
+        Vandita Kulkarni <vandita.kulkarni@intel.com>,
+        Deepak M <m.deepak@intel.com>,
+        Madhav Chauhan <madhav.chauhan@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org
+Subject: [PATCH 4.14 55/69] drm/i915: Fix wrong escape clock divisor init for GLK
+Date:   Wed, 14 Aug 2019 19:01:53 +0200
+Message-Id: <20190814165749.231806301@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -59,56 +67,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>
 
-commit 38ada2f406a9b81fb1249c5c9227fa657e7d5671 upstream.
+commit 73a0ff0b30af79bf0303d557eb82f1d1945bb6ee upstream.
 
-The code to detect if in4 is present is wrong; if in4 is not present,
-the in4_input sysfs attribute is still present.
+According to Bspec clock divisor registers in GeminiLake
+should be initialized by shifting 1(<<) to amount of correspondent
+divisor. While i915 was writing all this time that value as is.
 
-In detail:
+Surprisingly that it by accident worked, until we met some issues
+with Microtech Etab.
 
-- Ihen RTD3_MD=11 (VSEN3 present), everything is as expected (no bug).
-- If we have RTD3_MD!=11 (no VSEN3), we unexpectedly have a in4_input
-  file under /sys and the "sensors" command displays in4_input.
-  But as expected, we have no in4_min, in4_max, in4_alarm, in4_beep.
+v2: Added Fixes tag and cc
+v3: Added stable to cc as well.
 
-Fix is_visible function to detect and report in4_input visibility
-as expected.
-
-Reported-by: Gilles Buloz <Gilles.Buloz@kontron.com>
-Cc: Gilles Buloz <Gilles.Buloz@kontron.com>
+Signed-off-by: Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>
+Reviewed-by: Vandita Kulkarni <vandita.kulkarni@intel.com>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=108826
+Fixes: bcc657004841 ("drm/i915/glk: Program txesc clock divider for GLK")
+Cc: Deepak M <m.deepak@intel.com>
+Cc: Madhav Chauhan <madhav.chauhan@intel.com>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: intel-gfx@lists.freedesktop.org
 Cc: stable@vger.kernel.org
-Fixes: 3434f37835804 ("hwmon: Driver for Nuvoton NCT7802Y")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190712081938.14185-1-stanislav.lisovskiy@intel.com
+(cherry picked from commit ce52ad5dd52cfaf3398058384e0ff94134bbd89c)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/nct7802.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/i915/intel_dsi_pll.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/hwmon/nct7802.c
-+++ b/drivers/hwmon/nct7802.c
-@@ -768,7 +768,7 @@ static struct attribute *nct7802_in_attr
- 	&sensor_dev_attr_in3_alarm.dev_attr.attr,
- 	&sensor_dev_attr_in3_beep.dev_attr.attr,
+--- a/drivers/gpu/drm/i915/intel_dsi_pll.c
++++ b/drivers/gpu/drm/i915/intel_dsi_pll.c
+@@ -422,8 +422,8 @@ static void glk_dsi_program_esc_clock(st
+ 	else
+ 		txesc2_div = 10;
  
--	&sensor_dev_attr_in4_input.dev_attr.attr,	/* 17 */
-+	&sensor_dev_attr_in4_input.dev_attr.attr,	/* 16 */
- 	&sensor_dev_attr_in4_min.dev_attr.attr,
- 	&sensor_dev_attr_in4_max.dev_attr.attr,
- 	&sensor_dev_attr_in4_alarm.dev_attr.attr,
-@@ -794,9 +794,9 @@ static umode_t nct7802_in_is_visible(str
+-	I915_WRITE(MIPIO_TXESC_CLK_DIV1, txesc1_div & GLK_TX_ESC_CLK_DIV1_MASK);
+-	I915_WRITE(MIPIO_TXESC_CLK_DIV2, txesc2_div & GLK_TX_ESC_CLK_DIV2_MASK);
++	I915_WRITE(MIPIO_TXESC_CLK_DIV1, (1 << (txesc1_div - 1)) & GLK_TX_ESC_CLK_DIV1_MASK);
++	I915_WRITE(MIPIO_TXESC_CLK_DIV2, (1 << (txesc2_div - 1)) & GLK_TX_ESC_CLK_DIV2_MASK);
+ }
  
- 	if (index >= 6 && index < 11 && (reg & 0x03) != 0x03)	/* VSEN1 */
- 		return 0;
--	if (index >= 11 && index < 17 && (reg & 0x0c) != 0x0c)	/* VSEN2 */
-+	if (index >= 11 && index < 16 && (reg & 0x0c) != 0x0c)	/* VSEN2 */
- 		return 0;
--	if (index >= 17 && (reg & 0x30) != 0x30)		/* VSEN3 */
-+	if (index >= 16 && (reg & 0x30) != 0x30)		/* VSEN3 */
- 		return 0;
- 
- 	return attr->mode;
+ /* Program BXT Mipi clocks and dividers */
 
 
