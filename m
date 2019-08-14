@@ -2,102 +2,125 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D8AC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33093C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5AE921721
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:40:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="FyDcEDET"
+	by mail.kernel.org (Postfix) with ESMTP id 0086221721
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:41:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565822471;
+	bh=CviwBQybQ73luJx300rF3YLPLShA5l26GwG1n7ro8F0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WSm0eXlYfSG3ipAtik2QJoCATsAaV0oWaaxVYbcv7aRa5sG/MT3K/1JJlMuz1lC+l
+	 v8tv03z/MkPfSuASkEm8A3YSuCYilz39ofNBzSj92ee4HzGDu6FvUI+ENpP/U0Qd9b
+	 YgH4+uvSnAnQ2nujbg0OHFmt/udoCkRnNroLpKHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbfHNWkn (ORCPT
+        id S1728693AbfHNWlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 18:40:43 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:57898 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfHNWkm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 18:40:42 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 27ED32B2;
-        Thu, 15 Aug 2019 00:40:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1565822440;
-        bh=pP48/D76g4ScH0kk0XJHtcKoUrGy09hdCLB/Efv1QiU=;
+        Wed, 14 Aug 2019 18:41:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725895AbfHNWlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 18:41:09 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB31821721;
+        Wed, 14 Aug 2019 22:41:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565822469;
+        bh=CviwBQybQ73luJx300rF3YLPLShA5l26GwG1n7ro8F0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FyDcEDET6W4/tAkHMNA9RJuBnW0RvT250HZ6TRe//NvVCe034O/sPxVQZ1DYvdfRf
-         gzYa1pDVK3RcT1ks5LNswXYnj8AClA46XRjYM1EbG+sY6drPCQxh4kjcJrovmdrzrN
-         9hnkpYDI403yKnHHVopeAoGyXuF7FGEKPY8RWzus=
-Date:   Thu, 15 Aug 2019 01:40:28 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC 1/5] media: dt-bindings: Document 'location' property
-Message-ID: <20190814224028.GC5015@pendragon.ideasonboard.com>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-2-jacopo@jmondi.org>
+        b=LdMr+6TcuF7TGsEMStQtXS1Uo4pQ1azXbMpF7udi302gAehifXJq3WIG+R/7wcMC9
+         pkpo168tThNMaaY/MSacTx7GdSapjlR5WMtD7JeQ4CQ4f8uqPCXCGlSrrhEqDNbX+i
+         cTwAOHmEL2WxOck5kRRv4imfLfthlQXuzPtxYLts=
+Date:   Wed, 14 Aug 2019 15:41:07 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] KEYS: Replace uid/gid/perm permissions checking with
+ an ACL
+Message-ID: <20190814224106.GG101319@gmail.com>
+Mail-Followup-To: David Howells <dhowells@redhat.com>,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <155862710003.24863.11807972177275927370.stgit@warthog.procyon.org.uk>
+ <155862710731.24863.14013725058582750710.stgit@warthog.procyon.org.uk>
+ <20190710011559.GA7973@sol.localdomain>
+ <20190730034956.GB1966@sol.localdomain>
+ <20190731011614.GA687@sol.localdomain>
+ <20190807025814.GA1167@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190814202815.32491-2-jacopo@jmondi.org>
+In-Reply-To: <20190807025814.GA1167@sol.localdomain>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
-
-Thank you for the patch.
-
-On Wed, Aug 14, 2019 at 10:28:11PM +0200, Jacopo Mondi wrote:
-> Add the 'location' device property, used to specify the camera device
-> mounting position. The property is particularly meaningful for mobile
-> devices with a well defined usage orientation.
+On Tue, Aug 06, 2019 at 07:58:14PM -0700, Eric Biggers wrote:
+> On Tue, Jul 30, 2019 at 06:16:14PM -0700, Eric Biggers wrote:
+> > On Mon, Jul 29, 2019 at 08:49:56PM -0700, Eric Biggers wrote:
+> > > Hi David,
+> > > 
+> > > On Tue, Jul 09, 2019 at 06:16:01PM -0700, Eric Biggers wrote:
+> > > > On Thu, May 23, 2019 at 04:58:27PM +0100, David Howells wrote:
+> > > > > Replace the uid/gid/perm permissions checking on a key with an ACL to allow
+> > > > > the SETATTR and SEARCH permissions to be split.  This will also allow a
+> > > > > greater range of subjects to represented.
+> > > > > 
+> > > > 
+> > > > This patch broke 'keyctl new_session', and hence broke all the fscrypt tests:
+> > > > 
+> > > > $ keyctl new_session
+> > > > keyctl_session_to_parent: Permission denied
+> > > > 
+> > > > Output of 'keyctl show' is
+> > > > 
+> > > > $ keyctl show
+> > > > Session Keyring
+> > > >  605894913 --alswrv      0     0  keyring: _ses
+> > > >  189223103 ----s-rv      0     0   \_ user: invocation_id
+> > > > 
+> > > > - Eric
+> > > 
+> > > This bug is still present in next-20190729.
+> > > 
+> > > - Eric
+> > 
+> > This fixes it:
+> > 
+> > diff --git a/security/keys/process_keys.c b/security/keys/process_keys.c
+> > index aa3bfcadbc660..519c94f1cc3c2 100644
+> > --- a/security/keys/process_keys.c
+> > +++ b/security/keys/process_keys.c
+> > @@ -58,7 +58,7 @@ static struct key_acl session_keyring_acl = {
+> >  	.possessor_viewable = true,
+> >  	.nr_ace	= 2,
+> >  	.aces = {
+> > -		KEY_POSSESSOR_ACE(KEY_ACE__PERMS & ~KEY_ACE_JOIN),
+> > +		KEY_POSSESSOR_ACE(KEY_ACE__PERMS),
+> >  		KEY_OWNER_ACE(KEY_ACE_VIEW | KEY_ACE_READ),
+> >  	}
+> >  };
+> > 
+> > 
+> > The old permissions were KEY_POS_ALL | KEY_USR_VIEW | KEY_USR_READ, so
+> > I'm not sure why JOIN permission was removed?
+> > 
+> > - Eric
 > 
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> ---
->  Documentation/devicetree/bindings/media/video-interfaces.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+> Ping.  This is still broken in linux-next.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> index f884ada0bffc..819077b2649c 100644
-> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> @@ -89,6 +89,10 @@ Optional properties
->    but a number of degrees counter clockwise. Typical values are 0 and 180
->    (upside down).
-> 
-> +- location: The camera device mounting position, relative to the device
-> +  usage orientation. Possible values are:
 
-I would mention "camera sensor" explicitly here, as well as clearly
-stating that the property applies to camera sensors only.
+David, any comment on this?  This is still broken in linux-next.
 
-> +  0 - Front camera. The image sensor is mounted on the front side of the device.
-> +  1 - Back camera. The image sensor is mounted on the back side of the device.
-
-An additional paragraph explained what "device usage orientation" means
-would be useful. In particular I would give examples for phones, tablets
-and laptops.
-
-> 
->  Optional endpoint properties
->  ----------------------------
-
--- 
-Regards,
-
-Laurent Pinchart
+- Eric
