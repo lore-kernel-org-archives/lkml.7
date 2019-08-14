@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A98C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1E3C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E497A216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A82B1214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803570;
-	bh=X2Xp1Ub7iOB42ET/E+acLVe+OBzEfYU8mumcHqqqrwM=;
+	s=default; t=1565803575;
+	bh=L7r9ww7SAYVEu2l/41sseOOYt9QNi2ZZXDy86XLK94A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KckG5JLlJr0u9UsYmYy4FlRe5FITQoChkvZ3iKxLj5GUXCOrW9133u9vinKv9m7kC
-	 R2oy95Sppo3sKfn0/8q59YfHWW4E6bOF1h0v9NWHXTEuLmJPy7O1Eqmx1YdRSnL51A
-	 UkZvDAu8Zwmf+lGMn9cvhUB83jAMcIynW1dfiLas=
+	b=0EQr+VY4UDbuV3xqDbx8/IsM0kIC/Y2Jwkg20rSVVQMYG62we7ktb/W26gujdp8Am
+	 pv/wU4YzljMd6zyeAflOoffRgdYFMkNv3Z+W7J4QvcMbywdSCK/UOGo8fHs0rny8fn
+	 YI9rA029JjY9dH1m/kh8sFYkJncQfAgRcE/KFUrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbfHNR0I (ORCPT
+        id S1729369AbfHNRFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:26:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54108 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728576AbfHNRFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:05:13 -0400
+        id S1729347AbfHNRFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:05:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB628208C2;
-        Wed, 14 Aug 2019 17:05:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99CA6208C2;
+        Wed, 14 Aug 2019 17:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802312;
-        bh=X2Xp1Ub7iOB42ET/E+acLVe+OBzEfYU8mumcHqqqrwM=;
+        s=default; t=1565802302;
+        bh=L7r9ww7SAYVEu2l/41sseOOYt9QNi2ZZXDy86XLK94A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U3Z1LHF+rrcmwP5slC8bMbJNILEBoXEIIdU9HWN17tAGBXE5EUVtWclYtlZCHAW9j
-         VA5J+SMzV1XQ9covLpgxXq9VZKu7JagICLPvKEWULdLLzi5hDpfWeMo7Nvpbe8v2YM
-         yjhdqR5oZFDrZhfyF3Jl/GIVQQlQTF4Q64+c73S0=
+        b=Fasj9VBRk/9zmQ3IEfmGAFeIq0gunTsdJlQL/YArD/ZTEz55XOulFbwOlXb022bOk
+         t/R7fl1GlGP+xIr+aXRsFMJUsdt+moKmcyMfWzcA8cfTEhrAujozcP7OcWEQcVgYUV
+         SzXCKdhXezO3Al4divuO0UX8PC3KjKRp98mSnibE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Tai Man <taiman.wong@amd.com>,
+        Joshua Aberback <Joshua.Aberback@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 076/144] mac80211: fix possible memory leak in ieee80211_assign_beacon
-Date:   Wed, 14 Aug 2019 19:00:32 +0200
-Message-Id: <20190814165803.034950064@linuxfoundation.org>
+Subject: [PATCH 5.2 073/144] drm/amd/display: Increase size of audios array
+Date:   Wed, 14 Aug 2019 19:00:29 +0200
+Message-Id: <20190814165802.912559590@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -60,49 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bcc27fab8cc673ddc95452674373cce618ccb3a3 ]
+[ Upstream commit 7352193a33dfc9b69ba3bf6a8caea925b96243b1 ]
 
-Free new beacon_data in ieee80211_assign_beacon whenever
-ieee80211_assign_beacon fails
+[Why]
+The audios array defined in "struct resource_pool" is only 6 (MAX_PIPES)
+but the max number of audio devices (num_audio) is 7. In some projects,
+it will run out of audios array.
 
-Fixes: 8860020e0be1 ("cfg80211: restructure AP/GO mode API")
-Fixes: bc847970f432 ("mac80211: support FTM responder configuration/statistic")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Link: https://lore.kernel.org/r/770285772543c9fca33777bb4ad4760239e56256.1562105631.git.lorenzo@kernel.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+[How]
+Incraese the audios array size to 7.
+
+Signed-off-by: Tai Man <taiman.wong@amd.com>
+Reviewed-by: Joshua Aberback <Joshua.Aberback@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/cfg.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/inc/core_types.h   | 2 +-
+ drivers/gpu/drm/amd/display/dc/inc/hw/hw_shared.h | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
-index a1973a26c7fc4..b8288125e05db 100644
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -935,8 +935,10 @@ static int ieee80211_assign_beacon(struct ieee80211_sub_if_data *sdata,
+diff --git a/drivers/gpu/drm/amd/display/dc/inc/core_types.h b/drivers/gpu/drm/amd/display/dc/inc/core_types.h
+index 6f5ab05d64677..6f0cc718fbd75 100644
+--- a/drivers/gpu/drm/amd/display/dc/inc/core_types.h
++++ b/drivers/gpu/drm/amd/display/dc/inc/core_types.h
+@@ -169,7 +169,7 @@ struct resource_pool {
+ 	struct clock_source *clock_sources[MAX_CLOCK_SOURCES];
+ 	unsigned int clk_src_count;
  
- 	err = ieee80211_set_probe_resp(sdata, params->probe_resp,
- 				       params->probe_resp_len, csa);
--	if (err < 0)
-+	if (err < 0) {
-+		kfree(new);
- 		return err;
-+	}
- 	if (err == 0)
- 		changed |= BSS_CHANGED_AP_PROBE_RESP;
+-	struct audio *audios[MAX_PIPES];
++	struct audio *audios[MAX_AUDIOS];
+ 	unsigned int audio_count;
+ 	struct audio_support audio_support;
  
-@@ -948,8 +950,10 @@ static int ieee80211_assign_beacon(struct ieee80211_sub_if_data *sdata,
- 							 params->civicloc,
- 							 params->civicloc_len);
+diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw/hw_shared.h b/drivers/gpu/drm/amd/display/dc/inc/hw/hw_shared.h
+index 4c8e2c6fb6dbc..72266efd826cf 100644
+--- a/drivers/gpu/drm/amd/display/dc/inc/hw/hw_shared.h
++++ b/drivers/gpu/drm/amd/display/dc/inc/hw/hw_shared.h
+@@ -34,6 +34,7 @@
+  * Data types shared between different Virtual HW blocks
+  ******************************************************************************/
  
--		if (err < 0)
-+		if (err < 0) {
-+			kfree(new);
- 			return err;
-+		}
++#define MAX_AUDIOS 7
+ #define MAX_PIPES 6
  
- 		changed |= BSS_CHANGED_FTM_RESPONDER;
- 	}
+ struct gamma_curve {
 -- 
 2.20.1
 
