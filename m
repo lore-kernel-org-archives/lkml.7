@@ -2,104 +2,92 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 277D6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E650C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF78620844
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:04:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l9ndCYzl"
+	by mail.kernel.org (Postfix) with ESMTP id 2C52620843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:10:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565748651;
+	bh=l/TesP6REABelbdAXxmIopwIlyUCPz4GgqUrAyCQXgM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SoCwogfwprkJnKUYafLeWsm74y0mTmmH09+8MYSr/KFui0haevcrOztTLMhM7/JWl
+	 wH9Ca/hl5qGnLtKZZZnPHh+maGYfncAeBAqB18McJ01j1yYJzbpAYcGIYxuyENET3d
+	 xXsqHrOOFgWCgtmRaVBcIb8hWB3Au5stw0tRnDNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfHNCEb (ORCPT
+        id S1726843AbfHNCKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:04:31 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38059 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbfHNCEa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:04:30 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r12so5708122edo.5;
-        Tue, 13 Aug 2019 19:04:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yClt4IiYnvtlCU9uUEc5mhIYUjABpvyWOso+HI4mu3o=;
-        b=l9ndCYzlwR5qGpefWEgVLiJsPd4v8Dk4nsao6j4NOxiRFw3jG0aPROGqZxMVJR3lpC
-         GgflwMHAjzTKnoSfg6myFWphE5+A5HM8M2CC4ZNWiHjcMVl9lJ/c+PaDElSrNzJrfBGb
-         BniQUVDawR1ghe7yEsAp2HWpQJrndum1p0fxY5vT+knYDfn0SUqQPRT2Fgy1pQLXrb+I
-         WtvdlASjkuw+vO/1ZJ0V56F047OwOcNphKVmF3q3LEuJ6bEUsRuU1v5RdOVyx6oBNJbf
-         7glrhkCTTq7yr9ZGLALrsby9RiapZVvRb2IKimk68pRikKBjUMxUDjEVDYoqd8rLVkoM
-         IM0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yClt4IiYnvtlCU9uUEc5mhIYUjABpvyWOso+HI4mu3o=;
-        b=PJgHaZPnbKXJKqkVYvGMnUNUfRFlbwaYKHASInI+ak4LtttNCCeqJ76LQ8L0kRUoMu
-         nb5khdCVbmC5yh8dkT0NiG4h3oyi6ZRFbHx0u2aaGPIF1z5XztRWriuun9s3PPocmx2E
-         wpX5Ae06CvRJMVxBORvj4gc6PXxW5UDLjhTp79JsSkjwKsqS6zvLuKux4keZGxszKP1M
-         0Y7u3MC18JU6ogMhXIfwoDQzCfFmDOJ/qIAU1Gmy6oiQKjS7rPecf2pQDfIqQ++15yho
-         V9LSMp1lrd4A03viztn2IfuerY1ZcEskeJgL4TAiesCI9Iaf8giwUncg5d5Wj8SLIFKQ
-         UBYA==
-X-Gm-Message-State: APjAAAWlXr3axFgvQqD2sIfb/UNK9sdsTFp/dycanfm8SpF3HM98KvXi
-        puMwbSm/91qLiPRMIFJ65qA=
-X-Google-Smtp-Source: APXvYqxhOvGYIm/p1syoBfmRH4Nh5i7jAhIt7mkfGBb6oygRhVeG0iblgw2hn7e0AoAKsPwHBKza7g==
-X-Received: by 2002:a50:b48f:: with SMTP id w15mr45996037edd.260.1565748268455;
-        Tue, 13 Aug 2019 19:04:28 -0700 (PDT)
-Received: from continental ([186.212.91.40])
-        by smtp.gmail.com with ESMTPSA id x11sm25444255eda.80.2019.08.13.19.04.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2019 19:04:27 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 23:05:40 -0300
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org, hch@lst.de,
-        linux-block@vger.kernel.org
-Subject: Re: [PATCHv2 0/4] blk_execute_rq{_nowait} cleanup part1
-Message-ID: <20190814020540.GA27622@continental>
-References: <20190809105433.8946-1-marcos.souza.org@gmail.com>
- <55246cff-6d32-e7d5-bee0-9940bc59250a@kernel.dk>
+        Tue, 13 Aug 2019 22:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726383AbfHNCKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:10:50 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97F5520842;
+        Wed, 14 Aug 2019 02:10:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565748649;
+        bh=l/TesP6REABelbdAXxmIopwIlyUCPz4GgqUrAyCQXgM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Vi4mYmcXEEfLm3GjKUsJmPHF50WAuuM7AllxTaUzC1m3R6QVCsRs31Uyw+I6Wytru
+         wUIgEpb+FaM+YSeGo+z2wXu37+3Hr0hOT0tV6lEBnTHWSGTD7GvBy3eLCowUboIcVI
+         QockemHUWBxtSVLpd96fKdmE3PlRH5cnQIwxRr4c=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 001/123] ASoC: simple_card_utils.h: care NULL dai at asoc_simple_debug_dai()
+Date:   Tue, 13 Aug 2019 22:08:45 -0400
+Message-Id: <20190814021047.14828-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <55246cff-6d32-e7d5-bee0-9940bc59250a@kernel.dk>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 07:47:17AM -0600, Jens Axboe wrote:
-> On 8/9/19 3:54 AM, Marcos Paulo de Souza wrote:
-> > After checking the request_queue argument of funtion blk_execute_rq_nowait, I
-> > now added three more patches, one to remove the same argument from
-> > blk_execute_rq and other two to change the at_head argument from
-> > blk_exeute_rq_{nowait} from int to bool.
-> > 
-> > Original patch can be checked here[1].
-> > 
-> > After this patch gets merged, my plan is to analyse the usage the gendisk
-> > argument, is being set as NULL but the majority of callers.
-> > 
-> > [1]: https://lkml.org/lkml/2019/8/6/31
-> 
-> Don't ever send something out that hasn't even been compiled. I already
-> detest doing kernel-wide cleanup changes like this, but when I do, I
-> need absolute confidence in it actually being tested. The fact that it
-> hasn't even been compiled is a big black mark on the submitter.
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-My bad. I compiled the code locally and tested in VM, but later on I removed
-the semicolon by mistake while reviewing the changes once more and the code
-was commited without the semicolon. I'm improving my setup (scripts
-and whatnot) to avoid this happening again in the future.
+[ Upstream commit 52db6685932e326ed607644ab7ebdae8c194adda ]
 
-> 
-> -- 
-> Jens Axboe
-> 
+props->xxx_dai might be NULL when DPCM.
+This patch cares it for debug.
+
+Fixes: commit 0580dde59438 ("ASoC: simple-card-utils: add asoc_simple_debug_info()")
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/87o922gw4u.wl-kuninori.morimoto.gx@renesas.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/sound/simple_card_utils.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/include/sound/simple_card_utils.h b/include/sound/simple_card_utils.h
+index 3429888347e7c..b3609e4c46e0f 100644
+--- a/include/sound/simple_card_utils.h
++++ b/include/sound/simple_card_utils.h
+@@ -149,6 +149,10 @@ inline void asoc_simple_debug_dai(struct asoc_simple_priv *priv,
+ {
+ 	struct device *dev = simple_priv_to_dev(priv);
+ 
++	/* dai might be NULL */
++	if (!dai)
++		return;
++
+ 	if (dai->name)
+ 		dev_dbg(dev, "%s dai name = %s\n",
+ 			name, dai->name);
+-- 
+2.20.1
+
