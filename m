@@ -2,204 +2,93 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E1BC0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E8FC0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5E32067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB52C2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:08:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="azhHcHx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727245AbfHNHHi (ORCPT
+        id S1727358AbfHNHIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:07:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56172 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbfHNHHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:07:37 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 385103002069;
-        Wed, 14 Aug 2019 07:07:37 +0000 (UTC)
-Received: from [10.36.117.4] (ovpn-117-4.ams2.redhat.com [10.36.117.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AABFD60852;
-        Wed, 14 Aug 2019 07:07:24 +0000 (UTC)
-Subject: Re: [RFC][Patch v12 1/2] mm: page_reporting: core infrastructure
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        Pankaj Gupta <pagupta@redhat.com>,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
-        john.starks@microsoft.com, Dave Hansen <dave.hansen@intel.com>,
-        Michal Hocko <mhocko@suse.com>, cohuck@redhat.com
-References: <20190812131235.27244-1-nitesh@redhat.com>
- <20190812131235.27244-2-nitesh@redhat.com>
- <CAKgT0UcSabyrO=jUwq10KpJKLSuzorHDnKAGrtWVigKVgvD-6Q@mail.gmail.com>
- <ca362045-9668-18ff-39b0-de91fa72e73c@redhat.com>
- <d39504c9-93bd-b8f7-e119-84baac5a42d4@redhat.com>
- <32f61f87-6205-5001-866c-a84e20fc9d85@redhat.com>
- <CAKgT0UfaaHrEaS2wsbdTuzCdCtSrM4Tx79w=dP8HPEnq+T7rtQ@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <3409b5cc-59e0-28d2-de5f-aa7cadaf434c@redhat.com>
-Date:   Wed, 14 Aug 2019 09:07:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 14 Aug 2019 03:08:42 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40669 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfHNHIl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:08:41 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a93so50272219pla.7
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 00:08:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=noA9l+lac2tFbODKUiemces22bFWF2XvyoUUU0oGh3Y=;
+        b=azhHcHx6e2GPzq1qiXPKq9L0/FCy+3K5Ug+7kOM9qsxRMQvVJbQdk4B+sd9jPo1Wzm
+         XUFDfEyv1O0gaQeTg8YERL8VT4vQRl44Lr844PzeDUfdP8nDuTFzs1GEGVxpExF3xus2
+         JT3IsxKxLZ47NG/5vgeIDnHRAbxQfVqpGdkjk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=noA9l+lac2tFbODKUiemces22bFWF2XvyoUUU0oGh3Y=;
+        b=LLXLmlcx/74OyH7DY/Ddpzr6HQ6GFgwRhZGhk4Xps10miJj8fVC30/2EHGxDXXG1b9
+         BUaRU+k+vv32bZOz/UDEixJ0bs9KJDI7+6UbnLRJ0zFpZd0DHqOeRru5L4v+s87DMBPe
+         zNJSyNIzXQs8qrqZTSPHeWngqI2AAStWOmG0aEYz8Ob1zEE1eWD1nt5P7T/wcqWU9141
+         BSL1FPkKVYMkeNnF/uELe7bz77a7DTt9HIYfK8NxwL7ad2IEqIcs4KPnOcYW8m1/mdNy
+         4dkT+UGlryHYRnaZ1KWwwww97x42Atwpqdm9tSPibW5fRQ9BLgmALMcne1OeIhdEsKfw
+         gyxA==
+X-Gm-Message-State: APjAAAVXSdOhts+9YlC/3R4EI2Bea+OT4yYIoCemBA6Uo0LmClB6GzgO
+        H/GQsYcbAKMBHezxVwCq8T2Jfw==
+X-Google-Smtp-Source: APXvYqwhleD1WxLn9SQPb5TBxm/FmAKBDsfXxxHaV50lM2/VS0F8JJMyxYA9vP5R1sXtEGB5XR73nA==
+X-Received: by 2002:a17:902:7612:: with SMTP id k18mr40585980pll.48.1565766520648;
+        Wed, 14 Aug 2019 00:08:40 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id e6sm14135669pfl.37.2019.08.14.00.08.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 14 Aug 2019 00:08:40 -0700 (PDT)
+Message-ID: <5d53b378.1c69fb81.31b2e.5077@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UfaaHrEaS2wsbdTuzCdCtSrM4Tx79w=dP8HPEnq+T7rtQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 14 Aug 2019 07:07:37 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190814063803.GY52127@atomide.com>
+References: <20190814063803.GY52127@atomide.com>
+Subject: Re: Regression in Linux next with show wakeup sources stats in sysfs
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Tony Lindgren <tony@atomide.com>, Tri Vo <trong@android.com>
+User-Agent: alot/0.8.1
+Date:   Wed, 14 Aug 2019 00:08:39 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.08.19 01:14, Alexander Duyck wrote:
-> On Tue, Aug 13, 2019 at 3:34 AM David Hildenbrand <david@redhat.com> wrote:
->>
->>>>>> +static int process_free_page(struct page *page,
->>>>>> +                            struct page_reporting_config *phconf, int count)
->>>>>> +{
->>>>>> +       int mt, order, ret = 0;
->>>>>> +
->>>>>> +       mt = get_pageblock_migratetype(page);
->>>>>> +       order = page_private(page);
->>>>>> +       ret = __isolate_free_page(page, order);
->>>>>> +
->>>> I just started looking into the wonderful world of
->>>> isolation/compaction/migration.
->>>>
->>>> I don't think saving/restoring the migratetype is correct here. AFAIK,
->>>> MOVABLE/UNMOVABLE/RECLAIMABLE is just a hint, doesn't mean that e.g.,
->>>> movable pages and up in UNMOVABLE or ordinary kernel allocations on
->>>> MOVABLE. So that shouldn't be an issue - I guess.
->>>>
->>>> 1. You should never allocate something that is no
->>>> MOVABLE/UNMOVABLE/RECLAIMABLE. Especially not, if you have ISOLATE or
->>>> CMA here. There should at least be a !is_migrate_isolate_page() check
->>>> somewhere
->>>>
->>>> 2. set_migratetype_isolate() takes the zone lock, so to avoid racing
->>>> with isolation code, you have to hold the zone lock. Your code seems to
->>>> do that, so at least you cannot race against isolation.
->>>>
->>>> 3. You could end up temporarily allocating something in the
->>>> ZONE_MOVABLE. The pages you allocate are, however, not movable. There
->>>> would have to be a way to make alloc_contig_range()/offlining code
->>>> properly wait until the pages have been processed. Not sure about the
->>>> real implications, though - too many details in the code (I wonder if
->>>> Alex' series has a way of dealing with that)
->>>>
->>>> When you restore the migratetype, you could suddenly overwrite e.g.,
->>>> ISOLATE, which feels wrong.
->>>
->>>
->>> I was triggering an occasional CPU stall bug earlier, with saving and restoring
->>> the migratetype I was able to fix it.
->>> But I will further look into this to figure out if it is really required.
->>>
->>
->> You should especially look into handling isolated/cma pages. Maybe that
->> was the original issue. Alex seems to have added that in his latest
->> series (skipping isolated/cma pageblocks completely) as well.
-> 
-> So as far as skipping isolated pageblocks, I get the reason for
-> skipping isolated, but why would we need to skip CMA? I had made the
-> change I did based on comments you had made earlier. But while working
-> on some of the changes to address isolation better and looking over
-> several spots in the code it seems like CMA is already being used as
-> an allocation fallback for MIGRATE_MOVABLE. If that is the case
-> wouldn't it make sense to allow pulling pages and reporting them while
-> they are in the free_list?
+Quoting Tony Lindgren (2019-08-13 23:38:03)
+> Hi all,
+>=20
+> Looks like commit 986845e747af ("PM / wakeup: Show wakeup sources stats
+> in sysfs") has caused a regression in Linux next where I can now get
+> some errors like this during the boot:
+>=20
+> kobject_add_internal failed for wakeup10 (error: -2 parent: usb)
+>=20
+> Any ideas why this might be happening? Maybe some deferred probe
+> related issue?
+>=20
 
-I was assuming that CMA is also to be skipped because "static int
-fallbacks[MIGRATE_TYPES][4]" in mm/page_alloc.c doesn't handle CMA at
-all, meaning we should never fallback to CMA or from CMA to another type
-- at least when stealing pages from another migratetype. So it smells
-like MIGRATE_CMA is static -> the area is marked once and will never be
-converted to something else (except MIGRATE_ISOLATE temporarily).
+Yeah! Take a look at this thread[1] and please test out patches I'm
+throwing out there like a total cowboy(d).
 
-I assume you are talking about gfp_to_alloc_flags()/prepare_alloc_pages():
+[1] https://lkml.kernel.org/r/1565731976.8572.16.camel@lca.pw
 
-#ifdef CONFIG_CMA
-	if (gfpflags_to_migratetype(gfp_mask) == MIGRATE_MOVABLE)
-		alloc_flags |= ALLOC_CMA;
-#endif
-
-Yeah, this looks like MOVABLE allocations can fallback to CMA
-pageblocks. And from what I read, "CMA may use its own migratetype
-(MIGRATE_CMA) which behaves similarly to ZONE_MOVABLE but can be put in
-arbitrary places."
-
-So I think you are right, it could be that it is safe to temporarily
-pull out CMA pages (in contrast to isolated pages) - assuming it is fine
-to have temporary unmovable allocations on them (different discussion).
-
-(I am learning about the details as we discuss :) )
-
-The important part would then be to never allocate from the isolated
-pageblocks and to never overwrite MIGRATE_ISOLATE.
-
--- 
-
-Thanks,
-
-David / dhildenb
