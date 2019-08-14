@@ -2,92 +2,129 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DA3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B5AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB02F20842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D82D20842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 01:36:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="xIgh+scF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbfHNBdy (ORCPT
+        id S1726968AbfHNBgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 21:33:54 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:42296 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbfHNBdy (ORCPT
+        Tue, 13 Aug 2019 21:36:45 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46314 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfHNBgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 21:33:54 -0400
-Received: by mail-yb1-f195.google.com with SMTP id h8so1870047ybq.9;
-        Tue, 13 Aug 2019 18:33:53 -0700 (PDT)
+        Tue, 13 Aug 2019 21:36:45 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z17so60219444otk.13
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 18:36:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T79FqmE4omVh8KvKRr9Ji1NiYF1jwWoBp2a4S3wYfUE=;
+        b=xIgh+scFlFZaMbyoMV1IkOIlX/nYvIEVasdGR+4vgGYHLeiewku5FhfmMF/u82KCRX
+         MSErqkN/DgEQsqSvd4X7p+lT0oNexeTRv86qeokYYdUP0BOeLCGjOX9Sd/JWMKEQoS6g
+         PwX/lC9BqsULCOBZLAvJixho5nREePWl5uOPg2jE9g0vQx3cZII3Ilx0J7oUMkt8HCC0
+         jWbfmfOLvoT/mbKLqBnkK54WVKRXTWevpUb9oXR/7WiAJXekPzezsPzhCgDd3il+q6/O
+         WYUwutEc9PedlqPBB8PVWWm7kSFEs6Fj841/WMzEqYowG5ogcen99NisCiTcA9kQF5+G
+         eqrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=7CuXXwlvBZ4dD2S3Pu/3bidV2iYvzmejPU7LB/4HQdo=;
-        b=DtUa5u15Ar0hNUbBGQtp2qJt5ImBHG6LLRjtBtbZ1jJ5mJQeTeK+9BVTwKl2oTt86C
-         E0HKbxU9MV5ji9UIrxfuBVNFxjj9J+Utucl136pTz1YM9lu78fbF4VVjD7Vo3H97WTTv
-         0yo2yUITfSurEx68L6hRBsaKLLTSBytSHEVDbEWUBYGWGockEuRl9AdJPVQLHFbv672n
-         DaT7jROI+P2LI/+71KY38IVyQFKOodJUM7OeoGRPmSUXxyADqND6E42Wi1/HKNwmmczC
-         d6zqlR9XY5JS1E2rRtFojjybi7ZXaTM2TiYbW44LxOSKfuXXIh32xuUyH6WPlOu3s9BS
-         bTYg==
-X-Gm-Message-State: APjAAAVutFB/XtYEudk/glYDEKUHN9gGG6Iwxa2FV5jVARstHJ+urUML
-        pxvDUMsieJWSyhdAV+asWT8=
-X-Google-Smtp-Source: APXvYqy25a9R2H/+ARGmSHUJg7neMCJ+kuGpFwqGmkL3jNqijcUC1ov4CMwSPFL3AIlz5YYdLjZE2Q==
-X-Received: by 2002:a25:e70c:: with SMTP id e12mr8541928ybh.133.1565746433326;
-        Tue, 13 Aug 2019 18:33:53 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id l4sm23527919ywa.58.2019.08.13.18.33.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 13 Aug 2019 18:33:52 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] net: pch_gbe: Fix memory leaks
-Date:   Tue, 13 Aug 2019 20:33:45 -0500
-Message-Id: <1565746427-5366-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T79FqmE4omVh8KvKRr9Ji1NiYF1jwWoBp2a4S3wYfUE=;
+        b=fY7OYkhynjBbY+QCm27vUNXSSuc12H0XW+cpfJgKpRmXIc7HTWorpTnHTqx3qbtsEO
+         zcoc+Xq7RD00XwBnqkBcr75LRUo+dCulvP6LT3sPZP6YBy8PMDt1GccWD78BPZqkYny+
+         oaNhCAGdobdpRZ4q6ofOj9/1tmtzTEXTHMqgdTVPLKBg88HIE2lyyPCx1YpPhEVC/Khk
+         E6NhlCBX/Wy2OL1Am4xdshbaGUNbkTJoEbS0nFcrpP/ade+CwuYDaU1nDQupbI/jEyJ7
+         NjjfT4zIaWmEau/YEr2d5Fal+R3bxXKgkBB1T0H65icwZZn91C6b24Xcx+yICaicens1
+         P4mg==
+X-Gm-Message-State: APjAAAU3BrS/eKbR7QQuu2GV7jUBVDPtr34jjReGAuYy8mhMevSi9+PH
+        jPYlx92kDlQHWQ7LBKdJBaYITFR/EEiQRJBALHB9Ug==
+X-Google-Smtp-Source: APXvYqyFhSP3HBfgQ2MsiomdR7DRqtrfZ8oKVdlDOpd867Al47Dg9XQhd7rDLmPFJUa0Wi698T8sKjV8Y2VXZELxn2I=
+X-Received: by 2002:a9d:5f13:: with SMTP id f19mr28233915oti.207.1565746604730;
+ Tue, 13 Aug 2019 18:36:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190806160554.14046-1-hch@lst.de> <20190806160554.14046-5-hch@lst.de>
+ <20190807174548.GJ1571@mellanox.com> <CAPcyv4hPCuHBLhSJgZZEh0CbuuJNPLFDA3f-79FX5uVOO0yubA@mail.gmail.com>
+ <20190808065933.GA29382@lst.de>
+In-Reply-To: <20190808065933.GA29382@lst.de>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 13 Aug 2019 18:36:33 -0700
+Message-ID: <CAPcyv4hMUzw8vyXFRPe2pdwef0npbMm9tx9wiZ9MWkHGhH1V6w@mail.gmail.com>
+Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In pch_gbe_set_ringparam(), if netif_running() returns false, 'tx_old' and
-'rx_old' are not deallocated, leading to memory leaks. To fix this issue,
-move the free statements after the if branch.
+On Wed, Aug 7, 2019 at 11:59 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Wed, Aug 07, 2019 at 11:47:22AM -0700, Dan Williams wrote:
+> > > Unrelated to this patch, but what is the point of getting checking
+> > > that the pgmap exists for the page and then immediately releasing it?
+> > > This code has this pattern in several places.
+> > >
+> > > It feels racy
+> >
+> > Agree, not sure what the intent is here. The only other reason call
+> > get_dev_pagemap() is to just check in general if the pfn is indeed
+> > owned by some ZONE_DEVICE instance, but if the intent is to make sure
+> > the device is still attached/enabled that check is invalidated at
+> > put_dev_pagemap().
+> >
+> > If it's the former case, validating ZONE_DEVICE pfns, I imagine we can
+> > do something cheaper with a helper that is on the order of the same
+> > cost as pfn_valid(). I.e. replace PTE_DEVMAP with a mem_section flag
+> > or something similar.
+>
+> The hmm literally never dereferences the pgmap, so validity checking is
+> the only explanation for it.
+>
+> > > +               /*
+> > > +                * We do put_dev_pagemap() here so that we can leverage
+> > > +                * get_dev_pagemap() optimization which will not re-take a
+> > > +                * reference on a pgmap if we already have one.
+> > > +                */
+> > > +               if (hmm_vma_walk->pgmap)
+> > > +                       put_dev_pagemap(hmm_vma_walk->pgmap);
+> > > +
+> >
+> > Seems ok, but only if the caller is guaranteeing that the range does
+> > not span outside of a single pagemap instance. If that guarantee is
+> > met why not just have the caller pass in a pinned pagemap? If that
+> > guarantee is not met, then I think we're back to your race concern.
+>
+> It iterates over multiple ptes in a non-huge pmd.  Is there any kind of
+> limitations on different pgmap instances inside a pmd?  I can't think
+> of one, so this might actually be a bug.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_ethtool.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Section alignment constraints somewhat save us here. The only example
+I can think of a PMD not containing a uniform pgmap association for
+each pte is the case when the pgmap overlaps normal dram, i.e. shares
+the same 'struct memory_section' for a given span. Otherwise, distinct
+pgmaps arrange to manage their own exclusive sections (and now
+subsections as of v5.3). Otherwise the implementation could not
+guarantee different mapping lifetimes.
 
-diff --git a/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_ethtool.c b/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_ethtool.c
-index 1a3008e..ef6311cd 100644
---- a/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_ethtool.c
-+++ b/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_ethtool.c
-@@ -340,12 +340,12 @@ static int pch_gbe_set_ringparam(struct net_device *netdev,
- 			goto err_setup_tx;
- 		pch_gbe_free_rx_resources(adapter, rx_old);
- 		pch_gbe_free_tx_resources(adapter, tx_old);
--		kfree(tx_old);
--		kfree(rx_old);
- 		adapter->rx_ring = rxdr;
- 		adapter->tx_ring = txdr;
- 		err = pch_gbe_up(adapter);
- 	}
-+	kfree(tx_old);
-+	kfree(rx_old);
- 	return err;
- 
- err_setup_tx:
--- 
-2.7.4
-
+That said, this seems to want a better mechanism to determine "pfn is
+ZONE_DEVICE".
