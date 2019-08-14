@@ -2,251 +2,151 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26621C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 03:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A184DC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 03:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E469320843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 03:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 794812064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 03:01:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WlTw0X+l"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VJ9t/yRq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbfHNDBi (ORCPT
+        id S1727377AbfHNDB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 23:01:38 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42061 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfHNDBh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 23:01:37 -0400
-Received: by mail-oi1-f196.google.com with SMTP id o6so1718570oic.9;
-        Tue, 13 Aug 2019 20:01:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=JldLSgRtBBxHBWQOR9/Op7zdWxFQRoEO7eprbvicojY=;
-        b=WlTw0X+lDDkK3OWwBjw3XGwcyn83zxhuFTx1C/dPTO5g+56M2cE6hQKZhECyG/8qfE
-         4M1kEwcEFUUGt0nf+SZzgScOOf4nQPkxsyy8K6TXtBOTo7gbDTWjipJMV8icLdkfVYfh
-         PKWr9Fl6HA4bwv6pjv3W9GbIp7I8RKNUgumURAl8T1a2Bicojt3+SU/hLzh/nwykhS+8
-         5mqvP7BMag9DSTBxoqRpq59LZAl593xM5xU5FO1M2zpWotESM04EjuEQwGtrYeto3Fx4
-         yRk2oi5LSieYgI+hRfX4q7PGx8EOhmxIf1sClE9E7VvGFmn2BYlEnbjk/xi8Dv2dViC0
-         suhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=JldLSgRtBBxHBWQOR9/Op7zdWxFQRoEO7eprbvicojY=;
-        b=d8FvJmLEbVg2wr6uxVZfzq5t0m+Oju9YInwtnN3XyMTNnkvKgw8TASnJtw8mpCPoLy
-         RtZzLdg6012fIE4p0z8lFKjI11HpVm4/IJozSZ0Lgqzajwjf/TCJTRudaxdkvl/3mbw9
-         X6lhFRvcwxi5dsdoFA/SpzKm/l2OmGEl2nkW4BKKgW7BwmkGICIcHEsrZNKc78ABD4eN
-         oss5VpP9wQuS5KLIBPTgMm3g4GqFFW7A9N7xW436eY4lv/ucHnjFdT1+SA8B3dexg06M
-         LK4k9R/IwhnNg8ZwpncT535Dd5/gMR1j7OYe4Zq13sEWI3SgTaf/D3FrZlOat1IkVgCu
-         WGXQ==
-X-Gm-Message-State: APjAAAXvBFHZu8dlULtR5QqiVWpQC0erINdtZ1qQ7nJQ5mz93qTR0Tl3
-        SMkpkLO428xyCLhq24jw82XYtHe/Rp/ifpnCYI8=
-X-Google-Smtp-Source: APXvYqw9bx/8nkPjqknF7XY6B80tyPcjrTS+9WAO4WSz9iIwcoATg7FP7VyXf60IQz9sfC9Rqxz4I5A7ykIbv8yDURI=
-X-Received: by 2002:a54:4e95:: with SMTP id c21mr3197457oiy.145.1565751696231;
- Tue, 13 Aug 2019 20:01:36 -0700 (PDT)
+        Tue, 13 Aug 2019 23:01:56 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45991 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726692AbfHNDB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 23:01:56 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 467Z9s0Lz5z9sNp;
+        Wed, 14 Aug 2019 13:01:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565751713;
+        bh=G7TA1FgQY5xyFwXvPhiSM4ybVZ5VkU9A/oH3axymBjk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VJ9t/yRqnX1Peo7B0l9n9i2kfHKghZGAO4cn1u8h7JxPUzX/GB5OWuBcrZNVMKRal
+         lStDPU/9gniEt0Jy4Dib0AHKqKzXWkuWiXIDEn4dfnoB4mbdVS0qWOoApqK6EdaKsG
+         FrjCismGfiKWdMpnO4PKo4GR2p8ooM84qlp4+A03XmEcE+47sOK653UsEEwp0e6dfw
+         4fvanpBrPXd9AUbtrwwJySZN46y/eFwRFAXrJQzWVMjxMyUQ7fOSm/0osgQFk1g9WQ
+         ts8MCyIDhbh3TKMtqEYL4s1+n/VJHMS4v/GXMuwvABiqna+46BmqQ3v5JEZ1X9jzRJ
+         NWrDUMjyekc3w==
+Date:   Wed, 14 Aug 2019 13:01:52 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>,
+        Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: Re: linux-next: manual merge of the drm-msm tree with the drm tree
+Message-ID: <20190814130152.129e86d1@canb.auug.org.au>
+In-Reply-To: <20190814125859.35c1a2ca@canb.auug.org.au>
+References: <20190814125859.35c1a2ca@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190810052829.6032-1-tiny.windzz@gmail.com> <20190810052829.6032-9-tiny.windzz@gmail.com>
- <CA+E=qVfp-rProxOwX__J6jM-pZ9g_SmeuOCOgvC_5DJVQw4OGw@mail.gmail.com>
- <CAEExFWubLqtPZ=ZKJTCb6x2-PeYebXb3sr-t-XvtrLJTRiUU1A@mail.gmail.com>
- <CA+E=qVf9V9iTvCfXXyjqKeviCJOvYpKUO8qw6cQsKqoaRmdKYQ@mail.gmail.com> <20190813200623.2dmxcwibuyolnuhh@core.my.home>
-In-Reply-To: <20190813200623.2dmxcwibuyolnuhh@core.my.home>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Tue, 13 Aug 2019 20:01:10 -0700
-Message-ID: <CA+E=qVd-hz68VhL0n+3-HDNua2QsT0dOVY9mRjhb5e5+tBW5Fg@mail.gmail.com>
-Subject: Re: [PATCH v5 08/18] thermal: sun8i: support mod clocks
-To:     Vasily Khoruzhick <anarsoul@gmail.com>,
-        Frank Lee <tiny.windzz@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan.Cameron@huawei.com,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        rui.zhang@intel.com, "David S. Miller" <davem@davemloft.net>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/9=kbS_Ym36rpqk1vELFy8bT";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 1:06 PM Ond=C5=99ej Jirman <megous@megous.com> wrot=
-e:
->
-> On Mon, Aug 12, 2019 at 04:54:15PM -0700, Vasily Khoruzhick wrote:
-> > On Mon, Aug 12, 2019 at 4:46 PM Frank Lee <tiny.windzz@gmail.com> wrote=
-:
-> > >
-> > > HI Vasily,
-> > >
-> > > On Sat, Aug 10, 2019 at 2:17 PM Vasily Khoruzhick <anarsoul@gmail.com=
-> wrote:
-> > > >
-> > > > On Fri, Aug 9, 2019 at 10:31 PM Yangtao Li <tiny.windzz@gmail.com> =
+--Sig_/9=kbS_Ym36rpqk1vELFy8bT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Wed, 14 Aug 2019 12:58:59 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
 wrote:
-> > > > >
-> > > > > H3 has extra clock, so introduce something in ths_thermal_chip/th=
-s_device
-> > > > > and adds the process of the clock.
-> > > > >
-> > > > > This is pre-work for supprt it.
-> > > > >
-> > > > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > > > > ---
-> > > > >  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
-> > > > >  1 file changed, 16 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/su=
-n8i_thermal.c
-> > > > > index b934bc81eba7..6f4294c2aba7 100644
-> > > > > --- a/drivers/thermal/sun8i_thermal.c
-> > > > > +++ b/drivers/thermal/sun8i_thermal.c
-> > > > > @@ -54,6 +54,7 @@ struct tsensor {
-> > > > >  };
-> > > > >
-> > > > >  struct ths_thermal_chip {
-> > > > > +       bool            has_mod_clk;
-> > > > >         int             sensor_num;
-> > > > >         int             offset;
-> > > > >         int             scale;
-> > > > > @@ -69,6 +70,7 @@ struct ths_device {
-> > > > >         struct regmap                           *regmap;
-> > > > >         struct reset_control                    *reset;
-> > > > >         struct clk                              *bus_clk;
-> > > > > +       struct clk                              *mod_clk;
-> > > > >         struct tsensor                          sensor[MAX_SENSOR=
-_NUM];
-> > > > >  };
-> > > > >
-> > > > > @@ -274,6 +276,12 @@ static int sun8i_ths_resource_init(struct th=
-s_device *tmdev)
-> > > > >         if (IS_ERR(tmdev->bus_clk))
-> > > > >                 return PTR_ERR(tmdev->bus_clk);
-> > > > >
-> > > > > +       if (tmdev->chip->has_mod_clk) {
-> > > > > +               tmdev->mod_clk =3D devm_clk_get(&pdev->dev, "mod"=
-);
-> > > > > +               if (IS_ERR(tmdev->mod_clk))
-> > > > > +                       return PTR_ERR(tmdev->mod_clk);
-> > > > > +       }
-> > > > > +
-> > > > >         ret =3D reset_control_deassert(tmdev->reset);
-> > > > >         if (ret)
-> > > > >                 return ret;
-> > > > > @@ -282,12 +290,18 @@ static int sun8i_ths_resource_init(struct t=
-hs_device *tmdev)
-> > > > >         if (ret)
-> > > > >                 goto assert_reset;
-> > > > >
-> > > > > -       ret =3D sun50i_ths_calibrate(tmdev);
-> > > > > +       ret =3D clk_prepare_enable(tmdev->mod_clk);
-> > > >
-> > > > You have to set rate of modclk before enabling it since you can't r=
-ely
-> > > > on whatever bootloader left for you.
-> > > >
-> > > > Also I found that parameters you're using for PC_TEMP_PERIOD, ACQ0 =
-and
-> > > > ACQ1 are too aggressive and may result in high interrupt rate to th=
-e
-> > > > point when it may stall RCU. I changed driver a bit to use params f=
-rom
-> > > > Philipp Rossak's work (modclk set to 4MHz, PC_TEMP_PERIOD is 7, ACQ=
-0
-> > > > is 255, ACQ1 is 63) and it fixed RCU stalls for me, see [1] for
-> > > > details.
-> > >
-> > > Why is the RCU stall happening, is it caused by a deadlock?
-> > > Can you provide log information and your configuration?
-> > > I am a bit curious.
-> >
-> > It's not deadlock, I believe it just can't handle that many interrupts
-> > when running at lowest CPU frequency. Even with Philipp's settings
-> > there's ~20 interrupts a second from ths. I don't remember how many
-> > interrupts were there with your settings.
-> >
-> > Unfortunately there's nothing interesting in backtraces, I'm using
-> > Pine64-LTS board.
 >
-> Recently there was a similar issue, with buggy CCU driver that caused
-> CIR interrupts being fired constantly, and it also resulted in RCU
-> stalls. Looks like a comon cause of RCU stalls.
->
-> THS timing settings probably need to be made specific to the SoC, because
-> I noticed that the same settings lead to wildly different timings on
-> different SoCs.
->
-> It would be good to measure how often ths interrupt fires with this drive=
-r
-> on various SoCs.
->
-> 20 times a second and more sounds like overkill. I'd expect a useful
-> range to be at most 5-10 times a second. That should be enough to stop
-> overheating the SoC due to suddenly increased load, even without a
-> heatsink.
+> Today's linux-next merge of the drm-msm tree got a conflict in:
+>=20
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+>=20
+> between commit:
+>=20
+>   e78ad7654179 ("drm/msm: Use drm_gem_fb_prepare_fb")
+>=20
+> from the drm tree and commit:
+>=20
+>   ddc73f32ba95 ("drm/msm: drop use of drmP.h")
+>=20
+> from the drm-msm tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
+>=20
+> diff --cc drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> index 8cf0b8a4ed03,cd6e9bb1fedf..000000000000
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> @@@ -10,9 -21,9 +10,10 @@@
+>   #include <linux/debugfs.h>
+>   #include <linux/dma-buf.h>
+>  =20
+> - #include <drm/drm_damage_helper.h>
+>   #include <drm/drm_atomic_uapi.h>
+>  +#include <drm/drm_gem_framebuffer_helper.h>
+> + #include <drm/drm_damage_helper.h>
+> + #include <drm/drm_file.h>
+>  =20
+>   #include "msm_drv.h"
+>   #include "dpu_kms.h"
 
-Note that A64 has 3 sensors and each sensor has individual interrupt,
-so technically it's 6-7 interrupts per sensor per second
+Also in file
 
-> regards,
->         o.
->
-> > > Thx,
-> > > Yangtao
-> > >
-> > > >
-> > > > [1] https://github.com/anarsoul/linux-2.6/commit/46b8bb0fe2ccd1cd88=
-fa9181a2ecbf79e8d513b2
-> > > >
-> > > >
-> > > > >         if (ret)
-> > > > >                 goto bus_disable;
-> > > > >
-> > > > > +       ret =3D sun50i_ths_calibrate(tmdev);
-> > > > > +       if (ret)
-> > > > > +               goto mod_disable;
-> > > > > +
-> > > > >         return 0;
-> > > > >
-> > > > > +mod_disable:
-> > > > > +       clk_disable_unprepare(tmdev->mod_clk);
-> > > > >  bus_disable:
-> > > > >         clk_disable_unprepare(tmdev->bus_clk);
-> > > > >  assert_reset:
-> > > > > @@ -395,6 +409,7 @@ static int sun8i_ths_remove(struct platform_d=
-evice *pdev)
-> > > > >  {
-> > > > >         struct ths_device *tmdev =3D platform_get_drvdata(pdev);
-> > > > >
-> > > > > +       clk_disable_unprepare(tmdev->mod_clk);
-> > > > >         clk_disable_unprepare(tmdev->bus_clk);
-> > > > >         reset_control_assert(tmdev->reset);
-> > > > >
-> > > > > --
-> > > > > 2.17.1
-> > > > >
-> > > > >
-> > > > > _______________________________________________
-> > > > > linux-arm-kernel mailing list
-> > > > > linux-arm-kernel@lists.infradead.org
-> > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+  drivers/gpu/drm/msm/msm_atomic.c
+
+with resolution:
+
+diff --cc drivers/gpu/drm/msm/msm_atomic.c
+index 169d5f915e68,20387be1b810..000000000000
+--- a/drivers/gpu/drm/msm/msm_atomic.c
++++ b/drivers/gpu/drm/msm/msm_atomic.c
+@@@ -5,7 -4,19 +5,8 @@@
+   */
+ =20
+  #include <drm/drm_atomic_uapi.h>
+ +#include <drm/drm_gem_framebuffer_helper.h>
++ #include <drm/drm_vblank.h>
+ =20
+  #include "msm_drv.h"
+  #include "msm_gem.h"
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/9=kbS_Ym36rpqk1vELFy8bT
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1TeaAACgkQAVBC80lX
+0Gxg1Af9Eln97X1hb3IR2+fovPLB9B/4rRWFj5o0IcDHMXxKIwUTQp2ZyLdffrPm
+zJG3JnZpeRUFGxJvxfHLaF7X9KDXLbe0usEOOUsPWX6jsbLQ2lljojRyNabLkvk4
+tET+s+5pz9V41QGtDp7i1SjxY6Zi62OsCqmhbMTJeZ6OjcyR/RAZYyRJP9Qa1WZ4
+h7BkzR97EUdqvDgb6D4VQqzvcJdF52aXlSBLILDOBkD1D/vD/Zooz3JOT667ZSSY
+w0B1r1xp2P4bcqQdZGrfPPnlbr1pcK30+gveJ7WjMm78c5GJQRjAqBgUiQKOBXeX
+gva/XLahskhdSDZ3LTG4d5s2BbxT3w==
+=qNqU
+-----END PGP SIGNATURE-----
+
+--Sig_/9=kbS_Ym36rpqk1vELFy8bT--
