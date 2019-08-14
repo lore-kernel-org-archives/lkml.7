@@ -2,140 +2,162 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DB5C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4290AC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D2A214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DDEC2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:04:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oDgz7DWI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c8WaEs0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbfHNSEU (ORCPT
+        id S1729124AbfHNSEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 14:04:20 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:32993 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728301AbfHNSET (ORCPT
+        Wed, 14 Aug 2019 14:04:46 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39011 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbfHNSEp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 14:04:19 -0400
-Received: by mail-pl1-f196.google.com with SMTP id c14so50923457plo.0;
-        Wed, 14 Aug 2019 11:04:19 -0700 (PDT)
+        Wed, 14 Aug 2019 14:04:45 -0400
+Received: by mail-ot1-f66.google.com with SMTP id b1so40299otp.6
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 11:04:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=i65TMBvSXi6h25YTw/qjPwCNbGJI3tR/idiaX47L8Ck=;
-        b=oDgz7DWIxwNG9Rs8Av0aGQCb4Y4zM1LQ1tAIMtpGam4wL/8Gxup4y2oPyAmIxWlcIU
-         kFLQtS/AH/pC6D3MgtHWR9wg4hJ8t7xgrFUhclrPwzaVA5FyFlC0I/QalhEl2xy39Ffo
-         eSuQi/eiDx0fZE+0aJqR9uDc+19OfkJ3osRSnctH5h8O/aOk9KsZZRg/A1/+0Tw2jl1a
-         +CwRtB5bOqJvNipwLJ31AP3rI2NRvqwMQvjjVBoOhKueYR/6UdtBYuQgyj/AkrOQao2w
-         gkwPUGt/gn4vewJtfXhQp0BRvUYwhtL3OjR11guj+ZKxR5BlILFL/gYphITtDECXwsJV
-         4zQg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fre2yC1vMIg/Ij78+LtkTPs0yDzqDgWHdQaFD72Ay5k=;
+        b=c8WaEs0gX1vkjN0sz8yITmdD0epqeCGI9JTG8KM5bgB0UgZPBGAMS/52zXuwINa7PF
+         Zq55ouRXA2at27mYggoXxEu5betH2SU1k8k86RQ5YEvyOi+ySgd8d0YF40JIloaUl7pg
+         r0waHNmZr+006um7SjxpIaCgr/kFWl/U1c/DN+zFuN5y0XolPOgD+lI8Z6u5zf8PDI2g
+         c4m3QFEvVOOgC5lexEG/lhhdZMNTcyi+qee4NOhsuzfhma3iiAO3yfiTUCJVsvOQlTtk
+         ZxSMFtmK7Wza50DHp7orALP+H66VUKsJ9/ekXlx0Y7rhuTg1T3T8PQpKIsel6/ScaPgF
+         0mHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=i65TMBvSXi6h25YTw/qjPwCNbGJI3tR/idiaX47L8Ck=;
-        b=JQJdFqrg73K4bOsDiRvK/+npZVbRPJe+3vK6v4sO7goRjG8JPG9ALLItbJjG/XNCZR
-         /hXeTJcd2knfhMQCftdI2mWsRAYqUIe1YfJQCPQJrvFuOS8tZXH4GgHM/uQfJ2P4V5fA
-         AFzsVqECfgCTsGS3cKe2auXkNo9MAaB5avOBz2lRNvLVmkAT6Orh2UiQXRoeUoeb7FJr
-         +lpeNXK3l0F3oOlr/Cko05/NIpUzWCoyX7tckl9GhP8YTdr9fh5wR0YJiyQXR2QZnFXY
-         1VpDxW1UuH71OAgUfTKVz7Optpg7fB+NgQVsZhCDaLlDmC54gRSFkVGH7hvzAKVIae25
-         nUKw==
-X-Gm-Message-State: APjAAAX33uVnppEVISY4+XWuJUTkFsd4A+34vTUf8dLgN0Ns0GWzowa+
-        D9KMcFLTwA7coN4cSWFYtBk=
-X-Google-Smtp-Source: APXvYqzbRZiUS7F/Q9f8KdCAGzOCl81uvnwp5gpKSitriEyE233/ryC3fENXJCdawVK1SUb1JeKNVA==
-X-Received: by 2002:a17:902:b105:: with SMTP id q5mr596304plr.81.1565805858657;
-        Wed, 14 Aug 2019 11:04:18 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id i126sm540372pfb.32.2019.08.14.11.04.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 11:04:17 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 11:04:15 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jonas Gorski <jonas.gorski@gmail.com>
-Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v4 9/9] Input: add IOC3 serio driver
-Message-ID: <20190814180415.GC121898@dtor-ws>
-References: <20190809103235.16338-1-tbogendoerfer@suse.de>
- <20190809103235.16338-10-tbogendoerfer@suse.de>
- <CAOiHx=kuQtOuNfsJ+fDrps+hbrbp5cPujmQpi8Vfy+0qeP8dtA@mail.gmail.com>
- <20190814163733.82f624e342d061866ba8ff87@suse.de>
- <CAOiHx=mjLpLg9r=mE25T7RQFNRT8wEPkRcy2ZkfT7H=Y5RT-vw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fre2yC1vMIg/Ij78+LtkTPs0yDzqDgWHdQaFD72Ay5k=;
+        b=hUqVyMPcU/NWXgHod0WID0L2RE6VHjrErfTXwOIytsPtVGf73+KOX+V2LLUQcWvL0i
+         ihIIybe3VoIa+uvV5mg8f6wgEqnDT6z0I4Cv4nyYup65XnKo64i7BhTa/YV+UJEQ6DYn
+         YZcp7HgiE8hxUFsxWN4hJqD+dPRKvwCeE8pcX9fk0sca2UDeKVOAXHYah5d2Qvv+Dg7r
+         CaRAnTgeewom8JIv3jeZ2E+S1mGoVQE7poY7U08Tc37AZra5YoUwFmimRvfNlLYoUJ/D
+         Mwy2ftXIQUmo4vbDlXQtXOAsRw6DxLoA0TpF4JfjKdaiFsEJa3Lr87PnErnjCNyx0J9H
+         AyOQ==
+X-Gm-Message-State: APjAAAUc3aTqhkNMf+7l8WABgu7l+R39cnVbt1v22bESmdq4ysSgzk6/
+        jF3D1MdSLxFe/4pBRhGW/mPragSuLd6AbffvBus6fw==
+X-Google-Smtp-Source: APXvYqyF6QAjCvLdwmaPHuxijiZA4sSwGBMmI5G/Jyqgb3QpoKsmhl6M6l6c5naR8I/d5DEBmigS5GeVcoPQVqAXfRc=
+X-Received: by 2002:a6b:720e:: with SMTP id n14mr1241464ioc.139.1565805884486;
+ Wed, 14 Aug 2019 11:04:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOiHx=mjLpLg9r=mE25T7RQFNRT8wEPkRcy2ZkfT7H=Y5RT-vw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1565188228.git.ilubashe@akamai.com> <291d2cda6ee75b4cd4c9ce717c177db18bf03a31.1565188228.git.ilubashe@akamai.com>
+In-Reply-To: <291d2cda6ee75b4cd4c9ce717c177db18bf03a31.1565188228.git.ilubashe@akamai.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 14 Aug 2019 12:04:33 -0600
+Message-ID: <CANLsYkxZE0CQJKQ-bFi=zFV5vTCbL2v76+x1fmCpqNruqWiFXg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] perf: Use CAP_SYSLOG with kptr_restrict checks
+To:     Igor Lubashev <ilubashe@akamai.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        James Morris <jmorris@namei.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 06:57:55PM +0200, Jonas Gorski wrote:
-> On Wed, 14 Aug 2019 at 16:37, Thomas Bogendoerfer <tbogendoerfer@suse.de> wrote:
-> >
-> > On Wed, 14 Aug 2019 15:20:14 +0200
-> > Jonas Gorski <jonas.gorski@gmail.com> wrote:
-> >
-> > > > +       d = devm_kzalloc(&pdev->dev, sizeof(*d), GFP_KERNEL);
-> > >
-> > > &pdev->dev => dev
-> >
-> > will change.
-> >
-> > >
-> > > > +       if (!d)
-> > > > +               return -ENOMEM;
-> > > > +
-> > > > +       sk = kzalloc(sizeof(*sk), GFP_KERNEL);
-> > >
-> > > any reason not to devm_kzalloc this as well? Then you won't need to
-> > > manually free it in the error cases.
-> >
-> > it has different life time than the device, so it may not allocated
-> > via devm_kzalloc
-> >
-> > > > +static int ioc3kbd_remove(struct platform_device *pdev)
-> > > > +{
-> > > > +       struct ioc3kbd_data *d = platform_get_drvdata(pdev);
-> > > > +
-> > > > +       devm_free_irq(&pdev->dev, d->irq, d);
-> > > > +       serio_unregister_port(d->kbd);
-> > > > +       serio_unregister_port(d->aux);
-> > > > +       return 0;
-> > > > +}
-> > >
-> > > and on that topic, won't you need to kfree d->kbd and d->aux here?
-> >
-> > that's done in serio_release_port() by the serio core.
-> 
-> i see. But in that case, don't the kfree's after the
-> serio_unregister_port's in the error path of the .probe function cause
-> a double free?
+On Wed, 7 Aug 2019 at 08:44, Igor Lubashev <ilubashe@akamai.com> wrote:
+>
+> Kernel is using CAP_SYSLOG capability instead of uid==0 and euid==0 when
+> checking kptr_restrict. Make perf do the same.
+>
+> Also, the kernel is a more restrictive than "no restrictions" in case of
+> kptr_restrict==0, so add the same logic to perf.
+>
+> Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
+> ---
+>  tools/perf/util/symbol.c | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 173f3378aaa0..046271103499 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -4,6 +4,7 @@
+>  #include <stdlib.h>
+>  #include <stdio.h>
+>  #include <string.h>
+> +#include <linux/capability.h>
+>  #include <linux/kernel.h>
+>  #include <linux/mman.h>
+>  #include <linux/time64.h>
+> @@ -15,8 +16,10 @@
+>  #include <inttypes.h>
+>  #include "annotate.h"
+>  #include "build-id.h"
+> +#include "cap.h"
+>  #include "util.h"
+>  #include "debug.h"
+> +#include "event.h"
+>  #include "machine.h"
+>  #include "map.h"
+>  #include "symbol.h"
+> @@ -890,7 +893,11 @@ bool symbol__restricted_filename(const char *filename,
+>  {
+>         bool restricted = false;
+>
+> -       if (symbol_conf.kptr_restrict) {
+> +       /* Per kernel/kallsyms.c:
+> +        * we also restrict when perf_event_paranoid > 1 w/o CAP_SYSLOG
+> +        */
+> +       if (symbol_conf.kptr_restrict ||
+> +           (perf_event_paranoid() > 1 && !perf_cap__capable(CAP_SYSLOG))) {
+>                 char *r = realpath(filename, NULL);
+>
 
-Yes they do, we need to drop kfree()s from there. Nicely spotted.
+# echo 0 > /proc/sys/kernel/kptr_restrict
+# ./tools/perf/perf record -e instructions:k uname
+perf: Segmentation fault
+Obtained 10 stack frames.
+./tools/perf/perf(sighandler_dump_stack+0x44) [0x55af9e5da5d4]
+/lib/x86_64-linux-gnu/libc.so.6(+0x3ef20) [0x7fd31efb6f20]
+./tools/perf/perf(perf_event__synthesize_kernel_mmap+0xa7) [0x55af9e590337]
+./tools/perf/perf(+0x1cf5be) [0x55af9e50c5be]
+./tools/perf/perf(cmd_record+0x1022) [0x55af9e50dff2]
+./tools/perf/perf(+0x23f98d) [0x55af9e57c98d]
+./tools/perf/perf(+0x23fc9e) [0x55af9e57cc9e]
+./tools/perf/perf(main+0x369) [0x55af9e4f6bc9]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7) [0x7fd31ef99b97]
+./tools/perf/perf(_start+0x2a) [0x55af9e4f704a]
+Segmentation fault
 
-Thanks.
+I can reproduce this on both x86 and ARM64.
 
--- 
-Dmitry
+>                 if (r != NULL) {
+> @@ -2190,9 +2197,9 @@ static bool symbol__read_kptr_restrict(void)
+>                 char line[8];
+>
+>                 if (fgets(line, sizeof(line), fp) != NULL)
+> -                       value = ((geteuid() != 0) || (getuid() != 0)) ?
+> -                                       (atoi(line) != 0) :
+> -                                       (atoi(line) == 2);
+> +                       value = perf_cap__capable(CAP_SYSLOG) ?
+> +                                       (atoi(line) >= 2) :
+> +                                       (atoi(line) != 0);
+>
+>                 fclose(fp);
+>         }
+> --
+> 2.7.4
+>
