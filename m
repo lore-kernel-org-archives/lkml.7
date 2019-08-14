@@ -2,126 +2,150 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED1BC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9096AC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A55214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:14:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pyo3c5oc"
+	by mail.kernel.org (Postfix) with ESMTP id 6C5D0208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:14:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfHNPOI (ORCPT
+        id S1728157AbfHNPO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 11:14:08 -0400
-Received: from mail-pl1-f173.google.com ([209.85.214.173]:44252 "EHLO
-        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfHNPOH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 11:14:07 -0400
-Received: by mail-pl1-f173.google.com with SMTP id t14so50793065plr.11;
-        Wed, 14 Aug 2019 08:14:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gCnccQTqt1TRhZousM+vcIN96ilUiP0gMRpcGtjYEMY=;
-        b=pyo3c5ocqozp/w167fimJi74vKzb/9pxXSdNIGBMN2rre9nrpHKc8UM09QS0MI9dgY
-         mtAh9neYqv0/v7/+EM2lvpLLLlosARSbyXVcYdk6Y27KiH6tdEJLvguImDLY2t087lfW
-         N6/TYoDKKMRoisj9+A4Rwfk/Bp/drypKPrjaSdYIvvO5YqoFnmLv8OPKVR2sJzsxNugJ
-         6L+EFOEIDdB/TCO71H0Aiu9PREwK+0BvznI3LZ3LwtUrSnxJVti+mbQJo9yjoLLAYkOo
-         ezMS38AvMwZYWP/RHrI+j05QpSkDSokyxNOUq7kApShr++J0OMxxw6QwemCjFS+elxI5
-         6zig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gCnccQTqt1TRhZousM+vcIN96ilUiP0gMRpcGtjYEMY=;
-        b=dZFYf5zJSbda/XdCHRHX3tteIgBnVdu12yudgBopOsXJtD18qA5mEpApQ6N6VLjtjU
-         NdetV3Mu4ufLE9s6ymU+WFsYlsRpd7iuRXdYWztKM5oIrwMeMD0uPim52+Z1WNrV7NsG
-         vgx7VJRgQXODDYGzQBT5tIWAcX3O6sXevm8cv73sWRi4GIT+bzTmLnfV21oCUkoV0fFd
-         wwo0Q/LablNxWG/se6wGwggUcIxPAHanoqeFMidkNd6w9uEZOxfyNPzCoIwM7+0+AUA7
-         jivfUauDtu+4ABd8iYraT9EN9Q3q6WT9U3UEA31dL0DN3sxZeAZh1TyBJdigb495Tpk3
-         LyPg==
-X-Gm-Message-State: APjAAAXJj5Cg9gZ3SoK33RWAcoSlQ5x6Ojp+cIGMxK575oxSOtbBcHNn
-        I/4dBYc0a/i0EnqJ92ULw8w=
-X-Google-Smtp-Source: APXvYqzAkbmn85pTOhEKsugN0FloVlGEhNHnwZnCPQ5UnqmdI9zhZfAThjItj0dOSwgsT4HIVTZoVg==
-X-Received: by 2002:a17:902:29a7:: with SMTP id h36mr43774122plb.158.1565795647004;
-        Wed, 14 Aug 2019 08:14:07 -0700 (PDT)
-Received: from [192.168.11.2] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
-        by smtp.gmail.com with ESMTPSA id x22sm67086pfo.180.2019.08.14.08.14.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 08:14:06 -0700 (PDT)
-Subject: Subject: [PATCH 1/2] tools/memory-model: Reflect updated file name
- convention in judgelitmus.sh
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Akira Yokosawa <akiyks@gmail.com>
-References: <20190801222026.GA11315@linux.ibm.com>
- <20190801222056.12144-27-paulmck@linux.ibm.com>
- <beb07965-eb83-9cd1-2b49-cfc24928dce5@gmail.com>
- <20190812180649.GM28441@linux.ibm.com>
- <277937a7-0f50-ec1c-09ec-95ffbf85541e@gmail.com>
-From:   Akira Yokosawa <akiyks@gmail.com>
-Message-ID: <1dbd392a-876c-1d6b-f718-76a37f1d55ee@gmail.com>
-Date:   Thu, 15 Aug 2019 00:13:57 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <277937a7-0f50-ec1c-09ec-95ffbf85541e@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 14 Aug 2019 11:14:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52262 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725955AbfHNPO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 11:14:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7F9E0AB92;
+        Wed, 14 Aug 2019 15:14:26 +0000 (UTC)
+Date:   Wed, 14 Aug 2019 17:14:25 +0200
+Message-ID: <s5h8srvdbji.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Hui Peng <benquike@gmail.com>, security@kernel.org,
+        alsa-devel@alsa-project.org, YueHaibing <yuehaibing@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Wenwen Wang <wang6495@umn.edu>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Fix an OOB bug in parse_audio_mixer_unit
+In-Reply-To: <20190814090921.GO1935@kadam>
+References: <20190814023625.21683-1-benquike@gmail.com>
+        <s5hzhkcb6dh.wl-tiwai@suse.de>
+        <20190814090921.GO1935@kadam>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From 6251ebb775a81f1ac158f197ad8110b8f98c4248 Mon Sep 17 00:00:00 2001
-From: Akira Yokosawa <akiyks@gmail.com>
-Date: Wed, 14 Aug 2019 17:20:54 +0900
-Subject: [PATCH 1/2] tools/memory-model: Reflect updated file name convention in judgelitmus.sh
+On Wed, 14 Aug 2019 11:09:21 +0200,
+Dan Carpenter wrote:
+> 
+> On Wed, Aug 14, 2019 at 08:36:42AM +0200, Takashi Iwai wrote:
+> > On Wed, 14 Aug 2019 04:36:24 +0200,
+> > Hui Peng wrote:
+> > > 
+> > > The `uac_mixer_unit_descriptor` shown as below is read from the
+> > > device side. In `parse_audio_mixer_unit`, `baSourceID` field is
+> > > accessed from index 0 to `bNrInPins` - 1, the current implementation
+> > > assumes that descriptor is always valid (the length  of descriptor
+> > > is no shorter than 5 + `bNrInPins`). If a descriptor read from
+> > > the device side is invalid, it may trigger out-of-bound memory
+> > > access.
+> > > 
+> > > ```
+> > > struct uac_mixer_unit_descriptor {
+> > > 	__u8 bLength;
+> > > 	__u8 bDescriptorType;
+> > > 	__u8 bDescriptorSubtype;
+> > > 	__u8 bUnitID;
+> > > 	__u8 bNrInPins;
+> > > 	__u8 baSourceID[];
+> > > }
+> > > ```
+> > > 
+> > > This patch fixes the bug by add a sanity check on the length of
+> > > the descriptor.
+> > > 
+> > > Signed-off-by: Hui Peng <benquike@gmail.com>
+> > > Reported-by: Hui Peng <benquike@gmail.com>
+> > > Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+> > > ---
+> > >  sound/usb/mixer.c | 9 +++++++++
+> > >  1 file changed, 9 insertions(+)
+> > > 
+> > > diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+> > > index 7498b5191b68..38202ce67237 100644
+> > > --- a/sound/usb/mixer.c
+> > > +++ b/sound/usb/mixer.c
+> > > @@ -2091,6 +2091,15 @@ static int parse_audio_mixer_unit(struct mixer_build *state, int unitid,
+> > >  	struct usb_audio_term iterm;
+> > >  	int input_pins, num_ins, num_outs;
+> > >  	int pin, ich, err;
+> > > +	int desc_len = (int) ((unsigned long) state->buffer +
+> > > +			state->buflen - (unsigned long) raw_desc);
+> > > +
+> > > +	if (desc_len < sizeof(*desc) + desc->bNrInPins) {
+> > > +		usb_audio_err(state->chip,
+> > > +			      "descriptor %d too short\n",
+> > > +			      unitid);
+> > > +		return -EINVAL;
+> > > +	}
+> > >  
+> > >  	err = uac_mixer_unit_get_channels(state, desc);
+> > >  	if (err < 0) {
+> > 
+> > Hm, what is the desc->bLength value in the error case?
+> > 
+> > Basically the buffer boundary is already checked against bLength in
+> > snd_usb_find_desc() which is called from obtaining the raw_desc in the
+> > caller of this function (parse_audio_unit()).
+> > 
+> > So, if any, we need to check bLength for the possible overflow like
+> > below.
+> > 
+> > 
+> > thanks,
+> > 
+> > Takashi
+> > 
+> > --- a/sound/usb/mixer.c
+> > +++ b/sound/usb/mixer.c
+> > @@ -744,6 +744,8 @@ static int uac_mixer_unit_get_channels(struct mixer_build *state,
+> >  		return -EINVAL;
+> >  	if (!desc->bNrInPins)
+> >  		return -EINVAL;
+> > +	if (desc->bLength < sizeof(*desc) + desc->bNrInPins)
+> > +		return -EINVAL;
+> 
+> VERSION 1 and 2 already have a different check:
+> 
+> 	if (desc->bLength < sizeof(*desc) + desc->bNrInPins + 1)
+> 		return 0; /* no bmControls -> skip */
+>
+> So something is possibly off by one.  It's just version 3 which doesn't
+> have a check.
+> 
 
-Commit ("tools/memory-model: Move from .AArch64.litmus.out to
-.litmus.AArch.out") swapped "HW" and "litmus" part in .out file name.
-Reflect the change in header comment in judgelitmus.sh
-
-Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
----
- tools/memory-model/scripts/judgelitmus.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/memory-model/scripts/judgelitmus.sh b/tools/memory-model/scripts/judgelitmus.sh
-index 6408c012bdf5..c91130814593 100755
---- a/tools/memory-model/scripts/judgelitmus.sh
-+++ b/tools/memory-model/scripts/judgelitmus.sh
-@@ -6,7 +6,7 @@
- # test ran correctly.  If the --hw argument is omitted, check against the
- # LKMM output, which is assumed to be in file.litmus.out.  If this argument
- # is provided, this is assumed to be a hardware test, and the output is
--# assumed to be in file.HW.litmus.out, where "HW" is the --hw argument.
-+# assumed to be in file.litmus.HW.out, where "HW" is the --hw argument.
- # In addition, non-Sometimes verification results will be noted, but
- # forgiven.  Furthermore, if there is no "Result:" comment but there is
- # an LKMM .litmus.out file, the observation in that file will be used
--- 
-2.17.1
+No, both are sensible checks.  The first check is about the minimal
+size that doesn't contain bmControls bitmap which is optional on some
+devices, while the latter checks about the presence of bmControls
+field.  Note that the latter returns zero, which means no error, while
+the former returns an error.
 
 
+thanks,
+
+Takashi
