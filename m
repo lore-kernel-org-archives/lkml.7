@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6E2C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852F9C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F752084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50AE520679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749513;
-	bh=MLP40Xee1XZVetBmWFSJCKBW+PStioixF9jdljQ31A4=;
+	s=default; t=1565749519;
+	bh=BvDBc8ULFIJ03Qy5ImvqS1zRetsqy50NWFJ2J/Aakvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKVSTTTtTARXK4YyE+qvxyuVOirultbZ+gPJortQXzSK96MoLFgxWKyh7WjbN9ovI
-	 F4SamChNgPrkSwjom7XGAjNxsKroJ8LrZglf4wvObqkc8DoBLkHXSyZfD/PvPhReRD
-	 3c0Xb/TKh1GStKIpBbFlOt5aK0LS/SbrZLnoaMPU=
+	b=Zjoss0jQSZ1Gr9+bbbOsI0njy1PUlIerOmzmynHQSsOrLrQkbCNEQZXZdu1tkI247
+	 FiCFUFRZqS+MZvhsADDHx97Wf+lWb7krVMJqrbPqoanHfr+x3jzw2XSPlE6uLbiG4D
+	 VotfVJZhzPp0+y7It2QXJ/psDN9ZGo4GLKG422rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbfHNCYH (ORCPT
+        id S1729226AbfHNCZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:24:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52910 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:25:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728943AbfHNCYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:24:00 -0400
+        id S1730048AbfHNCYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:24:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D5EF216F4;
-        Wed, 14 Aug 2019 02:23:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 273BF20679;
+        Wed, 14 Aug 2019 02:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749439;
-        bh=MLP40Xee1XZVetBmWFSJCKBW+PStioixF9jdljQ31A4=;
+        s=default; t=1565749443;
+        bh=BvDBc8ULFIJ03Qy5ImvqS1zRetsqy50NWFJ2J/Aakvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cuD7ySIx/oJJac+KM1oAVifFDjJDkcv8hLsWVt1AsRZbE6yQHOkNrLNqoW/OBynHD
-         aabkip7KCHe5Qojrs/EpZ4WaTNZR0J8xukXC+piwMi+f6nSmM3EdyUpzXpE2WzIVyc
-         dxLAzr+GJBHsdsUCGO6ZAEVQse+rxtT1ysJttgZ8=
+        b=s7DmwLJeAVNb9fkOmDGzBAadGt6n2ZC2hHKdJHtoRHtYxlV8dPS/xYn1WHUEb6aik
+         Kr2SCp8p8BIuqPgvRXZMvEZUf8VPil4L9lLWPBuaMGqiKWbR3UtAhys3J94VqBnnDf
+         Rvfxgk3uGDeQwMPQzPmQwrL8zs51xDbAUblrHA3Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+965152643a75a56737be@syzkaller.appspotmail.com,
+Cc:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
         Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 20/33] HID: holtek: test for sanity of intfdata
-Date:   Tue, 13 Aug 2019 22:23:10 -0400
-Message-Id: <20190814022323.17111-20-sashal@kernel.org>
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 23/33] HID: hiddev: do cleanup in failure of opening a device
+Date:   Tue, 13 Aug 2019 22:23:13 -0400
+Message-Id: <20190814022323.17111-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022323.17111-1-sashal@kernel.org>
 References: <20190814022323.17111-1-sashal@kernel.org>
@@ -60,44 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Hillf Danton <hdanton@sina.com>
 
-[ Upstream commit 01ec0a5f19c8c82960a07f6c7410fc9e01d7fb51 ]
+[ Upstream commit 6d4472d7bec39917b54e4e80245784ea5d60ce49 ]
 
-The ioctl handler uses the intfdata of a second interface,
-which may not be present in a broken or malicious device, hence
-the intfdata needs to be checked for NULL.
+Undo what we did for opening before releasing the memory slice.
 
-[jkosina@suse.cz: fix newly added spurious space]
-Reported-by: syzbot+965152643a75a56737be@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Hillf Danton <hdanton@sina.com>
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-holtek-kbd.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/hid/usbhid/hiddev.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/hid/hid-holtek-kbd.c b/drivers/hid/hid-holtek-kbd.c
-index 6e1a4a4fc0c10..ab9da597106fa 100644
---- a/drivers/hid/hid-holtek-kbd.c
-+++ b/drivers/hid/hid-holtek-kbd.c
-@@ -126,9 +126,14 @@ static int holtek_kbd_input_event(struct input_dev *dev, unsigned int type,
- 
- 	/* Locate the boot interface, to receive the LED change events */
- 	struct usb_interface *boot_interface = usb_ifnum_to_if(usb_dev, 0);
-+	struct hid_device *boot_hid;
-+	struct hid_input *boot_hid_input;
- 
--	struct hid_device *boot_hid = usb_get_intfdata(boot_interface);
--	struct hid_input *boot_hid_input = list_first_entry(&boot_hid->inputs,
-+	if (unlikely(boot_interface == NULL))
-+		return -ENODEV;
+diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
+index 0bfc2009e4071..8903ea09ac587 100644
+--- a/drivers/hid/usbhid/hiddev.c
++++ b/drivers/hid/usbhid/hiddev.c
+@@ -330,6 +330,10 @@ static int hiddev_open(struct inode *inode, struct file *file)
+ 	return 0;
+ bail_unlock:
+ 	mutex_unlock(&hiddev->existancelock);
 +
-+	boot_hid = usb_get_intfdata(boot_interface);
-+	boot_hid_input = list_first_entry(&boot_hid->inputs,
- 		struct hid_input, list);
- 
- 	return boot_hid_input->input->event(boot_hid_input->input, type, code,
++	spin_lock_irq(&list->hiddev->list_lock);
++	list_del(&list->node);
++	spin_unlock_irq(&list->hiddev->list_lock);
+ bail:
+ 	file->private_data = NULL;
+ 	vfree(list);
 -- 
 2.20.1
 
