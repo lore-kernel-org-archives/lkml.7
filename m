@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC383C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20DDC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97FFC20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD1C20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750270;
-	bh=cuKDBwCGKqEUiFeh4j0gSk0yqRyXZg9czcbOrk+owtE=;
+	s=default; t=1565750273;
+	bh=G/bm9sqvpxQSi87WzIc0dDnkfdLJB3LAYin9F0lnpWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k6SNuh8RuFf2+AFevMktA2P3dnm12ER/uzV3FpMlsN6v+KVN9Ia4A6s/Au44rD9/p
-	 L1J6mt3Ipkvf0u9S0CFd92XX6jzX9aE7QE3PEP/+rqysh72HEXoKRPzPEgKNlmVj2f
-	 iv01Bu56wkkkaVLmUO2+4/UqNHHurXDedgwsvVz8=
+	b=QDsAMnQTlwur+pBUq6T1zYyqqsrRNI96PWcEMzywB9wjPuM1dGmlWc/LGPER2uDvU
+	 Qm0eWfoLOeGnMk4x/i0uYkr5W488D27GAlqzIh1ZftIUbVKgWIoB1xnNxblLwHfg3v
+	 7P1yrpCzi6SP9IIo7ocHlHtKB9mPrGy0z2OV8mN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbfHNCht (ORCPT
+        id S1727955AbfHNCMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:37:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44730 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:12:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727960AbfHNCMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:12:39 -0400
+        id S1727901AbfHNCMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:12:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59D8D20989;
-        Wed, 14 Aug 2019 02:12:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5CB42133F;
+        Wed, 14 Aug 2019 02:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748758;
-        bh=cuKDBwCGKqEUiFeh4j0gSk0yqRyXZg9czcbOrk+owtE=;
+        s=default; t=1565748752;
+        bh=G/bm9sqvpxQSi87WzIc0dDnkfdLJB3LAYin9F0lnpWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OzQP6vnW+TrkUPkfttptylqo5GJ+ixs4UmrRJ/YEib7GhUwRMOr7siIREdUSJfEat
-         HycP2LaVDCcrGmWDIjMhfuSS72nj2RA6Np+PvjZSpFO2uH0auBBjgbRi5tBbQcLaZS
-         gu/yggre0hDTWEKY83cd2KT8Aa8hhBU7l7qH05s0=
+        b=w2npYDljvVIKSnVDBJ9psrUtHSAUJa6w+Dn5mmtBLo/YQX+SOS3vMySaGWrWZuK4K
+         WHtcv0FYZIkzqXtnXtP22Rg7k8SyVqFWMa8jESmDg3WZ191fkWxtiVJ85UbJuT7OaV
+         0b3CbSBpKis3MJYELJTv31g5FBqM6CXsmKuZJKO4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Segal <bpsegal20@gmail.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 052/123] habanalabs: fix F/W download in BE architecture
-Date:   Tue, 13 Aug 2019 22:09:36 -0400
-Message-Id: <20190814021047.14828-52-sashal@kernel.org>
+Cc:     Cheng-Yi Chiang <cychiang@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 047/123] ASoC: rockchip: Fix mono capture
+Date:   Tue, 13 Aug 2019 22:09:31 -0400
+Message-Id: <20190814021047.14828-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -59,66 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Segal <bpsegal20@gmail.com>
+From: Cheng-Yi Chiang <cychiang@chromium.org>
 
-[ Upstream commit 75035fe22b808a520e1d712ebe913684ba406e01 ]
+[ Upstream commit 789e162a6255325325bd321ab0cd51dc7e285054 ]
 
-writeX macros might perform byte-swapping in BE architectures. As our F/W
-is in LE format, we need to make sure no byte-swapping will occur.
+This reverts commit db51707b9c9aeedd310ebce60f15d5bb006567e0.
+Revert "ASoC: rockchip: i2s: Support mono capture"
 
-There is a standard kernel function (called memcpy_toio) for copying data
-to I/O area which is used in a lot of drivers to download F/W to PCIe
-adapters. That function also makes sure the data is copied "as-is",
-without byte-swapping.
+Previous discussion in
 
-This patch use that function to copy the F/W to the GOYA ASIC instead of
-writeX macros.
+https://patchwork.kernel.org/patch/10147153/
 
-Signed-off-by: Ben Segal <bpsegal20@gmail.com>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+explains the issue of the patch.
+While device is configured as 1-ch, hardware is still
+generating a 2-ch stream.
+When user space reads the data and assumes it is a 1-ch stream,
+the rate will be slower by 2x.
+
+Revert the change so 1-ch is not supported.
+User space can selectively take one channel data out of two channel
+if 1-ch is preferred.
+Currently, both channels record identical data.
+
+Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Link: https://lore.kernel.org/r/20190726044202.26866-1-cychiang@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/firmware_if.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+ sound/soc/rockchip/rockchip_i2s.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/firmware_if.c b/drivers/misc/habanalabs/firmware_if.c
-index eda5d7fcb79f2..fe9e57a81b6fd 100644
---- a/drivers/misc/habanalabs/firmware_if.c
-+++ b/drivers/misc/habanalabs/firmware_if.c
-@@ -24,7 +24,7 @@ int hl_fw_push_fw_to_device(struct hl_device *hdev, const char *fw_name,
- {
- 	const struct firmware *fw;
- 	const u64 *fw_data;
--	size_t fw_size, i;
-+	size_t fw_size;
- 	int rc;
+diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
+index 0a34d0eb8dba9..88ebaf6e1880a 100644
+--- a/sound/soc/rockchip/rockchip_i2s.c
++++ b/sound/soc/rockchip/rockchip_i2s.c
+@@ -326,7 +326,6 @@ static int rockchip_i2s_hw_params(struct snd_pcm_substream *substream,
+ 		val |= I2S_CHN_4;
+ 		break;
+ 	case 2:
+-	case 1:
+ 		val |= I2S_CHN_2;
+ 		break;
+ 	default:
+@@ -459,7 +458,7 @@ static struct snd_soc_dai_driver rockchip_i2s_dai = {
+ 	},
+ 	.capture = {
+ 		.stream_name = "Capture",
+-		.channels_min = 1,
++		.channels_min = 2,
+ 		.channels_max = 2,
+ 		.rates = SNDRV_PCM_RATE_8000_192000,
+ 		.formats = (SNDRV_PCM_FMTBIT_S8 |
+@@ -659,7 +658,7 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
+ 	}
  
- 	rc = request_firmware(&fw, fw_name, hdev->dev);
-@@ -45,22 +45,7 @@ int hl_fw_push_fw_to_device(struct hl_device *hdev, const char *fw_name,
+ 	if (!of_property_read_u32(node, "rockchip,capture-channels", &val)) {
+-		if (val >= 1 && val <= 8)
++		if (val >= 2 && val <= 8)
+ 			soc_dai->capture.channels_max = val;
+ 	}
  
- 	fw_data = (const u64 *) fw->data;
- 
--	if ((fw->size % 8) != 0)
--		fw_size -= 8;
--
--	for (i = 0 ; i < fw_size ; i += 8, fw_data++, dst += 8) {
--		if (!(i & (0x80000 - 1))) {
--			dev_dbg(hdev->dev,
--				"copied so far %zu out of %zu for %s firmware",
--				i, fw_size, fw_name);
--			usleep_range(20, 100);
--		}
--
--		writeq(*fw_data, dst);
--	}
--
--	if ((fw->size % 8) != 0)
--		writel(*(const u32 *) fw_data, dst);
-+	memcpy_toio(dst, fw_data, fw_size);
- 
- out:
- 	release_firmware(fw);
 -- 
 2.20.1
 
