@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7541FC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A4CC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4218D2133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFDA82133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802574;
-	bh=bMsK2oFPbruaZw4mTKjzxcr+KGodWlB7UpdOisVetwY=;
+	s=default; t=1565802577;
+	bh=OPx45xy2p1rWXhmJFLkvQZHWulh+StboAdUlXNpnCFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0lIGH3sy+k75whpcRZTfK+Yv29ORhALN9MrRMVqij1YeWOSQQM9ghLlVDb/KadjDB
-	 KLOZ21E+qH33javZorda/KbfxpUXfZkAPDvx2PYGpJY7SNjunzTjtADzBJaSr/p3ux
-	 5WQKQfdb31bIrfSzF4zYMrV8yUhuUxveONCzV2cE=
+	b=KWn5JTh6gTz+jzV9CMvyAjR0hfT3r9ygHakX249m/SBlktYULZY83OtKd2+xqABG3
+	 0eRqlqnxXEDunbwDeMqMq/fonBPnk7DekDlt1cvqbb10tNRxlLrJ+o3axwBHavBWCo
+	 JVW6lZYwj8rM3aVnrdtVV2JvJj0b1I6roMwhq9HM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730341AbfHNRJd (ORCPT
+        id S1726265AbfHNRJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:09:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59920 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:09:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbfHNRJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:09:30 -0400
+        id S1729744AbfHNRJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:09:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D149217F4;
-        Wed, 14 Aug 2019 17:09:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFD472133F;
+        Wed, 14 Aug 2019 17:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802569;
-        bh=bMsK2oFPbruaZw4mTKjzxcr+KGodWlB7UpdOisVetwY=;
+        s=default; t=1565802572;
+        bh=OPx45xy2p1rWXhmJFLkvQZHWulh+StboAdUlXNpnCFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yoWNYr476/lK2+QcrCvrTYNOspdFCgCDxkxAI7Zlcp5GgkXJejPG611u+XAm1X1ZB
-         Ha8V2zTaUVCm2cmWbQmHyqC0azgt73l0YIN27mRZAlOS0Xc7Y6jLQIBUnzLJXWLrYk
-         z0xtlz3MKrlliGTzcFubhJ8gRc9RLcWYilFIcNjo=
+        b=JHUL0A3U8GBWnJDVgpYJ88QhCrTWF/F/WnBOdppSNjsDk4lmA6FkaJyUMff2BpOXK
+         MsW2qksZsShGvFsRMbffJwP3TclfEnMfpJXZr3axof7jNYEzFqlLP7uEEyQ3ObWzc9
+         Zn+uNs0mQJ0Trzi8RBRu7kKb/CAvD6M4Oukthrc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gary R Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 05/91] crypto: ccp - Fix oops by properly managing allocated structures
-Date:   Wed, 14 Aug 2019 19:00:28 +0200
-Message-Id: <20190814165749.293699173@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Stephane Grosjean <s.grosjean@peak-system.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.19 32/91] can: peak_usb: fix potential double kfree_skb()
+Date:   Wed, 14 Aug 2019 19:00:55 +0200
+Message-Id: <20190814165751.055919064@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -59,39 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gary R Hook <gary.hook@amd.com>
+From: Stephane Grosjean <s.grosjean@peak-system.com>
 
-commit 25e44338321af545ab34243a6081c3f0fc6107d0 upstream.
+commit fee6a8923ae0d318a7f7950c6c6c28a96cea099b upstream.
 
-A plaintext or ciphertext length of 0 is allowed in AES, in which case
-no encryption occurs. Ensure that we don't clean up data structures
-that were never allocated.
+When closing the CAN device while tx skbs are inflight, echo skb could
+be released twice. By calling close_candev() before unlinking all
+pending tx urbs, then the internal echo_skb[] array is fully and
+correctly cleared before the USB write callback and, therefore,
+can_get_echo_skb() are called, for each aborted URB.
 
-Fixes: 36cf515b9bbe2 ("crypto: ccp - Enable support for AES GCM on v5 CCPs")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Gary R Hook <gary.hook@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: bb4785551f64 ("can: usb: PEAK-System Technik USB adapters driver core")
+Signed-off-by: Stephane Grosjean <s.grosjean@peak-system.com>
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccp/ccp-ops.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/can/usb/peak_usb/pcan_usb_core.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/crypto/ccp/ccp-ops.c
-+++ b/drivers/crypto/ccp/ccp-ops.c
-@@ -862,11 +862,11 @@ e_tag:
- 	ccp_dm_free(&final_wa);
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+@@ -576,16 +576,16 @@ static int peak_usb_ndo_stop(struct net_
+ 	dev->state &= ~PCAN_USB_STATE_STARTED;
+ 	netif_stop_queue(netdev);
  
- e_dst:
--	if (aes->src_len && !in_place)
-+	if (ilen > 0 && !in_place)
- 		ccp_free_data(&dst, cmd_q);
++	close_candev(netdev);
++
++	dev->can.state = CAN_STATE_STOPPED;
++
+ 	/* unlink all pending urbs and free used memory */
+ 	peak_usb_unlink_all_urbs(dev);
  
- e_src:
--	if (aes->src_len)
-+	if (ilen > 0)
- 		ccp_free_data(&src, cmd_q);
+ 	if (dev->adapter->dev_stop)
+ 		dev->adapter->dev_stop(dev);
  
- e_aad:
+-	close_candev(netdev);
+-
+-	dev->can.state = CAN_STATE_STOPPED;
+-
+ 	/* can set bus off now */
+ 	if (dev->adapter->dev_set_bus) {
+ 		int err = dev->adapter->dev_set_bus(dev, 0);
 
 
