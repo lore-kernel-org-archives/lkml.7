@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F754C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7F6C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 774F6216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E36E21721
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802492;
-	bh=0cb6Sy4FNqj3n85nkDZG+leLNXb1tr//0ldqxlU9NSs=;
+	s=default; t=1565802493;
+	bh=Xdpt2zY/imvHs4oLSI3d+hTOzAVL2o8s930jvI2QNU0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ug2aeJK3NuK6w79MVjTD8HxDZu7AvkJjsnPilVrVL56vlqDmyxKoEr2pNkHoNWEP6
-	 ExRPwkCKCwd/UhhxYsxVNsVMEup0I8IEoed8nhJGGFxeVJHVoiRVytXXVgpzwACwiD
-	 6hfNiCIkxiump8K12crhphSBicVF1kY/XKaDZQMw=
+	b=hUNyIIRILaBx9pPhrSXexHJi+vp3YSmRU1y3KGm9UoEL8OotCTbgP8WtZemw1qBFQ
+	 LegvHtFNtaCz9ZzqZXykM/QWWKxzHcv2yLxhk9I9LGlw4b3q46Zwf1Dlchgqbwy2yP
+	 GUBSIsrbm6t/nn3ZsHUbTAUZiyMkc6xxdJ+AQo0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbfHNRIL (ORCPT
+        id S1730093AbfHNRIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:08:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57954 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:08:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729518AbfHNRIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:08:06 -0400
+        id S1730078AbfHNRIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:08:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DE1B216F4;
-        Wed, 14 Aug 2019 17:08:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22924214DA;
+        Wed, 14 Aug 2019 17:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802485;
-        bh=0cb6Sy4FNqj3n85nkDZG+leLNXb1tr//0ldqxlU9NSs=;
+        s=default; t=1565802490;
+        bh=Xdpt2zY/imvHs4oLSI3d+hTOzAVL2o8s930jvI2QNU0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T4pl3HSQ0+L7HEPvzhpxdYJo9Dq3myEInGl1eQiaW8bBN8nrcmeem7Kf3INDKvUIE
-         S2LyNDnWJSpIa+Lxr87bH9TVf9VjrgRtz6lQ7vJKZnjxdwnvJUVnTbvypr81yqacj9
-         YrP2nRFbcQ/muo3eRwSkuVUAamNcwnpMjteTyShQ=
+        b=a3joxSzBpv6z2kbF8sm/ceIeoK1K58N+k+EchUCAeVkidY3M8PBq29VCKugTX85Tf
+         3m0RuNEDSDNblSs7jkbqDllr+ksmvKLPskPiZfoSDQKJToqqOrH9OMqFvelay19JOJ
+         iCTn4X14zakZB/9mbjnE2DwjX2pYoeQyHN3lB+YM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Roderick Colenbrander <roderick.colenbrander@sony.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.2 118/144] HID: sony: Fix race condition between rumble and device remove.
-Date:   Wed, 14 Aug 2019 19:01:14 +0200
-Message-Id: <20190814165804.867815773@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.2 120/144] KVM/nSVM: properly map nested VMCB
+Date:   Wed, 14 Aug 2019 19:01:16 +0200
+Message-Id: <20190814165804.946479142@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -60,79 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roderick Colenbrander <roderick@gaikai.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-commit e0f6974a54d3f7f1b5fdf5a593bd43ce9206ec04 upstream.
+commit 8f38302c0be2d2daf3b40f7d2142ec77e35d209e upstream.
 
-Valve reported a kernel crash on Ubuntu 18.04 when disconnecting a DS4
-gamepad while rumble is enabled. This issue is reproducible with a
-frequency of 1 in 3 times in the game Borderlands 2 when using an
-automatic weapon, which triggers many rumble operations.
+Commit 8c5fbf1a7231 ("KVM/nSVM: Use the new mapping API for mapping guest
+memory") broke nested SVM completely: kvm_vcpu_map()'s second parameter is
+GFN so vmcb_gpa needs to be converted with gpa_to_gfn(), not the other way
+around.
 
-We found the issue to be a race condition between sony_remove and the
-final device destruction by the HID / input system. The problem was
-that sony_remove didn't clean some of its work_item state in
-"struct sony_sc". After sony_remove work, the corresponding evdev
-node was around for sufficient time for applications to still queue
-rumble work after "sony_remove".
-
-On pre-4.19 kernels the race condition caused a kernel crash due to a
-NULL-pointer dereference as "sc->output_report_dmabuf" got freed during
-sony_remove. On newer kernels this crash doesn't happen due the buffer
-now being allocated using devm_kzalloc. However we can still queue work,
-while the driver is an undefined state.
-
-This patch fixes the described problem, by guarding the work_item
-"state_worker" with an initialized variable, which we are setting back
-to 0 on cleanup.
-
-Signed-off-by: Roderick Colenbrander <roderick.colenbrander@sony.com>
-CC: stable@vger.kernel.org
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 8c5fbf1a7231 ("KVM/nSVM: Use the new mapping API for mapping guest memory")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-sony.c |   15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ arch/x86/kvm/svm.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/hid/hid-sony.c
-+++ b/drivers/hid/hid-sony.c
-@@ -585,10 +585,14 @@ static void sony_set_leds(struct sony_sc
- static inline void sony_schedule_work(struct sony_sc *sc,
- 				      enum sony_worker which)
- {
-+	unsigned long flags;
-+
- 	switch (which) {
- 	case SONY_WORKER_STATE:
--		if (!sc->defer_initialization)
-+		spin_lock_irqsave(&sc->lock, flags);
-+		if (!sc->defer_initialization && sc->state_worker_initialized)
- 			schedule_work(&sc->state_worker);
-+		spin_unlock_irqrestore(&sc->lock, flags);
- 		break;
- 	case SONY_WORKER_HOTPLUG:
- 		if (sc->hotplug_worker_initialized)
-@@ -2558,13 +2562,18 @@ static inline void sony_init_output_repo
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -3290,7 +3290,7 @@ static int nested_svm_vmexit(struct vcpu
+ 				       vmcb->control.exit_int_info_err,
+ 				       KVM_ISA_SVM);
  
- static inline void sony_cancel_work_sync(struct sony_sc *sc)
- {
-+	unsigned long flags;
-+
- 	if (sc->hotplug_worker_initialized)
- 		cancel_work_sync(&sc->hotplug_worker);
--	if (sc->state_worker_initialized)
-+	if (sc->state_worker_initialized) {
-+		spin_lock_irqsave(&sc->lock, flags);
-+		sc->state_worker_initialized = 0;
-+		spin_unlock_irqrestore(&sc->lock, flags);
- 		cancel_work_sync(&sc->state_worker);
-+	}
- }
+-	rc = kvm_vcpu_map(&svm->vcpu, gfn_to_gpa(svm->nested.vmcb), &map);
++	rc = kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(svm->nested.vmcb), &map);
+ 	if (rc) {
+ 		if (rc == -EINVAL)
+ 			kvm_inject_gp(&svm->vcpu, 0);
+@@ -3580,7 +3580,7 @@ static bool nested_svm_vmrun(struct vcpu
  
--
- static int sony_input_configured(struct hid_device *hdev,
- 					struct hid_input *hidinput)
- {
+ 	vmcb_gpa = svm->vmcb->save.rax;
+ 
+-	rc = kvm_vcpu_map(&svm->vcpu, gfn_to_gpa(vmcb_gpa), &map);
++	rc = kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb_gpa), &map);
+ 	if (rc) {
+ 		if (rc == -EINVAL)
+ 			kvm_inject_gp(&svm->vcpu, 0);
 
 
