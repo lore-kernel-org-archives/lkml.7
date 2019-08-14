@@ -2,161 +2,105 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2B0C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7971EC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6691D20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E79206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803632;
-	bh=7oC41y1/DvvtuaK/R0aXPzmQz9Z45akuQkvn+dDeXj4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D7JqqsYw3BbM4su7hSVryNsz+8dp9MF/sHuiYkpxD98xaEwUn/UYyFuWhNAwkQ68z
-	 b2iKu/MOUGZyLbCO7Burr4RuCEMCvEyhfhyeJakKxUIhHIj1ZXIcDiusZReCJZXCSH
-	 Svj/d4PzxcX77Ubnf5zPnXCn24SEmJXVZAs2KpBs=
+	s=default; t=1565803634;
+	bh=9q+dnxmp7wlV9CyGTOF8w+3RUc997Kz+VeFrAqoo1tk=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=yuIxbSN9lZFFbLjZgr2Vmn3K51ol9aSZtM8oAPnsR4ACYlmiHdEG6PO2EcHDsyMoO
+	 eg/alxF8cFTG7EqGIL4X6EmkpYuk+Ce6GEtvUyqQwJYaDOY/6U9+Ypu3qJL1a+gFUX
+	 wfBz/E/yjWj0GEcGEXVDtNl99aO2ytUDHE13IVpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729462AbfHNR1L (ORCPT
+        id S1729446AbfHNR1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:27:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52622 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:27:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729036AbfHNRDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:03:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1729041AbfHNRDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:03:50 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E66321721;
-        Wed, 14 Aug 2019 17:03:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E4462173E;
+        Wed, 14 Aug 2019 17:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802233;
-        bh=7oC41y1/DvvtuaK/R0aXPzmQz9Z45akuQkvn+dDeXj4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cWYytbReroHPVcsn+MvFHhHwST7A/uYDaMO3cOfcf+bkYUlEYwi/S1EleqM9+I65N
-         gt5DonQB0aG83BvRT9NMjU5ZsNqjIsiCt2lFbW6OBv6L+aaZFHg5wmRyejvIoU+70b
-         66+t8JVPmrNWb529ubu7s+UJVmSQTZdHmi7s9Xfg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: [PATCH 5.2 046/144] can: flexcan: fix stop mode acknowledgment
-Date:   Wed, 14 Aug 2019 19:00:02 +0200
-Message-Id: <20190814165801.752037420@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
-References: <20190814165759.466811854@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1565802229;
+        bh=9q+dnxmp7wlV9CyGTOF8w+3RUc997Kz+VeFrAqoo1tk=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=QgoMpwiOu8Em+B3wWDGgiVe0zWh6Nq+QgA1d5Y+2JLobHvV5ksMTQ894+QDuoF/ps
+         rYKLazrbDKqvQ5AYc350+yPlZMmJel+Skb52/iI3T1rb8KkHbUxNzKay9LSZVQUMGP
+         4h+Og4goilMJCZWPCbwIepZnpDsyI/Ha+pxCCDvk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190814125012.8700-8-vkoul@kernel.org>
+References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-8-vkoul@kernel.org>
+Subject: Re: [PATCH 07/22] arm64: dts: qcom: pm8150: Add pon and rtc nodes
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        sibis@codeaurora.org, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 14 Aug 2019 10:03:48 -0700
+Message-Id: <20190814170349.7E4462173E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
+Quoting Vinod Koul (2019-08-14 05:49:57)
+> PM8150 PMIC contains pon and rtc devices so add nodes for these.
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
 
-commit 5f186c257fa4808bb7f14e643b9fba3e11f08a30 upstream.
+Squash this with the other patch?
 
-To enter stop mode, the CPU should manually assert a global Stop Mode
-request and check the acknowledgment asserted by FlexCAN. The CPU must
-only consider the FlexCAN in stop mode when both request and
-acknowledgment conditions are satisfied.
+> @@ -12,6 +13,25 @@
+>                 #address-cells =3D <1>;
+>                 #size-cells =3D <0>;
+> =20
+> +               pon: pon@800 {
+> +                       compatible =3D "qcom,pm8916-pon";
+> +                       reg =3D <0x0800>;
+> +                       pwrkey {
+> +                               compatible =3D "qcom,pm8941-pwrkey";
+> +                               interrupts =3D <0x0 0x8 0 IRQ_TYPE_EDGE_B=
+OTH>;
+> +                               debounce =3D <15625>;
+> +                               bias-pull-up;
+> +                               linux,code =3D <KEY_POWER>;
 
-Fixes: de3578c198c6 ("can: flexcan: add self wakeup support")
-Reported-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc: linux-stable <stable@vger.kernel.org> # >= v5.0
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+status =3D "disabled"?
 
----
- drivers/net/can/flexcan.c |   31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+> +                       };
+> +               };
+> +
+> +               rtc@6000 {
+> +                       compatible =3D "qcom,pm8941-rtc";
+> +                       reg =3D <0x6000>;
+> +                       reg-names =3D "rtc", "alarm";
+> +                       interrupts =3D <0x0 0x61 0x1 IRQ_TYPE_NONE>;
 
---- a/drivers/net/can/flexcan.c
-+++ b/drivers/net/can/flexcan.c
-@@ -400,9 +400,10 @@ static void flexcan_enable_wakeup_irq(st
- 	priv->write(reg_mcr, &regs->mcr);
- }
- 
--static inline void flexcan_enter_stop_mode(struct flexcan_priv *priv)
-+static inline int flexcan_enter_stop_mode(struct flexcan_priv *priv)
- {
- 	struct flexcan_regs __iomem *regs = priv->regs;
-+	unsigned int ackval;
- 	u32 reg_mcr;
- 
- 	reg_mcr = priv->read(&regs->mcr);
-@@ -412,20 +413,37 @@ static inline void flexcan_enter_stop_mo
- 	/* enable stop request */
- 	regmap_update_bits(priv->stm.gpr, priv->stm.req_gpr,
- 			   1 << priv->stm.req_bit, 1 << priv->stm.req_bit);
-+
-+	/* get stop acknowledgment */
-+	if (regmap_read_poll_timeout(priv->stm.gpr, priv->stm.ack_gpr,
-+				     ackval, ackval & (1 << priv->stm.ack_bit),
-+				     0, FLEXCAN_TIMEOUT_US))
-+		return -ETIMEDOUT;
-+
-+	return 0;
- }
- 
--static inline void flexcan_exit_stop_mode(struct flexcan_priv *priv)
-+static inline int flexcan_exit_stop_mode(struct flexcan_priv *priv)
- {
- 	struct flexcan_regs __iomem *regs = priv->regs;
-+	unsigned int ackval;
- 	u32 reg_mcr;
- 
- 	/* remove stop request */
- 	regmap_update_bits(priv->stm.gpr, priv->stm.req_gpr,
- 			   1 << priv->stm.req_bit, 0);
- 
-+	/* get stop acknowledgment */
-+	if (regmap_read_poll_timeout(priv->stm.gpr, priv->stm.ack_gpr,
-+				     ackval, !(ackval & (1 << priv->stm.ack_bit)),
-+				     0, FLEXCAN_TIMEOUT_US))
-+		return -ETIMEDOUT;
-+
- 	reg_mcr = priv->read(&regs->mcr);
- 	reg_mcr &= ~FLEXCAN_MCR_SLF_WAK;
- 	priv->write(reg_mcr, &regs->mcr);
-+
-+	return 0;
- }
- 
- static inline void flexcan_error_irq_enable(const struct flexcan_priv *priv)
-@@ -1612,7 +1630,9 @@ static int __maybe_unused flexcan_suspen
- 		 */
- 		if (device_may_wakeup(device)) {
- 			enable_irq_wake(dev->irq);
--			flexcan_enter_stop_mode(priv);
-+			err = flexcan_enter_stop_mode(priv);
-+			if (err)
-+				return err;
- 		} else {
- 			err = flexcan_chip_disable(priv);
- 			if (err)
-@@ -1662,10 +1682,13 @@ static int __maybe_unused flexcan_noirq_
- {
- 	struct net_device *dev = dev_get_drvdata(device);
- 	struct flexcan_priv *priv = netdev_priv(dev);
-+	int err;
- 
- 	if (netif_running(dev) && device_may_wakeup(device)) {
- 		flexcan_enable_wakeup_irq(priv, false);
--		flexcan_exit_stop_mode(priv);
-+		err = flexcan_exit_stop_mode(priv);
-+		if (err)
-+			return err;
- 	}
- 
- 	return 0;
+status =3D "disabled"?
 
-
+> +               };
+> +
+>                 pm8150_gpios: gpio@c000 {
+>                         compatible =3D "qcom,pm8150-gpio";
+>                         reg =3D <0xc000>;
+> --=20
+> 2.20.1
+>=20
