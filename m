@@ -7,54 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B89C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BEEC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A533E20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CDE92084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750295;
-	bh=ed986r5hXz2jFm/xnp0aJsVrHTaLCp8d/JzUrylEx+M=;
+	s=default; t=1565750298;
+	bh=FI8bcXi9qUd0+dW7z3SAZPdzSJ0ljpA0yLshoH8UWVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SvpF2BArMytyOZMeXCEpO4GoUZXOaWaV+7gqhf8LbW5N616LBPMTDySwy3p+aVTTK
-	 c/2DtW/QlrOqUAS+GsyHn52/j3R2g2Jx+5virh4z0dRvFNvqB3sIA77gbfGRYwEFFd
-	 Cgik+Fmeq9hwTKU9s4IfSf1jm8GybylvqwMDWJ3g=
+	b=av82nZRZqobiIlihITmLuPyxWO2odKTXFydaXvNdYa8IK0SgJVeVAce3Jky48M9gJ
+	 QQwzx6apxxsVig1ZyP4SAHhNs/OiE+0ceQ0f9UgdEt5dzo98IFm3emBWXAqCshUoIw
+	 4CjGuQyrg+ar0olc4AnMDozUmss8NaWiGfG5MUjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbfHNCM2 (ORCPT
+        id S1728532AbfHNCiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:12:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44496 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:38:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727157AbfHNCMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:12:24 -0400
+        id S1727157AbfHNCM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:12:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70C1220842;
-        Wed, 14 Aug 2019 02:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C9D020842;
+        Wed, 14 Aug 2019 02:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748743;
-        bh=ed986r5hXz2jFm/xnp0aJsVrHTaLCp8d/JzUrylEx+M=;
+        s=default; t=1565748749;
+        bh=FI8bcXi9qUd0+dW7z3SAZPdzSJ0ljpA0yLshoH8UWVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rXsyqBmgYNwltaXcARhC4/nzyfb994k1g9RMwWHuynKMKaStrE4k5rwtLbHeL+Tf9
-         ton9HyJjuME0D9SkNmsrX2swy0ZbngTqtbjDZxs0QvrsqouHt/to3gZxkan8+GfeQD
-         FCZv9K6ecfBDBuBmeRaLbLKCEzXN7Vs3YIhmtQ8Y=
+        b=HPR503rqiTc08S4uEOU3ZLQxgTKaYDiEvxag4cIxEF3CvcmI945LvVgszqBgpEYaE
+         MnfuLrbwR+E2pCVH0IjskR/OcP139S8VVihHNYJnUxWCtzXWjC10hS6ySx1js2gi0i
+         T1HXnpyYPo1B8tUJvLi3exTpWMlAy3ay1zUG6Bm8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Jan=20Sebastian=20G=C3=B6tte?= <linux@jaseg.net>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.2 041/123] Staging: fbtft: Fix GPIO handling
-Date:   Tue, 13 Aug 2019 22:09:25 -0400
-Message-Id: <20190814021047.14828-41-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 044/123] st_nci_hci_connectivity_event_received: null check the allocation
+Date:   Tue, 13 Aug 2019 22:09:28 -0400
+Message-Id: <20190814021047.14828-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,170 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Sebastian Götte <linux@jaseg.net>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 92e3e884887c0d278042fbbb6f6c9b41d6addb71 ]
+[ Upstream commit 3008e06fdf0973770370f97d5f1fba3701d8281d ]
 
-Commit c440eee1a7a1 ("Staging: fbtft: Switch to the gpio descriptor
-interface") breaks GPIO handling. In several places, checks to only set
-a GPIO if it was configured ended up backwards.
-I have tested this fix. The fixed driver works with a ili9486
-display connected to a raspberry pi via SPI.
+devm_kzalloc may fail and return NULL. So the null check is needed.
 
-Fixes: c440eee1a7a1d ("Staging: fbtft: Switch to the gpio descriptor interface")
-Tested-by: Jan Sebastian Götte <linux@jaseg.net>
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Jan Sebastian Götte <linux@jaseg.net>
-Link: https://lore.kernel.org/r/75ada52f-afa1-08bc-d0ce-966fc1110e70@jaseg.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/fbtft/fb_bd663474.c  | 2 +-
- drivers/staging/fbtft/fb_ili9163.c   | 2 +-
- drivers/staging/fbtft/fb_ili9325.c   | 2 +-
- drivers/staging/fbtft/fb_s6d1121.c   | 2 +-
- drivers/staging/fbtft/fb_ssd1289.c   | 2 +-
- drivers/staging/fbtft/fb_ssd1331.c   | 4 ++--
- drivers/staging/fbtft/fb_upd161704.c | 2 +-
- drivers/staging/fbtft/fbtft-bus.c    | 2 +-
- drivers/staging/fbtft/fbtft-core.c   | 4 ++--
- 9 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/nfc/st-nci/se.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/staging/fbtft/fb_bd663474.c b/drivers/staging/fbtft/fb_bd663474.c
-index b6c6d66e4eb1b..e2c7646588f8c 100644
---- a/drivers/staging/fbtft/fb_bd663474.c
-+++ b/drivers/staging/fbtft/fb_bd663474.c
-@@ -24,7 +24,7 @@
+diff --git a/drivers/nfc/st-nci/se.c b/drivers/nfc/st-nci/se.c
+index c3e10b6ab3a4d..f25f1ec5f9e97 100644
+--- a/drivers/nfc/st-nci/se.c
++++ b/drivers/nfc/st-nci/se.c
+@@ -333,6 +333,8 @@ static int st_nci_hci_connectivity_event_received(struct nci_dev *ndev,
  
- static int init_display(struct fbtft_par *par)
- {
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
+ 		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
+ 					    skb->len - 2, GFP_KERNEL);
++		if (!transaction)
++			return -ENOMEM;
  
- 	par->fbtftops.reset(par);
-diff --git a/drivers/staging/fbtft/fb_ili9163.c b/drivers/staging/fbtft/fb_ili9163.c
-index d609a2b67db9b..fd32376700e28 100644
---- a/drivers/staging/fbtft/fb_ili9163.c
-+++ b/drivers/staging/fbtft/fb_ili9163.c
-@@ -77,7 +77,7 @@ static int init_display(struct fbtft_par *par)
- {
- 	par->fbtftops.reset(par);
- 
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	write_reg(par, MIPI_DCS_SOFT_RESET); /* software reset */
-diff --git a/drivers/staging/fbtft/fb_ili9325.c b/drivers/staging/fbtft/fb_ili9325.c
-index b090e7ab6fdd6..85e54a10ed72c 100644
---- a/drivers/staging/fbtft/fb_ili9325.c
-+++ b/drivers/staging/fbtft/fb_ili9325.c
-@@ -85,7 +85,7 @@ static int init_display(struct fbtft_par *par)
- {
- 	par->fbtftops.reset(par);
- 
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	bt &= 0x07;
-diff --git a/drivers/staging/fbtft/fb_s6d1121.c b/drivers/staging/fbtft/fb_s6d1121.c
-index b3d0701880fe3..5a129b1352cc8 100644
---- a/drivers/staging/fbtft/fb_s6d1121.c
-+++ b/drivers/staging/fbtft/fb_s6d1121.c
-@@ -29,7 +29,7 @@ static int init_display(struct fbtft_par *par)
- {
- 	par->fbtftops.reset(par);
- 
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	/* Initialization sequence from Lib_UTFT */
-diff --git a/drivers/staging/fbtft/fb_ssd1289.c b/drivers/staging/fbtft/fb_ssd1289.c
-index bbf75f795234b..88a5b6925901d 100644
---- a/drivers/staging/fbtft/fb_ssd1289.c
-+++ b/drivers/staging/fbtft/fb_ssd1289.c
-@@ -28,7 +28,7 @@ static int init_display(struct fbtft_par *par)
- {
- 	par->fbtftops.reset(par);
- 
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	write_reg(par, 0x00, 0x0001);
-diff --git a/drivers/staging/fbtft/fb_ssd1331.c b/drivers/staging/fbtft/fb_ssd1331.c
-index 4cfe9f8535d0f..37622c9462aa7 100644
---- a/drivers/staging/fbtft/fb_ssd1331.c
-+++ b/drivers/staging/fbtft/fb_ssd1331.c
-@@ -81,7 +81,7 @@ static void write_reg8_bus8(struct fbtft_par *par, int len, ...)
- 	va_start(args, len);
- 
- 	*buf = (u8)va_arg(args, unsigned int);
--	if (!par->gpio.dc)
-+	if (par->gpio.dc)
- 		gpiod_set_value(par->gpio.dc, 0);
- 	ret = par->fbtftops.write(par, par->buf, sizeof(u8));
- 	if (ret < 0) {
-@@ -104,7 +104,7 @@ static void write_reg8_bus8(struct fbtft_par *par, int len, ...)
- 			return;
- 		}
- 	}
--	if (!par->gpio.dc)
-+	if (par->gpio.dc)
- 		gpiod_set_value(par->gpio.dc, 1);
- 	va_end(args);
- }
-diff --git a/drivers/staging/fbtft/fb_upd161704.c b/drivers/staging/fbtft/fb_upd161704.c
-index 564a38e344406..c77832ae5e5ba 100644
---- a/drivers/staging/fbtft/fb_upd161704.c
-+++ b/drivers/staging/fbtft/fb_upd161704.c
-@@ -26,7 +26,7 @@ static int init_display(struct fbtft_par *par)
- {
- 	par->fbtftops.reset(par);
- 
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	/* Initialization sequence from Lib_UTFT */
-diff --git a/drivers/staging/fbtft/fbtft-bus.c b/drivers/staging/fbtft/fbtft-bus.c
-index 2ea814d0dca5d..63c65dd67b175 100644
---- a/drivers/staging/fbtft/fbtft-bus.c
-+++ b/drivers/staging/fbtft/fbtft-bus.c
-@@ -135,7 +135,7 @@ int fbtft_write_vmem16_bus8(struct fbtft_par *par, size_t offset, size_t len)
- 	remain = len / 2;
- 	vmem16 = (u16 *)(par->info->screen_buffer + offset);
- 
--	if (!par->gpio.dc)
-+	if (par->gpio.dc)
- 		gpiod_set_value(par->gpio.dc, 1);
- 
- 	/* non buffered write */
-diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
-index 9b07badf4c6ca..8fe2232442492 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -919,7 +919,7 @@ static int fbtft_init_display_dt(struct fbtft_par *par)
- 		return -EINVAL;
- 
- 	par->fbtftops.reset(par);
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	while (p) {
-@@ -1010,7 +1010,7 @@ int fbtft_init_display(struct fbtft_par *par)
- 	}
- 
- 	par->fbtftops.reset(par);
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	i = 0;
+ 		transaction->aid_len = skb->data[1];
+ 		memcpy(transaction->aid, &skb->data[2], transaction->aid_len);
 -- 
 2.20.1
 
