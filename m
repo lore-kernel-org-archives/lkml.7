@@ -4,50 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8E1C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F137AC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B630521721
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C95412084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802436;
-	bh=n7th62+p9HsiNvdVUJr1MZnEwS84TWzyJY78o6f1Fxs=;
+	s=default; t=1565802439;
+	bh=HcpxKF/MCkxq4bpGnQg8NKwrDNeMif3vMtDdIL/Asro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Isi/oaJHQuowiqTrMLQalgTzVzOAqfet0YTuIkrChMC3jJNMLLRw1tOB0VOstjDLc
-	 uLfrQ92TWALBVvu1FnZTnefP9l9SW0joC9vE+KF/BWdxSZuAHlp2blKMK8HTaWetC9
-	 iB011TAB66fqIaovof17MTuaJJSc0mmP1OIbJFAk=
+	b=FPaAEbKZLTo0hM2BTcxdxp+k3+u28CIeajKaGXvbIOU4+tA2l51J8eJ/aa47yIpvC
+	 ZeBLZ68BtnLUD8F//y9J9BOgiN+dGGHnTxyeBKhgzI0OvrHXMugEpG2AdaJ3a8LasR
+	 2pXafxZx+5gj1BFCwjrFBjs/uQbUVlFentVcw4yM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbfHNRHP (ORCPT
+        id S1729845AbfHNRHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:07:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56644 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:07:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729802AbfHNRHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:07:12 -0400
+        id S1729826AbfHNRHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:07:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8108D214DA;
-        Wed, 14 Aug 2019 17:07:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E23D221743;
+        Wed, 14 Aug 2019 17:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802432;
-        bh=n7th62+p9HsiNvdVUJr1MZnEwS84TWzyJY78o6f1Fxs=;
+        s=default; t=1565802434;
+        bh=HcpxKF/MCkxq4bpGnQg8NKwrDNeMif3vMtDdIL/Asro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WXsWWpgv0zYext8m8LoCTpdPC/lmZDe7O7Oppr3wtJaVSQqVvO+z5u4u4GmY4n5gA
-         zvEbnLl62rM7H01v5WsW7I5VN2O4PafP/WKAFz6uVnctLHGY1Px8CPBM3or+zVZij0
-         LKj6080el+q/zmbS45yJwwlKEncR2pskahsrQsEs=
+        b=KT4qcTtKBKIZUVDErmTIG0iUXgtYNOs3UslhUTDe39FAooz2oztrK0j1Njahvu/Vq
+         uy0xuvT+wdBZCAodnghcYxI0Czb8g+RuJtIWxR57z5Nzonkwk9KrPc5b9xBpaDaD6o
+         PApNkS4aSqSSb1CwtBGI8bN+T+2fF0nfUQl99+0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Iker Perez del Palomar Sustatxa 
-        <iker.perez@codethink.co.uk>, Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.2 124/144] hwmon: (lm75) Fixup tmp75b clr_mask
-Date:   Wed, 14 Aug 2019 19:01:20 +0200
-Message-Id: <20190814165805.116317258@linuxfoundation.org>
+        Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>,
+        Vandita Kulkarni <vandita.kulkarni@intel.com>,
+        Deepak M <m.deepak@intel.com>,
+        Madhav Chauhan <madhav.chauhan@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org
+Subject: [PATCH 5.2 125/144] drm/i915: Fix wrong escape clock divisor init for GLK
+Date:   Wed, 14 Aug 2019 19:01:21 +0200
+Message-Id: <20190814165805.156518457@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -60,37 +67,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Iker Perez del Palomar Sustatxa <iker.perez@codethink.co.uk>
+From: Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>
 
-commit a95a4f3f2702b55a89393bf0f1b2b3d79e0f7da2 upstream.
+commit 73a0ff0b30af79bf0303d557eb82f1d1945bb6ee upstream.
 
-The configuration register of the tmp75b sensor is 16bit long, however
-the first byte is reserved, so there is not no need to take care of it.
+According to Bspec clock divisor registers in GeminiLake
+should be initialized by shifting 1(<<) to amount of correspondent
+divisor. While i915 was writing all this time that value as is.
 
-Because the order of the bytes is little endian and it is only necessary
-to write one byte, the desired bits must be shifted into a 8 bit range.
+Surprisingly that it by accident worked, until we met some issues
+with Microtech Etab.
 
-Fixes: 39abe9d88b30 ("hwmon: (lm75) Add support for TMP75B")
+v2: Added Fixes tag and cc
+v3: Added stable to cc as well.
+
+Signed-off-by: Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>
+Reviewed-by: Vandita Kulkarni <vandita.kulkarni@intel.com>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=108826
+Fixes: bcc657004841 ("drm/i915/glk: Program txesc clock divider for GLK")
+Cc: Deepak M <m.deepak@intel.com>
+Cc: Madhav Chauhan <madhav.chauhan@intel.com>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: intel-gfx@lists.freedesktop.org
 Cc: stable@vger.kernel.org
-Signed-off-by: Iker Perez del Palomar Sustatxa <iker.perez@codethink.co.uk>
-Link: https://lore.kernel.org/r/20190801075324.4638-1-iker.perez@codethink.co.uk
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190712081938.14185-1-stanislav.lisovskiy@intel.com
+(cherry picked from commit ce52ad5dd52cfaf3398058384e0ff94134bbd89c)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/lm75.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/i915/vlv_dsi_pll.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/hwmon/lm75.c
-+++ b/drivers/hwmon/lm75.c
-@@ -343,7 +343,7 @@ lm75_probe(struct i2c_client *client, co
- 		data->sample_time = MSEC_PER_SEC / 2;
- 		break;
- 	case tmp75b:  /* not one-shot mode, Conversion rate 37Hz */
--		clr_mask |= 1 << 15 | 0x3 << 13;
-+		clr_mask |= 1 << 7 | 0x3 << 5;
- 		data->resolution = 12;
- 		data->sample_time = MSEC_PER_SEC / 37;
- 		break;
+--- a/drivers/gpu/drm/i915/vlv_dsi_pll.c
++++ b/drivers/gpu/drm/i915/vlv_dsi_pll.c
+@@ -394,8 +394,8 @@ static void glk_dsi_program_esc_clock(st
+ 	else
+ 		txesc2_div = 10;
+ 
+-	I915_WRITE(MIPIO_TXESC_CLK_DIV1, txesc1_div & GLK_TX_ESC_CLK_DIV1_MASK);
+-	I915_WRITE(MIPIO_TXESC_CLK_DIV2, txesc2_div & GLK_TX_ESC_CLK_DIV2_MASK);
++	I915_WRITE(MIPIO_TXESC_CLK_DIV1, (1 << (txesc1_div - 1)) & GLK_TX_ESC_CLK_DIV1_MASK);
++	I915_WRITE(MIPIO_TXESC_CLK_DIV2, (1 << (txesc2_div - 1)) & GLK_TX_ESC_CLK_DIV2_MASK);
+ }
+ 
+ /* Program BXT Mipi clocks and dividers */
 
 
