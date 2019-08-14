@@ -2,106 +2,186 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E855C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3B4C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7511A205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136E221721
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:34:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nLsND9JY";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Tv43NQ7c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbfHNLeV (ORCPT
+        id S1727798AbfHNLeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 07:34:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51520 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbfHNLeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 07:34:20 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8B6F9309BDA3;
-        Wed, 14 Aug 2019 11:34:20 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 96C3360F80;
-        Wed, 14 Aug 2019 11:34:05 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 19:33:53 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Martijn Coenen <maco@android.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        kernel-team@android.com, narayan@google.com, dariofreni@google.com,
-        ioffe@google.com, jiyong@google.com, maco@google.com
-Subject: Re: [PATCH] RFC: loop: Avoid calling blk_mq_freeze_queue() when
- possible.
-Message-ID: <20190814113348.GA525@ming.t460p>
-References: <20190814103244.92518-1-maco@android.com>
+        Wed, 14 Aug 2019 07:34:46 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44472 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbfHNLeq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 07:34:46 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7CBDC607F1; Wed, 14 Aug 2019 11:34:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565782484;
+        bh=b2jQMWzdFfaiBKrnO+UzX1RZMx1ZpZC8kl9TtoYO7vw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nLsND9JYti7vgLF+IVn/CPPUA7aSDfuTJefNobMGVVaPFvPxHwJxjBPJY3tyW0S43
+         YPPlkbvRjb15EdpQtiOiiwg0aA8npQzFepUNzBxDfR3A5jZ1RosDv2RTDC2VVTx1z9
+         n+GTheo2dKQecq2kp9FBzGBX50OlqM36gXYSlYxw=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id A92D060392;
+        Wed, 14 Aug 2019 11:34:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565782483;
+        bh=b2jQMWzdFfaiBKrnO+UzX1RZMx1ZpZC8kl9TtoYO7vw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Tv43NQ7c6CUs7smO+hqpHlo9Wz4CQf8n8VcbBm35s0Hqvgw9tl97fKyRIXQ6sOELM
+         tuIAjnkaJkxhaRG9n5288IfE9CWoRBHmb0TLuwKMrnb31rFzNFElJmur6EmwnEBYXH
+         Qwnu0nrolqJfnMLOo/t6B/6jfz1V072Mn9VWFSDw=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814103244.92518-1-maco@android.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 14 Aug 2019 11:34:20 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 14 Aug 2019 17:04:43 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     robh+dt@kernel.org, georgi.djakov@linaro.org
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
+        evgreen@chromium.org, daidavid1@codeaurora.org,
+        saravanak@google.com
+Subject: Re: [PATCH 1/2] dt-bindings: interconnect: Add OSM L3 DT bindings
+In-Reply-To: <20190807112432.26521-2-sibis@codeaurora.org>
+References: <20190807112432.26521-1-sibis@codeaurora.org>
+ <20190807112432.26521-2-sibis@codeaurora.org>
+Message-ID: <8d32736068a35e250e42e2d70f07dd28@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 12:32:44PM +0200, Martijn Coenen wrote:
-> Since Android Q, the creation and configuration of loop devices is in
-> the critical path of device boot. We found that the configuration of
-> loop devices is pretty slow, because many ioctl()'s involve freezing the
-> block queue, which in turn needs to wait for an RCU grace period. On
-> Android devices we've observed up to 60ms for the creation and
-> configuration of a single loop device; as we anticipate creating many
-> more in the future, we'd like to avoid this delay.
+on running dt_binding_check found a
+few errors which I'll fix in the next
+re-spin.
+
+
+On 2019-08-07 16:54, Sibi Sankar wrote:
+> Add bindings for Operating State Manager (OSM) L3 interconnect provider
+> on SDM845 SoCs.
 > 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  .../bindings/interconnect/qcom,osm-l3.yaml    | 55 +++++++++++++++++++
+>  .../dt-bindings/interconnect/qcom,osm-l3.h    | 13 +++++
+>  2 files changed, 68 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
+>  create mode 100644 include/dt-bindings/interconnect/qcom,osm-l3.h
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
+> b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
+> new file mode 100644
+> index 0000000000000..51a4722e1a69f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interconnect/qcom,osm-l3.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Operating State Manager (OSM) L3 Interconnect Provider
+> +
+> +maintainers:
+> +  - Sibi Sankar <sibis@codeaurora.org>
+> +
+> +description:
+> +  L3 cache bandwidth requirements on Qualcomm SoCs is serviced by the 
+> OSM.
+> +  The OSM L3 interconnect provider aggregates the L3 bandwidth 
+> requests
+> +  from CPU/GPU and relays it to the OSM.
+> +
+> +properties:
+> +  compatible:
+> +    const: "qcom,sdm845-osm-l3"
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: OSM L3 registers
 
-Another candidate is to not switch to q_usage_counter's percpu mode
-until loop becomes Lo_bound, and this way may be more clean.
+will correct the error ^^
 
-Something like the following patch:
+> +
+> +  clocks:
+> +    items:
+> +      - description: xo clock
+> +      - description: alternate clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: xo
+> +      - const: alternate
+> +
+> +  '#interconnect-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clocks-names
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index a7461f482467..8791f9242583 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1015,6 +1015,9 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 	 */
- 	bdgrab(bdev);
- 	mutex_unlock(&loop_ctl_mutex);
-+
-+	percpu_ref_switch_to_percpu(&lo->lo_queue->q_usage_counter);
-+
- 	if (partscan)
- 		loop_reread_partitions(lo, bdev);
- 	if (claimed_bdev)
-@@ -1171,6 +1174,8 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 	lo->lo_state = Lo_unbound;
- 	mutex_unlock(&loop_ctl_mutex);
- 
-+	percpu_ref_switch_to_atomic(&lo->lo_queue->q_usage_counter, NULL);
-+
- 	/*
- 	 * Need not hold loop_ctl_mutex to fput backing file.
- 	 * Calling fput holding loop_ctl_mutex triggers a circular
-@@ -2003,6 +2008,12 @@ static int loop_add(struct loop_device **l, int i)
- 	}
- 	lo->lo_queue->queuedata = lo;
- 
-+	/*
-+	 * cheat block layer for not switching to q_usage_counter's
-+	 * percpu mode before loop becomes Lo_bound
-+	 */
-+	blk_queue_flag_set(QUEUE_FLAG_INIT_DONE, lo->lo_queue);
-+
- 	blk_queue_max_hw_sectors(lo->lo_queue, BLK_DEF_MAX_SECTORS);
- 
- 	/*
+s/clocks-names/clock-names
 
+> +  - '#interconnect-cells'
+> +
+> +examples:
+> +  - |
+> +    osm_l3: interconnect@17d41000 {
+> +      compatible = "qcom,sdm845-osm-l3";
+> +      reg = <0 0x17d41000 0 0x1400>;
+> +
+> +      clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
 
-thanks,
-Ming
+will replace rpmh_cxo_clk with 0
+and GPLL0 with 165
+
+> +      clock-names = "xo", "alternate";
+> +
+> +      #interconnect-cells = <1>;
+> +    };
+> diff --git a/include/dt-bindings/interconnect/qcom,osm-l3.h
+> b/include/dt-bindings/interconnect/qcom,osm-l3.h
+> new file mode 100644
+> index 0000000000000..6662134c84248
+> --- /dev/null
+> +++ b/include/dt-bindings/interconnect/qcom,osm-l3.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2019 The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
+> +#define __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
+> +
+> +#define MASTER_OSM_L3_APPS	0
+> +#define MASTER_OSM_L3_GPU	1
+> +#define SLAVE_OSM_L3		2
+> +
+> +#endif
+
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
