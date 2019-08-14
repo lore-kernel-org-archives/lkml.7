@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A47C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF0CC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E88B214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12722133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802763;
-	bh=11lZz+6yQACe1I6P/yguZfY0P+xirhE2JL5cOz0aoiI=;
+	s=default; t=1565802767;
+	bh=Mh1/bHNMSZxjSXWuCew94BhzmXBwks+dNsCioYr3Aqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wqgn5Cp4+fmNrFBQd75RmSkcGZhHAGg3HiHHX9HMlTYeOoG+RMgc/lMK12yqg+EJb
-	 POoflG/nxUctiNpj9T92RdVMETzDK+4mOgTkNRWwwch9m5mZg2uucGQ2hd7lIAdzii
-	 cdE2SK0Kw+59+W6brHPtqsAMDoZ7sZBHkA4x2JJ4=
+	b=AfF/29nslhjRvJAA1xp323By4vqI7sdzp/JqsjKXrk7qy2vvcsqJ/kouhAQ/D7xTA
+	 /MCbyDpzUJP18DNQiAdiB8nHcuB5bUMK+n144AyTS6xA5mlDlRLnEv489Cnd/ihMEm
+	 YB0PkUEV4y9Q69uSCayWNVEo7NA1zWOUtyLHXKzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730366AbfHNRMm (ORCPT
+        id S1730420AbfHNRMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:12:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36618 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:12:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730577AbfHNRMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:12:40 -0400
+        id S1730781AbfHNRMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:12:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFA7C2133F;
-        Wed, 14 Aug 2019 17:12:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4347B2084D;
+        Wed, 14 Aug 2019 17:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802759;
-        bh=11lZz+6yQACe1I6P/yguZfY0P+xirhE2JL5cOz0aoiI=;
+        s=default; t=1565802761;
+        bh=Mh1/bHNMSZxjSXWuCew94BhzmXBwks+dNsCioYr3Aqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xF2MwxpqrabUiD1qCnaRUNVFTsH1AN7LUCrR5Dx/Z+x1O68eWgSXPz4I1Wxhvq+Zo
-         MkJkRiwgxAWIdDOWfP6n+CSWmfY0NlGRzvV0C+idmS1gODdgewOLKSJhVOopMLpbkU
-         XBzH3+ybV79X34is7nv44kVHCzZ/3VsQ04JMxUV4=
+        b=EYgn5H55CrutH8ZPMDxGWKt+xm3nxBs06ejfeBzNAPbNPPh+IHHxhoo68DW4Vf0X3
+         Q0crLLldBDPs78PQl3+HlIK7mhEb65AykAprJS8uADpmqbVcAfg7R0WsVtlcJvS/2V
+         wfm5NUGURRx8TCcgCeEgjj6/LXdtIt5K09/KSeZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com,
-        Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.14 05/69] usb: iowarrior: fix deadlock on disconnect
-Date:   Wed, 14 Aug 2019 19:01:03 +0200
-Message-Id: <20190814165745.632407298@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 06/69] sound: fix a memory leak bug
+Date:   Wed, 14 Aug 2019 19:01:04 +0200
+Message-Id: <20190814165745.758139241@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -60,50 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-commit c468a8aa790e0dfe0a7f8a39db282d39c2c00b46 upstream.
+commit c7cd7c748a3250ca33509f9235efab9c803aca09 upstream.
 
-We have to drop the mutex before we close() upon disconnect()
-as close() needs the lock. This is safe to do by dropping the
-mutex as intfdata is already set to NULL, so open() will fail.
+In sound_insert_unit(), the controlling structure 's' is allocated through
+kmalloc(). Then it is added to the sound driver list by invoking
+__sound_insert_unit(). Later on, if __register_chrdev() fails, 's' is
+removed from the list through __sound_remove_unit(). If 'index' is not less
+than 0, -EBUSY is returned to indicate the error. However, 's' is not
+deallocated on this execution path, leading to a memory leak bug.
 
-Fixes: 03f36e885fc26 ("USB: open disconnect race in iowarrior")
-Reported-by: syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Link: https://lore.kernel.org/r/20190808092728.23417-1-oneukum@suse.com
+To fix the above issue, free 's' before -EBUSY is returned.
+
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/iowarrior.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ sound/sound_core.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/misc/iowarrior.c
-+++ b/drivers/usb/misc/iowarrior.c
-@@ -870,19 +870,20 @@ static void iowarrior_disconnect(struct
- 	dev = usb_get_intfdata(interface);
- 	mutex_lock(&iowarrior_open_disc_lock);
- 	usb_set_intfdata(interface, NULL);
-+	/* prevent device read, write and ioctl */
-+	dev->present = 0;
+--- a/sound/sound_core.c
++++ b/sound/sound_core.c
+@@ -287,7 +287,8 @@ retry:
+ 				goto retry;
+ 			}
+ 			spin_unlock(&sound_loader_lock);
+-			return -EBUSY;
++			r = -EBUSY;
++			goto fail;
+ 		}
+ 	}
  
- 	minor = dev->minor;
-+	mutex_unlock(&iowarrior_open_disc_lock);
-+	/* give back our minor - this will call close() locks need to be dropped at this point*/
- 
--	/* give back our minor */
- 	usb_deregister_dev(interface, &iowarrior_class);
- 
- 	mutex_lock(&dev->mutex);
- 
- 	/* prevent device read, write and ioctl */
--	dev->present = 0;
- 
- 	mutex_unlock(&dev->mutex);
--	mutex_unlock(&iowarrior_open_disc_lock);
- 
- 	if (dev->opened) {
- 		/* There is a process that holds a filedescriptor to the device ,
 
 
