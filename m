@@ -2,156 +2,88 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FA4C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDD7C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6C3206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:09:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="C2cnealN";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="mCuqxkOn"
+	by mail.kernel.org (Postfix) with ESMTP id 4E6AD206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:09:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbfHNOJA (ORCPT
+        id S1728137AbfHNOJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 10:09:00 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:43286 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725800AbfHNOI7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 10:08:59 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7EE4lco009562;
-        Wed, 14 Aug 2019 07:08:49 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=DFLvRbMYt9xKcralRx3f5rXZkxOkjSzhXMkjcPOHXU4=;
- b=C2cnealNm/L4Ev2GYgNv+1rF9zdnSNj6MYUa1DhzC+hLRME3pdBI3nUcmPsuCLOElkj9
- HFwG5U6JkLR/EgNE7BNXGNaLyO2TMrXujEllRyoLchFXyfszKAvoKuchCjRshseh7tNu
- yL1NQ5ajfVFmGdgSE6fGZKY7GD4XX6FBK5HStUT4WL/ZV0vYDZz2n/5Z5WOy+5CvFaP4
- ALnHLOcOOqaZxcGMER3i+uNpg8jkjq6zDGfAOR4MueHNh027Zg5lDdX1reWgWZOHKK0C
- YTr/3Nw/LqWep8wIsC1uicGm+rYbE44zT49KqjWQP1+fcuqz3Kk5BJYeO/JDGEJ5QVsJ RA== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2ubfacytef-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 14 Aug 2019 07:08:49 -0700
-Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 14 Aug
- 2019 07:08:48 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.52) by
- SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 14 Aug 2019 07:08:48 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=flJKwRFv910hdcZZE/gCVDLtjy14/P4+Y0jbzXJj8GxTUhFn72NJEjXHCH6LM9fk3K+nTVKVKcAyHxtB/EUTX68piGJ9eUjFAA4WMlvuXrv9BSDfowRF5aqtIK17j7A8dh45Ab3/lAXjJu/4vxHwwfxrwAQwlUqfEb3EyAyENHE41Ud/0I2gLfGl+lSkWm3s10Nx+vibS0/G4uuZos7jXRSXuqz8XTiD4F44tGybJSIhqUGeck9YwFSXy95dvnAAXz9JUk38ogvNnk3MatNmd3hcE9YIi8ZyUPmWtpLKjl3cnCLAtQaWprLYTCnIn45bvJW9BdBxGNoGq32wydI1lg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DFLvRbMYt9xKcralRx3f5rXZkxOkjSzhXMkjcPOHXU4=;
- b=HWjX6/2/WP+Ye53pCYKxGiPGE/+dC4tjZWbJ/47SXDdWNbWhCRC2awwJQQbYrBcTt68uY64riFAzZipNorMRsj1bZGFrjY1+0JSYTaGT6PnEzMPpohQCSJTmZ799SAScgsU3v0DBKM7vDlrTP7TTeXtAc5jpFU1eKEvKQDht/V2sRO6NRdbokRAFWfAZhNVX/UhlMVilrKEB/+p0uaJcGXcA1SWLArbmES22Nx/2aeE6REEiwo1SjboYWOpwF7uqNlOJLuB1f9gl2TBZxOkX3exe6tsUXR25MV12Od6DyoA/9h96EOgLhmFUnmvXfYtLl/bEMMuPmKI9gp+I3eRlpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DFLvRbMYt9xKcralRx3f5rXZkxOkjSzhXMkjcPOHXU4=;
- b=mCuqxkOn+rJ3W5S181tHrtPC2vFw/NQwoi5xc9pTP8LPrwHSmiN1e4c67bvi5XkEmZgj8/kST5q7aLucy5mHQvxt8mep5At0cwtkQPNrJVg3GqQufSAWBQDDfIrc9qreg1X3zRFOWRHsoC+uNIiC2mYlmiXOOOviqrKtrVrn1gE=
-Received: from MN2PR18MB2637.namprd18.prod.outlook.com (20.179.80.147) by
- MN2PR18MB2863.namprd18.prod.outlook.com (20.179.21.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.18; Wed, 14 Aug 2019 14:08:42 +0000
-Received: from MN2PR18MB2637.namprd18.prod.outlook.com
- ([fe80::dba:2353:86d5:ff20]) by MN2PR18MB2637.namprd18.prod.outlook.com
- ([fe80::dba:2353:86d5:ff20%3]) with mapi id 15.20.2157.022; Wed, 14 Aug 2019
- 14:08:42 +0000
-From:   Ganapathi Bhat <gbhat@marvell.com>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        Andrey Konovalov <andreyknvl@google.com>
-CC:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>,
-        "amitkarwar@gmail.com" <amitkarwar@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "huxinming820@gmail.com" <huxinming820@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "nishants@marvell.com" <nishants@marvell.com>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
-Subject: RE: [EXT] INFO: trying to register non-static key in del_timer_sync
- (2)
-Thread-Topic: [EXT] INFO: trying to register non-static key in del_timer_sync
- (2)
-Thread-Index: AQHU8UKXrSaZj3qnvU6hFZ7GfmsosaaHYqxQgAJS84CAADevwIAOoBJwgGFIWICAAAY3D4ABlLnw
-Date:   Wed, 14 Aug 2019 14:08:42 +0000
-Message-ID: <MN2PR18MB263724E4791927DF1AE009B1A0AD0@MN2PR18MB2637.namprd18.prod.outlook.com>
-References: <000000000000927a7b0586561537@google.com>
-        <MN2PR18MB263783F52CAD4A335FD8BB34A01A0@MN2PR18MB2637.namprd18.prod.outlook.com>
-        <CACT4Y+aQzBkAq86Hx4jNFnAUzjXnq8cS2NZKfeCaFrZa__g-cg@mail.gmail.com>
-        <MN2PR18MB26372D98386D79736A7947EEA0140@MN2PR18MB2637.namprd18.prod.outlook.com>
-        <MN2PR18MB263710E8F1F8FFA06B2EDB3CA0EC0@MN2PR18MB2637.namprd18.prod.outlook.com>
-        <CAAeHK+z8MBNikw_x50Crf8ZhOhcF=uvPHakvBx44K77xHRUNfg@mail.gmail.com>
- <87k1bhb20j.fsf@kamboji.qca.qualcomm.com>
-In-Reply-To: <87k1bhb20j.fsf@kamboji.qca.qualcomm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [182.72.17.59]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3f8bc392-a750-48eb-0c1a-08d720c0ea04
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2863;
-x-ms-traffictypediagnostic: MN2PR18MB2863:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR18MB28630DB05D4A2B8C684DB5C7A0AD0@MN2PR18MB2863.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01294F875B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(376002)(39850400004)(346002)(199004)(189003)(6506007)(186003)(99286004)(4326008)(76176011)(25786009)(55236004)(229853002)(102836004)(6246003)(2906002)(6436002)(316002)(26005)(478600001)(6116002)(54906003)(74316002)(7696005)(52536014)(110136005)(66476007)(66556008)(64756008)(66446008)(33656002)(305945005)(71200400001)(8676002)(76116006)(66066001)(53936002)(71190400001)(7416002)(8936002)(966005)(7736002)(55016002)(81166006)(9686003)(81156014)(86362001)(6306002)(3846002)(4744005)(5660300002)(11346002)(486006)(446003)(14454004)(256004)(476003)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2863;H:MN2PR18MB2637.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: a9xx4pQfo52hZbR3XyovtBZEYCIcaA/n6rg0AWkkFyoJnj1dOSE74fN7YeaQQ0Rwwxt/FvmPUJa8ScVf0nnoX1JilLxNrZAbCpLV6DkVLn57yihNbBwSAeSNCSgrZU37D9iSAM64L6SZRPMnMRXVMWbxM6bDcwsMOqkQa8Th03ouVGqRkKuq0/nheaneWWta9JEaH9Dhmtln+zsjFqZwuwApo0c6tuNycVBYiCsr/GTbpPCP3mXh+Crr0LwdMYz1GBit+f1609aeZYwB03aPILSZ0kF/ksOQl5ukHtvbIDev/x8WJBxZA1ahVnAiNR9YKeevZGbZq4/XPHzuwWS4tLWlV6UhodZ88FtfnYm3m7B5LjEyfwU2/qpFtucaKwlkrqgOJXgQqR+mIZuEvYPEAP55xOKsUVK1f3XLk7sWmm0=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 14 Aug 2019 10:09:07 -0400
+Received: from mga14.intel.com ([192.55.52.115]:20204 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725800AbfHNOJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 10:09:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 07:09:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,385,1559545200"; 
+   d="scan'208";a="376053613"
+Received: from dthummal-mobl.amr.corp.intel.com (HELO [10.254.111.70]) ([10.254.111.70])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Aug 2019 07:09:05 -0700
+Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
+ snd_soc_dai_get_sdw_stream()
+To:     Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, linux-kernel@vger.kernel.org,
+        plai@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        spapothi@codeaurora.org
+References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
+ <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
+ <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
+ <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
+ <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
+ <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
+ <f0228cb4-0a6f-17f3-fe03-9be7f5f2e59d@linux.intel.com>
+ <20190813191827.GI5093@sirena.co.uk>
+ <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
+ <20190813195804.GL5093@sirena.co.uk>
+ <20190814041142.GU12733@vkoul-mobl.Dlink>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <99d35a9d-cbd8-f0da-4701-92ef650afe5a@linux.intel.com>
+Date:   Wed, 14 Aug 2019 09:09:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f8bc392-a750-48eb-0c1a-08d720c0ea04
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 14:08:42.5409
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1ngMPoJRR6SXYLcB5NVQe/GEHXmVv3ZpaiZ7e/YAPfdc4bA+XYmCW83wOZ52xNOd1k1K5R9wIf2Zuvlr2UemIA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2863
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
- definitions=2019-08-14_05:2019-08-14,2019-08-14 signatures=0
+In-Reply-To: <20190814041142.GU12733@vkoul-mobl.Dlink>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry/Kalle,
 
-> >>
-> >> Hi Dmitry,
-> >>
-> >> We have a patch to fix this:
-> >> https://patchwork.kernel.org/patch/10990275/
-> >
-> > Hi Ganapathi,
-> >
-> > Has this patch been accepted anywhere? This bug is still open on syzbot=
-.
->=20
-> The patch is in "Changes Requested" state which means that the author is
-> supposed to send a new version based on the review comments.
-We will address the review comments and try to push the updated version soo=
-n;
 
-Regards,
-Ganapathi
+On 8/13/19 11:11 PM, Vinod Koul wrote:
+> On 13-08-19, 20:58, Mark Brown wrote:
+>> On Tue, Aug 13, 2019 at 02:38:53PM -0500, Pierre-Louis Bossart wrote:
+>>
+>>> Indeed. I don't have a full understanding of that part to be honest, nor why
+>>> we need something SoundWire-specific. We already abused the set_tdm_slot API
+>>> to store an HDaudio stream, now we have a rather confusing stream
+>>> information for SoundWire and I have about 3 other 'stream' contexts in
+>>> SOF... I am still doing basic cleanups but this has been on my radar for a
+>>> while.
+>>
+>> There is something to be said for not abusing the TDM slot API if it can
+>> make things clearer by using bus-idiomatic mechanisms, but it does mean
+>> everything needs to know about each individual bus :/ .
+> 
+> Here ASoC doesn't need to know about sdw bus. As Srini explained, this
+> helps in the case for him to get the stream context and set the stream
+> context from the machine driver.
+> 
+> Nothing else is expected to be done from this API. We already do a set
+> using snd_soc_dai_set_sdw_stream(). Here we add the snd_soc_dai_get_sdw_stream() to query
+
+I didn't see a call to snd_soc_dai_set_sdw_stream() in Srini's code?
