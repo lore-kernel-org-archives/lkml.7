@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7ADC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA928C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3873F2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A186521743
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802361;
-	bh=iOVV75qfNB+FO1DfAKwsWE0RLJR3ayMmQo+knBbA83Q=;
+	s=default; t=1565802363;
+	bh=AXa9RRJ/hRrng5SKmQ9KKNzrj/K4RQNNYJG4yJbTRHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MEsTGPCbc9sEbN6AG8GQ9F3kLfw8hIK4Xr0QSKDhsCeGbY4PVcxkbdeB9GZpFqrd9
-	 whC3Ci2wYjdry1DspgPWywU4r8oA+i3eK/BvDNlABU5NwXnACSPasr6a3brEgZWYaS
-	 IoJeZT4iX+z4Z1rG7BU5ZnQqzwiMS8NhSiXe83ZQ=
+	b=sf/x161DTE//UAXNPAfKrDJ4VYu5cA95oWReuZRSz5lYpDeLtz/RUAzaHmNQYzBts
+	 NCTaT26MpjzBxCBzuRyQq1oJknIGG8pmaM77vPgFxoA7wy3PDVPt8m/nylFMY7ag9a
+	 2+UHoJn6KjPl0e01Hz2O80ZAcfkYZPW5F59wiPWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbfHNRGA (ORCPT
+        id S1729575AbfHNRGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:06:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54924 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:06:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729527AbfHNRF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:05:56 -0400
+        id S1729552AbfHNRF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:05:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64D7D214DA;
-        Wed, 14 Aug 2019 17:05:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E83322173B;
+        Wed, 14 Aug 2019 17:05:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802355;
-        bh=iOVV75qfNB+FO1DfAKwsWE0RLJR3ayMmQo+knBbA83Q=;
+        s=default; t=1565802358;
+        bh=AXa9RRJ/hRrng5SKmQ9KKNzrj/K4RQNNYJG4yJbTRHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WuaRVRxA5Q39yC3gwB0HyaJbO6Nlj7FPercxuLtAAVs3MwsD5UEfY84SCM4jvKpRo
-         beFtaNwxwrdj7IFUVQT9487TlpTN6X6dRpy/vlI4PIGeecKR/uazAZWXbZT4PcsXyR
-         aQQKQGMcF0mC8Dyf/jIbQggzBYIoOmzIFFIDRddc=
+        b=eCfUtYGcYeMGCmn/rmkhpSJuiQH9PDI+hX4CUl2IzELc5QHg2hjFTDEwbVZyql3u4
+         xgXwxsITFDxs+54GlHzLqHOHqt3/vKcoHxOuQANCvzNIBLvcPyU2hgndv6eiD7QW1+
+         UaxIM/z3xdyZVuR+79JIxaTr5iIA7QRGPOHgzcwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shubhashree Dhar <dhar@codeaurora.org>,
-        Sean Paul <seanpaul@chromium.org>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 086/144] drm/msm/dpu: Correct dpu encoder spinlock initialization
-Date:   Wed, 14 Aug 2019 19:00:42 +0200
-Message-Id: <20190814165803.474520635@linuxfoundation.org>
+Subject: [PATCH 5.2 095/144] ALSA: compress: Be more restrictive about when a drain is allowed
+Date:   Wed, 14 Aug 2019 19:00:51 +0200
+Message-Id: <20190814165803.856907290@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -60,41 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2e7b801eadbf327bf61041c943e5c44a5de4b0e5 ]
+[ Upstream commit 3b8179944cb0dd53e5223996966746cdc8a60657 ]
 
-dpu encoder spinlock should be initialized during dpu encoder
-init instead of dpu encoder setup which is part of modeset init.
+Draining makes little sense in the situation of hardware overrun, as the
+hardware will have consumed all its available samples. Additionally,
+draining whilst the stream is paused would presumably get stuck as no
+data is being consumed on the DSP side.
 
-Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
-[seanpaul resolved conflict in old init removal and revised the commit message]
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/1561357632-15361-1-git-send-email-dhar@codeaurora.org
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/core/compress_offload.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 0ea1501966594..c62f7abcf509c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -2226,8 +2226,6 @@ int dpu_encoder_setup(struct drm_device *dev, struct drm_encoder *enc,
- 	if (ret)
- 		goto fail;
- 
--	spin_lock_init(&dpu_enc->enc_spinlock);
--
- 	atomic_set(&dpu_enc->frame_done_timeout_ms, 0);
- 	timer_setup(&dpu_enc->frame_done_timer,
- 			dpu_encoder_frame_done_timeout, 0);
-@@ -2281,6 +2279,7 @@ struct drm_encoder *dpu_encoder_init(struct drm_device *dev,
- 
- 	drm_encoder_helper_add(&dpu_enc->base, &dpu_encoder_helper_funcs);
- 
-+	spin_lock_init(&dpu_enc->enc_spinlock);
- 	dpu_enc->enabled = false;
- 
- 	return &dpu_enc->base;
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index 6cf5b8440cf30..41905afada63f 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -811,7 +811,10 @@ static int snd_compr_drain(struct snd_compr_stream *stream)
+ 	case SNDRV_PCM_STATE_OPEN:
+ 	case SNDRV_PCM_STATE_SETUP:
+ 	case SNDRV_PCM_STATE_PREPARED:
++	case SNDRV_PCM_STATE_PAUSED:
+ 		return -EPERM;
++	case SNDRV_PCM_STATE_XRUN:
++		return -EPIPE;
+ 	default:
+ 		break;
+ 	}
+@@ -860,7 +863,10 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
+ 	case SNDRV_PCM_STATE_OPEN:
+ 	case SNDRV_PCM_STATE_SETUP:
+ 	case SNDRV_PCM_STATE_PREPARED:
++	case SNDRV_PCM_STATE_PAUSED:
+ 		return -EPERM;
++	case SNDRV_PCM_STATE_XRUN:
++		return -EPIPE;
+ 	default:
+ 		break;
+ 	}
 -- 
 2.20.1
 
