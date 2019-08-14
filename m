@@ -2,171 +2,110 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C27C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB189C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24EF1208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:35:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="J2CDkJc1"
+	by mail.kernel.org (Postfix) with ESMTP id AF5FC206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbfHNXfI (ORCPT
+        id S1729215AbfHNXix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 19:35:08 -0400
-Received: from mail-eopbgr680093.outbound.protection.outlook.com ([40.107.68.93]:9607
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728370AbfHNXfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 19:35:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jk4NXvyk+9uFwd5YqH+xAmlndETwt5ieVVTOivhu+AUo/VPGycB7nmvAwM8kW8XoJvwDXkYY8RYULTARfz4ce6v+P2p9EDOsUk4SeVsznF6s+fEJf2Hwzoy9M1kh9B6lNY5CnGRwZGCyY0V9WX13vBtOs4VQX2hKj7LVcL5NGWriXo3IhPc1OVlXcDBr6BUYOV84b3vjnpNb2qR+SpzHlaRtu1RB5QGO5agRxMuWFknBQzPdhujUmILwewjEDfLA14H2Eb4zkTCN8d84hOiy5JqOuw2HhNEYEbJlH07KUOWWYHAqgsUWlWT7xGXhevJvrpQ/o/yCkgFOe3Mej39hLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ei2NFcOpGtqljrDaJt0OO380rgYpQcVwC9XcHbw3+bw=;
- b=S1KMUcrOzrCNDRVsRJSvcPtPwP9wP6Pu9PgqFn93GullWOI7mYSmC53Rc1YfdLZu0kbqMbP+uzi09PGz26JaWw5dfNqgnn8v5AxscZk7662cBUH2McSYMpwG29CGpPX31pPE3EisGQcEm2n4MTx9uXm3dCsSj2wvFW7DDswUTW8LR21Mkr8FxDViLwjKyT6Nbg3tHFnH2x6ic1PBeUk7tpsisrNhRwkxbDiqbSfJz9clh9nWR7H3IRBopQ7aJbPEtBMLm9tIvKdOkbSeFpOOzXTSkx5bTSrNeKtGYUWPmrlH9sk3+tRMQk5X4Zssrvo/XvOG4YHRAcwPj35cXwy28A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 160.33.194.228) smtp.rcpttodomain=linaro.org smtp.mailfrom=sony.com;
- dmarc=bestguesspass action=none header.from=sony.com; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
- s=selector2-Sony-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ei2NFcOpGtqljrDaJt0OO380rgYpQcVwC9XcHbw3+bw=;
- b=J2CDkJc1ImAEJLt6oNw2K23Gy/fkOdH1lU2Qdcb+TY6tcYCP0vRbdnUVzl5DH8jRnd81GshI0rn1tytMKjMDEm6hDRuzNigP/Ou3tfgyEl+s65JUGe5HYKG96yIIA8+xD/PQ9fDG6yNY78L/MUCuvZlV4+v4t3VsW/6QD8NkYIk=
-Received: from CY4PR13CA0082.namprd13.prod.outlook.com (2603:10b6:903:152::20)
- by BN6PR13MB1425.namprd13.prod.outlook.com (2603:10b6:404:115::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2178.13; Wed, 14 Aug
- 2019 23:35:00 +0000
-Received: from CY1NAM02FT025.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::201) by CY4PR13CA0082.outlook.office365.com
- (2603:10b6:903:152::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2199.6 via Frontend
- Transport; Wed, 14 Aug 2019 23:34:59 +0000
-Authentication-Results: spf=pass (sender IP is 160.33.194.228)
- smtp.mailfrom=sony.com; linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=bestguesspass action=none
- header.from=sony.com;
-Received-SPF: Pass (protection.outlook.com: domain of sony.com designates
- 160.33.194.228 as permitted sender) receiver=protection.outlook.com;
- client-ip=160.33.194.228; helo=usculsndmail01v.am.sony.com;
-Received: from usculsndmail01v.am.sony.com (160.33.194.228) by
- CY1NAM02FT025.mail.protection.outlook.com (10.152.75.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2178.16 via Frontend Transport; Wed, 14 Aug 2019 23:34:59 +0000
-Received: from usculsndmail14v.am.sony.com (usculsndmail14v.am.sony.com [146.215.230.105])
-        by usculsndmail01v.am.sony.com (Sentrion-MTA-4.3.2/Sentrion-MTA-4.3.2) with ESMTP id x7ENYwim005831;
-        Wed, 14 Aug 2019 23:34:58 GMT
-Received: from USCULXHUB06V.am.sony.com (usculxhub06v.am.sony.com [146.215.231.44])
-        by usculsndmail14v.am.sony.com (Sentrion-MTA-4.3.2/Sentrion-MTA-4.3.2) with ESMTP id x7ENYvge010838;
-        Wed, 14 Aug 2019 23:34:57 GMT
-Received: from USCULXMSG01.am.sony.com ([fe80::b09d:6cb6:665e:d1b5]) by
- USCULXHUB06V.am.sony.com ([146.215.231.44]) with mapi id 14.03.0439.000; Wed,
- 14 Aug 2019 19:34:57 -0400
-From:   <Tim.Bird@sony.com>
-To:     <anders.roxell@linaro.org>, <davem@davemloft.net>,
-        <shuah@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] selftests: net: tcp_fastopen_backup_key.sh: fix
- shellcheck issue
-Thread-Topic: [PATCH] selftests: net: tcp_fastopen_backup_key.sh: fix
- shellcheck issue
-Thread-Index: AQHVUupYcm8KhbZuh0SIGrwn5rxmsKb7SY0Q
-Date:   Wed, 14 Aug 2019 23:34:54 +0000
-Message-ID: <ECADFF3FD767C149AD96A924E7EA6EAF977A2939@USCULXMSG01.am.sony.com>
-References: <20190814214948.5571-1-anders.roxell@linaro.org>
-In-Reply-To: <20190814214948.5571-1-anders.roxell@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [146.215.231.6]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 14 Aug 2019 19:38:53 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39391 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbfHNXiw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 19:38:52 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 843FC80A2A; Thu, 15 Aug 2019 01:38:37 +0200 (CEST)
+Date:   Thu, 15 Aug 2019 01:38:49 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>, tytso@mit.edu,
+        nhorman@tuxdriver.com, security@kernel.org
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Chen Yu <yu.c.chen@intel.com>, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: Non-random RDRAND Re: [PATCH] x86/CPU/AMD: Clear RDRAND CPUID
+ bit on AMD family 15h/16h
+Message-ID: <20190814233849.GA462@amd>
+References: <776cb5c2d33e7fd0d2893904724c0e52b394f24a.1565817448.git.thomas.lendacky@amd.com>
+ <20190814232434.GA31769@amd>
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:160.33.194.228;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10019020)(39860400002)(346002)(136003)(396003)(376002)(2980300002)(13464003)(189003)(199004)(6116002)(2201001)(3846002)(246002)(8936002)(50466002)(8746002)(7696005)(55846006)(86362001)(110136005)(2906002)(76176011)(8676002)(316002)(23726003)(2876002)(229853002)(4326008)(70586007)(70206006)(55016002)(6246003)(478600001)(336012)(5660300002)(102836004)(186003)(26005)(46406003)(486006)(54906003)(426003)(126002)(446003)(476003)(33656002)(47776003)(97756001)(11346002)(356004)(14444005)(6666004)(7736002)(305945005)(37786003)(106002)(66066001)(5001870100001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR13MB1425;H:usculsndmail01v.am.sony.com;FPR:;SPF:Pass;LANG:en;PTR:mail.sonyusa.com,mail01.sonyusa.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cf735421-9bf3-4002-0afe-08d7211005cd
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328)(7193020);SRVR:BN6PR13MB1425;
-X-MS-TrafficTypeDiagnostic: BN6PR13MB1425:
-X-Microsoft-Antispam-PRVS: <BN6PR13MB1425C2FB125CEB0DC32F6BE7FDAD0@BN6PR13MB1425.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-Forefront-PRVS: 01294F875B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: zUQQKXLzFlfEFk8jARByTq9Ddchlta2iD2qJf0PFlfEjacHsWCGfRyQ/HfaCS164Y3N/2A05EmBNYmBtbQdd5vxe3hGC3V9SrRwJlNKi8FfAKlXcWLdZkP6s+qn4k46rUUqEwB8qJCtD5Rn/UlsXlDINnPTFqC9ZEpyr3sVZpf41NpEsOCoAt+q8BPn5vWFXX2w4NlXc9uQKrgRL/X/JTO3d1/+npIkUYeC6LUBKMLoZkFlA0DclaPxYuNwJKfXEwlpsSPPkIjm0u5eYtN9ha7JoyGcTX+QkAlQXQgLUxjepHMtKj7QEwSB8A0bccbreEMOXqvY1ulWYvrcA97UGX4IJPvcgRl4V3yHfsLbPZi5qUKgHlgun0bzjDpamul4JWC1OtWTtrixyU8z+Htm1M6G6vPhw1fNL/I3KVqewMLc=
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2019 23:34:59.2379
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf735421-9bf3-4002-0afe-08d7211005cd
-X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[160.33.194.228];Helo=[usculsndmail01v.am.sony.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR13MB1425
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
+Content-Disposition: inline
+In-Reply-To: <20190814232434.GA31769@amd>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--PNTmBPCT7hxwcZjr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: Anders Roxell
+On Thu 2019-08-15 01:24:35, Pavel Machek wrote:
+> On Wed 2019-08-14 21:17:41, Lendacky, Thomas wrote:
+> > From: Tom Lendacky <thomas.lendacky@amd.com>
+> >=20
+> > There have been reports of RDRAND issues after resuming from suspend on
+> > some AMD family 15h and family 16h systems. This issue stems from BIOS
+> > not performing the proper steps during resume to ensure RDRAND continues
+> > to function properly.
 >=20
-> When running tcp_fastopen_backup_key.sh the following issue was seen in
-> a busybox environment.
-> ./tcp_fastopen_backup_key.sh: line 33: [: -ne: unary operator expected
+> Burn it with fire!
 >=20
-> Shellcheck showed the following issue.
-> $ shellcheck tools/testing/selftests/net/tcp_fastopen_backup_key.sh
+> I mean... people were afraid RDRAND would be backdoored, and you now
+> confirm ... it indeed _is_ backdoored? /., here's news for you!
 >=20
-> In tools/testing/selftests/net/tcp_fastopen_backup_key.sh line 33:
->         if [ $val -ne 0 ]; then
->              ^-- SC2086: Double quote to prevent globbing and word splitt=
-ing.
->=20
-> Rework to add double quotes around the variable 'val' that shellcheck
-> recommends.
->=20
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-> ---
->  tools/testing/selftests/net/tcp_fastopen_backup_key.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/tools/testing/selftests/net/tcp_fastopen_backup_key.sh
-> b/tools/testing/selftests/net/tcp_fastopen_backup_key.sh
-> index 41476399e184..ba5ec3eb314e 100755
-> --- a/tools/testing/selftests/net/tcp_fastopen_backup_key.sh
-> +++ b/tools/testing/selftests/net/tcp_fastopen_backup_key.sh
-> @@ -30,7 +30,7 @@ do_test() {
->  	ip netns exec "${NETNS}" ./tcp_fastopen_backup_key "$1"
->  	val=3D$(ip netns exec "${NETNS}" nstat -az | \
->  		grep TcpExtTCPFastOpenPassiveFail | awk '{print $2}')
-> -	if [ $val -ne 0 ]; then
-> +	if [ "$val" -ne 0 ]; then
+> So what is the impact? Does it give random-looking but predictable
+> numbers after resume? Does it give all zeros? Something else?
 
-Did you test this in the failing environment?
+Plus... We trust the RDRAND in some configurations:
 
-With a busybox shell, I get:
- $ [ "" -ne 0 ]
-sh: bad number
+        random.trust_cpu=3D{on,off}
+				[KNL] Enable or disable trusting the
+				use of the CPU's random
+				number generator (if available) to
+	       		     fully seed the
+				kernel's CRNG. Default is controlled by
+				CONFIG_RANDOM_TRUST_CPU.
 
-You might need to explicitly check for empty string here, or switch to a st=
-ring comparison instead:
-if [ "$val" !=3D 0 ]; then
+so.. does this mean /dev/random was giving non-random values for some
+users?
 
-   -- Tim
+Certainly it means userland users were getting non-random values. That
+sounds like something worth CVE and informing affected users?
 
->  		echo "FAIL: TcpExtTCPFastOpenPassiveFail non-zero"
->  		return 1
->  	fi
-> --
-> 2.20.1
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
+--PNTmBPCT7hxwcZjr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1Um4kACgkQMOfwapXb+vIG8QCfcMvaMkAtM9hsS5yK2VENUKxn
+ka4AoLbv6GDCX/Ku6G0zERnadnXHCQNE
+=6aFU
+-----END PGP SIGNATURE-----
+
+--PNTmBPCT7hxwcZjr--
