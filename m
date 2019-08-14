@@ -2,115 +2,112 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E27C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05F0C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11028208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71E1208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565773257;
+	bh=fv/ZdU246p/5qy812w3lXY0nGq8ygs2Wu6GV4nOHlOA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tIi1y4jxlsIxeMdD8T6T+A5empNnBGdVYing8z3jdqEAij44DLSg5luAmwUo1UmzJ
+	 4SCU7CPl5arjOecAzArOe3H3qWQIyPPUVvyV/z6Q0f5ImQUPqRYrHJAr9otmPv/LwI
+	 S+R8KgA8uOZsL0cYzoTwV3TWXta3OCu1Fnk0xCEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfHNI66 (ORCPT
+        id S1726512AbfHNJA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 04:58:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51512 "EHLO mx1.redhat.com"
+        Wed, 14 Aug 2019 05:00:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725265AbfHNI66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 04:58:58 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725955AbfHNJA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 05:00:56 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 475864E926;
-        Wed, 14 Aug 2019 08:58:58 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AE7A710016F3;
-        Wed, 14 Aug 2019 08:58:51 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 16:58:46 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>, "hch@lst.de" <hch@lst.de>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V3 1/3] genirq/affinity: Enhance warning check
-Message-ID: <20190814085845.GA21802@ming.t460p>
-References: <20190813081447.1396-1-ming.lei@redhat.com>
- <20190813081447.1396-2-ming.lei@redhat.com>
- <ac920ba3996d0feedc924045b54724ba5482e427.camel@intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C2D4205F4;
+        Wed, 14 Aug 2019 09:00:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565773255;
+        bh=fv/ZdU246p/5qy812w3lXY0nGq8ygs2Wu6GV4nOHlOA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kIx/eLPGVFxMcw7npmnquDzvRi55iR7TqmtRsPDLZ0K5D3Y7f6OzDI5B2LIp0Yn1T
+         RE2++kH938do7pDBu/P5eFkucJogf8EAeIeJ57FhmsfZ+xw//Z9AbXSuR8hbYxVSfj
+         XLL5/0Q9uUQLXEiiPSJWA1KaE26t+O2RoYSB8Y+Y=
+Date:   Wed, 14 Aug 2019 10:00:51 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Paul Walmsley <paul@pwsan.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Atish Patra <atish.patra@wdc.com>
+Subject: Re: linux-next: manual merge of the risc-v tree with the arm64 tree
+Message-ID: <20190814090051.2qzhglnz4452avdc@willie-the-truck>
+References: <20190813093447.747a5853@canb.auug.org.au>
+ <20190813082422.lecgqtknnn5g4dyj@willie-the-truck>
+ <alpine.DEB.2.21.999.1908132220450.13287@utopia.booyaka.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ac920ba3996d0feedc924045b54724ba5482e427.camel@intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 14 Aug 2019 08:58:58 +0000 (UTC)
+In-Reply-To: <alpine.DEB.2.21.999.1908132220450.13287@utopia.booyaka.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 07:31:39PM +0000, Derrick, Jonathan wrote:
-> Hi Ming,
-> 
-> On Tue, 2019-08-13 at 16:14 +0800, Ming Lei wrote:
-> > The two-stage spread is done on same irq vectors, and we just need that
-> > either one stage covers all vector, not two stage work together to cover
-> > all vectors.
+On Tue, Aug 13, 2019 at 10:24:30PM +0000, Paul Walmsley wrote:
+> On Tue, 13 Aug 2019, Will Deacon wrote:
+> > On Tue, Aug 13, 2019 at 09:34:47AM +1000, Stephen Rothwell wrote:
+> > > Today's linux-next merge of the risc-v tree got a conflict in:
+> > > 
+> > >   arch/arm64/kernel/topology.c
+> > > 
+> > > between commit:
+> > > 
+> > >   98dc19902a0b ("arm64: topology: Use PPTT to determine if PE is a thread")
+> > > 
+> > > from the arm64 tree and commit:
+> > > 
+> > >   60c1b220d8bc ("cpu-topology: Move cpu topology code to common code.")
+> > > 
+> > > from the risc-v tree.
+> > > 
+> > > I fixed it up (see below) and can carry the fix as necessary. This
+> > > is now fixed as far as linux-next is concerned, but any non trivial
+> > > conflicts should be mentioned to your upstream maintainer when your tree
+> > > is submitted for merging.  You may also want to consider cooperating
+> > > with the maintainer of the conflicting tree to minimise any particularly
+> > > complex conflicts.
 > > 
-> > So enhance the warning check to make sure all vectors are spread.
+> > Thanks, Stephen.
 > > 
-> > Cc: Christoph Hellwig <hch@lst.de>
-> > Cc: Keith Busch <kbusch@kernel.org>
-> > Cc: linux-nvme@lists.infradead.org,
-> > Cc: Jon Derrick <jonathan.derrick@intel.com>
-> > Cc: Jens Axboe <axboe@kernel.dk>
-> > Fixes: 6da4b3ab9a6 ("genirq/affinity: Add support for allocating interrupt sets")
-> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> > ---
-> >  kernel/irq/affinity.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > Paul, Palmer -- If it's not too late, then it would probably be best to
+> > stick this commit (60c1b220d8bc) and any dependencies on their own stable
+> > branch so that we can both pull it into our respective trees and I can
+> > resolve this conflict in the arm64 tree, which I'll send early during the
+> > merge window.
 > > 
-> > diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
-> > index 6fef48033f96..265b3076f16b 100644
-> > --- a/kernel/irq/affinity.c
-> > +++ b/kernel/irq/affinity.c
-> > @@ -215,8 +215,7 @@ static int irq_build_affinity_masks(unsigned int startvec, unsigned int numvecs,
-> >  					       npresmsk, nmsk, masks);
-> >  	put_online_cpus();
-> >  
-> > -	if (nr_present < numvecs)
-> > -		WARN_ON(nr_present + nr_others < numvecs);
-> > +	WARN_ON(max(nr_present, nr_others) < numvecs);
+> > Looking at your tree, I guess I could just pull in
+> > common/for-v5.4-rc1/cpu-topology if you promise never to rebase it. Failing
+> > that, you could fork a new branch from 60c1b220d8bc and I could just pull
+> > that part instead.
 > 
-> I think the patch description assumes the first condition
-> "The two-stage spread is done on same irq vectors"
+> How about if we treat common/for-v5.4-rc1/cpu-topology as a stable branch?  
+> I wasn't planning to rebase it.  Then both of us can just merge it into 
+> our for-next branches for the merge window?  (It looks like I will need to 
+> rebuild the riscv for-next branch on top of v5.3-rc5, for unrelated 
+> reasons.)
 > 
->     /*
->      * Spread on non present CPUs starting from the next vector to be
->      * handled. If the spreading of present CPUs already exhausted the
->      * vector space, assign the non present CPUs to the already spread
->      * out vectors.
->      */
->     if (nr_present >= numvecs)
->             curvec = firstvec;
-> 
-> But doesn't following condition imply nr_others spread is potentionally
-> different vector set?
-> 
->     else
->             curvec = firstvec + nr_present;
-> 
+> Sound reasonable?
 
-Most times, __irq_build_affinity_masks() returns numvecs.
+Cheers, Paul. Sounds good to me.
 
-However, each stage may expose less CPU number than num_vecs, then less
-vectors than 'numvecs' can be spread.
-
-So this patch is actually wrong.
-
-
-Thank,
-Ming
+Will
