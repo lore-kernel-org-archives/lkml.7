@@ -2,235 +2,80 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33547C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19532C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23D020989
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748804;
-	bh=m3n4qYP2wjJnIbaUjpskt2z+wMq7OZCU1tih6v4NOTo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=evM3WCfhrB5w1+QVSYBS/2zF0070TzZPrTpF73CQpVBSnNqr+AIZDyk1hqPvAJRq5
-	 wfIQF4qsamB3dfDABZR0DZ1X/PCOQDAr1UCHH/CAJVxUSR/gq799glcn+B1DNqIbnj
-	 1ziSqu9kLI914k4Fmoc8xowWhF4AZKnOKYTcLfFc=
+	by mail.kernel.org (Postfix) with ESMTP id E0D672133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfHNCNW (ORCPT
+        id S1727607AbfHNCNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:13:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45262 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:13:25 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:42842 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727416AbfHNCNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:16 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA2E820842;
-        Wed, 14 Aug 2019 02:13:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748795;
-        bh=m3n4qYP2wjJnIbaUjpskt2z+wMq7OZCU1tih6v4NOTo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1dOyfsXYFMO1vKiRjR2CODojNBskPNzoldA+ASHEAiDYkkY9tCz/Yhsup+AEB/dAF
-         6dElg6q5iiZ1DVsCQWwplt51pYHq5JJJkaZxQcG9yXfnN29LE/Zsltcn/wa5tvQgcA
-         BlymuF+75Z3TWePpD0hLb+4reeg6E4rpzKil9PaY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gregory Greenman <gregory.greenman@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 066/123] iwlwifi: mvm: send LQ command always ASYNC
-Date:   Tue, 13 Aug 2019 22:09:50 -0400
-Message-Id: <20190814021047.14828-66-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
-References: <20190814021047.14828-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S1727498AbfHNCNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:20 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7CEAF1A0256;
+        Wed, 14 Aug 2019 04:13:18 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CD5741A0269;
+        Wed, 14 Aug 2019 04:13:13 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2C4AB402EC;
+        Wed, 14 Aug 2019 10:13:08 +0800 (SGT)
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCHv6 1/2] PCI: layerscape: Add the bar_fixed_64bit property in EP driver.
+Date:   Wed, 14 Aug 2019 10:03:29 +0800
+Message-Id: <20190814020330.12133-1-xiaowei.bao@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory Greenman <gregory.greenman@intel.com>
+The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1
+is 32bit, BAR2 and BAR4 is 64bit, this is determined by hardware,
+so set the bar_fixed_64bit with 0x14.
 
-[ Upstream commit cd4d6b0bcd51580efda9ae54ab7b2d630b4147dc ]
-
-The only place where the command was sent as SYNC is during
-init and this is not really critical. This change is required
-for replacing RS mutex with a spinlock (in the subsequent patch),
-since SYNC comamnd requres sleeping and thus the flow cannot
-be done when holding a spinlock.
-
-Signed-off-by: Gregory Greenman <gregory.greenman@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/mvm.h  |  2 +-
- drivers/net/wireless/intel/iwlwifi/mvm/rs.c   | 23 ++++++++++---------
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c  |  2 +-
- .../net/wireless/intel/iwlwifi/mvm/utils.c    |  4 ++--
- 4 files changed, 16 insertions(+), 15 deletions(-)
+v2:
+ - Replace value 0x14 with a macro.
+v3:
+ - No change.
+v4:
+ - send the patch again with '--to'.
+v5:
+ - fix the commit message.
+v6:
+ - remove the [EXT] tag of the $SUBJECT in email.
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-index 88af1f0ba3f0f..31c8636b2a3f8 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-@@ -1806,7 +1806,7 @@ iwl_mvm_vif_dbgfs_clean(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
- #endif /* CONFIG_IWLWIFI_DEBUGFS */
+ drivers/pci/controller/dwc/pci-layerscape-ep.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index be61d96..ca9aa45 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -44,6 +44,7 @@ static const struct pci_epc_features ls_pcie_epc_features = {
+ 	.linkup_notifier = false,
+ 	.msi_capable = true,
+ 	.msix_capable = false,
++	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+ };
  
- /* rate scaling */
--int iwl_mvm_send_lq_cmd(struct iwl_mvm *mvm, struct iwl_lq_cmd *lq, bool sync);
-+int iwl_mvm_send_lq_cmd(struct iwl_mvm *mvm, struct iwl_lq_cmd *lq);
- void iwl_mvm_update_frame_stats(struct iwl_mvm *mvm, u32 rate, bool agg);
- int rs_pretty_print_rate(char *buf, int bufsz, const u32 rate);
- void rs_update_last_rssi(struct iwl_mvm *mvm,
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rs.c b/drivers/net/wireless/intel/iwlwifi/mvm/rs.c
-index 836541caa3167..01b032f18bc8b 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rs.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rs.c
-@@ -1326,7 +1326,7 @@ void iwl_mvm_rs_tx_status(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
- 			IWL_DEBUG_RATE(mvm,
- 				       "Too many rates mismatch. Send sync LQ. rs_state %d\n",
- 				       lq_sta->rs_state);
--			iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq, false);
-+			iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq);
- 		}
- 		/* Regardless, ignore this status info for outdated rate */
- 		return;
-@@ -1388,7 +1388,8 @@ void iwl_mvm_rs_tx_status(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
- 		if (info->status.ampdu_ack_len == 0)
- 			info->status.ampdu_len = 1;
- 
--		rs_collect_tlc_data(mvm, mvmsta, tid, curr_tbl, tx_resp_rate.index,
-+		rs_collect_tlc_data(mvm, mvmsta, tid, curr_tbl,
-+				    tx_resp_rate.index,
- 				    info->status.ampdu_len,
- 				    info->status.ampdu_ack_len);
- 
-@@ -1823,7 +1824,7 @@ static void rs_update_rate_tbl(struct iwl_mvm *mvm,
- 			       struct iwl_scale_tbl_info *tbl)
- {
- 	rs_fill_lq_cmd(mvm, sta, lq_sta, &tbl->rate);
--	iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq, false);
-+	iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq);
- }
- 
- static bool rs_tweak_rate_tbl(struct iwl_mvm *mvm,
-@@ -2925,7 +2926,7 @@ void rs_update_last_rssi(struct iwl_mvm *mvm,
- static void rs_initialize_lq(struct iwl_mvm *mvm,
- 			     struct ieee80211_sta *sta,
- 			     struct iwl_lq_sta *lq_sta,
--			     enum nl80211_band band, bool update)
-+			     enum nl80211_band band)
- {
- 	struct iwl_scale_tbl_info *tbl;
- 	struct rs_rate *rate;
-@@ -2955,7 +2956,7 @@ static void rs_initialize_lq(struct iwl_mvm *mvm,
- 	rs_set_expected_tpt_table(lq_sta, tbl);
- 	rs_fill_lq_cmd(mvm, sta, lq_sta, rate);
- 	/* TODO restore station should remember the lq cmd */
--	iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq, !update);
-+	iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq);
- }
- 
- static void rs_drv_get_rate(void *mvm_r, struct ieee80211_sta *sta,
-@@ -3208,7 +3209,7 @@ void iwl_mvm_update_frame_stats(struct iwl_mvm *mvm, u32 rate, bool agg)
-  * Called after adding a new station to initialize rate scaling
-  */
- static void rs_drv_rate_init(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
--			     enum nl80211_band band, bool update)
-+			     enum nl80211_band band)
- {
- 	int i, j;
- 	struct ieee80211_hw *hw = mvm->hw;
-@@ -3288,7 +3289,7 @@ static void rs_drv_rate_init(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
- #ifdef CONFIG_IWLWIFI_DEBUGFS
- 	iwl_mvm_reset_frame_stats(mvm);
- #endif
--	rs_initialize_lq(mvm, sta, lq_sta, band, update);
-+	rs_initialize_lq(mvm, sta, lq_sta, band);
- }
- 
- static void rs_drv_rate_update(void *mvm_r,
-@@ -3602,7 +3603,7 @@ static void rs_set_lq_ss_params(struct iwl_mvm *mvm,
- 
- 		bfersta_ss_params &= ~LQ_SS_BFER_ALLOWED;
- 		bfersta_lq_cmd->ss_params = cpu_to_le32(bfersta_ss_params);
--		iwl_mvm_send_lq_cmd(mvm, bfersta_lq_cmd, false);
-+		iwl_mvm_send_lq_cmd(mvm, bfersta_lq_cmd);
- 
- 		ss_params |= LQ_SS_BFER_ALLOWED;
- 		IWL_DEBUG_RATE(mvm,
-@@ -3768,7 +3769,7 @@ static void rs_program_fix_rate(struct iwl_mvm *mvm,
- 
- 	if (lq_sta->pers.dbg_fixed_rate) {
- 		rs_fill_lq_cmd(mvm, NULL, lq_sta, NULL);
--		iwl_mvm_send_lq_cmd(lq_sta->pers.drv, &lq_sta->lq, false);
-+		iwl_mvm_send_lq_cmd(lq_sta->pers.drv, &lq_sta->lq);
- 	}
- }
- 
-@@ -4171,7 +4172,7 @@ void iwl_mvm_rs_rate_init(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
- 		struct iwl_mvm_sta *mvmsta = iwl_mvm_sta_from_mac80211(sta);
- 
- 		mutex_lock(&mvmsta->lq_sta.rs_drv.mutex);
--		rs_drv_rate_init(mvm, sta, band, update);
-+		rs_drv_rate_init(mvm, sta, band);
- 		mutex_unlock(&mvmsta->lq_sta.rs_drv.mutex);
- 	}
- }
-@@ -4203,7 +4204,7 @@ static int rs_drv_tx_protection(struct iwl_mvm *mvm, struct iwl_mvm_sta *mvmsta,
- 			lq->flags &= ~LQ_FLAG_USE_RTS_MSK;
- 	}
- 
--	return iwl_mvm_send_lq_cmd(mvm, lq, false);
-+	return iwl_mvm_send_lq_cmd(mvm, lq);
- }
- 
- /**
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-index ac9bc65c4d156..22715cdb83171 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -2978,7 +2978,7 @@ int iwl_mvm_sta_tx_agg_oper(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
- 	IWL_DEBUG_HT(mvm, "Tx aggregation enabled on ra = %pM tid = %d\n",
- 		     sta->addr, tid);
- 
--	return iwl_mvm_send_lq_cmd(mvm, &mvmsta->lq_sta.rs_drv.lq, false);
-+	return iwl_mvm_send_lq_cmd(mvm, &mvmsta->lq_sta.rs_drv.lq);
- }
- 
- static void iwl_mvm_unreserve_agg_queue(struct iwl_mvm *mvm,
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/utils.c b/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
-index cc56ab88fb439..a71277de2e0eb 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
-@@ -641,12 +641,12 @@ int iwl_mvm_reconfig_scd(struct iwl_mvm *mvm, int queue, int fifo, int sta_id,
-  * this case to clear the state indicating that station creation is in
-  * progress.
-  */
--int iwl_mvm_send_lq_cmd(struct iwl_mvm *mvm, struct iwl_lq_cmd *lq, bool sync)
-+int iwl_mvm_send_lq_cmd(struct iwl_mvm *mvm, struct iwl_lq_cmd *lq)
- {
- 	struct iwl_host_cmd cmd = {
- 		.id = LQ_CMD,
- 		.len = { sizeof(struct iwl_lq_cmd), },
--		.flags = sync ? 0 : CMD_ASYNC,
-+		.flags = CMD_ASYNC,
- 		.data = { lq, },
- 	};
- 
+ static const struct pci_epc_features*
 -- 
-2.20.1
+2.9.5
 
