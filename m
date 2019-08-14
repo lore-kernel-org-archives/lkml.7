@@ -4,58 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA791C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B446C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A3F21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114072084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802140;
-	bh=FGSeR5kbJNlTHpLl6tarV6WMLNjn7j4dFasyTUHsYrY=;
+	s=default; t=1565802144;
+	bh=m7coW/nUKcqBl9kve1Atqp19m9rGbSie94rH5hg7P6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hCPYo11c+rTXG9PKox9b3nEPx0qjPNR28pFrcLRYuvsiy4C/EgHMWRLzN0RZNhnG+
-	 wLRVIjW9pI5Z/HEYVXZWY77PEBvF6WOlUj37YS79DofV2xkXMY4zuj9Hbpq9wju3aw
-	 Lee5N1CgeC0znXxOnXhY9RzAjF+lCBXZaT0Xgf1o=
+	b=Sd+5pkJ3rvUy/pgW/l08HEiCayqMED2KiyQCgOw1wY/8CJr3rx0PMUYOWUfUvoDUe
+	 ouhq+3NtghC78podEguzKe42YaCK3ryJC6qaMh4dK7izbM2esakw2vIs4Vle+NmxzK
+	 6u4d6ATXak8tbXt2sKA2ydLwDpjpo+mMYubzcDVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbfHNRCU (ORCPT
+        id S1728568AbfHNRCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:02:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:02:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726804AbfHNRCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:02:19 -0400
+        id S1726804AbfHNRCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:02:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55B35208C2;
-        Wed, 14 Aug 2019 17:02:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CED7A214DA;
+        Wed, 14 Aug 2019 17:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802137;
-        bh=FGSeR5kbJNlTHpLl6tarV6WMLNjn7j4dFasyTUHsYrY=;
+        s=default; t=1565802140;
+        bh=m7coW/nUKcqBl9kve1Atqp19m9rGbSie94rH5hg7P6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QEf5jTJ9mzz+TnFKd+J+oHHQZ8n0PzNk79KeRpgeoXrwHnme1s5eEtjrLpayHGiKD
-         dKLRke49mdFIXu5RsGTSR945tSzBDBwHOscko2BPbX66/TYHHXiDMuQG5FXavGoyRU
-         zJcuKbzecu6x89PI/hjuU1OfYfxeBt1a3rXhdUpk=
+        b=YRq7BusuB59q8s7EpkibgcMEjInXEUsPtCa7wiXWGmayCtW8qzkBqwbfdLZOf85Yi
+         5XBuR5jHDlPXZ3lqLTyea6YuazEDrrGfup32VSxZzjCsMosqBkPsj/teOmKsbVLjNR
+         s+Vzqpx+LgvN7MAN4jPlLUqySP55a5Fiavf9tqak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Andree <matthias.andree@gmx.de>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.2 001/144] Revert "PCI: Add missing link delays required by the PCIe spec"
-Date:   Wed, 14 Aug 2019 18:59:17 +0200
-Message-Id: <20190814165759.530366801@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        =?UTF-8?q?Jan=20Sebastian=20G=C3=B6tte?= <linux@jaseg.net>,
+        Phil Reid <preid@electromag.com.au>
+Subject: [PATCH 5.2 010/144] Staging: fbtft: Fix probing of gpio descriptor
+Date:   Wed, 14 Aug 2019 18:59:26 +0200
+Message-Id: <20190814165800.052151932@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,204 +61,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Phil Reid <preid@electromag.com.au>
 
-commit 0617bdede5114a0002298b12cd0ca2b0cfd0395d upstream.
+commit dbc4f989c878fe101fb7920e9609e8ec44e097cd upstream.
 
-Commit c2bf1fc212f7 ("PCI: Add missing link delays required by the PCIe
-spec") turned out causing issues with some systems either by making them
-unresponsive or slowing down runtime and system wide resume of PCIe
-devices. While root cause for the unresponsiveness is still under
-investigation given the amount of issues reported better to revert it
-for now.
+Conversion to use gpio descriptors broke all gpio lookups as
+devm_gpiod_get_index was converted to use dev->driver->name for
+the gpio name lookup. Fix this by using the name param. In
+addition gpiod_get post-fixes the -gpios to the name so that
+shouldn't be included in the call. However this then breaks the
+of_find_property call to see if the gpio entry exists as all
+fbtft treats all gpios as optional. So use devm_gpiod_get_index_optional
+instead which achieves the same thing and is simpler.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204413
-Link: https://lore.kernel.org/linux-pci/SL2P216MB01878BBCD75F21D882AEEA2880C60@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM/
-Link: https://lore.kernel.org/linux-pci/2857501d-c167-547d-c57d-d5d24ea1f1dc@molgen.mpg.de/
-Reported-by: Matthias Andree <matthias.andree@gmx.de>
-Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Nishad confirmed the changes where only ever compile tested.
+
+Fixes: c440eee1a7a1 ("Staging: fbtft: Switch to the gpio descriptor interface")
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Tested-by: Jan Sebastian Götte <linux@jaseg.net>
+Signed-off-by: Phil Reid <preid@electromag.com.au>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1563236677-5045-2-git-send-email-preid@electromag.com.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pci.c               |   29 ++++++-----------
- drivers/pci/pci.h               |    1 
- drivers/pci/pcie/portdrv_core.c |   66 ----------------------------------------
- 3 files changed, 10 insertions(+), 86 deletions(-)
+ drivers/staging/fbtft/fbtft-core.c |   39 +++++++++++++++++--------------------
+ 1 file changed, 18 insertions(+), 21 deletions(-)
 
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1004,10 +1004,15 @@ static void __pci_start_power_transition
- 	if (state == PCI_D0) {
- 		pci_platform_power_transition(dev, PCI_D0);
- 		/*
--		 * Mandatory power management transition delays are
--		 * handled in the PCIe portdrv resume hooks.
-+		 * Mandatory power management transition delays, see
-+		 * PCI Express Base Specification Revision 2.0 Section
-+		 * 6.6.1: Conventional Reset.  Do not delay for
-+		 * devices powered on/off by corresponding bridge,
-+		 * because have already delayed for the bridge.
- 		 */
- 		if (dev->runtime_d3cold) {
-+			if (dev->d3cold_delay && !dev->imm_ready)
-+				msleep(dev->d3cold_delay);
- 			/*
- 			 * When powering on a bridge from D3cold, the
- 			 * whole hierarchy may be powered on into
-@@ -4570,16 +4575,14 @@ static int pci_pm_reset(struct pci_dev *
- 
- 	return pci_dev_wait(dev, "PM D3->D0", PCIE_RESET_READY_POLL_MS);
- }
--
- /**
-- * pcie_wait_for_link_delay - Wait until link is active or inactive
-+ * pcie_wait_for_link - Wait until link is active or inactive
-  * @pdev: Bridge device
-  * @active: waiting for active or inactive?
-- * @delay: Delay to wait after link has become active (in ms)
-  *
-  * Use this to wait till link becomes active or inactive.
-  */
--bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active, int delay)
-+bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
+--- a/drivers/staging/fbtft/fbtft-core.c
++++ b/drivers/staging/fbtft/fbtft-core.c
+@@ -76,21 +76,18 @@ static int fbtft_request_one_gpio(struct
+ 				  struct gpio_desc **gpiop)
  {
- 	int timeout = 1000;
- 	bool ret;
-@@ -4616,25 +4619,13 @@ bool pcie_wait_for_link_delay(struct pci
- 		timeout -= 10;
+ 	struct device *dev = par->info->device;
+-	struct device_node *node = dev->of_node;
+ 	int ret = 0;
+ 
+-	if (of_find_property(node, name, NULL)) {
+-		*gpiop = devm_gpiod_get_index(dev, dev->driver->name, index,
+-					      GPIOD_OUT_HIGH);
+-		if (IS_ERR(*gpiop)) {
+-			ret = PTR_ERR(*gpiop);
+-			dev_err(dev,
+-				"Failed to request %s GPIO:%d\n", name, ret);
+-			return ret;
+-		}
+-		fbtft_par_dbg(DEBUG_REQUEST_GPIOS, par, "%s: '%s' GPIO\n",
+-			      __func__, name);
++	*gpiop = devm_gpiod_get_index_optional(dev, name, index,
++					       GPIOD_OUT_HIGH);
++	if (IS_ERR(*gpiop)) {
++		ret = PTR_ERR(*gpiop);
++		dev_err(dev,
++			"Failed to request %s GPIO: %d\n", name, ret);
++		return ret;
  	}
- 	if (active && ret)
--		msleep(delay);
-+		msleep(100);
- 	else if (ret != active)
- 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
- 			active ? "set" : "cleared");
- 	return ret == active;
- }
++	fbtft_par_dbg(DEBUG_REQUEST_GPIOS, par, "%s: '%s' GPIO\n",
++		      __func__, name);
  
--/**
-- * pcie_wait_for_link - Wait until link is active or inactive
-- * @pdev: Bridge device
-- * @active: waiting for active or inactive?
-- *
-- * Use this to wait till link becomes active or inactive.
-- */
--bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
--{
--	return pcie_wait_for_link_delay(pdev, active, 100);
--}
--
- void pci_reset_secondary_bus(struct pci_dev *dev)
- {
- 	u16 ctrl;
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -493,7 +493,6 @@ static inline int pci_dev_specific_disab
- void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
- 		      u32 service);
- 
--bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active, int delay);
- bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
- #ifdef CONFIG_PCIEASPM
- void pcie_aspm_init_link_state(struct pci_dev *pdev);
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -9,7 +9,6 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/kernel.h>
--#include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/pm.h>
- #include <linux/pm_runtime.h>
-@@ -379,67 +378,6 @@ static int pm_iter(struct device *dev, v
- 	return 0;
+ 	return ret;
  }
+@@ -103,34 +100,34 @@ static int fbtft_request_gpios_dt(struct
+ 	if (!par->info->device->of_node)
+ 		return -EINVAL;
  
--static int get_downstream_delay(struct pci_bus *bus)
--{
--	struct pci_dev *pdev;
--	int min_delay = 100;
--	int max_delay = 0;
--
--	list_for_each_entry(pdev, &bus->devices, bus_list) {
--		if (!pdev->imm_ready)
--			min_delay = 0;
--		else if (pdev->d3cold_delay < min_delay)
--			min_delay = pdev->d3cold_delay;
--		if (pdev->d3cold_delay > max_delay)
--			max_delay = pdev->d3cold_delay;
--	}
--
--	return max(min_delay, max_delay);
--}
--
--/*
-- * wait_for_downstream_link - Wait for downstream link to establish
-- * @pdev: PCIe port whose downstream link is waited
-- *
-- * Handle delays according to PCIe 4.0 section 6.6.1 before configuration
-- * access to the downstream component is permitted.
-- *
-- * This blocks PCI core resume of the hierarchy below this port until the
-- * link is trained. Should be called before resuming port services to
-- * prevent pciehp from starting to tear-down the hierarchy too soon.
-- */
--static void wait_for_downstream_link(struct pci_dev *pdev)
--{
--	int delay;
--
--	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT &&
--	    pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM)
--		return;
--
--	if (pci_dev_is_disconnected(pdev))
--		return;
--
--	if (!pdev->subordinate || list_empty(&pdev->subordinate->devices) ||
--	    !pdev->bridge_d3)
--		return;
--
--	delay = get_downstream_delay(pdev->subordinate);
--	if (!delay)
--		return;
--
--	dev_dbg(&pdev->dev, "waiting downstream link for %d ms\n", delay);
--
--	/*
--	 * If downstream port does not support speeds greater than 5 GT/s
--	 * need to wait 100ms. For higher speeds (gen3) we need to wait
--	 * first for the data link layer to become active.
--	 */
--	if (pcie_get_speed_cap(pdev) <= PCIE_SPEED_5_0GT)
--		msleep(delay);
--	else
--		pcie_wait_for_link_delay(pdev, true, delay);
--}
--
- /**
-  * pcie_port_device_suspend - suspend port services associated with a PCIe port
-  * @dev: PCI Express port to handle
-@@ -453,8 +391,6 @@ int pcie_port_device_suspend(struct devi
- int pcie_port_device_resume_noirq(struct device *dev)
- {
- 	size_t off = offsetof(struct pcie_port_service_driver, resume_noirq);
--
--	wait_for_downstream_link(to_pci_dev(dev));
- 	return device_for_each_child(dev, &off, pm_iter);
- }
- 
-@@ -485,8 +421,6 @@ int pcie_port_device_runtime_suspend(str
- int pcie_port_device_runtime_resume(struct device *dev)
- {
- 	size_t off = offsetof(struct pcie_port_service_driver, runtime_resume);
--
--	wait_for_downstream_link(to_pci_dev(dev));
- 	return device_for_each_child(dev, &off, pm_iter);
- }
- #endif /* PM */
+-	ret = fbtft_request_one_gpio(par, "reset-gpios", 0, &par->gpio.reset);
++	ret = fbtft_request_one_gpio(par, "reset", 0, &par->gpio.reset);
+ 	if (ret)
+ 		return ret;
+-	ret = fbtft_request_one_gpio(par, "dc-gpios", 0, &par->gpio.dc);
++	ret = fbtft_request_one_gpio(par, "dc", 0, &par->gpio.dc);
+ 	if (ret)
+ 		return ret;
+-	ret = fbtft_request_one_gpio(par, "rd-gpios", 0, &par->gpio.rd);
++	ret = fbtft_request_one_gpio(par, "rd", 0, &par->gpio.rd);
+ 	if (ret)
+ 		return ret;
+-	ret = fbtft_request_one_gpio(par, "wr-gpios", 0, &par->gpio.wr);
++	ret = fbtft_request_one_gpio(par, "wr", 0, &par->gpio.wr);
+ 	if (ret)
+ 		return ret;
+-	ret = fbtft_request_one_gpio(par, "cs-gpios", 0, &par->gpio.cs);
++	ret = fbtft_request_one_gpio(par, "cs", 0, &par->gpio.cs);
+ 	if (ret)
+ 		return ret;
+-	ret = fbtft_request_one_gpio(par, "latch-gpios", 0, &par->gpio.latch);
++	ret = fbtft_request_one_gpio(par, "latch", 0, &par->gpio.latch);
+ 	if (ret)
+ 		return ret;
+ 	for (i = 0; i < 16; i++) {
+-		ret = fbtft_request_one_gpio(par, "db-gpios", i,
++		ret = fbtft_request_one_gpio(par, "db", i,
+ 					     &par->gpio.db[i]);
+ 		if (ret)
+ 			return ret;
+-		ret = fbtft_request_one_gpio(par, "led-gpios", i,
++		ret = fbtft_request_one_gpio(par, "led", i,
+ 					     &par->gpio.led[i]);
+ 		if (ret)
+ 			return ret;
+-		ret = fbtft_request_one_gpio(par, "aux-gpios", i,
++		ret = fbtft_request_one_gpio(par, "aux", i,
+ 					     &par->gpio.aux[i]);
+ 		if (ret)
+ 			return ret;
 
 
