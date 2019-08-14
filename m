@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B152C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 821C3C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724A421721
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568AF2133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802530;
-	bh=S8IPL5fdFrB1YEC+xEAXvBeryNQRoErBMjsR/WoHJrE=;
+	s=default; t=1565802533;
+	bh=XvknwjnuBMf1hFCWUy/MZO+WHgmN+0h1YxygMJT2GyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nD/uD84jUJwfkJXfaPgfOI/Fr+4mwdMjLdPIgL518nvSU/cL8o9nRwRWoNwR7ovD5
-	 eEie372jUZqhAswgilfsJgJBr//TS92hUUKoKc4opxJwy/AcKCJYRzD16GljnBdBX3
-	 hpqnPDqDtU+q06LAHWqAZSNm5ixFxmtszFjwqnDA=
+	b=f4ZOIGm1PHwq4dma4YQRqFowEQ0G1FozGHk4+MUrEIEOjPzNgQkpXJy2M8qhiTjLT
+	 VLT77Q4D0Te+qi/ApRH7Qa0fSv+IR1D1FvhMacMmaspkYSTQdfPaiK5TNtBIW+Z14A
+	 RpIlhDXuyr55YqbFeCfqDXozv6zaZJDX+yD1Ddqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730218AbfHNRIt (ORCPT
+        id S1729712AbfHNRIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:08:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58944 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:08:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730206AbfHNRIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:08:46 -0400
+        id S1729734AbfHNRIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:08:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B88CF2084D;
-        Wed, 14 Aug 2019 17:08:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E64B2084D;
+        Wed, 14 Aug 2019 17:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802526;
-        bh=S8IPL5fdFrB1YEC+xEAXvBeryNQRoErBMjsR/WoHJrE=;
+        s=default; t=1565802528;
+        bh=XvknwjnuBMf1hFCWUy/MZO+WHgmN+0h1YxygMJT2GyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LzWGvUGgcH4bArDDEaj0k1XAZDVqdnxrc6Hoju83GH2NbmthsybPBKLRDdVJG6c8e
-         bF2cFdNK9CZa8zub8WjraLQ+npeSSPR+LvuGEv3zXG5hJaKR39tGOPRVycfh/pNRqt
-         asxkN1YTWvu0TyTriM+kfpVtG6KRPsaOseTPYS9g=
+        b=KMUXfWqa2lLKvpXr40/qRp6NN2q+hO/VlJeB6uwFiRGXayc9fwiqDtPm74fh7efWZ
+         vt6U6pbWldqa/zOnNalMowlDfQYNA+ORMP0gVENHxqJghlJvMYJ82gN6Bm3Wd+LsCo
+         MC/53EGKU4vHMFS9YdAHFY91PDCpfhRqceuiPuxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nate Graham <pointedstick@zoho.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 16/91] Input: synaptics - enable RMI mode for HP Spectre X360
-Date:   Wed, 14 Aug 2019 19:00:39 +0200
-Message-Id: <20190814165750.441808408@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH 4.19 17/91] x86/mm: Check for pfn instead of page in vmalloc_sync_one()
+Date:   Wed, 14 Aug 2019 19:00:40 +0200
+Message-Id: <20190814165750.477975048@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -59,33 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit 25f8c834e2a6871920cc1ca113f02fb301d007c3 upstream.
+commit 51b75b5b563a2637f9d8dc5bd02a31b2ff9e5ea0 upstream.
 
-The 2016 kabylake HP Spectre X360 (model number 13-w013dx) works much better
-with psmouse.synaptics_intertouch=1 kernel parameter, so let's enable RMI4
-mode automatically.
+Do not require a struct page for the mapped memory location because it
+might not exist. This can happen when an ioremapped region is mapped with
+2MB pages.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204115
-Reported-by: Nate Graham <pointedstick@zoho.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/20190719184652.11391-2-joro@8bytes.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/mouse/synaptics.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/mm/fault.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -185,6 +185,7 @@ static const char * const smbus_pnp_ids[
- 	"LEN2055", /* E580 */
- 	"SYN3052", /* HP EliteBook 840 G4 */
- 	"SYN3221", /* HP 15-ay000 */
-+	"SYN323d", /* HP Spectre X360 13-w013dx */
- 	NULL
- };
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -267,7 +267,7 @@ static inline pmd_t *vmalloc_sync_one(pg
+ 	if (!pmd_present(*pmd))
+ 		set_pmd(pmd, *pmd_k);
+ 	else
+-		BUG_ON(pmd_page(*pmd) != pmd_page(*pmd_k));
++		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
  
+ 	return pmd_k;
+ }
 
 
