@@ -2,98 +2,182 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E56C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E80C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B362083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D102084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:37:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfHNKg6 (ORCPT
+        id S1727289AbfHNKhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:36:58 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34768 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbfHNKg6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:36:58 -0400
-Received: by mail-qt1-f196.google.com with SMTP id q4so12382402qtp.1;
-        Wed, 14 Aug 2019 03:36:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LDEbTyIJnFa3pozet2GSZKuiwciqafTCxiRFUe/ZD/o=;
-        b=o3LC7ZgyrdRpwtdhGYS48Xk8J9mRd67AmTV4clxQcKw1IZXX7gqLkNklHwSSffKbKt
-         2if1fNlGbM9VBmxFZ4yUEYKmGLR8jMAt4v18+6Vx7IHsaZGSYsLRf1NfccvSc17yaZw5
-         E0s8FE92j7tAXnTODvYDF2UUzIbmoW0Ut41EOEl9zGn+X+sbGUm/4eg9GyLC0My1riES
-         P7huRq+fYooy8R6rogFRgtdT5TsbYckzj+WDLgSN9h43i3eYa4QaNNitoREZpO78cSOu
-         DUf9kYDH7N6A7G5t+Qr7e/4grsvbuwTNbcx3dbmXtx0cj76UPKtyRqePKMFzSAyoJkkI
-         Q0Nw==
-X-Gm-Message-State: APjAAAXU6R7t0a0h74ke0KN8zgCeae3xOwMP87+rkEv1LjsrwssRzbPX
-        9aF6fOYEtz77qDUSmMSiOGK4bd9CEK121DhSez0=
-X-Google-Smtp-Source: APXvYqwV2TBabqJ9UAr2y8hQJw2m2az45KCTEx2a/C7amkL7cSDfPFgfYqeUqWRJZyqYCM2uSOekI8sS/0dFywJPLYg=
-X-Received: by 2002:ac8:239d:: with SMTP id q29mr8646894qtq.304.1565779017271;
- Wed, 14 Aug 2019 03:36:57 -0700 (PDT)
+        Wed, 14 Aug 2019 06:37:50 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58000 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726230AbfHNKht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:37:49 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 383BC3802EDB3BCF20C5;
+        Wed, 14 Aug 2019 18:37:47 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 14 Aug
+ 2019 18:37:40 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <yuchao0@huawei.com>, Pavel Machek <pavel@denx.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, <linux-fsdevel@vger.kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v2 3/3] staging: erofs: correct all misused ENOTSUPP
+Date:   Wed, 14 Aug 2019 18:37:05 +0800
+Message-ID: <20190814103705.60698-3-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190814103705.60698-1-gaoxiang25@huawei.com>
+References: <20190814103705.60698-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-References: <20190808212234.2213262-1-arnd@arndb.de> <20190808212234.2213262-15-arnd@arndb.de>
- <20190813103605.GL52127@atomide.com> <CAK8P3a0E+QUn9wcP5Obv-FitWyXCFwcp+oPConeO2p-NV1rqsw@mail.gmail.com>
- <20190813181158.GA26798@darkstar.musicnaut.iki.fi> <CAK8P3a0LjKrc+7c5Ht9OL7LfYyLnG9=y7u+w24ujA1xAid_yCQ@mail.gmail.com>
- <20190814074918.GA52127@atomide.com>
-In-Reply-To: <20190814074918.GA52127@atomide.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 14 Aug 2019 12:36:40 +0200
-Message-ID: <CAK8P3a3k_HOGqzMGjtc+7NSaK0Bsa_vxxRFLzY8aP6ev4wa9iA@mail.gmail.com>
-Subject: Re: [PATCH 14/22] ARM: omap1: use pci_ioremap_io() for omap_cf
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 9:49 AM Tony Lindgren <tony@atomide.com> wrote:
-> * Arnd Bergmann <arnd@arndb.de> [190813 19:34]:
-> > On Tue, Aug 13, 2019 at 8:12 PM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
-> > diff --git a/arch/arm/mach-omap1/hardware.h b/arch/arm/mach-omap1/hardware.h
-> > index 232b8deef907..9fc76a3c9e57 100644
-> > --- a/arch/arm/mach-omap1/hardware.h
-> > +++ b/arch/arm/mach-omap1/hardware.h
-> > @@ -61,7 +61,7 @@ static inline u32 omap_cs3_phys(void)
-> >
-> >  #endif /* ifndef __ASSEMBLER__ */
-> >
-> > -#define OMAP1_IO_OFFSET                0x01000000      /* Virtual IO
-> > = 0xfefb0000 */
-> > +#define OMAP1_IO_OFFSET                0x00fb0000      /* Virtual IO
-> > = 0xff000000 */
-> >  #define OMAP1_IO_ADDRESS(pa)   IOMEM((pa) - OMAP1_IO_OFFSET)
-> >
-> >  #include "serial.h"
->
-> Oh OK yeah sounds like that's the issue.
->
-> > There may be additional locations that hardcode the virtual address.
->
-> Those should be in mach-omap1/io.c, and I recall innovator had some
-> hardcoded fpga address that should also be checked.
+As Chao pointed out [1], ENOTSUPP is used for NFS
+protocol only, we should use EOPNOTSUPP instead...
 
-I see four boards with hardcoded I/O addresses, but they are all below
-the PCI I/O virtual address range, and are not affected by that change.
+[1] https://lore.kernel.org/lkml/108ee2f9-75dd-b8ab-8da7-b81c17bafbf6@huawei.com/
 
-For the innovator FPGA access, this was ok, it uses the correct address
-in the OMAP1_IO_OFFSET range.
+Reported-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+ drivers/staging/erofs/decompressor.c | 2 +-
+ drivers/staging/erofs/internal.h     | 6 +++---
+ drivers/staging/erofs/xattr.c        | 2 +-
+ drivers/staging/erofs/xattr.h        | 4 ++--
+ drivers/staging/erofs/zmap.c         | 8 ++++----
+ 5 files changed, 11 insertions(+), 11 deletions(-)
 
-        Arnd
+diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
+index 5361a2bbedb6..32a811ac704a 100644
+--- a/drivers/staging/erofs/decompressor.c
++++ b/drivers/staging/erofs/decompressor.c
+@@ -124,7 +124,7 @@ static int lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ 	int ret;
+ 
+ 	if (rq->inputsize > PAGE_SIZE)
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	src = kmap_atomic(*rq->in);
+ 	inputmargin = 0;
+diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
+index 12f737cbc0c0..0e8d58546c52 100644
+--- a/drivers/staging/erofs/internal.h
++++ b/drivers/staging/erofs/internal.h
+@@ -403,12 +403,12 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+ 			    struct erofs_map_blocks *map,
+ 			    int flags);
+ #else
+-static inline int z_erofs_fill_inode(struct inode *inode) { return -ENOTSUPP; }
++static inline int z_erofs_fill_inode(struct inode *inode) { return -EOPNOTSUPP; }
+ static inline int z_erofs_map_blocks_iter(struct inode *inode,
+ 					  struct erofs_map_blocks *map,
+ 					  int flags)
+ {
+-	return -ENOTSUPP;
++	return -EOPNOTSUPP;
+ }
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
+ 
+@@ -516,7 +516,7 @@ void *erofs_get_pcpubuf(unsigned int pagenr);
+ #else
+ static inline void *erofs_get_pcpubuf(unsigned int pagenr)
+ {
+-	return ERR_PTR(-ENOTSUPP);
++	return ERR_PTR(-EOPNOTSUPP);
+ }
+ 
+ #define erofs_put_pcpubuf(buf) do {} while (0)
+diff --git a/drivers/staging/erofs/xattr.c b/drivers/staging/erofs/xattr.c
+index c5bfc9be412f..e7e5840e3f9d 100644
+--- a/drivers/staging/erofs/xattr.c
++++ b/drivers/staging/erofs/xattr.c
+@@ -71,7 +71,7 @@ static int init_inode_xattrs(struct inode *inode)
+ 	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
+ 		errln("xattr_isize %d of nid %llu is not supported yet",
+ 		      vi->xattr_isize, vi->nid);
+-		ret = -ENOTSUPP;
++		ret = -EOPNOTSUPP;
+ 		goto out_unlock;
+ 	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
+ 		if (unlikely(vi->xattr_isize)) {
+diff --git a/drivers/staging/erofs/xattr.h b/drivers/staging/erofs/xattr.h
+index 63cc87e3d3f4..e20249647541 100644
+--- a/drivers/staging/erofs/xattr.h
++++ b/drivers/staging/erofs/xattr.h
+@@ -74,13 +74,13 @@ static inline int erofs_getxattr(struct inode *inode, int index,
+ 				 const char *name, void *buffer,
+ 				 size_t buffer_size)
+ {
+-	return -ENOTSUPP;
++	return -EOPNOTSUPP;
+ }
+ 
+ static inline ssize_t erofs_listxattr(struct dentry *dentry,
+ 				      char *buffer, size_t buffer_size)
+ {
+-	return -ENOTSUPP;
++	return -EOPNOTSUPP;
+ }
+ #endif	/* !CONFIG_EROFS_FS_XATTR */
+ 
+diff --git a/drivers/staging/erofs/zmap.c b/drivers/staging/erofs/zmap.c
+index 5551e615e8ea..b61b9b5950ac 100644
+--- a/drivers/staging/erofs/zmap.c
++++ b/drivers/staging/erofs/zmap.c
+@@ -68,7 +68,7 @@ static int fill_inode_lazy(struct inode *inode)
+ 	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX) {
+ 		errln("unknown compression format %u for nid %llu, please upgrade kernel",
+ 		      vi->z_algorithmtype[0], vi->nid);
+-		err = -ENOTSUPP;
++		err = -EOPNOTSUPP;
+ 		goto unmap_done;
+ 	}
+ 
+@@ -79,7 +79,7 @@ static int fill_inode_lazy(struct inode *inode)
+ 	if (vi->z_physical_clusterbits[0] != LOG_BLOCK_SIZE) {
+ 		errln("unsupported physical clusterbits %u for nid %llu, please upgrade kernel",
+ 		      vi->z_physical_clusterbits[0], vi->nid);
+-		err = -ENOTSUPP;
++		err = -EOPNOTSUPP;
+ 		goto unmap_done;
+ 	}
+ 
+@@ -211,7 +211,7 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
+ 	else if (1 << amortizedshift == 2 && lclusterbits == 12)
+ 		vcnt = 16;
+ 	else
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	encodebits = ((vcnt << amortizedshift) - sizeof(__le32)) * 8 / vcnt;
+ 	base = round_down(eofs, vcnt << amortizedshift);
+@@ -275,7 +275,7 @@ static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
+ 	int err;
+ 
+ 	if (lclusterbits != 12)
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	if (lcn >= totalidx)
+ 		return -EINVAL;
+-- 
+2.17.1
+
