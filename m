@@ -2,171 +2,75 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E749C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FEAC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F77214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:00:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cECcwQ7p"
+	by mail.kernel.org (Postfix) with ESMTP id 4172F214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbfHNSAw (ORCPT
+        id S1729041AbfHNSA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 14:00:52 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35036 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728841AbfHNSAv (ORCPT
+        Wed, 14 Aug 2019 14:00:57 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:52928 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726166AbfHNSA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 14:00:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id d85so3532609pfd.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 11:00:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fJ9cwj5PrHv4tRSMH6SQvLLbwv7CS8HXTftOWfJo5YU=;
-        b=cECcwQ7pw8ag3svApom/3ETlM1wknpk5ILygrzGn1QU4bu/wsXI6CsZTBQ73V5pcq0
-         hXnqCylY/c5iFgimVmuUzZM+oxtdeRMf5TF/wOdu6A1kvOEYnyeE+01vSTVm4zSMihXs
-         dOnbA/MsU6qsOfN4jSNA1g041BjYGzwr45XH8ZYGhbgHoTpoLoIJvDu+eH4CKDQtRDif
-         Xy8xa4yYdsnUQfh1/WWJPu2ImOFr0aFF33yxzD6S2TiL4inlGcSGfNuGxOlQnPdPU1vg
-         jV3EmAmQCrmzlIet4ld2gJMgLo6m3DvCFpRneuCBvOV1wloKmsjcsrwY0n3xmKMvqWuF
-         8KFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fJ9cwj5PrHv4tRSMH6SQvLLbwv7CS8HXTftOWfJo5YU=;
-        b=UJTKzPhBJq4VAY6k+l6D16t23HNFsmlwmYc2iC16hpEz5nz3TrVTyM0SkZeU8g/zIO
-         KIl+9r1cSWSVn33pS5ebU6nZcjf3gUIKViz9CJMAhIP2c5n+5UijkfFM6ORR+QFcNYQb
-         4fZQdHV1ZC+D2Pcz+I2aUNR94JxjCXqNH3nsT17X+aTc4XBAv7OloqWVYX+R9fOgEamz
-         +6xRIKERMPKYrkWYOPZKcErXkHFLHPEpJfjX3jipxYs8Udp/LV32Vy4O97osoIleylIb
-         TAgyYTtR2SC57N0UWE6983x/vGIUrD8uglKRlXubYVvF5lec5K9v5lBqZGedBwW0fwht
-         UFfQ==
-X-Gm-Message-State: APjAAAWRaP+myfNWOKWFvn7OV6UYN3yjaHg/FZ3rxmYf1I6XWt5rEiOT
-        FcEZWIsAkZGg1GTy5E9tmFMzKOHE3Ro=
-X-Google-Smtp-Source: APXvYqzrakKid7QIIFOdnyxXZVtpIxlsGPaEU5w1zmjCc5Hh5N86JWWqrhekwsDpNQnJ1x5HdupD0w==
-X-Received: by 2002:a17:90a:858c:: with SMTP id m12mr870111pjn.129.1565805650121;
-        Wed, 14 Aug 2019 11:00:50 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a6sm694379pjv.30.2019.08.14.11.00.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 11:00:49 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 11:00:47 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        Wed, 14 Aug 2019 14:00:57 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R281e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=liangyan.peng@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TZUYsGz_1565805622;
+Received: from localhost(mailfrom:liangyan.peng@linux.alibaba.com fp:SMTPD_---0TZUYsGz_1565805622)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 15 Aug 2019 02:00:54 +0800
+From:   Liangyan <liangyan.peng@linux.alibaba.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/22] arm64: dts: qcom: pm8150b: Add pon and adc nodes
-Message-ID: <20190814180047.GH6167@minitux>
-References: <20190814125012.8700-1-vkoul@kernel.org>
- <20190814125012.8700-11-vkoul@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814125012.8700-11-vkoul@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Cc:     shanpeic@linux.alibaba.com, xlpang@linux.alibaba.com
+Subject: [PATCH] sched/fair: don't assign runtime for throttled cfs_rq
+Date:   Thu, 15 Aug 2019 02:00:21 +0800
+Message-Id: <20190814180021.165389-1-liangyan.peng@linux.alibaba.com>
+X-Mailer: git-send-email 2.14.4.44.g2045bb6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 14 Aug 05:50 PDT 2019, Vinod Koul wrote:
+do_sched_cfs_period_timer() will refill cfs_b runtime and call
+distribute_cfs_runtime() to unthrottle cfs_rq, sometimes cfs_b->runtime
+will allocate all quota to one cfs_rq incorrectly.
+This will cause other cfs_rq can't get runtime and will be throttled.
+We find that one throttled cfs_rq has non-negative
+cfs_rq->runtime_remaining and cause an unexpetced cast from s64 to u64
+in snippet: distribute_cfs_runtime() {
+runtime = -cfs_rq->runtime_remaining + 1; }.
+This cast will cause that runtime will be a large number and
+cfs_b->runtime will be subtracted to be zero at last.
 
-> Add the pon and adc nodes found in pm8150b PMIC.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  arch/arm64/boot/dts/qcom/pm8150b.dtsi | 54 +++++++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> index c0a678b0f159..846197bd65cd 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> @@ -2,6 +2,7 @@
->  // Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
->  // Copyright (c) 2019, Linaro Limited
->  
-> +#include <dt-bindings/iio/qcom,spmi-vadc.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/spmi/spmi.h>
->  
-> @@ -11,6 +12,59 @@
->  		reg = <0x2 SPMI_USID>;
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +
-> +		pon@800 {
-> +			compatible = "qcom,pm8916-pon";
-> +			reg = <0x0800>;
-> +		};
-> +
-> +		adc@3100 {
-> +			compatible = "qcom,spmi-adc5";
-> +			reg = <0x3100>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			#io-channel-cells = <1>;
-> +			interrupts = <0x2 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
-> +
-> +			ref-gnd@0 {
-> +				reg = <ADC5_REF_GND>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "ref_gnd";
-> +			};
-> +
-> +			vref-1p25@1 {
-> +				reg = <ADC5_1P25VREF>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "vref_1p25";
-> +			};
-> +
-> +			die-temp@6 {
-> +				reg = <ADC5_DIE_TEMP>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "die_temp";
-> +			};
-> +
-> +			chg-temp@9 {
-> +				reg = <ADC5_CHG_TEMP>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "chg_temp";
-> +			};
-> +
+This commit prevents cfs_rq to be assgined new runtime if it has been
+throttled to avoid the above incorrect type cast.
 
-I believe the above items are internal, so it makes sense to keep them
-here, the below amux ones relates to board configuration so I think
-those should go in the board file.
+Signed-off-by: Liangyan <liangyan.peng@linux.alibaba.com>
+---
+ kernel/sched/fair.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Regards,
-Bjorn
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 81fd8a2a605b..b14d67d28138 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4068,6 +4068,8 @@ static void __account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
+ 	if (likely(cfs_rq->runtime_remaining > 0))
+ 		return;
+ 
++	if (cfs_rq->throttled)
++		return;
+ 	/*
+ 	 * if we're unable to extend our runtime we resched so that the active
+ 	 * hierarchy can be throttled
+-- 
+2.14.4.44.g2045bb6
 
-> +			smb1390-therm@14 {
-> +				reg = <ADC5_AMUX_THM2>;
-> +				qcom,hw-settle-time = <200>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "smb1390_therm";
-> +			};
-> +
-> +			smb1355-therm@78 {
-> +				reg = <ADC5_AMUX_THM2_100K_PU>;
-> +				qcom,ratiometric;
-> +				qcom,hw-settle-time = <200>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "smb1355_therm";
-> +			};
-> +		};
->  	};
->  
->  	qcom,pm8150@3 {
-> -- 
-> 2.20.1
-> 
