@@ -2,124 +2,104 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8D5C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E01C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 024E2214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:44:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oe2SbrDs"
+	by mail.kernel.org (Postfix) with ESMTP id 95E89214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:46:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbfHNRoo (ORCPT
+        id S1728516AbfHNRqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:44:44 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38174 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbfHNRon (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:44:43 -0400
-Received: by mail-pg1-f193.google.com with SMTP id e11so2878863pga.5
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 10:44:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8TCzd3zFiDX85xywn7ChohopRVZ50w25juT6dtizlkE=;
-        b=oe2SbrDsxV5qofbDmFkBqA/UP9LedTWCuoTlB0Dudr7XbzPEYuUN6J4RPjYPhUydZK
-         rXBGXeY5571WEWKzj9B1jVJ1S1lWxSwZUuUWFA2XtkHd0d+zQxMnATh3qY331FncYDrq
-         +1dAf/OvSZAbb/D1dqBPTQB4T+/q12M1m+juWLZ63EEgRUQ3ZhrIWM+3haIFRknl2R9W
-         am3nxtCWziF1Anpf4Sq4xKlgKXOiyl2aYOtwtPpJcRlPKjmsP2EsyzTVQtWoDkvEaSh+
-         XANVlK78HhARtfEdjzjSHCrufUqXl1/IOcJD/qBd6rf5XlxkWBWR2KxBMfgVl+KHRHKK
-         EU+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8TCzd3zFiDX85xywn7ChohopRVZ50w25juT6dtizlkE=;
-        b=e7ypCZzjNpPnaSPBiZQifyVsVwOTCKZX+MMjksSSr4VX8vtqXfkOJmKPYVrpdLooM9
-         YkXomjEZO7zqs00KoinGY0Ql3qkxEyALIV1z+HrDQSjCLHa1w1AwNFJj2Ohtd9cXPeai
-         Gnbtx3F1SlDjOeZ8R64z4oK1TLRiU4m0TQPDiEG0gDrubUVHXwnlTOpd6GjdCDjA5diL
-         qTx6zw+ji8l7HfFEce+BgjnAgK+ahbdSJIoCDWlAnZoRBjztA3/nbGGxYrHGj6nJrHg2
-         ClQyAVUTc5cv2eIuxuk6TFlaWU9F+56dHh6bGmfTPOxUTouweOlDqha0OXqXuElXEHSY
-         uFlw==
-X-Gm-Message-State: APjAAAVPQO/thpsrbO7+UObb7V96t3blOEvKpHWfET8+W8OKhGCcqf4i
-        bceky4CDfXMCWoknVFOm4jWBJw==
-X-Google-Smtp-Source: APXvYqz7MavHYdq/g7PveGK4Yap8TGnFicPUAMqpQBASUNRsOeDUdM0OR1O6eb/HCjCED+9QnKCHhg==
-X-Received: by 2002:a62:58c4:: with SMTP id m187mr1104043pfb.147.1565804682598;
-        Wed, 14 Aug 2019 10:44:42 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e13sm438363pff.181.2019.08.14.10.44.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 10:44:41 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 10:44:39 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        linux-arm-msm@vger.kernel.org, sibis@codeaurora.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/22] arm64: dts: qcom: sm8150: add base dts file
-Message-ID: <20190814174439.GE6167@minitux>
-References: <20190814125012.8700-1-vkoul@kernel.org>
- <20190814125012.8700-2-vkoul@kernel.org>
- <20190814165855.098FD2063F@mail.kernel.org>
+        Wed, 14 Aug 2019 13:46:31 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:38028 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725828AbfHNRqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:46:31 -0400
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hxxLt-00009q-1D; Wed, 14 Aug 2019 11:46:25 -0600
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <green.hu@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Waterman <andrew@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Bates <sbates@raithlin.com>, linux-mm@vger.kernel.org,
+        Olof Johansson <olof@lixom.net>, greentime.hu@sifive.com,
+        linux-riscv@lists.infradead.org,
+        Michael Clark <michaeljclark@mac.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190109203911.7887-1-logang@deltatee.com>
+ <c4298fdd-6fd6-fa7f-73f7-5ff016788e49@deltatee.com>
+ <CAEbi=3cn4+7zk2DU1iRa45CDwTsJYfkAV8jXHf-S7Jz63eYy-A@mail.gmail.com>
+ <CAEbi=3eZcgWevpX9VO9ohgxVDFVprk_t52Xbs3-TdtZ+js3NVA@mail.gmail.com>
+ <0926a261-520e-4c40-f926-ddd40bb8ce44@deltatee.com>
+ <CAEbi=3ebNM-t_vA4OA7KCvQUF08o6VmL1j=kMojVnYsYsN_fBw@mail.gmail.com>
+ <e2603558-7b2c-2e5f-e28c-f01782dc4e66@deltatee.com>
+ <CAEbi=3d7_xefYaVXEnMJW49Bzdbbmc2+UOwXWrCiBo7YkTAihg@mail.gmail.com>
+ <96156909-1453-d487-ff66-a041d67c74d6@deltatee.com>
+ <CAEbi=3dC86dhGdwdarS_x+6-5=WPydUBKjo613qRZxKLDAqU_g@mail.gmail.com>
+ <5506c875-9387-acc9-a7fe-5b7c10036c40@deltatee.com>
+ <alpine.DEB.2.21.9999.1908130921170.30024@viisi.sifive.com>
+ <e1f78a33-18bb-bd6e-eede-e5e86758a4d0@deltatee.com>
+ <CAEbi=3f+JDywuHYspfYKuC8z2wm8inRenBz+3DYbKK3ixFjU_g@mail.gmail.com>
+ <0d81412d-73fc-fa56-6f84-dedda72b9cc6@deltatee.com>
+ <alpine.DEB.2.21.9999.1908141035020.18249@viisi.sifive.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <26594413-227b-2cc8-0f61-232a6a3907d0@deltatee.com>
+Date:   Wed, 14 Aug 2019 11:46:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814165855.098FD2063F@mail.kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <alpine.DEB.2.21.9999.1908141035020.18249@viisi.sifive.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: hch@lst.de, michaeljclark@mac.com, linux-riscv@lists.infradead.org, greentime.hu@sifive.com, olof@lixom.net, linux-mm@vger.kernel.org, sbates@raithlin.com, linux-kernel@vger.kernel.org, palmer@sifive.com, andrew@sifive.com, aou@eecs.berkeley.edu, robh@kernel.org, green.hu@gmail.com, paul.walmsley@sifive.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v4 2/2] RISC-V: Implement sparsemem
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 14 Aug 09:58 PDT 2019, Stephen Boyd wrote:
 
-> Quoting Vinod Koul (2019-08-14 05:49:51)
-> > diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-[..]
-> > +       clocks {
-> > +               xo_board: xo-board {
-> > +                       compatible = "fixed-clock";
-> > +                       #clock-cells = <0>;
-> > +                       clock-frequency = <19200000>;
+
+On 2019-08-14 11:40 a.m., Paul Walmsley wrote:
+> On Wed, 14 Aug 2019, Logan Gunthorpe wrote:
 > 
-> Is it 19.2 or 38.4 MHz? It seems like lately there are dividers, but I
-> guess it doesn't really matter in the end.
+>> On 2019-08-14 7:35 a.m., Greentime Hu wrote:
+>>
+>>> Maybe this commit explains why it used HAVE_ARCH_PFN_VALID instead of SPARSEMEM.
+>>> https://github.com/torvalds/linux/commit/7b7bf499f79de3f6c85a340c8453a78789523f85
+>>>
+>>> BTW, I found another issue here.
+>>> #define FIXADDR_TOP            (VMALLOC_START)
+>>> #define FIXADDR_START           (FIXADDR_TOP - FIXADDR_SIZE)
+>>> #define VMEMMAP_END    (VMALLOC_START - 1)
+>>> #define VMEMMAP_START  (VMALLOC_START - VMEMMAP_SIZE)
+>>> These 2 regions are overlapped.
+>>>
+>>> How about this fix? Not sure if it is good for everyone.
+>>
+>> Yes, this looks good to me. I can fold these changes into my patch and
+>> send a v5 to the list.
 > 
+> The change to FIXADDR_TOP should be separated out into its own patch - it 
+> probably needs to go up as a fix.
 
-As with previous platforms, the board's XO feeds the PMIC at 38.4MHz and
-the SoC's CXO_IN pin (i.e. bi_tcxo) is fed from the PMIC's LNBBCLK1,
-which is ticking at 19.2MHz.
+I don't think so... VMEMMAP_START doesn't exist until the sparsemem
+patch so it can't be changed until after the sparsemem patch and no
+sense adding a bug in the sparsemem patch...
 
-[..]
-> > +               gcc: clock-controller@100000 {
-> > +                       compatible = "qcom,gcc-sm8150";
-> > +                       reg = <0x00100000 0x1f0000>;
-> > +                       #clock-cells = <1>;
-> > +                       #reset-cells = <1>;
-> > +                       #power-domain-cells = <1>;
-> > +                       clock-names = "bi_tcxo", "sleep_clk";
-> > +                       clocks = <&xo_board>, <&sleep_clk>;
+Logan
 
-So this first one should actually be <&rpmhcc LNBBCLK1>.
-
-But while we now should handle this gracefully in the clock driver I
-think we still have problems with the cascading probe deferral that
-follows - last time I tried to do this the serial driver probe deferred
-past user space initialization and the system crashed as we didn't have
-a /dev/console.
-
-
-So, I think we should s/xo_board/lnbbclk1/ (at 19.2MHz) to make it
-represent the schematics and then once we have rpmhcc and validated that
-the system handles this gracefully we can switch it out.
-
-Regards,
-Bjorn
