@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A4CC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FA5C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B802420874
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1988B2085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749051;
-	bh=32vHX0qAiiheZGw7h2T/l4MSrwCLSSm/5k06H7IwmiQ=;
+	s=default; t=1565749065;
+	bh=yZiJ8rf/cHJGFNppWirptWcXt6eDQ6i695avXVJEEl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0lbJTDZgw9+cr7Pl89jjVNMEL+7jYmNcNBn1UIWhEbhAfYFpZ4vaid4fmqr2mqcRB
-	 sCyDL5T/BUSRpAn7hWpbMVqqQ6yle0lEbReXDP09cx6jBvw9hBPjJClNO1Cf2ELLI2
-	 hCfiYuG0yhYnQgZN/eemdrzcdwOSU+WikBkphbX8=
+	b=YRsCFJet/KYFjjGvRDGMWH/SQAgyg9TSoDcIEVWq4S8H1NBCq5i3E9VgvgOa0bbRf
+	 0OX00PKntyk0G/yRH52KCg1snFV397vVWfRql0NiE1UAg9awQkJHXJY0c4TL5BUFFD
+	 6F2a1DPjHdtTvaSbfsEViE6JafU98KoL7b1lGNt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfHNCRa (ORCPT
+        id S1729490AbfHNCRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:17:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48564 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:17:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728812AbfHNCRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:17:13 -0400
+        id S1729313AbfHNCR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:17:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BBF920874;
-        Wed, 14 Aug 2019 02:17:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DDF72085A;
+        Wed, 14 Aug 2019 02:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749032;
-        bh=32vHX0qAiiheZGw7h2T/l4MSrwCLSSm/5k06H7IwmiQ=;
+        s=default; t=1565749048;
+        bh=yZiJ8rf/cHJGFNppWirptWcXt6eDQ6i695avXVJEEl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ugEL5VZ+0GZJQIRl3Dzh03dbH7MjPd62cAyU4c0ZITHbrMXNYYgPZ1x7BKn+8DKmc
-         8jlZl7ssRE0BiASRk0y/CQxEvd5f1vSgx4biftz74l/El1GiQPlf5V9IhYEBl/gClN
-         hkHGvw44JFUCa2RTlfy5yryZcptMhUv0NMPwavDA=
+        b=hLSoiaPUxnfZpSPvqtpd4ZjdpTrilnIXj3ZLzeuYDjpvp/W5DdZs30RSo/gNP5SnU
+         Szuzp/Q3+Dwaf3WeFCqR1exQT5DGhl6PwzXywqx9ZoNrP1TXBjSBbNbRnXo1UcyH7n
+         LGTRtGdn9amyhADMnyGYGWevvtao81af3YJmLmoY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 49/68] HID: hiddev: do cleanup in failure of opening a device
-Date:   Tue, 13 Aug 2019 22:15:27 -0400
-Message-Id: <20190814021548.16001-49-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Deepak Rawat <drawat@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 61/68] drm/vmwgfx: fix memory leak when too many retries have occurred
+Date:   Tue, 13 Aug 2019 22:15:39 -0400
+Message-Id: <20190814021548.16001-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -61,36 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hillf Danton <hdanton@sina.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 6d4472d7bec39917b54e4e80245784ea5d60ce49 ]
+[ Upstream commit 6b7c3b86f0b63134b2ab56508921a0853ffa687a ]
 
-Undo what we did for opening before releasing the memory slice.
+Currently when too many retries have occurred there is a memory
+leak on the allocation for reply on the error return path. Fix
+this by kfree'ing reply before returning.
 
-Reported-by: syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Addresses-Coverity: ("Resource leak")
+Fixes: a9cd9c044aa9 ("drm/vmwgfx: Add a check to handle host message failure")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Deepak Rawat <drawat@vmware.com>
+Signed-off-by: Deepak Rawat <drawat@vmware.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/usbhid/hiddev.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/vmwgfx/vmwgfx_msg.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
-index 56da33bc3862e..5a949ca42b1d0 100644
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -321,6 +321,10 @@ static int hiddev_open(struct inode *inode, struct file *file)
- 	hid_hw_power(hid, PM_HINT_NORMAL);
- bail_unlock:
- 	mutex_unlock(&hiddev->existancelock);
-+
-+	spin_lock_irq(&list->hiddev->list_lock);
-+	list_del(&list->node);
-+	spin_unlock_irq(&list->hiddev->list_lock);
- bail:
- 	file->private_data = NULL;
- 	vfree(list);
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
+index e4e09d47c5c0e..59e9d05ab928b 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
+@@ -389,8 +389,10 @@ static int vmw_recv_msg(struct rpc_channel *channel, void **msg,
+ 		break;
+ 	}
+ 
+-	if (retries == RETRIES)
++	if (retries == RETRIES) {
++		kfree(reply);
+ 		return -EINVAL;
++	}
+ 
+ 	*msg_len = reply_len;
+ 	*msg     = reply;
 -- 
 2.20.1
 
