@@ -2,165 +2,271 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E373C32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5457CC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54CD020843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB334204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:25:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ul21S1li"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xgt3PUpG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfHNJYL (ORCPT
+        id S1727291AbfHNJZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:24:11 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35515 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfHNJYK (ORCPT
+        Wed, 14 Aug 2019 05:25:24 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:50332 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfHNJZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:24:10 -0400
-Received: by mail-lf1-f65.google.com with SMTP id p197so78783768lfa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 02:24:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aubLn8waLrcyH8GiaZ4/P2Bxuaos2txwyKIGB9Gh2j4=;
-        b=Ul21S1lis1op8IKkes8RTEHlbkQVCappEErZbRKZ/80yD1dIJHnrjhrJnVl4ZjcgQH
-         rErzc0XkGd3wrTdwfUdIqtGvVaKXlsAL1m25p/glBIDFtz01bh1s/XQsqo/IyGGEj5kP
-         RSxwcnLmToLQfB2ZKWBlOqKh0IPrXdJi5KrOiDyC+8W95WCPep6e3aHN44Zbuq2CcccP
-         f9Wd/C4An7+1P9XofbNvxTIhq317PFTTEav1onpxaVYmC8HJj+Zi6gHx+48H17X2Jhso
-         JeveMcqq/+MMTR/VleApLzuBEw8Z2wlSbWOQLjtVwogWboOdh3cwse5vyml1MlxjXGi4
-         ZDkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=aubLn8waLrcyH8GiaZ4/P2Bxuaos2txwyKIGB9Gh2j4=;
-        b=coAi8geGX9oYAwooMK03il9hyNgPCUnJPz/x2aYNuhNh2bCyryueRAKFcEd5BnDv+Q
-         kkB7UzA3ZhvyffFIivzWxS7Tn/CrvOtXoUhvO+dL0dbUlf4qf4IANbG5H5X4H4RiUX8t
-         8shgfaHUrKrf39plJMKzkmeSbNjOjdRjm5zInu2lx1TIg4OCHCQxAangJPWRtOPYnkMV
-         tlZ4oVa21bSfrwFyuuzMwLfRBb1cxeCczYarEDFtMLsTtblvWTEOUHeQLWhdh1kXvbSs
-         8oYIeXXCXdlyIyBwZ+yx0ssx+MMUFyhvJOc1WWVUFoAHvJcJVkePvXsoQhAXniWQIrVq
-         WQJQ==
-X-Gm-Message-State: APjAAAXZ1JnFjiobuL8kj6i+7y8c6vnnUVTw+Sf9wfdYBxhG7dw/DLtW
-        so0oez8X4uR/1z+tKezImV47V2JECh8=
-X-Google-Smtp-Source: APXvYqw/IbZ9AUCs5SDIK+7WNXN+iu4AlM9c2hMq7+ZqfLDbxuqRkzN7aTSaafwrcI4AOd/xgKDPQg==
-X-Received: by 2002:a19:6d02:: with SMTP id i2mr24317533lfc.191.1565774648121;
-        Wed, 14 Aug 2019 02:24:08 -0700 (PDT)
-Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id r23sm228169ljm.59.2019.08.14.02.24.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 02:24:07 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 12:24:05 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Magnus Karlsson <magnus.karlsson@intel.com>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        xdp-newbies@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next 1/3] libbpf: add asm/unistd.h to xsk to get
- __NR_mmap2
-Message-ID: <20190814092403.GA4142@khorivan>
-Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        xdp-newbies@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
- <20190813102318.5521-2-ivan.khoronzhuk@linaro.org>
- <CAEf4BzZ2y_DmTXkVqFh6Hdcquo6UvntvCygw5h5WwrWYXRRg_g@mail.gmail.com>
+        Wed, 14 Aug 2019 05:25:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5GLM7RMxsKlu95OsL0kg2mBOR6Zhm7I2lVDy7A35wJ0=; b=xgt3PUpGxruDLmQsNo3O6HHL4
+        v2NBK4HN3SAU7VUtgcRkutSUmeMqouex8yVULUUl1epWMxyqJzMMawALWW7qhMqQNoeUzpWfqkuJd
+        Jcm37JenhMjf1DBhc5Ve0reGZsbQz3rsLZ5uSCLiRQb24Spr/QVz5fWnT3HXhWPGA/LF4S/cGI9b1
+        fyfJKikmluUbw55wsLeu3Cv+mUDqtb25BWBYHjURxgaNSRbW8VGoUkGlghZEb9M6VJ6eXb/nEsX3d
+        yKXYQeSJOhRU6vCXxmQDk7Z96NddegtX4ythKgGg5JzknfZk1NHs3j7D7J/7wG+ZuL9WfU51K4O+5
+        qYaCWDjhA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:44794)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hxpWt-0005aw-Mu; Wed, 14 Aug 2019 10:25:15 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hxpWl-0008LR-3s; Wed, 14 Aug 2019 10:25:07 +0100
+Date:   Wed, 14 Aug 2019 10:25:07 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Steve Longerbeam <slongerbeam@gmail.com>
+Cc:     linux-media@vger.kernel.org,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [BUG] removing and reinserting imx-media causes kernel to explode
+Message-ID: <20190814092506.GH13294@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEf4BzZ2y_DmTXkVqFh6Hdcquo6UvntvCygw5h5WwrWYXRRg_g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 04:38:13PM -0700, Andrii Nakryiko wrote:
+I just did this:
 
-Hi, Andrii
+rmmod imx-media
+modprobe imx-media
 
->On Tue, Aug 13, 2019 at 3:24 AM Ivan Khoronzhuk
-><ivan.khoronzhuk@linaro.org> wrote:
->>
->> That's needed to get __NR_mmap2 when mmap2 syscall is used.
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> ---
->>  tools/lib/bpf/xsk.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
->> index 5007b5d4fd2c..f2fc40f9804c 100644
->> --- a/tools/lib/bpf/xsk.c
->> +++ b/tools/lib/bpf/xsk.c
->> @@ -12,6 +12,7 @@
->>  #include <stdlib.h>
->>  #include <string.h>
->>  #include <unistd.h>
->> +#include <asm/unistd.h>
->
->asm/unistd.h is not present in Github libbpf projection. Is there any
+and was greeted by the below kernel messages.  I don't think this has
+been the first issue I found with the iMX media stuff involving a module
+unload/reload cycle - may I suggest that this is added to the testing
+regime for this code?  Thanks.
 
-Look on includes from
-tools/lib/bpf/libpf.c
-tools/lib/bpf/bpf.c
-
-That's how it's done... Copping headers to arch/arm will not
-solve this, it includes both of them anyway, and anyway it needs
-asm/unistd.h inclusion here, only because xsk.c needs __NR_*
-
-
->way to avoid including this header? Generally, libbpf can't easily use
->all of kernel headers, we need to re-implemented all the extra used
->stuff for Github version of libbpf, so we try to minimize usage of new
->headers that are not just plain uapi headers from include/uapi.
-
-Yes I know, it's far away from real number of changes needed.
-I faced enough about this already and kernel headers, especially
-for arm32 it's a bit decency problem. But this patch it's part of
-normal one. I have couple issues despite this normally fixed mmap2
-that is the same even if uapi includes are coppied to tools/arch/arm.
-
-In continuation of kernel headers inclusion and arm build:
-
-For instance, what about this rough "kernel headers" hack:
-https://github.com/ikhorn/af_xdp_stuff/commit/aa645ccca4d844f404ec3c2b27402d4d7848d1b5
-
-or this one related for arm32 only:
-https://github.com/ikhorn/af_xdp_stuff/commit/2c6c6d538605aac39600dcb3c9b66de11c70b963
-
-I have more...
-
->
->>  #include <arpa/inet.h>
->>  #include <asm/barrier.h>
->>  #include <linux/compiler.h>
->> --
->> 2.17.1
->>
+imx-media: Removing imx-media
+ipu1_vdic: Removing
+ipu1_ic_prp: Removing
+ipu1_ic_prpenc: Removing
+ipu1_ic_prpvf: Removing
+ipu2_vdic: Removing
+ipu2_ic_prp: Removing
+ipu2_ic_prpenc: Removing
+ipu2_ic_prpvf: Removing
+imx_media: module is from the staging directory, the quality is unknown, you have been warned.
+ipu2_ic_prpvf: Registered ipu2_ic_prpvf capture as /dev/video2
+imx-media: subdev ipu2_ic_prpvf bound
+ipu2_ic_prpenc: Registered ipu2_ic_prpenc capture as /dev/video3
+imx-media: subdev ipu2_ic_prpenc bound
+imx-media: subdev ipu2_ic_prp bound
+imx-media: subdev ipu2_vdic bound
+ipu1_ic_prpvf: Registered ipu1_ic_prpvf capture as /dev/video4
+imx-media: subdev ipu1_ic_prpvf bound
+ipu1_ic_prpenc: Registered ipu1_ic_prpenc capture as /dev/video5
+imx-media: subdev ipu1_ic_prpenc bound
+imx-media: subdev ipu1_ic_prp bound
+imx-media: subdev ipu1_vdic bound
+kobject (ddca68f0): tried to init an initialized object, something is seriously wrong.
+CPU: 1 PID: 31521 Comm: modprobe Tainted: G         C        5.2.0+ #325
+Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+[<c0019560>] (unwind_backtrace) from [<c0014734>] (show_stack+0x10/0x14)
+[<c0014734>] (show_stack) from [<c084573c>] (dump_stack+0x9c/0xd4)
+[<c084573c>] (dump_stack) from [<c084a878>] (kobject_init+0x74/0x94)
+[<c084a878>] (kobject_init) from [<c04b2a70>] (device_initialize+0x1c/0xec)
+[<c04b2a70>] (device_initialize) from [<c04b4ad0>] (device_register+0xc/0x18)
+[<c04b4ad0>] (device_register) from [<c0599484>] (__video_register_device+0x9b4/0x1228)
+[<c0599484>] (__video_register_device) from [<bf129fac>] (imx_media_capture_device_register+0x44/0x1f4 [imx_media_capture])
+[<bf129fac>] (imx_media_capture_device_register [imx_media_capture]) from [<bf130bf8>] (csi_registered+0x154/0x19c [imx_media_csi])
+[<bf130bf8>] (csi_registered [imx_media_csi]) from [<c05a062c>] (v4l2_device_register_subdev+0xd0/0x164)
+[<c05a062c>] (v4l2_device_register_subdev) from [<c05abed0>] (v4l2_async_match_notify+0x1c/0x130)
+[<c05abed0>] (v4l2_async_match_notify) from [<c05ac02c>] (v4l2_async_notifier_try_all_subdevs+0x48/0x94)
+[<c05ac02c>] (v4l2_async_notifier_try_all_subdevs) from [<c05ac6f4>] (__v4l2_async_notifier_register+0xa8/0x110)
+[<c05ac6f4>] (__v4l2_async_notifier_register) from [<c05ac7ec>] (v4l2_async_notifier_register+0x3c/0x54)
+[<c05ac7ec>] (v4l2_async_notifier_register) from [<bf01ef64>] (imx_media_dev_notifier_register+0x2c/0x70 [imx_media])
+[<bf01ef64>] (imx_media_dev_notifier_register [imx_media]) from [<bf01e090>] (imx_media_probe+0x3c/0x8c [imx_media])
+[<bf01e090>] (imx_media_probe [imx_media]) from [<c04b9178>] (platform_drv_probe+0x48/0x98)
+[<c04b9178>] (platform_drv_probe) from [<c04b7298>] (really_probe+0x1d8/0x2c0)
+[<c04b7298>] (really_probe) from [<c04b7554>] (driver_probe_device+0x5c/0x174)
+[<c04b7554>] (driver_probe_device) from [<c04b7814>] (device_driver_attach+0x58/0x60)
+[<c04b7814>] (device_driver_attach) from [<c04b78a0>] (__driver_attach+0x84/0xc0)
+[<c04b78a0>] (__driver_attach) from [<c04b5968>] (bus_for_each_dev+0x58/0x7c)
+[<c04b5968>] (bus_for_each_dev) from [<c04b6768>] (bus_add_driver+0xd0/0x1cc)
+[<c04b6768>] (bus_add_driver) from [<c04b848c>] (driver_register+0x7c/0x110)
+[<c04b848c>] (driver_register) from [<c000b05c>] (do_one_initcall+0x74/0x308)
+[<c000b05c>] (do_one_initcall) from [<c00d9b78>] (do_init_module+0x5c/0x1f4)
+[<c00d9b78>] (do_init_module) from [<c00d8be4>] (load_module+0x19a4/0x2020)
+[<c00d8be4>] (load_module) from [<c00d9438>] (sys_finit_module+0x8c/0x98)
+[<c00d9438>] (sys_finit_module) from [<c0009000>] (ret_fast_syscall+0x0/0x28)
+Exception stack(0xdb677fa8 to 0xdb677ff0)
+7fa0:                   00b04170 00000000 00000003 007bd84c 00000000 00b05cb8
+7fc0: 00b04170 00000000 1ee84500 0000017b 00040000 00000000 00b04eb8 00000000
+7fe0: be958178 be958168 007b54bb b6c28712
+ipu1_csi0: Registered ipu1_csi0 capture as /dev/video6
+imx-media: subdev ipu1_csi0 bound
+kobject (dcd780f0): tried to init an initialized object, something is seriously wrong.
+CPU: 1 PID: 31521 Comm: modprobe Tainted: G         C        5.2.0+ #325
+Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+[<c0019560>] (unwind_backtrace) from [<c0014734>] (show_stack+0x10/0x14)
+[<c0014734>] (show_stack) from [<c084573c>] (dump_stack+0x9c/0xd4)
+[<c084573c>] (dump_stack) from [<c084a878>] (kobject_init+0x74/0x94)
+[<c084a878>] (kobject_init) from [<c04b2a70>] (device_initialize+0x1c/0xec)
+[<c04b2a70>] (device_initialize) from [<c04b4ad0>] (device_register+0xc/0x18)
+[<c04b4ad0>] (device_register) from [<c0599484>] (__video_register_device+0x9b4/0x1228)
+[<c0599484>] (__video_register_device) from [<bf129fac>] (imx_media_capture_device_register+0x44/0x1f4 [imx_media_capture])
+[<bf129fac>] (imx_media_capture_device_register [imx_media_capture]) from [<bf130bf8>] (csi_registered+0x154/0x19c [imx_media_csi])
+[<bf130bf8>] (csi_registered [imx_media_csi]) from [<c05a062c>] (v4l2_device_register_subdev+0xd0/0x164)
+[<c05a062c>] (v4l2_device_register_subdev) from [<c05abed0>] (v4l2_async_match_notify+0x1c/0x130)
+[<c05abed0>] (v4l2_async_match_notify) from [<c05ac02c>] (v4l2_async_notifier_try_all_subdevs+0x48/0x94)
+[<c05ac02c>] (v4l2_async_notifier_try_all_subdevs) from [<c05ac6f4>] (__v4l2_async_notifier_register+0xa8/0x110)
+[<c05ac6f4>] (__v4l2_async_notifier_register) from [<c05ac7ec>] (v4l2_async_notifier_register+0x3c/0x54)
+[<c05ac7ec>] (v4l2_async_notifier_register) from [<bf01ef64>] (imx_media_dev_notifier_register+0x2c/0x70 [imx_media])
+[<bf01ef64>] (imx_media_dev_notifier_register [imx_media]) from [<bf01e090>] (imx_media_probe+0x3c/0x8c [imx_media])
+[<bf01e090>] (imx_media_probe [imx_media]) from [<c04b9178>] (platform_drv_probe+0x48/0x98)
+[<c04b9178>] (platform_drv_probe) from [<c04b7298>] (really_probe+0x1d8/0x2c0)
+[<c04b7298>] (really_probe) from [<c04b7554>] (driver_probe_device+0x5c/0x174)
+[<c04b7554>] (driver_probe_device) from [<c04b7814>] (device_driver_attach+0x58/0x60)
+[<c04b7814>] (device_driver_attach) from [<c04b78a0>] (__driver_attach+0x84/0xc0)
+[<c04b78a0>] (__driver_attach) from [<c04b5968>] (bus_for_each_dev+0x58/0x7c)
+[<c04b5968>] (bus_for_each_dev) from [<c04b6768>] (bus_add_driver+0xd0/0x1cc)
+[<c04b6768>] (bus_add_driver) from [<c04b848c>] (driver_register+0x7c/0x110)
+[<c04b848c>] (driver_register) from [<c000b05c>] (do_one_initcall+0x74/0x308)
+[<c000b05c>] (do_one_initcall) from [<c00d9b78>] (do_init_module+0x5c/0x1f4)
+[<c00d9b78>] (do_init_module) from [<c00d8be4>] (load_module+0x19a4/0x2020)
+[<c00d8be4>] (load_module) from [<c00d9438>] (sys_finit_module+0x8c/0x98)
+[<c00d9438>] (sys_finit_module) from [<c0009000>] (ret_fast_syscall+0x0/0x28)
+Exception stack(0xdb677fa8 to 0xdb677ff0)
+7fa0:                   00b04170 00000000 00000003 007bd84c 00000000 00b05cb8
+7fc0: 00b04170 00000000 1ee84500 0000017b 00040000 00000000 00b04eb8 00000000
+7fe0: be958178 be958168 007b54bb b6c28712
+8<--- cut here ---
+Unable to handle kernel NULL pointer dereference at virtual address 00000064
+pgd = db720000
+[00000064] *pgd=00000000
+Internal error: Oops: 5 [#1] SMP ARM
+Modules linked in: imx_media(C+) caam_jr imx_media_vdic(C) imx_media_ic(C) snd_soc_imx_spdif imx_thermal imx_media_csi(C) imx_media_capture(C) snd_soc_imx_audmux imx219 snd_soc_sgtl5000 imx6_mipi_csi2(C) nvmem_imx_ocotp mux_mmio video_mux caam mux_core error imx_sdma virt_dma coda v4l2_mem2mem rc_cec snd_soc_fsl_spdif imx_vdoa videobuf2_dma_contig snd_soc_fsl_ssi imx_pcm_dma dw_hdmi_ahb_audio dw_hdmi_cec etnaviv gpu_sched v4l2_fwnode imx_media_common(C) imx6q_cpufreq rc_pinnacle_pctv_hd nfsd [last unloaded: imx_media]
+CPU: 1 PID: 31521 Comm: modprobe Tainted: G         C        5.2.0+ #325
+Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+PC is at kobject_get+0x10/0x54
+LR is at klist_node_init+0x40/0x58
+pc : [<c084a61c>]    lr : [<c084a304>]    psr: 200d0013
+sp : db677b20  ip : 600d0013  fp : dcd78000
+r10: c08c9044  r9 : c0c97d20  r8 : 00000000
+r7 : 00000000  r6 : deb34c10  r5 : deb049c0  r4 : 00000044
+r3 : c04b23bc  r2 : c0c17c94  r1 : dcc04930  r0 : 00000044
+Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+Control: 10c5387d  Table: 2b72004a  DAC: 00000051
+Process modprobe (pid: 31521, stack limit = 0xdb676218)
+Stack: (0xdb677b20 to 0xdb678000)
+7b20: 00000000 dcc9f300 dcc04930 c084a304 00000000 deb049c0 dcc04930 c084a3cc
+7b40: 00000000 dcd780f0 00000000 c04b47b4 3a3138f0 c13c0037 00000001 c04b2af8
+7b60: c13c6208 00000007 dcd780f0 000003ac c13c6608 c0599484 c0cb7f90 60060013
+7b80: 00000000 00000001 00000001 c0ab9740 00000001 00000000 1bef8335 8c000030
+7ba0: 7e000f99 00000080 00000000 00000000 00000000 ddca7040 dcd78000 ddca7858
+7bc0: ddca784c 00000001 00000000 ddca71a0 00000000 bf129fac bf12ad00 ddd1c96c
+7be0: da51f2c0 60060013 c05975cc c0089908 00000000 00000002 ddd1c938 ddca7970
+7c00: db677c18 c139a374 00000003 00000000 ddca784c c0862d4c 00000001 db677c18
+7c20: 00000003 ddca7970 ddd1c840 ddca784c 00000003 00000000 ddca784c 00000003
+7c40: ddca7840 ddca7858 ddca78a0 00000001 ddca784c bf130bf8 00000001 ddca7a6c
+7c60: c0cb8120 00002017 bf02089c ddca784c ddd1ca60 00000000 c0c97ebc ddd1ca60
+7c80: 00000030 bf02089c 00000124 c05a062c d5a1c8c0 ddca784c d5a1c8c0 ddd1cbb8
+7ca0: c0c97ebc c05abed0 d5a1c8c0 ddca784c ddd1cbb8 c0c97f08 c0c97ebc c05ac02c
+7cc0: ddd1cbb4 ddd1cbb8 ddd1cbc8 ddd1cbd0 00000000 c05ac6f4 ddd1cbb8 00000000
+7ce0: bf02089c c13c3b8c 00000000 c05ac7ec bf020518 ddd1c840 00000000 bf01ef64
+7d00: fffffffe ddd1c840 00000000 bf01e090 bf01e054 deb34c10 00000000 c04b9178
+7d20: c04b9130 deb34c10 c13c3a88 00000000 c13c3b8c c04b7298 deb34c10 00000000
+7d40: bf02089c 00000000 c0c1e560 00000028 deb34c10 c04b7554 deb34c10 bf02089c
+7d60: 00000000 deb34c10 00000000 bf02089c 00000000 c0c1e560 00000028 dce1ac00
+7d80: 00000124 c04b7814 bf02089c deb34c10 00000000 c04b78a0 deb34c10 bf02089c
+7da0: c04b781c c04b5968 df0812a4 deb04a10 bf02089c c403d700 c0c84cc0 c04b6768
+7dc0: bf0206bc bf02089c bf023000 bf02089c bf023000 c0cb7c20 00000000 c04b848c
+7de0: c04b8d04 c0cb6bc0 bf023000 c000b05c 00000001 c0c1eca4 c0cb6daf 00000cc0
+7e00: 00000040 c00d9b3c 00000008 c00aa7e8 d5a1c700 c01b2110 dddcfb80 df001e00
+7e20: 00000001 00000cc0 df001e00 000ecf78 c00d8b98 bf020900 c0c1e560 bf020900
+7e40: d5a1c700 bf020900 c0cb8120 bf020948 dce1ac00 c00d9b78 c0cb8120 bf020948
+7e60: c0cb6ca7 c0c1e560 bf020900 c00d8be4 bf02090c 00007fff bf020900 c00d688c
+7e80: bf02469e c13abc64 f0a21000 bf020b20 000000c5 db677eb4 000051b8 c01cf3a0
+7ea0: 00000001 00000000 c01cf4a8 00000006 00000000 00000000 00000000 bf01f0b8
+7ec0: 00000003 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+7ee0: 00000000 00000000 00000000 00000000 00000003 7fffffff 00000000 00000000
+7f00: 00000003 007bd84c db676000 0000017b 00000000 c00d9438 7fffffff 00000000
+7f20: 00000003 b6ccb000 00000000 f0a21000 000051b8 00000000 00000002 f0a2371d
+7f40: f0a23a80 f0a21000 000051b8 f0a25b50 f0a23d49 f0a24b58 00002b50 00003170
+7f60: 00001624 000035c8 00000000 00000000 00000000 00001614 00000027 00000028
+7f80: 00000020 00000000 00000017 00000000 00b04170 00000000 1ee84500 0000017b
+7fa0: c00091c4 c0009000 00b04170 00000000 00000003 007bd84c 00000000 00b05cb8
+7fc0: 00b04170 00000000 1ee84500 0000017b 00040000 00000000 00b04eb8 00000000
+7fe0: be958178 be958168 007b54bb b6c28712 800e0030 00000003 00000000 00000000
+[<c084a61c>] (kobject_get) from [<c084a304>] (klist_node_init+0x40/0x58)
+[<c084a304>] (klist_node_init) from [<c084a3cc>] (klist_add_tail+0x18/0x44)
+[<c084a3cc>] (klist_add_tail) from [<c04b47b4>] (device_add+0x3dc/0x59c)
+[<c04b47b4>] (device_add) from [<c0599484>] (__video_register_device+0x9b4/0x1228)
+[<c0599484>] (__video_register_device) from [<bf129fac>] (imx_media_capture_device_register+0x44/0x1f4 [imx_media_capture])
+[<bf129fac>] (imx_media_capture_device_register [imx_media_capture]) from [<bf130bf8>] (csi_registered+0x154/0x19c [imx_media_csi])
+[<bf130bf8>] (csi_registered [imx_media_csi]) from [<c05a062c>] (v4l2_device_register_subdev+0xd0/0x164)
+[<c05a062c>] (v4l2_device_register_subdev) from [<c05abed0>] (v4l2_async_match_notify+0x1c/0x130)
+[<c05abed0>] (v4l2_async_match_notify) from [<c05ac02c>] (v4l2_async_notifier_try_all_subdevs+0x48/0x94)
+[<c05ac02c>] (v4l2_async_notifier_try_all_subdevs) from [<c05ac6f4>] (__v4l2_async_notifier_register+0xa8/0x110)
+[<c05ac6f4>] (__v4l2_async_notifier_register) from [<c05ac7ec>] (v4l2_async_notifier_register+0x3c/0x54)
+[<c05ac7ec>] (v4l2_async_notifier_register) from [<bf01ef64>] (imx_media_dev_notifier_register+0x2c/0x70 [imx_media])
+[<bf01ef64>] (imx_media_dev_notifier_register [imx_media]) from [<bf01e090>] (imx_media_probe+0x3c/0x8c [imx_media])
+[<bf01e090>] (imx_media_probe [imx_media]) from [<c04b9178>] (platform_drv_probe+0x48/0x98)
+[<c04b9178>] (platform_drv_probe) from [<c04b7298>] (really_probe+0x1d8/0x2c0)
+[<c04b7298>] (really_probe) from [<c04b7554>] (driver_probe_device+0x5c/0x174)
+[<c04b7554>] (driver_probe_device) from [<c04b7814>] (device_driver_attach+0x58/0x60)
+[<c04b7814>] (device_driver_attach) from [<c04b78a0>] (__driver_attach+0x84/0xc0)
+[<c04b78a0>] (__driver_attach) from [<c04b5968>] (bus_for_each_dev+0x58/0x7c)
+[<c04b5968>] (bus_for_each_dev) from [<c04b6768>] (bus_add_driver+0xd0/0x1cc)
+[<c04b6768>] (bus_add_driver) from [<c04b848c>] (driver_register+0x7c/0x110)
+[<c04b848c>] (driver_register) from [<c000b05c>] (do_one_initcall+0x74/0x308)
+[<c000b05c>] (do_one_initcall) from [<c00d9b78>] (do_init_module+0x5c/0x1f4)
+[<c00d9b78>] (do_init_module) from [<c00d8be4>] (load_module+0x19a4/0x2020)
+[<c00d8be4>] (load_module) from [<c00d9438>] (sys_finit_module+0x8c/0x98)
+[<c00d9438>] (sys_finit_module) from [<c0009000>] (ret_fast_syscall+0x0/0x28)
+Exception stack(0xdb677fa8 to 0xdb677ff0)
+7fa0:                   00b04170 00000000 00000003 007bd84c 00000000 00b05cb8
+7fc0: 00b04170 00000000 1ee84500 0000017b 00040000 00000000 00b04eb8 00000000
+7fe0: be958178 be958168 007b54bb b6c28712
+Code: e92d4010 e2504000 e24dd008 0a000004 (e5d43020) 
+---[ end trace c0709acc637cb5de ]---
 
 -- 
-Regards,
-Ivan Khoronzhuk
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
