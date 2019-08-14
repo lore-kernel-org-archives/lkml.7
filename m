@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C81CC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9F3C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1550F208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C32208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:02:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802170;
-	bh=BkcDTATYIDNP1lgjr3cK6wsrDP7zg9Rqhww//Ivq318=;
+	s=default; t=1565802172;
+	bh=zhxAZGvoqo0f1xdBBUnCSimhFegjwoKQYTfVfwVAH1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wASSgrHAg5gOcT+8kibXYXgba+K19oqoSyyMMPmmNU6DFwyChP7BwJje81qb0jHbL
-	 lJ++HTzjh3pixhze/cLs/IIhGKUxMb2ysA8jclV43v+6iFMxzgW+YHYw3hrVY3fXzX
-	 DBDBNi2BuIQP+7PGqyWE0owjEsZBFyPPkSHMxLeY=
+	b=fFhrqwOekgzr71ng76MlI8V5ntp7aY4FxJCBoUg8HHlV8WxjRxXDahErFLIt4d5t9
+	 +Wo1eR8ltRJ2LUQg0a/7LZ+P/53ohJvao3oyuanW2Kk3HlS68yM0QjI0XemkSlS2Ro
+	 mnV5dgoZX4gxdVlOYnX1KeLI7yMxxomgl0T5AMCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbfHNRCs (ORCPT
+        id S1728770AbfHNRCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:02:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51258 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:02:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728737AbfHNRCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:02:46 -0400
+        id S1728753AbfHNRCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:02:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74FE1216F4;
-        Wed, 14 Aug 2019 17:02:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BC3921721;
+        Wed, 14 Aug 2019 17:02:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802165;
-        bh=BkcDTATYIDNP1lgjr3cK6wsrDP7zg9Rqhww//Ivq318=;
+        s=default; t=1565802168;
+        bh=zhxAZGvoqo0f1xdBBUnCSimhFegjwoKQYTfVfwVAH1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pSh6yMWNKJchV0Hmgaoxe+Atx9OcSNTVZPW2peBqzr5RfNaFyl/9dLRp9BFOxbczA
-         z3BNTusUQ30UIH2GEd53gpb8vJcvDxByGudpNV1pBkAkeoZRpjirzPENFkADIEdUA3
-         Yt2XUFazh6vZQM/69hr8o7PmlYkCVrIqqJEYkjfI=
+        b=d31Ip0htVsd7cchDYqIAcmQlf+A60+Q9eAVZ4KwMrLZd7/tt9HA7U2u3q2wzKkUkq
+         hvmKAIBteZhngMaA/vk/PfPeKutNAAxj370K5SdEHknE1JQ7NIBMv6PRQr1P6Q2zHH
+         fL7iveKH96woK6A/D/3jdh2eCCsyA1FgN9GueJy4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Maarten ter Huurne <maarten@treewalker.org>,
-        Artur Rojek <contact@artur-rojek.eu>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.2 002/144] IIO: Ingenic JZ47xx: Set clock divider on probe
-Date:   Wed, 14 Aug 2019 18:59:18 +0200
-Message-Id: <20190814165759.574557059@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.2 020/144] mmc: cavium: Set the correct dma max segment size for mmc_host
+Date:   Wed, 14 Aug 2019 18:59:36 +0200
+Message-Id: <20190814165800.711906685@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -61,153 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maarten ter Huurne <maarten@treewalker.org>
+From: Kevin Hao <haokexin@gmail.com>
 
-commit 5a304e1a4ea000177cf25f5ecf26e786dda25b98 upstream.
+commit fa25eba6993b3750f417baabba169afaba076178 upstream.
 
-The SADC component can run at up to 8 MHz on JZ4725B, but is fed
-a 12 MHz input clock (EXT). Divide it by two to get 6 MHz, then
-set up another divider to match, to produce a 10us clock.
+We have set the mmc_host.max_seg_size to 8M, but the dma max segment
+size of PCI device is set to 64K by default in function pci_device_add().
+The mmc_host.max_seg_size is used to set the max segment size of
+the blk queue. Then this mismatch will trigger a calltrace like below
+when a bigger than 64K segment request arrives at mmc dev. So we should
+consider the limitation of the cvm_mmc_host when setting the
+mmc_host.max_seg_size.
+  DMA-API: thunderx_mmc 0000:01:01.4: mapping sg segment longer than device claims to support [len=131072] [max=65536]
+  WARNING: CPU: 6 PID: 238 at kernel/dma/debug.c:1221 debug_dma_map_sg+0x2b8/0x350
+  Modules linked in:
+  CPU: 6 PID: 238 Comm: kworker/6:1H Not tainted 5.3.0-rc1-next-20190724-yocto-standard+ #62
+  Hardware name: Marvell OcteonTX CN96XX board (DT)
+  Workqueue: kblockd blk_mq_run_work_fn
+  pstate: 80c00009 (Nzcv daif +PAN +UAO)
+  pc : debug_dma_map_sg+0x2b8/0x350
+  lr : debug_dma_map_sg+0x2b8/0x350
+  sp : ffff00001770f9e0
+  x29: ffff00001770f9e0 x28: ffffffff00000000
+  x27: 00000000ffffffff x26: ffff800bc2c73180
+  x25: ffff000010e83700 x24: 0000000000000002
+  x23: 0000000000000001 x22: 0000000000000001
+  x21: 0000000000000000 x20: ffff800bc48ba0b0
+  x19: ffff800bc97e8c00 x18: ffffffffffffffff
+  x17: 0000000000000000 x16: 0000000000000000
+  x15: ffff000010e835c8 x14: 6874207265676e6f
+  x13: 6c20746e656d6765 x12: 7320677320676e69
+  x11: 7070616d203a342e x10: 31303a31303a3030
+  x9 : 303020636d6d5f78 x8 : 35363d78616d5b20
+  x7 : 00000000000002fd x6 : ffff000010fd57dc
+  x5 : 0000000000000000 x4 : ffff0000106c61f0
+  x3 : 00000000ffffffff x2 : 0000800bee060000
+  x1 : 7010678df3041a00 x0 : 0000000000000000
+  Call trace:
+   debug_dma_map_sg+0x2b8/0x350
+   cvm_mmc_request+0x3c4/0x988
+   __mmc_start_request+0x9c/0x1f8
+   mmc_start_request+0x7c/0xb0
+   mmc_blk_mq_issue_rq+0x5c4/0x7b8
+   mmc_mq_queue_rq+0x11c/0x278
+   blk_mq_dispatch_rq_list+0xb0/0x568
+   blk_mq_do_dispatch_sched+0x6c/0x108
+   blk_mq_sched_dispatch_requests+0x110/0x1b8
+   __blk_mq_run_hw_queue+0xb0/0x118
+   blk_mq_run_work_fn+0x28/0x38
+   process_one_work+0x210/0x490
+   worker_thread+0x48/0x458
+   kthread+0x130/0x138
+   ret_from_fork+0x10/0x1c
 
-If the clock dividers are left on their power-on defaults (a divider
-of 1), the SADC mostly works, but will occasionally produce erroneous
-readings. This led to button presses being detected out of nowhere on
-the RS90 every few minutes. With this change, no ghost button presses
-were logged in almost a day worth of testing.
-
-The ADCLK register for configuring clock dividers doesn't exist on
-JZ4740, so avoid writing it there.
-
-A function has been introduced rather than a flag because there is a lot
-of variation between the ADCLK registers on JZ47xx SoCs, both in
-the internal layout of the register and in the frequency range
-supported by the SADC. So this solution should make it easier
-to add support for other JZ47xx SoCs later.
-
-Fixes: 1a78daea107d ("iio: adc: probe should set clock divider")
-Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Fixes: ba3869ff32e4 ("mmc: cavium: Add core MMC driver for Cavium SOCs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/ingenic-adc.c |   54 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ drivers/mmc/host/cavium.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/iio/adc/ingenic-adc.c
-+++ b/drivers/iio/adc/ingenic-adc.c
-@@ -11,6 +11,7 @@
- #include <linux/iio/iio.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
-+#include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/platform_device.h>
-@@ -22,8 +23,11 @@
- #define JZ_ADC_REG_ADTCH		0x18
- #define JZ_ADC_REG_ADBDAT		0x1c
- #define JZ_ADC_REG_ADSDAT		0x20
-+#define JZ_ADC_REG_ADCLK		0x28
+--- a/drivers/mmc/host/cavium.c
++++ b/drivers/mmc/host/cavium.c
+@@ -1046,7 +1046,8 @@ int cvm_mmc_of_slot_probe(struct device
+ 		mmc->max_segs = 1;
  
- #define JZ_ADC_REG_CFG_BAT_MD		BIT(4)
-+#define JZ_ADC_REG_ADCLK_CLKDIV_LSB	0
-+#define JZ_ADC_REG_ADCLK_CLKDIV10US_LSB	16
- 
- #define JZ_ADC_AUX_VREF				3300
- #define JZ_ADC_AUX_VREF_BITS			12
-@@ -34,6 +38,8 @@
- #define JZ4740_ADC_BATTERY_HIGH_VREF		(7500 * 0.986)
- #define JZ4740_ADC_BATTERY_HIGH_VREF_BITS	12
- 
-+struct ingenic_adc;
-+
- struct ingenic_adc_soc_data {
- 	unsigned int battery_high_vref;
- 	unsigned int battery_high_vref_bits;
-@@ -41,6 +47,7 @@ struct ingenic_adc_soc_data {
- 	size_t battery_raw_avail_size;
- 	const int *battery_scale_avail;
- 	size_t battery_scale_avail_size;
-+	int (*init_clk_div)(struct device *dev, struct ingenic_adc *adc);
- };
- 
- struct ingenic_adc {
-@@ -151,6 +158,42 @@ static const int jz4740_adc_battery_scal
- 	JZ_ADC_BATTERY_LOW_VREF, JZ_ADC_BATTERY_LOW_VREF_BITS,
- };
- 
-+static int jz4725b_adc_init_clk_div(struct device *dev, struct ingenic_adc *adc)
-+{
-+	struct clk *parent_clk;
-+	unsigned long parent_rate, rate;
-+	unsigned int div_main, div_10us;
-+
-+	parent_clk = clk_get_parent(adc->clk);
-+	if (!parent_clk) {
-+		dev_err(dev, "ADC clock has no parent\n");
-+		return -ENODEV;
-+	}
-+	parent_rate = clk_get_rate(parent_clk);
-+
-+	/*
-+	 * The JZ4725B ADC works at 500 kHz to 8 MHz.
-+	 * We pick the highest rate possible.
-+	 * In practice we typically get 6 MHz, half of the 12 MHz EXT clock.
-+	 */
-+	div_main = DIV_ROUND_UP(parent_rate, 8000000);
-+	div_main = clamp(div_main, 1u, 64u);
-+	rate = parent_rate / div_main;
-+	if (rate < 500000 || rate > 8000000) {
-+		dev_err(dev, "No valid divider for ADC main clock\n");
-+		return -EINVAL;
-+	}
-+
-+	/* We also need a divider that produces a 10us clock. */
-+	div_10us = DIV_ROUND_UP(rate, 100000);
-+
-+	writel(((div_10us - 1) << JZ_ADC_REG_ADCLK_CLKDIV10US_LSB) |
-+	       (div_main - 1) << JZ_ADC_REG_ADCLK_CLKDIV_LSB,
-+	       adc->base + JZ_ADC_REG_ADCLK);
-+
-+	return 0;
-+}
-+
- static const struct ingenic_adc_soc_data jz4725b_adc_soc_data = {
- 	.battery_high_vref = JZ4725B_ADC_BATTERY_HIGH_VREF,
- 	.battery_high_vref_bits = JZ4725B_ADC_BATTERY_HIGH_VREF_BITS,
-@@ -158,6 +201,7 @@ static const struct ingenic_adc_soc_data
- 	.battery_raw_avail_size = ARRAY_SIZE(jz4725b_adc_battery_raw_avail),
- 	.battery_scale_avail = jz4725b_adc_battery_scale_avail,
- 	.battery_scale_avail_size = ARRAY_SIZE(jz4725b_adc_battery_scale_avail),
-+	.init_clk_div = jz4725b_adc_init_clk_div,
- };
- 
- static const struct ingenic_adc_soc_data jz4740_adc_soc_data = {
-@@ -167,6 +211,7 @@ static const struct ingenic_adc_soc_data
- 	.battery_raw_avail_size = ARRAY_SIZE(jz4740_adc_battery_raw_avail),
- 	.battery_scale_avail = jz4740_adc_battery_scale_avail,
- 	.battery_scale_avail_size = ARRAY_SIZE(jz4740_adc_battery_scale_avail),
-+	.init_clk_div = NULL, /* no ADCLK register on JZ4740 */
- };
- 
- static int ingenic_adc_read_avail(struct iio_dev *iio_dev,
-@@ -317,6 +362,15 @@ static int ingenic_adc_probe(struct plat
- 		return ret;
- 	}
- 
-+	/* Set clock dividers. */
-+	if (soc_data->init_clk_div) {
-+		ret = soc_data->init_clk_div(dev, adc);
-+		if (ret) {
-+			clk_disable_unprepare(adc->clk);
-+			return ret;
-+		}
-+	}
-+
- 	/* Put hardware in a known passive state. */
- 	writeb(0x00, adc->base + JZ_ADC_REG_ENABLE);
- 	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
+ 	/* DMA size field can address up to 8 MB */
+-	mmc->max_seg_size = 8 * 1024 * 1024;
++	mmc->max_seg_size = min_t(unsigned int, 8 * 1024 * 1024,
++				  dma_get_max_seg_size(host->dev));
+ 	mmc->max_req_size = mmc->max_seg_size;
+ 	/* External DMA is in 512 byte blocks */
+ 	mmc->max_blk_size = 512;
 
 
