@@ -2,94 +2,143 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F14C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDBEC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A16C320665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72138214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565821089;
+	bh=k8sF9ByxTFJt+xPpPS1ClUhI3arOUct3oMxaqPHO3MI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iUbGoC3PUhuwfO7rC8ye/2Pq9SXAe4QXXq5tgd1P0bYIVj6mdKvDoAOY6lT0kz+Aa
+	 gwQghsyF4aI5OeZhTxiw+cYTE5p0MLdOXNhuICGWUVFxH8jNX8rPe0/yWHaKmAPSzE
+	 sF8OTJiaSt+LRmNMuUYQRiU2YAnSK6zoKy3slAKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbfHNWRX (ORCPT
+        id S1729993AbfHNWSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 18:17:23 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:37135 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbfHNWRX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 18:17:23 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 4683q45kTYz1rHD6;
-        Thu, 15 Aug 2019 00:17:20 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 4683q4522vz1qqkW;
-        Thu, 15 Aug 2019 00:17:20 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id G7ErTnX-oNt5; Thu, 15 Aug 2019 00:17:19 +0200 (CEST)
-X-Auth-Info: Iuc9ZYI4BIAaDMS/g3FIEq6VQEfCcaJn66m8Acsgr85k6LCEcGh1Wi2xm4up9MZM
-Received: from igel.home (ppp-46-244-165-194.dynamic.mnet-online.de [46.244.165.194])
+        Wed, 14 Aug 2019 18:18:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726221AbfHNWSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 18:18:08 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Thu, 15 Aug 2019 00:17:19 +0200 (CEST)
-Received: by igel.home (Postfix, from userid 1000)
-        id BF7C02C124F; Thu, 15 Aug 2019 00:17:18 +0200 (CEST)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>, vincent.chen@sifive.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] riscv: Make __fstate_clean() work correctly.
-References: <alpine.DEB.2.21.9999.1908141328440.18249@viisi.sifive.com>
-        <mhng-4eded486-d381-4822-abc5-4023bf7ba591@palmer-si-x1c4>
-X-Yow:  Well, I'm a classic ANAL RETENTIVE!!  And I'm looking for a way to
- VICARIOUSLY experience some reason to LIVE!!
-Date:   Thu, 15 Aug 2019 00:17:18 +0200
-In-Reply-To: <mhng-4eded486-d381-4822-abc5-4023bf7ba591@palmer-si-x1c4>
-        (Palmer Dabbelt's message of "Wed, 14 Aug 2019 14:29:24 -0700 (PDT)")
-Message-ID: <87mugbv1ch.fsf@igel.home>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        by mail.kernel.org (Postfix) with ESMTPSA id 4107D20665;
+        Wed, 14 Aug 2019 22:18:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565821086;
+        bh=k8sF9ByxTFJt+xPpPS1ClUhI3arOUct3oMxaqPHO3MI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=S/1z63Ov8CQ7Ns/DVtHuelIHzOPS4/tww77AgTZI+v2U7sLvnbEEPlv9WPhG4y32H
+         Ky5oGomVEEFvzPSSqxC0WdbhxRINJl5SXaHNr/fe/MyCpOGumxN+7Nu+yIVU/PM4I1
+         D0rTreqznnzPWBSf5XSM5YiCaXthUF0BkjISpeJc=
+Date:   Wed, 14 Aug 2019 15:18:05 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     bjorn.topel@intel.com, linux-mm@kvack.org,
+        xdp-newbies@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, ast@kernel.org,
+        magnus.karlsson@intel.com
+Subject: Re: [PATCH v2 bpf-next] mm: mmap: increase sockets maximum memory
+ size pgoff for 32bits
+Message-Id: <20190814151805.bbff7b08f3a4119750b3e9fd@linux-foundation.org>
+In-Reply-To: <20190814150934.GD4142@khorivan>
+References: <20190812113429.2488-1-ivan.khoronzhuk@linaro.org>
+        <20190812124326.32146-1-ivan.khoronzhuk@linaro.org>
+        <20190812141924.32136e040904d0c5a819dcb1@linux-foundation.org>
+        <20190814150934.GD4142@khorivan>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Aug 14 2019, Palmer Dabbelt <palmer@sifive.com> wrote:
+On Wed, 14 Aug 2019 18:09:36 +0300 Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 
-> On Wed, 14 Aug 2019 13:32:50 PDT (-0700), Paul Walmsley wrote:
->> On Wed, 14 Aug 2019, Vincent Chen wrote:
->>
->>> Make the __fstate_clean() function correctly set the
->>> state of sstatus.FS in pt_regs to SR_FS_CLEAN.
->>>
->>> Fixes: 7db91e5 ("RISC-V: Task implementation")
->>> Cc: linux-stable <stable@vger.kernel.org>
->>> Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
->>> Reviewed-by: Anup Patel <anup@brainfault.org>
->>> Reviewed-by: Christoph Hellwig <hch@lst.de>
->>
->> Thanks, I extended the "Fixes" commit ID to 12 digits, as is the usual
->> practice here, and have queued the following for v5.3-rc.
+> On Mon, Aug 12, 2019 at 02:19:24PM -0700, Andrew Morton wrote:
+> 
+> Hi, Andrew
+> 
+> >On Mon, 12 Aug 2019 15:43:26 +0300 Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+> >
+> >> The AF_XDP sockets umem mapping interface uses XDP_UMEM_PGOFF_FILL_RING
+> >> and XDP_UMEM_PGOFF_COMPLETION_RING offsets. The offsets seems like are
+> >> established already and are part of configuration interface.
+> >>
+> >> But for 32-bit systems, while AF_XDP socket configuration, the values
+> >> are to large to pass maximum allowed file size verification.
+> >> The offsets can be tuned ofc, but instead of changing existent
+> >> interface - extend max allowed file size for sockets.
+> >
+> >
+> >What are the implications of this?  That all code in the kernel which
+> >handles mapped sockets needs to be audited (and tested) for correctly
+> >handling mappings larger than 4G on 32-bit machines?  Has that been
+> 
+> That's to allow only offset to be passed, mapping length is less than 4Gb.
+> I have verified all list of mmap for sockets and all of them contain dummy
+> cb sock_no_mmap() except the following:
+> 
+> xsk_mmap()
+> tcp_mmap()
+> packet_mmap()
+> 
+> xsk_mmap() - it's what this fix is needed for.
+> tcp_mmap() - doesn't have obvious issues with pgoff - no any references on it.
+> packet_mmap() - return -EINVAL if it's even set.
+
+Great, thanks.
+
+> 
+> >done?  Are we confident that we aren't introducing user-visible buggy
+> >behaviour into unsuspecting legacy code?
+> >
+> >Also...  what are the user-visible runtime effects of this change?
+> >Please send along a paragraph which explains this, for the changelog.
+> >Does this patch fix some user-visible problem?  If so, should be code
+> >be backported into -stable kernels?
+> It should go to linux-next, no one has been using it till this patch
+> with 32 bits as w/o this fix af_xdp sockets can't be used at all.
+> It unblocks af_xdp socket usage for 32bit systems.
+> 
+> 
+> That's example of potential next commit message:
+> Subject: mm: mmap: increase sockets maximum memory size pgoff for 32bits
+> 
+> The AF_XDP sockets umem mapping interface uses XDP_UMEM_PGOFF_FILL_RING
+> and XDP_UMEM_PGOFF_COMPLETION_RING offsets.  These offsets are established
+> already and are part of the configuration interface.
+> 
+> But for 32-bit systems, using AF_XDP socket configuration, these values
+> are too large to pass the maximum allowed file size verification.  The
+> offsets can be tuned off, but instead of changing the existing interface,
+> let's extend the max allowed file size for sockets.
+> 
+> No one has been using it till this patch with 32 bits as w/o this fix
+> af_xdp sockets can't be used at all, so it unblocks af_xdp socket usage
+> for 32bit systems.
+> 
+> All list of mmap cbs for sockets were verified on side effects and
+> all of them contain dummy cb - sock_no_mmap() at this moment, except the
+> following:
+> 
+> xsk_mmap() - it's what this fix is needed for.
+> tcp_mmap() - doesn't have obvious issues with pgoff - no any references on it.
+> packet_mmap() - return -EINVAL if it's even set.
 >
-> For reference, something like "git config core.abbrev=12" (or whatever you
-> write to get this in your .gitconfig)
+> ...
 >
->    https://github.com/palmer-dabbelt/home/blob/master/.gitconfig.in#L23
->
-> causes git to do the right thing.
+> Is it ok to be replicated in PATCH v2 or this explanation is enough here
+> to use v1?
 
-Actually, the right setting is core.abbrev=auto (or leaving it unset).
-It lets git chose the appropriate length depending on the repository
-contents.  For the linux repository it will chose 13 right now.
+I have replaced the changlog in my tree with the above, thanks.
 
-Andreas.
-
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
