@@ -4,54 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE29C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AB4C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85B420843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CE7E20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749068;
-	bh=da4oIfD+CGAK0HzB9KRvNT3HgKwkI1tu3i9EptXEmHM=;
+	s=default; t=1565749069;
+	bh=5T9m9kIHdtEA3c1wGjE0pou36IeEAMPgIbQzEGkvXfk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ThXjR275tBEQ9XNd/NQygJMpfOXrEmJnqL1BvlS4+/HHx23hqOQhKmP2qDZz6wdyQ
-	 +UY2IDBaM4JNNGlRbxMxLq4mZzrC9jVDEBhLeMFXehWxid+KvPRO2/yG/vo2lO9IXw
-	 ooEr3WldePbvIkKa4Gj8S9PrNi/XU64dbQnfSk0Y=
+	b=1KxUn8nbV179azF6zxwoQ62YgXrRZt7RVFgfogE0VfqqY8OXhGBQubVEBqr2RKr8Y
+	 I/GAVpANBPEAt5TWixjrp6yzzeMetYwuysDVbRVBRuRgYO1sLk2+B8V8m+opC5W+rU
+	 MkPQvuZDquUEZCZ1UzaeWY+MK/SsQmWyiPltN+7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729504AbfHNCRr (ORCPT
+        id S1729515AbfHNCRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:17:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48894 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:17:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729439AbfHNCRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:17:37 -0400
+        id S1729451AbfHNCRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:17:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D38D720842;
-        Wed, 14 Aug 2019 02:17:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DCE82085A;
+        Wed, 14 Aug 2019 02:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749056;
-        bh=da4oIfD+CGAK0HzB9KRvNT3HgKwkI1tu3i9EptXEmHM=;
+        s=default; t=1565749057;
+        bh=5T9m9kIHdtEA3c1wGjE0pou36IeEAMPgIbQzEGkvXfk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xSxr71o6bcCNgns65gJJRt0iBsC7Lj5kktn7FQwiKkRmb2wwGZJ/2HjqCbpOOBE3l
-         TMkT/Nm7vzImKPJOiHmTVluwIGwEUbGGRcV0GnuEirz47fM1JM+YvG0vwengFVKqCa
-         BoYOd9/cjdBHdpqZKL4z1JScrOa974PtfzfG/oAU=
+        b=OXzshmpQMrA2t2rAp8CKwzIg8YgEI8iH8gJ3Hi+V/6kxMqeD1dFDervGu+E9T0ppu
+         YVT3jxREoSIGYg0POqOlpy9lML9MRSYHPtgPWTz0J0V0lXRP+azJ7HhRz2A0VAXZiM
+         ompl6bdmdInVNzVvmnklb72LRyI20+g/FyIiACec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jin Yao <yao.jin@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 65/68] perf pmu-events: Fix missing "cpu_clk_unhalted.core" event
-Date:   Tue, 13 Aug 2019 22:15:43 -0400
-Message-Id: <20190814021548.16001-65-sashal@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 4.19 67/68] KVM: arm: Don't write junk to CP15 registers on reset
+Date:   Tue, 13 Aug 2019 22:15:45 -0400
+Message-Id: <20190814021548.16001-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -64,64 +58,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 8e6e5bea2e34c61291d00cb3f47560341aa84bc3 ]
+[ Upstream commit c69509c70aa45a8c4954c88c629a64acf4ee4a36 ]
 
-The events defined in pmu-events JSON are parsed and added into perf
-tool. For fixed counters, we handle the encodings between JSON and perf
-by using a static array fixed[].
+At the moment, the way we reset CP15 registers is mildly insane:
+We write junk to them, call the reset functions, and then check that
+we have something else in them.
 
-But the fixed[] has missed an important event "cpu_clk_unhalted.core".
+The "fun" thing is that this can happen while the guest is running
+(PSCI, for example). If anything in KVM has to evaluate the state
+of a CP15 register while junk is in there, bad thing may happen.
 
-For example, on the Tremont platform,
+Let's stop doing that. Instead, we track that we have called a
+reset function for that register, and assume that the reset
+function has done something.
 
-  [root@localhost ~]# perf stat -e cpu_clk_unhalted.core -a
-  event syntax error: 'cpu_clk_unhalted.core'
-                       \___ parser error
+In the end, the very need of this reset check is pretty dubious,
+as it doesn't check everything (a lot of the CP15 reg leave outside
+of the cp15_regs[] array). It may well be axed in the near future.
 
-With this patch, the event cpu_clk_unhalted.core can be parsed.
-
-  [root@localhost perf]# ./perf stat -e cpu_clk_unhalted.core -a -vvv
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             4
-    size                             112
-    config                           0x3c
-    sample_type                      IDENTIFIER
-    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-    disabled                         1
-    inherit                          1
-    exclude_guest                    1
-  ------------------------------------------------------------
-...
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190729072755.2166-1-yao.jin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/pmu-events/jevents.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/kvm/coproc.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 68c92bb599eef..6b36b71106695 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -450,6 +450,7 @@ static struct fixed {
- 	{ "inst_retired.any_p", "event=0xc0" },
- 	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
- 	{ "cpu_clk_unhalted.thread", "event=0x3c" },
-+	{ "cpu_clk_unhalted.core", "event=0x3c" },
- 	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
- 	{ NULL, NULL},
- };
+diff --git a/arch/arm/kvm/coproc.c b/arch/arm/kvm/coproc.c
+index fd6cde23bb5d0..871fa50a09f19 100644
+--- a/arch/arm/kvm/coproc.c
++++ b/arch/arm/kvm/coproc.c
+@@ -658,13 +658,22 @@ int kvm_handle_cp14_64(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ }
+ 
+ static void reset_coproc_regs(struct kvm_vcpu *vcpu,
+-			      const struct coproc_reg *table, size_t num)
++			      const struct coproc_reg *table, size_t num,
++			      unsigned long *bmap)
+ {
+ 	unsigned long i;
+ 
+ 	for (i = 0; i < num; i++)
+-		if (table[i].reset)
++		if (table[i].reset) {
++			int reg = table[i].reg;
++
+ 			table[i].reset(vcpu, &table[i]);
++			if (reg > 0 && reg < NR_CP15_REGS) {
++				set_bit(reg, bmap);
++				if (table[i].is_64bit)
++					set_bit(reg + 1, bmap);
++			}
++		}
+ }
+ 
+ static struct coproc_params decode_32bit_hsr(struct kvm_vcpu *vcpu)
+@@ -1439,17 +1448,15 @@ void kvm_reset_coprocs(struct kvm_vcpu *vcpu)
+ {
+ 	size_t num;
+ 	const struct coproc_reg *table;
+-
+-	/* Catch someone adding a register without putting in reset entry. */
+-	memset(vcpu->arch.ctxt.cp15, 0x42, sizeof(vcpu->arch.ctxt.cp15));
++	DECLARE_BITMAP(bmap, NR_CP15_REGS) = { 0, };
+ 
+ 	/* Generic chip reset first (so target could override). */
+-	reset_coproc_regs(vcpu, cp15_regs, ARRAY_SIZE(cp15_regs));
++	reset_coproc_regs(vcpu, cp15_regs, ARRAY_SIZE(cp15_regs), bmap);
+ 
+ 	table = get_target_table(vcpu->arch.target, &num);
+-	reset_coproc_regs(vcpu, table, num);
++	reset_coproc_regs(vcpu, table, num, bmap);
+ 
+ 	for (num = 1; num < NR_CP15_REGS; num++)
+-		WARN(vcpu_cp15(vcpu, num) == 0x42424242,
++		WARN(!test_bit(num, bmap),
+ 		     "Didn't reset vcpu_cp15(vcpu, %zi)", num);
+ }
 -- 
 2.20.1
 
