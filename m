@@ -2,93 +2,88 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49378C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5546DC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0512133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C5572084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbfHNQhC (ORCPT
+        id S1727524AbfHNQkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:37:02 -0400
-Received: from mga02.intel.com ([134.134.136.20]:39981 "EHLO mga02.intel.com"
+        Wed, 14 Aug 2019 12:40:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:57154 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfHNQhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:37:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 09:37:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,385,1559545200"; 
-   d="scan'208";a="178213373"
-Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by fmsmga007.fm.intel.com with ESMTP; 14 Aug 2019 09:37:00 -0700
-Message-ID: <eabd0c16bd2028ad9fef8d10ddf570b3a10d5680.camel@intel.com>
-Subject: Re: [PATCH v8 15/27] mm: Handle shadow stack page fault
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Wed, 14 Aug 2019 09:27:21 -0700
-In-Reply-To: <CALCETrVKbqzivPfUOiGi5efHUpEsfPkNzP0CrmAZzcwUgf7quA@mail.gmail.com>
-References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
-         <20190813205225.12032-16-yu-cheng.yu@intel.com>
-         <CALCETrVKbqzivPfUOiGi5efHUpEsfPkNzP0CrmAZzcwUgf7quA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726166AbfHNQkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 12:40:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 21311344;
+        Wed, 14 Aug 2019 09:40:03 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B9643F694;
+        Wed, 14 Aug 2019 09:40:01 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 17:39:59 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        akpm@linux-foundation.org, bigeasy@linutronix.de, bp@suse.de,
+        davem@davemloft.net, hch@lst.de, kan.liang@intel.com,
+        mingo@kernel.org, peterz@infradead.org, riel@surriel.com,
+        will@kernel.org
+Subject: Re: [PATCH 3/9] kmemleak: correctly check for kthreads
+Message-ID: <20190814163959.GB54611@arrakis.emea.arm.com>
+References: <20190814104131.20190-1-mark.rutland@arm.com>
+ <20190814104131.20190-4-mark.rutland@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814104131.20190-4-mark.rutland@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-13 at 15:55 -0700, Andy Lutomirski wrote:
-> On Tue, Aug 13, 2019 at 2:02 PM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
-> > 
-> > When a task does fork(), its shadow stack (SHSTK) must be duplicated
-> > for the child.  This patch implements a flow similar to copy-on-write
-> > of an anonymous page, but for SHSTK.
-> > 
-> > A SHSTK PTE must be RO and dirty.  This dirty bit requirement is used
-> > to effect the copying.  In copy_one_pte(), clear the dirty bit from a
-> > SHSTK PTE to cause a page fault upon the next SHSTK access.  At that
-> > time, fix the PTE and copy/re-use the page.
+On Wed, Aug 14, 2019 at 11:41:25AM +0100, Mark Rutland wrote:
+> In general, a non-NULL current->mm doesn't imply that current is a
+> kthread, as kthreads can install an mm via use_mm(), and so it's
+> preferable to use is_kthread() to determine whether a thread is a
+> kthread.
 > 
-> Is using VM_SHSTK and special-casing all of this really better than
-> using a special mapping or other pseudo-file-backed VMA and putting
-> all the magic in the vm_operations?
+> For consistency, let's use is_kthread() here.
+> 
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> ---
+>  mm/kmemleak.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-A special mapping is cleaner.  However, we also need to exclude normal [RO +
-dirty] pages from shadow stack.
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 
-Yu-cheng
+> index 6e9e8cca663e..42ea3c14b577 100644
+> --- a/mm/kmemleak.c
+> +++ b/mm/kmemleak.c
+> @@ -1290,10 +1290,10 @@ static int scan_should_stop(void)
+>  	 * This function may be called from either process or kthread context,
+>  	 * hence the need to check for both stop conditions.
+>  	 */
+> -	if (current->mm)
+> -		return signal_pending(current);
+> -	else
+> +	if (is_kthread(current))
+>  		return kthread_should_stop();
+> +	else
+> +		return signal_pending(current);
+
+While you are at it, you can drop the 'else' as well (occasionally
+checkpatch complains about 'else' after return).
+
+Thanks.
+
+-- 
+Catalin
