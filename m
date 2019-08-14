@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE60C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08664C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 999DB21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7939208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749583;
-	bh=WI/EfAnOncHGpyQuhasDcz8tRW1vgeiQ6AEAx0QGQr0=;
+	s=default; t=1565749594;
+	bh=BvDBc8ULFIJ03Qy5ImvqS1zRetsqy50NWFJ2J/Aakvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tMTLnH12t+HDST3cDogZLqQirFgFn8rBbKSy42X0se3ZsKIgQn9xvEk2+U7I+ggR+
-	 EuZ7QFF7aDz0L/8z/0Y718LX8bF0q3jFioz9yPemiCdRlDoh27saSW7lunixQRWIsM
-	 PETnEIR0yg/j070ushOZoGOSBPq5MLLxpQRr7SC4=
+	b=TpJJlL6Vztv+ofQq5RQYVuNl5zgu2x+fAj9oXq36V8o0brhs5lyxloeubgw6Z6ynM
+	 n3c+giNHVABV8MrDajGFjQshMExMI7m5Fgx9iyjYjcBIpnT6qXULa1AznJZhWLNDNr
+	 rx+365qZgxGz5EsxMhr+GgRJit1NKAFuJc+0MCA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730292AbfHNC0W (ORCPT
+        id S1730362AbfHNC0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:26:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54420 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:26:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730264AbfHNC0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:26:20 -0400
+        id S1730312AbfHNC01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:26:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A7902084F;
-        Wed, 14 Aug 2019 02:26:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1030921721;
+        Wed, 14 Aug 2019 02:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749579;
-        bh=WI/EfAnOncHGpyQuhasDcz8tRW1vgeiQ6AEAx0QGQr0=;
+        s=default; t=1565749587;
+        bh=BvDBc8ULFIJ03Qy5ImvqS1zRetsqy50NWFJ2J/Aakvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ftbIzqg9kb5RndpS4HpJM0XN8Qfdmb95U9PvMN2Gf90ywRHzd7wC+arI7JEDEQHXL
-         drcFBMlKIm8TInnml1UYBP9rLFnyaYg6rbgQLEeyZUM2IomnZ87iSQkUIzLnqv3M6P
-         0tIJxLYpKjTcn3I/1t9g2iBtwkBONw2UEcaBobdQ=
+        b=kgHIS0j7EhH+QawRmcMXCwVrrJ1flhI1hjV/0yx/V9PYGm78GJ8YumA+0KUECzP7W
+         /UV0SKNtbLZ+8S9BNkNmAAMK6u6/gy9e4JI2xp/naC2m4PX2cd5qi+oFtOSiaoj9dh
+         yEPJl9XhGyrzeykDzrZI/WQ59i3Q5/iGzVyGoddc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Xiayang <xywang.sjtu@sjtu.edu.cn>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 16/28] can: sja1000: force the string buffer NULL-terminated
-Date:   Tue, 13 Aug 2019 22:25:38 -0400
-Message-Id: <20190814022550.17463-16-sashal@kernel.org>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 21/28] HID: hiddev: do cleanup in failure of opening a device
+Date:   Tue, 13 Aug 2019 22:25:43 -0400
+Message-Id: <20190814022550.17463-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022550.17463-1-sashal@kernel.org>
 References: <20190814022550.17463-1-sashal@kernel.org>
@@ -60,38 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+From: Hillf Danton <hdanton@sina.com>
 
-[ Upstream commit cd28aa2e056cd1ea79fc5f24eed0ce868c6cab5c ]
+[ Upstream commit 6d4472d7bec39917b54e4e80245784ea5d60ce49 ]
 
-strncpy() does not ensure NULL-termination when the input string size
-equals to the destination buffer size IFNAMSIZ. The output string
-'name' is passed to dev_info which relies on NULL-termination.
+Undo what we did for opening before releasing the memory slice.
 
-Use strlcpy() instead.
-
-This issue is identified by a Coccinelle script.
-
-Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Reported-by: syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/sja1000/peak_pcmcia.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/usbhid/hiddev.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/can/sja1000/peak_pcmcia.c b/drivers/net/can/sja1000/peak_pcmcia.c
-index dd56133cc4616..fc9f8b01ecae2 100644
---- a/drivers/net/can/sja1000/peak_pcmcia.c
-+++ b/drivers/net/can/sja1000/peak_pcmcia.c
-@@ -487,7 +487,7 @@ static void pcan_free_channels(struct pcan_pccard *card)
- 		if (!netdev)
- 			continue;
- 
--		strncpy(name, netdev->name, IFNAMSIZ);
-+		strlcpy(name, netdev->name, IFNAMSIZ);
- 
- 		unregister_sja1000dev(netdev);
- 
+diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
+index 0bfc2009e4071..8903ea09ac587 100644
+--- a/drivers/hid/usbhid/hiddev.c
++++ b/drivers/hid/usbhid/hiddev.c
+@@ -330,6 +330,10 @@ static int hiddev_open(struct inode *inode, struct file *file)
+ 	return 0;
+ bail_unlock:
+ 	mutex_unlock(&hiddev->existancelock);
++
++	spin_lock_irq(&list->hiddev->list_lock);
++	list_del(&list->node);
++	spin_unlock_irq(&list->hiddev->list_lock);
+ bail:
+ 	file->private_data = NULL;
+ 	vfree(list);
 -- 
 2.20.1
 
