@@ -5,244 +5,187 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3F5C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 411A3C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE98B2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051922064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:15:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyNob6e0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VUmWiTkH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729428AbfHNXOc (ORCPT
+        id S1729465AbfHNXPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 19:14:32 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38507 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbfHNXOc (ORCPT
+        Wed, 14 Aug 2019 19:15:08 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37254 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbfHNXPI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 19:14:32 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r20so2046266ota.5;
-        Wed, 14 Aug 2019 16:14:31 -0700 (PDT)
+        Wed, 14 Aug 2019 19:15:08 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 129so287498pfa.4;
+        Wed, 14 Aug 2019 16:15:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HHq+oxQ+RcU0cpnKyr/UwNvGamPQ9xWpmgS+w5o7uPg=;
-        b=fyNob6e0SmKDM/Sf2JROj1no5CMDOJcQ/r3Fhyttou8SMF38hkOzsjNV5SnVaIrmYg
-         sldSWXgxREyRGwAxTWAm7Ijg+2HoP2+dscBLK+PIxcIutdRVrY89CGBmsrMDlv+4B3N4
-         jNaNtyYduM9lGN8I8JTBu5sdCbIzHy1zqea5jGkoXCtIoaHypKunY+pc9J8OasXNhJyF
-         CyzPhh4N1VU1GXuORyy1CJ1QU/zpH21gMCfGrtkofd5GHSFLKNJRVMtaFd72ym7+u5hs
-         68v5OCijBqE7B3jusYMc4I2aJG0CboFnEVhUUc/50MwzSR7yovYjRycH/Syp1yHjBb30
-         0dZw==
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o67DhSDRgbswj21UglkRVro2MWwGEaqu1vVOhssAaMU=;
+        b=VUmWiTkHBHj+x+Zv0VlyA0EtZQoYfePcfuCebB+IUM5k8jUDo9/sNdQWpF9KrNiMSB
+         PhKew6Ixa5dsgndpPA3IaNW1gxXRz3boASWhF7nhm7z56RFgOU+s1xnA4Ll2fQtKilbu
+         NGyZDMyCY7zo66PxtMCbgmoARua1NLJats5a527c71pjEl8PnBN1nZ3XmkevumGq1yoW
+         5ZQArjTvEZgSVs3OlWwUkp9nSCir1QBAd2DzIHP1UyiP0A8oz7jhdDWTymhvYP3XI7Yh
+         zCI0oD5TQW+1XpV0YA2J0eRy820rCPkdiPP1WiH1P8Dzqd3MBavWQ//O1Oy0V4dWsO27
+         E6WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HHq+oxQ+RcU0cpnKyr/UwNvGamPQ9xWpmgS+w5o7uPg=;
-        b=p0GiED/cWmI//FooiY3IwBdYscJd0QIIhjJtJxcU/WKOzxI7v0uTC296+IDJx9/15B
-         RZUuWCiP/WovOnsXhya2+rTpRdB+HVZTXJa2+hPUFVlefnT0eMUKWdiVYiLN7pblkt/B
-         2SJQ1sLP1Bh5gJSKrFCjPs3WyY3HQjePVoT8RNoVKbmN5UILJtogHFHvWHY/xmbWa/zO
-         GJARpVR1X+DIloiu4XyWjPE8+8q96BeVJIPfKzLDEu8Ls1gnWato71r84MShfE+n36Lg
-         sAWl2ilp5SRdzE4r1CLCIz57c9DqZcPSeIY4Ku0q2zZGxwo+6rmjF5X2FuSj4ggdNOth
-         JZZw==
-X-Gm-Message-State: APjAAAW8h1B/w/+FTa+rWOW1sjkIIT9qDWHAK/0FBnVtnCOmj+BRza+Y
-        ESKwJyC8y1WQ7lgwwC8PDnhAJ72ezv/caA==
-X-Google-Smtp-Source: APXvYqyDYueuD9QDZ+Rja/eGcDBvqaevTYEMGzYx861bh4J2sL2u6/qjE1LBMT4Vd8nXY6l+6oJ24g==
-X-Received: by 2002:a5d:924e:: with SMTP id e14mr483473iol.215.1565824470948;
-        Wed, 14 Aug 2019 16:14:30 -0700 (PDT)
-Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id 8sm1434519ion.26.2019.08.14.16.14.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 16:14:30 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 17:14:27 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 1/3] PCI: sysfs: Define device
- attributes with DEVICE_ATTR*()
-Message-ID: <20190814231427.GC110786@JATN>
-References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-2-skunberg.kelsey@gmail.com>
- <20190814075220.GA4067@kroah.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=o67DhSDRgbswj21UglkRVro2MWwGEaqu1vVOhssAaMU=;
+        b=s4jBiLyUVny5g79+LocJYx0CeX9NTUs6kzPXuakMTlsSwArv/oVekA10DekIxOhVeH
+         ECgcuvPi+aidFkg7ZZzSIp9jHjf8sse9d23cFZUu0mRG4bG/Vth4ZQZDP9yjfBqoegSY
+         4qsKIiOXRC2Sh4kY/yr2qQv/B5k2VLoaJlduH6hSQc7w/jN2Y9M3EY7mak8XOqPWr8HT
+         +jn7DD7CLrtkbO9/Wu0T5G2xEmoH4cjC8LlXoC5nCB3I7pTastRzX5GotlcdXLueDcwt
+         8i8eiaYQRHM7ztsUT6y9k7JnkkNQgWpL2eBEfTJx8usXRvFXHaM1L5O2t2Qx+vAOz85X
+         MTCw==
+X-Gm-Message-State: APjAAAUbDKhJDe3sFpg3QCv5afFNmkkStn0QyX5/1gYZgPuYiA+F3NLh
+        dtmtGm1EYxqOiAoguM/QNVg=
+X-Google-Smtp-Source: APXvYqylYlIFzbbguUB4NjvJ44kXGrZpaKaBuRcPG8RVCt3xuQFHrnB9apI1Fot7CmBKStyMDNIGBw==
+X-Received: by 2002:a17:90a:c24e:: with SMTP id d14mr282997pjx.129.1565824507180;
+        Wed, 14 Aug 2019 16:15:07 -0700 (PDT)
+Received: from [10.67.49.31] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id m7sm975523pfb.99.2019.08.14.16.15.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 16:15:05 -0700 (PDT)
+Subject: Re: [PATCH net-next v2 5/9] net: phy: add MACsec ops in phy_device
+To:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
+        sd@queasysnail.net, andrew@lunn.ch, hkallweit1@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
+        allan.nielsen@microchip.com, camelia.groza@nxp.com,
+        Simon.Edelhaus@aquantia.com
+References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
+ <20190808140600.21477-6-antoine.tenart@bootlin.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <1521a28b-a0af-b3fb-d1bf-af82ec2f3d47@gmail.com>
+Date:   Wed, 14 Aug 2019 16:15:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814075220.GA4067@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190808140600.21477-6-antoine.tenart@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 09:52:20AM +0200, Greg KH wrote:
-> On Tue, Aug 13, 2019 at 02:45:11PM -0600, Kelsey Skunberg wrote:
-> > Defining device attributes should be done through the helper
-> > DEVICE_ATTR*(_name, _mode, _show, _store). Change all instances using
-> > __ATTR*() to now use DEVICE_ATTR*().
-> > 
-> > Example of old:
-> > 
-> > struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show,
-> > 						  _store)
-> > 
-> > Example of new:
-> > 
-> > static DEVICE_ATTR(foo, S_IWUSR | S_IRUGO, show_foo, store_foo)
+On 8/8/19 7:05 AM, Antoine Tenart wrote:
+> This patch adds a reference to MACsec ops in the phy_device, to allow
+> PHYs to support offloading MACsec operations. The phydev lock will be
+> held while calling those helpers.
 > 
-> Why not DEVICE_ATTR_RO() and DEVICE_ATTR_RW() and friends?  "Raw"
-> DEVICE_ATTR() should almost never be used unless the files have a very
-> strange mode setting.  And if that is true, they should be audited to
-> find out why their permissions are so strange from the rest of the
-> kernel defaults.
->
+> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+> ---
+>  include/linux/phy.h | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/include/linux/phy.h b/include/linux/phy.h
+> index 462b90b73f93..6947a19587e4 100644
+> --- a/include/linux/phy.h
+> +++ b/include/linux/phy.h
+> @@ -22,6 +22,10 @@
+>  #include <linux/workqueue.h>
+>  #include <linux/mod_devicetable.h>
+>  
+> +#ifdef CONFIG_MACSEC
+> +#include <net/macsec.h>
+> +#endif
 
-This makes sense. I'll put together a patch to change the DEVICE_ATTR()
-applicable to be changed. Thank you, Greg!
+#if IS_ENABLED(CONFIG_MACSEC)
 
--Kelsey
+> +
+>  #include <linux/atomic.h>
+>  
+>  #define PHY_DEFAULT_FEATURES	(SUPPORTED_Autoneg | \
+> @@ -345,6 +349,7 @@ struct phy_c45_device_ids {
+>   * attached_dev: The attached enet driver's device instance ptr
+>   * adjust_link: Callback for the enet controller to respond to
+>   * changes in the link state.
+> + * macsec_ops: MACsec offloading ops.
+>   *
+>   * speed, duplex, pause, supported, advertising, lp_advertising,
+>   * and autoneg are used like in mii_if_info
+> @@ -438,6 +443,11 @@ struct phy_device {
+>  
+>  	void (*phy_link_change)(struct phy_device *, bool up, bool do_carrier);
+>  	void (*adjust_link)(struct net_device *dev);
+> +
+> +#if defined(CONFIG_MACSEC)
+> +	/* MACsec management functions */
+> +	const struct macsec_ops *macsec_ops;
+> +#endif
 
-> > 
-> > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> > ---
-> >  drivers/pci/pci-sysfs.c | 59 +++++++++++++++++++----------------------
-> >  1 file changed, 27 insertions(+), 32 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > index 965c72104150..8af7944fdccb 100644
-> > --- a/drivers/pci/pci-sysfs.c
-> > +++ b/drivers/pci/pci-sysfs.c
-> > @@ -464,9 +464,7 @@ static ssize_t dev_rescan_store(struct device *dev,
-> >  	}
-> >  	return count;
-> >  }
-> > -static struct device_attribute dev_rescan_attr = __ATTR(rescan,
-> > -							(S_IWUSR|S_IWGRP),
-> > -							NULL, dev_rescan_store);
-> > +static DEVICE_ATTR(rescan, (S_IWUSR | S_IWGRP), NULL, dev_rescan_store);
-> 
-> DEVICE_ATTR_WO()?
-> 
-> >  static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
-> >  			    const char *buf, size_t count)
-> > @@ -480,9 +478,8 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
-> >  		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
-> >  	return count;
-> >  }
-> > -static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
-> > -							(S_IWUSR|S_IWGRP),
-> > -							NULL, remove_store);
-> > +static DEVICE_ATTR_IGNORE_LOCKDEP(remove, (S_IWUSR | S_IWGRP), NULL,
-> > +				  remove_store);
-> 
-> DEVICE_ATTR_WO()?
-> 
-> Ugh, no lockdep?  ick, ok, leave this as-is, crazy "remove" files...
-> 
-> >  
-> >  static ssize_t dev_bus_rescan_store(struct device *dev,
-> >  				    struct device_attribute *attr,
-> > @@ -504,7 +501,7 @@ static ssize_t dev_bus_rescan_store(struct device *dev,
-> >  	}
-> >  	return count;
-> >  }
-> > -static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
-> > +static DEVICE_ATTR(bus_rescan, (S_IWUSR | S_IWGRP), NULL, dev_bus_rescan_store);
-> 
-> DEVICE_ATTR_WO()?
-> 
-> >  
-> >  #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
-> >  static ssize_t d3cold_allowed_store(struct device *dev,
-> > @@ -687,16 +684,14 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
-> >  	return count;
-> >  }
-> >  
-> > -static struct device_attribute sriov_totalvfs_attr = __ATTR_RO(sriov_totalvfs);
-> > -static struct device_attribute sriov_numvfs_attr =
-> > -		__ATTR(sriov_numvfs, (S_IRUGO|S_IWUSR|S_IWGRP),
-> > -		       sriov_numvfs_show, sriov_numvfs_store);
-> > -static struct device_attribute sriov_offset_attr = __ATTR_RO(sriov_offset);
-> > -static struct device_attribute sriov_stride_attr = __ATTR_RO(sriov_stride);
-> > -static struct device_attribute sriov_vf_device_attr = __ATTR_RO(sriov_vf_device);
-> > -static struct device_attribute sriov_drivers_autoprobe_attr =
-> > -		__ATTR(sriov_drivers_autoprobe, (S_IRUGO|S_IWUSR|S_IWGRP),
-> > -		       sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
-> > +static DEVICE_ATTR_RO(sriov_totalvfs);
-> > +static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
-> > +				  sriov_numvfs_show, sriov_numvfs_store);
-> 
-> DEVICE_ATTR_RW()?
-> 
-> > +static DEVICE_ATTR_RO(sriov_offset);
-> > +static DEVICE_ATTR_RO(sriov_stride);
-> > +static DEVICE_ATTR_RO(sriov_vf_device);
-> > +static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
-> > +		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
-> 
-> DEVICE_ATTR_RW()?
-> 
-> >  #endif /* CONFIG_PCI_IOV */
-> >  
-> >  static ssize_t driver_override_store(struct device *dev,
-> > @@ -792,7 +787,7 @@ static struct attribute *pcie_dev_attrs[] = {
-> >  };
-> >  
-> >  static struct attribute *pcibus_attrs[] = {
-> > -	&dev_attr_rescan.attr,
-> > +	&dev_attr_bus_rescan.attr,
-> >  	&dev_attr_cpuaffinity.attr,
-> >  	&dev_attr_cpulistaffinity.attr,
-> >  	NULL,
-> > @@ -820,7 +815,7 @@ static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
-> >  		!!(pdev->resource[PCI_ROM_RESOURCE].flags &
-> >  		   IORESOURCE_ROM_SHADOW));
-> >  }
-> > -static struct device_attribute vga_attr = __ATTR_RO(boot_vga);
-> > +static DEVICE_ATTR_RO(boot_vga);
-> >  
-> >  static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
-> >  			       struct bin_attribute *bin_attr, char *buf,
-> > @@ -1458,7 +1453,7 @@ static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
-> >  	return count;
-> >  }
-> >  
-> > -static struct device_attribute reset_attr = __ATTR(reset, 0200, NULL, reset_store);
-> > +static DEVICE_ATTR(reset, 0200, NULL, reset_store);
-> 
-> DEVICE_ATTR_WO()?  Hm, root only, maybe not :(
-> 
-> >  
-> >  static int pci_create_capabilities_sysfs(struct pci_dev *dev)
-> >  {
-> > @@ -1468,7 +1463,7 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
-> >  	pcie_aspm_create_sysfs_dev_files(dev);
-> >  
-> >  	if (dev->reset_fn) {
-> > -		retval = device_create_file(&dev->dev, &reset_attr);
-> > +		retval = device_create_file(&dev->dev, &dev_attr_reset);
-> 
-> odds are this needs to be fixed up later to use attribute groups
-> properly.  But that's better left for another patch.
-> 
-> >  		if (retval)
-> >  			goto error;
-> >  	}
-> > @@ -1553,7 +1548,7 @@ static void pci_remove_capabilities_sysfs(struct pci_dev *dev)
-> >  	pcie_vpd_remove_sysfs_dev_files(dev);
-> >  	pcie_aspm_remove_sysfs_dev_files(dev);
-> >  	if (dev->reset_fn) {
-> > -		device_remove_file(&dev->dev, &reset_attr);
-> > +		device_remove_file(&dev->dev, &dev_attr_reset);
-> 
-> Same here, attribute groups will handle this.
-> 
-> thanks,
-> 
-> greg k-h
+#if IS_ENABLED(CONFIG_MACSEC)
+
+likewise.
+-- 
+Florian
