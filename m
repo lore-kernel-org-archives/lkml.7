@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1578C32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11A1C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F04E208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8404208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802479;
-	bh=VBjxKQbmEC3ejwzUV+O9gdG/YAAWgAXWkxhLYsFppDo=;
+	s=default; t=1565802481;
+	bh=7u6y6PJryD4iCbF2IuVqPiFbr3X04F7zJDSfs/jAL1M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kELDerWlJSy10fAJGeg8m+60aE+5JhGO3uAWrp5DyytSfDc8XVmM3iid50LaXIQtt
-	 gYRBYIOt//U0q/Y15PnjeIGBRgzXJRHh/yVWo8LxmuRf/mYDUHC3NKt5QtNm3RUkuC
-	 rdLh2nloR7NWD9rW1KoL4JxqI7psW8TO/i9Li/pg=
+	b=f8DnTZ4fpYtOph+QTx2G1DHCOZxMKwXUh6BrzDyO3AAHq4Tsab+km6Vw1DQn72MMy
+	 nlhblCwMp1zUlT4n78NCqy0+Iuco3jYx2tDdMSiNIyHouyuCnPw6dJuKOwJ4LTIUwC
+	 8abL0n69iIxqJVwxY/EzLrTAVIajm9enaaqMnZIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbfHNRH7 (ORCPT
+        id S1730033AbfHNRIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:07:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57674 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:08:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729993AbfHNRHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:07:55 -0400
+        id S1730003AbfHNRH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:07:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C12C521883;
-        Wed, 14 Aug 2019 17:07:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55A9A214DA;
+        Wed, 14 Aug 2019 17:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802475;
-        bh=VBjxKQbmEC3ejwzUV+O9gdG/YAAWgAXWkxhLYsFppDo=;
+        s=default; t=1565802477;
+        bh=7u6y6PJryD4iCbF2IuVqPiFbr3X04F7zJDSfs/jAL1M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x7351Hfp8YBJXo2t7YgNqg1C7wrX8tvox/3YeGSIiCfdV2he2caZvzpoD2/ykO/3f
-         /PaVLHfaS97qO+FBVKTqAWkhBftYr931bfduSlX8Oilppyv9UYveejvKhbaT4GY/7N
-         n20L5JJLu2Uh7mmG6Pl0B0/rq4WTrND3uCjjnQcc=
+        b=lO7CrVCGo+p0ddbYx6lCGvYiAvvkBXoyNZ5Cri8bv5TAZ+/DtfGNsARIDwPjlGoVO
+         82A2Ys72JaPTmmzv75sw0X1iqtBD2pXiQYzR1DsSvPPvHojp5Hsh5y52UPbE/0Axmu
+         Qazj/Nc6MPiWfmJrNh0sIXKNjQNybVxP9Zbc+5kY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
         Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.2 140/144] iwlwifi: dont unmap as page memory that was mapped as single
-Date:   Wed, 14 Aug 2019 19:01:36 +0200
-Message-Id: <20190814165805.822748207@linuxfoundation.org>
+Subject: [PATCH 5.2 141/144] iwlwifi: mvm: fix an out-of-bound access
+Date:   Wed, 14 Aug 2019 19:01:37 +0200
+Message-Id: <20190814165805.863457330@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -62,35 +62,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 
-commit 87e7e25aee6b59fef740856f4e86d4b60496c9e1 upstream.
+commit ba3224db78034435e9ff0247277cce7c7bb1756c upstream.
 
-In order to remember how to unmap a memory (as single or
-as page), we maintain a bit per Transmit Buffer (TBs) in
-the meta data (structure iwl_cmd_meta).
-We maintain a bitmap: 1 bit per TB.
-If the TB is set, we will free the memory as a page.
-This bitmap was never cleared. Fix this.
+The index for the elements of the ACPI object we dereference
+was static. This means that if we called the function twice
+we wouldn't start from 3 again, but rather from the latest
+index we reached in the previous call.
+This was dutifully reported by KASAN.
+
+Fix this.
 
 Cc: stable@vger.kernel.org
-Fixes: 3cd1980b0cdf ("iwlwifi: pcie: introduce new tfd and tb formats")
+Fixes: 6996490501ed ("iwlwifi: mvm: add support for EWRD (Dynamic SAR) ACPI table")
 Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/tx.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
-@@ -435,6 +435,8 @@ static void iwl_pcie_tfd_unmap(struct iw
- 					 DMA_TO_DEVICE);
- 	}
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -753,7 +753,7 @@ static int iwl_mvm_sar_get_ewrd_table(st
  
-+	meta->tbs = 0;
-+
- 	if (trans->cfg->use_tfh) {
- 		struct iwl_tfh_tfd *tfd_fh = (void *)tfd;
+ 	for (i = 0; i < n_profiles; i++) {
+ 		/* the tables start at element 3 */
+-		static int pos = 3;
++		int pos = 3;
  
+ 		/* The EWRD profiles officially go from 2 to 4, but we
+ 		 * save them in sar_profiles[1-3] (because we don't
 
 
