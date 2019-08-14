@@ -2,51 +2,53 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23708C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B04C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E71E12173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 187D5214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802723;
-	bh=5KpzJcO9s1No6VYp64ZStfAjB04V+ezPbwatG7aZ2rs=;
+	s=default; t=1565802726;
+	bh=H/J+QUGTpvkGNfplsZFmab6N54wgsHVUC46ruTanEMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=apgnb176KOvcp7AVoOOz6c0XZ2BEAdDlCmCEe8hihi7B+OyziSeoIjqCtvJ4gWOHc
-	 5Sdz/ZRxD7p4k5/8HBQoVPeSxYJGVHSN+u4y0KC9jgu8wSRRa6fOt3xZCbKeJBCvgo
-	 dWsMngk57iydhcooXOpzGmp/GEQCv994Z2eNv4kk=
+	b=T++99cdy8U7T4Ve5regAK7vTd5KRa69q/2o1utI+aiOuOY17jf63mVHtzrBVGWMv5
+	 BQOsQEllBx7M+Rn6ypnVsJthDce+liz7Obo74L3rI1sQX8/gXDB2GoTxzkCByX/8xb
+	 ZfYWSISRUeBLFzE36R32GnUtU/CR2HU9am3Ao+tQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730670AbfHNRMB (ORCPT
+        id S1730676AbfHNRME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:12:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35536 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:12:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730239AbfHNRL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:11:59 -0400
+        id S1730668AbfHNRMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:12:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6F3E2063F;
-        Wed, 14 Aug 2019 17:11:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 619B42063F;
+        Wed, 14 Aug 2019 17:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802718;
-        bh=5KpzJcO9s1No6VYp64ZStfAjB04V+ezPbwatG7aZ2rs=;
+        s=default; t=1565802720;
+        bh=H/J+QUGTpvkGNfplsZFmab6N54wgsHVUC46ruTanEMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FcTP8y2wsFsB1hDoi7V59ldphcEA7mViYe8RulWywuHTJTgdBYgyFmWHzlYJWw0nW
-         LBb8R23AzJC3ViK5WtcAR3wnuSJEs/7LtZQl+2O0fWwKc5GPAZ2vlMKXvtHJQcrQba
-         VzidnahqCSpnoWJWaJ4pWE5d/d7UY99ZNFUS/8YA=
+        b=jPMoKfumwko11cMmX63DeNof5bAoHkc/C2NzPHJkzfJvyCf4zaGxlz4QDxDjdlxAV
+         hyESzJJ+Yk+9IdJYJPqP5Sf3GATDhq0sPmknW4Mh3g9B4q+/sNW37ViPHEt4Frf/Cp
+         vS3F3ZrT5zdBLr2RHIpe38PKgKiVtgYx4+0Z7Pas=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.19 90/91] iwlwifi: mvm: dont send GEO_TX_POWER_LIMIT on version < 41
-Date:   Wed, 14 Aug 2019 19:01:53 +0200
-Message-Id: <20190814165754.073170009@linuxfoundation.org>
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        Zhangguanghui <zhang.guanghui@h3c.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 65/91] scsi: scsi_dh_alua: always use a 2 second delay before retrying RTPG
+Date:   Wed, 14 Aug 2019 19:01:28 +0200
+Message-Id: <20190814165752.371119116@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -59,73 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+[ Upstream commit 20122994e38aef0ae50555884d287adde6641c94 ]
 
-commit 39bd984c203e86f3109b49c2a2e20677c4d3ab65 upstream.
+Retrying immediately after we've received a 'transitioning' sense code is
+pretty much pointless, we should always use a delay before retrying.  So
+ensure the default delay is applied before retrying.
 
-Firmware versions before 41 don't support the GEO_TX_POWER_LIMIT
-command, and sending it to the firmware will cause a firmware crash.
-We allow this via debugfs, so we need to return an error value in case
-it's not supported.
-
-This had already been fixed during init, when we send the command if
-the ACPI WGDS table is present.  Fix it also for the other,
-userspace-triggered case.
-
-Cc: stable@vger.kernel.org
-Fixes: 7fe90e0e3d60 ("iwlwifi: mvm: refactor geo init")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Tested-by: Zhangguanghui <zhang.guanghui@h3c.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c |   22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/scsi/device_handler/scsi_dh_alua.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -836,6 +836,17 @@ int iwl_mvm_sar_select_profile(struct iw
- 	return iwl_mvm_send_cmd_pdu(mvm, REDUCE_TX_POWER_CMD, 0, len, &cmd);
- }
+diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c b/drivers/scsi/device_handler/scsi_dh_alua.c
+index d1154baa9436a..9c21938ed67ed 100644
+--- a/drivers/scsi/device_handler/scsi_dh_alua.c
++++ b/drivers/scsi/device_handler/scsi_dh_alua.c
+@@ -54,6 +54,7 @@
+ #define ALUA_FAILOVER_TIMEOUT		60
+ #define ALUA_FAILOVER_RETRIES		5
+ #define ALUA_RTPG_DELAY_MSECS		5
++#define ALUA_RTPG_RETRY_DELAY		2
  
-+static bool iwl_mvm_sar_geo_support(struct iwl_mvm *mvm)
-+{
-+	/*
-+	 * The GEO_TX_POWER_LIMIT command is not supported on earlier
-+	 * firmware versions.  Unfortunately, we don't have a TLV API
-+	 * flag to rely on, so rely on the major version which is in
-+	 * the first byte of ucode_ver.
-+	 */
-+	return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 41;
-+}
-+
- int iwl_mvm_get_sar_geo_profile(struct iwl_mvm *mvm)
- {
- 	struct iwl_geo_tx_power_profiles_resp *resp;
-@@ -851,6 +862,9 @@ int iwl_mvm_get_sar_geo_profile(struct i
- 		.data = { &geo_cmd },
- 	};
- 
-+	if (!iwl_mvm_sar_geo_support(mvm))
-+		return -EOPNOTSUPP;
-+
- 	ret = iwl_mvm_send_cmd(mvm, &cmd);
- 	if (ret) {
- 		IWL_ERR(mvm, "Failed to get geographic profile info %d\n", ret);
-@@ -876,13 +890,7 @@ static int iwl_mvm_sar_geo_init(struct i
- 	int ret, i, j;
- 	u16 cmd_wide_id =  WIDE_ID(PHY_OPS_GROUP, GEO_TX_POWER_LIMIT);
- 
--	/*
--	 * This command is not supported on earlier firmware versions.
--	 * Unfortunately, we don't have a TLV API flag to rely on, so
--	 * rely on the major version which is in the first byte of
--	 * ucode_ver.
--	 */
--	if (IWL_UCODE_SERIAL(mvm->fw->ucode_ver) < 41)
-+	if (!iwl_mvm_sar_geo_support(mvm))
- 		return 0;
- 
- 	ret = iwl_mvm_sar_get_wgds_table(mvm);
+ /* device handler flags */
+ #define ALUA_OPTIMIZE_STPG		0x01
+@@ -696,7 +697,7 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
+ 	case SCSI_ACCESS_STATE_TRANSITIONING:
+ 		if (time_before(jiffies, pg->expiry)) {
+ 			/* State transition, retry */
+-			pg->interval = 2;
++			pg->interval = ALUA_RTPG_RETRY_DELAY;
+ 			err = SCSI_DH_RETRY;
+ 		} else {
+ 			struct alua_dh_data *h;
+@@ -821,6 +822,8 @@ static void alua_rtpg_work(struct work_struct *work)
+ 				spin_lock_irqsave(&pg->lock, flags);
+ 				pg->flags &= ~ALUA_PG_RUNNING;
+ 				pg->flags |= ALUA_PG_RUN_RTPG;
++				if (!pg->interval)
++					pg->interval = ALUA_RTPG_RETRY_DELAY;
+ 				spin_unlock_irqrestore(&pg->lock, flags);
+ 				queue_delayed_work(kaluad_wq, &pg->rtpg_work,
+ 						   pg->interval * HZ);
+@@ -832,6 +835,8 @@ static void alua_rtpg_work(struct work_struct *work)
+ 		spin_lock_irqsave(&pg->lock, flags);
+ 		if (err == SCSI_DH_RETRY || pg->flags & ALUA_PG_RUN_RTPG) {
+ 			pg->flags &= ~ALUA_PG_RUNNING;
++			if (!pg->interval && !(pg->flags & ALUA_PG_RUN_RTPG))
++				pg->interval = ALUA_RTPG_RETRY_DELAY;
+ 			pg->flags |= ALUA_PG_RUN_RTPG;
+ 			spin_unlock_irqrestore(&pg->lock, flags);
+ 			queue_delayed_work(kaluad_wq, &pg->rtpg_work,
+-- 
+2.20.1
+
 
 
