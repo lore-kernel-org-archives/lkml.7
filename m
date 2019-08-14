@@ -8,117 +8,88 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68568C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3480CC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 410EA214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CCF6216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:48:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gkUo10is"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBMuvLlE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbfHNRsO (ORCPT
+        id S1728878AbfHNRsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:48:14 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40641 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728253AbfHNRsO (ORCPT
+        Wed, 14 Aug 2019 13:48:51 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39783 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728651AbfHNRsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:48:14 -0400
-Received: by mail-pl1-f196.google.com with SMTP id a93so50950183pla.7;
-        Wed, 14 Aug 2019 10:48:13 -0700 (PDT)
+        Wed, 14 Aug 2019 13:48:50 -0400
+Received: by mail-pf1-f194.google.com with SMTP id f17so50010729pfn.6;
+        Wed, 14 Aug 2019 10:48:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0NgxYQZyADX7wGeMf0qg8RogagcfEOIY3QXxQvCx6fI=;
-        b=gkUo10isoegn4SBnVHc/SxhQpAVtJoBCEjnMMYwpmtTIAaP0KX6tTSW4Wlc41T7NOI
-         Z9Zv1CNw0TM2L8bVcrAzvdlaKALot9PyfplL95knbvOnObki+0pw8f7Md8IZmJiZGHpw
-         I8ECQyV+ideNMiGKgEEBP+rhPmsFQLv9ZpOfwExj7cXTwJFywnJJMtQCCTE3thfapCaj
-         luXEz2fVIAh+2v+Je68tXBgrvNxqJBcaKK7WYgrKiT162cNAcQuPkCawNoCeIiN2mucc
-         KC0zm2BbvYvk2gHR6Oi90A+9xdkc20Z07EYpmJLyOVgXslqWvK5ug6Q6WbKLmadOEpcP
-         8y6Q==
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JjXmk7pXQOMLxZgpEYBzHbDbsBvtUuW4FzkivJFUtz8=;
+        b=lBMuvLlEHpvux9PAgI79qF01xOk4oEUbokALibaKFb7HhKQ4EWeBTFX5OCP87/aDdW
+         8C2gRUf3C55DbxRUaCVtUyD3Ef6+liZAlojYpZ4QYU61T+dovMJjTXfvQ0xEnVLQ0Vkp
+         9OHc7G/ZqpLHCfsSY7kf1yiQIx+CUCFuZp6AhqF6BHOv6iY6bA9/WBucvS0/W41k3VMp
+         Kz+gTjbCp+GWraGRDpa8x8gKKm0GXrB6euT3wQhX1F4v1OWI3Qc2yg+dIh8ozcizn6O+
+         FXpSn4hXahzFA7FsKtvg8iPRsHj8SdgehRGFjr+MMqVnLvNXcLB/DVLbj+DEiCDJMn/J
+         CZsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0NgxYQZyADX7wGeMf0qg8RogagcfEOIY3QXxQvCx6fI=;
-        b=JSy1chz7M6HpknVbipJuLKaJgXEW+GlMPKqvx2cSwDcvb8yjl2vgAEpCDGriPlXO8Z
-         r2m/aTNt8AlKyS2qcC12/2VuIt0fSJ05vHK+DrEteeMC5g7/BVoEkCrPvLW50dCbd7Iw
-         o3KVTztfmFZLzSGHr+XVT10Wb98LWqyF1CaSueNmXzna4FjF+vYG5XgVB1gQqd351AYT
-         GHPgb/OQ6bQ/54TZFjXLpkR7uMFleIxOc/ADPpkI+kuDkCaAWThct13w7pVt89X5UhNk
-         1raPZ3KLVKbnEPwaq61R7F5BcH20I9azE9mIGy8hCCrsGu6ZyAcTj4OsHvjZX3FFHa29
-         AvIA==
-X-Gm-Message-State: APjAAAWZb83agDJorBOhy6AlObTGoPUvNOkyza4mTksujd8tPfjZsdhx
-        eZuRm89QjC/7f/XBIRDgA+4=
-X-Google-Smtp-Source: APXvYqw0rP/rPYfBL/2kR6Jfxvyiykgzo5X9oZ0tapP/Do+OFFuCSHZzWBMt/vcchc5RqT6ElyWIQQ==
-X-Received: by 2002:a17:902:e106:: with SMTP id cc6mr514588plb.255.1565804893019;
-        Wed, 14 Aug 2019 10:48:13 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id p1sm445586pfn.83.2019.08.14.10.48.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 10:48:11 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 10:48:09 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 21/57] Input: Remove dev_err() usage after
- platform_get_irq()
-Message-ID: <20190814174809.GB121898@dtor-ws>
-References: <20190730181557.90391-1-swboyd@chromium.org>
- <20190730181557.90391-22-swboyd@chromium.org>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JjXmk7pXQOMLxZgpEYBzHbDbsBvtUuW4FzkivJFUtz8=;
+        b=BRwJJ89VgaZjxvRlvEAc8vmNw+eq4gL7AINonMn8c34MMb/UgEGe6mAaH4JWP+lgTV
+         whnPJis1bz20hqV+l0rkrNIxsDjBvWXm7u14OvKtMBhZ1hM11RFCKfbpAamzeHQWb2Yl
+         AnU7tND82fqtSro3ZRCEhRIq2k+5hIOzSqyRgtFrIA+I2E8ShKRaa+RRPyN9r2RXQqmA
+         ehT8HTqLy+D4ASISQIIhFr9l5RNiW/R0ejvLj9Ayn5N2c20EAj6TZYjeX4FQ9MDwkeC4
+         MSy8Z7h0NTYmvEwv8G8pz9bTfMGSi/3UrS+20WQqHsej2ZKglqU6UppRQpnwG8+crY30
+         nbrQ==
+X-Gm-Message-State: APjAAAWf+pXlDl+NPD07qGnGUmjdo5CdWFoG8Zm+mlz7eR1Ft4Tj+rXi
+        Dzux32OYQF06dQf+yRA3KmQ=
+X-Google-Smtp-Source: APXvYqzfkLeKkyjIgLIPq570di138yN6m5FnJNr/6PfkVy4YtQvKN3AUSGHwtl9ryfes2NifRmMbJA==
+X-Received: by 2002:a63:9e56:: with SMTP id r22mr294495pgo.221.1565804929926;
+        Wed, 14 Aug 2019 10:48:49 -0700 (PDT)
+Received: from [10.69.78.41] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id b14sm428475pfo.15.2019.08.14.10.48.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 10:48:49 -0700 (PDT)
+Subject: Re: [PATCH v4 03/14] net: phy: adin: add support for interrupts
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        hkallweit1@gmail.com, andrew@lunn.ch
+References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+ <20190812112350.15242-4-alexandru.ardelean@analog.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <a888c1d9-4f5d-c3fa-4526-94586fd9e242@gmail.com>
+Date:   Wed, 14 Aug 2019 10:48:47 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730181557.90391-22-swboyd@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190812112350.15242-4-alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 11:15:21AM -0700, Stephen Boyd wrote:
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
-> 
-> // <smpl>
-> @@
-> expression ret;
-> struct platform_device *E;
-> @@
-> 
-> ret =
-> (
-> platform_get_irq(E, ...)
-> |
-> platform_get_irq_byname(E, ...)
-> );
-> 
-> if ( \( ret < 0 \| ret <= 0 \) )
-> {
-> (
-> -if (ret != -EPROBE_DEFER)
-> -{ ...
-> -dev_err(...);
-> -... }
-> |
-> ...
-> -dev_err(...);
-> )
-> ...
-> }
-> // </smpl>
-> 
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
-> 
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: linux-input@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
-Applied, thank you.
 
+On 8/12/2019 4:23 AM, Alexandru Ardelean wrote:
+> This change hooks link-status-change interrupts to phylib.
+> 
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Dmitry
+Florian
