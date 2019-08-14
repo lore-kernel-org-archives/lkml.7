@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E7CC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269E9C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36EAC20842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE70020679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749376;
-	bh=JZeOdsZ1pDG9kYueDJ17W6IlCvFkm0I3PGmHHUVd1uU=;
+	s=default; t=1565749382;
+	bh=FU7JrSjpDn+j5PtmdPsUX2jCP/x8aep9fWo+JQAylnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X8eEjqyneN6L2XC9stBPpT+CAbE+6gl25iW5eIZzzeZiXo5GSxjO3b2bYgT0ZoSXs
-	 3rryrQgDNQW5/ZX7AHp2oYYMBhQDKbDVoHsNTcAmmhHWs+tTYvjEVFzXAf61iZGsQr
-	 tYKQjU2W9MJKX8ykmhLVtczhHinhTTGzgPxse+Wc=
+	b=dnjwxw+F9ogceLfSoybYgSNV0asQYqZducrpDOFrrOUn141UXdQj16x/wZ3T4Dn1d
+	 JO2NMHPT+/AwWBPBeynQdqiZyEWS68L2DeqydxZb74QjndaRXpbmvav1/2JGMyi/cD
+	 YRu6NJBQkDzEhACtsI50JIacivnupfQAiTlMdbYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbfHNCRd (ORCPT
+        id S1729727AbfHNCXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:17:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48602 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:23:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729328AbfHNCRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:17:15 -0400
+        id S1727626AbfHNCRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:17:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E91B208C2;
-        Wed, 14 Aug 2019 02:17:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2750208C2;
+        Wed, 14 Aug 2019 02:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749034;
-        bh=JZeOdsZ1pDG9kYueDJ17W6IlCvFkm0I3PGmHHUVd1uU=;
+        s=default; t=1565749050;
+        bh=FU7JrSjpDn+j5PtmdPsUX2jCP/x8aep9fWo+JQAylnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qh2wFkIu/cHv8i9Txx9+s/AzNzzRDoIx2+1VAF2JjQWinu9tBT7fzep5JGJNtl/Nz
-         VvAlVqQ02ZkfDWpc3X7/8s9yINArsm58ePGTHI/MxKG0A22yrcNYmkGW0k0fqHswmJ
-         8XHBXmOsDqQWAAIDpnlqkv3QeZtodfltEloViW60=
+        b=eA/vMENHRIm9JIuTN0o2S7tXK0t6edL6VH5eZQ96ILEjhB9fUhT2iUWtmrnA/K9Rr
+         ryrGu34vWACC3sH5W+NmThN2eD2w9mvvC3ClHklmhyV9r948ASVnIZkvGu+sX9UZny
+         FEQr48RVoNyPhxK9Hc4vJnGtmLY3xSjyumqN4Bbo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Andreas Krebbel <krebbel@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 50/68] s390: put _stext and _etext into .text section
-Date:   Tue, 13 Aug 2019 22:15:28 -0400
-Message-Id: <20190814021548.16001-50-sashal@kernel.org>
+Cc:     He Zhe <zhe.he@windriver.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 63/68] perf ftrace: Fix failure to set cpumask when only one cpu is present
+Date:   Tue, 13 Aug 2019 22:15:41 -0400
+Message-Id: <20190814021548.16001-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -60,57 +66,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: He Zhe <zhe.he@windriver.com>
 
-[ Upstream commit 24350fdadbdec780406a1ef988e6cd3875e374a8 ]
+[ Upstream commit cf30ae726c011e0372fd4c2d588466c8b50a8907 ]
 
-Perf relies on _etext and _stext symbols being one of 't', 'T', 'v' or
-'V'. Put them into .text section to guarantee that.
+The buffer containing the string used to set cpumask is overwritten at
+the end of the string later in cpu_map__snprint_mask due to not enough
+memory space, when there is only one cpu.
 
-Also moves padding to page boundary inside .text which has an effect that
-.text section is now padded with nops rather than 0's, which apparently
-has been the initial intention for specifying 0x0700 fill expression.
+And thus causes the following failure:
 
-Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+  $ perf ftrace ls
+  failed to reset ftrace
+  $
+
+This patch fixes the calculation of the cpumask string size.
+
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Fixes: dc23103278c5 ("perf ftrace: Add support for -a and -C option")
+Link: http://lkml.kernel.org/r/1564734592-15624-1-git-send-email-zhe.he@windriver.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/vmlinux.lds.S | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ tools/perf/builtin-ftrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
-index b43f8d33a3697..18ede6e806b91 100644
---- a/arch/s390/kernel/vmlinux.lds.S
-+++ b/arch/s390/kernel/vmlinux.lds.S
-@@ -31,10 +31,9 @@ PHDRS {
- SECTIONS
- {
- 	. = 0x100000;
--	_stext = .;		/* Start of text section */
- 	.text : {
--		/* Text and read-only data */
--		_text = .;
-+		_stext = .;		/* Start of text section */
-+		_text = .;		/* Text and read-only data */
- 		HEAD_TEXT
- 		TEXT_TEXT
- 		SCHED_TEXT
-@@ -46,11 +45,10 @@ SECTIONS
- 		*(.text.*_indirect_*)
- 		*(.fixup)
- 		*(.gnu.warning)
-+		. = ALIGN(PAGE_SIZE);
-+		_etext = .;		/* End of text section */
- 	} :text = 0x0700
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index f42f228e88992..137955197ba8d 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -174,7 +174,7 @@ static int set_tracing_cpumask(struct cpu_map *cpumap)
+ 	int last_cpu;
  
--	. = ALIGN(PAGE_SIZE);
--	_etext = .;		/* End of text section */
--
- 	NOTES :text :note
+ 	last_cpu = cpu_map__cpu(cpumap, cpumap->nr - 1);
+-	mask_size = (last_cpu + 3) / 4 + 1;
++	mask_size = last_cpu / 4 + 2; /* one more byte for EOS */
+ 	mask_size += last_cpu / 32; /* ',' is needed for every 32th cpus */
  
- 	.dummy : { *(.dummy) } :data
+ 	cpumask = malloc(mask_size);
 -- 
 2.20.1
 
