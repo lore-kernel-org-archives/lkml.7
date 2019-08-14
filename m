@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92079C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70ABDC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E50520843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4452C20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749332;
-	bh=p0XxJE8N7o7zXXXAIMl9GnwO25oAM1lDCY+x/eI0iIQ=;
+	s=default; t=1565749344;
+	bh=tgwqXG420JjM010JcdbmV4Sa0EscBJXvR6tUTDVc0pc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E6rzJC1h59lmjX+lB6I02tUBTIHjVnIPVI32OnlwEFewwUIet7yfd9wc2aFR//Sl5
-	 QXtE1pAMZRbAFgHzaeTuNVniCdB9ULW8cCEDEjSOlUX3iuSW34uqcGRUZVwhnIFmR3
-	 96Lf0SuxQnz968weR6M0zwSdyRIHOZbmC7gqG1Uk=
+	b=Acaw0jqyovTs5oFxMwE9CtUAev6BuM5Fp2T/g677jQNPKUhnZQqOsqP249UEKuEEk
+	 uoIV/lxqOnI4r189l48hl1xXrMMshIF9tvtvP/AMaWmYTZ+4otV25jB/2XNaPOgHDr
+	 9+GeteW4JTS09FUAL6YUsQMMDpxBmPAQpItzZyvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbfHNCWK (ORCPT
+        id S1729777AbfHNCWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:22:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49768 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:22:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728697AbfHNCSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:18:51 -0400
+        id S1729529AbfHNCSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:18:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7096A2084D;
-        Wed, 14 Aug 2019 02:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98E8A20989;
+        Wed, 14 Aug 2019 02:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749130;
-        bh=p0XxJE8N7o7zXXXAIMl9GnwO25oAM1lDCY+x/eI0iIQ=;
+        s=default; t=1565749124;
+        bh=tgwqXG420JjM010JcdbmV4Sa0EscBJXvR6tUTDVc0pc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A1Ll8n7dVYc5bFUIJ7hAzwkR03+BQ6oqNo9vfz3AXQkGcVBdp4iyewVJ6ZqFV7rqH
-         80HcYeJ9MHMCuX7t3ktuk7ifI2gXM+ERnP9B3j77mRZW/h3zQTYuIeUKxCpWMKRq8V
-         lfyrShoQ13bRiT5HYyJiKUH1GsMvWW7Hen7ygY6s=
+        b=Z42HNGcftQeVS0HW9aOw81uvOL0dBaA0rUn9fXZrWldnsv5oA+tE7D21uHdtBSwBX
+         AP9wia8ByX2LNCU9aY2yKIDdeI4cGkEqGnJbtFpv5wZeVPX0XzW2d3AHtSWwkqgFnB
+         b4VMpiX81rAa3lorhaNZkz1y1TaDxSgSd3UJlmKk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/44] st21nfca_connectivity_event_received: null check the allocation
-Date:   Tue, 13 Aug 2019 22:17:59 -0400
-Message-Id: <20190814021834.16662-10-sashal@kernel.org>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 06/44] ASoC: dapm: Fix handling of custom_stop_condition on DAPM graph walks
+Date:   Tue, 13 Aug 2019 22:17:55 -0400
+Message-Id: <20190814021834.16662-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021834.16662-1-sashal@kernel.org>
 References: <20190814021834.16662-1-sashal@kernel.org>
@@ -59,32 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit 9891d06836e67324c9e9c4675ed90fc8b8110034 ]
+[ Upstream commit 8dd26dff00c0636b1d8621acaeef3f6f3a39dd77 ]
 
-devm_kzalloc may fail and return null. So the null check is needed.
+DPCM uses snd_soc_dapm_dai_get_connected_widgets to build a
+list of the widgets connected to a specific front end DAI so it
+can search through this list for available back end DAIs. The
+custom_stop_condition was added to is_connected_ep to facilitate this
+list not containing more widgets than is necessary. Doing so both
+speeds up the DPCM handling as less widgets need to be searched and
+avoids issues with CODEC to CODEC links as these would be confused
+with back end DAIs if they appeared in the list of available widgets.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+custom_stop_condition was implemented by aborting the graph walk
+when the condition is triggered, however there is an issue with this
+approach. Whilst walking the graph is_connected_ep should update the
+endpoints cache on each widget, if the walk is aborted the number
+of attached end points is unknown for that sub-graph. When the stop
+condition triggered, the original patch ignored the triggering widget
+and returned zero connected end points; a later patch updated this
+to set the triggering widget's cache to 1 and return that. Both of
+these approaches result in inaccurate values being stored in various
+end point caches as the values propagate back through the graph,
+which can result in later issues with widgets powering/not powering
+unexpectedly.
+
+As the original goal was to reduce the size of the widget list passed
+to the DPCM code, the simplest solution is to limit the functionality
+of the custom_stop_condition to the widget list. This means the rest
+of the graph will still be processed resulting in correct end point
+caches, but only widgets up to the stop condition will be added to the
+returned widget list.
+
+Fixes: 6742064aef7f ("ASoC: dapm: support user-defined stop condition in dai_get_connected_widgets")
+Fixes: 5fdd022c2026 ("ASoC: dpcm: play nice with CODEC<->CODEC links")
+Fixes: 09464974eaa8 ("ASoC: dapm: Fix to return correct path list in is_connected_ep.")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20190718084333.15598-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/st21nfca/se.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/soc-dapm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nfc/st21nfca/se.c b/drivers/nfc/st21nfca/se.c
-index 3a98563d4a121..eac608a457f03 100644
---- a/drivers/nfc/st21nfca/se.c
-+++ b/drivers/nfc/st21nfca/se.c
-@@ -326,6 +326,8 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index b4c8ba412a5c1..104d5f487c7d1 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -1152,8 +1152,8 @@ static __always_inline int is_connected_ep(struct snd_soc_dapm_widget *widget,
+ 		list_add_tail(&widget->work_list, list);
  
- 		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
- 						   skb->len - 2, GFP_KERNEL);
-+		if (!transaction)
-+			return -ENOMEM;
+ 	if (custom_stop_condition && custom_stop_condition(widget, dir)) {
+-		widget->endpoints[dir] = 1;
+-		return widget->endpoints[dir];
++		list = NULL;
++		custom_stop_condition = NULL;
+ 	}
  
- 		transaction->aid_len = skb->data[1];
- 		memcpy(transaction->aid, &skb->data[2],
+ 	if ((widget->is_ep & SND_SOC_DAPM_DIR_TO_EP(dir)) && widget->connected) {
+@@ -1190,8 +1190,8 @@ static __always_inline int is_connected_ep(struct snd_soc_dapm_widget *widget,
+  *
+  * Optionally, can be supplied with a function acting as a stopping condition.
+  * This function takes the dapm widget currently being examined and the walk
+- * direction as an arguments, it should return true if the walk should be
+- * stopped and false otherwise.
++ * direction as an arguments, it should return true if widgets from that point
++ * in the graph onwards should not be added to the widget list.
+  */
+ static int is_connected_output_ep(struct snd_soc_dapm_widget *widget,
+ 	struct list_head *list,
 -- 
 2.20.1
 
