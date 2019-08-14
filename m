@@ -2,57 +2,120 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25AFC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532D9C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A29B1214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F89214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:49:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbfHNKtu (ORCPT
+        id S1727906AbfHNKtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:49:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56840 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727226AbfHNKto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:49:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A0F0CADEF;
-        Wed, 14 Aug 2019 10:49:43 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 12:49:41 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/8] printk: Replace strncmp with str_has_prefix
-Message-ID: <20190814104941.qt66ozcau5fdswcs@pathway.suse.cz>
-References: <20190809071034.17279-1-hslester96@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809071034.17279-1-hslester96@gmail.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+        Wed, 14 Aug 2019 06:49:04 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51468 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726126AbfHNKtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:49:00 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 56199200223;
+        Wed, 14 Aug 2019 12:48:59 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 46296200220;
+        Wed, 14 Aug 2019 12:48:59 +0200 (CEST)
+Received: from fsr-ub1664-120.ea.freescale.net (fsr-ub1664-120.ea.freescale.net [10.171.82.81])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 475672060E;
+        Wed, 14 Aug 2019 12:48:58 +0200 (CEST)
+From:   Robert Chiras <robert.chiras@nxp.com>
+To:     =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 03/15] drm/mxsfb: Add defines for the rest of registers
+Date:   Wed, 14 Aug 2019 13:48:39 +0300
+Message-Id: <1565779731-1300-4-git-send-email-robert.chiras@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
+References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-08-09 15:10:34, Chuhong Yuan wrote:
-> strncmp(str, const, len) is error-prone because len
-> is easy to have typo.
-> The example is the hard-coded len has counting error
-> or sizeof(const) forgets - 1.
-> So we prefer using newly introduced str_has_prefix()
-> to substitute such strncmp to make code better.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Some of the existing registers in this controller are not defined, but
+also not used. Add them to the register definitions, so that they can be
+easily used in future improvements or fixes.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+---
+ drivers/gpu/drm/mxsfb/mxsfb_regs.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Best Regards,
-Petr
+diff --git a/drivers/gpu/drm/mxsfb/mxsfb_regs.h b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+index 932d7ea..71426aa 100644
+--- a/drivers/gpu/drm/mxsfb/mxsfb_regs.h
++++ b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+@@ -14,19 +14,31 @@
+ 
+ #define LCDC_CTRL			0x00
+ #define LCDC_CTRL1			0x10
++#define LCDC_V4_CTRL2			0x20
+ #define LCDC_V3_TRANSFER_COUNT		0x20
+ #define LCDC_V4_TRANSFER_COUNT		0x30
+ #define LCDC_V4_CUR_BUF			0x40
+ #define LCDC_V4_NEXT_BUF		0x50
+ #define LCDC_V3_CUR_BUF			0x30
+ #define LCDC_V3_NEXT_BUF		0x40
++#define LCDC_TIMING			0x60
+ #define LCDC_VDCTRL0			0x70
+ #define LCDC_VDCTRL1			0x80
+ #define LCDC_VDCTRL2			0x90
+ #define LCDC_VDCTRL3			0xa0
+ #define LCDC_VDCTRL4			0xb0
++#define LCDC_DVICTRL0			0xc0
++#define LCDC_DVICTRL1			0xd0
++#define LCDC_DVICTRL2			0xe0
++#define LCDC_DVICTRL3			0xf0
++#define LCDC_DVICTRL4			0x100
++#define LCDC_V4_DATA			0x180
++#define LCDC_V3_DATA			0x1b0
+ #define LCDC_V4_DEBUG0			0x1d0
+ #define LCDC_V3_DEBUG0			0x1f0
++#define LCDC_AS_CTRL			0x210
++#define LCDC_AS_BUF			0x220
++#define LCDC_AS_NEXT_BUF		0x230
+ 
+ #define CTRL_SFTRST			(1 << 31)
+ #define CTRL_CLKGATE			(1 << 30)
+@@ -45,12 +57,15 @@
+ #define CTRL_DF24			(1 << 1)
+ #define CTRL_RUN			(1 << 0)
+ 
++#define CTRL1_RECOVERY_ON_UNDERFLOW	(1 << 24)
+ #define CTRL1_FIFO_CLEAR		(1 << 21)
+ #define CTRL1_SET_BYTE_PACKAGING(x)	(((x) & 0xf) << 16)
+ #define CTRL1_GET_BYTE_PACKAGING(x)	(((x) >> 16) & 0xf)
+ #define CTRL1_CUR_FRAME_DONE_IRQ_EN	(1 << 13)
+ #define CTRL1_CUR_FRAME_DONE_IRQ	(1 << 9)
+ 
++#define CTRL2_OUTSTANDING_REQS__REQ_16		(4 << 21)
++
+ #define TRANSFER_COUNT_SET_VCOUNT(x)	(((x) & 0xffff) << 16)
+ #define TRANSFER_COUNT_GET_VCOUNT(x)	(((x) >> 16) & 0xffff)
+ #define TRANSFER_COUNT_SET_HCOUNT(x)	((x) & 0xffff)
+-- 
+2.7.4
+
