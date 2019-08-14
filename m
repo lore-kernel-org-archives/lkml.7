@@ -2,110 +2,154 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05660C0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6A6C0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1D3E2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40F852084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565769208;
-	bh=jmEspuA7KfuzsBgRx20ueACmvcLnL7OVWc2d3mTSYG8=;
+	s=default; t=1565769367;
+	bh=xzDG1ZpbXh4qkkKi778JgW5JeXdRXLg9qk5/CzhD2/U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q1mqRK80xKNq8ZqA0ayj0cg9nL86z4HT6Cc6wIU7v8CQnWuILkA8Ol2YXrF+HZoCu
-	 nPp1+ot15jRVoPHMmcNexQgkNNFHjHxTyMjA46vX1EHqbLRF2d+z1gEhiJvjsWkvkq
-	 5qWYH/IfDzEjIc1A+yee6DX9y0dfgGkVh/OzWCRk=
+	b=CykVUCADqSKFNDDgBuRFuqfaFfNpW27C1YxHysCY7Hw6KtfpCiK37+iU25fAAh3VC
+	 ayi2fniL59aQliUbUUmYW43QPDKJXcQd/1DTQHns6COVDC/pjoRoHcD9lv1MButrJO
+	 h1gXace3rcGfZxEU/p8vmH0cxSuohFjD/7fp5k3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbfHNHx1 (ORCPT
+        id S1726774AbfHNH4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:53:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725928AbfHNHx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:53:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E5D42054F;
-        Wed, 14 Aug 2019 07:53:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565769206;
-        bh=jmEspuA7KfuzsBgRx20ueACmvcLnL7OVWc2d3mTSYG8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vwX2LKGabCD7qoZ++5QKS2NVnr7C54bfswvICGwLBoCgCiwBOnRL8qfI7JH4hUpGZ
-         bbVDrY/Hmp1r+Rnbq+uzEGzFV+Rd2MLVeDwMUagLFwsU92axHNLES9xPmH0BSLZfB+
-         xDcwtPbZEpKUDYfHAnN9gPaA1wdfNB7MaON8qpUs=
-Date:   Wed, 14 Aug 2019 09:53:24 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Bodong Wang <bodong@mellanox.com>,
-        Donald Dutile <ddutile@redhat.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 2/3] PCI: sysfs: Change
- permissions from symbolic to octal
-Message-ID: <20190814075324.GB4067@kroah.com>
-References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-3-skunberg.kelsey@gmail.com>
- <20190814053846.GA253360@google.com>
+        Wed, 14 Aug 2019 03:56:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33080 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725928AbfHNH4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:56:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2336EACBA;
+        Wed, 14 Aug 2019 07:56:03 +0000 (UTC)
+Date:   Wed, 14 Aug 2019 09:56:01 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Daniel Gruss <daniel.gruss@iaik.tugraz.at>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hansen <chansen3@cisco.com>,
+        Daniel Colascione <dancol@google.com>, fmayer@google.com,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        kernel-team <kernel-team@android.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>, namhyung@google.com,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Todd Kjos <tkjos@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 1/6] mm/page_idle: Add per-pid idle page tracking
+ using virtual index
+Message-ID: <20190814075601.GO17933@dhcp22.suse.cz>
+References: <20190807171559.182301-1-joel@joelfernandes.org>
+ <CAG48ez0ysprvRiENhBkLeV9YPTN_MB18rbu2HDa2jsWo5FYR8g@mail.gmail.com>
+ <20190813100856.GF17933@dhcp22.suse.cz>
+ <CAG48ez2cuqe_VYhhaqw8Hcyswv47cmz2XmkqNdvkXEhokMVaXg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190814053846.GA253360@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAG48ez2cuqe_VYhhaqw8Hcyswv47cmz2XmkqNdvkXEhokMVaXg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 12:38:46AM -0500, Bjorn Helgaas wrote:
-> [+cc Bodong, Don, Greg for permission question]
+On Tue 13-08-19 17:29:09, Jann Horn wrote:
+> On Tue, Aug 13, 2019 at 12:09 PM Michal Hocko <mhocko@kernel.org> wrote:
+> > On Mon 12-08-19 20:14:38, Jann Horn wrote:
+> > > On Wed, Aug 7, 2019 at 7:16 PM Joel Fernandes (Google)
+> > > <joel@joelfernandes.org> wrote:
+> > > > The page_idle tracking feature currently requires looking up the pagemap
+> > > > for a process followed by interacting with /sys/kernel/mm/page_idle.
+> > > > Looking up PFN from pagemap in Android devices is not supported by
+> > > > unprivileged process and requires SYS_ADMIN and gives 0 for the PFN.
+> > > >
+> > > > This patch adds support to directly interact with page_idle tracking at
+> > > > the PID level by introducing a /proc/<pid>/page_idle file.  It follows
+> > > > the exact same semantics as the global /sys/kernel/mm/page_idle, but now
+> > > > looking up PFN through pagemap is not needed since the interface uses
+> > > > virtual frame numbers, and at the same time also does not require
+> > > > SYS_ADMIN.
+> > > >
+> > > > In Android, we are using this for the heap profiler (heapprofd) which
+> > > > profiles and pin points code paths which allocates and leaves memory
+> > > > idle for long periods of time. This method solves the security issue
+> > > > with userspace learning the PFN, and while at it is also shown to yield
+> > > > better results than the pagemap lookup, the theory being that the window
+> > > > where the address space can change is reduced by eliminating the
+> > > > intermediate pagemap look up stage. In virtual address indexing, the
+> > > > process's mmap_sem is held for the duration of the access.
+> > >
+> > > What happens when you use this interface on shared pages, like memory
+> > > inherited from the zygote, library file mappings and so on? If two
+> > > profilers ran concurrently for two different processes that both map
+> > > the same libraries, would they end up messing up each other's data?
+> >
+> > Yup PageIdle state is shared. That is the page_idle semantic even now
+> > IIRC.
+> >
+> > > Can this be used to observe which library pages other processes are
+> > > accessing, even if you don't have access to those processes, as long
+> > > as you can map the same libraries? I realize that there are already a
+> > > bunch of ways to do that with side channels and such; but if you're
+> > > adding an interface that allows this by design, it seems to me like
+> > > something that should be gated behind some sort of privilege check.
+> >
+> > Hmm, you need to be priviledged to get the pfn now and without that you
+> > cannot get to any page so the new interface is weakening the rules.
+> > Maybe we should limit setting the idle state to processes with the write
+> > status. Or do you think that even observing idle status is useful for
+> > practical side channel attacks? If yes, is that a problem of the
+> > profiler which does potentially dangerous things?
 > 
-> On Tue, Aug 13, 2019 at 02:45:12PM -0600, Kelsey Skunberg wrote:
-> > Symbolic permissions such as "(S_IWUSR | S_IWGRP)" are not
-> > preferred and octal permissions should be used instead. Change all
-> > symbolic permissions to octal permissions.
-> > 
-> > Example of old:
-> > 
-> > "(S_IWUSR | S_IWGRP)"
-> > 
-> > Example of new:
-> > 
-> > "0220"
+> I suppose read-only access isn't a real problem as long as the
+> profiler isn't writing the idle state in a very tight loop... but I
+> don't see a usecase where you'd actually want that? As far as I can
+> tell, if you can't write the idle state, being able to read it is
+> pretty much useless.
 > 
-> 
-> >  static DEVICE_ATTR_RO(sriov_totalvfs);
-> > -static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
-> > -				  sriov_numvfs_show, sriov_numvfs_store);
-> > +static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
-> >  static DEVICE_ATTR_RO(sriov_offset);
-> >  static DEVICE_ATTR_RO(sriov_stride);
-> >  static DEVICE_ATTR_RO(sriov_vf_device);
-> > -static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
-> > -		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
-> > +static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
-> > +		   sriov_drivers_autoprobe_store);
-> 
-> Greg noticed that sriov_numvfs and sriov_drivers_autoprobe have
-> "unusual" permissions.  These were added by:
-> 
->   0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
->   1789382a72a5 ("PCI: SRIOV control and status via sysfs")
-> 
-> Kelsey's patch correctly preserves the existing permissions, but we
-> should double-check that they are the permissions they want, and
-> possibly add a comment about why they're different from the rest.
+> If the profiler only wants to profile process-private memory, then
+> that should be implementable in a safe way in principle, I think, but
+> since Joel said that they want to profile CoW memory as well, I think
+> that's inherently somewhat dangerous.
 
-I agree.  And if those permissions are ok, please put a HUGE comment in
-here saying why they are what they are and why they need to stay that
-way so we don't have this conversation again in a few years :)
+I cannot really say how useful that would be but I can see that
+implementing ownership checks would be really non-trivial for
+shared pages. Reducing the interface to exclusive pages would make it
+easier as you noted but less helpful.
 
-thanks,
+Besides that the attack vector shouldn't be really much different from
+the page cache access, right? So essentially can_do_mincore model.
 
-greg k-h
+I guess we want to document that page idle tracking should be used with
+care because it potentially opens a side channel opportunity if used
+on sensitive data.
+-- 
+Michal Hocko
+SUSE Labs
