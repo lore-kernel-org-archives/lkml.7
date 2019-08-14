@@ -2,125 +2,182 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 031C4C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88979C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB3E20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565787666;
-	bh=sxfCJqJU/qaOohNVgHPQHtwC8Q7H8C3hXjEXkCV0LNo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lM7hx/oYEA37pxA5e/oVDrwwihZRDD4L5VKwMrm0S4GghFhjVtByZDAqLTG0adfC5
-	 44VUridv9sRrkBAZ5bujpavBdbm4Bi53x1tAuC0QR6THZVO2vN6mPTFIr4yKy/uQ4P
-	 zbn2/Ijt0P3L0xhyEKTljb35IhrIRkB3hxHKawqw=
+	by mail.kernel.org (Postfix) with ESMTP id 56F2C20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:02:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pxcnvuyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbfHNNBF (ORCPT
+        id S1727783AbfHNNCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 09:01:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbfHNNBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:01:04 -0400
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E759221744;
-        Wed, 14 Aug 2019 13:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565787663;
-        bh=sxfCJqJU/qaOohNVgHPQHtwC8Q7H8C3hXjEXkCV0LNo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tiBxKOHYPSR9Y16yt71V0kc9fqsUD3IQPem9PJ+ncdv72uoSxmqJtsd0RLTgE1vhZ
-         zPnAJCALKkwQ1OQTB7iDM9vbtg1WlAG9wCYw+O4SUFaOQa7pTN/CQsOM92O6VI18V/
-         bXMlvMyNZfAyuY9uE3S+ddZXnYhANUtNV02Jxty0=
-Received: by mail-lj1-f169.google.com with SMTP id u15so9741898ljl.3;
-        Wed, 14 Aug 2019 06:01:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAULxOpygd4VJgACuT0l7DrARQnRgLiqQHvjxd8ES7TWrUQuXfKj
-        wi/cSA7Zesw22i5ohC89fi/Dv3jipyrsSi1n58E=
-X-Google-Smtp-Source: APXvYqxsCMPhEB6d19AkAwrH2WmpslgogpPgDenxgBgQD8gEdZbqPk9ibFEDJH1FhqxoSOjrLiasHqOPI013151j9Zs=
-X-Received: by 2002:a2e:8197:: with SMTP id e23mr4590849ljg.80.1565787661091;
- Wed, 14 Aug 2019 06:01:01 -0700 (PDT)
+        Wed, 14 Aug 2019 09:02:35 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:60545 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbfHNNCe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:02:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1565787753; x=1597323753;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=ahedc4jUDKTjKYr/t9LKGSVGXplFx3U807P6YTr2BXY=;
+  b=pxcnvuyy+e6NkEQZRmNvsII4zW0P1AEo78w3dH5gpd5a/LuIQNFJEbUS
+   Gjoxz5a005sd9YSda+v/yy9DcRaWUd0b6jCQJxy8uirvoNJ/0I23+4DOt
+   QN55pPqNb6/499xTAbRv8tJwV3Fp2q1mIB9yF4JR+CF/krABI1QC+w9ji
+   w=;
+X-IronPort-AV: E=Sophos;i="5.64,385,1559520000"; 
+   d="scan'208";a="409587587"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-8549039f.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 14 Aug 2019 13:02:30 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-8549039f.us-west-2.amazon.com (Postfix) with ESMTPS id C0243A227C;
+        Wed, 14 Aug 2019 13:02:29 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 14 Aug 2019 13:02:29 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.160.211) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 14 Aug 2019 13:02:26 +0000
+Subject: Re: [PATCH 0/9] arm64: Stolen time support
+To:     Steven Price <steven.price@arm.com>, Marc Zyngier <maz@kernel.org>
+CC:     <kvm@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+        <linux-doc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>,
+        <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Will Deacon" <will@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190802145017.42543-1-steven.price@arm.com>
+ <20190803190522.5fec8f7d@why> <6789f477-8ab5-cc54-1ad2-8627917b07c9@arm.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <8ca5c106-7c12-4c6e-6d81-a90f281a9894@amazon.com>
+Date:   Wed, 14 Aug 2019 15:02:25 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CGME20190813150858eucas1p1a5fbf425753e4911c50631c3a6d34ffd@eucas1p1.samsung.com>
- <20190813150827.31972-1-s.nawrocki@samsung.com> <20190813150827.31972-8-s.nawrocki@samsung.com>
-In-Reply-To: <20190813150827.31972-8-s.nawrocki@samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 14 Aug 2019 15:00:50 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdfe-ON9wmy30YGoGG_LzwhEuXmcv_-kt07cS-Wd3cG8w@mail.gmail.com>
-Message-ID: <CAJKOXPdfe-ON9wmy30YGoGG_LzwhEuXmcv_-kt07cS-Wd3cG8w@mail.gmail.com>
-Subject: Re: [PATCH v3 7/9] soc: samsung: Update the CHIP ID DT binding documentation
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
-        kgene@kernel.org, pankaj.dubey@samsung.com,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6789f477-8ab5-cc54-1ad2-8627917b07c9@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.160.211]
+X-ClientProxiedBy: EX13D03UWA002.ant.amazon.com (10.43.160.144) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 13 Aug 2019 at 17:09, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
->
-> This patch adds documentation of a new optional "samsung,asv-bin"
-> property in the chipid device node and documents requirement of
-> "syscon" compatible string.  These additions are needed to support
-> Exynos ASV (Adaptive Supply Voltage) feature.
->
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
-> Changes since v2:
->  - none
->
-> Changes since v1 (RFC):
->  - new patch
-> ---
->  .../devicetree/bindings/arm/samsung/exynos-chipid.txt  | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-> index 85c5dfd4a720..be3657e6c00c 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-> @@ -1,12 +1,18 @@
-> -SAMSUNG Exynos SoCs Chipid driver.
-> +SAMSUNG Exynos SoC series CHIPID subsystem
->
->  Required properties:
-> -- compatible : Should at least contain "samsung,exynos4210-chipid".
-> +- compatible : Should at least contain "samsung,exynos4210-chipid", "syscon".
->
->  - reg: offset and length of the register set
->
-> +Optional properties:
-> + - samsung,asv-bin : Adaptive Supply Voltage bin selection. This can be used
-> +   to determine the ASV bin of an SoC if respective information is missing
-> +   in the CHIPID registers or in the OTP memory. Possible values: 0...3.
-> +
->  Example:
->         chipid@10000000 {
->                 compatible = "samsung,exynos4210-chipid";
 
-Please update the example with new required compatible.
 
-Best regards,
-Krzysztof
+On 05.08.19 15:06, Steven Price wrote:
+> On 03/08/2019 19:05, Marc Zyngier wrote:
+>> On Fri,  2 Aug 2019 15:50:08 +0100
+>> Steven Price <steven.price@arm.com> wrote:
+>>
+>> Hi Steven,
+>>
+>>> This series add support for paravirtualized time for arm64 guests and
+>>> KVM hosts following the specification in Arm's document DEN 0057A:
+>>>
+>>> https://developer.arm.com/docs/den0057/a
+>>>
+>>> It implements support for stolen time, allowing the guest to
+>>> identify time when it is forcibly not executing.
+>>>
+>>> It doesn't implement support for Live Physical Time (LPT) as there are
+>>> some concerns about the overheads and approach in the above
+>>> specification, and I expect an updated version of the specification to
+>>> be released soon with just the stolen time parts.
+>>
+>> Thanks for posting this.
+>>
+>> My current concern with this series is around the fact that we allocate
+>> memory from the kernel on behalf of the guest. It is the first example
+>> of such thing in the ARM port, and I can't really say I'm fond of it.
+>>
+>> x86 seems to get away with it by having the memory allocated from
+>> userspace, why I tend to like more. Yes, put_user is more
+>> expensive than a straight store, but this isn't done too often either.
+>>
+>> What is the rational for your current approach?
+> 
+> As I see it there are 3 approaches that can be taken here:
+> 
+> 1. Hypervisor allocates memory and adds it to the virtual machine. This
+> means that everything to do with the 'device' is encapsulated behind the
+> KVM_CREATE_DEVICE / KVM_[GS]ET_DEVICE_ATTR ioctls. But since we want the
+> stolen time structure to be fast it cannot be a trapping region and has
+> to be backed by real memory - in this case allocated by the host kernel.
+> 
+> 2. Host user space allocates memory. Similar to above, but this time
+> user space needs to manage the memory region as well as the usual
+> KVM_CREATE_DEVICE dance. I've no objection to this, but it means
+> kvmtool/QEMU needs to be much more aware of what is going on (e.g. how
+> to size the memory region).
 
->                 reg = <0x10000000 0x100>;
-> +               samsung,asv-bin = <2>;
->         };
-> --
-> 2.17.1
->
+You ideally want to get the host overhead for a VM to as little as you 
+can. I'm not terribly fond of the idea of reserving a full page just 
+because we're too afraid of having the guest donate memory.
+
+> 
+> 3. Guest kernel "donates" the memory to the hypervisor for the
+> structure. As far as I'm aware this is what x86 does. The problems I see
+> this approach are:
+> 
+>   a) kexec becomes much more tricky - there needs to be a disabling
+> mechanism for the guest to stop the hypervisor scribbling on memory
+> before starting the new kernel.
+
+I wouldn't call "quiesce a device" much more tricky. We have to do that 
+for other devices as well today.
+
+>   b) If there is more than one entity that is interested in the
+> information (e.g. firmware and kernel) then this requires some form of
+> arbitration in the guest because the hypervisor doesn't want to have to
+> track an arbitrary number of regions to update.
+
+Why would FW care?
+
+>   c) Performance can suffer if the host kernel doesn't have a suitably
+> aligned/sized area to use. As you say - put_user() is more expensive.
+
+Just define the interface to always require natural alignment when 
+donating a memory location?
+
+> The structure is updated on every return to the VM.
+
+If you really do suffer from put_user(), there are alternatives. You 
+could just map the page on the registration hcall and then leave it 
+pinned until the vcpu gets destroyed again.
+
+> Of course x86 does prove the third approach can work, but I'm not sure
+> which is actually better. Avoid the kexec cancellation requirements was
+> the main driver of the current approach. Although many of the
+
+I really don't understand the problem with kexec cancellation. Worst 
+case, let guest FW set it up for you and propagate only the address down 
+via ACPI/DT. That way you can mark the respective memory as reserved too.
+
+But even with a Linux only mechanism, just take a look at 
+arch/x86/kernel/kvmclock.c. All they do to remove the map is to hook 
+into machine_crash_shutdown() and machine_shutdown().
+
+
+Alex
+
+> conversations about this were also tied up with Live Physical Time which
+> adds its own complications.
+> 
+> Steve
+> _______________________________________________
+> kvmarm mailing list
+> kvmarm@lists.cs.columbia.edu
+> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
+> 
