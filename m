@@ -2,93 +2,96 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862D4C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D796C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64AD5206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1828220665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565803119;
+	bh=zCzGe+IkEgLhN0/wnekb8wcp+LhDVFGV4vS0wRfFjuw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v4rWpboehYvfyl3lRrMw0KV2/6JwUPkNdCsCEXlpO/mIR2b7x5avAs+byr1YYpdSi
+	 nHkkNBp0R84LUmQJmjMmUUFctLfUvECIIKUFvPyghdU8d0pQfYRks4wKN3D6i6GMCR
+	 dI65XQhnOStf1c/9ektF5CGfkv9zALMM0WDLlbFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730628AbfHNRS1 (ORCPT
+        id S1730296AbfHNRMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:18:27 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:13982 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730983AbfHNRS0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:18:26 -0400
-Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7EGvC4f020879;
-        Wed, 14 Aug 2019 17:18:09 GMT
-Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2ucm0vh8y6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 14 Aug 2019 17:18:09 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g9t5008.houston.hpe.com (Postfix) with ESMTP id 92E2768;
-        Wed, 14 Aug 2019 17:18:07 +0000 (UTC)
-Received: from hpe.com (teo-eag.americas.hpqcorp.net [10.33.152.10])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 4CB6F45;
-        Wed, 14 Aug 2019 17:18:06 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 12:18:06 -0500
-From:   Dimitri Sivanich <sivanich@hpe.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        Gavin Shan <shangw@linux.vnet.ibm.com>,
-        Andrea Righi <andrea@betterlinux.com>
-Subject: Re: [PATCH v3 hmm 04/11] misc/sgi-gru: use mmu_notifier_get/put for
- struct gru_mm_struct
-Message-ID: <20190814171806.GA14680@hpe.com>
-References: <20190806231548.25242-1-jgg@ziepe.ca>
- <20190806231548.25242-5-jgg@ziepe.ca>
- <20190808102556.GB648@lst.de>
- <20190814155830.GO13756@mellanox.com>
+        Wed, 14 Aug 2019 13:12:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730745AbfHNRMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:12:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00D422133F;
+        Wed, 14 Aug 2019 17:12:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565802751;
+        bh=zCzGe+IkEgLhN0/wnekb8wcp+LhDVFGV4vS0wRfFjuw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2ZoS9gy58UXUs7NqYdpXcX6UMRbnnMlSTf/edT24S5DqkjWaT9LqygLEfSXg0HwCB
+         RnEpx5gE2O5yQ5XB/aPo1QopCetcALgpGc9U+3R/caRTWJnjM6Az0XHhoTkYAClvvQ
+         NHTB7HCq0cCwQKKJO0M/gncKQJY6Cv8hLWrJD57Y=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Gary R Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 02/69] crypto: ccp - Fix oops by properly managing allocated structures
+Date:   Wed, 14 Aug 2019 19:01:00 +0200
+Message-Id: <20190814165745.308040528@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
+References: <20190814165744.822314328@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814155830.GO13756@mellanox.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-14_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=636 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908140158
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 03:58:34PM +0000, Jason Gunthorpe wrote:
-> On Thu, Aug 08, 2019 at 12:25:56PM +0200, Christoph Hellwig wrote:
-> > Looks good,
-> > 
-> > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> 
-> Dimitri, are you OK with this patch?
->
+From: Gary R Hook <gary.hook@amd.com>
 
-I think this looks OK.
+commit 25e44338321af545ab34243a6081c3f0fc6107d0 upstream.
 
-Reviewed-by: Dimitri Sivanich <sivanich@hpe.com>
+A plaintext or ciphertext length of 0 is allowed in AES, in which case
+no encryption occurs. Ensure that we don't clean up data structures
+that were never allocated.
+
+Fixes: 36cf515b9bbe2 ("crypto: ccp - Enable support for AES GCM on v5 CCPs")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/crypto/ccp/ccp-ops.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/crypto/ccp/ccp-ops.c
++++ b/drivers/crypto/ccp/ccp-ops.c
+@@ -841,11 +841,11 @@ e_tag:
+ 	ccp_dm_free(&final_wa);
+ 
+ e_dst:
+-	if (aes->src_len && !in_place)
++	if (ilen > 0 && !in_place)
+ 		ccp_free_data(&dst, cmd_q);
+ 
+ e_src:
+-	if (aes->src_len)
++	if (ilen > 0)
+ 		ccp_free_data(&src, cmd_q);
+ 
+ e_aad:
+
+
