@@ -2,82 +2,135 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106DDC0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BE3C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCAE72133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5465208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:14:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XNTqUbcz"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RmdSOviw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbfHNGOW (ORCPT
+        id S1727519AbfHNGO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 02:14:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60140 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbfHNGOW (ORCPT
+        Wed, 14 Aug 2019 02:14:26 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:38098 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725265AbfHNGOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 02:14:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=44K07C207hP60aYqx/O6kvlLTyW56Ovhtuazmf91s3M=; b=XNTqUbczBcUcBbsb2phecwHjD
-        /lGxXibOWPO99uMOTbuOoALJusaNcHor07dCMalkCClPs3nQt/P8CvClvz2yHRNX4jZwXF3D+om5T
-        vB5pbbOJMSjhtIoVYDrnj3tQf+pOhrr8SDPfu4Z96z5i50/E9jiQ2Q+2uLpwgIkwVNH/AOCANk1H7
-        CmOBRSMduJImu+WNej5byXvQHT/nhYc7ifGAGEMMtpK6Ob489BB07q5Q9YbJh16eQQseDdqPzRZU+
-        nXjkTeROgopU8iLe44RqQC1qHEvtnpXAgFR9q96FXFTjN/yfjSEtQXPjF6XPwsHg1aBHfRiFsfM3I
-        51ChTttGQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hxmY8-0005Tu-P2; Wed, 14 Aug 2019 06:14:21 +0000
-Date:   Tue, 13 Aug 2019 23:14:20 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org, npiggin@gmail.com,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v1 05/10] powerpc/mm: Do early ioremaps from top to
- bottom on PPC64 too.
-Message-ID: <20190814061420.GA17453@infradead.org>
-References: <6bc35eca507359075528bc0e55938bc1ce8ee485.1565726867.git.christophe.leroy@c-s.fr>
- <019c5d90f7027ccff00e38a3bcd633d290f6af59.1565726867.git.christophe.leroy@c-s.fr>
- <20190814055525.GA12744@infradead.org>
- <1d44ec1d-339d-e22c-2133-175e0aa745f6@c-s.fr>
+        Wed, 14 Aug 2019 02:14:23 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190814061422euoutp020f8219a3dd41f78dcf552eed43ebca6f~6tWRA9Att2918229182euoutp02j
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 06:14:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190814061422euoutp020f8219a3dd41f78dcf552eed43ebca6f~6tWRA9Att2918229182euoutp02j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1565763262;
+        bh=A9qn6/3oZyPgTnSv23DYT0U0eyRPsOJWWLBTj6TWiQM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=RmdSOviwAmmdIRWFzJh8tAxhjIJErg3XxhbdJ94Rz3MIotnDoJOU9MH7gD0WpvgT1
+         1sdCgirrkGV0lfAGUL7wy7NbTC3LoXv6MKN3RlolX1S+3m7xkkOAhFHpsp+trR9cfc
+         FV6zbof9WARCUh2gL59mN5YJYmTXi6Vpd/x32g2Q=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190814061421eucas1p1e7c13e50a9b36257d62a442c0fd97114~6tWQRUtXg2140121401eucas1p1Q;
+        Wed, 14 Aug 2019 06:14:21 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 69.80.04309.DB6A35D5; Wed, 14
+        Aug 2019 07:14:21 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190814061420eucas1p2dcce5e9b1c1aa3743d4c1ede2f01e737~6tWPDe0Pe2033720337eucas1p2E;
+        Wed, 14 Aug 2019 06:14:20 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190814061420eusmtrp2ce4d3a3f765a573b4b941546bb11f6cb~6tWOz3EPp3251532515eusmtrp2V;
+        Wed, 14 Aug 2019 06:14:20 +0000 (GMT)
+X-AuditID: cbfec7f4-ae1ff700000010d5-10-5d53a6bd9311
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5D.80.04166.CB6A35D5; Wed, 14
+        Aug 2019 07:14:20 +0100 (BST)
+Received: from [106.120.50.63] (unknown [106.120.50.63]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190814061419eusmtip22e85c745574f1bb7a680372a6e6bba54~6tWOd-FoX2191321913eusmtip2X;
+        Wed, 14 Aug 2019 06:14:19 +0000 (GMT)
+Subject: Re: linux-next: Tree for Aug 13
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        James Morris <jmorris@namei.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <c17d1844-7e13-aba5-0fc9-98c4b247c147@samsung.com>
+Date:   Wed, 14 Aug 2019 08:14:18 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d44ec1d-339d-e22c-2133-175e0aa745f6@c-s.fr>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190813105645.4ffba70c@gandalf.local.home>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju27nsaM0+5+3FosvMKCMvKbEoxKBs5B/R+lFelx5U1Ck7ztL+
+        LCvRZTkMLJeQZmQmXjAvqThvoWbmZiIMITBQNHUoaoqjNI8ny3/P87zP877fAx9DSKspdyZJ
+        lcGqVcoUGW1PNvetm053vAmP8s2fPiI3G1YpeW1dhUg+2lZKy7vLc5F8dsZLbsybEMmbOsbE
+        QWLFPYuFVjwwjosVZQ0ahf5VF1IUrMUplhsOhdI37S/EsylJmazaJzDWPnHBskmmm4g7ebXB
+        WmQT6ZAdAzgAqhvaKB2yZ6T4LYKVsUEkkBUEj9a1pECWEdhyLcROZNo0QAiDSgRzg/V/iRXB
+        8FT7VoRhnPAJmDJG8wFnHALdxR+3PQReRGBczaX5AY39QGfVbWMJDoSHNeuIz5LYE5YKZbzs
+        giOhdb6AECyO8KlkkuSxHT4HP79VUjwm8GFosZYSAnaD8cmXIv4W4GYxFLW/oPmdgC/BXJdG
+        KOAEs/2NYgEfhM3WHf99BN+Ha8QCKUAwmvMcCa7z0Ns/QvGLCHwS6tp8BPkiPK7PEQn7HcBi
+        dRTe4ABFzc8IQZZAXq5UcB8HQ3/tv7Pd5q+EHskMu5oZdrUx7Gpj+H+3DJHvkBur4VITWO6M
+        ir3tzSlTOY0qwTsuLbUBbX2hzxv9Kx9Q269bPQgzSLZPEtoYFiWllJlcVmoPAoaQOUv0I1uS
+        JF6Zlc2q02LUmhSW60EHGFLmJrm7ZyJCihOUGWwyy6az6p2piLFz16KyiNcjJVRhgJLKztdf
+        s9mI6fmgdtcqj3CZ/5eWTW1vSPnvJtHS0DH6fYzRz9fTe5F05WZwZ0zfwI+iaMPGfs3ZEnOF
+        h3pBnajtQ5FHaYuZNdkUl6+3VnkN7e2cjY8YNOZFudcHR+efKl5TXLmR4ZLs7/80lrqaMPyE
+        obPDZCSXqPTzItSc8g/JcY/KPgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLIsWRmVeSWpSXmKPExsVy+t/xe7p7lgXHGuy8IGBxYdY3Vot16xcz
+        WVzeNYfN4uDCNkaLVy+0LPZ1PGCy2Lr3KrsDu0fjjRtsHi37brF7LNhU6jFh0QFGj57vyR6f
+        N8kFsEXp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXo
+        Zby/8Z+l4DxzRcc6twbGX0xdjJwcEgImEs/Pn2DuYuTiEBJYyiix/tQ1RoiEjMTJaQ2sELaw
+        xJ9rXWwgtpDAa0aJvibHLkYODmEBDYmn++JAwiIC3hIHpx0Bm8Ms8IFR4uinVWwQQ98zSpz+
+        PhdsKJuAoUTXW4hBvAJ2Eq1rfzKCDGIRUJX41K8EEhYViJHYd2Y7O0SJoMTJmU9YQGxOAUuJ
+        r3eXg93DLGAmMW/zQ2YIW15i+9s5ULa4xK0n85kmMArNQtI+C0nLLCQts5C0LGBkWcUoklpa
+        nJueW2yoV5yYW1yal66XnJ+7iREYdduO/dy8g/HSxuBDjAIcjEo8vAFbgmKFWBPLiitzDzFK
+        cDArifBOuAgU4k1JrKxKLcqPLyrNSS0+xGgK9NtEZinR5HxgQsgriTc0NTS3sDQ0NzY3NrNQ
+        EuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cDI1FCzeZLluUWdM8okrtziPh2xb5lHNu+HM0W1
+        O7MfGvEd3T7xZani3L+7v11wuP1LpuIxM/cLo5oz36ZnFxX57bnxnFU2a+eEFY2z6vJ/plUW
+        zvN/eFenc2bZ0voAl2D9iaaG+UlR3ff145Zt6DMzLZzQ3HNOWKshfMOGI0cXLwlXvObEor5f
+        iaU4I9FQi7moOBEAcBJSrtACAAA=
+X-CMS-MailID: 20190814061420eucas1p2dcce5e9b1c1aa3743d4c1ede2f01e737
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190813145654epcas2p2981ea6b19b84470dc37825469cba91de
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190813145654epcas2p2981ea6b19b84470dc37825469cba91de
+References: <20190813191924.7c5310dd@canb.auug.org.au>
+        <your-ad-here.call-01565700115-ext-9407@work.hours>
+        <CGME20190813145654epcas2p2981ea6b19b84470dc37825469cba91de@epcas2p2.samsung.com>
+        <20190813105645.4ffba70c@gandalf.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 08:10:59AM +0200, Christophe Leroy wrote:
-> > Note that while a few other architectures have a magic hack like powerpc
-> > to make ioremap work before vmalloc, the normal practice would be
-> > to explicitly use early_ioremap.  I guess your change is fine for now,
-> > but it might make sense convert powerpc to the explicit early_ioremap
-> > scheme as well.
-> > 
-> 
-> I've been looking into early_ioremap(), but IIUC early_ioremap() is for
-> ephemeral mappings only, it expects all early mappings to be gone at the end
-> of init.
+Hi Steven,
 
-Yes.
+On 2019-08-13 16:56, Steven Rostedt wrote:
+> This looks related to what Marek posted.
+>
+>    https://lore.kernel.org/linux-security-module/3028ed35-3b6d-459f-f3c8-103c5636fe95@samsung.com/
+>
+> Care to apply the change he suggested to see if it fixes the issue for
+> you. If it does, Marek, can you make an official patch?
 
-> PPC installs definitive early mappings (for instance for PCI). How does that
-> have to be handled ?
+Sure: https://lkml.org/lkml/2019/8/14/75
 
-Good question, and no good answer.  I've just been looking at a generic
-ioremap for simple architectures, and been finding all kinds of crap
-and inconsistencies, and this is one of the things I noticed.
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
