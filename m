@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D80DC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B9CC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2EA2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C99214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802657;
-	bh=zguiC8HP/MFooApydEOtzHjcprr/7Fmez4iab1u41pM=;
+	s=default; t=1565802658;
+	bh=3hcUrXBwLYEFvDHHf+GYMkiPTXNi7elwJUIL1TIduhM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=darlt+n8Y/Jy3J0ToHAh9M/397SsQsgLCN6mIymqqyNUqIk9Vee6RzJhYBsY4mGmv
-	 Dy7XFLqCl3ZobsOggX+RrgNDcwFZDLqnX2xGd9mwgMviLjOWY8sLRStNvx9Afxl65f
-	 +V62bLQAYZl2Y+FOIPKgtD2QFqncryA/0IvLGjcc=
+	b=WyFPiZq1DeJDaqysm5e1dNF4cTaA5UCX9b0WJKfkosbR1J+Ch61Eu1RHILNlxxtvh
+	 z12k5nL0LoWPQFaXVivP9PHHvWUFyEGdyvHYRutnJYvddWWMQXaOB7f9LcviA6aoMy
+	 FIgRyXxPZEds6FSaHM0HarDiyK/4ao060ZV6332o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbfHNRK4 (ORCPT
+        id S1730545AbfHNRK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:10:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33794 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:10:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730507AbfHNRKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:10:47 -0400
+        id S1730524AbfHNRKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:10:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07FF2214DA;
-        Wed, 14 Aug 2019 17:10:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24EA9214DA;
+        Wed, 14 Aug 2019 17:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802646;
-        bh=zguiC8HP/MFooApydEOtzHjcprr/7Fmez4iab1u41pM=;
+        s=default; t=1565802651;
+        bh=3hcUrXBwLYEFvDHHf+GYMkiPTXNi7elwJUIL1TIduhM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UJeqtW1kyawAwUizZsX4nV68roHre98XkeUon5WD+mFUgWhbHkgzns3x0LNDrHt+q
-         XYf2lS5XIMx4dQib0ecBZL7JbqUpoSesoEEC5RMaU9vTYuxLUKhsU04i79UYl/gZBF
-         Q3DL0ViXmaSCg26RIPTrxAMr068EzB+gCXSi00SM=
+        b=WtBFL4CRS1usCjgm8z7q1BGbkZ2Hcn5GyX2Pi5fKVtkXTrJ7wt2rNkmIMwvOvTzLq
+         /hJfx1yF9jjI+vjJQiparFdQI5T78Nt1tIRNAXLE376bVuVuuKuJbE9qmedlwqx5/L
+         nq+2fGalIxNb285hTb1YfMIrhInmmBaTsZGmdkvI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laura Garcia Liebana <nevola@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        SivapiriyanKumarasamy <sivapiriyan.kumarasamy@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 37/91] netfilter: nft_hash: fix symhash with modulus one
-Date:   Wed, 14 Aug 2019 19:01:00 +0200
-Message-Id: <20190814165751.247450065@linuxfoundation.org>
+Subject: [PATCH 4.19 39/91] drm/amd/display: Wait for backlight programming completion in set backlight level
+Date:   Wed, 14 Aug 2019 19:01:02 +0200
+Message-Id: <20190814165751.313309758@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -60,37 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 28b1d6ef53e3303b90ca8924bb78f31fa527cafb ]
+[ Upstream commit c7990daebe71d11a9e360b5c3b0ecd1846a3a4bb ]
 
-The rule below doesn't work as the kernel raises -ERANGE.
+[WHY]
+Currently we don't wait for blacklight programming completion in DMCU
+when setting backlight level. Some sequences such as PSR static screen
+event trigger reprogramming requires it to be complete.
 
-nft add rule netdev nftlb lb01 ip daddr set \
-	symhash mod 1 map { 0 : 192.168.0.10 } fwd to "eth0"
+[How]
+Add generic wait for dmcu command completion in set backlight level.
 
-This patch allows to use the symhash modulus with one
-element, in the same way that the other types of hashes and
-algorithms that uses the modulus parameter.
-
-Signed-off-by: Laura Garcia Liebana <nevola@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: SivapiriyanKumarasamy <sivapiriyan.kumarasamy@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_hash.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dce/dce_abm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/netfilter/nft_hash.c b/net/netfilter/nft_hash.c
-index c2d237144f747..b8f23f75aea6c 100644
---- a/net/netfilter/nft_hash.c
-+++ b/net/netfilter/nft_hash.c
-@@ -196,7 +196,7 @@ static int nft_symhash_init(const struct nft_ctx *ctx,
- 	priv->dreg = nft_parse_register(tb[NFTA_HASH_DREG]);
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c b/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
+index 070ab56a8aca7..da8b198538e5f 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
+@@ -242,6 +242,10 @@ static void dmcu_set_backlight_level(
+ 	s2 |= (level << ATOM_S2_CURRENT_BL_LEVEL_SHIFT);
  
- 	priv->modulus = ntohl(nla_get_be32(tb[NFTA_HASH_MODULUS]));
--	if (priv->modulus <= 1)
-+	if (priv->modulus < 1)
- 		return -ERANGE;
+ 	REG_WRITE(BIOS_SCRATCH_2, s2);
++
++	/* waitDMCUReadyForCmd */
++	REG_WAIT(MASTER_COMM_CNTL_REG, MASTER_COMM_INTERRUPT,
++			0, 1, 80000);
+ }
  
- 	if (priv->offset + priv->modulus - 1 < priv->offset)
+ static void dce_abm_init(struct abm *abm)
 -- 
 2.20.1
 
