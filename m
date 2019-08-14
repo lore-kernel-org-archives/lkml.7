@@ -2,110 +2,157 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0694C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F550C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 639E5214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:14:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565820890;
-	bh=UI7guIwUhxj2d7avxjaE7hMxiiSK2A0bwoAKP8qw2sk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BlhPo/QgiCxi/ofh6nker27CpyZ39vnLGRKSEEbae+LgFSYcTGaW+J3vIHy/mxWhb
-	 ZywriceiCKLWd3wliFsbU4Y3/5bWGcjqPy0jlhPmFfnXXynmdRgejWUPeXfB/odkrh
-	 dBKXxMhIoZC3fZEVLVBcl+p6LQ9bEJsGNyLx/pRM=
+	by mail.kernel.org (Postfix) with ESMTP id EF61520665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:16:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qBzDnv5W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730001AbfHNWOt (ORCPT
+        id S1729748AbfHNWQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 18:14:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727937AbfHNWOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 18:14:49 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97C652064A;
-        Wed, 14 Aug 2019 22:14:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565820888;
-        bh=UI7guIwUhxj2d7avxjaE7hMxiiSK2A0bwoAKP8qw2sk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kgdL+2SiVRNwSW1JH17ZCHCofzHSIpTR4YWsnpsl1DebWSKDpe5dUCISgu8Up/S+V
-         wgHLmG+J9tdZ0hOfZk+W2Gz3gtDTZ1kwYLUSkUSYDNbrgubOrLmnymmaQQqM86LjYb
-         4pgir0WNhhiFRt0JrlAp8mqwek9vmFjP5iLFjw8w=
-Date:   Wed, 14 Aug 2019 15:14:47 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        David Rientjes <rientjes@google.com>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 1/5] mm: Check if mmu notifier callbacks are allowed to
- fail
-Message-Id: <20190814151447.e9ab74f4c7ed4297e39321d1@linux-foundation.org>
-In-Reply-To: <20190814202027.18735-2-daniel.vetter@ffwll.ch>
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
-        <20190814202027.18735-2-daniel.vetter@ffwll.ch>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 14 Aug 2019 18:16:05 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38167 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbfHNWQF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 18:16:05 -0400
+Received: by mail-pl1-f196.google.com with SMTP id m12so232719plt.5;
+        Wed, 14 Aug 2019 15:16:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=aWZa5dI2NRu6gHtKDFpC6w867E//TeA8xW/o66+S8bg=;
+        b=qBzDnv5WoEcN49Ehx8P57UUIl8oz7j6r5pJKgnDJkq/9i9JcNFNlrzIJlKHWe0bVRt
+         4VBrMBdIbbnWB3gueEj7YeclzU2RJJXWdDrjarGuiAi3yGBXO6hOIc/73O+CR0EEZ18j
+         9qYE5DRvKuLxLJS5XTXrqrVimdgbiJ5oL4pT1EgYOIBf4Uk/wyznzvDd2xw7B37Kc0oC
+         s3TwkOyd7vs6FnLVXfUQjsu4evDIWT81CEpi2WiJ5eRKyJxqRsZkpbQ1qBC6iD8EQNBn
+         lmB30rOH8gpS3p5romApm2kcDjm6u1DOklnmxABYn6kLbJj0nD5JyU9qyX3Yfs7sDosV
+         x9xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=aWZa5dI2NRu6gHtKDFpC6w867E//TeA8xW/o66+S8bg=;
+        b=fXxcvCBXrPlaKiTPqW0jGcv4iRB0Srt+0tDVeH6gr9iArIH1Ot3c31xzF9Z5S+a4DO
+         EBkXilMuphb3kWGsphoMk8ZbiajeMC4OP736lJjBqfcKkX87qiVt6TYK3Hn3OHVjkUgS
+         rhBoHQdjSikmAwXyrZxvbDDjaH2G1pS1p/g7WYWNSvF+PQwgrfFyVGM757WIIA7RU7Kj
+         yWZ1AxmseAgUItYJ7aIOQv2l+Mt7o8PPt/PTo3NKTtcf18pJwFRTWCT/lXUpwuHeoN48
+         Fz3GYAfYX+F2vARe/iwCNI+64JwDdtCv+aI+EVolkAJeQ/UWNhkSPtU2ywj5ADc3OeRH
+         eSsQ==
+X-Gm-Message-State: APjAAAXdHWWJsvDRpV4fsdctez8SAtqSSZ91ps4hSOLpkgfkc+XDivu4
+        RohKS2XBe5fjZhGzz/zAtrY=
+X-Google-Smtp-Source: APXvYqx4wiJg+kMGqoXbIWyLQISiWCqIYOJbh2AH50z72sXIlWDah+Rb8L65s8HhZIIA59tPKBJUVQ==
+X-Received: by 2002:a17:902:7b98:: with SMTP id w24mr1427925pll.163.1565820964515;
+        Wed, 14 Aug 2019 15:16:04 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id h195sm898264pfe.20.2019.08.14.15.16.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 15:16:03 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 5/6] drm/msm: stop abusing DMA API
+Date:   Wed, 14 Aug 2019 15:00:00 -0700
+Message-Id: <20190814220011.26934-6-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190814220011.26934-1-robdclark@gmail.com>
+References: <20190814220011.26934-1-robdclark@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 22:20:23 +0200 Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+From: Rob Clark <robdclark@chromium.org>
 
-> Just a bit of paranoia, since if we start pushing this deep into
-> callchains it's hard to spot all places where an mmu notifier
-> implementation might fail when it's not allowed to.
-> 
-> Inspired by some confusion we had discussing i915 mmu notifiers and
-> whether we could use the newly-introduced return value to handle some
-> corner cases. Until we realized that these are only for when a task
-> has been killed by the oom reaper.
-> 
-> An alternative approach would be to split the callback into two
-> versions, one with the int return value, and the other with void
-> return value like in older kernels. But that's a lot more churn for
-> fairly little gain I think.
-> 
-> Summary from the m-l discussion on why we want something at warning
-> level: This allows automated tooling in CI to catch bugs without
-> humans having to look at everything. If we just upgrade the existing
-> pr_info to a pr_warn, then we'll have false positives. And as-is, no
-> one will ever spot the problem since it's lost in the massive amounts
-> of overall dmesg noise.
-> 
-> ...
->
-> --- a/mm/mmu_notifier.c
-> +++ b/mm/mmu_notifier.c
-> @@ -179,6 +179,8 @@ int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
->  				pr_info("%pS callback failed with %d in %sblockable context.\n",
->  					mn->ops->invalidate_range_start, _ret,
->  					!mmu_notifier_range_blockable(range) ? "non-" : "");
-> +				WARN_ON(mmu_notifier_range_blockable(range) ||
-> +					ret != -EAGAIN);
->  				ret = _ret;
->  			}
->  		}
+Use arch_sync_dma_for_{device,cpu}() rather than abusing the DMA API to
+indirectly get at the arch_sync_dma code.
 
-A problem with WARN_ON(a || b) is that if it triggers, we don't know
-whether it was because of a or because of b.  Or both.  So I'd suggest
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/msm_gem.c | 37 +++++++++++------------------------
+ 1 file changed, 11 insertions(+), 26 deletions(-)
 
-	WARN_ON(a);
-	WARN_ON(b);
+diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+index 8cf6362e64bf..a2611e62df19 100644
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -7,6 +7,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/shmem_fs.h>
+ #include <linux/dma-buf.h>
++#include <linux/dma-noncoherent.h>
+ #include <linux/pfn_t.h>
+ 
+ #include "msm_drv.h"
+@@ -32,43 +33,27 @@ static bool use_pages(struct drm_gem_object *obj)
+ 	return !msm_obj->vram_node;
+ }
+ 
+-/*
+- * Cache sync.. this is a bit over-complicated, to fit dma-mapping
+- * API.  Really GPU cache is out of scope here (handled on cmdstream)
+- * and all we need to do is invalidate newly allocated pages before
+- * mapping to CPU as uncached/writecombine.
+- *
+- * On top of this, we have the added headache, that depending on
+- * display generation, the display's iommu may be wired up to either
+- * the toplevel drm device (mdss), or to the mdp sub-node, meaning
+- * that here we either have dma-direct or iommu ops.
+- *
+- * Let this be a cautionary tail of abstraction gone wrong.
+- */
+-
+ static void sync_for_device(struct msm_gem_object *msm_obj)
+ {
+ 	struct device *dev = msm_obj->base.dev->dev;
++	struct scatterlist *sg;
++	int i;
+ 
+-	if (get_dma_ops(dev)) {
+-		dma_sync_sg_for_device(dev, msm_obj->sgt->sgl,
+-			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
+-	} else {
+-		dma_map_sg(dev, msm_obj->sgt->sgl,
+-			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
++	for_each_sg(msm_obj->sgt->sgl, sg, msm_obj->sgt->nents, i) {
++		arch_sync_dma_for_device(dev, sg_phys(sg), sg->length,
++				DMA_BIDIRECTIONAL);
+ 	}
+ }
+ 
+ static void sync_for_cpu(struct msm_gem_object *msm_obj)
+ {
+ 	struct device *dev = msm_obj->base.dev->dev;
++	struct scatterlist *sg;
++	int i;
+ 
+-	if (get_dma_ops(dev)) {
+-		dma_sync_sg_for_cpu(dev, msm_obj->sgt->sgl,
+-			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
+-	} else {
+-		dma_unmap_sg(dev, msm_obj->sgt->sgl,
+-			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
++	for_each_sg(msm_obj->sgt->sgl, sg, msm_obj->sgt->nents, i) {
++		arch_sync_dma_for_cpu(dev, sg_phys(sg), sg->length,
++				DMA_BIDIRECTIONAL);
+ 	}
+ }
+ 
+-- 
+2.21.0
 
