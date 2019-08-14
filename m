@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC941C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19376C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C17216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56922084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750168;
-	bh=+swnYQtTC60El5g8koEpcOiNRFLnXArpyw2F+nuZu3Y=;
+	s=default; t=1565750175;
+	bh=cWp6Su97TehheftA739ylcE2BBj4vaIspegho4YJaqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YKtF/F+gDRL15thBYXNeaoR1XsuGz0ppazyrkyP6DIrG3qzbSdG5pFnp3u2ZVHsVd
-	 qezIKq32jg84y61HzV/7SJHWEf0g+Kzde50aD2/lXMhHptpAOOxdTT/dI6hiFt8ZQS
-	 9GilM0MV+SZdaPco6mZebsVJ0q++L3KDekZmkehU=
+	b=XonBFiJBUyjWjh1/qYn+ci0iGs9DuQte5wigqixqR4bQBMAXQ5BiCoyDdvsa7Tppw
+	 lYbwrogxKYp/efOBL0Avq2idPVICEUwfzQhxhh/YXgxh3E/5KEtoKhPZw1DYR0GvVf
+	 Eyr34/CaLjccCqBm6Ht3NKeeTGQHaMFaklIztEQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbfHNCgH (ORCPT
+        id S1729571AbfHNCgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:36:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45356 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:36:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727496AbfHNCNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:20 -0400
+        id S1728177AbfHNCNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DA0C20874;
-        Wed, 14 Aug 2019 02:13:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 026F720844;
+        Wed, 14 Aug 2019 02:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748800;
-        bh=+swnYQtTC60El5g8koEpcOiNRFLnXArpyw2F+nuZu3Y=;
+        s=default; t=1565748796;
+        bh=cWp6Su97TehheftA739ylcE2BBj4vaIspegho4YJaqU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rXWFLat5rBP9+jQ5cX3NQX0267Zl6V2vVfIVX+K0Wl5kYLtAkJvS3e5qENYlI95t2
-         NBXYGbz6GXQuO9vhIEOpGbOc72m5pJPGv01fG7bKkHibzIgt8b6m9KHXP07B4S1eiN
-         E0Ljk6jN8C5IXgYD6Q09nyJCDC6aT5WA4UfEAZCc=
+        b=i7ye2+szkfE6smUbZn95u02KV4/QLCua0yIN3ivj/ILewL9S2dRaJD3cQ94ucuQSv
+         QgEtVDEUI42vuN064ODsLE9wAwiMr/hS74mCBzUxJIV64zuh+HnNc73/t3SbuGYkUr
+         WfkfknVppdZTvAwU1+4uffiTrYBs6tDaA5ZYn4q8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 069/123] isdn: hfcsusb: Fix mISDN driver crash caused by transfer buffer on the stack
-Date:   Tue, 13 Aug 2019 22:09:53 -0400
-Message-Id: <20190814021047.14828-69-sashal@kernel.org>
+Cc:     Muchun Song <smuchun@gmail.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Prateek Sood <prsood@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 067/123] driver core: Fix use-after-free and double free on glue directory
+Date:   Tue, 13 Aug 2019 22:09:51 -0400
+Message-Id: <20190814021047.14828-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -59,85 +61,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+From: Muchun Song <smuchun@gmail.com>
 
-[ Upstream commit d8a1de3d5bb881507602bc02e004904828f88711 ]
+[ Upstream commit ac43432cb1f5c2950408534987e57c2071e24d8f ]
 
-Since linux 4.9 it is not possible to use buffers on the stack for DMA transfers.
+There is a race condition between removing glue directory and adding a new
+device under the glue dir. It can be reproduced in following test:
 
-During usb probe the driver crashes with "transfer buffer is on stack" message.
+CPU1:                                         CPU2:
 
-This fix k-allocates a buffer to be used on "read_reg_atomic", which is a macro
-that calls "usb_control_msg" under the hood.
+device_add()
+  get_device_parent()
+    class_dir_create_and_add()
+      kobject_add_internal()
+        create_dir()    // create glue_dir
 
-Kernel 4.19 backtrace:
+                                              device_add()
+                                                get_device_parent()
+                                                  kobject_get() // get glue_dir
 
-usb_hcd_submit_urb+0x3e5/0x900
-? sched_clock+0x9/0x10
-? log_store+0x203/0x270
-? get_random_u32+0x6f/0x90
-? cache_alloc_refill+0x784/0x8a0
-usb_submit_urb+0x3b4/0x550
-usb_start_wait_urb+0x4e/0xd0
-usb_control_msg+0xb8/0x120
-hfcsusb_probe+0x6bc/0xb40 [hfcsusb]
-usb_probe_interface+0xc2/0x260
-really_probe+0x176/0x280
-driver_probe_device+0x49/0x130
-__driver_attach+0xa9/0xb0
-? driver_probe_device+0x130/0x130
-bus_for_each_dev+0x5a/0x90
-driver_attach+0x14/0x20
-? driver_probe_device+0x130/0x130
-bus_add_driver+0x157/0x1e0
-driver_register+0x51/0xe0
-usb_register_driver+0x5d/0x120
-? 0xf81ed000
-hfcsusb_drv_init+0x17/0x1000 [hfcsusb]
-do_one_initcall+0x44/0x190
-? free_unref_page_commit+0x6a/0xd0
-do_init_module+0x46/0x1c0
-load_module+0x1dc1/0x2400
-sys_init_module+0xed/0x120
-do_fast_syscall_32+0x7a/0x200
-entry_SYSENTER_32+0x6b/0xbe
+device_del()
+  cleanup_glue_dir()
+    kobject_del(glue_dir)
 
-Signed-off-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+                                                kobject_add()
+                                                  kobject_add_internal()
+                                                    create_dir() // in glue_dir
+                                                      sysfs_create_dir_ns()
+                                                        kernfs_create_dir_ns(sd)
+
+      sysfs_remove_dir() // glue_dir->sd=NULL
+      sysfs_put()        // free glue_dir->sd
+
+                                                          // sd is freed
+                                                          kernfs_new_node(sd)
+                                                            kernfs_get(glue_dir)
+                                                            kernfs_add_one()
+                                                            kernfs_put()
+
+Before CPU1 remove last child device under glue dir, if CPU2 add a new
+device under glue dir, the glue_dir kobject reference count will be
+increase to 2 via kobject_get() in get_device_parent(). And CPU2 has
+been called kernfs_create_dir_ns(), but not call kernfs_new_node().
+Meanwhile, CPU1 call sysfs_remove_dir() and sysfs_put(). This result in
+glue_dir->sd is freed and it's reference count will be 0. Then CPU2 call
+kernfs_get(glue_dir) will trigger a warning in kernfs_get() and increase
+it's reference count to 1. Because glue_dir->sd is freed by CPU1, the next
+call kernfs_add_one() by CPU2 will fail(This is also use-after-free)
+and call kernfs_put() to decrease reference count. Because the reference
+count is decremented to 0, it will also call kmem_cache_free() to free
+the glue_dir->sd again. This will result in double free.
+
+In order to avoid this happening, we also should make sure that kernfs_node
+for glue_dir is released in CPU1 only when refcount for glue_dir kobj is
+1 to fix this race.
+
+The following calltrace is captured in kernel 4.14 with the following patch
+applied:
+
+commit 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
+
+--------------------------------------------------------------------------
+[    3.633703] WARNING: CPU: 4 PID: 513 at .../fs/kernfs/dir.c:494
+                Here is WARN_ON(!atomic_read(&kn->count) in kernfs_get().
+....
+[    3.633986] Call trace:
+[    3.633991]  kernfs_create_dir_ns+0xa8/0xb0
+[    3.633994]  sysfs_create_dir_ns+0x54/0xe8
+[    3.634001]  kobject_add_internal+0x22c/0x3f0
+[    3.634005]  kobject_add+0xe4/0x118
+[    3.634011]  device_add+0x200/0x870
+[    3.634017]  _request_firmware+0x958/0xc38
+[    3.634020]  request_firmware_into_buf+0x4c/0x70
+....
+[    3.634064] kernel BUG at .../mm/slub.c:294!
+                Here is BUG_ON(object == fp) in set_freepointer().
+....
+[    3.634346] Call trace:
+[    3.634351]  kmem_cache_free+0x504/0x6b8
+[    3.634355]  kernfs_put+0x14c/0x1d8
+[    3.634359]  kernfs_create_dir_ns+0x88/0xb0
+[    3.634362]  sysfs_create_dir_ns+0x54/0xe8
+[    3.634366]  kobject_add_internal+0x22c/0x3f0
+[    3.634370]  kobject_add+0xe4/0x118
+[    3.634374]  device_add+0x200/0x870
+[    3.634378]  _request_firmware+0x958/0xc38
+[    3.634381]  request_firmware_into_buf+0x4c/0x70
+--------------------------------------------------------------------------
+
+Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
+Signed-off-by: Muchun Song <smuchun@gmail.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Prateek Sood <prsood@codeaurora.org>
+Link: https://lore.kernel.org/r/20190727032122.24639-1-smuchun@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/hardware/mISDN/hfcsusb.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/base/core.c | 53 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 52 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
-index 8fb7c5dea07fc..008a74a1ed444 100644
---- a/drivers/isdn/hardware/mISDN/hfcsusb.c
-+++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
-@@ -1693,13 +1693,23 @@ hfcsusb_stop_endpoint(struct hfcsusb *hw, int channel)
- static int
- setup_hfcsusb(struct hfcsusb *hw)
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index eaf3aa0cb8031..2dc0123cbba12 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -1820,12 +1820,63 @@ static inline struct kobject *get_glue_dir(struct device *dev)
+  */
+ static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
  {
-+	void *dmabuf = kmalloc(sizeof(u_char), GFP_KERNEL);
- 	u_char b;
-+	int ret;
++	unsigned int ref;
++
+ 	/* see if we live in a "glue" directory */
+ 	if (!live_in_glue_dir(glue_dir, dev))
+ 		return;
  
- 	if (debug & DBG_HFC_CALL_TRACE)
- 		printk(KERN_DEBUG "%s: %s\n", hw->name, __func__);
- 
-+	if (!dmabuf)
-+		return -ENOMEM;
-+
-+	ret = read_reg_atomic(hw, HFCUSB_CHIP_ID, dmabuf);
-+
-+	memcpy(&b, dmabuf, sizeof(u_char));
-+	kfree(dmabuf);
-+
- 	/* check the chip id */
--	if (read_reg_atomic(hw, HFCUSB_CHIP_ID, &b) != 1) {
-+	if (ret != 1) {
- 		printk(KERN_DEBUG "%s: %s: cannot read chip id\n",
- 		       hw->name, __func__);
- 		return 1;
+ 	mutex_lock(&gdp_mutex);
+-	if (!kobject_has_children(glue_dir))
++	/**
++	 * There is a race condition between removing glue directory
++	 * and adding a new device under the glue directory.
++	 *
++	 * CPU1:                                         CPU2:
++	 *
++	 * device_add()
++	 *   get_device_parent()
++	 *     class_dir_create_and_add()
++	 *       kobject_add_internal()
++	 *         create_dir()    // create glue_dir
++	 *
++	 *                                               device_add()
++	 *                                                 get_device_parent()
++	 *                                                   kobject_get() // get glue_dir
++	 *
++	 * device_del()
++	 *   cleanup_glue_dir()
++	 *     kobject_del(glue_dir)
++	 *
++	 *                                               kobject_add()
++	 *                                                 kobject_add_internal()
++	 *                                                   create_dir() // in glue_dir
++	 *                                                     sysfs_create_dir_ns()
++	 *                                                       kernfs_create_dir_ns(sd)
++	 *
++	 *       sysfs_remove_dir() // glue_dir->sd=NULL
++	 *       sysfs_put()        // free glue_dir->sd
++	 *
++	 *                                                         // sd is freed
++	 *                                                         kernfs_new_node(sd)
++	 *                                                           kernfs_get(glue_dir)
++	 *                                                           kernfs_add_one()
++	 *                                                           kernfs_put()
++	 *
++	 * Before CPU1 remove last child device under glue dir, if CPU2 add
++	 * a new device under glue dir, the glue_dir kobject reference count
++	 * will be increase to 2 in kobject_get(k). And CPU2 has been called
++	 * kernfs_create_dir_ns(). Meanwhile, CPU1 call sysfs_remove_dir()
++	 * and sysfs_put(). This result in glue_dir->sd is freed.
++	 *
++	 * Then the CPU2 will see a stale "empty" but still potentially used
++	 * glue dir around in kernfs_new_node().
++	 *
++	 * In order to avoid this happening, we also should make sure that
++	 * kernfs_node for glue_dir is released in CPU1 only when refcount
++	 * for glue_dir kobj is 1.
++	 */
++	ref = kref_read(&glue_dir->kref);
++	if (!kobject_has_children(glue_dir) && !--ref)
+ 		kobject_del(glue_dir);
+ 	kobject_put(glue_dir);
+ 	mutex_unlock(&gdp_mutex);
 -- 
 2.20.1
 
