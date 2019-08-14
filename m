@@ -2,200 +2,104 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A87C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0E7C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42DD9206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9ED206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbfHNLjs convert rfc822-to-8bit (ORCPT
+        id S1727823AbfHNLkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 07:39:48 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:1925 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbfHNLjr (ORCPT
+        Wed, 14 Aug 2019 07:40:04 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38567 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbfHNLkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 07:39:47 -0400
-IronPort-SDR: oy9sF8ZShLMsG66RYhvMLKDdtoV0TWmRr9RRJ1B+2emNbzD8vdz1qvGZaW8HfcSPLJe5c2m8Ui
- +k60b3sVjibSSClIaDo5O1B7E43wMjT7Vx2cgKfTNfo38sAQaNs9cqOSYQTFHSXN2QbCDLQ6n9
- wElcFuanxhImlBYIiJALx49lk1wbkQ9c55p+OUaHuLM6tBKEP8zhWLY8sxFH7kW+qQ0drdeacz
- 5DpDQLsSNfuiwVHNVqceCtEbNL3a/rba7Qc5afZC6lKLcmB2SnCV9cADo9UInwTM1QiWIhi67R
- zjc=
-X-IronPort-AV: E=Sophos;i="5.64,385,1559548800"; 
-   d="scan'208";a="40454989"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 14 Aug 2019 03:39:47 -0800
-IronPort-SDR: Aoeb+lm75XWbI7uH8v6v17c8kZdqfZs0aTRMRUksJQ0xXff1sjbZgy7ImoFVeVB/eUbpd7Xiqq
- L7+uyFqwat4KZqnnixTJD+O6ta5iOIiUXHwRdZ0STugmqPQ8fl2j4ezQBt2bxj5M2lXtviBunn
- nxiTDkVxRfStU00D/ABLfzEBC3kY3Gweuh/XmvZs9EJfuGiGHPPvNBxMNWHW5QjBf1snLQ9H4g
- +ZA4O3yWmZUQ5wrCR2XflTH8mq91Qwv+AjgoyPQf08c6EUnfbZBS7q4ilA6twMCMg+wH40PknM
- eEE=
-From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: [PATCH] usb: xhci-pci: reorder removal to avoid use-after-free
-Thread-Topic: [PATCH] usb: xhci-pci: reorder removal to avoid use-after-free
-Thread-Index: AQHVUpSXBvBKq97fNkaS50QUUgX/8g==
-Date:   Wed, 14 Aug 2019 11:39:41 +0000
-Message-ID: <1565782781938.37795@mentor.com>
-Accept-Language: de-DE, en-IE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [137.202.0.90]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Wed, 14 Aug 2019 07:40:04 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g17so110777821wrr.5
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:40:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TfDFGn9xBFspmX5cBemBdinuQbO2xkupqQlduBuui6A=;
+        b=L5Fhrv7c5vedy8UCmcPNRCfNmRzHIOBtQXiXM0TDHoqOsMt2ux/cB6Js0ZK5ChAZL0
+         B3bPjKbUqUoqrtYQFUxRRwW74qIUwCmdXQodvkqhvvGbmpvPAGXplCrkDYwl5xZBNcio
+         ypQ0++9sNyDZ7uPfcoiqDBK7Tu23zY/8ja9kIHFUAMBxHZa/CEJJGSMj0V8HdGQar/OK
+         8vk/KWdvoaGFbSbBHktpi2R35D2/xhozCTRF/gac3NP7sJbLXZ2oQ4vxji5b88R8u62h
+         HQSIj5RviSsniSVFkp862xpNDHvEHyNYYVN/vUDLbT8LM6rMIE5wXThoI96jwLMqp/zo
+         Sz8w==
+X-Gm-Message-State: APjAAAVtnbMVqk4DUIgbXNJNCRDUeYzlO2jvxBeN74cSQipQBvhfa3G1
+        97pmn/lx1OzF0PEFEWDhn+Xyb6JKhwaU5A==
+X-Google-Smtp-Source: APXvYqzcFoKfhorVqikyfuY9ZRC6b7eerGvEK4rndnPu8acr++apgjHIYDBg5sNyPg6Ubgueu8W9EQ==
+X-Received: by 2002:adf:fc51:: with SMTP id e17mr49123371wrs.348.1565782802049;
+        Wed, 14 Aug 2019 04:40:02 -0700 (PDT)
+Received: from localhost.localdomain ([213.220.153.21])
+        by smtp.gmail.com with ESMTPSA id j9sm8924705wrx.66.2019.08.14.04.40.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 14 Aug 2019 04:40:01 -0700 (PDT)
+From:   christian.brauner@ubuntu.com
+To:     linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
+Cc:     oleg@redhat.com, alistair23@gmail.com, ebiederm@xmission.com,
+        arnd@arndb.de, dalias@libc.org, torvalds@linux-foundation.org,
+        adhemerval.zanella@linaro.org, fweimer@redhat.com,
+        palmer@sifive.com, macro@wdc.com, zongbox@gmail.com,
+        akpm@linux-foundation.org, viro@zeniv.linux.org.uk, hpa@zytor.com,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v1 0/1] waitid: process group enhancement
+Date:   Wed, 14 Aug 2019 13:38:21 +0200
+Message-Id: <20190814113822.9505-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <CAKmqyKMJPQAOKn11xepzAwXOd4e9dU0Cyz=A0T-uMEgUp5yJjA@mail.gmail.com>
+References: <CAKmqyKMJPQAOKn11xepzAwXOd4e9dU0Cyz=A0T-uMEgUp5yJjA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On driver removal, the platform_device_unregister call
-attached through devm_add_action_or_reset was executed
-after usb_hcd_pci_remove.
-This lead to a use-after-free for the iomem resorce of
-the xhci-ext-caps driver in the platform removal
-because the parent of the resource was freed earlier.
+From: Christian Brauner <christian.brauner@ubuntu.com>
 
-Fix this by reordering of the removal sequence.
+Hey everyone,
 
-Signed-off-by: Carsten Schmid <carsten_schmid@mentor.com>
----
- drivers/usb/host/xhci-ext-caps.c | 22 ++++++++++++----------
- drivers/usb/host/xhci-pci.c      |  4 ++++
- drivers/usb/host/xhci-pci.h      | 19 +++++++++++++++++++
- drivers/usb/host/xhci.h          |  1 +
- 4 files changed, 36 insertions(+), 10 deletions(-)
- create mode 100644 drivers/usb/host/xhci-pci.h
+This patch adds support for waiting on the current process group by
+specifying waitid(P_PGID, 0, ...) as discussed in [1]. The details why
+we need to do this are in the commit message of [PATCH 1/1] so I won't
+repeat them here.
 
-diff --git a/drivers/usb/host/xhci-ext-caps.c b/drivers/usb/host/xhci-ext-caps.c
-index 399113f9fc5c..d2ab1e2a39c0 100644
---- a/drivers/usb/host/xhci-ext-caps.c
-+++ b/drivers/usb/host/xhci-ext-caps.c
-@@ -7,21 +7,19 @@
- 
- #include <linux/platform_device.h>
- #include "xhci.h"
-+#include "xhci-pci.h"
- 
- #define USB_SW_DRV_NAME		"intel_xhci_usb_sw"
- #define USB_SW_RESOURCE_SIZE	0x400
- 
--static void xhci_intel_unregister_pdev(void *arg)
--{
--	platform_device_unregister(arg);
--}
--
- static int xhci_create_intel_xhci_sw_pdev(struct xhci_hcd *xhci, u32 cap_offset)
- {
- 	struct usb_hcd *hcd = xhci_to_hcd(xhci);
- 	struct device *dev = hcd->self.controller;
- 	struct platform_device *pdev;
- 	struct resource	res = { 0, };
-+	struct xhci_pci_priv *priv = (struct xhci_pci_priv *)xhci->priv;
-+
- 	int ret;
- 
- 	pdev = platform_device_alloc(USB_SW_DRV_NAME, PLATFORM_DEVID_NONE);
-@@ -52,11 +50,7 @@ static int xhci_create_intel_xhci_sw_pdev(struct xhci_hcd *xhci, u32 cap_offset)
- 		return ret;
- 	}
- 
--	ret = devm_add_action_or_reset(dev, xhci_intel_unregister_pdev, pdev);
--	if (ret) {
--		dev_err(dev, "couldn't add unregister action for intel_xhci_usb_sw pdev\n");
--		return ret;
--	}
-+	priv->pdev = pdev;
- 
- 	return 0;
- }
-@@ -88,3 +82,11 @@ int xhci_ext_cap_init(struct xhci_hcd *xhci)
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(xhci_ext_cap_init);
-+
-+void xhci_ext_cap_remove(struct xhci_hcd *xhci)
-+{
-+	struct xhci_pci_priv *priv = (struct xhci_pci_priv *)xhci->priv;
-+	if (priv->pdev)
-+		platform_device_unregister(priv->pdev);
-+}
-+EXPORT_SYMBOL_GPL(xhci_ext_cap_remove);
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index c2fe218e051f..a4d094df56f7 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -14,6 +14,7 @@
- #include <linux/acpi.h>
- 
- #include "xhci.h"
-+#include "xhci-pci.h"
- #include "xhci-trace.h"
- 
- #define SSIC_PORT_NUM		2
-@@ -62,6 +63,7 @@ static struct hc_driver __read_mostly xhci_pci_hc_driver;
- static int xhci_pci_setup(struct usb_hcd *hcd);
- 
- static const struct xhci_driver_overrides xhci_pci_overrides __initconst = {
-+	.extra_priv_size = sizeof(struct xhci_pci_priv),
- 	.reset = xhci_pci_setup,
- };
- 
-@@ -393,6 +395,8 @@ static void xhci_pci_remove(struct pci_dev *dev)
- 		xhci->shared_hcd = NULL;
- 	}
- 
-+	xhci_ext_cap_remove(xhci);
-+
- 	/* Workaround for spurious wakeups at shutdown with HSW */
- 	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
- 		pci_set_power_state(dev, PCI_D3hot);
-diff --git a/drivers/usb/host/xhci-pci.h b/drivers/usb/host/xhci-pci.h
-new file mode 100644
-index 000000000000..ead9618d7368
---- /dev/null
-+++ b/drivers/usb/host/xhci-pci.h
-@@ -0,0 +1,19 @@
-+/*
-+ * xhci-pci.h - xHCI extended capability handling platform Glue.
-+ *
-+ * Copyright (C) 2019 Mentor Graphics (Deutschland) GmbH
-+ * Derived from xhci-plat.h
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ */
-+
-+#ifndef _XHCI_PCI_H
-+#define _XHCI_PCI_H
-+
-+struct xhci_pci_priv {
-+	struct platform_device *pdev;
-+};
-+
-+#endif	/* _XHCI_PCI_H */
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index fabbce1c542a..847d2021fc2c 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -2052,6 +2052,7 @@ void xhci_init_driver(struct hc_driver *drv,
- 		      const struct xhci_driver_overrides *over);
- int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id);
- int xhci_ext_cap_init(struct xhci_hcd *xhci);
-+void xhci_ext_cap_remove(struct xhci_hcd *xhci);
- 
- int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup);
- int xhci_resume(struct xhci_hcd *xhci, bool hibernated);
+I've picked this up since the thread has gone stale and parts of
+userspace are actually blocked by this.
+
+Note that the patch has been marked with v1 because I've changed the
+patch to be more closely aligned with the P_PIDFD changes to waitid() I
+have sitting in my for-next branch (cf. [2]).
+This makes the merge conflict a little simpler and picks up on the
+coding style discussions that guided the P_PIDFD patchset.
+
+There was some desire to get this feature in with 5.3 (cf. [3]).
+But given that this is a new feature for waitid() and for the sake of
+avoiding any merge conflicts I would prefer to land this in the 5.4
+merge window together with the P_PIDFD changes.
+
+Thanks!
+Christian
+
+/* References */
+[1]: https://www.sourceware.org/ml/libc-alpha/2019-07/msg00587.html
+[2]: https://lore.kernel.org/lkml/20190727222229.6516-1-christian@brauner.io/
+[3]: https://www.sourceware.org/ml/libc-alpha/2019-08/msg00304.html
+
+Eric W. Biederman (1):
+  waitid: Add support for waiting for the current process group
+
+ kernel/exit.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
 -- 
-2.17.1
+2.22.0
+
