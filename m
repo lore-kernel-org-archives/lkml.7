@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 275FFC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88FCC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F9F2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2AC214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802536;
-	bh=n0qBG/a3GFpuKWNftyN0W4yVsGfHWbgQGMmXyCJAkEM=;
+	s=default; t=1565802539;
+	bh=fllYO8klzVBu/v/RKi/Wr7MUFDeaUMeXiVuI1JnUge0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bB5JtdDqJ1w/mJa8Are76u0R6SqlzhNG0YuB7cPc6cRHebyeKuXWYWSjh90PIYqia
-	 zxv8Dl1FJKNlvJFnLVbG1TK2kn/TodEP+VrY+JFc6L2XK4h7Hm03duDNgLNrxqSfM+
-	 cLHgmmt8F7JmousWqrvlaHfuzPvL3bdvVVSG6bVA=
+	b=u2mTFWT5H/tp1CdbQczlMHkHl6V8UQ1nrCovJFJapkXWOm2WxiiuzMPdcTjyFjuKh
+	 KPLf6I7foBxyAsbnWzMuFQbqjYeWs3E3+6iWQVj32GLtAJM60zHvjjfTRnXuqgPwew
+	 Lk9M+A894MRXHtTLx2qFCw73h+f6kT1XvzAJyU6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbfHNRIz (ORCPT
+        id S1730241AbfHNRI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:08:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59056 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:08:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730223AbfHNRIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:08:52 -0400
+        id S1730216AbfHNRIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:08:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9AFA208C2;
-        Wed, 14 Aug 2019 17:08:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 618E721721;
+        Wed, 14 Aug 2019 17:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802531;
-        bh=n0qBG/a3GFpuKWNftyN0W4yVsGfHWbgQGMmXyCJAkEM=;
+        s=default; t=1565802533;
+        bh=fllYO8klzVBu/v/RKi/Wr7MUFDeaUMeXiVuI1JnUge0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IH0ekc1niey02H06myEhvZWhj1s44XrDDA0Wd9LmZCNF4Voa1oAftxUaQbzrJcFnM
-         fOa4bipiJufu4YAxEl17C610A27uM0X13EWaIecdf2jpNMxGdU+eg7XvgfHzWcOyLc
-         2VPP28gT7D7EGVchFJzo8cLiIKY1ErfZc4kIa/J4=
+        b=ZRyMb+QhZ5l1qOOUu7dDHKs5kMKbGikggXm0DItWTI0BtogkEVHvF6E87/PSSZ8IG
+         lUeY25iDTDQ6sFZ39umXU4Ilz4nYCxh0/0Uug5/9KXSKSxqnuhawsghCvKx5mq8LbM
+         ttrj/MUvv76/I6rd0ybEF+AGqHpD3KftYX1wa2HY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH 4.19 18/91] x86/mm: Sync also unmappings in vmalloc_sync_all()
-Date:   Wed, 14 Aug 2019 19:00:41 +0200
-Message-Id: <20190814165750.512161708@linuxfoundation.org>
+Subject: [PATCH 4.19 19/91] mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()
+Date:   Wed, 14 Aug 2019 19:00:42 +0200
+Message-Id: <20190814165750.551462071@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -62,63 +62,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-commit 8e998fc24de47c55b47a887f6c95ab91acd4a720 upstream.
+commit 3f8fd02b1bf1d7ba964485a56f2f4b53ae88c167 upstream.
 
-With huge-page ioremap areas the unmappings also need to be synced between
-all page-tables. Otherwise it can cause data corruption when a region is
-unmapped and later re-used.
+On x86-32 with PTI enabled, parts of the kernel page-tables are not shared
+between processes. This can cause mappings in the vmalloc/ioremap area to
+persist in some page-tables after the region is unmapped and released.
 
-Make the vmalloc_sync_one() function ready to sync unmappings and make sure
-vmalloc_sync_all() iterates over all page-tables even when an unmapped PMD
-is found.
+When the region is re-used the processes with the old mappings do not fault
+in the new mappings but still access the old ones.
+
+This causes undefined behavior, in reality often data corruption, kernel
+oopses and panics and even spontaneous reboots.
+
+Fix this problem by activly syncing unmaps in the vmalloc/ioremap area to
+all page-tables in the system before the regions can be re-used.
 
 Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lkml.kernel.org/r/20190719184652.11391-3-joro@8bytes.org
+Link: https://lkml.kernel.org/r/20190719184652.11391-4-joro@8bytes.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/mm/fault.c |   13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ mm/vmalloc.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -261,11 +261,12 @@ static inline pmd_t *vmalloc_sync_one(pg
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1752,6 +1752,12 @@ void *__vmalloc_node_range(unsigned long
+ 		return NULL;
  
- 	pmd = pmd_offset(pud, address);
- 	pmd_k = pmd_offset(pud_k, address);
--	if (!pmd_present(*pmd_k))
--		return NULL;
- 
--	if (!pmd_present(*pmd))
-+	if (pmd_present(*pmd) != pmd_present(*pmd_k))
- 		set_pmd(pmd, *pmd_k);
+ 	/*
++	 * First make sure the mappings are removed from all page-tables
++	 * before they are freed.
++	 */
++	vmalloc_sync_all();
 +
-+	if (!pmd_present(*pmd_k))
-+		return NULL;
- 	else
- 		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
- 
-@@ -287,17 +288,13 @@ void vmalloc_sync_all(void)
- 		spin_lock(&pgd_lock);
- 		list_for_each_entry(page, &pgd_list, lru) {
- 			spinlock_t *pgt_lock;
--			pmd_t *ret;
- 
- 			/* the pgt_lock only for Xen */
- 			pgt_lock = &pgd_page_get_mm(page)->page_table_lock;
- 
- 			spin_lock(pgt_lock);
--			ret = vmalloc_sync_one(page_address(page), address);
-+			vmalloc_sync_one(page_address(page), address);
- 			spin_unlock(pgt_lock);
--
--			if (!ret)
--				break;
- 		}
- 		spin_unlock(&pgd_lock);
- 	}
++	/*
+ 	 * In this function, newly allocated vm_struct has VM_UNINITIALIZED
+ 	 * flag. It means that vm_struct is not fully initialized.
+ 	 * Now, it is fully initialized, so remove this flag here.
+@@ -2296,6 +2302,9 @@ EXPORT_SYMBOL(remap_vmalloc_range);
+ /*
+  * Implement a stub for vmalloc_sync_all() if the architecture chose not to
+  * have one.
++ *
++ * The purpose of this function is to make sure the vmalloc area
++ * mappings are identical in all page-tables in the system.
+  */
+ void __weak vmalloc_sync_all(void)
+ {
 
 
