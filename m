@@ -2,150 +2,162 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B8BC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A564C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D28F2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D26F208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 23:22:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="MBXOG5zR"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CeW4A6s9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbfHNXQV (ORCPT
+        id S1728908AbfHNXWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 19:16:21 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36743 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727659AbfHNXQU (ORCPT
+        Wed, 14 Aug 2019 19:22:41 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44421 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728416AbfHNXWk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 19:16:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r3so656526wrt.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 16:16:18 -0700 (PDT)
+        Wed, 14 Aug 2019 19:22:40 -0400
+Received: by mail-qk1-f193.google.com with SMTP id d79so459941qke.11
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 16:22:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=YcOnCRhvASOCE8YHTM3+3xNRALgdjiXsHUDG2PLCBIc=;
-        b=MBXOG5zR0vSOnBQd8KhlfxhuDJRdNNhNdQuxq4VR47SeVIK8plGbloHybugYfeC6sW
-         sZ0plL2KJc/gBchjIqetxtk59qRutv9NdsPsBxckBXtXuyJTc7lGPAt0wKglFcer9bhw
-         NQtp0espcSecKhuE6zHv6HhiIrBVJhz7gmgzPph5RBbR3M4Z9i7zGCJLvwO53uFz0Xxs
-         IJEXvQbv607P1qJttaD65eeJcr9msCbGwIPEmcizpWyH7rnrCSdcJ5sP9enTpJeFUTu2
-         Y8BVG0Q5xmg1voqbgmm+KSwbTQBEny9txbcUnzZPbCM6cish6GylB4ehi7Ly3DRcYB12
-         eNvQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+oq/5hVDOEPmfOLGRxP/LWMzZW9hvok8H3hUDypMEVM=;
+        b=CeW4A6s9kz9AiVYMqcDI06mk+8c43yhH15wi/FMEFEpQYj8SoEDj5igZ++T61nyJEF
+         J7bz0bCMDreJWQK3+sSkHZZElkuyAADVchuhvjtrodJFxPZC3y/SlYmVyZDBspE6JQMx
+         QBl4yI3FTbCPsBXJIEej0rRovg1r1eAJISK6dGTgM2wlBFQ9LmobWpzLw4t831OfYRb3
+         /nDARP5ragOjl1a4cBnMFDGnjBCOaSWZPg4MgvhREoOAQZk/AElEi+uxFPxrJ0nhHZo2
+         mDgtCgwDUIpQdxdHxzFJsk3H7GsWbWO3a1pFsGNrwr6UFL1DCAwb0wYESMq+D/n6TN/i
+         qPKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=YcOnCRhvASOCE8YHTM3+3xNRALgdjiXsHUDG2PLCBIc=;
-        b=B9pNWdmdk3jngyULyDXAE3+kCAYqTUiF25g9XIlnh0fi6G0MPFxdRPe7V2lEwMM3FO
-         q8avcMA/WQYqp+7KATO/N/9n7GkhyXzGxXusSm1yQzwZUyNty5/xXWYOBfHqpjyP9f25
-         DMdMedBVmrZylmauRUg3BytpQ4/Ur0sTnxfs0ieXih5BotYgqc0ZEG2GKjujUQzKjkgE
-         zBK6n5/JiNsrAr8PU1/OEGkL1rOA/52SKiphuh8vJX6i0WQ5UWWIIwM3v2kHjZ8N+Kv6
-         gaf5QM55+BNqgyCnZv1IBaeZ+WkgQHkxUFla1pjbdL9ITT+iNxSWiKmgsmpdmKqpgQ9h
-         7rlQ==
-X-Gm-Message-State: APjAAAUhovdT4oVf3VZGyP+vvwUSw70NJTdJbaabCxJjUAej08jTyQP+
-        bs2kyCUBrsvel16xt9XY5Y2a0nzde8OBlA==
-X-Google-Smtp-Source: APXvYqxGRi9k5bfRHmF+C8w3CIbOc1lfBEBImYS+ceILTAduPDTNYG8oNogTwAyMuUN1kV1rf2s9Ww==
-X-Received: by 2002:adf:f507:: with SMTP id q7mr1937660wro.210.1565824578258;
-        Wed, 14 Aug 2019 16:16:18 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id 39sm3070962wrc.45.2019.08.14.16.16.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 16:16:17 -0700 (PDT)
-Message-ID: <5d549641.1c69fb81.a2cd7.0209@mx.google.com>
-Date:   Wed, 14 Aug 2019 16:16:17 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+oq/5hVDOEPmfOLGRxP/LWMzZW9hvok8H3hUDypMEVM=;
+        b=RCEK2kpcQmicYgQFhHU/nh0THqz7SXn4tc+37nDJ8n2ccrKQ9YnfzPxxGYl0UI2ebT
+         ODCSZBbqOOiC1I0QEHgUHjrdOTx0P+dzZOWBzSh14UGr9OpNxW26wjv33GNMmCiIUDD/
+         pL57PodCGnF5+tDozkpCx7M+Zko/ZYV2Z6jhv7izueZRbVEEXmyYi3hx8b7+hCNUqc+b
+         Rvl4Q58gqiX8+T9p5/AqFXwHNfL3PknLqJuwtK8bVsqdtYk5MJizkx+2TfQU/WwielCe
+         EWnEyZ7j4IKUxL+F1jx7XfpjVPh+VFgKtzSIt3asCmX+cQ5RhTx0KTDzhvumi9RoCjoC
+         rAjQ==
+X-Gm-Message-State: APjAAAXmYgzxrYBP4sp0scvfZdK3WfVJ3yi3BmN7z56/Zj9D6ySEF0Qj
+        u9ArQ88UOw1sAt4vspXahsXRlA==
+X-Google-Smtp-Source: APXvYqwEds8jlvcwtlYKmEv2OldLu3N2F0isLZlZaympLBGufKl1MnMG6bankd4uSkDCSEjrCOszig==
+X-Received: by 2002:a05:620a:15f4:: with SMTP id p20mr1484735qkm.303.1565824959470;
+        Wed, 14 Aug 2019 16:22:39 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id x5sm529189qtr.54.2019.08.14.16.22.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 14 Aug 2019 16:22:39 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hy2bG-00035M-Gd; Wed, 14 Aug 2019 20:22:38 -0300
+Date:   Wed, 14 Aug 2019 20:22:38 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        David Rientjes <rientjes@google.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 1/5] mm: Check if mmu notifier callbacks are allowed to
+ fail
+Message-ID: <20190814232238.GA11200@ziepe.ca>
+References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
+ <20190814202027.18735-2-daniel.vetter@ffwll.ch>
+ <20190814151447.e9ab74f4c7ed4297e39321d1@linux-foundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.2.8-145-g2440e485aeda
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: linux-5.2.y
-In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
-References: <20190814165759.466811854@linuxfoundation.org>
-Subject: Re: [PATCH 5.2 000/144] 5.2.9-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814151447.e9ab74f4c7ed4297e39321d1@linux-foundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-5.2.y boot: 134 boots: 1 failed, 119 passed with 12 offline=
-, 2 untried/unknown (v5.2.8-145-g2440e485aeda)
+On Wed, Aug 14, 2019 at 03:14:47PM -0700, Andrew Morton wrote:
+> On Wed, 14 Aug 2019 22:20:23 +0200 Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+> 
+> > Just a bit of paranoia, since if we start pushing this deep into
+> > callchains it's hard to spot all places where an mmu notifier
+> > implementation might fail when it's not allowed to.
+> > 
+> > Inspired by some confusion we had discussing i915 mmu notifiers and
+> > whether we could use the newly-introduced return value to handle some
+> > corner cases. Until we realized that these are only for when a task
+> > has been killed by the oom reaper.
+> > 
+> > An alternative approach would be to split the callback into two
+> > versions, one with the int return value, and the other with void
+> > return value like in older kernels. But that's a lot more churn for
+> > fairly little gain I think.
+> > 
+> > Summary from the m-l discussion on why we want something at warning
+> > level: This allows automated tooling in CI to catch bugs without
+> > humans having to look at everything. If we just upgrade the existing
+> > pr_info to a pr_warn, then we'll have false positives. And as-is, no
+> > one will ever spot the problem since it's lost in the massive amounts
+> > of overall dmesg noise.
+> > 
+> > ...
+> >
+> > +++ b/mm/mmu_notifier.c
+> > @@ -179,6 +179,8 @@ int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
+> >  				pr_info("%pS callback failed with %d in %sblockable context.\n",
+> >  					mn->ops->invalidate_range_start, _ret,
+> >  					!mmu_notifier_range_blockable(range) ? "non-" : "");
+> > +				WARN_ON(mmu_notifier_range_blockable(range) ||
+> > +					ret != -EAGAIN);
+> >  				ret = _ret;
+> >  			}
+> >  		}
+> 
+> A problem with WARN_ON(a || b) is that if it triggers, we don't know
+> whether it was because of a or because of b.  Or both.  So I'd suggest
+> 
+> 	WARN_ON(a);
+> 	WARN_ON(b);
+> 
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--5.2.y/kernel/v5.2.8-145-g2440e485aeda/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.2.y=
-/kernel/v5.2.8-145-g2440e485aeda/
+Well, we did just make a pr_info right above with the value of
+blockable, that seems enough to tell the cases apart?
 
-Tree: stable-rc
-Branch: linux-5.2.y
-Git Describe: v5.2.8-145-g2440e485aeda
-Git Commit: 2440e485aeda5f36eaf2050eb1bb61be46275b39
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 81 unique boards, 27 SoC families, 17 builds out of 208
+But you are generally right, the full logic:
 
-Boot Regressions Detected:
+    if (_ret) {
+      if (WARN_ON(mmu_notifier_range_blockable(range)))
+            continue;
+      WARN_ON(_ret != -EAGAIN);
+      ret = -EAGAIN;
+      break;
+    }
 
-arm:
+would force correct API contract up the call chain once we detect a
+broken driver..
 
-    qcom_defconfig:
-        gcc-8:
-          qcom-apq8064-cm-qs600:
-              lab-baylibre-seattle: new failure (last pass: v5.2.8)
-          qcom-apq8064-ifc6410:
-              lab-baylibre-seattle: new failure (last pass: v5.2.8)
+But at some point it does feel like a bit much debugging logic to have
+in a production code path, as this should never happen and is just to
+discourage wrong driver behaviors during driver development.
 
-Boot Failure Detected:
+If we like this version then:
 
-arm64:
-    defconfig:
-        gcc-8:
-            rk3399-firefly: 1 failed lab
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 
-Offline Platforms:
+Also - I have a bunch of other patches to mmu notifiers for hmm.git,
+so when everyone agrees I can grab this to avoid conflicts.
 
-arm64:
-
-    defconfig:
-        gcc-8
-            apq8016-sbc: 1 offline lab
-            meson-gxbb-odroidc2: 1 offline lab
-
-arm:
-
-    multi_v7_defconfig:
-        gcc-8
-            imx6dl-wandboard_solo: 1 offline lab
-            imx6q-wandboard: 1 offline lab
-            qcom-apq8064-cm-qs600: 1 offline lab
-            qcom-apq8064-ifc6410: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-
-    qcom_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            qcom-apq8064-ifc6410: 1 offline lab
-
-    imx_v6_v7_defconfig:
-        gcc-8
-            imx6dl-wandboard_solo: 1 offline lab
-            imx6q-wandboard: 1 offline lab
-
----
-For more info write to <info@kernelci.org>
+Thanks,
+Jason
