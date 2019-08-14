@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC7AC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D0DC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF4B2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09B0D2133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfHNKtD (ORCPT
+        id S1727949AbfHNKtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:49:03 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:51408 "EHLO inva021.nxp.com"
+        Wed, 14 Aug 2019 06:49:05 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51538 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727299AbfHNKtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:49:00 -0400
+        id S1727791AbfHNKtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:49:03 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 31A1F2001B8;
-        Wed, 14 Aug 2019 12:48:57 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 89B53200362;
+        Wed, 14 Aug 2019 12:49:01 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 207CB200184;
-        Wed, 14 Aug 2019 12:48:57 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7BCFE2001E4;
+        Wed, 14 Aug 2019 12:49:01 +0200 (CEST)
 Received: from fsr-ub1664-120.ea.freescale.net (fsr-ub1664-120.ea.freescale.net [10.171.82.81])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 283722060E;
-        Wed, 14 Aug 2019 12:48:56 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 817212060E;
+        Wed, 14 Aug 2019 12:49:00 +0200 (CEST)
 From:   Robert Chiras <robert.chiras@nxp.com>
 To:     =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
         Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
@@ -42,223 +42,194 @@ Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 01/15] drm/mxsfb: Update mxsfb to support a bridge
-Date:   Wed, 14 Aug 2019 13:48:37 +0300
-Message-Id: <1565779731-1300-2-git-send-email-robert.chiras@nxp.com>
+Subject: [PATCH v2 05/15] drm/mxsfb: Update register definitions using bit manipulation defines
+Date:   Wed, 14 Aug 2019 13:48:41 +0300
+Message-Id: <1565779731-1300-6-git-send-email-robert.chiras@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
 References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the MXSFB DRM driver only supports a panel. But, its output
-display signal can also be redirected to another encoder, like a DSI
-controller. In this case, that DSI controller may act like a drm_bridge.
-In order support this use-case too, this patch adds support for drm_bridge
-in mxsfb.
+Use BIT(x) and GEN_MASK(h, l) for better representation the inside of
+various registers.
 
 Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-Tested-by: Guido Günther <agx@sigxcpu.org>
 ---
- drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 17 +++++++++++---
- drivers/gpu/drm/mxsfb/mxsfb_drv.c  | 46 +++++++++++++++++++++++++++++++++-----
- drivers/gpu/drm/mxsfb/mxsfb_drv.h  |  4 +++-
- drivers/gpu/drm/mxsfb/mxsfb_out.c  | 26 +++++++++++----------
- 4 files changed, 72 insertions(+), 21 deletions(-)
+ drivers/gpu/drm/mxsfb/mxsfb_regs.h | 151 ++++++++++++++++++++++---------------
+ 1 file changed, 89 insertions(+), 62 deletions(-)
 
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-index 1242156..de09b93 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-@@ -95,8 +95,11 @@ static void mxsfb_set_bus_fmt(struct mxsfb_drm_private *mxsfb)
+diff --git a/drivers/gpu/drm/mxsfb/mxsfb_regs.h b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+index 71426aa..9fcb1db 100644
+--- a/drivers/gpu/drm/mxsfb/mxsfb_regs.h
++++ b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+@@ -40,66 +40,93 @@
+ #define LCDC_AS_BUF			0x220
+ #define LCDC_AS_NEXT_BUF		0x230
  
- 	reg = readl(mxsfb->base + LCDC_CTRL);
- 
--	if (mxsfb->connector.display_info.num_bus_formats)
--		bus_format = mxsfb->connector.display_info.bus_formats[0];
-+	if (mxsfb->connector->display_info.num_bus_formats)
-+		bus_format = mxsfb->connector->display_info.bus_formats[0];
+-#define CTRL_SFTRST			(1 << 31)
+-#define CTRL_CLKGATE			(1 << 30)
+-#define CTRL_BYPASS_COUNT		(1 << 19)
+-#define CTRL_VSYNC_MODE			(1 << 18)
+-#define CTRL_DOTCLK_MODE		(1 << 17)
+-#define CTRL_DATA_SELECT		(1 << 16)
+-#define CTRL_SET_BUS_WIDTH(x)		(((x) & 0x3) << 10)
+-#define CTRL_GET_BUS_WIDTH(x)		(((x) >> 10) & 0x3)
+-#define CTRL_BUS_WIDTH_MASK		(0x3 << 10)
+-#define CTRL_SET_WORD_LENGTH(x)		(((x) & 0x3) << 8)
+-#define CTRL_GET_WORD_LENGTH(x)		(((x) >> 8) & 0x3)
+-#define CTRL_MASTER			(1 << 5)
+-#define CTRL_DF16			(1 << 3)
+-#define CTRL_DF18			(1 << 2)
+-#define CTRL_DF24			(1 << 1)
+-#define CTRL_RUN			(1 << 0)
+-
+-#define CTRL1_RECOVERY_ON_UNDERFLOW	(1 << 24)
+-#define CTRL1_FIFO_CLEAR		(1 << 21)
+-#define CTRL1_SET_BYTE_PACKAGING(x)	(((x) & 0xf) << 16)
+-#define CTRL1_GET_BYTE_PACKAGING(x)	(((x) >> 16) & 0xf)
+-#define CTRL1_CUR_FRAME_DONE_IRQ_EN	(1 << 13)
+-#define CTRL1_CUR_FRAME_DONE_IRQ	(1 << 9)
+-
+-#define CTRL2_OUTSTANDING_REQS__REQ_16		(4 << 21)
+-
+-#define TRANSFER_COUNT_SET_VCOUNT(x)	(((x) & 0xffff) << 16)
+-#define TRANSFER_COUNT_GET_VCOUNT(x)	(((x) >> 16) & 0xffff)
+-#define TRANSFER_COUNT_SET_HCOUNT(x)	((x) & 0xffff)
+-#define TRANSFER_COUNT_GET_HCOUNT(x)	((x) & 0xffff)
+-
+-#define VDCTRL0_ENABLE_PRESENT		(1 << 28)
+-#define VDCTRL0_VSYNC_ACT_HIGH		(1 << 27)
+-#define VDCTRL0_HSYNC_ACT_HIGH		(1 << 26)
+-#define VDCTRL0_DOTCLK_ACT_FALLING	(1 << 25)
+-#define VDCTRL0_ENABLE_ACT_HIGH		(1 << 24)
+-#define VDCTRL0_VSYNC_PERIOD_UNIT	(1 << 21)
+-#define VDCTRL0_VSYNC_PULSE_WIDTH_UNIT	(1 << 20)
+-#define VDCTRL0_HALF_LINE		(1 << 19)
+-#define VDCTRL0_HALF_LINE_MODE		(1 << 18)
+-#define VDCTRL0_SET_VSYNC_PULSE_WIDTH(x) ((x) & 0x3ffff)
+-#define VDCTRL0_GET_VSYNC_PULSE_WIDTH(x) ((x) & 0x3ffff)
+-
+-#define VDCTRL2_SET_HSYNC_PERIOD(x)	((x) & 0x3ffff)
+-#define VDCTRL2_GET_HSYNC_PERIOD(x)	((x) & 0x3ffff)
+-
+-#define VDCTRL3_MUX_SYNC_SIGNALS	(1 << 29)
+-#define VDCTRL3_VSYNC_ONLY		(1 << 28)
+-#define SET_HOR_WAIT_CNT(x)		(((x) & 0xfff) << 16)
+-#define GET_HOR_WAIT_CNT(x)		(((x) >> 16) & 0xfff)
+-#define SET_VERT_WAIT_CNT(x)		((x) & 0xffff)
+-#define GET_VERT_WAIT_CNT(x)		((x) & 0xffff)
+-
+-#define VDCTRL4_SET_DOTCLK_DLY(x)	(((x) & 0x7) << 29) /* v4 only */
+-#define VDCTRL4_GET_DOTCLK_DLY(x)	(((x) >> 29) & 0x7) /* v4 only */
+-#define VDCTRL4_SYNC_SIGNALS_ON		(1 << 18)
+-#define SET_DOTCLK_H_VALID_DATA_CNT(x)	((x) & 0x3ffff)
+-
+-#define DEBUG0_HSYNC			(1 < 26)
+-#define DEBUG0_VSYNC			(1 < 25)
++/* reg bit manipulation */
++#define REG_PUT(x, h, l) (((x) << (l)) & GENMASK(h, l))
++#define REG_GET(x, h, l) (((x) & GENMASK(h, l)) >> (l))
 +
-+	DRM_DEV_DEBUG_DRIVER(drm->dev, "Using bus_format: 0x%08X\n",
-+			     bus_format);
- 
- 	reg &= ~CTRL_BUS_WIDTH_MASK;
- 	switch (bus_format) {
-@@ -204,8 +207,9 @@ static dma_addr_t mxsfb_get_fb_paddr(struct mxsfb_drm_private *mxsfb)
- 
- static void mxsfb_crtc_mode_set_nofb(struct mxsfb_drm_private *mxsfb)
- {
-+	struct drm_device *drm = mxsfb->pipe.crtc.dev;
- 	struct drm_display_mode *m = &mxsfb->pipe.crtc.state->adjusted_mode;
--	const u32 bus_flags = mxsfb->connector.display_info.bus_flags;
-+	const u32 bus_flags = mxsfb->connector->display_info.bus_flags;
- 	u32 vdctrl0, vsync_pulse_len, hsync_pulse_len;
- 	int err;
- 
-@@ -229,6 +233,13 @@ static void mxsfb_crtc_mode_set_nofb(struct mxsfb_drm_private *mxsfb)
- 
- 	clk_set_rate(mxsfb->clk, m->crtc_clock * 1000);
- 
-+	DRM_DEV_DEBUG_DRIVER(drm->dev, "Pixel clock: %dkHz (actual: %dkHz)\n",
-+			     m->crtc_clock,
-+			     (int)(clk_get_rate(mxsfb->clk) / 1000));
-+	DRM_DEV_DEBUG_DRIVER(drm->dev, "Connector bus_flags: 0x%08X\n",
-+			     bus_flags);
-+	DRM_DEV_DEBUG_DRIVER(drm->dev, "Mode flags: 0x%08X\n", m->flags);
++#define CTRL_SFTRST			BIT(31)
++#define CTRL_CLKGATE			BIT(30)
++#define CTRL_SHIFT_DIR(x)		REG_PUT((x), 26, 26)
++#define CTRL_SHIFT_NUM(x)		REG_PUT((x), 25, 21)
++#define CTRL_BYPASS_COUNT		BIT(19)
++#define CTRL_VSYNC_MODE			BIT(18)
++#define CTRL_DOTCLK_MODE		BIT(17)
++#define CTRL_DATA_SELECT		BIT(16)
++#define CTRL_INPUT_SWIZZLE(x)		REG_PUT((x), 15, 14)
++#define CTRL_CSC_SWIZZLE(x)		REG_PUT((x), 13, 12)
++#define CTRL_SET_BUS_WIDTH(x)		REG_PUT((x), 11, 10)
++#define CTRL_GET_BUS_WIDTH(x)		REG_GET((x), 11, 10)
++#define CTRL_BUS_WIDTH_MASK		REG_PUT((0x3), 11, 10)
++#define CTRL_SET_WORD_LENGTH(x)		REG_PUT((x), 9, 8)
++#define CTRL_GET_WORD_LENGTH(x)		REG_GET((x), 9, 8)
++#define CTRL_MASTER			BIT(5)
++#define CTRL_DF16			BIT(3)
++#define CTRL_DF18			BIT(2)
++#define CTRL_DF24			BIT(1)
++#define CTRL_RUN			BIT(0)
 +
- 	writel(TRANSFER_COUNT_SET_VCOUNT(m->crtc_vdisplay) |
- 	       TRANSFER_COUNT_SET_HCOUNT(m->crtc_hdisplay),
- 	       mxsfb->base + mxsfb->devdata->transfer_count);
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 878ef68..9dc69b7 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -101,9 +101,25 @@ static void mxsfb_pipe_enable(struct drm_simple_display_pipe *pipe,
- 			      struct drm_crtc_state *crtc_state,
- 			      struct drm_plane_state *plane_state)
- {
-+	struct drm_connector *connector;
- 	struct mxsfb_drm_private *mxsfb = drm_pipe_to_mxsfb_drm_private(pipe);
- 	struct drm_device *drm = pipe->plane.dev;
- 
-+	if (!mxsfb->connector) {
-+		list_for_each_entry(connector,
-+				    &drm->mode_config.connector_list,
-+				    head)
-+			if (connector->encoder == &mxsfb->pipe.encoder) {
-+				mxsfb->connector = connector;
-+				break;
-+			}
-+	}
++#define CTRL1_RECOVERY_ON_UNDERFLOW	BIT(24)
++#define CTRL1_FIFO_CLEAR		BIT(21)
 +
-+	if (!mxsfb->connector) {
-+		dev_warn(drm->dev, "No connector attached, using default\n");
-+		mxsfb->connector = &mxsfb->panel_connector;
-+	}
++/*
++ * BYTE_PACKAGING
++ *
++ * This bitfield is used to show which data bytes in a 32-bit word area valid.
++ * Default value 0xf indicates that all bytes are valid. For 8-bit transfers,
++ * any combination in this bitfield will mean valid data is present in the
++ * corresponding bytes. In the 16-bit mode, a 16-bit half-word is valid only if
++ * adjacent bits [1:0] or [3:2] or both are 1. A value of 0x0 will mean that
++ * none of the bytes are valid and should not be used. For example, set the bit
++ * field value to 0x7 if the display data is arranged in the 24-bit unpacked
++ * format (A-R-G-B where A value does not have be transmitted).
++ */
++#define CTRL1_SET_BYTE_PACKAGING(x)	REG_PUT((x), 19, 16)
++#define CTRL1_GET_BYTE_PACKAGING(x)	REG_GET((x), 19, 16)
 +
- 	pm_runtime_get_sync(drm->dev);
- 	drm_panel_prepare(mxsfb->panel);
- 	mxsfb_crtc_enable(mxsfb);
-@@ -129,6 +145,9 @@ static void mxsfb_pipe_disable(struct drm_simple_display_pipe *pipe)
- 		drm_crtc_send_vblank_event(crtc, event);
- 	}
- 	spin_unlock_irq(&drm->event_lock);
++#define CTRL1_CUR_FRAME_DONE_IRQ_EN	BIT(13)
++#define CTRL1_CUR_FRAME_DONE_IRQ	BIT(9)
 +
-+	if (mxsfb->connector != &mxsfb->panel_connector)
-+		mxsfb->connector = NULL;
- }
- 
- static void mxsfb_pipe_update(struct drm_simple_display_pipe *pipe,
-@@ -226,16 +245,33 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
- 
- 	ret = drm_simple_display_pipe_init(drm, &mxsfb->pipe, &mxsfb_funcs,
- 			mxsfb_formats, ARRAY_SIZE(mxsfb_formats), NULL,
--			&mxsfb->connector);
-+			mxsfb->connector);
- 	if (ret < 0) {
- 		dev_err(drm->dev, "Cannot setup simple display pipe\n");
- 		goto err_vblank;
- 	}
- 
--	ret = drm_panel_attach(mxsfb->panel, &mxsfb->connector);
--	if (ret) {
--		dev_err(drm->dev, "Cannot connect panel\n");
--		goto err_vblank;
-+	/*
-+	 * Attach panel only if there is one.
-+	 * If there is no panel attach, it must be a bridge. In this case, we
-+	 * need a reference to its connector for a proper initialization.
-+	 * We will do this check in pipe->enable(), since the connector won't
-+	 * be attached to an encoder until then.
-+	 */
++#define CTRL2_OUTSTANDING_REQS(x)	REG_PUT((x), 23, 21)
++#define REQ_1	0
++#define REQ_2	1
++#define REQ_4	2
++#define REQ_8	3
++#define REQ_16	4
 +
-+	if (mxsfb->panel) {
-+		ret = drm_panel_attach(mxsfb->panel, mxsfb->connector);
-+		if (ret) {
-+			dev_err(drm->dev, "Cannot connect panel: %d\n", ret);
-+			goto err_vblank;
-+		}
-+	} else if (mxsfb->bridge) {
-+		ret = drm_simple_display_pipe_attach_bridge(&mxsfb->pipe,
-+							    mxsfb->bridge);
-+		if (ret) {
-+			dev_err(drm->dev, "Cannot connect bridge: %d\n", ret);
-+			goto err_vblank;
-+		}
- 	}
++#define TRANSFER_COUNT_SET_VCOUNT(x)	REG_PUT((x), 31, 16)
++#define TRANSFER_COUNT_GET_VCOUNT(x)	REG_GET((x), 31, 16)
++#define TRANSFER_COUNT_SET_HCOUNT(x)	REG_PUT((x), 15, 0)
++#define TRANSFER_COUNT_GET_HCOUNT(x)	REG_GET((x), 15, 0)
++
++#define VDCTRL0_ENABLE_PRESENT		BIT(28)
++#define VDCTRL0_VSYNC_ACT_HIGH		BIT(27)
++#define VDCTRL0_HSYNC_ACT_HIGH		BIT(26)
++#define VDCTRL0_DOTCLK_ACT_FALLING	BIT(25)
++#define VDCTRL0_ENABLE_ACT_HIGH		BIT(24)
++#define VDCTRL0_VSYNC_PERIOD_UNIT	BIT(21)
++#define VDCTRL0_VSYNC_PULSE_WIDTH_UNIT	BIT(20)
++#define VDCTRL0_HALF_LINE		BIT(19)
++#define VDCTRL0_HALF_LINE_MODE		BIT(18)
++#define VDCTRL0_SET_VSYNC_PULSE_WIDTH(x) REG_PUT((x), 17, 0)
++#define VDCTRL0_GET_VSYNC_PULSE_WIDTH(x) REG_GET((x), 17, 0)
++
++#define VDCTRL2_SET_HSYNC_PERIOD(x)	REG_PUT((x), 15, 0)
++#define VDCTRL2_GET_HSYNC_PERIOD(x)	REG_GET((x), 15, 0)
++
++#define VDCTRL3_MUX_SYNC_SIGNALS	BIT(29)
++#define VDCTRL3_VSYNC_ONLY		BIT(28)
++#define SET_HOR_WAIT_CNT(x)		REG_PUT((x), 27, 16)
++#define GET_HOR_WAIT_CNT(x)		REG_GET((x), 27, 16)
++#define SET_VERT_WAIT_CNT(x)		REG_PUT((x), 15, 0)
++#define GET_VERT_WAIT_CNT(x)		REG_GET((x), 15, 0)
++
++#define VDCTRL4_SET_DOTCLK_DLY(x)	REG_PUT((x), 31, 29) /* v4 only */
++#define VDCTRL4_GET_DOTCLK_DLY(x)	REG_GET((x), 31, 29) /* v4 only */
++#define VDCTRL4_SYNC_SIGNALS_ON		BIT(18)
++#define SET_DOTCLK_H_VALID_DATA_CNT(x)	REG_PUT((x), 17, 0)
++
++#define DEBUG0_HSYNC			BIT(26)
++#define DEBUG0_VSYNC			BIT(25)
  
- 	drm->mode_config.min_width	= MXSFB_MIN_XRES;
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-index d975300..0b65b51 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-@@ -27,8 +27,10 @@ struct mxsfb_drm_private {
- 	struct clk			*clk_disp_axi;
+ #define MXSFB_MIN_XRES			120
+ #define MXSFB_MIN_YRES			120
+@@ -116,7 +143,7 @@
+ #define STMLCDIF_18BIT 2 /* pixel data bus to the display is of 18 bit width */
+ #define STMLCDIF_24BIT 3 /* pixel data bus to the display is of 24 bit width */
  
- 	struct drm_simple_display_pipe	pipe;
--	struct drm_connector		connector;
-+	struct drm_connector		panel_connector;
-+	struct drm_connector		*connector;
- 	struct drm_panel		*panel;
-+	struct drm_bridge		*bridge;
- };
+-#define MXSFB_SYNC_DATA_ENABLE_HIGH_ACT	(1 << 6)
+-#define MXSFB_SYNC_DOTCLK_FALLING_ACT	(1 << 7) /* negative edge sampling */
++#define MXSFB_SYNC_DATA_ENABLE_HIGH_ACT	BIT(6)
++#define MXSFB_SYNC_DOTCLK_FALLING_ACT	BIT(7) /* negative edge sampling */
  
- int mxsfb_setup_crtc(struct drm_device *dev);
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_out.c b/drivers/gpu/drm/mxsfb/mxsfb_out.c
-index 231d016..9506eec 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_out.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_out.c
-@@ -21,7 +21,8 @@
- static struct mxsfb_drm_private *
- drm_connector_to_mxsfb_drm_private(struct drm_connector *connector)
- {
--	return container_of(connector, struct mxsfb_drm_private, connector);
-+	return container_of(connector, struct mxsfb_drm_private,
-+			    panel_connector);
- }
- 
- static int mxsfb_panel_get_modes(struct drm_connector *connector)
-@@ -76,22 +77,23 @@ static const struct drm_connector_funcs mxsfb_panel_connector_funcs = {
- int mxsfb_create_output(struct drm_device *drm)
- {
- 	struct mxsfb_drm_private *mxsfb = drm->dev_private;
--	struct drm_panel *panel;
- 	int ret;
- 
--	ret = drm_of_find_panel_or_bridge(drm->dev->of_node, 0, 0, &panel, NULL);
-+	ret = drm_of_find_panel_or_bridge(drm->dev->of_node, 0, 0,
-+					  &mxsfb->panel, &mxsfb->bridge);
- 	if (ret)
- 		return ret;
- 
--	mxsfb->connector.dpms = DRM_MODE_DPMS_OFF;
--	mxsfb->connector.polled = 0;
--	drm_connector_helper_add(&mxsfb->connector,
--			&mxsfb_panel_connector_helper_funcs);
--	ret = drm_connector_init(drm, &mxsfb->connector,
--				 &mxsfb_panel_connector_funcs,
--				 DRM_MODE_CONNECTOR_Unknown);
--	if (!ret)
--		mxsfb->panel = panel;
-+	if (mxsfb->panel) {
-+		mxsfb->connector = &mxsfb->panel_connector;
-+		mxsfb->connector->dpms = DRM_MODE_DPMS_OFF;
-+		mxsfb->connector->polled = 0;
-+		drm_connector_helper_add(mxsfb->connector,
-+					 &mxsfb_panel_connector_helper_funcs);
-+		ret = drm_connector_init(drm, mxsfb->connector,
-+					 &mxsfb_panel_connector_funcs,
-+					 DRM_MODE_CONNECTOR_Unknown);
-+	}
- 
- 	return ret;
- }
+ #endif /* __MXSFB_REGS_H__ */
 -- 
 2.7.4
 
