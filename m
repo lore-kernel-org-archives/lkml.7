@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDACBC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E76FC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB81C2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC282084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748922;
-	bh=HrXJUbP0HVYGNmZQhdlWqxKzlQYYd7gezp4NX3WmKAI=;
+	s=default; t=1565748925;
+	bh=qsMAbfqU27ah2ytEkUDkCXHBWJhVdm23ZEVVmGeTkKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dtOSJJNAMkz9oBb3CXoT01BVYW73A6QuknLqLsyEKaBuj6waSLz1UOv9jFxMHOfXM
-	 Lr0RyKXwI827G2KFFlMyxpB9YgIXVqn3vPmZ/P8Urh04RJwer35czvNUUDghDrZhB1
-	 ao/EnGcBVPmSgGrSkKxZB3wbMd8lxuOFJg7JKNgY=
+	b=bGSZEiBKPSpC5B5FL7W8mywn9lDQKcHitVha1B0KrqCDBCtM5MFpwRlB/Z5vNFUs7
+	 /Ru3NdYTCgvPXvVgGwnlGLvL4py31r5mzZL468drYLijaeYTlO4rxetDQPMpUfQ5Uu
+	 4k80LviH29Oynzk2TPUYTtXTwX016irLxqUQgGTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfHNCOZ (ORCPT
+        id S1728716AbfHNCOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:14:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46312 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:14:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728710AbfHNCOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:14:23 -0400
+        id S1728682AbfHNCOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:14:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14BC02084D;
-        Wed, 14 Aug 2019 02:14:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADCFC20874;
+        Wed, 14 Aug 2019 02:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748862;
-        bh=HrXJUbP0HVYGNmZQhdlWqxKzlQYYd7gezp4NX3WmKAI=;
+        s=default; t=1565748857;
+        bh=qsMAbfqU27ah2ytEkUDkCXHBWJhVdm23ZEVVmGeTkKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DN/GZdq7X2eulIQf1ugPzsb1Hw9fw00ke8KR2Hy4gLDYNyJsd6OtSBHYbgdfbOObV
-         b04N+0mNr7nM8YTg4ri7yNTMGUEX7lsOl1YsG3CaQ4EgMjgt7L7x2Sy5ammUQ3UIsW
-         72autAOltIBGGGUXA33pH7wbpYQkCNAQ766zlUh0=
+        b=vsRBfx2+f1p6vKuBUauUabzl/Kyiq88IWsK9IPtE0GvN3v2npOMYt2AaeBgTt4dW3
+         /z5yAmB+fsSQ7eTALErMElEgR2FjW+C/yRFjZvrJKmiwM8ccOcW01k7eQg4ljs4DhO
+         +1X30BVwR2T0QpmoaNYEcQChJgZhblAgRk/jvbv0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Matthias Andree <matthias.andree@gmx.de>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 109/123] Revert "PCI: Add missing link delays required by the PCIe spec"
-Date:   Tue, 13 Aug 2019 22:10:33 -0400
-Message-Id: <20190814021047.14828-109-sashal@kernel.org>
+Cc:     Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 106/123] net: hisilicon: make hip04_tx_reclaim non-reentrant
+Date:   Tue, 13 Aug 2019 22:10:30 -0400
+Message-Id: <20190814021047.14828-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -62,210 +59,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
-[ Upstream commit 0617bdede5114a0002298b12cd0ca2b0cfd0395d ]
+[ Upstream commit 1a2c070ae805910a853b4a14818481ed2e17c727 ]
 
-Commit c2bf1fc212f7 ("PCI: Add missing link delays required by the PCIe
-spec") turned out causing issues with some systems either by making them
-unresponsive or slowing down runtime and system wide resume of PCIe
-devices. While root cause for the unresponsiveness is still under
-investigation given the amount of issues reported better to revert it
-for now.
+If hip04_tx_reclaim is interrupted while it is running
+and then __napi_schedule continues to execute
+hip04_rx_poll->hip04_tx_reclaim, reentrancy occurs
+and oops is generated. So you need to mask the interrupt
+during the hip04_tx_reclaim run.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204413
-Link: https://lore.kernel.org/linux-pci/SL2P216MB01878BBCD75F21D882AEEA2880C60@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM/
-Link: https://lore.kernel.org/linux-pci/2857501d-c167-547d-c57d-d5d24ea1f1dc@molgen.mpg.de/
-Reported-by: Matthias Andree <matthias.andree@gmx.de>
-Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The kernel oops exception stack is as follows:
+
+Unable to handle kernel NULL pointer dereference
+at virtual address 00000050
+pgd = c0003000
+[00000050] *pgd=80000000a04003, *pmd=00000000
+Internal error: Oops: 206 [#1] SMP ARM
+Modules linked in: hip04_eth mtdblock mtd_blkdevs mtd
+ohci_platform ehci_platform ohci_hcd ehci_hcd
+vfat fat sd_mod usb_storage scsi_mod usbcore usb_common
+CPU: 0 PID: 0 Comm: swapper/0 Tainted: G           O    4.4.185 #1
+Hardware name: Hisilicon A15
+task: c0a250e0 task.stack: c0a00000
+PC is at hip04_tx_reclaim+0xe0/0x17c [hip04_eth]
+LR is at hip04_tx_reclaim+0x30/0x17c [hip04_eth]
+pc : [<bf30c3a4>]    lr : [<bf30c2f4>]    psr: 600e0313
+sp : c0a01d88  ip : 00000000  fp : c0601f9c
+r10: 00000000  r9 : c3482380  r8 : 00000001
+r7 : 00000000  r6 : 000000e1  r5 : c3482000  r4 : 0000000c
+r3 : f2209800  r2 : 00000000  r1 : 00000000  r0 : 00000000
+Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment kernel
+Control: 32c5387d  Table: 03d28c80  DAC: 55555555
+Process swapper/0 (pid: 0, stack limit = 0xc0a00190)
+Stack: (0xc0a01d88 to 0xc0a02000)
+[<bf30c3a4>] (hip04_tx_reclaim [hip04_eth]) from [<bf30d2e0>]
+                                                (hip04_rx_poll+0x88/0x368 [hip04_eth])
+[<bf30d2e0>] (hip04_rx_poll [hip04_eth]) from [<c04c2d9c>] (net_rx_action+0x114/0x34c)
+[<c04c2d9c>] (net_rx_action) from [<c021eed8>] (__do_softirq+0x218/0x318)
+[<c021eed8>] (__do_softirq) from [<c021f284>] (irq_exit+0x88/0xac)
+[<c021f284>] (irq_exit) from [<c0240090>] (msa_irq_exit+0x11c/0x1d4)
+[<c0240090>] (msa_irq_exit) from [<c02677e0>] (__handle_domain_irq+0x110/0x148)
+[<c02677e0>] (__handle_domain_irq) from [<c0201588>] (gic_handle_irq+0xd4/0x118)
+[<c0201588>] (gic_handle_irq) from [<c0551700>] (__irq_svc+0x40/0x58)
+Exception stack(0xc0a01f30 to 0xc0a01f78)
+1f20:                                     c0ae8b40 00000000 00000000 00000000
+1f40: 00000002 ffffe000 c0601f9c 00000000 ffffffff c0a2257c c0a22440 c0831a38
+1f60: c0a01ec4 c0a01f80 c0203714 c0203718 600e0213 ffffffff
+[<c0551700>] (__irq_svc) from [<c0203718>] (arch_cpu_idle+0x20/0x3c)
+[<c0203718>] (arch_cpu_idle) from [<c025bfd8>] (cpu_startup_entry+0x244/0x29c)
+[<c025bfd8>] (cpu_startup_entry) from [<c054b0d8>] (rest_init+0xc8/0x10c)
+[<c054b0d8>] (rest_init) from [<c0800c58>] (start_kernel+0x468/0x514)
+Code: a40599e5 016086e2 018088e2 7660efe6 (503090e5)
+---[ end trace 1db21d6d09c49d74 ]---
+Kernel panic - not syncing: Fatal exception in interrupt
+CPU3: stopping
+CPU: 3 PID: 0 Comm: swapper/3 Tainted: G      D    O    4.4.185 #1
+
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c               | 29 +++++----------
- drivers/pci/pci.h               |  1 -
- drivers/pci/pcie/portdrv_core.c | 66 ---------------------------------
- 3 files changed, 10 insertions(+), 86 deletions(-)
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 720da09d4d738..088fcdc8d2b4d 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1004,10 +1004,15 @@ static void __pci_start_power_transition(struct pci_dev *dev, pci_power_t state)
- 	if (state == PCI_D0) {
- 		pci_platform_power_transition(dev, PCI_D0);
- 		/*
--		 * Mandatory power management transition delays are
--		 * handled in the PCIe portdrv resume hooks.
-+		 * Mandatory power management transition delays, see
-+		 * PCI Express Base Specification Revision 2.0 Section
-+		 * 6.6.1: Conventional Reset.  Do not delay for
-+		 * devices powered on/off by corresponding bridge,
-+		 * because have already delayed for the bridge.
- 		 */
- 		if (dev->runtime_d3cold) {
-+			if (dev->d3cold_delay && !dev->imm_ready)
-+				msleep(dev->d3cold_delay);
- 			/*
- 			 * When powering on a bridge from D3cold, the
- 			 * whole hierarchy may be powered on into
-@@ -4570,16 +4575,14 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index e1f2978506fd3..5abe88dfe6abf 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -494,6 +494,9 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
+ 	u16 len;
+ 	u32 err;
  
- 	return pci_dev_wait(dev, "PM D3->D0", PCIE_RESET_READY_POLL_MS);
- }
--
- /**
-- * pcie_wait_for_link_delay - Wait until link is active or inactive
-+ * pcie_wait_for_link - Wait until link is active or inactive
-  * @pdev: Bridge device
-  * @active: waiting for active or inactive?
-- * @delay: Delay to wait after link has become active (in ms)
-  *
-  * Use this to wait till link becomes active or inactive.
-  */
--bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active, int delay)
-+bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
- {
- 	int timeout = 1000;
- 	bool ret;
-@@ -4616,25 +4619,13 @@ bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active, int delay)
- 		timeout -= 10;
++	/* clean up tx descriptors */
++	tx_remaining = hip04_tx_reclaim(ndev, false);
++
+ 	while (cnt && !last) {
+ 		buf = priv->rx_buf[priv->rx_head];
+ 		skb = build_skb(buf, priv->rx_buf_size);
+@@ -554,8 +557,7 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
  	}
- 	if (active && ret)
--		msleep(delay);
-+		msleep(100);
- 	else if (ret != active)
- 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
- 			active ? "set" : "cleared");
- 	return ret == active;
- }
+ 	napi_complete_done(napi, rx);
+ done:
+-	/* clean up tx descriptors and start a new timer if necessary */
+-	tx_remaining = hip04_tx_reclaim(ndev, false);
++	/* start a new timer if necessary */
+ 	if (rx < budget && tx_remaining)
+ 		hip04_start_tx_timer(priv);
  
--/**
-- * pcie_wait_for_link - Wait until link is active or inactive
-- * @pdev: Bridge device
-- * @active: waiting for active or inactive?
-- *
-- * Use this to wait till link becomes active or inactive.
-- */
--bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
--{
--	return pcie_wait_for_link_delay(pdev, active, 100);
--}
--
- void pci_reset_secondary_bus(struct pci_dev *dev)
- {
- 	u16 ctrl;
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 59802b3def4bc..9cb99380c61e3 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -493,7 +493,6 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
- void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
- 		      u32 service);
- 
--bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active, int delay);
- bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
- #ifdef CONFIG_PCIEASPM
- void pcie_aspm_init_link_state(struct pci_dev *pdev);
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index 308c3e0c4a340..1b330129089fe 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -9,7 +9,6 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/kernel.h>
--#include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/pm.h>
- #include <linux/pm_runtime.h>
-@@ -379,67 +378,6 @@ static int pm_iter(struct device *dev, void *data)
- 	return 0;
- }
- 
--static int get_downstream_delay(struct pci_bus *bus)
--{
--	struct pci_dev *pdev;
--	int min_delay = 100;
--	int max_delay = 0;
--
--	list_for_each_entry(pdev, &bus->devices, bus_list) {
--		if (!pdev->imm_ready)
--			min_delay = 0;
--		else if (pdev->d3cold_delay < min_delay)
--			min_delay = pdev->d3cold_delay;
--		if (pdev->d3cold_delay > max_delay)
--			max_delay = pdev->d3cold_delay;
--	}
--
--	return max(min_delay, max_delay);
--}
--
--/*
-- * wait_for_downstream_link - Wait for downstream link to establish
-- * @pdev: PCIe port whose downstream link is waited
-- *
-- * Handle delays according to PCIe 4.0 section 6.6.1 before configuration
-- * access to the downstream component is permitted.
-- *
-- * This blocks PCI core resume of the hierarchy below this port until the
-- * link is trained. Should be called before resuming port services to
-- * prevent pciehp from starting to tear-down the hierarchy too soon.
-- */
--static void wait_for_downstream_link(struct pci_dev *pdev)
--{
--	int delay;
--
--	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT &&
--	    pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM)
--		return;
--
--	if (pci_dev_is_disconnected(pdev))
--		return;
--
--	if (!pdev->subordinate || list_empty(&pdev->subordinate->devices) ||
--	    !pdev->bridge_d3)
--		return;
--
--	delay = get_downstream_delay(pdev->subordinate);
--	if (!delay)
--		return;
--
--	dev_dbg(&pdev->dev, "waiting downstream link for %d ms\n", delay);
--
--	/*
--	 * If downstream port does not support speeds greater than 5 GT/s
--	 * need to wait 100ms. For higher speeds (gen3) we need to wait
--	 * first for the data link layer to become active.
--	 */
--	if (pcie_get_speed_cap(pdev) <= PCIE_SPEED_5_0GT)
--		msleep(delay);
--	else
--		pcie_wait_for_link_delay(pdev, true, delay);
--}
--
- /**
-  * pcie_port_device_suspend - suspend port services associated with a PCIe port
-  * @dev: PCI Express port to handle
-@@ -453,8 +391,6 @@ int pcie_port_device_suspend(struct device *dev)
- int pcie_port_device_resume_noirq(struct device *dev)
- {
- 	size_t off = offsetof(struct pcie_port_service_driver, resume_noirq);
--
--	wait_for_downstream_link(to_pci_dev(dev));
- 	return device_for_each_child(dev, &off, pm_iter);
- }
- 
-@@ -485,8 +421,6 @@ int pcie_port_device_runtime_suspend(struct device *dev)
- int pcie_port_device_runtime_resume(struct device *dev)
- {
- 	size_t off = offsetof(struct pcie_port_service_driver, runtime_resume);
--
--	wait_for_downstream_link(to_pci_dev(dev));
- 	return device_for_each_child(dev, &off, pm_iter);
- }
- #endif /* PM */
 -- 
 2.20.1
 
