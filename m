@@ -4,53 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E536C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6554C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B8120842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A8020679
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749385;
-	bh=NSafegQqM6bZHr8DIYO0zVk1Y9lQxdXuReFFnkivw10=;
+	s=default; t=1565749394;
+	bh=oMOOYF2muYVufUpefqwfVGjatThEUEuRCM/yLta1KHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uGxu6xKyyIwTCIGANaU40vCjY3+vL/tweMkA0FUHdE3PQ50ZrnW8aTaVAPHyqKovQ
-	 1sxelSmZgNuK1XO3+wRP3wWt1Fl0Oc+DQDAQYovvchVSPAZT7gDevGivSq61M8O8SX
-	 hIlanD6kfb0TU07uuXXgwd7Dy9KO+9hUkbFFdyzM=
+	b=qw6Bhq9soHqdIlqRp5yKlxAe4HAOf5BloiQGxpnHxdZgUrvgCJMoP+jFkbSpvJyD8
+	 OIggprGWdreH8CNiQ82YUftnD4P6A5pOGLvnTaYdGMgKEY7V+k5P6eG+c4xhfv3PO1
+	 Pv69MTVF4q1Z4myNQS5jj9YmkzrSb0GwfQsbNKJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729788AbfHNCXD (ORCPT
+        id S1728288AbfHNCXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:23:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48788 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729412AbfHNCRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:17:30 -0400
+        id S1729393AbfHNCRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:17:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6730F20843;
-        Wed, 14 Aug 2019 02:17:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55DB220843;
+        Wed, 14 Aug 2019 02:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749049;
-        bh=NSafegQqM6bZHr8DIYO0zVk1Y9lQxdXuReFFnkivw10=;
+        s=default; t=1565749045;
+        bh=oMOOYF2muYVufUpefqwfVGjatThEUEuRCM/yLta1KHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H5O2f+EU+ncEOfmjWcQk4UtAgQgqlXIsiroFTpCiMsxXq4PeHJQLSug235Qa7Pn8m
-         8MhjCLTOHGOB/6qvEY40V/AVRZ5T1DytWMw/KcvEoBhNhQMPC38X+X6Ms8l0nM2qPc
-         gLGytBrw4BZWKK3GD8G9Om6qYqLqHIzLHESygjUc=
+        b=EdvhAIIwfNQ0o7CCsl7wFOLVl6iZyJLFzEMboDziIHsZqgzSaF3s/iR8f5q7cysIi
+         nI3+0SrdJa/owY9LXWaLCIPvJ7biJcY4rxj0TckJRsPJVIxWIj69KMPU1V9XEHolmg
+         Z7T9Uv3zp7lUlYxilctwEIb2y+MFd+hSMEs/kZUk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Hsin-Yi Wang <hsinyi@google.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 62/68] block, bfq: handle NULL return value by bfq_init_rq()
-Date:   Tue, 13 Aug 2019 22:15:40 -0400
-Message-Id: <20190814021548.16001-62-sashal@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Kees Cook <keescook@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 59/68] libata: add SG safety checks in SFF pio transfers
+Date:   Tue, 13 Aug 2019 22:15:37 -0400
+Message-Id: <20190814021548.16001-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
@@ -63,76 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit fd03177c33b287c6541f4048f1d67b7b45a1abc9 ]
+[ Upstream commit 752ead44491e8c91e14d7079625c5916b30921c5 ]
 
-As reported in [1], the call bfq_init_rq(rq) may return NULL in case
-of OOM (in particular, if rq->elv.icq is NULL because memory
-allocation failed in failed in ioc_create_icq()).
+Abort processing of a command if we run out of mapped data in the
+SG list. This should never happen, but a previous bug caused it to
+be possible. Play it safe and attempt to abort nicely if we don't
+have more SG segments left.
 
-This commit handles this circumstance.
-
-[1] https://lkml.org/lkml/2019/7/22/824
-
-Cc: Hsin-Yi Wang <hsinyi@google.com>
-Cc: Nicolas Boichat <drinkcat@chromium.org>
-Cc: Doug Anderson <dianders@chromium.org>
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Reported-by: Hsin-Yi Wang <hsinyi@google.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/ata/libata-sff.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index becd793a258c8..d8d2ac294b0c0 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -1886,9 +1886,14 @@ static void bfq_request_merged(struct request_queue *q, struct request *req,
- 	    blk_rq_pos(container_of(rb_prev(&req->rb_node),
- 				    struct request, rb_node))) {
- 		struct bfq_queue *bfqq = bfq_init_rq(req);
--		struct bfq_data *bfqd = bfqq->bfqd;
-+		struct bfq_data *bfqd;
- 		struct request *prev, *next_rq;
+diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
+index c5ea0fc635e54..873cc09060551 100644
+--- a/drivers/ata/libata-sff.c
++++ b/drivers/ata/libata-sff.c
+@@ -674,6 +674,10 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+ 	unsigned int offset;
+ 	unsigned char *buf;
  
-+		if (!bfqq)
-+			return;
-+
-+		bfqd = bfqq->bfqd;
-+
- 		/* Reposition request in its sort_list */
- 		elv_rb_del(&bfqq->sort_list, req);
- 		elv_rb_add(&bfqq->sort_list, req);
-@@ -1930,6 +1935,9 @@ static void bfq_requests_merged(struct request_queue *q, struct request *rq,
- 	struct bfq_queue *bfqq = bfq_init_rq(rq),
- 		*next_bfqq = bfq_init_rq(next);
- 
-+	if (!bfqq)
++	if (!qc->cursg) {
++		qc->curbytes = qc->nbytes;
 +		return;
-+
- 	/*
- 	 * If next and rq belong to the same bfq_queue and next is older
- 	 * than rq, then reposition rq in the fifo (by substituting next
-@@ -4590,12 +4598,12 @@ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
++	}
+ 	if (qc->curbytes == qc->nbytes - qc->sect_size)
+ 		ap->hsm_task_state = HSM_ST_LAST;
  
- 	spin_lock_irq(&bfqd->lock);
- 	bfqq = bfq_init_rq(rq);
--	if (at_head || blk_rq_is_passthrough(rq)) {
-+	if (!bfqq || at_head || blk_rq_is_passthrough(rq)) {
- 		if (at_head)
- 			list_add(&rq->queuelist, &bfqd->dispatch);
- 		else
- 			list_add_tail(&rq->queuelist, &bfqd->dispatch);
--	} else { /* bfqq is assumed to be non null here */
-+	} else {
- 		idle_timer_disabled = __bfq_insert_request(bfqd, rq);
- 		/*
- 		 * Update bfqq, because, if a queue merge has occurred
+@@ -699,6 +703,8 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+ 
+ 	if (qc->cursg_ofs == qc->cursg->length) {
+ 		qc->cursg = sg_next(qc->cursg);
++		if (!qc->cursg)
++			ap->hsm_task_state = HSM_ST_LAST;
+ 		qc->cursg_ofs = 0;
+ 	}
+ }
 -- 
 2.20.1
 
