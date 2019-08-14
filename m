@@ -2,130 +2,69 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A029C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27422C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CE52083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0921C2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbfHNQPS (ORCPT
+        id S1728282AbfHNQPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:15:18 -0400
-Received: from sauhun.de ([88.99.104.3]:50502 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbfHNQPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:15:18 -0400
-Received: from localhost (p54B33326.dip0.t-ipconnect.de [84.179.51.38])
-        by pokefinder.org (Postfix) with ESMTPSA id B927A2C311C;
-        Wed, 14 Aug 2019 18:15:15 +0200 (CEST)
-Date:   Wed, 14 Aug 2019 18:15:15 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     lingyxu <lingyan.xu@nokia-sbell.com>,
-        Jean Delvare <jdelvare@suse.de>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wladislav Wiebe <wladislav.wiebe@nokia.com>,
-        Krzysztof Adamski <krzysztof.adamski@nokia.com>
-Subject: Re: [PATCH] i801_smbus: clear SMBALERT status bit and disable
- SMBALERT interrupt
-Message-ID: <20190814161515.GB5816@kunai>
-References: <1565577634-18264-1-git-send-email-lingyan.xu@nokia-sbell.com>
+        Wed, 14 Aug 2019 12:15:22 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43643 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfHNQPU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 12:15:20 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1hxvvi-0007Ui-MU; Wed, 14 Aug 2019 16:15:19 +0000
+Date:   Wed, 14 Aug 2019 18:15:17 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, libc-alpha@sourceware.org,
+        alistair23@gmail.com, ebiederm@xmission.com, arnd@arndb.de,
+        dalias@libc.org, torvalds@linux-foundation.org,
+        adhemerval.zanella@linaro.org, fweimer@redhat.com,
+        palmer@sifive.com, macro@wdc.com, zongbox@gmail.com,
+        akpm@linux-foundation.org, viro@zeniv.linux.org.uk, hpa@zytor.com
+Subject: Re: [PATCH v3 1/1] waitid: Add support for waiting for the current
+ process group
+Message-ID: <20190814161517.ldbn62mulk2pmqo5@wittgenstein>
+References: <CAKmqyKMJPQAOKn11xepzAwXOd4e9dU0Cyz=A0T-uMEgUp5yJjA@mail.gmail.com>
+ <20190814154400.6371-1-christian.brauner@ubuntu.com>
+ <20190814154400.6371-2-christian.brauner@ubuntu.com>
+ <20190814160917.GG11595@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gatW/ieO32f1wygP"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1565577634-18264-1-git-send-email-lingyan.xu@nokia-sbell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190814160917.GG11595@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 14, 2019 at 06:09:17PM +0200, Oleg Nesterov wrote:
+> On 08/14, Christian Brauner wrote:
+> >
+> > and a signal could come in between the system call that
+> > retrieved the process gorup and the call to waitid that changes the
+>                         ^^^^^
+> > current process group.
+> 
+> I noticed this typo only because I spent 2 minutes or more trying to
+> understand this sentence ;) But yes, a signal handler or another thread
 
---gatW/ieO32f1wygP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'll try to rewrite it. :)
 
-On Mon, Aug 12, 2019 at 10:40:34AM +0800, lingyxu wrote:
-> From: Lingyan Xu <lingyan.xu@nokia-sbell.com>
->=20
-> In current i801 driver, SMBALERT interrupt is allowed
-> (Slave Command Register bit2 is 0).
-> But these is no handler for SMBALERT interrupt in i801_isr,
-> if there is SMBALERT interrupt asserted and deasserted,
-> i801 will have an irq flood for the related status bit is setted.
->=20
-> So SMBALERT interrupt handler is needed, and also, SMBALERT interrupt
-> will be generated from time to time if slave chip have some fault.
-> So disable SMBALERT interrupt is also needed.
->=20
-> About the solution,
-> please see http://www.farnell.com/datasheets/1581967.pdf
-> Page632 P640 for more.
->=20
-> Signed-off-by: Lingyan Xu <lingyan.xu@nokia-sbell.com>
-
-Jean, this seems important if it fixes an interrupt flood. Can you
-review, please?
-
-> ---
->  drivers/i2c/busses/i2c-i801.c |    7 ++++++-
->  1 files changed, 6 insertions(+), 1 deletions(-)
->=20
-> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-> index f295693..033bafe 100644
-> --- a/drivers/i2c/busses/i2c-i801.c
-> +++ b/drivers/i2c/busses/i2c-i801.c
-> @@ -661,9 +661,11 @@ static irqreturn_t i801_isr(int irq, void *dev_id)
->  	 * Clear irq sources and report transaction result.
->  	 * ->status must be cleared before the next transaction is started.
->  	 */
-> +
-> +	outb_p(status, SMBHSTSTS(priv));
-> +
->  	status &=3D SMBHSTSTS_INTR | STATUS_ERROR_FLAGS;
->  	if (status) {
-> -		outb_p(status, SMBHSTSTS(priv));
->  		priv->status =3D status;
->  		wake_up(&priv->waitq);
->  	}
-> @@ -1810,6 +1812,9 @@ static int i801_probe(struct pci_dev *dev, const st=
-ruct pci_device_id *id)
->  	/* Default timeout in interrupt mode: 200 ms */
->  	priv->adapter.timeout =3D HZ / 5;
-> =20
-> +	/* Disable SMBALERT interrupt */
-> +	outb_p(inb_p(SMBSLVCMD(priv)) | BIT(2), SMBSLVCMD(priv));
-> +
->  	if (dev->irq =3D=3D IRQ_NOTCONNECTED)
->  		priv->features &=3D ~FEATURE_IRQ;
-> =20
-> --=20
-> 1.7.1
->=20
-
---gatW/ieO32f1wygP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1UM5MACgkQFA3kzBSg
-KbbKShAAgHQ//ioHF5ivdpcdozotMV3e/P41u3Se2raGd/cDF/ImlZvHh4hlOyn9
-P7jp8dpeq9GfUeHXiE26jaGHZyHP9i80FMU2fO3LIludY4P7MsAV4fcTfJKzMZIC
-FxUmXkrgmYeqDcDnW13NU1AaSEfTGb+T08ccOF8uhpZT1JC16eXd3ILZ5dlXujmO
-XzwqGWRcJPof8d/xXbtl6yo3LaX//RqS7hPVz+pFAvOGE0IV2EOGGHeUgWU99UTu
-+a7mNXOSCa/IFsDIKMF5B9Qg942nRnQZNbleNCPfO3jOAYgvLrv3a0RrK+PIoLl9
-AwSHl6ts6HjqibPkqaMFPkXkRCseXmbIgV7QCuv8jHsCE1r4cRPpuzoZTWZI3pur
-DYqOP5/T9gZgR8GaKkNL74DC1G7/8sRuZX077nHOwCEpDO2ckqjLpVxaOBGsIzVw
-pjsGIjEMVlcAXD1rZWSCw/m8HEvDbdwAwfpUVx6KJNuUfOnDM6ajPQvos86ybfzR
-INkMPnDAxAu7HrYEkhGy1w3yzBA8qH6vSl+Za7KcBrdmXRBQVfgtDHBI0Sfmz/Ig
-tJZGX7LQ9lo3aK4FuMWRKBGKnejbj4EzaGOnxqseDvmcORK+KGqD9MjbhcFjICUq
-bgjs3RPpIoeTGQ+3F1FmY+woRDb/bOvcAIHYNvxxCgIUAU9GrPI=
-=/1k8
------END PGP SIGNATURE-----
-
---gatW/ieO32f1wygP--
+> can change pgrp in between.
+> 
+> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> 
