@@ -2,52 +2,52 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE66C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41878C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAD64216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D590208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802484;
-	bh=YFlaAVjmdVZ9XdNhwVjIZnJ4nRFc81vzqueGiTczBeA=;
+	s=default; t=1565802488;
+	bh=lcMozOM5yjam6HkNiqU50QQ7u0Xe0A4WXIsFCJZkTMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kcnCZc5M3pjT5CDvLKkTIBFgxe7Xer4cx0z6/a/YKGifWB0bNZThsRyEAzWehuUfs
-	 ZN6Un6Lk77fAFIW8FpZlOla99YR7ZL/pKsFa3haGR4KLPzzowLUcTy05h142CiejXy
-	 v/FbKse3somcbGwkCrC4jpogaoUky8Qb1Lib947A=
+	b=G8A6j+6nFCanakdhTnPH7N9IxDjPlPNEMKFiyDbtWqD+NsC2DY/WbyMvl9BNLKuPG
+	 BWFI7cNW9sCeMxSeBGGAJJ6eh0ltrY8XJvef9ZnIuvgb9lEM8PpFJCDRwJpm8VGP3p
+	 0mPtqnYaXDbk9WD6fNXP7ogQT0NZQZG7fKXoDniE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbfHNRID (ORCPT
+        id S1730059AbfHNRIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:08:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57798 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:08:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730035AbfHNRIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:08:01 -0400
+        id S1730046AbfHNRID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:08:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA5EB214DA;
-        Wed, 14 Aug 2019 17:07:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C359208C2;
+        Wed, 14 Aug 2019 17:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802480;
-        bh=YFlaAVjmdVZ9XdNhwVjIZnJ4nRFc81vzqueGiTczBeA=;
+        s=default; t=1565802483;
+        bh=lcMozOM5yjam6HkNiqU50QQ7u0Xe0A4WXIsFCJZkTMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S4Gn9HEDOeFYRH+99yE/5QU+uGleMDnr6Sjr41EWny70wrU0A/MElvM9MgeIluGBs
-         oTurU3IAhVG+2PxAzzeK3sCuOcqiZ4VWm1t7PIj3p3G0HH1exDDZFGB+27qfQ0dWEM
-         Yupjj3tOIHZDIbh685zv5M9MxzPXmJIS59m4XpIo=
+        b=2FeCKMVITp6V9QlcbF8QGilrzEcGDPEWX7THq/nQHO3kWTmdJ5B/XP2RbtxBlnD9t
+         SKDYnZQNqSQOsYSYKHtOeauNE9Qm/aUrM7xtuNzLk3XXYK9+Z8VQa3xBIK4yXOQT7Z
+         hRJW345m9drFWxf0Z2gQ4mQ93vWOcyFLZg8InfZA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.2 142/144] iwlwifi: mvm: fix a use-after-free bug in iwl_mvm_tx_tso_segment
-Date:   Wed, 14 Aug 2019 19:01:38 +0200
-Message-Id: <20190814165805.908186196@linuxfoundation.org>
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 117/144] gen_compile_commands: lower the entry count threshold
+Date:   Wed, 14 Aug 2019 19:01:13 +0200
+Message-Id: <20190814165804.824720229@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -60,44 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+[ Upstream commit cb36955a5569f1ff17a42ae93264ef391c013a97 ]
 
-commit 71b256f8f7a5c09810d2c3ed6165629c2cc0a652 upstream.
+Running gen_compile_commands.py after building the kernel with
+allnoconfig gave this:
 
-Accessing the hdr of an skb that was consumed already isn't
-a good idea.
-First ask if the skb is a QoS packet, then keep that data
-on stack, and then consume the skb.
-This was spotted by KASAN.
+$ ./scripts/gen_compile_commands.py
+WARNING: Found 449 entries. Have you compiled the kernel?
 
-Cc: stable@vger.kernel.org
-Fixes: 08f7d8b69aaf ("iwlwifi: mvm: bring back mvm GSO code")
-Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/tx.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ scripts/gen_compile_commands.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-@@ -831,6 +831,7 @@ iwl_mvm_tx_tso_segment(struct sk_buff *s
- 	unsigned int tcp_payload_len;
- 	unsigned int mss = skb_shinfo(skb)->gso_size;
- 	bool ipv4 = (skb->protocol == htons(ETH_P_IP));
-+	bool qos = ieee80211_is_data_qos(hdr->frame_control);
- 	u16 ip_base_id = ipv4 ? ntohs(ip_hdr(skb)->id) : 0;
+diff --git a/scripts/gen_compile_commands.py b/scripts/gen_compile_commands.py
+index 7915823b92a5e..c458696ef3a79 100755
+--- a/scripts/gen_compile_commands.py
++++ b/scripts/gen_compile_commands.py
+@@ -21,9 +21,9 @@ _LINE_PATTERN = r'^cmd_[^ ]*\.o := (.* )([^ ]*\.c)$'
+ _VALID_LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
  
- 	skb_shinfo(skb)->gso_size = num_subframes * mss;
-@@ -864,7 +865,7 @@ iwl_mvm_tx_tso_segment(struct sk_buff *s
- 		if (tcp_payload_len > mss) {
- 			skb_shinfo(tmp)->gso_size = mss;
- 		} else {
--			if (ieee80211_is_data_qos(hdr->frame_control)) {
-+			if (qos) {
- 				u8 *qc;
+ # A kernel build generally has over 2000 entries in its compile_commands.json
+-# database. If this code finds 500 or fewer, then warn the user that they might
++# database. If this code finds 300 or fewer, then warn the user that they might
+ # not have all the .cmd files, and they might need to compile the kernel.
+-_LOW_COUNT_THRESHOLD = 500
++_LOW_COUNT_THRESHOLD = 300
  
- 				if (ipv4)
+ 
+ def parse_arguments():
+-- 
+2.20.1
+
 
 
