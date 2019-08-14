@@ -2,117 +2,114 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CEAC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED206C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 083012173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:17:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="J174bcZr"
+	by mail.kernel.org (Postfix) with ESMTP id CA18A214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:18:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727687AbfHNOR3 (ORCPT
+        id S1727781AbfHNOSm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 10:17:29 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:2944 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726019AbfHNOR2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 10:17:28 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7EEBQT5021331;
-        Wed, 14 Aug 2019 16:17:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=864BMKlRVFujYQCq26+1g0K4hmq2aALb8dEnOteiolo=;
- b=J174bcZrkmVeJ7AJOl9VCKXBznmKRNGKuDznEEXShutR8zIKsYb3zZoJjmj7dK6hhK86
- pa2BHJKexcG++kpNZuT8ZtR3NgdSxFyIVq9wwvVFLbzz3smt+NVNYNSMNPz4yFx+41DE
- ARk9qY87/HMVJkZkFzWdH4htlaFv8ubQe8cLNPkXvh0nO4z1+2A/pa7zefqWKmafwPFx
- jyZvovgQIZXEd3rDaFel6SwqEZvhDThUrlZcBFE7yTwlDRUCQvKmyFumyleQApn39Dj2
- cEq8L+o0Xnx9k1l32qgFnjOWTRQ3vsPwt48I7z3O+7TwRnV2noQXt0wn56rdHAzUyzh3 TA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2u9kpuwtjn-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 14 Aug 2019 16:17:14 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D312534;
-        Wed, 14 Aug 2019 14:17:13 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C0FDC2B910C;
-        Wed, 14 Aug 2019 16:17:13 +0200 (CEST)
-Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG6NODE3.st.com
- (10.75.127.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 14 Aug
- 2019 16:17:13 +0200
-Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
- SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
- 15.00.1473.003; Wed, 14 Aug 2019 16:17:13 +0200
-From:   Hugues FRUCHET <hugues.fruchet@st.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-CC:     Alexandre TORGUE <alexandre.torgue@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Mickael GUENE <mickael.guene@st.com>
-Subject: Re: [PATCH v4 1/3] media: stm32-dcmi: improve sensor subdev naming
-Thread-Topic: [PATCH v4 1/3] media: stm32-dcmi: improve sensor subdev naming
-Thread-Index: AQHVTsvbNiH8ciXV5ESmNTxaXVzk1ab6ls8A
-Date:   Wed, 14 Aug 2019 14:17:13 +0000
-Message-ID: <ca92a856-98fc-f82b-fa0a-62b9f44e266c@st.com>
-References: <1564577783-18627-1-git-send-email-hugues.fruchet@st.com>
- <1564577783-18627-2-git-send-email-hugues.fruchet@st.com>
- <20190809160121.GA6194@paasikivi.fi.intel.com>
-In-Reply-To: <20190809160121.GA6194@paasikivi.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.51]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EDF4C1A0C930AF4EB3EB2E6088AF5865@st.com>
-Content-Transfer-Encoding: base64
+        Wed, 14 Aug 2019 10:18:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44158 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbfHNOSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 10:18:42 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ED1A6309BF21;
+        Wed, 14 Aug 2019 14:18:41 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A71625C1D4;
+        Wed, 14 Aug 2019 14:18:40 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, marc.dionne@auristor.com,
+        baijiaju1990@gmail.com, linux-afs@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] afs: Fixes
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-14_05:,,
- signatures=0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <13850.1565792319.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Wed, 14 Aug 2019 15:18:40 +0100
+Message-ID: <13851.1565792320@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 14 Aug 2019 14:18:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU2FrYXJpLCBIYW5zLA0KDQpJJ3ZlIGp1c3QgcHVzaGVkIGEgdjYgd2l0aCB0aGUgRklYTUUg
-d2UgZGlzY3Vzc2VkIG9uIElSQyBhYm91dA0KInBhcmFsbGVsIiBtYnVzIGNvZGUgdmVyc3VzICJz
-ZXJpYWwiIG1idXMgY29kZS4gSSBoYXZlIGFsc28gYWRkZWQNCnNvbWUgdHJhY2VzIHRvIGhlbHAg
-aW4gZGVidWdnaW5nIGlmIHN1Y2ggY2FzZSBvY2N1cnMuDQoNCnZlcnNpb24gNjoNCiAgIC0gQXMg
-cGVyIFNha2FyaSByZW1hcms6IGFkZCBhIEZJWE1FIGV4cGxhaW5pbmcgdGhhdCB0aGlzDQogICAg
-IHZlcnNpb24gb25seSBzdXBwb3J0cyBzdWJkZXZpY2VzIHdoaWNoIGV4cG9zZSBSR0IgJiBZVVYN
-CiAgICAgInBhcmFsbGVsIGZvcm0iIG1idXMgY29kZSAoXzJYOCkNCiAgIC0gQWRkIHNvbWUgdHJh
-Y2UgYXJvdW5kIHN1YmRldl9jYWxsKHNfZm10KSBlcnJvciAmIGZvcm1hdA0KICAgICBjaGFuZ2Vz
-IHRvIGRlYnVnIHN1YmRldiB3aGljaCBvbmx5IGV4cG9zZSBzZXJpYWwgbWJ1cyBjb2RlDQogICAt
-IENvbmZvcm0gdG8gIjxuYW1lPiI6PHBhZCBpbmRleD4gd2hlbiB0cmFjaW5nIHN1YmRldiBpbmZv
-cw0KDQoNCkJlc3QgcmVnYXJkcywNCkh1Z3Vlcy4NCg0KT24gOC85LzE5IDY6MDEgUE0sIFNha2Fy
-aSBBaWx1cyB3cm90ZToNCj4gSGkgSHVndWVzLA0KPiANCj4gVGhhbmtzIGZvciB0ZWggdXBkYXRl
-Lg0KPiANCj4gT24gV2VkLCBKdWwgMzEsIDIwMTkgYXQgMDI6NTY6MjFQTSArMDIwMCwgSHVndWVz
-IEZydWNoZXQgd3JvdGU6DQo+PiBSZW5hbWUgInN1YmRldiIgZW50aXR5IHN0cnVjdCBmaWVsZCB0
-byAic291cmNlIg0KPj4gdG8gcHJlcGFyZSBmb3Igc2V2ZXJhbCBzdWJkZXYgc3VwcG9ydC4NCj4+
-IE1vdmUgYXNkIGZpZWxkIG9uIHRvcCBvZiBlbnRpdHkgc3RydWN0Lg0KPj4NCj4+IFNpZ25lZC1v
-ZmYtYnk6IEh1Z3VlcyBGcnVjaGV0IDxodWd1ZXMuZnJ1Y2hldEBzdC5jb20+DQo+PiBDaGFuZ2Ut
-SWQ6IEkxNTQ1YTFhMjlhODA2MWVlNjdjYzZlNGI3OTllOWE2OTA3MTkxMWU3DQo+IA0KPiBObyBD
-aGFuZ2UtSWQgdGFncyBpbiB0aGUga2VybmVsLCBwbGVhc2UuIENoZWNrIHRoZSBvdGhlciB0d28g
-YXMgd2VsbC4NCj4gDQo+IFdpdGggdGhhdCBmaXhlZCwNCj4gDQo+IEFja2VkLWJ5OiBTYWthcmkg
-QWlsdXMgPHNha2FyaS5haWx1c0BsaW51eC5pbnRlbC5jb20+DQo+IA==
+Hi Linus,
+
+Can you pull these afs fixes please?
+
+ (1) Fix the CB.ProbeUuid handler to generate its reply correctly.
+
+ (2) Fix a mix up in indices when parsing a Volume Location entry record.
+
+ (3) Fix a potential NULL-pointer deref when cleaning up a read request.
+
+ (4) Fix the expected data version of the destination directory in
+     afs_rename().
+
+ (5) Fix afs_d_revalidate() to only update d_fsdata if it's not the same as
+     the directory data version to reduce the likelihood of overwriting the
+     result of a competing operation.  (d_fsdata carries the directory DV
+     or the least-significant word thereof).
+
+ (6) Fix the tracking of the data-version on a directory and make sure that
+     dentry objects get properly initialised, updated and revalidated.
+
+     Also fix rename to update d_fsdata to match the new directory's DV if
+     the dentry gets moved over and unhash the dentry to stop
+     afs_d_revalidate() from interfering.
+
+David
+---
+The following changes since commit 2a11c76e5301dddefcb618dac04f74e6314df6bc:
+
+  Merge tag 'for_linus' of git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost (2019-07-29 11:34:12 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-fixes-20190814
+
+for you to fetch changes up to 9dd0b82ef530cdfe805c9f7079c99e104be59a14:
+
+  afs: Fix missing dentry data version updating (2019-07-30 14:38:52 +0100)
+
+----------------------------------------------------------------
+AFS Fixes
+
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+
+----------------------------------------------------------------
+David Howells (4):
+      afs: Fix the CB.ProbeUuid service handler to reply correctly
+      afs: Fix off-by-one in afs_rename() expected data version calculation
+      afs: Only update d_fsdata if different in afs_d_revalidate()
+      afs: Fix missing dentry data version updating
+
+Jia-Ju Bai (1):
+      fs: afs: Fix a possible null-pointer dereference in afs_put_read()
+
+Marc Dionne (1):
+      afs: Fix loop index mixup in afs_deliver_vl_get_entry_by_name_u()
+
+ fs/afs/cmservice.c | 10 ++----
+ fs/afs/dir.c       | 89 ++++++++++++++++++++++++++++++++++++++++++++----------
+ fs/afs/file.c      | 12 +++++---
+ fs/afs/vlclient.c  | 11 ++++---
+ 4 files changed, 89 insertions(+), 33 deletions(-)
