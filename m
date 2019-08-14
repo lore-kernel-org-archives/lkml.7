@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1ABC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9912DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D20A206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B88B206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803320;
-	bh=bbV/8pJFh2CJ+OTFXl4xsgxVcDcaQJ5Cl2Q4N6T3Ltc=;
+	s=default; t=1565803332;
+	bh=FjH7MbOHzJA3Qgz8B/MkhCNJMbeI4oucK1ktnCJFHRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ahcYxwT39MKNHpRcwDmIWBBUTziBy2O43ZbFC3OZCja9mEn3DoNOz0HL8pcIUvs9n
-	 8GO5YgkDOSDvpsYSZ7QdmCc+HHZuHoHHwwrrf1byKxXSVtwlDrKNH2yrjQOp6GUG26
-	 dl542mXKBzak4J+lNKxw8uePPkdan4MAysmtTV8M=
+	b=irqFJMyxgZuCIaqSLhiD22bo4BJQZLn4rT/jAI5Y42PUT7Q7XaqT7jkZ036WM35bo
+	 T6tycmMrgONc/LxD7yBGrsBpizS7v8zbqK95glx5g8sKXsVlE+Gs9ZZBmuSBnHtmAe
+	 tWDeN35FHOysedOBt4Z3l+3Mm1qNuiEywc7ZqPIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730166AbfHNRV7 (ORCPT
+        id S1730171AbfHNRWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:21:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59474 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:22:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730273AbfHNRJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:09:12 -0400
+        id S1730216AbfHNRJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:09:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51D38214DA;
-        Wed, 14 Aug 2019 17:09:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E28C2084D;
+        Wed, 14 Aug 2019 17:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802551;
-        bh=bbV/8pJFh2CJ+OTFXl4xsgxVcDcaQJ5Cl2Q4N6T3Ltc=;
+        s=default; t=1565802538;
+        bh=FjH7MbOHzJA3Qgz8B/MkhCNJMbeI4oucK1ktnCJFHRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GfU0gLg5JFo/T/f92oNNxQvdHDrKzfkALivijUfLq9jMOkucx6+jf/Wa84Aeoxfff
-         KQb1ZhFOkTYg/kz3BrrOYxlMso7QY2nME9vm7devqr+DYEnKlQWo+VPLb9e5eLp2K7
-         pmddBtG8JR/ky4pIDxX50wTS/YeAIeybbx6Fc7BM=
+        b=gi25H/qZpqiDPYdL/Eg1H4Vke5aa99gtBhTrmkr9Dyz+Xs6XbXTb0j4/abjbZjUfC
+         vx6NUw/sLoeO9w17XGiXU+kwnvrfl0KLj0f0At60IBSFs48xDNzY3+F8OrEIyffnaU
+         TX8em3TSjb9UKVpfGEOU/eEH/GAJs7xaSr4ZdQX8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 4.19 25/91] usb: host: xhci-rcar: Fix timeout in xhci_suspend()
-Date:   Wed, 14 Aug 2019 19:00:48 +0200
-Message-Id: <20190814165750.766614263@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.19 21/91] perf db-export: Fix thread__exec_comm()
+Date:   Wed, 14 Aug 2019 19:00:44 +0200
+Message-Id: <20190814165750.618189689@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -59,50 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 783bda5e41acc71f98336e1a402c180f9748e5dc upstream.
+commit 3de7ae0b2a1d86dbb23d0cb135150534fdb2e836 upstream.
 
-When a USB device is connected to the host controller and
-the system enters suspend, the following error happens
-in xhci_suspend():
+Threads synthesized from /proc have comms with a start time of zero, and
+not marked as "exec". Currently, there can be 2 such comms. The first is
+created by processing a synthesized fork event and is set to the
+parent's comm string, and the second by processing a synthesized comm
+event set to the thread's current comm string.
 
-	xhci-hcd ee000000.usb: WARN: xHC CMD_RUN timeout
+In the absence of an "exec" comm, thread__exec_comm() picks the last
+(oldest) comm, which, in the case above, is the parent's comm string.
+For a main thread, that is very probably wrong. Use the second-to-last
+in that case.
 
-Since the firmware/internal CPU control the USBSTS.STS_HALT
-and the process speed is down when the roothub port enters U3,
-long delay for the handshake of STS_HALT is neeed in xhci_suspend().
-So, this patch adds to set the XHCI_SLOW_SUSPEND.
+This affects only db-export because it is the only user of
+thread__exec_comm().
 
-Fixes: 435cc1138ec9 ("usb: host: xhci-plat: set resume_quirk() for R-Car controllers")
-Cc: <stable@vger.kernel.org> # v4.12+
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/1564734815-17964-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Example:
+
+  $ sudo perf record -a -o pt-a-sleep-1 -e intel_pt//u -- sleep 1
+  $ sudo chown ahunter pt-a-sleep-1
+
+Before:
+
+  $ perf script -i pt-a-sleep-1 --itrace=bep -s tools/perf/scripts/python/export-to-sqlite.py pt-a-sleep-1.db branches calls
+  $ sqlite3 -header -column pt-a-sleep-1.db 'select * from comm_threads_view'
+  comm_id     command     thread_id   pid         tid
+  ----------  ----------  ----------  ----------  ----------
+  1           swapper     1           0           0
+  2           rcu_sched   2           10          10
+  3           kthreadd    3           78          78
+  5           sudo        4           15180       15180
+  5           sudo        5           15180       15182
+  7           kworker/4:  6           10335       10335
+  8           kthreadd    7           55          55
+  10          systemd     8           865         865
+  10          systemd     9           865         875
+  13          perf        10          15181       15181
+  15          sleep       10          15181       15181
+  16          kworker/3:  11          14179       14179
+  17          kthreadd    12          29376       29376
+  19          systemd     13          746         746
+  21          systemd     14          401         401
+  23          systemd     15          879         879
+  23          systemd     16          879         945
+  25          kthreadd    17          556         556
+  27          kworker/u1  18          14136       14136
+  28          kworker/u1  19          15021       15021
+  29          kthreadd    20          509         509
+  31          systemd     21          836         836
+  31          systemd     22          836         967
+  33          systemd     23          1148        1148
+  33          systemd     24          1148        1163
+  35          kworker/2:  25          17988       17988
+  36          kworker/0:  26          13478       13478
+
+After:
+
+  $ perf script -i pt-a-sleep-1 --itrace=bep -s tools/perf/scripts/python/export-to-sqlite.py pt-a-sleep-1b.db branches calls
+  $ sqlite3 -header -column pt-a-sleep-1b.db 'select * from comm_threads_view'
+  comm_id     command     thread_id   pid         tid
+  ----------  ----------  ----------  ----------  ----------
+  1           swapper     1           0           0
+  2           rcu_sched   2           10          10
+  3           kswapd0     3           78          78
+  4           perf        4           15180       15180
+  4           perf        5           15180       15182
+  6           kworker/4:  6           10335       10335
+  7           kcompactd0  7           55          55
+  8           accounts-d  8           865         865
+  8           accounts-d  9           865         875
+  10          perf        10          15181       15181
+  12          sleep       10          15181       15181
+  13          kworker/3:  11          14179       14179
+  14          kworker/1:  12          29376       29376
+  15          haveged     13          746         746
+  16          systemd-jo  14          401         401
+  17          NetworkMan  15          879         879
+  17          NetworkMan  16          879         945
+  19          irq/131-iw  17          556         556
+  20          kworker/u1  18          14136       14136
+  21          kworker/u1  19          15021       15021
+  22          kworker/u1  20          509         509
+  23          thermald    21          836         836
+  23          thermald    22          836         967
+  25          unity-sett  23          1148        1148
+  25          unity-sett  24          1148        1163
+  27          kworker/2:  25          17988       17988
+  28          kworker/0:  26          13478       13478
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 65de51f93ebf ("perf tools: Identify which comms are from exec")
+Link: http://lkml.kernel.org/r/20190808064823.14846-1-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-rcar.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ tools/perf/util/thread.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci-rcar.c
-+++ b/drivers/usb/host/xhci-rcar.c
-@@ -238,10 +238,15 @@ int xhci_rcar_init_quirk(struct usb_hcd
- 	 * pointers. So, this driver clears the AC64 bit of xhci->hcc_params
- 	 * to call dma_set_coherent_mask(dev, DMA_BIT_MASK(32)) in
- 	 * xhci_gen_setup().
-+	 *
-+	 * And, since the firmware/internal CPU control the USBSTS.STS_HALT
-+	 * and the process speed is down when the roothub port enters U3,
-+	 * long delay for the handshake of STS_HALT is neeed in xhci_suspend().
- 	 */
- 	if (xhci_rcar_is_gen2(hcd->self.controller) ||
--			xhci_rcar_is_gen3(hcd->self.controller))
--		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
-+			xhci_rcar_is_gen3(hcd->self.controller)) {
-+		xhci->quirks |= XHCI_NO_64BIT_SUPPORT | XHCI_SLOW_SUSPEND;
-+	}
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -192,14 +192,24 @@ struct comm *thread__comm(const struct t
  
- 	if (!xhci_rcar_wait_for_pll_active(hcd))
- 		return -ETIMEDOUT;
+ struct comm *thread__exec_comm(const struct thread *thread)
+ {
+-	struct comm *comm, *last = NULL;
++	struct comm *comm, *last = NULL, *second_last = NULL;
+ 
+ 	list_for_each_entry(comm, &thread->comm_list, list) {
+ 		if (comm->exec)
+ 			return comm;
++		second_last = last;
+ 		last = comm;
+ 	}
+ 
++	/*
++	 * 'last' with no start time might be the parent's comm of a synthesized
++	 * thread (created by processing a synthesized fork event). For a main
++	 * thread, that is very probably wrong. Prefer a later comm to avoid
++	 * that case.
++	 */
++	if (second_last && !last->start && thread->pid_ == thread->tid)
++		return second_last;
++
+ 	return last;
+ }
+ 
 
 
