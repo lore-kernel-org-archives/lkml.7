@@ -2,92 +2,114 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE2FC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD44C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3AC32084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 062C4214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:47:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="HRoKkCMG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u8hTQDyw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbfHNRqs (ORCPT
+        id S1728799AbfHNRrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:46:48 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:33292 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728169AbfHNRqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:46:48 -0400
-Received: from zn.tnic (p200300EC2F0BD0003850D0C8BF1AA1C5.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:d000:3850:d0c8:bf1a:a1c5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BE7B31EC0260;
-        Wed, 14 Aug 2019 19:46:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565804807;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=2SA+6786MPKxV9jdAfB9Q+F1WSWbXybqiA3c/b/Fyek=;
-        b=HRoKkCMGX9XffldZ1bdQh77Ucsh/dkiDimF3tNgLqjK4pzSo/87R66h1SJtgSp22UDqUVe
-        9ystX6lvzqfB/NilBoEtGEhi5N1uAoID2eMpKHUszFuHLpwxwk21JMPBW91lBfiSyzHmC+
-        5xV1UL/PqMyGU66c8NTryZSdeBhaTYY=
-Date:   Wed, 14 Aug 2019 19:47:32 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Josh Boyer <jwboyer@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Young <dyoung@redhat.com>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH V38 15/29] acpi: Ignore acpi_rsdp kernel param when the
- kernel has been locked down
-Message-ID: <20190814174732.GD1841@zn.tnic>
-References: <20190808000721.124691-1-matthewgarrett@google.com>
- <20190808000721.124691-16-matthewgarrett@google.com>
- <20190814072602.GA27836@zn.tnic>
- <CACdnJuuOhuw71GDwQOrPQxUexpvpZNJocr6m0dYzJw+MMaVKWQ@mail.gmail.com>
+        Wed, 14 Aug 2019 13:47:31 -0400
+Received: from mail-pf1-f178.google.com ([209.85.210.178]:43035 "EHLO
+        mail-pf1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbfHNRra (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:47:30 -0400
+Received: by mail-pf1-f178.google.com with SMTP id v12so6213746pfn.10;
+        Wed, 14 Aug 2019 10:47:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CCSrBSX7IQ2xxBVP3hmlei8pJXx43OzdA6dFKjJ2gHU=;
+        b=u8hTQDywSt89aTs/QwC9DaOHMlSKvwhLozmjlU41t8YDFprKEWWarY2xStTo/0YXgW
+         0AGEIqqBIhCOYR3txYPORce7cXecJWQ3C65glTyA51/Dz+x2KDpHIGCEUkWuIcqRMVPh
+         jDBqAGqBFvpLJ1PDO4GaA4g30VbpxvG3H8brE6rxT/RkVuNzT+girw/O97arUcG0YPGA
+         rwNzJlfTDfGXiRoH1fqKSeQwIaB0uidO0rU1AAVDUjMV7PKU1RM6PNxtKQ8OJc8q6hoA
+         euvtFAiSt5zK9vviufuPiwr2kdXEO40JBNSwhDwbwTq3anOxZvihNlKiJKnh9QH/jyQ5
+         92uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CCSrBSX7IQ2xxBVP3hmlei8pJXx43OzdA6dFKjJ2gHU=;
+        b=W/cdBWbPQoBCObFtNEHRK5MKSPIzVyJiqhfFFE0ydvJk2Jv2s1kUSf+v7N+6Fd7CI0
+         KiW0+u4u4wD7gbIYjCZUP2oTOJlAbad88TGlD3cw9tkAolpsTqM4KY0fxmlT0TMBS6AN
+         0C8AponwCwv4iqzrM6QtSFeI4nq7HvmKkV7xIdk0RiEoF1R+jfGtFEk9Vi+uQSBZyeTZ
+         Kkp2Yzb4NZIUD504OY/ohUNavmEsQbtzJR9EluRA2HvYHCOPzRDrUwtY3RiTr6PHiL+g
+         /1gRMJr1E4wuCOtNBAlupqup7qjlqVfLeshONl2VCQp4m2wrH1SA+KTKbsYfcylwW+8k
+         Lp9A==
+X-Gm-Message-State: APjAAAUQfmSVBgNY9IbRs+SGLXvaDXrUt4qWc8dkezdeTmm4Su+yNq2j
+        UNnVs3A89dI9d9Dh+jFOjhw=
+X-Google-Smtp-Source: APXvYqzKsieWLirBEkQptXH2tQ5lBWKzQqGdQYuYBNU2y56nrw4EPOGJQz5bPTV4Ki//Sk2Ezj2FkA==
+X-Received: by 2002:a63:3006:: with SMTP id w6mr313117pgw.440.1565804849676;
+        Wed, 14 Aug 2019 10:47:29 -0700 (PDT)
+Received: from [10.69.78.41] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 10sm499867pfv.63.2019.08.14.10.47.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 10:47:28 -0700 (PDT)
+Subject: Re: [PATCH v4 01/14] net: phy: adin: add support for Analog Devices
+ PHYs
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        hkallweit1@gmail.com, andrew@lunn.ch
+References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+ <20190812112350.15242-2-alexandru.ardelean@analog.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <06de7e05-e3b5-6003-acc5-63f45d8ce9e8@gmail.com>
+Date:   Wed, 14 Aug 2019 10:47:24 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190812112350.15242-2-alexandru.ardelean@analog.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CACdnJuuOhuw71GDwQOrPQxUexpvpZNJocr6m0dYzJw+MMaVKWQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 10:14:54AM -0700, Matthew Garrett wrote:
-> We explicitly don't want to pay attention to the acpi_rsdp kernel
-> parameter in early boot except for the case of finding the SRAT table,
-> and we only need that if CONFIG_RANDOMIZE_BASE and
-> CONFIG_MEMORY_HOTREMOVE are set. However, we *do* want to tell the
-> actual kernel where the RSDP is if we found it via some other means,
-> so we can't just clear the boot parameters value.
 
-Ok.
 
-> The kernel proper will parse the command line again and will then (if
-> lockdown isn't enabled) override the actual value we passed up in boot
-> params.
+On 8/12/2019 4:23 AM, Alexandru Ardelean wrote:
+> This change adds support for Analog Devices Industrial Ethernet PHYs.
+> Particularly the PHYs this driver adds support for:
+>  * ADIN1200 - Robust, Industrial, Low Power 10/100 Ethernet PHY
+>  * ADIN1300 - Robust, Industrial, Low Latency 10/100/1000 Gigabit
+>    Ethernet PHY
+> 
+> The 2 chips are register compatible with one another. The main difference
+> being that ADIN1200 doesn't operate in gigabit mode.
+> 
+> The chips can be operated by the Generic PHY driver as well via the
+> standard IEEE PHY registers (0x0000 - 0x000F) which are supported by the
+> kernel as well. This assumes that configuration of the PHY has been done
+> completely in HW, according to spec.
+> 
+> Configuration can also be done via registers, which will be supported by
+> this driver.
+> 
+> Datasheets:
+>   https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1300.pdf
+>   https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1200.pdf
+> 
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-Yeah, ok, I see what you're doing there. AFAICT, you do that in
-
-setup_arch->acpi_boot_table_init-> ... -> acpi_os_get_root_pointer()
-
-I hope nothing needs it earlier because then we'll have to restructure
-again...
-
-Thx.
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Florian
