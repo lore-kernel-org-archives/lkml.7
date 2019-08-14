@@ -2,123 +2,132 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC83C32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B191C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D45208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:07:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="m4NbZWWv"
+	by mail.kernel.org (Postfix) with ESMTP id 0046C208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565798876;
+	bh=s3SOplqsGkMSWSphnX3KTQmhyKhK8KEfjFpxgd7RDqc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NmHsQdvGt77ur/vMv46NOkWx2rvImPYzmIkvX56AZ902NKMeeYMVPDISJBMDR93yk
+	 hwswPqTVXLoi/WIfYCFuE/aYYtmRSrZyzjuo4UjKoW7GvDGPpHEZ20k8PqyIZk6h76
+	 cG/GJx4Oh1Gj/OM1tIcnX2tK/mMW1zWa63y4XJYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbfHNQHt (ORCPT
+        id S1728344AbfHNQHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:07:49 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36717 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfHNQHt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:07:49 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z4so110755163qtc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 09:07:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uSze5gwW1/nHV7sdPnwR3jTf0rLBBMNUn/+CnX7OfxQ=;
-        b=m4NbZWWvLvFaknX0xdkPpgAtWEaAV8BPlNsV0QPnc6RgrYDmgG7AIsCG9ZHupO1OhY
-         MK5GQaw5bosgo81D9cY6GHmq179L4OqwHK3M6QUinKEJeDqx/XxsudgIdbj6JCJJ8Mx4
-         OEfKzvMu4bctJ4ELd7APkdehLFO1/45kAPB31gtLMFMBegBd1BaTmuRtXRxfaqmbb9j/
-         7gcKiA8oYZgHtUpbyJxdB8Pj0Jf2ZLMQcL7IdGdjMoAq6vEQba2nasxNHi3QIdWTLTQH
-         d/4ioF5GVIgVwgwhmehLPTTzbIryOo6apF1QStiPEI+ww2ZIZ0Kt7coH71+5OeY3wmmM
-         wQUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uSze5gwW1/nHV7sdPnwR3jTf0rLBBMNUn/+CnX7OfxQ=;
-        b=jb9bt7Dw56M6xZ1BHX4gRlheV9zzKbxZGqqFdldc8sN2s46DO1dwBh8PX5WsIZfJ1l
-         vaMW6F9YKtGn15gJq1axU+PI7vGAV/fcp6xFaV9yRSE+e1gqEigL92jPuXH/zIn8hEQq
-         E6zP6DrEBXFs4luw/n5o+hJTYj1L+juozDJp0FX94aOnaIdfb/OeKLxt/kWCsQqQ7se+
-         fjouwtrKRVUUSa8aB6iIXsmV/+l9uD8fHpvTggPXCPbeVwVvzNfg7OZO8MhpK3/2NwOO
-         LnQVbiqHoS5qDFoC02m+0piPwEMLiP9E6Rhs3geUOp6WQ9Doi4hOrPIp7Sw+dlezhLB4
-         Vmpw==
-X-Gm-Message-State: APjAAAWMtW5FWprZE5uxtjsDsGssdoBD2lA3wqocC1SME5m9QBR0WAAG
-        CMVkEjqQMY8vQZ+ypUTsZTivZg==
-X-Google-Smtp-Source: APXvYqyb9m87zjH3q35GhpgQm6CNCVSjTDXOgvHlJfjkQScATNdsG/TvzCk00mXmdZUVCVz5HTGwYA==
-X-Received: by 2002:a0c:af33:: with SMTP id i48mr323000qvc.185.1565798867959;
-        Wed, 14 Aug 2019 09:07:47 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id h26sm52286qta.58.2019.08.14.09.07.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 09:07:47 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hxvoR-0001J4-0D; Wed, 14 Aug 2019 13:07:47 -0300
-Date:   Wed, 14 Aug 2019 13:07:46 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     linux-mm@kvack.org
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Dimitri Sivanich <sivanich@sgi.com>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v3 hmm 08/11] drm/radeon: use mmu_notifier_get/put for
- struct radeon_mn
-Message-ID: <20190814160746.GA4926@ziepe.ca>
-References: <20190806231548.25242-1-jgg@ziepe.ca>
- <20190806231548.25242-9-jgg@ziepe.ca>
+        Wed, 14 Aug 2019 12:07:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37950 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726047AbfHNQHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 12:07:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 61C21AB92;
+        Wed, 14 Aug 2019 16:07:53 +0000 (UTC)
+Date:   Wed, 14 Aug 2019 18:07:51 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2 3/5] mm/memory_hotplug: Simplify online_pages_range()
+Message-ID: <20190814160751.GI17933@dhcp22.suse.cz>
+References: <20190814154109.3448-1-david@redhat.com>
+ <20190814154109.3448-4-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190806231548.25242-9-jgg@ziepe.ca>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190814154109.3448-4-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 08:15:45PM -0300, Jason Gunthorpe wrote:
-> From: Jason Gunthorpe <jgg@mellanox.com>
+On Wed 14-08-19 17:41:07, David Hildenbrand wrote:
+> online_pages always corresponds to nr_pages. Simplify the code, getting
+> rid of online_pages_blocks(). Add some comments.
 > 
-> radeon is using a device global hash table to track what mmu_notifiers
-> have been registered on struct mm. This is better served with the new
-> get/put scheme instead.
-> 
-> radeon has a bug where it was not blocking notifier release() until all
-> the BO's had been invalidated. This could result in a use after free of
-> pages the BOs. This is tied into a second bug where radeon left the
-> notifiers running endlessly even once the interval tree became
-> empty. This could result in a use after free with module unload.
-> 
-> Both are fixed by changing the lifetime model, the BOs exist in the
-> interval tree with their natural lifetimes independent of the mm_struct
-> lifetime using the get/put scheme. The release runs synchronously and just
-> does invalidate_start across the entire interval tree to create the
-> required DMA fence.
-> 
-> Additions to the interval tree after release are already impossible as
-> only current->mm is used during the add.
-> 
-> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
->  drivers/gpu/drm/radeon/radeon.h        |   3 -
->  drivers/gpu/drm/radeon/radeon_device.c |   2 -
->  drivers/gpu/drm/radeon/radeon_drv.c    |   2 +
->  drivers/gpu/drm/radeon/radeon_mn.c     | 157 ++++++-------------------
->  4 files changed, 38 insertions(+), 126 deletions(-)
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-AMD team: Are you OK with this patch?
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Jason
+Thanks!
+
+> ---
+>  mm/memory_hotplug.c | 36 ++++++++++++++++--------------------
+>  1 file changed, 16 insertions(+), 20 deletions(-)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 10ad970f3f14..63b1775f7cf8 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -632,31 +632,27 @@ static void generic_online_page(struct page *page, unsigned int order)
+>  #endif
+>  }
+>  
+> -static int online_pages_blocks(unsigned long start, unsigned long nr_pages)
+> -{
+> -	unsigned long end = start + nr_pages;
+> -	int order, onlined_pages = 0;
+> -
+> -	while (start < end) {
+> -		order = min(MAX_ORDER - 1,
+> -			get_order(PFN_PHYS(end) - PFN_PHYS(start)));
+> -		(*online_page_callback)(pfn_to_page(start), order);
+> -
+> -		onlined_pages += (1UL << order);
+> -		start += (1UL << order);
+> -	}
+> -	return onlined_pages;
+> -}
+> -
+>  static int online_pages_range(unsigned long start_pfn, unsigned long nr_pages,
+>  			void *arg)
+>  {
+> -	unsigned long onlined_pages = *(unsigned long *)arg;
+> +	const unsigned long end_pfn = start_pfn + nr_pages;
+> +	unsigned long pfn;
+> +	int order;
+> +
+> +	/*
+> +	 * Online the pages. The callback might decide to keep some pages
+> +	 * PG_reserved (to add them to the buddy later), but we still account
+> +	 * them as being online/belonging to this zone ("present").
+> +	 */
+> +	for (pfn = start_pfn; pfn < end_pfn; pfn += 1ul << order) {
+> +		order = min(MAX_ORDER - 1, get_order(PFN_PHYS(end_pfn - pfn)));
+> +		(*online_page_callback)(pfn_to_page(pfn), order);
+> +	}
+>  
+> -	onlined_pages += online_pages_blocks(start_pfn, nr_pages);
+> -	online_mem_sections(start_pfn, start_pfn + nr_pages);
+> +	/* mark all involved sections as online */
+> +	online_mem_sections(start_pfn, end_pfn);
+>  
+> -	*(unsigned long *)arg = onlined_pages;
+> +	*(unsigned long *)arg += nr_pages;
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.21.0
+> 
+
+-- 
+Michal Hocko
+SUSE Labs
