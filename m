@@ -2,89 +2,127 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F9EC32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808DAC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F93D2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54852216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802190;
-	bh=6K1pZaqhlCYLETUu0L6vQfLqj8yj0kpEznabffwYKXo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fMxX4IB9e1cjT1e8Ko7iRLcP0H3xQVeux4JO1gy86cM8PmjMMA6Knk9A80FJNaWll
-	 18+8W2LuRM3WX8R3MA4x5chbsZcLsFeHlh6LpRG4RuA6Tt5vq5Sr182xwaTtxS7Nik
-	 OgoxpTyoGlmib1CJifnz0cY3aOeYl7u+W1TltrBw=
+	s=default; t=1565802194;
+	bh=CxvDG9zCWBcJ812reKgHR+JSRHBdcJUP+rEPiz+YCcg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=Wh+ZUmw6LREXVLdTOi8PbdFcZuUgNbAE0OAWEGTmzx7rfcf8jX78z2b7DHPIeL4WH
+	 erUglgsWRaltL+93cY/qadbs0+tiLGP+dQ37lNWeMO1yuqpZ3lOrotIx+72eE/VleZ
+	 jQwhjRl4PkZmdX4ZD0xf3RyB1XqkoM6mCH6PBiDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbfHNRDJ (ORCPT
+        id S1728873AbfHNRDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:03:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51666 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:03:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728829AbfHNRDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:03:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728855AbfHNRDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:03:10 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45A6D208C2;
-        Wed, 14 Aug 2019 17:03:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EF3D21721;
+        Wed, 14 Aug 2019 17:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802186;
-        bh=6K1pZaqhlCYLETUu0L6vQfLqj8yj0kpEznabffwYKXo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Di3uVsof1YRxsTb9qKshj/LaSfN99mi/iFNtxepWdccdAggouQDKcqdwtB7oID+n3
-         tzzy5gqDTuXcm9Jh3Re+ZQ2pMDCkGi7QiAZKknU5bhYQf2teXXcWZWtyUSLE+c2OJN
-         4FCKphb3CDmcveod7viNgVKc43+TkRQqU/yTLndI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.2 003/144] iio: cros_ec_accel_legacy: Fix incorrect channel setting
-Date:   Wed, 14 Aug 2019 18:59:19 +0200
-Message-Id: <20190814165759.616580469@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
-References: <20190814165759.466811854@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1565802189;
+        bh=CxvDG9zCWBcJ812reKgHR+JSRHBdcJUP+rEPiz+YCcg=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=NJ4K9dUAH+t+UIQvAHVJFiRbRzhHLGejThFYXNc9CX5R6DksIoGG7XHUrbfzF9jwX
+         kfR6DJb5Gb3Ke06rKLCw+Zabi0EuAngzPLUuhN3SIEzI0HHUKDo/N4SFbMOCc0fMPR
+         S+Leo21cz7twxJopaDlRCeqiCdGyViIV0rs4l758=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190814125012.8700-7-vkoul@kernel.org>
+References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-7-vkoul@kernel.org>
+Subject: Re: [PATCH 06/22] arm64: dts: qcom: pm8150: Add Base DTS file
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        sibis@codeaurora.org, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 14 Aug 2019 10:03:08 -0700
+Message-Id: <20190814170309.0EF3D21721@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gwendal Grignou <gwendal@chromium.org>
+Quoting Vinod Koul (2019-08-14 05:49:56)
+> Add base DTS file for pm8150 along with GPIOs
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  arch/arm64/boot/dts/qcom/pm8150.dtsi | 41 ++++++++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/pm8150.dtsi
+>=20
+> diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/q=
+com/pm8150.dtsi
+> new file mode 100644
+> index 000000000000..b533e254a203
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
+> @@ -0,0 +1,41 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +// Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+> +// Copyright (c) 2019, Linaro Limited
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/spmi/spmi.h>
+> +
+> +&spmi_bus {
+> +       pm8150_0: pm8150@0 {
 
-commit 6cdff99c9f7d7d28b87cf05dd464f7c7736332ae upstream.
+I think node name should be 'pmic'
 
-INFO_SCALE is set both for each channel and all channels.
-iio is using all channel setting, so the error was not user visible.
+> +               compatible =3D "qcom,spmi-pmic";
 
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This should also have the model number? "qcom,pm8150"?
 
----
- drivers/iio/accel/cros_ec_accel_legacy.c |    1 -
- 1 file changed, 1 deletion(-)
+> +               reg =3D <0x0 SPMI_USID>;
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <0>;
+> +
+> +               pm8150_gpios: gpio@c000 {
+> +                       compatible =3D "qcom,pm8150-gpio";
+> +                       reg =3D <0xc000>;
+> +                       gpio-controller;
+> +                       #gpio-cells =3D <2>;
+> +                       interrupts =3D <0 0xc0 0 IRQ_TYPE_NONE>,
+> +                                    <0 0xc1 0 IRQ_TYPE_NONE>,
+> +                                    <0 0xc2 0 IRQ_TYPE_NONE>,
+> +                                    <0 0xc3 0 IRQ_TYPE_NONE>,
+> +                                    <0 0xc4 0 IRQ_TYPE_NONE>,
+> +                                    <0 0xc5 0 IRQ_TYPE_NONE>,
+> +                                    <0 0xc6 0 IRQ_TYPE_NONE>,
+> +                                    <0 0xc7 0 IRQ_TYPE_NONE>,
+> +                                    <0 0xc8 0 IRQ_TYPE_NONE>,
+> +                                    <0 0xc9 0 IRQ_TYPE_NONE>,
+> +                                    <0 0xca 0 IRQ_TYPE_NONE>,
+> +                                    <0 0xcb 0 IRQ_TYPE_NONE>;
+> +               };
+> +       };
+> +
+> +       qcom,pm8150@1 {
 
---- a/drivers/iio/accel/cros_ec_accel_legacy.c
-+++ b/drivers/iio/accel/cros_ec_accel_legacy.c
-@@ -319,7 +319,6 @@ static const struct iio_chan_spec_ext_in
- 		.modified = 1,					        \
- 		.info_mask_separate =					\
- 			BIT(IIO_CHAN_INFO_RAW) |			\
--			BIT(IIO_CHAN_INFO_SCALE) |			\
- 			BIT(IIO_CHAN_INFO_CALIBBIAS),			\
- 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SCALE),	\
- 		.ext_info = cros_ec_accel_legacy_ext_info,		\
+Same comment, pmic@1.
 
-
+> +               compatible =3D"qcom,spmi-pmic";
+> +               reg =3D <0x1 SPMI_USID>;
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <0>;
+> +       };
+> +};
