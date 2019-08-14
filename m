@@ -2,213 +2,102 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B094BC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D04C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8432C206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A173D208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:52:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nZvbfydp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfHNKwP (ORCPT
+        id S1727529AbfHNKwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:52:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57832 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725888AbfHNKwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:52:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 87819ADEF;
-        Wed, 14 Aug 2019 10:52:12 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 12:52:07 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jikos@kernel.org, pmladek@suse.com,
-        joe.lawrence@redhat.com, nstange@suse.de,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH] s390/livepatch: Implement reliable stack tracing for
- the consistency model
-In-Reply-To: <20190728204456.7bxnsbuo4o3tjxeq@treble>
-Message-ID: <alpine.LSU.2.21.1908141241061.16696@pobox.suse.cz>
-References: <20190710105918.22487-1-mbenes@suse.cz> <20190728204456.7bxnsbuo4o3tjxeq@treble>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 14 Aug 2019 06:52:20 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44632 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfHNKwT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:52:19 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k22so3066920oiw.11
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 03:52:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BFvHPaEBpVtDvsWsYTlc9ktuYlykq2Vr8qmG0BvJYjQ=;
+        b=nZvbfydpf2sDd0yKC1kYDe7pbTYf0RoRnG/RwmCKjN4PumO0LUNsXhUwuGjilZjqI1
+         nYaRqSAEFEqavuSSKxdcN6kkX0m9c+6ArZfhoviiE37qwBpKRFUYF1jWToMixOQkSFJA
+         qjm9yWN0hOS0n1/MvltJKRhnYLeknjuIHfB2FapfoPmgfnZwA7iW8k1TPD/LjKXYhe9N
+         LlJ/dFJnU5Cp3WbO2Hsls6hry/vs4ggNY6JdYejq6jRP16HM2bLhWwe+CfZ+ncYIWh/W
+         aKRjnNGCAknT7MYibajbR+rmDfl110as88QeipfeOBKHgbL5EXpAQ/t1FmK+vXzStbvi
+         GnuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BFvHPaEBpVtDvsWsYTlc9ktuYlykq2Vr8qmG0BvJYjQ=;
+        b=ZJOORZUKTaIxDVjQox8IvyEGj0mheAeMTnlD58hj/kgOhvlQtoEkamHdfhqQx+iDuJ
+         3ezcKeT+i9LPhaxcSBFHYK0sLX63tlBCGXNaKBb+9tA9/u+08T2YZmImxr9sP71JLRtS
+         jzAKVI9GCSB8Rch9NWs7PCilEIFGF+fgm8RKiB2EDnWP0zDl3g7EjSBWcMZEnYtte+DX
+         t+r9DrCFGMQqmkqgrb9gD+ujMkfw+hkO8P6MIBKFkcOKqhAfAB7BLm3nEO452+gODFdo
+         2vhJGMFBO7ZWythAog4YaboytI94dM9KnX3otGEAeK3yi68HzEmRsWDnnERRL1KkDqDN
+         ZXjQ==
+X-Gm-Message-State: APjAAAUtP/ljqYPmJDCnCLVQElCbcJudEMTn5wybKd+fuHsguMz1guG6
+        i5KhBJNex6TxfC5O3OPH0NoEbzxtD9IpyLz+nxxXIg==
+X-Google-Smtp-Source: APXvYqy9mUtI5PPGciU9JdBXtN+uZK4N0zN7cuSjarKrVdkZREuIQs1m8ssHSkm+3oY9x9IO0S8JUsNE8p8fudmw790=
+X-Received: by 2002:a02:a88e:: with SMTP id l14mr2649335jam.105.1565779938039;
+ Wed, 14 Aug 2019 03:52:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190813110300.83025-1-darekm@google.com> <20190813110300.83025-5-darekm@google.com>
+ <20190813112014.GE13294@shell.armlinux.org.uk>
+In-Reply-To: <20190813112014.GE13294@shell.armlinux.org.uk>
+From:   Dariusz Marcinkiewicz <darekm@google.com>
+Date:   Wed, 14 Aug 2019 12:52:06 +0200
+Message-ID: <CALFZZQGXrQh-RnuMihfpTPxhpVohRFnrkQ0V_fJo00SAM16yTg@mail.gmail.com>
+Subject: Re: [PATCH v6 4/8] drm: tda998x: use cec_notifier_conn_(un)register
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > diff --git a/arch/s390/include/asm/unwind.h b/arch/s390/include/asm/unwind.h
-> > index d827b5b9a32c..1cc96c54169c 100644
-> > --- a/arch/s390/include/asm/unwind.h
-> > +++ b/arch/s390/include/asm/unwind.h
-> > @@ -45,6 +45,25 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
-> >  bool unwind_next_frame(struct unwind_state *state);
-> >  unsigned long unwind_get_return_address(struct unwind_state *state);
-> >  
-> > +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-> > +void __unwind_start_reliable(struct unwind_state *state,
-> > +			     struct task_struct *task, unsigned long sp);
-> > +bool unwind_next_frame_reliable(struct unwind_state *state);
-> > +
-> > +static inline void unwind_start_reliable(struct unwind_state *state,
-> > +					 struct task_struct *task)
-> > +{
-> > +	unsigned long sp;
-> > +
-> > +	if (task == current)
-> > +		sp = current_stack_pointer();
-> > +	else
-> > +		sp = task->thread.ksp;
-> > +
-> > +	__unwind_start_reliable(state, task, sp);
-> > +}
-> > +#endif
-> > +
-> 
-> (Ah, cool, I didn't realize s390 ported the x86 unwind interfaces.  We
-> should look at unifying them someday.)
+Hello.
 
-Yes, it is quite recent change.
- 
-> Why do you need _reliable() variants of the unwind interfaces?  Can the
-> error checking be integrated into unwind_start() and unwind_next_frame()
-> like they are on x86?
+On Tue, Aug 13, 2019 at 1:20 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> This also doesn't make sense: tda998x_destroy() is the opposite of
+> tda998x_create().  However, tda998x_connector_destroy() is the
+> opposite of tda998x_connector_create().
+>
+> By moving the CEC creation code into tda998x_connector_create(), you
+> are creating the possibility for the following sequence to mess up
+> CEC and leak:
+>
+>         tda998x_create()
+>         tda998x_connector_create()
+>         tda998x_connector_destroy()
+>         tda998x_connector_create()
+>         tda998x_connector_destroy()
+>         tda998x_destroy()
+>
+> Anything you create in tda998x_connector_create() must be cleaned up
+> by tda998x_connector_destroy().
+>
+Thank you.
 
-Good question. I rebased the patch a lot of times and it was much easier 
-in the end just to separate the original and reliable infrastructure. Not 
-the best for upstream inclusion though.
+I've just sent out another revision of the patch, where registration
+and deregistration is symmetric. Please take a look.
 
-unwind_start_reliable() is basically the same as the original. 
-get_stack_info_reliable() is the main difference. It is much simpler in 
-our case. I wanted to avoid a new parameter or a callback, but let me 
-think about it again.
-
-unwind_next_frame_reliable() is again a lot simpler than the original one, 
-because we know that the unwinding happens only on a task stack. I'll 
-think about inclusion to the unwind_next_frame() though. The code 
-duplication is not nice.
-
-> > +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-> > +void __unwind_start_reliable(struct unwind_state *state,
-> > +			     struct task_struct *task, unsigned long sp)
-> > +{
-> > +	struct stack_info *info = &state->stack_info;
-> > +	struct stack_frame *sf;
-> > +	unsigned long ip;
-> > +
-> > +	memset(state, 0, sizeof(*state));
-> > +	state->task = task;
-> > +
-> > +	/* Get current stack pointer and initialize stack info */
-> > +	if (get_stack_info_reliable(sp, task, info) ||
-> > +	    !on_stack(info, sp, sizeof(struct stack_frame))) {
-> > +		/* Something is wrong with the stack pointer */
-> > +		info->type = STACK_TYPE_UNKNOWN;
-> > +		state->error = true;
-> > +		return;
-> > +	}
-> > +
-> > +	/* Get the instruction pointer from the stack frame */
-> > +	sf = (struct stack_frame *) sp;
-> > +	ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-> > +
-> > +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> > +	/* Decode any ftrace redirection */
-> > +	if (ip == (unsigned long) return_to_handler)
-> > +		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
-> > +					   ip, NULL);
-> > +#endif
-> 
-> The return_to_handler and ifdef checks aren't needed.  Those are done
-> already by the call.
-
-Correct. I realized it when Joe asked about the hunk.
- 
-> Also it seems a bit odd that the kretprobes check isn't done in this
-> function next to the ftrace check.
-
-Ah, yes.
-
-> > +
-> > +	/* Update unwind state */
-> > +	state->sp = sp;
-> > +	state->ip = ip;
-> > +}
-> > +
-> > +bool unwind_next_frame_reliable(struct unwind_state *state)
-> > +{
-> > +	struct stack_info *info = &state->stack_info;
-> > +	struct stack_frame *sf;
-> > +	struct pt_regs *regs;
-> > +	unsigned long sp, ip;
-> > +
-> > +	sf = (struct stack_frame *) state->sp;
-> > +	sp = READ_ONCE_NOCHECK(sf->back_chain);
-> > +	/*
-> > +	 * Idle tasks are special. The final back-chain points to nodat_stack.
-> > +	 * See CALL_ON_STACK() in smp_start_secondary() callback used in
-> > +	 * __cpu_up(). We just accept it, go to else branch and look for
-> > +	 * pt_regs.
-> > +	 */
-> > +	if (likely(sp && !(is_idle_task(state->task) &&
-> > +			   outside_of_stack(state, sp)))) {
-> > +		/* Non-zero back-chain points to the previous frame */
-> > +		if (unlikely(outside_of_stack(state, sp)))
-> > +			goto out_err;
-> > +
-> > +		sf = (struct stack_frame *) sp;
-> > +		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-> > +	} else {
-> > +		/* No back-chain, look for a pt_regs structure */
-> > +		sp = state->sp + STACK_FRAME_OVERHEAD;
-> > +		regs = (struct pt_regs *) sp;
-> > +		if ((unsigned long)regs != info->end - sizeof(struct pt_regs))
-> > +			goto out_err;
-> > +		if (!(state->task->flags & (PF_KTHREAD | PF_IDLE)) &&
-> > +		     !user_mode(regs))
-> > +			goto out_err;
-> > +
-> > +		state->regs = regs;
-> > +		goto out_stop;
-> > +	}
-> > +
-> > +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> > +	/* Decode any ftrace redirection */
-> > +	if (ip == (unsigned long) return_to_handler)
-> > +		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
-> > +					   ip, (void *) sp);
-> > +#endif
-> > +
-> > +	/* Update unwind state */
-> > +	state->sp = sp;
-> > +	state->ip = ip;
-> > +	return true;
-> > +
-> > +out_err:
-> > +	state->error = true;
-> > +out_stop:
-> > +	state->stack_info.type = STACK_TYPE_UNKNOWN;
-> > +	return false;
-> > +}
-> > +#endif
-> 
-> For the _reliable() variants of the unwind interfaces, there's a lot of
-> code duplication with the non-reliable variants.  It looks like it would
-> be a lot cleaner (and easier to follow) if they were integrated.
-
-True.
- 
-> Overall it's looking good though.
-
-Great. Now let me try to make it nicer.
-
-Thanks for the review.
-
-Miroslav
+Best regards.
