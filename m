@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1931C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E7CC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55BC20842
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36EAC20842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749372;
-	bh=Ifj00gfVsgvP+iQz6eKGgCcOciA1KGPr8g0npFZqP+o=;
+	s=default; t=1565749376;
+	bh=JZeOdsZ1pDG9kYueDJ17W6IlCvFkm0I3PGmHHUVd1uU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fuzx+2U2Nd6HMAZcoEj+H47oQFeAChVpHit9KncqZsBVcSeYJdMxrMYXGdNxIoXp9
-	 NAZVs/T1YxxX+WB0EuapadWpY7mhpAutaac4EmyCvyjxwpyBEGg22qUl0b5glQHn7Y
-	 imhaE/Jr7eqti/dWaXdxMkiJ+8o5MrNCNjAv7D1Q=
+	b=X8eEjqyneN6L2XC9stBPpT+CAbE+6gl25iW5eIZzzeZiXo5GSxjO3b2bYgT0ZoSXs
+	 3rryrQgDNQW5/ZX7AHp2oYYMBhQDKbDVoHsNTcAmmhHWs+tTYvjEVFzXAf61iZGsQr
+	 tYKQjU2W9MJKX8ykmhLVtczhHinhTTGzgPxse+Wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfHNCWv (ORCPT
+        id S1729420AbfHNCRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:22:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49584 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:17:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbfHNCSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:18:38 -0400
+        id S1729328AbfHNCRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:17:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A65D20842;
-        Wed, 14 Aug 2019 02:18:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E91B208C2;
+        Wed, 14 Aug 2019 02:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749117;
-        bh=Ifj00gfVsgvP+iQz6eKGgCcOciA1KGPr8g0npFZqP+o=;
+        s=default; t=1565749034;
+        bh=JZeOdsZ1pDG9kYueDJ17W6IlCvFkm0I3PGmHHUVd1uU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GLAidyxc6SQVPKLObWsC1Xnv6oGjSRNFS695GyO5gD0LSdpnQe3nCK9H4aXPg3JpT
-         2pWaOB68HGYLqkboJZtxuiWxeFkHVQF8LXOwIwarJGS9kchh19iNUi2YTG3h2lTvYD
-         9NGZrX1xWgEKPGBjMkKngx9y+moLofMfvvQGqtdo=
+        b=Qh2wFkIu/cHv8i9Txx9+s/AzNzzRDoIx2+1VAF2JjQWinu9tBT7fzep5JGJNtl/Nz
+         VvAlVqQ02ZkfDWpc3X7/8s9yINArsm58ePGTHI/MxKG0A22yrcNYmkGW0k0fqHswmJ
+         8XHBXmOsDqQWAAIDpnlqkv3QeZtodfltEloViW60=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Trukhanov <lahvuun@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/44] HID: Add 044f:b320 ThrustMaster, Inc. 2 in 1 DT
-Date:   Tue, 13 Aug 2019 22:17:51 -0400
-Message-Id: <20190814021834.16662-2-sashal@kernel.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Andreas Krebbel <krebbel@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 50/68] s390: put _stext and _etext into .text section
+Date:   Tue, 13 Aug 2019 22:15:28 -0400
+Message-Id: <20190814021548.16001-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190814021834.16662-1-sashal@kernel.org>
-References: <20190814021834.16662-1-sashal@kernel.org>
+In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
+References: <20190814021548.16001-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,65 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Trukhanov <lahvuun@gmail.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 65f11c72780fa9d598df88def045ccb6a885cf80 ]
+[ Upstream commit 24350fdadbdec780406a1ef988e6cd3875e374a8 ]
 
-Enable force feedback for the Thrustmaster Dual Trigger 2 in 1 Rumble Force
-gamepad. Compared to other Thrustmaster devices, left and right rumble
-motors here are swapped.
+Perf relies on _etext and _stext symbols being one of 't', 'T', 'v' or
+'V'. Put them into .text section to guarantee that.
 
-Signed-off-by: Ilya Trukhanov <lahvuun@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Also moves padding to page boundary inside .text which has an effect that
+.text section is now padded with nops rather than 0's, which apparently
+has been the initial intention for specifying 0x0700 fill expression.
+
+Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-tmff.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/s390/kernel/vmlinux.lds.S | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/hid/hid-tmff.c b/drivers/hid/hid-tmff.c
-index b83376077d722..cfa0cb22c9b3c 100644
---- a/drivers/hid/hid-tmff.c
-+++ b/drivers/hid/hid-tmff.c
-@@ -34,6 +34,8 @@
+diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
+index b43f8d33a3697..18ede6e806b91 100644
+--- a/arch/s390/kernel/vmlinux.lds.S
++++ b/arch/s390/kernel/vmlinux.lds.S
+@@ -31,10 +31,9 @@ PHDRS {
+ SECTIONS
+ {
+ 	. = 0x100000;
+-	_stext = .;		/* Start of text section */
+ 	.text : {
+-		/* Text and read-only data */
+-		_text = .;
++		_stext = .;		/* Start of text section */
++		_text = .;		/* Text and read-only data */
+ 		HEAD_TEXT
+ 		TEXT_TEXT
+ 		SCHED_TEXT
+@@ -46,11 +45,10 @@ SECTIONS
+ 		*(.text.*_indirect_*)
+ 		*(.fixup)
+ 		*(.gnu.warning)
++		. = ALIGN(PAGE_SIZE);
++		_etext = .;		/* End of text section */
+ 	} :text = 0x0700
  
- #include "hid-ids.h"
+-	. = ALIGN(PAGE_SIZE);
+-	_etext = .;		/* End of text section */
+-
+ 	NOTES :text :note
  
-+#define THRUSTMASTER_DEVICE_ID_2_IN_1_DT	0xb320
-+
- static const signed short ff_rumble[] = {
- 	FF_RUMBLE,
- 	-1
-@@ -88,6 +90,7 @@ static int tmff_play(struct input_dev *dev, void *data,
- 	struct hid_field *ff_field = tmff->ff_field;
- 	int x, y;
- 	int left, right;	/* Rumbling */
-+	int motor_swap;
- 
- 	switch (effect->type) {
- 	case FF_CONSTANT:
-@@ -112,6 +115,13 @@ static int tmff_play(struct input_dev *dev, void *data,
- 					ff_field->logical_minimum,
- 					ff_field->logical_maximum);
- 
-+		/* 2-in-1 strong motor is left */
-+		if (hid->product == THRUSTMASTER_DEVICE_ID_2_IN_1_DT) {
-+			motor_swap = left;
-+			left = right;
-+			right = motor_swap;
-+		}
-+
- 		dbg_hid("(left,right)=(%08x, %08x)\n", left, right);
- 		ff_field->value[0] = left;
- 		ff_field->value[1] = right;
-@@ -238,6 +248,8 @@ static const struct hid_device_id tm_devices[] = {
- 		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb304),   /* FireStorm Dual Power 2 (and 3) */
- 		.driver_data = (unsigned long)ff_rumble },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, THRUSTMASTER_DEVICE_ID_2_IN_1_DT),   /* Dual Trigger 2-in-1 */
-+		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb323),   /* Dual Trigger 3-in-1 (PC Mode) */
- 		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb324),   /* Dual Trigger 3-in-1 (PS3 Mode) */
+ 	.dummy : { *(.dummy) } :data
 -- 
 2.20.1
 
