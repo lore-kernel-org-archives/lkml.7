@@ -2,50 +2,50 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253D5C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E425AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE44F2133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72CF206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:54:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="BUATFTtS"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="TDbpOJbv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfHNKyh (ORCPT
+        id S1727754AbfHNKym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:54:37 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:52502 "EHLO
+        Wed, 14 Aug 2019 06:54:42 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:52498 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727110AbfHNKyf (ORCPT
+        with ESMTP id S1726383AbfHNKyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 14 Aug 2019 06:54:35 -0400
 Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x7EAs34Z024567;
-        Wed, 14 Aug 2019 19:54:05 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7EAs34Z024567
+        by conuserg-12.nifty.com with ESMTP id x7EAs34Y024567;
+        Wed, 14 Aug 2019 19:54:04 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7EAs34Y024567
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
         s=dec2015msa; t=1565780045;
-        bh=Hfj4V/SBxgMk8U6X1oeV3V2ByVnCtLeD3aXokuYTB1c=;
+        bh=KNIkl3BaVdtuV4S46GHgiFB1XPYspoKpIq3NRC3qoAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BUATFTtS5AvC8UcDPz6n9Zj9WT0D6gRgAi+/ewDBpRFbUUu08HiVa0LeFInEI4ylJ
-         FR4qubC6Z2NH08PWOPzRKylDm+VaZS1qgpkO2PwPrPG6Zzyjry/vvyUi/dowm+0G/C
-         Jy3o5wQWqOnJlNmC5B8gXJNn4gHgtzTfY51QYvV7EBpE8cOysywhvLLnUMEIxdSTbl
-         HTID/JZomIaSP7c+lhSztnQSRWv6ngVNn/8jV9ZR4B7/o2E7Trh2/3z/MfF0sdy4hu
-         bnle3vHXyJTPDu5Rfu4L2PEQEKl5hCMgPhalgJk6y4pEqumiEUPWPJ46Y/+a5e068n
-         1lhb9Sv0xLdgA==
+        b=TDbpOJbvMqNT0bpf/NUssvpsQHzkNV6FB4VdlAUtvotQm1rWW8tDgDAUe7tkK1F9R
+         1g4GtGTWqs3yNSOUlzFCWeE7K/t7fBkPfIwvOh/j9W90tSmmljVautvqFrUHCi3x7S
+         Jo0CuOD3N+WSHdPil+YAmNpmnq1yqD5Ax2agYtiTfKdoYAFe18dSMOv6pQcDNmHqnS
+         dil2G4VDtBBlj28TTw4HyBEEsdTNTKB1lcCWl5BuqipeMjdDj/25FIrTGn9SRNx6Xg
+         1efOCbkA0C1RC04xLqLyvceuq+jOrpaMTdkmlI0HOsbG+2kcsQDnF8CwOJpmWoXwm4
+         cVQ1FslrsnCdQ==
 X-Nifty-SrcIP: [126.125.143.222]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] docs: kbuild: remove cc-ldoption from document again
-Date:   Wed, 14 Aug 2019 19:54:00 +0900
-Message-Id: <20190814105400.1339-3-yamada.masahiro@socionext.com>
+Subject: [PATCH 1/2] docs: kbuild: fix invalid ReST syntax
+Date:   Wed, 14 Aug 2019 19:53:59 +0900
+Message-Id: <20190814105400.1339-2-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190814105400.1339-1-yamada.masahiro@socionext.com>
 References: <20190814105400.1339-1-yamada.masahiro@socionext.com>
@@ -54,46 +54,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 055efab3120b ("kbuild: drop support for cc-ldoption") correctly
-removed the cc-ldoption from Documentation/kbuild/makefiles.txt, but
-commit cd238effefa2 ("docs: kbuild: convert docs to ReST and rename
-to *.rst") revived it. I guess it was a rebase mistake.
+I see the following warnings when I open this document with a ReST
+viewer, retext:
 
-Remove it again.
+/home/masahiro/ref/linux/Documentation/kbuild/makefiles.rst:1142: (WARNING/2) Inline emphasis start-string without end-string.
+/home/masahiro/ref/linux/Documentation/kbuild/makefiles.rst:1152: (WARNING/2) Inline emphasis start-string without end-string.
+/home/masahiro/ref/linux/Documentation/kbuild/makefiles.rst:1154: (WARNING/2) Inline emphasis start-string without end-string.
 
-Fixes: cd238effefa2 ("docs: kbuild: convert docs to ReST and rename to *.rst")
+These hunks were added by commit e846f0dc57f4 ("kbuild: add support
+for ensuring headers are self-contained") and commit 1e21cbfada87
+("kbuild: support header-test-pattern-y"), respectively. They were
+written not for ReST but for the plain text, and merged via the
+kbuild tree.
+
+In the same development cycle, this document was converted to ReST
+by commit cd238effefa2 ("docs: kbuild: convert docs to ReST and rename
+to *.rst"), and merged via the doc sub-system.
+
+Merging them together into Linus' tree resulted in the current situation.
+
+To fix the syntax, surround the asterisks with back-quotes, and
+use :: for the code sample.
+
+Fixes: 39ceda5ce1b0 ("Merge tag 'kbuild-v5.3' of git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild")
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- Documentation/kbuild/makefiles.rst | 15 ---------------
- 1 file changed, 15 deletions(-)
+ Documentation/kbuild/makefiles.rst | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-index b4c28c543d72..7971729d1fd4 100644
+index f4f0f7ffde2b..b4c28c543d72 100644
 --- a/Documentation/kbuild/makefiles.rst
 +++ b/Documentation/kbuild/makefiles.rst
-@@ -471,21 +471,6 @@ more details, with real examples.
- 	The second argument is optional, and if supplied will be used
- 	if first argument is not supported.
+@@ -1139,7 +1139,7 @@ When kbuild executes, the following steps are followed (roughly):
  
--    cc-ldoption
--	cc-ldoption is used to check if $(CC) when used to link object files
--	supports the given option.  An optional second option may be
--	specified if first option are not supported.
--
--	Example::
--
--		#arch/x86/kernel/Makefile
--		vsyscall-flags += $(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
--
--	In the above example, vsyscall-flags will be assigned the option
--	-Wl$(comma)--hash-style=sysv if it is supported by $(CC).
--	The second argument is optional, and if supplied will be used
--	if first argument is not supported.
--
-     as-instr
- 	as-instr checks if the assembler reports a specific instruction
- 	and then outputs either option1 or option2
+     header-test-y
+ 
+-	header-test-y specifies headers (*.h) in the current directory that
++	header-test-y specifies headers (`*.h`) in the current directory that
+ 	should be compile tested to ensure they are self-contained,
+ 	i.e. compilable as standalone units. If CONFIG_HEADER_TEST is enabled,
+ 	this builds them as part of extra-y.
+@@ -1147,11 +1147,11 @@ When kbuild executes, the following steps are followed (roughly):
+     header-test-pattern-y
+ 
+ 	This works as a weaker version of header-test-y, and accepts wildcard
+-	patterns. The typical usage is:
++	patterns. The typical usage is::
+ 
+-		  header-test-pattern-y += *.h
++		header-test-pattern-y += *.h
+ 
+-	This specifies all the files that matches to '*.h' in the current
++	This specifies all the files that matches to `*.h` in the current
+ 	directory, but the files in 'header-test-' are excluded.
+ 
+ 6.7 Commands useful for building a boot image
 -- 
 2.17.1
 
