@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A910C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C01C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE7A20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C9520842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749485;
-	bh=Zmf44+e0XE3x1uN8fCLZdo1CLwtdhJXzOTYsVc0cUwE=;
+	s=default; t=1565749489;
+	bh=ATgu5sVMXu5Bvc2XYr6x+coYMNy3bq3/q+Ll4nIE4aU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f6fpPgibVG3eKwyS+YcSaQof+IrdrIh0/KDBWnDXV2FZr7rhKJeRgVoYonO8t783F
-	 +W1v47rY35yyjKcrQ71+WJxMeR5aZCWkCyJgAtLKBTo5RNsFi3wk3DE3thDWgx1Yaj
-	 iwS9uyJ7BqYquL1y4aUSXicATVswyMbs3KaWZ/P0=
+	b=p8i4qDxmzMeFEdQOeulVvaBuf7fI72bWL2v5101XxLcIkf0XcfyT4Viwj6HlD498a
+	 oDMiqy0uPozF4F4tv2elyAAZfUGe0FEIipJsksVLXSvUaew97RPJpTQlmzyaQW1H+D
+	 XxkWA9WAyw7MP2AxG4XpOBC4NZqmIa9atOK8hUMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729732AbfHNCYo (ORCPT
+        id S1729441AbfHNCYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:24:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53122 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:24:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730124AbfHNCYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:24:14 -0400
+        id S1729576AbfHNCYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:24:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C9F52084F;
-        Wed, 14 Aug 2019 02:24:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C287920842;
+        Wed, 14 Aug 2019 02:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749453;
-        bh=Zmf44+e0XE3x1uN8fCLZdo1CLwtdhJXzOTYsVc0cUwE=;
+        s=default; t=1565749445;
+        bh=ATgu5sVMXu5Bvc2XYr6x+coYMNy3bq3/q+Ll4nIE4aU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O+6OkqUeVYdMvQyK5cvossnTrQBJLZZEFW6wxR7ks7YRFl6g0kjZI+CEYPYlxiWks
-         vjY/E2J6/0pxiEFlKUgzi7V4vsHVj4kTkM+yPyjCpg0xDI0J4N/R47IOVLb7jIMYH1
-         7T5IWgC5n9BxqKWdeRXfKHmp2MOcDUl9gY34i8Dk=
+        b=rEOb+jEoJiyGPrCoWxfy46ze9Q75zm+a0RN0LLQ45Su10QswTz/VI93ehc8vYerDv
+         lTEKKNDUV6Bv+9dfRfUxaJxMKnorCjj6QVV6duHVNbt9fVDuW/eaIiUD/TT0+ZVxTh
+         BQtEb+V53rAdkhKTFZvpzh+gkYALhQKXj4Yur2vQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Deepak Rawat <drawat@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 31/33] drm/vmwgfx: fix memory leak when too many retries have occurred
-Date:   Tue, 13 Aug 2019 22:23:21 -0400
-Message-Id: <20190814022323.17111-31-sashal@kernel.org>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+5efc10c005014d061a74@syzkaller.appspotmail.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 24/33] Input: iforce - add sanity checks
+Date:   Tue, 13 Aug 2019 22:23:14 -0400
+Message-Id: <20190814022323.17111-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022323.17111-1-sashal@kernel.org>
 References: <20190814022323.17111-1-sashal@kernel.org>
@@ -61,41 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 6b7c3b86f0b63134b2ab56508921a0853ffa687a ]
+[ Upstream commit 849f5ae3a513c550cad741c68dd3d7eb2bcc2a2c ]
 
-Currently when too many retries have occurred there is a memory
-leak on the allocation for reply on the error return path. Fix
-this by kfree'ing reply before returning.
+The endpoint type should also be checked before a device
+is accepted.
 
-Addresses-Coverity: ("Resource leak")
-Fixes: a9cd9c044aa9 ("drm/vmwgfx: Add a check to handle host message failure")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Deepak Rawat <drawat@vmware.com>
-Signed-off-by: Deepak Rawat <drawat@vmware.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reported-by: syzbot+5efc10c005014d061a74@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/input/joystick/iforce/iforce-usb.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-index e57a0bad7a626..77df50dd6d30d 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-@@ -300,8 +300,10 @@ static int vmw_recv_msg(struct rpc_channel *channel, void **msg,
- 		break;
- 	}
+diff --git a/drivers/input/joystick/iforce/iforce-usb.c b/drivers/input/joystick/iforce/iforce-usb.c
+index db64adfbe1aff..3e1ea912b41d1 100644
+--- a/drivers/input/joystick/iforce/iforce-usb.c
++++ b/drivers/input/joystick/iforce/iforce-usb.c
+@@ -145,7 +145,12 @@ static int iforce_usb_probe(struct usb_interface *intf,
+ 		return -ENODEV;
  
--	if (retries == RETRIES)
-+	if (retries == RETRIES) {
-+		kfree(reply);
- 		return -EINVAL;
-+	}
+ 	epirq = &interface->endpoint[0].desc;
++	if (!usb_endpoint_is_int_in(epirq))
++		return -ENODEV;
++
+ 	epout = &interface->endpoint[1].desc;
++	if (!usb_endpoint_is_int_out(epout))
++		return -ENODEV;
  
- 	*msg_len = reply_len;
- 	*msg     = reply;
+ 	if (!(iforce = kzalloc(sizeof(struct iforce) + 32, GFP_KERNEL)))
+ 		goto fail;
 -- 
 2.20.1
 
