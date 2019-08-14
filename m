@@ -2,115 +2,111 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A418C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A11C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7BD205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:32:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cUSmaBFd"
+	by mail.kernel.org (Postfix) with ESMTP id 94D2A205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbfHNLcf (ORCPT
+        id S1727734AbfHNLcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 07:32:35 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42976 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbfHNLce (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 07:32:34 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p3so2638985pgb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MF7jMNepz1wdVPgQ1SCooo7k7btOrltx/wKQg+y/GsA=;
-        b=cUSmaBFdYOwqXrkSpi2SHCWiWNzTtlXihjcmXOVqkDl+X3n5d6peoCGvuYwgX64MqL
-         3w2UzzDyfZu0hfAU0lFABuw+Jx2QQySxZ8wFRwIlGIY7OxsvXkuM24aClrgd5BDVkt3S
-         WZWQjzicuFTY2WaLJVE4TowEXGrnoyST9NVe8UpN5Hq+5g9Y7NTDxGNJ9pj82Xev2xou
-         ImULti9r2uMXMeGwdPlBd119/jITjOHMHvdG6iACS1VVifw2mwiInWCMfp4BhMf/hxoH
-         fysDbWyizAW+Mp9h1asFijLvf66MdVAAiwQXyIBRQB6ViWm+rix8TlfWqFOBiu6f24pG
-         vriw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MF7jMNepz1wdVPgQ1SCooo7k7btOrltx/wKQg+y/GsA=;
-        b=afuZ4kzJdOx2+40HlyVRTVHXa6RnEcuQEwcfve+s/kh9g3pr0w8dVZZ1t3fb9Aq8fp
-         ++igqtOzaLUukAzZFi8oQI6csj2ojxjibg/CbsODdSLLcqhSJm3mTIxbnPmPnpeeQ6Er
-         iZG+HmPGfp8ZJlH6xtzJcmNtXBj/ZSpIEbBHWG6zm/xtTAEsKgFZoPmchso1eLD+2jXi
-         PSNJPehNxP6m14ankr350hMKK3KYb1nTN4qZmaU4Y3YSd5jcyZTnAWh+ZT11Yz+lMi79
-         vqvnbBfLJsx8+n5Smoia4U+d9WVT6fra3VpD3VMN31tA3ntL6K3xUIuTopPlNWrb/sVa
-         Kv5A==
-X-Gm-Message-State: APjAAAU1AxVJ9hrIlxc+NRa1Wrvci4bvVfv7ku9bHrc+HkXt8IA0XGwu
-        8o6jZaGVJhEPjG9ipyHL0Hd68w2Vxeg0Pnc1C1A2Lw==
-X-Google-Smtp-Source: APXvYqxa1i+/yJ7X44W26il0CSBQveyXOF7jDDdUxdID5l1/hjOMDzF9/5eHbAzZ0E9FEdefJrW5A8OnVzmLhKHHRo4=
-X-Received: by 2002:a17:90a:858c:: with SMTP id m12mr6772187pjn.129.1565782353721;
- Wed, 14 Aug 2019 04:32:33 -0700 (PDT)
+        Wed, 14 Aug 2019 07:32:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:53170 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726585AbfHNLch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 07:32:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F53F28;
+        Wed, 14 Aug 2019 04:32:36 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B17ED3F706;
+        Wed, 14 Aug 2019 04:32:34 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 12:32:32 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christoph Hellwig <hch@lst.de>, kan.liang@intel.com,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 1/9] sched/core: add is_kthread() helper
+Message-ID: <20190814113232.GE17931@lakrids.cambridge.arm.com>
+References: <20190814104131.20190-1-mark.rutland@arm.com>
+ <20190814104131.20190-2-mark.rutland@arm.com>
+ <CAMuHMdV_hZ-uMmKdqEutLL5+XkhhcKdSaurMUS2N46AhZwDNKQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAAeHK+zPDgvDr_Bao9dz_7hGEg+Ud6-tj7pZaihKeYHJ8M386Q@mail.gmail.com>
- <00000000000054f8bd058ddfa341@google.com> <CAAeHK+xZRH9-ue0QyEdiWmbFJF6P3RXMud+tE6t3x6Orcxnbkg@mail.gmail.com>
- <20190813205104.pnyan3kafz26wsse@gofer.mess.org>
-In-Reply-To: <20190813205104.pnyan3kafz26wsse@gofer.mess.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 14 Aug 2019 13:32:22 +0200
-Message-ID: <CAAeHK+y3MHoeAgOtAW0pTaTBFeVzXmNpCnazsYT0wJMqhmzd0w@mail.gmail.com>
-Subject: Re: KASAN: global-out-of-bounds Read in dvb_pll_attach
-To:     Sean Young <sean@mess.org>
-Cc:     syzbot <syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com>,
-        bnvandana@gmail.com, allison@lohutok.net, hverkuil-cisco@xs4all.nl,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        USB list <linux-usb@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        rfontana@redhat.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>, tskd08@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV_hZ-uMmKdqEutLL5+XkhhcKdSaurMUS2N46AhZwDNKQ@mail.gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 10:51 PM Sean Young <sean@mess.org> wrote:
->
-> On Tue, Aug 13, 2019 at 03:22:49PM +0200, Andrey Konovalov wrote:
-> > On Wed, Jul 17, 2019 at 2:29 PM syzbot
-> > <syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > syzbot has tested the proposed patch and the reproducer did not trigger
-> > > crash:
-> > >
-> > > Reported-and-tested-by:
-> > > syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com
-> > >
-> > > Tested on:
-> > >
-> > > commit:         6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-> > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=d90745bdf884fc0a
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > patch:          https://syzkaller.appspot.com/x/patch.diff?x=1454f4d0600000
-> > >
-> > > Note: testing is done by a robot and is best-effort only.
+On Wed, Aug 14, 2019 at 01:26:43PM +0200, Geert Uytterhoeven wrote:
+> Hi Mark,
+> 
+> On Wed, Aug 14, 2019 at 12:43 PM Mark Rutland <mark.rutland@arm.com> wrote:
+> > Code checking whether a task is a kthread isn't very consistent. Some
+> > code correctly tests task->flags & PF_THREAD, while other code checks
+> > task->mm (which can be true for a kthread which calls use_mm()).
 > >
-> > Hi bnvandana,
+> > So that we can clean this up and keep the code easy to follow, let's add
+> > an obvious helper function to test whether a task is a kthread.
+> > Subsequent patches will use this as part of cleaning up and correcting
+> > open-coded tests.
 > >
-> > Could you submit this patch? Syzbot testing shows that is fixes the issue.
->
-> The patch had issues (see discussion in the thread). I created this patch
-> but I see now I did not include the correct Reported-by: tag.
->
-> https://www.mail-archive.com/linux-media@vger.kernel.org/msg148889.html
+> > At the same time, let's fix up the kerneldoc for is_idle_task() for
+> > consistency with the new helper, using true/false rather than 0/1, given
+> > the functions return bool.
+> >
+> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> 
+> Thanks for your patch!
+> 
+> > --- a/include/linux/sched.h
+> > +++ b/include/linux/sched.h
+> > @@ -1621,13 +1621,24 @@ extern struct task_struct *idle_task(int cpu);
+> >   * is_idle_task - is the specified task an idle task?
+> >   * @p: the task in question.
+> >   *
+> > - * Return: 1 if @p is an idle task. 0 otherwise.
+> > + * Return: true if @p is an idle task, false otherwise.
+> >   */
+> >  static inline bool is_idle_task(const struct task_struct *p)
+> >  {
+> >         return !!(p->flags & PF_IDLE);
+> >  }
+> >
+> > +/**
+> > + * is_kthread - is the specified task a kthread
+> > + * @p: the task in question.
+> > + *
+> > + * Return: true if @p is a kthread, false otherwise.
+> > + */
+> > +static inline bool is_kthread(const struct task_struct *p)
+> > +{
+> > +       return !!(p->flags & PF_KTHREAD);
+> 
+> The !! is not really needed.
+> Probably you followed is_idle_task() above (where it's also not needed).
 
-No problem, we can mark the fix manually:
+Indeed! I'm aware of the implicit bool conversion, but kept that for
+consistency.
 
-#syz fix: media: dvb-frontends: use ida for pll number
+Peter, Ingo, do you have a preference?
 
-Thanks!
+Thanks,
+Mark.
