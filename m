@@ -2,226 +2,163 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFB6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CB4C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0892206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234772083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:54:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="X5/pcIOO"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LdX9bmgt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfHNJwF (ORCPT
+        id S1726481AbfHNJyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:52:05 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:36819 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbfHNJwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:52:02 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 467lH34pPRz9tynB;
-        Wed, 14 Aug 2019 11:51:59 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=X5/pcIOO; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ulXofdWbA9uw; Wed, 14 Aug 2019 11:51:59 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 467lH33Vqzz9tyn3;
-        Wed, 14 Aug 2019 11:51:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1565776319; bh=+FCiwWOOpae8c6rfzQlstJ5bKgF6HvBwINQawQacNPg=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=X5/pcIOOeek/09iDeST27qlQtzj8NahFTI9q0o77rNlUZALKoYs20E/25lkc5Njbt
-         e4cBPAbXKZQCMNZg/btTQn6XbEhjO92TIXZA/0giyAXbtlVQhgMGp9gw6mriwrCgle
-         Pf1j77njc7yTN9jXL8ocFj73uSJCSn4Tw8BBvk4s=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7DF848B7F0;
-        Wed, 14 Aug 2019 11:52:00 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id vIfKcnZbXVRw; Wed, 14 Aug 2019 11:52:00 +0200 (CEST)
-Received: from pc17473vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9A8338B7F5;
-        Wed, 14 Aug 2019 11:51:59 +0200 (CEST)
-Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 9982E6B6B8; Wed, 14 Aug 2019 09:51:59 +0000 (UTC)
-Message-Id: <da7e0504d9b9b3a97689000f42fccb789091ae7f.1565776115.git.christophe.leroy@c-s.fr>
-In-Reply-To: <b0bf1ef9840c13dad22c72ae0b7b2d56adf9a98f.1565776115.git.christophe.leroy@c-s.fr>
-References: <b0bf1ef9840c13dad22c72ae0b7b2d56adf9a98f.1565776115.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 2/2] powerpc/32: replace LOAD_MSR_KERNEL() by
- LOAD_REG_IMMEDIATE()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        segher@kernel.crashing.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 14 Aug 2019 09:51:59 +0000 (UTC)
+        Wed, 14 Aug 2019 05:54:50 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54378 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfHNJyt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 05:54:49 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p74so4021906wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 02:54:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=S0qffjmHFNR1Sy40wwuOSColl5UwNxzdHwfmzhDqELM=;
+        b=LdX9bmgt4s6x4/ZP8x1+XQ1L/RBYjEzeAtDRH+YjIDi7FU2dlfebUcjRayATdNpdc+
+         pBKu9KPx/kywff4EGdq9oFicNv4Ym9AWl5I7dx553hKs+kTV0lNMNdeUsRHp7FMNf3yN
+         THmCOz4Iykn8dwZ6CVZwEWHA65tjYGB21WPDXTWXVq+Jei1JuK1HQ2i0G0v9x8jykoar
+         j8c/ma/RGKiKE7Hi1nmndGuSMaZCDpJGTPR5g3is8qtDI+g8dYgTtgV/VnA87pih0ZVc
+         lNUIfogH6qSdvw0FDzqgaViM4onT/T7zZxurTAFaI14OkBfgOhfq5SUch3OsuYOrzheA
+         DI7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=S0qffjmHFNR1Sy40wwuOSColl5UwNxzdHwfmzhDqELM=;
+        b=c4EoO6o5b8ShTgMxs08UCqHMDfrER5e/ZRKyXRnRxQHciF1TBlGAFa8Spa/ASqDUmv
+         iNMcvUfXrjzeYf/HOXW4OoE/9NRVdyV7XAihcNalfVpfhPzzGBc+MdkI1/MX2nFTKMDv
+         uJUmsDlisyvwAFgffOkxJPBTUWQn1ubyityQp+IGyAC0zz7zbH6dJibEP9Y8G2JwcP3j
+         kjXTYPgpmD7jXq8jubo9E3HcTtmke3UW31nJuKTbiWUpmiRJCv7svqH9dRMFCcGNwtpF
+         fqPrfpMQ9nb8Udzc6Em01eSscNQ5I5lOenGvPWwuUfPYuJ0AEPrXXV4WG8wrA1Gi/cV6
+         RKYQ==
+X-Gm-Message-State: APjAAAUh7vNgnOl9+W/WsEP4DRjDgkRL/FrPdJXR8FWrHLEeYsAIwP+T
+        BiUioiSR4Zps7y7j/yF0fC7j3diWxDI/Vw==
+X-Google-Smtp-Source: APXvYqw/xCXZ/ntaYTSZDBFoiPx5UEcHFMETlTLRVVK72L8nHQhjC0Jv/k7Nj/gzbl6rVG1TmR1okg==
+X-Received: by 2002:a1c:2ec6:: with SMTP id u189mr7423263wmu.67.1565776486644;
+        Wed, 14 Aug 2019 02:54:46 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id y7sm2789491wmm.19.2019.08.14.02.54.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 02:54:46 -0700 (PDT)
+Subject: Re: [PATCH v3 0/3] drm/meson: convert bindings to YAML schemas
+To:     robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190808085522.21950-1-narmstrong@baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <b0363e6e-4d73-a483-41b7-7849f48a9ff3@baylibre.com>
+Date:   Wed, 14 Aug 2019 11:54:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190808085522.21950-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LOAD_MSR_KERNEL() and LOAD_REG_IMMEDIATE() are doing the same thing
-in the same way. Drop LOAD_MSR_KERNEL()
+On 08/08/2019 10:55, Neil Armstrong wrote:
+> This patchset converts the existing text bindings to YAML schemas.
+> 
+> Those bindings have a lot of texts, thus is interesting to convert.
+> 
+> All have been tested using :
+> $ make ARCH=arm64 dtbs_check
+> 
+> Issues with the amlogic arm64 DTs has already been identified thanks
+> to the validation scripts. The DT fixes will be pushed once these yaml
+> bindings are acked.
+> 
+> Changes since v2:
+> - Added review tag on amlogic,meson-dw-hdmi.yaml
+> - Removed power-domains type from amlogic,meson-vpu.yaml
+> 
+> Neil Armstrong (3):
+>   dt-bindings: display: amlogic,meson-dw-hdmi: convert to yaml
+>   dt-bindings: display: amlogic,meson-vpu: convert to yaml
+>   MAINTAINERS: Update with Amlogic DRM bindings converted as YAML
+> 
+>  .../display/amlogic,meson-dw-hdmi.txt         | 119 --------------
+>  .../display/amlogic,meson-dw-hdmi.yaml        | 150 ++++++++++++++++++
+>  .../bindings/display/amlogic,meson-vpu.txt    | 121 --------------
+>  .../bindings/display/amlogic,meson-vpu.yaml   | 137 ++++++++++++++++
+>  MAINTAINERS                                   |   4 +-
+>  5 files changed, 289 insertions(+), 242 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
+> 
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- v2: no change
-
- arch/powerpc/kernel/entry_32.S | 18 +++++++++---------
- arch/powerpc/kernel/head_32.h  | 21 ++++-----------------
- 2 files changed, 13 insertions(+), 26 deletions(-)
-
-diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index 54fab22c9a43..972b05504a0a 100644
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -230,7 +230,7 @@ transfer_to_handler_cont:
- 	 */
- 	lis	r12,reenable_mmu@h
- 	ori	r12,r12,reenable_mmu@l
--	LOAD_MSR_KERNEL(r0, MSR_KERNEL)
-+	LOAD_REG_IMMEDIATE(r0, MSR_KERNEL)
- 	mtspr	SPRN_SRR0,r12
- 	mtspr	SPRN_SRR1,r0
- 	SYNC
-@@ -304,7 +304,7 @@ stack_ovf:
- 	addi	r1,r1,THREAD_SIZE-STACK_FRAME_OVERHEAD
- 	lis	r9,StackOverflow@ha
- 	addi	r9,r9,StackOverflow@l
--	LOAD_MSR_KERNEL(r10,MSR_KERNEL)
-+	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL)
- #if defined(CONFIG_PPC_8xx) && defined(CONFIG_PERF_EVENTS)
- 	mtspr	SPRN_NRI, r0
- #endif
-@@ -324,7 +324,7 @@ trace_syscall_entry_irq_off:
- 	bl	trace_hardirqs_on
- 
- 	/* Now enable for real */
--	LOAD_MSR_KERNEL(r10, MSR_KERNEL | MSR_EE)
-+	LOAD_REG_IMMEDIATE(r10, MSR_KERNEL | MSR_EE)
- 	mtmsr	r10
- 
- 	REST_GPR(0, r1)
-@@ -394,7 +394,7 @@ ret_from_syscall:
- #endif
- 	mr	r6,r3
- 	/* disable interrupts so current_thread_info()->flags can't change */
--	LOAD_MSR_KERNEL(r10,MSR_KERNEL)	/* doesn't include MSR_EE */
-+	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL)	/* doesn't include MSR_EE */
- 	/* Note: We don't bother telling lockdep about it */
- 	SYNC
- 	MTMSRD(r10)
-@@ -824,7 +824,7 @@ ret_from_except:
- 	 * can't change between when we test it and when we return
- 	 * from the interrupt. */
- 	/* Note: We don't bother telling lockdep about it */
--	LOAD_MSR_KERNEL(r10,MSR_KERNEL)
-+	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL)
- 	SYNC			/* Some chip revs have problems here... */
- 	MTMSRD(r10)		/* disable interrupts */
- 
-@@ -991,7 +991,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
- 	 * can restart the exception exit path at the label
- 	 * exc_exit_restart below.  -- paulus
- 	 */
--	LOAD_MSR_KERNEL(r10,MSR_KERNEL & ~MSR_RI)
-+	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL & ~MSR_RI)
- 	SYNC
- 	MTMSRD(r10)		/* clear the RI bit */
- 	.globl exc_exit_restart
-@@ -1066,7 +1066,7 @@ exc_exit_restart_end:
- 	REST_NVGPRS(r1);						\
- 	lwz	r3,_MSR(r1);						\
- 	andi.	r3,r3,MSR_PR;						\
--	LOAD_MSR_KERNEL(r10,MSR_KERNEL);				\
-+	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL);				\
- 	bne	user_exc_return;					\
- 	lwz	r0,GPR0(r1);						\
- 	lwz	r2,GPR2(r1);						\
-@@ -1236,7 +1236,7 @@ recheck:
- 	 * neither. Those disable/enable cycles used to peek at
- 	 * TI_FLAGS aren't advertised.
- 	 */
--	LOAD_MSR_KERNEL(r10,MSR_KERNEL)
-+	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL)
- 	SYNC
- 	MTMSRD(r10)		/* disable interrupts */
- 	lwz	r9,TI_FLAGS(r2)
-@@ -1329,7 +1329,7 @@ _GLOBAL(enter_rtas)
- 	lwz	r4,RTASBASE(r4)
- 	mfmsr	r9
- 	stw	r9,8(r1)
--	LOAD_MSR_KERNEL(r0,MSR_KERNEL)
-+	LOAD_REG_IMMEDIATE(r0,MSR_KERNEL)
- 	SYNC			/* disable interrupts so SRR0/1 */
- 	MTMSRD(r0)		/* don't get trashed */
- 	li	r9,MSR_KERNEL & ~(MSR_IR|MSR_DR)
-diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
-index 4a692553651f..8abc7783dbe5 100644
---- a/arch/powerpc/kernel/head_32.h
-+++ b/arch/powerpc/kernel/head_32.h
-@@ -5,19 +5,6 @@
- #include <asm/ptrace.h>	/* for STACK_FRAME_REGS_MARKER */
- 
- /*
-- * MSR_KERNEL is > 0x8000 on 4xx/Book-E since it include MSR_CE.
-- */
--.macro __LOAD_MSR_KERNEL r, x
--.if \x >= 0x8000
--	lis \r, (\x)@h
--	ori \r, \r, (\x)@l
--.else
--	li \r, (\x)
--.endif
--.endm
--#define LOAD_MSR_KERNEL(r, x) __LOAD_MSR_KERNEL r, x
--
--/*
-  * Exception entry code.  This code runs with address translation
-  * turned off, i.e. using physical addresses.
-  * We assume sprg3 has the physical address of the current
-@@ -92,7 +79,7 @@
- #ifdef CONFIG_40x
- 	rlwinm	r9,r9,0,14,12		/* clear MSR_WE (necessary?) */
- #else
--	LOAD_MSR_KERNEL(r10, MSR_KERNEL & ~(MSR_IR|MSR_DR)) /* can take exceptions */
-+	LOAD_REG_IMMEDIATE(r10, MSR_KERNEL & ~(MSR_IR|MSR_DR)) /* can take exceptions */
- 	MTMSRD(r10)			/* (except for mach check in rtas) */
- #endif
- 	lis	r10,STACK_FRAME_REGS_MARKER@ha /* exception frame marker */
-@@ -140,10 +127,10 @@
- 	 * otherwise we might risk taking an interrupt before we tell lockdep
- 	 * they are enabled.
- 	 */
--	LOAD_MSR_KERNEL(r10, MSR_KERNEL)
-+	LOAD_REG_IMMEDIATE(r10, MSR_KERNEL)
- 	rlwimi	r10, r9, 0, MSR_EE
- #else
--	LOAD_MSR_KERNEL(r10, MSR_KERNEL | MSR_EE)
-+	LOAD_REG_IMMEDIATE(r10, MSR_KERNEL | MSR_EE)
- #endif
- #if defined(CONFIG_PPC_8xx) && defined(CONFIG_PERF_EVENTS)
- 	mtspr	SPRN_NRI, r0
-@@ -187,7 +174,7 @@
- #define EXC_XFER_TEMPLATE(hdlr, trap, msr, tfer, ret)		\
- 	li	r10,trap;					\
- 	stw	r10,_TRAP(r11);					\
--	LOAD_MSR_KERNEL(r10, msr);				\
-+	LOAD_REG_IMMEDIATE(r10, msr);				\
- 	bl	tfer;						\
- 	.long	hdlr;						\
- 	.long	ret
--- 
-2.13.3
-
+Applied to drm-misc-next
