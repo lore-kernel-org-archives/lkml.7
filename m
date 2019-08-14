@@ -4,100 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4F6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FFCC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 657C320843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 258F62084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749080;
-	bh=sNjcijFzaiXPZDlUW/SriUVtBEx8J/jXHdLIfW3jKQY=;
+	s=default; t=1565749083;
+	bh=pbuP1J8T8FvzcH2KFLUs35UB1Eb4K9GOfx+pIrHLNFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c8ChNy/nrI+fSNQoxynpJJAstnwV0rrwNr1sS6zNEhCZPAEzPWwN/MlHC0slFpFA/
-	 rxuQKQmlVXY2glreJlXbbCaATbmhbL/Yp+fz/x0f7SjYzB3RzpGyf1a9MP+1YF2m3c
-	 oV+f9Qvzc+C3h5r+EiM7gTkCo9pNGc0lDjkPf/g4=
+	b=Gx+RDD8OitARRCbsFyzgVmMRqIsDlAzPhhs0VRGKjXXybeOGorL3t9PpR4KS8+Eeo
+	 EUOLrox98VMH0pHfUIWnpb0rxwDWOMBCdk3X7zrfVnWS0u0oscL6QMIDQV9Kmv9u4j
+	 2FBhfj5LJKC5yaWTG+GUzEYnoQoKJ0nNPIxGniL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbfHNCRm (ORCPT
+        id S1729470AbfHNCRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:17:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48762 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:17:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729403AbfHNCR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:17:27 -0400
+        id S1729369AbfHNCRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:17:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B68D20842;
-        Wed, 14 Aug 2019 02:17:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E944214DA;
+        Wed, 14 Aug 2019 02:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749046;
-        bh=sNjcijFzaiXPZDlUW/SriUVtBEx8J/jXHdLIfW3jKQY=;
+        s=default; t=1565749041;
+        bh=pbuP1J8T8FvzcH2KFLUs35UB1Eb4K9GOfx+pIrHLNFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ch3dxpQuUOqjaLi+TuFf9/9SB0IVHirnr56S6ioMAWLGEnc+cdlW6ETcUMxko36HU
-         98VbsH7ijhOdp5Gp0ceoteK/d0w9VTbpgpKizvT/efYCrpvy2sHv534RZCL5ebaN9D
-         nhwZpqe4ia3VzYWABofn+Pi4zdFNVNy8Ykae9cYU=
+        b=aSm4MswH5btd+9JJJGb8CDCXW0CLmAhZhgZUHjF+xcvobb9mSye+YRtunhPqFDP99
+         shBVIjeqb4Vilzrz9TSAA9Bjvfa+X8oIS9um3OFEZCwBJT1m+4CpngRFVrgs7M6wfh
+         xqrha1toQXWgi9sBv29lN+l0yvSW5dW4BGGuaBq4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 60/68] x86/lib/cpu: Address missing prototypes warning
-Date:   Tue, 13 Aug 2019 22:15:38 -0400
-Message-Id: <20190814021548.16001-60-sashal@kernel.org>
+Cc:     Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 56/68] net: hisilicon: fix hip04-xmit never return TX_BUSY
+Date:   Tue, 13 Aug 2019 22:15:34 -0400
+Message-Id: <20190814021548.16001-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
 References: <20190814021548.16001-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
-[ Upstream commit 04f5bda84b0712d6f172556a7e8dca9ded5e73b9 ]
+[ Upstream commit f2243b82785942be519016067ee6c55a063bbfe2 ]
 
-When building with W=1, warnings about missing prototypes are emitted:
+TX_DESC_NUM is 256, in tx_count, the maximum value of
+mod(TX_DESC_NUM - 1) is 254, the variable "count" in
+the hip04_mac_start_xmit function is never equal to
+(TX_DESC_NUM - 1), so hip04_mac_start_xmit never
+return NETDEV_TX_BUSY.
 
-  CC      arch/x86/lib/cpu.o
-arch/x86/lib/cpu.c:5:14: warning: no previous prototype for 'x86_family' [-Wmissing-prototypes]
-    5 | unsigned int x86_family(unsigned int sig)
-      |              ^~~~~~~~~~
-arch/x86/lib/cpu.c:18:14: warning: no previous prototype for 'x86_model' [-Wmissing-prototypes]
-   18 | unsigned int x86_model(unsigned int sig)
-      |              ^~~~~~~~~
-arch/x86/lib/cpu.c:33:14: warning: no previous prototype for 'x86_stepping' [-Wmissing-prototypes]
-   33 | unsigned int x86_stepping(unsigned int sig)
-      |              ^~~~~~~~~~~~
+tx_count is modified to mod(TX_DESC_NUM) so that
+the maximum value of tx_count can reach
+(TX_DESC_NUM - 1), then hip04_mac_start_xmit can reurn
+NETDEV_TX_BUSY.
 
-Add the proper include file so the prototypes are there.
-
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/42513.1565234837@turing-police
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/lib/cpu.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/lib/cpu.c b/arch/x86/lib/cpu.c
-index 2dd1fe13a37b3..19f707992db22 100644
---- a/arch/x86/lib/cpu.c
-+++ b/arch/x86/lib/cpu.c
-@@ -1,5 +1,6 @@
- #include <linux/types.h>
- #include <linux/export.h>
-+#include <asm/cpu.h>
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index 57c0afa25f9fb..fe3b1637fd5f4 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -185,7 +185,7 @@ struct hip04_priv {
  
- unsigned int x86_family(unsigned int sig)
+ static inline unsigned int tx_count(unsigned int head, unsigned int tail)
  {
+-	return (head - tail) % (TX_DESC_NUM - 1);
++	return (head - tail) % TX_DESC_NUM;
+ }
+ 
+ static void hip04_config_port(struct net_device *ndev, u32 speed, u32 duplex)
 -- 
 2.20.1
 
