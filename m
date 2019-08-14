@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74698C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3342C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4745320665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1DEB21743
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803542;
-	bh=2HQjwaVMDMIgYTuzXW6A+YlByo/D1x2TfmII9Duz3NA=;
+	s=default; t=1565803548;
+	bh=opFJpgTClBgfG8Nm64vOfdsYXzGQOp9y9phS/LKcW+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eSoo9yNsaf6zWbf/p4vC5ieBQM63v3fLi8tajMoc722Iu++8wbATYWoYQyNe2pJRI
-	 /Xeo5Zq0ZPdBMyaTWMt378CMCdcGUI/I4qK5iAxw8FWudxTjOqxDoz+uiWi8T4JS9i
-	 SEmFQUJR3wQP/dX40lxSUpXE3ogPgZOfdt3Z7d44=
+	b=I0pTGKGBHZ13d8WcV9dQGd5HEyc4hCpsBGOOHH5w1QqbJiNtBdqdtBMPTlMqmA5PR
+	 /OIKQcUrWnvOZtVJ/NbOMPLkmVnQzJHI1qndek88jJjZdMvgXkq7gQJGsBSFunjGdY
+	 WW8Su+5zjWbDUI+QqYmPEjI++CU6usfKwqPY2n7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbfHNRZl (ORCPT
+        id S1729419AbfHNRFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:25:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54482 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:05:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728927AbfHNRFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:05:33 -0400
+        id S1729401AbfHNRFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:05:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BCE42173B;
-        Wed, 14 Aug 2019 17:05:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D68802084D;
+        Wed, 14 Aug 2019 17:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802332;
-        bh=2HQjwaVMDMIgYTuzXW6A+YlByo/D1x2TfmII9Duz3NA=;
+        s=default; t=1565802317;
+        bh=opFJpgTClBgfG8Nm64vOfdsYXzGQOp9y9phS/LKcW+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=clGseUUy2M8Zi8fzRiARJGG8BEHyRrCfnqQZDe6YCxJmTd1xEXZqopKxRg8NU9wQf
-         0Jw/6u2sohyOmBbXkMil+0nLpyxGg19VoLaDrsdKNC5gBcFSy3Bu9YZ22ieRJELNsM
-         GFwKvXqk7snlYqqo7bKI/PFjfE0kb3VDwxe2HLVU=
+        b=CrXMQCjnk3lwLIhBDYKeiqOlMV71DIHM7DyufgU9Kd70+vpY75bpUpbFlJd+H9Mad
+         o8babhXR2Sg0xnV7wrr2wg4zCufuppcc2AujUMU4fqR3u9CEDsIMU9nFVG3sqwhxRk
+         Pd6e8RUICPJHJ5URbWEOUcJV53EGzlbJzYiLgFSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 084/144] arm64: entry: SP Alignment Fault doesnt write to FAR_EL1
-Date:   Wed, 14 Aug 2019 19:00:40 +0200
-Message-Id: <20190814165803.386114946@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 078/144] allocate_flower_entry: should check for null deref
+Date:   Wed, 14 Aug 2019 19:00:34 +0200
+Message-Id: <20190814165803.118010522@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -59,101 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 40ca0ce56d4bb889dc43b455c55398468115569a ]
+[ Upstream commit bb1320834b8a80c6ac2697ab418d066981ea08ba ]
 
-Comparing the arm-arm's  pseudocode for AArch64.PCAlignmentFault() with
-AArch64.SPAlignmentFault() shows that SP faults don't copy the faulty-SP
-to FAR_EL1, but this is where we read from, and the address we provide
-to user-space with the BUS_ADRALN signal.
+allocate_flower_entry does not check for allocation success, but tries
+to deref the result. I only moved the spin_lock under null check, because
+ the caller is checking allocation's status at line 652.
 
-For user-space this value will be UNKNOWN due to the previous ERET to
-user-space. If the last value is preserved, on systems with KASLR or KPTI
-this will be the user-space link-register left in FAR_EL1 by tramp_exit().
-Fix this to retrieve the original sp_el0 value, and pass this to
-do_sp_pc_fault().
-
-SP alignment faults from EL1 will cause us to take the fault again when
-trying to store the pt_regs. This eventually takes us to the overflow
-stack. Remove the ESR_ELx_EC_SP_ALIGN check as we will never make it
-this far.
-
-Fixes: 60ffc30d5652 ("arm64: Exception handling")
-Signed-off-by: James Morse <james.morse@arm.com>
-[will: change label name and fleshed out comment]
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/entry.S | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 9cdc4592da3ef..320a30dbe35ef 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -586,10 +586,8 @@ el1_sync:
- 	b.eq	el1_ia
- 	cmp	x24, #ESR_ELx_EC_SYS64		// configurable trap
- 	b.eq	el1_undef
--	cmp	x24, #ESR_ELx_EC_SP_ALIGN	// stack alignment exception
--	b.eq	el1_sp_pc
- 	cmp	x24, #ESR_ELx_EC_PC_ALIGN	// pc alignment exception
--	b.eq	el1_sp_pc
-+	b.eq	el1_pc
- 	cmp	x24, #ESR_ELx_EC_UNKNOWN	// unknown exception in EL1
- 	b.eq	el1_undef
- 	cmp	x24, #ESR_ELx_EC_BREAKPT_CUR	// debug exception in EL1
-@@ -611,9 +609,11 @@ el1_da:
- 	bl	do_mem_abort
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
+index cfaf8f618d1f3..56742fa0c1af6 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
+@@ -67,7 +67,8 @@ static struct ch_tc_pedit_fields pedits[] = {
+ static struct ch_tc_flower_entry *allocate_flower_entry(void)
+ {
+ 	struct ch_tc_flower_entry *new = kzalloc(sizeof(*new), GFP_KERNEL);
+-	spin_lock_init(&new->lock);
++	if (new)
++		spin_lock_init(&new->lock);
+ 	return new;
+ }
  
- 	kernel_exit 1
--el1_sp_pc:
-+el1_pc:
- 	/*
--	 * Stack or PC alignment exception handling
-+	 * PC alignment exception handling. We don't handle SP alignment faults,
-+	 * since we will have hit a recursive exception when trying to push the
-+	 * initial pt_regs.
- 	 */
- 	mrs	x0, far_el1
- 	inherit_daif	pstate=x23, tmp=x2
-@@ -732,9 +732,9 @@ el0_sync:
- 	ccmp	x24, #ESR_ELx_EC_WFx, #4, ne
- 	b.eq	el0_sys
- 	cmp	x24, #ESR_ELx_EC_SP_ALIGN	// stack alignment exception
--	b.eq	el0_sp_pc
-+	b.eq	el0_sp
- 	cmp	x24, #ESR_ELx_EC_PC_ALIGN	// pc alignment exception
--	b.eq	el0_sp_pc
-+	b.eq	el0_pc
- 	cmp	x24, #ESR_ELx_EC_UNKNOWN	// unknown exception in EL0
- 	b.eq	el0_undef
- 	cmp	x24, #ESR_ELx_EC_BREAKPT_LOW	// debug exception in EL0
-@@ -758,7 +758,7 @@ el0_sync_compat:
- 	cmp	x24, #ESR_ELx_EC_FP_EXC32	// FP/ASIMD exception
- 	b.eq	el0_fpsimd_exc
- 	cmp	x24, #ESR_ELx_EC_PC_ALIGN	// pc alignment exception
--	b.eq	el0_sp_pc
-+	b.eq	el0_pc
- 	cmp	x24, #ESR_ELx_EC_UNKNOWN	// unknown exception in EL0
- 	b.eq	el0_undef
- 	cmp	x24, #ESR_ELx_EC_CP15_32	// CP15 MRC/MCR trap
-@@ -858,11 +858,15 @@ el0_fpsimd_exc:
- 	mov	x1, sp
- 	bl	do_fpsimd_exc
- 	b	ret_to_user
-+el0_sp:
-+	ldr	x26, [sp, #S_SP]
-+	b	el0_sp_pc
-+el0_pc:
-+	mrs	x26, far_el1
- el0_sp_pc:
- 	/*
- 	 * Stack or PC alignment exception handling
- 	 */
--	mrs	x26, far_el1
- 	gic_prio_kentry_setup tmp=x0
- 	enable_da_f
- #ifdef CONFIG_TRACE_IRQFLAGS
 -- 
 2.20.1
 
