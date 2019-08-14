@@ -2,159 +2,232 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6D7C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4747C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 075912083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:32:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="EfUKxgMU"
+	by mail.kernel.org (Postfix) with ESMTP id 867E62083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbfHNOch (ORCPT
+        id S1728091AbfHNOcw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 10:32:37 -0400
-Received: from mail-eopbgr80049.outbound.protection.outlook.com ([40.107.8.49]:49813
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726121AbfHNOcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 10:32:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ad7qBpeMg7gha4QnXU2Es3fT0jv9oGgM44lTe7SYbl7HdtNu8Qtr6QQrBDTWESaKidyK2zEEOL5h0/wOUVm+Iqz3YKuXlY2fDWTDHrWPJKtyN9ZaZdZZnRZX0KX1LYVsnH6FZfay0icU9LqONU88emexE6mAbsFB9QhtEcM2JEuoZG/fH86GXanklctEgZANreNdpnMRL2RDCDH9ijsCXbKyqp7MKGPghGSkIsTMYCNJE332kl7gxdIAEvOgEMsQ4Q4SVxMgPlKN1X7d03CBNC3nhAnjlICK6RXhftkhyCsn/KgMX+XpEeZLOA2znxzMXAKYJEFKNQnvKdQN1eYsGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4FgTCsVUoW2DvaClEoPrCkBK4AtqZbkvGA9QVk4wv7Y=;
- b=VT40dRgf5W743jJk5YE+h7OTywrPXnmBvnKjruR9TWIl79ExQCzY/8vn0PzIXKwiAnvW1AaJX4GyWN+v02xg/Vxr9K+mt9AUXTc4Q7eUULqM5KuGwSDXsBwkkYikvOfQmeZB821IdJMdObtnQtEr4wfK+95ULGYbomulZ9sLyXxLOPfINQKxVwB+oY7a13RbFocrxIr5Axhl1wlWBqBDCBgTJ01Ty2JFYntSFpyt82U8IXjYaKm9dwD+x1fkoujGVpaKDeAxQQ56gkw8IxnPpwdtjVb1kk3+A55MYSwYW8xoVIJxmmS0Y9zY3Cu02MFo773Yb42cnH/b3l+YD95msg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 193.47.165.251) smtp.rcpttodomain=raithlin.com smtp.mailfrom=mellanox.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=mellanox.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4FgTCsVUoW2DvaClEoPrCkBK4AtqZbkvGA9QVk4wv7Y=;
- b=EfUKxgMU2jcVB3RWlhZYncWv6OJ6XW7rEcq0nLBYj/QrNXs4xY+pTSbMxtpICTHPuKOz7p3DN+Rk36nFN3HsBLa4MFXbCZHbnhh65V2GGxQZ4mmKH9owk8l7m2p4W3DabRdk4Zc7QObNvTEy6wjju9Fjb5NfIhGojSbmrkFsgMo=
-Received: from DB6PR05CA0010.eurprd05.prod.outlook.com (2603:10a6:6:14::23) by
- AM5PR0502MB3057.eurprd05.prod.outlook.com (2603:10a6:203:9c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.18; Wed, 14 Aug
- 2019 14:32:31 +0000
-Received: from VE1EUR03FT041.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e09::200) by DB6PR05CA0010.outlook.office365.com
- (2603:10a6:6:14::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.14 via Frontend
- Transport; Wed, 14 Aug 2019 14:31:49 +0000
-Authentication-Results: spf=pass (sender IP is 193.47.165.251)
- smtp.mailfrom=mellanox.com; raithlin.com; dkim=none (message not signed)
- header.d=none;raithlin.com; dmarc=pass action=none header.from=mellanox.com;
-Received-SPF: Pass (protection.outlook.com: domain of mellanox.com designates
- 193.47.165.251 as permitted sender) receiver=protection.outlook.com;
- client-ip=193.47.165.251; helo=mtlcas13.mtl.com;
-Received: from mtlcas13.mtl.com (193.47.165.251) by
- VE1EUR03FT041.mail.protection.outlook.com (10.152.19.163) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2115.18 via Frontend Transport; Wed, 14 Aug 2019 14:31:48 +0000
-Received: from MTLCAS13.mtl.com (10.0.8.78) by mtlcas13.mtl.com (10.0.8.78)
- with Microsoft SMTP Server (TLS) id 15.0.1178.4; Wed, 14 Aug 2019 17:31:48
- +0300
-Received: from MTLCAS01.mtl.com (10.0.8.71) by MTLCAS13.mtl.com (10.0.8.78)
- with Microsoft SMTP Server (TLS) id 15.0.1178.4 via Frontend Transport; Wed,
- 14 Aug 2019 17:31:48 +0300
-Received: from [10.223.0.54] (10.223.0.54) by MTLCAS01.mtl.com (10.0.8.71)
- with Microsoft SMTP Server (TLS) id 14.3.301.0; Wed, 14 Aug 2019 17:31:46
- +0300
-Subject: Re: [PATCH v7 05/14] nvmet-passthru: update KConfig with config
- passthru option
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        <linux-kernel@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
-        <linux-block@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
-CC:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        "Keith Busch" <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190801234514.7941-1-logang@deltatee.com>
- <20190801234514.7941-6-logang@deltatee.com>
-From:   Max Gurtovoy <maxg@mellanox.com>
-Message-ID: <68173412-f3e3-df6f-78f0-296b03eaaf13@mellanox.com>
-Date:   Wed, 14 Aug 2019 17:31:45 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 14 Aug 2019 10:32:52 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:2401 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfHNOcw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 10:32:52 -0400
+IronPort-SDR: TC7J2TPCpQq+h5jzUzfERvFAtXZ3JoB9AGYyYLKiqfa+4tRcAtOr+JfmeQkEDqRM+t0ZALOyY1
+ abiIC8qQkBmiIOSCnoyz8/7UJvY252dE/BlasE2x7dKKFY+dP/IMlyHRW4s7zv/CVQeqoRKP4h
+ 3fAd50RZdUkYHXllQcI/sPLt0kKwnyx7rPqP6nQ1YjIubC6hiOSckLNB3AP6VOQtEUhlQwi//F
+ F7mNTACRCNtA/xQVl3HDzLklSc/wkFepMoVtYkOQ84Op8Vvz85KiyhGnJ9CKJpXVJbdYmrYHD1
+ QL0=
+X-IronPort-AV: E=Sophos;i="5.64,385,1559548800"; 
+   d="scan'208";a="40450057"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa3.mentor.iphmx.com with ESMTP; 14 Aug 2019 06:32:51 -0800
+IronPort-SDR: NLYVRwkFwNT7pjSE9ru1OFQVkT4FwXSoOHTzEgFStKGjx/9bs34IRNNtkLWR7ZfltULKTXJauj
+ dWmfBwRJwH1l0CUAs5wvaS/Zx3CfDdsJqGbiWVnRtXcPmj47p3CHmBJtsRxCnaLsRqDaPuLE4T
+ jB9YUhOEW4KGuPEfoZqdZkY3Xc9OIejC/O6FovCWPnkfDWVqKndThjzTdt3ma0CwL3emhMnJK0
+ vm7dfsNmtA4x6LfJfze2vl6bueFMvGOpJGv77S87dFDQUuIwPbSibUiLNe5/ijb9sWmCAwudIv
+ quY=
+From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: [PATCH v2] usb: xhci-pci: reorder removal to avoid use-after-free
+Thread-Topic: [PATCH v2] usb: xhci-pci: reorder removal to avoid
+ use-after-free
+Thread-Index: AQHVUqy8Nhj3BRvGDEy2Ur9dpf2v1Q==
+Date:   Wed, 14 Aug 2019 14:32:45 +0000
+Message-ID: <1565793165678.11527@mentor.com>
+References: <1565782781938.37795@mentor.com>
+ <15aa45c7-6e45-d03f-9336-4291f8b2dc66@redhat.com>
+ <29aadcf136bb4d5285afb4fc5b500b49@SVR-IES-MBX-03.mgc.mentorg.com>,<662c2014-f52c-a4a7-cbf0-78d43c3a4f22@redhat.com>
+In-Reply-To: <662c2014-f52c-a4a7-cbf0-78d43c3a4f22@redhat.com>
+Accept-Language: de-DE, en-IE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [137.202.0.90]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20190801234514.7941-6-logang@deltatee.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.223.0.54]
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:193.47.165.251;IPV:NLI;CTRY:IL;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(376002)(39860400002)(2980300002)(199004)(189003)(53546011)(16576012)(229853002)(2616005)(31686004)(966005)(36906005)(186003)(316002)(23676004)(2420400007)(305945005)(76176011)(65806001)(478600001)(336012)(7736002)(36756003)(2486003)(15650500001)(26005)(476003)(11346002)(64126003)(446003)(50466002)(65956001)(486006)(126002)(47776003)(65826007)(8936002)(81156014)(8676002)(106002)(14444005)(31696002)(7416002)(6116002)(3846002)(6306002)(2201001)(58126008)(230700001)(356004)(6246003)(110136005)(54906003)(81166006)(70206006)(16526019)(86362001)(70586007)(5660300002)(2906002)(53936002)(4326008)(3940600001)(2101003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR0502MB3057;H:mtlcas13.mtl.com;FPR:;SPF:Pass;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 84a77063-c4ba-45ba-8708-08d720c42460
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(4709080)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM5PR0502MB3057;
-X-MS-TrafficTypeDiagnostic: AM5PR0502MB3057:
-X-MS-Exchange-PUrlCount: 1
-X-Microsoft-Antispam-PRVS: <AM5PR0502MB3057C3FA03691D6ADE8A98B6B6AD0@AM5PR0502MB3057.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3044;
-X-Forefront-PRVS: 01294F875B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: tGYpTaB4/RKGgnNxm8yCZV/zeFoE3eHFYrQGcKPzwzrbjtjt0HIjh98fq9/mEFrsguhlWsPumiWORp58k8Hm9LmemrNWIOI5I3kNTWo7NsE3Im0E7bnoJ0GRZ9n95zh4xcIqWryKKWtH6QUKekNnzkwuw++k8V0vIc5eFN/Q0DCIuW0cGHPb/hPmiSOqmlH6a2YovpGtyjgQtKGKavVpaS9yVmbZYpfoZ33LS0/yuAUXwbAWGEfrgaGd84h68ZqBkw3NlaOAdrJ5KtXFlEjCSUrNI84jUN0bUGaIEkyWz6g1BtsOVIczfEgKMXYR9tcxicJx65UnyL/Kl1oVqT9QrEznvN6SUpegR03vv4Lc2hV5sIqSPOOibGPPgQxfTMhNzxNTPl+dK1qI60r5xn0XH/2mSFmlW0LCzh4ie/Cm5iE=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2019 14:31:48.8295
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84a77063-c4ba-45ba-8708-08d720c42460
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a652971c-7d2e-4d9b-a6a4-d149256f461b;Ip=[193.47.165.251];Helo=[mtlcas13.mtl.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0502MB3057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On driver removal, the platform_device_unregister call
+attached through devm_add_action_or_reset was executed
+after usb_hcd_pci_remove.
+This lead to a use-after-free for the iomem resorce of
+the xhci-ext-caps driver in the platform removal
+because the parent of the resource was freed earlier.
 
-On 8/2/2019 2:45 AM, Logan Gunthorpe wrote:
-> From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
->
-> This patch updates KConfig file for the NVMeOF target where we add new
-> option so that user can selectively enable/disable passthru code.
->
-> Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-> [logang@deltatee.com: fixed some of the wording in the help message]
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
->   drivers/nvme/target/Kconfig | 10 ++++++++++
->   1 file changed, 10 insertions(+)
->
-> diff --git a/drivers/nvme/target/Kconfig b/drivers/nvme/target/Kconfig
-> index d7f48c0fb311..2478cb5a932d 100644
-> --- a/drivers/nvme/target/Kconfig
-> +++ b/drivers/nvme/target/Kconfig
-> @@ -15,6 +15,16 @@ config NVME_TARGET
->   	  To configure the NVMe target you probably want to use the nvmetcli
->   	  tool from http://git.infradead.org/users/hch/nvmetcli.git.
->   
-> +config NVME_TARGET_PASSTHRU
-> +	bool "NVMe Target Passthrough support"
-> +	depends on NVME_CORE
-> +	depends on NVME_TARGET
-> +	help
-> +	  This enables target side NVMe passthru controller support for the
-> +	  NVMe Over Fabrics protocol. It allows for hosts to manage and
-> +	  directly access an actual NVMe controller residing on the target
-> +	  side, incuding executing Vendor Unique Commands.
-> +
->   config NVME_TARGET_LOOP
->   	tristate "NVMe loopback device support"
->   	depends on NVME_TARGET
+Fix this by reordering of the removal sequence.
 
+Signed-off-by: Carsten Schmid <carsten_schmid@mentor.com>
+---
+v2:
+  - more speaking name for private data element
+  - consider failure in driver init sequence
+  - fix minor issues found by checkpatch.pl
+---
+ drivers/usb/host/xhci-ext-caps.c | 25 +++++++++++++++----------
+ drivers/usb/host/xhci-pci.c      |  8 +++++++-
+ drivers/usb/host/xhci-pci.h      | 20 ++++++++++++++++++++
+ drivers/usb/host/xhci.h          |  1 +
+ 4 files changed, 43 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/usb/host/xhci-pci.h
 
-Looks good,
-
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-
-
+diff --git a/drivers/usb/host/xhci-ext-caps.c b/drivers/usb/host/xhci-ext-caps.c
+index 399113f9fc5c..28a7d53ecf2c 100644
+--- a/drivers/usb/host/xhci-ext-caps.c
++++ b/drivers/usb/host/xhci-ext-caps.c
+@@ -7,21 +7,19 @@
+ 
+ #include <linux/platform_device.h>
+ #include "xhci.h"
++#include "xhci-pci.h"
+ 
+ #define USB_SW_DRV_NAME		"intel_xhci_usb_sw"
+ #define USB_SW_RESOURCE_SIZE	0x400
+ 
+-static void xhci_intel_unregister_pdev(void *arg)
+-{
+-	platform_device_unregister(arg);
+-}
+-
+ static int xhci_create_intel_xhci_sw_pdev(struct xhci_hcd *xhci, u32 cap_offset)
+ {
+ 	struct usb_hcd *hcd = xhci_to_hcd(xhci);
+ 	struct device *dev = hcd->self.controller;
+ 	struct platform_device *pdev;
+ 	struct resource	res = { 0, };
++	struct xhci_pci_priv *priv = (struct xhci_pci_priv *)xhci->priv;
++
+ 	int ret;
+ 
+ 	pdev = platform_device_alloc(USB_SW_DRV_NAME, PLATFORM_DEVID_NONE);
+@@ -52,11 +50,7 @@ static int xhci_create_intel_xhci_sw_pdev(struct xhci_hcd *xhci, u32 cap_offset)
+ 		return ret;
+ 	}
+ 
+-	ret = devm_add_action_or_reset(dev, xhci_intel_unregister_pdev, pdev);
+-	if (ret) {
+-		dev_err(dev, "couldn't add unregister action for intel_xhci_usb_sw pdev\n");
+-		return ret;
+-	}
++	priv->role_switch_pdev = pdev;
+ 
+ 	return 0;
+ }
+@@ -88,3 +82,14 @@ int xhci_ext_cap_init(struct xhci_hcd *xhci)
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(xhci_ext_cap_init);
++
++void xhci_ext_cap_remove(struct xhci_hcd *xhci)
++{
++	struct xhci_pci_priv *priv = (struct xhci_pci_priv *)xhci->priv;
++
++	if (priv->role_switch_pdev) {
++		platform_device_unregister(priv->role_switch_pdev);
++		priv->role_switch_pdev = NULL;
++	}
++}
++EXPORT_SYMBOL_GPL(xhci_ext_cap_remove);
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index c2fe218e051f..f2201f380c17 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -14,6 +14,7 @@
+ #include <linux/acpi.h>
+ 
+ #include "xhci.h"
++#include "xhci-pci.h"
+ #include "xhci-trace.h"
+ 
+ #define SSIC_PORT_NUM		2
+@@ -62,6 +63,7 @@ static struct hc_driver __read_mostly xhci_pci_hc_driver;
+ static int xhci_pci_setup(struct usb_hcd *hcd);
+ 
+ static const struct xhci_driver_overrides xhci_pci_overrides __initconst = {
++	.extra_priv_size = sizeof(struct xhci_pci_priv),
+ 	.reset = xhci_pci_setup,
+ };
+ 
+@@ -350,7 +352,7 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	retval = usb_add_hcd(xhci->shared_hcd, dev->irq,
+ 			IRQF_SHARED);
+ 	if (retval)
+-		goto put_usb3_hcd;
++		goto remove_ext_cap;
+ 	/* Roothub already marked as USB 3.0 speed */
+ 
+ 	if (!(xhci->quirks & XHCI_BROKEN_STREAMS) &&
+@@ -368,6 +370,8 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 
+ 	return 0;
+ 
++remove_ext_cap:
++	xhci_ext_cap_remove(xhci);
+ put_usb3_hcd:
+ 	usb_put_hcd(xhci->shared_hcd);
+ dealloc_usb2_hcd:
+@@ -393,6 +397,8 @@ static void xhci_pci_remove(struct pci_dev *dev)
+ 		xhci->shared_hcd = NULL;
+ 	}
+ 
++	xhci_ext_cap_remove(xhci);
++
+ 	/* Workaround for spurious wakeups at shutdown with HSW */
+ 	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
+ 		pci_set_power_state(dev, PCI_D3hot);
+diff --git a/drivers/usb/host/xhci-pci.h b/drivers/usb/host/xhci-pci.h
+new file mode 100644
+index 000000000000..fc0cde231679
+--- /dev/null
++++ b/drivers/usb/host/xhci-pci.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * xhci-pci.h - xHCI extended capability handling platform Glue.
++ *
++ * Copyright (C) 2019 Mentor Graphics (Deutschland) GmbH
++ * Derived from xhci-plat.h
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ */
++
++#ifndef _XHCI_PCI_H
++#define _XHCI_PCI_H
++
++struct xhci_pci_priv {
++	struct platform_device *role_switch_pdev;
++};
++
++#endif	/* _XHCI_PCI_H */
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index fabbce1c542a..847d2021fc2c 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -2052,6 +2052,7 @@ void xhci_init_driver(struct hc_driver *drv,
+ 		      const struct xhci_driver_overrides *over);
+ int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id);
+ int xhci_ext_cap_init(struct xhci_hcd *xhci);
++void xhci_ext_cap_remove(struct xhci_hcd *xhci);
+ 
+ int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup);
+ int xhci_resume(struct xhci_hcd *xhci, bool hibernated);
+-- 
+2.17.1
