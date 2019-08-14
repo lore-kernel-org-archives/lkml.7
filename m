@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8072BC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD40C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 544AC20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29744206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803466;
-	bh=C2vs5veVVQl4m5EUzEISRy7dfJk4KURDdHDXOBFQgVU=;
+	s=default; t=1565803471;
+	bh=t2XG4CmWsTIyBrHSCGBno53f3jKzblsHT8JKdD8A2O0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xlL0gGcEDIjyV3850pchDDBbY14xW0ANZaJDYe6Ui5qa3vaUr49zxzntAydGfvLSi
-	 /KeJ0evfL3ZgZyc0pdrGLxWFLTIE5uE9Pp94iT4leB2nAGmow1Xk0sb3AHlN85hkiK
-	 XBekuQBwaq1/uMOh0R/Ga75wMJCdOO4ulgDzhTmU=
+	b=Z4SNwXGh92P9bABwA+PSbmgSJu2IWpRKnZu4kc/D+x7n21o3ghmDvG0x5jSnPOISD
+	 7Lc22jsY6aJktTrpOKhvxuIEixm9qORMaZKsSDDb2ncp/00b7mhUGIV0gwljowQU3R
+	 d6TYWYeysaiFvftmP3dEsXLR5HmCNyuoO6n7M9oE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729699AbfHNRGi (ORCPT
+        id S1729196AbfHNRG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:06:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55748 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:06:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729687AbfHNRGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:06:34 -0400
+        id S1729626AbfHNRGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:06:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29BFD2084D;
-        Wed, 14 Aug 2019 17:06:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77B9A21744;
+        Wed, 14 Aug 2019 17:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802393;
-        bh=C2vs5veVVQl4m5EUzEISRy7dfJk4KURDdHDXOBFQgVU=;
+        s=default; t=1565802381;
+        bh=t2XG4CmWsTIyBrHSCGBno53f3jKzblsHT8JKdD8A2O0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NkxKvv5odm7c3lskFut388W8AeGdVcd2EHHZJ7k520fC48j6dJT8bYDIjvMKcDY0d
-         n1Ob8uDcPzgbHZ+O1Mu3WKBTn6RTfbFlWajKjlYAoiwXSa3HGplHX1xdbZd8cCFssN
-         10/8CoXSMgVP3/3iTjjFnjQpAQZ61uPqRwCPwCeo=
+        b=OTNj5xDfxHfKjvtkaOaAKbJI9zBtOrAxpGe7IWOwe/Il5WlqzsdaiPX+rvLrcKjGj
+         8P2/MJ9RErDn3cdvIAr6T2xgCkM18NCvQ0lnRsMR0Fr+Ux0kgDIyE5PqNNkzTvpWOj
+         +pOjIYxvGJ6K/ikFr6994uTAghcHh+x2iVxiav88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 108/144] scsi: ibmvfc: fix WARN_ON during event pool release
-Date:   Wed, 14 Aug 2019 19:01:04 +0200
-Message-Id: <20190814165804.426458084@linuxfoundation.org>
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 104/144] nvme: fix memory leak caused by incorrect subsystem free
+Date:   Wed, 14 Aug 2019 19:01:00 +0200
+Message-Id: <20190814165804.250036186@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -61,71 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5578257ca0e21056821e6481bd534ba267b84e58 ]
+[ Upstream commit e654dfd38c1ecf58d8d019f3c053189413484a5b ]
 
-While removing an ibmvfc client adapter a WARN_ON like the following
-WARN_ON is seen in the kernel log:
+When freeing the subsystem after finding another match with
+__nvme_find_get_subsystem(), use put_device() instead of
+__nvme_release_subsystem() which calls kfree() directly.
 
-WARNING: CPU: 6 PID: 5421 at ./include/linux/dma-mapping.h:541
-ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
-CPU: 6 PID: 5421 Comm: rmmod Tainted: G            E     4.17.0-rc1-next-20180419-autotest #1
-NIP:  d00000000290328c LR: d00000000290325c CTR: c00000000036ee20
-REGS: c000000288d1b7e0 TRAP: 0700   Tainted: G            E      (4.17.0-rc1-next-20180419-autotest)
-MSR:  800000010282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 44008828  XER: 20000000
-CFAR: c00000000036e408 SOFTE: 1
-GPR00: d00000000290325c c000000288d1ba60 d000000002917900 c000000289d75448
-GPR04: 0000000000000071 c0000000ff870000 0000000018040000 0000000000000001
-GPR08: 0000000000000000 c00000000156e838 0000000000000001 d00000000290c640
-GPR12: c00000000036ee20 c00000001ec4dc00 0000000000000000 0000000000000000
-GPR16: 0000000000000000 0000000000000000 00000100276901e0 0000000010020598
-GPR20: 0000000010020550 0000000010020538 0000000010020578 00000000100205b0
-GPR24: 0000000000000000 0000000000000000 0000000010020590 5deadbeef0000100
-GPR28: 5deadbeef0000200 d000000002910b00 0000000000000071 c0000002822f87d8
-NIP [d00000000290328c] ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
-LR [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc]
-Call Trace:
-[c000000288d1ba60] [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc] (unreliable)
-[c000000288d1baf0] [d000000002909390] ibmvfc_abort_task_set+0x7b0/0x8b0 [ibmvfc]
-[c000000288d1bb70] [c0000000000d8c68] vio_bus_remove+0x68/0x100
-[c000000288d1bbb0] [c0000000007da7c4] device_release_driver_internal+0x1f4/0x2d0
-[c000000288d1bc00] [c0000000007da95c] driver_detach+0x7c/0x100
-[c000000288d1bc40] [c0000000007d8af4] bus_remove_driver+0x84/0x140
-[c000000288d1bcb0] [c0000000007db6ac] driver_unregister+0x4c/0xa0
-[c000000288d1bd20] [c0000000000d6e7c] vio_unregister_driver+0x2c/0x50
-[c000000288d1bd50] [d00000000290ba0c] cleanup_module+0x24/0x15e0 [ibmvfc]
-[c000000288d1bd70] [c0000000001dadb0] sys_delete_module+0x220/0x2d0
-[c000000288d1be30] [c00000000000b284] system_call+0x58/0x6c
-Instruction dump:
-e8410018 e87f0068 809f0078 e8bf0080 e8df0088 2fa30000 419e008c e9230200
-2fa90000 419e0080 894d098a 794a07e0 <0b0a0000> e9290008 2fa90000 419e0028
+Per the documentation, put_device() should always be used
+after device_initialization() is called. Otherwise, leaks
+like the one below which was detected by kmemleak may occur.
 
-This is tripped as a result of irqs being disabled during the call to
-dma_free_coherent() by ibmvfc_free_event_pool(). At this point in the code path
-we have quiesced the adapter and its overly paranoid anyways to be holding the
-host lock.
+Once the call of __nvme_release_subsystem() is removed it no
+longer makes sense to keep the helper, so fold it back
+into nvme_release_subsystem().
 
-Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+unreferenced object 0xffff8883d12bfbc0 (size 16):
+  comm "nvme", pid 2635, jiffies 4294933602 (age 739.952s)
+  hex dump (first 16 bytes):
+    6e 76 6d 65 2d 73 75 62 73 79 73 32 00 88 ff ff  nvme-subsys2....
+  backtrace:
+    [<000000007d8fc208>] __kmalloc_track_caller+0x16d/0x2a0
+    [<0000000081169e5f>] kvasprintf+0xad/0x130
+    [<0000000025626f25>] kvasprintf_const+0x47/0x120
+    [<00000000fa66ad36>] kobject_set_name_vargs+0x44/0x120
+    [<000000004881f8b3>] dev_set_name+0x98/0xc0
+    [<000000007124dae3>] nvme_init_identify+0x1995/0x38e0
+    [<000000009315020a>] nvme_loop_configure_admin_queue+0x4fa/0x5e0
+    [<000000001a63e766>] nvme_loop_create_ctrl+0x489/0xf80
+    [<00000000a46ecc23>] nvmf_dev_write+0x1a12/0x2220
+    [<000000002259b3d5>] __vfs_write+0x66/0x120
+    [<000000002f6df81e>] vfs_write+0x154/0x490
+    [<000000007e8cfc19>] ksys_write+0x10a/0x240
+    [<00000000ff5c7b85>] __x64_sys_write+0x73/0xb0
+    [<00000000fee6d692>] do_syscall_64+0xaa/0x470
+    [<00000000997e1ede>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: ab9e00cc72fa ("nvme: track subsystems")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ibmvscsi/ibmvfc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
-index acd16e0d52cfe..8cdbac076a1b6 100644
---- a/drivers/scsi/ibmvscsi/ibmvfc.c
-+++ b/drivers/scsi/ibmvscsi/ibmvfc.c
-@@ -4864,8 +4864,8 @@ static int ibmvfc_remove(struct vio_dev *vdev)
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 4a1d2ab4d1612..5deb4deb38209 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2264,17 +2264,15 @@ static void nvme_init_subnqn(struct nvme_subsystem *subsys, struct nvme_ctrl *ct
+ 	memset(subsys->subnqn + off, 0, sizeof(subsys->subnqn) - off);
+ }
  
- 	spin_lock_irqsave(vhost->host->host_lock, flags);
- 	ibmvfc_purge_requests(vhost, DID_ERROR);
--	ibmvfc_free_event_pool(vhost);
- 	spin_unlock_irqrestore(vhost->host->host_lock, flags);
-+	ibmvfc_free_event_pool(vhost);
+-static void __nvme_release_subsystem(struct nvme_subsystem *subsys)
++static void nvme_release_subsystem(struct device *dev)
+ {
++	struct nvme_subsystem *subsys =
++		container_of(dev, struct nvme_subsystem, dev);
++
+ 	ida_simple_remove(&nvme_subsystems_ida, subsys->instance);
+ 	kfree(subsys);
+ }
  
- 	ibmvfc_free_mem(vhost);
- 	spin_lock(&ibmvfc_driver_lock);
+-static void nvme_release_subsystem(struct device *dev)
+-{
+-	__nvme_release_subsystem(container_of(dev, struct nvme_subsystem, dev));
+-}
+-
+ static void nvme_destroy_subsystem(struct kref *ref)
+ {
+ 	struct nvme_subsystem *subsys =
+@@ -2429,7 +2427,7 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ 	mutex_lock(&nvme_subsystems_lock);
+ 	found = __nvme_find_get_subsystem(subsys->subnqn);
+ 	if (found) {
+-		__nvme_release_subsystem(subsys);
++		put_device(&subsys->dev);
+ 		subsys = found;
+ 
+ 		if (!nvme_validate_cntlid(subsys, ctrl, id)) {
 -- 
 2.20.1
 
