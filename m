@@ -2,140 +2,112 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B5AC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D98C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 110E0206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8B620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfHNAMi (ORCPT
+        id S1726637AbfHNAWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 20:12:38 -0400
-Received: from lgeamrelo12.lge.com ([156.147.23.52]:45020 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726512AbfHNAMi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 20:12:38 -0400
-Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
-        by 156.147.23.52 with ESMTP; 14 Aug 2019 09:12:35 +0900
-X-Original-SENDERIP: 156.147.1.126
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.126 with ESMTP; 14 Aug 2019 09:12:35 +0900
-X-Original-SENDERIP: 10.177.222.33
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Wed, 14 Aug 2019 09:11:03 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Byungchul Park <max.byungchul.park@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rao Shoaib <rao.shoaib@oracle.com>, kernel-team@android.com,
-        kernel-team <kernel-team@lge.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
- batching
-Message-ID: <20190814001103.GA31884@X58A-UD3R>
-References: <20190808125607.GB261256@google.com>
- <CANrsvRPU_u6oKpjZ1368Evto+1hGboNYeOuMdbdzaOfXhSO=5g@mail.gmail.com>
- <20190808180916.GP28441@linux.ibm.com>
- <20190811083626.GA9486@X58A-UD3R>
- <20190811084950.GB9486@X58A-UD3R>
- <20190811234939.GC28441@linux.ibm.com>
- <20190812101052.GA10478@X58A-UD3R>
- <20190812131234.GC27552@google.com>
- <20190813052954.GA18373@X58A-UD3R>
- <20190813154145.GE28441@linux.ibm.com>
+        Tue, 13 Aug 2019 20:22:21 -0400
+Received: from mga04.intel.com ([192.55.52.120]:13153 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726007AbfHNAWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 20:22:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 17:22:21 -0700
+X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
+   d="scan'208";a="167220997"
+Received: from tsduncan-ubuntu.jf.intel.com (HELO [10.7.169.130]) ([10.7.169.130])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 13 Aug 2019 17:22:20 -0700
+Subject: Re: [PATCH net-next] net/ncsi: allow to customize BMC MAC Address
+ offset
+From:   Terry Duncan <terry.s.duncan@linux.intel.com>
+To:     Tao Ren <taoren@fb.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+        Ben Wei <benwei@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+        "David S.Miller" <davem@davemloft.net>,
+        William Kennington <wak@google.com>
+References: <20190807002118.164360-1-taoren@fb.com>
+ <20190807112518.644a21a2@cakuba.netronome.com>
+ <20190807184143.GE26047@lunn.ch>
+ <806a76a8-229a-7f24-33c7-2cf2094f3436@fb.com>
+ <20190808133209.GB32706@lunn.ch>
+ <77762b10-b8e7-b8a4-3fc0-e901707a1d54@fb.com>
+ <20190808211629.GQ27917@lunn.ch>
+ <ac22bbe0-36ca-b4b9-7ea7-7b1741c2070d@fb.com>
+ <20190808230312.GS27917@lunn.ch>
+ <f1519844-4e21-a9a4-1a69-60c37bd07f75@fb.com>
+ <10079A1AC4244A41BC7939A794B72C238FCE0E03@fmsmsx104.amr.corp.intel.com>
+ <bc9da695-3fd3-6643-8e06-562cc08fbc62@linux.intel.com>
+ <dc0382c9-7995-edf5-ee1c-508b0f759c3d@linux.intel.com>
+ <faa1b3c9-9ba3-0fff-e1d4-f6dddb60c52c@fb.com>
+ <33e3e783-fb93-e628-8baa-a8374540ea25@linux.intel.com>
+Message-ID: <68c25963-4659-c5a2-f8ca-ee51ae17d63f@linux.intel.com>
+Date:   Tue, 13 Aug 2019 17:22:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813154145.GE28441@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <33e3e783-fb93-e628-8baa-a8374540ea25@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 08:41:45AM -0700, Paul E. McKenney wrote:
-> On Tue, Aug 13, 2019 at 02:29:54PM +0900, Byungchul Park wrote:
-> > On Mon, Aug 12, 2019 at 09:12:34AM -0400, Joel Fernandes wrote:
-> > > On Mon, Aug 12, 2019 at 07:10:52PM +0900, Byungchul Park wrote:
-> > > > On Sun, Aug 11, 2019 at 04:49:39PM -0700, Paul E. McKenney wrote:
-> > > > > Maybe.  Note well that I said "potential issue".  When I checked a few
-> > > > > years ago, none of the uses of rcu_barrier() cared about kfree_rcu().
-> > > > > They cared instead about call_rcu() callbacks that accessed code or data
-> > > > > that was going to disappear soon, for example, due to module unload or
-> > > > > filesystem unmount.
-> > > > > 
-> > > > > So it -might- be that rcu_barrier() can stay as it is, but with changes
-> > > > > as needed to documentation.
-> > > 
-> > > Right, we should update the docs. Byungchul, do you mind sending a patch that
-> > > documents the rcu_barrier() behavior?
-> > 
-> > Are you trying to give me the chance? I feel thankful. It doens't matter
-> > to try it at the moment though, I can't follow-up until September. I'd
-> > better do that in Septamber or give it up this time.
+On 8/13/19 1:54 PM, Terry Duncan wrote:
 > 
-> Which reminds me...  I recall your asking if the kfree_rcu() patch
-> might be sensitive to the exact hardware, but I cannot locate that
-> email right off-hand.  This is an excellent question!  When faced with
-> floods of kfree_rcu() calls, I would expect some hardware, compiler,
-> and kernel-configuration sensitivity.  Which is why it will likely be
+> On 8/13/19 11:28 AM, Tao Ren wrote:
+>> On 8/13/19 9:31 AM, Terry Duncan wrote:
+>>> Tao, in your new patch will it be possible to disable the setting of 
+>>> the BMC MAC?  I would like to be able to send NCSI_OEM_GET_MAC 
+>>> perhaps with netlink (TBD) to get the system address without it 
+>>> affecting the BMC address.
+>>>
+>>> I was about to send patches to add support for the Intel adapters 
+>>> when I saw this thread.
+>>>
+>>> Thanks,
+>>>
+>>> Terry
+>>
+>> Hi Terry,
+>>
+>> Sounds like you are planning to configure BMC MAC address from user 
+>> space via netlink? Ben Wei <benwei@fb.com> started a thread 
+>> "Out-of-band NIC management" in openbmc community for NCSI management 
+>> using netlink, and you may follow up with him for details.
+>>
+>> I haven't decided what to do in my v2 patch: maybe using device tree, 
+>> maybe moving the logic to uboot, and I'm also evaluating the netlink 
+>> option. But it shouldn't impact your patch, because you can disable 
+>> NCSI_OEM_GET_MAC option from your config file.
+> 
+> Thanks Tao. I see now that disabling the NCSI_OEM_GET_MAC option will do 
+> what I want.
+> 
+> Best,
+> Terry
+Hi Tao,
 
-Yes.
-
-> necessary to do a few more improvements over time -- for but one example,
-> accumulating callbacks into vectors in order to reduce the number of
-> kfree()-time cache misses.
-
-Yes. That would be a pretty good way to mitigate the problem. I hope
-the simple way we've done works well enough so it would never happen
-though.
-
-Or I would check the condition of all system resourses e.g. CPU and
-memory and control the bandwith of them, of course only if that actually
-happens.
-
-Thanks a lot for sharing your opinion on it!
+After a second look, it appears that the OEM handlers for Broadcom and 
+Melanox in ncsi-rsp.c will set the MAC regardless of the origin of the 
+request. Even with NCSI_OEM_GET_MAC disabled, sending an OEM command 
+with netlink would result in setting the BMC MAC.
 
 Thanks,
-Byungchul
-
-> 							Thanx, Paul
-> 
-> > Thanks,
-> > Byungchul
-> > 
-> > > > > It also -might- be, maybe now or maybe some time in the future, that
-> > > > > there will need to be a kfree_rcu_barrier() or some such.  But if so,
-> > > > > let's not create it until it is needed.  For one thing, it is reasonably
-> > > > > likely that something other than a kfree_rcu_barrier() would really
-> > > > > be what was needed.  After all, the main point would be to make sure
-> > > > > that the old memory really was freed before allocating new memory.
-> > > > 
-> > > > Now I fully understand what you meant thanks to you. Thank you for
-> > > > explaining it in detail.
-> > > > 
-> > > > > But if the system had ample memory, why wait?  In that case you don't
-> > > > > really need to wait for all the old memory to be freed, but rather for
-> > > > > sufficient memory to be available for allocation.
-> > > > 
-> > > > Agree. Totally make sense.
-> > > 
-> > > Agreed, all makes sense.
-> > > 
-> > > thanks,
-> > > 
-> > >  - Joel
-> > > 
-> > > [snip]
-> > 
+Terry
