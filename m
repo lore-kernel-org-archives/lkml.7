@@ -2,102 +2,112 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E33FC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C546C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D07720665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:40:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750417;
-	bh=5CbHaWA4pPlQGT5osSB1fwo4tu8bfwW8MhI9pWYmO14=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qqYGhv5x2RRe9zQ0RhTMdjjSgmc7vw0cejExrIKTybHYxzNGLXZxo0JMAzLYSz4Mn
-	 sv72LHhmLo9vA5gt2q/CMTIUuW+cRaxKw6l/ddeLqfSHKORTVx2E4MnVeLVfvITiBo
-	 3fmgR9ypO3NXnaCmuAaJWfAy6hzikLW3SpZYtyr0=
+	by mail.kernel.org (Postfix) with ESMTP id 3C015214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfHNCLH (ORCPT
+        id S1727887AbfHNCk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:11:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727128AbfHNCLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:11:01 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBE7420842;
-        Wed, 14 Aug 2019 02:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748660;
-        bh=5CbHaWA4pPlQGT5osSB1fwo4tu8bfwW8MhI9pWYmO14=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0milqljLfnLaBjyahrG9XapEaZtko7LVPzgYdD5/9+HdWJyN+QWQ6HTa+SC+WiO+O
-         e9WIVQ7C59umUglAJwAoR0rHHHYucXvEZpGpMeTrTSGY6HluopljnrlGGIilasRyg/
-         st5uhATwS59RgHPpaOL4KFnpGPXIrUd+w249l07A=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 006/123] ASoC: audio-graph-card: add missing const at graph_get_dai_id()
-Date:   Tue, 13 Aug 2019 22:08:50 -0400
-Message-Id: <20190814021047.14828-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
-References: <20190814021047.14828-1-sashal@kernel.org>
+        Tue, 13 Aug 2019 22:40:26 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4254 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727182AbfHNCkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:40:23 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 71FB0567C5C78BC6698F;
+        Wed, 14 Aug 2019 10:40:20 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 14 Aug 2019
+ 10:40:15 +0800
+Subject: Re: [PATCH linux-next] drivers: dma: Fix sparse warning for
+ mux_configure32
+To:     Vinod Koul <vkoul@kernel.org>
+References: <20190812074205.96759-1-maowenan@huawei.com>
+ <20190813044327.GR12733@vkoul-mobl.Dlink>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <0a29e584-2385-9e7c-8d13-3ba47d3bf81c@huawei.com>
+Date:   Wed, 14 Aug 2019 10:40:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190813044327.GR12733@vkoul-mobl.Dlink>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-[ Upstream commit ec3042ad39d4e2ddbc3a3344f90bb10d8feb53bc ]
 
-commit c152f8491a8d9 ("ASoC: audio-graph-card: fix an use-after-free in
-graph_get_dai_id()") fixups use-after-free issue,
-but, it need to use "const" for reg. This patch adds it.
+On 2019/8/13 12:43, Vinod Koul wrote:
+> On 12-08-19, 15:42, Mao Wenan wrote:
+> 
+> Patch title is incorrect, it should mention the changes in patch, for
+> example make mux_configure32 static
+> 
+> Do read up on Documentation/process/submitting-patches.rst again!
+> 
+>> There is one sparse warning in drivers/dma/fsl-edma-common.c,
+> 
+> It will help to explain the warning before the fix
+> 
+>> fix it by setting mux_configure32() as static.
+>>
+>> make allmodconfig ARCH=mips CROSS_COMPILE=mips-linux-gnu-
+>> make C=2 drivers/dma/fsl-edma-common.o ARCH=mips CROSS_COMPILE=mips-linux-gnu-
+> 
+> Make cmds are not relevant for the log
+> 
+>> drivers/dma/fsl-edma-common.c:93:6: warning: symbol 'mux_configure32' was not declared. Should it be static?
+> 
+> This one is and should be retained
+> 
+>>
+>> Fixes: 232a7f18cf8ec ("dmaengine: fsl-edma: add i.mx7ulp edma2 version support")
+>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+>> ---
+>>  drivers/dma/fsl-edma-common.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+>> index 6d6d8a4..7dbf7df 100644
+>> --- a/drivers/dma/fsl-edma-common.c
+>> +++ b/drivers/dma/fsl-edma-common.c
+>> @@ -90,8 +90,8 @@ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
+>>  	iowrite8(val8, addr + off);
+>>  }
+>>  
+>> -void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
+>> -		     u32 off, u32 slot, bool enable)
+>> +static void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
+> 
+> just change this to static
+> 
+>> +			    u32 off, u32 slot, bool enable)
+> 
+> and dont change anything else.
+> 
+> If you feel to change this, propose a new patch for this line explaining
+> why this should be changed
 
-We will have below without this patch
+thanks, I will send v2.
 
-LINUX/sound/soc/generic/audio-graph-card.c: In function 'graph_get_dai_id':
-LINUX/sound/soc/generic/audio-graph-card.c:87:7: warning: assignment discards\
- 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   reg = of_get_property(node, "reg", NULL);
-
-Fixes: c152f8491a8d9 ("ASoC: audio-graph-card: fix an use-after-free in graph_get_dai_id()")
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Acked-by: Wen Yang <wen.yang99@zte.com.cn>
-Link: https://lore.kernel.org/r/87sgrd43ja.wl-kuninori.morimoto.gx@renesas.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/generic/audio-graph-card.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/generic/audio-graph-card.c b/sound/soc/generic/audio-graph-card.c
-index a681ea443fc16..6398741ebd0ef 100644
---- a/sound/soc/generic/audio-graph-card.c
-+++ b/sound/soc/generic/audio-graph-card.c
-@@ -63,7 +63,7 @@ static int graph_get_dai_id(struct device_node *ep)
- 	struct device_node *endpoint;
- 	struct of_endpoint info;
- 	int i, id;
--	u32 *reg;
-+	const u32 *reg;
- 	int ret;
- 
- 	/* use driver specified DAI ID if exist */
--- 
-2.20.1
+> 
+>>  {
+>>  	u32 val;
+>>  
+>> -- 
+>> 2.7.4
+> 
 
