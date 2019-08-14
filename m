@@ -2,112 +2,94 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D98C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E553C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8B620665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6402420665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 00:24:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565742245;
+	bh=b9sTOzVRZO2UFsFBvHh59r6YtcTgFSYnb0uAfs4xYSg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=oVK9gRxMrynFZa9Wl83BDVmxDhuoGZ75TzS1kMywJDT4Kh+mPjvf7y//zEv0Pejmo
+	 0Kxu1O4Nact8KUXOwffs3h5MthRzca/LRexymKh7iQEHDpgXLxhNrVTbANamsCqCM+
+	 8B8eVaIb4HQN35d7vogFXwoZK3tHs7r8xlRAbpuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfHNAWV (ORCPT
+        id S1726712AbfHNAYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 20:22:21 -0400
-Received: from mga04.intel.com ([192.55.52.120]:13153 "EHLO mga04.intel.com"
+        Tue, 13 Aug 2019 20:24:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbfHNAWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 20:22:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 17:22:21 -0700
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="167220997"
-Received: from tsduncan-ubuntu.jf.intel.com (HELO [10.7.169.130]) ([10.7.169.130])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 13 Aug 2019 17:22:20 -0700
-Subject: Re: [PATCH net-next] net/ncsi: allow to customize BMC MAC Address
- offset
-From:   Terry Duncan <terry.s.duncan@linux.intel.com>
-To:     Tao Ren <taoren@fb.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        Ben Wei <benwei@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        "David S.Miller" <davem@davemloft.net>,
-        William Kennington <wak@google.com>
-References: <20190807002118.164360-1-taoren@fb.com>
- <20190807112518.644a21a2@cakuba.netronome.com>
- <20190807184143.GE26047@lunn.ch>
- <806a76a8-229a-7f24-33c7-2cf2094f3436@fb.com>
- <20190808133209.GB32706@lunn.ch>
- <77762b10-b8e7-b8a4-3fc0-e901707a1d54@fb.com>
- <20190808211629.GQ27917@lunn.ch>
- <ac22bbe0-36ca-b4b9-7ea7-7b1741c2070d@fb.com>
- <20190808230312.GS27917@lunn.ch>
- <f1519844-4e21-a9a4-1a69-60c37bd07f75@fb.com>
- <10079A1AC4244A41BC7939A794B72C238FCE0E03@fmsmsx104.amr.corp.intel.com>
- <bc9da695-3fd3-6643-8e06-562cc08fbc62@linux.intel.com>
- <dc0382c9-7995-edf5-ee1c-508b0f759c3d@linux.intel.com>
- <faa1b3c9-9ba3-0fff-e1d4-f6dddb60c52c@fb.com>
- <33e3e783-fb93-e628-8baa-a8374540ea25@linux.intel.com>
-Message-ID: <68c25963-4659-c5a2-f8ca-ee51ae17d63f@linux.intel.com>
-Date:   Tue, 13 Aug 2019 17:22:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1726007AbfHNAYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 20:24:03 -0400
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EF3120665;
+        Wed, 14 Aug 2019 00:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565742243;
+        bh=b9sTOzVRZO2UFsFBvHh59r6YtcTgFSYnb0uAfs4xYSg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=awRYqL6qd97cGg07d9AY7B2KkWjvnuH1hQxRbS6/Xq4lPQJs7/jYcbqB7X9gAUhe1
+         0NP51JH8xA3Ul9lYhipBS1mxELGiBOEtBVJZ/3pOMUwrynyHCFfRkkQdYbzQT3YHj8
+         c6ymwmg2ctGskEOehlubifwIEAYler+U9+rJEGL0=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCH] clk: socfpga: deindent code to proper indentation
+Date:   Tue, 13 Aug 2019 17:24:02 -0700
+Message-Id: <20190814002402.18154-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
 MIME-Version: 1.0
-In-Reply-To: <33e3e783-fb93-e628-8baa-a8374540ea25@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/19 1:54 PM, Terry Duncan wrote:
-> 
-> On 8/13/19 11:28 AM, Tao Ren wrote:
->> On 8/13/19 9:31 AM, Terry Duncan wrote:
->>> Tao, in your new patch will it be possible to disable the setting of 
->>> the BMC MAC?  I would like to be able to send NCSI_OEM_GET_MAC 
->>> perhaps with netlink (TBD) to get the system address without it 
->>> affecting the BMC address.
->>>
->>> I was about to send patches to add support for the Intel adapters 
->>> when I saw this thread.
->>>
->>> Thanks,
->>>
->>> Terry
->>
->> Hi Terry,
->>
->> Sounds like you are planning to configure BMC MAC address from user 
->> space via netlink? Ben Wei <benwei@fb.com> started a thread 
->> "Out-of-band NIC management" in openbmc community for NCSI management 
->> using netlink, and you may follow up with him for details.
->>
->> I haven't decided what to do in my v2 patch: maybe using device tree, 
->> maybe moving the logic to uboot, and I'm also evaluating the netlink 
->> option. But it shouldn't impact your patch, because you can disable 
->> NCSI_OEM_GET_MAC option from your config file.
-> 
-> Thanks Tao. I see now that disabling the NCSI_OEM_GET_MAC option will do 
-> what I want.
-> 
-> Best,
-> Terry
-Hi Tao,
+This code is indented oddly, causing checkpatch to complain. Indent it
+properly.
 
-After a second look, it appears that the OEM handlers for Broadcom and 
-Melanox in ncsi-rsp.c will set the MAC regardless of the origin of the 
-request. Even with NCSI_OEM_GET_MAC disabled, sending an OEM command 
-with netlink would result in setting the BMC MAC.
+Cc: Dinh Nguyen <dinguyen@kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/socfpga/clk-gate.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
-Terry
+diff --git a/drivers/clk/socfpga/clk-gate.c b/drivers/clk/socfpga/clk-gate.c
+index 2a5876dfa0cf..43ecd507bf83 100644
+--- a/drivers/clk/socfpga/clk-gate.c
++++ b/drivers/clk/socfpga/clk-gate.c
+@@ -45,8 +45,8 @@ static u8 socfpga_clk_get_parent(struct clk_hw *hwclk)
+ 	if (streq(name, SOCFPGA_MMC_CLK))
+ 		return perpll_src &= 0x3;
+ 	if (streq(name, SOCFPGA_NAND_CLK) ||
+-			streq(name, SOCFPGA_NAND_X_CLK))
+-			return (perpll_src >> 2) & 3;
++	    streq(name, SOCFPGA_NAND_X_CLK))
++		return (perpll_src >> 2) & 3;
+ 
+ 	/* QSPI clock */
+ 	return (perpll_src >> 4) & 3;
+
+base-commit: 5f9e832c137075045d15cd6899ab0505cfb2ca4b
+prerequisite-patch-id: aeb7774ad0e487e9156f9065b4ba813eb74fb9b0
+prerequisite-patch-id: 71bf5a81905764a6f5639fd13eae3ce644baed20
+prerequisite-patch-id: 75904dba6c6767f4d9bcfa1f32002d2992e647b7
+prerequisite-patch-id: 478335b7427317b0e86f3b5433ffcec7f7c3b83e
+prerequisite-patch-id: c532536a7433c0041f7ad1c7ee0b08a8d4c99a9d
+prerequisite-patch-id: 7d179ce42cc421f3d110bade4783780955f8df42
+prerequisite-patch-id: 390fa8a15fccc52e454e27552cdb835cb0e35b7f
+prerequisite-patch-id: c9092a57b488d94d1ba249ef726c29fafb5abcbb
+prerequisite-patch-id: d39cde5e03e04c09a66bffb3851a23dc5e5128d6
+-- 
+Sent by a computer through tubes
+
