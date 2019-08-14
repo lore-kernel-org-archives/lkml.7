@@ -2,124 +2,81 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC34C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E36FC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B99A92084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35372208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 15:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565796627;
+	bh=CX48mP1/qs/V0WIfEuGbZqpNO4Jo433GaILdRZ/JeEM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Qz1o8t5p5cv96LpuPV1IETg1tbkwB7QaPCa1c18lW5KvpgrybpsarMMtPPlPKTd/I
+	 ln6KMm9n471ni1Bz3lk+pZ6rBE1qqRnx7rIETyhdeFNMa3aI7DbL+t+OZ2BgingWb0
+	 26E62rNA8H+ZGEB68o1o1jj+QSX+d/U9CuvO22Vo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbfHNP3x (ORCPT
+        id S1728104AbfHNPa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 11:29:53 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42613 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbfHNP3x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 11:29:53 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y1so475551plp.9;
-        Wed, 14 Aug 2019 08:29:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=z0MSIiaazH9n7y7CjJIuJYZjOBI8O+Eixsa8yK04afk=;
-        b=DxhHyYorrFq464afg13l8v1x1ObZHZg+aLoaFmrI7JEOE1OpRWhhkOR4q9hAsMLsFJ
-         8/McjeGm5SjviNaFStnnU8Fe7PYFm3RJgSauPva4PyO/nnbC9G60bhq6O20WuCCj5BuI
-         gK0ofaHkihrYpI5/tguMYHj+OFEW/NMal64I4patefMVTj8CcJxlvd3UZuXKxXdErCIB
-         o5RTm8lnjc5LfBTvBhmrWwZjDHzefC7bdWBo6/U1mkHHcObm9UTkYq/VQCOGqV2/jgxl
-         vTRxGKC+8G9c6KLvvy2YqtY36jNxVKSYERpjyi+hQfkujB/OA70Oqa3xaYZkXVglty9f
-         n2rw==
-X-Gm-Message-State: APjAAAX236z8N4GwAeXU6OFibC7owjir/dacqhIeLw2YQXpnrbG486By
-        4NRdnMtVeSSPjALGYKpnbhE7C8Nz
-X-Google-Smtp-Source: APXvYqyBcsaRNq53NqWG4y44GJZwnDO3p5ZWxzkVNewTfu1WFnt5wQuXPgiVE5Ekgev7iAsC+xfD6Q==
-X-Received: by 2002:a17:902:8489:: with SMTP id c9mr43796601plo.327.1565796592611;
-        Wed, 14 Aug 2019 08:29:52 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id y128sm45301pgy.41.2019.08.14.08.29.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Aug 2019 08:29:51 -0700 (PDT)
-Subject: Re: [PATCH] RFC: loop: Avoid calling blk_mq_freeze_queue() when
- possible.
-To:     Martijn Coenen <maco@android.com>, axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, kernel-team@android.com,
-        narayan@google.com, dariofreni@google.com, ioffe@google.com,
-        jiyong@google.com, maco@google.com
-References: <20190814103244.92518-1-maco@android.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <29990045-b05e-1411-a5c2-32e735265a04@acm.org>
-Date:   Wed, 14 Aug 2019 08:29:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 14 Aug 2019 11:30:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726551AbfHNPaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 11:30:25 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01F702084F;
+        Wed, 14 Aug 2019 15:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565796624;
+        bh=CX48mP1/qs/V0WIfEuGbZqpNO4Jo433GaILdRZ/JeEM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PGQUpwQFn9e0omqFaTUYm7VbpW+lXW0bU9M+B2FR7aU67oDqxmiEmiBjnW9MulJx/
+         T/qx3MWZHfn9hU+trpxwu/BTwz32PdAXz9bgi9ZQTHzoU/zlJ6Sohx0ZZfOhnK/Leq
+         wdI/Ln1KlneQc+SVrWr0dvUwdu0+FV6Oi5R8bxfA=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-clk@vger.kernel.org
+Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com, stable@vger.kernel.org
+Subject: [PATCH] clk: socfpga: stratix10: fix rate caclulationg for cnt_clks
+Date:   Wed, 14 Aug 2019 10:30:14 -0500
+Message-Id: <20190814153014.12962-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190814103244.92518-1-maco@android.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/19 3:32 AM, Martijn Coenen wrote:
-> Since Android Q, the creation and configuration of loop devices is in
-> the critical path of device boot. We found that the configuration of
-> loop devices is pretty slow, because many ioctl()'s involve freezing the
-> block queue, which in turn needs to wait for an RCU grace period. On
-> Android devices we've observed up to 60ms for the creation and
-> configuration of a single loop device; as we anticipate creating many
-> more in the future, we'd like to avoid this delay.
-> 
-> This allows LOOP_SET_BLOCK_SIZE to be called before the loop device has
-> been bound; since the block queue is not running at that point, we can
-> avoid the expensive freezing of the queue.
-> 
-> On a recent x86, this patch yields the following results:
-> 
-> ===
-> Call LOOP_SET_BLOCK_SIZE on /dev/loop0 before being bound
-> ===
-> ~# time ./set_block_size
-> 
-> real 0m0.002s
-> user 0m0.000s
-> sys  0m0.002s
-> 
-> ===
-> Call LOOP_SET_BLOCK_SIZE on /dev/loop0 after being bound
-> ===
-> ~# losetup /dev/loop0 fs.img
-> ~# time ./set_block_size
-> 
-> real 0m0.008s
-> user 0m0.000s
-> sys  0m0.002s
-> 
-> Over many runs, this is a 4x improvement.
-> 
-> This is RFC because technically it is a change in behavior; before,
-> calling LOOP_SET_BLOCK_SIZE on an unbound device would return ENXIO, and
-> userspace programs that left it in their code despite the returned
-> error, would now suddenly see the requested value effectuated. I'm not
-> sure whether this is acceptable.
-> 
-> An alternative might be a CONFIG option to set the default block size to
-> another value than 512. Another alternative I considered is allowing the
-> block device to be created with a "frozen" queue, where we can manually
-> unfreeze the queue when all the configuration is done. This would be a
-> much larger code change, though.
+Checking bypass_reg is incorrect for calculating the cnt_clk rates.
+Instead we should be checking that there is a proper hardware register
+that holds the clock divider.
 
-Hi Martijn,
+Cc: stable@vger.kernel.org
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+ drivers/clk/socfpga/clk-periph-s10.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Is the loop driver used in Android Q to make a file on a filesystem 
-visible as a block device or rather to make a subset of a block device 
-visible as a block device? In the latter case, have you considered to 
-use the dm-linear driver instead? I expect that the overhead per I/O of 
-dm-linear will be lower than that of the loop driver.
+diff --git a/drivers/clk/socfpga/clk-periph-s10.c b/drivers/clk/socfpga/clk-periph-s10.c
+index 5c50e723ecae..1a191eeeebba 100644
+--- a/drivers/clk/socfpga/clk-periph-s10.c
++++ b/drivers/clk/socfpga/clk-periph-s10.c
+@@ -38,7 +38,7 @@ static unsigned long clk_peri_cnt_clk_recalc_rate(struct clk_hw *hwclk,
+ 	if (socfpgaclk->fixed_div) {
+ 		div = socfpgaclk->fixed_div;
+ 	} else {
+-		if (!socfpgaclk->bypass_reg)
++		if (socfpgaclk->hw.reg)
+ 			div = ((readl(socfpgaclk->hw.reg) & 0x7ff) + 1);
+ 	}
+ 
+-- 
+2.20.0
 
-Bart.
