@@ -2,104 +2,136 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74335C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0204C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42EE32083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7EA9208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfHNOXK (ORCPT
+        id S1727721AbfHNOXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 10:23:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40374 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbfHNOXJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 10:23:09 -0400
-Received: from mail-qt1-f199.google.com ([209.85.160.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <halves@canonical.com>)
-        id 1hxuB9-0000Zd-In
-        for linux-kernel@vger.kernel.org; Wed, 14 Aug 2019 14:23:07 +0000
-Received: by mail-qt1-f199.google.com with SMTP id c14so10049329qtn.17
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 07:23:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HyNOdgzrf0nEwWLN0ipEiO26i5YRDnxup2Cu8HuBZzY=;
-        b=Wky/Vjt3afd31T38l9FRrZn4VRf5Kr+BLUQeRKEmSWiGGFovhqwBRQT2O7VPwqZmkJ
-         O15JnHP7oU1aiBIR8Q6F0ZfHmmRS/36LKWNz47jLWorfocLGOO/kijaSTcpNb95YE+he
-         Vm6+vtAkLHdsmSBrqgLU4Q0Wgsz09igA/wf4/e7s8zbkVULgD9SmXgxPzcald8y0QpC1
-         yYl58WqF8bIvybrIvonjbSG5uxwy9pJW9LLDUa4Jck0juU6RFas7YD3dSuDzjlfae2wr
-         7tLwKO205fl//3/G8KrG/FxUmkSEuvr6Bt0xk3arHt+gQWI7C0650G0ZlVPlk34svwcT
-         ylWA==
-X-Gm-Message-State: APjAAAVg9tBZTdvXrxvxSt5cCtYRjTyh8Aehde4/g5pkoqE9SCj21r9+
-        PYJCfuNj9oEH5TwwtOxsSorkAYwgFfcaX6agD4O4jB2Ck1ZBnOLibxg3tijiViDD5SDJfeJLqzR
-        V77hWo0dV7/0Cq/JHwh9ZNy3BpCFhsg9goBu6k1caow==
-X-Received: by 2002:a37:9b82:: with SMTP id d124mr18216790qke.110.1565792586775;
-        Wed, 14 Aug 2019 07:23:06 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqysQsjgJidhgsWx6K4OuqZYtSPysL0lhrpjw0CC5EWcGKlyOF9ztg1knSVFzSWIoV4eaLGtaQ==
-X-Received: by 2002:a37:9b82:: with SMTP id d124mr18216773qke.110.1565792586594;
-        Wed, 14 Aug 2019 07:23:06 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:4e3:83c1:584b:6fd:30f2:e7ed])
-        by smtp.gmail.com with ESMTPSA id x26sm7928348qkn.116.2019.08.14.07.23.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 07:23:05 -0700 (PDT)
-From:   Heitor Alves de Siqueira <halves@canonical.com>
-To:     colyli@suse.de
-Cc:     kent.overstreet@gmail.com, linux-bcache@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shile.zhang@linux.alibaba.com,
-        vojtech@suse.com
-Subject: Re: [PATCH] bcache: add cond_resched() in __bch_cache_cmp()
-Date:   Wed, 14 Aug 2019 11:23:01 -0300
-Message-Id: <20190814142301.32556-1-halves@canonical.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <c13b1d2a-a8e6-f20c-604e-a375c018bf66@suse.de>
-References: <c13b1d2a-a8e6-f20c-604e-a375c018bf66@suse.de>
+        Wed, 14 Aug 2019 10:23:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42778 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbfHNOXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 10:23:12 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7E87619D335;
+        Wed, 14 Aug 2019 14:23:11 +0000 (UTC)
+Received: from [10.36.116.49] (ovpn-116-49.ams2.redhat.com [10.36.116.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EC730546E0;
+        Wed, 14 Aug 2019 14:23:09 +0000 (UTC)
+Subject: Re: [PATCH v1 3/4] mm/memory_hotplug: Simplify online_pages_range()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20190809125701.3316-1-david@redhat.com>
+ <20190809125701.3316-4-david@redhat.com>
+ <20190814141920.GB17933@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <97885e6d-7b54-e3a5-dbca-67d0d19abc02@redhat.com>
+Date:   Wed, 14 Aug 2019 16:23:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190814141920.GB17933@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 14 Aug 2019 14:23:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Coly,
+On 14.08.19 16:19, Michal Hocko wrote:
+> On Fri 09-08-19 14:57:00, David Hildenbrand wrote:
+>> move_pfn_range_to_zone() will set all pages to PG_reserved via
+>> memmap_init_zone(). The only way a page could no longer be reserved
+>> would be if a MEM_GOING_ONLINE notifier would clear PG_reserved - which
+>> is not done (the online_page callback is used for that purpose by
+>> e.g., Hyper-V instead). walk_system_ram_range() will never call
+>> online_pages_range() with duplicate PFNs, so drop the PageReserved() check.
+>>
+>> Simplify the handling, as online_pages always corresponds to nr_pages.
+>> There is no need for online_pages_blocks() anymore.
+> 
+> This would be easier to review if split up into two patches. One that
+> only performs cleanup without any other changes and the PageReserved
+> check. I like the check going away and we should get rid of the
+> dependency on the Reserved bit completely.
 
-We've had users impacted by system stalls and were able to trace it back to the
-bcache priority_stats query. After investigating a bit further, it seems that
-the sorting step in the quantiles calculation can cause heavy CPU
-contention. This has a severe performance impact on any task that is running in
-the same CPU as the sysfs query, and caused issues even for non-bcache
-workloads.
+Yes, makes sense.
 
-We did some test runs with fio to get a better picture of the impact on
-read/write workloads while a priority_stats query is running, and came up with
-some interesting results. The bucket locking doesn't seem to have that
-much performance impact even in full-write workloads, but the 'sort' can affect
-bcache device throughput and latency pretty heavily (and any other tasks that
-are "unlucky" to be scheduled together with it). In some of our tests, there was
-a performance reduction of almost 90% in random read IOPS to the bcache device
-(refer to the comparison graph at [0]). There's a few more details on the
-Launchpad bug [1] we've created to track this, together with the complete fio
-results + comparison graphs.
+> 
+> Other than that I find the start_pfn and pfn being used both for
+> iteration each a different way really confusing and I cannot convince
+> myself it is even correct because I didn't bother to look deeper as
+> I simply think that the order manipulation from the previous is just
+> making things worse at this moment. If the problem is even real then it
+> can be done on top instead with some real example of the memory layout
+> that breaks.
 
-The cond_resched() patch suggested by Shile Zhang actually improved performance
-a lot, and eliminated the stalls we've observed during the priority_stats
-query. Even though it may cause the sysfs query to take a bit longer, it seems
-like a decent tradeoff for general performance when running that query on a
-system under heavy load. It's also a cheap short-term solution until we can look
-into a more complex re-write of the priority_stats calculation (perhaps one that
-doesn't require the locking?). Could we revisit Shile's patch, and consider
-merging it?
+Yes, I'll rework this. Only "pfn" should be used in the loop (it seems
+to be correct but confusing I agree).
 
-Thanks!
-Heitor
+-- 
 
-[0] https://people.canonical.com/~halves/priority_stats/read/4k-iops-2Dsmooth.png
-[1] https://bugs.launchpad.net/bugs/1840043
+Thanks,
+
+David / dhildenb
