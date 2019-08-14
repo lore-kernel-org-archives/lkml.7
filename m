@@ -2,180 +2,136 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B365C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C142C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C491204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CDA208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfHNKoR (ORCPT
+        id S1727526AbfHNKoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:44:17 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:50282 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726265AbfHNKoP (ORCPT
+        Wed, 14 Aug 2019 06:44:24 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:47358 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726383AbfHNKoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:44:15 -0400
-X-UUID: 0a008f327833440c839a7017977fb0af-20190814
-X-UUID: 0a008f327833440c839a7017977fb0af-20190814
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 356022096; Wed, 14 Aug 2019 18:44:06 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 14 Aug 2019 18:44:01 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 14 Aug 2019 18:44:02 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v2 1/10] pwm: mediatek: add a property "num-pwms"
-Date:   Wed, 14 Aug 2019 18:43:31 +0800
-Message-ID: <621e49c01b943edb6ddac9182f34719eb0727f01.1548313019.git.ryder.lee@mediatek.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 14 Aug 2019 06:44:23 -0400
+Received: from dread.disaster.area (pa49-195-190-67.pa.nsw.optusnet.com.au [49.195.190.67])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 9F7EB43D394;
+        Wed, 14 Aug 2019 20:44:18 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hxqkI-0001pY-Aq; Wed, 14 Aug 2019 20:43:10 +1000
+Date:   Wed, 14 Aug 2019 20:43:10 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Mike Snitzer <msnitzer@redhat.com>, junxiao.bi@oracle.com,
+        dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>,
+        honglei.wang@oracle.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] direct-io: use GFP_NOIO to avoid deadlock
+Message-ID: <20190814104310.GN6129@dread.disaster.area>
+References: <alpine.LRH.2.02.1908080540240.15519@file01.intranet.prod.int.rdu2.redhat.com>
+ <20190809013403.GY7777@dread.disaster.area>
+ <alpine.LRH.2.02.1908090725290.31061@file01.intranet.prod.int.rdu2.redhat.com>
+ <20190809215733.GZ7777@dread.disaster.area>
+ <alpine.LRH.2.02.1908131231010.6852@file01.intranet.prod.int.rdu2.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: C210467220D08AB4A2720086E49BB2C845657508C5D2C45C5876C5C23677EC2D2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.02.1908131231010.6852@file01.intranet.prod.int.rdu2.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=TR82T6zjGmBjdfWdGgpkDw==:117 a=TR82T6zjGmBjdfWdGgpkDw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=B-2tCdbVYXm3Rcn1sc0A:9
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+On Tue, Aug 13, 2019 at 12:35:49PM -0400, Mikulas Patocka wrote:
+> 
+> 
+> On Sat, 10 Aug 2019, Dave Chinner wrote:
+> 
+> > No, you misunderstand. I'm talking about blocking kswapd being
+> > wrong.  i.e. Blocking kswapd in shrinkers causes problems
+> > because th ememory reclaim code does not expect kswapd to be
+> > arbitrarily delayed by waiting on IO. We've had this problem with
+> > the XFS inode cache shrinker for years, and there are many reports
+> > of extremely long reclaim latencies for both direct and kswapd
+> > reclaim that result from kswapd not making progress while waiting
+> > in shrinkers for IO to complete.
+> > 
+> > The work I'm currently doing to fix this XFS problem can be found
+> > here:
+> > 
+> > https://lore.kernel.org/linux-fsdevel/20190801021752.4986-1-david@fromorbit.com/
+> > 
+> > 
+> > i.e. the point I'm making is that waiting for IO in kswapd reclaim
+> > context is considered harmful - kswapd context shrinker reclaim
+> > should be as non-blocking as possible, and any back-off to wait for
+> > IO to complete should be done by the high level reclaim core once
+> > it's completed an entire reclaim scan cycle of everything....
+> > 
+> > What follows from that, and is pertinent for in this situation, is
+> > that if you don't block kswapd, then other reclaim contexts are not
+> > going to get stuck waiting for it regardless of the reclaim context
+> > they use.
+> > 
+> > Cheers,
+> > 
+> > Dave.
+> 
+> So, what do you think the dm-bufio shrinker should do?
 
-This adds a property "num-pwms" to avoid having an endless
-list of compatibles with no differences for the same driver.
+I'm not familiar with the constraints the code operates under, so
+I can't guarantee that I have an answer for you... :/
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
----
-Used: 
-https://patchwork.kernel.org/project/linux-mediatek/list/?series=68207
+> Currently it tries to free buffers on the clean list and if there are not 
+> enough buffers on the clean list, it goes into the dirty list - it writes 
+> the buffers back and then frees them.
+> 
+> What should it do? Should it just start writeback of the dirty list 
+> without waiting for it? What should it do if all the buffers are under 
+> writeback?
 
-Changes since v2:
-- use num-pwms instead of mediatek,num-pwms.
-- rename the member from num_pwms to fallback_num_pwms to make it more obvious
-  that it doesn't represent the actually used value.
-- add a dev_warn and a expressive comment to help other developers to not start
-  adding num_pwms in the compatible_data.
+For kswapd, it should do what it can without blocking. e.g. kicking
+an async writer thread rather than submitting the IO itself. That's
+what I changes XFS to do.
 
-Changes since v1:
-- add some checks for backwards compatibility.
----
- drivers/pwm/pwm-mediatek.c | 35 ++++++++++++++++++++++-------------
- 1 file changed, 22 insertions(+), 13 deletions(-)
+And if you look at the patchset in the above link, it also
+introduced a mechanism for shrinkers to communicate back to the high
+level reclaim code that kswapd needs to back off
+(reclaim_state->need_backoff).
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index eb6674c..f9d67fb 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -55,7 +55,7 @@ enum {
- };
- 
- struct mtk_pwm_platform_data {
--	unsigned int num_pwms;
-+	unsigned int fallback_npwms;
- 	bool pwm45_fixup;
- 	bool has_clks;
- };
-@@ -226,27 +226,36 @@ static void mtk_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 
- static int mtk_pwm_probe(struct platform_device *pdev)
- {
--	const struct mtk_pwm_platform_data *data;
-+	struct device_node *np = pdev->dev.of_node;
- 	struct mtk_pwm_chip *pc;
- 	struct resource *res;
--	unsigned int i;
-+	unsigned int i, npwms;
- 	int ret;
- 
- 	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
- 	if (!pc)
- 		return -ENOMEM;
- 
--	data = of_device_get_match_data(&pdev->dev);
--	if (data == NULL)
--		return -EINVAL;
--	pc->soc = data;
-+	pc->soc = of_device_get_match_data(&pdev->dev);
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	pc->regs = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(pc->regs))
- 		return PTR_ERR(pc->regs);
- 
--	for (i = 0; i < data->num_pwms + 2 && pc->soc->has_clks; i++) {
-+	ret = of_property_read_u32(np, "num-pwms", &npwms);
-+	if (ret < 0) {
-+		/* It's deprecated, we should specify num_pwms via DT now. */
-+		if (pc->soc->fallback_npwms) {
-+			npwms = pc->soc->fallback_npwms;
-+			dev_warn(&pdev->dev, "DT is outdated, please update it\n");
-+		} else {
-+			dev_err(&pdev->dev, "failed to get number of PWMs\n");
-+			return ret;
-+		}
-+	}
-+
-+	for (i = 0; i < npwms + 2 && pc->soc->has_clks; i++) {
- 		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
- 		if (IS_ERR(pc->clks[i])) {
- 			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
-@@ -260,7 +269,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 	pc->chip.dev = &pdev->dev;
- 	pc->chip.ops = &mtk_pwm_ops;
- 	pc->chip.base = -1;
--	pc->chip.npwm = data->num_pwms;
-+	pc->chip.npwm = npwms;
- 
- 	ret = pwmchip_add(&pc->chip);
- 	if (ret < 0) {
-@@ -279,25 +288,25 @@ static int mtk_pwm_remove(struct platform_device *pdev)
- }
- 
- static const struct mtk_pwm_platform_data mt2712_pwm_data = {
--	.num_pwms = 8,
-+	.fallback_npwms = 8,
- 	.pwm45_fixup = false,
- 	.has_clks = true,
- };
- 
- static const struct mtk_pwm_platform_data mt7622_pwm_data = {
--	.num_pwms = 6,
-+	.fallback_npwms = 6,
- 	.pwm45_fixup = false,
- 	.has_clks = true,
- };
- 
- static const struct mtk_pwm_platform_data mt7623_pwm_data = {
--	.num_pwms = 5,
-+	.fallback_npwms = 5,
- 	.pwm45_fixup = true,
- 	.has_clks = true,
- };
- 
- static const struct mtk_pwm_platform_data mt7628_pwm_data = {
--	.num_pwms = 4,
-+	.fallback_npwms = 4,
- 	.pwm45_fixup = true,
- 	.has_clks = false,
- };
+With these mechanism, the shrinker can start IO without blocking
+kswapd on congested request queues and tell memory reclaim to wait
+before calling this shrinker again. This allows kswapd to aggregate
+all the waits that shrinkers and page reclaim require to all
+progress to be made into a single backoff event. That means kswapd
+does other scanning work while background writeback goes on, and
+once everythign is scanned it does a single wait for everything that
+needs time to make progress...
+
+I think that should also work for the dm-bufio shrinker, and the the
+direct reclaim backoff parts of the patchset should work for
+non-blocking direct reclaim scanning as well, like it now does for
+XFS.
+
+Cheers,
+
+Dave.
 -- 
-1.9.1
-
+Dave Chinner
+david@fromorbit.com
