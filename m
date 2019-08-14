@@ -2,114 +2,168 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F97C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A49C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F06E206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:09:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f75OYjPP"
+	by mail.kernel.org (Postfix) with ESMTP id 0EDB9206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:10:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbfHNNJY (ORCPT
+        id S1728018AbfHNNKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 09:09:24 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36072 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfHNNJX (ORCPT
+        Wed, 14 Aug 2019 09:10:43 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38011 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727474AbfHNNKm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:09:23 -0400
-Received: by mail-wm1-f67.google.com with SMTP id g67so4424864wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 06:09:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UDLa6zXMAOjQhOfwSq9LjN1EM9IBbq4NVeShp4a46KE=;
-        b=f75OYjPPZqrZUXpIVDLeS6DLx3A+MnbtEpOHyayzqK0y7pDvvQDHb2pPMoFxAWJCrB
-         ufhbdsMKzG+hWZiS6/aPr7uiCVgSq1ZgCZcQC7yiCU1HYAH+KE08GSlO+DgbNQdOdEp9
-         WkWVjiAyySSx+VTYT3WHZ5/hF1XvD5z0bihtnMnTXlL7WFmgvogaWkUGtX4Rv2qgi3Gu
-         mLCbBqlv+xVSCjhCHawEVff1MG3clE/qBUgXrkbsT5QAlMiC7qTK8W+yQGW5VMMn+CGl
-         qmz1Q2Z1qBPAPgxfjdxLuueZAhR4GdYuZ4j/q9jI0Km84opMLHdDV+9OIiRwwfE3X5ZB
-         OHxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UDLa6zXMAOjQhOfwSq9LjN1EM9IBbq4NVeShp4a46KE=;
-        b=br6wKu6EJsMPPiHFvyLd5d6Ix/x9EpCyV6pqKHSygiExSghpr/0ys6XOGXstb9723l
-         JaoBU5ZrGbxbtjgzdZQ7WuqHnFys8/+ntkO3tx7d4IuVFIiJxjl7MH58O7IJnI9Os82y
-         dqt5BDO9GO8GvRhafC4rN0HfwoStlAXhHCVnCyQ38+RBpWBByPzD/7mY1IALsr/Y97wK
-         /TroDPtr4bwLuO+nGyh4pJJtgw0qiZtc0AtiXeqGPBZjXBa+jVTeANJIGQI6IHWRCCal
-         AzahTS0O7u3KjilfLCoY6FgP0Z5LuBQuDisjnh2yFzV1NYsbuFr7ODSNMejjHH8ra4ew
-         iUcQ==
-X-Gm-Message-State: APjAAAUQDxTMxTUFApiXjbUKjyFeJuUwzIvmsTZz6OVAIxstP7XTf7qR
-        VtAu90oy3LVBOeYlCd5FkCQKQwyIehs6l3qom2IgZfJHihl+27qH
-X-Google-Smtp-Source: APXvYqwYo+nywgJ51yXUMS0ayH35PhWDPLpiWFs2L1EnqpMr/rvtJW+8lSP/5xz5OHu5DkyvzL3KHDOVwxm+6gkEmOc=
-X-Received: by 2002:a1c:a481:: with SMTP id n123mr7882793wme.123.1565788162062;
- Wed, 14 Aug 2019 06:09:22 -0700 (PDT)
+        Wed, 14 Aug 2019 09:10:42 -0400
+Received: from [213.220.153.21] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1hxt33-0003Hp-Db; Wed, 14 Aug 2019 13:10:41 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
+Cc:     oleg@redhat.com, alistair23@gmail.com, ebiederm@xmission.com,
+        arnd@arndb.de, dalias@libc.org, torvalds@linux-foundation.org,
+        adhemerval.zanella@linaro.org, fweimer@redhat.com,
+        palmer@sifive.com, macro@wdc.com, zongbox@gmail.com,
+        akpm@linux-foundation.org, viro@zeniv.linux.org.uk, hpa@zytor.com,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v2 1/1] waitid: Add support for waiting for the current process group
+Date:   Wed, 14 Aug 2019 15:07:32 +0200
+Message-Id: <20190814130732.23572-2-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190814130732.23572-1-christian.brauner@ubuntu.com>
+References: <CAKmqyKMJPQAOKn11xepzAwXOd4e9dU0Cyz=A0T-uMEgUp5yJjA@mail.gmail.com>
+ <20190814130732.23572-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-References: <20190813212251.12316-1-ben.whitten@gmail.com> <20190814100115.GF4640@sirena.co.uk>
-In-Reply-To: <20190814100115.GF4640@sirena.co.uk>
-From:   Ben Whitten <ben.whitten@gmail.com>
-Date:   Wed, 14 Aug 2019 14:09:11 +0100
-Message-ID: <CAF3==iuZvCnmAg9hqs8ivHw0wHaUQEf8k9U8=KTekMMjdyyEKg@mail.gmail.com>
-Subject: Re: [PATCH] regmap: fix writes to non incrementing registers
-To:     Mark Brown <broonie@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, nandor.han@vaisala.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 at 11:01, Mark Brown <broonie@kernel.org> wrote:
->
-> On Tue, Aug 13, 2019 at 10:22:51PM +0100, Ben Whitten wrote:
->
-> > @@ -1489,10 +1489,11 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
-> >       WARN_ON(!map->bus);
-> >
-> >       /* Check for unwritable registers before we start */
-> > -     for (i = 0; i < val_len / map->format.val_bytes; i++)
-> > -             if (!regmap_writeable(map,
-> > -                                  reg + regmap_get_offset(map, i)))
-> > -                     return -EINVAL;
-> > +     if (!regmap_writeable_noinc(map, reg))
-> > +             for (i = 0; i < val_len / map->format.val_bytes; i++)
-> > +                     if (!regmap_writeable(map,
-> > +                                          reg + regmap_get_offset(map, i)))
-> > +                             return -EINVAL;
->
-> This feels like we're getting ourselves confused about nonincrementing
-> registers and probably have other breakage somewhere else - we're
-> already checking for nonincrementability in regmap_write_noinc(), and
-> here we're only checking if the first register in the block has that
-> property which might blow up on us if there's a register in the middle
-> of the block that is nonincrementable.  If we're going to check this
-> here I think we should check on every register, but this is
-> _raw_write_impl() which is part of the call path for implementing
-> regmap_noinc_write() so checking here will break the API purpose
-> designed for nonincrementing writes.
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-So it appeared that the last patch in this area for validating a register
-block [1] broke the regmap_noinc_write use case.
-Because regmap_noinc_write calls _regmap_raw_write and in
-turn hits the _regmap_raw_write_impl, the val_len is the depth of the
-one register to write to and not a block of registers which is assumed
-by the previous check. By inserting a check that the first (and only)
-register is a noinc one allows me to start writing to my FIFO again.
+It was recently discovered that the linux version of waitid is not a
+superset of the other wait functions because it does not include
+support for waiting for the current process group.  This has two
+downsides.  An extra system call is needed to get the current process
+group, and a signal could come in between the system call that
+retrieved the process gorup and the call to waitid that changes the
+current process group.
 
-I'm all for an alternative solution though if there is a cleaner approach.
+Allow userspace to avoid both of those issues by defining
+idtype == P_PGID and id == 0 to mean wait for the caller's process
+group at the time of the call.
 
-Kind regards,
-Ben
+Arguments can be made for using a different choice of idtype and id
+for this case but the BSDs already use this P_PGID and 0 to indicate
+waiting for the current process's process group.  So be nice to user
+space programmers and don't introduce an unnecessary incompatibility.
 
-[1] https://lore.kernel.org/patchwork/patch/1057184/
+Some people have noted that the posix description is that
+waitpid will wait for the current process group, and that in
+the presence of pthreads that process group can change.  To get
+clarity on this issue I looked at XNU, FreeBSD, and Luminos.  All of
+those flavors of unix waited for the current process group at the
+time of call and as written could not adapt to the process group
+changing after the call.
+
+At one point Linux did adapt to the current process group changing but
+that stopped in 161550d74c07 ("pid: sys_wait... fixes").  It has been
+over 11 years since Linux has that behavior, no programs that fail
+with the change in behavior have been reported, and I could not
+find any other unix that does this.  So I think it is safe to clarify
+the definition of current process group, to current process group
+at the time of the wait function.
+
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Rich Felker <dalias@libc.org>
+Cc: Alistair Francis <alistair23@gmail.com>
+Cc: Zong Li <zongbox@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Florian Weimer <fweimer@redhat.com>
+Cc: Adhemerval Zanella <adhemerval.zanella@linaro.org>
+Cc: GNU C Library <libc-alpha@sourceware.org>
+---
+v1:
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - move find_get_pid() calls into the switch statements to minimize
+    merge conflicts with P_PIDFD changes and adhere to coding style
+    discussions we had for P_PIDFD
+
+v2:
+- Oleg Nesterov <oleg@redhat.com>:
+  - take rcu_read_lock() around task_pgrp() so that we don't race with
+    another thread changing the pgrp
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - introduce find_get_pgrp()
+---
+ kernel/exit.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 5b4a5dcce8f8..d02715a39f68 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -1554,6 +1554,20 @@ static long do_wait(struct wait_opts *wo)
+ 	return retval;
+ }
+ 
++static struct pid *find_get_pgrp(pid_t nr)
++{
++	struct pid *pid;
++
++	if (nr)
++		return find_get_pid(nr);
++
++	rcu_read_lock();
++	pid = get_pid(task_pgrp(current));
++	rcu_read_unlock();
++
++	return pid;
++}
++
+ static long kernel_waitid(int which, pid_t upid, struct waitid_info *infop,
+ 			  int options, struct rusage *ru)
+ {
+@@ -1576,19 +1590,20 @@ static long kernel_waitid(int which, pid_t upid, struct waitid_info *infop,
+ 		type = PIDTYPE_PID;
+ 		if (upid <= 0)
+ 			return -EINVAL;
++
++		pid = find_get_pid(upid);
+ 		break;
+ 	case P_PGID:
+ 		type = PIDTYPE_PGID;
+-		if (upid <= 0)
++		if (upid < 0)
+ 			return -EINVAL;
++
++		pid = find_get_pgrp(upid);
+ 		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+ 
+-	if (type < PIDTYPE_MAX)
+-		pid = find_get_pid(upid);
+-
+ 	wo.wo_type	= type;
+ 	wo.wo_pid	= pid;
+ 	wo.wo_flags	= options;
+-- 
+2.22.0
+
