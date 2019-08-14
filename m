@@ -2,170 +2,312 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C06F3C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1029C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D342063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FEB2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mWdzdk2y"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ASoxP7rO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbfHNNq1 (ORCPT
+        id S1728171AbfHNNrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 09:46:27 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45026 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727755AbfHNNqZ (ORCPT
+        Wed, 14 Aug 2019 09:47:01 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37259 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfHNNrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:46:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lfey4WDBhuksYHGZdkucZywx82anwHHWoHAXRD/jeH4=; b=mWdzdk2yMkgSgWmtHgVV6JwBvT
-        AFOk0ztsmUH5XKuBBN7ynZOtnhyAz+pvhhP6SE1KBCHEqqD/XB4f06rTVg1mvd4/OU363mIAVsiH6
-        SbSWnSz2o3pTH6msMkFyw6y4dFkcFcrNP25YVGHAeIL9ADD6l2b/TB3UmnjBFTXbNp5ITn8+gvmI1
-        DfyckNu7zZBAKUS9CT+jbUbBAaXFWu83En1AIOhDvf+nCCmIiQQE9MUDCkXTGni11GqFGQ94mFXDn
-        2bCZv9yDG2HiJhPWvxYjKH3K7G2/XfFz6KqXyNFQD0ydIo5bEHVWop5UY0TnhJjwPq2LZoFUjMgbY
-        1FIz8tqw==;
-Received: from [2001:4bb8:180:1ec3:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hxtbZ-0003ZG-32; Wed, 14 Aug 2019 13:46:21 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        iommu@lists.linux-foundation.org, linux-sh@vger.kernel.org,
+        Wed, 14 Aug 2019 09:47:00 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z23so4529847wmf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 06:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=nTVgW66htPmFXYFJDpkKh6h9k52+8k0c73ltmbLRxWg=;
+        b=ASoxP7rOnKEL/HaRBNfKDMr5/vaFzSs3WvwSRHpHg9ZDcllVOBiPbmyA+sAJ8jVoD/
+         cVvhrnX6eZKjQHl9d9NPg6DMDWFGO/czo+zQVn5hx2+x9wtnluZFkTvxyu6oJobAT/JK
+         RlApuE88RCP9ceG66Axu4KD39PM0y57pstIxZVxx6oX0lfDuKQ3HYQGFh15fI+P8UESX
+         W8xPfCkGKsp9l00NfgOFFXaLhO8F+XQJmwahQKCEk1FA/PEJXPidjtKC1jTfqzhM17Ef
+         RsjSTPO7QcPvOFMnK4l4f0lHc47qndvz/CUJwnlS9aAhL+gXDoH7wBY6gp9egTBSLEME
+         WNtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=nTVgW66htPmFXYFJDpkKh6h9k52+8k0c73ltmbLRxWg=;
+        b=YWoiW8ncS/jpKEd4JcHHSLspn8TqUJ6YKU9oKP+m/ZLIFENABorZgGO/VllavhSBlE
+         kdVso8hDGwcvE1mw/pGdbKHHhSrz0AkKJ2EJ+GXBEOqtQoXboi2jahNGnLx6TzG+EwCh
+         IWPJfNAss8YX27Ih3W9h8bIAiJNcmAnJG6FT9fxJ3nMwymYeb8w/RvayRyux9+BWEnug
+         X1tBiefNUew5SggwtkLLRwjQ8jfvAPOG7GA74OJK8XEW+l/WdaqewSExPHbuLzMnj5ef
+         QDFPOuMR0nv2x+DgMjclTOxgK0HzHA6Y5CuJldzN3XYOgPvAXSsbDA/HQBOvtjQULJyI
+         bzjw==
+X-Gm-Message-State: APjAAAWP8xDpzH9dNhMzAGciRX9NOIm2f2KwjD3HO2lHOlD/z9dGVfxN
+        WthRMkK/AkvY8DMfT9vhE0hDCd7nLq7E3g==
+X-Google-Smtp-Source: APXvYqwuglte2f576lPiHbb4D4NDNhit8iVQj9m/KmXK3GYznu3BlfNMv4KC1rNGkvgLECIa/Mud6A==
+X-Received: by 2002:a1c:18a:: with SMTP id 132mr8712502wmb.15.1565790416660;
+        Wed, 14 Aug 2019 06:46:56 -0700 (PDT)
+Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id n8sm96813763wro.89.2019.08.14.06.46.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 06:46:56 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] clk: meson: axg-audio: add g12a reset support
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] sh: use the generic dma coherent remap allocator
-Date:   Wed, 14 Aug 2019 15:46:15 +0200
-Message-Id: <20190814134615.29442-2-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190814134615.29442-1-hch@lst.de>
-References: <20190814134615.29442-1-hch@lst.de>
+References: <20190812123253.4734-1-jbrunet@baylibre.com>
+ <20190812123253.4734-3-jbrunet@baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <5cd719ec-07e4-bdd9-1d2d-aecad0b9f1e8@baylibre.com>
+Date:   Wed, 14 Aug 2019 15:46:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190812123253.4734-3-jbrunet@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This switches to using common code for the DMA allocations, including
-potential use of the CMA allocator if configured.
+On 12/08/2019 14:32, Jerome Brunet wrote:
+> On the g12a, the register space dedicated to the audio clock also
+> provides some resets. Let the clock controller register a reset
+> provider as well for this SoC family.
+> 
+> the axg SoC family does not appear to provide this feature.
+> 
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  drivers/clk/meson/axg-audio.c | 107 +++++++++++++++++++++++++++++++++-
+>  drivers/clk/meson/axg-audio.h |   1 +
+>  2 files changed, 106 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
+> index 741df7e955ca..6be9df1efce5 100644
+> --- a/drivers/clk/meson/axg-audio.c
+> +++ b/drivers/clk/meson/axg-audio.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+>  #include <linux/reset.h>
+> +#include <linux/reset-controller.h>
+>  #include <linux/slab.h>
+>  
+>  #include "axg-audio.h"
+> @@ -918,6 +919,84 @@ static int devm_clk_get_enable(struct device *dev, char *id)
+>  	return 0;
+>  }
+>  
+> +struct axg_audio_reset_data {
+> +	struct reset_controller_dev rstc;
+> +	struct regmap *map;
+> +	unsigned int offset;
+> +};
+> +
+> +static void axg_audio_reset_reg_and_bit(struct axg_audio_reset_data *rst,
+> +					unsigned long id,
+> +					unsigned int *reg,
+> +					unsigned int *bit)
+> +{
+> +	unsigned int stride = regmap_get_reg_stride(rst->map);
+> +
+> +	*reg = (id / (stride * BITS_PER_BYTE)) * stride;
+> +	*reg += rst->offset;
+> +	*bit = id % (stride * BITS_PER_BYTE);
+> +}
+> +
+> +static int axg_audio_reset_update(struct reset_controller_dev *rcdev,
+> +				unsigned long id, bool assert)
+> +{
+> +	struct axg_audio_reset_data *rst =
+> +		container_of(rcdev, struct axg_audio_reset_data, rstc);
+> +	unsigned int offset, bit;
+> +
+> +	axg_audio_reset_reg_and_bit(rst, id, &offset, &bit);
+> +
+> +	regmap_update_bits(rst->map, offset, BIT(bit),
+> +			assert ? BIT(bit) : 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static int axg_audio_reset_status(struct reset_controller_dev *rcdev,
+> +				unsigned long id)
+> +{
+> +	struct axg_audio_reset_data *rst =
+> +		container_of(rcdev, struct axg_audio_reset_data, rstc);
+> +	unsigned int val, offset, bit;
+> +
+> +	axg_audio_reset_reg_and_bit(rst, id, &offset, &bit);
+> +
+> +	regmap_read(rst->map, offset, &val);
+> +
+> +	return !!(val & BIT(bit));
+> +}
+> +
+> +static int axg_audio_reset_assert(struct reset_controller_dev *rcdev,
+> +				unsigned long id)
+> +{
+> +	return axg_audio_reset_update(rcdev, id, true);
+> +}
+> +
+> +static int axg_audio_reset_deassert(struct reset_controller_dev *rcdev,
+> +				unsigned long id)
+> +{
+> +	return axg_audio_reset_update(rcdev, id, false);
+> +}
+> +
+> +static int axg_audio_reset_toggle(struct reset_controller_dev *rcdev,
+> +				unsigned long id)
+> +{
+> +	int ret;
+> +
+> +	ret = axg_audio_reset_assert(rcdev, id);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return axg_audio_reset_deassert(rcdev, id);
+> +}
+> +
+> +static const struct reset_control_ops axg_audio_rstc_ops = {
+> +	.assert = axg_audio_reset_assert,
+> +	.deassert = axg_audio_reset_deassert,
+> +	.reset = axg_audio_reset_toggle,
+> +	.status = axg_audio_reset_status,
+> +};
+> +
+>  static const struct regmap_config axg_audio_regmap_cfg = {
+>  	.reg_bits	= 32,
+>  	.val_bits	= 32,
+> @@ -927,12 +1006,15 @@ static const struct regmap_config axg_audio_regmap_cfg = {
+>  
+>  struct audioclk_data {
+>  	struct clk_hw_onecell_data *hw_onecell_data;
+> +	unsigned int reset_offset;
+> +	unsigned int reset_num;
+>  };
+>  
+>  static int axg_audio_clkc_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	const struct audioclk_data *data;
+> +	struct axg_audio_reset_data *rst;
+>  	struct regmap *map;
+>  	struct resource *res;
+>  	void __iomem *regs;
+> @@ -984,8 +1066,27 @@ static int axg_audio_clkc_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> -	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
+> -					   data->hw_onecell_data);
+> +	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
+> +					data->hw_onecell_data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Stop here if there is no reset */
+> +	if (!data->reset_num)
+> +		return 0;
+> +
+> +	rst = devm_kzalloc(dev, sizeof(*rst), GFP_KERNEL);
+> +	if (!rst)
+> +		return -ENOMEM;
+> +
+> +	rst->map = map;
+> +	rst->offset = data->reset_offset;
+> +	rst->rstc.nr_resets = data->reset_num;
+> +	rst->rstc.ops = &axg_audio_rstc_ops;
+> +	rst->rstc.of_node = dev->of_node;
+> +	rst->rstc.owner = THIS_MODULE;
+> +
+> +	return devm_reset_controller_register(dev, &rst->rstc);
+>  }
+>  
+>  static const struct audioclk_data axg_audioclk_data = {
+> @@ -994,6 +1095,8 @@ static const struct audioclk_data axg_audioclk_data = {
+>  
+>  static const struct audioclk_data g12a_audioclk_data = {
+>  	.hw_onecell_data = &g12a_audio_hw_onecell_data,
+> +	.reset_offset = AUDIO_SW_RESET,
+> +	.reset_num = 26,
+>  };
+>  
+>  static const struct of_device_id clkc_match_table[] = {
+> diff --git a/drivers/clk/meson/axg-audio.h b/drivers/clk/meson/axg-audio.h
+> index 5d972d55d6c7..c00e28b2e1a9 100644
+> --- a/drivers/clk/meson/axg-audio.h
+> +++ b/drivers/clk/meson/axg-audio.h
+> @@ -22,6 +22,7 @@
+>  #define AUDIO_MCLK_F_CTRL	0x018
+>  #define AUDIO_MST_PAD_CTRL0	0x01c
+>  #define AUDIO_MST_PAD_CTRL1	0x020
+> +#define AUDIO_SW_RESET		0x024
+>  #define AUDIO_MST_A_SCLK_CTRL0	0x040
+>  #define AUDIO_MST_A_SCLK_CTRL1	0x044
+>  #define AUDIO_MST_B_SCLK_CTRL0	0x048
+> 
 
-Switching to the generic code enables DMA allocations from atomic
-context, which is required by the DMA API documentation, and also
-adds various other minor features drivers start relying upon.  It
-also makes sure we have on tested code base for all architectures
-that require uncached pte bits for coherent DMA allocations.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/sh/Kconfig               |  2 ++
- arch/sh/kernel/dma-coherent.c | 57 +++++------------------------------
- 2 files changed, 10 insertions(+), 49 deletions(-)
-
-diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-index 6b1b5941b618..21eefe7c4ba6 100644
---- a/arch/sh/Kconfig
-+++ b/arch/sh/Kconfig
-@@ -158,7 +158,9 @@ config DMA_COHERENT
- 
- config DMA_NONCOHERENT
- 	def_bool !DMA_COHERENT
-+	select ARCH_HAS_DMA_PREP_COHERENT
- 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
-+	select DMA_DIRECT_REMAP
- 
- config PGTABLE_LEVELS
- 	default 3 if X2TLB
-diff --git a/arch/sh/kernel/dma-coherent.c b/arch/sh/kernel/dma-coherent.c
-index b17514619b7e..2f0e2f2d1f9c 100644
---- a/arch/sh/kernel/dma-coherent.c
-+++ b/arch/sh/kernel/dma-coherent.c
-@@ -3,60 +3,13 @@
-  * Copyright (C) 2004 - 2007  Paul Mundt
-  */
- #include <linux/mm.h>
--#include <linux/init.h>
- #include <linux/dma-noncoherent.h>
--#include <linux/module.h>
- #include <asm/cacheflush.h>
- #include <asm/addrspace.h>
- 
--void *arch_dma_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
--		gfp_t gfp, unsigned long attrs)
-+void arch_dma_prep_coherent(struct page *page, size_t size)
- {
--	void *ret, *ret_nocache;
--	int order = get_order(size);
--
--	gfp |= __GFP_ZERO;
--
--	ret = (void *)__get_free_pages(gfp, order);
--	if (!ret)
--		return NULL;
--
--	/*
--	 * Pages from the page allocator may have data present in
--	 * cache. So flush the cache before using uncached memory.
--	 */
--	arch_sync_dma_for_device(dev, virt_to_phys(ret), size,
--			DMA_BIDIRECTIONAL);
--
--	ret_nocache = (void __force *)ioremap_nocache(virt_to_phys(ret), size);
--	if (!ret_nocache) {
--		free_pages((unsigned long)ret, order);
--		return NULL;
--	}
--
--	split_page(pfn_to_page(virt_to_phys(ret) >> PAGE_SHIFT), order);
--
--	*dma_handle = virt_to_phys(ret);
--	if (!WARN_ON(!dev))
--		*dma_handle -= PFN_PHYS(dev->dma_pfn_offset);
--
--	return ret_nocache;
--}
--
--void arch_dma_free(struct device *dev, size_t size, void *vaddr,
--		dma_addr_t dma_handle, unsigned long attrs)
--{
--	int order = get_order(size);
--	unsigned long pfn = (dma_handle >> PAGE_SHIFT);
--	int k;
--
--	if (!WARN_ON(!dev))
--		pfn += dev->dma_pfn_offset;
--
--	for (k = 0; k < (1 << order); k++)
--		__free_pages(pfn_to_page(pfn + k), 0);
--
--	iounmap(vaddr);
-+	__flush_purge_region(page_address(page), size);
- }
- 
- void arch_sync_dma_for_device(struct device *dev, phys_addr_t paddr,
-@@ -78,3 +31,9 @@ void arch_sync_dma_for_device(struct device *dev, phys_addr_t paddr,
- 		BUG();
- 	}
- }
-+
-+static int __init atomic_pool_init(void)
-+{
-+	return dma_atomic_pool_init(GFP_KERNEL, pgprot_noncached(PAGE_KERNEL));
-+}
-+postcore_initcall(atomic_pool_init);
--- 
-2.20.1
-
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
