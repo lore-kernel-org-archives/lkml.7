@@ -2,71 +2,109 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B13DC32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C917C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF2920644
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802111;
-	bh=bw1OD498idiV2ItGD5//8JJa45SmzXMwqWChBDsdsQY=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=aEFxpjeegDGlB+OpD7kNFU7ZKS/Zv6D7s+cYZUgpBBKKiEM5rtCOhDJs7+e5hZsOf
-	 OCESVo5RHySQClv8osDKZXFi5K7q0BeQKf7Wwnz8Fd6UIo5mpDQyveS2Dwe2OfG30d
-	 LfiteBCRhrTomsOXBijhmbf70WzFyHh6zpNtm/xI=
+	by mail.kernel.org (Postfix) with ESMTP id 1C687208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728521AbfHNRBu (ORCPT
+        id S1728535AbfHNRCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:01:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727558AbfHNRBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:01:49 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56D1320644;
-        Wed, 14 Aug 2019 17:01:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802108;
-        bh=bw1OD498idiV2ItGD5//8JJa45SmzXMwqWChBDsdsQY=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=X4UBMKZMzRICneyZMtrN4cEempPQ8nD3Wx3Xz12XSmNOuSp0q85Q9NjJtVpT7ABW5
-         ux8UzONsaGnrFKFNhasZqPEMWIkSbIoNiFxW7RbEkd3won27TiJAtYjSgZX4VSlFbs
-         dkB7vA5H1LObdXsIuEhMwVIUG7E/o8vWI6NHsQ8w=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 14 Aug 2019 13:02:06 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44740 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbfHNRCF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:02:05 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1hxwew-0001t5-5g; Wed, 14 Aug 2019 17:02:02 +0000
+Date:   Wed, 14 Aug 2019 19:02:01 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Rich Felker <dalias@libc.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org,
+        libc-alpha@sourceware.org, alistair23@gmail.com,
+        ebiederm@xmission.com, arnd@arndb.de,
+        torvalds@linux-foundation.org, adhemerval.zanella@linaro.org,
+        fweimer@redhat.com, palmer@sifive.com, macro@wdc.com,
+        zongbox@gmail.com, akpm@linux-foundation.org,
+        viro@zeniv.linux.org.uk, hpa@zytor.com
+Subject: Re: [PATCH v3 1/1] waitid: Add support for waiting for the current
+ process group
+Message-ID: <20190814170200.kqkygob7yo5hciau@wittgenstein>
+References: <CAKmqyKMJPQAOKn11xepzAwXOd4e9dU0Cyz=A0T-uMEgUp5yJjA@mail.gmail.com>
+ <20190814154400.6371-1-christian.brauner@ubuntu.com>
+ <20190814154400.6371-2-christian.brauner@ubuntu.com>
+ <20190814160917.GG11595@redhat.com>
+ <20190814161517.ldbn62mulk2pmqo5@wittgenstein>
+ <20190814163443.6odsksff4jbta7be@wittgenstein>
+ <20190814165501.GJ9017@brightrain.aerifal.cx>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190814125012.8700-6-vkoul@kernel.org>
-References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-6-vkoul@kernel.org>
-Subject: Re: [PATCH 05/22] arm64: dts: qcom: sm8150: Add spmi node
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        sibis@codeaurora.org, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 14 Aug 2019 10:01:47 -0700
-Message-Id: <20190814170148.56D1320644@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190814165501.GJ9017@brightrain.aerifal.cx>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-08-14 05:49:55)
-> Add SPMI node which is used for spmi_bus
->=20
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  arch/arm64/boot/dts/qcom/sm8150.dtsi | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+On Wed, Aug 14, 2019 at 12:55:01PM -0400, Rich Felker wrote:
+> On Wed, Aug 14, 2019 at 06:34:44PM +0200, Christian Brauner wrote:
+> > On Wed, Aug 14, 2019 at 06:15:17PM +0200, Christian Brauner wrote:
+> > > On Wed, Aug 14, 2019 at 06:09:17PM +0200, Oleg Nesterov wrote:
+> > > > On 08/14, Christian Brauner wrote:
+> > > > >
+> > > > > and a signal could come in between the system call that
+> > > > > retrieved the process gorup and the call to waitid that changes the
+> > > >                         ^^^^^
+> > > > > current process group.
+> > > > 
+> > > > I noticed this typo only because I spent 2 minutes or more trying to
+> > > > understand this sentence ;) But yes, a signal handler or another thread
+> > > 
+> > > I'll try to rewrite it. :)
+> > 
+> > Ok, here's what I changed it to:
+> > 
+> > It was recently discovered that the linux version of waitid is not a
+> > superset of the other wait functions because it does not include
+> > support for waiting for the current process group. This has two
+> > downsides:
+> > 1. An extra system call is needed to get the current process group.
+> > 2. After the current process group is received and before it is passed
+> >    to waitid a signal could arrive causing the current process group to change.
+> 
+> I don't think "downsides" sufficiently conveys that this is hard
+> breakage of a requirement for waitpid. How about something like the
+> following?
+> 
+> "It was recently discovered that the linux version of waitid is not a
+> superset of the other wait functions because it does not include
+> support for waiting for the current process group. Userspace cannot
+> simply emulate this functionality with an additional getpgid syscall
+> due to inherent race conditions that violate the async-signal safety
+> requirements for waitpid."
 
-Squash?
+I like the rather specific example in there. How about we add that after
+this section like so:
 
+It was recently discovered that the linux version of waitid is not a
+superset of the other wait functions because it does not include
+support for waiting for the current process group. This has two
+downsides:
+1. An extra system call is needed to get the current process group.
+2. After the current process group is received and before it is passed
+   to waitid a signal could arrive causing the current process group to change.
+
+Such inherent race-conditions as mentioned in 2. make it impossible for
+userspace to emulate this functionaly and thus violate the async-signal
+safety requirements for waitpid.
+
+Christian
