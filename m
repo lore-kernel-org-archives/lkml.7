@@ -3,83 +3,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A04BDC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A891C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFC82133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C9B32084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbfHNQG7 (ORCPT
+        id S1728311AbfHNQHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:06:59 -0400
-Received: from mga17.intel.com ([192.55.52.151]:38992 "EHLO mga17.intel.com"
+        Wed, 14 Aug 2019 12:07:14 -0400
+Received: from sauhun.de ([88.99.104.3]:50418 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfHNQG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:06:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 09:06:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,385,1559545200"; 
-   d="scan'208";a="184358026"
-Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 Aug 2019 09:06:58 -0700
-Message-ID: <84fc1b3bb2dbcf52ca79cb1141a431e087f082b5.camel@intel.com>
-Subject: Re: [PATCH v8 01/27] Documentation/x86: Add CET description
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Wed, 14 Aug 2019 08:57:19 -0700
-In-Reply-To: <87tvakgofi.fsf@oldenburg2.str.redhat.com>
-References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
-         <20190813205225.12032-2-yu-cheng.yu@intel.com>
-         <87tvakgofi.fsf@oldenburg2.str.redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726047AbfHNQHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 12:07:13 -0400
+Received: from localhost (p54B33326.dip0.t-ipconnect.de [84.179.51.38])
+        by pokefinder.org (Postfix) with ESMTPSA id 9C6BA2C311C;
+        Wed, 14 Aug 2019 18:07:11 +0200 (CEST)
+Date:   Wed, 14 Aug 2019 18:07:11 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Jean Delvare <jdelvare@suse.de>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Andrew Cooks <acooks@rationali.st>,
+        linux-acpi@vger.kernel.org, platypus-sw@opengear.com,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Will Wagner <willw@carallon.com>
+Subject: Re: [PATCH v5 0/3] Enable ACPI-defined peripherals on i2c-piix4 SMBus
+Message-ID: <20190814160711.GA5816@kunai>
+References: <20190802145109.38dd4045@endymion>
+ <b013c33b-da11-ce5e-08d4-0b24a8575109@metux.net>
+ <20190809103340.2ef24523@endymion>
+ <01de7b0c-7579-048b-312c-122dddc23c64@metux.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Content-Disposition: inline
+In-Reply-To: <01de7b0c-7579-048b-312c-122dddc23c64@metux.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-08-14 at 10:07 +0200, Florian Weimer wrote:
-> * Yu-cheng Yu:
-> 
-> > +ENDBR
-> > +    The compiler inserts an ENDBR at all valid branch targets.  Any
-> > +    CALL/JMP to a target without an ENDBR triggers a control
-> > +    protection fault.
-> 
-> Is this really correct?  I think ENDBR is needed only for indirect
-> branch targets where the jump/call does not have a NOTRACK prefix.
 
-You are right.  I will fix the wording.
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yu-cheng
+
+> > Unfortunately not. I only picked up from where Andrew Cooks left, due
+> > to me being way too slow to review his patches.
+>=20
+> @Andrew: can you tell us more about this ?
+
+Was the info Andrew supplied helpful to you?
+
+>=20
+> > I was able to test the first 2 patches which fix bugs, but
+> > not the 3rd one which deals with ACPI devices. There does not seem to
+> > be any such device on the 2 test machines I have remotely access to.
+>=20
+> Did you already test on apu2/apu3 ?
+> If not, maybe you could prepare a queue that I could test.
+
+Maybe I am missing something but can't you just apply these patches on a
+recent kernel?
+
+So, the discussion stalled, but I think the series is fine as is? If
+someone disagrees, please speak up. I want to apply patch 1 to
+for-current soon and the others to for-next, too.
+
+
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1UMaoACgkQFA3kzBSg
+KbZfHg/+PtVFnMuKKJxRrrr+D7Xz5UzKEh38nshbA37TJVz+nIbzDVVD7c+OoZav
+sAGEgKPEskjpmZUlC823T18Z25hOY3PCysPNs+3yr0QlfXk1G2rdvnDzfJQYyV1O
+QEhVeDqpGf92XKcX3dhshkev7CE524uAZtNs7fhUoz97ckcb+CMN+CrJnFVhA4lj
+HdDRQ2os8ys82wAbxkRhcif+SP6Qvb/rzMHHEaUhbFjAXs/awy5cLVEHhdNgDabB
+gnGPyXmg0F668DB5B0ZAMbWup8CJbVuUxg37usl4VsDN2HpTmUkfwWYqtdycDRUz
+B2S2CPv39PYQQyhTzXqTUctg/g3hYd+HfKXLwEh2+da7UWK7OjEFpnVmhNc4dCcH
++0nEkBUfMox8t4G5/lRZrt9m1TiHPEbdMP+ZdeHYpoPMdmkZKb9vwiz6dZRa554I
+Qyjquwg6IOmeGrbEeqPLu0ypeoS76sOJJ/pNQa2cePyqP53BC953Qpqo1cKGfSzJ
+NjU5qQJiTivAxE9g7I5A3cIXq0SqwjW68keNWSphMY/9cboeDabzprP4eqqCWjXj
+eR/AQcocWeQtyApSxzA1kmAF0oEcwQ4dwX04AvmKnQEpQSVEO7lQTif9Zh+Y6C3M
+81PFi6pjHFsaIaw2oehutcitFwHGefowMlMSYFdmciY9/ZMwbsE=
+=ebsn
+-----END PGP SIGNATURE-----
+
+--LZvS9be/3tNcYl/X--
