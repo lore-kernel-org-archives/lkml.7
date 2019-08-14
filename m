@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 688DEC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C957EC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5652084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F0C20842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748839;
-	bh=6IW0LbZ1Rpn2/X1ULoBXggIeNd4mXiLEGia1aydwyCU=;
+	s=default; t=1565748853;
+	bh=k8yonzpNdAgceiEG578aqiAgYJnAWLHIoNXeqkcJjYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K0yKY48dDEcgPMn570PHwMVnJ0loAJDg8g4/74Hom3snm0p5jYjEwnpBnq/gLnqGT
-	 lh6/4tN94T2Z+PdBFyMU0lADjYZ217BFX3VHdELYSer9f47GgafJkX8ezpz9wTIcwu
-	 SjahjYlZEr8AzfMBeWHF3fYnVrMV9+MaDgD+EpzY=
+	b=u7fbbXubheyRalqoUiOsvzdzby3W0zAA+HUqNZPWAc3mrNRbz9ti3fy9DYMl3c5S4
+	 YP8rJ9zKUX1diFvoB7pJyNnbsq4QALu+zk3FBtTgyD/tV8Vv/wRM7ENTCBvp/6SKy/
+	 /GShoPmc2e7ZGaGWqFiQ8hj72lBVCVjc4bLhXCJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbfHNCN6 (ORCPT
+        id S1728658AbfHNCOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:13:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45912 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:14:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728456AbfHNCNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:51 -0400
+        id S1728571AbfHNCOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:14:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90AF020842;
-        Wed, 14 Aug 2019 02:13:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5293E20842;
+        Wed, 14 Aug 2019 02:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748830;
-        bh=6IW0LbZ1Rpn2/X1ULoBXggIeNd4mXiLEGia1aydwyCU=;
+        s=default; t=1565748847;
+        bh=k8yonzpNdAgceiEG578aqiAgYJnAWLHIoNXeqkcJjYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VLDiz1MhmbU1B/a29E0qHrinSTihADS5sYQGYpJ5tdsGg8MWxNNSJn5QtjvIHOEmk
-         nRG+1IOe52wcprQk/E/p0iVYYTGZiuWPWvjQAXWXjJrCmHbbfv/mOMHFgIr7QZZxvK
-         GNgiTcEsUiwpb77IZd0rqHTxK1SWY/BhxdXX/adY=
+        b=lWwOWYKLoOIQqHrC0N7cDCGqRgfkkYQwIY5cbfktJgnlrQv4L58LabknSSPci63gX
+         aS6TvioRz530yDMXJl/4t853igm31JnVdsfae7LipVTL1LuKyrZ5FGUPjSo+Gqsq6k
+         lU/YkkibZFooiY1lmQvcQWv04INd/ERzwtWtJdqs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavel Shilovsky <pshilov@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 090/123] SMB3: Fix potential memory leak when processing compound chain
-Date:   Tue, 13 Aug 2019 22:10:14 -0400
-Message-Id: <20190814021047.14828-90-sashal@kernel.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Andreas Krebbel <krebbel@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 099/123] s390: put _stext and _etext into .text section
+Date:   Tue, 13 Aug 2019 22:10:23 -0400
+Message-Id: <20190814021047.14828-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -60,87 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 3edeb4a4146dc3b54d6fa71b7ee0585cb52ebfdf ]
+[ Upstream commit 24350fdadbdec780406a1ef988e6cd3875e374a8 ]
 
-When a reconnect happens in the middle of processing a compound chain
-the code leaks a buffer from the memory pool. Fix this by properly
-checking for a return code and freeing buffers in case of error.
+Perf relies on _etext and _stext symbols being one of 't', 'T', 'v' or
+'V'. Put them into .text section to guarantee that.
 
-Also maintain a buf variable to be equal to either smallbuf or bigbuf
-depending on a response buffer size while parsing a chain and when
-returning to the caller.
+Also moves padding to page boundary inside .text which has an effect that
+.text section is now padded with nops rather than 0's, which apparently
+has been the initial intention for specifying 0x0700 fill expression.
 
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2ops.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ arch/s390/kernel/vmlinux.lds.S | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 2ec37dc589a7b..ae10d6e297c3a 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -4015,7 +4015,6 @@ receive_encrypted_standard(struct TCP_Server_Info *server,
+diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
+index 49d55327de0bc..7e0eb40209177 100644
+--- a/arch/s390/kernel/vmlinux.lds.S
++++ b/arch/s390/kernel/vmlinux.lds.S
+@@ -32,10 +32,9 @@ PHDRS {
+ SECTIONS
  {
- 	int ret, length;
- 	char *buf = server->smallbuf;
--	char *tmpbuf;
- 	struct smb2_sync_hdr *shdr;
- 	unsigned int pdu_length = server->pdu_size;
- 	unsigned int buf_size;
-@@ -4045,18 +4044,15 @@ receive_encrypted_standard(struct TCP_Server_Info *server,
- 		return length;
+ 	. = 0x100000;
+-	_stext = .;		/* Start of text section */
+ 	.text : {
+-		/* Text and read-only data */
+-		_text = .;
++		_stext = .;		/* Start of text section */
++		_text = .;		/* Text and read-only data */
+ 		HEAD_TEXT
+ 		TEXT_TEXT
+ 		SCHED_TEXT
+@@ -47,11 +46,10 @@ SECTIONS
+ 		*(.text.*_indirect_*)
+ 		*(.fixup)
+ 		*(.gnu.warning)
++		. = ALIGN(PAGE_SIZE);
++		_etext = .;		/* End of text section */
+ 	} :text = 0x0700
  
- 	next_is_large = server->large_buf;
-- one_more:
-+one_more:
- 	shdr = (struct smb2_sync_hdr *)buf;
- 	if (shdr->NextCommand) {
--		if (next_is_large) {
--			tmpbuf = server->bigbuf;
-+		if (next_is_large)
- 			next_buffer = (char *)cifs_buf_get();
--		} else {
--			tmpbuf = server->smallbuf;
-+		else
- 			next_buffer = (char *)cifs_small_buf_get();
--		}
- 		memcpy(next_buffer,
--		       tmpbuf + le32_to_cpu(shdr->NextCommand),
-+		       buf + le32_to_cpu(shdr->NextCommand),
- 		       pdu_length - le32_to_cpu(shdr->NextCommand));
- 	}
- 
-@@ -4085,12 +4081,21 @@ receive_encrypted_standard(struct TCP_Server_Info *server,
- 		pdu_length -= le32_to_cpu(shdr->NextCommand);
- 		server->large_buf = next_is_large;
- 		if (next_is_large)
--			server->bigbuf = next_buffer;
-+			server->bigbuf = buf = next_buffer;
- 		else
--			server->smallbuf = next_buffer;
+-	. = ALIGN(PAGE_SIZE);
+-	_etext = .;		/* End of text section */
 -
--		buf += le32_to_cpu(shdr->NextCommand);
-+			server->smallbuf = buf = next_buffer;
- 		goto one_more;
-+	} else if (ret != 0) {
-+		/*
-+		 * ret != 0 here means that we didn't get to handle_mid() thus
-+		 * server->smallbuf and server->bigbuf are still valid. We need
-+		 * to free next_buffer because it is not going to be used
-+		 * anywhere.
-+		 */
-+		if (next_is_large)
-+			free_rsp_buf(CIFS_LARGE_BUFFER, next_buffer);
-+		else
-+			free_rsp_buf(CIFS_SMALL_BUFFER, next_buffer);
- 	}
+ 	NOTES :text :note
  
- 	return ret;
+ 	.dummy : { *(.dummy) } :data
 -- 
 2.20.1
 
