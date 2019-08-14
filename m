@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896EEC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A3DC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5432D208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B45932085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749170;
-	bh=RJiXeKfS42makB4C4taAZV1n6o5Ln+7nifGi48PCrng=;
+	s=default; t=1565749177;
+	bh=bzv/fqPNo0WNfX7VYLsRM8HQcYMeOI+Jo8IwxCnCXzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pMXnNX53FPWA9hiyNn/CRsH7knZ24DxkTWBXQEKb0v7CuHlAql4hDkodhyy4tMdQH
-	 mwzCP5J7aN/9q7iZQ+nzoCSl7oEj6RmoBfGQ2cdBbzdJY3ZdypJZrO+eNLex5I+KQO
-	 Dc/7vmry9ca9okEntaGc+rXAIIc9f3PekXVyr7YU=
+	b=Sa1r+q/aD0qRQdbiZIz6kCPwY/epK8V5U2lck6loUr5Pfu5W9+OqWFtvvfeKrGmqa
+	 y2L7cN68p/ennXf2h6wWvw9d1Kx/BMygEgXvV3KJfwmwBJ3YVYAvTWyPpjfZs8kkYU
+	 rwZnUPuZDK005T7AcXih3wz727FNtJ1Sz3/RltLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbfHNCT3 (ORCPT
+        id S1729804AbfHNCTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:19:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50308 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:19:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729704AbfHNCTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:19:25 -0400
+        id S1729775AbfHNCTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:19:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DECA208C2;
-        Wed, 14 Aug 2019 02:19:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2B6F214DA;
+        Wed, 14 Aug 2019 02:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749164;
-        bh=RJiXeKfS42makB4C4taAZV1n6o5Ln+7nifGi48PCrng=;
+        s=default; t=1565749172;
+        bh=bzv/fqPNo0WNfX7VYLsRM8HQcYMeOI+Jo8IwxCnCXzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qeaiBND9RwYTX5YijTfnFY71rjXtNQd6CakS0bhyQul0X6RlmGh/Oy/jz/7NVksM7
-         zzjlXCPEw5rTeKOggDYjaW40Q1MIX96ikaiMI9XL0WxOHcq1cEiZ0mwesSB9KMahpX
-         QRQ+gTNmScBeylU7Bc5eIKHdFPndh3ANv8i+iNLo=
+        b=S62OVv52pEHd4zHwplwihcTEUocfGf2sw5wOqri9Z3a/Rcv/BPvTANG6fwhl7ULTO
+         zf8LQD7RQEn74GTvjSfNPpYroTF5nR7kAr9R80BHLwiooX5RShSA10ajVFbzzHe3dq
+         GOLK+8vqNDRowM9fn3xC+cG9eOcR8YvQyWo+2T78=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 31/44] HID: hiddev: do cleanup in failure of opening a device
-Date:   Tue, 13 Aug 2019 22:18:20 -0400
-Message-Id: <20190814021834.16662-31-sashal@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Krishna Ram Prakash R <krp@gtux.in>,
+        Kees Cook <keescook@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 37/44] libata: have ata_scsi_rw_xlat() fail invalid passthrough requests
+Date:   Tue, 13 Aug 2019 22:18:26 -0400
+Message-Id: <20190814021834.16662-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021834.16662-1-sashal@kernel.org>
 References: <20190814021834.16662-1-sashal@kernel.org>
@@ -61,36 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hillf Danton <hdanton@sina.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 6d4472d7bec39917b54e4e80245784ea5d60ce49 ]
+[ Upstream commit 2d7271501720038381d45fb3dcbe4831228fc8cc ]
 
-Undo what we did for opening before releasing the memory slice.
+For passthrough requests, libata-scsi takes what the user passes in
+as gospel. This can be problematic if the user fills in the CDB
+incorrectly. One example of that is in request sizes. For read/write
+commands, the CDB contains fields describing the transfer length of
+the request. These should match with the SG_IO header fields, but
+libata-scsi currently does no validation of that.
 
-Reported-by: syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Check that the number of blocks in the CDB for passthrough requests
+matches what was mapped into the request. If the CDB asks for more
+data then the validated SG_IO header fields, error it.
+
+Reported-by: Krishna Ram Prakash R <krp@gtux.in>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/usbhid/hiddev.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/ata/libata-scsi.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
-index 5e1361dfb61cd..ce342fd0457e9 100644
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -321,6 +321,10 @@ static int hiddev_open(struct inode *inode, struct file *file)
- 	hid_hw_power(hid, PM_HINT_NORMAL);
- bail_unlock:
- 	mutex_unlock(&hiddev->existancelock);
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index bf5777bc04d35..eb0c4ee205258 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -1804,6 +1804,21 @@ static unsigned int ata_scsi_verify_xlat(struct ata_queued_cmd *qc)
+ 	return 1;
+ }
+ 
++static bool ata_check_nblocks(struct scsi_cmnd *scmd, u32 n_blocks)
++{
++	struct request *rq = scmd->request;
++	u32 req_blocks;
 +
-+	spin_lock_irq(&list->hiddev->list_lock);
-+	list_del(&list->node);
-+	spin_unlock_irq(&list->hiddev->list_lock);
- bail:
- 	file->private_data = NULL;
- 	vfree(list);
++	if (!blk_rq_is_passthrough(rq))
++		return true;
++
++	req_blocks = blk_rq_bytes(rq) / scmd->device->sector_size;
++	if (n_blocks > req_blocks)
++		return false;
++
++	return true;
++}
++
+ /**
+  *	ata_scsi_rw_xlat - Translate SCSI r/w command into an ATA one
+  *	@qc: Storage for translated ATA taskfile
+@@ -1848,6 +1863,8 @@ static unsigned int ata_scsi_rw_xlat(struct ata_queued_cmd *qc)
+ 		scsi_10_lba_len(cdb, &block, &n_block);
+ 		if (cdb[1] & (1 << 3))
+ 			tf_flags |= ATA_TFLAG_FUA;
++		if (!ata_check_nblocks(scmd, n_block))
++			goto invalid_fld;
+ 		break;
+ 	case READ_6:
+ 	case WRITE_6:
+@@ -1862,6 +1879,8 @@ static unsigned int ata_scsi_rw_xlat(struct ata_queued_cmd *qc)
+ 		 */
+ 		if (!n_block)
+ 			n_block = 256;
++		if (!ata_check_nblocks(scmd, n_block))
++			goto invalid_fld;
+ 		break;
+ 	case READ_16:
+ 	case WRITE_16:
+@@ -1872,6 +1891,8 @@ static unsigned int ata_scsi_rw_xlat(struct ata_queued_cmd *qc)
+ 		scsi_16_lba_len(cdb, &block, &n_block);
+ 		if (cdb[1] & (1 << 3))
+ 			tf_flags |= ATA_TFLAG_FUA;
++		if (!ata_check_nblocks(scmd, n_block))
++			goto invalid_fld;
+ 		break;
+ 	default:
+ 		DPRINTK("no-byte command\n");
 -- 
 2.20.1
 
