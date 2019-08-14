@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B84C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E8DC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE6E20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936CB206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803310;
-	bh=ZOosVN0Ic6Q88AcFPeEupioIcmxpjRiFLM8kbGNB5nU=;
+	s=default; t=1565803314;
+	bh=TYFy08fBWSEElyvDyVwKiGkMT0KMuV3TrvCCJW8HtAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n9pUgwB3GX72Xla2D7F26+s8iKSsNLWPsHB4ZzQhjUSTXTK975luiOFPXdleggKIY
-	 Ro/z7/P4u9b+JHKLTkDpIN76/tiEYnFL8d9rf8uEeV6Kl+ANjoh3J6jt13FzdBCxKs
-	 jRehQmM7da58RC2o+KXX7Mv5k6hB54YOtllnF8to=
+	b=CycPTJmXa3CoUJoPDZZdt5s5dEsEHOujWMym3eSpm4klrZGcdiY9lVhuSZ62NJlzR
+	 Rp42HFlFI35UkA0VkMPrhIl4XFu7o63bFJdbPtk8GR/5iu7FX0MmpBSpXAlTo8yMod
+	 egR5fW6EnmJQzggi2Y1yyYzulz8oNcVt+fJMDKPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbfHNRVt (ORCPT
+        id S1730310AbfHNRJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:21:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59844 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:09:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730314AbfHNRJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:09:27 -0400
+        id S1729542AbfHNRJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:09:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 869CA2133F;
-        Wed, 14 Aug 2019 17:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 623CD2084D;
+        Wed, 14 Aug 2019 17:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802567;
-        bh=ZOosVN0Ic6Q88AcFPeEupioIcmxpjRiFLM8kbGNB5nU=;
+        s=default; t=1565802556;
+        bh=TYFy08fBWSEElyvDyVwKiGkMT0KMuV3TrvCCJW8HtAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c5fWbNoCc7gP+hGtJCYc0+HIEoZ6aCWYK4NqznkGPOwThydJUa9sxDI3j5SbFpT79
-         G80MPgWAs3sBULuMAl59Yzz1ZrJrthSme+5zizqV8xxDmRWfV2YoKn/MYYjXILXcd0
-         ugk2vxGqr2w1qkNCVPy76L6fINuV1lDmxRti+IBA=
+        b=CWIk+DLYZ9wcnFHTO3MyO9ENLPKio9y9/GEz6Y5knCVdOgmTcD48+9FTvpae7P4AT
+         tjlQ3nnC0hq0Q72vy07WRNijrh/hWtBEwNzKVl+fWbq44aUx8V2Zex6fl7PFBlYYp0
+         LoDszyMaFhul1i8EzVHsvX5C6mUjzEFVctqmoQZ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.19 31/91] can: rcar_canfd: fix possible IRQ storm on high load
-Date:   Wed, 14 Aug 2019 19:00:54 +0200
-Message-Id: <20190814165751.018391194@linuxfoundation.org>
+        stable@vger.kernel.org, Li Jun <jun.li@nxp.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.19 27/91] usb: typec: tcpm: free log buf memory when remove debug file
+Date:   Wed, 14 Aug 2019 19:00:50 +0200
+Message-Id: <20190814165750.843608582@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
 References: <20190814165748.991235624@linuxfoundation.org>
@@ -60,67 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+From: Li Jun <jun.li@nxp.com>
 
-commit d4b890aec4bea7334ca2ca56fd3b12fb48a00cd1 upstream.
+commit fd5da3e2cc61b4a7c877172fdc9348c82cf6ccfc upstream.
 
-We have observed rcar_canfd driver entering IRQ storm under high load,
-with following scenario:
-- rcar_canfd_global_interrupt() in entered due to Rx available,
-- napi_schedule_prep() is called, and sets NAPIF_STATE_SCHED in state
-- Rx fifo interrupts are masked,
-- rcar_canfd_global_interrupt() is entered again, this time due to
-  error interrupt (e.g. due to overflow),
-- since scheduled napi poller has not yet executed, condition for calling
-  napi_schedule_prep() from rcar_canfd_global_interrupt() remains true,
-  thus napi_schedule_prep() gets called and sets NAPIF_STATE_MISSED flag
-  in state,
-- later, napi poller function rcar_canfd_rx_poll() gets executed, and
-  calls napi_complete_done(),
-- due to NAPIF_STATE_MISSED flag in state, this call does not clear
-  NAPIF_STATE_SCHED flag from state,
-- on return from napi_complete_done(), rcar_canfd_rx_poll() unmasks Rx
-  interrutps,
-- Rx interrupt happens, rcar_canfd_global_interrupt() gets called
-  and calls napi_schedule_prep(),
-- since NAPIF_STATE_SCHED is set in state at this time, this call
-  returns false,
-- due to that false return, rcar_canfd_global_interrupt() returns
-  without masking Rx interrupt
-- and this results into IRQ storm: unmasked Rx interrupt happens again
-  and again is misprocessed in the same way.
+The logbuffer memory should be freed when remove debug file.
 
-This patch fixes that scenario by unmasking Rx interrupts only when
-napi_complete_done() returns true, which means it has cleared
-NAPIF_STATE_SCHED in state.
-
-Fixes: dd3bd23eb438 ("can: rcar_canfd: Add Renesas R-Car CAN FD driver")
-Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: stable@vger.kernel.org # v4.15+
+Fixes: 4b4e02c83167 ("typec: tcpm: Move out of staging")
+Signed-off-by: Li Jun <jun.li@nxp.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20190717080646.30421-1-jun.li@nxp.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/rcar/rcar_canfd.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/usb/typec/tcpm.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/net/can/rcar/rcar_canfd.c
-+++ b/drivers/net/can/rcar/rcar_canfd.c
-@@ -1512,10 +1512,11 @@ static int rcar_canfd_rx_poll(struct nap
+--- a/drivers/usb/typec/tcpm.c
++++ b/drivers/usb/typec/tcpm.c
+@@ -585,6 +585,15 @@ static void tcpm_debugfs_init(struct tcp
  
- 	/* All packets processed */
- 	if (num_pkts < quota) {
--		napi_complete_done(napi, num_pkts);
--		/* Enable Rx FIFO interrupts */
--		rcar_canfd_set_bit(priv->base, RCANFD_RFCC(ridx),
--				   RCANFD_RFCC_RFIE);
-+		if (napi_complete_done(napi, num_pkts)) {
-+			/* Enable Rx FIFO interrupts */
-+			rcar_canfd_set_bit(priv->base, RCANFD_RFCC(ridx),
-+					   RCANFD_RFCC_RFIE);
-+		}
- 	}
- 	return num_pkts;
+ static void tcpm_debugfs_exit(struct tcpm_port *port)
+ {
++	int i;
++
++	mutex_lock(&port->logbuffer_lock);
++	for (i = 0; i < LOG_BUFFER_ENTRIES; i++) {
++		kfree(port->logbuffer[i]);
++		port->logbuffer[i] = NULL;
++	}
++	mutex_unlock(&port->logbuffer_lock);
++
+ 	debugfs_remove(port->dentry);
  }
+ 
 
 
