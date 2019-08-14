@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71766C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D89DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8C02084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F0B0214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802497;
-	bh=X2uMXTHGNhPxf1CI+iyWVQOr8M90YXHMvOG9H+Ly1Uo=;
+	s=default; t=1565802500;
+	bh=8kfYVqb2NIlKpHyB9OJtszlE9DT2CdhMlAunHr6PX7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=An8kepRANiVOKNJgSxaY1XLhngXqrGc/zA6hd2C42KBdtfNMUJmeqkdsA5oUPrRu/
-	 UKhXmvzxz0dmR1+A7GEjpxvzpJUyRJ6wvhrpszvAT/AyXc9sEyLD+syKFIFcr5CyWw
-	 iCyFzB/d+nG8dQtC9sD7EU3UNqyWAoSitXR483lQ=
+	b=JhSfkpRT5FUO52yQdZQaPBv6icX2TNbgwiwXdWw4Cxk/wlzLZflIhsFxUnSRJ1Ik9
+	 a14t9NUmONoGEzHGnrf0MlHYirN8rTmjhkdE34leZR77hbRfUS9n61dhbU5p6m8Ffu
+	 TnRDhSlbP2eefswbop2rZG9XzS1eoTAxTll+t7jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbfHNRIQ (ORCPT
+        id S1730120AbfHNRIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:08:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58128 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:08:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729045AbfHNRIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:08:13 -0400
+        id S1730102AbfHNRIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:08:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF3D7216F4;
-        Wed, 14 Aug 2019 17:08:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E8ED214DA;
+        Wed, 14 Aug 2019 17:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802493;
-        bh=X2uMXTHGNhPxf1CI+iyWVQOr8M90YXHMvOG9H+Ly1Uo=;
+        s=default; t=1565802495;
+        bh=8kfYVqb2NIlKpHyB9OJtszlE9DT2CdhMlAunHr6PX7E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NUCrV0EwJtzmuxic9PT2cxj8bxqUuQlcgGNJygqYGHRsWWtFzRKGp7WozmK1WOkAc
-         T3TFMsPdr9oUigHpCvFM6cGa1tEZwgNWrTdvdO1l7nOb0dS+OFUeriI1YZ3/U9dUNf
-         NtesYL06BCQngObU1YZcJKEp9Vx0VeLR3CIWZ3sA=
+        b=KZxGlhp8FF3+X8dENU+OrA8Kmb/mUYcJdOoev/FenMAU243CJXZW9S1G81jDf8bk1
+         sLcYDpDvdu5+dd22qHonP5B+iqqWEELM7Y5keIWjXkPFHStRKPC97Jvid1eUcjreZS
+         8r0VjVFaTQ6Gu2HzeOY60KIj9RXhOsDkshmrz2Vg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
-        syzbot+d6a5a1a3657b596ef132@syzkaller.appspotmail.com,
+        syzbot+513e4d0985298538bf9b@syzkaller.appspotmail.com,
         Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 5.2 121/144] can: peak_usb: pcan_usb_pro: Fix info-leaks to USB devices
-Date:   Wed, 14 Aug 2019 19:01:17 +0200
-Message-Id: <20190814165804.990792548@linuxfoundation.org>
+Subject: [PATCH 5.2 122/144] can: peak_usb: pcan_usb_fd: Fix info-leaks to USB devices
+Date:   Wed, 14 Aug 2019 19:01:18 +0200
+Message-Id: <20190814165805.033851424@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -62,33 +62,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tomas Bortoli <tomasbortoli@gmail.com>
 
-commit ead16e53c2f0ed946d82d4037c630e2f60f4ab69 upstream.
+commit 30a8beeb3042f49d0537b7050fd21b490166a3d9 upstream.
 
 Uninitialized Kernel memory can leak to USB devices.
 
 Fix by using kzalloc() instead of kmalloc() on the affected buffers.
 
 Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-Reported-by: syzbot+d6a5a1a3657b596ef132@syzkaller.appspotmail.com
-Fixes: f14e22435a27 ("net: can: peak_usb: Do not do dma on the stack")
+Reported-by: syzbot+513e4d0985298538bf9b@syzkaller.appspotmail.com
+Fixes: 0a25e1f4f185 ("can: peak_usb: add support for PEAK new CANFD USB adapters")
 Cc: linux-stable <stable@vger.kernel.org>
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/usb/peak_usb/pcan_usb_pro.c |    2 +-
+ drivers/net/can/usb/peak_usb/pcan_usb_fd.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
-@@ -494,7 +494,7 @@ static int pcan_usb_pro_drv_loaded(struc
- 	u8 *buffer;
- 	int err;
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_fd.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_fd.c
+@@ -841,7 +841,7 @@ static int pcan_usb_fd_init(struct peak_
+ 			goto err_out;
  
--	buffer = kmalloc(PCAN_USBPRO_FCT_DRVLD_REQ_LEN, GFP_KERNEL);
-+	buffer = kzalloc(PCAN_USBPRO_FCT_DRVLD_REQ_LEN, GFP_KERNEL);
- 	if (!buffer)
- 		return -ENOMEM;
- 
+ 		/* allocate command buffer once for all for the interface */
+-		pdev->cmd_buffer_addr = kmalloc(PCAN_UFD_CMD_BUFFER_SIZE,
++		pdev->cmd_buffer_addr = kzalloc(PCAN_UFD_CMD_BUFFER_SIZE,
+ 						GFP_KERNEL);
+ 		if (!pdev->cmd_buffer_addr)
+ 			goto err_out_1;
 
 
