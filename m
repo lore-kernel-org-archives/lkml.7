@@ -2,183 +2,108 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8583C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A76C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 725472133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:56:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="rIhj4ypg"
+	by mail.kernel.org (Postfix) with ESMTP id 152F6205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565773119;
+	bh=lR6D/uZC5vwtdQApWaGMLJNcYlISGU/5wQ1Oz3L94P4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HrrHRt84aJoLCIA3XmGs8wmyzG4TFp9zM67otmsnvRhit0goO8rlWAWglZvW1w3Rq
+	 mwPXb/gl5yO8t2ZKJJGLugBzc2BOldX9UlQmsaojJm34uFa1DoJ4r/LNp66IP6goY1
+	 5+XhCs4grFMrtL2ihI91bd3mhQY+8oBdvvoz0Jxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbfHNI4u (ORCPT
+        id S1726488AbfHNI6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 04:56:50 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:16012 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725888AbfHNI4t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 04:56:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1565773004;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=EQ5geUHxakV09l9HVHK0cmOn+n8Yhs/05AuD3JOmScE=;
-        b=rIhj4ypgiKzHxoCRwUjcd7rE7wOJ/5welpvNg+eLgj9vGS1t1ycv+4/QzP8slvS8Jq
-        3V1FWlqoxiE1UIHXB+2qMTf5qOvuJqADB1HC1gsSWtKq9tjxqJyM7NXriRNTYe+i0ROX
-        wGQF+Sfh0LfTzgZcPcg0yj8XKNqLvM/v3KIWXS5CZxvr5sqsrwFYZaVLDcjjc+54P+Gh
-        ukLq68rZ5WaFJHzeStWu8cln4xLKdeRoKuimnXNPpWMdDLZ9sSqTRE04G/a1oKbu45KV
-        DujKCYNJkXcDjEbrxrEPCVPdvznVSRk1gc1PBJtS62ta7uBIKPGwyRAfuiN55sRnv56d
-        FtXw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMmw47slWo="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.26.1 DYNA|AUTH)
-        with ESMTPSA id V074e8v7E8uU4Pr
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 14 Aug 2019 10:56:30 +0200 (CEST)
+        Wed, 14 Aug 2019 04:58:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50750 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725828AbfHNI6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 04:58:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 325FAAD4E;
+        Wed, 14 Aug 2019 08:58:33 +0000 (UTC)
+Date:   Wed, 14 Aug 2019 10:58:31 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Khalid Aziz <khalid.aziz@oracle.com>
+Cc:     akpm@linux-foundation.org, vbabka@suse.cz,
+        mgorman@techsingularity.net, dan.j.williams@intel.com,
+        osalvador@suse.de, richard.weiyang@gmail.com, hannes@cmpxchg.org,
+        arunks@codeaurora.org, rppt@linux.vnet.ibm.com, jgg@ziepe.ca,
+        amir73il@gmail.com, alexander.h.duyck@linux.intel.com,
+        linux-mm@kvack.org, linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/2] Add predictive memory reclamation and compaction
+Message-ID: <20190814085831.GS17933@dhcp22.suse.cz>
+References: <20190813014012.30232-1-khalid.aziz@oracle.com>
+ <20190813140553.GK17933@dhcp22.suse.cz>
+ <3cb0af00-f091-2f3e-d6cc-73a5171e6eda@oracle.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: Lay common foundation to make PVR/SGX work without hacks on OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
-Date:   Wed, 14 Aug 2019 10:56:29 +0200
-Cc:     linux-omap <linux-omap@vger.kernel.org>, kernel@pyra-handheld.com,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
-References: <20180108214032.GW3872@atomide.com> <4d99c1ae-7752-949b-7e88-bc8f1dc594a2@wizzup.org> <0C51EC59-9CDC-4196-ACF9-24596C9E61B6@goldelico.com> <FA4520D5-62CB-446D-975C-A1C7B9251517@goldelico.com> <20190212205132.GO5720@atomide.com> <0b00ce0a-969f-e638-8247-c2da96cf7ce6@gmail.com> <20190213004143.GP5720@atomide.com> <480AB632-A544-41E7-95A4-DC354AEBB71A@goldelico.com> <CAKpie0SigGGsQxSU+X-Mz5boy-Xx=3wRNOcrf+F=ehFr3RBi7Q@mail.gmail.com> <092210C3-05DE-4AFB-986F-81BD8F990B67@goldelico.com> <CAKpie0RXM1UC33YFeFy-kAxfGhYGNkw4vUgNTThf-ZCAhPTVXw@mail.gmail.com> <BE23C1E4-2877-49FA-B230-F9C10691B805@goldelico.com> <CAKpie0TSo-8gmDm9_Zw4Sd+kjVVEomp8yA9Vu8qY2U2AcrQc=w@mail.gmail.com> <8A069D96-C65F-43F5-8F54-20019CFB1A8D@goldelico.com> <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org> <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com> <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org> <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com> <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org
- >
-To:     Merlijn Wajer <merlijn@wizzup.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?utf-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        =?utf-8?Q?Filip_Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
-        Adam Ford <aford173@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <3cb0af00-f091-2f3e-d6cc-73a5171e6eda@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Tue 13-08-19 09:20:51, Khalid Aziz wrote:
+> On 8/13/19 8:05 AM, Michal Hocko wrote:
+> > On Mon 12-08-19 19:40:10, Khalid Aziz wrote:
+> > [...]
+> >> Patch 1 adds code to maintain a sliding lookback window of (time, number
+> >> of free pages) points which can be updated continuously and adds code to
+> >> compute best fit line across these points. It also adds code to use the
+> >> best fit lines to determine if kernel must start reclamation or
+> >> compaction.
+> >>
+> >> Patch 2 adds code to collect data points on free pages of various orders
+> >> at different points in time, uses code in patch 1 to update sliding
+> >> lookback window with these points and kicks off reclamation or
+> >> compaction based upon the results it gets.
+> > 
+> > An important piece of information missing in your description is why
+> > do we need to keep that logic in the kernel. In other words, we have
+> > the background reclaim that acts on a wmark range and those are tunable
+> > from the userspace. The primary point of this background reclaim is to
+> > keep balance and prevent from direct reclaim. Why cannot you implement
+> > this or any other dynamic trend watching watchdog and tune watermarks
+> > accordingly? Something similar applies to kcompactd although we might be
+> > lacking a good interface.
+> > 
+> 
+> Hi Michal,
+> 
+> That is a very good question. As a matter of fact the initial prototype
+> to assess the feasibility of this approach was written in userspace for
+> a very limited application. We wrote the initial prototype to monitor
+> fragmentation and used /sys/devices/system/node/node*/compact to trigger
+> compaction. The prototype demonstrated this approach has merits.
+> 
+> The primary reason to implement this logic in the kernel is to make the
+> kernel self-tuning.
 
-> Am 17.07.2019 um 12:51 schrieb Merlijn Wajer <merlijn@wizzup.org>:
->=20
-> Hi,
->=20
-> On 10/03/2019 08:07, H. Nikolaus Schaller wrote:
->>=20
->>> Am 10.03.2019 um 00:14 schrieb Merlijn Wajer <merlijn@wizzup.org>:
->>>=20
->>> Hi,
->>>=20
->>> On 15/02/2019 14:09, H. Nikolaus Schaller wrote:
->>>=20
->>>>>> At least I can download and start firmware. I just have to find a =
-way to fix the omaplfb so that it works
->>>>>> with our omapdrm based panels to runs the CLipBlit test [1] on =
-modern kernels...
->>>>>=20
->>>>> Maybe you can compare with what we have here:
->>>>> =
-https://github.com/maemo-leste/n9xx-linux/tree/pvr-wip-4.15.7/drivers/gpu/=
-pvr
->>>>=20
->>>> I'll take a look into it especially how omaplfb is done.
->>>>=20
->>>> First observation is that there is a "flat" tree while I am working =
-on a structured one...
->>>> But that is just a marginal difference (mainly significant for =
-Makefile writers).
->>>=20
->>> I've ported the Maemo Leste kernel + pvr to 5.0 and it seems to =
-work:
->>> https://github.com/maemo-leste/n9xx-linux/commits/pvr-wip-5.0.y
->>>=20
->>> Should I add this as maemo-leste-n900-5.0 branch (or something) to
->>> https://github.com/openpvrsgx-devgroup/linux_openpvrsgx ?
->>=20
->> Yes, that would be nice to be able to easily compare stuff.
->=20
-> I've just pushed the Maemo Leste v5.1 branch + patches here:
->=20
-> 	=
-https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/tree/n900/v5.1-pat=
-ch
->=20
-> This works on N900 with X, but it doesn't use DRM yet. I'm wondering
-> what a next logical step would be: to try and modules to load/probe on
-> another device (I have a droid4 or a Pandaboard ES rev B1), or to try
-> and get DRM PowerVR to work on the N900, with omapdrmfb and dri3wsegl.
->=20
-> For either path, I'll probably need some help. Any updates from anyone
-> else? Maybe we should list things people can work - perhaps document
-> progress in github issues. (Mailing list is also fine, BTW)
->=20
-> Cheers,
-> Merlijn
->=20
+What makes this particular self-tuning an universal win? In other words
+there are many ways to analyze the memory pressure and feedback it back
+that I can think of. It is quite likely that very specific workloads
+would have very specific demands there. I have seen cases where are
+trivial increase of min_free_kbytes to normally insane value worked
+really great for a DB workload because the wasted memory didn't matter
+for example.
 
-I also have pushed good news to
+> The more knobs we have externally, the more complex
+> it becomes to tune the kernel externally.
 
-	=
-https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/tree/letux-pvr
-
-Thanks to the help from the Pyra community, I was able to get a (binary) =
-reference
-implementation using DRM that works on Pyra/OMAP5. At least the =
-gles1test1.
-
-With that reference setup I was able to fix my Makefiles for the =
-staging/pvr implementation.
-
-I have tested that it works with v4.19.66 and v5.3-rc4 (LPAE build of =
-the LetuxOS kernel tree)
-on the Pyra.
-
-In which areas does this tree go beyond the TI SDK/IMG DDK 1.14?
-
-* includes internal API fixes for kernels up to v5.3
-* lives in drivers/staging/pvr/1.14.3699939 - so that we can ask for =
-inclusion in linux-next
-* has Kconfig and Makefiles for in-kernel configuration (no separate =
-build system)
-* builds separate kernel modules for omap3430, omap3630, am335x, omap4, =
-omap5, dra7 etc.
-  pvrsrvkm
-  e.g. pvrsrvkm_omap_omap5_sgx544_116
-* the correct kernel module is automatically probed by matching =
-.compatible in device tree
-  so that the code is multi-platform friendly
-* includes SoC integration for OMAP3/4/5 and has some preliminary =
-bindings documentation
-* code base should also support JZ4780/CI20 and some Intel Atom =
-processors (CedarView, Poulsbo)
-* has got a ToDo to describe what should be done during staging phase
-
-	=
-https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/blob/letux/latest-=
-pvr/drivers/staging/pvr/TODO
-
-My plans for the next steps are:
-
-* do more testing (e.g. X11, kmscube)
-* check if and/or how it can run on am335x (BeagleBone) or OMAP3 (e.g. =
-GTA04, OpenPandora)
-* try a JZ480/CI20 build (unfortuantely I have no HDMI there with =
-mainline kernels and I am
-  missing the user-space libraries for MIPS).
-
-BR,
-Nikolaus
-
+I agree on this point. Is the current set of tunning sufficient? What
+would be missing if not?
+-- 
+Michal Hocko
+SUSE Labs
