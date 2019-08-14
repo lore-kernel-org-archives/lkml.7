@@ -2,170 +2,141 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB78C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAC4C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41EEE206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9142C20644
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfHNSIv (ORCPT
+        id S1728599AbfHNSL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 14:08:51 -0400
-Received: from mga18.intel.com ([134.134.136.126]:51018 "EHLO mga18.intel.com"
+        Wed, 14 Aug 2019 14:11:28 -0400
+Received: from enpas.org ([46.38.239.100]:58846 "EHLO mail.enpas.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726166AbfHNSIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 14:08:51 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 11:08:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,386,1559545200"; 
-   d="scan'208";a="376130035"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Aug 2019 11:08:49 -0700
-Date:   Wed, 14 Aug 2019 11:08:49 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-Message-ID: <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190814101714.GA26273@quack2.suse.cz>
+        id S1727975AbfHNSL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 14:11:28 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        by mail.enpas.org (Postfix) with ESMTPSA id 6F2A1100073;
+        Wed, 14 Aug 2019 18:11:23 +0000 (UTC)
+Subject: Re: [PATCH v2 3/4] hwmon/ltc2990: Add platform_data support
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.com>, linux-m68k@vger.kernel.org,
+        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
+References: <20190812235237.21797-1-max@enpas.org>
+ <20190812235237.21797-3-max@enpas.org> <20190813080237.GA29986@roeck-us.net>
+ <6912362a-1f58-a9d6-f86b-d16930aa359c@enpas.org>
+ <275c42b3-9a91-a73a-0696-3c5a0a344509@roeck-us.net>
+From:   Max Staudt <max@enpas.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=max@enpas.org; prefer-encrypt=mutual; keydata=
+ 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
+ urZIw0nz8zec+73Bv/qF4GHHftLYfA==
+Message-ID: <a35b87c2-6bcd-fc27-ceb5-6a18c06f5cc2@enpas.org>
+Date:   Wed, 14 Aug 2019 20:11:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814101714.GA26273@quack2.suse.cz>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <275c42b3-9a91-a73a-0696-3c5a0a344509@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 12:17:14PM +0200, Jan Kara wrote:
-> Hello!
-> 
-> On Fri 09-08-19 15:58:14, ira.weiny@intel.com wrote:
-> > Pre-requisites
-> > ==============
-> > 	Based on mmotm tree.
-> > 
-> > Based on the feedback from LSFmm, the LWN article, the RFC series since
-> > then, and a ton of scenarios I've worked in my mind and/or tested...[1]
-> > 
-> > Solution summary
-> > ================
-> > 
-> > The real issue is that there is no use case for a user to have RDMA pinn'ed
-> > memory which is then truncated.  So really any solution we present which:
-> > 
-> > A) Prevents file system corruption or data leaks
-> > ...and...
-> > B) Informs the user that they did something wrong
-> > 
-> > Should be an acceptable solution.
-> > 
-> > Because this is slightly new behavior.  And because this is going to be
-> > specific to DAX (because of the lack of a page cache) we have made the user
-> > "opt in" to this behavior.
-> > 
-> > The following patches implement the following solution.
-> > 
-> > 0) Registrations to Device DAX char devs are not affected
-> > 
-> > 1) The user has to opt in to allowing page pins on a file with an exclusive
-> >    layout lease.  Both exclusive and layout lease flags are user visible now.
-> > 
-> > 2) page pins will fail if the lease is not active when the file back page is
-> >    encountered.
-> > 
-> > 3) Any truncate or hole punch operation on a pinned DAX page will fail.
-> 
-> So I didn't fully grok the patch set yet but by "pinned DAX page" do you
-> mean a page which has corresponding file_pin covering it? Or do you mean a
-> page which has pincount increased? If the first then I'd rephrase this to
-> be less ambiguous, if the second then I think it is wrong. 
+Hi Guenter,
 
-I mean the second.  but by "fail" I mean hang.  Right now the "normal" page
-pincount processing will hang the truncate.  Given the discussion with John H
-we can make this a bit better if we use something like FOLL_PIN and the page
-count bias to indicate this type of pin.  Then I could fail the truncate
-outright.  but that is not done yet.
+Thanks for your feedback!
+Reply below.
 
-so... I used the word "fail" to be a bit more vague as the final implementation
-may return ETXTBUSY or hang as noted.
 
-> 
-> > 4) The user has the option of holding the lease or releasing it.  If they
-> >    release it no other pin calls will work on the file.
-> 
-> Last time we spoke the plan was that the lease is kept while the pages are
-> pinned (and an attempt to release the lease would block until the pages are
-> unpinned). That also makes it clear that the *lease* is what is making
-> truncate and hole punch fail with ETXTBUSY and the file_pin structure is
-> just an implementation detail how the existence is efficiently tracked (and
-> what keeps the backing file for the pages open so that the lease does not
-> get auto-destroyed). Why did you change this?
+On 08/13/2019 03:24 PM, Guenter Roeck wrote:
+> Sorry, I don't understand. Why exactly can't you replace of_property_read_u32_array()
+> with device_property_read_u32_array() and use fwnode_create_software_node()
+> in the calling code to set the properties ?
 
-closing the file _and_ unmaping it will cause the lease to be released
-regardless of if we allow this or not.
+Thanks for this hint.
 
-As we discussed preventing the close seemed intractable.
+Turns out wcove is the only user of fwnode_create_software_node(), and intel_cht_int33fe is the only other driver to contain the string "software_node". Please bear with us if we didn't know about this handy trick yet. And handy it is!
 
-I thought about failing the munmap but that seemed wrong as well.  But more
-importantly AFAIK RDMA can pass its memory pins to other processes via FD
-passing...  This means that one could pin this memory, pass it to another
-process and exit.  The file lease on the pin'ed file is lost.
+device_property_read_*() is also really helpful to know about, as it covers both the DT case, as well as other firmware interfaces - thanks for the hint. Is there any reason to ever use of_property_read_*() anymore?
 
-The file lease is just a key to get the memory pin.  Once unlocked the procfs
-tracking keeps track of where that pin goes and which processes need to be
-killed to get rid of it.
+I've applied your suggested changes, and will send another patch round soon (I want to try one last thing). Please let me/us know what you think once it's on the list.
 
-> 
-> > 5) Closing the file is ok.
-> > 
-> > 6) Unmapping the file is ok
-> > 
-> > 7) Pins against the files are tracked back to an owning file or an owning mm
-> >    depending on the internal subsystem needs.  With RDMA there is an owning
-> >    file which is related to the pined file.
-> > 
-> > 8) Only RDMA is currently supported
-> 
-> If you currently only need "owning file" variant in your patch set, then
-> I'd just implement that and leave "owning mm" variant for later if it
-> proves to be necessary. The things are complex enough as is...
 
-I can do that...  I was trying to get io_uring working as well with the
-owning_mm but I should save that for later.
-
-> 
-> > 9) Truncation of pages which are not actively pinned nor covered by a lease
-> >    will succeed.
-> 
-> Otherwise I like the design.
-
-Thanks,
-Ira
-
-> 
-> 								Honza
-> 
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+Max
