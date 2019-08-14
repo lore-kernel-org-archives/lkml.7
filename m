@@ -2,124 +2,113 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC32EC32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED366C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9432B2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD2F206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:52:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="LdIlYROe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klldFEUj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbfHNOwJ (ORCPT
+        id S1728166AbfHNOwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 10:52:09 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:33424 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfHNOwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 10:52:09 -0400
-Received: from zn.tnic (p200300EC2F0BD0000538F16F91702398.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:d000:538:f16f:9170:2398])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 98A761EC0554;
-        Wed, 14 Aug 2019 16:52:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565794327;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=BskQ5DhIGKuIwHy1nktd9lNxwb4SfiRB6QlSE0m/dGg=;
-        b=LdIlYROee9QJn5dmedFuc/APWt+04NVXrE7HGkSFbSMJSzIy2kPkCLhPLZLkkyphnszX+u
-        hdWUayRHu3tgHxWSHq9TM24jG5/R7DHefUVi0zZGO6m5yvnv0JUwQHhlI0L2FcQz9ycjOm
-        H9DXhh7GCz+dVhCHzhqiLJ9oZWFclh0=
-Date:   Wed, 14 Aug 2019 16:52:52 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 07/24] EDAC: Kill EDAC_DIMM_OFF() macro
-Message-ID: <20190814145252.GA1841@zn.tnic>
-References: <20190624150758.6695-1-rrichter@marvell.com>
- <20190624150758.6695-8-rrichter@marvell.com>
+        Wed, 14 Aug 2019 10:52:38 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43110 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfHNOwi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 10:52:38 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e12so38698181otp.10;
+        Wed, 14 Aug 2019 07:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LE9bCOi3fgM77T3hJ0EjLAjiJBaAYnU/w04iUO3AhrI=;
+        b=klldFEUjvKAWMbt8cIXxkXbpqdwzHJagqEl8faKaELgCOO/YJq52UPWsuledkssXak
+         HS6sBAZ8T0ncB2JmCu4mN9Qk9g26Sc00Y4qRFNtZGcy+kR5N3HQQW/jSlibvr9RhwIiQ
+         1+1DFVmkZJUHXTjn1xvvZxcaX/nAjmLe5pwj8bQHj8nBvxINVYYs9876JmMmJJcK5FJq
+         NfHmY0PEFWnOJiVbIsXhPtCd1Fg+0a+q5vkgiSj76/sYg1UYczVQrqG8rVjzI4uAsCQS
+         75bIAO9u3hTrGxIVDqmWfQG1h3JwGpD9Bho3OnqiM6eBteJ3bkbIvjp4uqHi9M6XID/o
+         GmuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LE9bCOi3fgM77T3hJ0EjLAjiJBaAYnU/w04iUO3AhrI=;
+        b=h7F1I2Grc8lGWBQ+UWszTQk1R/bajdXYKd6Vu/B20+iTNaLBlCbar2ADBXupRl21om
+         zBxi5GjHw8kWlPfewG3p1LBPDYJQpEyzhDbrF9ZyaK0hyMyNHo0fAeYzlIdW2FRzO6El
+         jHDHxnFgqx0OCQN+mFKTCHgmeUyjU3ppoI4MV9HrbzkLaY/yqu2Fhrnk1aKB6InWNitP
+         bek+P3PkhgtpPsjhstRXf7p1p4T9+Adig6tlmJIGVwe68BPsZ3ugzFJ2ma4p4aZ1bB8c
+         OzmPJmUYxyjDwHHcJyVRwTfD6wkvzeJsF2cYGDPgUOOTkPh4XU4n/vfQzU4MTCifX6FA
+         g7dg==
+X-Gm-Message-State: APjAAAW8MLA6dzsj2itCTe19jk9xGDc4p5+tcQxrRO862wNz3gC3dpgz
+        LtsybfQ9nLHa+ktLHjzND/SZV24xW6AQjz4CnV8=
+X-Google-Smtp-Source: APXvYqzwP7Oanm4rNC3H3XlkdoD28KPFtrzYX/SlNeMG5UeKPjAE3US8kr3ngvS0Es4sOJC5yHA8GMzaBhoFQdc1pEk=
+X-Received: by 2002:a6b:6516:: with SMTP id z22mr303258iob.7.1565794356826;
+ Wed, 14 Aug 2019 07:52:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190624150758.6695-8-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
+ <20190717192616.1731-2-tushar.khandelwal@arm.com> <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
+ <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
+ <VI1PR0601MB21113C48E719B2C79EC2FE508FC20@VI1PR0601MB2111.eurprd06.prod.outlook.com>
+ <CABb+yY3yMWbUiQnJgfQhwnW1OM3aoFL3ZFc018E-fxGichi-4Q@mail.gmail.com>
+ <VI1PR0601MB2111A5A4E951F011D389A8978FD90@VI1PR0601MB2111.eurprd06.prod.outlook.com>
+ <CABb+yY3Ni7wV+ui1LO7TERWQH_BoakZbPq961wdRPB4X-nwS2A@mail.gmail.com> <20190814100518.GA21898@e107155-lin>
+In-Reply-To: <20190814100518.GA21898@e107155-lin>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Wed, 14 Aug 2019 09:52:25 -0500
+Message-ID: <CABb+yY1jZs0OU-oi86iNNHiqBTjaY6ixFPMoUPkU6MCH_YrwLg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding documentation
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Morten Borup Petersen <morten_bp@live.dk>,
+        Tushar Khandelwal <tushar.khandelwal@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>,
+        "nd@arm.com" <nd@arm.com>,
+        Morten Borup Petersen <morten.petersen@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 03:09:09PM +0000, Robert Richter wrote:
-> We do not need to calculate the offset in the mc's dimm array, let's
-> just store the index in struct dimm_info and we can get rid of this
-> macro.
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> ---
->  drivers/edac/edac_mc.c       | 13 ++++--------
->  drivers/edac/edac_mc_sysfs.c | 20 ++++--------------
->  include/linux/edac.h         | 41 ------------------------------------
->  3 files changed, 8 insertions(+), 66 deletions(-)
+On Wed, Aug 14, 2019 at 5:05 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> On Tue, Aug 13, 2019 at 11:36:56AM -0500, Jassi Brar wrote:
+> [...]
+>
+> > > >>
+> > > >> As mentioned in the response to your initial comment, the driver does
+> > > >> not currently support mixing protocols.
+> > > >>
+> > > > Thanks for acknowledging that limitation. But lets also address it.
+> > > >
+> > >
+> > > We are hesitant to dedicate time to developing mixing protocols given
+> > > that we don't have any current usecase nor any current platform which
+> > > would support this.
+> > >
+> > Can you please share the client code against which you tested this driver?
+> > From my past experience, I realise it is much more efficient to tidyup
+> > the code myself, than endlessly trying to explain the benefits.
+> >
+>
+> Thanks for the patience and offer.
+>
+Ok, but the offer is to Morten for MHUv2 driver.
 
-I like this cleanup a lot. Good!
-
-> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-> index c959e8b1643c..c44bc83e8502 100644
-> --- a/drivers/edac/edac_mc.c
-> +++ b/drivers/edac/edac_mc.c
-> @@ -318,7 +318,7 @@ struct mem_ctl_info *edac_mc_alloc(unsigned mc_num,
->  	unsigned size, tot_dimms = 1, count = 1;
->  	unsigned tot_csrows = 1, tot_channels = 1, tot_errcount = 0;
->  	void *pvt, *p, *ptr = NULL;
-> -	int i, j, row, chn, n, len, off;
-> +	int idx, i, j, row, chn, n, len;
->  	bool per_rank = false;
->  
->  	BUG_ON(n_layers > EDAC_MAX_LAYERS || n_layers == 0);
-> @@ -426,20 +426,15 @@ struct mem_ctl_info *edac_mc_alloc(unsigned mc_num,
->  	memset(&pos, 0, sizeof(pos));
->  	row = 0;
->  	chn = 0;
-> -	for (i = 0; i < tot_dimms; i++) {
-> +	for (idx = 0; idx < tot_dimms; idx++) {
->  		chan = mci->csrows[row]->channels[chn];
-> -		off = EDAC_DIMM_OFF(layer, n_layers, pos[0], pos[1], pos[2]);
-> -		if (off < 0 || off >= tot_dimms) {
-> -			edac_mc_printk(mci, KERN_ERR, "EDAC core bug: EDAC_DIMM_OFF is trying to do an illegal data access\n");
-> -			goto error;
-> -		}
-
-Btw, right around here there's a comment:
-
-        /*
-         * Allocate and fill the dimm structs
-         */
-
-and since you're cleaning up all this, can you please add another patch
-which takes all that code under the comment and see if you can carve it
-out into a separate helper edac_alloc_dimms() or so. Because that
-edac_mc_alloc() function is huuuge.
-
-Btw, the code under
-
-        /*
-         * Alocate and fill the csrow/channels structs
-         */
-
-begs to be a separate function too :-)
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+> Can we try the same with MHUv1 and SCMI
+> upstream driver.
+>
+MHUv1 driver is fine as it is.
+I did try my best to keep you from messing the SCMI driver, without success
+https://lkml.org/lkml/2017/8/7/924
