@@ -2,91 +2,63 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D616C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6C4C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12DEF2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:17:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565767022;
-	bh=XDAYAIHKx15cbm4MLaeL2uyl4aIQnIOMeL1b9sGwwNE=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=eVOUbmyU4eVu/yh8NU3W4C4peC0ju99uvD5eve2FMNVkflwbO9EC7tqT33328ipz3
-	 CZkITemzYhx9ApbZX12K9Cd4QxkPcJJ4ASZEDu+IxCF3Y4dUsc7nPtvd4ksFYsRKIw
-	 OvXru7tvUz82vEROujFVXlYxeGNtxWtwmSa39fYM=
+	by mail.kernel.org (Postfix) with ESMTP id 405FD2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfHNHRA (ORCPT
+        id S1727416AbfHNHRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:17:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbfHNHQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:16:59 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 066412054F;
-        Wed, 14 Aug 2019 07:16:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565767018;
-        bh=XDAYAIHKx15cbm4MLaeL2uyl4aIQnIOMeL1b9sGwwNE=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=BivEU2xIZL82EeTgEkm0YeMoEaLJDpoEO7a2zS5hiA9cs3kvwHPeOwoR5hLAFoCSs
-         QN7vT/TulxQAdD2w0+cnf1mdxQEv+C8FQSllITsMUv0YH0f9tH2JKqFwShfbEex0li
-         PW40DSG+Nh81h9qArVWE/xPTvIfUmbeV1PbKJ/WE=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 14 Aug 2019 03:17:07 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40818 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726373AbfHNHRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:17:05 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4DDD918D36EF53D47457;
+        Wed, 14 Aug 2019 15:17:01 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 14 Aug 2019 15:16:55 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <vkoul@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Mao Wenan" <maowenan@huawei.com>
+Subject: [PATCH v2 linux-next 0/2] change mux_configure32() to static
+Date:   Wed, 14 Aug 2019 15:21:03 +0800
+Message-ID: <20190814072105.144107-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190814055108.214253-10-brendanhiggins@google.com>
-References: <20190814055108.214253-1-brendanhiggins@google.com> <20190814055108.214253-10-brendanhiggins@google.com>
-Subject: Re: [PATCH v13 09/18] kunit: test: add support for test abort
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
-        tytso@mit.edu, yamada.masahiro@socionext.com
-User-Agent: alot/0.8.1
-Date:   Wed, 14 Aug 2019 00:16:57 -0700
-Message-Id: <20190814071658.066412054F@mail.kernel.org>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2019-08-13 22:50:59)
-> Add support for aborting/bailing out of test cases, which is needed for
-> implementing assertions.
->=20
-> An assertion is like an expectation, but bails out of the test case
-> early if the assertion is not met. The idea with assertions is that you
-> use them to state all the preconditions for your test. Logically
-> speaking, these are the premises of the test case, so if a premise isn't
-> true, there is no point in continuing the test case because there are no
-> conclusions that can be drawn without the premises. Whereas, the
-> expectation is the thing you are trying to prove.
->=20
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
+First patch is to make mux_configure32() static to avoid sparse warning,
+the second patch is to chage alignment of two functions.
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+v2: change subject from "drivers: dma: Fix sparse warning for mux_configure32"
+to "drivers: dma: make mux_configure32 static", and cleanup the log. And add 
+one patch to change alignment of two functions. 
+
+Mao Wenan (2):
+  drivers: dma: make mux_configure32 static
+  drivers: dma: change alignment of mux_configure32 and
+    fsl_edma_chan_mux
+
+ drivers/dma/fsl-edma-common.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+-- 
+2.20.1
 
