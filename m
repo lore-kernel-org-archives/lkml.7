@@ -2,161 +2,132 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2065EC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3A6C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 025362133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D27214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:08:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565780937;
+	bh=Slmc554d9NHP9HnBMwBNWDhzdbVdeyMrAvJUg9evm70=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ogzf/y1Xdio0LcXV+9M8Ab+lpeTI7HgU07nj2ZvXd6pk3jl4FIYXx1BVj1YmpGHJj
+	 MoUx12okpnJbaAfTqPfyl5QFeeFI1eA54QnWnSAqm03ZVW5a3ysJAnS31llrttS0iS
+	 g9ktZGROWUZ2iZ5V+EIdJVT+ulI4udWGuIqG7fD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfHNLIn (ORCPT
+        id S1727724AbfHNLI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 07:08:43 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:48069 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbfHNLIm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 07:08:42 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 055BE240006;
-        Wed, 14 Aug 2019 11:08:36 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 09:13:43 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     codekipper@gmail.com
-Cc:     wens@csie.org, linux-sunxi@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, lgirdwood@gmail.com,
-        broonie@kernel.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org, be17068@iperbole.bo.it
-Subject: Re: [PATCH v5 03/15] ASoC: sun4i-i2s: Correct divider calculations
-Message-ID: <20190814071343.vvjbozrmv5ionwnf@flea>
-References: <20190814060854.26345-1-codekipper@gmail.com>
- <20190814060854.26345-4-codekipper@gmail.com>
+        Wed, 14 Aug 2019 07:08:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34060 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727507AbfHNLIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 07:08:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D4950AF9F;
+        Wed, 14 Aug 2019 11:08:51 +0000 (UTC)
+Date:   Wed, 14 Aug 2019 13:08:50 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
+        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH 1/2 -mm] mm: account lazy free pages separately
+Message-ID: <20190814110850.GT17933@dhcp22.suse.cz>
+References: <1565308665-24747-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190809083216.GM18351@dhcp22.suse.cz>
+ <1a3c4185-c7ab-8d6f-8191-77dce02025a7@linux.alibaba.com>
+ <20190809180238.GS18351@dhcp22.suse.cz>
+ <79c90f6b-fcac-02e1-015a-0eaa4eafdf7d@linux.alibaba.com>
+ <fb1f4958-5147-2fab-531f-d234806c2f37@linux.alibaba.com>
+ <20190812093430.GD5117@dhcp22.suse.cz>
+ <297aefa2-ba64-cb91-d2c8-733054db01a3@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bamdgrdnwpokqt4x"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190814060854.26345-4-codekipper@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <297aefa2-ba64-cb91-d2c8-733054db01a3@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon 12-08-19 10:00:17, Yang Shi wrote:
+> 
+> 
+> On 8/12/19 2:34 AM, Michal Hocko wrote:
+> > On Fri 09-08-19 16:54:43, Yang Shi wrote:
+> > > 
+> > > On 8/9/19 11:26 AM, Yang Shi wrote:
+> > > > 
+> > > > On 8/9/19 11:02 AM, Michal Hocko wrote:
+> > [...]
+> > > > > I have to study the code some more but is there any reason why those
+> > > > > pages are not accounted as proper THPs anymore? Sure they are partially
+> > > > > unmaped but they are still THPs so why cannot we keep them accounted
+> > > > > like that. Having a new counter to reflect that sounds like papering
+> > > > > over the problem to me. But as I've said I might be missing something
+> > > > > important here.
+> > > > I think we could keep those pages accounted for NR_ANON_THPS since they
+> > > > are still THP although they are unmapped as you mentioned if we just
+> > > > want to fix the improper accounting.
+> > > By double checking what NR_ANON_THPS really means,
+> > > Documentation/filesystems/proc.txt says "Non-file backed huge pages mapped
+> > > into userspace page tables". Then it makes some sense to dec NR_ANON_THPS
+> > > when removing rmap even though they are still THPs.
+> > > 
+> > > I don't think we would like to change the definition, if so a new counter
+> > > may make more sense.
+> > Yes, changing NR_ANON_THPS semantic sounds like a bad idea. Let
+> > me try whether I understand the problem. So we have some THP in
+> > limbo waiting for them to be split and unmapped parts to be freed,
+> > right? I can see that page_remove_anon_compound_rmap does correctly
+> > decrement NR_ANON_MAPPED for sub pages that are no longer mapped by
+> > anybody. LRU pages seem to be accounted properly as well.  As you've
+> > said NR_ANON_THPS reflects the number of THPs mapped and that should be
+> > reflecting the reality already IIUC.
+> > 
+> > So the only problem seems to be that deferred THP might aggregate a lot
+> > of immediately freeable memory (if none of the subpages are mapped) and
+> > that can confuse MemAvailable because it doesn't know about the fact.
+> > Has an skewed counter resulted in a user observable behavior/failures?
+> 
+> No. But the skewed counter may make big difference for a big scale cluster.
+> The MemAvailable is an important factor for cluster scheduler to determine
+> the capacity.
 
---bamdgrdnwpokqt4x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+But MemAvailable is a very rough estimation. Is relying on it really a
+good measure? I mean there is a lot of reclaimable memory that is not
+reflected there (some fs. internal data structures, networking buffers
+etc.)
 
-Hi,
+[...]
 
-(I just noticed this, but can you update my mail address, it's not
-@free-electrons for quite a while, you probably want to change your
-scripts to use mripard@kernel.org)
+> > accounting the full THP correct? What if subpages are still mapped?
+> 
+> "Deferred split" definitely doesn't mean they are free. When memory pressure
+> is hit, they would be split, then the unmapped normal pages would be freed.
+> So, when calculating MemAvailable, they are not accounted 100%, but like
+> "available += lazyfree - min(lazyfree / 2, wmark_low)", just like how page
+> cache is accounted.
 
-On Wed, Aug 14, 2019 at 08:08:42AM +0200, codekipper@gmail.com wrote:
-> From: Marcus Cooper <codekipper@gmail.com>
->
-> The clock division circuitry is different on the H3 and later SoCs.
-> The division of bclk is now based on pll2.
->
-> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> ---
->  sound/soc/sunxi/sun4i-i2s.c | 73 +++++++++++++++++++++++++------------
->  1 file changed, 49 insertions(+), 24 deletions(-)
->
-> diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> index 7c37b6291df0..34f31439ae7b 100644
-> --- a/sound/soc/sunxi/sun4i-i2s.c
-> +++ b/sound/soc/sunxi/sun4i-i2s.c
-> @@ -127,8 +127,6 @@ struct sun4i_i2s;
->   * @has_chsel_offset: SoC uses offset for selecting dai operational mode.
->   * @reg_offset_txdata: offset of the tx fifo.
->   * @sun4i_i2s_regmap: regmap config to use.
-> - * @mclk_offset: Value by which mclkdiv needs to be adjusted.
-> - * @bclk_offset: Value by which bclkdiv needs to be adjusted.
->   * @field_clkdiv_mclk_en: regmap field to enable mclk output.
->   * @field_fmt_wss: regmap field to set word select size.
->   * @field_fmt_sr: regmap field to set sample resolution.
-> @@ -150,8 +148,6 @@ struct sun4i_i2s_quirks {
->  	bool				has_chsel_offset;
->  	unsigned int			reg_offset_txdata;	/* TX FIFO */
->  	const struct regmap_config	*sun4i_i2s_regmap;
-> -	unsigned int			mclk_offset;
-> -	unsigned int			bclk_offset;
->
->  	/* Register fields for i2s */
->  	struct reg_field		field_clkdiv_mclk_en;
-> @@ -212,7 +208,25 @@ static const struct sun4i_i2s_clk_div sun4i_i2s_bclk_div[] = {
->  	{ .div = 8, .val = 3 },
->  	{ .div = 12, .val = 4 },
->  	{ .div = 16, .val = 5 },
-> -	/* TODO - extend divide ratio supported by newer SoCs */
-> +};
-> +
-> +static const struct sun4i_i2s_clk_div sun8i_i2s_clk_div[] = {
-> +	{ .div = 0, .val = 0 },
+Then this is even more dubious IMHO.
 
-Having a divider of 0 seems like a bad idea.
+> We could get more accurate account, i.e. checking each sub page's mapcount
+> when accounting, but it may change before shrinker start scanning. So, just
+> use the ballpark estimation to trade off the complexity for accurate
+> accounting.
 
-> +	{ .div = 1, .val = 1 },
-> +	{ .div = 2, .val = 2 },
-> +	{ .div = 4, .val = 3 },
-> +	{ .div = 6, .val = 4 },
-> +	{ .div = 8, .val = 5 },
-> +	{ .div = 12, .val = 6 },
-> +	{ .div = 16, .val = 7 },
-> +	{ .div = 24, .val = 8 },
-> +	{ .div = 32, .val = 9 },
-> +	{ .div = 48, .val = 10 },
-> +	{ .div = 64, .val = 11 },
-> +	{ .div = 96, .val = 12 },
-> +	{ .div = 128, .val = 13 },
-> +	{ .div = 176, .val = 14 },
-> +	{ .div = 192, .val = 15 },
->  };
->
->  static const struct sun4i_i2s_clk_div sun4i_i2s_mclk_div[] = {
-> @@ -224,21 +238,21 @@ static const struct sun4i_i2s_clk_div sun4i_i2s_mclk_div[] = {
->  	{ .div = 12, .val = 5 },
->  	{ .div = 16, .val = 6 },
->  	{ .div = 24, .val = 7 },
-> -	/* TODO - extend divide ratio supported by newer SoCs */
->  };
->
->  static int sun4i_i2s_get_bclk_div(struct sun4i_i2s *i2s,
->  				  unsigned int oversample_rate,
-> -				  unsigned int word_size)
-> +				  unsigned int word_size,
-> +				  const struct sun4i_i2s_clk_div *bdiv,
-> +				  unsigned int size)
-
-Wouldn't it be simpler to just have the divider list in the variant
-structure? It would avoid having to refactor all the functions, and
-it's not like it's really going to change from one call to another
-anyway.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---bamdgrdnwpokqt4x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVO0pwAKCRDj7w1vZxhR
-xeUlAP9r6Z9EM/cbBKKY+kiTaI16sfr7c9NwecdxGZCT7mrOkAEAlrY4YQHdPrGM
-Ek/ZDh1DW7Q85spOkTJgAF0ugAOlDwQ=
-=8Nke
------END PGP SIGNATURE-----
-
---bamdgrdnwpokqt4x--
+I do not see much point in fixing up one particular counter when there
+is a whole lot that is even not considered. I would rather live with the
+fact that MemAvailable is only very rough estimate then whack a mole on
+any memory consumer that is freeable directly or indirectly via memory
+reclaim. Because this is likely to be always subtly broken and only
+visible under very specific workloads so there is no way to test for it.
+-- 
+Michal Hocko
+SUSE Labs
