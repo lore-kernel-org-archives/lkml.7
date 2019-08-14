@@ -4,114 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BED7C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6266DC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7CA206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 394702084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565803103;
-	bh=FAAciiWxMv2HbnmTuQi2r+sFmhndjmM10hnTqGnrU6s=;
+	s=default; t=1565803107;
+	bh=2xDhGvxEekeoQnWrd1RGsBcE82TmnMmVp4nQjv/gPvA=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=KgYTCBicKt1isEruWkTsjKNP1IIgdzXjeJH6b/qhAHyaHBkOCbEnBFJuETVWyXdoz
-	 0J+zU2ZEqEHb9d0dGKBrtmw5szdMMRnshlYTsvxi1UsFzqNJOkGzkqto86ZTTegOOK
-	 o9IeAQwODh+DfgXLjalaUKGG4F/UQtm2KJhjhefQ=
+	b=Zw14l1WxkkU7MO1nO3zK/X5Sq/DOzeV20S6Fv9+5M63QPNc0twydrWtsoBXyyfzGD
+	 I0v5emX8Q/jzU8GrcTh5kj3yzwpqiGOU6n+AdbZNhBo31YIUXI6TezjJtyZq6HwSVc
+	 cKXQj29/oVF67v7aZTirKNMTuQRfAY7Re08rNQ1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730772AbfHNRSW (ORCPT
+        id S1730771AbfHNRSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:18:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36510 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:18:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730764AbfHNRMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:12:36 -0400
+        id S1730735AbfHNRSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:18:24 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BE1721721;
-        Wed, 14 Aug 2019 17:12:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 839C4206C2;
+        Wed, 14 Aug 2019 17:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802755;
-        bh=FAAciiWxMv2HbnmTuQi2r+sFmhndjmM10hnTqGnrU6s=;
+        s=default; t=1565803103;
+        bh=2xDhGvxEekeoQnWrd1RGsBcE82TmnMmVp4nQjv/gPvA=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=IZW4vquRvp6nTj8xECSl2DsQWLZ9UlVhL77SlELIL1od7nOKA4H1KK2IJ3DhqvmQA
-         pWFJi505fBwDJQKH4P1EgHfemTDtb6CLSkLWLJ7IFrp3ho57pMsC/kv7b2r1NNbqgQ
-         4gNEeH53a9ZmaPLH/dF/81wJdJXYiNBuCFP+4r9c=
+        b=Mkrq41mufZhx6tAovMyKzqdPCv+OggwC2AuHo5ZshBfhoectAbjupJIN/QKDYDvpZ
+         MH3Ae6+8EFELjQsGFB8pd6aywWD/8U+SeEW2SFDAXHmwhtgINwn4OfVEj/yu/L889k
+         /EiPsWgi5YGqqF8998BZKiIf6eNX5gADTFD/qEN8=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190814125012.8700-18-vkoul@kernel.org>
-References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-18-vkoul@kernel.org>
-Subject: Re: [PATCH 17/22] arm64: dts: qcom: sm8150: Add apss_shared and apps_rsc nodes
+In-Reply-To: <20190814122958.4981-1-vkoul@kernel.org>
+References: <20190814122958.4981-1-vkoul@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: Document SM8150 rpmh-clock compatible
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-arm-msm@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        sibis@codeaurora.org, Vinod Koul <vkoul@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
 User-Agent: alot/0.8.1
-Date:   Wed, 14 Aug 2019 10:12:34 -0700
-Message-Id: <20190814171235.6BE1721721@mail.kernel.org>
+Date:   Wed, 14 Aug 2019 10:18:22 -0700
+Message-Id: <20190814171823.839C4206C2@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-08-14 05:50:07)
-> Add apss_shared and apps_rsc node including the rpmhcc child node
+Quoting Vinod Koul (2019-08-14 05:29:57)
+> Document the SM8150 rpmh-clock compatible for rpmh clock controller
+> found on SM8150 platforms.
 >=20
 > Signed-off-by: Vinod Koul <vkoul@kernel.org>
 > ---
-
-Can't this be squashed with the original dtsi file?
-
->  arch/arm64/boot/dts/qcom/sm8150.dtsi | 30 ++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
+>  Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/q=
-com/sm8150.dtsi
-> index 5c6b103b042b..5258b79676f6 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> @@ -4,6 +4,7 @@
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt b/=
+Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+> index 3c007653da31..82dee80cdbf3 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+> @@ -6,7 +6,9 @@ some Qualcomm Technologies Inc. SoCs. It accepts clock re=
+quests from
+>  other hardware subsystems via RSC to control clocks.
 > =20
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/clock/qcom,gcc-sm8150.h>
-> +#include <dt-bindings/soc/qcom,rpmh-rsc.h>
-
-But not the rpmh clk bindings?
-
-> @@ -272,6 +279,29 @@
->                         };
->                 };
+>  Required properties :
+> -- compatible : shall contain "qcom,sdm845-rpmh-clk"
+> +- compatible : must be one of:
+> +              "qcom,sdm845-rpmh-clk"
+> +              "qcom,sm8150-rpmh-clk"
 > =20
-> +               apps_rsc: rsc@18200000 {
-> +                       label =3D "apps_rsc";
-> +                       compatible =3D "qcom,rpmh-rsc";
-> +                       reg =3D <0x18200000 0x10000>,
-> +                             <0x18210000 0x10000>,
-> +                             <0x18220000 0x10000>;
-> +                       reg-names =3D "drv-0", "drv-1", "drv-2";
-> +                       interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> +                       qcom,tcs-offset =3D <0xd00>;
-> +                       qcom,drv-id =3D <2>;
-> +                       qcom,tcs-config =3D <ACTIVE_TCS  2>,
-> +                                         <SLEEP_TCS   1>,
-> +                                         <WAKE_TCS    1>,
-> +                                         <CONTROL_TCS 0>;
-> +
-> +                       rpmhcc: clock-controller {
-> +                               compatible =3D "qcom,sm8150-rpmh-clk";
-> +                               #clock-cells =3D <1>;
 
-Should take some sort of clocks property to get the board clock for XO?
+Can it take a 'clocks' property to get the board clock?
 
-> +                       };
-> +               };
-> +
-=20
+
