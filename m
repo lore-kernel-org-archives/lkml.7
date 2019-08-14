@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07827C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7852C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC392204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7734204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 10:41:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727424AbfHNKlu (ORCPT
+        id S1727478AbfHNKlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 06:41:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:51906 "EHLO foss.arm.com"
+        Wed, 14 Aug 2019 06:41:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:51882 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfHNKlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:41:49 -0400
+        id S1727122AbfHNKlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:41:46 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB6AE28;
-        Wed, 14 Aug 2019 03:41:48 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66B151576;
+        Wed, 14 Aug 2019 03:41:46 -0700 (PDT)
 Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 210CD3F706;
-        Wed, 14 Aug 2019 03:41:47 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9024D3F706;
+        Wed, 14 Aug 2019 03:41:44 -0700 (PDT)
 From:   Mark Rutland <mark.rutland@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     ak@linux.intel.com, akpm@linux-foundation.org,
@@ -32,9 +32,9 @@ Cc:     ak@linux.intel.com, akpm@linux-foundation.org,
         davem@davemloft.net, hch@lst.de, kan.liang@intel.com,
         mark.rutland@arm.com, mingo@kernel.org, peterz@infradead.org,
         riel@surriel.com, will@kernel.org
-Subject: [PATCH 4/9] arm/perf: correctly check for kthreads
-Date:   Wed, 14 Aug 2019 11:41:26 +0100
-Message-Id: <20190814104131.20190-5-mark.rutland@arm.com>
+Subject: [PATCH 3/9] kmemleak: correctly check for kthreads
+Date:   Wed, 14 Aug 2019 11:41:25 +0100
+Message-Id: <20190814104131.20190-4-mark.rutland@arm.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190814104131.20190-1-mark.rutland@arm.com>
 References: <20190814104131.20190-1-mark.rutland@arm.com>
@@ -42,10 +42,6 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-
-The arm perf_callchain_user() functions looks at current->mm,
-apparently to determine whether the thread is a kthread without any
-valid user context.
 
 In general, a non-NULL current->mm doesn't imply that current is a
 kthread, as kthreads can install an mm via use_mm(), and so it's
@@ -55,26 +51,31 @@ kthread.
 For consistency, let's use is_kthread() here.
 
 Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Ingo Molnar <mingo@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- arch/arm/kernel/perf_callchain.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/kmemleak.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/kernel/perf_callchain.c b/arch/arm/kernel/perf_callchain.c
-index 3b69a76d341e..5c920f2c46a8 100644
---- a/arch/arm/kernel/perf_callchain.c
-+++ b/arch/arm/kernel/perf_callchain.c
-@@ -71,7 +71,7 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
- 
- 	perf_callchain_store(entry, regs->ARM_pc);
- 
--	if (!current->mm)
+diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+index 6e9e8cca663e..42ea3c14b577 100644
+--- a/mm/kmemleak.c
++++ b/mm/kmemleak.c
+@@ -1290,10 +1290,10 @@ static int scan_should_stop(void)
+ 	 * This function may be called from either process or kthread context,
+ 	 * hence the need to check for both stop conditions.
+ 	 */
+-	if (current->mm)
+-		return signal_pending(current);
+-	else
 +	if (is_kthread(current))
- 		return;
+ 		return kthread_should_stop();
++	else
++		return signal_pending(current);
  
- 	tail = (struct frame_tail __user *)regs->ARM_fp - 1;
+ 	return 0;
+ }
 -- 
 2.11.0
 
