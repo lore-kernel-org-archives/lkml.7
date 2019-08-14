@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C62C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CF2C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30343208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4C02084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802350;
-	bh=XiPjNHNVCK3KucFiNxonNoU7G7EJoy3Q8sILBxEOtk8=;
+	s=default; t=1565802352;
+	bh=IW/FH2Ge38FoPwIKam244A3ofR5WOVQDwGpmI/So+Wg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=thqzuSgICUC4/q2Olv1Mn//GleVbnfSl+60H1EcYtDOQO6NA4B9aIWPpPJ4bMJBvy
-	 IvnTueyaBZVkBP4KYH6NSoXEV95FQcaXvZHtRRNcKyRJZWX4vXwvLOnOsQcLTMY2lJ
-	 bQQLFcUWzKk2e58dL1Jx/dp68/RCpimagiXkA8qI=
+	b=terCKXtfSPMhjzQVFQhWaz1N56WJ3nsl9GgFmEtXlFwMKw+05HcaZOjPXi3rEUu2z
+	 xFNhubCZXMVo7jaFTlWw1gR0t8NVBwjh7MhRogmytzlv5djwegRYA7/1YgQOkJFoqG
+	 Tt27jYHfDEM3ec8RuI4UnAjD1UshIiBHHoYU6wRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbfHNRFs (ORCPT
+        id S1729528AbfHNRFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:05:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54682 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:05:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728457AbfHNRFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:05:43 -0400
+        id S1728979AbfHNRFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:05:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66CA02084D;
-        Wed, 14 Aug 2019 17:05:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2AE12084D;
+        Wed, 14 Aug 2019 17:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802342;
-        bh=XiPjNHNVCK3KucFiNxonNoU7G7EJoy3Q8sILBxEOtk8=;
+        s=default; t=1565802348;
+        bh=IW/FH2Ge38FoPwIKam244A3ofR5WOVQDwGpmI/So+Wg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eulxkqj3/80L3gpZi5eVcfY9b2SIx2kItOadxG02EkfFSwWB2rkAQT+ifotHyQFtS
-         L7unKodRFok9TXXchVyHLemfmqX1Ihl1F8e8jTnGPURQEzQsXOH0zaj1kLGu57yjsI
-         wwcSJIv6aVMZ4GWdFBr203ySlTLYM49mLrVeGPII=
+        b=eS8hyGzIW3SNeGVxZWs4k2QLsMbvlC1mo3wcRH5HUu08+GfKN5MvH+OB4hqGoT2Os
+         xGX7GWrD0iH/WsZRVqyY63Yeb6jPY7SnUZhShA3JI737nFH7+vDVXWIrkbvvElxJQU
+         lkNodEgHHlJos6INMSDwMuYE32nZZGM0SWAfXNpg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 061/144] rq-qos: set ourself TASK_UNINTERRUPTIBLE after we schedule
-Date:   Wed, 14 Aug 2019 19:00:17 +0200
-Message-Id: <20190814165802.384808920@linuxfoundation.org>
+        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 063/144] netfilter: nf_tables: Support auto-loading for inet nat
+Date:   Wed, 14 Aug 2019 19:00:19 +0200
+Message-Id: <20190814165802.474880431@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -60,31 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d14a9b389a86a5154b704bc88ce8dd37c701456a ]
+[ Upstream commit b4f1483cbfa5fafca4874e90063f75603edbc210 ]
 
-In case we get a spurious wakeup we need to make sure to re-set
-ourselves to TASK_UNINTERRUPTIBLE so we don't busy wait.
+Trying to create an inet family nat chain would not cause
+nft_chain_nat.ko module to auto-load due to missing module alias. Add a
+proper one with hard-coded family value 1 for the pseudo-family
+NFPROTO_INET.
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: d164385ec572 ("netfilter: nat: add inet family nat support")
+Signed-off-by: Phil Sutter <phil@nwl.cc>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-rq-qos.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/netfilter/nft_chain_nat.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-index e5d75280b431e..e3ab75e4df9ea 100644
---- a/block/blk-rq-qos.c
-+++ b/block/blk-rq-qos.c
-@@ -261,6 +261,7 @@ void rq_qos_wait(struct rq_wait *rqw, void *private_data,
- 		}
- 		io_schedule();
- 		has_sleeper = true;
-+		set_current_state(TASK_UNINTERRUPTIBLE);
- 	} while (1);
- 	finish_wait(&rqw->wait, &data.wq);
- }
+diff --git a/net/netfilter/nft_chain_nat.c b/net/netfilter/nft_chain_nat.c
+index 2f89bde3c61cb..ff9ac8ae0031f 100644
+--- a/net/netfilter/nft_chain_nat.c
++++ b/net/netfilter/nft_chain_nat.c
+@@ -142,3 +142,6 @@ MODULE_ALIAS_NFT_CHAIN(AF_INET, "nat");
+ #ifdef CONFIG_NF_TABLES_IPV6
+ MODULE_ALIAS_NFT_CHAIN(AF_INET6, "nat");
+ #endif
++#ifdef CONFIG_NF_TABLES_INET
++MODULE_ALIAS_NFT_CHAIN(1, "nat");	/* NFPROTO_INET */
++#endif
 -- 
 2.20.1
 
