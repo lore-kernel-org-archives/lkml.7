@@ -2,102 +2,124 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E516C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98DBC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D91216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9B82084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802394;
-	bh=t6eA6VKXVROaAH59iF6DMwE06CidU+UM0bKpkui1p7Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vVoaB80qkcRpWggZkJnDZAsYFFHCO2j6EvwJm/VLbBfdSwnTzrV5fBh0He1E0d5Fi
-	 aTt6xcmOKnQG4Htpeb5Eqd1gX8rwSVli79j9N2RKUO5kdYTnEAV+hfsBDo75Xq7v43
-	 WVjOHCwcSBwhrVjYLdtF6CEqRKFkuVpneL8o15PY=
+	s=default; t=1565802403;
+	bh=cXqilVKacRFXF1CHJC47PiTFUzhALt1B27Dx/pfjrGQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=U7HCp4kYocbwnoo8cZJZ4hjoQA2V6nmzGMZT5gm2V96942crwwKNteCInMsxG2yCt
+	 TAl/9PbktpszqhFDpLY7Xd6N40bNRyQlHeHNye1qBQ/qxhsmy227CoK/NGoFqfxLuF
+	 N7tsdZ8v60nd8zk9GdhjVSq/rbGllQmK3daqHAK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbfHNRGe (ORCPT
+        id S1729725AbfHNRGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:06:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729670AbfHNRGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:06:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 988C0208C2;
-        Wed, 14 Aug 2019 17:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802391;
-        bh=t6eA6VKXVROaAH59iF6DMwE06CidU+UM0bKpkui1p7Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d6bDvq+aCvQKT1O1FtxVrNdHEsw2ASdMvOwmU+6+bPADu41P14segcEN3X8A7lN+v
-         S8/afAB4yTj7n7a4T+MCZwqzJ2U2zIW1QtBFLdsfmR+aaQKCXWxrhcO+zjcsArKQvE
-         sei4HWLLV0MS9FKQBDdVQk9Ne2xjKQ0Rb6o11iCE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junxiao Bi <junxiao.bi@oracle.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 107/144] scsi: megaraid_sas: fix panic on loading firmware crashdump
-Date:   Wed, 14 Aug 2019 19:01:03 +0200
-Message-Id: <20190814165804.380628302@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
-References: <20190814165759.466811854@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 14 Aug 2019 13:06:42 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44981 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729698AbfHNRGk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:06:40 -0400
+Received: by mail-lj1-f196.google.com with SMTP id e24so8774151ljg.11
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 10:06:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qmLXQ1DX4enCLG/blcVpIzNK/UzBgUaIlDbRYanVvW4=;
+        b=Csf25HiuxApDjXUxMS0pWtKyfLzVjYG4VXzOleml//uHgzP+qL0YwcJqGaQuNRQpl+
+         2SYQ8+b2PWgohIGByl+o5JyIcIk29Yc8tix8B3PRd7owe8Qz46sqgTFXQlaKOw2YUepA
+         ZDOaJE5DMkDYDpikit2AFTUhw9j/S3D2wNmEE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qmLXQ1DX4enCLG/blcVpIzNK/UzBgUaIlDbRYanVvW4=;
+        b=BmSvlvynodXA151rMDSIWgg2dYkVL2HlwYvWMeftyk0W6TRb8aDnkZf7HaLImpHZa5
+         k5u+fVU7LwTdTgxWQmFMaUmClQMuCh4+yHLM97uDXq8csh+y5q/upog3Jw40CmLFmA4K
+         FJ+ziPmrT0kWqo9/NXHGIkj4tsvvlqyY2CAdM35JcM9RBWcHRFtdkGs3DlwcbXZLu2AR
+         9/lZ6KA0iCvVM97b8ktNLygDGcNNiAHFJ6SbgMvXOoRlX82QuTWeFhHt9PuxoGlYFw9u
+         vM9X8FK6+x6ZZEGPqOQ1h1qs15b472syYy80oQ8Kx/08+xOevAcHlqAqIrNZrY3Z0IJJ
+         biCA==
+X-Gm-Message-State: APjAAAUEnKqhOJEzYilWRKE2DBGW/VyUG1g6HZ0XJhA9PctzLO3I8NHn
+        ky5O8EPVku8kxMonPKuDcpSBv9yhUTY=
+X-Google-Smtp-Source: APXvYqwg5eZjU1FeBRhWalrBU3++A6LyNs+xdJIK0ekG3UKQJDeak5yDut8Tx0aVP3RD0+aCWZ+fRw==
+X-Received: by 2002:a2e:22c4:: with SMTP id i187mr403887lji.41.1565802397607;
+        Wed, 14 Aug 2019 10:06:37 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id a15sm23537lfl.44.2019.08.14.10.06.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Aug 2019 10:06:36 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id x3so26094270lfn.6
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 10:06:36 -0700 (PDT)
+X-Received: by 2002:ac2:4c12:: with SMTP id t18mr235524lfq.134.1565802395958;
+ Wed, 14 Aug 2019 10:06:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CAKmqyKMJPQAOKn11xepzAwXOd4e9dU0Cyz=A0T-uMEgUp5yJjA@mail.gmail.com>
+ <20190814154400.6371-1-christian.brauner@ubuntu.com> <20190814154400.6371-2-christian.brauner@ubuntu.com>
+ <20190814160917.GG11595@redhat.com> <20190814161517.ldbn62mulk2pmqo5@wittgenstein>
+ <20190814163443.6odsksff4jbta7be@wittgenstein> <20190814165501.GJ9017@brightrain.aerifal.cx>
+In-Reply-To: <20190814165501.GJ9017@brightrain.aerifal.cx>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 14 Aug 2019 10:06:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgpoeAnhscv9+fKNLLJF0tvypGPAxyzBCa0rp5hppRDRQ@mail.gmail.com>
+Message-ID: <CAHk-=wgpoeAnhscv9+fKNLLJF0tvypGPAxyzBCa0rp5hppRDRQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] waitid: Add support for waiting for the current
+ process group
+To:     Rich Felker <dalias@libc.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Alistair Francis <alistair23@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Palmer Dabbelt <palmer@sifive.com>, macro@wdc.com,
+        Zong Li <zongbox@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Peter Anvin <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b5f307ef3cb5022bfe3c8ca5b8f2114d5bf6c29 ]
+On Wed, Aug 14, 2019 at 9:55 AM Rich Felker <dalias@libc.org> wrote:
+>
+> I don't think "downsides" sufficiently conveys that this is hard
+> breakage of a requirement for waitpid.
 
-While loading fw crashdump in function fw_crash_buffer_show(), left bytes
-in one dma chunk was not checked, if copying size over it, overflow access
-will cause kernel panic.
+Well, let's be honest here. Who has _ever_ seen a signal handler
+changing the current process group?
 
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/megaraid/megaraid_sas_base.c | 3 +++
- 1 file changed, 3 insertions(+)
+In fact, the SYSV version of setpgid() takes a process ID to set it
+*for somebody else*, so the signal safety is not even necessarily
+relevant, since it might be racing with _another_ thread doing it
+(which even the kernel side won't fix - it's just user space doing odd
+things).
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 7237114a1d534..5f30016e9b64f 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -3045,6 +3045,7 @@ megasas_fw_crash_buffer_show(struct device *cdev,
- 	u32 size;
- 	unsigned long buff_addr;
- 	unsigned long dmachunk = CRASH_DMA_BUF_SIZE;
-+	unsigned long chunk_left_bytes;
- 	unsigned long src_addr;
- 	unsigned long flags;
- 	u32 buff_offset;
-@@ -3070,6 +3071,8 @@ megasas_fw_crash_buffer_show(struct device *cdev,
- 	}
- 
- 	size = (instance->fw_crash_buffer_size * dmachunk) - buff_offset;
-+	chunk_left_bytes = dmachunk - (buff_offset % dmachunk);
-+	size = (size > chunk_left_bytes) ? chunk_left_bytes : size;
- 	size = (size >= PAGE_SIZE) ? (PAGE_SIZE - 1) : size;
- 
- 	src_addr = (unsigned long)instance->crash_buf[buff_offset / dmachunk] +
--- 
-2.20.1
+So yes - it's technically true that it's impossible to emulate
+properly in user space.
 
+But I doubt it makes _any_ difference what-so-ever, and glibc might as
+well do something like
 
+     ret = waitid(P_PGID, 0, ..);
+     if (ret == -EINVAL) { do the emulation }
 
+which makes it work with older kernels, and has zero downside in practice.
+
+Hmm?
+
+              Linus
