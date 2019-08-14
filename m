@@ -2,57 +2,84 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3946AC0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6892C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DFCD21744
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2060206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbfHNGiI (ORCPT
+        id S1727552AbfHNGiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 02:38:08 -0400
-Received: from muru.com ([72.249.23.125]:57414 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726940AbfHNGiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 02:38:07 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 79DC780C8;
-        Wed, 14 Aug 2019 06:38:34 +0000 (UTC)
-Date:   Tue, 13 Aug 2019 23:38:03 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Tri Vo <trong@android.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-Subject: Regression in Linux next with show wakeup sources stats in sysfs
-Message-ID: <20190814063803.GY52127@atomide.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Wed, 14 Aug 2019 02:38:54 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:38657 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbfHNGiy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 02:38:54 -0400
+Received: by mail-yb1-f193.google.com with SMTP id j199so40810412ybg.5;
+        Tue, 13 Aug 2019 23:38:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zC5nOG0/99YM0l9ci08akJ+NBkTP4tUrD3MLrU08kpw=;
+        b=Os5sbqRrygIZmRsW8clcL0KiyGYMXeLrt5DmFahcg7oC7C67XzzaOdN0NvLrN1OYeh
+         7Ug+G23dlLQA+EWoL6XYXm+6uvDdlHDgX6UgmpNCWYpQHfhypMYb6AyxekYoYwLgD6Wg
+         FMY3wB9306SNxUcGZ6wUktSGf+oRSXLvB/A5TaDjRWiP2CyaW9vdetaHgI+hUixawL1D
+         w2Ufu2HF8tifhpkn3UlhwtlOelwbOJBJ+ReC3E4wypXH6vptBQhJIO60uBqx19rqQqH7
+         Lt7NTpYgwalADBK4JoD9Smo24ILWqUP6h7GLeNE36PSNF98lySzm/P3n64x+bPD1H0PD
+         6dIw==
+X-Gm-Message-State: APjAAAU9JYhB4Er54fOeM3vAiKAtc/X8sNGET83MOpz60gh8g/5xS6MP
+        il7O9yIf36297epoIQcQbqg=
+X-Google-Smtp-Source: APXvYqyByWpfdk/Iul0/yYFAFA2h8msozyN9NUx2GkwaDjdrm62GsVw5TeJDQ3Jf+9VpWTd8/7JEIA==
+X-Received: by 2002:a25:7652:: with SMTP id r79mr4636899ybc.258.1565764733078;
+        Tue, 13 Aug 2019 23:38:53 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id d69sm24643978ywa.29.2019.08.13.23.38.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 13 Aug 2019 23:38:51 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Chris Lee <christopher.lee@cspi.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev@vger.kernel.org (open list:MYRICOM MYRI-10G 10GbE DRIVER
+        (MYRI10GE)), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] net: myri10ge: fix memory leaks
+Date:   Wed, 14 Aug 2019 01:38:39 -0500
+Message-Id: <1565764719-6488-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+In myri10ge_probe(), myri10ge_alloc_slices() is invoked to allocate slices
+related structures. Later on, myri10ge_request_irq() is used to get an irq.
+However, if this process fails, the allocated slices related structures are
+not deallocated, leading to memory leaks. To fix this issue, revise the
+target label of the goto statement to 'abort_with_slices'.
 
-Looks like commit 986845e747af ("PM / wakeup: Show wakeup sources stats
-in sysfs") has caused a regression in Linux next where I can now get
-some errors like this during the boot:
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/net/ethernet/myricom/myri10ge/myri10ge.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-kobject_add_internal failed for wakeup10 (error: -2 parent: usb)
+diff --git a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
+index d8b7fba..337b0cb 100644
+--- a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
++++ b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
+@@ -3919,7 +3919,7 @@ static int myri10ge_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	 * setup (if available). */
+ 	status = myri10ge_request_irq(mgp);
+ 	if (status != 0)
+-		goto abort_with_firmware;
++		goto abort_with_slices;
+ 	myri10ge_free_irq(mgp);
+ 
+ 	/* Save configuration space to be restored if the
+-- 
+2.7.4
 
-Any ideas why this might be happening? Maybe some deferred probe
-related issue?
-
-Regards,
-
-Tony
