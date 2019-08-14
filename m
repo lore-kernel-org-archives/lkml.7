@@ -2,67 +2,247 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282CDC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE6EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB8620843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009A820843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 05:51:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l89PZLe3"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GX19XCmZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfHNFtt (ORCPT
+        id S1727239AbfHNFvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 01:49:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60128 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbfHNFtt (ORCPT
+        Wed, 14 Aug 2019 01:51:10 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:54554 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbfHNFvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 01:49:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yLBvjgIz0/4kJcpvkkBD2mhvRhrr916GyFhs+M2+Ar0=; b=l89PZLe3h8ePNmyh0C6eM6wvl
-        fuUGOalLN8UJhfga5/x6cM+wfPZjKyP5Rya55baqZOzsQaDLp7ZtDMIikFLTGJo/jvDrqoaEEJso8
-        4bSX88LZau5MGKh18xEunO8WFA4fU3P+9LXlt7chI7aR+md32QQUHCsE61yupuvbCWyVZnzzDRmwR
-        toolzrEcnVxrJi9pBe/2uCpjXcOzUyZMnSlov9ZZKHDGRhPv60trWYFwKnuLXr+eNoG7iATOE8tjX
-        v1TrZew0KtMKapyRN+nODjjWFxz23lJr7W2y5Q7+JksSuUOURqm/FAzzBa/MdsQM8Jxc9jVpz76rT
-        DVAssgY+A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hxmAH-0001Q6-5w; Wed, 14 Aug 2019 05:49:41 +0000
-Date:   Tue, 13 Aug 2019 22:49:41 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 10/10] powerpc/mm: refactor ioremap_range() and use
- ioremap_page_range()
-Message-ID: <20190814054941.GC27497@infradead.org>
-References: <6bc35eca507359075528bc0e55938bc1ce8ee485.1565726867.git.christophe.leroy@c-s.fr>
- <bd784c8091cbf41231a862f73b52fd2a356ec8f1.1565726867.git.christophe.leroy@c-s.fr>
+        Wed, 14 Aug 2019 01:51:10 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7E5mpIe062503;
+        Wed, 14 Aug 2019 05:50:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
+ : from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=corp-2019-08-05;
+ bh=Cptp77h6SIWaOvz4askUueIxJmMTrJXjaT7ObIOf3wU=;
+ b=GX19XCmZzVcDXK8yEfa0abnaUNeVMokbhpknbfpO5glNTU45xXLJfB9FpVWAgA0JVrd6
+ fXqyk3K0LaPCUb5Y8fOHFVDkEi7jwoUlcjHuqpzDAkj4+WhGgyDovB4I/cD27akjSe9M
+ PUOcIlSfDEg6kz2L36Eqi+pI22ODUmGPwwnmniQ0vWXVMReS/3cEp3LqANclvJLsCMZo
+ 1/Xd63hTFKLk/2dUlAvffuFgjOwc2R2B4fZu+kU5hufny4d+QNdnsoDPO+XMmKC8r5sH
+ Bxgcmq7nn1/Yb8802zA+neK6Domh1/QpVeE5Wf5flHdM2nMmwLsym9PTpRi/za1GojJZ aQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2u9nvpaj2v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 14 Aug 2019 05:50:44 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7E5mm9T187666;
+        Wed, 14 Aug 2019 05:50:44 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2ubwcxkrm9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 14 Aug 2019 05:50:43 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7E5oc50025565;
+        Wed, 14 Aug 2019 05:50:38 GMT
+Received: from abi.no.oracle.com (/141.143.213.43)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 13 Aug 2019 22:50:37 -0700
+Message-ID: <aba3a1457087b281a82c09c3e382c932e750194f.camel@oracle.com>
+Subject: Re: [RFC 01/19] kbuild: Fixes to rules for host-cshlib and
+ host-cxxshlib
+From:   Knut Omang <knut.omang@oracle.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shreyans Devendra Doshi <0xinfosect0r@gmail.com>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Hidenori Yamaji <hidenori.yamaji@sony.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Timothy Bird <Tim.Bird@sony.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
+        Stephen Boyd <sboyd@kernel.org>
+Date:   Wed, 14 Aug 2019 07:50:33 +0200
+In-Reply-To: <CAK7LNASgfd6KPRQ=hcqKkpZ6EVhFmbBjCXa30bvEqscu_5dwbQ@mail.gmail.com>
+References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
+         <be2c361eac49ded2848b2a555b75e30cc3c24e71.1565676440.git-series.knut.omang@oracle.com>
+         <CAK7LNASX4jPRxRxD+JafAfKqjck=x27HuHZgPV1VFfW8MzcwZA@mail.gmail.com>
+         <14b99d26a4cff1c813c92818dc1234007fa06fc9.camel@oracle.com>
+         <CAK7LNASgfd6KPRQ=hcqKkpZ6EVhFmbBjCXa30bvEqscu_5dwbQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bd784c8091cbf41231a862f73b52fd2a356ec8f1.1565726867.git.christophe.leroy@c-s.fr>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908140056
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908140056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Somehow this series is missing a cover letter.
+On Wed, 2019-08-14 at 11:02 +0900, Masahiro Yamada wrote:
+> Hi Knut,
+> 
+> On Wed, Aug 14, 2019 at 1:19 AM Knut Omang <knut.omang@oracle.com> wrote:
+> > On Tue, 2019-08-13 at 23:01 +0900, Masahiro Yamada wrote:
+> > > On Tue, Aug 13, 2019 at 3:13 PM Knut Omang <knut.omang@oracle.com> wrote:
+> > > > C++ libraries interfacing to C APIs might sometimes need some glue
+> > > > logic more easily written in C.
+> > > > Allow a C++ library to also contain 0 or more C objects.
+> > > > 
+> > > > Also fix rules for both C and C++ shared libraries:
+> > > > - C++ shared libraries depended on .c instead of .cc files
+> > > > - Rules were referenced as -objs instead of the intended
+> > > >   -cobjs and -cxxobjs following the pattern from hostprogs*.
+> > > > 
+> > > > Signed-off-by: Knut Omang <knut.omang@oracle.com>
+> > > 
+> > > How is this patch related to the rest of this series?
+> > 
+> > This is just my (likely naive) way I to get what I had working
+> > using autotools in the Github version of KTF) translated into something
+> > comparable using kbuild only. We need to build a shared library consisting
+> > of a few C++ files and a very simple C file, and a couple of simple binaries,
+> > and the rule in there does seem to take .c files and subject them to the
+> > C++ compiler, which makes this difficult to achieve?
+> 
+> Looking at the diff stat of the cover-letter,
+> the rest of this patch series is touching only
+> Documentation/ and tools/testing/kselftests/.
+> 
+> So, this one is unused by the rest of the changes, isn't it?
+> Am I missing something?
 
-While you are touching all this "fun" can you also look into killing
-__ioremap?  It seems to be a weird non-standard version of ioremap_prot
-(probably predating ioremap_prot) that is missing a few lines of code
-setting attributes that might not even be applicable for the two drivers
-calling it.
+What I am trying to do is to build kernel **and** user mode components 
+under tools/testing/selftests/ktf and to keep the kernel test code out 
+of the tree. The only way I was able to do this was by means of the module build,
+eg. 'make TARGETS="ktf" kselftest' will cause a toplevel 'make M=tools/testing/selftests/ktf'
+which is what builds the lot. One can argue that this is a misuse of that mechanism,
+but as I argue in the cover letter, I think there is a need to make it possible 
+to have kernel code that is not going to be part of the installed kernel 
+somewhere else than in the normal build path of the kernel, which is what 
+I am trying to achieve.
+
+The toplevel Makefile logic for this is in patch 17 of the series in 
+tools/testing/selftests/ktf/Makefile
+and for ktf/kernel/Makefile and ktf/lib/Makefile and ktf/user/Makefile 
+in patches 2, 12 and 16 respectively.
+
+It is a bit of a hack still, since the hostcxxprogs-y and hostcxxlib-y
+targets in ktf/user and ktf/lib do not get invoked "automatically" 
+from __build like the obj-m targets. I haven't been able to figure out 
+yet how to achieve that, and was hoping I could get help on it :-)
+
+Thanks!
+Knut
+
+> > > This patch breaks GCC-plugins.
+> > > Did you really compile-test this patch before the submission?
+> > 
+> > Sorry for my ignorance here:
+> > I ran through the kernel build and installed the resulting kernel
+> > on a VM that I used to test this, if that's what you are asking
+> > about?
+> > 
+> > Do I need some unusual .config options or run a special make target
+> > to trigger the problem you see?
+> > 
+> > I used a recent Fedora config with default values for new options,
+> > and ran the normal default make target (also with O=) and make selftests
+> > to test the patch itself.
+> 
+> I just built allmodconfig for arm.
+> 
+> (The 0-day bot tests allmodconfig for most of architectures,
+> so you may receive error reports anyway.)
+> 
+> 
+> With your patch, I got the following:
+> 
+> 
+> masahiro@grover:~/ref/linux$ make  ARCH=arm
+> CROSS_COMPILE=arm-linux-gnueabihf-  allmodconfig all
+>   HOSTCC  scripts/basic/fixdep
+>   HOSTCC  scripts/kconfig/conf.o
+>   HOSTCC  scripts/kconfig/confdata.o
+>   HOSTCC  scripts/kconfig/expr.o
+>   LEX     scripts/kconfig/lexer.lex.c
+>   YACC    scripts/kconfig/parser.tab.h
+>   HOSTCC  scripts/kconfig/lexer.lex.o
+>   YACC    scripts/kconfig/parser.tab.c
+>   HOSTCC  scripts/kconfig/parser.tab.o
+>   HOSTCC  scripts/kconfig/preprocess.o
+>   HOSTCC  scripts/kconfig/symbol.o
+>   HOSTLD  scripts/kconfig/conf
+> scripts/kconfig/conf  --allmodconfig Kconfig
+> #
+> # configuration written to .config
+> #
+>   SYSHDR  arch/arm/include/generated/uapi/asm/unistd-common.h
+>   SYSHDR  arch/arm/include/generated/uapi/asm/unistd-oabi.h
+>   SYSHDR  arch/arm/include/generated/uapi/asm/unistd-eabi.h
+>   HOSTCC  scripts/dtc/dtc.o
+>   HOSTCC  scripts/dtc/flattree.o
+>   HOSTCC  scripts/dtc/fstree.o
+>   HOSTCC  scripts/dtc/data.o
+>   HOSTCC  scripts/dtc/livetree.o
+>   HOSTCC  scripts/dtc/treesource.o
+>   HOSTCC  scripts/dtc/srcpos.o
+>   HOSTCC  scripts/dtc/checks.o
+>   HOSTCC  scripts/dtc/util.o
+>   LEX     scripts/dtc/dtc-lexer.lex.c
+>   YACC    scripts/dtc/dtc-parser.tab.h
+>   HOSTCC  scripts/dtc/dtc-lexer.lex.o
+>   YACC    scripts/dtc/dtc-parser.tab.c
+>   HOSTCC  scripts/dtc/dtc-parser.tab.o
+>   HOSTCC  scripts/dtc/yamltree.o
+>   HOSTLD  scripts/dtc/dtc
+>   CC      scripts/gcc-plugins/latent_entropy_plugin.o
+> cc1: error: cannot load plugin ./scripts/gcc-plugins/arm_ssp_per_task_plugin.so
+>    ./scripts/gcc-plugins/arm_ssp_per_task_plugin.so: cannot open
+> shared object file: No such file or directory
+> cc1: error: cannot load plugin ./scripts/gcc-plugins/structleak_plugin.so
+>    ./scripts/gcc-plugins/structleak_plugin.so: cannot open shared
+> object file: No such file or directory
+> cc1: error: cannot load plugin ./scripts/gcc-plugins/latent_entropy_plugin.so
+>    ./scripts/gcc-plugins/latent_entropy_plugin.so: cannot open shared
+> object file: No such file or directory
+> cc1: error: cannot load plugin ./scripts/gcc-plugins/randomize_layout_plugin.so
+>    ./scripts/gcc-plugins/randomize_layout_plugin.so: cannot open
+> shared object file: No such file or directory
+> make[3]: *** [scripts/Makefile.build;281:
+> scripts/gcc-plugins/latent_entropy_plugin.o] Error 1
+> make[2]: *** [scripts/Makefile.build;497: scripts/gcc-plugins] Error 2
+> make[1]: *** [Makefile;1097: scripts] Error 2
+> make: *** [Makefile;330: __build_one_by_one] Error 2
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+
