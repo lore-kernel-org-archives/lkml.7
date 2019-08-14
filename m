@@ -2,117 +2,107 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B62C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A6AC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 555632084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565785896;
-	bh=HuxukNahTWeA+LLtZCC/D3RZ3m6XjTpkYJTv3BTqbPU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ycr+nyvmFaiXLMxjHDITsBHIWEr8O2r369iuEVrzHgnK++4d/bsZOIi1TvtLhUaSt
-	 kuL8vy4ODeFMvk+AeQyj0dLsa7gjsvp92uorLWO4mncErxB/vMWl/U6mdapjf4DOdd
-	 ewAQ6kJRAm1Lz4kMBEee3dJckmOQpJZCCpblEwgE=
+	by mail.kernel.org (Postfix) with ESMTP id 5BA1D2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 12:32:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KcKp2Bwr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbfHNMbf (ORCPT
+        id S1727770AbfHNMc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 08:31:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbfHNMbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 08:31:34 -0400
-Received: from localhost.localdomain (unknown [171.76.115.97])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 670B7208C2;
-        Wed, 14 Aug 2019 12:31:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565785894;
-        bh=HuxukNahTWeA+LLtZCC/D3RZ3m6XjTpkYJTv3BTqbPU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ylmaSMbCmQUnrTWaVcPTJIqnL8Yiz6MX11hgeTRepB1ig5urgetDP9vBPBzYvMcQE
-         55upndk+ryGTQ0A/O198eX/V+quBsfcgFkIQAMD3ru3qcN6AWICS+viK8DUHbObsEu
-         kpen/3YA3gI5lzZcsIFlTAwE0TetoXCoMQ7YXpYE=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] clk: qcom: clk-rpmh: Add support for SM8150
-Date:   Wed, 14 Aug 2019 17:59:58 +0530
-Message-Id: <20190814122958.4981-2-vkoul@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190814122958.4981-1-vkoul@kernel.org>
-References: <20190814122958.4981-1-vkoul@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 14 Aug 2019 08:32:27 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46484 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfHNMc1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 08:32:27 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q139so5209224pfc.13;
+        Wed, 14 Aug 2019 05:32:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=bScrLOPkx8T8jsTd/oJ+R9nDwyouzFa8tBbrlwj/4dE=;
+        b=KcKp2BwrqlITo3B45rK0EztJWn8t2lkFizTIryV/calhu7C+7V211m1XNHDPi3FHaN
+         4CJhTDfmACnwl5HKgYn4hGo1bXaVfm3YnanH0FNTj0qaaEaVybgJzupCD/nWL6Hz5Mla
+         fmo8agQX8CWXurnZQD+QTn9A5+BH6fn+I4O9TGflkncgxh6vSfpuq5kjFIP0yvHeIULC
+         X1Ly8RSnU1CU43vtjhbaMbDTSERE+gL7b9S2W17PaKBjpDwPvLEavJo0bn8Cuz2yeMOT
+         y281WZvWx3NbPe+4o3ME7lpdEB/3h3Gpmel2cQEwZF4wthkiplwMfL0zD6ttWOf7gRvd
+         NQuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=bScrLOPkx8T8jsTd/oJ+R9nDwyouzFa8tBbrlwj/4dE=;
+        b=iiTh16BfxJmavxsnlx36DymbpXYi/gf2mCX8WvjRyaDBZ5lI1hnfZJOMN9JlJXdxJC
+         a36AVyZ97w2Hxo4Ra3TFrptsQsakJDpswzD/AiIZbCI2cNaG1s5nK4iXHUNsZmw3rC7Z
+         FlAo7cZvXDF8ZfE/TzTeDeuz+F6bKom0bni0goX8zi+ZiWB/XRm4HhDFKqI0SurKNOOd
+         7vf5NQQ1OD04ihag4esNNL3ncnX5pJfyz8XVtnywUBoO/slSp2zosqDzbHEn5uyhmN6k
+         zuQt23jw3LcQ5/um7b+4ZubbPYSl6Rnmju4Y3qEGzxxRlj6ndkmJA3sPE8ePy4dsZ0Ix
+         7L1A==
+X-Gm-Message-State: APjAAAUDvt+eAWPJpkVz9BQRz3fzb9KLUuROO2dTuFLVXX7qDgEBLT8/
+        MpX5+lgbcC2XsBfd84vbAu8=
+X-Google-Smtp-Source: APXvYqwTmcoXZ5l9Arr9V/DkJppKlUROq/tLcfCMNd0DVzrcZdSdL1+wFXjcBQF8Yquymvsmr2FyCQ==
+X-Received: by 2002:a63:dd17:: with SMTP id t23mr38049981pgg.295.1565785946131;
+        Wed, 14 Aug 2019 05:32:26 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([167.220.255.52])
+        by smtp.googlemail.com with ESMTPSA id u69sm135276430pgu.77.2019.08.14.05.32.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 14 Aug 2019 05:32:25 -0700 (PDT)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, sashal@kernel.org,
+        daniel.lezcano@linaro.org, arnd@arndb.de,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2 0/2] clocksource/Hyper-V: Add Hyper-V specific sched clock
+Date:   Wed, 14 Aug 2019 20:32:14 +0800
+Message-Id: <20190814123216.32245-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for rpmh clocks found in SM8150
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/clk/qcom/clk-rpmh.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Hyper-V guests use the default native_sched_clock() in pv_ops.time.sched_clock
+on x86. But native_sched_clock() directly uses the raw TSC value, which
+can be discontinuous in a Hyper-V VM.   Add the generic hv_setup_sched_clock()
+to set the sched clock function appropriately.  On x86, this sets
+pv_ops.time.sched_clock to read the Hyper-V reference TSC value that is
+scaled and adjusted to be continuous.
 
-diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-index c3fd632af119..7fea263447c5 100644
---- a/drivers/clk/qcom/clk-rpmh.c
-+++ b/drivers/clk/qcom/clk-rpmh.c
-@@ -368,6 +368,32 @@ static const struct clk_rpmh_desc clk_rpmh_sdm845 = {
- 	.num_clks = ARRAY_SIZE(sdm845_rpmh_clocks),
- };
- 
-+DEFINE_CLK_RPMH_ARC(sm8150, bi_tcxo, bi_tcxo_ao, "xo.lvl", 0x3, 2);
-+DEFINE_CLK_RPMH_VRM(sm8150, ln_bb_clk2, ln_bb_clk2_ao, "lnbclka2", 2);
-+DEFINE_CLK_RPMH_VRM(sm8150, ln_bb_clk3, ln_bb_clk3_ao, "lnbclka3", 2);
-+DEFINE_CLK_RPMH_VRM(sm8150, rf_clk1, rf_clk1_ao, "rfclka1", 1);
-+DEFINE_CLK_RPMH_VRM(sm8150, rf_clk2, rf_clk2_ao, "rfclka2", 1);
-+DEFINE_CLK_RPMH_VRM(sm8150, rf_clk3, rf_clk3_ao, "rfclka3", 1);
-+
-+static struct clk_hw *sm8150_rpmh_clocks[] = {
-+	[RPMH_CXO_CLK]		= &sm8150_bi_tcxo.hw,
-+	[RPMH_CXO_CLK_A]	= &sm8150_bi_tcxo_ao.hw,
-+	[RPMH_LN_BB_CLK2]	= &sm8150_ln_bb_clk2.hw,
-+	[RPMH_LN_BB_CLK2_A]	= &sm8150_ln_bb_clk2_ao.hw,
-+	[RPMH_LN_BB_CLK3]	= &sm8150_ln_bb_clk3.hw,
-+	[RPMH_LN_BB_CLK3_A]	= &sm8150_ln_bb_clk3_ao.hw,
-+	[RPMH_RF_CLK1]		= &sm8150_rf_clk1.hw,
-+	[RPMH_RF_CLK1_A]	= &sm8150_rf_clk1_ao.hw,
-+	[RPMH_RF_CLK2]		= &sm8150_rf_clk2.hw,
-+	[RPMH_RF_CLK2_A]	= &sm8150_rf_clk2_ao.hw,
-+	[RPMH_RF_CLK3]		= &sm8150_rf_clk3.hw,
-+	[RPMH_RF_CLK3_A]	= &sm8150_rf_clk3_ao.hw,
-+};
-+
-+static const struct clk_rpmh_desc clk_rpmh_sm8150 = {
-+	.clks = sm8150_rpmh_clocks,
-+	.num_clks = ARRAY_SIZE(sm8150_rpmh_clocks),
-+};
- static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
- 					 void *data)
- {
-@@ -447,6 +473,7 @@ static int clk_rpmh_probe(struct platform_device *pdev)
- 
- static const struct of_device_id clk_rpmh_match_table[] = {
- 	{ .compatible = "qcom,sdm845-rpmh-clk", .data = &clk_rpmh_sdm845},
-+	{ .compatible = "qcom,sm8150-rpmh-clk", .data = &clk_rpmh_sm8150},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
+Also move the Hyper-V reference TSC initialization much earlier in the boot
+process so no discontinuity is observed when pv_ops.time.sched_clock
+calculates its offset.  This earlier initialization requires that the Hyper-V TSC
+page be allocated statically instead of with vmalloc(), so fixup the references
+to the TSC page and the method of getting its physical address.
+
+Change since v1:
+	- Update patch 1 commit log
+	- Remove and operation of tsc page's va with PAGE_MASK
+	in the read_hv_sched_clock_tsc().
+
+Tianyu Lan (2):
+  clocksource/Hyper-v: Allocate Hyper-V tsc page statically
+  clocksource/Hyper-V:  Add Hyper-V specific sched clock function
+
+ arch/x86/entry/vdso/vma.c          |  2 +-
+ arch/x86/hyperv/hv_init.c          |  2 --
+ arch/x86/kernel/cpu/mshyperv.c     |  8 ++++++++
+ drivers/clocksource/hyperv_timer.c | 34 ++++++++++++++++------------------
+ include/asm-generic/mshyperv.h     |  1 +
+ 5 files changed, 26 insertions(+), 21 deletions(-)
+
 -- 
-2.20.1
+2.14.5
 
