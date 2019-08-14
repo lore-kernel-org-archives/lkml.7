@@ -2,108 +2,109 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A76C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8E3C32759
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 152F6205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:58:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565773119;
-	bh=lR6D/uZC5vwtdQApWaGMLJNcYlISGU/5wQ1Oz3L94P4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HrrHRt84aJoLCIA3XmGs8wmyzG4TFp9zM67otmsnvRhit0goO8rlWAWglZvW1w3Rq
-	 mwPXb/gl5yO8t2ZKJJGLugBzc2BOldX9UlQmsaojJm34uFa1DoJ4r/LNp66IP6goY1
-	 5+XhCs4grFMrtL2ihI91bd3mhQY+8oBdvvoz0Jxo=
+	by mail.kernel.org (Postfix) with ESMTP id 2F4DB214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfHNI6h (ORCPT
+        id S1726534AbfHNI6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 04:58:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50750 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725828AbfHNI6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 04:58:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 325FAAD4E;
-        Wed, 14 Aug 2019 08:58:33 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 10:58:31 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Khalid Aziz <khalid.aziz@oracle.com>
-Cc:     akpm@linux-foundation.org, vbabka@suse.cz,
-        mgorman@techsingularity.net, dan.j.williams@intel.com,
-        osalvador@suse.de, richard.weiyang@gmail.com, hannes@cmpxchg.org,
-        arunks@codeaurora.org, rppt@linux.vnet.ibm.com, jgg@ziepe.ca,
-        amir73il@gmail.com, alexander.h.duyck@linux.intel.com,
-        linux-mm@kvack.org, linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/2] Add predictive memory reclamation and compaction
-Message-ID: <20190814085831.GS17933@dhcp22.suse.cz>
-References: <20190813014012.30232-1-khalid.aziz@oracle.com>
- <20190813140553.GK17933@dhcp22.suse.cz>
- <3cb0af00-f091-2f3e-d6cc-73a5171e6eda@oracle.com>
+        Wed, 14 Aug 2019 04:58:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52900 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725888AbfHNI6i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 04:58:38 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7E8vBds027453
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:58:37 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ucd5fvwnb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:58:36 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
+        Wed, 14 Aug 2019 09:58:34 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 14 Aug 2019 09:58:31 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7E8wBnK29950288
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 14 Aug 2019 08:58:11 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A1EE4C044;
+        Wed, 14 Aug 2019 08:58:30 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 07FE44C040;
+        Wed, 14 Aug 2019 08:58:29 +0000 (GMT)
+Received: from in.ibm.com (unknown [9.124.35.250])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 14 Aug 2019 08:58:28 +0000 (GMT)
+Date:   Wed, 14 Aug 2019 14:28:26 +0530
+From:   Bharata B Rao <bharata@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
+Subject: Re: [PATCH 5/5] memremap: provide a not device managed memremap_pages
+Reply-To: bharata@linux.ibm.com
+References: <20190811081247.22111-1-hch@lst.de>
+ <20190811081247.22111-6-hch@lst.de>
+ <20190812145058.GA16950@in.ibm.com>
+ <20190812150012.GA12700@lst.de>
+ <20190813045611.GB16950@in.ibm.com>
+ <20190814061150.GA24835@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3cb0af00-f091-2f3e-d6cc-73a5171e6eda@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190814061150.GA24835@lst.de>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-TM-AS-GCONF: 00
+x-cbid: 19081408-0016-0000-0000-0000029EA913
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081408-0017-0000-0000-000032FEC1E3
+Message-Id: <20190814085826.GB8784@in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-14_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=335 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908140090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 13-08-19 09:20:51, Khalid Aziz wrote:
-> On 8/13/19 8:05 AM, Michal Hocko wrote:
-> > On Mon 12-08-19 19:40:10, Khalid Aziz wrote:
-> > [...]
-> >> Patch 1 adds code to maintain a sliding lookback window of (time, number
-> >> of free pages) points which can be updated continuously and adds code to
-> >> compute best fit line across these points. It also adds code to use the
-> >> best fit lines to determine if kernel must start reclamation or
-> >> compaction.
-> >>
-> >> Patch 2 adds code to collect data points on free pages of various orders
-> >> at different points in time, uses code in patch 1 to update sliding
-> >> lookback window with these points and kicks off reclamation or
-> >> compaction based upon the results it gets.
-> > 
-> > An important piece of information missing in your description is why
-> > do we need to keep that logic in the kernel. In other words, we have
-> > the background reclaim that acts on a wmark range and those are tunable
-> > from the userspace. The primary point of this background reclaim is to
-> > keep balance and prevent from direct reclaim. Why cannot you implement
-> > this or any other dynamic trend watching watchdog and tune watermarks
-> > accordingly? Something similar applies to kcompactd although we might be
-> > lacking a good interface.
-> > 
+On Wed, Aug 14, 2019 at 08:11:50AM +0200, Christoph Hellwig wrote:
+> On Tue, Aug 13, 2019 at 10:26:11AM +0530, Bharata B Rao wrote:
+> > Yes, this patchset works non-modular and with kvm-hv as module, it
+> > works with devm_memremap_pages_release() and release_mem_region() in the
+> > cleanup path. The cleanup path will be required in the non-modular
+> > case too for proper recovery from failures.
 > 
-> Hi Michal,
+> Can you check if the version here:
 > 
-> That is a very good question. As a matter of fact the initial prototype
-> to assess the feasibility of this approach was written in userspace for
-> a very limited application. We wrote the initial prototype to monitor
-> fragmentation and used /sys/devices/system/node/node*/compact to trigger
-> compaction. The prototype demonstrated this approach has merits.
+>     git://git.infradead.org/users/hch/misc.git pgmap-remove-dev
 > 
-> The primary reason to implement this logic in the kernel is to make the
-> kernel self-tuning.
+> Gitweb:
+> 
+>     http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/pgmap-remove-dev
+> 
+> works for you fully before I resend?
 
-What makes this particular self-tuning an universal win? In other words
-there are many ways to analyze the memory pressure and feedback it back
-that I can think of. It is quite likely that very specific workloads
-would have very specific demands there. I have seen cases where are
-trivial increase of min_free_kbytes to normally insane value worked
-really great for a DB workload because the wasted memory didn't matter
-for example.
+Yes, this works for us. This and migrate-vma-cleanup series helps to
+really simplify the kvmppc secure pages management code. Thanks.
 
-> The more knobs we have externally, the more complex
-> it becomes to tune the kernel externally.
+Regards,
+Bharata.
 
-I agree on this point. Is the current set of tunning sufficient? What
-would be missing if not?
--- 
-Michal Hocko
-SUSE Labs
