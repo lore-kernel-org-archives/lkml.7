@@ -2,141 +2,88 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA55C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BB7C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B9B2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A44782084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565749115;
+	bh=5rLlWUJ+nSWbLbJ/vJkace/NVU+oEELFK99umC/pAFk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HvqGqhyaoc9RJj+ZlQVamT87vIXhYMa6K865NWLscKdUmlY1Qsl5U/VmSmEVhbwUg
+	 Ldi4obwSKX40TuIopd1289iVsLAzd6Y95pAbzGhATpx+eSg4I2gGxWdf30lb3dVhxh
+	 OuZd00sk560T+p4csaa9R6BJeixskk11zJ1QU4fQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbfHNCS1 (ORCPT
+        id S1728945AbfHNCSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:18:27 -0400
-Received: from mga12.intel.com ([192.55.52.136]:4431 "EHLO mga12.intel.com"
+        Tue, 13 Aug 2019 22:18:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728388AbfHNCSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:18:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 19:18:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="181365548"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga006.jf.intel.com with ESMTP; 13 Aug 2019 19:18:23 -0700
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz, osalvador@suse.de
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: [PATCH 3/3] mm/mmap.c: extract __vma_unlink_list as counter part for __vma_link_list
-Date:   Wed, 14 Aug 2019 10:17:55 +0800
-Message-Id: <20190814021755.1977-3-richardw.yang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190814021755.1977-1-richardw.yang@linux.intel.com>
-References: <20190814021755.1977-1-richardw.yang@linux.intel.com>
+        id S1728348AbfHNCSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:18:32 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A01302084D;
+        Wed, 14 Aug 2019 02:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565749112;
+        bh=5rLlWUJ+nSWbLbJ/vJkace/NVU+oEELFK99umC/pAFk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dvk+mxh4RjjbneTU8b2AU14sbbsKrW3v9usjimp82BkwtrbqQRmNE1gBNBFI9vjkY
+         yZF6R+Y8gY8mFPu8JF5PdX0qDYzVxvWIQbXiI5zMrPLCaEz6VphQ5JEj6Bzp8DF1Oh
+         RBF8XqmQMy5wNJaal4FbvKtFY/I/mbmBf50yiBnE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 68/68] selftests: kvm: Adding config fragments
+Date:   Tue, 13 Aug 2019 22:15:46 -0400
+Message-Id: <20190814021548.16001-68-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190814021548.16001-1-sashal@kernel.org>
+References: <20190814021548.16001-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just make the code a little easy to read.
+From: Naresh Kamboju <naresh.kamboju () linaro ! org>
 
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+[ Upstream commit c096397c78f766db972f923433031f2dec01cae0 ]
 
+selftests kvm test cases need pre-required kernel configs for the test
+to get pass.
+
+Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Note: For nommu part, the code is not tested.
----
- mm/internal.h |  1 +
- mm/mmap.c     | 12 +-----------
- mm/nommu.c    |  8 +-------
- mm/util.c     | 14 ++++++++++++++
- 4 files changed, 17 insertions(+), 18 deletions(-)
+ tools/testing/selftests/kvm/config | 3 +++
+ 1 file changed, 3 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/config
 
-diff --git a/mm/internal.h b/mm/internal.h
-index 41a49574acc3..4736aeb37dae 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -291,6 +291,7 @@ static inline bool is_data_mapping(vm_flags_t flags)
- /* mm/util.c */
- void __vma_link_list(struct mm_struct *mm, struct vm_area_struct *vma,
- 		struct vm_area_struct *prev);
-+void __vma_unlink_list(struct mm_struct *mm, struct vm_area_struct *vma);
- 
- #ifdef CONFIG_MMU
- extern long populate_vma_page_range(struct vm_area_struct *vma,
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 3fde0ec18554..aa66753b175e 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -677,18 +677,8 @@ static __always_inline void __vma_unlink_common(struct mm_struct *mm,
- 						struct vm_area_struct *vma,
- 						struct vm_area_struct *ignore)
- {
--	struct vm_area_struct *prev, *next;
--
- 	vma_rb_erase_ignore(vma, &mm->mm_rb, ignore);
--	next = vma->vm_next;
--	prev = vma->vm_prev;
--	if (prev)
--		prev->vm_next = next;
--	else
--		mm->mmap = next;
--	if (next)
--		next->vm_prev = prev;
--
-+	__vma_unlink_list(mm, vma);
- 	/* Kill the cache */
- 	vmacache_invalidate(mm);
- }
-diff --git a/mm/nommu.c b/mm/nommu.c
-index 12a66fbeb988..1a403f65b99e 100644
---- a/mm/nommu.c
-+++ b/mm/nommu.c
-@@ -673,13 +673,7 @@ static void delete_vma_from_mm(struct vm_area_struct *vma)
- 	/* remove from the MM's tree and list */
- 	rb_erase(&vma->vm_rb, &mm->mm_rb);
- 
--	if (vma->vm_prev)
--		vma->vm_prev->vm_next = vma->vm_next;
--	else
--		mm->mmap = vma->vm_next;
--
--	if (vma->vm_next)
--		vma->vm_next->vm_prev = vma->vm_prev;
-+	__vma_unlink_list(mm, vma);
- }
- 
- /*
-diff --git a/mm/util.c b/mm/util.c
-index 80632db29247..5f113cd0acad 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -281,6 +281,20 @@ void __vma_link_list(struct mm_struct *mm, struct vm_area_struct *vma,
- 		next->vm_prev = vma;
- }
- 
-+void __vma_unlink_list(struct mm_struct *mm, struct vm_area_struct *vma)
-+{
-+	struct vm_area_struct *prev, *next;
-+
-+	next = vma->vm_next;
-+	prev = vma->vm_prev;
-+	if (prev)
-+		prev->vm_next = next;
-+	else
-+		mm->mmap = next;
-+	if (next)
-+		next->vm_prev = prev;
-+}
-+
- /* Check if the vma is being used as a stack by this task */
- int vma_is_stack_for_current(struct vm_area_struct *vma)
- {
+diff --git a/tools/testing/selftests/kvm/config b/tools/testing/selftests/kvm/config
+new file mode 100644
+index 0000000000000..63ed533f73d6e
+--- /dev/null
++++ b/tools/testing/selftests/kvm/config
+@@ -0,0 +1,3 @@
++CONFIG_KVM=y
++CONFIG_KVM_INTEL=y
++CONFIG_KVM_AMD=y
 -- 
-2.17.1
+2.20.1
 
