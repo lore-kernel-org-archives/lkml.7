@@ -2,106 +2,100 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E09BDC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBB6C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18352133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E4721721
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:10:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565802620;
+	bh=YTT9ir1z4aRqxuZTg3VF2ZnFXYtMqZeM7zj+UdEUnPg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=trDlf1HPQfgIEs4ReXRzR8J1psCLhc57Z8BZ2SZnJKilxB1ZJay57UFNyG/WyDjQf
+	 MRFE1U/eISi+C/NtEzu8KHKy5pNkJ5+nJhqymbqR5UjfekXxQ8PDQLp90GAkAVESEx
+	 mRQXj4e3BXdZ1J8VgAtxYdC7WcUCora0DR+imdYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbfHNRKQ (ORCPT
+        id S1730461AbfHNRKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:10:16 -0400
-Received: from mga02.intel.com ([134.134.136.20]:43175 "EHLO mga02.intel.com"
+        Wed, 14 Aug 2019 13:10:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729595AbfHNRKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:10:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 10:10:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,386,1559545200"; 
-   d="scan'208";a="376806157"
-Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by fmsmga006.fm.intel.com with ESMTP; 14 Aug 2019 10:10:05 -0700
-Message-ID: <a47dd0338ff37ebaa7888f291d05a5fccf1cb44b.camel@intel.com>
-Subject: Re: [PATCH v8 15/27] mm: Handle shadow stack page fault
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Wed, 14 Aug 2019 10:00:27 -0700
-In-Reply-To: <bf8a6390-97a6-1ab6-90ef-6399437ed38c@intel.com>
-References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
-         <20190813205225.12032-16-yu-cheng.yu@intel.com>
-         <CALCETrVKbqzivPfUOiGi5efHUpEsfPkNzP0CrmAZzcwUgf7quA@mail.gmail.com>
-         <eabd0c16bd2028ad9fef8d10ddf570b3a10d5680.camel@intel.com>
-         <bf8a6390-97a6-1ab6-90ef-6399437ed38c@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1730412AbfHNRKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:10:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C36F02084D;
+        Wed, 14 Aug 2019 17:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565802608;
+        bh=YTT9ir1z4aRqxuZTg3VF2ZnFXYtMqZeM7zj+UdEUnPg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uebZFrPjWlLvSnYObaXM+wE0EF4WYnBZHjJJG6uxWHkLoKs1jMq2NUxSOB/PRy6Bl
+         vaoQn/cGKCs0LXYNNSctnpIdfpiljzGVkkqXZJpkFWFzqJg88c4iOqRy2J8YJGoVAW
+         +dl+vcPp5FjW2RASGKc8BtnaKLc/xJDqThcVtkPc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Bjoern Gerhart <gerhart@posteo.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 48/91] hwmon: (nct6775) Fix register address and added missed tolerance for nct6106
+Date:   Wed, 14 Aug 2019 19:01:11 +0200
+Message-Id: <20190814165751.615902169@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
+References: <20190814165748.991235624@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-08-14 at 09:48 -0700, Dave Hansen wrote:
-> On 8/14/19 9:27 AM, Yu-cheng Yu wrote:
-> > On Tue, 2019-08-13 at 15:55 -0700, Andy Lutomirski wrote:
-> > > On Tue, Aug 13, 2019 at 2:02 PM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
-> > > > When a task does fork(), its shadow stack (SHSTK) must be duplicated
-> > > > for the child.  This patch implements a flow similar to copy-on-write
-> > > > of an anonymous page, but for SHSTK.
-> > > > 
-> > > > A SHSTK PTE must be RO and dirty.  This dirty bit requirement is used
-> > > > to effect the copying.  In copy_one_pte(), clear the dirty bit from a
-> > > > SHSTK PTE to cause a page fault upon the next SHSTK access.  At that
-> > > > time, fix the PTE and copy/re-use the page.
-> > > 
-> > > Is using VM_SHSTK and special-casing all of this really better than
-> > > using a special mapping or other pseudo-file-backed VMA and putting
-> > > all the magic in the vm_operations?
-> > 
-> > A special mapping is cleaner.  However, we also need to exclude normal [RO +
-> > dirty] pages from shadow stack.
-> 
-> I don't understand what you are saying.
-> 
-> Are you saying that we need this VM_SHSTK flag in order to exclude
-> RO+HW-Dirty pages from being created in non-shadow-stack VMAs?
+[ Upstream commit f3d43e2e45fd9d44ba52d20debd12cd4ee9c89bf ]
 
-We use VM_SHSTK for page fault handling (the special-casing).  If we have a
-special mapping, all these become cleaner (but more code).  However, we still
-need most of the PTE macros (e.g. ptep_set_wrprotect, PAGE_DIRTY_SW, etc.).
+Fixed address of third NCT6106_REG_WEIGHT_DUTY_STEP, and
+added missed NCT6106_REG_TOLERANCE_H.
 
-Yu-cheng
+Fixes: 6c009501ff200 ("hwmon: (nct6775) Add support for NCT6102D/6106D")
+Signed-off-by: Bjoern Gerhart <gerhart@posteo.de>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hwmon/nct6775.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
+index 78603b78cf410..eba692cddbdee 100644
+--- a/drivers/hwmon/nct6775.c
++++ b/drivers/hwmon/nct6775.c
+@@ -818,7 +818,7 @@ static const u16 NCT6106_REG_TARGET[] = { 0x111, 0x121, 0x131 };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_SEL[] = { 0x168, 0x178, 0x188 };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_STEP[] = { 0x169, 0x179, 0x189 };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_STEP_TOL[] = { 0x16a, 0x17a, 0x18a };
+-static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x17c };
++static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x18b };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_BASE[] = { 0x16c, 0x17c, 0x18c };
+ static const u16 NCT6106_REG_WEIGHT_DUTY_BASE[] = { 0x16d, 0x17d, 0x18d };
+ 
+@@ -3673,6 +3673,7 @@ static int nct6775_probe(struct platform_device *pdev)
+ 		data->REG_FAN_TIME[0] = NCT6106_REG_FAN_STOP_TIME;
+ 		data->REG_FAN_TIME[1] = NCT6106_REG_FAN_STEP_UP_TIME;
+ 		data->REG_FAN_TIME[2] = NCT6106_REG_FAN_STEP_DOWN_TIME;
++		data->REG_TOLERANCE_H = NCT6106_REG_TOLERANCE_H;
+ 		data->REG_PWM[0] = NCT6106_REG_PWM;
+ 		data->REG_PWM[1] = NCT6106_REG_FAN_START_OUTPUT;
+ 		data->REG_PWM[2] = NCT6106_REG_FAN_STOP_OUTPUT;
+-- 
+2.20.1
+
+
+
