@@ -2,73 +2,67 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B93C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16189C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0577C204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E666D204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:22:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfHNJWW (ORCPT
+        id S1727227AbfHNJWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:22:22 -0400
-Received: from viti.kaiser.cx ([85.214.81.225]:43064 "EHLO viti.kaiser.cx"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbfHNJWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:22:20 -0400
-Received: from x4dbd508b.dyn.telefonica.de ([77.189.80.139] helo=martin-debian-1.paytec.ch)
-        by viti.kaiser.cx with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <martin@kaiser.cx>)
-        id 1hxpU0-0008O2-BN; Wed, 14 Aug 2019 11:22:16 +0200
-From:   Martin Kaiser <martin@kaiser.cx>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Lars-Peter Clausen <lars@metafoo.de>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH] iio: max5487: use devres for iio device registration
-Date:   Wed, 14 Aug 2019 11:22:05 +0200
-Message-Id: <20190814092205.11031-1-martin@kaiser.cx>
-X-Mailer: git-send-email 2.11.0
+        Wed, 14 Aug 2019 05:22:32 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4260 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726699AbfHNJWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 05:22:31 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D101664A8DDC451216D5;
+        Wed, 14 Aug 2019 17:22:25 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 14 Aug
+ 2019 17:22:19 +0800
+Subject: Re: [PATCH RESEND 1/2] staging: erofs: introduce EFSCORRUPTED and
+ more logs
+To:     Gao Xiang <gaoxiang25@huawei.com>, Pavel Machek <pavel@denx.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, <linux-fsdevel@vger.kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+References: <20190814042525.4925-2-gaoxiang25@huawei.com>
+ <20190814043208.15591-1-gaoxiang25@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <db0e0d1d-9018-5c2c-93d0-b718e7e6853c@huawei.com>
+Date:   Wed, 14 Aug 2019 17:22:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190814043208.15591-1-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace iio_device_register with the devres variant and drop the
-explicit function call to unregister the iio device.
+On 2019/8/14 12:32, Gao Xiang wrote:
+> Previously, EROFS uses EIO to indicate that filesystem is
+> corrupted as well, but other filesystems tend to use
+> EUCLEAN instead, let's follow what others do right now.
+> 
+> Also, add some more prints to the syslog.
+> 
+> Suggested-by: Pavel Machek <pavel@denx.de>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
- drivers/iio/potentiometer/max5487.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-diff --git a/drivers/iio/potentiometer/max5487.c b/drivers/iio/potentiometer/max5487.c
-index 68ff806d4668..a6c92050d397 100644
---- a/drivers/iio/potentiometer/max5487.c
-+++ b/drivers/iio/potentiometer/max5487.c
-@@ -110,15 +110,11 @@ static int max5487_spi_probe(struct spi_device *spi)
- 	if (ret < 0)
- 		return ret;
- 
--	return iio_device_register(indio_dev);
-+	return devm_iio_device_register(&spi->dev, indio_dev);
- }
- 
- static int max5487_spi_remove(struct spi_device *spi)
- {
--	struct iio_dev *indio_dev = dev_get_drvdata(&spi->dev);
--
--	iio_device_unregister(indio_dev);
--
- 	/* save both wiper regs to NV regs */
- 	return max5487_write_cmd(spi, MAX5487_COPY_AB_TO_NV);
- }
--- 
-2.11.0
-
+Thanks,
