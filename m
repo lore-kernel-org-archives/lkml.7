@@ -2,69 +2,136 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BD7C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BEAC32757
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40961214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:25:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565807115;
-	bh=qWSBdV3hWg97qBnKIsAim0F+3pcIzBkHQNQrfKrwysE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=wSPvZtCXP5jV7cYQw//XfdN/u98/j07K8ji9QVgf0c4zz4aaUdz1UEwVQoyloOAbV
-	 Vz2huGN+bRinydJBY56Em17OkoK43DxqXMkmpzKHkNWAe+Vyi+L3QqhEtH8vAuT0d2
-	 DO+HkQ5VkOFE6sdVcM6laCIniMoAZHAnGszZVukI=
+	by mail.kernel.org (Postfix) with ESMTP id AE9ED214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:25:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aVjpnrjN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfHNSZO (ORCPT
+        id S1729162AbfHNSZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 14:25:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728792AbfHNSZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 14:25:07 -0400
-Subject: Re: [PULL REQUEST] Please pull rdma.git
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565807106;
-        bh=qWSBdV3hWg97qBnKIsAim0F+3pcIzBkHQNQrfKrwysE=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=gkteLbrh1zajdgg1tkLOPvlsyNvAojzUPsKrVgrktCi/Kfzsk83dm45ApY7UbYIOY
-         mngYz5/xdZeXEqQofz+M2GZsyyxjemI/zbRZvjThBe8VghefXdo6a5YiQdY9wS+g7n
-         wVgAxwWldg+20/K02Xxrxx7XQhDdrxTVmdA4r+wg=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <09bcafaab07dfde728357bfe61b6a7edfa3b25c9.camel@redhat.com>
-References: <09bcafaab07dfde728357bfe61b6a7edfa3b25c9.camel@redhat.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <09bcafaab07dfde728357bfe61b6a7edfa3b25c9.camel@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
-X-PR-Tracked-Commit-Id: 2c8ccb37b08fe364f02a9914daca474d43151453
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a8dba0531bc0ba8b65e77a4a858da4b6eeaa1b92
-Message-Id: <156580710639.11871.4883886338409398105.pr-tracker-bot@kernel.org>
-Date:   Wed, 14 Aug 2019 18:25:06 +0000
-To:     Doug Ledford <dledford@redhat.com>
-Cc:     "Torvalds, Linus" <torvalds@linux-foundation.org>,
-        "Gunthorpe, Jason" <jgg@ziepe.ca>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Wed, 14 Aug 2019 14:25:22 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42339 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729109AbfHNSZV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 14:25:21 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i30so5354125pfk.9
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 11:25:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dj4KAX4oiOlHlXT1vUtLuT1vYXvby2UL10kTcUOrNVU=;
+        b=aVjpnrjNjtev+v0rOvs8haZujsIS+SKSncIJWkjkfISt434mYvH9ZXTPW8wBD5bGPC
+         o8SRuLOWToAWroJNjgL9mzkUg7pZL0rg9adAlql+R+78AjCyhV+sU3P0rmKZnNHhDq+Y
+         cEVrmLlVbqJ8RvxQU6HF1D7onDXD6y79XuyZ3wBbiBgOCGGad+d2p7DoBN0YkWVjtRv8
+         cXA/Tx/2iGDkeuY0xn6JOEzKk9UW/gSVIlOE4AeQfT6Nx8/GYwWEGSP/Oo++j+VyTGNj
+         hEtA5/sv1Nv3mH/GumYlvjJsqc92BETeL6d2WiboFtAgkgTSaiGT3u7TkLGJ7IJ9RIRF
+         L3lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dj4KAX4oiOlHlXT1vUtLuT1vYXvby2UL10kTcUOrNVU=;
+        b=jY1CzoY+QEkhab912kHpgzP9gLL6EJTTO7FUlz/013zGKlbBahGOORT+TXprOdChVu
+         kHNytqgH2N8TIv4khK982FSsUvGYG7QA/ejhWjsdTuCnvsDm6e71ODHF7VvH4qk9M0V6
+         /Qz2YbS4X9viRaAXh3rP2oNhyMHAa0maJRoVKzmw949vPsUKdEYGvy/aNt1XvTnfiimA
+         MActVsF1OJDWhHL+xQIcPAxLY42zfl2vGGr5MPvcMfh2L1SXlbn6ilVBeN6h4039qiyv
+         sZZl63k+dgodwAfF/EAH5hIvGB73wax3BPxHwj6FPD3t41QIWjGI6SCx61SkRpSmK2Ph
+         C0ww==
+X-Gm-Message-State: APjAAAU/cQOdT7vsqH0euLVmYKJ1h/5m0RYEcejh25vyxQZzdXcXztFZ
+        VdbvH3gHATHgNV13EDwJ31e/nwZNW9FiGIXBt3fMWBhNlig=
+X-Google-Smtp-Source: APXvYqz/twTfpGfqt66xJCwQIFEHEknWQOpgXq5rPtScTXaG6QgAeHl3K1Dxc6WBbeihQAjQJx847aX1lF7z3cIPudw=
+X-Received: by 2002:aa7:984a:: with SMTP id n10mr1326537pfq.3.1565807120061;
+ Wed, 14 Aug 2019 11:25:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190814165809.46421-1-natechancellor@gmail.com>
+In-Reply-To: <20190814165809.46421-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 14 Aug 2019 11:25:08 -0700
+Message-ID: <CAKwvOdmvBkXu3JTp6c9yRKgPTv6pQ=_jrCsBzU5dJLD2xRvVxg@mail.gmail.com>
+Subject: Re: [PATCH] netfilter: nft_bitwise: Adjust parentheses to fix memcmp
+ size argument
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 14 Aug 2019 10:59:07 -0400:
+On Wed, Aug 14, 2019 at 9:58 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> clang warns:
+>
+> net/netfilter/nft_bitwise.c:138:50: error: size argument in 'memcmp'
+> call is a comparison [-Werror,-Wmemsize-comparison]
+>         if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
+>                                       ~~~~~~~~~~~~~~~~~~^~
+> net/netfilter/nft_bitwise.c:138:6: note: did you mean to compare the
+> result of 'memcmp' instead?
+>         if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
+>             ^
+>                                                        )
+> net/netfilter/nft_bitwise.c:138:32: note: explicitly cast the argument
+> to size_t to silence this warning
+>         if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
+>                                       ^
+>                                       (size_t)(
+> 1 error generated.
+>
+> Adjust the parentheses so that the result of the sizeof is used for the
+> size argument in memcmp, rather than the result of the comparison (which
+> would always be true because sizeof is a non-zero number).
+>
+> Fixes: bd8699e9e292 ("netfilter: nft_bitwise: add offload support")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/638
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+oh no! thanks for the patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a8dba0531bc0ba8b65e77a4a858da4b6eeaa1b92
-
-Thank you!
+> ---
+>  net/netfilter/nft_bitwise.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/netfilter/nft_bitwise.c b/net/netfilter/nft_bitwise.c
+> index 1f04ed5c518c..974300178fa9 100644
+> --- a/net/netfilter/nft_bitwise.c
+> +++ b/net/netfilter/nft_bitwise.c
+> @@ -135,8 +135,8 @@ static int nft_bitwise_offload(struct nft_offload_ctx *ctx,
+>  {
+>         const struct nft_bitwise *priv = nft_expr_priv(expr);
+>
+> -       if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
+> -           priv->sreg != priv->dreg))
+> +       if (memcmp(&priv->xor, &zero, sizeof(priv->xor)) ||
+> +           priv->sreg != priv->dreg)
+>                 return -EOPNOTSUPP;
+>
+>         memcpy(&ctx->regs[priv->dreg].mask, &priv->mask, sizeof(priv->mask));
+> --
+> 2.23.0.rc2
+>
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Thanks,
+~Nick Desaulniers
