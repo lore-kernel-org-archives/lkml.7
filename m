@@ -2,99 +2,64 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C92DC0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A45C0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1663B2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:11:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="duCN9Vgw"
+	by mail.kernel.org (Postfix) with ESMTP id 76765208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 06:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfHNGLC (ORCPT
+        id S1727477AbfHNGL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 02:11:02 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:35458 "EHLO pegase1.c-s.fr"
+        Wed, 14 Aug 2019 02:11:56 -0400
+Received: from verein.lst.de ([213.95.11.211]:34981 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbfHNGLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 02:11:02 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 467fN43NP3z9vBmv;
-        Wed, 14 Aug 2019 08:11:00 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=duCN9Vgw; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id kd7CDSTzq66e; Wed, 14 Aug 2019 08:11:00 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 467fN4166sz9vBmt;
-        Wed, 14 Aug 2019 08:11:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1565763060; bh=XH/hXUYOtyI0ss05GLpoqwKxWjKTlS/1d5666/vUiPQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=duCN9VgwdfKgbD5Ie20Lmdq7BCnFCQEvgMw5tWhphRKFd11RezdeQJ7mtSKud6GBm
-         Mwl4ENf+lN/roTnNcUvF7mUWRd0iax97slF3ej3mPTtqDutzv21SqwhKq9973gMljN
-         hjR5Ssl98zhfen6I7hExkSU7f5lTJa3JTOCTKfzw=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 227608B780;
-        Wed, 14 Aug 2019 08:11:01 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id YFDPe1e-wMz0; Wed, 14 Aug 2019 08:11:01 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F075D8B761;
-        Wed, 14 Aug 2019 08:11:00 +0200 (CEST)
-Subject: Re: [PATCH v1 05/10] powerpc/mm: Do early ioremaps from top to bottom
- on PPC64 too.
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <6bc35eca507359075528bc0e55938bc1ce8ee485.1565726867.git.christophe.leroy@c-s.fr>
- <019c5d90f7027ccff00e38a3bcd633d290f6af59.1565726867.git.christophe.leroy@c-s.fr>
- <20190814055525.GA12744@infradead.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <1d44ec1d-339d-e22c-2133-175e0aa745f6@c-s.fr>
-Date:   Wed, 14 Aug 2019 08:10:59 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726809AbfHNGL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 02:11:56 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 20CAC68B02; Wed, 14 Aug 2019 08:11:51 +0200 (CEST)
+Date:   Wed, 14 Aug 2019 08:11:50 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Bharata B Rao <bharata@linux.ibm.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
+Subject: Re: [PATCH 5/5] memremap: provide a not device managed
+ memremap_pages
+Message-ID: <20190814061150.GA24835@lst.de>
+References: <20190811081247.22111-1-hch@lst.de> <20190811081247.22111-6-hch@lst.de> <20190812145058.GA16950@in.ibm.com> <20190812150012.GA12700@lst.de> <20190813045611.GB16950@in.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190814055525.GA12744@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813045611.GB16950@in.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 13, 2019 at 10:26:11AM +0530, Bharata B Rao wrote:
+> Yes, this patchset works non-modular and with kvm-hv as module, it
+> works with devm_memremap_pages_release() and release_mem_region() in the
+> cleanup path. The cleanup path will be required in the non-modular
+> case too for proper recovery from failures.
 
+Can you check if the version here:
 
-Le 14/08/2019 à 07:55, Christoph Hellwig a écrit :
-> On Tue, Aug 13, 2019 at 08:11:38PM +0000, Christophe Leroy wrote:
->> Until vmalloc system is up and running, ioremap basically
->> allocates addresses at the border of the IOREMAP area.
+    git://git.infradead.org/users/hch/misc.git pgmap-remove-dev
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/pgmap-remove-dev
+
+works for you fully before I resend?
+
 > 
-> Note that while a few other architectures have a magic hack like powerpc
-> to make ioremap work before vmalloc, the normal practice would be
-> to explicitly use early_ioremap.  I guess your change is fine for now,
-> but it might make sense convert powerpc to the explicit early_ioremap
-> scheme as well.
-> 
-
-I've been looking into early_ioremap(), but IIUC early_ioremap() is for 
-ephemeral mappings only, it expects all early mappings to be gone at the 
-end of init.
-
-PPC installs definitive early mappings (for instance for PCI). How does 
-that have to be handled ?
-
-Christophe
+> Regards,
+> Bharata.
+---end quoted text---
