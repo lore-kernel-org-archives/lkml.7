@@ -2,130 +2,156 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB649C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D9AC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83A9B206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:38:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="jbPsuqGC"
+	by mail.kernel.org (Postfix) with ESMTP id 98862206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 11:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfHNLii (ORCPT
+        id S1727708AbfHNLjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 07:38:38 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40325 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfHNLii (ORCPT
+        Wed, 14 Aug 2019 07:39:24 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:43043 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725800AbfHNLjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 07:38:38 -0400
-Received: by mail-lf1-f67.google.com with SMTP id b17so79093309lff.7
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 04:38:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tl4lHPgUKyjZ4PA5frXihhV1cgSueNxdkLcdZsBaY4I=;
-        b=jbPsuqGC/o2ZqbZIV5mCeR3UJ7x6ztoAqdeOaM7bCjV7XeQ2b2f5KSNZRWcy5T2J1F
-         nhf36FHFqaSyVDvmlGFM3VfNnoGwd6y14WLITLKeO607r5sFOoZY2t9WNLsEX++muVKG
-         FvIB2nYIXiTZ5DBylglUMRIypMmbVkAjleOlU8tGJpKD1PYbLOZVNMVnixtiI4DAP3lz
-         jikVx7bcSI8WeTCcfEHqLoa2EwRwtE4bIj/HjAWX9k0U78xbi4AlhNCTfiIwbTD3WmDU
-         j78kMNCxdbgOggwf8Z5c3Ckm88BxzvbfnG516bYC+LKJru+dvuDZcGYad6olsS+OaK6h
-         G7LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tl4lHPgUKyjZ4PA5frXihhV1cgSueNxdkLcdZsBaY4I=;
-        b=A44KI54wUpSgb644NrVRF6IHgPNUFFGgDrdgqTsPSPmDEA4gO6SBpP+Q9Zx0swX486
-         q6MH0wjoY53XbywM1pInTOrTHQiQ1BCBjHtNXZR6xTg5o2wkpPrZ45/rE0jWjNeleINS
-         +j8YuPdpiOXHHhfcgrsE3oz1WUefMXQwOfnfOPREilsnGzJ60IP7e6neo3qwWhCMwb8D
-         GTMDv1eSeNzxsqvp2T4W4s8ggMfkxUvPWgHOw8IpxwGjxUtWBpTCkyV95XsN9XJth/Ya
-         RpvcUzdt6vh44PuNuFF4xFu3C6iWoDAsrMKQrGe5KSxkSWk7Nad3Uwb/xVK0kJv4/WoD
-         Zqpw==
-X-Gm-Message-State: APjAAAW6x9Eq8sLez/QcQJcV69RKW5VnRDHRkjrvrw275pE2o3feMsc1
-        zwGRr3ixT7WnVsqokcYIFk7i1P5xQs6QmuH7fVn6bQ==
-X-Google-Smtp-Source: APXvYqwdp0z7dISVyQdXlhFPeViRhkBkT7bHEq6kyIgkUCGOt5rMfFVE/QcTv/yI+SBrUgZYYqu3wwbwFOkJT3h5PoY=
-X-Received: by 2002:ac2:4ac4:: with SMTP id m4mr24826096lfp.172.1565782716019;
- Wed, 14 Aug 2019 04:38:36 -0700 (PDT)
+        Wed, 14 Aug 2019 07:39:23 -0400
+Received: from dread.disaster.area (pa49-195-190-67.pa.nsw.optusnet.com.au [49.195.190.67])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 4D35443D5DD;
+        Wed, 14 Aug 2019 21:39:17 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hxrbW-0002CL-QK; Wed, 14 Aug 2019 21:38:10 +1000
+Date:   Wed, 14 Aug 2019 21:38:10 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 01/19] fs/locks: Export F_LAYOUT lease to user
+ space
+Message-ID: <20190814113810.GJ7777@dread.disaster.area>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-2-ira.weiny@intel.com>
+ <20190809235231.GC7777@dread.disaster.area>
+ <20190812173626.GB19746@iweiny-DESK2.sc.intel.com>
+ <20190814080547.GJ6129@dread.disaster.area>
+ <1ba29bfa22f82e6d880ab31c3835047f3353f05a.camel@kernel.org>
 MIME-Version: 1.0
-References: <20190814103244.92518-1-maco@android.com> <20190814113348.GA525@ming.t460p>
-In-Reply-To: <20190814113348.GA525@ming.t460p>
-From:   Martijn Coenen <maco@android.com>
-Date:   Wed, 14 Aug 2019 13:38:25 +0200
-Message-ID: <CAB0TPYHdaOTUKf5ix-oU7cXsV12ZW6YDYBsG+VKr6zk=RCW2NA@mail.gmail.com>
-Subject: Re: [PATCH] RFC: loop: Avoid calling blk_mq_freeze_queue() when possible.
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>, kernel-team@android.com,
-        Narayan Kamath <narayan@google.com>,
-        Dario Freni <dariofreni@google.com>,
-        Nikita Ioffe <ioffe@google.com>,
-        Jiyong Park <jiyong@google.com>,
-        Martijn Coenen <maco@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ba29bfa22f82e6d880ab31c3835047f3353f05a.camel@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
+        a=TR82T6zjGmBjdfWdGgpkDw==:117 a=TR82T6zjGmBjdfWdGgpkDw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=ZoWuoDdl_XJqS1jHo3MA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 1:34 PM Ming Lei <ming.lei@redhat.com> wrote:
-> Another candidate is to not switch to q_usage_counter's percpu mode
-> until loop becomes Lo_bound, and this way may be more clean.
+On Wed, Aug 14, 2019 at 07:21:34AM -0400, Jeff Layton wrote:
+> On Wed, 2019-08-14 at 18:05 +1000, Dave Chinner wrote:
+> > On Mon, Aug 12, 2019 at 10:36:26AM -0700, Ira Weiny wrote:
+> > > On Sat, Aug 10, 2019 at 09:52:31AM +1000, Dave Chinner wrote:
+> > > > On Fri, Aug 09, 2019 at 03:58:15PM -0700, ira.weiny@intel.com wrote:
+> > > > > +	/*
+> > > > > +	 * NOTE on F_LAYOUT lease
+> > > > > +	 *
+> > > > > +	 * LAYOUT lease types are taken on files which the user knows that
+> > > > > +	 * they will be pinning in memory for some indeterminate amount of
+> > > > > +	 * time.
+> > > > 
+> > > > Indeed, layout leases have nothing to do with pinning of memory.
+> > > 
+> > > Yep, Fair enough.  I'll rework the comment.
+> > > 
+> > > > That's something an application taht uses layout leases might do,
+> > > > but it largely irrelevant to the functionality layout leases
+> > > > provide. What needs to be done here is explain what the layout lease
+> > > > API actually guarantees w.r.t. the physical file layout, not what
+> > > > some application is going to do with a lease. e.g.
+> > > > 
+> > > > 	The layout lease F_RDLCK guarantees that the holder will be
+> > > > 	notified that the physical file layout is about to be
+> > > > 	changed, and that it needs to release any resources it has
+> > > > 	over the range of this lease, drop the lease and then
+> > > > 	request it again to wait for the kernel to finish whatever
+> > > > 	it is doing on that range.
+> > > > 
+> > > > 	The layout lease F_RDLCK also allows the holder to modify
+> > > > 	the physical layout of the file. If an operation from the
+> > > > 	lease holder occurs that would modify the layout, that lease
+> > > > 	holder does not get notification that a change will occur,
+> > > > 	but it will block until all other F_RDLCK leases have been
+> > > > 	released by their holders before going ahead.
+> > > > 
+> > > > 	If there is a F_WRLCK lease held on the file, then a F_RDLCK
+> > > > 	holder will fail any operation that may modify the physical
+> > > > 	layout of the file. F_WRLCK provides exclusive physical
+> > > > 	modification access to the holder, guaranteeing nothing else
+> > > > 	will change the layout of the file while it holds the lease.
+> > > > 
+> > > > 	The F_WRLCK holder can change the physical layout of the
+> > > > 	file if it so desires, this will block while F_RDLCK holders
+> > > > 	are notified and release their leases before the
+> > > > 	modification will take place.
+> > > > 
+> > > > We need to define the semantics we expose to userspace first.....
+> 
+> Absolutely.
+> 
+> > > 
+> > > Agreed.  I believe I have implemented the semantics you describe above.  Do I
+> > > have your permission to use your verbiage as part of reworking the comment and
+> > > commit message?
+> > 
+> > Of course. :)
+> > 
+> > Cheers,
+> > 
+> 
+> I'll review this in more detail soon, but subsequent postings of the set
+> should probably also go to linux-api mailing list. This is a significant
+> API change. It might not also hurt to get the glibc folks involved here
+> too since you'll probably want to add the constants to the headers there
+> as well.
 
-Thanks! I had considered this too, but thought it a bit risky to mess
-with the init flag from the loop driver. Maybe we could delay
-switching q_usage_counter to per-cpu mode in the block layer in
-general, until the first request comes in?
+Sure, but lets first get it to the point where we have something
+that is actually workable, much more complete and somewhat validated
+with unit tests before we start involving too many people. Wide
+review of prototype code isn't really a good use of resources given
+how much it's probably going to change from here...
 
-This would also address our issues, and potentially be an even smaller change.
+> Finally, consider going ahead and drafting a patch to the fcntl(2)
+> manpage if you think you have the API mostly nailed down. This API is a
+> little counterintuitive (i.e. you can change the layout with an F_RDLCK
+> lease), so it will need to be very clearly documented. I've also found
+> that when creating a new API, documenting it tends to help highlight its
+> warts and areas where the behavior is not clearly defined.
 
-Martijn
->
-> Something like the following patch:
->
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index a7461f482467..8791f9242583 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -1015,6 +1015,9 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
->          */
->         bdgrab(bdev);
->         mutex_unlock(&loop_ctl_mutex);
-> +
-> +       percpu_ref_switch_to_percpu(&lo->lo_queue->q_usage_counter);
-> +
->         if (partscan)
->                 loop_reread_partitions(lo, bdev);
->         if (claimed_bdev)
-> @@ -1171,6 +1174,8 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
->         lo->lo_state = Lo_unbound;
->         mutex_unlock(&loop_ctl_mutex);
->
-> +       percpu_ref_switch_to_atomic(&lo->lo_queue->q_usage_counter, NULL);
-> +
->         /*
->          * Need not hold loop_ctl_mutex to fput backing file.
->          * Calling fput holding loop_ctl_mutex triggers a circular
-> @@ -2003,6 +2008,12 @@ static int loop_add(struct loop_device **l, int i)
->         }
->         lo->lo_queue->queuedata = lo;
->
-> +       /*
-> +        * cheat block layer for not switching to q_usage_counter's
-> +        * percpu mode before loop becomes Lo_bound
-> +        */
-> +       blk_queue_flag_set(QUEUE_FLAG_INIT_DONE, lo->lo_queue);
-> +
->         blk_queue_max_hw_sectors(lo->lo_queue, BLK_DEF_MAX_SECTORS);
->
->         /*
->
->
-> thanks,
-> Ming
+I find writing unit tests for xfstests to validate the new APIs work
+as intended finds far more problems with the API than writing the
+documentation. :)
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
