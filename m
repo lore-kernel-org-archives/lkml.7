@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4E7C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47987C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE352085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131EC2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749455;
-	bh=nHmX9zi2VfqJUiw+7gWfVIB1zCbhZkXMkI2XgTjTic4=;
+	s=default; t=1565749459;
+	bh=8lbmIY1aOT4JZP/B0nvlZvq0dITQdhB1j8LjOqmC96o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ov37gcYdDGwXUiDzNjR/S58gp0shRC0I22QERs4TY+YEzvfLFtWQONlmeLUcZTdr4
-	 zu0N698KSTayQQ4QHDTOBQ7P2dDIxGhXvbHroKYre8yKDyRCmAru3w9k1RMK2FBSMX
-	 J+Z2hZqggGmg+dZlGA2BwTyj3LKVgGcLiix6fxgI=
+	b=ORUSrukhsfMhiHQKZ6X6tNdo8Qhgacbf88ZxC3EUYlMEfTsFqzfmkMQ2Q6baURYZz
+	 9efG+V+dXMtFtAVXwGbq4DtEqY2/7S6ppWkH2mVakS4gJs7+8DrqTp9Vxnq3EIi9Gj
+	 vvMVW604xY4pPLqeSkduU/J+1UjHeJhFiOB7AOm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730125AbfHNCYO (ORCPT
+        id S1730145AbfHNCYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:24:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53038 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:24:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730054AbfHNCYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:24:07 -0400
+        id S1730102AbfHNCYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:24:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE0122084F;
-        Wed, 14 Aug 2019 02:24:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 233CE216F4;
+        Wed, 14 Aug 2019 02:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749446;
-        bh=nHmX9zi2VfqJUiw+7gWfVIB1zCbhZkXMkI2XgTjTic4=;
+        s=default; t=1565749450;
+        bh=8lbmIY1aOT4JZP/B0nvlZvq0dITQdhB1j8LjOqmC96o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zE5XTtzCtst5a4ixsXjv/6iC1DPF4d9xlEVJ3nf8weXnZ4KNddDBzm0amOnY4XAC2
-         GCIC9U7ntL129On2unkBhcqoLX9qyUw/GrhyiYn+ACQAoOZVvm+av3XfejQ+WUPEw3
-         wJJkzdpJojBAnaAGVK1tT7xX+FBhQ+3DSduV3UyU=
+        b=E+uUi4baBRd111IbbisGx7nZlCdfxxeZxhggP2JSdRmHKsfl3s2kNQrTYfIWurI8n
+         ksEpKHXIR+nFFR1va7bCxh/SHkNQHDpeIiGENRAtC+UlTVxSn2vOk9qEpIiwgGl04c
+         ti5h3wywX7GsAw2CcRPliR5uxzj1XYEIUwF/L9Ws=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 25/33] net: cxgb3_main: Fix a resource leak in a error path in 'init_one()'
-Date:   Tue, 13 Aug 2019 22:23:15 -0400
-Message-Id: <20190814022323.17111-25-sashal@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Kees Cook <keescook@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 29/33] libata: add SG safety checks in SFF pio transfers
+Date:   Tue, 13 Aug 2019 22:23:19 -0400
+Message-Id: <20190814022323.17111-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022323.17111-1-sashal@kernel.org>
 References: <20190814022323.17111-1-sashal@kernel.org>
@@ -59,44 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit debea2cd3193ac868289e8893c3a719c265b0612 ]
+[ Upstream commit 752ead44491e8c91e14d7079625c5916b30921c5 ]
 
-A call to 'kfree_skb()' is missing in the error handling path of
-'init_one()'.
-This is already present in 'remove_one()' but is missing here.
+Abort processing of a command if we run out of mapped data in the
+SG list. This should never happen, but a previous bug caused it to
+be possible. Play it safe and attempt to abort nicely if we don't
+have more SG segments left.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/ata/libata-sff.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-index ddd1ec8f7bd0f..d1a2159e40d6b 100644
---- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-@@ -3263,7 +3263,7 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (!adapter->regs) {
- 		dev_err(&pdev->dev, "cannot map device registers\n");
- 		err = -ENOMEM;
--		goto out_free_adapter;
-+		goto out_free_adapter_nofail;
+diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
+index 8d22acdf90f0b..0e2bc5b9a78c1 100644
+--- a/drivers/ata/libata-sff.c
++++ b/drivers/ata/libata-sff.c
+@@ -703,6 +703,10 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+ 	unsigned int offset;
+ 	unsigned char *buf;
+ 
++	if (!qc->cursg) {
++		qc->curbytes = qc->nbytes;
++		return;
++	}
+ 	if (qc->curbytes == qc->nbytes - qc->sect_size)
+ 		ap->hsm_task_state = HSM_ST_LAST;
+ 
+@@ -742,6 +746,8 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+ 
+ 	if (qc->cursg_ofs == qc->cursg->length) {
+ 		qc->cursg = sg_next(qc->cursg);
++		if (!qc->cursg)
++			ap->hsm_task_state = HSM_ST_LAST;
+ 		qc->cursg_ofs = 0;
  	}
- 
- 	adapter->pdev = pdev;
-@@ -3381,6 +3381,9 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		if (adapter->port[i])
- 			free_netdev(adapter->port[i]);
- 
-+out_free_adapter_nofail:
-+	kfree_skb(adapter->nofail_skb);
-+
- out_free_adapter:
- 	kfree(adapter);
- 
+ }
 -- 
 2.20.1
 
