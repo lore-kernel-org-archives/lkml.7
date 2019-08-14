@@ -2,85 +2,94 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4B4C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0939FC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29A32084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1AB7206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 13:40:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbfHNNjc (ORCPT
+        id S1727959AbfHNNkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 09:39:32 -0400
-Received: from 8bytes.org ([81.169.241.247]:49310 "EHLO theia.8bytes.org"
+        Wed, 14 Aug 2019 09:40:11 -0400
+Received: from muru.com ([72.249.23.125]:57752 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726865AbfHNNio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:38:44 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 045F846A; Wed, 14 Aug 2019 15:38:42 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     corbet@lwn.net, tony.luck@intel.com, fenghua.yu@intel.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, linux-doc@vger.kernel.org,
-        linux-ia64@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Thomas.Lendacky@amd.com,
-        Suravee.Suthikulpanit@amd.com, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 02/10] iommu/amd: Request passthrough mode from IOMMU core
-Date:   Wed, 14 Aug 2019 15:38:33 +0200
-Message-Id: <20190814133841.7095-3-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190814133841.7095-1-joro@8bytes.org>
-References: <20190814133841.7095-1-joro@8bytes.org>
+        id S1726722AbfHNNkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:40:10 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id D37C680C8;
+        Wed, 14 Aug 2019 13:40:36 +0000 (UTC)
+Date:   Wed, 14 Aug 2019 06:40:06 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 14/22] ARM: omap1: use pci_ioremap_io() for omap_cf
+Message-ID: <20190814134006.GE52127@atomide.com>
+References: <20190808212234.2213262-1-arnd@arndb.de>
+ <20190808212234.2213262-15-arnd@arndb.de>
+ <20190813103605.GL52127@atomide.com>
+ <CAK8P3a0E+QUn9wcP5Obv-FitWyXCFwcp+oPConeO2p-NV1rqsw@mail.gmail.com>
+ <20190813181158.GA26798@darkstar.musicnaut.iki.fi>
+ <CAK8P3a0LjKrc+7c5Ht9OL7LfYyLnG9=y7u+w24ujA1xAid_yCQ@mail.gmail.com>
+ <20190814074918.GA52127@atomide.com>
+ <CAK8P3a3k_HOGqzMGjtc+7NSaK0Bsa_vxxRFLzY8aP6ev4wa9iA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3k_HOGqzMGjtc+7NSaK0Bsa_vxxRFLzY8aP6ev4wa9iA@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+* Arnd Bergmann <arnd@arndb.de> [190814 10:37]:
+> On Wed, Aug 14, 2019 at 9:49 AM Tony Lindgren <tony@atomide.com> wrote:
+> > * Arnd Bergmann <arnd@arndb.de> [190813 19:34]:
+> > > On Tue, Aug 13, 2019 at 8:12 PM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
+> > > diff --git a/arch/arm/mach-omap1/hardware.h b/arch/arm/mach-omap1/hardware.h
+> > > index 232b8deef907..9fc76a3c9e57 100644
+> > > --- a/arch/arm/mach-omap1/hardware.h
+> > > +++ b/arch/arm/mach-omap1/hardware.h
+> > > @@ -61,7 +61,7 @@ static inline u32 omap_cs3_phys(void)
+> > >
+> > >  #endif /* ifndef __ASSEMBLER__ */
+> > >
+> > > -#define OMAP1_IO_OFFSET                0x01000000      /* Virtual IO
+> > > = 0xfefb0000 */
+> > > +#define OMAP1_IO_OFFSET                0x00fb0000      /* Virtual IO
+> > > = 0xff000000 */
+> > >  #define OMAP1_IO_ADDRESS(pa)   IOMEM((pa) - OMAP1_IO_OFFSET)
+> > >
+> > >  #include "serial.h"
+> >
+> > Oh OK yeah sounds like that's the issue.
+> >
+> > > There may be additional locations that hardcode the virtual address.
+> >
+> > Those should be in mach-omap1/io.c, and I recall innovator had some
+> > hardcoded fpga address that should also be checked.
+> 
+> I see four boards with hardcoded I/O addresses, but they are all below
+> the PCI I/O virtual address range, and are not affected by that change.
+> 
+> For the innovator FPGA access, this was ok, it uses the correct address
+> in the OMAP1_IO_OFFSET range.
 
-Get rid of the iommu_pass_through variable and request
-passthrough mode via the new iommu core function.
+OK thanks for checking. I tried to apply your virtual address patch to
+test boot it, but could not get it to apply. What tree is it against?
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/amd_iommu.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Regards,
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index b607a92791d3..7434b34d7a94 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -436,7 +436,7 @@ static int iommu_init_device(struct device *dev)
- 	 * invalid address), we ignore the capability for the device so
- 	 * it'll be forced to go into translation mode.
- 	 */
--	if ((iommu_pass_through || !amd_iommu_force_isolation) &&
-+	if ((iommu_default_passthrough() || !amd_iommu_force_isolation) &&
- 	    dev_is_pci(dev) && pci_iommuv2_capable(to_pci_dev(dev))) {
- 		struct amd_iommu *iommu;
- 
-@@ -2226,7 +2226,7 @@ static int amd_iommu_add_device(struct device *dev)
- 
- 	BUG_ON(!dev_data);
- 
--	if (iommu_pass_through || dev_data->iommu_v2)
-+	if (dev_data->iommu_v2)
- 		iommu_request_dm_for_dev(dev);
- 
- 	/* Domains are initialized for this device - have a look what we ended up with */
-@@ -2805,7 +2805,7 @@ int __init amd_iommu_init_api(void)
- 
- int __init amd_iommu_init_dma_ops(void)
- {
--	swiotlb        = (iommu_pass_through || sme_me_mask) ? 1 : 0;
-+	swiotlb        = (iommu_default_passthrough() || sme_me_mask) ? 1 : 0;
- 	iommu_detected = 1;
- 
- 	if (amd_iommu_unmap_flush)
--- 
-2.17.1
-
+Tony
