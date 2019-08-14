@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 046F3C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18968C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C677920843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D817F2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749152;
-	bh=/gJJeJ8vYa7uoBni5qb8RxQkNy0sO6Fbd2ouTRdwYA4=;
+	s=default; t=1565749155;
+	bh=t9nh+fDzLR+lZdA6UiSx0HNU8IeirI5p/eg+9P6Z6ok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1BhWby3TYBXet3YrEdSOrlEvKC3VJlB4IC1Rl0cd8dtyFcw0t7kJNFXUBrX6Yqown
-	 ptlpZaHQVpbCJxyy7csFPhxwBjOJDDSX9ZSiB0ehPL5NBnXb0U2pcNeHp9tsV4z6mN
-	 JaGLsO2D00VdkkwFMtX3zYYVTW8Guy90iTPwEq58=
+	b=NTVmJm8njiFF8LyQI3CLK/OVUlKbmYiAvAB41jy3aocgGJsUbplkrbxgtymYGAq/5
+	 2MjgghbBBmqI4o4Ncre2EJqsAR4Pb1UviXv3E9LyGh33yRYGiaeiEjGvtMebtUqrDo
+	 rGiMMhpAzsrMfwrZzvmvmidxaMIkC2YKPWTglOAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbfHNCTL (ORCPT
+        id S1729666AbfHNCTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:19:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49908 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:19:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729588AbfHNCS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:18:59 -0400
+        id S1729606AbfHNCTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:19:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EA672084D;
-        Wed, 14 Aug 2019 02:18:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58B4B20843;
+        Wed, 14 Aug 2019 02:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749138;
-        bh=/gJJeJ8vYa7uoBni5qb8RxQkNy0sO6Fbd2ouTRdwYA4=;
+        s=default; t=1565749141;
+        bh=t9nh+fDzLR+lZdA6UiSx0HNU8IeirI5p/eg+9P6Z6ok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YjaKZy9n2GiwP6/zGrrJNFYQjlZIqNqeixtoyGRESYhWN8fAp/KTOS1H/xezghGjF
-         dkV5tz5rG/DSyD1hKXpQ54cJT6ZRNn7J8t02imY6CV1e1lmPCuOMBctRuCKfdSvG/D
-         Ha4am6QaxtlFn7+nbWJBasSDgP/UNzMYayBnJ3jk=
+        b=fCmImOED50zP7P7cPfG8cjqXHB3RdLTNzRuzGAVS2Fa3eKQG7mUiv8TaVogKrniUt
+         6LIyWVXZZxAVAW39Ms9mhQuGaFJmWXzRS1i9HDG+4sIRDWtewoJYdyTABz+Gxqlizo
+         PwaLY74QlBep4Eb3t4qa+uvdvkK/8LiLnSZ1UMgY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 15/44] isdn: mISDN: hfcsusb: Fix possible null-pointer dereferences in start_isoc_chain()
-Date:   Tue, 13 Aug 2019 22:18:04 -0400
-Message-Id: <20190814021834.16662-15-sashal@kernel.org>
+Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Shijie Luo <luoshijie1@huawei.com>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 16/44] netfilter: ipset: Fix rename concurrency with listing
+Date:   Tue, 13 Aug 2019 22:18:05 -0400
+Message-Id: <20190814021834.16662-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021834.16662-1-sashal@kernel.org>
 References: <20190814021834.16662-1-sashal@kernel.org>
@@ -59,48 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Jozsef Kadlecsik <kadlec@netfilter.org>
 
-[ Upstream commit a0d57a552b836206ad7705a1060e6e1ce5a38203 ]
+[ Upstream commit 6c1f7e2c1b96ab9b09ac97c4df2bd9dc327206f6 ]
 
-In start_isoc_chain(), usb_alloc_urb() on line 1392 may fail
-and return NULL. At this time, fifo->iso[i].urb is assigned to NULL.
+Shijie Luo reported that when stress-testing ipset with multiple concurrent
+create, rename, flush, list, destroy commands, it can result
 
-Then, fifo->iso[i].urb is used at some places, such as:
-LINE 1405:    fill_isoc_urb(fifo->iso[i].urb, ...)
-                  urb->number_of_packets = num_packets;
-                  urb->transfer_flags = URB_ISO_ASAP;
-                  urb->actual_length = 0;
-                  urb->interval = interval;
-LINE 1416:    fifo->iso[i].urb->...
-LINE 1419:    fifo->iso[i].urb->...
+ipset <version>: Broken LIST kernel message: missing DATA part!
 
-Thus, possible null-pointer dereferences may occur.
+error messages and broken list results. The problem was the rename operation
+was not properly handled with respect of listing. The patch fixes the issue.
 
-To fix these bugs, "continue" is added to avoid using fifo->iso[i].urb
-when it is NULL.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Shijie Luo <luoshijie1@huawei.com>
+Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/hardware/mISDN/hfcsusb.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/netfilter/ipset/ip_set_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
-index 35983c7c31375..163bc482b2a78 100644
---- a/drivers/isdn/hardware/mISDN/hfcsusb.c
-+++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
-@@ -1402,6 +1402,7 @@ start_isoc_chain(struct usb_fifo *fifo, int num_packets_per_urb,
- 				printk(KERN_DEBUG
- 				       "%s: %s: alloc urb for fifo %i failed",
- 				       hw->name, __func__, fifo->fifonum);
-+				continue;
- 			}
- 			fifo->iso[i].owner_fifo = (struct usb_fifo *) fifo;
- 			fifo->iso[i].indx = i;
+diff --git a/net/netfilter/ipset/ip_set_core.c b/net/netfilter/ipset/ip_set_core.c
+index a3f1dc7cf5382..dbf17d3596a69 100644
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -1128,7 +1128,7 @@ static int ip_set_rename(struct net *net, struct sock *ctnl,
+ 		return -ENOENT;
+ 
+ 	write_lock_bh(&ip_set_ref_lock);
+-	if (set->ref != 0) {
++	if (set->ref != 0 || set->ref_netlink != 0) {
+ 		ret = -IPSET_ERR_REFERENCED;
+ 		goto out;
+ 	}
 -- 
 2.20.1
 
