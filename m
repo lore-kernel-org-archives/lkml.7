@@ -2,233 +2,223 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8319CC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B2CC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F11D20844
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756C6206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="LPRq1AFI"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Hi7fJNvM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfHNJuJ (ORCPT
+        id S1726932AbfHNJwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:50:09 -0400
-Received: from mail-eopbgr60128.outbound.protection.outlook.com ([40.107.6.128]:5822
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725280AbfHNJuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:50:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y40dmh2T6Dqf0ZQTWWxmjjiRYx3Z/GNNvPo+tOPubMLOg6IZnX1Uj3MBm2I72B++EhoXe+eL7tPcBcal3yBDqkT6balpq1UgB7Zspl04eXTp0DSA4UZk4Yq6XucYYKnp+AhYlnvz0ow/7e7hdSPcEPbLG85pHM9jKS7OetBbLZCaDKuxPKNNMh5OM3U27s1S28gdXniQZwjziVIUQHfoOzSJlTkpvUdcohu6LWeBS5cCZ4qtDxYwNjIIbxdR2k70iHy2vtvFCvF1dcqyPXwrlYj8OVhKB2nsBpRhy+yoWA5zOhvoQ1jemUCBFnmmwDzMKiwMFwQG0tyvf+Y8MpszzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QFUyq921WRy9WQzWlBZuwEpU0NpSxRB9HJrKw7rxQkA=;
- b=EQdBPwxdqcrlYitH7di9D36XelhT4JjTk0ZyVadO1p0CUStFTqUC9f4aTEgJ+Z2brP7ZxzE+1oGhuYUm9O/boNMNd3yaag/t4jEkLCHfH3y6KSsdql9RefaSulyCpdcoG/Q9taB5fkLZo/vIefceR78y8mtKg7lDI9LzHv17KeLElfLWdvW5i8kIJVnNBoIoVp2InurxFb32J1jtFEpZpQpNPu2lGsaHB/Ce8/AEUFbfHr61zAi+c/4TxTIbgYzYcGXvrAS+hfYmtgGqKdfxFkLkISdSM5bRpeKvEUTDeGJvUwgIJmrcG9UyVj+wYum95r8fF/Ty+bd+qpCUZSYAnQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QFUyq921WRy9WQzWlBZuwEpU0NpSxRB9HJrKw7rxQkA=;
- b=LPRq1AFICWkhCnTSBuo2DZF/Q2CoBU0srASzou4LAJA62kLaHmSHAb6ncRb0TMiep2IpVmgK8eRAjEz5vlesJCvcGyCh5/B7vkJ05lVd9aoMfCzCArNaG6JcuxPGai72WRXdztv1Sxy+0FsnnMtDurMXfQXXkZvGKDNXBJGh+ys=
-Received: from DB7PR08MB4618.eurprd08.prod.outlook.com (20.178.85.31) by
- DB7PR08MB3497.eurprd08.prod.outlook.com (20.177.120.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.21; Wed, 14 Aug 2019 09:50:03 +0000
-Received: from DB7PR08MB4618.eurprd08.prod.outlook.com
- ([fe80::5d1c:472f:6617:588]) by DB7PR08MB4618.eurprd08.prod.outlook.com
- ([fe80::5d1c:472f:6617:588%4]) with mapi id 15.20.2157.022; Wed, 14 Aug 2019
- 09:50:03 +0000
-From:   Pavel Emelianov <xemul@virtuozzo.com>
-To:     Adrian Reber <areber@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Andrei Vagin (C)" <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v6 1/2] fork: extend clone3() to support setting a PID
-Thread-Topic: [PATCH v6 1/2] fork: extend clone3() to support setting a PID
-Thread-Index: AQHVUoWksLQOkg3SykaYXzh+RjIGOg==
-Date:   Wed, 14 Aug 2019 09:50:03 +0000
-Message-ID: <6a65c4c4-6860-b042-a0bf-b3f8e9b277af@virtuozzo.com>
-References: <20190812200939.23784-1-areber@redhat.com>
-In-Reply-To: <20190812200939.23784-1-areber@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [91.193.176.213]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-x-clientproxiedby: HE1PR1001CA0023.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:3:f7::33) To DB7PR08MB4618.eurprd08.prod.outlook.com
- (2603:10a6:10:34::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xemul@virtuozzo.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 05e546ba-0bcc-4426-376c-08d7209cc762
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB7PR08MB3497;
-x-ms-traffictypediagnostic: DB7PR08MB3497:
-x-ld-processed: 0bc7f26d-0264-416e-a6fc-8352af79c58f,ExtAddr
-x-microsoft-antispam-prvs: <DB7PR08MB34975729022E289922797971B0AD0@DB7PR08MB3497.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01294F875B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(366004)(136003)(39850400004)(376002)(199004)(189003)(66476007)(76176011)(14454004)(229853002)(66556008)(7736002)(53546011)(6116002)(65826007)(66946007)(186003)(64756008)(31696002)(64126003)(386003)(6506007)(26005)(36756003)(11346002)(3846002)(65806001)(486006)(6436002)(65956001)(66446008)(52116002)(446003)(8936002)(2906002)(476003)(86362001)(2616005)(66066001)(31686004)(102836004)(110136005)(7416002)(53936002)(54906003)(58126008)(478600001)(14444005)(71190400001)(316002)(25786009)(4326008)(5660300002)(71200400001)(81156014)(81166006)(8676002)(305945005)(6246003)(256004)(6486002)(6512007)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:DB7PR08MB3497;H:DB7PR08MB4618.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: virtuozzo.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: XvCNGUI+y/FJWzoiIA+yiZ62jPnxeW9SrWuHbyaqgopqgLreWQLElmYxxzSfSEJh8CjL0jE3Y9EA1ht/5PDUet7U1XkrhN88tnc/F3w3NfLIwKbJ6LQveVUuLglrnAiSnJfPNg3h4RDMJtnyxP9XWgMAOBa9xmjISNNjVi3yYrz3hPry7wusHl192lFVvNt0WUV4V9jChilLJXIF8RVekqg0BBl5mnWUcPvItVEUxHxQhlSwVOLxqEYJFZmij1JgWXLSplI/ccSdmLA3elxtsQ4BsyQeXQMKoDWRyEuh8ta/AIeRpA3pABCddjeWNNtEoruJKVUMUIIFYsJO/MTde752ZLmsIXvs6nWkrhOU+buSTut8at9+VsGwYXe+z6Cu2PJspwt6AbxHLfUxEvcCRM+7YztHe0LidtzQYfWfRY4=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5252D31F39EF0E449266327E109DC250@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05e546ba-0bcc-4426-376c-08d7209cc762
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2019 09:50:03.0662
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZMr4OHF4+wd51YMErE8BaLEQML+FdDpZPmuZITlIcvkY3YOj9j53Jh2NokC0zCr2mhalVnbl/zkHNKrO47nb/w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3497
+        Wed, 14 Aug 2019 05:52:02 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:30383 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725888AbfHNJwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 05:52:02 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 467lH26fxCz9tyn5;
+        Wed, 14 Aug 2019 11:51:58 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Hi7fJNvM; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id gbc1dtRvE0Zv; Wed, 14 Aug 2019 11:51:58 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 467lH25WtWz9tyn3;
+        Wed, 14 Aug 2019 11:51:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1565776318; bh=aiDVM1gpTs0t8Rh2Dzwq7qzoObtOaz4J0RXI1KzQaco=;
+        h=From:Subject:To:Cc:Date:From;
+        b=Hi7fJNvMPr4r6t/C9eAxTFFr+yuFxXgfQkwqRhNQaCQvisy9r3xXZ4G4tWvjuKodR
+         YcSFbdPdYtKWaYNnhB8/+uaiD99fhIOw6fS1Tsi16B7hL4tupqjOo2fmjp1Gm2T0U5
+         Fd+l68WQzXF4OA0dX3YyWtmbJ+x4O76UySF+ry+0=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5CB638B7F2;
+        Wed, 14 Aug 2019 11:51:59 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Su5vGXgGoMrG; Wed, 14 Aug 2019 11:51:59 +0200 (CEST)
+Received: from pc17473vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 07B1E8B761;
+        Wed, 14 Aug 2019 11:51:58 +0200 (CEST)
+Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 921576B6B8; Wed, 14 Aug 2019 09:51:58 +0000 (UTC)
+Message-Id: <b0bf1ef9840c13dad22c72ae0b7b2d56adf9a98f.1565776115.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2 1/2] powerpc: rewrite LOAD_REG_IMMEDIATE() as an
+ intelligent macro
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        segher@kernel.crashing.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Wed, 14 Aug 2019 09:51:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOC8xMi8xOSAxMTowOSBQTSwgQWRyaWFuIFJlYmVyIHdyb3RlOg0KPiBUaGUgbWFpbiBtb3Rp
-dmF0aW9uIHRvIGFkZCBzZXRfdGlkIHRvIGNsb25lMygpIGlzIENSSVUuDQo+IA0KPiBUbyByZXN0
-b3JlIGEgcHJvY2VzcyB3aXRoIHRoZSBzYW1lIFBJRC9USUQgQ1JJVSBjdXJyZW50bHkgdXNlcw0K
-PiAvcHJvYy9zeXMva2VybmVsL25zX2xhc3RfcGlkLiBJdCB3cml0ZXMgdGhlIGRlc2lyZWQgKFBJ
-RCAtIDEpIHRvDQo+IG5zX2xhc3RfcGlkIGFuZCB0aGVuIChxdWlja2x5KSBkb2VzIGEgY2xvbmUo
-KS4gVGhpcyB3b3JrcyBtb3N0IG9mIHRoZQ0KPiB0aW1lLCBidXQgaXQgaXMgcmFjeS4gSXQgaXMg
-YWxzbyBzbG93IGFzIGl0IHJlcXVpcmVzIG11bHRpcGxlIHN5c2NhbGxzLg0KPiANCj4gRXh0ZW5k
-aW5nIGNsb25lMygpIHRvIHN1cHBvcnQgc2V0X3RpZCBtYWtlcyBpdCBwb3NzaWJsZSByZXN0b3Jl
-IGENCj4gcHJvY2VzcyB1c2luZyBDUklVIHdpdGhvdXQgYWNjZXNzaW5nIC9wcm9jL3N5cy9rZXJu
-ZWwvbnNfbGFzdF9waWQgYW5kDQo+IHJhY2UgZnJlZSAoYXMgbG9uZyBhcyB0aGUgZGVzaXJlZCBQ
-SUQvVElEIGlzIGF2YWlsYWJsZSkuDQo+IA0KPiBUaGlzIGNsb25lMygpIGV4dGVuc2lvbiBwbGFj
-ZXMgdGhlIHNhbWUgcmVzdHJpY3Rpb25zIChDQVBfU1lTX0FETUlOKQ0KPiBvbiBjbG9uZTMoKSB3
-aXRoIHNldF90aWQgYXMgdGhleSBhcmUgY3VycmVudGx5IGluIHBsYWNlIGZvciBuc19sYXN0X3Bp
-ZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFkcmlhbiBSZWJlciA8YXJlYmVyQHJlZGhhdC5jb20+
-DQoNCkFja2VkLWJ5OiBQYXZlbCBFbWVseWFub3YgPHhlbXVsQG9wZW52ei5vcmc+DQoNCj4gLS0t
-DQo+IHYyOg0KPiAgLSBSZW1vdmVkIChzaXplIDwgc2l6ZW9mKHN0cnVjdCBjbG9uZV9hcmdzKSkg
-YXMgZGlzY3Vzc2VkIHdpdGgNCj4gICAgQ2hyaXN0aWFuIGFuZCBEbWl0cnkNCj4gIC0gQWRkZWQg
-Y29tbWVudCB0byAoKHNldF90aWQgIT0gMSkgJiYgaWRyX2dldF9jdXJzb3IoKSA8PSAxKSAoT2xl
-ZykNCj4gIC0gVXNlIGlkcl9hbGxvYygpIGluc3RlYWQgb2YgaWRyX2FsbG9jX2N5Y2xpYygpIChP
-bGVnKQ0KPiANCj4gdjM6DQo+ICAtIFJldHVybiBFRVhJU1QgaWYgUElEIGlzIGFscmVhZHkgaW4g
-dXNlIChDaHJpc3RpYW4pDQo+ICAtIERyb3AgQ0xPTkVfU0VUX1RJRCAoQ2hyaXN0aWFuIGFuZCBP
-bGVnKQ0KPiAgLSBVc2UgaWRyX2lzX2VtcHR5KCkgaW5zdGVhZCBvZiBpZHJfZ2V0X2N1cnNvcigp
-IChPbGVnKQ0KPiAgLSBIYW5kbGUgZGlmZmVyZW50IGBzdHJ1Y3QgY2xvbmVfYXJnc2Agc2l6ZXMg
-KERtaXRyeSkNCj4gDQo+IHY0Og0KPiAgLSBSZXdvcmsgc3RydWN0IHNpemUgY2hlY2sgd2l0aCBk
-ZWZpbmVzIChDaHJpc3RpYW4pDQo+ICAtIFJlZHVjZSBudW1iZXIgb2Ygc2V0X3RpZCBjaGVja3Mg
-KE9sZWcpDQo+ICAtIExlc3MgcGFyZW50aGVzZXMgYW5kIG1vcmUgcm9idXN0IGNvZGUgKE9sZWcp
-DQo+ICAtIERvIG5zX2NhcGFibGUoKSBvbiBjb3JyZWN0IHVzZXJfbnMgKE9sZWcsIENocmlzdGlh
-bikNCj4gDQo+IHY1Og0KPiAgLSBtYWtlIHNldF90aWQgY2hlY2tzIGVhcmxpZXIgaW4gYWxsb2Nf
-cGlkKCkgKENocmlzdGlhbikNCj4gIC0gcmVtb3ZlIHVubmVjZXNzYXJ5IGNvbW1lbnQgYW5kIHN0
-cnVjdCBzaXplIGNoZWNrIChDaHJpc3RpYW4pDQo+IA0KPiB2NjoNCj4gIC0gcmVtb3ZlIENMT05F
-X1NFVF9USUQgZnJvbSBkZXNjcmlwdGlvbiAoQ2hyaXN0aWFuKQ0KPiAgLSBhZGQgY2xvbmUzKCkg
-dGVzdHMgZm9yIGRpZmZlcmVudCBjbG9uZV9hcmdzIHNpemVzIChDaHJpc3RpYW4pDQo+ICAtIG1v
-dmUgbW9yZSBzZXRfdGlkIGNoZWNrcyB0byBhbGxvY19waWQoKSAoT2xlZykNCj4gIC0gbWFrZSBh
-bGwgc2V0X3RpZCBjaGVja3MgbG9ja2xlc3MgKE9sZWcpDQo+IC0tLQ0KPiAgaW5jbHVkZS9saW51
-eC9waWQuaCAgICAgICAgfCAgMiArLQ0KPiAgaW5jbHVkZS9saW51eC9zY2hlZC90YXNrLmggfCAg
-MSArDQo+ICBpbmNsdWRlL3VhcGkvbGludXgvc2NoZWQuaCB8ICAxICsNCj4gIGtlcm5lbC9mb3Jr
-LmMgICAgICAgICAgICAgIHwgMTQgKysrKysrKysrKysrLS0NCj4gIGtlcm5lbC9waWQuYyAgICAg
-ICAgICAgICAgIHwgMzcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLQ0KPiAg
-NSBmaWxlcyBjaGFuZ2VkLCA0NSBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkNCj4gDQo+
-IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3BpZC5oIGIvaW5jbHVkZS9saW51eC9waWQuaA0K
-PiBpbmRleCAyYTgzZTQzNGRiOWQuLjA1MjAwMGRiMGNlZCAxMDA2NDQNCj4gLS0tIGEvaW5jbHVk
-ZS9saW51eC9waWQuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L3BpZC5oDQo+IEBAIC0xMTYsNyAr
-MTE2LDcgQEAgZXh0ZXJuIHN0cnVjdCBwaWQgKmZpbmRfdnBpZChpbnQgbnIpOw0KPiAgZXh0ZXJu
-IHN0cnVjdCBwaWQgKmZpbmRfZ2V0X3BpZChpbnQgbnIpOw0KPiAgZXh0ZXJuIHN0cnVjdCBwaWQg
-KmZpbmRfZ2VfcGlkKGludCBuciwgc3RydWN0IHBpZF9uYW1lc3BhY2UgKik7DQo+ICANCj4gLWV4
-dGVybiBzdHJ1Y3QgcGlkICphbGxvY19waWQoc3RydWN0IHBpZF9uYW1lc3BhY2UgKm5zKTsNCj4g
-K2V4dGVybiBzdHJ1Y3QgcGlkICphbGxvY19waWQoc3RydWN0IHBpZF9uYW1lc3BhY2UgKm5zLCBw
-aWRfdCBzZXRfdGlkKTsNCj4gIGV4dGVybiB2b2lkIGZyZWVfcGlkKHN0cnVjdCBwaWQgKnBpZCk7
-DQo+ICBleHRlcm4gdm9pZCBkaXNhYmxlX3BpZF9hbGxvY2F0aW9uKHN0cnVjdCBwaWRfbmFtZXNw
-YWNlICpucyk7DQo+ICANCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc2NoZWQvdGFzay5o
-IGIvaW5jbHVkZS9saW51eC9zY2hlZC90YXNrLmgNCj4gaW5kZXggMDQ5NzA5MWU0MGMxLi40ZjJh
-ODA1NjQzMzIgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvc2NoZWQvdGFzay5oDQo+ICsr
-KyBiL2luY2x1ZGUvbGludXgvc2NoZWQvdGFzay5oDQo+IEBAIC0yNiw2ICsyNiw3IEBAIHN0cnVj
-dCBrZXJuZWxfY2xvbmVfYXJncyB7DQo+ICAJdW5zaWduZWQgbG9uZyBzdGFjazsNCj4gIAl1bnNp
-Z25lZCBsb25nIHN0YWNrX3NpemU7DQo+ICAJdW5zaWduZWQgbG9uZyB0bHM7DQo+ICsJcGlkX3Qg
-c2V0X3RpZDsNCj4gIH07DQo+ICANCj4gIC8qDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkv
-bGludXgvc2NoZWQuaCBiL2luY2x1ZGUvdWFwaS9saW51eC9zY2hlZC5oDQo+IGluZGV4IGIzMTA1
-YWMxMzgxYS4uZTFjZTEwM2EyYzQ3IDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL3VhcGkvbGludXgv
-c2NoZWQuaA0KPiArKysgYi9pbmNsdWRlL3VhcGkvbGludXgvc2NoZWQuaA0KPiBAQCAtNDUsNiAr
-NDUsNyBAQCBzdHJ1Y3QgY2xvbmVfYXJncyB7DQo+ICAJX19hbGlnbmVkX3U2NCBzdGFjazsNCj4g
-IAlfX2FsaWduZWRfdTY0IHN0YWNrX3NpemU7DQo+ICAJX19hbGlnbmVkX3U2NCB0bHM7DQo+ICsJ
-X19hbGlnbmVkX3U2NCBzZXRfdGlkOw0KPiAgfTsNCj4gIA0KPiAgLyoNCj4gZGlmZiAtLWdpdCBh
-L2tlcm5lbC9mb3JrLmMgYi9rZXJuZWwvZm9yay5jDQo+IGluZGV4IDI4NTJkMGU3NmVhMy4uODMx
-N2Q0MDhhOGQ2IDEwMDY0NA0KPiAtLS0gYS9rZXJuZWwvZm9yay5jDQo+ICsrKyBiL2tlcm5lbC9m
-b3JrLmMNCj4gQEAgLTExNyw2ICsxMTcsMTEgQEANCj4gICAqLw0KPiAgI2RlZmluZSBNQVhfVEhS
-RUFEUyBGVVRFWF9USURfTUFTSw0KPiAgDQo+ICsvKg0KPiArICogRm9yIGRpZmZlcmVudCBzaXpl
-cyBvZiBzdHJ1Y3QgY2xvbmVfYXJncw0KPiArICovDQo+ICsjZGVmaW5lIENMT05FM19BUkdTX1NJ
-WkVfVjAgNjQNCj4gKw0KPiAgLyoNCj4gICAqIFByb3RlY3RlZCBjb3VudGVycyBieSB3cml0ZV9s
-b2NrX2lycSgmdGFza2xpc3RfbG9jaykNCj4gICAqLw0KPiBAQCAtMjAzMSw3ICsyMDM2LDcgQEAg
-c3RhdGljIF9fbGF0ZW50X2VudHJvcHkgc3RydWN0IHRhc2tfc3RydWN0ICpjb3B5X3Byb2Nlc3Mo
-DQo+ICAJc3RhY2tsZWFrX3Rhc2tfaW5pdChwKTsNCj4gIA0KPiAgCWlmIChwaWQgIT0gJmluaXRf
-c3RydWN0X3BpZCkgew0KPiAtCQlwaWQgPSBhbGxvY19waWQocC0+bnNwcm94eS0+cGlkX25zX2Zv
-cl9jaGlsZHJlbik7DQo+ICsJCXBpZCA9IGFsbG9jX3BpZChwLT5uc3Byb3h5LT5waWRfbnNfZm9y
-X2NoaWxkcmVuLCBhcmdzLT5zZXRfdGlkKTsNCj4gIAkJaWYgKElTX0VSUihwaWQpKSB7DQo+ICAJ
-CQlyZXR2YWwgPSBQVFJfRVJSKHBpZCk7DQo+ICAJCQlnb3RvIGJhZF9mb3JrX2NsZWFudXBfdGhy
-ZWFkOw0KPiBAQCAtMjUzNSw5ICsyNTQwLDEzIEBAIG5vaW5saW5lIHN0YXRpYyBpbnQgY29weV9j
-bG9uZV9hcmdzX2Zyb21fdXNlcihzdHJ1Y3Qga2VybmVsX2Nsb25lX2FyZ3MgKmthcmdzLA0KPiAg
-CWlmICh1bmxpa2VseShzaXplID4gUEFHRV9TSVpFKSkNCj4gIAkJcmV0dXJuIC1FMkJJRzsNCj4g
-IA0KPiAtCWlmICh1bmxpa2VseShzaXplIDwgc2l6ZW9mKHN0cnVjdCBjbG9uZV9hcmdzKSkpDQo+
-ICsJaWYgKHVubGlrZWx5KHNpemUgPCBDTE9ORTNfQVJHU19TSVpFX1YwKSkNCj4gIAkJcmV0dXJu
-IC1FSU5WQUw7DQo+ICANCj4gKwlpZiAoc2l6ZSA8IHNpemVvZihzdHJ1Y3QgY2xvbmVfYXJncykp
-DQo+ICsJCW1lbXNldCgodm9pZCAqKSZhcmdzICsgc2l6ZSwgMCwNCj4gKwkJCQlzaXplb2Yoc3Ry
-dWN0IGNsb25lX2FyZ3MpIC0gc2l6ZSk7DQo+ICsNCj4gIAlpZiAodW5saWtlbHkoIWFjY2Vzc19v
-ayh1YXJncywgc2l6ZSkpKQ0KPiAgCQlyZXR1cm4gLUVGQVVMVDsNCj4gIA0KPiBAQCAtMjU3MSw2
-ICsyNTgwLDcgQEAgbm9pbmxpbmUgc3RhdGljIGludCBjb3B5X2Nsb25lX2FyZ3NfZnJvbV91c2Vy
-KHN0cnVjdCBrZXJuZWxfY2xvbmVfYXJncyAqa2FyZ3MsDQo+ICAJCS5zdGFjawkJPSBhcmdzLnN0
-YWNrLA0KPiAgCQkuc3RhY2tfc2l6ZQk9IGFyZ3Muc3RhY2tfc2l6ZSwNCj4gIAkJLnRscwkJPSBh
-cmdzLnRscywNCj4gKwkJLnNldF90aWQJPSBhcmdzLnNldF90aWQsDQo+ICAJfTsNCj4gIA0KPiAg
-CXJldHVybiAwOw0KPiBkaWZmIC0tZ2l0IGEva2VybmVsL3BpZC5jIGIva2VybmVsL3BpZC5jDQo+
-IGluZGV4IDBhOWYyZTQzNzIxNy4uNWNkYWI3M2I5MDk0IDEwMDY0NA0KPiAtLS0gYS9rZXJuZWwv
-cGlkLmMNCj4gKysrIGIva2VybmVsL3BpZC5jDQo+IEBAIC0xNTcsNyArMTU3LDcgQEAgdm9pZCBm
-cmVlX3BpZChzdHJ1Y3QgcGlkICpwaWQpDQo+ICAJY2FsbF9yY3UoJnBpZC0+cmN1LCBkZWxheWVk
-X3B1dF9waWQpOw0KPiAgfQ0KPiAgDQo+IC1zdHJ1Y3QgcGlkICphbGxvY19waWQoc3RydWN0IHBp
-ZF9uYW1lc3BhY2UgKm5zKQ0KPiArc3RydWN0IHBpZCAqYWxsb2NfcGlkKHN0cnVjdCBwaWRfbmFt
-ZXNwYWNlICpucywgaW50IHNldF90aWQpDQo+ICB7DQo+ICAJc3RydWN0IHBpZCAqcGlkOw0KPiAg
-CWVudW0gcGlkX3R5cGUgdHlwZTsNCj4gQEAgLTE2Niw2ICsxNjYsMTYgQEAgc3RydWN0IHBpZCAq
-YWxsb2NfcGlkKHN0cnVjdCBwaWRfbmFtZXNwYWNlICpucykNCj4gIAlzdHJ1Y3QgdXBpZCAqdXBp
-ZDsNCj4gIAlpbnQgcmV0dmFsID0gLUVOT01FTTsNCj4gIA0KPiArCWlmIChzZXRfdGlkKSB7DQo+
-ICsJCWlmIChzZXRfdGlkIDwgMCB8fCBzZXRfdGlkID49IHBpZF9tYXgpDQo+ICsJCQlyZXR1cm4g
-RVJSX1BUUigtRUlOVkFMKTsNCj4gKwkJLyogQWxzbyBmYWlsIGlmIGEgUElEICE9IDEgaXMgcmVx
-dWVzdGVkIGFuZCBubyBQSUQgMSBleGlzdHMgKi8NCj4gKwkJaWYgKHNldF90aWQgIT0gMSAmJiAh
-bnMtPmNoaWxkX3JlYXBlcikNCj4gKwkJCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOw0KPiArCQlp
-ZiAoIW5zX2NhcGFibGUobnMtPnVzZXJfbnMsIENBUF9TWVNfQURNSU4pKQ0KPiArCQkJcmV0dXJu
-IEVSUl9QVFIoLUVQRVJNKTsNCj4gKwl9DQo+ICsNCj4gIAlwaWQgPSBrbWVtX2NhY2hlX2FsbG9j
-KG5zLT5waWRfY2FjaGVwLCBHRlBfS0VSTkVMKTsNCj4gIAlpZiAoIXBpZCkNCj4gIAkJcmV0dXJu
-IEVSUl9QVFIocmV0dmFsKTsNCj4gQEAgLTE4NiwxMiArMTk2LDI1IEBAIHN0cnVjdCBwaWQgKmFs
-bG9jX3BpZChzdHJ1Y3QgcGlkX25hbWVzcGFjZSAqbnMpDQo+ICAJCWlmIChpZHJfZ2V0X2N1cnNv
-cigmdG1wLT5pZHIpID4gUkVTRVJWRURfUElEUykNCj4gIAkJCXBpZF9taW4gPSBSRVNFUlZFRF9Q
-SURTOw0KPiAgDQo+IC0JCS8qDQo+IC0JCSAqIFN0b3JlIGEgbnVsbCBwb2ludGVyIHNvIGZpbmRf
-cGlkX25zIGRvZXMgbm90IGZpbmQNCj4gLQkJICogYSBwYXJ0aWFsbHkgaW5pdGlhbGl6ZWQgUElE
-IChzZWUgYmVsb3cpLg0KPiAtCQkgKi8NCj4gLQkJbnIgPSBpZHJfYWxsb2NfY3ljbGljKCZ0bXAt
-PmlkciwgTlVMTCwgcGlkX21pbiwNCj4gLQkJCQkgICAgICBwaWRfbWF4LCBHRlBfQVRPTUlDKTsN
-Cj4gKwkJaWYgKHNldF90aWQpIHsNCj4gKwkJCW5yID0gaWRyX2FsbG9jKCZ0bXAtPmlkciwgTlVM
-TCwgc2V0X3RpZCwNCj4gKwkJCQkJc2V0X3RpZCArIDEsIEdGUF9BVE9NSUMpOw0KPiArCQkJLyoN
-Cj4gKwkJCSAqIElmIEVOT1NQQyBpcyByZXR1cm5lZCBpdCBtZWFucyB0aGF0IHRoZSBQSUQgaXMN
-Cj4gKwkJCSAqIGFscmVheSBpbiB1c2UuIFJldHVybiBFRVhJU1QgaW4gdGhhdCBjYXNlLg0KPiAr
-CQkJICovDQo+ICsJCQlpZiAobnIgPT0gLUVOT1NQQykNCj4gKwkJCQluciA9IC1FRVhJU1Q7DQo+
-ICsJCQkvKiBPbmx5IHVzZSBzZXRfdGlkIGZvciBvbmUgUElEIG5hbWVzcGFjZS4gKi8NCj4gKwkJ
-CXNldF90aWQgPSAwOw0KPiArCQl9IGVsc2Ugew0KPiArCQkJLyoNCj4gKwkJCSAqIFN0b3JlIGEg
-bnVsbCBwb2ludGVyIHNvIGZpbmRfcGlkX25zIGRvZXMgbm90IGZpbmQNCj4gKwkJCSAqIGEgcGFy
-dGlhbGx5IGluaXRpYWxpemVkIFBJRCAoc2VlIGJlbG93KS4NCj4gKwkJCSAqLw0KPiArCQkJbnIg
-PSBpZHJfYWxsb2NfY3ljbGljKCZ0bXAtPmlkciwgTlVMTCwgcGlkX21pbiwNCj4gKwkJCQkJICAg
-ICAgcGlkX21heCwgR0ZQX0FUT01JQyk7DQo+ICsJCX0NCj4gIAkJc3Bpbl91bmxvY2tfaXJxKCZw
-aWRtYXBfbG9jayk7DQo+ICAJCWlkcl9wcmVsb2FkX2VuZCgpOw0KPiAgDQo+IA0KDQo=
+Today LOAD_REG_IMMEDIATE() is a basic #define which loads all
+parts on a value into a register, including the parts that are NUL.
+
+This means always 2 instructions on PPC32 and always 5 instructions
+on PPC64. And those instructions cannot run in parallele as they are
+updating the same register.
+
+Ex: LOAD_REG_IMMEDIATE(r1,THREAD_SIZE) in head_64.S results in:
+
+3c 20 00 00     lis     r1,0
+60 21 00 00     ori     r1,r1,0
+78 21 07 c6     rldicr  r1,r1,32,31
+64 21 00 00     oris    r1,r1,0
+60 21 40 00     ori     r1,r1,16384
+
+Rewrite LOAD_REG_IMMEDIATE() with GAS macro in order to skip
+the parts that are NUL.
+
+Rename existing LOAD_REG_IMMEDIATE() as LOAD_REG_IMMEDIATE_SYM()
+and use that one for loading value of symbols which are not known
+at compile time.
+
+Now LOAD_REG_IMMEDIATE(r1,THREAD_SIZE) in head_64.S results in:
+
+38 20 40 00     li      r1,16384
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ v2: Fixed the test from (\x) & 0xffffffff to (\x) >= 0x80000000 || (\x) < -0x80000000 in __LOAD_REG_IMMEDIATE()
+
+ arch/powerpc/include/asm/ppc_asm.h   | 42 +++++++++++++++++++++++++++++++-----
+ arch/powerpc/kernel/exceptions-64e.S | 10 ++++-----
+ arch/powerpc/kernel/head_64.S        |  2 +-
+ 3 files changed, 43 insertions(+), 11 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/ppc_asm.h b/arch/powerpc/include/asm/ppc_asm.h
+index e0637730a8e7..bc1385b2f0aa 100644
+--- a/arch/powerpc/include/asm/ppc_asm.h
++++ b/arch/powerpc/include/asm/ppc_asm.h
+@@ -311,13 +311,43 @@ GLUE(.,name):
+ 	addis	reg,reg,(name - 0b)@ha;		\
+ 	addi	reg,reg,(name - 0b)@l;
+ 
+-#ifdef __powerpc64__
+-#ifdef HAVE_AS_ATHIGH
++#if defined(__powerpc64__) && defined(HAVE_AS_ATHIGH)
+ #define __AS_ATHIGH high
+ #else
+ #define __AS_ATHIGH h
+ #endif
+-#define LOAD_REG_IMMEDIATE(reg,expr)		\
++
++.macro __LOAD_REG_IMMEDIATE_32 r, x
++	.if (\x) >= 0x8000 || (\x) < -0x8000
++		lis \r, (\x)@__AS_ATHIGH
++		.if (\x) & 0xffff != 0
++			ori \r, \r, (\x)@l
++		.endif
++	.else
++		li \r, (\x)@l
++	.endif
++.endm
++
++.macro __LOAD_REG_IMMEDIATE r, x
++	.if (\x) >= 0x80000000 || (\x) < -0x80000000
++		__LOAD_REG_IMMEDIATE_32 \r, (\x) >> 32
++		rldicr	\r, \r, 32, 31
++		.if (\x) & 0xffff0000 != 0
++			oris \r, \r, (\x)@__AS_ATHIGH
++		.endif
++		.if (\x) & 0xffff != 0
++			oris \r, \r, (\x)@l
++		.endif
++	.else
++		__LOAD_REG_IMMEDIATE_32 \r, \x
++	.endif
++.endm
++
++#ifdef __powerpc64__
++
++#define LOAD_REG_IMMEDIATE(reg, expr) __LOAD_REG_IMMEDIATE reg, expr
++
++#define LOAD_REG_IMMEDIATE_SYM(reg,expr)	\
+ 	lis     reg,(expr)@highest;		\
+ 	ori     reg,reg,(expr)@higher;	\
+ 	rldicr  reg,reg,32,31;		\
+@@ -335,11 +365,13 @@ GLUE(.,name):
+ 
+ #else /* 32-bit */
+ 
+-#define LOAD_REG_IMMEDIATE(reg,expr)		\
++#define LOAD_REG_IMMEDIATE(reg, expr) __LOAD_REG_IMMEDIATE_32 reg, expr
++
++#define LOAD_REG_IMMEDIATE_SYM(reg,expr)		\
+ 	lis	reg,(expr)@ha;		\
+ 	addi	reg,reg,(expr)@l;
+ 
+-#define LOAD_REG_ADDR(reg,name)		LOAD_REG_IMMEDIATE(reg, name)
++#define LOAD_REG_ADDR(reg,name)		LOAD_REG_IMMEDIATE_SYM(reg, name)
+ 
+ #define LOAD_REG_ADDRBASE(reg, name)	lis	reg,name@ha
+ #define ADDROFF(name)			name@l
+diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/exceptions-64e.S
+index 1cfb3da4a84a..898aae6da167 100644
+--- a/arch/powerpc/kernel/exceptions-64e.S
++++ b/arch/powerpc/kernel/exceptions-64e.S
+@@ -751,8 +751,8 @@ END_FTR_SECTION_IFSET(CPU_FTR_ALTIVEC)
+ 	ld	r14,interrupt_base_book3e@got(r15)
+ 	ld	r15,__end_interrupts@got(r15)
+ #else
+-	LOAD_REG_IMMEDIATE(r14,interrupt_base_book3e)
+-	LOAD_REG_IMMEDIATE(r15,__end_interrupts)
++	LOAD_REG_IMMEDIATE_SYM(r14,interrupt_base_book3e)
++	LOAD_REG_IMMEDIATE_SYM(r15,__end_interrupts)
+ #endif
+ 	cmpld	cr0,r10,r14
+ 	cmpld	cr1,r10,r15
+@@ -821,8 +821,8 @@ kernel_dbg_exc:
+ 	ld	r14,interrupt_base_book3e@got(r15)
+ 	ld	r15,__end_interrupts@got(r15)
+ #else
+-	LOAD_REG_IMMEDIATE(r14,interrupt_base_book3e)
+-	LOAD_REG_IMMEDIATE(r15,__end_interrupts)
++	LOAD_REG_IMMEDIATE_SYM(r14,interrupt_base_book3e)
++	LOAD_REG_IMMEDIATE_SYM(r15,__end_interrupts)
+ #endif
+ 	cmpld	cr0,r10,r14
+ 	cmpld	cr1,r10,r15
+@@ -1449,7 +1449,7 @@ a2_tlbinit_code_start:
+ a2_tlbinit_after_linear_map:
+ 
+ 	/* Now we branch the new virtual address mapped by this entry */
+-	LOAD_REG_IMMEDIATE(r3,1f)
++	LOAD_REG_IMMEDIATE_SYM(r3,1f)
+ 	mtctr	r3
+ 	bctr
+ 
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index 91d297e696dd..1fd44761e997 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -635,7 +635,7 @@ __after_prom_start:
+ 	sub	r5,r5,r11
+ #else
+ 	/* just copy interrupts */
+-	LOAD_REG_IMMEDIATE(r5, FIXED_SYMBOL_ABS_ADDR(__end_interrupts))
++	LOAD_REG_IMMEDIATE_SYM(r5, FIXED_SYMBOL_ABS_ADDR(__end_interrupts))
+ #endif
+ 	b	5f
+ 3:
+-- 
+2.13.3
+
