@@ -2,75 +2,95 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FEAC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B19BC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4172F214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45E512084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 18:02:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nbuuCGGL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbfHNSA5 (ORCPT
+        id S1729070AbfHNSCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 14:00:57 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:52928 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726166AbfHNSA5 (ORCPT
+        Wed, 14 Aug 2019 14:02:10 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46730 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728821AbfHNSCJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 14:00:57 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R281e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=liangyan.peng@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TZUYsGz_1565805622;
-Received: from localhost(mailfrom:liangyan.peng@linux.alibaba.com fp:SMTPD_---0TZUYsGz_1565805622)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 15 Aug 2019 02:00:54 +0800
-From:   Liangyan <liangyan.peng@linux.alibaba.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Cc:     shanpeic@linux.alibaba.com, xlpang@linux.alibaba.com
-Subject: [PATCH] sched/fair: don't assign runtime for throttled cfs_rq
-Date:   Thu, 15 Aug 2019 02:00:21 +0800
-Message-Id: <20190814180021.165389-1-liangyan.peng@linux.alibaba.com>
-X-Mailer: git-send-email 2.14.4.44.g2045bb6
+        Wed, 14 Aug 2019 14:02:09 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q139so5738986pfc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 11:02:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=WfxA1A737XoI5ZZ/Hf4Cr2tS9xoxZFvNR1WhcJSUChE=;
+        b=nbuuCGGLRs2jIpwx5obA8WHvJ1rd4HSPNnsO6jd7X4i8etCRuSwgpoU5UUSuHhgGmB
+         yxxNkVHq72XrgE08a6AU6gQV0mgSYgifC1WnkUrRYPLW5PZa3h88lqtpphXfdJX9HwCP
+         r/KDowHHZ6yYZvOXVfENrcjMJZBXe1xYx6Uso=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=WfxA1A737XoI5ZZ/Hf4Cr2tS9xoxZFvNR1WhcJSUChE=;
+        b=HzcHJbL9Q+GOE0YibvFHuDP8eVkGuyEDvkaJh/PzRUPSkjct/OgixzJH7AOiUODDaX
+         uFCGno8MAEH2GxzO/IVyWEDnIXlVzu7aheaZs7/YKhkGE64HH/8UbbhH/v6H+mK7Sod8
+         zGW2l61xKa8R2zKb0jhTSprgGks2x3okHBcBaDTbQ4ZnfBKOeHGG4ZxoMilpQyptD5o+
+         4LSjLIIC84x7OXNGslL42yXhnYnxsgENKXLpHs4/mYi1feJJBv89hPI0Zl7V8PSF5K9g
+         +KRCXOw2WxOniRCnDoArPFa3CDC8opPkLoYC49dZ6Pr8qnsOtQVG5OTyk3TfBuf0uxqt
+         Rwmg==
+X-Gm-Message-State: APjAAAW44oJHE+b+o13yDilDQLLMjqgkN/eGfmH6Hj4lPM3jK9MOYD8Q
+        JfyBOnQczMIjyjPIi2pbwuY8PpezK0asUA==
+X-Google-Smtp-Source: APXvYqwk4DMeNeDAM10WFbJ0Wxfbl3zzpawQoDzKGmcpMx0DkwBbVOGhCtuG5YmdXcz2nCdcgwAyTQ==
+X-Received: by 2002:a17:90b:14c:: with SMTP id em12mr971132pjb.28.1565805728996;
+        Wed, 14 Aug 2019 11:02:08 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 185sm601094pff.54.2019.08.14.11.02.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 14 Aug 2019 11:02:08 -0700 (PDT)
+Message-ID: <5d544ca0.1c69fb81.a98a7.19e1@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190813082442.25796-4-mkshah@codeaurora.org>
+References: <20190813082442.25796-1-mkshah@codeaurora.org> <20190813082442.25796-4-mkshah@codeaurora.org>
+Subject: Re: [PATCH 3/4] dt-bindings: soc: qcom: Add RSC power domain specifier
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org, ulf.hansson@linaro.org,
+        Maulik Shah <mkshah@codeaurora.org>, devicetree@vger.kernel.org
+To:     Maulik Shah <mkshah@codeaurora.org>, agross@kernel.org,
+        david.brown@linaro.org, linux-arm-msm@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Wed, 14 Aug 2019 11:02:07 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-do_sched_cfs_period_timer() will refill cfs_b runtime and call
-distribute_cfs_runtime() to unthrottle cfs_rq, sometimes cfs_b->runtime
-will allocate all quota to one cfs_rq incorrectly.
-This will cause other cfs_rq can't get runtime and will be throttled.
-We find that one throttled cfs_rq has non-negative
-cfs_rq->runtime_remaining and cause an unexpetced cast from s64 to u64
-in snippet: distribute_cfs_runtime() {
-runtime = -cfs_rq->runtime_remaining + 1; }.
-This cast will cause that runtime will be a large number and
-cfs_b->runtime will be subtracted to be zero at last.
+Quoting Maulik Shah (2019-08-13 01:24:41)
+> In addition to transmitting resource state requests to the remote
+> processor, the RSC is responsible for powering off/lowering the
+> requirements from CPUs subsystem for the associated hardware like
+> buses, clocks, and regulators when all CPUs and cluster is powered down.
+>=20
+> The power domain is configured to a low power state and when all the
+> CPUs are powered down, the RSC can lower resource state requirements
+> and power down the rails that power the CPUs.
+>=20
+> Add PM domain specifier property for RSC controller.
+>=20
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
 
-This commit prevents cfs_rq to be assgined new runtime if it has been
-throttled to avoid the above incorrect type cast.
-
-Signed-off-by: Liangyan <liangyan.peng@linux.alibaba.com>
----
- kernel/sched/fair.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 81fd8a2a605b..b14d67d28138 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4068,6 +4068,8 @@ static void __account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
- 	if (likely(cfs_rq->runtime_remaining > 0))
- 		return;
- 
-+	if (cfs_rq->throttled)
-+		return;
- 	/*
- 	 * if we're unable to extend our runtime we resched so that the active
- 	 * hierarchy can be throttled
--- 
-2.14.4.44.g2045bb6
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
