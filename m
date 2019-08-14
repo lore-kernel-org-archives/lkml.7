@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FC9C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 833CDC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A84DE2085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DB420874
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749574;
-	bh=2Ej4JXBL+umRmchx+lpkGnP86ilUK0ZlJFwHz58qWn4=;
+	s=default; t=1565749577;
+	bh=ClpRLn0jlfzAj9FWbX/zUrPshENJQ1x4gtWDjYhn/TI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HsbgTmYgBDa3MPVoejvPsh01uwvAav5cpdQLG8UGVyo+SukKFvLNeh4CbI0/E3+C/
-	 pvM9InlwySQffazAnDn8hI8foXbOluWvE2XB70pTaJsrODGJQ4F/AqlZge/nKQ5fZG
-	 IOm+GkW8pKFcWQLe0DuM048M1pdurh3YDa3sq9Ck=
+	b=oLIj9QCnKtStWhxUXdH0yMQ7O1KuH00Vx1E31Z9qmgrmmEmlK3qbzdL1eFb45Pj2w
+	 AmfpWpCg0jlYcAv1NJ30PJUwJUV13XOp/jesg/xwG+GjeZ6HFiztti4Nou3eGd4ta0
+	 gf5csIWSLUPDuVRwyedGZ49GfTBedj6GwrgdwKOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbfHNC0N (ORCPT
+        id S1730242AbfHNC0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:26:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54248 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:26:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728487AbfHNC0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:26:10 -0400
+        id S1727883AbfHNC0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:26:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA28920679;
-        Wed, 14 Aug 2019 02:26:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA6772084F;
+        Wed, 14 Aug 2019 02:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749569;
-        bh=2Ej4JXBL+umRmchx+lpkGnP86ilUK0ZlJFwHz58qWn4=;
+        s=default; t=1565749574;
+        bh=ClpRLn0jlfzAj9FWbX/zUrPshENJQ1x4gtWDjYhn/TI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JLhnt5ogG6iFXbZuaoM7oIppWWbzsMBW1q5WAgrjDz9ELpaPivIh0PEKLxDMaGVA4
-         xEA7RnYYXDbLXH3SUXXqdGLNDAU/XhsoWj0K6jMKJeIx416QkBZqM0SmGsaZZRlkqM
-         nKIlOqXn+eaP2wgVpwNsNC0ApbEN2enBqIC1Dac0=
+        b=Tn/psprRz9nA+SN0U3H+FwLAkJXLICaCfsZwj2c1hzU17xpai4DQ5wYC/LXjcdcOe
+         AHGMdVzpxJVet+dA5PmC9WPArDVFNBShyvcpGGQM+eZ6XC4kUgwHYZ6UjFHM2Ogz5Z
+         TP1lfSIpcaNpjlOu5/3kK4ynhcMWhmvfWJVvnoDc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 11/28] isdn: mISDN: hfcsusb: Fix possible null-pointer dereferences in start_isoc_chain()
-Date:   Tue, 13 Aug 2019 22:25:33 -0400
-Message-Id: <20190814022550.17463-11-sashal@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Michael Petlan <mpetlan@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 13/28] perf bench numa: Fix cpu0 binding
+Date:   Tue, 13 Aug 2019 22:25:35 -0400
+Message-Id: <20190814022550.17463-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022550.17463-1-sashal@kernel.org>
 References: <20190814022550.17463-1-sashal@kernel.org>
@@ -59,48 +64,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-[ Upstream commit a0d57a552b836206ad7705a1060e6e1ce5a38203 ]
+[ Upstream commit 6bbfe4e602691b90ac866712bd4c43c51e546a60 ]
 
-In start_isoc_chain(), usb_alloc_urb() on line 1392 may fail
-and return NULL. At this time, fifo->iso[i].urb is assigned to NULL.
+Michael reported an issue with perf bench numa failing with binding to
+cpu0 with '-0' option.
 
-Then, fifo->iso[i].urb is used at some places, such as:
-LINE 1405:    fill_isoc_urb(fifo->iso[i].urb, ...)
-                  urb->number_of_packets = num_packets;
-                  urb->transfer_flags = URB_ISO_ASAP;
-                  urb->actual_length = 0;
-                  urb->interval = interval;
-LINE 1416:    fifo->iso[i].urb->...
-LINE 1419:    fifo->iso[i].urb->...
+  # perf bench numa mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd
+  # Running 'numa/mem' benchmark:
 
-Thus, possible null-pointer dereferences may occur.
+   # Running main, "perf bench numa numa-mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd"
+  binding to node 0, mask: 0000000000000001 => -1
+  perf: bench/numa.c:356: bind_to_memnode: Assertion `!(ret)' failed.
+  Aborted (core dumped)
 
-To fix these bugs, "continue" is added to avoid using fifo->iso[i].urb
-when it is NULL.
+This happens when the cpu0 is not part of node0, which is the benchmark
+assumption and we can see that's not the case for some powerpc servers.
 
-These bugs are found by a static analysis tool STCheck written by us.
+Using correct node for cpu0 binding.
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Michael Petlan <mpetlan@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/20190801142642.28004-1-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/hardware/mISDN/hfcsusb.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/bench/numa.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
-index c60c7998af173..6f19530ba2a93 100644
---- a/drivers/isdn/hardware/mISDN/hfcsusb.c
-+++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
-@@ -1402,6 +1402,7 @@ start_isoc_chain(struct usb_fifo *fifo, int num_packets_per_urb,
- 				printk(KERN_DEBUG
- 				       "%s: %s: alloc urb for fifo %i failed",
- 				       hw->name, __func__, fifo->fifonum);
-+				continue;
- 			}
- 			fifo->iso[i].owner_fifo = (struct usb_fifo *) fifo;
- 			fifo->iso[i].indx = i;
+diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+index df41deed0320e..3bfba81d19118 100644
+--- a/tools/perf/bench/numa.c
++++ b/tools/perf/bench/numa.c
+@@ -370,8 +370,10 @@ static u8 *alloc_data(ssize_t bytes0, int map_flags,
+ 
+ 	/* Allocate and initialize all memory on CPU#0: */
+ 	if (init_cpu0) {
+-		orig_mask = bind_to_node(0);
+-		bind_to_memnode(0);
++		int node = numa_node_of_cpu(0);
++
++		orig_mask = bind_to_node(node);
++		bind_to_memnode(node);
+ 	}
+ 
+ 	bytes = bytes0 + HPSIZE;
 -- 
 2.20.1
 
