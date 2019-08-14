@@ -2,51 +2,55 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDF8C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6ADC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77C94208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E273221721
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802750;
-	bh=S8IPL5fdFrB1YEC+xEAXvBeryNQRoErBMjsR/WoHJrE=;
+	s=default; t=1565802754;
+	bh=o4LAQK483Q6DdzmPzHeYVkEq9+wOBvdyI/oGyKuoIJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B2jBPQHSVtoZ3Jd1mQnNx+NaD2xtSZfclvD8FnmrJgqd1qA9izkXcmPHA80pPGsPq
-	 E98daK6pB9OaHYktHJNlCxXifHxlxqKIwpR6SV7XkTMrx2AE6gR6Eq155YdWN7hAOA
-	 GPCU2obJDSAjEnztVDYWXxBLHzQZL29ZVA9J2zOI=
+	b=xo+AjB8WH/9gsN4qBngijTUvzxEWYYT3rJ0fNDtHM9f9jR8zbMo9AfR7r9y5DFdSf
+	 BwtNgNT004D6/7D0d4MWigtZmYkE5F3UEVXN/mZ2JZNouklgPBwpTpwctYfZuhUtMw
+	 3QaE0n59Xhu+ZaRlB1+6w3ZJ47p6UWWPRFgPXmEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbfHNRM3 (ORCPT
+        id S1730752AbfHNRMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:12:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36274 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:12:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730729AbfHNRM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:12:26 -0400
+        id S1730742AbfHNRMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:12:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2D6A2084D;
-        Wed, 14 Aug 2019 17:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A70F2084D;
+        Wed, 14 Aug 2019 17:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802746;
-        bh=S8IPL5fdFrB1YEC+xEAXvBeryNQRoErBMjsR/WoHJrE=;
+        s=default; t=1565802748;
+        bh=o4LAQK483Q6DdzmPzHeYVkEq9+wOBvdyI/oGyKuoIJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VW1mUpNLMQhxTW+JssxYdiXcgkIihXZs5BmRfeM3AYeQSg4pDCoMqTxCZ4YXcm3H3
-         W0+a2Y80ITDrlGmLUwf5qx/mTnoYGFdzNAGxtvODnGJ3pmdsoMyNq2wZa6WVeQax8q
-         dFKJ6k8EhVEML3H1Cf4w5yVZj/jDPgGFyC7t3Sro=
+        b=oWuKlmy9RfohKf+3JD3DRt5DHTmffDBXcMISNjuR2fF+95foCsnGai3xMO7RPpe6p
+         mnWYx8GzL56KdOMuNz3t9CUdId/ALExLSiTJtAWU6XGIIPDCTODSs852AaR9b3u3Jf
+         YHhrYeMjgiR6uZtca6SfHLEHcsfyqS0OrXj8OwD0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nate Graham <pointedstick@zoho.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 10/69] Input: synaptics - enable RMI mode for HP Spectre X360
-Date:   Wed, 14 Aug 2019 19:01:08 +0200
-Message-Id: <20190814165746.219529267@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Alan Modra <amodra@gmail.com>,
+        Jordan Rupprect <rupprecht@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH 4.14 11/69] lkdtm: support llvm-objcopy
+Date:   Wed, 14 Aug 2019 19:01:09 +0200
+Message-Id: <20190814165746.249357318@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165744.822314328@linuxfoundation.org>
 References: <20190814165744.822314328@linuxfoundation.org>
@@ -59,33 +63,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-commit 25f8c834e2a6871920cc1ca113f02fb301d007c3 upstream.
+commit e9e08a07385e08f1a7f85c5d1e345c21c9564963 upstream.
 
-The 2016 kabylake HP Spectre X360 (model number 13-w013dx) works much better
-with psmouse.synaptics_intertouch=1 kernel parameter, so let's enable RMI4
-mode automatically.
+With CONFIG_LKDTM=y and make OBJCOPY=llvm-objcopy, llvm-objcopy errors:
+llvm-objcopy: error: --set-section-flags=.text conflicts with
+--rename-section=.text=.rodata
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204115
-Reported-by: Nate Graham <pointedstick@zoho.com>
+Rather than support setting flags then renaming sections vs renaming
+then setting flags, it's simpler to just change both at the same time
+via --rename-section. Adding the load flag is required for GNU objcopy
+to mark .rodata Type as PROGBITS after the rename.
+
+This can be verified with:
+$ readelf -S drivers/misc/lkdtm/rodata_objcopy.o
+...
+Section Headers:
+  [Nr] Name              Type             Address           Offset
+       Size              EntSize          Flags  Link  Info  Align
+...
+  [ 1] .rodata           PROGBITS         0000000000000000  00000040
+       0000000000000004  0000000000000000   A       0     0     4
+...
+
+Which shows that .text is now renamed .rodata, the alloc flag A is set,
+the type is PROGBITS, and the section is not flagged as writeable W.
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://sourceware.org/bugzilla/show_bug.cgi?id=24554
+Link: https://github.com/ClangBuiltLinux/linux/issues/448
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Alan Modra <amodra@gmail.com>
+Suggested-by: Jordan Rupprect <rupprecht@google.com>
+Suggested-by: Kees Cook <keescook@chromium.org>
+Acked-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+commit e9e08a07385e08f1a7f85c5d1e345c21c9564963 upstream.
+
+With CONFIG_LKDTM=y and make OBJCOPY=llvm-objcopy, llvm-objcopy errors:
+llvm-objcopy: error: --set-section-flags=.text conflicts with
+--rename-section=.text=.rodata
+
+Rather than support setting flags then renaming sections vs renaming
+then setting flags, it's simpler to just change both at the same time
+via --rename-section. Adding the load flag is required for GNU objcopy
+to mark .rodata Type as PROGBITS after the rename.
+
+This can be verified with:
+$ readelf -S drivers/misc/lkdtm/rodata_objcopy.o
+...
+Section Headers:
+  [Nr] Name              Type             Address           Offset
+       Size              EntSize          Flags  Link  Info  Align
+...
+  [ 1] .rodata           PROGBITS         0000000000000000  00000040
+       0000000000000004  0000000000000000   A       0     0     4
+...
+
+Which shows that .text is now renamed .rodata, the alloc flag A is set,
+the type is PROGBITS, and the section is not flagged as writeable W.
+
+Cc: stable@vger.kernel.org
+Link: https://sourceware.org/bugzilla/show_bug.cgi?id=24554
+Link: https://github.com/ClangBuiltLinux/linux/issues/448
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Alan Modra <amodra@gmail.com>
+Suggested-by: Jordan Rupprect <rupprecht@google.com>
+Suggested-by: Kees Cook <keescook@chromium.org>
+Acked-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/mouse/synaptics.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/Makefile |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -185,6 +185,7 @@ static const char * const smbus_pnp_ids[
- 	"LEN2055", /* E580 */
- 	"SYN3052", /* HP EliteBook 840 G4 */
- 	"SYN3221", /* HP 15-ay000 */
-+	"SYN323d", /* HP Spectre X360 13-w013dx */
- 	NULL
- };
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@ -69,8 +69,7 @@ KCOV_INSTRUMENT_lkdtm_rodata.o	:= n
  
+ OBJCOPYFLAGS :=
+ OBJCOPYFLAGS_lkdtm_rodata_objcopy.o := \
+-			--set-section-flags .text=alloc,readonly \
+-			--rename-section .text=.rodata
++	--rename-section .text=.rodata,alloc,readonly,load
+ targets += lkdtm_rodata.o lkdtm_rodata_objcopy.o
+ $(obj)/lkdtm_rodata_objcopy.o: $(obj)/lkdtm_rodata.o FORCE
+ 	$(call if_changed,objcopy)
 
 
