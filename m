@@ -2,102 +2,82 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A983FC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9271C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86E692084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C31E4214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 16:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbfHNQvo (ORCPT
+        id S1728371AbfHNQwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 12:51:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:57346 "EHLO foss.arm.com"
+        Wed, 14 Aug 2019 12:52:04 -0400
+Received: from mga02.intel.com ([134.134.136.20]:41343 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfHNQvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 12:51:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6676344;
-        Wed, 14 Aug 2019 09:51:42 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 621593F694;
-        Wed, 14 Aug 2019 09:51:41 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 17:51:33 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Morten Borup Petersen <morten_bp@live.dk>,
-        Tushar Khandelwal <tushar.khandelwal@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>,
-        "nd@arm.com" <nd@arm.com>,
-        Morten Borup Petersen <morten.petersen@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
- documentation
-Message-ID: <20190814165133.GA8346@e107155-lin>
-References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
- <20190717192616.1731-2-tushar.khandelwal@arm.com>
- <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
- <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
- <VI1PR0601MB21113C48E719B2C79EC2FE508FC20@VI1PR0601MB2111.eurprd06.prod.outlook.com>
- <CABb+yY3yMWbUiQnJgfQhwnW1OM3aoFL3ZFc018E-fxGichi-4Q@mail.gmail.com>
- <VI1PR0601MB2111A5A4E951F011D389A8978FD90@VI1PR0601MB2111.eurprd06.prod.outlook.com>
- <CABb+yY3Ni7wV+ui1LO7TERWQH_BoakZbPq961wdRPB4X-nwS2A@mail.gmail.com>
- <20190814100518.GA21898@e107155-lin>
- <CABb+yY1jZs0OU-oi86iNNHiqBTjaY6ixFPMoUPkU6MCH_YrwLg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABb+yY1jZs0OU-oi86iNNHiqBTjaY6ixFPMoUPkU6MCH_YrwLg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1728053AbfHNQwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 12:52:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 09:52:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,386,1559545200"; 
+   d="scan'208";a="260559319"
+Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
+  by orsmga001.jf.intel.com with ESMTP; 14 Aug 2019 09:52:02 -0700
+Message-ID: <c7731c682b55ec882ad3d4ea11ad7a823dcaae8f.camel@intel.com>
+Subject: Re: [PATCH v8 11/27] x86/mm: Introduce _PAGE_DIRTY_SW
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Wed, 14 Aug 2019 09:42:23 -0700
+In-Reply-To: <dac2d62b-9045-4767-87dd-eac12e7abafd@intel.com>
+References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
+         <20190813205225.12032-12-yu-cheng.yu@intel.com>
+         <dac2d62b-9045-4767-87dd-eac12e7abafd@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 09:52:25AM -0500, Jassi Brar wrote:
-> On Wed, Aug 14, 2019 at 5:05 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > On Tue, Aug 13, 2019 at 11:36:56AM -0500, Jassi Brar wrote:
-> > [...]
-> >
-> > > > >>
-> > > > >> As mentioned in the response to your initial comment, the driver does
-> > > > >> not currently support mixing protocols.
-> > > > >>
-> > > > > Thanks for acknowledging that limitation. But lets also address it.
-> > > > >
-> > > >
-> > > > We are hesitant to dedicate time to developing mixing protocols given
-> > > > that we don't have any current usecase nor any current platform which
-> > > > would support this.
-> > > >
-> > > Can you please share the client code against which you tested this driver?
-> > > From my past experience, I realise it is much more efficient to tidyup
-> > > the code myself, than endlessly trying to explain the benefits.
-> > >
-> >
-> > Thanks for the patience and offer.
-> >
-> Ok, but the offer is to Morten for MHUv2 driver.
-> 
-> > Can we try the same with MHUv1 and SCMI
-> > upstream driver.
-> >
-> MHUv1 driver is fine as it is.
-> I did try my best to keep you from messing the SCMI driver, without success
-> https://lkml.org/lkml/2017/8/7/924
+On Tue, 2019-08-13 at 16:02 -0700, Dave Hansen wrote:
+[...]
+> Please also reconcile the supervisor XSAVE portion of your patches with
+> the ones that Fenghua has been sending around.  I've given quite a bit
+> of feedback to improve those.  Please consolidate and agree on a common
+> set of patches with him.
 
-I disagree, you haven't told me how to address the usecase which I mentioned
-with the abstraction/multiplexer on top of MHU as you have been suggesting.
+XSAVES supervisor is now a six-patch set.  Maybe we can make it a separate
+series?  I will consolidate and send it out.
 
-I am sure MHUv2 will have the same usecase.
-
---
-Regards,
-Sudeep
+Yu-cheng
