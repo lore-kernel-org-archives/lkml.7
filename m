@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A159AC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C64F4C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4DE20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9352720842
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565749738;
-	bh=A959iDBz6axkDGYmFedeS7BeuaZ4FIDNHH7HQ1vGz1s=;
+	s=default; t=1565749755;
+	bh=WB7QRxAz9d9wS0CZe73ecjeyFOskFfMmJJwHo0Z+GrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=taIoVz2V/hG70ZHhaBKLimbLU1Q7Ch2k1CuR7LCG3yZnKoz9qps0qX5YrDSy3rjSD
-	 dWQAcaiv3Ki1jEKzkCccBY4iSxtTgMh7AFB86ZBFazzAXwgFbSjMvDVcR8KwjKOeHE
-	 5C3+EeFINck6s3FC7Cm0mAGwnbq4YqytDF+eWSTE=
+	b=YOykQt/HiqBA/Fa9rX2vgmksAx/vD3ficos5VmxD6pfEUlXfTZkrQU5CQk9SFgZl0
+	 lR9VAFTkX/0Jua7F5yb068zMPilQpoZ8HuE05u0pu6mm25K91knSG/54NF6Gu9klPL
+	 C+BidM4n/C93WQL85LZBITqgI2fLdkhtzKWnDSP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbfHNCXn (ORCPT
+        id S1727764AbfHNCXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:23:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52642 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:23:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729890AbfHNCXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:23:38 -0400
+        id S1729837AbfHNCX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:23:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DA7820679;
-        Wed, 14 Aug 2019 02:23:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E0CB20679;
+        Wed, 14 Aug 2019 02:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565749417;
-        bh=A959iDBz6axkDGYmFedeS7BeuaZ4FIDNHH7HQ1vGz1s=;
+        s=default; t=1565749408;
+        bh=WB7QRxAz9d9wS0CZe73ecjeyFOskFfMmJJwHo0Z+GrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z9R0Iwi10Djq3nYv/jkbXMRRk8HZhL8E5hvZKPfUJmMgn5TdSWGfscEMylPIqRAvZ
-         Frho5wbb+ATJz3Bd4BXV0gkird2057tPcsmnEbwtHF9uLTLN2BqZ8SV2w8Exj7+yNI
-         k8tIKDf+1SZRVdRgibHyjjW/fs2MRS6jF8eW3xqk=
+        b=qjB8JyuAt7ovpXK8SUTUTubMoLJnGiHfV4dKNaUkcQK+IOsamr/BOmjEnqI7eOwDt
+         gyf5McjW6xIUg91g2x37wv/tNi7Qoej+5zu+4Olw4kCmY05GzA5xwr1FqHvEoZLTRD
+         E3fkXlC1mq3OVsag24U15E3ZsAtivO2vBT5sxvEM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 09/33] st_nci_hci_connectivity_event_received: null check the allocation
-Date:   Tue, 13 Aug 2019 22:22:59 -0400
-Message-Id: <20190814022323.17111-9-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/33] netfilter: ebtables: fix a memory leak bug in compat
+Date:   Tue, 13 Aug 2019 22:22:53 -0400
+Message-Id: <20190814022323.17111-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814022323.17111-1-sashal@kernel.org>
 References: <20190814022323.17111-1-sashal@kernel.org>
@@ -59,32 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 3008e06fdf0973770370f97d5f1fba3701d8281d ]
+[ Upstream commit 15a78ba1844a8e052c1226f930133de4cef4e7ad ]
 
-devm_kzalloc may fail and return NULL. So the null check is needed.
+In compat_do_replace(), a temporary buffer is allocated through vmalloc()
+to hold entries copied from the user space. The buffer address is firstly
+saved to 'newinfo->entries', and later on assigned to 'entries_tmp'. Then
+the entries in this temporary buffer is copied to the internal kernel
+structure through compat_copy_entries(). If this copy process fails,
+compat_do_replace() should be terminated. However, the allocated temporary
+buffer is not freed on this path, leading to a memory leak.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+To fix the bug, free the buffer before returning from compat_do_replace().
+
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/st-nci/se.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/bridge/netfilter/ebtables.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nfc/st-nci/se.c b/drivers/nfc/st-nci/se.c
-index 56f2112e0cd84..85df2e0093109 100644
---- a/drivers/nfc/st-nci/se.c
-+++ b/drivers/nfc/st-nci/se.c
-@@ -344,6 +344,8 @@ static int st_nci_hci_connectivity_event_received(struct nci_dev *ndev,
+diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
+index 142ccaae9c7b6..4a47918b504f8 100644
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -2288,8 +2288,10 @@ static int compat_do_replace(struct net *net, void __user *user,
+ 	state.buf_kern_len = size64;
  
- 		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
- 					    skb->len - 2, GFP_KERNEL);
-+		if (!transaction)
-+			return -ENOMEM;
+ 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
+-	if (WARN_ON(ret < 0))
++	if (WARN_ON(ret < 0)) {
++		vfree(entries_tmp);
+ 		goto out_unlock;
++	}
  
- 		transaction->aid_len = skb->data[1];
- 		memcpy(transaction->aid, &skb->data[2], transaction->aid_len);
+ 	vfree(entries_tmp);
+ 	tmp.entries_size = size64;
 -- 
 2.20.1
 
