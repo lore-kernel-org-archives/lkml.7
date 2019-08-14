@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0919BC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3297CC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CABEE20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A06720665
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565750343;
-	bh=xqS3v1YUYs6IjprirBY5jzrqWlbFrwFG1Nf3A+/Fu00=;
+	s=default; t=1565750352;
+	bh=H7yId5Cjt3grtQ1JdVrFZniPce+PtmDRZEBY7dKBYSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GG7MPcKYTDKPLtzaPVuHNk4jx2z+XvmtTFAJT6T6D7pVH9ZwySelmbc1uOJehg5NJ
-	 EOZcHtqp3FXWSf7+Ppw4XCxPxlTxE92Qrz6QclT1fwpkza2CFjwfgtHF4ahCqeMoDa
-	 zaKZiqmUwFn3eaYgstrVBIbpuKBjFaOcAllN6ECc=
+	b=QE24EoO6d7Dz6N/ncLM/c7rYZvnihuCOopABXPyHKG6Jcdeo6nBATTXaU9zHueVPj
+	 8x4xdeTwtYj5f22COcgLJzBnxQ/ioJjc4PUkPwV8QuubSeoVitVuKpREl0HAaz5Jej
+	 /JCG+pFSLugJtx+dNoTENuX+3qWnMmEYBpVJnHK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbfHNCjC (ORCPT
+        id S1727575AbfHNCLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:39:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43922 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:11:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727566AbfHNCLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:11:42 -0400
+        id S1727533AbfHNCLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:11:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CD8D2085A;
-        Wed, 14 Aug 2019 02:11:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCD3220843;
+        Wed, 14 Aug 2019 02:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748701;
-        bh=xqS3v1YUYs6IjprirBY5jzrqWlbFrwFG1Nf3A+/Fu00=;
+        s=default; t=1565748694;
+        bh=H7yId5Cjt3grtQ1JdVrFZniPce+PtmDRZEBY7dKBYSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oR11nE1+S/gZZ4sFfETfdqftVJtpv1v66MT5rNRr/jl+1DSJXCt79ofCaIlEtV5Cc
-         AdY1sI89RMWZJg1FmUhc+lzrPyuZg7CoCTabhC4dtKuRrkKAxcvRGHEcOUrspBLiXW
-         kugYLO/xT+CpXHrPrE2AtHQXFYpryGUMTxo/2BhM=
+        b=no1MXWG11J8C0V7C7mHdb3vpzIIFoV54k7oD1Xxvsygwso0sxMLtlBrh7qdtYqkMr
+         5vQl2D6IW6bZepJ2iDocnkg+dovLx0uwNFCXekemjLBUuakxQyRTZUD7hAyC6RfOWm
+         R6zgar5pNSq1uGg9vc/MjKtL+9C0hmQTlTj4lYxs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 029/123] ASoC: dapm: fix a memory leak bug
-Date:   Tue, 13 Aug 2019 22:09:13 -0400
-Message-Id: <20190814021047.14828-29-sashal@kernel.org>
+Cc:     John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 025/123] bpf: sockmap, sock_map_delete needs to use xchg
+Date:   Tue, 13 Aug 2019 22:09:09 -0400
+Message-Id: <20190814021047.14828-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -58,41 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: John Fastabend <john.fastabend@gmail.com>
 
-[ Upstream commit 45004d66f2a28d78f543fb2ffbc133e31dc2d162 ]
+[ Upstream commit 45a4521dcbd92e71c9e53031b40e34211d3b4feb ]
 
-In snd_soc_dapm_new_control_unlocked(), a kernel buffer is allocated in
-dapm_cnew_widget() to hold the new dapm widget. Then, different actions are
-taken according to the id of the widget, i.e., 'w->id'. If any failure
-occurs during this process, snd_soc_dapm_new_control_unlocked() should be
-terminated by going to the 'request_failed' label. However, the allocated
-kernel buffer is not freed on this code path, leading to a memory leak bug.
+__sock_map_delete() may be called from a tcp event such as unhash or
+close from the following trace,
 
-To fix the above issue, free the buffer before returning from
-snd_soc_dapm_new_control_unlocked() through the 'request_failed' label.
+  tcp_bpf_close()
+    tcp_bpf_remove()
+      sk_psock_unlink()
+        sock_map_delete_from_link()
+          __sock_map_delete()
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Link: https://lore.kernel.org/r/1563803864-2809-1-git-send-email-wang6495@umn.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+In this case the sock lock is held but this only protects against
+duplicate removals on the TCP side. If the map is free'd then we have
+this trace,
+
+  sock_map_free
+    xchg()                  <- replaces map entry
+    sock_map_unref()
+      sk_psock_put()
+        sock_map_del_link()
+
+The __sock_map_delete() call however uses a read, test, null over the
+map entry which can result in both paths trying to free the map
+entry.
+
+To fix use xchg in TCP paths as well so we avoid having two references
+to the same map entry.
+
+Fixes: 604326b41a6fb ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dapm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/core/sock_map.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index 835ce1ff188d9..f40adb604c25b 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -3705,6 +3705,8 @@ snd_soc_dapm_new_control_unlocked(struct snd_soc_dapm_context *dapm,
- 		dev_err(dapm->dev, "ASoC: Failed to request %s: %d\n",
- 			w->name, ret);
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index be6092ac69f8a..1d40e040320d2 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -281,16 +281,20 @@ static int __sock_map_delete(struct bpf_stab *stab, struct sock *sk_test,
+ 			     struct sock **psk)
+ {
+ 	struct sock *sk;
++	int err = 0;
  
-+	kfree_const(w->sname);
-+	kfree(w);
- 	return ERR_PTR(ret);
+ 	raw_spin_lock_bh(&stab->lock);
+ 	sk = *psk;
+ 	if (!sk_test || sk_test == sk)
+-		*psk = NULL;
++		sk = xchg(psk, NULL);
++
++	if (likely(sk))
++		sock_map_unref(sk, psk);
++	else
++		err = -EINVAL;
++
+ 	raw_spin_unlock_bh(&stab->lock);
+-	if (unlikely(!sk))
+-		return -EINVAL;
+-	sock_map_unref(sk, psk);
+-	return 0;
++	return err;
  }
  
+ static void sock_map_delete_from_link(struct bpf_map *map, struct sock *sk,
 -- 
 2.20.1
 
