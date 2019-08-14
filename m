@@ -2,132 +2,97 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E213C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2FFC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 608CA20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:37:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s4jfsXx+"
+	by mail.kernel.org (Postfix) with ESMTP id 91EF520874
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565750235;
+	bh=wNh6GWulO7kZkg9hpcN8Ka4IBAvXQO8HkVRjF3YKfnk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KRbAir7fkS08mBu1QUodZyEO1fbXD3su3Oa6kpN4MmQ1ggvEi5Wp46fxIvJoyLBD0
+	 GIiMqHmwf9ayGWuEIV7tdh0BXdNczbYp6yki52tu7Xk8sdlWkebpz0/ytbSYdzAHds
+	 THgOgwieawjgKBgodraEmG9FMvGEAOynLAZr6wNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbfHNChK (ORCPT
+        id S1728251AbfHNChO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:37:10 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36343 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728458AbfHNChI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:37:08 -0400
-Received: by mail-ot1-f66.google.com with SMTP id k18so46811218otr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 19:37:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hV2pKWlMxnhaypGzns6kJSRcp18KAhjsh92Ko5vM2dU=;
-        b=s4jfsXx+Cq+klsDPXG+/AvuC0BYDeQjlCJgMXkRlH6uOTDU0uk3KDxxap7JNbXYqZn
-         5wymoRYTTpTBAFjfHQvCHNtf9pA6e+DA34DFVNR5sVBCPQFulY4qlafhcJ3i0mh3iw4B
-         QsMATqQdvXL/I3B1lqcuI7SeJ4CJL6cnKGVO+o5QfK3rNkM9Zf+gqu6dKGh4UTYoZYKt
-         GacMgdbyQQFh+EqCKftFmQJTn9nhX87zjEC6HuvAsaA3wVebgOlYuggqskABTeS8/W+F
-         8KWzyETW2o8SuHJQUocXaSek2bkbt8LRpIrGaPk6kJVPttyR+yAaLh39j1WvDavSedYp
-         jT5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hV2pKWlMxnhaypGzns6kJSRcp18KAhjsh92Ko5vM2dU=;
-        b=gWuvZAtODz2b7BkCiRk7acGpcozFk5CefUe3a5UMVOkPkGRS56E7bCOxWwVyn/d+ZB
-         OZAbfFxdXFifjJvIsHCG6AW3eIf5IO9QQNy4Oti7uhf0+BhruvaaNhmHvWbPzrSYms1t
-         R4qGqllfOlSzi2zCEMiQ/w9xcgNO5ffx+LCG321gBUTqqyZpP2wSRsMlLA//tf0sts1i
-         aJDKn6decEPb+YGg3OAwaTjs4vx+kpgX0sv9GHhdfXp3mW14cW8jZN38n/UrZmjhhBZ/
-         GlGpBrRLZKCzMVvTgZ5FNvR3xjOfQYqG+6UDIGGr/5VB0UsUSmXrscfkg7rsCFL+R4Cq
-         xKJA==
-X-Gm-Message-State: APjAAAWxFiF0OJZcJAgAEdqgrpK2kr3K7mBAgVI159Pbf7nMRQFE5qBh
-        e1WUdrfHbchmXXDzLjv26QY=
-X-Google-Smtp-Source: APXvYqwCm95c1dn4xfbMaEyHxx8PGMDXqkcsKW7lYisFSX5mPMe4ewDWvMLmZIc03W0kaSBlbWSJSQ==
-X-Received: by 2002:a5e:c911:: with SMTP id z17mr13586768iol.119.1565750227338;
-        Tue, 13 Aug 2019 19:37:07 -0700 (PDT)
-Received: from peng.science.purdue.edu (cos-128-210-107-27.science.purdue.edu. [128.210.107.27])
-        by smtp.googlemail.com with ESMTPSA id y19sm14805008ioj.62.2019.08.13.19.37.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2019 19:37:06 -0700 (PDT)
-From:   Hui Peng <benquike@gmail.com>
-To:     security@kernel.org
-Cc:     Hui Peng <benquike@gmail.com>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Wenwen Wang <wang6495@umn.edu>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Fix an OOB bug in parse_audio_mixer_unit
-Date:   Tue, 13 Aug 2019 22:36:24 -0400
-Message-Id: <20190814023625.21683-1-benquike@gmail.com>
-X-Mailer: git-send-email 2.22.1
+        Tue, 13 Aug 2019 22:37:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728027AbfHNCMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:12:50 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29CEF2084F;
+        Wed, 14 Aug 2019 02:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565748769;
+        bh=wNh6GWulO7kZkg9hpcN8Ka4IBAvXQO8HkVRjF3YKfnk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tZEbOLujxP7273RymHmQcIRdexMMmzsqDQ13fGhYNZFUIINASJX7bEttvVtlIr3Bs
+         dc66iQXzIBVtv0GRlzBEf3usAmZKrKWuyJt7QLs1kG04e4yPM+7PbNAGFjjF5yIjgD
+         Cw1qZ1/vRqhaB6wRtdfrnq2tK4h+z7WhMUEo8R4s=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Shijie Luo <luoshijie1@huawei.com>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 057/123] netfilter: ipset: Fix rename concurrency with listing
+Date:   Tue, 13 Aug 2019 22:09:41 -0400
+Message-Id: <20190814021047.14828-57-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
+References: <20190814021047.14828-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The `uac_mixer_unit_descriptor` shown as below is read from the
-device side. In `parse_audio_mixer_unit`, `baSourceID` field is
-accessed from index 0 to `bNrInPins` - 1, the current implementation
-assumes that descriptor is always valid (the length  of descriptor
-is no shorter than 5 + `bNrInPins`). If a descriptor read from
-the device side is invalid, it may trigger out-of-bound memory
-access.
+From: Jozsef Kadlecsik <kadlec@netfilter.org>
 
-```
-struct uac_mixer_unit_descriptor {
-	__u8 bLength;
-	__u8 bDescriptorType;
-	__u8 bDescriptorSubtype;
-	__u8 bUnitID;
-	__u8 bNrInPins;
-	__u8 baSourceID[];
-}
-```
+[ Upstream commit 6c1f7e2c1b96ab9b09ac97c4df2bd9dc327206f6 ]
 
-This patch fixes the bug by add a sanity check on the length of
-the descriptor.
+Shijie Luo reported that when stress-testing ipset with multiple concurrent
+create, rename, flush, list, destroy commands, it can result
 
-Signed-off-by: Hui Peng <benquike@gmail.com>
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+ipset <version>: Broken LIST kernel message: missing DATA part!
+
+error messages and broken list results. The problem was the rename operation
+was not properly handled with respect of listing. The patch fixes the issue.
+
+Reported-by: Shijie Luo <luoshijie1@huawei.com>
+Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/mixer.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ net/netfilter/ipset/ip_set_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index 7498b5191b68..38202ce67237 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -2091,6 +2091,15 @@ static int parse_audio_mixer_unit(struct mixer_build *state, int unitid,
- 	struct usb_audio_term iterm;
- 	int input_pins, num_ins, num_outs;
- 	int pin, ich, err;
-+	int desc_len = (int) ((unsigned long) state->buffer +
-+			state->buflen - (unsigned long) raw_desc);
-+
-+	if (desc_len < sizeof(*desc) + desc->bNrInPins) {
-+		usb_audio_err(state->chip,
-+			      "descriptor %d too short\n",
-+			      unitid);
-+		return -EINVAL;
-+	}
+diff --git a/net/netfilter/ipset/ip_set_core.c b/net/netfilter/ipset/ip_set_core.c
+index 16afa0df4004d..e103c875383a5 100644
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -1161,7 +1161,7 @@ static int ip_set_rename(struct net *net, struct sock *ctnl,
+ 		return -ENOENT;
  
- 	err = uac_mixer_unit_get_channels(state, desc);
- 	if (err < 0) {
+ 	write_lock_bh(&ip_set_ref_lock);
+-	if (set->ref != 0) {
++	if (set->ref != 0 || set->ref_netlink != 0) {
+ 		ret = -IPSET_ERR_REFERENCED;
+ 		goto out;
+ 	}
 -- 
-2.22.1
+2.20.1
 
