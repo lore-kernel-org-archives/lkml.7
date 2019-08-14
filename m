@@ -2,210 +2,228 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45A9C0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BEDC0650F
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB09A20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE9420843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 07:47:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfHNHpX (ORCPT
+        id S1726838AbfHNHrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 03:45:23 -0400
-Received: from 59-120-53-16.HINET-IP.hinet.net ([59.120.53.16]:23793 "EHLO
-        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726347AbfHNHpW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 03:45:22 -0400
-Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
-        by ATCSQR.andestech.com with ESMTP id x7E7WkLS078787;
-        Wed, 14 Aug 2019 15:32:46 +0800 (GMT-8)
-        (envelope-from nickhu@andestech.com)
-Received: from andestech.com (10.0.15.65) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Wed, 14 Aug 2019
- 15:44:17 +0800
-Date:   Wed, 14 Aug 2019 15:44:18 +0800
-From:   Nick Hu <nickhu@andestech.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     Alan Quey-Liang =?utf-8?B?S2FvKOmrmOmtgeiJryk=?= 
-        <alankao@andestech.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "green.hu@gmail.com" <green.hu@gmail.com>,
-        "deanbo422@gmail.com" <deanbo422@gmail.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "aryabinin@virtuozzo.com" <aryabinin@virtuozzo.com>,
-        "glider@google.com" <glider@google.com>,
-        "dvyukov@google.com" <dvyukov@google.com>,
-        "Anup.Patel@wdc.com" <Anup.Patel@wdc.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>,
-        =?utf-8?B?6Zui6IG3Wm9uZyBab25nLVhpYW4gTGko5p2O5a6X5oayKQ==?= 
-        <zong@andestech.com>,
-        "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>
-Subject: Re: [PATCH 2/2] riscv: Add KASAN support
-Message-ID: <20190814074417.GA21929@andestech.com>
-References: <cover.1565161957.git.nickhu@andestech.com>
- <88358ef8f7cfcb7fd01b6b989eccaddbe00a1e57.1565161957.git.nickhu@andestech.com>
- <20190812151050.GJ26897@infradead.org>
+        Wed, 14 Aug 2019 03:47:17 -0400
+Received: from mga09.intel.com ([134.134.136.24]:30572 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbfHNHrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:47:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 00:47:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,384,1559545200"; 
+   d="scan'208";a="188041233"
+Received: from pipin.fi.intel.com ([10.237.72.175])
+  by orsmga002.jf.intel.com with ESMTP; 14 Aug 2019 00:47:14 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 1/2] PTP: introduce new versions of IOCTLs
+Date:   Wed, 14 Aug 2019 10:47:11 +0300
+Message-Id: <20190814074712.10684-1-felipe.balbi@linux.intel.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190812151050.GJ26897@infradead.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.0.15.65]
-X-DNSRBL: 
-X-MAIL: ATCSQR.andestech.com x7E7WkLS078787
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+The current version of the IOCTL have a small problem which prevents us
+from extending the API by making use of reserved fields. In these new
+IOCTLs, we are now making sure that flags and rsv fields are zero which
+will allow us to extend the API in the future.
 
-Thanks for your reply. I will answer one by one.
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+---
+ drivers/ptp/ptp_chardev.c      | 58 ++++++++++++++++++++++++++++++++--
+ include/uapi/linux/ptp_clock.h | 12 +++++++
+ 2 files changed, 68 insertions(+), 2 deletions(-)
 
-Hi Alexander,
+diff --git a/drivers/ptp/ptp_chardev.c b/drivers/ptp/ptp_chardev.c
+index 18ffe449efdf..204212fc3f8c 100644
+--- a/drivers/ptp/ptp_chardev.c
++++ b/drivers/ptp/ptp_chardev.c
+@@ -123,9 +123,11 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 	struct timespec64 ts;
+ 	int enable, err = 0;
+ 
++	memset(&req, 0, sizeof(req));
+ 	switch (cmd) {
+ 
+ 	case PTP_CLOCK_GETCAPS:
++	case PTP_CLOCK_GETCAPS2:
+ 		memset(&caps, 0, sizeof(caps));
+ 		caps.max_adj = ptp->info->max_adj;
+ 		caps.n_alarm = ptp->info->n_alarm;
+@@ -139,11 +141,22 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 		break;
+ 
+ 	case PTP_EXTTS_REQUEST:
++	case PTP_EXTTS_REQUEST2:
+ 		if (copy_from_user(&req.extts, (void __user *)arg,
+ 				   sizeof(req.extts))) {
+ 			err = -EFAULT;
+ 			break;
+ 		}
++		if ((req.extts.flags || req.extts.rsv[0] || req.extts.rsv[1])
++			&& cmd == PTP_EXTTS_REQUEST2) {
++			err = -EINVAL;
++			break;
++		} else if (cmd == PTP_EXTTS_REQUEST) {
++			req.extts.flags = 0;
++			req.extts.rsv[0] = 0;
++			req.extts.rsv[1] = 0;
++		}
++			
+ 		if (req.extts.index >= ops->n_ext_ts) {
+ 			err = -EINVAL;
+ 			break;
+@@ -154,11 +167,24 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 		break;
+ 
+ 	case PTP_PEROUT_REQUEST:
++	case PTP_PEROUT_REQUEST2:
+ 		if (copy_from_user(&req.perout, (void __user *)arg,
+ 				   sizeof(req.perout))) {
+ 			err = -EFAULT;
+ 			break;
+ 		}
++		if ((req.perout.flags || req.perout.rsv[0] || req.perout.rsv[1]
++				|| req.perout.rsv[2] || req.perout.rsv[3])
++			&& cmd == PTP_PEROUT_REQUEST2) {
++			err = -EINVAL;
++			break;
++		} else if (cmd == PTP_PEROUT_REQUEST) {
++			req.perout.flags = 0;
++			req.perout.rsv[0] = 0;
++			req.perout.rsv[1] = 0;
++			req.perout.rsv[2] = 0;
++			req.perout.rsv[3] = 0;
++		}
+ 		if (req.perout.index >= ops->n_per_out) {
+ 			err = -EINVAL;
+ 			break;
+@@ -169,6 +195,7 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 		break;
+ 
+ 	case PTP_ENABLE_PPS:
++	case PTP_ENABLE_PPS2:
+ 		if (!capable(CAP_SYS_TIME))
+ 			return -EPERM;
+ 		req.type = PTP_CLK_REQ_PPS;
+@@ -177,6 +204,7 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 		break;
+ 
+ 	case PTP_SYS_OFFSET_PRECISE:
++	case PTP_SYS_OFFSET_PRECISE2:
+ 		if (!ptp->info->getcrosststamp) {
+ 			err = -EOPNOTSUPP;
+ 			break;
+@@ -201,6 +229,7 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 		break;
+ 
+ 	case PTP_SYS_OFFSET_EXTENDED:
++	case PTP_SYS_OFFSET_EXTENDED2:
+ 		if (!ptp->info->gettimex64) {
+ 			err = -EOPNOTSUPP;
+ 			break;
+@@ -232,6 +261,7 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 		break;
+ 
+ 	case PTP_SYS_OFFSET:
++	case PTP_SYS_OFFSET2:
+ 		sysoff = memdup_user((void __user *)arg, sizeof(*sysoff));
+ 		if (IS_ERR(sysoff)) {
+ 			err = PTR_ERR(sysoff);
+@@ -265,11 +295,23 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 			err = -EFAULT;
+ 		break;
+ 
+-	case PTP_PIN_GETFUNC:
++	case PTP_PIN_GETFUNC2:
+ 		if (copy_from_user(&pd, (void __user *)arg, sizeof(pd))) {
+ 			err = -EFAULT;
+ 			break;
+ 		}
++		if ((pd.rsv[0] || pd.rsv[1] || pd.rsv[2]
++				|| pd.rsv[3] || pd.rsv[4])
++			&& cmd == PTP_PIN_GETFUNC2) {
++			err = -EINVAL;
++			break;
++		} else if (cmd == PTP_PIN_GETFUNC) {
++			pd.rsv[0] = 0;
++			pd.rsv[1] = 0;
++			pd.rsv[2] = 0;
++			pd.rsv[3] = 0;
++			pd.rsv[4] = 0;
++		}
+ 		pin_index = pd.index;
+ 		if (pin_index >= ops->n_pins) {
+ 			err = -EINVAL;
+@@ -284,11 +326,23 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 			err = -EFAULT;
+ 		break;
+ 
+-	case PTP_PIN_SETFUNC:
++	case PTP_PIN_SETFUNC2:
+ 		if (copy_from_user(&pd, (void __user *)arg, sizeof(pd))) {
+ 			err = -EFAULT;
+ 			break;
+ 		}
++		if ((pd.rsv[0] || pd.rsv[1] || pd.rsv[2]
++				|| pd.rsv[3] || pd.rsv[4])
++			&& cmd == PTP_PIN_SETFUNC2) {
++			err = -EINVAL;
++			break;
++		} else if (cmd == PTP_PIN_SETFUNC) {
++			pd.rsv[0] = 0;
++			pd.rsv[1] = 0;
++			pd.rsv[2] = 0;
++			pd.rsv[3] = 0;
++			pd.rsv[4] = 0;
++		}
+ 		pin_index = pd.index;
+ 		if (pin_index >= ops->n_pins) {
+ 			err = -EINVAL;
+diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
+index 1bc794ad957a..039cd62ec706 100644
+--- a/include/uapi/linux/ptp_clock.h
++++ b/include/uapi/linux/ptp_clock.h
+@@ -149,6 +149,18 @@ struct ptp_pin_desc {
+ #define PTP_SYS_OFFSET_EXTENDED \
+ 	_IOWR(PTP_CLK_MAGIC, 9, struct ptp_sys_offset_extended)
+ 
++#define PTP_CLOCK_GETCAPS2  _IOR(PTP_CLK_MAGIC, 10, struct ptp_clock_caps)
++#define PTP_EXTTS_REQUEST2  _IOW(PTP_CLK_MAGIC, 11, struct ptp_extts_request)
++#define PTP_PEROUT_REQUEST2 _IOW(PTP_CLK_MAGIC, 12, struct ptp_perout_request)
++#define PTP_ENABLE_PPS2     _IOW(PTP_CLK_MAGIC, 13, int)
++#define PTP_SYS_OFFSET2     _IOW(PTP_CLK_MAGIC, 14, struct ptp_sys_offset)
++#define PTP_PIN_GETFUNC2    _IOWR(PTP_CLK_MAGIC, 15, struct ptp_pin_desc)
++#define PTP_PIN_SETFUNC2    _IOW(PTP_CLK_MAGIC, 16, struct ptp_pin_desc)
++#define PTP_SYS_OFFSET_PRECISE2 \
++	_IOWR(PTP_CLK_MAGIC, 17, struct ptp_sys_offset_precise)
++#define PTP_SYS_OFFSET_EXTENDED2 \
++	_IOWR(PTP_CLK_MAGIC, 18, struct ptp_sys_offset_extended)
++
+ struct ptp_extts_event {
+ 	struct ptp_clock_time t; /* Time event occured. */
+ 	unsigned int index;      /* Which channel produced the event. */
+-- 
+2.22.0
 
-Would you help me for the question about SOFTIRQENTRY_TEXT?
-
-On Mon, Aug 12, 2019 at 11:10:50PM +0800, Christoph Hellwig wrote:
-> > 2. KASAN can't debug the modules since the modules are allocated in VMALLOC
-> > area. We mapped the shadow memory, which corresponding to VMALLOC area,
-> > to the kasan_early_shadow_page because we don't have enough physical space
-> > for all the shadow memory corresponding to VMALLOC area.
-> 
-> How do other architectures solve this problem?
-> 
-Other archs like arm64 and x86 allocate modules in their module region.
-
-> > @@ -54,6 +54,8 @@ config RISCV
-> >  	select EDAC_SUPPORT
-> >  	select ARCH_HAS_GIGANTIC_PAGE
-> >  	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
-> > +	select GENERIC_STRNCPY_FROM_USER if KASAN
-> 
-> Is there any reason why we can't always enabled this?  Also just
-> enabling the generic efficient strncpy_from_user should probably be
-> a separate patch.
-> 
-You're right, always enable it would be better.
-
-> > +	select HAVE_ARCH_KASAN if MMU
-> 
-> Based on your cover letter this should be if MMU && 64BIT
-> 
-> >  #define __HAVE_ARCH_MEMCPY
-> >  extern asmlinkage void *memcpy(void *, const void *, size_t);
-> > +extern asmlinkage void *__memcpy(void *, const void *, size_t);
-> >  
-> >  #define __HAVE_ARCH_MEMMOVE
-> >  extern asmlinkage void *memmove(void *, const void *, size_t);
-> > +extern asmlinkage void *__memmove(void *, const void *, size_t);
-> > +
-> > +#define memcpy(dst, src, len) __memcpy(dst, src, len)
-> > +#define memmove(dst, src, len) __memmove(dst, src, len)
-> > +#define memset(s, c, n) __memset(s, c, n)
-> 
-> This looks weird and at least needs a very good comment.  Also
-> with this we effectively don't need the non-prefixed prototypes
-> anymore.  Also you probably want to split the renaming of the mem*
-> routines into a separate patch with a proper changelog.
-> 
-I made some mistakes on this porting, this would be better:
-
-#define __HAVE_ARCH_MEMSET
-extern asmlinkage void *memset(void *, int, size_t);
-extern asmlinkage void *__memset(void *, int, size_t);
-
-#define __HAVE_ARCH_MEMCPY
-extern asmlinkage void *memcpy(void *, const void *, size_t);
-extern asmlinkage void *__memcpy(void *, const void *, size_t);
-
-#define __HAVE_ARCH_MEMMOVE
-extern asmlinkage void *memmove(void *, const void *, size_t);
-extern asmlinkage void *__memmove(void *, const void *, size_t);
-
-#if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
-
-#define memcpy(dst, src, len) __memcpy(dst, src, len)
-#define memmove(dst, src, len) __memmove(dst, src, len)
-#define memset(s, c, n) __memset(s, c, n)
-
-#endif
-
-> >  #include <asm/tlbflush.h>
-> >  #include <asm/thread_info.h>
-> >  
-> > +#ifdef CONFIG_KASAN
-> > +#include <asm/kasan.h>
-> > +#endif
-> 
-> Any good reason to not just always include the header?
->
-Nope, I would remove the '#ifdef CONFIG_KASAN', and do the logic in the header
-instead.
-
-> > +
-> >  #ifdef CONFIG_DUMMY_CONSOLE
-> >  struct screen_info screen_info = {
-> >  	.orig_video_lines	= 30,
-> > @@ -64,12 +68,17 @@ void __init setup_arch(char **cmdline_p)
-> >  
-> >  	setup_bootmem();
-> >  	paging_init();
-> > +
-> >  	unflatten_device_tree();
-> 
-> spurious whitespace change.
-> 
-> > diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-> > index 23cd1a9..9700980 100644
-> > --- a/arch/riscv/kernel/vmlinux.lds.S
-> > +++ b/arch/riscv/kernel/vmlinux.lds.S
-> > @@ -46,6 +46,7 @@ SECTIONS
-> >  		KPROBES_TEXT
-> >  		ENTRY_TEXT
-> >  		IRQENTRY_TEXT
-> > +		SOFTIRQENTRY_TEXT
-> 
-> Hmm.  What is the relation to kasan here?  Maybe we should add this
-> separately with a good changelog?
-> 
-There is a commit for it:
-
-Author: Alexander Potapenko <glider@google.com>
-Date:   Fri Mar 25 14:22:05 2016 -0700
-
-    arch, ftrace: for KASAN put hard/soft IRQ entries into separate sections
-
-    KASAN needs to know whether the allocation happens in an IRQ handler.
-    This lets us strip everything below the IRQ entry point to reduce the
-    number of unique stack traces needed to be stored.
-
-    Move the definition of __irq_entry to <linux/interrupt.h> so that the
-    users don't need to pull in <linux/ftrace.h>.  Also introduce the
-    __softirq_entry macro which is similar to __irq_entry, but puts the
-    corresponding functions to the .softirqentry.text section.
-
-After reading the patch I understand that soft/hard IRQ entries should be
-separated for KASAN to work, but why?
-
-Alexender, do you have any comments on this?
-
-> > +++ b/arch/riscv/mm/kasan_init.c
-> > @@ -0,0 +1,102 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> 
-> This probably also wants a copyright statement.
-> 
-> > +	// init for swapper_pg_dir
-> 
-> Please use /* */ style comments.
