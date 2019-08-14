@@ -2,130 +2,132 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EE6C0650F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED79C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29457205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57734205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 08:09:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VVoB/inl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B5hCQPPM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfHNIIy (ORCPT
+        id S1727260AbfHNIJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 04:08:54 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51958 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbfHNIIx (ORCPT
+        Wed, 14 Aug 2019 04:09:34 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37271 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfHNIJd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 04:08:53 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7E88lKd165896;
-        Wed, 14 Aug 2019 08:08:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=jrPcOifHUOUhayzLxc1G1x8+nhLUdUnAVA7EfqZI4zI=;
- b=VVoB/inlnzSMm+Cveqqbpy5m5Zz16s5QuS4oW8VxwAfLtNyKfsZzKGArD00HCxMSq3Lr
- fyP1u3GqysMwvz2V7CYXZG7x9U4/ScBSYvMGmMND2rhfqKXzWiTbfa6QwuWfGRwp+boP
- cbErqv5DX1L1AdrBcSn1W1JkEs4X4Bvpv4HyejGZlW/BCfdNagJmnf/MAbAhqGEtilfb
- nL1uKPDaRXn0JzvG5Gmg7xb6vriYDITflQCJCfgELmWUbgb3J/RNBpEc7oq46wEHJWBr
- cUviqERZBrOAIWySKIY+pmKy/GPAIcYCIov4ZLOdDVF4gkwXpk5jE0A1fi0rMuA+iTBg qA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2u9pjqk2qu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 14 Aug 2019 08:08:47 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7E88gJ1111333;
-        Wed, 14 Aug 2019 08:08:42 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2ubwrgyuu9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 14 Aug 2019 08:08:42 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7E88CKx019282;
-        Wed, 14 Aug 2019 08:08:12 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 14 Aug 2019 01:08:01 -0700
-Date:   Wed, 14 Aug 2019 11:07:54 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Jianyun Li <jyli@marvell.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: mvumi: fix 32 bit shift of a u32 value
-Message-ID: <20190814080754.GT1974@kadam>
-References: <20190813180113.14245-1-colin.king@canonical.com>
+        Wed, 14 Aug 2019 04:09:33 -0400
+Received: by mail-lf1-f67.google.com with SMTP id c9so78633305lfh.4
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 01:09:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a3pu4WqgZpVtxAPpr6WRRG6CgvXxsRt/IJW7QWZZBkQ=;
+        b=B5hCQPPM/FOpJJlOBHnIL4YX7ZnsrCAX7eRZbnz2PJMhtcI0fVe6V4tL+rTL5JoHgZ
+         CHqDhH41nc5wKh+bC3n8fdrhtv10H700YfIlpEyJHujfqhUrKrq1Do8k8+av41R3vJeL
+         qs0QfYp8SOYllcOBS3PKhtLI4alQkT7Kt94EHplLYwzMh9sG1DGikunIPOdaoMVMjVwP
+         rN4aKmc05L+cbA9//qjMoTgsIYtOUYVIVrpo/q+SMLJzJZahwtGzHuBN85pWOa2Qdbu4
+         T8V7sVe3UoVNzPP82tcfVm/NqmzSFZEFfwoH/i5jHXfTKL1QicnXiUITV3szo9S/2uof
+         WWCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a3pu4WqgZpVtxAPpr6WRRG6CgvXxsRt/IJW7QWZZBkQ=;
+        b=r+WFnz5QZGcUMgukF9HLIrzxOJY7pIb0Kla3THVp7t/L9CBgvHYyNR0V6sBcUZz6Lv
+         XH+/zU0N2ZiC5qvpgCdjLYr+RCGL4NolMek/8SmgnAt2pSEUrtG1ZGFltM63Lqfi5aTs
+         XPAPIhFFevBY/Qa3MDOHSapTW3naFZu1ToBghjHWbbTZZkxI8HEzzNQKukNIR9pJEcOv
+         v2meGHCP8+VpKSSzIXBg5mS+vpGedkaJj1wG7/CCvy/e5VQp2P9nlkn5+lDOlQejqrS5
+         D4yswhvNy1WfMbDJ9tzhp+8wlQcaiJhT2c6bnQH0UjLodW/47yp2L0YzYQJXnL9h/jSc
+         9ukw==
+X-Gm-Message-State: APjAAAVMXU+3HG5gYgjwnUEX/q5pLTZzqRL0+ycMTL3yP36YPB8ELyHo
+        +KVyxaEo2qN0+UithrTp5yA7ySNA8NLpteoSXLQRZQ==
+X-Google-Smtp-Source: APXvYqxBCrpxYicv9hI8gzWTP6SjkdBV0kiAs9w9dXlSllL/56vgciBYrqOy9aeSFx8Aqqn7+5gXG80m6la1l53JTPU=
+X-Received: by 2002:a19:e006:: with SMTP id x6mr24363756lfg.165.1565770171843;
+ Wed, 14 Aug 2019 01:09:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813180113.14245-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908140080
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908140080
+References: <1564603297-1391-1-git-send-email-hongweiz@ami.com> <1564603297-1391-3-git-send-email-hongweiz@ami.com>
+In-Reply-To: <1564603297-1391-3-git-send-email-hongweiz@ami.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 14 Aug 2019 10:09:20 +0200
+Message-ID: <CACRpkdaojLe3UTc0=66b5J2yrSOo7t8o5bAY=WRscL+met3iWQ@mail.gmail.com>
+Subject: Re: [v7 2/2] gpio: aspeed: Add SGPIO driver
+To:     Hongwei Zhang <hongweiz@ami.com>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 07:01:13PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently the top 32 bits of a 64 bit address is being calculated
-> by shifting a u32 twice by 16 bits and then being cast into a 64
-> bit address.  Shifting a u32 twice by 16 bits always ends up with
-> a zero.  Fix this by casting the u32 to a 64 bit address first
-> and then shifting it 32 bits.
-> 
-> Addresses-Coverity: ("Operands don't affect result")
-> Fixes: f0c568a478f0 ("[SCSI] mvumi: Add Marvell UMI driver")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/scsi/mvumi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/mvumi.c b/drivers/scsi/mvumi.c
-> index 8906aceda4c4..62df69f1e71e 100644
-> --- a/drivers/scsi/mvumi.c
-> +++ b/drivers/scsi/mvumi.c
-> @@ -296,7 +296,7 @@ static void mvumi_delete_internal_cmd(struct mvumi_hba *mhba,
->  			sgd_getsz(mhba, m_sg, size);
->  
->  			phy_addr = (dma_addr_t) m_sg->baseaddr_l |
-> -				(dma_addr_t) ((m_sg->baseaddr_h << 16) << 16);
-> +				   (dma_addr_t) m_sg->baseaddr_h << 32;
+Hi Hongwei,
 
-Colin, you've sent this patch before on Feb 16, 2019.  If you shift by
-32 then it's undefined behavior on 32 bit systems.  The correct fix is
-to move the cast which was what your original patch did actually.
+thanks for your patch!
 
-			(((dma_addr_t)m_sg->baseaddr_h << 16) << 16);
+I have now merged the bindings so you only need to respin
+this patch.
 
-My suggestion back then was to introduce a macro:
+On Wed, Jul 31, 2019 at 10:02 PM Hongwei Zhang <hongweiz@ami.com> wrote:
 
-/*
- * The dma_addr_t type can be either 32 or 64 bit.  Left shifting a 32
- * bit number is undefined so this do two 16 bit left shifts.
- *
- */
-#define DMA_LSHIFT_32(val) (((dma_addr_t)(val) << 16) << 16)
+> Add SGPIO driver support for Aspeed AST2500 SoC.
+>
+> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+> Reviewed-by:   Andrew Jeffery <andrew@aj.id.au>
 
-regards,
-dan carpenter
+I guess I need to go with this, there are some minor things
+I still want to be fixed:
 
+> +static void __aspeed_sgpio_set(struct gpio_chip *gc, unsigned int offset, int val)
+
+I don't like __underscore_functions because their semantic
+is ambiguous.
+
+Rename this something like aspeed_sgpio_commit() or
+whatever best fits the actual use.
+
+> +static int aspeed_sgpio_setup_irqs(struct aspeed_sgpio *gpio,
+> +                                  struct platform_device *pdev)
+> +{
+(...)
+> +       rc = gpiochip_irqchip_add(&gpio->chip, &aspeed_sgpio_irqchip,
+> +                                 0, handle_bad_irq, IRQ_TYPE_NONE);
+(...)
+> +       gpiochip_set_chained_irqchip(&gpio->chip, &aspeed_sgpio_irqchip,
+> +                                    gpio->irq, aspeed_sgpio_irq_handler);
+
+We do not set up chained irqchips like this anymore, sorry.
+
+I am currently rewriting all existing chained drivers to pass
+an initialized irqchip when registering the whole gpio chip.
+See drivers/gpio/TODO.
+
+Here are examples:
+https://lore.kernel.org/linux-gpio/20190811080539.15647-1-linus.walleij@linaro.org/
+https://lore.kernel.org/linux-gpio/20190812132554.18313-1-linus.walleij@linaro.org/
+
+> +       /* set all SGPIO pins as input (1). */
+> +       memset(gpio->dir_in, 0xff, sizeof(gpio->dir_in));
+
+Do the irqchip set-up here, before adding the gpio_chip.
+
+> +       rc = devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
+> +       if (rc < 0)
+> +               return rc;
+> +
+> +       return aspeed_sgpio_setup_irqs(gpio, pdev);
+
+Yours,
+Linus Walleij
