@@ -2,111 +2,103 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFFEC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D8CC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8695214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:10:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BTIl/9Tk"
+	by mail.kernel.org (Postfix) with ESMTP id 21186214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 22:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565820662;
+	bh=2YQMr9WmohFL+xkk50uFprdKReR2E7JTnbbbO1059oA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fbO8FtRKyguzYQ94SwVe1kl3Htvx5bFCPbZFM/PC1bK4bvNiezVKzVitXE12zRDeM
+	 cu0I4fyKWXdQlFctTE9SO6LJM93KaR2f0TVu9XK6Q86AhqCTZs6gc8cOfZhS163xBt
+	 Mx1atEozvlRtiBR+9G/N+qRRXjcB7mTp4yPp/m1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729234AbfHNWKF (ORCPT
+        id S1729771AbfHNWLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 18:10:05 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46301 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfHNWKF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 18:10:05 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w3so272881pgt.13
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 15:10:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EgMxpqnDCUKKSviaeDfqej3uE+25ke/kBD5EQ8QhSvk=;
-        b=BTIl/9TkKL1+c9ssk34W7XBCbm+8s/A7Aw49hrbdu/fvCvAhPq7IzZM6LQxNWC2QoE
-         43Fy8M+wBoAaew0rOCWEYQwW7hi4OWCZw6V6ljV8i60R6zk3xV1oqtX+5OAjikb7TOo1
-         euYSXyToMva4nrJeLoOG98FDCZPQBFYfVuK757KSMnKyMdqqDJ7hJn9O82GWwbVWL9Va
-         YaafGnFOnoXjFAO3qaf7hnVlz6fUzZ9nRvXAT9cifyZdFjtDpGNfVhryES6wHppUEFRl
-         N8nXSFKxcF2k8iMc+4q6OzgcKiepinofnK8FF77cgrT+mIe6oir15Gjrwq/AEM4yw+XV
-         l75g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EgMxpqnDCUKKSviaeDfqej3uE+25ke/kBD5EQ8QhSvk=;
-        b=jI3DrReiE+j1C+xBX5lxHIThEu3AJBoKjtLKJZR2YdzKCoXPrZgWbswzemonEIEORR
-         zEpy/0IssgbZTry8xBeo1D5yKv/v8OCsxvKZMYl5e7t9f4+rM08fhj7RvccLYwUkkc1q
-         ezmaApo7s+4mEG+GnxWGmx4gYw4x1RfOdOHH3kgJJeWAMrLXH7RbHGcZGsG9wjfQcKD/
-         qQZYzp3DaM5xv5mQN+1U7wxHxTUUPG9oUtZOYOZBkx6O2cQaaRvZEl5OzG1KlPZYaEZe
-         vc4gAyoA5nSDqcmN87piFZxPLn6RPucsJmnPcRqTzVQ5rWg+kNvIBwamRyaN9c6QbCwR
-         7eDg==
-X-Gm-Message-State: APjAAAU9yb9OpeQ/r4ianyey+DuB16/XJN6d0p9XrULVzWe0owEffHNT
-        Q8iyYotcPmd0USpZ9HSeoYk=
-X-Google-Smtp-Source: APXvYqxT0bYRzWmURPra22SeQuhBS+23yZe3pSx10q32MZ/PWreU7JH+YXqDftobAJdodjbhda6e0Q==
-X-Received: by 2002:a63:de4c:: with SMTP id y12mr1125128pgi.264.1565820604373;
-        Wed, 14 Aug 2019 15:10:04 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id a189sm929015pfa.60.2019.08.14.15.10.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 15:10:03 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@chromium.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/6] powerpc: export arch_sync_dma_for_*()
-Date:   Wed, 14 Aug 2019 14:59:58 -0700
-Message-Id: <20190814220011.26934-4-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190814220011.26934-1-robdclark@gmail.com>
-References: <20190814220011.26934-1-robdclark@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 14 Aug 2019 18:11:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725895AbfHNWLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 18:11:00 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5BF32064A;
+        Wed, 14 Aug 2019 22:10:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565820660;
+        bh=2YQMr9WmohFL+xkk50uFprdKReR2E7JTnbbbO1059oA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nni+87chGmQaQDK8GYduslnDr78IJ75iX/jjJzdja8FuHyonKkGVJ9TJbqa+1r2+g
+         Bj5z2EZ9x7Tu4dLBvT9FHLLid9v0DUT5RTzPuYXwyKdKNIbsFi6X0YF5iUvKb5JNAj
+         EqADKsB5cz+e0n1z7exbiuiRittpuRoGaNTXA404=
+Date:   Wed, 14 Aug 2019 15:10:59 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Arun KS <arunks@codeaurora.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2 4/5] mm/memory_hotplug: Make sure the pfn is aligned
+ to the order when onlining
+Message-Id: <20190814151059.54618c4f86b7e0c613ab7413@linux-foundation.org>
+In-Reply-To: <784cba14-e0ad-cfea-8ffc-bfbf855ceb10@redhat.com>
+References: <20190814154109.3448-1-david@redhat.com>
+        <20190814154109.3448-5-david@redhat.com>
+        <20190814135608.a449ca5a75cd700e077a8d23@linux-foundation.org>
+        <784cba14-e0ad-cfea-8ffc-bfbf855ceb10@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Wed, 14 Aug 2019 23:47:24 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- arch/powerpc/mm/dma-noncoherent.c | 2 ++
- 1 file changed, 2 insertions(+)
+> >> --- a/mm/memory_hotplug.c
+> >> +++ b/mm/memory_hotplug.c
+> >> @@ -646,6 +646,9 @@ static int online_pages_range(unsigned long start_pfn, unsigned long nr_pages,
+> >>  	 */
+> >>  	for (pfn = start_pfn; pfn < end_pfn; pfn += 1ul << order) {
+> >>  		order = min(MAX_ORDER - 1, get_order(PFN_PHYS(end_pfn - pfn)));
+> >> +		/* __free_pages_core() wants pfns to be aligned to the order */
+> >> +		if (unlikely(!IS_ALIGNED(pfn, 1ul << order)))
+> >> +			order = 0;
+> >>  		(*online_page_callback)(pfn_to_page(pfn), order);
+> >>  	}
+> > 
+> > We aren't sure if this occurs, but if it does, we silently handle it.
+> > 
+> > It seems a reasonable defensive thing to do, but should we add a
+> > WARN_ON_ONCE() so that we get to find out about it?  If we get such a
+> > report then we can remove the WARN_ON_ONCE() and add an illuminating
+> > comment.
+> > 
+> > 
+> 
+> Makes sense, do you want to add the WARN_ON_ONCE() or shall I resend?
 
-diff --git a/arch/powerpc/mm/dma-noncoherent.c b/arch/powerpc/mm/dma-noncoherent.c
-index c617282d5b2a..80d53b950821 100644
---- a/arch/powerpc/mm/dma-noncoherent.c
-+++ b/arch/powerpc/mm/dma-noncoherent.c
-@@ -401,12 +401,14 @@ void arch_sync_dma_for_device(struct device *dev, phys_addr_t paddr,
- {
- 	__dma_sync_page(paddr, size, dir);
- }
-+EXPORT_SYMBOL_GPL(arch_sync_dma_for_device);
- 
- void arch_sync_dma_for_cpu(struct device *dev, phys_addr_t paddr,
- 		size_t size, enum dma_data_direction dir)
- {
- 	__dma_sync_page(paddr, size, dir);
- }
-+EXPORT_SYMBOL_GPL(arch_sync_dma_for_cpu);
- 
- /*
-  * Return the PFN for a given cpu virtual address returned by arch_dma_alloc.
--- 
-2.21.0
+--- a/mm/memory_hotplug.c~mm-memory_hotplug-make-sure-the-pfn-is-aligned-to-the-order-when-onlining-fix
++++ a/mm/memory_hotplug.c
+@@ -647,7 +647,7 @@ static int online_pages_range(unsigned l
+ 	for (pfn = start_pfn; pfn < end_pfn; pfn += 1ul << order) {
+ 		order = min(MAX_ORDER - 1, get_order(PFN_PHYS(end_pfn - pfn)));
+ 		/* __free_pages_core() wants pfns to be aligned to the order */
+-		if (unlikely(!IS_ALIGNED(pfn, 1ul << order)))
++		if (WARN_ON_ONCE(!IS_ALIGNED(pfn, 1ul << order)))
+ 			order = 0;
+ 		(*online_page_callback)(pfn_to_page(pfn), order);
+ 	}
+_
 
