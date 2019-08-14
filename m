@@ -2,210 +2,165 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CABC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E373C32757
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BAA6204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54CD020843
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 09:24:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ul21S1li"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfHNJXq (ORCPT
+        id S1726818AbfHNJYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 05:23:46 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53145 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfHNJXq (ORCPT
+        Wed, 14 Aug 2019 05:24:11 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35515 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfHNJYK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:23:46 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxpVM-0000pP-7X; Wed, 14 Aug 2019 11:23:40 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxpVL-0004Xl-K7; Wed, 14 Aug 2019 11:23:39 +0200
-Date:   Wed, 14 Aug 2019 11:23:39 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
-Subject: Re: [PATCH v2 2/2] pwm: sprd: Add Spreadtrum PWM support
-Message-ID: <20190814092339.73ybj5mycklvpnrq@pengutronix.de>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
- <20190813151612.v6x6e6kzxflkpu7b@pengutronix.de>
- <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
+        Wed, 14 Aug 2019 05:24:10 -0400
+Received: by mail-lf1-f65.google.com with SMTP id p197so78783768lfa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 02:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aubLn8waLrcyH8GiaZ4/P2Bxuaos2txwyKIGB9Gh2j4=;
+        b=Ul21S1lis1op8IKkes8RTEHlbkQVCappEErZbRKZ/80yD1dIJHnrjhrJnVl4ZjcgQH
+         rErzc0XkGd3wrTdwfUdIqtGvVaKXlsAL1m25p/glBIDFtz01bh1s/XQsqo/IyGGEj5kP
+         RSxwcnLmToLQfB2ZKWBlOqKh0IPrXdJi5KrOiDyC+8W95WCPep6e3aHN44Zbuq2CcccP
+         f9Wd/C4An7+1P9XofbNvxTIhq317PFTTEav1onpxaVYmC8HJj+Zi6gHx+48H17X2Jhso
+         JeveMcqq/+MMTR/VleApLzuBEw8Z2wlSbWOQLjtVwogWboOdh3cwse5vyml1MlxjXGi4
+         ZDkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=aubLn8waLrcyH8GiaZ4/P2Bxuaos2txwyKIGB9Gh2j4=;
+        b=coAi8geGX9oYAwooMK03il9hyNgPCUnJPz/x2aYNuhNh2bCyryueRAKFcEd5BnDv+Q
+         kkB7UzA3ZhvyffFIivzWxS7Tn/CrvOtXoUhvO+dL0dbUlf4qf4IANbG5H5X4H4RiUX8t
+         8shgfaHUrKrf39plJMKzkmeSbNjOjdRjm5zInu2lx1TIg4OCHCQxAangJPWRtOPYnkMV
+         tlZ4oVa21bSfrwFyuuzMwLfRBb1cxeCczYarEDFtMLsTtblvWTEOUHeQLWhdh1kXvbSs
+         8oYIeXXCXdlyIyBwZ+yx0ssx+MMUFyhvJOc1WWVUFoAHvJcJVkePvXsoQhAXniWQIrVq
+         WQJQ==
+X-Gm-Message-State: APjAAAXZ1JnFjiobuL8kj6i+7y8c6vnnUVTw+Sf9wfdYBxhG7dw/DLtW
+        so0oez8X4uR/1z+tKezImV47V2JECh8=
+X-Google-Smtp-Source: APXvYqw/IbZ9AUCs5SDIK+7WNXN+iu4AlM9c2hMq7+ZqfLDbxuqRkzN7aTSaafwrcI4AOd/xgKDPQg==
+X-Received: by 2002:a19:6d02:: with SMTP id i2mr24317533lfc.191.1565774648121;
+        Wed, 14 Aug 2019 02:24:08 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id r23sm228169ljm.59.2019.08.14.02.24.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 14 Aug 2019 02:24:07 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 12:24:05 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Magnus Karlsson <magnus.karlsson@intel.com>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        xdp-newbies@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf-next 1/3] libbpf: add asm/unistd.h to xsk to get
+ __NR_mmap2
+Message-ID: <20190814092403.GA4142@khorivan>
+Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        xdp-newbies@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
+ <20190813102318.5521-2-ivan.khoronzhuk@linaro.org>
+ <CAEf4BzZ2y_DmTXkVqFh6Hdcquo6UvntvCygw5h5WwrWYXRRg_g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <CAEf4BzZ2y_DmTXkVqFh6Hdcquo6UvntvCygw5h5WwrWYXRRg_g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Baolin,
+On Tue, Aug 13, 2019 at 04:38:13PM -0700, Andrii Nakryiko wrote:
 
-On Wed, Aug 14, 2019 at 04:42:28PM +0800, Baolin Wang wrote:
-> On Tue, 13 Aug 2019 at 23:16, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Tue, Aug 13, 2019 at 09:46:41PM +0800, Baolin Wang wrote:
-> > [...]
-> Not really, our hardware's method is, when you changed a new
-> configuration (MOD or duty is changed) , the hardware will wait for a
-> while to complete current period, then change to the new period.
+Hi, Andrii
 
-Can you describe that in more detail? This doesn't explain why MOD must be
-configured before DUTY. Is there another reason for that?
+>On Tue, Aug 13, 2019 at 3:24 AM Ivan Khoronzhuk
+><ivan.khoronzhuk@linaro.org> wrote:
+>>
+>> That's needed to get __NR_mmap2 when mmap2 syscall is used.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> ---
+>>  tools/lib/bpf/xsk.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
+>> index 5007b5d4fd2c..f2fc40f9804c 100644
+>> --- a/tools/lib/bpf/xsk.c
+>> +++ b/tools/lib/bpf/xsk.c
+>> @@ -12,6 +12,7 @@
+>>  #include <stdlib.h>
+>>  #include <string.h>
+>>  #include <unistd.h>
+>> +#include <asm/unistd.h>
+>
+>asm/unistd.h is not present in Github libbpf projection. Is there any
 
-> > > +static int sprd_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > +                       struct pwm_state *state)
-> > > +{
-> > > +     struct sprd_pwm_chip *spc =
-> > > +             container_of(chip, struct sprd_pwm_chip, chip);
-> > > +     struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
-> > > +     struct pwm_state cstate;
-> > > +     int ret;
-> > > +
-> > > +     pwm_get_state(pwm, &cstate);
-> >
-> > I don't like it when pwm drivers call pwm_get_state(). If ever
-> > pwm_get_state would take a lock, this would deadlock as the lock is
-> > probably already taken when your .apply() callback is running. Moreover
-> > the (expensive) calculations are not used appropriately. See below.
-> 
-> I do not think so, see:
-> 
-> static inline void pwm_get_state(const struct pwm_device *pwm, struct
-> pwm_state *state)
-> {
->         *state = pwm->state;
-> }
+Look on includes from
+tools/lib/bpf/libpf.c
+tools/lib/bpf/bpf.c
 
-OK, the PWM framework currently caches this for you. Still I would
-prefer if you didn't call PWM API functions in your lowlevel driver.
-There is (up to now) nothing bad that will happen if you do it anyhow,
-but when the PWM framework evolves it might (and I want to work on such
-an evolution). You must not call clk_get_rate() in a .set_rate()
-callback of a clock either.
- 
-> > > +     if (state->enabled) {
-> > > +             if (!cstate.enabled) {
-> >
-> > To just know the value of cstate.enabled you only need to read the
-> > register with the ENABLE flag. That is cheaper than calling get_state.
-> >
-> > > +                     /*
-> > > +                      * The clocks to PWM channel has to be enabled first
-> > > +                      * before writing to the registers.
-> > > +                      */
-> > > +                     ret = clk_bulk_prepare_enable(SPRD_PWM_NUM_CLKS,
-> > > +                                                   chn->clks);
-> > > +                     if (ret) {
-> > > +                             dev_err(spc->dev,
-> > > +                                     "failed to enable pwm%u clocks\n",
-> > > +                                     pwm->hwpwm);
-> > > +                             return ret;
-> > > +                     }
-> > > +             }
-> > > +
-> > > +             if (state->period != cstate.period ||
-> > > +                 state->duty_cycle != cstate.duty_cycle) {
-> >
-> > This is a coarse check. If state->period and cstate.period only differ
-> > by one calling sprd_pwm_config(spc, pwm, state->duty_cycle,
-> > state->period) probably results in a noop. So you're doing an expensive
-> > division to get an unreliable check. It would be better to calculate the
-> > register values from the requested state and compare the register
-> > values. The costs are more or less the same than calling .get_state and
-> > the check is reliable. And you don't need to spend another division to
-> > calculate the new register values.
-> 
-> Same as above comment.
+That's how it's done... Copping headers to arch/arm will not
+solve this, it includes both of them anyway, and anyway it needs
+asm/unistd.h inclusion here, only because xsk.c needs __NR_*
 
-When taking the caching into account (which I wouldn't) the check is
-still incomplete. OK, you could argue avoiding the recalculation in 90%
-(to just say some number) of the cases where it is unnecessary is good.
- 
-> >
-> > > +                     ret = sprd_pwm_config(spc, pwm, state->duty_cycle,
-> > > +                                           state->period);
-> > > +                     if (ret)
-> > > +                             return ret;
-> > > +             }
-> > > +
-> > > +             sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_ENABLE, 1);
-> > > +     } else if (cstate.enabled) {
-> > > +             sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_ENABLE, 0);
-> > > +
-> > > +             clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->clks);
-> >
-> > Assuming writing SPRD_PWM_ENABLE = 0 to the hardware completes the
-> > currently running period and the write doesn't block that long: Does
-> > disabling the clocks interfere with completing the period?
-> 
-> Writing SPRD_PWM_ENABLE = 0 will stop the PWM immediately, will not
-> waiting for completing the currently period.
 
-The currently active period is supposed to be completed. If you cannot
-implement this please point this out as limitation at the top of the
-driver.
+>way to avoid including this header? Generally, libbpf can't easily use
+>all of kernel headers, we need to re-implemented all the extra used
+>stuff for Github version of libbpf, so we try to minimize usage of new
+>headers that are not just plain uapi headers from include/uapi.
 
-Honestly I think most pwm users won't mind and they should get the
-possibility to tell they prefer pwm_apply_state to return immediately
-even if this could result in a spike. But we're not there yet.
-(Actually there are three things a PWM consumer might want:
+Yes I know, it's far away from real number of changes needed.
+I faced enough about this already and kernel headers, especially
+for arm32 it's a bit decency problem. But this patch it's part of
+normal one. I have couple issues despite this normally fixed mmap2
+that is the same even if uapi includes are coppied to tools/arch/arm.
 
- a) stop immediately;
- b) complete the currently running period, then stop and return only
-    when the period is completed; or
- c) complete the currently running period and then stop, return immediately if
-    possible.
+In continuation of kernel headers inclusion and arm build:
 
-Currently the expected semantic is b).
+For instance, what about this rough "kernel headers" hack:
+https://github.com/ikhorn/af_xdp_stuff/commit/aa645ccca4d844f404ec3c2b27402d4d7848d1b5
 
-> > > +static int sprd_pwm_remove(struct platform_device *pdev)
-> > > +{
-> > > +     struct sprd_pwm_chip *spc = platform_get_drvdata(pdev);
-> > > +     int ret, i;
-> > > +
-> > > +     ret = pwmchip_remove(&spc->chip);
-> > > +
-> > > +     for (i = 0; i < spc->num_pwms; i++) {
-> > > +             struct sprd_pwm_chn *chn = &spc->chn[i];
-> > > +
-> > > +             clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->clks);
-> >
-> > If a PWM was still running you're effectively stopping it here, right?
-> > Are you sure you don't disable once more than you enabled?
-> 
-> Yes, you are right. I should check current enable status of the PWM channel.
-> Thanks for your comments.
+or this one related for arm32 only:
+https://github.com/ikhorn/af_xdp_stuff/commit/2c6c6d538605aac39600dcb3c9b66de11c70b963
 
-I didn't recheck, but I think the right approach is to not fiddle with
-the clocks at all and rely on the PWM framework to not let someone call
-sprd_pwm_remove when a PWM is still in use.
+I have more...
 
-Best regards
-Uwe
+>
+>>  #include <arpa/inet.h>
+>>  #include <asm/barrier.h>
+>>  #include <linux/compiler.h>
+>> --
+>> 2.17.1
+>>
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Regards,
+Ivan Khoronzhuk
