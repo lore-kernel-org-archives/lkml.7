@@ -2,161 +2,116 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E38C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43935C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 831DC208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:43:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="m4VSz6yP"
+	by mail.kernel.org (Postfix) with ESMTP id 1DF61214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 21:44:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbfHNVnd (ORCPT
+        id S1729235AbfHNVoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 17:43:33 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:56696 "EHLO mail.andi.de1.cc"
+        Wed, 14 Aug 2019 17:44:21 -0400
+Received: from mga01.intel.com ([192.55.52.88]:38219 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728855AbfHNVnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 17:43:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rzfhwFa3vGxoAkostceCbIdcn+mpEwU4ARYQbmvuyIk=; b=m4VSz6yPLD1INnQVjkWpFn2qps
-        fSyfckhDJhYEai8gy0FwfRSrR9yWrYNcrGnAwnR8TRKT/qAM8CIHuDlTxchGrAP2FWHng2nOcMn+U
-        nb2r+79X4T14vNdmx9UzMj0mcOEd6/26DwjRdFYzetfHZlduSC546ugr2LBmLQbnMTlQ=;
-Received: from p5dcc3d63.dip0.t-ipconnect.de ([93.204.61.99] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1hy13F-0002T6-0Y; Wed, 14 Aug 2019 23:43:25 +0200
-Received: from andi by aktux with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1hy13E-0006HI-Mq; Wed, 14 Aug 2019 23:43:24 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     tony@atomide.com, lgirdwood@gmail.com, broonie@kernel.org,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, sboyd@kernel.org, nm@ti.com,
-        vireshk@kernel.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>, stable@vger.kernel.org
-Subject: [PATCH v2] regulator: twl: voltage lists for vdd1/2 on twl4030
-Date:   Wed, 14 Aug 2019 23:43:19 +0200
-Message-Id: <20190814214319.24087-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
+        id S1726126AbfHNVoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 17:44:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 14:44:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,386,1559545200"; 
+   d="scan'208";a="376182235"
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Aug 2019 14:44:20 -0700
+Received: from orsmsx111.amr.corp.intel.com (10.22.240.12) by
+ ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 14 Aug 2019 14:44:19 -0700
+Received: from orsmsx122.amr.corp.intel.com ([169.254.11.68]) by
+ ORSMSX111.amr.corp.intel.com ([169.254.12.226]) with mapi id 14.03.0439.000;
+ Wed, 14 Aug 2019 14:44:20 -0700
+From:   "Schmauss, Erik" <erik.schmauss@intel.com>
+To:     "Duran, Leo" <leo.duran@amd.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Subject: RE: Parsing PXM from ACPI (DSDT)
+Thread-Topic: Parsing PXM from ACPI (DSDT)
+Thread-Index: AdVSCEGThmsUNGQZSm2XEI5B9E2GMQA3cq8AAAA9gMAAAAlkEAAAd9EA
+Date:   Wed, 14 Aug 2019 21:44:19 +0000
+Message-ID: <CF6A88132359CE47947DB4C6E1709ED53C61A2BC@ORSMSX122.amr.corp.intel.com>
+References: <CY4PR12MB1815927E36A8A9A0E5B18734F9D20@CY4PR12MB1815.namprd12.prod.outlook.com>
+ <CY4PR12MB18156AA493BA8F3C28F0377FF9AD0@CY4PR12MB1815.namprd12.prod.outlook.com>
+ <CY4PR12MB1815E6208E334CE4EA8F2670F9AD0@CY4PR12MB1815.namprd12.prod.outlook.com>
+ <CY4PR12MB1815251BBCB062AAA8EEB39CF9AD0@CY4PR12MB1815.namprd12.prod.outlook.com>
+In-Reply-To: <CY4PR12MB1815251BBCB062AAA8EEB39CF9AD0@CY4PR12MB1815.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMWE4ZTM1NTQtNzkzMi00NzdhLTgyZDUtOWI3Y2JhYTcxNWI3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZG1wRnF0MUtxQVpJdGNadVlpK2RJNDNlMml3YmF5Y1huOVY1bEhuNnBMVEF2bGMyRTZFTG8yMzJ0S3NtbVwvbjEifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-_opp_supported_by_regulators() wrongly ignored errors from
-regulator_is_supported_voltage(), so it considered errors as
-success. Since
-commit 498209445124 ("regulator: core: simplify return value on suported_voltage")
-regulator_is_supported_voltage() returns a real boolean, so
-errors make _opp_supported_by_regulators() return false.
-
-That reveals a problem with the declaration of the VDD1/2
-regulators on twl4030.
-The VDD1/VDD2 regulators on twl4030 are neither defined with
-voltage lists nor with the continuous flag set, so
-regulator_is_supported_voltage() returns false and an error
-before above mentioned commit (which was considered success)
-The result is that after the above mentioned commit cpufreq
-does not work properly e.g. dm3730.
-
-[    2.490997] core: _opp_supported_by_regulators: OPP minuV: 1012500 maxuV: 1012500, not supported by regulator
-[    2.501617] cpu cpu0: _opp_add: OPP not supported by regulators (300000000)
-[    2.509246] core: _opp_supported_by_regulators: OPP minuV: 1200000 maxuV: 1200000, not supported by regulator
-[    2.519775] cpu cpu0: _opp_add: OPP not supported by regulators (600000000)
-[    2.527313] core: _opp_supported_by_regulators: OPP minuV: 1325000 maxuV: 1325000, not supported by regulator
-[    2.537750] cpu cpu0: _opp_add: OPP not supported by regulators (800000000)
-
-The patch fixes declaration of VDD1/2 regulators by
-adding proper voltage lists.
-
-Fixes: 498209445124 ("regulator: core: simplify return value on suported_voltage")
-Cc: stable@vger.kernel.org
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-resent because it was rejected by mailing lists, due to technical
-issues, sorry for the noise.
-changes in v2:
-  using a proper voltage list instead of misusing the continuous flag
-  subject was regulator: twl: mark vdd1/2 as continuous on twl4030
-
- drivers/regulator/twl-regulator.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/regulator/twl-regulator.c b/drivers/regulator/twl-regulator.c
-index 6fa15b2d6fb3..866b4dd01da9 100644
---- a/drivers/regulator/twl-regulator.c
-+++ b/drivers/regulator/twl-regulator.c
-@@ -359,6 +359,17 @@ static const u16 VINTANA2_VSEL_table[] = {
- 	2500, 2750,
- };
- 
-+/* 600mV to 1450mV in 12.5 mV steps */
-+static const struct regulator_linear_range VDD1_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(600000, 0, 68, 12500)
-+};
-+
-+/* 600mV to 1450mV in 12.5 mV steps, everything above = 1500mV */
-+static const struct regulator_linear_range VDD2_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(600000, 0, 68, 12500),
-+	REGULATOR_LINEAR_RANGE(1500000, 69, 69, 12500)
-+};
-+
- static int twl4030ldo_list_voltage(struct regulator_dev *rdev, unsigned index)
- {
- 	struct twlreg_info	*info = rdev_get_drvdata(rdev);
-@@ -427,6 +438,8 @@ static int twl4030smps_get_voltage(struct regulator_dev *rdev)
- }
- 
- static const struct regulator_ops twl4030smps_ops = {
-+	.list_voltage   = regulator_list_voltage_linear_range,
-+
- 	.set_voltage	= twl4030smps_set_voltage,
- 	.get_voltage	= twl4030smps_get_voltage,
- };
-@@ -466,7 +479,8 @@ static const struct twlreg_info TWL4030_INFO_##label = { \
- 		}, \
- 	}
- 
--#define TWL4030_ADJUSTABLE_SMPS(label, offset, num, turnon_delay, remap_conf) \
-+#define TWL4030_ADJUSTABLE_SMPS(label, offset, num, turnon_delay, remap_conf, \
-+		n_volt) \
- static const struct twlreg_info TWL4030_INFO_##label = { \
- 	.base = offset, \
- 	.id = num, \
-@@ -479,6 +493,9 @@ static const struct twlreg_info TWL4030_INFO_##label = { \
- 		.owner = THIS_MODULE, \
- 		.enable_time = turnon_delay, \
- 		.of_map_mode = twl4030reg_map_mode, \
-+		.n_voltages = n_volt, \
-+		.n_linear_ranges = ARRAY_SIZE(label ## _ranges), \
-+		.linear_ranges = label ## _ranges, \
- 		}, \
- 	}
- 
-@@ -518,8 +535,8 @@ TWL4030_ADJUSTABLE_LDO(VSIM, 0x37, 9, 100, 0x00);
- TWL4030_ADJUSTABLE_LDO(VDAC, 0x3b, 10, 100, 0x08);
- TWL4030_ADJUSTABLE_LDO(VINTANA2, 0x43, 12, 100, 0x08);
- TWL4030_ADJUSTABLE_LDO(VIO, 0x4b, 14, 1000, 0x08);
--TWL4030_ADJUSTABLE_SMPS(VDD1, 0x55, 15, 1000, 0x08);
--TWL4030_ADJUSTABLE_SMPS(VDD2, 0x63, 16, 1000, 0x08);
-+TWL4030_ADJUSTABLE_SMPS(VDD1, 0x55, 15, 1000, 0x08, 68);
-+TWL4030_ADJUSTABLE_SMPS(VDD2, 0x63, 16, 1000, 0x08, 69);
- /* VUSBCP is managed *only* by the USB subchip */
- TWL4030_FIXED_LDO(VINTANA1, 0x3f, 1500, 11, 100, 0x08);
- TWL4030_FIXED_LDO(VINTDIG, 0x47, 1500, 13, 100, 0x08);
--- 
-2.20.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtYWNwaS1vd25l
+ckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpsaW51eC1hY3BpLQ0KPiBvd25lckB2Z2VyLmtlcm5l
+bC5vcmddIE9uIEJlaGFsZiBPZiBEdXJhbiwgTGVvDQo+IFNlbnQ6IFdlZG5lc2RheSwgQXVndXN0
+IDE0LCAyMDE5IDI6MzAgUE0NCj4gVG86IGxpbnV4LWFjcGlAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IENjOiBSYWZhZWwgSi4gV3lzb2NraSA8cmp3QHJq
+d3lzb2NraS5uZXQ+OyBMZW4gQnJvd24gPGxlbmJAa2VybmVsLm9yZz4NCj4gU3ViamVjdDogUGFy
+c2luZyBQWE0gZnJvbSBBQ1BJIChEU0RUKQ0KPiANCkhpIExlbywNCg0KPiBIZWxsbywNCj4gSXMg
+bm90IGNsZWFyIG9yIGV2aWRlbnQgdG8gbWUgaWYgdGhlIGtlcm5lbCBwYXJzZXMgX1BYTSB2YWx1
+ZXMgYmVsb3cgKG9yIHVuZGVyKQ0KPiB0aGUgcm9vdC1jb21wbGV4Lg0KDQpCdWlsZCB3aXRoIENP
+TkZJR19BQ1BJX0RFQlVHPXkgYW5kIGJvb3Qgd2l0aCBhY3BpLmRlYnVnX2xheWVyPTB4ZmZmZmZm
+ZmYgYWNwaS5kZWJ1Z19sZXZlbD0weDgwMDAwDQoNClRoaXMgd2lsbCBwcmludCBhbGwgb2YgdGhl
+IEFjcGlFdmFsdWF0ZU9iamVjdCBxdWVyaWVzIHRvIHRoZSBkbWVzZy4NCg0KPiANCj4gRm9yIGV4
+YW1wbGUsIGluIG15IGV4cGVyaWVuY2U6DQo+IFRoaXMgQVNMIHNhbXBsZSBmb3IgUFhNIGF0IHRo
+ZSByb290LWNvbXBsZXggbGV2ZWwgcHJvZHVjZXMgdGhlIGV4cGVjdGVkDQo+IE5VTUEgYXNzaWdu
+bWVudCBmcm9tIOKAnGxzdG9wb+KAnToNCj4gU2NvcGUgKFxfU0IpIHsNCj4gICAvLyAuLi4NCj4g
+ICBEZXZpY2UgKFBDSTApIHsgLy8gUm9vdCBQQ0kgQnVzIChIb3N0LUJyaWRnZSkNCj4gICAgIE5h
+bWUgKF9ISUQsIEVJU0FJRCgiUE5QMEEwOCIpKQ0KPiAgICAgTmFtZSAoX0NJRCwgRUlTQUlEKCJQ
+TlAwQTAzIikpDQo+ICAgICBOYW1lIChfQkJOLCAwKQ0KPiAgICAgTWV0aG9kIChfQ1JTLDApIHsN
+Cj4gICAgICAgLy8gUmV0dXJuIGN1cnJlbnQgcmVzb3VyY2VzIGZvciBob3N0IGJyaWRnZSAwDQo+
+ICAgICB9DQo+ICAgICBOYW1lIChfUFJULCBQYWNrYWdlKCkgew0KPiAgICAgIC8vIFBhY2thZ2Ug
+d2l0aCBQQ0kgSVJRIHJvdXRpbmcgdGFibGUgaW5mb3JtYXRpb24NCj4gICAgIH0pDQo+ICAgICBN
+ZXRob2QgKF9QWE0sIDAsIE5vdFNlcmlhbGl6ZWQpIHsNCj4gICAgICAgUmV0dXJuICgwKQ0KPiAg
+ICAgfQ0KPiAgIH0NCj4gICAvLyAuLi4NCj4gfQ0KPiANCj4gSG93ZXZlciwNCj4gVGhpcyBBU0wg
+c2FtcGxlIGZvciBQWE0gYXQgdGhlIFAyUCByb290LWJyaWRnZSBsZXZlbCBkb2VzIG5vdCBwcm9k
+dWNlIHRoZQ0KPiBleHBlY3RlZCBOVU1BIGFzc2lnbm1lbnQgZnJvbSDigJxsc3RvcG/igJ06DQo+
+ICAoT2YgY291cnNlLCB0aGUgYXNzdW1wdGlvbiBpcyB0aGF0IG11bHRpcGxlIE5VTUEgbm9kZXMg
+YWN0dWFsbHkgZXhpc3Qgb24gdGhlDQo+IHN5c3RlbSkNCj4gDQo+ICBTY29wZSAoXF9TQikgew0K
+PiAgIC8vIC4uLg0KPiAgIERldmljZSAoUENJMCkgeyAvLyBSb290IFBDSSBCdXMgKEhvc3QtQnJp
+ZGdlKQ0KPiAgICAgTmFtZSAoX0hJRCwgRUlTQUlEICgiUE5QMEEwOCIpKQ0KPiAgICAgTmFtZSAo
+X0NJRCwgRUlTQUlEICgiUE5QMEEwMyIpKQ0KPiAgICAgTmFtZSAoX0JCTiwgMCkNCj4gICAgIE1l
+dGhvZCAoX0NSUywwKSB7DQo+ICAgICAgIC8vIFJldHVybiBjdXJyZW50IHJlc291cmNlcyBmb3Ig
+aG9zdCBicmlkZ2UgMA0KPiAgICAgfQ0KPiAgICAgTmFtZSAoX1BSVCwgUGFja2FnZSgpIHsNCj4g
+ICAgICAgLy8gUGFja2FnZSB3aXRoIFBDSSBJUlEgcm91dGluZyB0YWJsZSBpbmZvcm1hdGlvbg0K
+PiAgICAgfSkNCj4gDQo+IMKgwqDCoCBEZXZpY2UgKFAyUDApIHsgLy8gRmlyc3QgUENJLXRvLVBD
+SSBicmlkZ2UgKFBvcnQwKQ0KPiDCoMKgwqDCoMKgIE5hbWUgKF9BRFIsIDB4MDAwNzAwMDEpIC8v
+IERldmljZSM3aCwgRnVuYyMxIG9uIGJ1cyBQQ0kwDQo+IMKgwqDCoMKgwqAgTmFtZSAoX1BSVCwg
+UGFja2FnZSgpIHsNCj4gwqDCoMKgwqDCoCAgIC8vIFBhY2thZ2Ugd2l0aCBQQ0kgSVJRIHJvdXRp
+bmcgdGFibGUgaW5mb3JtYXRpb24NCj4gwqDCoMKgwqDCoCB9KQ0KPiAgICAgICBNZXRob2QgKF9Q
+WE0sIDAsIE5vdFNlcmlhbGl6ZWQpIHsNCj4gICAgICAgICBSZXR1cm4gKDApDQo+ICAgICAgIH0N
+Cj4gwqDCoMKgIH0NCj4gDQo+IMKgwqDCoCBEZXZpY2UgKFAyUDEpIHsgLy8gU2Vjb25kIFBDSS10
+by1QQ0kgYnJpZGdlIChQb3J0MSkNCj4gwqDCoMKgwqDCoCBOYW1lIChfQURSICwweDAwMDgwMDAx
+KSAvLyBEZXZpY2UjOGgsIEZ1bmMjMSBvbiBidXMgUENJMA0KPiDCoMKgwqDCoMKgIE5hbWUgKF9Q
+UlQsIFBhY2thZ2UoKSB7DQo+IMKgwqDCoMKgwqAgICAvLyBQYWNrYWdlIHdpdGggUENJIElSUSBy
+b3V0aW5nIHRhYmxlIGluZm9ybWF0aW9uDQo+IMKgICAgwqAgfSkNCj4gICAgICAgTWV0aG9kIChf
+UFhNLCAwLCBOb3RTZXJpYWxpemVkKSB7DQo+ICAgICAgICAgIFJldHVybiAoMSkNCj4gICAgICAg
+fQ0KPiDCoMKgwqAgfQ0KPiAgIH0NCj4gICAvLyAuLi4NCj4gfQ0KPiANCj4gVGhhbmtzLA0KPiBM
+ZW8uDQoNCg==
