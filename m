@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECFDC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95000C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0312720843
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 603002085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 02:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565748830;
-	bh=v+WF0ZRVrM4VLB1uDTBTypBQtF7paU+fFtBRHVf9egE=;
+	s=default; t=1565748836;
+	bh=X+Ec1Epi8YKzHbbrViQD/m0/f4StJkTKOw6RGCVSHYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wIxVSL6xk63fF4H498wikpd3c4MCJPn4Zy8YlbgRnuyOA/1c5iIngaugS/CmYwEBO
-	 nPmkyZdtKHPZmH8mi4e7Q4nlk2Fc+pzvWOB0kGUsicvLsxno4Zlnd2LGBomX/GmuL4
-	 uE/MGH2ZjfRdqtt1biY9U62zGJuQzYxGGXMo8qCk=
+	b=AOvIs/+IfszWpqO52zbozo//h57SfhepAYRYiPNVeDyIztjHjm0qM9y7wpy2XO2M5
+	 DsOigg7rb2dWG2UbrBt8ZwghFGXQHfxXfT7xVRfxvaZpoIUtVF6ufcrHKoKIwbxk6y
+	 3cbliluk9vKfPhZKWlVGEqAi7Y95PBDd+KT4opdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728438AbfHNCNt (ORCPT
+        id S1726659AbfHNCNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 22:13:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45754 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 22:13:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728416AbfHNCNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 22:13:44 -0400
+        id S1728430AbfHNCNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 22:13:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2713320844;
-        Wed, 14 Aug 2019 02:13:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BE0E20843;
+        Wed, 14 Aug 2019 02:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565748823;
-        bh=v+WF0ZRVrM4VLB1uDTBTypBQtF7paU+fFtBRHVf9egE=;
+        s=default; t=1565748827;
+        bh=X+Ec1Epi8YKzHbbrViQD/m0/f4StJkTKOw6RGCVSHYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yOtoZ6zPmd3DcIg0TImsztSamqcXG7IeM0AgiFstlcB4dykTSwkml5VZlzMwn/y+n
-         sajM/aJ/+qRlEl9gzBeYQa9yMHqcJ5lfWdr8FsCSXs58rT/b1Ehb4nG4vmSZdfNvEt
-         635rAu5w7tENQb3qDMtczeYA2kIQu933h/sXWbXQ=
+        b=HccSGUEDp01Xnr0iuZeN/fmJ9AAiqvCo8N3ScCELPhf+EoBGqs+221qYAdoY+cMJl
+         7FTwJHcVQ4Ri3UJ1NgXj5rE3iZ8FhyIHgKgfEwR+V/RIgI6wqN/BjgLro/z7MQ9SAr
+         371jwFqrq6EvYgDm9d7fi4MFkE318xPaeSsxxcsU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 084/123] NFSv4: Fix a potential sleep while atomic in nfs4_do_reclaim()
-Date:   Tue, 13 Aug 2019 22:10:08 -0400
-Message-Id: <20190814021047.14828-84-sashal@kernel.org>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+965152643a75a56737be@syzkaller.appspotmail.com,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 087/123] HID: holtek: test for sanity of intfdata
+Date:   Tue, 13 Aug 2019 22:10:11 -0400
+Message-Id: <20190814021047.14828-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190814021047.14828-1-sashal@kernel.org>
 References: <20190814021047.14828-1-sashal@kernel.org>
@@ -59,142 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit c77e22834ae9a11891cb613bd9a551be1b94f2bc ]
+[ Upstream commit 01ec0a5f19c8c82960a07f6c7410fc9e01d7fb51 ]
 
-John Hubbard reports seeing the following stack trace:
+The ioctl handler uses the intfdata of a second interface,
+which may not be present in a broken or malicious device, hence
+the intfdata needs to be checked for NULL.
 
-nfs4_do_reclaim
-   rcu_read_lock /* we are now in_atomic() and must not sleep */
-       nfs4_purge_state_owners
-           nfs4_free_state_owner
-               nfs4_destroy_seqid_counter
-                   rpc_destroy_wait_queue
-                       cancel_delayed_work_sync
-                           __cancel_work_timer
-                               __flush_work
-                                   start_flush_work
-                                       might_sleep:
-                                        (kernel/workqueue.c:2975: BUG)
-
-The solution is to separate out the freeing of the state owners
-from nfs4_purge_state_owners(), and perform that outside the atomic
-context.
-
-Reported-by: John Hubbard <jhubbard@nvidia.com>
-Fixes: 0aaaf5c424c7f ("NFS: Cache state owners after files are closed")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+[jkosina@suse.cz: fix newly added spurious space]
+Reported-by: syzbot+965152643a75a56737be@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4_fs.h    |  3 ++-
- fs/nfs/nfs4client.c |  5 ++++-
- fs/nfs/nfs4state.c  | 27 ++++++++++++++++++++++-----
- 3 files changed, 28 insertions(+), 7 deletions(-)
+ drivers/hid/hid-holtek-kbd.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-index 8a38a254f5162..235919156eddd 100644
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -465,7 +465,8 @@ static inline void nfs4_schedule_session_recovery(struct nfs4_session *session,
+diff --git a/drivers/hid/hid-holtek-kbd.c b/drivers/hid/hid-holtek-kbd.c
+index b3d502421b79d..0a38e8e9bc783 100644
+--- a/drivers/hid/hid-holtek-kbd.c
++++ b/drivers/hid/hid-holtek-kbd.c
+@@ -123,9 +123,14 @@ static int holtek_kbd_input_event(struct input_dev *dev, unsigned int type,
  
- extern struct nfs4_state_owner *nfs4_get_state_owner(struct nfs_server *, const struct cred *, gfp_t);
- extern void nfs4_put_state_owner(struct nfs4_state_owner *);
--extern void nfs4_purge_state_owners(struct nfs_server *);
-+extern void nfs4_purge_state_owners(struct nfs_server *, struct list_head *);
-+extern void nfs4_free_state_owners(struct list_head *head);
- extern struct nfs4_state * nfs4_get_open_state(struct inode *, struct nfs4_state_owner *);
- extern void nfs4_put_open_state(struct nfs4_state *);
- extern void nfs4_close_state(struct nfs4_state *, fmode_t);
-diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index 81b9b6d7927ac..208a236dc2350 100644
---- a/fs/nfs/nfs4client.c
-+++ b/fs/nfs/nfs4client.c
-@@ -758,9 +758,12 @@ int nfs41_walk_client_list(struct nfs_client *new,
+ 	/* Locate the boot interface, to receive the LED change events */
+ 	struct usb_interface *boot_interface = usb_ifnum_to_if(usb_dev, 0);
++	struct hid_device *boot_hid;
++	struct hid_input *boot_hid_input;
  
- static void nfs4_destroy_server(struct nfs_server *server)
- {
-+	LIST_HEAD(freeme);
+-	struct hid_device *boot_hid = usb_get_intfdata(boot_interface);
+-	struct hid_input *boot_hid_input = list_first_entry(&boot_hid->inputs,
++	if (unlikely(boot_interface == NULL))
++		return -ENODEV;
 +
- 	nfs_server_return_all_delegations(server);
- 	unset_pnfs_layoutdriver(server);
--	nfs4_purge_state_owners(server);
-+	nfs4_purge_state_owners(server, &freeme);
-+	nfs4_free_state_owners(&freeme);
- }
++	boot_hid = usb_get_intfdata(boot_interface);
++	boot_hid_input = list_first_entry(&boot_hid->inputs,
+ 		struct hid_input, list);
  
- /*
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 556ec916846f0..261de26d897f7 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -624,24 +624,39 @@ void nfs4_put_state_owner(struct nfs4_state_owner *sp)
- /**
-  * nfs4_purge_state_owners - Release all cached state owners
-  * @server: nfs_server with cached state owners to release
-+ * @head: resulting list of state owners
-  *
-  * Called at umount time.  Remaining state owners will be on
-  * the LRU with ref count of zero.
-+ * Note that the state owners are not freed, but are added
-+ * to the list @head, which can later be used as an argument
-+ * to nfs4_free_state_owners.
-  */
--void nfs4_purge_state_owners(struct nfs_server *server)
-+void nfs4_purge_state_owners(struct nfs_server *server, struct list_head *head)
- {
- 	struct nfs_client *clp = server->nfs_client;
- 	struct nfs4_state_owner *sp, *tmp;
--	LIST_HEAD(doomed);
- 
- 	spin_lock(&clp->cl_lock);
- 	list_for_each_entry_safe(sp, tmp, &server->state_owners_lru, so_lru) {
--		list_move(&sp->so_lru, &doomed);
-+		list_move(&sp->so_lru, head);
- 		nfs4_remove_state_owner_locked(sp);
- 	}
- 	spin_unlock(&clp->cl_lock);
-+}
- 
--	list_for_each_entry_safe(sp, tmp, &doomed, so_lru) {
-+/**
-+ * nfs4_purge_state_owners - Release all cached state owners
-+ * @head: resulting list of state owners
-+ *
-+ * Frees a list of state owners that was generated by
-+ * nfs4_purge_state_owners
-+ */
-+void nfs4_free_state_owners(struct list_head *head)
-+{
-+	struct nfs4_state_owner *sp, *tmp;
-+
-+	list_for_each_entry_safe(sp, tmp, head, so_lru) {
- 		list_del(&sp->so_lru);
- 		nfs4_free_state_owner(sp);
- 	}
-@@ -1864,12 +1879,13 @@ static int nfs4_do_reclaim(struct nfs_client *clp, const struct nfs4_state_recov
- 	struct nfs4_state_owner *sp;
- 	struct nfs_server *server;
- 	struct rb_node *pos;
-+	LIST_HEAD(freeme);
- 	int status = 0;
- 
- restart:
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
--		nfs4_purge_state_owners(server);
-+		nfs4_purge_state_owners(server, &freeme);
- 		spin_lock(&clp->cl_lock);
- 		for (pos = rb_first(&server->state_owners);
- 		     pos != NULL;
-@@ -1898,6 +1914,7 @@ static int nfs4_do_reclaim(struct nfs_client *clp, const struct nfs4_state_recov
- 		spin_unlock(&clp->cl_lock);
- 	}
- 	rcu_read_unlock();
-+	nfs4_free_state_owners(&freeme);
- 	return 0;
- }
- 
+ 	return boot_hid_input->input->event(boot_hid_input->input, type, code,
 -- 
 2.20.1
 
