@@ -2,88 +2,109 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEF6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE10C32759
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C78B021721
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C78A216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 20:32:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bWazUH1o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbfHNU1X (ORCPT
+        id S1727652AbfHNUcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 16:27:23 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:35937 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729625AbfHNU1V (ORCPT
+        Wed, 14 Aug 2019 16:32:21 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:6708 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbfHNUcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 16:27:21 -0400
-X-Originating-IP: 87.5.130.64
-Received: from uno.homenet.telecomitalia.it (host64-130-dynamic.5-87-r.retail.telecomitalia.it [87.5.130.64])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id D59F3FF807;
-        Wed, 14 Aug 2019 20:27:18 +0000 (UTC)
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE
-        (V4L/DVB)), linux-kernel@vger.kernel.org (open list)
-Subject: [RFC 5/5] media: i2c: ov13858: Report the camera location
-Date:   Wed, 14 Aug 2019 22:28:15 +0200
-Message-Id: <20190814202815.32491-6-jacopo@jmondi.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190814202815.32491-1-jacopo@jmondi.org>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
+        Wed, 14 Aug 2019 16:32:20 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d546fdf0001>; Wed, 14 Aug 2019 13:32:31 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 14 Aug 2019 13:32:20 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 14 Aug 2019 13:32:20 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 14 Aug
+ 2019 20:32:13 +0000
+Subject: Re: [PATCH v3 hmm 02/11] mm/mmu_notifiers: do not speculatively
+ allocate a mmu_notifier_mm
+To:     Jason Gunthorpe <jgg@ziepe.ca>, <linux-mm@kvack.org>
+CC:     Andrea Arcangeli <aarcange@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        "Alex Deucher" <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Dimitri Sivanich <sivanich@sgi.com>,
+        <dri-devel@lists.freedesktop.org>, <amd-gfx@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>,
+        <intel-gfx@lists.freedesktop.org>,
+        Gavin Shan <shangw@linux.vnet.ibm.com>,
+        Andrea Righi <andrea@betterlinux.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+References: <20190806231548.25242-1-jgg@ziepe.ca>
+ <20190806231548.25242-3-jgg@ziepe.ca>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <d2d8d6a8-7ac5-8f04-c11a-61140fccc5e1@nvidia.com>
+Date:   Wed, 14 Aug 2019 13:32:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190806231548.25242-3-jgg@ziepe.ca>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565814751; bh=q5g/jOMKlOwEYLFivYM3g535tx3Zkm1ReT5LriUi6Cs=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bWazUH1oIGAphw/LWLwGrPnKZAno5v5obKf5t/eNR0RapozA5skQevZ5NNUWMTqSs
+         kQOZhem/RWC7YrXGqUQcoX9RNPOMaSjczbb19BupGsQlBWLQzrHehLyn5MRQxPoeRz
+         uRp+VPoBZXaU5WWDPyHzy/zn86IiYdKiYmtZuXSgMvZILtqwXmEIOyiTigq4o1+c8b
+         VlbXt4UAjtud+BNmrZDyOUAgEsUrePtigZDeaGw1BwQ9WQfGiUlfYRa7z7VO+ymAOg
+         wk1HgI2Ck8lmve8YFdkbz1IbY9uFTOy/smB0ozBuN1+Xs3FmWnPICy4oobSEcCxgmw
+         VWUvGnEtlLyrQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The camera location is retrieved from the firmware interface parsing
-the "location" device property and reported through the read-only
-V4L2_CID_LOCATION control.
 
-Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
----
- drivers/media/i2c/ov13858.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On 8/6/19 4:15 PM, Jason Gunthorpe wrote:
+> From: Jason Gunthorpe <jgg@mellanox.com>
+> 
+> A prior commit e0f3c3f78da2 ("mm/mmu_notifier: init notifier if necessary")
+> made an attempt at doing this, but had to be reverted as calling
+> the GFP_KERNEL allocator under the i_mmap_mutex causes deadlock, see
+> commit 35cfa2b0b491 ("mm/mmu_notifier: allocate mmu_notifier in advance").
+> 
+> However, we can avoid that problem by doing the allocation only under
+> the mmap_sem, which is already happening.
+> 
+> Since all writers to mm->mmu_notifier_mm hold the write side of the
+> mmap_sem reading it under that sem is deterministic and we can use that to
+> decide if the allocation path is required, without speculation.
+> 
+> The actual update to mmu_notifier_mm must still be done under the
+> mm_take_all_locks() to ensure read-side coherency.
+> 
+> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 
-diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
-index 45bb872db3c5..6baefc3083e1 100644
---- a/drivers/media/i2c/ov13858.c
-+++ b/drivers/media/i2c/ov13858.c
-@@ -1591,6 +1591,7 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
- 	struct i2c_client *client = v4l2_get_subdevdata(&ov13858->sd);
- 	struct v4l2_ctrl_handler *ctrl_hdlr;
- 	s64 exposure_max;
-+	u32 location;
- 	s64 vblank_def;
- 	s64 vblank_min;
- 	s64 hblank;
-@@ -1659,6 +1660,16 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
- 				     V4L2_CID_TEST_PATTERN,
- 				     ARRAY_SIZE(ov13858_test_pattern_menu) - 1,
- 				     0, 0, ov13858_test_pattern_menu);
-+
-+	ret = device_property_read_u32(&client->dev, "location", &location);
-+	if (!ret) {
-+		v4l2_ctrl_new_std(ctrl_hdlr, &ov13858_ctrl_ops,
-+				  V4L2_CID_LOCATION, V4L2_LOCATION_FRONT,
-+				  V4L2_LOCATION_BACK, 1,
-+				  location == V4L2_LOCATION_FRONT ?
-+				  V4L2_LOCATION_FRONT : V4L2_LOCATION_BACK);
-+	}
-+
- 	if (ctrl_hdlr->error) {
- 		ret = ctrl_hdlr->error;
- 		dev_err(&client->dev, "%s control init failed (%d)\n",
--- 
-2.22.0
-
+Looks good to me.
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
