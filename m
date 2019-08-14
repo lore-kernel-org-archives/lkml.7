@@ -5,50 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA928C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A069C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A186521743
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EFF521743
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 17:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565802363;
-	bh=AXa9RRJ/hRrng5SKmQ9KKNzrj/K4RQNNYJG4yJbTRHQ=;
+	s=default; t=1565802371;
+	bh=d4I6Ceu/1O8p7f12GClQkLGcpFKIXGp9haa/aTigk8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sf/x161DTE//UAXNPAfKrDJ4VYu5cA95oWReuZRSz5lYpDeLtz/RUAzaHmNQYzBts
-	 NCTaT26MpjzBxCBzuRyQq1oJknIGG8pmaM77vPgFxoA7wy3PDVPt8m/nylFMY7ag9a
-	 2+UHoJn6KjPl0e01Hz2O80ZAcfkYZPW5F59wiPWA=
+	b=nZE/icxQifiGPrV1aIsjWWRVtU+MYLkVlPWxIMzLYghbpHsH1vlbi2xiitmhuLa7O
+	 xoMWXg6IwTU/H2FedtWEF6RGIo9nYHkpI7Ho/u5WdXSH0AqNmdaJ/cvJ7Ed8rFNrO/
+	 Ilngw3PYMGthYi7/1vuIC5cmowZPhEooQkNX2eTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729575AbfHNRGC (ORCPT
+        id S1729598AbfHNRGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 13:06:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55006 "EHLO mail.kernel.org"
+        Wed, 14 Aug 2019 13:06:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729552AbfHNRF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 13:05:59 -0400
+        id S1729579AbfHNRGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 13:06:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E83322173B;
-        Wed, 14 Aug 2019 17:05:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3369821743;
+        Wed, 14 Aug 2019 17:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565802358;
-        bh=AXa9RRJ/hRrng5SKmQ9KKNzrj/K4RQNNYJG4yJbTRHQ=;
+        s=default; t=1565802365;
+        bh=d4I6Ceu/1O8p7f12GClQkLGcpFKIXGp9haa/aTigk8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eCfUtYGcYeMGCmn/rmkhpSJuiQH9PDI+hX4CUl2IzELc5QHg2hjFTDEwbVZyql3u4
-         xgXwxsITFDxs+54GlHzLqHOHqt3/vKcoHxOuQANCvzNIBLvcPyU2hgndv6eiD7QW1+
-         UaxIM/z3xdyZVuR+79JIxaTr5iIA7QRGPOHgzcwg=
+        b=GgNRkj3CQ5s2SCWbPXvN3//I8BEbeIlZBwHl1ggH9PRDeYVu00D/MNES/Vlg+b/Yh
+         e0V+Jj2X/YPg3tekIIZBvqU8AjybU722JMT9VscmWG6WYAc4lbQ1DbtEHsuHvPJufP
+         iQvLSdSFUbetGHjIu3DqSVsCFFkX3xZp3sU13Q20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Numfor Mbiziwo-Tiapo <nums@google.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>, Mark Drayton <mbd@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 095/144] ALSA: compress: Be more restrictive about when a drain is allowed
-Date:   Wed, 14 Aug 2019 19:00:51 +0200
-Message-Id: <20190814165803.856907290@linuxfoundation.org>
+Subject: [PATCH 5.2 098/144] perf stat: Fix segfault for event group in repeat mode
+Date:   Wed, 14 Aug 2019 19:00:54 +0200
+Message-Id: <20190814165803.983934923@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
 References: <20190814165759.466811854@linuxfoundation.org>
@@ -61,47 +67,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b8179944cb0dd53e5223996966746cdc8a60657 ]
+[ Upstream commit 08ef3af1579d0446db1c1bd08e2c42565addf10f ]
 
-Draining makes little sense in the situation of hardware overrun, as the
-hardware will have consumed all its available samples. Additionally,
-draining whilst the stream is paused would presumably get stuck as no
-data is being consumed on the DSP side.
+Numfor Mbiziwo-Tiapo reported segfault on stat of event group in repeat
+mode:
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+  # perf stat -e '{cycles,instructions}' -r 10 ls
+
+It's caused by memory corruption due to not cleaned evsel's id array and
+index, which needs to be rebuilt in every stat iteration. Currently the
+ids index grows, while the array (which is also not freed) has the same
+size.
+
+Fixing this by releasing id array and zeroing ids index in
+perf_evsel__close function.
+
+We also need to keep the evsel_list alive for stat record (which is
+disabled in repeat mode).
+
+Reported-by: Numfor Mbiziwo-Tiapo <nums@google.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Mark Drayton <mbd@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190715142121.GC6032@krava
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/compress_offload.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/builtin-stat.c | 9 ++++++++-
+ tools/perf/util/evsel.c   | 2 ++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index 6cf5b8440cf30..41905afada63f 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -811,7 +811,10 @@ static int snd_compr_drain(struct snd_compr_stream *stream)
- 	case SNDRV_PCM_STATE_OPEN:
- 	case SNDRV_PCM_STATE_SETUP:
- 	case SNDRV_PCM_STATE_PREPARED:
-+	case SNDRV_PCM_STATE_PAUSED:
- 		return -EPERM;
-+	case SNDRV_PCM_STATE_XRUN:
-+		return -EPIPE;
- 	default:
- 		break;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index e28002d905738..c6c550dbb9479 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -607,7 +607,13 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 	 * group leaders.
+ 	 */
+ 	read_counters(&(struct timespec) { .tv_nsec = t1-t0 });
+-	perf_evlist__close(evsel_list);
++
++	/*
++	 * We need to keep evsel_list alive, because it's processed
++	 * later the evsel_list will be closed after.
++	 */
++	if (!STAT_RECORD)
++		perf_evlist__close(evsel_list);
+ 
+ 	return WEXITSTATUS(status);
+ }
+@@ -1922,6 +1928,7 @@ int cmd_stat(int argc, const char **argv)
+ 			perf_session__write_header(perf_stat.session, evsel_list, fd, true);
+ 		}
+ 
++		perf_evlist__close(evsel_list);
+ 		perf_session__delete(perf_stat.session);
  	}
-@@ -860,7 +863,10 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
- 	case SNDRV_PCM_STATE_OPEN:
- 	case SNDRV_PCM_STATE_SETUP:
- 	case SNDRV_PCM_STATE_PREPARED:
-+	case SNDRV_PCM_STATE_PAUSED:
- 		return -EPERM;
-+	case SNDRV_PCM_STATE_XRUN:
-+		return -EPIPE;
- 	default:
- 		break;
- 	}
+ 
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 2c46f9aa416c6..b854541604df5 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1282,6 +1282,7 @@ static void perf_evsel__free_id(struct perf_evsel *evsel)
+ 	xyarray__delete(evsel->sample_id);
+ 	evsel->sample_id = NULL;
+ 	zfree(&evsel->id);
++	evsel->ids = 0;
+ }
+ 
+ static void perf_evsel__free_config_terms(struct perf_evsel *evsel)
+@@ -2074,6 +2075,7 @@ void perf_evsel__close(struct perf_evsel *evsel)
+ 
+ 	perf_evsel__close_fd(evsel);
+ 	perf_evsel__free_fd(evsel);
++	perf_evsel__free_id(evsel);
+ }
+ 
+ int perf_evsel__open_per_cpu(struct perf_evsel *evsel,
 -- 
 2.20.1
 
