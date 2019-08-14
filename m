@@ -2,179 +2,183 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36446C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90A8C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DCDF2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:39:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vn4hhpuF"
+	by mail.kernel.org (Postfix) with ESMTP id 7CB63208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 14:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565793669;
+	bh=jqAmDB/DdtSMeWfimuoJggpnAk0RJ3WaU75jDeIn5oo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CyEO26jKv+hCnxSsWwZq77C8UMCeXQGYgADFs+DSn4E+R3/vdH3YOlXTncAX09JM+
+	 eMX8+Tip6gcpxcPkMhhRdEPDGqwVtRhmz4FdOrVzyVERUZF1GUhmWIFplNh7R6YYRl
+	 3O/LPgrYlydQpWhUfuitZrqfZJTbUgkilYdnFIO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbfHNOjY (ORCPT
+        id S1728143AbfHNOlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 10:39:24 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40060 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfHNOjY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 10:39:24 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w10so53185133pgj.7;
-        Wed, 14 Aug 2019 07:39:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JMUiHJTsAwSZagRv5u1mIW6VordoKt5B7sVmqdI/15I=;
-        b=Vn4hhpuFqTeNWbD1F1Eoy7rzWzynqyLG1XMGKCAH3ubHPbZRAA4jB/RmnUSR84PPEW
-         iTYdoIJ1SPh1+s2JwNE2rD++IJwZT+krmtVTN5MFNapPOXbvxv7QScwACsW5fypf0/3U
-         MHl3u5XPur/ap7gR3F5Z1PxeGaV4mmkdLvQLdRtkFztAW5p9m+XO/IwIVo1fTubSgP4G
-         kC1ufrogrl6I4DZQX//noYCuMJntbF+i29tznjywK1nWrJ+sLJLOnDQL/acV34tOXj3I
-         5UcfRFHzKIW/rWaAFXKNeh63SHPoqljaggm4WWeBkXPvyqLj6kGPYQHT1ISKh3/qgEBn
-         lQ6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JMUiHJTsAwSZagRv5u1mIW6VordoKt5B7sVmqdI/15I=;
-        b=tgmO9PvCSfB1BVURNwwDdmNrYpdv0o/+szPifcchGQSh+qd06v57/DI0zzel7wQ+L4
-         o9yz+Oo3eSqqgsl1XToctpvRsItmXGrzmOYomUt0/nluMpOaVkE7RkS1IsPrsVsYhXzG
-         T75Fffab+MPjhuwTrY4xqwYAUaI0LFsx7jgjTLquRfYjXO0NFm6caAR66/Mt1ok2MCiT
-         lCdZ9THi08bPUKOMpugobQurlMaoypdpFbBCnlAp8R4DpypODNXBPUhbYCJ+lPyRPwf6
-         GrOgE6tFo6oE2s8d20yI+DBDta+DP94acjZWt8shjfGkRa37O4fb9MoNpoZhKXLKiFzt
-         XZRQ==
-X-Gm-Message-State: APjAAAVpmiUmwNMt+qfNt6AagJOMbq3pAjaWR6y2G7PNW/f8wBg1U7ug
-        PRGm69FDzcBhwsb6vXDZzKI=
-X-Google-Smtp-Source: APXvYqxk9+PaPbwX9l+cfmGnvelXdoXFkB7yG+lB9YLeeCMPwLcf50CVzSOElPfZ/oV7p8L2OX4rDQ==
-X-Received: by 2002:a63:2a08:: with SMTP id q8mr38916870pgq.415.1565793563173;
-        Wed, 14 Aug 2019 07:39:23 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e9sm6411280pge.39.2019.08.14.07.39.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 07:39:22 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 07:39:20 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/bridge: dumb-vga-dac: Fix dereferencing -ENODEV DDC
- channel
-Message-ID: <20190814143920.GA30613@roeck-us.net>
-References: <20190813093046.4976-1-geert+renesas@glider.be>
- <29ff3bfd-57ee-9c64-3706-555edc8b4675@baylibre.com>
+        Wed, 14 Aug 2019 10:41:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36248 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727558AbfHNOlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 10:41:08 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C5A12084F;
+        Wed, 14 Aug 2019 14:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565793666;
+        bh=jqAmDB/DdtSMeWfimuoJggpnAk0RJ3WaU75jDeIn5oo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rNsmFWWNEtepwSspPVPQj7tCrKE+6ilVhN23rjhA7f8T2B2i69Zs85I3qpC/pDSEY
+         rqWqwiQfS1y9E4hWMQdJM/K+pyYE6AQ9CMK9ek75MNFaUo5/+LkNcKP4ySo17uqG16
+         tpBkanURK0WmMPwYRrDuqri3s8x6EsmrAO4LX/AQ=
+Date:   Wed, 14 Aug 2019 15:41:00 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Yong Wu <yong.wu@mediatek.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Tomasz Figa <tfiga@google.com>,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
+        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
+        Matthias Kaehlcke <mka@chromium.org>, cui.zhang@mediatek.com,
+        chao.hao@mediatek.com, ming-fan.chen@mediatek.com
+Subject: Re: [PATCH v9 08/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB
+ Mode
+Message-ID: <20190814144059.ruyc45yoqkwpbuga@willie-the-truck>
+References: <1565423901-17008-1-git-send-email-yong.wu@mediatek.com>
+ <1565423901-17008-9-git-send-email-yong.wu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <29ff3bfd-57ee-9c64-3706-555edc8b4675@baylibre.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1565423901-17008-9-git-send-email-yong.wu@mediatek.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 02:01:26PM +0200, Neil Armstrong wrote:
-> Hi,
-> 
-> 
-> On 13/08/2019 11:30, Geert Uytterhoeven wrote:
-> > If the VGA connector has no DDC channel, an error pointer will be
-> > dereferenced, e.g. on Salvator-XS:
-> > 
-> >     Unable to handle kernel NULL pointer dereference at virtual address 000000000000017d
-> >     ...
-> >     Call trace:
-> >      sysfs_do_create_link_sd.isra.0+0x40/0x108
-> >      sysfs_create_link+0x20/0x40
-> >      drm_sysfs_connector_add+0xa8/0xc8
-> >      drm_connector_register.part.3+0x54/0xb0
-> >      drm_connector_register_all+0xb0/0xd0
-> >      drm_modeset_register_all+0x54/0x88
-> >      drm_dev_register+0x18c/0x1d8
-> >      rcar_du_probe+0xe4/0x150
-> >      ...
-> > 
-> > This happens because vga->ddc either contains a valid DDC channel
-> > pointer, or -ENODEV, and drm_connector_init_with_ddc() expects a valid
-> > DDC channel pointer, or NULL.
-> > 
-> > Fix this by resetting vga->ddc to NULL in case of -ENODEV, and replacing
-> > the existing error checks by non-NULL checks.
-> > This is similar to what the HDMI connector driver does.
-> > 
-> > Fixes: a4f9087e85de141e ("drm/bridge: dumb-vga-dac: Provide ddc symlink in connector sysfs directory")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > An alternative would be to check if vga->ddc contains an error pointer,
-> > and calling drm_connector_init() instead of
-> > drm_connector_init_with_ddc(), like before.
-> > ---
-> >  drivers/gpu/drm/bridge/dumb-vga-dac.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c b/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> > index 8ef6539ae78a6eb3..7aa789c358829b05 100644
-> > --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> > +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> > @@ -42,7 +42,7 @@ static int dumb_vga_get_modes(struct drm_connector *connector)
-> >  	struct edid *edid;
-> >  	int ret;
-> >  
-> > -	if (IS_ERR(vga->ddc))
-> > +	if (!vga->ddc)
-> >  		goto fallback;
-> >  
-> >  	edid = drm_get_edid(connector, vga->ddc);
-> > @@ -84,7 +84,7 @@ dumb_vga_connector_detect(struct drm_connector *connector, bool force)
-> >  	 * wire the DDC pins, or the I2C bus might not be working at
-> >  	 * all.
-> >  	 */
-> > -	if (!IS_ERR(vga->ddc) && drm_probe_ddc(vga->ddc))
-> > +	if (vga->ddc && drm_probe_ddc(vga->ddc))
-> >  		return connector_status_connected;
-> >  
-> >  	return connector_status_unknown;
-> > @@ -197,6 +197,7 @@ static int dumb_vga_probe(struct platform_device *pdev)
-> >  		if (PTR_ERR(vga->ddc) == -ENODEV) {
-> >  			dev_dbg(&pdev->dev,
-> >  				"No i2c bus specified. Disabling EDID readout\n");
-> > +			vga->ddc = NULL;
-> >  		} else {
-> >  			dev_err(&pdev->dev, "Couldn't retrieve i2c bus\n");
-> >  			return PTR_ERR(vga->ddc);
-> > @@ -218,7 +219,7 @@ static int dumb_vga_remove(struct platform_device *pdev)
-> >  
-> >  	drm_bridge_remove(&vga->bridge);
-> >  
-> > -	if (!IS_ERR(vga->ddc))
-> > +	if (vga->ddc)
-> >  		i2c_put_adapter(vga->ddc);
-> >  
-> >  	return 0;
-> > 
-> 
-> Looks sane,
-> 
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> 
-> Guenter, can you confirm it also fixes qemu:versatilepb ?
-> 
+Hi Yong Wu,
 
-Yes, it does.
+Sorry, but I'm still deeply confused by this patch.
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+On Sat, Aug 10, 2019 at 03:58:08PM +0800, Yong Wu wrote:
+> MediaTek extend the arm v7s descriptor to support the dram over 4GB.
+> 
+> In the mt2712 and mt8173, it's called "4GB mode", the physical address
+> is from 0x4000_0000 to 0x1_3fff_ffff, but from EMI point of view, it
+> is remapped to high address from 0x1_0000_0000 to 0x1_ffff_ffff, the
+> bit32 is always enabled. thus, in the M4U, we always enable the bit9
+> for all PTEs which means to enable bit32 of physical address. Here is
+> the detailed remap relationship in the "4GB mode":
+> CPU PA         ->    HW PA
+> 0x4000_0000          0x1_4000_0000 (Add bit32)
+> 0x8000_0000          0x1_8000_0000 ...
+> 0xc000_0000          0x1_c000_0000 ...
+> 0x1_0000_0000        0x1_0000_0000 (No change)
 
-Guenter
+So in this example, there are no PAs below 0x4000_0000 yet you later
+add code to deal with that:
+
+> +	/* Workaround for MTK 4GB Mode: Add BIT32 only when PA < 0x4000_0000.*/
+> +	if (cfg->oas == ARM_V7S_MTK_4GB_OAS && paddr < 0x40000000UL)
+> +		paddr |= BIT_ULL(32);
+
+Why? Mainline currently doesn't do anything like this for the "4gb mode"
+support as far as I can tell. In fact, we currently unconditionally set
+bit 32 in the physical address returned by iova_to_phys() which wouldn't
+match your CPU PAs listed above, so I'm confused about how this is supposed
+to work.
+
+The way I would like this quirk to work is that the io-pgtable code
+basically sets bit 9 in the pte when bit 32 is set in the physical address,
+and sets bit 4 in the pte when bit 33 is set in the physical address. It
+would then do the opposite when converting a pte to a physical address.
+
+That way, your driver can call the page table code directly with the high
+addresses and we don't have to do any manual offsetting or range checking
+in the page table code.
+
+Please can you explain to me why the diff below doesn't work on top of
+this series? I'm happy to chat on IRC if you think it would be easier,
+because I have a horrible feeling that we've been talking past each other
+and I'd like to see this support merged for 5.4.
+
+Will
+
+--->8
+
+diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
+index ab12ef5f8b03..d8d84617c822 100644
+--- a/drivers/iommu/io-pgtable-arm-v7s.c
++++ b/drivers/iommu/io-pgtable-arm-v7s.c
+@@ -184,7 +184,7 @@ static arm_v7s_iopte paddr_to_iopte(phys_addr_t paddr, int lvl,
+ 	arm_v7s_iopte pte = paddr & ARM_V7S_LVL_MASK(lvl);
+ 
+ 	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
+-		if ((paddr & BIT_ULL(32)) || cfg->oas == ARM_V7S_MTK_4GB_OAS)
++		if (paddr & BIT_ULL(32))
+ 			pte |= ARM_V7S_ATTR_MTK_PA_BIT32;
+ 		if (paddr & BIT_ULL(33))
+ 			pte |= ARM_V7S_ATTR_MTK_PA_BIT33;
+@@ -206,17 +206,14 @@ static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
+ 		mask = ARM_V7S_LVL_MASK(lvl);
+ 
+ 	paddr = pte & mask;
+-	if (cfg->oas == 32 || !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT))
+-		return paddr;
+ 
+-	if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
+-		paddr |= BIT_ULL(33);
++	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
++		if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
++			paddr |= BIT_ULL(32);
++		if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
++			paddr |= BIT_ULL(33);
++	}
+ 
+-	/* Workaround for MTK 4GB Mode: Add BIT32 only when PA < 0x4000_0000.*/
+-	if (cfg->oas == ARM_V7S_MTK_4GB_OAS && paddr < 0x40000000UL)
+-		paddr |= BIT_ULL(32);
+-	else if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
+-		paddr |= BIT_ULL(32);
+ 	return paddr;
+ }
+ 
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index d5b9454352fd..3ae54dedede0 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -286,7 +286,7 @@ static int mtk_iommu_domain_finalise(struct mtk_iommu_domain *dom)
+ 	if (!IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
+ 		dom->cfg.oas = 32;
+ 	else if (data->enable_4GB)
+-		dom->cfg.oas = ARM_V7S_MTK_4GB_OAS;
++		dom->cfg.oas = 33;
+ 	else
+ 		dom->cfg.oas = 34;
+ 
+diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
+index 27337395bd42..a2a52c349fe4 100644
+--- a/include/linux/io-pgtable.h
++++ b/include/linux/io-pgtable.h
+@@ -113,8 +113,6 @@ struct io_pgtable_cfg {
+ 	};
+ };
+ 
+-#define ARM_V7S_MTK_4GB_OAS			33
+-
+ /**
+  * struct io_pgtable_ops - Page table manipulation API for IOMMU drivers.
+  *
