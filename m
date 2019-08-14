@@ -2,155 +2,154 @@ Return-Path: <SRS0=cDsG=WK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AC4C32757
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 19:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4899C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 19:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CFD32064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 19:56:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5im4LRU"
+	by mail.kernel.org (Postfix) with ESMTP id 7E6332064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 14 Aug 2019 19:59:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbfHNT4p (ORCPT
+        id S1728581AbfHNT7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 15:56:45 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45274 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbfHNT4p (ORCPT
+        Wed, 14 Aug 2019 15:59:48 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57474 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728169AbfHNT7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 15:56:45 -0400
-Received: by mail-qt1-f195.google.com with SMTP id k13so14217221qtm.12;
-        Wed, 14 Aug 2019 12:56:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=ww+ukQWhq8T3zW2D5eMGHhBPEXg0kxg6O6YWVSbyLu0=;
-        b=Z5im4LRUTbqe71draDujv36ynaR5I7qnWRFDXujjJOzy8/wD1b7rPasp8FZ0ASV+FK
-         2TOMISmoOdJ7DuiiaFYlzb9BQAokUydp8ZyR4t3xhk1tZM5T4q89XGdp4vgvIz3wTBGN
-         ffr//kJA2Xy3cDRAURvIvGO8qv4/ro/22riaw2Bg/9dDRcetRHknLSh58Jf+0KNGPA6v
-         lgx6bGTaXn0l4GBe5ERN9ErTjrki/EPLWVrJ2B3fH2L2nj5WJoF9oQPcTGGr3zqbYi0M
-         dkSVvFrCEYMsPitD6HZNUOztYWReG85PTV3FVlII6yFD012SQJAF12TPOqyl9lHBi811
-         DFeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=ww+ukQWhq8T3zW2D5eMGHhBPEXg0kxg6O6YWVSbyLu0=;
-        b=gOIXH6EXbEq99u27/TqlAWtgJW640zSSJoqOG3WixZrPqD4BNwu83PMHGzIEczf1Pz
-         Aj0W4PUBaIh8G8CZ7gRMFz1Hxj4YBaeXVVyZrSRImK+OgYqCCKuZAiTVnFtJlrAQpEcH
-         TI6KhURiF43fNfbxoVX5B04Kvj3BOSpOhfOlYrPoahFC4osbNV5zcbEb0vZ+yDyoPnY0
-         qrosby1lVpnfpzYMPGHe063un0TGD/UTNiwJcesEzZJDkLIdp97TaiVIJhSGWUszZe1f
-         2MoCZLtQUaR4b7Zqmq/sqakTSEAwEDPmeDaQ5TtSAR9YCBPSvAhUrg4cf8qsd5WIB7As
-         9rsQ==
-X-Gm-Message-State: APjAAAVaDSh7YV2zmipsJT3Uc4M6gA5bG0sFvd16OfOQPP8lVms1Opez
-        DVc9os4hhPe70aiVLwdyqCMKIOm2RIW/ei/TL8c=
-X-Google-Smtp-Source: APXvYqxXSTAWwijyc9NlManHFj6IVa/Msxv4XU2yOuIwifQOSvJEefJBpvrsS3zKqV4PuA0PJ50+m8sLy2gTt5qDjGs=
-X-Received: by 2002:ac8:488a:: with SMTP id i10mr891426qtq.93.1565812603868;
- Wed, 14 Aug 2019 12:56:43 -0700 (PDT)
+        Wed, 14 Aug 2019 15:59:47 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id DA10228CB47
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v6 00/11] media: hantro: Add support for H264 decoding
+Date:   Wed, 14 Aug 2019 16:59:20 -0300
+Message-Id: <20190814195931.6587-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
- <20190813102318.5521-2-ivan.khoronzhuk@linaro.org> <CAEf4BzZ2y_DmTXkVqFh6Hdcquo6UvntvCygw5h5WwrWYXRRg_g@mail.gmail.com>
- <20190814092403.GA4142@khorivan>
-In-Reply-To: <20190814092403.GA4142@khorivan>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 14 Aug 2019 12:56:32 -0700
-Message-ID: <CAEf4BzbyAHkL5pFoBCKPY7ia3voj7t2OkFDNKYqdyE1Fiuy4nQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/3] libbpf: add asm/unistd.h to xsk to get __NR_mmap2
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        xdp-newbies@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 2:24 AM Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> wrote:
->
-> On Tue, Aug 13, 2019 at 04:38:13PM -0700, Andrii Nakryiko wrote:
->
-> Hi, Andrii
->
-> >On Tue, Aug 13, 2019 at 3:24 AM Ivan Khoronzhuk
-> ><ivan.khoronzhuk@linaro.org> wrote:
-> >>
-> >> That's needed to get __NR_mmap2 when mmap2 syscall is used.
-> >>
-> >> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> >> ---
-> >>  tools/lib/bpf/xsk.c | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
-> >> index 5007b5d4fd2c..f2fc40f9804c 100644
-> >> --- a/tools/lib/bpf/xsk.c
-> >> +++ b/tools/lib/bpf/xsk.c
-> >> @@ -12,6 +12,7 @@
-> >>  #include <stdlib.h>
-> >>  #include <string.h>
-> >>  #include <unistd.h>
-> >> +#include <asm/unistd.h>
-> >
-> >asm/unistd.h is not present in Github libbpf projection. Is there any
->
-> Look on includes from
-> tools/lib/bpf/libpf.c
-> tools/lib/bpf/bpf.c
->
+Small respin of H264 uAPI review and Hantro G1 H264 decoding support.
+Compared to previous version, this version does some more improvements
+on the uAPI spec, addressing feedback from Hans and Paul.
 
-Yeah, sorry for the noise. I missed that this is system header that's
-expected to be present, not internal kernel header, parts of which we
-need to re-implement for Github projection. Never mind my concerns.
+I really hope I managed to get this right, and address current concerns.
 
+Here's previous cover letter, for reference:
 
-> That's how it's done... Copping headers to arch/arm will not
-> solve this, it includes both of them anyway, and anyway it needs
-> asm/unistd.h inclusion here, only because xsk.c needs __NR_*
->
->
-> >way to avoid including this header? Generally, libbpf can't easily use
-> >all of kernel headers, we need to re-implemented all the extra used
-> >stuff for Github version of libbpf, so we try to minimize usage of new
-> >headers that are not just plain uapi headers from include/uapi.
->
-> Yes I know, it's far away from real number of changes needed.
-> I faced enough about this already and kernel headers, especially
-> for arm32 it's a bit decency problem. But this patch it's part of
-> normal one. I have couple issues despite this normally fixed mmap2
-> that is the same even if uapi includes are coppied to tools/arch/arm.
->
-> In continuation of kernel headers inclusion and arm build:
->
-> For instance, what about this rough "kernel headers" hack:
-> https://github.com/ikhorn/af_xdp_stuff/commit/aa645ccca4d844f404ec3c2b27402d4d7848d1b5
->
-> or this one related for arm32 only:
-> https://github.com/ikhorn/af_xdp_stuff/commit/2c6c6d538605aac39600dcb3c9b66de11c70b963
->
-> I have more...
->
-> >
-> >>  #include <arpa/inet.h>
-> >>  #include <asm/barrier.h>
-> >>  #include <linux/compiler.h>
-> >> --
-> >> 2.17.1
-> >>
->
-> --
-> Regards,
-> Ivan Khoronzhuk
+This series consolidates the two recent H264 series submitted
+by Boris [1] [2]. Some patches from [2] have been merged (namely,
+helpers for the Hantro driver), and so I'm adding the remanining
+bits required to support H264 on Hantro G1 VPU.
+
+* Patch 1 adds support for the sort_r() variant and has
+  been posted separately by Rasmus. It would be good to merge this patch
+  via the media tree, ideally as soon as possible, to avoid the
+  synchronisation burden that might appear if we decide to delay it.
+
+* Patch 2 to 4 extends the H264 uAPI, introducing frame-based vs slice-based
+  decoding granularity, and also support for different NALU start codes.
+  Currently, Annex B and no start codes are the supported options.
+
+  With the introduction of the start code control, the H264 parsed
+  slices pixel format should be renamed, dropping the _RAW suffix,
+  which is now meaningless.
+
+* Patch 5 removes the P0/B0/B1 ref lists from the decode_params control.
+  These lists are no longer needed since we build them on the
+  kernel side based on the DPB.
+
+* Patch 6 and 7 exposes the proper decoding mode and start code
+  on the cedrus driver. The driver functionality is not changed,
+  and only the Cedrus support is now being properly exposed to
+  userspace.
+
+* Patch 8 is needed to properly propagate the OUTPUT buffer timestamp to
+  the CAPTURE buffer one, which is required for intra-frame references.
+
+* Patches 9 to 11 adds H264 support for Hantro G1 and then enable
+  H264 decoding on RK3288.
+
+This is based on media master and tested on Rockchip RK3288 for Hantro and
+Allwinner H3 boards for Cedrus. Philipp Zabel tested on i.MX8MQ EVK using [3].
+
+The Ffmpeg branch used to test is based on the great work of Jonas and Boris,
+and is available in [4]. Instructions to build and run are as follows:
+
+./configure --enable-v4l2-request --enable-libdrm
+make -j4
+
+(test via framebuffer rendering):
+
+./ffmpeg -loglevel debug -hwaccel drm -hwaccel_device /dev/dri/card0 -i $some_file.avi -pix_fmt bgra -f fbdev /dev/fb0
+
+[1] https://www.mail-archive.com/linux-media@vger.kernel.org/msg148299.html
+[2] https://lkml.org/lkml/2019/6/19/379
+[3] git://git.pengutronix.de/git/pza/linux.git hantro/imx8m-wip
+[4] https://gitlab.collabora.com/ezequiel/ffmpeg/tree/stateless-mpeg2-vp8-h264-v4
+
+Boris Brezillon (3):
+  media: uapi: h264: Add the concept of decoding mode
+  media: uapi: h264: Get rid of the p0/b0/b1 ref-lists
+  media: hantro: Move copy_metadata() before doing a decode operation
+
+Ezequiel Garcia (4):
+  media: uapi: h264: Rename pixel format
+  media: uapi: h264: Add the concept of start code
+  media: cedrus: Cleanup control initialization
+  media: cedrus: Specify H264 startcode and decoding mode
+
+Hertz Wong (3):
+  media: hantro: Add core bits to support H264 decoding
+  media: hantro: Add support for H264 decoding on G1
+  media: hantro: Enable H264 decoding on rk3288
+
+Rasmus Villemoes (1):
+  lib/sort.c: implement sort() variant taking context argument
+
+ .../media/uapi/v4l/ext-ctrls-codec.rst        |  89 ++-
+ .../media/uapi/v4l/pixfmt-compressed.rst      |  11 +-
+ drivers/media/v4l2-core/v4l2-ctrls.c          |  18 +
+ drivers/media/v4l2-core/v4l2-ioctl.c          |   2 +-
+ drivers/staging/media/hantro/Makefile         |   2 +
+ drivers/staging/media/hantro/hantro.h         |   9 +-
+ drivers/staging/media/hantro/hantro_drv.c     |  50 +-
+ .../staging/media/hantro/hantro_g1_h264_dec.c | 292 ++++++++
+ drivers/staging/media/hantro/hantro_h264.c    | 641 ++++++++++++++++++
+ drivers/staging/media/hantro/hantro_hw.h      |  56 ++
+ drivers/staging/media/hantro/hantro_v4l2.c    |  10 +
+ drivers/staging/media/hantro/rk3288_vpu_hw.c  |  21 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.c   |  65 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.h   |   3 +-
+ .../staging/media/sunxi/cedrus/cedrus_dec.c   |   2 +-
+ .../staging/media/sunxi/cedrus/cedrus_video.c |   6 +-
+ include/linux/sort.h                          |   5 +
+ include/media/h264-ctrls.h                    |  21 +-
+ lib/sort.c                                    |  34 +-
+ 19 files changed, 1281 insertions(+), 56 deletions(-)
+ create mode 100644 drivers/staging/media/hantro/hantro_g1_h264_dec.c
+ create mode 100644 drivers/staging/media/hantro/hantro_h264.c
+
+-- 
+2.22.0
+
