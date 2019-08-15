@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BB5C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFECC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD22A20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623F62064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:57:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkhZBqbf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFJqYvpT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387528AbfHOW4x (ORCPT
+        id S2387555AbfHOW5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 18:56:53 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43577 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730124AbfHOW4w (ORCPT
+        Thu, 15 Aug 2019 18:57:12 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35165 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730124AbfHOW5L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 18:56:52 -0400
-Received: by mail-pl1-f196.google.com with SMTP id 4so1614491pld.10
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 15:56:52 -0700 (PDT)
+        Thu, 15 Aug 2019 18:57:11 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n4so1964290pgv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 15:57:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=k1idU8Xq6hhWx14UIqaY9Rq9ig+3aprjuOtZjiDONKE=;
-        b=YkhZBqbfCk1Ko7vJ6WDQM8L6chno+V86bJn+cnF8X7aSW6hBVDObZiN5WJ17hMRBKq
-         /Btn3/Z+yobLcycXO7YDY8uOPheeKM2jnrRK58W9Hxa85OSA1km0kovKpiPNULEQrLL6
-         ERjX4nU3Tlu9zmJNagcwlPcA5jy9S8saT2fjdxzK7b2fJ5k8wfrvhotlaho8EYg+bLcL
-         mumDpLjOLg1jefHHdMufOAHruXyjSSC/2b6st6+DlPM1Neg/Bd1oUiTc11wC7FXvMRm/
-         3CSiIecms0QmlJ+yqZHOk490dBjRAVL7p/SYKh76vXMQ1W99w3g1lzZMW5MBzAvhDo4F
-         sE/w==
+        bh=//SH/nINLOSWPZTKeiIZxOBb8S19kIfsI20rVzfjmqI=;
+        b=cFJqYvpTHl2EeWvWjI0a3S/etuNiR1l40ySdrxskwE2GnLZ32c4otk1g4Rib5hfSKw
+         mC2B5bs292zz65+40RhNS/nYgRQMSkhB4Cg653lLzyhFsLMTt4c5GwovYsdAHXlcO/sw
+         84IERcCaRBjcU/fTwKU68SO61xvxrZqVgOPbb7QL4mpE11vJiqX8Fqo/g3WmeFrAjF4s
+         oau4HF03asFMX7GsmGTpFWP3HCOU5QfNix02fUY9GxgIjvRIQ8sRnKwMIAd1eIXVc71H
+         mjIjbUWOMPfUxw0rIHVRbyq2/5FrXMl2ThUeINNDyp9YUaxjnEqyVQTOLk3LNO7Z5DPc
+         7W0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=k1idU8Xq6hhWx14UIqaY9Rq9ig+3aprjuOtZjiDONKE=;
-        b=aS+8QXUAW07ExBMxRrWZ028UtvPtC5JyVzu0yktinOUcp9WKY2P4JkGNPP7R7HOJHe
-         OseTXoiChO/Gy5vvGBwxoewJ4y4GlvKo03+oQeG5KayGUlTHzajTk3W+O4ccaQgdr93N
-         kbXRFQEiap4e9Qj/LKJ6kmTmQNzhZYUNUYB8opRgQFZ9ohUsGxZ4LHMxmFAO7SAPazGH
-         WJ0+GNb2qOITIBciADMqabMuoP/pJjZu9+ro825BVo93l2L5QfGPYn1qoIyReVaYYFkJ
-         jEPs/ZtzDyas/N0doWs3ztTbrEqLdJwZ+fLSca6sCQTNdSWZczLmxM9WbsqEW1cKtYkO
-         2nQA==
-X-Gm-Message-State: APjAAAX0faFnt8NoAF6u391pdEjr9HyGzEl7Hy8cUJSYybbU1tyUTIa3
-        bnMQTvNZOhZKLmt2Wj5eE44=
-X-Google-Smtp-Source: APXvYqxMJGBNcPTBZ0h+q6UAEVcmOWZ7emWkOre2m+YQ8Eso5wBsO8bhqKZfmAm2pB+ov8ym5Suhlw==
-X-Received: by 2002:a17:902:1107:: with SMTP id d7mr6292166pla.184.1565909811833;
-        Thu, 15 Aug 2019 15:56:51 -0700 (PDT)
+        bh=//SH/nINLOSWPZTKeiIZxOBb8S19kIfsI20rVzfjmqI=;
+        b=dsByirdJ4xG31yArt8b4O8/Gav4O+oOvI/FXKwHB8bvaR6nvERfOVPm+cphAhuyNDY
+         Ag7LMbgX/YJkUZvVsjKOpTmSt7wRGS0k7gk/A9cRoLKBUkVtZwMmPwGOF6j/mvkQ4FBV
+         dOucgm6y7C9Gb5bfJCw8lDIFZvq8SQ1yRn7D+h3gxWaOYsB5GQwmvKVrtRpnbvbS7SCV
+         Rh1ZhG3NnHAKEkC+ZwCLrF8+C/DSOG+cd6bmIzaYw9KRP3930WorMVtVBDRZ6Bwmk9qe
+         OpkW6917EtK27VDYyzSxv4ViN4+i/+DtqhiLN/4zjlA79RVRRAysNLTo/yRhaXtlURag
+         N1cQ==
+X-Gm-Message-State: APjAAAW5m8G56f+whACu7o+Hb/+bNKrm6a/tlCEw6Ln6bCt0ahWaEU2C
+        p0JJXYBbqhL7TmzjX4A1o4LzCCis
+X-Google-Smtp-Source: APXvYqwGDvJgFezJfFP3RkSBWjVZ/cxRtxvTrvwXrkQFRva+4SgXleNEEYPKKt03uz+Zl/gkFc8vzg==
+X-Received: by 2002:a65:6096:: with SMTP id t22mr5432433pgu.204.1565909830591;
+        Thu, 15 Aug 2019 15:57:10 -0700 (PDT)
 Received: from [10.67.49.31] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id f10sm292037pjw.14.2019.08.15.15.56.50
+        by smtp.googlemail.com with ESMTPSA id 195sm4346051pfu.75.2019.08.15.15.57.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 15:56:51 -0700 (PDT)
-Subject: Re: [GIT PULL 2/3] bcm2835-defconfig-next-2019-08-15
+        Thu, 15 Aug 2019 15:57:09 -0700 (PDT)
+Subject: Re: [GIT PULL 3/3] bcm2835-defconfig-64-next-2019-08-15
 To:     Stefan Wahren <wahrenst@gmx.net>,
         Florian Fainelli <f.fainelli@gmail.com>
 Cc:     Eric Anholt <eric@anholt.net>, linux-kernel@vger.kernel.org,
@@ -67,7 +67,7 @@ Cc:     Eric Anholt <eric@anholt.net>, linux-kernel@vger.kernel.org,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
 References: <1565894043-5249-1-git-send-email-wahrenst@gmx.net>
- <1565894043-5249-2-git-send-email-wahrenst@gmx.net>
+ <1565894043-5249-3-git-send-email-wahrenst@gmx.net>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
@@ -124,12 +124,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
  M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <398abe33-b556-bb89-7148-7f059e9cfe2a@gmail.com>
-Date:   Thu, 15 Aug 2019 15:56:50 -0700
+Message-ID: <b56f3cf4-bf75-264f-14f2-fcd569ce4be1@gmail.com>
+Date:   Thu, 15 Aug 2019 15:57:08 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1565894043-5249-2-git-send-email-wahrenst@gmx.net>
+In-Reply-To: <1565894043-5249-3-git-send-email-wahrenst@gmx.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -147,18 +147,18 @@ On 8/15/19 11:34 AM, Stefan Wahren wrote:
 > 
 > are available in the git repository at:
 > 
->   git://github.com/anholt/linux tags/bcm2835-defconfig-next-2019-08-15
+>   git://github.com/anholt/linux tags/bcm2835-defconfig-64-next-2019-08-15
 > 
-> for you to fetch changes up to 4c6f5d4038af2c7332630bdd75cfdc0309e97242:
+> for you to fetch changes up to e2dd73ac4440f7143e990e76bad9a46dc63a5951:
 > 
->   ARM: defconfig: enable cpufreq driver for RPi (2019-07-23 22:53:35 +0200)
+>   arm64: defconfig: enable cpufreq support for RPi3 (2019-07-23 23:17:09 +0200)
 > 
 > ----------------------------------------------------------------
-> This pull request enables the new RPi cpufreq driver in the 32-bit
-> defconfigs.
+> This pull request enables the new RPi cpufreq driver in the 64-bit
+> defconfig.
 > 
 > ----------------------------------------------------------------
 
-Merged into defconfig/next, thanks Stefan!
+Merged into defconfig-arm64/next, thanks Stefan!
 -- 
 Florian
