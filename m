@@ -2,567 +2,90 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5832BC32753
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 02:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB88C32753
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 02:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222C02063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 02:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C6D208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 02:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565836759;
+	bh=6QbandalLnAk7UTLMfGCysXOvMZVD8zDiXVztaTkPvM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=M3wucJrnVq6hV/ylcWOWijLLRTyNd20cC4L/jRHOQlTSxaHS9WBzMIEZcg3DstpVa
+	 0iyhSx3E4JsWjRuDrRlaVof9iJOThWWF6at8WIW9XKc6CZNBjoxb1Ad7qAEHuomqa1
+	 RophVMWCSInk5aKTPmCjQ7sV4R84MQwWLsndL+TQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbfHOCg5 (ORCPT
+        id S1728768AbfHOCjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 22:36:57 -0400
-Received: from smtprelay0233.hostedemail.com ([216.40.44.233]:35441 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726496AbfHOCg4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 22:36:56 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 2E38C83777EE;
-        Thu, 15 Aug 2019 02:36:53 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: plane66_590520a5a0e1f
-X-Filterd-Recvd-Size: 18134
-Received: from joe-laptop.perches.com (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 15 Aug 2019 02:36:51 +0000 (UTC)
-From:   Joe Perches <joe@perches.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Huckleberry <nhuck@google.com>,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] afs: Move comments after /* fallthrough */
-Date:   Wed, 14 Aug 2019 19:36:49 -0700
-Message-Id: <e77b0f32a2ce97c872eede52c88b84aa78094ae5.1565836130.git.joe@perches.com>
-X-Mailer: git-send-email 2.15.0
+        Wed, 14 Aug 2019 22:39:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726496AbfHOCjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 22:39:17 -0400
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B6FD216F4;
+        Thu, 15 Aug 2019 02:39:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565836756;
+        bh=6QbandalLnAk7UTLMfGCysXOvMZVD8zDiXVztaTkPvM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RSkuKlm0NGGu8APyg6jy9o40Z1GL5PDioKvTTmrex2ngWcAfSwaqqWhLdUzWmdLnj
+         FCqCB23jZjq+fQ52yCvopkjQDq9yjnmAiKyiArsa5D+Ge0uCmV9dKeEWUvhdHYdL5H
+         wo2RFawVbhBV8ymWz3Wj+DR8D0Zq93/KI15G/CnE=
+Received: by mail-qt1-f178.google.com with SMTP id y26so974455qto.4;
+        Wed, 14 Aug 2019 19:39:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAWu0YdL4095pudP9m7riRw6zPz3UIHnjCMf3oSgYes05+kr7Trk
+        nugsbe2d00vMn0Sv0XnA8y42aNRH1Y7GF/bxvg==
+X-Google-Smtp-Source: APXvYqy720b+TBPiY3xSErK/uPvy00ygrhACFau+Inlb5PS4ZryBu4TZuITCQtM7YmMF5mIDTHqb7h7I0JYxps+k0mk=
+X-Received: by 2002:ac8:386f:: with SMTP id r44mr2221226qtb.300.1565836755669;
+ Wed, 14 Aug 2019 19:39:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190814073150.4602-1-mircea.caprioru@analog.com> <20190814073150.4602-4-mircea.caprioru@analog.com>
+In-Reply-To: <20190814073150.4602-4-mircea.caprioru@analog.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 14 Aug 2019 20:39:04 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKONxFbS-nUMc1c=-9HcXCrOVmOOfn9htKOJOjAS6HCKg@mail.gmail.com>
+Message-ID: <CAL_JsqKONxFbS-nUMc1c=-9HcXCrOVmOOfn9htKOJOjAS6HCKg@mail.gmail.com>
+Subject: Re: [PATCH V3 4/4] dt-bindings: iio: adc: ad7192: Add binding
+ documentation for AD7192
+To:     Mircea Caprioru <mircea.caprioru@analog.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the code a bit easier for a script to appropriately convert
-case statement blocks with /* fallthrough */ comments to a macro by
-moving comments describing the next case block to the case statement.
+On Wed, Aug 14, 2019 at 1:32 AM Mircea Caprioru
+<mircea.caprioru@analog.com> wrote:
+>
+> This patch add device tree binding documentation for AD7192 adc in YAML
+> format.
+>
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> ---
+> Changelog V2:
+> - remove description from spi and interrupt properties
+> - changed the name of the device from ad7192 to adc in the example
+>
+> Changelog V3:
+> - added semicolon at the end of the dt example
+>
+>  .../bindings/iio/adc/adi,ad7192.yaml          | 121 ++++++++++++++++++
+>  1 file changed, 121 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- fs/afs/cmservice.c | 10 +++-------
- fs/afs/fsclient.c  | 51 +++++++++++++++++----------------------------------
- fs/afs/vlclient.c  | 50 +++++++++++++++++++++++++-------------------------
- fs/afs/yfsclient.c | 51 +++++++++++++++++----------------------------------
- 4 files changed, 62 insertions(+), 100 deletions(-)
-
-diff --git a/fs/afs/cmservice.c b/fs/afs/cmservice.c
-index b86195e4dc6c..2270fe9325da 100644
---- a/fs/afs/cmservice.c
-+++ b/fs/afs/cmservice.c
-@@ -282,10 +282,8 @@ static int afs_deliver_cb_callback(struct afs_call *call)
- 	case 0:
- 		afs_extract_to_tmp(call);
- 		call->unmarshall++;
--
--		/* extract the FID array and its count in two steps */
- 		/* fall through */
--	case 1:
-+	case 1:		/* extract the FID array and its count in two steps */
- 		_debug("extract FID count");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-@@ -329,9 +327,8 @@ static int afs_deliver_cb_callback(struct afs_call *call)
- 		afs_extract_to_tmp(call);
- 		call->unmarshall++;
- 
--		/* extract the callback array and its count in two steps */
- 		/* fall through */
--	case 3:
-+	case 3:		/* extract the callback array & count in two steps */
- 		_debug("extract CB count");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-@@ -651,9 +648,8 @@ static int afs_deliver_yfs_cb_callback(struct afs_call *call)
- 		afs_extract_to_tmp(call);
- 		call->unmarshall++;
- 
--		/* extract the FID array and its count in two steps */
- 		/* Fall through */
--	case 1:
-+	case 1:		/* extract the FID array and its count in two steps */
- 		_debug("extract FID count");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
-index 114f281f3687..d9dc1bdfa695 100644
---- a/fs/afs/fsclient.c
-+++ b/fs/afs/fsclient.c
-@@ -341,8 +341,7 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
- 		}
- 		/* Fall through */
- 
--		/* extract the returned data length */
--	case 1:
-+	case 1:		/* extract the returned data length */
- 		_debug("extract data length");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-@@ -369,8 +368,7 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
- 		ASSERTCMP(size, <=, PAGE_SIZE);
- 		/* Fall through */
- 
--		/* extract the returned data */
--	case 2:
-+	case 2:		/* extract the returned data */
- 		_debug("extract data %zu/%llu",
- 		       iov_iter_count(&call->iter), req->remain);
- 
-@@ -411,8 +409,7 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
- 		afs_extract_to_buf(call, (21 + 3 + 6) * 4);
- 		/* Fall through */
- 
--		/* extract the metadata */
--	case 4:
-+	case 4:		/* extract the metadata */
- 		ret = afs_extract_data(call, false);
- 		if (ret < 0)
- 			return ret;
-@@ -1476,8 +1473,7 @@ static int afs_deliver_fs_get_volume_status(struct afs_call *call)
- 		afs_extract_to_buf(call, 12 * 4);
- 		/* Fall through */
- 
--		/* extract the returned status record */
--	case 1:
-+	case 1:		/* extract the returned status record */
- 		_debug("extract status");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-@@ -1489,8 +1485,7 @@ static int afs_deliver_fs_get_volume_status(struct afs_call *call)
- 		afs_extract_to_tmp(call);
- 		/* Fall through */
- 
--		/* extract the volume name length */
--	case 2:
-+	case 2:		/* extract the volume name length */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -1505,8 +1500,7 @@ static int afs_deliver_fs_get_volume_status(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the volume name */
--	case 3:
-+	case 3:		/* extract the volume name */
- 		_debug("extract volname");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-@@ -1519,8 +1513,7 @@ static int afs_deliver_fs_get_volume_status(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the offline message length */
--	case 4:
-+	case 4:		/* extract the offline message length */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -1535,8 +1528,7 @@ static int afs_deliver_fs_get_volume_status(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the offline message */
--	case 5:
-+	case 5:		/* extract the offline message */
- 		_debug("extract offline");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-@@ -1550,8 +1542,7 @@ static int afs_deliver_fs_get_volume_status(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the message of the day length */
--	case 6:
-+	case 6:		/* extract the message of the day length */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -1566,8 +1557,7 @@ static int afs_deliver_fs_get_volume_status(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the message of the day */
--	case 7:
-+	case 7:		/* extract the message of the day */
- 		_debug("extract motd");
- 		ret = afs_extract_data(call, false);
- 		if (ret < 0)
-@@ -1862,8 +1852,7 @@ static int afs_deliver_fs_get_capabilities(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* Extract the capabilities word count */
--	case 1:
-+	case 1:		/* Extract the capabilities word count */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -1876,8 +1865,7 @@ static int afs_deliver_fs_get_capabilities(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* Extract capabilities words */
--	case 2:
-+	case 2:		/* Extract capabilities words */
- 		ret = afs_extract_data(call, false);
- 		if (ret < 0)
- 			return ret;
-@@ -2034,8 +2022,7 @@ static int afs_deliver_fs_inline_bulk_status(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* Extract the file status count and array in two steps */
--	case 1:
-+	case 1:		/* Extract the file status count & array in two steps */
- 		_debug("extract status count");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-@@ -2074,8 +2061,7 @@ static int afs_deliver_fs_inline_bulk_status(struct afs_call *call)
- 		afs_extract_to_tmp(call);
- 		/* Fall through */
- 
--		/* Extract the callback count and array in two steps */
--	case 3:
-+	case 3:		/* Extract the callback count & array in two steps */
- 		_debug("extract CB count");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-@@ -2207,8 +2193,7 @@ static int afs_deliver_fs_fetch_acl(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the returned data length */
--	case 1:
-+	case 1:		/* extract the returned data length */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -2225,8 +2210,7 @@ static int afs_deliver_fs_fetch_acl(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the returned data */
--	case 2:
-+	case 2:		/* extract the returned data */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -2235,8 +2219,7 @@ static int afs_deliver_fs_fetch_acl(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the metadata */
--	case 3:
-+	case 3:		/* extract the metadata */
- 		ret = afs_extract_data(call, false);
- 		if (ret < 0)
- 			return ret;
-diff --git a/fs/afs/vlclient.c b/fs/afs/vlclient.c
-index cfb0ac4bd039..c0b327ff0005 100644
---- a/fs/afs/vlclient.c
-+++ b/fs/afs/vlclient.c
-@@ -193,10 +193,10 @@ static int afs_deliver_vl_get_addrs_u(struct afs_call *call)
- 				   sizeof(struct afs_uuid__xdr) + 3 * sizeof(__be32));
- 		call->unmarshall++;
- 
--		/* Extract the returned uuid, uniquifier, nentries and
--		 * blkaddrs size */
- 		/* Fall through */
--	case 1:
-+	case 1:		/* Extract the returned uuid, uniquifier, nentries and
-+			 * blkaddrs size
-+			 */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -220,8 +220,8 @@ static int afs_deliver_vl_get_addrs_u(struct afs_call *call)
- 		count = min(call->count, 4U);
- 		afs_extract_to_buf(call, count * sizeof(__be32));
- 
--		/* Fall through - and extract entries */
--	case 2:
-+		/* Fall through */
-+	case 2:		/* extract entries */
- 		ret = afs_extract_data(call, call->count > 4);
- 		if (ret < 0)
- 			return ret;
-@@ -323,8 +323,8 @@ static int afs_deliver_vl_get_capabilities(struct afs_call *call)
- 		afs_extract_to_tmp(call);
- 		call->unmarshall++;
- 
--		/* Fall through - and extract the capabilities word count */
--	case 1:
-+		/* Fall through */
-+	case 1:		/* extract the capabilities word count */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -336,8 +336,8 @@ static int afs_deliver_vl_get_capabilities(struct afs_call *call)
- 		call->unmarshall++;
- 		afs_extract_discard(call, count * sizeof(__be32));
- 
--		/* Fall through - and extract capabilities words */
--	case 2:
-+		/* Fall through */
-+	case 2:		/*  extract capabilities words */
- 		ret = afs_extract_data(call, false);
- 		if (ret < 0)
- 			return ret;
-@@ -431,12 +431,12 @@ static int afs_deliver_yfsvl_get_endpoints(struct afs_call *call)
- 	case 0:
- 		afs_extract_to_buf(call, sizeof(uuid_t) + 3 * sizeof(__be32));
- 		call->unmarshall = 1;
--
--		/* Extract the returned uuid, uniquifier, fsEndpoints count and
--		 * either the first fsEndpoint type or the volEndpoints
--		 * count if there are no fsEndpoints. */
- 		/* Fall through */
--	case 1:
-+	case 1:		/* Extract the returned uuid, uniquifier,
-+			 * fsEndpoints count and either the first fsEndpoint
-+			 * type or the volEndpoints count if there are no
-+			 * fsEndpoints.
-+			 */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -476,8 +476,8 @@ static int afs_deliver_yfsvl_get_endpoints(struct afs_call *call)
- 		afs_extract_to_buf(call, size);
- 		call->unmarshall = 2;
- 
--		/* Fall through - and extract fsEndpoints[] entries */
--	case 2:
-+		/* Fall through */
-+	case 2:		/* extract fsEndpoints[] entries */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -525,12 +525,12 @@ static int afs_deliver_yfsvl_get_endpoints(struct afs_call *call)
- 		afs_extract_to_buf(call, 1 * sizeof(__be32));
- 		call->unmarshall = 3;
- 
--		/* Extract the type of volEndpoints[0].  Normally we would
--		 * extract the type of the next endpoint when we extract the
--		 * data of the current one, but this is the first...
--		 */
- 		/* Fall through */
--	case 3:
-+	case 3:		/* Extract the type of volEndpoints[0].
-+			 * Normally we would extract the type of the
-+			 * next endpoint when we extract the data of
-+			 * the current one, but this is the first...
-+			 */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -556,8 +556,8 @@ static int afs_deliver_yfsvl_get_endpoints(struct afs_call *call)
- 		afs_extract_to_buf(call, size);
- 		call->unmarshall = 4;
- 
--		/* Fall through - and extract volEndpoints[] entries */
--	case 4:
-+		/* Fall through */
-+	case 4:		/* extract volEndpoints[] entries */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -592,8 +592,8 @@ static int afs_deliver_yfsvl_get_endpoints(struct afs_call *call)
- 		afs_extract_discard(call, 0);
- 		call->unmarshall = 5;
- 
--		/* Fall through - Done */
--	case 5:
-+		/* Fall through */
-+	case 5:		/* Done */
- 		ret = afs_extract_data(call, false);
- 		if (ret < 0)
- 			return ret;
-diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
-index 2575503170fc..77cf878e6a25 100644
---- a/fs/afs/yfsclient.c
-+++ b/fs/afs/yfsclient.c
-@@ -452,8 +452,7 @@ static int yfs_deliver_fs_fetch_data64(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the returned data length */
--	case 1:
-+	case 1:		/* extract the returned data length */
- 		_debug("extract data length");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-@@ -480,8 +479,7 @@ static int yfs_deliver_fs_fetch_data64(struct afs_call *call)
- 		ASSERTCMP(size, <=, PAGE_SIZE);
- 		/* Fall through */
- 
--		/* extract the returned data */
--	case 2:
-+	case 2:		/* extract the returned data */
- 		_debug("extract data %zu/%llu",
- 		       iov_iter_count(&call->iter), req->remain);
- 
-@@ -525,8 +523,7 @@ static int yfs_deliver_fs_fetch_data64(struct afs_call *call)
- 				   sizeof(struct yfs_xdr_YFSVolSync));
- 		/* Fall through */
- 
--		/* extract the metadata */
--	case 4:
-+	case 4:		/* extract the metadata */
- 		ret = afs_extract_data(call, false);
- 		if (ret < 0)
- 			return ret;
-@@ -1434,8 +1431,7 @@ static int yfs_deliver_fs_get_volume_status(struct afs_call *call)
- 		afs_extract_to_buf(call, sizeof(struct yfs_xdr_YFSFetchVolumeStatus));
- 		/* Fall through */
- 
--		/* extract the returned status record */
--	case 1:
-+	case 1:		/* extract the returned status record */
- 		_debug("extract status");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-@@ -1447,8 +1443,7 @@ static int yfs_deliver_fs_get_volume_status(struct afs_call *call)
- 		afs_extract_to_tmp(call);
- 		/* Fall through */
- 
--		/* extract the volume name length */
--	case 2:
-+	case 2:		/* extract the volume name length */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -1463,8 +1458,7 @@ static int yfs_deliver_fs_get_volume_status(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the volume name */
--	case 3:
-+	case 3:		/* extract the volume name */
- 		_debug("extract volname");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-@@ -1477,8 +1471,7 @@ static int yfs_deliver_fs_get_volume_status(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the offline message length */
--	case 4:
-+	case 4:		/* extract the offline message length */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -1493,8 +1486,7 @@ static int yfs_deliver_fs_get_volume_status(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the offline message */
--	case 5:
-+	case 5:		/* extract the offline message */
- 		_debug("extract offline");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-@@ -1508,8 +1500,7 @@ static int yfs_deliver_fs_get_volume_status(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the message of the day length */
--	case 6:
-+	case 6:		/* extract the message of the day length */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -1524,8 +1515,7 @@ static int yfs_deliver_fs_get_volume_status(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the message of the day */
--	case 7:
-+	case 7:		/* extract the message of the day */
- 		_debug("extract motd");
- 		ret = afs_extract_data(call, false);
- 		if (ret < 0)
-@@ -1817,8 +1807,7 @@ static int yfs_deliver_fs_inline_bulk_status(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* Extract the file status count and array in two steps */
--	case 1:
-+	case 1:		/* Extract the file status count & array in two steps */
- 		_debug("extract status count");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-@@ -1857,8 +1846,7 @@ static int yfs_deliver_fs_inline_bulk_status(struct afs_call *call)
- 		afs_extract_to_tmp(call);
- 		/* Fall through */
- 
--		/* Extract the callback count and array in two steps */
--	case 3:
-+	case 3:		/* Extract the callback count & array in two steps */
- 		_debug("extract CB count");
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
-@@ -1990,8 +1978,7 @@ static int yfs_deliver_fs_fetch_opaque_acl(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* Extract the file ACL length */
--	case 1:
-+	case 1:		/* Extract the file ACL length */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -2012,8 +1999,7 @@ static int yfs_deliver_fs_fetch_opaque_acl(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* Extract the file ACL */
--	case 2:
-+	case 2:		/* Extract the file ACL */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -2022,8 +2008,7 @@ static int yfs_deliver_fs_fetch_opaque_acl(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* Extract the volume ACL length */
--	case 3:
-+	case 3:		/* Extract the volume ACL length */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -2044,8 +2029,7 @@ static int yfs_deliver_fs_fetch_opaque_acl(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* Extract the volume ACL */
--	case 4:
-+	case 4:		/* Extract the volume ACL */
- 		ret = afs_extract_data(call, true);
- 		if (ret < 0)
- 			return ret;
-@@ -2057,8 +2041,7 @@ static int yfs_deliver_fs_fetch_opaque_acl(struct afs_call *call)
- 		call->unmarshall++;
- 		/* Fall through */
- 
--		/* extract the metadata */
--	case 5:
-+	case 5:		/* extract the metadata */
- 		ret = afs_extract_data(call, false);
- 		if (ret < 0)
- 			return ret;
--- 
-2.15.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
