@@ -6,84 +6,73 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFC6C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E909C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B902084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 150752084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732319AbfHONcN (ORCPT
+        id S1732268AbfHONeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:32:13 -0400
-Received: from verein.lst.de ([213.95.11.211]:46747 "EHLO verein.lst.de"
+        Thu, 15 Aug 2019 09:34:02 -0400
+Received: from mga04.intel.com ([192.55.52.120]:16788 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730635AbfHONcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:32:12 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id AA62D68BFE; Thu, 15 Aug 2019 15:32:04 +0200 (CEST)
-Date:   Thu, 15 Aug 2019 15:32:04 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
+        id S1731747AbfHONeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:34:01 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 06:34:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
+   d="scan'208";a="194766618"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 15 Aug 2019 06:33:58 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 15 Aug 2019 16:33:58 +0300
+Date:   Thu, 15 Aug 2019 16:33:58 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        linux-arch@vger.kernel.org, Olav Kongas <ok@artecdesign.ee>,
-        Gavin Li <git@thegavinli.com>, linuxppc-dev@lists.ozlabs.org,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Geoff Levand <geoff@infradead.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-usb@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>,
-        iommu@lists.linux-foundation.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Shawn Guo <shawnguo@kernel.org>, Bin Liu <b-liu@ti.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 6/6] driver core: initialize a default DMA mask for
- platform device
-Message-ID: <20190815133204.GD12036@lst.de>
-References: <20190811080520.21712-1-hch@lst.de> <20190811080520.21712-7-hch@lst.de> <fbea6e6d-7721-b51d-0501-582e8446e9c9@arm.com>
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] software node: Add software_node_find_by_name()
+Message-ID: <20190815133358.GC24772@kuha.fi.intel.com>
+References: <20190815112826.81785-1-heikki.krogerus@linux.intel.com>
+ <20190815112826.81785-2-heikki.krogerus@linux.intel.com>
+ <CAHp75VduJ2VQ-4r-vrARMyL6WAnsppwMtLRD-g4f-GEnew8m2g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fbea6e6d-7721-b51d-0501-582e8446e9c9@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CAHp75VduJ2VQ-4r-vrARMyL6WAnsppwMtLRD-g4f-GEnew8m2g@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 04:49:13PM +0100, Robin Murphy wrote:
->> because we have to support platform_device structures that are
->> statically allocated.
->
-> This would be a good point to also get rid of the long-standing bodge in 
-> platform_device_register_full().
+On Thu, Aug 15, 2019 at 03:55:40PM +0300, Andy Shevchenko wrote:
+> On Thu, Aug 15, 2019 at 2:32 PM Heikki Krogerus
+> <heikki.krogerus@linux.intel.com> wrote:
+> >
+> > Function that searches software nodes by node name.
+> 
+> > +/**
+> > + * software_node_find_by_name - Find software node by name
+> > + * @parent: Parent of the software node
+> > + * @name: Name of the software node
+> > + *
+> > + * The function will find a node that is child of @parent and that is named
+> > + * @name. If no node is found, the function returns NULL.
+> 
+> Shouldn't we add that the caller responsible of putting kobject?
 
-platform_device_register_full looks odd to start with, especially
-as the coumentation is rather lacking..
+OK. I'll fix this and the other one too.
 
->>   +static void setup_pdev_archdata(struct platform_device *pdev)
->
-> Bikeshed: painting the generic DMA API properties as "archdata" feels a bit 
-> off-target :/
->
->> +{
->> +	if (!pdev->dev.coherent_dma_mask)
->> +		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
->> +	if (!pdev->dma_mask)
->> +		pdev->dma_mask = DMA_BIT_MASK(32);
->> +	if (!pdev->dev.dma_mask)
->> +		pdev->dev.dma_mask = &pdev->dma_mask;
->> +	arch_setup_pdev_archdata(pdev);
->
-> AFAICS m68k's implementation of that arch hook becomes entirely redundant 
-> after this change, so may as well go. That would just leave powerpc's 
-> actual archdata, which at a glance looks like it could probably be cleaned 
-> up with not *too* much trouble.
+Thanks Andy!
 
-Actually I think we can just kill both off.  At the point archdata
-is indeed entirely misnamed.
+-- 
+heikki
