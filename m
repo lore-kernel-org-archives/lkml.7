@@ -2,77 +2,70 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01D2C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DF4C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AEB206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E4D2133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:40:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565876454;
+	bh=8fkos3bJ03vfzr91v3bkBePjiTgQUfL0AC+nbnlTyX4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1yhKj8A4g0wd1345j+si7cmbl5qKNpr656Q0/Xx0MDTBRW0n2AXmoXh7MKIABfIxM
+	 dQISn9+aFeZDiKun3WagevXd4NLzCjwniCYhBktEMwVnR8lXhtzKY37qLT/tRe8F7D
+	 1j/x3AnyTUS7bv2UUaQcQ7F/gAK6xm8co9WN9oRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732403AbfHONkT convert rfc822-to-8bit (ORCPT
+        id S1732409AbfHONkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:40:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54306 "EHLO mx1.redhat.com"
+        Thu, 15 Aug 2019 09:40:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732267AbfHONkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:40:19 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1732267AbfHONkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:40:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E79D43023087;
-        Thu, 15 Aug 2019 13:40:18 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7CB3D837BA;
-        Thu, 15 Aug 2019 13:40:17 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <e77b0f32a2ce97c872eede52c88b84aa78094ae5.1565836130.git.joe@perches.com>
-References: <e77b0f32a2ce97c872eede52c88b84aa78094ae5.1565836130.git.joe@perches.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     dhowells@redhat.com, Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Huckleberry <nhuck@google.com>,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] afs: Move comments after /* fallthrough */
+        by mail.kernel.org (Postfix) with ESMTPSA id AF5F7206C1;
+        Thu, 15 Aug 2019 13:40:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565876452;
+        bh=8fkos3bJ03vfzr91v3bkBePjiTgQUfL0AC+nbnlTyX4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GaOhF6vbyf+T7aulWg92TMC6bUDvEbaPxwD2xqLBCY4CHHdPDRWT9gjWEDCpwNFt7
+         QWxfcdLHp1h0+mTzJ+LulblqiIx4HaWbkhXARaJs2a3K06CdvLBjy+BiEDHMruilXF
+         YsizqWrmueY4Bb4qqkAyMln60GbfTZ1pf47HE0k0=
+Date:   Thu, 15 Aug 2019 15:40:49 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     soc@kernel.org, Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v2 11/13] serial: lpc32xx: allow compile testing
+Message-ID: <20190815134049.GA3372@kroah.com>
+References: <20190809144043.476786-1-arnd@arndb.de>
+ <20190809144043.476786-12-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <12307.1565876416.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Thu, 15 Aug 2019 14:40:16 +0100
-Message-ID: <12308.1565876416@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 15 Aug 2019 13:40:19 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809144043.476786-12-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joe Perches <joe@perches.com> wrote:
+On Fri, Aug 09, 2019 at 04:40:37PM +0200, Arnd Bergmann wrote:
+> The lpc32xx_loopback_set() function in hte lpc32xx_hs driver is the
+> one thing that relies on platform header files. Move that into the
+> core platform code so we only need a variable declaration for it,
+> and enable COMPILE_TEST building.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-> Make the code a bit easier for a script to appropriately convert
-> case statement blocks with /* fallthrough */ comments to a macro by
-> moving comments describing the next case block to the case statement.
-
-This doesn't sound good.  Can you give an illustration of what a resulting
-case might look like?  Say taking the following as an example:
-
-> @@ -282,10 +282,8 @@ static int afs_deliver_cb_callback(struct afs_call *call)
->  	case 0:
->  		afs_extract_to_tmp(call);
->  		call->unmarshall++;
-> -
-> -		/* extract the FID array and its count in two steps */
->  		/* fall through */
-> -	case 1:
-> +	case 1:		/* extract the FID array and its count in two steps */
->  		_debug("extract FID count");
->  		ret = afs_extract_data(call, true);
->  		if (ret < 0)
-
-David
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
