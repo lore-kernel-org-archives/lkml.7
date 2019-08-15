@@ -2,181 +2,95 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 995F4C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C46DFC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7982B206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AFC2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:08:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732087AbfHONGC (ORCPT
+        id S1732094AbfHONI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:06:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37356 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730304AbfHONGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:06:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B6D16ACC5;
-        Thu, 15 Aug 2019 13:05:59 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id F206B1E4200; Thu, 15 Aug 2019 15:05:58 +0200 (CEST)
-Date:   Thu, 15 Aug 2019 15:05:58 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-Message-ID: <20190815130558.GF14313@quack2.suse.cz>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190814101714.GA26273@quack2.suse.cz>
- <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
+        Thu, 15 Aug 2019 09:08:28 -0400
+Received: from mga18.intel.com ([134.134.136.126]:8011 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730304AbfHONI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:08:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 06:08:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
+   d="scan'208";a="171105628"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
+  by orsmga008.jf.intel.com with ESMTP; 15 Aug 2019 06:08:26 -0700
+Subject: Re: [PATCH v3 1/3] mmc: sdhci: Add PLL Enable support to internal
+ clock setup
+To:     "Michael K. Johnson" <johnsonm@danlj.org>
+Cc:     ulf.hansson@linaro.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>
+References: <20190726020746.GB12042@people.danlj.org>
+ <acc74e9e-ca41-a5dd-780a-615745d70101@intel.com>
+ <20190812225611.GA30758@people.danlj.org>
+ <d6432410-6431-efdb-4e28-a601493e4916@intel.com>
+ <20190815120432.GA20438@people.danlj.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <d13043b2-8945-7fda-2e67-2da592d681dd@intel.com>
+Date:   Thu, 15 Aug 2019 16:07:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190815120432.GA20438@people.danlj.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 14-08-19 11:08:49, Ira Weiny wrote:
-> On Wed, Aug 14, 2019 at 12:17:14PM +0200, Jan Kara wrote:
-> > Hello!
-> > 
-> > On Fri 09-08-19 15:58:14, ira.weiny@intel.com wrote:
-> > > Pre-requisites
-> > > ==============
-> > > 	Based on mmotm tree.
-> > > 
-> > > Based on the feedback from LSFmm, the LWN article, the RFC series since
-> > > then, and a ton of scenarios I've worked in my mind and/or tested...[1]
-> > > 
-> > > Solution summary
-> > > ================
-> > > 
-> > > The real issue is that there is no use case for a user to have RDMA pinn'ed
-> > > memory which is then truncated.  So really any solution we present which:
-> > > 
-> > > A) Prevents file system corruption or data leaks
-> > > ...and...
-> > > B) Informs the user that they did something wrong
-> > > 
-> > > Should be an acceptable solution.
-> > > 
-> > > Because this is slightly new behavior.  And because this is going to be
-> > > specific to DAX (because of the lack of a page cache) we have made the user
-> > > "opt in" to this behavior.
-> > > 
-> > > The following patches implement the following solution.
-> > > 
-> > > 0) Registrations to Device DAX char devs are not affected
-> > > 
-> > > 1) The user has to opt in to allowing page pins on a file with an exclusive
-> > >    layout lease.  Both exclusive and layout lease flags are user visible now.
-> > > 
-> > > 2) page pins will fail if the lease is not active when the file back page is
-> > >    encountered.
-> > > 
-> > > 3) Any truncate or hole punch operation on a pinned DAX page will fail.
-> > 
-> > So I didn't fully grok the patch set yet but by "pinned DAX page" do you
-> > mean a page which has corresponding file_pin covering it? Or do you mean a
-> > page which has pincount increased? If the first then I'd rephrase this to
-> > be less ambiguous, if the second then I think it is wrong. 
+On 15/08/19 3:04 PM, Michael K. Johnson wrote:
+> On Thu, Aug 15, 2019 at 02:27:44PM +0300, Adrian Hunter wrote:
+>> On 13/08/19 1:56 AM, Michael K. Johnson wrote:
+>>> The GL9750 and GL9755 chipsets, and possibly others, require PLL Enable
+>>> setup as part of the internal clock setup as described in 3.2.1 Internal
+>>> Clock Setup Sequence of SD Host Controller Simplified Specification
+>>> Version 4.20.  This changes the timeouts to the new specification of
+>>> 150ms for each step and is documented as safe for "prior versions which
+>>> do not support PLL Enable."
+>>>
+>>> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+>>> Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
+>>
+>> Did you mean for this patch to be "From:" Ben Chuang because otherwise
+>> "Co-developed-by" the author is redundant.
 > 
-> I mean the second.  but by "fail" I mean hang.  Right now the "normal" page
-> pincount processing will hang the truncate.  Given the discussion with John H
-> we can make this a bit better if we use something like FOLL_PIN and the page
-> count bias to indicate this type of pin.  Then I could fail the truncate
-> outright.  but that is not done yet.
+> Ben wrote the code and is the primary author. I helped with some
+> changes to bring it closer to normal style, so I have definitely
+> been a secondary co-developer. Ben's corporate email server adds a
+> generic confidentiality notice outside his control, and we were
+> informed that with that header on the email the patches could not
+> be accepted.  We developed it in a git repository, so that I have
+> not been "tainted" by the automatic confidentiality notice, and
+> at Ben's request I have posted the work. To credit me as primary
+> author would be fundamentally incorrect.
 > 
-> so... I used the word "fail" to be a bit more vague as the final implementation
-> may return ETXTBUSY or hang as noted.
-
-Ah, OK. Hanging is fine in principle but with longterm pins, your work
-makes sure they actually fail with ETXTBUSY, doesn't it? The thing is that
-e.g. DIO will use page pins as well for its buffers and we must wait there
-until the pin is released. So please just clarify your 'fail' here a bit
-:).
-
-> > > 4) The user has the option of holding the lease or releasing it.  If they
-> > >    release it no other pin calls will work on the file.
-> > 
-> > Last time we spoke the plan was that the lease is kept while the pages are
-> > pinned (and an attempt to release the lease would block until the pages are
-> > unpinned). That also makes it clear that the *lease* is what is making
-> > truncate and hole punch fail with ETXTBUSY and the file_pin structure is
-> > just an implementation detail how the existence is efficiently tracked (and
-> > what keeps the backing file for the pages open so that the lease does not
-> > get auto-destroyed). Why did you change this?
+> Are you saying that this work cannot be accepted until Ben chooses
+> an alternative email provider besides his corporate email in order
+> to avoid the spurious confidentiality notice, such that he is the
+> sender of the email?
 > 
-> closing the file _and_ unmaping it will cause the lease to be released
-> regardless of if we allow this or not.
-> 
-> As we discussed preventing the close seemed intractable.
 
-Yes, preventing the application from closing the file is difficult. But
-from a quick look at your patches it seemed to me that you actually hold a
-backing file reference from the file_pin structure thus even though the
-application closes its file descriptor, the struct file (and thus the
-lease) lives further until the file_pin gets released. And that should last
-as long as the pages are pinned. Am I missing something?
+No, there should be a "From:" line.  Here's an example:
 
-> I thought about failing the munmap but that seemed wrong as well.  But more
-> importantly AFAIK RDMA can pass its memory pins to other processes via FD
-> passing...  This means that one could pin this memory, pass it to another
-> process and exit.  The file lease on the pin'ed file is lost.
+	https://marc.info/?l=linux-mmc&m=155966548112475&q=raw
 
-Not if file_pin grabs struct file reference as I mentioned above...
- 
-> The file lease is just a key to get the memory pin.  Once unlocked the procfs
-> tracking keeps track of where that pin goes and which processes need to be
-> killed to get rid of it.
-
-I think having file lease being just a key to get the pin is conceptually
-wrong. The lease is what expresses: "I'm accessing these blocks directly,
-don't touch them without coordinating with me." So it would be only natural
-if we maintained the lease while we are accessing blocks instead of
-transferring this protection responsibility to another structure - namely
-file_pin - and letting the lease go. But maybe I miss some technical reason
-why maintaining file lease is difficult. If that's the case, I'd like to hear
-what...
- 
-> > > 5) Closing the file is ok.
-> > > 
-> > > 6) Unmapping the file is ok
-> > > 
-> > > 7) Pins against the files are tracked back to an owning file or an owning mm
-> > >    depending on the internal subsystem needs.  With RDMA there is an owning
-> > >    file which is related to the pined file.
-> > > 
-> > > 8) Only RDMA is currently supported
-> > 
-> > If you currently only need "owning file" variant in your patch set, then
-> > I'd just implement that and leave "owning mm" variant for later if it
-> > proves to be necessary. The things are complex enough as is...
-> 
-> I can do that...  I was trying to get io_uring working as well with the
-> owning_mm but I should save that for later.
-
-Ah, OK. Yes, I guess io_uring can be next step.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+If you had committed your changes with Ben as the author (git commit
+--author) then "git format-patch" would have added the correct "From:" line.
