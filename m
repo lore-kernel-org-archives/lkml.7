@@ -2,96 +2,133 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E1DC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27052C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1492084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E58F7205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565889311;
+	bh=1kVNtADiy23Obq0tpxB6iCSDs13M7dQ6sxYkfYZvf7Q=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=0qscV2ut8Wtw2CePDR6mVpncrM+TK4hxBwp9ValzTFUnA0fhf/ACo4qdDcpVa1HF8
+	 n5dsnfy19A65gdpHInPrnopv1X87RcEkK8fE+mRZJFZ2aUQO+WowiOmPf01wiBDaAd
+	 AZqOF2l3RM3URd6KrURLtb4e7hWP5f59lz1ExpmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731990AbfHORPA (ORCPT
+        id S1732007AbfHORPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:15:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38572 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731965AbfHORO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:14:56 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7306446672;
-        Thu, 15 Aug 2019 17:14:56 +0000 (UTC)
-Received: from localhost (ovpn-116-32.gru2.redhat.com [10.97.116.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 02AB6841E7;
-        Thu, 15 Aug 2019 17:14:55 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 14:14:54 -0300
-From:   Eduardo Habkost <ehabkost@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: Re: [PATCH 2/2] KVM: x86: always expose VIRT_SSBD to guests
-Message-ID: <20190815171454.GV3908@habkost.net>
-References: <1565854883-27019-1-git-send-email-pbonzini@redhat.com>
- <1565854883-27019-3-git-send-email-pbonzini@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565854883-27019-3-git-send-email-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 15 Aug 2019 17:14:56 +0000 (UTC)
+        Thu, 15 Aug 2019 13:15:10 -0400
+Received: from mail-wr1-f98.google.com ([209.85.221.98]:42379 "EHLO
+        mail-wr1-f98.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731625AbfHOROa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:14:30 -0400
+Received: by mail-wr1-f98.google.com with SMTP id b16so2848112wrq.9
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
+        bh=KWUuHNaeuLnP3/JiAYH55pf1los9RRnsI3012c89ha8=;
+        b=g/BKtK45mkDcTLVm2WOxcGvfKAblk/00eUBC+k7uKo9wBdSfUn0469l3FrQ51+mvTn
+         ij7QefDfbK4vAsMZq/ZCfOsSBaeX+le3EKpzVrKSZtBwJngznTMlLZlLpwMvQa+sSFjO
+         Q2nBNpYhJ86YHeVEBXlmcA8pX+s0vTVF4Vu98ZOQFpXBfMfwCPd4PXB874yCvI8OHaov
+         7fSRs2ftl66KiJ+OdLHpjARYjlANpy4/Mu/r4l/fyPdC3/WYL2M1eFKrDExxq7G/8UeM
+         ex7EKYsxQsUflSpyEJIwgdNZzPhizL6nFSfGxK5UqO2JjZs26qtrDeHDh6lG1y179V0n
+         lOYg==
+X-Gm-Message-State: APjAAAWN8mFIppu39NWEAMWRjoC+/g2MkuB4g/8uJ2II4erTdzZe+b1j
+        RorMpW55vnxDzDXXy7v0A+rSIv1XU+qJtlfaayp3ds1p4fBXUuUFYAf+4a35d89wQw==
+X-Google-Smtp-Source: APXvYqwWDvl7fMqBHpJtlbdFiqytWl7O/XHWKPee2tCAd0zJbkiaCCfr3WgkbS1PijRiJdEJ1PqDf7oVgqUx
+X-Received: by 2002:adf:aa8d:: with SMTP id h13mr6910152wrc.307.1565889267900;
+        Thu, 15 Aug 2019 10:14:27 -0700 (PDT)
+Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
+        by smtp-relay.gmail.com with ESMTPS id e16sm10188wma.1.2019.08.15.10.14.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 15 Aug 2019 10:14:27 -0700 (PDT)
+X-Relaying-Domain: sirena.org.uk
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hyJKV-00052P-Ij; Thu, 15 Aug 2019 17:14:27 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 19EF52742BD6; Thu, 15 Aug 2019 18:14:27 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org, info@metux.net,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: es8328: Fix copy-paste error in es8328_right_line_controls" to the asoc tree
+In-Reply-To: <20190815092300.68712-1-yuehaibing@huawei.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190815171427.19EF52742BD6@ypsilon.sirena.org.uk>
+Date:   Thu, 15 Aug 2019 18:14:27 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 09:41:23AM +0200, Paolo Bonzini wrote:
-> Even though it is preferrable to use SPEC_CTRL (represented by
-> X86_FEATURE_AMD_SSBD) instead of VIRT_SPEC, VIRT_SPEC is always
-> supported anyway because otherwise it would be impossible to
-> migrate from old to new CPUs.  Make this apparent in the
-> result of KVM_GET_SUPPORTED_CPUID as well.
-> 
-> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-> Reported-by: Eduardo Habkost <ehabkost@redhat.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/cpuid.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 145ec050d45d..5865bc73bbb5 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -747,11 +747,13 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
->  		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
->  		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
->  		/*
-> -		 * The preference is to use SPEC CTRL MSR instead of the
-> -		 * VIRT_SPEC MSR.
-> +		 * VIRT_SPEC is only implemented for AMD processors,
-> +		 * but the host could set AMD_SSBD if it wanted even
-> +		 * for Intel processors.
->  		 */
-> -		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) &&
-> -		    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
-> +		if ((boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
-> +		     boot_cpu_has(X86_FEATURE_AMD_SSBD)) &&
-> +		    boot_cpu_has(X86_FEATURE_SVM))
+The patch
 
-Would it be desirable to move this code to
-svm_set_supported_cpuid(), or is there a reason for keeping this
-in cpuid.c?
+   ASoC: es8328: Fix copy-paste error in es8328_right_line_controls
 
+has been applied to the asoc tree at
 
->  			entry->ebx |= F(VIRT_SSBD);
->  		break;
->  	}
-> -- 
-> 1.8.3.1
-> 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 630742c296341a8cfe00dfd941392025ba8dd4e8 Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Thu, 15 Aug 2019 17:23:00 +0800
+Subject: [PATCH] ASoC: es8328: Fix copy-paste error in
+ es8328_right_line_controls
+
+It seems 'es8328_rline_enum' should be used
+in es8328_right_line_controls
+
+Fixes: 567e4f98922c ("ASoC: add es8328 codec driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20190815092300.68712-1-yuehaibing@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/es8328.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/soc/codecs/es8328.c b/sound/soc/codecs/es8328.c
+index 822a25a8f53c..69b81e704127 100644
+--- a/sound/soc/codecs/es8328.c
++++ b/sound/soc/codecs/es8328.c
+@@ -228,7 +228,7 @@ static const struct soc_enum es8328_rline_enum =
+ 			      ARRAY_SIZE(es8328_line_texts),
+ 			      es8328_line_texts);
+ static const struct snd_kcontrol_new es8328_right_line_controls =
+-	SOC_DAPM_ENUM("Route", es8328_lline_enum);
++	SOC_DAPM_ENUM("Route", es8328_rline_enum);
+ 
+ /* Left Mixer */
+ static const struct snd_kcontrol_new es8328_left_mixer_controls[] = {
 -- 
-Eduardo
+2.20.1
+
