@@ -4,69 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27052C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D1DC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E58F7205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BFCD205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565889311;
-	bh=1kVNtADiy23Obq0tpxB6iCSDs13M7dQ6sxYkfYZvf7Q=;
+	s=default; t=1565889314;
+	bh=nvsLVUFtAMRzEu1y2Z1m0T+QQ5UYAC9iqJQox9tALAY=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=0qscV2ut8Wtw2CePDR6mVpncrM+TK4hxBwp9ValzTFUnA0fhf/ACo4qdDcpVa1HF8
-	 n5dsnfy19A65gdpHInPrnopv1X87RcEkK8fE+mRZJFZ2aUQO+WowiOmPf01wiBDaAd
-	 AZqOF2l3RM3URd6KrURLtb4e7hWP5f59lz1ExpmQ=
+	b=FHaPZxWejNqk+6pg5sk7pRqS/UykRa9dYHK97aGLNk1JgDAl/r/9BLXfROqOscsi7
+	 zp9zGV95rM9B3QOiQzU+u08vWH6peUpxNxiYIKcNVjWvvtGz2442u7bxClu6Gi3+4/
+	 X5dqDTjf8bWeUIGArLNmx/vxYVHyonydkoedAK0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732007AbfHORPK (ORCPT
+        id S1732047AbfHORPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:15:10 -0400
-Received: from mail-wr1-f98.google.com ([209.85.221.98]:42379 "EHLO
-        mail-wr1-f98.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731625AbfHOROa (ORCPT
+        Thu, 15 Aug 2019 13:15:13 -0400
+Received: from mail-wm1-f100.google.com ([209.85.128.100]:38404 "EHLO
+        mail-wm1-f100.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731646AbfHOROa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 15 Aug 2019 13:14:30 -0400
-Received: by mail-wr1-f98.google.com with SMTP id b16so2848112wrq.9
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:28 -0700 (PDT)
+Received: by mail-wm1-f100.google.com with SMTP id m125so1859719wmm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=KWUuHNaeuLnP3/JiAYH55pf1los9RRnsI3012c89ha8=;
-        b=g/BKtK45mkDcTLVm2WOxcGvfKAblk/00eUBC+k7uKo9wBdSfUn0469l3FrQ51+mvTn
-         ij7QefDfbK4vAsMZq/ZCfOsSBaeX+le3EKpzVrKSZtBwJngznTMlLZlLpwMvQa+sSFjO
-         Q2nBNpYhJ86YHeVEBXlmcA8pX+s0vTVF4Vu98ZOQFpXBfMfwCPd4PXB874yCvI8OHaov
-         7fSRs2ftl66KiJ+OdLHpjARYjlANpy4/Mu/r4l/fyPdC3/WYL2M1eFKrDExxq7G/8UeM
-         ex7EKYsxQsUflSpyEJIwgdNZzPhizL6nFSfGxK5UqO2JjZs26qtrDeHDh6lG1y179V0n
-         lOYg==
-X-Gm-Message-State: APjAAAWN8mFIppu39NWEAMWRjoC+/g2MkuB4g/8uJ2II4erTdzZe+b1j
-        RorMpW55vnxDzDXXy7v0A+rSIv1XU+qJtlfaayp3ds1p4fBXUuUFYAf+4a35d89wQw==
-X-Google-Smtp-Source: APXvYqwWDvl7fMqBHpJtlbdFiqytWl7O/XHWKPee2tCAd0zJbkiaCCfr3WgkbS1PijRiJdEJ1PqDf7oVgqUx
-X-Received: by 2002:adf:aa8d:: with SMTP id h13mr6910152wrc.307.1565889267900;
-        Thu, 15 Aug 2019 10:14:27 -0700 (PDT)
+        bh=CnBCQCl8HgGtRAslD3BhGDm2lZeAd4b8wc+xobzHTtE=;
+        b=fAtSj4gtUsw/zzHOeGeURkspKwTZdaAbjfN+qSryoOWqsXpe4Nw4PO/2LVpnPljL38
+         UPc2EsMnAMl0PC1UVZHzaVTC+ch8AQl/obUVUhNJ76HL12R9nwzWNqN12CMqiZeDE7TO
+         ugsRd7mV8EBvR1Xf46LPRpaLKLLe4/OCCoppCCkZKeEK8OBdwVToPTdIdoiLaZCqdaKp
+         qhdfLoHO0xWzfOWHHIlb2bH/ae4f34m+DwZwyvrk71elnMkhv5pcNWKrJz1kIM/Yu6wI
+         l9aS7TuSAXQ3wnwxnxgkabVEy3Ac+RwLlYFJ5Y3e17m3Gmxua+rDhUR4mNkSsCGQ3cZy
+         DNdw==
+X-Gm-Message-State: APjAAAWpan29/51Xv8iJtOduwfBu6OESdLMgxgTtbGt+dCTo+yrShmNy
+        CaDaoewD0UhW+4+u2adwfFd2EwnumkWEcyxEMvW8lzevWUUbPNUNKi+49/piJ3bZfg==
+X-Google-Smtp-Source: APXvYqzF9p1m8pQLSYHcZd54ZXHssvs7mOElBrJ3n7sLNitdfagAUctF4SZiOcG91ZIiZMiKr3Spp9T/hSsU
+X-Received: by 2002:a1c:a1c1:: with SMTP id k184mr3836224wme.81.1565889268788;
+        Thu, 15 Aug 2019 10:14:28 -0700 (PDT)
 Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id e16sm10188wma.1.2019.08.15.10.14.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 15 Aug 2019 10:14:27 -0700 (PDT)
+        by smtp-relay.gmail.com with ESMTPS id v11sm7554wmh.27.2019.08.15.10.14.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 10:14:28 -0700 (PDT)
 X-Relaying-Domain: sirena.org.uk
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1hyJKV-00052P-Ij; Thu, 15 Aug 2019 17:14:27 +0000
+        id 1hyJKW-00052e-HJ; Thu, 15 Aug 2019 17:14:28 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 19EF52742BD6; Thu, 15 Aug 2019 18:14:27 +0100 (BST)
+        id 16A862742B9E; Thu, 15 Aug 2019 18:14:28 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org, info@metux.net,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: es8328: Fix copy-paste error in es8328_right_line_controls" to the asoc tree
-In-Reply-To: <20190815092300.68712-1-yuehaibing@huawei.com>
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     alsa-devel@alsa-project.org, cain.cai@rock-chips.com,
+        dgreid@chromium.org, dianders@chromium.org,
+        eddie.cai@rock-chips.com, enric.balletbo@collabora.com,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jaroslav Kysela <perex@perex.cz>, jeffy.chen@rock-chips.com,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        tzungbi@chromium.org, zhengxing@rock-chips.com
+Subject: Applied "ASoC: rockchip: rockchip_max98090: Set period size to 240" to the asoc tree
+In-Reply-To: <20190813074430.191791-1-cychiang@chromium.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20190815171427.19EF52742BD6@ypsilon.sirena.org.uk>
-Date:   Thu, 15 Aug 2019 18:14:27 +0100 (BST)
+Message-Id: <20190815171428.16A862742B9E@ypsilon.sirena.org.uk>
+Date:   Thu, 15 Aug 2019 18:14:28 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -74,7 +81,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: es8328: Fix copy-paste error in es8328_right_line_controls
+   ASoC: rockchip: rockchip_max98090: Set period size to 240
 
 has been applied to the asoc tree at
 
@@ -99,36 +106,55 @@ to this mail.
 Thanks,
 Mark
 
-From 630742c296341a8cfe00dfd941392025ba8dd4e8 Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 15 Aug 2019 17:23:00 +0800
-Subject: [PATCH] ASoC: es8328: Fix copy-paste error in
- es8328_right_line_controls
+From 7188f656cdf762d4ea8ce16b6aaf4c6b06e119ec Mon Sep 17 00:00:00 2001
+From: Cheng-Yi Chiang <cychiang@chromium.org>
+Date: Tue, 13 Aug 2019 15:44:30 +0800
+Subject: [PATCH] ASoC: rockchip: rockchip_max98090: Set period size to 240
 
-It seems 'es8328_rline_enum' should be used
-in es8328_right_line_controls
+From stress testing of arecord, we found that period size
+greater than ~900 will bring pl330 to DYING state and
+can not recover within 100 iterations.
+The result is that arecord will stuck and get I/O error,
+and issue can not be recovered until reboot.
 
-Fixes: 567e4f98922c ("ASoC: add es8328 codec driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190815092300.68712-1-yuehaibing@huawei.com
+This issue does not happen when period size is small.
+Set constraint of period size to 240 to prevent such issue.
+With the constraint, there will be no issue after 2000 iterations.
+
+We can revert this patch once the root cause is found
+in rockchip's pl330 implementation.
+
+Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Link: https://lore.kernel.org/r/20190813074430.191791-1-cychiang@chromium.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/es8328.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/rockchip/rockchip_max98090.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/sound/soc/codecs/es8328.c b/sound/soc/codecs/es8328.c
-index 822a25a8f53c..69b81e704127 100644
---- a/sound/soc/codecs/es8328.c
-+++ b/sound/soc/codecs/es8328.c
-@@ -228,7 +228,7 @@ static const struct soc_enum es8328_rline_enum =
- 			      ARRAY_SIZE(es8328_line_texts),
- 			      es8328_line_texts);
- static const struct snd_kcontrol_new es8328_right_line_controls =
--	SOC_DAPM_ENUM("Route", es8328_lline_enum);
-+	SOC_DAPM_ENUM("Route", es8328_rline_enum);
+diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
+index 782e534d4c0d..d54f672d38d8 100644
+--- a/sound/soc/rockchip/rockchip_max98090.c
++++ b/sound/soc/rockchip/rockchip_max98090.c
+@@ -138,8 +138,19 @@ static int rk_aif1_hw_params(struct snd_pcm_substream *substream,
+ 	return ret;
+ }
  
- /* Left Mixer */
- static const struct snd_kcontrol_new es8328_left_mixer_controls[] = {
++static int rk_aif1_startup(struct snd_pcm_substream *substream)
++{
++	/*
++	 * Set period size to 240 because pl330 has issue
++	 * dealing with larger period in stress testing.
++	 */
++	return snd_pcm_hw_constraint_minmax(substream->runtime,
++			SNDRV_PCM_HW_PARAM_PERIOD_SIZE, 240, 240);
++}
++
+ static const struct snd_soc_ops rk_aif1_ops = {
+ 	.hw_params = rk_aif1_hw_params,
++	.startup = rk_aif1_startup,
+ };
+ 
+ SND_SOC_DAILINK_DEFS(hifi,
 -- 
 2.20.1
 
