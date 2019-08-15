@@ -2,167 +2,116 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9C2C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68198C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9748C21744
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F35C2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:10:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KZd07T7R"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="refM5sSM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732613AbfHOSGt (ORCPT
+        id S1731520AbfHOSKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 14:06:49 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:51556 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729210AbfHOSGt (ORCPT
+        Thu, 15 Aug 2019 14:10:13 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44804 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729366AbfHOSKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 14:06:49 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BD1132AF;
-        Thu, 15 Aug 2019 20:06:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1565892406;
-        bh=zSZrTeCBrQTp1u2GZFwS+KZBuw8HzikCk+YGmksbVr0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KZd07T7RZTOJW2fuJtYfQt9PLJw15GsaPJPuTzgRCaJfd6h/p+1bHa+F5zwvspLpl
-         bEc6eIOBnCwi9UKOdXkLUhCWjHHRvKJztl1GhACJJebKECs9xk30cOI3c4z3mkIbji
-         wR99mJBa5xZkEBJtYVr7VoNDjMt6O1uO3/ouHkI0=
-Date:   Thu, 15 Aug 2019 21:06:41 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, Eric Anholt <eric@anholt.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: Re: [PATCH v2 3/9] drm: Rename drm_bridge_timings to drm_timings
-Message-ID: <20190815180641.GY5011@pendragon.ideasonboard.com>
-References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1565867073-24746-4-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190815131838.GP5011@pendragon.ideasonboard.com>
- <20190815140400.GA7174@kroah.com>
- <20190815141440.GA20322@pendragon.ideasonboard.com>
- <TY1PR01MB1770404C560F6967FA81D521C0AC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <20190815145300.GA15016@kroah.com>
+        Thu, 15 Aug 2019 14:10:12 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i18so1616416pgl.11;
+        Thu, 15 Aug 2019 11:10:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YGZciRmFKywos7phtHka3BMLOjJ5GD0teHhlJqhmVkk=;
+        b=refM5sSMD7XaWN2cBYtXuBqQL++UFaQwWAlfDTzJPByqFlruWjmG6Yh089jW7TdpbD
+         NrxNm0s2FZstcIYgXU/1OVsLWK+FGl/oYQP7+rTaMZkVBgGR23anbQo8oXgra9wTo9FE
+         j2SPBqMOEPNcKZuxqfPe/Pg1VNQm0EO34QutZQTrQlKL2cYjCOVrLe8Oxo+zJZteOQlu
+         B8hMLNBQEAo1UHIr3ABYn9iPuYxpRN+b0Z+J5xpbw/J0aCqSamjWusXlwPIWC+3YINI7
+         nT835bJJdCLvSjcjCqTDzc+ntlidStA5Dl6+CgzdON8g1MYQ6qhhFDs0HvmQv88M+BJb
+         dCaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YGZciRmFKywos7phtHka3BMLOjJ5GD0teHhlJqhmVkk=;
+        b=TAK2zbsMzphSzYHz0H+jiKefk9nQKLojQnv4w2oyYEe9IVnsv354JFR9RuqHQ0oMi4
+         VQTQa57wU3hGBoM/IEoFWeBxu4mAr8acyuAqgMG/NBMEEw2c3zDpBm020QPkxixO0aVH
+         mLP5/NMFXxSsEMBzEJVX2zGlrizflC6RWasibeQJHy2UrJ+GoGd+TwZn0XC7QaSkYowt
+         hydSrYVAui5rOYlArGaUrnv+3gENtC5Etf3+v2aQWrWPmUXLZg4rFYLKnCnkka/vhW8+
+         JY/kY3kxJPN/dQ5UIcMKejxj60WjTpazOn8A/n49jEPjZy7aRzF9ysJpT+Em3lrLOlvA
+         NR6w==
+X-Gm-Message-State: APjAAAV6j9qQDjQtnH/jr9u1i4Nfj209bB1zZ38L3bQDW6zGIsDifbnJ
+        EqZeVTw88JRFV32515soid0=
+X-Google-Smtp-Source: APXvYqxIDdyy6by/HwcLogs24nzI99cv+AM8Nkc5yJYlPuae0cwXsF1pvVTorAHFvjBOwQbrOwQiZw==
+X-Received: by 2002:a62:38d7:: with SMTP id f206mr6797850pfa.102.1565892612133;
+        Thu, 15 Aug 2019 11:10:12 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n98sm1927437pjc.26.2019.08.15.11.10.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 11:10:11 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 11:10:10 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Anatolij Gustschin <agust@denx.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linuxppc-dev@lists.ozlabs.org, linux-um@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 06/18] compat_ioctl: move WDIOC handling into wdt
+ drivers
+Message-ID: <20190815181010.GA28580@roeck-us.net>
+References: <20190814204259.120942-1-arnd@arndb.de>
+ <20190814205245.121691-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190815145300.GA15016@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190814205245.121691-1-arnd@arndb.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-On Thu, Aug 15, 2019 at 04:53:00PM +0200, Greg Kroah-Hartman wrote:
-> On Thu, Aug 15, 2019 at 02:31:26PM +0000, Fabrizio Castro wrote:
-> > On 15 August 2019 15:15, Laurent Pinchart wrote:
-> > > On Thu, Aug 15, 2019 at 04:04:00PM +0200, Greg Kroah-Hartman wrote:
-> > > > On Thu, Aug 15, 2019 at 04:18:38PM +0300, Laurent Pinchart wrote:
-> > > > > Hi Fabrizio,
-> > > > >
-> > > > > (CC'ing Greg as the architect of the SPDX move)
-> > > >
-> > > > _one of_, not the one that did the most of he work, that would be Thomas :)
-> > > >
-> > > > > On Thu, Aug 15, 2019 at 12:04:27PM +0100, Fabrizio Castro wrote:
-> > > > > > The information represented by drm_bridge_timings is also
-> > > > > > needed by panels, therefore rename drm_bridge_timings to
-> > > > > > drm_timings.
-> > > > > >
-> > > > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > > > > Link: https://www.spinics.net/lists/linux-renesas-soc/msg43271.html
-> > > > > >
-> > > > > > ---
-> > > > > > v1->v2:
-> > > > > > * new patch
-> > > > > >
-> > > > > > I have copied the license from include/drm/drm_bridge.h as that's
-> > > > > > where the struct originally came from. What's the right SPDX license
-> > > > > > to use in this case?
-> > > > >
-> > > > > https://wiki.spdx.org/view/Legal_Team/Decisions/Dealing_with_Public_Domain_within_SPDX_Files
-> > > > >
-> > > > > Greg, any idea on how we should handle this ?
-> > > >
-> > > > Ugh, what lunacy.  But drm_bridge.h is NOT under any "public domain"
-> > > > license, so why is that an issue here?  This looks like a "normal" bsd 3
-> > > > clause license to me, right?
-> > > 
-> > > You're right, I overread part of the text in drm_bridge.h, it seems to
-> > > indeed be covered by a BSD 3 clause license. Sorry for the noise.
-> > 
-> > Mmm... This is the template for the BSD-3-Clause:
-> > 
-> > Copyright (c) <YEAR>, <OWNER>                                                    
-> > All rights reserved.                                                             
-> >                                                                                  
-> > Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-> >                                                                                  
-> > Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-> > Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-> > Neither the name of the <ORGANIZATION> nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-> > THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> > 
-> > And this is the license coming from include/drm/drm_bridge.h:
-> > 
-> > /*                                                                                                                                                                                                                                                                              
-> >  * Copyright (c) 2016 Intel Corporation                                          
-> >  *                                                                               
-> >  * Permission to use, copy, modify, distribute, and sell this software and its   
-> >  * documentation for any purpose is hereby granted without fee, provided that    
-> >  * the above copyright notice appear in all copies and that both that copyright  
-> >  * notice and this permission notice appear in supporting documentation, and     
-> >  * that the name of the copyright holders not be used in advertising or          
-> >  * publicity pertaining to distribution of the software without specific,        
-> >  * written prior permission.  The copyright holders make no representations      
-> >  * about the suitability of this software for any purpose.  It is provided "as   
-> >  * is" without express or implied warranty.                                      
-> >  *                                                                               
-> >  * THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,   
-> >  * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO        
-> >  * EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY SPECIAL, INDIRECT OR      
-> >  * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,   
-> >  * DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER        
-> >  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE  
-> >  * OF THIS SOFTWARE.                                                             
-> >  */
-> > 
-> > Perhaps I am completely wrong here, and I am not a lawyer, but the wording seems different enough to me...
-> > I am happy to use "BSD-3-Clause" though. Laurent please double check.
+On Wed, Aug 14, 2019 at 10:49:18PM +0200, Arnd Bergmann wrote:
+> All watchdog drivers implement the same set of ioctl commands, and
+> fortunately all of them are compatible between 32-bit and 64-bit
+> architectures.
 > 
-> Please talk to your lawyers about this, we are not them...
+> Modern drivers always go through drivers/watchdog/wdt.c as an abstraction
+> layer, but older ones implement their own file_operations on a character
+> device for this.
+> 
+> Move the handling from fs/compat_ioctl.c into the individual drivers.
+> 
+> Note that most of the legacy drivers will never be used on 64-bit
+> hardware, because they are for an old 32-bit SoC implementation, but
+> doing them all at once is safer than trying to guess which ones do
+> or do not need the compat_ioctl handling.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-I don't think that's fair though. Fabrizio is reworking kernel code, and
-as part of that wondered what SPDX tag to apply to a new file that
-contains code moved from an existing file that has no SPDX tag, but the
-above copyright notice. He's not trying to change a license, or reword
-it. As SPDX is the preferred way of expressing licenses in the kernel,
-he legitimately asked for help, and I think we should provide an
-official answer for this (which could be not to use SPDX but copy the
-license text).
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
--- 
-Regards,
+This patch doesn't seem to have a useful base (or at least git says so).
+It does not apply to mainline nor to my own watchdog-next branch.
+I assume you plan to apply the entire series together. Please not
+that there will be conflicts against watchdog-next when you do so.
 
-Laurent Pinchart
+Guenter
