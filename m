@@ -2,115 +2,84 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C863AC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06688C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C056206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6F9D2133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:10:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CAQ+IYG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387633AbfHOXJf (ORCPT
+        id S2387635AbfHOXKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 19:09:35 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39298 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387417AbfHOXJf (ORCPT
+        Thu, 15 Aug 2019 19:10:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49550 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730638AbfHOXKp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 19:09:35 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 16so3492589oiq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 16:09:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/KueCoqv0v/W7V4/eL1H80gQgh9EGimyZb4UkR4ZiMo=;
-        b=RfdbKtZLk6McraAvphR8g4CfcQ5SsT1qT16EF8avBGIhHmXoTuDAp6fZnT0zpxnc86
-         UBJbn9nk82yOgX0bFJYZGJANfssCatFvgX6y1vv64t9W4gAv32Rl3sDNVAZ0x8S31sRF
-         NqWOCvSblxSLLO+dAcm4+B5nV1PowMAaXdqK7uC57vRI5M0sFDmpYMtehJcUyte/Qzb3
-         mcQoc9vWWRwC55ewyktP9hNGcGRMcgPkCWp+x2ZMgtLNbJeuaceyhPbnkrtoIrEkkgbZ
-         Tsw1422CwC3PTF7E9tL2mz4gPYPWTjfDsxrgksiMkYQmDSLbLqZVwqiXkmJ2heiZc5IU
-         GHKQ==
-X-Gm-Message-State: APjAAAVMu5P/eakOwg/medxXdS7iME3lOwVgNV/c0q6ggo04HoT/W9xX
-        UhMHd71RM3fJbJ9OwCv/+yR8tr+D3M8=
-X-Google-Smtp-Source: APXvYqwGBWiPyvvWs8m39AIAtQCmYX3nojzA0B2ExrcRAKq8IKawTgRBa6T7UD6NpzS5OGeFGhRaKw==
-X-Received: by 2002:aca:cd41:: with SMTP id d62mr3043815oig.78.1565910573833;
-        Thu, 15 Aug 2019 16:09:33 -0700 (PDT)
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com. [209.85.210.53])
-        by smtp.gmail.com with ESMTPSA id n22sm1437858otk.28.2019.08.15.16.09.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Aug 2019 16:09:33 -0700 (PDT)
-Received: by mail-ot1-f53.google.com with SMTP id c7so8073650otp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 16:09:33 -0700 (PDT)
-X-Received: by 2002:a9d:7383:: with SMTP id j3mr5708386otk.74.1565910573210;
- Thu, 15 Aug 2019 16:09:33 -0700 (PDT)
+        Thu, 15 Aug 2019 19:10:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=TRvle+ToJwUGZSz2o4z4HL+lfRoAh8b5g7ahx3uFjrg=; b=CAQ+IYG8uWK4/XIclus7nyqqa
+        tVflJ5MMvlEWzvMMV6WUVhYTPA8qxNQledcXDm+ibNlL2B5ax6fwXExGN9dbGkmzO4pbBNUO7R00I
+        RJbmhCrvAhaZQjEogU+PrQZDnr8+NBcNCE94Mpjzi9msYYZW4CLsrOqZhvLmRGQtQ7+wE4CwB7xVc
+        2k99njFYAJP6/f1IDA0yUggro+gx66orfDTu6RVoF3Oe9dGgZ5pHTZ5s+WGMgtNo54EDIxvl6/t34
+        Pa0K5+JPK57a8JakNW3/59Xqpy0/40JXCcidnb6ofsghECha/P+lWxMGWgQqOdGFQ/dMQAwd3v68w
+        NUO/0MjSQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hyOtG-0002Ec-Q0; Thu, 15 Aug 2019 23:10:42 +0000
+Subject: Re: [PATCH] Documentation/admin-guide: Embargoed hardware security
+ issues
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        security@kernel.org, linux-doc@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Kosina <jkosina@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+References: <20190725130113.GA12932@kroah.com>
+ <20190725151302.16a3e0e3@lwn.net> <20190815212019.GB12041@kroah.com>
+ <e3ae0d66-b9eb-97ba-647a-57f3e2eb4af2@infradead.org>
+ <20190815223147.GA28275@kroah.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <0d8ee183-7559-99ee-8c83-a902e7215da8@infradead.org>
+Date:   Thu, 15 Aug 2019 16:10:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1562165800-30721-1-git-send-email-ioana.ciornei@nxp.com> <1562165800-30721-4-git-send-email-ioana.ciornei@nxp.com>
-In-Reply-To: <1562165800-30721-4-git-send-email-ioana.ciornei@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Thu, 15 Aug 2019 18:09:21 -0500
-X-Gmail-Original-Message-ID: <CADRPPNT9LGdMWuBcBnvWXhD8Q-qbTNOzbYp1dRrt0NXb2DBgDw@mail.gmail.com>
-Message-ID: <CADRPPNT9LGdMWuBcBnvWXhD8Q-qbTNOzbYp1dRrt0NXb2DBgDw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] soc: fsl: FSL_MC_DPIO selects directly FSL_GUTS
-To:     Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Roy Pledge <Roy.Pledge@nxp.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190815223147.GA28275@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 9:58 AM Ioana Ciornei <ioana.ciornei@nxp.com> wrote:
->
-> Make FSL_MC_DPIO select directly FSL_GUTS. Without this change we could
-> be in a situation where both FSL_MC_DPIO and SOC_BUS are enabled but
-> FSL_GUTS is not.
->
-> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-> ---
->  drivers/soc/fsl/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
-> index b6804c04e96f..7e62c1d0aee7 100644
-> --- a/drivers/soc/fsl/Kconfig
-> +++ b/drivers/soc/fsl/Kconfig
-> @@ -22,7 +22,7 @@ config FSL_GUTS
->  config FSL_MC_DPIO
->          tristate "QorIQ DPAA2 DPIO driver"
->          depends on FSL_MC_BUS
-> -        select SOC_BUS
-> +        select FSL_GUTS
+On 8/15/19 3:31 PM, Greg Kroah-Hartman wrote:
+> On Thu, Aug 15, 2019 at 03:12:34PM -0700, Randy Dunlap wrote:
+>> On 8/15/19 2:20 PM, Greg Kroah-Hartman wrote:
+>>>>> +The hardware security team will provide a per incident specific encrypted
+>>>> s/per incident specific/incident-specific/
+>>> Fixed.  And changed /a/ to /an/
+>>
+>> eh?  still should be /a per incident/
+> 
+> The sentence was changed to:
+> 	The hardware security team will provide an incident-specific
+> 	encrypted...
+> 
+> is not "an" correct here?
 
-NACK.  Although DPIO only exists on SoCs with the GUTS block for now.
-There is no direct dependency between the two IPs.  I don't think we
-should add this dependency to make FSL_GUTS not configurable.  Here is
-some explaination from kernel documentation:
+That's good then.  I didn't see the complete sentence.
 
-        select should be used with care. select will force
-        a symbol to a value without visiting the dependencies.
-        By abusing select you are able to select a symbol FOO even
-        if FOO depends on BAR that is not set.
-        In general use select only for non-visible symbols
-        (no prompts anywhere) and for symbols with no dependencies.
-        That will limit the usefulness but on the other hand avoid
-        the illegal configurations all over.
-
-We probably shouldn't let it select SOC_BUS either from the beginning,
-as the basic feature of DPIO should still work without defining
-SOC_BUS.
-
-Regards,
-Leo
-
->          help
->           Driver for the DPAA2 DPIO object.  A DPIO provides queue and
->           buffer management facilities for software to interact with
-> --
-> 1.9.1
->
+-- 
+~Randy
