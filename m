@@ -2,147 +2,139 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DE5C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 333A1C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C46E02083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:46:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="NOCyQ0RJ"
+	by mail.kernel.org (Postfix) with ESMTP id EEED42054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565898989;
+	bh=AtLbiaZ+VQlrktIPUORYmJysPW8SdO78vpZ66TK/sa4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=NEWTKsAVpwdNVV+J65HyqaS39SGN90PcFQdWXdFEaDQ68619t26FxB3LD2DlUtwSp
+	 H8yPFS193RSrKTZmLhPF46j9i/w4csoLqFQ+43D6sRJfMxadVl5xj89kPtpH/iC1K1
+	 eAGJ04KOf62UNgCY/iUp0DppTun90TffpjIu8Ehg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733202AbfHOTqn (ORCPT
+        id S1732098AbfHOT42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 15:46:43 -0400
-Received: from mail-eopbgr10083.outbound.protection.outlook.com ([40.107.1.83]:16619
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729779AbfHOTqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 15:46:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AejlJQM/OKLo2+k9TEkPp1nwsFoCCBMUqabBrzobO/QgkF4UIemLMS5WECx4sEdhgaSfcfmDQ+/SQhbLZ4r59pUeJCc3lAeCZQ6vuki57qRbUoF1+PWn+a0seJnkj99cpZumNVSok4Kjv+UiCWnmgc+1aAnLe/OhUZJAAP+tf+wRK/mM5BmjtiHzRh+O4Ix3G7WrPBWJDotqMfjVraeXlnTweT0BpFKfQpITo9fkWgDElkZGVQZBGsSs1tVxRmp+fHXlzR7Pag9Wk+Z24qQw5+86y8k36KHggTX6MSD9wyd920v3i5j/id8EnaYLOnneF0YQjwBAR+Gq5/qrfIOk2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w0BTBF8kBiLrHFHJkVGaHXIMzhmWMU/iNoD1oXuo9IM=;
- b=a4g93HA7YNi34/bB4mruBaU4piOs7lnki1BwSA/APcFccMD19aOE9Sm2VLWqWJTVM0lpof2gLxiW2pw6HA/LZrTRsVdpyoeetpsa7C0WArGdUZwQR7ikuYt/z0XCx/747M1//XgjrLw/9TnMGAgh1jSyrRbKX3Ls1Nt2c42/hgvmK8hBqr7UpVgHOkUgqL+KytTXfPk9dXIY1O3QrKgEheIq/9ehx687zVu56ly0WldAhaRJiYRYwT1xj+H4t9j0L5VWXPqy4eQ0maartBDvYwe6uFwT3r0eT5uDQae8t2Cctkn6Amj73GwGiepIYsbH2Z2ygmBvgIv1euplWTH4Cw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w0BTBF8kBiLrHFHJkVGaHXIMzhmWMU/iNoD1oXuo9IM=;
- b=NOCyQ0RJptuOlGmC66pGD1CZi5Sr530aX0F//3KLxm8rlhs/T8hWJXKdOwFXsqgg4U5DpcEpUq2cMksGRMqM689bq0J8wZKL+T+7aLbxir19IBnoxXB+lxgu3kB0tHl1YZb/1IY3Cy3az7xAZzldEgmQy3FJGB62PmZoDQA6yQU=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5168.eurprd05.prod.outlook.com (20.178.10.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.21; Thu, 15 Aug 2019 19:46:26 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
- 19:46:26 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "christian.koenig@amd.com" <christian.koenig@amd.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Dimitri Sivanich <sivanich@sgi.com>,
-        Gavin Shan <shangw@linux.vnet.ibm.com>,
-        Andrea Righi <andrea@betterlinux.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        =?utf-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v3 hmm 08/11] drm/radeon: use mmu_notifier_get/put for
- struct radeon_mn
-Thread-Topic: [PATCH v3 hmm 08/11] drm/radeon: use mmu_notifier_get/put for
- struct radeon_mn
-Thread-Index: AQHVTKz1YDgPM7GGLU27kR5zKXuwhab77XGAgAC9boA=
-Date:   Thu, 15 Aug 2019 19:46:26 +0000
-Message-ID: <20190815194621.GF22970@mellanox.com>
-References: <20190806231548.25242-1-jgg@ziepe.ca>
- <20190806231548.25242-9-jgg@ziepe.ca>
- <2baff2e5-b923-c39b-98e5-b3e7f77bd6d3@gmail.com>
-In-Reply-To: <2baff2e5-b923-c39b-98e5-b3e7f77bd6d3@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YQBPR0101CA0057.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:1::34) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 28c89de1-b5a2-4a9a-c12d-08d721b9428c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5168;
-x-ms-traffictypediagnostic: VI1PR05MB5168:
-x-microsoft-antispam-prvs: <VI1PR05MB51681C1EF442D179C3BE8696CFAC0@VI1PR05MB5168.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 01304918F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(366004)(396003)(136003)(199004)(189003)(6506007)(305945005)(2351001)(11346002)(36756003)(186003)(2616005)(102836004)(7416002)(66476007)(14454004)(64756008)(66556008)(26005)(486006)(446003)(66446008)(76176011)(476003)(66946007)(386003)(5660300002)(52116002)(7736002)(4326008)(316002)(256004)(66066001)(71200400001)(2906002)(33656002)(54906003)(81166006)(8676002)(1076003)(6512007)(25786009)(81156014)(71190400001)(6486002)(3846002)(6116002)(66574012)(99286004)(53936002)(478600001)(5640700003)(229853002)(86362001)(6916009)(8936002)(6246003)(6436002)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5168;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: fILogM5ET6wCipH9DgoM3HqNITLwlrxJI2cgDafFx5J9icOy7soEV1u/6g/yFdRMglGjJikP8+X19/UX2lPTWyn+kxdMSMeD9cwhCSRrEAf6IuXOSlStS2IlrXHAEwvuJsqLp5ge8B5d+0MmE+0r7yT0ZiU82tFXz5lbVuFw7DmiCVKKmmmlj8UQgiI24v1LSAU09TWm7MpD2LTXmaTWVRHr6ZSmxFsNjbM+HHP6Iwlry4K9Dk/WDEXiUSWcqKuutbYNNOGSsNMra+0+54JMj4OwFocKLSrhWQBRu44Ap37S7KztIlp0xPX49c+2Uhcjz4N37WYO2tBC/Gj0RNFzoMvtiHin7s6yAiSuwO9tVerzA2tGBUDCS1Y3LvB0BPJSMPfVYE119C2WMnrvNyrimbmyChHdxlSOiMvOrFTpN5k=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2697329F3A1E3A4682A1061BFB978A84@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 15 Aug 2019 15:56:28 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40011 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731379AbfHOT41 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 15:56:27 -0400
+Received: by mail-qk1-f196.google.com with SMTP id s145so2817686qke.7;
+        Thu, 15 Aug 2019 12:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=8z1El4joEJPfZv/LOFE6htKfEd+io5Oqo8kE5bpDZI8=;
+        b=IV591KQoCqfTve5OPjwQ47qHrWwJRQf3xrEvs5BOJAkNcxSizdrKC6TUcjcAaz9PoQ
+         px/g/rn3BTUn77UIp7bkv6L/1d9qTjvMhw/OQX8nroblfWcmVo93BMhaqjBRFoBlA1RI
+         10S1uDqFaHcg1R8CS7xKdqNFnQrkMfSNbLm4P9cBlbgE6j91TZWgHEUnVYF9rHSpnhuW
+         tpDQZcemdcad6WXNjgVDo9e+re3W/IsVX5KPyDXUnuJvt8FOYQOOy8yprthlx9FQfKP2
+         WjO9IZw+8e0pI6aAhBHhlJ2AmcWyozZKtW9efPWWbwtSQ+6Ecj79f0juQPYo17z08IuK
+         FaFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=8z1El4joEJPfZv/LOFE6htKfEd+io5Oqo8kE5bpDZI8=;
+        b=dSmrRTlNcO8rSow0cIqMZnh3XKC8/ki2yrGpE6AfJsOuunEt+UbTJ+uH9NN6idYTY1
+         oiWaOX95uBPKO2onrq/V3e6umFbol4tvD6i7zbI10cYWEOFRsKgyEe5KwiJGYXJl2LG5
+         O+NtX68aTqbiRsWY5DtaUZzL96WUZ6eO8a0cV6a2wJtDq/pFHlZ0tYr0+voipgMSKxOH
+         oE82OLPSil3rnpf65I9y0zZmNmaT4YuELTL+g42n4/lryhrvN1L8ZzxYXkfXmHgkBdiL
+         qrIIcOgSfzeEfvNfAlTltPKcWuIRYuzQhUz9P2NI+zdxIh69vCA8NVDkDUeia4TnFJbv
+         fjSg==
+X-Gm-Message-State: APjAAAUvFy3YAZ6QNrKIMDHGmRxW4y3oLY4UHYKIIuJVkyT9XMJ+ePt8
+        YLzqnaBb/3/CoXNoj3ztCyk=
+X-Google-Smtp-Source: APXvYqyFEhAOKMzIeJih4yO72MRxGcpcdDYyJTV1V8osLQRoZK31+m6+Tv7/N0fkfX3fOJV0l5MUVQ==
+X-Received: by 2002:a37:4791:: with SMTP id u139mr5430488qka.386.1565898981989;
+        Thu, 15 Aug 2019 12:56:21 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:25cd])
+        by smtp.gmail.com with ESMTPSA id c13sm1817004qtn.77.2019.08.15.12.56.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 12:56:21 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 12:56:19 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com
+Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, guro@fb.com, akpm@linux-foundation.org
+Subject: [PATCHSET v2] writeback, memcg: Implement foreign inode flushing
+Message-ID: <20190815195619.GA2263813@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28c89de1-b5a2-4a9a-c12d-08d721b9428c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 19:46:26.7080
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wr44nuzrOFqyQ8CDBnIZBpKKVc1F/faVzxn1IB0CV8N2pnaiWwXawzoXNPWFVXppCL/XneYKDHgeBk/kLVkTpw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5168
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCBBdWcgMTUsIDIwMTkgYXQgMTA6Mjg6MjFBTSArMDIwMCwgQ2hyaXN0aWFuIEvDtm5p
-ZyB3cm90ZToNCj4gQW0gMDcuMDguMTkgdW0gMDE6MTUgc2NocmllYiBKYXNvbiBHdW50aG9ycGU6
-DQo+ID4gRnJvbTogSmFzb24gR3VudGhvcnBlIDxqZ2dAbWVsbGFub3guY29tPg0KPiA+IA0KPiA+
-IHJhZGVvbiBpcyB1c2luZyBhIGRldmljZSBnbG9iYWwgaGFzaCB0YWJsZSB0byB0cmFjayB3aGF0
-IG1tdV9ub3RpZmllcnMNCj4gPiBoYXZlIGJlZW4gcmVnaXN0ZXJlZCBvbiBzdHJ1Y3QgbW0uIFRo
-aXMgaXMgYmV0dGVyIHNlcnZlZCB3aXRoIHRoZSBuZXcNCj4gPiBnZXQvcHV0IHNjaGVtZSBpbnN0
-ZWFkLg0KPiA+IA0KPiA+IHJhZGVvbiBoYXMgYSBidWcgd2hlcmUgaXQgd2FzIG5vdCBibG9ja2lu
-ZyBub3RpZmllciByZWxlYXNlKCkgdW50aWwgYWxsDQo+ID4gdGhlIEJPJ3MgaGFkIGJlZW4gaW52
-YWxpZGF0ZWQuIFRoaXMgY291bGQgcmVzdWx0IGluIGEgdXNlIGFmdGVyIGZyZWUgb2YNCj4gPiBw
-YWdlcyB0aGUgQk9zLiBUaGlzIGlzIHRpZWQgaW50byBhIHNlY29uZCBidWcgd2hlcmUgcmFkZW9u
-IGxlZnQgdGhlDQo+ID4gbm90aWZpZXJzIHJ1bm5pbmcgZW5kbGVzc2x5IGV2ZW4gb25jZSB0aGUg
-aW50ZXJ2YWwgdHJlZSBiZWNhbWUNCj4gPiBlbXB0eS4gVGhpcyBjb3VsZCByZXN1bHQgaW4gYSB1
-c2UgYWZ0ZXIgZnJlZSB3aXRoIG1vZHVsZSB1bmxvYWQuDQo+ID4gDQo+ID4gQm90aCBhcmUgZml4
-ZWQgYnkgY2hhbmdpbmcgdGhlIGxpZmV0aW1lIG1vZGVsLCB0aGUgQk9zIGV4aXN0IGluIHRoZQ0K
-PiA+IGludGVydmFsIHRyZWUgd2l0aCB0aGVpciBuYXR1cmFsIGxpZmV0aW1lcyBpbmRlcGVuZGVu
-dCBvZiB0aGUgbW1fc3RydWN0DQo+ID4gbGlmZXRpbWUgdXNpbmcgdGhlIGdldC9wdXQgc2NoZW1l
-LiBUaGUgcmVsZWFzZSBydW5zIHN5bmNocm9ub3VzbHkgYW5kIGp1c3QNCj4gPiBkb2VzIGludmFs
-aWRhdGVfc3RhcnQgYWNyb3NzIHRoZSBlbnRpcmUgaW50ZXJ2YWwgdHJlZSB0byBjcmVhdGUgdGhl
-DQo+ID4gcmVxdWlyZWQgRE1BIGZlbmNlLg0KPiA+IA0KPiA+IEFkZGl0aW9ucyB0byB0aGUgaW50
-ZXJ2YWwgdHJlZSBhZnRlciByZWxlYXNlIGFyZSBhbHJlYWR5IGltcG9zc2libGUgYXMNCj4gPiBv
-bmx5IGN1cnJlbnQtPm1tIGlzIHVzZWQgZHVyaW5nIHRoZSBhZGQuDQo+ID4gDQo+ID4gU2lnbmVk
-LW9mZi1ieTogSmFzb24gR3VudGhvcnBlIDxqZ2dAbWVsbGFub3guY29tPg0KPiANCj4gQWNrZWQt
-Ynk6IENocmlzdGlhbiBLw7ZuaWcgPGNocmlzdGlhbi5rb2VuaWdAYW1kLmNvbT4NCg0KVGhhbmtz
-IQ0KDQo+IEJ1dCBJJ20gd29uZGVyaW5nIGlmIHdlIHNob3VsZG4ndCBjb21wbGV0ZWx5IGRyb3Ag
-cmFkZW9uIHVzZXJwdHIgc3VwcG9ydC4NCj4gSXQncyBqdXN0IHRvIGJ1Z2d5LA0KDQpJIHdvdWxk
-IG5vdCBvYmplY3QgOikNCg0KSmFzb24NCg==
+Hello,
+
+Changes from v1[1]:
+
+* More comments explaining the parameters.
+
+* 0003-writeback-Separate-out-wb_get_lookup-from-wb_get_create.patch
+  added and avoid spuriously creating missing wbs for foreign
+  flushing.
+
+There's an inherent mismatch between memcg and writeback.  The former
+trackes ownership per-page while the latter per-inode.  This was a
+deliberate design decision because honoring per-page ownership in the
+writeback path is complicated, may lead to higher CPU and IO overheads
+and deemed unnecessary given that write-sharing an inode across
+different cgroups isn't a common use-case.
+
+Combined with inode majority-writer ownership switching, this works
+well enough in most cases but there are some pathological cases.  For
+example, let's say there are two cgroups A and B which keep writing to
+different but confined parts of the same inode.  B owns the inode and
+A's memory is limited far below B's.  A's dirty ratio can rise enough
+to trigger balance_dirty_pages() sleeps but B's can be low enough to
+avoid triggering background writeback.  A will be slowed down without
+a way to make writeback of the dirty pages happen.
+
+This patchset implements foreign dirty recording and foreign mechanism
+so that when a memcg encounters a condition as above it can trigger
+flushes on bdi_writebacks which can clean its pages.  Please see the
+last patch for more details.
+
+This patchset contains the following four patches.
+
+ 0001-writeback-Generalize-and-expose-wb_completion.patch
+ 0002-bdi-Add-bdi-id.patch
+ 0003-writeback-Separate-out-wb_get_lookup-from-wb_get_create.patch
+ 0004-writeback-memcg-Implement-cgroup_writeback_by_id.patch
+ 0005-writeback-memcg-Implement-foreign-dirty-flushing.patch
+
+0001-0004 are prep patches which expose wb_completion and implement
+bdi->id and flushing by bdi and memcg IDs.
+
+0005 implements foreign inode flushing.
+
+Thanks.  diffstat follows.
+
+ fs/fs-writeback.c                |  114 +++++++++++++++++++++++----------
+ include/linux/backing-dev-defs.h |   23 ++++++
+ include/linux/backing-dev.h      |    5 +
+ include/linux/memcontrol.h       |   39 +++++++++++
+ include/linux/writeback.h        |    2 
+ mm/backing-dev.c                 |  120 +++++++++++++++++++++++++++++------
+ mm/memcontrol.c                  |  132 +++++++++++++++++++++++++++++++++++++++
+ mm/page-writeback.c              |    4 +
+ 8 files changed, 386 insertions(+), 53 deletions(-)
+
+--
+tejun
+
+[1] http://lkml.kernel.org/r/20190803140155.181190-1-tj@kernel.org
