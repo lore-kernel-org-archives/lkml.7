@@ -2,29 +2,30 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5EDC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DABC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96D982171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4052B2067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:42:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbfHOEmn (ORCPT
+        id S1729611AbfHOEmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:42:43 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34884 "EHLO huawei.com"
+        Thu, 15 Aug 2019 00:42:47 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34888 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725440AbfHOEmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:42:43 -0400
+        id S1725832AbfHOEmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:42:46 -0400
 Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1BAAE4BE6ECA50AFED55;
+        by Forcepoint Email with ESMTP id 01E68F66D4A94C56F1CC;
         Thu, 15 Aug 2019 12:42:38 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 15 Aug
- 2019 12:42:31 +0800
+ 2019 12:42:28 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         "Alexander Viro" <viro@zeniv.linux.org.uk>
@@ -46,12 +47,10 @@ CC:     LKML <linux-kernel@vger.kernel.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v8 02/24] erofs: add erofs in-memory stuffs
-Date:   Thu, 15 Aug 2019 12:41:33 +0800
-Message-ID: <20190815044155.88483-3-gaoxiang25@huawei.com>
+Subject: [PATCH v8 00/24] erofs: promote erofs from staging v8
+Date:   Thu, 15 Aug 2019 12:41:31 +0800
+Message-ID: <20190815044155.88483-1-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190815044155.88483-1-gaoxiang25@huawei.com>
-References: <20190815044155.88483-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.140.130.215]
@@ -61,385 +60,246 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- - erofs_sb_info:
-   contains erofs-specific in-memory information.
+[I strip the previous cover letter, the old one can be found in v6:
+ https://lore.kernel.org/r/20190802125347.166018-1-gaoxiang25@huawei.com/]
 
- - erofs_vnode:
-   contains vfs_inode and other fs-specific information.
-   same as super block, the only one in-memory definition exists.
+We'd like to submit a formal moving patch applied to staging tree
+for 5.4, before that we'd like to hear if there are some ACKs,
+suggestions or NAKs, objections of EROFS. Therefore, we can improve
+it in this round or rethink about the whole thing.
 
- - erofs_map_blocks
-   Logical to physical block mapping, used by erofs_map_blocks().
+As related materials mentioned [1] [2], the goal of EROFS is to
+save extra storage space with guaranteed end-to-end performance
+for read-only files, which has better performance over exist Linux
+compression filesystems based on fixed-sized output compression
+and inplace decompression. It even has better performance in
+a large compression ratio range compared with generic uncompressed
+filesystems with proper CPU-storage combinations. And we think this
+direction is correct and a dedicated kernel team is continuously /
+actively working on improving it, enough testers and beta / end
+users using it.
 
+EROFS has been applied to almost all in-service HUAWEI smartphones
+(Yes, the number is still increasing by time) and it seems like
+a success. It can be used in more wider scenarios. We think it's
+useful for Linux / Android OS community and it's the time moving
+out of staging.
+
+In order to get started, latest stable mkfs.erofs is available at
+
+git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b dev
+
+with README in the repository.
+
+We are still tuning sequential read performance for ultra-fast
+speed NVME SSDs like Samsung 970PRO, but at least now you can
+try on your PC with some data with proper compression ratio,
+the latest Linux kernel, USB stick for convenience sake and
+a not very old-fashioned CPU. There are also benchmarks available
+in the above materials mentioned.
+
+EROFS is a self-contained filesystem driver. Although there are
+still some TODOs to be more generic, we will actively keep on
+developping / tuning EROFS with the evolution of Linux kernel
+as the other in-kernel filesystems.
+
+As I mentioned before in LSF/MM 2019, in the future, we'd like
+to generalize the decompression engine into a library for other
+fses to use after the whole system is mature like fscrypt.
+However, such metadata should be designed respectively for
+each fs, and synchronous metadata read cost will be larger
+than EROFS because of those ondisk limitation. Therefore EROFS
+is still a better choice for read-only scenarios.
+
+EROFS is now ready for reviewing and moving, and the code is
+already cleaned up as shiny floors... Please kindly take some
+precious time, share your comments about EROFS and let us know
+your opinion about this. It's really important for us since
+generally speaking, we like to use Linux _in-tree_ stuffs rather
+than lack of supported out-of-tree / orphan stuffs as well.
+
+Thank you in advance,
+Gao Xiang
+
+[1] https://kccncosschn19eng.sched.com/event/Nru2/erofs-an-introduction-and-our-smartphone-practice-xiang-gao-huawei
+[2] https://www.usenix.org/conference/atc19/presentation/gao
+
+Changelog from v7:
+ o keep up with the latest staging tree in addition to
+   the latest staging patch:
+   https://lore.kernel.org/r/20190814103705.60698-1-gaoxiang25@huawei.com/
+   - use EUCLEAN for fs corruption cases suggested by Pavel;
+   - turn EIO into EOPNOTSUPP for unsupported on-disk format;
+   - fix all misused ENOTSUPP into EOPNOTSUPP pointed out by Chao;
+ o update cover letter
+
+It can also be found in git at tag "erofs_2019-08-15" (will be shown later) at:
+ https://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git/
+
+and the latest fs code is available at:
+ https://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git/tree/fs/erofs?h=erofs-outofstaging
+
+Changelog from v6:
+ o keep up with the latest staging patchset
+   https://lore.kernel.org/linux-fsdevel/20190813023054.73126-1-gaoxiang25@huawei.com/
+   in order to fix the following cases:
+   - inline erofs_inode_is_data_compressed() in erofs_fs.h;
+   - remove incomplete cleancache;
+   - remove all BUG_ON in EROFS.
+ o Removing the file names from the comments at the top of the files
+   suggested by Stephen will be applied to the real moving patch later.
+
+Changelog from v5:
+ o keep up with "[PATCH v2] staging: erofs: updates according to erofs-outofstaging v4"
+    https://lore.kernel.org/lkml/20190731155752.210602-1-gaoxiang25@huawei.com/
+   which mainly addresses review comments from Chao:
+  - keep the marco EROFS_IO_MAX_RETRIES_NOFAIL in internal.h;
+  - kill a redundant NULL check in "__stagingpage_alloc";
+  - add some descriptions in document about "use_vmap";
+  - rearrange erofs_vmap of "staging: erofs: kill CONFIG_EROFS_FS_USE_VM_MAP_RAM";
+
+ o all changes have been merged into staging tree, which are under staging-testing:
+    https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/log/?h=staging-testing
+
+Changelog from v4:
+ o rebase on Linux 5.3-rc1;
+
+ o keep up with "staging: erofs: updates according to erofs-outofstaging v4"
+   in order to get main code bit-for-bit identical with staging tree:
+    https://lore.kernel.org/lkml/20190729065159.62378-1-gaoxiang25@huawei.com/
+
+Changelog from v3:
+ o use GPL-2.0-only for SPDX-License-Identifier suggested by Stephen;
+
+ o kill all kconfig cache strategies and turn them into mount options
+   "cache_strategy={disable|readahead|readaround}" suggested by Ted.
+   As the first step, cached pages can still be usable after cache is
+   disabled by remounting, and these pages will be fallen out over
+   time, which can be refined in the later version if some requirement
+   is needed. Update related document as well;
+
+ o turn on CONFIG_EROFS_FS_SECURITY by default suggested by David;
+
+ o kill CONFIG_EROFS_FS_IO_MAX_RETRIES and fold it into code; turn
+   EROFS_FS_USE_VM_MAP_RAM into a module parameter ("use_vmap")
+   suggested by David.
+
+Changelog from v2:
+ o kill sbi->dev_name and clean up all failure handling in
+   fill_super() suggested by Al.
+   Note that the initialzation of managed_cache is now moved
+   after s_root is assigned since it's more preferred to iput()
+   in .put_super() and all inodes should be evicted before
+   the end of generic_shutdown_super(sb);
+
+ o fold in the following staging patches (and thanks):
+   staging: erofs:converting all 'unsigned' to 'unsigned int'
+   staging: erofs: Remove function erofs_kill_sb()
+    - However it was revoked due to erofs_kill_sb reused...
+   staging: erofs: avoid opened loop codes
+   staging: erofs: support bmap
+
+ o move EROFS_SUPER_MAGIC_V1 from linux/fs/erofs/erofs_fs.h to
+   include/uapi/linux/magic.h for userspace utilities.
+
+Changelog from v1:
+ o resend the whole filesystem into a patchset suggested by Greg;
+ o code is more cleaner, especially for decompression frontend.
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Theodore Ts'o <tytso@mit.edu>
+Cc: Pavel Machek <pavel@denx.de>
+Cc: David Sterba <dsterba@suse.cz>
+Cc: Amir Goldstein <amir73il@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Darrick J . Wong <darrick.wong@oracle.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: Jan Kara <jack@suse.cz> 
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Chao Yu <yuchao0@huawei.com>
+Cc: Miao Xie <miaoxie@huawei.com>
+Cc: Li Guifu <bluce.liguifu@huawei.com>
+Cc: Fang Wei <fangwei1@huawei.com>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- fs/erofs/internal.h | 357 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 357 insertions(+)
- create mode 100644 fs/erofs/internal.h
 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-new file mode 100644
-index 000000000000..5b946eabc239
---- /dev/null
-+++ b/fs/erofs/internal.h
-@@ -0,0 +1,357 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * linux/fs/erofs/internal.h
-+ *
-+ * Copyright (C) 2017-2018 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
-+ */
-+#ifndef __EROFS_INTERNAL_H
-+#define __EROFS_INTERNAL_H
-+
-+#include <linux/fs.h>
-+#include <linux/dcache.h>
-+#include <linux/mm.h>
-+#include <linux/pagemap.h>
-+#include <linux/bio.h>
-+#include <linux/buffer_head.h>
-+#include <linux/magic.h>
-+#include <linux/slab.h>
-+#include <linux/vmalloc.h>
-+#include "erofs_fs.h"
-+
-+/* redefine pr_fmt "erofs: " */
-+#undef pr_fmt
-+#define pr_fmt(fmt) "erofs: " fmt
-+
-+#define errln(x, ...)   pr_err(x "\n", ##__VA_ARGS__)
-+#define infoln(x, ...)  pr_info(x "\n", ##__VA_ARGS__)
-+#ifdef CONFIG_EROFS_FS_DEBUG
-+#define debugln(x, ...) pr_debug(x "\n", ##__VA_ARGS__)
-+#define DBG_BUGON               BUG_ON
-+#else
-+#define debugln(x, ...)         ((void)0)
-+#define DBG_BUGON(x)            ((void)(x))
-+#endif	/* !CONFIG_EROFS_FS_DEBUG */
-+
-+enum {
-+	FAULT_KMALLOC,
-+	FAULT_READ_IO,
-+	FAULT_MAX,
-+};
-+
-+#ifdef CONFIG_EROFS_FAULT_INJECTION
-+extern const char *erofs_fault_name[FAULT_MAX];
-+#define IS_FAULT_SET(fi, type) ((fi)->inject_type & (1 << (type)))
-+
-+struct erofs_fault_info {
-+	atomic_t inject_ops;
-+	unsigned int inject_rate;
-+	unsigned int inject_type;
-+};
-+#endif	/* CONFIG_EROFS_FAULT_INJECTION */
-+
-+/* EROFS_SUPER_MAGIC_V1 to represent the whole file system */
-+#define EROFS_SUPER_MAGIC   EROFS_SUPER_MAGIC_V1
-+
-+typedef u64 erofs_nid_t;
-+typedef u64 erofs_off_t;
-+/* data type for filesystem-wide blocks number */
-+typedef u32 erofs_blk_t;
-+
-+struct erofs_sb_info {
-+	u32 blocks;
-+	u32 meta_blkaddr;
-+
-+	/* inode slot unit size in bit shift */
-+	unsigned char islotbits;
-+
-+	u32 build_time_nsec;
-+	u64 build_time;
-+
-+	/* what we really care is nid, rather than ino.. */
-+	erofs_nid_t root_nid;
-+	/* used for statfs, f_files - f_favail */
-+	u64 inos;
-+
-+	u8 uuid[16];                    /* 128-bit uuid for volume */
-+	u8 volume_name[16];             /* volume name */
-+	u32 requirements;
-+
-+	unsigned int mount_opt;
-+
-+#ifdef CONFIG_EROFS_FAULT_INJECTION
-+	struct erofs_fault_info fault_info;	/* For fault injection */
-+#endif
-+};
-+
-+#ifdef CONFIG_EROFS_FAULT_INJECTION
-+#define erofs_show_injection_info(type)					\
-+	infoln("inject %s in %s of %pS", erofs_fault_name[type],        \
-+		__func__, __builtin_return_address(0))
-+
-+static inline bool time_to_inject(struct erofs_sb_info *sbi, int type)
-+{
-+	struct erofs_fault_info *ffi = &sbi->fault_info;
-+
-+	if (!ffi->inject_rate)
-+		return false;
-+
-+	if (!IS_FAULT_SET(ffi, type))
-+		return false;
-+
-+	atomic_inc(&ffi->inject_ops);
-+	if (atomic_read(&ffi->inject_ops) >= ffi->inject_rate) {
-+		atomic_set(&ffi->inject_ops, 0);
-+		return true;
-+	}
-+	return false;
-+}
-+#else
-+static inline bool time_to_inject(struct erofs_sb_info *sbi, int type)
-+{
-+	return false;
-+}
-+
-+static inline void erofs_show_injection_info(int type)
-+{
-+}
-+#endif	/* !CONFIG_EROFS_FAULT_INJECTION */
-+
-+static inline void *erofs_kmalloc(struct erofs_sb_info *sbi,
-+					size_t size, gfp_t flags)
-+{
-+	if (time_to_inject(sbi, FAULT_KMALLOC)) {
-+		erofs_show_injection_info(FAULT_KMALLOC);
-+		return NULL;
-+	}
-+	return kmalloc(size, flags);
-+}
-+
-+#define EROFS_SB(sb) ((struct erofs_sb_info *)(sb)->s_fs_info)
-+#define EROFS_I_SB(inode) ((struct erofs_sb_info *)(inode)->i_sb->s_fs_info)
-+
-+/* Mount flags set via mount options or defaults */
-+#define EROFS_MOUNT_FAULT_INJECTION	0x00000040
-+
-+#define clear_opt(sbi, option)	((sbi)->mount_opt &= ~EROFS_MOUNT_##option)
-+#define set_opt(sbi, option)	((sbi)->mount_opt |= EROFS_MOUNT_##option)
-+#define test_opt(sbi, option)	((sbi)->mount_opt & EROFS_MOUNT_##option)
-+
-+/* we strictly follow PAGE_SIZE and no buffer head yet */
-+#define LOG_BLOCK_SIZE		PAGE_SHIFT
-+
-+#undef LOG_SECTORS_PER_BLOCK
-+#define LOG_SECTORS_PER_BLOCK	(PAGE_SHIFT - 9)
-+
-+#undef SECTORS_PER_BLOCK
-+#define SECTORS_PER_BLOCK	(1 << SECTORS_PER_BLOCK)
-+
-+#define EROFS_BLKSIZ		(1 << LOG_BLOCK_SIZE)
-+
-+#if (EROFS_BLKSIZ % 4096 || !EROFS_BLKSIZ)
-+#error erofs cannot be used in this platform
-+#endif
-+
-+#define EROFS_IO_MAX_RETRIES_NOFAIL     5
-+
-+#define ROOT_NID(sb)		((sb)->root_nid)
-+
-+#define erofs_blknr(addr)       ((addr) / EROFS_BLKSIZ)
-+#define erofs_blkoff(addr)      ((addr) % EROFS_BLKSIZ)
-+#define blknr_to_addr(nr)       ((erofs_off_t)(nr) * EROFS_BLKSIZ)
-+
-+static inline erofs_off_t iloc(struct erofs_sb_info *sbi, erofs_nid_t nid)
-+{
-+	return blknr_to_addr(sbi->meta_blkaddr) + (nid << sbi->islotbits);
-+}
-+
-+struct erofs_vnode {
-+	erofs_nid_t nid;
-+
-+	unsigned char datamode;
-+	unsigned char inode_isize;
-+	unsigned short xattr_isize;
-+
-+	erofs_blk_t raw_blkaddr;
-+	/* the corresponding vfs inode */
-+	struct inode vfs_inode;
-+};
-+
-+#define EROFS_V(ptr)	\
-+	container_of(ptr, struct erofs_vnode, vfs_inode)
-+
-+#define __inode_advise(x, bit, bits) \
-+	(((x) >> (bit)) & ((1 << (bits)) - 1))
-+
-+#define __inode_version(advise)	\
-+	__inode_advise(advise, EROFS_I_VERSION_BIT,	\
-+		EROFS_I_VERSION_BITS)
-+
-+#define __inode_data_mapping(advise)	\
-+	__inode_advise(advise, EROFS_I_DATA_MAPPING_BIT,\
-+		EROFS_I_DATA_MAPPING_BITS)
-+
-+static inline unsigned long inode_datablocks(struct inode *inode)
-+{
-+	/* since i_size cannot be changed */
-+	return DIV_ROUND_UP(inode->i_size, EROFS_BLKSIZ);
-+}
-+
-+static inline bool is_inode_layout_compression(struct inode *inode)
-+{
-+	return erofs_inode_is_data_compressed(EROFS_V(inode)->datamode);
-+}
-+
-+static inline bool is_inode_flat_inline(struct inode *inode)
-+{
-+	return EROFS_V(inode)->datamode == EROFS_INODE_FLAT_INLINE;
-+}
-+
-+extern const struct super_operations erofs_sops;
-+
-+extern const struct address_space_operations erofs_raw_access_aops;
-+
-+/*
-+ * Logical to physical block mapping, used by erofs_map_blocks()
-+ *
-+ * Different with other file systems, it is used for 2 access modes:
-+ *
-+ * 1) RAW access mode:
-+ *
-+ * Users pass a valid (m_lblk, m_lofs -- usually 0) pair,
-+ * and get the valid m_pblk, m_pofs and the longest m_len(in bytes).
-+ *
-+ * Note that m_lblk in the RAW access mode refers to the number of
-+ * the compressed ondisk block rather than the uncompressed
-+ * in-memory block for the compressed file.
-+ *
-+ * m_pofs equals to m_lofs except for the inline data page.
-+ *
-+ * 2) Normal access mode:
-+ *
-+ * If the inode is not compressed, it has no difference with
-+ * the RAW access mode. However, if the inode is compressed,
-+ * users should pass a valid (m_lblk, m_lofs) pair, and get
-+ * the needed m_pblk, m_pofs, m_len to get the compressed data
-+ * and the updated m_lblk, m_lofs which indicates the start
-+ * of the corresponding uncompressed data in the file.
-+ */
-+enum {
-+	BH_Zipped = BH_PrivateStart,
-+	BH_FullMapped,
-+};
-+
-+/* Has a disk mapping */
-+#define EROFS_MAP_MAPPED	(1 << BH_Mapped)
-+/* Located in metadata (could be copied from bd_inode) */
-+#define EROFS_MAP_META		(1 << BH_Meta)
-+
-+struct erofs_map_blocks {
-+	erofs_off_t m_pa, m_la;
-+	u64 m_plen, m_llen;
-+
-+	unsigned int m_flags;
-+
-+	struct page *mpage;
-+};
-+
-+/* Flags used by erofs_map_blocks() */
-+#define EROFS_GET_BLOCKS_RAW    0x0001
-+
-+/* data.c */
-+static inline struct bio *erofs_grab_bio(struct super_block *sb,
-+					 erofs_blk_t blkaddr,
-+					 unsigned int nr_pages,
-+					 void *bi_private, bio_end_io_t endio,
-+					 bool nofail)
-+{
-+	const gfp_t gfp = GFP_NOIO;
-+	struct bio *bio;
-+
-+	do {
-+		if (nr_pages == 1) {
-+			bio = bio_alloc(gfp | (nofail ? __GFP_NOFAIL : 0), 1);
-+			if (unlikely(!bio)) {
-+				DBG_BUGON(nofail);
-+				return ERR_PTR(-ENOMEM);
-+			}
-+			break;
-+		}
-+		bio = bio_alloc(gfp, nr_pages);
-+		nr_pages /= 2;
-+	} while (unlikely(!bio));
-+
-+	bio->bi_end_io = endio;
-+	bio_set_dev(bio, sb->s_bdev);
-+	bio->bi_iter.bi_sector = (sector_t)blkaddr << LOG_SECTORS_PER_BLOCK;
-+	bio->bi_private = bi_private;
-+	return bio;
-+}
-+
-+static inline void __submit_bio(struct bio *bio, unsigned int op,
-+				unsigned int op_flags)
-+{
-+	bio_set_op_attrs(bio, op, op_flags);
-+	submit_bio(bio);
-+}
-+
-+struct page *__erofs_get_meta_page(struct super_block *sb, erofs_blk_t blkaddr,
-+				   bool prio, bool nofail);
-+
-+static inline struct page *erofs_get_meta_page(struct super_block *sb,
-+	erofs_blk_t blkaddr, bool prio)
-+{
-+	return __erofs_get_meta_page(sb, blkaddr, prio, false);
-+}
-+
-+int erofs_map_blocks(struct inode *, struct erofs_map_blocks *, int);
-+
-+static inline struct page *erofs_get_inline_page(struct inode *inode,
-+						 erofs_blk_t blkaddr)
-+{
-+	return erofs_get_meta_page(inode->i_sb, blkaddr,
-+				   S_ISDIR(inode->i_mode));
-+}
-+
-+/* inode.c */
-+static inline unsigned long erofs_inode_hash(erofs_nid_t nid)
-+{
-+#if BITS_PER_LONG == 32
-+	return (nid >> 32) ^ (nid & 0xffffffff);
-+#else
-+	return nid;
-+#endif
-+}
-+
-+extern const struct inode_operations erofs_generic_iops;
-+extern const struct inode_operations erofs_symlink_iops;
-+extern const struct inode_operations erofs_fast_symlink_iops;
-+
-+static inline void set_inode_fast_symlink(struct inode *inode)
-+{
-+	inode->i_op = &erofs_fast_symlink_iops;
-+}
-+
-+static inline bool is_inode_fast_symlink(struct inode *inode)
-+{
-+	return inode->i_op == &erofs_fast_symlink_iops;
-+}
-+
-+struct inode *erofs_iget(struct super_block *sb, erofs_nid_t nid, bool dir);
-+int erofs_getattr(const struct path *path, struct kstat *stat,
-+		  u32 request_mask, unsigned int query_flags);
-+
-+/* namei.c */
-+extern const struct inode_operations erofs_dir_iops;
-+
-+int erofs_namei(struct inode *dir, struct qstr *name,
-+		erofs_nid_t *nid, unsigned int *d_type);
-+
-+/* dir.c */
-+extern const struct file_operations erofs_dir_fops;
-+
-+#define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
-+
-+#endif	/* __EROFS_INTERNAL_H */
-+
+
+Gao Xiang (24):
+  erofs: add on-disk layout
+  erofs: add erofs in-memory stuffs
+  erofs: add super block operations
+  erofs: add raw address_space operations
+  erofs: add inode operations
+  erofs: support special inode
+  erofs: add directory operations
+  erofs: add namei functions
+  erofs: support tracepoint
+  erofs: update Kconfig and Makefile
+  erofs: introduce xattr & posixacl support
+  erofs: introduce tagged pointer
+  erofs: add compression indexes support
+  erofs: introduce superblock registration
+  erofs: introduce erofs shrinker
+  erofs: introduce workstation for decompression
+  erofs: introduce per-CPU buffers implementation
+  erofs: introduce pagevec for decompression subsystem
+  erofs: add erofs_allocpage()
+  erofs: introduce generic decompression backend
+  erofs: introduce LZ4 decompression inplace
+  erofs: introduce the decompression frontend
+  erofs: introduce cached decompression
+  erofs: add document
+
+ Documentation/filesystems/erofs.txt |  225 +++++
+ fs/Kconfig                          |    1 +
+ fs/Makefile                         |    1 +
+ fs/erofs/Kconfig                    |   98 ++
+ fs/erofs/Makefile                   |   11 +
+ fs/erofs/compress.h                 |   62 ++
+ fs/erofs/data.c                     |  425 ++++++++
+ fs/erofs/decompressor.c             |  360 +++++++
+ fs/erofs/dir.c                      |  148 +++
+ fs/erofs/erofs_fs.h                 |  316 ++++++
+ fs/erofs/inode.c                    |  333 +++++++
+ fs/erofs/internal.h                 |  555 +++++++++++
+ fs/erofs/namei.c                    |  253 +++++
+ fs/erofs/super.c                    |  666 +++++++++++++
+ fs/erofs/tagptr.h                   |  110 +++
+ fs/erofs/utils.c                    |  335 +++++++
+ fs/erofs/xattr.c                    |  705 ++++++++++++++
+ fs/erofs/xattr.h                    |   94 ++
+ fs/erofs/zdata.c                    | 1405 +++++++++++++++++++++++++++
+ fs/erofs/zdata.h                    |  195 ++++
+ fs/erofs/zmap.c                     |  463 +++++++++
+ fs/erofs/zpvec.h                    |  159 +++
+ include/trace/events/erofs.h        |  256 +++++
+ include/uapi/linux/magic.h          |    1 +
+ 24 files changed, 7177 insertions(+)
+ create mode 100644 Documentation/filesystems/erofs.txt
+ create mode 100644 fs/erofs/Kconfig
+ create mode 100644 fs/erofs/Makefile
+ create mode 100644 fs/erofs/compress.h
+ create mode 100644 fs/erofs/data.c
+ create mode 100644 fs/erofs/decompressor.c
+ create mode 100644 fs/erofs/dir.c
+ create mode 100644 fs/erofs/erofs_fs.h
+ create mode 100644 fs/erofs/inode.c
+ create mode 100644 fs/erofs/internal.h
+ create mode 100644 fs/erofs/namei.c
+ create mode 100644 fs/erofs/super.c
+ create mode 100644 fs/erofs/tagptr.h
+ create mode 100644 fs/erofs/utils.c
+ create mode 100644 fs/erofs/xattr.c
+ create mode 100644 fs/erofs/xattr.h
+ create mode 100644 fs/erofs/zdata.c
+ create mode 100644 fs/erofs/zdata.h
+ create mode 100644 fs/erofs/zmap.c
+ create mode 100644 fs/erofs/zpvec.h
+ create mode 100644 include/trace/events/erofs.h
+
 -- 
 2.17.1
 
