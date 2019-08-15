@@ -2,121 +2,171 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B71A4C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA3AC41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9378020656
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6053C2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:17:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nI/VjGd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732899AbfHOOQb (ORCPT
+        id S1732900AbfHOORb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:16:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39873 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732829AbfHOOQb (ORCPT
+        Thu, 15 Aug 2019 10:17:31 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46681 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732211AbfHOORb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:16:31 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos.glx-home)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hyGY3-0006TL-He; Thu, 15 Aug 2019 16:16:15 +0200
-Date:   Thu, 15 Aug 2019 16:16:09 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Felipe Balbi <felipe.balbi@linux.intel.com>
-cc:     Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Christopher S . Hall" <christopher.s.hall@intel.com>
-Subject: Re: [RFC PATCH 1/5] x86: tsc: add tsc to art helpers
-In-Reply-To: <87y2zvt1hk.fsf@gmail.com>
-Message-ID: <alpine.DEB.2.21.1908151458560.1923@nanos.tec.linutronix.de>
-References: <20190716072038.8408-1-felipe.balbi@linux.intel.com> <20190716072038.8408-2-felipe.balbi@linux.intel.com> <alpine.DEB.2.21.1907160952040.1767@nanos.tec.linutronix.de> <87y2zvt1hk.fsf@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 15 Aug 2019 10:17:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z1so2327409wru.13;
+        Thu, 15 Aug 2019 07:17:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hR2oVEeRE+U1aLSfdfNg62NTQOkO5YChFCkngTDgHeM=;
+        b=nI/VjGd/mq6T+65tzQ7x4tkebtyS3PxvHyhLkdm2i/ZFYP1cgiJvNNMeJ0PPg29XJx
+         HwKn5LxRP3UwZu2uWNNmU4CANGdJgMKClTQ5ribhEYvLVdihDi6sq0xDRBWdCNQRTE4H
+         f1wIrktxqFPC+xvZsi0AxeLU5q1dfN2iKkKfzmOQWDTjVvqZemKATl3bLR6Hu9WcS7yD
+         1248flZzbmcN9exUx1bE1g/Kvcu6z6qJ9cjFx4/IsiMEJVdNPITcbw6946P18Vu6xmAB
+         7WJJZ2VyaxQmhLmTLbys+3T6/cfw0yrGX3zHPGBbiDKWUeqbdomaIHmDnFTVxTup1EDQ
+         CHiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hR2oVEeRE+U1aLSfdfNg62NTQOkO5YChFCkngTDgHeM=;
+        b=cqDDOwVDJ5+0o+hCTJ4o85LpdBiDkLUI/4XlfcumEcqmb6Ngle5XxWPhdhdBeQmeGY
+         34Ke7By5F10OkmngvRQyuyODXh/D5sE07Wv+7WKs1HvBvZ0bR26XJ/pBg90jz9ZGQz0b
+         IcwCLzQhVLN1l+BbxTsqq0TwUZlf7dUAXbZ/Imbb9HiRIsQ03X3TsLcUEcEFR8N/posy
+         aNOhztrjAVHaEh5thQjSVcsIiM19RYow1mYDEcqezjPRJMbur0ovuFkGTOUxBXXeRJwD
+         hdwQtG4DvkGzPyrBtGrEzvNXA7z6MMalWeQy8ScUVegu8frPtT1+zoCIeePegTWqZ5pb
+         W3/A==
+X-Gm-Message-State: APjAAAXyyaOh2DZFUuEdejs5GUis4u2SppyM3Bxix5g1kEDYGcqEPsXa
+        LLz3EeBtWHEDz+3iFLkKccCVDf4yHQixHEqofiI=
+X-Google-Smtp-Source: APXvYqwgEG09J1je3EBh7rb1fgFE0/whIpdRqyy9bANab2t48jig1H2inCjfGhuD0Pl/LhVva2b5zoj8pJFrogTe+KU=
+X-Received: by 2002:a5d:6b11:: with SMTP id v17mr5599295wrw.323.1565878648396;
+ Thu, 15 Aug 2019 07:17:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190814213118.28473-1-kherbst@redhat.com> <20190814213118.28473-2-kherbst@redhat.com>
+ <CAPM=9ty7yEUqKrcixV1tTuWCpyh6UikA3rxX8BF1E3fDb6WLQQ@mail.gmail.com>
+ <5e05532328324d01bc554c573f6298f8@AUSX13MPC101.AMER.DELL.COM>
+ <CACO55tsDA1WpMGtAPqUJpWt0AmPDnv9LuC09g2KB5GXB-VSCew@mail.gmail.com>
+ <CADnq5_NUox3vvg6Mt3i9erA+AL2MfotpNBZQnWWknn4j+j-F=Q@mail.gmail.com> <CACO55tty6TqEo4UBkX5YckLuP-XhHXKVs0ew+Q8__sKMi1BCbA@mail.gmail.com>
+In-Reply-To: <CACO55tty6TqEo4UBkX5YckLuP-XhHXKVs0ew+Q8__sKMi1BCbA@mail.gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 15 Aug 2019 10:17:17 -0400
+Message-ID: <CADnq5_PWuLU0pcG549-xThMHy3W0P2+fAO_Ledk6FP2TVG3+gQ@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
+ enable dGPU direct output"
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     Mario.Limonciello@dell.com,
+        nouveau <nouveau@lists.freedesktop.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>,
+        Alex Hung <alex.hung@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Felipe,
-
-On Thu, 15 Aug 2019, Felipe Balbi wrote:
-> Thomas Gleixner <tglx@linutronix.de> writes:
-> > On Tue, 16 Jul 2019, Felipe Balbi wrote:
+On Thu, Aug 15, 2019 at 10:15 AM Karol Herbst <kherbst@redhat.com> wrote:
+>
+> On Thu, Aug 15, 2019 at 4:13 PM Alex Deucher <alexdeucher@gmail.com> wrote:
 > >
-> > So some information what those interfaces are used for and why they are
-> > needed would be really helpful.
-> 
-> Okay, I have some more details about this. The TGPIO device itself uses
-> ART since TSC is not directly available to anything other than the
-> CPU. The 'problem' here is that reading ART incurs extra latency which
-> we would like to avoid. Therefore, we use TSC and scale it to
-> nanoseconds which, would be the same as ART to ns.
-
-Fine. But that's not really correct:
-
-      TSC = art_to_tsc_offset + ART * scale;
- 
-> >> +void get_tsc_ns(struct system_counterval_t *tsc_counterval, u64 *tsc_ns)
-
-Why is this not returning the result instead of having that pointer
-indirection?
-
-> >> +{
-> >> +	u64 tmp, res, rem;
-> >> +	u64 cycles;
-> >> +
-> >> +	tsc_counterval->cycles = clocksource_tsc.read(NULL);
-> >> +	cycles = tsc_counterval->cycles;
-> >> +	tsc_counterval->cs = art_related_clocksource;
-
-So this does more than returning the TSC time converted to nanoseconds. The
-function name should reflect this. Plus both functions want kernel-doc
-explaining what they do.
-
-> >> +	rem = do_div(cycles, tsc_khz);
-> >> +
-> >> +	res = cycles * USEC_PER_SEC;
-> >> +	tmp = rem * USEC_PER_SEC;
-> >> +
-> >> +	do_div(tmp, tsc_khz);
-> >> +	res += tmp;
-> >> +
-> >> +	*tsc_ns = res;
-> >> +}
-> >> +EXPORT_SYMBOL(get_tsc_ns);
-> >> +
-> >> +u64 get_art_ns_now(void)
-> >> +{
-> >> +	struct system_counterval_t tsc_cycles;
-> >> +	u64 tsc_ns;
-> >> +
-> >> +	get_tsc_ns(&tsc_cycles, &tsc_ns);
-> >> +
-> >> +	return tsc_ns;
-> >> +}
-> >> +EXPORT_SYMBOL(get_art_ns_now);
+> > On Thu, Aug 15, 2019 at 10:04 AM Karol Herbst <kherbst@redhat.com> wrote:
+> > >
+> > > On Thu, Aug 15, 2019 at 3:56 PM <Mario.Limonciello@dell.com> wrote:
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: linux-acpi-owner@vger.kernel.org <linux-acpi-owner@vger.kernel.org> On
+> > > > > Behalf Of Dave Airlie
+> > > > > Sent: Wednesday, August 14, 2019 5:48 PM
+> > > > > To: Karol Herbst
+> > > > > Cc: LKML; Linux ACPI; dri-devel; nouveau; Rafael J . Wysocki; Alex Hung; Ben
+> > > > > Skeggs; Dave Airlie
+> > > > > Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
+> > > > > enable dGPU direct output"
+> > > > >
+> > > > > On Thu, 15 Aug 2019 at 07:31, Karol Herbst <kherbst@redhat.com> wrote:
+> > > > > >
+> > > > > > This reverts commit 28586a51eea666d5531bcaef2f68e4abbd87242c.
+> > > > > >
+> > > > > > The original commit message didn't even make sense. AMD _does_ support it and
+> > > > > > it works with Nouveau as well.
+> > > > > >
+> > > > > > Also what was the issue being solved here? No references to any bugs and not
+> > > > > > even explaining any issue at all isn't the way we do things.
+> > > > > >
+> > > > > > And even if it means a muxed design, then the fix is to make it work inside the
+> > > > > > driver, not adding some hacky workaround through ACPI tricks.
+> > > > > >
+> > > > > > And what out of tree drivers do or do not support we don't care one bit anyway.
+> > > > > >
+> > > > >
+> > > > > I think the reverts should be merged via Rafael's tree as the original
+> > > > > patches went in via there, and we should get them in asap.
+> > > > >
+> > > > > Acked-by: Dave Airlie <airlied@redhat.com>
+> > > > > Dave.
+> > > >
+> > > > There are definitely going to be regressions on machines in the field with the
+> > > > in tree drivers by reverting this.  I think we should have an answer for all of those
+> > > > before this revert is accepted.
+> > > >
+> > > > Regarding systems with Intel+NVIDIA, we'll have to work with partners to collect
+> > > > some information on the impact of reverting this.
+> > > >
+> > > > When this is used on a system with Intel+AMD the ASL configures AMD GPU to use
+> > > > "Hybrid Graphics" when on Windows and "Power Express" and "Switchable Graphics"
+> > > > when on Linux.
+> > >
+> > > and what's exactly the difference between those? And what's the actual
+> > > issue here?
 > >
-> > While the changes look innocuous I'm missing the big picture why this needs
-> > to emulate ART instead of simply using TSC directly.
-> 
-> i don't think we're emulating ART here (other than the name in the
-> function). We're just reading TSC and converting to nanoseconds, right?
+> > Hybrid Graphics is the new "standard" way of handling these laptops.
+> > It uses the standard _PR3 APCI method to handle dGPU power.  Support
+> > for this was added to Linux relatively later compared to when the
+> > laptops were launched.  "Power Express" used the other AMD specific
+> > ATPX ACPI method to handle dGPU power.  The driver supports both so
+> > either method will work.
+> >
+> > Alex
+> >
+>
+> thanks for clarifying. But that still means that we won't need such
+> workarounds for AMD users, right? amdgpu handles hybrid graphics just
+> fine, right?
 
-Well, the function name says clearly: get_art_ns_now(). But you are not
-using ART, you use the TSC and derive the ART value from it (incorrectly).
+Yeah it should, assuming you have a new enough kernel which supports
+HG, which has been several years at this point IIRC.
 
-Thanks,
+Alex
 
-	tglx
-
+>
+> > >
+> > > We already have the PRIME offloading in place and if that's not
+> > > enough, we should work on extending it, not adding some ACPI based
+> > > workarounds, because that's exactly how that looks like.
+> > >
+> > > Also, was this discussed with anybody involved in the drm subsystem?
+> > >
+> > > >
+> > > > I feel we need a knob and/or DMI detection to affect the changes that the ASL
+> > > > normally performs.
+> > >
+> > > Why do we have to do that on a firmware level at all?
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
