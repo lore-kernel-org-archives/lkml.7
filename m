@@ -2,154 +2,227 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FD1C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D71BC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 201562133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1933D2133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbfHOEoV (ORCPT
+        id S1730343AbfHOEo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:44:21 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46552 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729826AbfHOEoT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:44:19 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z17so3290019otk.13
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 21:44:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7sgS6p5Q/fcvkuEHxhDuVLaRmp/CaA8gA0Ducst9aSA=;
-        b=qtJ+i+a0tAJY6FT9b8QmTdQlLeR5ZZ19RdrdQcy5JEiNZlXPbitXkJOjJW/eLJQG/s
-         UZIck7oKpduNF27TYMQN7qFmaMD+0Vohgxfe/0rSS7EhgISIKL+rM+xyJRz0gxu66O2Y
-         pB1qRJHpMoDXG7JtKaM16W209ukDCTN39q9c/tYSVHn7W6cNXs/Slcbqg6Uh2vzvxVGk
-         zbI8FPbJFCQItPd1HeypZyoXdAplk80nsfdGTR2oByqqbHBuXDx3eIwhMrZ8A8iGqQsv
-         k5Xp/cfoNeggvjUM5geVgM/10HTtPYt3WIdRk/QaV07KjW6GWl5ah5WZodq2MaFMW3A4
-         DTBw==
-X-Gm-Message-State: APjAAAWgT0e6Obz0zBst24tKRIzIc0bUvKPS85Prw1osVrZ9/9lMYzGn
-        BMSj2J9Bjku51bIM9+eUYyyQIy3njQuM9VURmE6GIA==
-X-Google-Smtp-Source: APXvYqzSDSGEKv6Lo/FEdaBeeBng3hZLZ0ZFMnC1IGlwgNjG49HHY2f6Hq8EMesb30W3wQuAlY93QT/q+q+6otEXm7U=
-X-Received: by 2002:a6b:f906:: with SMTP id j6mr3664108iog.26.1565844258431;
- Wed, 14 Aug 2019 21:44:18 -0700 (PDT)
+        Thu, 15 Aug 2019 00:44:28 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35368 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729916AbfHOEm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:42:56 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3540AB91C6CCBF4D703A;
+        Thu, 15 Aug 2019 12:42:48 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 15 Aug
+ 2019 12:42:39 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        "Alexander Viro" <viro@zeniv.linux.org.uk>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        "Amir Goldstein" <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Richard Weinberger <richard@nod.at>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v8 07/24] erofs: add directory operations
+Date:   Thu, 15 Aug 2019 12:41:38 +0800
+Message-ID: <20190815044155.88483-8-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190815044155.88483-1-gaoxiang25@huawei.com>
+References: <20190815044155.88483-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-References: <20190814213118.28473-1-kherbst@redhat.com> <20190814213118.28473-4-kherbst@redhat.com>
- <CAJ=jquaVcWisQ3Qw-_GMktcOq4zqFmeYXztfwNAVKZJO=_+yLA@mail.gmail.com>
-In-Reply-To: <CAJ=jquaVcWisQ3Qw-_GMktcOq4zqFmeYXztfwNAVKZJO=_+yLA@mail.gmail.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Thu, 15 Aug 2019 06:44:06 +0200
-Message-ID: <CACO55ttcXhod940t_G1ty74tU7vT2K1tShwqAwhcy0Eu2TYGqA@mail.gmail.com>
-Subject: Re: [PATCH 3/7] Revert "ACPI / OSI: Add OEM _OSI strings to disable
- NVidia RTD3"
-To:     Alex Hung <alex.hung@canonical.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Lyude Paul <lyude@redhat.com>, Ben Skeggs <bskeggs@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 1:35 AM Alex Hung <alex.hung@canonical.com> wrote:
->
-> On Wed, Aug 14, 2019 at 3:31 PM Karol Herbst <kherbst@redhat.com> wrote:
-> >
-> > This reverts commit 9251a71db62ca9cc7e7cf364218610b0f018c291.
-> >
-> > This was never discussed with anybody Nouveau related and we would have NACKed
-> > this change immediately.
-> >
-> > We have a better workaround, which makes it actually work with Nouveau. No idea
-> > why the comment mentions the Nvidia driver and assumes it gives any weight to
-> > the reasoning.... we don't care about out of tree drivers.
-> >
-> > Nouveau does support RTD3, but we had some issues with that. And we even have
-> > a better fix for this issue. Also, can we _please_ do it in a way worthy of an
-> > upstream community the next time?
-> >
-> > If some distribution feels like they have to please companies not wanting to
-> > be part of the linux community, please do so downstream and don't try to push
-> > something like this upstream.
->
-> Hi Karol,
->
-> A lot of appreciation for your hard-work on this issue, but unfriendly
-> comments aren't necessary. At the time this was discussed with
-> hardware vendors and platform vendors and it worked for many systems
-> and benefit for many people buying these platforms. Last but not
-> least, I do appreciate better fixes and want to retire the hacks too.
->
+This adds functions for directory, mainly readdir.
 
-sorry if that sounded too harsh, but the issue is not that it helped,
-the issue is, that nobody talked with us about that. And those three
-commits also sounded like they were mainly targeted against the Nvidia
-driver (and please correct me if I am wrong here).
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+ fs/erofs/dir.c | 148 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 148 insertions(+)
+ create mode 100644 fs/erofs/dir.c
 
-The situation would be completely different if we would have talked
-about all this earlier (and I wouldn't get annoyed by all of this in
-the first place).
+diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
+new file mode 100644
+index 000000000000..c52d27bedff4
+--- /dev/null
++++ b/fs/erofs/dir.c
+@@ -0,0 +1,148 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * linux/fs/erofs/dir.c
++ *
++ * Copyright (C) 2017-2018 HUAWEI, Inc.
++ *             http://www.huawei.com/
++ * Created by Gao Xiang <gaoxiang25@huawei.com>
++ */
++#include "internal.h"
++
++static const unsigned char erofs_filetype_table[EROFS_FT_MAX] = {
++	[EROFS_FT_UNKNOWN]	= DT_UNKNOWN,
++	[EROFS_FT_REG_FILE]	= DT_REG,
++	[EROFS_FT_DIR]		= DT_DIR,
++	[EROFS_FT_CHRDEV]	= DT_CHR,
++	[EROFS_FT_BLKDEV]	= DT_BLK,
++	[EROFS_FT_FIFO]		= DT_FIFO,
++	[EROFS_FT_SOCK]		= DT_SOCK,
++	[EROFS_FT_SYMLINK]	= DT_LNK,
++};
++
++static void debug_one_dentry(unsigned char d_type, const char *de_name,
++			     unsigned int de_namelen)
++{
++#ifdef CONFIG_EROFS_FS_DEBUG
++	/* since the on-disk name could not have the trailing '\0' */
++	unsigned char dbg_namebuf[EROFS_NAME_LEN + 1];
++
++	memcpy(dbg_namebuf, de_name, de_namelen);
++	dbg_namebuf[de_namelen] = '\0';
++
++	debugln("found dirent %s de_len %u d_type %d", dbg_namebuf,
++		de_namelen, d_type);
++#endif
++}
++
++static int erofs_fill_dentries(struct inode *dir, struct dir_context *ctx,
++			       void *dentry_blk, unsigned int *ofs,
++			       unsigned int nameoff, unsigned int maxsize)
++{
++	struct erofs_dirent *de = dentry_blk + *ofs;
++	const struct erofs_dirent *end = dentry_blk + nameoff;
++
++	while (de < end) {
++		const char *de_name;
++		unsigned int de_namelen;
++		unsigned char d_type;
++
++		if (de->file_type < EROFS_FT_MAX)
++			d_type = erofs_filetype_table[de->file_type];
++		else
++			d_type = DT_UNKNOWN;
++
++		nameoff = le16_to_cpu(de->nameoff);
++		de_name = (char *)dentry_blk + nameoff;
++
++		/* the last dirent in the block? */
++		if (de + 1 >= end)
++			de_namelen = strnlen(de_name, maxsize - nameoff);
++		else
++			de_namelen = le16_to_cpu(de[1].nameoff) - nameoff;
++
++		/* a corrupted entry is found */
++		if (unlikely(nameoff + de_namelen > maxsize ||
++			     de_namelen > EROFS_NAME_LEN)) {
++			errln("bogus dirent @ nid %llu", EROFS_V(dir)->nid);
++			DBG_BUGON(1);
++			return -EFSCORRUPTED;
++		}
++
++		debug_one_dentry(d_type, de_name, de_namelen);
++		if (!dir_emit(ctx, de_name, de_namelen,
++			      le64_to_cpu(de->nid), d_type))
++			/* stopped by some reason */
++			return 1;
++		++de;
++		*ofs += sizeof(struct erofs_dirent);
++	}
++	*ofs = maxsize;
++	return 0;
++}
++
++static int erofs_readdir(struct file *f, struct dir_context *ctx)
++{
++	struct inode *dir = file_inode(f);
++	struct address_space *mapping = dir->i_mapping;
++	const size_t dirsize = i_size_read(dir);
++	unsigned int i = ctx->pos / EROFS_BLKSIZ;
++	unsigned int ofs = ctx->pos % EROFS_BLKSIZ;
++	int err = 0;
++	bool initial = true;
++
++	while (ctx->pos < dirsize) {
++		struct page *dentry_page;
++		struct erofs_dirent *de;
++		unsigned int nameoff, maxsize;
++
++		dentry_page = read_mapping_page(mapping, i, NULL);
++		if (IS_ERR(dentry_page))
++			continue;
++
++		de = (struct erofs_dirent *)kmap(dentry_page);
++
++		nameoff = le16_to_cpu(de->nameoff);
++
++		if (unlikely(nameoff < sizeof(struct erofs_dirent) ||
++			     nameoff >= PAGE_SIZE)) {
++			errln("%s, invalid de[0].nameoff %u @ nid %llu",
++			      __func__, nameoff, EROFS_V(dir)->nid);
++			err = -EFSCORRUPTED;
++			goto skip_this;
++		}
++
++		maxsize = min_t(unsigned int,
++				dirsize - ctx->pos + ofs, PAGE_SIZE);
++
++		/* search dirents at the arbitrary position */
++		if (unlikely(initial)) {
++			initial = false;
++
++			ofs = roundup(ofs, sizeof(struct erofs_dirent));
++			if (unlikely(ofs >= nameoff))
++				goto skip_this;
++		}
++
++		err = erofs_fill_dentries(dir, ctx, de, &ofs,
++					  nameoff, maxsize);
++skip_this:
++		kunmap(dentry_page);
++
++		put_page(dentry_page);
++
++		ctx->pos = blknr_to_addr(i) + ofs;
++
++		if (unlikely(err))
++			break;
++		++i;
++		ofs = 0;
++	}
++	return err < 0 ? err : 0;
++}
++
++const struct file_operations erofs_dir_fops = {
++	.llseek		= generic_file_llseek,
++	.read		= generic_read_dir,
++	.iterate_shared	= erofs_readdir,
++};
++
+-- 
+2.17.1
 
-I am well aware this is a super painful issue for a lot of users, but
-even then disabling RTD3 (for a limited amount of hardware) inside
-nouveau would be the only acceptable way to disable it.
-
-I don't see how pushing vendors to add some firmware code to disable
-certain features  helps in any way, when there is a fast and easy way
-to disable it and wouldn't draw resources away from actually fixing
-it.
-
-> I am going to notify hardware owners to test these patches on the
-> original intended systems, and will report whether there are
-> regressions.
->
->
-> >
-> > Signed-off-by: Karol Herbst <kherbst@redhat.com>
-> > CC: Alex Hung <alex.hung@canonical.com>
-> > CC: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > CC: Dave Airlie <airlied@redhat.com>
-> > CC: Lyude Paul <lyude@redhat.com>
-> > CC: Ben Skeggs <bskeggs@redhat.com>
-> > ---
-> >  drivers/acpi/osi.c | 9 ---------
-> >  1 file changed, 9 deletions(-)
-> >
-> > diff --git a/drivers/acpi/osi.c b/drivers/acpi/osi.c
-> > index 56cc95b6b724..f5d559a2ff14 100644
-> > --- a/drivers/acpi/osi.c
-> > +++ b/drivers/acpi/osi.c
-> > @@ -44,15 +44,6 @@ osi_setup_entries[OSI_STRING_ENTRIES_MAX] __initdata = {
-> >         {"Processor Device", true},
-> >         {"3.0 _SCP Extensions", true},
-> >         {"Processor Aggregator Device", true},
-> > -       /*
-> > -        * Linux-Dell-Video is used by BIOS to disable RTD3 for NVidia graphics
-> > -        * cards as RTD3 is not supported by drivers now.  Systems with NVidia
-> > -        * cards will hang without RTD3 disabled.
-> > -        *
-> > -        * Once NVidia drivers officially support RTD3, this _OSI strings can
-> > -        * be removed if both new and old graphics cards are supported.
-> > -        */
-> > -       {"Linux-Dell-Video", true},
-> >  };
-> >
-> >  static u32 acpi_osi_handler(acpi_string interface, u32 supported)
-> > --
-> > 2.21.0
-> >
->
->
-> --
-> Cheers,
-> Alex Hung
