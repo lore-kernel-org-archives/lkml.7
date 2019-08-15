@@ -2,107 +2,98 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0DCC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA1BC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5612064B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C6362086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:57:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/e1PI8t"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sIK6zRUg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbfHOXyN (ORCPT
+        id S1726603AbfHOX5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 19:54:13 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45378 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbfHOXyN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 19:54:13 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a30so2804399lfk.12;
-        Thu, 15 Aug 2019 16:54:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uUR8sKJAysqvgde7a/GEolWZUsjVUl8S+CBNn4ZSzd0=;
-        b=H/e1PI8tnfZHbSVcmTI3ZlTz/NDKqEbLupqbUDm6SFLMikorKxQDrI8jM2bw5Cj7Wc
-         TkYmvKSsRqQP2MCg8Dy7LCRf/YOmveTd+sT2G7ZSy1J6gVDwdjfM4X9bZ4M5BqdF4tyR
-         fX9+0BehG9+13N6ZvdPeFLilu7xbfpNB6vQNCFsc0+qNDDTu0rPjUPmvKcKhRcoGStno
-         tUWQigjrXp/5PKkO6sOwRv8TMTGG3Qq3gBU8T5y/4hHl/2zuhwB3SjhIKBQMGl04GTeJ
-         kSfiG+khAqeTuWG+3Yie+lr8E8HdE5ZhSb/+gRCBl019IGJF5r+SLn1JB+ta7wGJxeGb
-         AvFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uUR8sKJAysqvgde7a/GEolWZUsjVUl8S+CBNn4ZSzd0=;
-        b=YwmDYKjBPUlYyHXTDgWJ6Ll4es+Uc8BHOdzzDdq9EBbr18bbTl22q6iOHj/0xBn5ZK
-         TKQM4ybqUMpu5Wshoyru8bANN8anHyYt88MZDCobGDn+zsqgE4uGoNsOX8r2ssbMCb63
-         gyWb8NdCC65M1I51/Gl2yPjqODsovwDpsMjbXcLHD4f6RX8VCfSbFg1x6bscC3CmFPAR
-         p9rPSt2RXY+Xl6MtNJcvhOISPw6An+MDkRQYSI8jRGBzq8xInQ4uGlBe5r3qWBE0j8AS
-         Z+9uTIhpXZnzImgy3CIboxjii/TLxnLxffIXi9dsaWy89oobEU66nXDaQelBiQuC67oi
-         JfKg==
-X-Gm-Message-State: APjAAAWQCFPSYTwO0QG91Fm2Xqj5FPT4ZxjckJznBfEtWtP/1X5S3A0W
-        xZCoyJfEghGmZNjv2HyqkFBActAQ3axHJwzfEWc=
-X-Google-Smtp-Source: APXvYqw9iMwlbGaYa9Gw4S54tbPxw0qnWHs1sXgDrojU1m0SkxO8PL1a615sX1xDGMc4IE0k1fF376dS8B7zOgup64A=
-X-Received: by 2002:ac2:4157:: with SMTP id c23mr3561969lfi.173.1565913251168;
- Thu, 15 Aug 2019 16:54:11 -0700 (PDT)
+        Thu, 15 Aug 2019 19:57:37 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59415 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726080AbfHOX5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 19:57:37 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 468k0G13t7z9sDQ;
+        Fri, 16 Aug 2019 09:57:33 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565913454;
+        bh=9i0HriZXkUOIw393EkMb0OLCjxJPlfiJhqCtswsGvIQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=sIK6zRUgyiIMEk/F2ORLaz7ggcKC9pWp6y8VKt/mBmemz+vQjy2AK+92oLcC6xNub
+         /+0Ighp2XzT4qIR9Fj9rcIn/iVPgXs2XyPIZuOIg9af+LdwZabnSS7oQ3nKtnwedoK
+         QtOcnbuLvzzFBXGGe+I7rbR5oOyWX+WE45sbTajTLo8SJ7nEqJ5WEWGLCAkpLkjyfL
+         F2ImbpWQ20ax805Bbu3S44VjZD7rrF4UWkrnS+IE4VpSsFsu13n0ow08S3lxU+bhqd
+         +g5vA5qu1PEIBJUowozVaTE/MAKnI6ETQVigdAmqALgKn7eKpT0P8XTNFpx+151sYU
+         eLTGyVnggO4Lw==
+Date:   Fri, 16 Aug 2019 09:57:32 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: linux-next: build warning after merge of the clk tree
+Message-ID: <20190816095732.0ffea609@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190815182029.197604-1-nhuck@google.com> <20190815204529.GA69414@archlinux-threadripper>
- <CANiq72nM4d-rc_qUMUEisXyEU9A0mbW=O_w5X0zoqWNPLacuNw@mail.gmail.com> <CAKwvOdm4Lsj1mPn3+FtPDrNVSQovsw8Fe9u6Yw3te7pD-izAog@mail.gmail.com>
-In-Reply-To: <CAKwvOdm4Lsj1mPn3+FtPDrNVSQovsw8Fe9u6Yw3te7pD-izAog@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 16 Aug 2019 01:53:59 +0200
-Message-ID: <CANiq72mVSyr6zvem13v5JNR=GTDnB1fgO=9P2Qimc=GekLB-kA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Require W=1 for -Wimplicit-fallthrough with clang
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nathan Huckleberry <nhuck@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Joe Perches <joe@perches.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/wW4HF+6t_L8/vB=qk60FrM0";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 1:05 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Thu, Aug 15, 2019 at 3:59 PM Miguel Ojeda
-> <miguel.ojeda.sandonis@gmail.com> wrote:
-> >
-> > On Thu, Aug 15, 2019 at 10:45 PM Nathan Chancellor
-> > <natechancellor@gmail.com> wrote:
-> > > * Revert commit bfd77145f35c ("Makefile: Convert -Wimplicit-fallthrough=3
-> > > to just -Wimplicit-fallthrough for clang") for the time being and just
-> > > rely on adding -Wimplicit-fallthrough to KCFLAGS for testing.
-> >
-> > I would avoid applying commits that will have to be reverted just for
-> > Clang, particularly since it is not fully supported yet.
->
-> "not fully supported yet" you say? *drops monocle*
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/MAINTAINERS?h=v5.3-rc4#n4001
+--Sig_/wW4HF+6t_L8/vB=qk60FrM0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-By fully supported I mean it already works and people can rely on it
-out of the box using a released version of Clang/LLVM. Is that the
-case already? If so, many places need updating!
+Hi all,
 
-  * include/linux/compiler-clang.h should check for the minimum
-supported version
-  * Documentation/process/programming-language.rst should be updated
-  * https://github.com/ClangBuiltLinux/linux/wiki does not mention anything
+After merging the clk tree, today's linux-next build (x86_64 allmodconfig)
+produced this warning:
 
-etc.
+drivers/clk/actions/owl-common.c: In function 'owl_clk_probe':
+drivers/clk/actions/owl-common.c:71:24: warning: 'hw' may be used uninitial=
+ized in this function [-Wmaybe-uninitialized]
+   const char *name =3D hw->init->name;
+                      ~~^~~~~~
 
+Introduced by commit
+
+  20cac6d02815 ("clk: actions: Don't reference clk_init_data after registra=
+tion")
+
+Clearly not a false positive. :-(
+
+--=20
 Cheers,
-Miguel
+Stephen Rothwell
+
+--Sig_/wW4HF+6t_L8/vB=qk60FrM0
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1V8WwACgkQAVBC80lX
+0GybUAf+Itj+VhjLoPWpkjn+BxSnxb3D5OfJpA4vghJbrdshK4gNLlxPAXSLXVse
+nviHyRdLpXA6c6fou27o6gmgKKpY3t5GS5W5Cn6XgBASobvA3TOQ/tSSxmNzmbrz
+CJpqMXn8i4VfAbk79GniO0X4MTwLJL4ACyZ3YY8NgpDjdo8Kw7QV2+G+ZS1XtsjY
+4m5XOkeH+xaAG/UTMJE3dpbWDu5KU7PcsJpffzYBgBKD+dnZ/WFnyerUj8Sv7FoH
+JFBlLgLTmc+cxEJonH6UOlTflGPTjvAHRBoP+Ac/mw7nguutMqTJoICRFlRNLWBx
+0puqCuFsB5+XWxsAHIEAftmIsQrI5w==
+=x25U
+-----END PGP SIGNATURE-----
+
+--Sig_/wW4HF+6t_L8/vB=qk60FrM0--
