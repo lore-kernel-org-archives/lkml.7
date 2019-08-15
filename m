@@ -2,73 +2,114 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CAAC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E46AC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C555E2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBED92089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733231AbfHOUET (ORCPT
+        id S1733245AbfHOUEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 16:04:19 -0400
-Received: from ajax.cs.uga.edu ([128.192.4.6]:58534 "EHLO ajax.cs.uga.edu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731196AbfHOUES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 16:04:18 -0400
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-        (authenticated bits=0)
-        by ajax.cs.uga.edu (8.14.4/8.14.4) with ESMTP id x7FK4Glf077418
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 15 Aug 2019 16:04:17 -0400
-Received: by mail-lj1-f170.google.com with SMTP id t14so3303098lji.4;
-        Thu, 15 Aug 2019 13:04:17 -0700 (PDT)
-X-Gm-Message-State: APjAAAXsCRc9iH4LVC+LmNeSc+CyO58hdcx1hlsVZ96JP/9atBQtBYxQ
-        P7Gc21e/vHTAy3nPDqKt76lTytzWBSiAU4+d4xo=
-X-Google-Smtp-Source: APXvYqxchbILk3u6RoZ5V2DW/Lx4nxcDY/rbKmpM5NZY035vjh1iu3ANZK/4SOJ3fQaZHTPs5SNPwt+mEorkaNEOnGQ=
-X-Received: by 2002:a2e:89da:: with SMTP id c26mr3015536ljk.214.1565899455773;
- Thu, 15 Aug 2019 13:04:15 -0700 (PDT)
+        Thu, 15 Aug 2019 16:04:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40754 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731196AbfHOUEX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 16:04:23 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hyLyt-0005AL-Cb; Thu, 15 Aug 2019 22:04:19 +0200
+Date:   Thu, 15 Aug 2019 22:04:18 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Kernel User <linux-kernel@riseup.net>
+cc:     LKML <linux-kernel@vger.kernel.org>, mhocko@suse.com,
+        x86@kernel.org
+Subject: Re: /sys/devices/system/cpu/vulnerabilities/ doesn't show all known
+ CPU vulnerabilities
+In-Reply-To: <20190815223730.0b5c6c13@localhost>
+Message-ID: <alpine.DEB.2.21.1908152140460.1908@nanos.tec.linutronix.de>
+References: <20190813232829.3a1962cc@localhost> <20190813212115.GO16770@zn.tnic> <20190814010041.098fe4be@localhost> <20190814070457.GA26456@zn.tnic> <20190814121154.12f488f7@localhost> <alpine.DEB.2.21.1908151054090.2241@nanos.tec.linutronix.de>
+ <20190815223730.0b5c6c13@localhost>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <1565746427-5366-1-git-send-email-wenwen@cs.uga.edu> <20190815.123430.831231953098536795.davem@davemloft.net>
-In-Reply-To: <20190815.123430.831231953098536795.davem@davemloft.net>
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-Date:   Thu, 15 Aug 2019 16:03:39 -0400
-X-Gmail-Original-Message-ID: <CAAa=b7ft-crBJm+H9U7Bn2dcgfjQsE8o53p2ryBWK3seQoF3Cg@mail.gmail.com>
-Message-ID: <CAAa=b7ft-crBJm+H9U7Bn2dcgfjQsE8o53p2ryBWK3seQoF3Cg@mail.gmail.com>
-Subject: Re: [PATCH] net: pch_gbe: Fix memory leaks
-To:     David Miller <davem@davemloft.net>
-Cc:     Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Wenwen Wang <wenwen@cs.uga.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 3:34 PM David Miller <davem@davemloft.net> wrote:
->
-> From: Wenwen Wang <wenwen@cs.uga.edu>
-> Date: Tue, 13 Aug 2019 20:33:45 -0500
->
-> > In pch_gbe_set_ringparam(), if netif_running() returns false, 'tx_old' and
-> > 'rx_old' are not deallocated, leading to memory leaks. To fix this issue,
-> > move the free statements after the if branch.
-> >
-> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
->
-> Why would they be "deallocated"?  They are still assigned to
-> adapter->tx_ring and adapter->rx_ring.
+On Thu, 15 Aug 2019, Kernel User wrote:
+> On Thu, 15 Aug 2019 11:03:35 +0200 (CEST) Thomas Gleixner wrote:
+> 
+> > It's used to denote vulnerability classes and their mitigations:
+> > 
+> >   - Spectre v1
+> >   - Spectre v2
+> >   - Meltdown
+> >   - SSB
+> >   - L1TF
+> >   - MDS
+> 
+> In the Wikipedia article there are:
+> 
+> + Bounds Check Bypass (Spectre, Variant 1)
+> + Branch Target Injection (Spectre, Variant 2)
+> + Rogue Data Cache Load (Meltdown, Variant 3)
+> - Rogue System Register Read (Spectre-NG, Variant 3a)
 
-'adapter->tx_ring' and 'adapter->rx_ring' has been covered by newly
-allocated 'txdr' and 'rxdr' respectively before this if statement.
+Is a subclass of Meltdown, but cannot be mitigated in software and we don't
+know whether the micro-code contains a fix or not unless the CPU/microcode
+tells us that Meltdown is fixed, which includes 3a. We report that
+correctly.
 
-Wenwen
+It's also not a really spectacular issue. The only valuable data you might
+get out of it is info to break KASLR, but there are a gazillion other ways
+to do so.
+
+> + Speculative Store Bypass (Spectre-NG, Variant 4)
+> - Lazy FP state restore (Spectre-NG)
+
+The kernel is not using lazy restore. Dead kernels did, but they got
+patched and no longer allow the lazy mode. So, nothing to see here.
+
+> - Bounds Check Bypass Store (Spectre-NG)
+
+Is a subclass of Spectre V1 similar to the recently published SWAPGS issue.
+
+> + Foreshadow
+> - Spoiler
+
+Spoiler cannot be mitigated by any means. It's like Rowhammer. Nothing we
+can do about and nothing to show.
+
+> + Microarchitectural Data Sampling
+> 
+> I have marked with '+' those which I recognize in the list you provided
+> and with '-' those which are not.
+> 
+> > We are not tracking subclasses and their individual CVEs.
+> 
+> Why do you say that? In your list only L1TF and MDS are not subclasses,
+> i.e. subclasses are in the list. So why not have the others? Also
+> Spoiler seems to be a separate class.
+
+What? Spectre V1, V2 and Meltdown and SSB are different classes despite the
+variant 1,2,3,4 enumeration. They are different classes because they
+utilize different parts of the whole speculative execution machinery and
+need very different mitigation mechanisms.
+
+Just because Wikipedia has a list of some sort does not mean that we have
+to blindly follow it.
+
+Thanks,
+
+	tglx
