@@ -2,78 +2,113 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD889C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D4FC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788972086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:15:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CZnD/c6l"
+	by mail.kernel.org (Postfix) with ESMTP id B83E32086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:16:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565907363;
+	bh=S+HnNRjzevYqF/1E7oN2K3HGRc81RDrKMX1OcXkblsE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RjlM8M/WY7Gj1x8ioef7F1QHx0/tf+LhjSfh4l9aWhJrRqXwg35W9p8HciFZGPqUN
+	 ATgi3sUmYPGSLWyxBihOwJ9mrN6oowPIF+D81qsFTpt14QTibPpBJIs1+JVdfiB8vE
+	 LOLZsNFxZFIyV2AdjiFWn+4MXNZOMZgsyqTgOEMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732585AbfHOWP0 (ORCPT
+        id S1732866AbfHOWQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 18:15:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33040 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728685AbfHOWP0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 18:15:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JSn/G2Oy/FEQuWnzNZ5SW7BflOV+7FNEUWnKN4qTV8o=; b=CZnD/c6lx99rtJ5klCe9PqogQ
-        ijPThQc2FBWmVtYxTy5kSEWa0oKbBuvT5Iii7Ky+NstSfLmOty7W2Ip8XkYXAQglBeeY7KsfZadpa
-        sZEQw40B93sR1nApKujoUOAnILefYgrB6bff7NLpOcJi3YShA1MDPdlpUFJpyt8rPAzH290TqPDMC
-        0ntpVTbLYaSLOlrXbzmT6ZV5CGr3JnOTtjVcCXvHX/6bdiOqYFwZttk0L8ARJT0DrPQ94Ahjv45pe
-        clOMD3/4ThGYL3HtbiIUbkBAkRbjRFqAppuLj2XsIKNYLozH0fQpEt+/SwWzLhey1yOPigMz7D88C
-        SeJKC6niQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hyO1Y-0007yN-A5; Thu, 15 Aug 2019 22:15:12 +0000
-Subject: Re: [PATCH v2] Documentation/admin-guide: Embargoed hardware security
- issues
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Cc:     security@kernel.org, linux-doc@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Kosina <jkosina@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Jiri Kosina <jkosina@suse.cz>
-References: <20190725130113.GA12932@kroah.com>
- <20190815212505.GC12041@kroah.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <635f5f3d-dc1e-90a0-8d85-d26a786bb910@infradead.org>
-Date:   Thu, 15 Aug 2019 15:15:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 15 Aug 2019 18:16:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728685AbfHOWQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 18:16:02 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D48F020644;
+        Thu, 15 Aug 2019 22:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565907361;
+        bh=S+HnNRjzevYqF/1E7oN2K3HGRc81RDrKMX1OcXkblsE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lYQLvuvDfrxb/sksuseUW5V/MAsUIo57vN82VjPUZoB43787ziWQ/gk17qDlFECb9
+         /StBjikx3IpFkZaYIg9csIL0ploUtgbOl/vRod8B6rjjtzSTHzQaUp+tdM+Pv9vS+x
+         qoLD9/VFRBxoJzRR1BUxN81EUSuS20ZNckCuQtvE=
+Date:   Thu, 15 Aug 2019 17:15:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>,
+        Daniel Drake <drake@endlessm.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Karol Herbst <kherbst@redhat.com>,
+        Maik Freudenberg <hhfeuer@gmx.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Use pci_reset_bus() in
+ quirk_reset_lenovo_thinkpad_50_nvgpu()
+Message-ID: <20190815221522.GH253360@google.com>
+References: <20190801220117.14952-1-lyude@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190815212505.GC12041@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801220117.14952-1-lyude@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/15/19 2:25 PM, Greg Kroah-Hartman wrote:
-> v2: updated list of people with document from Jiri as I had the old one
->     grammer tweaks based on Jon's review
->     moved document to Documentation/process/
+On Thu, Aug 01, 2019 at 06:01:17PM -0400, Lyude Paul wrote:
+> Since quirk_nvidia_hda() was added there's now two nvidia device
+> functions on any laptops with nvidia GPUs: the HDA controller, and the
+> GPU itself. Unfortunately this has the sideaffect of breaking
+> quirk_reset_lenovo_thinkpad_50_nvgpu() since pci_reset_function() was
+> using pci_parent_bus_reset() to reset the GPU's respective PCI bus, and
+> pci_parent_bus_reset() does not work on busses which have more then a
+> single device function present.
+> 
+> So, fix this by simply calling pci_reset_bus() instead which properly
+> resets the GPU bus and all device functions under it, including both the
+> GPU and the HDA controller.
+> 
+> Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
+> Cc: Lukas Wunner <lukas@wunner.de>
+> Cc: Daniel Drake <drake@endlessm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Aaron Plattner <aplattner@nvidia.com>
+> Cc: Peter Wu <peter@lekensteyn.nl>
+> Cc: Ilia Mirkin <imirkin@alum.mit.edu>
+> Cc: Karol Herbst <kherbst@redhat.com>
+> Cc: Maik Freudenberg <hhfeuer@gmx.de>
+> Cc: linux-pci@vger.kernel.org
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
 
-If you get to do a v3, you can change the $Subject also.
+We merged b516ea586d71 for v5.3, so I applied this with Ben's ack to
+for-linus for v5.3, thanks!
 
--- 
-~Randy
+> ---
+>  drivers/pci/quirks.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 208aacf39329..44c4ae1abd00 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5256,7 +5256,7 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+>  	 */
+>  	if (ioread32(map + 0x2240c) & 0x2) {
+>  		pci_info(pdev, FW_BUG "GPU left initialized by EFI, resetting\n");
+> -		ret = pci_reset_function(pdev);
+> +		ret = pci_reset_bus(pdev);
+>  		if (ret < 0)
+>  			pci_err(pdev, "Failed to reset GPU: %d\n", ret);
+>  	}
+> -- 
+> 2.21.0
+> 
