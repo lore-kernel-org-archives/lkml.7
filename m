@@ -2,81 +2,185 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BA3C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5C5C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10A4A206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A35CA208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:51:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fvrGFVka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732576AbfHONu4 (ORCPT
+        id S1732584AbfHONvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:50:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:44456 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732426AbfHONu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:50:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25C6D344;
-        Thu, 15 Aug 2019 06:50:56 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 068C83F694;
-        Thu, 15 Aug 2019 06:50:54 -0700 (PDT)
-Subject: Re: DMA-API: cacheline tracking ENOMEM, dma-debug disabled due to
- nouveau ?
-To:     Christoph Hellwig <hch@lst.de>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>, bskeggs@redhat.com,
-        airlied@linux.ie, m.szyprowski@samsung.com,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-References: <20190814145033.GA11190@Red>
- <20190814174927.GT7444@phenom.ffwll.local> <20190815133554.GE12036@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <cdb43f4b-55ff-80c3-8d27-56238b2ab1a1@arm.com>
-Date:   Thu, 15 Aug 2019 14:50:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 15 Aug 2019 09:51:48 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:46138 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732426AbfHONvs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:51:48 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5E6122AF;
+        Thu, 15 Aug 2019 15:51:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1565877106;
+        bh=eQaxJ9fWzARXPrOco46drXtMqHl8iBVISexpgwltDec=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fvrGFVkaMHxE7ZCJ6VmVuUBnwX+lY5NX8E3uYdQdN5um35yc0ZREjQtNfQOEUAl69
+         LsG3gXVAYtPbsxxTiaxIejTqesO+6fNhlsdlUvwaDnGNfUmP3zfFIsggKWEkrWEuwD
+         hJp9t7xVupEFs5CVqLfePFRxogg15dsszGdhbves=
+Date:   Thu, 15 Aug 2019 16:51:43 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
+        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
+        Jacob Chen <jacob-chen@rock-chips.com>
+Subject: Re: [PATCH v8 02/14] media: doc: add document for rkisp1 meta buffer
+ format
+Message-ID: <20190815135143.GU5011@pendragon.ideasonboard.com>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-3-helen.koike@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20190815133554.GE12036@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190730184256.30338-3-helen.koike@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/08/2019 14:35, Christoph Hellwig wrote:
-> On Wed, Aug 14, 2019 at 07:49:27PM +0200, Daniel Vetter wrote:
->> On Wed, Aug 14, 2019 at 04:50:33PM +0200, Corentin Labbe wrote:
->>> Hello
->>>
->>> Since lot of release (at least since 4.19), I hit the following error message:
->>> DMA-API: cacheline tracking ENOMEM, dma-debug disabled
->>>
->>> After hitting that, I try to check who is creating so many DMA mapping and see:
->>> cat /sys/kernel/debug/dma-api/dump | cut -d' ' -f2 | sort | uniq -c
->>>        6 ahci
->>>      257 e1000e
->>>        6 ehci-pci
->>>     5891 nouveau
->>>       24 uhci_hcd
->>>
->>> Does nouveau having this high number of DMA mapping is normal ?
->>
->> Yeah seems perfectly fine for a gpu.
+Hi Helen,
+
+Thank you for the patch.
+
+On Tue, Jul 30, 2019 at 03:42:44PM -0300, Helen Koike wrote:
+> From: Jacob Chen <jacob2.chen@rock-chips.com>
 > 
-> That is a lot and apparently overwhelm the dma-debug tracking.  Robin
-> rewrote this code in Linux 4.21 to work a little better, so I'm curious
-> why this might have changes in 4.19, as dma-debug did not change at
-> all there.
+> This commit add document for rkisp1 meta buffer format
+> 
+> Signed-off-by: Jacob Chen <jacob-chen@rock-chips.com>
+> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> [update for upstream]
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> 
+> ---
+> 
+> Changes in v8:
+> - Add SPDX in the header
+> - Remove emacs configs
+> - Fix doc style
+> 
+> Changes in v7:
+> - s/correspond/corresponding
+> - s/use/uses
+> - s/docuemnt/document
+> 
+>  Documentation/media/uapi/v4l/meta-formats.rst |  2 ++
+>  .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    | 23 +++++++++++++++++++
+>  .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      | 22 ++++++++++++++++++
+>  3 files changed, 47 insertions(+)
+>  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+>  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> 
+> diff --git a/Documentation/media/uapi/v4l/meta-formats.rst b/Documentation/media/uapi/v4l/meta-formats.rst
+> index b10ca9ee3968..5de621fea3cc 100644
+> --- a/Documentation/media/uapi/v4l/meta-formats.rst
+> +++ b/Documentation/media/uapi/v4l/meta-formats.rst
+> @@ -24,3 +24,5 @@ These formats are used for the :ref:`metadata` interface only.
+>      pixfmt-meta-uvc
+>      pixfmt-meta-vsp1-hgo
+>      pixfmt-meta-vsp1-hgt
+> +    pixfmt-meta-rkisp1-params
+> +    pixfmt-meta-rkisp1-stat
+> diff --git a/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> new file mode 100644
+> index 000000000000..103b5cb79b7c
+> --- /dev/null
+> +++ b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> @@ -0,0 +1,23 @@
+> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +
+> +.. _v4l2-meta-fmt-rkisp1-params:
+> +
+> +============================
+> +V4L2_META_FMT_RK_ISP1_PARAMS
+> +============================
+> +
+> +Rockchip ISP1 Parameters Data
+> +
+> +Description
+> +===========
+> +
+> +This format describes input parameters for the Rockchip ISP1.
+> +
+> +It uses c-struct :c:type:`rkisp1_isp_params_cfg`, which is defined in
+> +the ``linux/rkisp1-config.h`` header file.
 
-FWIW, the cacheline tracking entries are a separate thing from the 
-dma-debug entries that I rejigged - judging by those numbers there 
-should still be plenty of free dma-debug entries, but for some reason it 
-has failed to extend the radix tree :/
+I would say that
 
-Robin.
+"The buffer contains a single instance of the C structure
+:c:type:`rkisp1_isp_params_cfg`, defined in the
+``linux/rkisp1-config.h`` header file."
+
+And add a sentence to explain what the alignment requirements are.
+
+> +
+> +The parameters consist of multiple modules.
+> +The module won't be updated if the corresponding bit was not set in module_*_update.
+
+Doesn't this belong to rkisp1-config.h ? I would group all the
+information related to fields of the structure in the header file, and
+only have here the information related to the buffer layout (this mainly
+referencing the structure and talking about alignment/padding).
+
+> +
+> +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
+> +   :functions: rkisp1_isp_params_cfg
+> diff --git a/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> new file mode 100644
+> index 000000000000..4ad303f96421
+> --- /dev/null
+> +++ b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> @@ -0,0 +1,22 @@
+> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +
+> +.. _v4l2-meta-fmt-rkisp1-stat:
+> +
+> +=============================
+> +V4L2_META_FMT_RK_ISP1_STAT_3A
+> +=============================
+> +
+> +
+> +Rockchip ISP1 Statistics Data
+> +
+> +Description
+> +===========
+> +
+> +This format describes image color statistics information generated by the Rockchip
+> +ISP1.
+> +
+> +It uses c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
+> +the ``linux/rkisp1-config.h`` header file.
+
+Same comment here, I think we need to document alignment/padding
+constraints.
+
+> +
+> +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
+> +   :functions: rkisp1_stat_buffer
+
+-- 
+Regards,
+
+Laurent Pinchart
