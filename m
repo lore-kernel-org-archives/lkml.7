@@ -2,79 +2,97 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441ECC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD70C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CB162086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF46E2086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565884834;
-	bh=+/fnRC0jyLVx6w920S0CF2lCIeWd4yq3V09fV2AHnhg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Cv/WvJHjAtTgWKhKqBFapfyKYb8lHLMT2qwKgLRIaBs6dpEemOPF1uMgZ3PBhgNmt
-	 P+BnGSMU7oWslBqelmQmxDLE8vWxIr7zKgDzLMsIBsD0DgkFOLgQk9q76M2hQ+VFqO
-	 gaQywgnfXnT22f0XzZYPIP9cML6SX9//SxWruzrk=
+	s=default; t=1565884836;
+	bh=A4wQl6vcC8iZEo+vLLbng0Wix6dTYFgjLABnwe1gTpY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=F9Wbd4OmVaTQAUvd8qnDJBqMriT4e1C2XiIkpe7UmM8f+DxmccoPPNijas1BFAfcg
+	 O7tNdgVbjH0keluW+hwes2CdzENhBdKvDdo08LNlgdFio9hzLcmgk4t3u9K+UNI9Uo
+	 qeD+HRD75mzzlvL+AxLNbTKHBVOOKRGR0IBdEc7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731040AbfHOQAd (ORCPT
+        id S1731010AbfHOQAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:00:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730298AbfHOQAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 15 Aug 2019 12:00:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.kernel.org ([198.145.29.99]:46556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729539AbfHOQAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 12:00:23 -0400
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 437762089E;
-        Thu, 15 Aug 2019 16:00:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EFBA2171F;
+        Thu, 15 Aug 2019 16:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565884831;
-        bh=+/fnRC0jyLVx6w920S0CF2lCIeWd4yq3V09fV2AHnhg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZWmoVGtPoveLoyfnLs/9mqMq5pYFU9h2xV2OIfAV4B31zah4f7ieduiOuiGxClEdB
-         IuGnVeeqH2/8bPzkxENWlpIiUjAXjy7jQkSUY0+2F15xz+0Mewxduj/DO1/eHI/bwa
-         lgysM4yBfyo8Stj0WHD1DTOZkAPyXf53sKKzZy7c=
-Date:   Thu, 15 Aug 2019 18:00:29 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hridya Valsaraju <hridya@google.com>
-Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v3 0/2] Add default binderfs devices
-Message-ID: <20190815160029.GA23940@kroah.com>
-References: <20190808222727.132744-1-hridya@google.com>
+        s=default; t=1565884823;
+        bh=A4wQl6vcC8iZEo+vLLbng0Wix6dTYFgjLABnwe1gTpY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YC9e654T/YbzSJ2/aIR2ryASLUL2B5Uu0n1AxyMJhG/B3tjT6DSd0JQYAvHdw3ose
+         1SvsZKH1vaij+mxpOTcfr9+N5HrM8bcw4G+DoqXmYvqAsxXneDziMTe9+IaRrJMzit
+         xMAeOPSyULkiHT+QQrS2pk8v9ap8ygmcYPC6V80o=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH 4/4] clk: qcom: Remove error prints from DFS registration
+Date:   Thu, 15 Aug 2019 09:00:20 -0700
+Message-Id: <20190815160020.183334-5-sboyd@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+In-Reply-To: <20190815160020.183334-1-sboyd@kernel.org>
+References: <20190815160020.183334-1-sboyd@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808222727.132744-1-hridya@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 03:27:24PM -0700, Hridya Valsaraju wrote:
-> Binderfs was created to help provide private binder devices to
-> containers in their own IPC namespace. Currently, every time a new binderfs
-> instance is mounted, its private binder devices need to be created via
-> IOCTL calls. This patch series eliminates the effort for creating
-> the default binder devices for each binderfs instance by creating them
-> automatically.
-> 
-> Hridya Valsaraju (2):
->   binder: Add default binder devices through binderfs when configured
->   binder: Validate the default binderfs device names.
+These aren't useful and they reference the init structure name. Let's
+just drop them.
 
-I'd like to get a reviewed-by from the other binder maintainers before
-taking this series....
+Cc: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/qcom/clk-rcg2.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-{hint}
+diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+index 8c02bffe50df..161a6498ed5a 100644
+--- a/drivers/clk/qcom/clk-rcg2.c
++++ b/drivers/clk/qcom/clk-rcg2.c
+@@ -1105,8 +1105,6 @@ static int clk_rcg2_enable_dfs(const struct clk_rcg_dfs_data *data,
+ 
+ 	rcg->freq_tbl = NULL;
+ 
+-	pr_debug("DFS registered for clk %s\n", init->name);
+-
+ 	return 0;
+ }
+ 
+@@ -1117,12 +1115,8 @@ int qcom_cc_register_rcg_dfs(struct regmap *regmap,
+ 
+ 	for (i = 0; i < len; i++) {
+ 		ret = clk_rcg2_enable_dfs(&rcgs[i], regmap);
+-		if (ret) {
+-			const char *name = rcgs[i].init->name;
+-
+-			pr_err("DFS register failed for clk %s\n", name);
++		if (ret)
+ 			return ret;
+-		}
+ 	}
+ 
+ 	return 0;
+-- 
+Sent by a computer through tubes
 
