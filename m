@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DD4C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCB5C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12AC1206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FE33206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q2pGXx4p"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IWRo0YgI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731799AbfHOMOd (ORCPT
+        id S1731832AbfHOMOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:14:33 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41548 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731753AbfHOMOa (ORCPT
+        Thu, 15 Aug 2019 08:14:48 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41548 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731776AbfHOMOc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 08:14:30 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 62so1488580lfa.8
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 05:14:28 -0700 (PDT)
+        Thu, 15 Aug 2019 08:14:32 -0400
+Received: by mail-lf1-f65.google.com with SMTP id 62so1488656lfa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 05:14:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=U4bBImeq628Nz3uHByPC1jCfJS23IKHJ82E0OrJ4tyg=;
-        b=Q2pGXx4pGEm+ED+Zw0z4LrMq/3hmJgwAD47DAyDDHHDPBwKDV/ZATZ1/6TUfm524ae
-         8LwooppbfL6jV5goKikAx06W5XkEko79IMDjTSz9cIEXd9IUTviMyXuMTRIT0s3g87y2
-         iVGSeIQe5cSW80XQ30F58QkdnzVQzQn/hhLr6R0yi6ruLiWW2s627mF8Uw10Rgbej5iq
-         3ITbVakwo/Z54FsU0vUNOCdRp9SPdKfXVFsIAu2ZUa1cm876jjZyDZYyYMPDfXVHWoxZ
-         3zd16deu+NV/KKMm87HFM65dHDulOEDXC54tgLaXqUsrS05k4xBOrTjlHva95aftpzPc
-         LDbg==
+        bh=aIVfXCW1+kiXSGueAdzDW1yyefj6NecEzYan4H+pqQc=;
+        b=IWRo0YgIC5PrnJ7KHBk5p2MKI1bMnA25MrpR3+u6sXtARJMClbHlRjCEeBl8LlYmw+
+         CuA31luU5HMV8WIcc8wNZzm3INx7zoxVpNydrj/gZHlq3e6d7oTsqmtP/NkFCyrMsRvF
+         36oQVwiV3yUfI0TdJSpqkg73xRcBNxJBbyaqRQE+Xe/z1xejqHw1z1j67k8meNUe1BVU
+         Mb7yn4eVM87G0tC/eNq9T/gJtQiOquVYAIS0t5nmxbHTyZkgyvRm0tyaatmWjeeghO1g
+         3Ab7WzGzwRqzwZ5zQS5gisf5Nnj7vvq543McaqHLPDAo0FNTP+icYMYi/mj7t2rAzo1k
+         ybsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=U4bBImeq628Nz3uHByPC1jCfJS23IKHJ82E0OrJ4tyg=;
-        b=N1ksSkv5rhO8tkgje5P1hC+E4L9LZUN7J66WC4SjaBiqECvNfxDKdP3KQ/VxhRFQCT
-         4rqtbM2iTEn53uBzll7rBm0VKkh4dBeDB3nz9SNMD7lSN3imnxJyRTPyFH9P8ekeDFfh
-         G68mKF2b0eRFW4sHVp+2xeYt9MsJTFxEFQCOoAncGuTwY/7KcuY2+jQG4E4iSrn7oiwQ
-         6bk1by5VqFJHrOG7HGhkUrnv4qQ3qdpAo6n90SlylW4DD1WtB1QSQBOlnHfNUW0vuwyv
-         SbYrkYEc9GxGUoTlIcAOxtnIqhY5yhq8yFjWfxyCkhXjcscr2MrVXmA300Kplj0/luTF
-         kuqw==
-X-Gm-Message-State: APjAAAWqqFfemOIwSENQHn6v3zZiHygkFgR73tfjoJy/SswegfRe8YPR
-        KDG3NUvMk6BT3gaS97SulWwZgg==
-X-Google-Smtp-Source: APXvYqzog6+Zoot/T2CF/gd3OHH1KBhSJI2WcOT2wsESPVK9HP52ORvBdR7Fdhihqg4M4yfHM3zLHg==
-X-Received: by 2002:a19:9111:: with SMTP id t17mr2197405lfd.113.1565871267467;
-        Thu, 15 Aug 2019 05:14:27 -0700 (PDT)
+        bh=aIVfXCW1+kiXSGueAdzDW1yyefj6NecEzYan4H+pqQc=;
+        b=Vj+mhMFkQJh2s409zueciYQlb1RzzVkGj92Y09Ranewdoe20zX9qZH4+8ExvUEU3pF
+         ZfGdtNHaXs650qZKMQ554Y/wRAizEYmueCC8FpQBRPyOdRoukhLp96B3yBtbR+5wt6Jb
+         ZWc/34mTyFEmZ2AnPKVXc5zeCH0WgqjxM7Ffv/XvyVj/LProOyR/nAioYY8ZCQRHGmPG
+         8Rijal/4lknRgXEdqVgjyJNFHKeb1rwoCkQJig2vKWbSosTUUvTPk1+DjgLDIDg67TUZ
+         j6IYc/M+K/s0B4FfSbkTrYvoDgV2N4mjYy6NnlbXmcTRh0EwS6Xi3Dh4FD2qfhjDb42+
+         O25w==
+X-Gm-Message-State: APjAAAWZlqgEwjWWPQa+4uz04/UnV1llNtXLekifsqGPvu3y0eD9xeMj
+        0U6VJAQzS+qitkB4LgXPrCB3vA==
+X-Google-Smtp-Source: APXvYqzfFMtyr4sHYyHuVpFusHpNj+KZyw1KwJMVehQBwCRbpnsZoYpaoPpgtFyivFAAYDHobXOLkA==
+X-Received: by 2002:ac2:599b:: with SMTP id w27mr2300688lfn.75.1565871270040;
+        Thu, 15 Aug 2019 05:14:30 -0700 (PDT)
 Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id q25sm462060ljg.30.2019.08.15.05.14.26
+        by smtp.gmail.com with ESMTPSA id q25sm462060ljg.30.2019.08.15.05.14.28
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 15 Aug 2019 05:14:26 -0700 (PDT)
+        Thu, 15 Aug 2019 05:14:29 -0700 (PDT)
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 To:     magnus.karlsson@intel.com, bjorn.topel@intel.com
 Cc:     davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
@@ -63,9 +63,9 @@ Cc:     davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
         xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org,
         jlemon@flugsvamp.com, yhs@fb.com, andrii.nakryiko@gmail.com,
         Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH bpf-next v2 1/3] libbpf: use LFS (_FILE_OFFSET_BITS) instead of direct mmap2 syscall
-Date:   Thu, 15 Aug 2019 15:13:54 +0300
-Message-Id: <20190815121356.8848-2-ivan.khoronzhuk@linaro.org>
+Subject: [PATCH bpf-next v2 3/3] samples: bpf: syscal_nrs: use mmap2 if defined
+Date:   Thu, 15 Aug 2019 15:13:56 +0300
+Message-Id: <20190815121356.8848-4-ivan.khoronzhuk@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190815121356.8848-1-ivan.khoronzhuk@linaro.org>
 References: <20190815121356.8848-1-ivan.khoronzhuk@linaro.org>
@@ -74,118 +74,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop __NR_mmap2 fork in flavor of LFS, that is _FILE_OFFSET_BITS=64
-(glibc & bionic) / LARGEFILE64_SOURCE (for musl) decision. It allows
-mmap() to use 64bit offset that is passed to mmap2 syscall. As result
-pgoff is not truncated and no need to use direct access to mmap2 for
-32 bits systems.
+For arm32 xdp sockets mmap2 is preferred, so use it if it's defined.
+Declaration of __NR_mmap can be skipped and it breaks build.
 
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 ---
- tools/lib/bpf/Makefile |  1 +
- tools/lib/bpf/xsk.c    | 49 ++++++++++++------------------------------
- 2 files changed, 15 insertions(+), 35 deletions(-)
+ samples/bpf/syscall_nrs.c  |  6 ++++++
+ samples/bpf/tracex5_kern.c | 13 +++++++++++++
+ 2 files changed, 19 insertions(+)
 
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index 9312066a1ae3..844f6cd79c03 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -113,6 +113,7 @@ override CFLAGS += -Werror -Wall
- override CFLAGS += -fPIC
- override CFLAGS += $(INCLUDES)
- override CFLAGS += -fvisibility=hidden
-+override CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
+diff --git a/samples/bpf/syscall_nrs.c b/samples/bpf/syscall_nrs.c
+index 516e255cbe8f..88f940052450 100644
+--- a/samples/bpf/syscall_nrs.c
++++ b/samples/bpf/syscall_nrs.c
+@@ -9,5 +9,11 @@ void syscall_defines(void)
+ 	COMMENT("Linux system call numbers.");
+ 	SYSNR(__NR_write);
+ 	SYSNR(__NR_read);
++#ifdef __NR_mmap2
++	SYSNR(__NR_mmap2);
++#endif
++#ifdef __NR_mmap
+ 	SYSNR(__NR_mmap);
++#endif
++
+ }
+diff --git a/samples/bpf/tracex5_kern.c b/samples/bpf/tracex5_kern.c
+index f57f4e1ea1ec..35cb0eed3be5 100644
+--- a/samples/bpf/tracex5_kern.c
++++ b/samples/bpf/tracex5_kern.c
+@@ -68,12 +68,25 @@ PROG(SYS__NR_read)(struct pt_regs *ctx)
+ 	return 0;
+ }
  
- ifeq ($(VERBOSE),1)
-   Q =
-diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
-index 680e63066cf3..7392f428c07b 100644
---- a/tools/lib/bpf/xsk.c
-+++ b/tools/lib/bpf/xsk.c
-@@ -74,23 +74,6 @@ struct xsk_nl_info {
- 	int fd;
- };
- 
--/* For 32-bit systems, we need to use mmap2 as the offsets are 64-bit.
-- * Unfortunately, it is not part of glibc.
-- */
--static inline void *xsk_mmap(void *addr, size_t length, int prot, int flags,
--			     int fd, __u64 offset)
--{
--#ifdef __NR_mmap2
--	unsigned int page_shift = __builtin_ffs(getpagesize()) - 1;
--	long ret = syscall(__NR_mmap2, addr, length, prot, flags, fd,
--			   (off_t)(offset >> page_shift));
--
--	return (void *)ret;
--#else
--	return mmap(addr, length, prot, flags, fd, offset);
--#endif
--}
--
- int xsk_umem__fd(const struct xsk_umem *umem)
++#ifdef __NR_mmap2
++PROG(SYS__NR_mmap2)(struct pt_regs *ctx)
++{
++	char fmt[] = "mmap2\n";
++
++	bpf_trace_printk(fmt, sizeof(fmt));
++	return 0;
++}
++#endif
++
++#ifdef __NR_mmap
+ PROG(SYS__NR_mmap)(struct pt_regs *ctx)
  {
- 	return umem ? umem->fd : -EINVAL;
-@@ -210,10 +193,9 @@ int xsk_umem__create(struct xsk_umem **umem_ptr, void *umem_area, __u64 size,
- 		goto out_socket;
- 	}
+ 	char fmt[] = "mmap\n";
++
+ 	bpf_trace_printk(fmt, sizeof(fmt));
+ 	return 0;
+ }
++#endif
  
--	map = xsk_mmap(NULL, off.fr.desc +
--		       umem->config.fill_size * sizeof(__u64),
--		       PROT_READ | PROT_WRITE, MAP_SHARED | MAP_POPULATE,
--		       umem->fd, XDP_UMEM_PGOFF_FILL_RING);
-+	map = mmap(NULL, off.fr.desc + umem->config.fill_size * sizeof(__u64),
-+		   PROT_READ | PROT_WRITE, MAP_SHARED | MAP_POPULATE, umem->fd,
-+		   XDP_UMEM_PGOFF_FILL_RING);
- 	if (map == MAP_FAILED) {
- 		err = -errno;
- 		goto out_socket;
-@@ -227,10 +209,9 @@ int xsk_umem__create(struct xsk_umem **umem_ptr, void *umem_area, __u64 size,
- 	fill->ring = map + off.fr.desc;
- 	fill->cached_cons = umem->config.fill_size;
- 
--	map = xsk_mmap(NULL,
--		       off.cr.desc + umem->config.comp_size * sizeof(__u64),
--		       PROT_READ | PROT_WRITE, MAP_SHARED | MAP_POPULATE,
--		       umem->fd, XDP_UMEM_PGOFF_COMPLETION_RING);
-+	map = mmap(NULL, off.cr.desc + umem->config.comp_size * sizeof(__u64),
-+		   PROT_READ | PROT_WRITE, MAP_SHARED | MAP_POPULATE, umem->fd,
-+		   XDP_UMEM_PGOFF_COMPLETION_RING);
- 	if (map == MAP_FAILED) {
- 		err = -errno;
- 		goto out_mmap;
-@@ -550,11 +531,10 @@ int xsk_socket__create(struct xsk_socket **xsk_ptr, const char *ifname,
- 	}
- 
- 	if (rx) {
--		rx_map = xsk_mmap(NULL, off.rx.desc +
--				  xsk->config.rx_size * sizeof(struct xdp_desc),
--				  PROT_READ | PROT_WRITE,
--				  MAP_SHARED | MAP_POPULATE,
--				  xsk->fd, XDP_PGOFF_RX_RING);
-+		rx_map = mmap(NULL, off.rx.desc +
-+			      xsk->config.rx_size * sizeof(struct xdp_desc),
-+			      PROT_READ | PROT_WRITE, MAP_SHARED | MAP_POPULATE,
-+			      xsk->fd, XDP_PGOFF_RX_RING);
- 		if (rx_map == MAP_FAILED) {
- 			err = -errno;
- 			goto out_socket;
-@@ -569,11 +549,10 @@ int xsk_socket__create(struct xsk_socket **xsk_ptr, const char *ifname,
- 	xsk->rx = rx;
- 
- 	if (tx) {
--		tx_map = xsk_mmap(NULL, off.tx.desc +
--				  xsk->config.tx_size * sizeof(struct xdp_desc),
--				  PROT_READ | PROT_WRITE,
--				  MAP_SHARED | MAP_POPULATE,
--				  xsk->fd, XDP_PGOFF_TX_RING);
-+		tx_map = mmap(NULL, off.tx.desc +
-+			      xsk->config.tx_size * sizeof(struct xdp_desc),
-+			      PROT_READ | PROT_WRITE, MAP_SHARED | MAP_POPULATE,
-+			      xsk->fd, XDP_PGOFF_TX_RING);
- 		if (tx_map == MAP_FAILED) {
- 			err = -errno;
- 			goto out_mmap_rx;
+ char _license[] SEC("license") = "GPL";
+ u32 _version SEC("version") = LINUX_VERSION_CODE;
 -- 
 2.17.1
 
