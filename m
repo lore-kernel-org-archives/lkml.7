@@ -2,104 +2,177 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 974FCC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF90CC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C942086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C490206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565884840;
-	bh=pln53YyoxIrrm78qGdr+loO6ia2BSdIYlVyYfDz+Ck8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ajhzB+6Je562PbXiJuWHePjf3zCp3uc4PCqnCBfB0sOghLIaMNaVqF3dwnNLPi1FH
-	 iKq6ar+vSRQhJwuE+9/5MwH6QXNfK9M7IGt8MOdWfPu/Rv9uqwZ8vbnK0V7zIB2Fg6
-	 U+7f5Vx55r+mmGmKjnNIsySkWhz6YBoz+C9SSLBI=
+	s=default; t=1565884848;
+	bh=sRXOAhPyE3UIr0F6bcoz7Xh/Y7P4rnqIyvDZ0omD6os=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vmDzQiZNLDgD6YdXRzZDJjcdnlXlq/mi+vRMquJMKLTJihDqMAQUkerGIW69dpii+
+	 SclwQ48eks9FsM5u/TvHB/qX2o5AFmnW4pVoLx6nJH6/1TPGfHiEB67T601MGx6kTF
+	 9KLGq2WgICgMAynOmB1pWuGvwxJlxzuGO8NENSaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729880AbfHOQAX (ORCPT
+        id S1731096AbfHOQAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:00:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729539AbfHOQAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:00:23 -0400
-Received: from mail.kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74E6A206C1;
-        Thu, 15 Aug 2019 16:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565884822;
-        bh=pln53YyoxIrrm78qGdr+loO6ia2BSdIYlVyYfDz+Ck8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Txfhv8QBYpK2livl6OXHUknugGqueIyUg/oPjQY0GQ9j/n+qYFhX6mcfNvBqdAJdu
-         AzIKZaGLoIj8jaAg+h2Eld8FGlTFia13cJwukraa1G+bcbS7q3Nqug+7o8mJNuUSpe
-         qFehkLroFRc6XDy/sw27axiMadXjVsw6HRPXs9fA=
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-rtc@vger.kernel.org, bot@kernelci.org,
-        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, broonie@kernel.org, matthew.hart@linaro.org,
-        khilman@baylibre.com, enric.balletbo@collabora.com,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Jun Nie <jun.nie@linaro.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sugaya Taichi <sugaya.taichi@socionext.com>,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH 0/4] Followup to "Make clk_hw::init NULL after clk registration"
-Date:   Thu, 15 Aug 2019 09:00:16 -0700
-Message-Id: <20190815160020.183334-1-sboyd@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+        Thu, 15 Aug 2019 12:00:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53210 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731055AbfHOQAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 12:00:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A4EFBAD7C;
+        Thu, 15 Aug 2019 16:00:42 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 18:00:41 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
+Message-ID: <20190815155950.GN9477@dhcp22.suse.cz>
+References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
+ <20190814202027.18735-3-daniel.vetter@ffwll.ch>
+ <20190814235805.GB11200@ziepe.ca>
+ <20190815065829.GA7444@phenom.ffwll.local>
+ <20190815122344.GA21596@ziepe.ca>
+ <20190815132127.GI9477@dhcp22.suse.cz>
+ <20190815141219.GF21596@ziepe.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815141219.GF21596@ziepe.ca>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I found some more cases where the init structure is referenced from
-within the clk_hw struct after clk_registration is called. I suspect the
-rtc driver fix is useful to avoid crashes on Allwinner devices, reported
-by kernel-ci.
+On Thu 15-08-19 11:12:19, Jason Gunthorpe wrote:
+> On Thu, Aug 15, 2019 at 03:21:27PM +0200, Michal Hocko wrote:
+> > On Thu 15-08-19 09:23:44, Jason Gunthorpe wrote:
+> > > On Thu, Aug 15, 2019 at 08:58:29AM +0200, Daniel Vetter wrote:
+> > > > On Wed, Aug 14, 2019 at 08:58:05PM -0300, Jason Gunthorpe wrote:
+> > > > > On Wed, Aug 14, 2019 at 10:20:24PM +0200, Daniel Vetter wrote:
+> > > > > > In some special cases we must not block, but there's not a
+> > > > > > spinlock, preempt-off, irqs-off or similar critical section already
+> > > > > > that arms the might_sleep() debug checks. Add a non_block_start/end()
+> > > > > > pair to annotate these.
+> > > > > > 
+> > > > > > This will be used in the oom paths of mmu-notifiers, where blocking is
+> > > > > > not allowed to make sure there's forward progress. Quoting Michal:
+> > > > > > 
+> > > > > > "The notifier is called from quite a restricted context - oom_reaper -
+> > > > > > which shouldn't depend on any locks or sleepable conditionals. The code
+> > > > > > should be swift as well but we mostly do care about it to make a forward
+> > > > > > progress. Checking for sleepable context is the best thing we could come
+> > > > > > up with that would describe these demands at least partially."
+> > > > > 
+> > > > > But this describes fs_reclaim_acquire() - is there some reason we are
+> > > > > conflating fs_reclaim with non-sleeping?
+> > > > 
+> > > > No idea why you tie this into fs_reclaim. We can definitly sleep in there,
+> > > > and for e.g. kswapd (which also wraps everything in fs_reclaim) we're
+> > > > event supposed to I thought. To make sure we can get at the last bit of
+> > > > memory by flushing all the queues and waiting for everything to be cleaned
+> > > > out.
+> > > 
+> > > AFAIK the point of fs_reclaim is to prevent "indirect dependency upon
+> > > the page allocator" ie a justification that was given this !blockable
+> > > stuff.
+> > > 
+> > > For instance:
+> > > 
+> > >   fs_reclaim_acquire()
+> > >   kmalloc(GFP_KERNEL) <- lock dep assertion
+> > > 
+> > > And further, Michal's concern about indirectness through locks is also
+> > > handled by lockdep:
+> > > 
+> > >        CPU0                                 CPU1
+> > >                                         mutex_lock()
+> > >                                         kmalloc(GFP_KERNEL)
+> > >                                         mutex_unlock()
+> > >   fs_reclaim_acquire()
+> > >   mutex_lock() <- lock dep assertion
+> > > 
+> > > In other words, to prevent recursion into the page allocator you use
+> > > fs_reclaim_acquire(), and lockdep verfies it in its usual robust way.
+> > 
+> > fs_reclaim_acquire is about FS/IO recursions IIUC. We are talking about
+> > any !GFP_NOWAIT allocation context here and any {in}direct dependency on
+> > it. 
+> 
+> AFAIK 'GFP_NOWAIT' is characterized by the lack of __GFP_FS and
+> __GFP_DIRECT_RECLAIM..
+>
+> This matches the existing test in __need_fs_reclaim() - so if you are
+> OK with GFP_NOFS, aka __GFP_IO which triggers try_to_compact_pages(),
+> allocations during OOM, then I think fs_reclaim already matches what
+> you described?
 
-Cc: <bot@kernelci.org>                                                                                                                                      
-Cc: <tomeu.vizoso@collabora.com>
-Cc: <guillaume.tucker@collabora.com>
-Cc: <mgalka@collabora.com>
-Cc: <broonie@kernel.org>
-Cc: <matthew.hart@linaro.org>
-Cc: <khilman@baylibre.com>
-Cc: <enric.balletbo@collabora.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>      
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Jun Nie <jun.nie@linaro.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sugaya Taichi <sugaya.taichi@socionext.com>
-Cc: Taniya Das <tdas@codeaurora.org>
+No GFP_NOFS is equally bad. Please read my other email explaining what
+the oom_reaper actually requires. In short no blocking on direct or
+indirect dependecy on memory allocation that might sleep. If you can
+express that in the existing lockdep machinery. All fine. But then
+consider deployments where lockdep is no-no because of the overhead.
 
-Stephen Boyd (4):
-  clk: milbeaut:  Don't reference clk_init_data after registration
-  clk: zx296718: Don't reference clk_init_data after registration
-  rtc: sun6i: Don't reference clk_init_data after registration
-  clk: qcom: Remove error prints from DFS registration
+> > No, non-blocking is a very coarse approximation of what we really need.
+> > But it should give us even a stronger condition. Essentially any sleep
+> > other than a preemption shouldn't be allowed in that context.
+> 
+> But it is a nonsense API to give the driver invalidate_range_start,
+> the blocking alternative to the non-blocking invalidate_range and then
+> demand it to be non-blocking.
+> 
+> Inspecting the code, no drivers are actually able to progress their
+> side in non-blocking mode.
+> 
+> The best we got was drivers tested the VA range and returned success
+> if they had no interest. Which is a big win to be sure, but it looks
+> like getting any more is not really posssible.
 
- drivers/clk/clk-milbeaut.c     |   2 +-
- drivers/clk/qcom/clk-rcg2.c    |   8 +--
- drivers/clk/zte/clk-zx296718.c | 109 +++++++++++++++------------------
- drivers/rtc/rtc-sun6i.c        |   2 +-
- 4 files changed, 52 insertions(+), 69 deletions(-)
+And that is already a great win! Because many notifiers only do care
+about particular mappings. Please note that backing off unconditioanlly
+will simply cause that the oom reaper will have to back off not doing
+any tear down anything.
 
+> However, we could (probably even should) make the drivers fs_reclaim
+> safe.
+> 
+> If that is enough to guarantee progress of OOM, then lets consider
+> something like using current_gfp_context() to force PF_MEMALLOC_NOFS
+> allocation behavior on the driver callback and lockdep to try and keep
+> pushing on the the debugging, and dropping !blocking.
+
+How are you going to enforce indirect dependency? E.g. a lock that is
+also used in other context which depend on sleepable memory allocation
+to move forward.
+
+Really, this was aimed to give a very simple debugging aid. If it is
+considered to be so controversial, even though I really do not see why,
+then let's just drop it on the floor.
 -- 
-Sent by a computer through tubes
-
+Michal Hocko
+SUSE Labs
