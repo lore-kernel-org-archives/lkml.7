@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8391AC3A59B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF2CC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 570092086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02B0A2086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387437AbfHOUJw (ORCPT
+        id S2387447AbfHOUJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 16:09:52 -0400
-Received: from mga18.intel.com ([134.134.136.126]:43474 "EHLO mga18.intel.com"
+        Thu, 15 Aug 2019 16:09:54 -0400
+Received: from mga18.intel.com ([134.134.136.126]:43476 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733279AbfHOUJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1733285AbfHOUJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 15 Aug 2019 16:09:48 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 13:09:42 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
-   d="scan'208";a="188596215"
+   d="scan'208";a="188596226"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga002.jf.intel.com with ESMTP; 15 Aug 2019 13:09:42 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -41,9 +41,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>, "Yi Liu" <yi.l.liu@intel.com>,
         Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
         "Lu Baolu" <baolu.lu@linux.intel.com>,
         Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v5 06/19] iommu: Introduce cache_invalidate API
-Date:   Thu, 15 Aug 2019 13:13:12 -0700
-Message-Id: <1565900005-62508-7-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v5 10/19] iommu/vt-d: Enlightened PASID allocation
+Date:   Thu, 15 Aug 2019 13:13:16 -0700
+Message-Id: <1565900005-62508-11-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565900005-62508-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1565900005-62508-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -52,215 +52,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi L Liu <yi.l.liu@linux.intel.com>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-In any virtualization use case, when the first translation stage
-is "owned" by the guest OS, the host IOMMU driver has no knowledge
-of caching structure updates unless the guest invalidation activities
-are trapped by the virtualizer and passed down to the host.
+If Intel IOMMU runs in caching mode, a.k.a. virtual IOMMU, the
+IOMMU driver should rely on the emulation software to allocate
+and free PASID IDs. The Intel vt-d spec revision 3.0 defines a
+register set to support this. This includes a capability register,
+a virtual command register and a virtual response register. Refer
+to section 10.4.42, 10.4.43, 10.4.44 for more information.
 
-Since the invalidation data are obtained from user space and will be
-written into physical IOMMU, we must allow security check at various
-layers. Therefore, generic invalidation data format are proposed here,
-model specific IOMMU drivers need to convert them into their own format.
+This patch adds the enlightened PASID allocation/free interfaces
+via the virtual command register.
 
-Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 ---
- drivers/iommu/iommu.c      |  10 +++++
- include/linux/iommu.h      |  14 ++++++
- include/uapi/linux/iommu.h | 110 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 134 insertions(+)
+ drivers/iommu/intel-pasid.c | 83 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/iommu/intel-pasid.h | 13 ++++++-
+ include/linux/intel-iommu.h |  2 ++
+ 3 files changed, 97 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 155ebef..6228d5d 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1719,6 +1719,16 @@ void iommu_detach_pasid_table(struct iommu_domain *domain)
+diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+index 040a445..76bcbb2 100644
+--- a/drivers/iommu/intel-pasid.c
++++ b/drivers/iommu/intel-pasid.c
+@@ -63,6 +63,89 @@ void *intel_pasid_lookup_id(int pasid)
+ 	return p;
  }
- EXPORT_SYMBOL_GPL(iommu_detach_pasid_table);
  
-+int iommu_cache_invalidate(struct iommu_domain *domain, struct device *dev,
-+			   struct iommu_cache_invalidate_info *inv_info)
++static int check_vcmd_pasid(struct intel_iommu *iommu)
 +{
-+	if (unlikely(!domain->ops->cache_invalidate))
++	u64 cap;
++
++	if (!ecap_vcs(iommu->ecap)) {
++		pr_warn("IOMMU: %s: Hardware doesn't support virtual command\n",
++			iommu->name);
 +		return -ENODEV;
++	}
 +
-+	return domain->ops->cache_invalidate(domain, dev, inv_info);
++	cap = dmar_readq(iommu->reg + DMAR_VCCAP_REG);
++	if (!(cap & DMA_VCS_PAS)) {
++		pr_warn("IOMMU: %s: Emulation software doesn't support PASID allocation\n",
++			iommu->name);
++		return -ENODEV;
++	}
++
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(iommu_cache_invalidate);
 +
- static void __iommu_detach_device(struct iommu_domain *domain,
- 				  struct device *dev)
- {
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 8c64065..28f1a8c 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -230,6 +230,7 @@ struct iommu_sva_ops {
-  * @page_response: handle page request response
-  * @attach_pasid_table: attach a pasid table
-  * @detach_pasid_table: detach the pasid table
-+ * @cache_invalidate: invalidate translation caches
-  * @pgsize_bitmap: bitmap of all possible supported page sizes
-  */
- struct iommu_ops {
-@@ -296,6 +297,8 @@ struct iommu_ops {
- 	int (*page_response)(struct device *dev,
- 			     struct iommu_fault_event *evt,
- 			     struct iommu_page_response *msg);
-+	int (*cache_invalidate)(struct iommu_domain *domain, struct device *dev,
-+				struct iommu_cache_invalidate_info *inv_info);
- 
- 	unsigned long pgsize_bitmap;
- };
-@@ -407,6 +410,9 @@ extern void iommu_detach_device(struct iommu_domain *domain,
- extern int iommu_attach_pasid_table(struct iommu_domain *domain,
- 				    struct iommu_pasid_table_config *cfg);
- extern void iommu_detach_pasid_table(struct iommu_domain *domain);
-+extern int iommu_cache_invalidate(struct iommu_domain *domain,
-+				  struct device *dev,
-+				  struct iommu_cache_invalidate_info *inv_info);
- extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
- extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
- extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
-@@ -959,6 +965,14 @@ int iommu_attach_pasid_table(struct iommu_domain *domain,
- static inline
- void iommu_detach_pasid_table(struct iommu_domain *domain) {}
- 
-+static inline int
-+iommu_cache_invalidate(struct iommu_domain *domain,
-+		       struct device *dev,
-+		       struct iommu_cache_invalidate_info *inv_info)
++int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int *pasid)
 +{
-+	return -ENODEV;
++	u64 res;
++	u8 status_code;
++	unsigned long flags;
++	int ret = 0;
++
++	ret = check_vcmd_pasid(iommu);
++	if (ret)
++		return ret;
++
++	raw_spin_lock_irqsave(&iommu->register_lock, flags);
++	dmar_writeq(iommu->reg + DMAR_VCMD_REG, VCMD_CMD_ALLOC);
++	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
++		      !(res & VCMD_VRSP_IP), res);
++	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
++
++	status_code = VCMD_VRSP_SC(res);
++	switch (status_code) {
++	case VCMD_VRSP_SC_SUCCESS:
++		*pasid = VCMD_VRSP_RESULT(res);
++		break;
++	case VCMD_VRSP_SC_NO_PASID_AVAIL:
++		pr_info("IOMMU: %s: No PASID available\n", iommu->name);
++		ret = -ENOMEM;
++		break;
++	default:
++		ret = -ENODEV;
++		pr_warn("IOMMU: %s: Unexpected error code %d\n",
++			iommu->name, status_code);
++	}
++
++	return ret;
 +}
 +
- #endif /* CONFIG_IOMMU_API */
++void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid)
++{
++	u64 res;
++	u8 status_code;
++	unsigned long flags;
++
++	if (check_vcmd_pasid(iommu))
++		return;
++
++	raw_spin_lock_irqsave(&iommu->register_lock, flags);
++	dmar_writeq(iommu->reg + DMAR_VCMD_REG, (pasid << 8) | VCMD_CMD_FREE);
++	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
++		      !(res & VCMD_VRSP_IP), res);
++	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
++
++	status_code = VCMD_VRSP_SC(res);
++	switch (status_code) {
++	case VCMD_VRSP_SC_SUCCESS:
++		break;
++	case VCMD_VRSP_SC_INVALID_PASID:
++		pr_info("IOMMU: %s: Invalid PASID\n", iommu->name);
++		break;
++	default:
++		pr_warn("IOMMU: %s: Unexpected error code %d\n",
++			iommu->name, status_code);
++	}
++}
++
+ /*
+  * Per device pasid table management:
+  */
+diff --git a/drivers/iommu/intel-pasid.h b/drivers/iommu/intel-pasid.h
+index fc8cd8f..e413e88 100644
+--- a/drivers/iommu/intel-pasid.h
++++ b/drivers/iommu/intel-pasid.h
+@@ -23,6 +23,16 @@
+ #define is_pasid_enabled(entry)		(((entry)->lo >> 3) & 0x1)
+ #define get_pasid_dir_size(entry)	(1 << ((((entry)->lo >> 9) & 0x7) + 7))
  
- #ifdef CONFIG_IOMMU_DEBUGFS
-diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-index 0f9d249..919ea02 100644
---- a/include/uapi/linux/iommu.h
-+++ b/include/uapi/linux/iommu.h
-@@ -203,4 +203,114 @@ struct iommu_pasid_table_config {
- 	};
- };
++/* Virtual command interface for enlightened pasid management. */
++#define VCMD_CMD_ALLOC			0x1
++#define VCMD_CMD_FREE			0x2
++#define VCMD_VRSP_IP			0x1
++#define VCMD_VRSP_SC(e)			(((e) >> 1) & 0x3)
++#define VCMD_VRSP_SC_SUCCESS		0
++#define VCMD_VRSP_SC_NO_PASID_AVAIL	1
++#define VCMD_VRSP_SC_INVALID_PASID	1
++#define VCMD_VRSP_RESULT(e)		(((e) >> 8) & 0xfffff)
++
+ /*
+  * Domain ID reserved for pasid entries programmed for first-level
+  * only and pass-through transfer modes.
+@@ -95,5 +105,6 @@ int intel_pasid_setup_pass_through(struct intel_iommu *iommu,
+ 				   struct device *dev, int pasid);
+ void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
+ 				 struct device *dev, int pasid);
+-
++int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int *pasid);
++void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid);
+ #endif /* __INTEL_PASID_H */
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index f2ae8a0..37fb0c9 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -161,6 +161,7 @@
+ #define ecap_smpwc(e)		(((e) >> 48) & 0x1)
+ #define ecap_flts(e)		(((e) >> 47) & 0x1)
+ #define ecap_slts(e)		(((e) >> 46) & 0x1)
++#define ecap_vcs(e)		(((e) >> 44) & 0x1)
+ #define ecap_smts(e)		(((e) >> 43) & 0x1)
+ #define ecap_dit(e)		((e >> 41) & 0x1)
+ #define ecap_pasid(e)		((e >> 40) & 0x1)
+@@ -277,6 +278,7 @@
  
-+/* defines the granularity of the invalidation */
-+enum iommu_inv_granularity {
-+	IOMMU_INV_GRANU_DOMAIN,	/* domain-selective invalidation */
-+	IOMMU_INV_GRANU_PASID,	/* PASID-selective invalidation */
-+	IOMMU_INV_GRANU_ADDR,	/* page-selective invalidation */
-+	IOMMU_INV_GRANU_NR,	/* number of invalidation granularities */
-+};
-+
-+/**
-+ * struct iommu_inv_addr_info - Address Selective Invalidation Structure
-+ *
-+ * @flags: indicates the granularity of the address-selective invalidation
-+ * - If the PASID bit is set, the @pasid field is populated and the invalidation
-+ *   relates to cache entries tagged with this PASID and matching the address
-+ *   range.
-+ * - If ARCHID bit is set, @archid is populated and the invalidation relates
-+ *   to cache entries tagged with this architecture specific ID and matching
-+ *   the address range.
-+ * - Both PASID and ARCHID can be set as they may tag different caches.
-+ * - If neither PASID or ARCHID is set, global addr invalidation applies.
-+ * - The LEAF flag indicates whether only the leaf PTE caching needs to be
-+ *   invalidated and other paging structure caches can be preserved.
-+ * @archid: architecture-specific ID
-+ * @pasid: process address space ID
-+ * @addr: first stage/level input address
-+ * @granule_size: page/block size of the mapping in bytes
-+ * @nb_granules: number of contiguous granules to be invalidated
-+ */
-+struct iommu_inv_addr_info {
-+#define IOMMU_INV_ADDR_FLAGS_PASID	(1 << 0)
-+#define IOMMU_INV_ADDR_FLAGS_ARCHID	(1 << 1)
-+#define IOMMU_INV_ADDR_FLAGS_LEAF	(1 << 2)
-+	__u32	flags;
-+	__u32	archid;
-+	__u64	pasid;
-+	__u64	addr;
-+	__u64	granule_size;
-+	__u64	nb_granules;
-+};
-+
-+/**
-+ * struct iommu_inv_pasid_info - PASID Selective Invalidation Structure
-+ *
-+ * @flags: indicates the granularity of the PASID-selective invalidation
-+ * - If the PASID bit is set, the @pasid field is populated and the invalidation
-+ *   relates to cache entries tagged with this PASID and matching the address
-+ *   range.
-+ * - If the ARCHID bit is set, the @archid is populated and the invalidation
-+ *   relates to cache entries tagged with this architecture specific ID and
-+ *   matching the address range.
-+ * - Both PASID and ARCHID can be set as they may tag different caches.
-+ * - At least one of PASID or ARCHID must be set.
-+ * @archid: architecture-specific ID
-+ * @pasid: process address space ID
-+ */
-+struct iommu_inv_pasid_info {
-+#define IOMMU_INV_PASID_FLAGS_PASID	(1 << 0)
-+#define IOMMU_INV_PASID_FLAGS_ARCHID	(1 << 1)
-+	__u32	flags;
-+	__u32	archid;
-+	__u64	pasid;
-+};
-+
-+/**
-+ * struct iommu_cache_invalidate_info - First level/stage invalidation
-+ *     information
-+ * @version: API version of this structure
-+ * @cache: bitfield that allows to select which caches to invalidate
-+ * @granularity: defines the lowest granularity used for the invalidation:
-+ *     domain > PASID > addr
-+ * @padding: reserved for future use (should be zero)
-+ * @pasid_info: invalidation data when @granularity is %IOMMU_INV_GRANU_PASID
-+ * @addr_info: invalidation data when @granularity is %IOMMU_INV_GRANU_ADDR
-+ *
-+ * Not all the combinations of cache/granularity are valid:
-+ *
-+ * +--------------+---------------+---------------+---------------+
-+ * | type /       |   DEV_IOTLB   |     IOTLB     |      PASID    |
-+ * | granularity  |               |               |      cache    |
-+ * +==============+===============+===============+===============+
-+ * | DOMAIN       |       N/A     |       Y       |       Y       |
-+ * +--------------+---------------+---------------+---------------+
-+ * | PASID        |       Y       |       Y       |       Y       |
-+ * +--------------+---------------+---------------+---------------+
-+ * | ADDR         |       Y       |       Y       |       N/A     |
-+ * +--------------+---------------+---------------+---------------+
-+ *
-+ * Invalidations by %IOMMU_INV_GRANU_DOMAIN don't take any argument other than
-+ * @version and @cache.
-+ *
-+ * If multiple cache types are invalidated simultaneously, they all
-+ * must support the used granularity.
-+ */
-+struct iommu_cache_invalidate_info {
-+#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
-+	__u32	version;
-+/* IOMMU paging structure cache */
-+#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /* IOMMU IOTLB */
-+#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /* Device IOTLB */
-+#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /* PASID cache */
-+#define IOMMU_CACHE_INV_TYPE_NR		(3)
-+	__u8	cache;
-+	__u8	granularity;
-+	__u8	padding[2];
-+	union {
-+		struct iommu_inv_pasid_info pasid_info;
-+		struct iommu_inv_addr_info addr_info;
-+	};
-+};
-+
- #endif /* _UAPI_IOMMU_H */
+ /* PRS_REG */
+ #define DMA_PRS_PPR	((u32)1)
++#define DMA_VCS_PAS	((u64)1)
+ 
+ #define IOMMU_WAIT_OP(iommu, offset, op, cond, sts)			\
+ do {									\
 -- 
 2.7.4
 
