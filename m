@@ -2,93 +2,164 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0F2C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4F9C3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A0D2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC922089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cPrbVHFE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JkRFzeRf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387624AbfHOXFb (ORCPT
+        id S2387629AbfHOXJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 19:05:31 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37497 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729807AbfHOXFb (ORCPT
+        Thu, 15 Aug 2019 19:09:11 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36116 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387417AbfHOXJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 19:05:31 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d1so1366722pgp.4
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 16:05:31 -0700 (PDT)
+        Thu, 15 Aug 2019 19:09:10 -0400
+Received: by mail-oi1-f194.google.com with SMTP id c15so3499447oic.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 16:09:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cPt+lD53UMmWuKSJSUmfcWxGBTRSp/XxZ/GGdWGHTvg=;
-        b=cPrbVHFEyHC+uvkIilU4GIY9SyYx/S0ZZtKFPQAt4vRxN/T5cNs5cO+Ihx54yxNs9y
-         d5hpJS6osCY3OrNh3cPpLfWemfKgqQ6cXt2lKm286OHdPaAPus4hwQc31PT7QFQyJ/f4
-         TEZ6ekHrzcQ8HflG8Di+MA1uPRbKplWE/ZSg37dWv5AcLrB4HMXzVQ0VpAyfoLw+z+AV
-         610gol6FrJP7CHIZKxfiDv4GKmuTohad7BYwTOEZPRHc+pz36khtHygP/4uzoF/ZXfpL
-         LZ0kCaH0bxBa+7ELQz29uwSzs+3PKATciJTbkYv3yk6GUDZs/Z6Yj5ew630EzyMdiuE1
-         3cRQ==
+        bh=Pubd6f1tcZHifquOcrj8xQglVw6DCxjyDkP+6D1UxS0=;
+        b=JkRFzeRfQlWs+Pyjcat2Ssn+D8XoJ1Uow7Ah+iXZrqxiUrkwD5e301ji+FAnkgr3Mi
+         zQyExXAXO0ueRB6RKdinbV4d+uew/w3RGB1LZBzLVeWxJU1P+s7GT8dtzEEfX1l490DR
+         5RRcWZMODHPXuCDS97ebyvj1t4/x10SAdNswXg5uL1xvkwb/77E/VvebPuUbzUAp8mcW
+         aLfr2eozWfE9Hz1Szd5c8U8Whe5ZubXfCrM+YBMFJxGap3xnbKhQgHjzjQPnn+klku5l
+         VVvGmdO7O1JLyLjJFvUB4dACVRZaZImub65FzL/miuQuE4GIHHIO8W0NT4Y7VsAstxOL
+         5Ilg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cPt+lD53UMmWuKSJSUmfcWxGBTRSp/XxZ/GGdWGHTvg=;
-        b=rYLRotBgPM4l23Ce2CNR19crSkjh/jHl4z6iQB9E60ZOMZVXoXGWbYtpluRXPEimug
-         f8A1G7+wr1T70E4uX71Nz+NypiR0CLMOCdivOvE0Fi4CIHi8owOcKQjhFcGBGbsV14m4
-         sBoHVlqUzb+9Pex+f0rdW48NOurLMTmDsUqh72wc23xwNDXUNPSpc/f2RnhaTEFyWakN
-         rwdpEAJ5NJ1hIFZG8FSEj3H/IVwORO7aLSOPuvTG4gSTZHSfHCuS6elXgy1de72xYGSm
-         8cs65kviA0DExAaJ5xFCg6wuuJVTvoy9uuvIxCOud5Q33qXU3O+NgI9PUTII5SekDr6T
-         1E6A==
-X-Gm-Message-State: APjAAAUdb/SmAh12piKso6c9EKpYD1GdqIg4a+kk21G/u3Y+Oyz9PY9z
-        FTX4NPdh1EiB/W7pxWATv+R2oWVyJOtj+hs4Tpc6nQ==
-X-Google-Smtp-Source: APXvYqzZ1Dj1S+kEiduAjq/Oq400aLK2gSwv+Mb47pdY97i+JKU/RVJ+Ju3f4ogpqOE2DVajTFA98xhjDfaDMXYNyUk=
-X-Received: by 2002:a63:61cd:: with SMTP id v196mr5358843pgb.263.1565910330216;
- Thu, 15 Aug 2019 16:05:30 -0700 (PDT)
+        bh=Pubd6f1tcZHifquOcrj8xQglVw6DCxjyDkP+6D1UxS0=;
+        b=Veb8LXJCmxizyU4jBWHFs94k/x05bYwhBQ+9pFCkVLsrZx4a+mJ81Ebl1OvLntlbLs
+         0OEqBMF3BUd+DlCOeD9w4Jn2vpPKGAvsytgWv1oWt1KUMXquAfBwreSu4l1gbL3lw0jE
+         drvB2HBl1+i2/xP4EAf/9sc05lXNbuP7swfCrUxUoO64MXu7QKHlDcl0jddF2jwACPI0
+         o+FC1IL7Lppsdzgi0LzJqSc4v1b4ZXExwBa22vTNMDYE+IOUY3p798XqqzVv4W8t1GRJ
+         V8nEde/V/+kYMKA+3UomlOFQ0zPx7OjPj5QGLpo34y4ri8lb10a9fgg6IUi8LDkYwASJ
+         g2TQ==
+X-Gm-Message-State: APjAAAVOi2WUtequooWYWlXlKqyyaG0sbO1cSJzRLctwBSMwQinQS2ch
+        QfV+Big4sTNsioKkDFBEQ2mpnCetQv3y0ZgJ2d57cg==
+X-Google-Smtp-Source: APXvYqxN0uUAEJhEjtJzjXxnKNYpPNiK/F/NzefhYeJ0Iv6GCu8lETSML8m0YWqPezXLufCngXQA/Okrum/me97k7VQ=
+X-Received: by 2002:aca:cfcb:: with SMTP id f194mr3347602oig.103.1565910549591;
+ Thu, 15 Aug 2019 16:09:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190815182029.197604-1-nhuck@google.com> <20190815204529.GA69414@archlinux-threadripper>
- <CANiq72nM4d-rc_qUMUEisXyEU9A0mbW=O_w5X0zoqWNPLacuNw@mail.gmail.com>
-In-Reply-To: <CANiq72nM4d-rc_qUMUEisXyEU9A0mbW=O_w5X0zoqWNPLacuNw@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 15 Aug 2019 16:05:19 -0700
-Message-ID: <CAKwvOdm4Lsj1mPn3+FtPDrNVSQovsw8Fe9u6Yw3te7pD-izAog@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Require W=1 for -Wimplicit-fallthrough with clang
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nathan Huckleberry <nhuck@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Joe Perches <joe@perches.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20190808231340.53601-1-almasrymina@google.com>
+ <20190808231340.53601-5-almasrymina@google.com> <47cfc50d-bea3-0247-247e-888d2942f134@oracle.com>
+In-Reply-To: <47cfc50d-bea3-0247-247e-888d2942f134@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Thu, 15 Aug 2019 16:08:57 -0700
+Message-ID: <CAHS8izNAZLQnHi6qXiO_efgSs1x2NOXKOKy7rZf+oF-8+hq=YQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 4/5] hugetlb_cgroup: Add accounting for shared mappings
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>, akpm@linux-foundation.org,
+        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 3:59 PM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
+On Tue, Aug 13, 2019 at 4:54 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
 >
-> On Thu, Aug 15, 2019 at 10:45 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> > * Revert commit bfd77145f35c ("Makefile: Convert -Wimplicit-fallthrough=3
-> > to just -Wimplicit-fallthrough for clang") for the time being and just
-> > rely on adding -Wimplicit-fallthrough to KCFLAGS for testing.
+> On 8/8/19 4:13 PM, Mina Almasry wrote:
+> > For shared mappings, the pointer to the hugetlb_cgroup to uncharge lives
+> > in the resv_map entries, in file_region->reservation_counter.
+> >
+> > When a file_region entry is added to the resv_map via region_add, we
+> > also charge the appropriate hugetlb_cgroup and put the pointer to that
+> > in file_region->reservation_counter. This is slightly delicate since we
+> > need to not modify the resv_map until we know that charging the
+> > reservation has succeeded. If charging doesn't succeed, we report the
+> > error to the caller, so that the kernel fails the reservation.
 >
-> I would avoid applying commits that will have to be reverted just for
-> Clang, particularly since it is not fully supported yet.
+> I wish we did not need to modify these region_() routines as they are
+> already difficult to understand.  However, I see no other way with the
+> desired semantics.
+>
+> > On region_del, which is when the hugetlb memory is unreserved, we delete
+> > the file_region entry in the resv_map, but also uncharge the
+> > file_region->reservation_counter.
+> >
+> > ---
+> >  mm/hugetlb.c | 208 +++++++++++++++++++++++++++++++++++++++++----------
+> >  1 file changed, 170 insertions(+), 38 deletions(-)
+> >
+> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> > index 235996aef6618..d76e3137110ab 100644
+> > --- a/mm/hugetlb.c
+> > +++ b/mm/hugetlb.c
+> > @@ -242,8 +242,72 @@ struct file_region {
+> >       struct list_head link;
+> >       long from;
+> >       long to;
+> > +#ifdef CONFIG_CGROUP_HUGETLB
+> > +     /*
+> > +      * On shared mappings, each reserved region appears as a struct
+> > +      * file_region in resv_map. These fields hold the info needed to
+> > +      * uncharge each reservation.
+> > +      */
+> > +     struct page_counter *reservation_counter;
+> > +     unsigned long pages_per_hpage;
+> > +#endif
+> >  };
+> >
+> > +/* Must be called with resv->lock held. Calling this with dry_run == true will
+> > + * count the number of pages added but will not modify the linked list.
+> > + */
+> > +static long consume_regions_we_overlap_with(struct file_region *rg,
+> > +             struct list_head *head, long f, long *t,
+> > +             struct hugetlb_cgroup *h_cg,
+> > +             struct hstate *h,
+> > +             bool dry_run)
+> > +{
+> > +     long add = 0;
+> > +     struct file_region *trg = NULL, *nrg = NULL;
+> > +
+> > +     /* Consume any regions we now overlap with. */
+> > +     nrg = rg;
+> > +     list_for_each_entry_safe(rg, trg, rg->link.prev, link) {
+> > +             if (&rg->link == head)
+> > +                     break;
+> > +             if (rg->from > *t)
+> > +                     break;
+> > +
+> > +             /* If this area reaches higher then extend our area to
+> > +              * include it completely.  If this is not the first area
+> > +              * which we intend to reuse, free it.
+> > +              */
+> > +             if (rg->to > *t)
+> > +                     *t = rg->to;
+> > +             if (rg != nrg) {
+> > +                     /* Decrement return value by the deleted range.
+> > +                      * Another range will span this area so that by
+> > +                      * end of routine add will be >= zero
+> > +                      */
+> > +                     add -= (rg->to - rg->from);
+> > +                     if (!dry_run) {
+> > +                             list_del(&rg->link);
+> > +                             kfree(rg);
+>
+> Is it possible that the region struct we are deleting pointed to
+> a reservation_counter?  Perhaps even for another cgroup?
+> Just concerned with the way regions are coalesced that we may be
+> deleting counters.
+>
 
-"not fully supported yet" you say? *drops monocle*
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/MAINTAINERS?h=v5.3-rc4#n4001
--- 
-Thanks,
-~Nick Desaulniers
+Yep, that needs to be handled I think. Thanks for catching!
+
+
+> --
+> Mike Kravetz
