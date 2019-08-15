@@ -2,127 +2,115 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E8BC3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB8FC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5C82089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:38:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CS0VBL1+"
+	by mail.kernel.org (Postfix) with ESMTP id 6D8D82063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732529AbfHORih (ORCPT
+        id S1732254AbfHORj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:38:37 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45755 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728685AbfHORig (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:38:36 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w26so1646780pfq.12;
-        Thu, 15 Aug 2019 10:38:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=euIwOXnK/svYHHXPSlmp88qDO1N+OcnvV3P5BXMue5g=;
-        b=CS0VBL1+zvqK+8DcO7ZE7dAZAaQ0bWWAcL+P2fYvK0b43mojfJGF9QCXVLO7+RDUnA
-         Xt8WdeaVCWI4lrvW5qM8iWPEyVG/P6d4KZSU0cdm+rhh2brZLielTHLuieic7j+ZemP2
-         1c9mAI8yzVCYQ/rU5M4yrFGMpu0zmiLP4hDx1sqVyAFTNzzoFgvg7XHbF3fl3JsShMZF
-         qtqX48eBdG/+bMjZOV3FGk3Wq4oQEJfXuNLnE9nstbVXGJREk0wUfuKECf70hIw8Jbj3
-         7QUNRb7MPF1wRGV7IXxLZnV9JdU5/pqjgfx0mgYjL+T7trsepX6NIqZv7fDHWqhi1lnB
-         J0Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=euIwOXnK/svYHHXPSlmp88qDO1N+OcnvV3P5BXMue5g=;
-        b=g1qhhlBjen0gShI2XoqzUnGcBoA6gR2r0lEQxIIVd8uoHG6aQpttEaYMuxqgbaxqkS
-         Zj+Rs7qQGLLOa8NNh4C1K+dagY3meaWXDjcaPHZ5PEK9o5sfw7Wy/TNVOH5dVJbrDNoQ
-         CVdJcnewt8cP3EfPfRLyKlR1/kmYNbZndorcBKTYLkNrXQE7Cbb4J1U8cKxTzz8m2Me6
-         Bejj0i2UAJr9RwXn2kA0VDYMkSxKwI5JMWU6T8mUvOSlAFEO3YSrulfcaT1nbexNKF4v
-         iD3NBNsJp/uEuFwwsKPmkuU7gQHEvMXwaTkVQae4g+dfFedC2W4xUCto6aN1hY/sakcQ
-         qUyg==
-X-Gm-Message-State: APjAAAVuTWk39fmfpLG5TSJjKwF/0OpsrYJFNJtHaLA0FAq+e+bjQGyS
-        yCEZqjAVor/xAZeBgkPpiz23MoVF
-X-Google-Smtp-Source: APXvYqxYliQ8QXyA6bg2cQ8hluZ/YaCldQ4vOlvxR7/QowwAjhYBKdr+cF6WsHHPG8ro2pXGOHSURw==
-X-Received: by 2002:a17:90a:bd0b:: with SMTP id y11mr3104986pjr.141.1565890715816;
-        Thu, 15 Aug 2019 10:38:35 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m20sm3516107pff.79.2019.08.15.10.38.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 10:38:34 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 10:38:33 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, arnd@arndb.de,
-        kirill.shutemov@linux.intel.com, mhocko@suse.com, jgg@ziepe.ca,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2] asm-generic: fix variable 'p4d' set but not used
-Message-ID: <20190815173833.GA29763@roeck-us.net>
-References: <20190806232917.881-1-cai@lca.pw>
+        Thu, 15 Aug 2019 13:39:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54144 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbfHORj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:39:26 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 500082A09BD;
+        Thu, 15 Aug 2019 17:39:26 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 90D51841D7;
+        Thu, 15 Aug 2019 17:39:24 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 13:39:22 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
+Message-ID: <20190815173922.GH30916@redhat.com>
+References: <20190814202027.18735-3-daniel.vetter@ffwll.ch>
+ <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
+ <20190815084429.GE9477@dhcp22.suse.cz>
+ <20190815130415.GD21596@ziepe.ca>
+ <CAKMK7uE9zdmBuvxa788ONYky=46GN=5Up34mKDmsJMkir4x7MQ@mail.gmail.com>
+ <20190815143759.GG21596@ziepe.ca>
+ <CAKMK7uEJQ6mPQaOWbT_6M+55T-dCVbsOxFnMC6KzLAMQNa-RGg@mail.gmail.com>
+ <20190815151028.GJ21596@ziepe.ca>
+ <CAKMK7uG33FFCGJrDV4-FHT2FWi+Z5SnQ7hoyBQd4hignzm1C-A@mail.gmail.com>
+ <20190815173557.GN21596@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190806232917.881-1-cai@lca.pw>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190815173557.GN21596@ziepe.ca>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 15 Aug 2019 17:39:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 07:29:17PM -0400, Qian Cai wrote:
-> A compiler throws a warning on an arm64 system since the
-> commit 9849a5697d3d ("arch, mm: convert all architectures to use
-> 5level-fixup.h"),
+On Thu, Aug 15, 2019 at 02:35:57PM -0300, Jason Gunthorpe wrote:
+> On Thu, Aug 15, 2019 at 06:25:16PM +0200, Daniel Vetter wrote:
 > 
-> mm/kasan/init.c: In function 'kasan_free_p4d':
-> mm/kasan/init.c:344:9: warning: variable 'p4d' set but not used
-> [-Wunused-but-set-variable]
->  p4d_t *p4d;
->         ^~~
+> > I'm not really well versed in the details of our userptr, but both
+> > amdgpu and i915 wait for the gpu to complete from
+> > invalidate_range_start. Jerome has at least looked a lot at the amdgpu
+> > one, so maybe he can explain what exactly it is we're doing ...
 > 
-> because p4d_none() in "5level-fixup.h" is compiled away while it is a
-> static inline function in "pgtable-nopud.h". However, if converted
-> p4d_none() to a static inline there, powerpc would be unhappy as it
-> reads those in assembler language in
-> "arch/powerpc/include/asm/book3s/64/pgtable.h", so it needs to skip
-> assembly include for the static inline C function. While at it,
-> converted a few similar functions to be consistent with the ones in
-> "pgtable-nopud.h".
+> amdgpu is (wrongly) using hmm for something, I can't really tell what
+> it is trying to do. The calls to dma_fence under the
+> invalidate_range_start do not give me a good feeling.
 > 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> However, i915 shows all the signs of trying to follow the registration
+> cache model, it even has a nice comment in
+> i915_gem_userptr_get_pages() explaining that the races it has don't
+> matter because it is a user space bug to change the VA mapping in the
+> first place. That just screams registration cache to me.
+> 
+> So it is fine to run HW that way, but if you do, there is no reason to
+> fence inside the invalidate_range end. Just orphan the DMA buffer and
+> clean it up & release the page pins when all DMA buffer refs go to
+> zero. The next access to that VA should get a new DMA buffer with the
+> right mapping.
+> 
+> In other words the invalidation should be very simple without
+> complicated locking, or wait_event's. Look at hfi1 for example.
 
-All parisc builds fail with this patch applied.
+This would break the today usage model of uptr and it will
+break userspace expectation ie if GPU is writting to that
+memory and that memory then the userspace want to make sure
+that it will see what the GPU write.
 
-include/asm-generic/5level-fixup.h:14:18: error:
-	unknown type name 'pgd_t'; did you mean 'pid_t'?
+Yes i915 is broken in respect to not having a end notifier
+and tracking active invalidation for a range but the GUP
+side of thing kind of hide this bug and it shrinks the window
+for bad to happen to something so small that i doubt anyone
+could ever hit it (still a bug thought).
 
-Bisect results below.
-
-Guenter
-
----
-# bad: [329120423947e8b36fd2f8b5cf69944405d0aece] Merge tag 'auxdisplay-for-linus-v5.3-rc5' of git://github.com/ojeda/linux
-# good: [ee1c7bd33e66376067fd6306b730789ee2ae53e4] Merge tag 'tpmdd-next-20190813' of git://git.infradead.org/users/jjs/linux-tpmdd
-git bisect start 'HEAD' 'ee1c7bd33e66'
-# bad: [e83b009c5c366b678c7986fa6c1d38fed06c954c] Merge tag 'dma-mapping-5.3-4' of git://git.infradead.org/users/hch/dma-mapping
-git bisect bad e83b009c5c366b678c7986fa6c1d38fed06c954c
-# bad: [92717d429b38e4f9f934eed7e605cc42858f1839] Revert "Revert "mm, thp: consolidate THP gfp handling into alloc_hugepage_direct_gfpmask""
-git bisect bad 92717d429b38e4f9f934eed7e605cc42858f1839
-# good: [b997052bc3ac444a0bceab1093aff7ae71ed419e] mm/z3fold.c: fix z3fold_destroy_pool() race condition
-git bisect good b997052bc3ac444a0bceab1093aff7ae71ed419e
-# good: [951531691c4bcaa59f56a316e018bc2ff1ddf855] mm/usercopy: use memory range to be accessed for wraparound check
-git bisect good 951531691c4bcaa59f56a316e018bc2ff1ddf855
-# good: [6a2aeab59e97101b4001bac84388fc49a992f87e] seq_file: fix problem when seeking mid-record
-git bisect good 6a2aeab59e97101b4001bac84388fc49a992f87e
-# bad: [0cfaee2af3a04c0be5f056cebe5f804dedc59a43] include/asm-generic/5level-fixup.h: fix variable 'p4d' set but not used
-git bisect bad 0cfaee2af3a04c0be5f056cebe5f804dedc59a43
-# first bad commit: [0cfaee2af3a04c0be5f056cebe5f804dedc59a43] include/asm-generic/5level-fixup.h: fix variable 'p4d' set but not used
+Cheers,
+Jérôme
