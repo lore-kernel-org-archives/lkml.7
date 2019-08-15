@@ -2,135 +2,218 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F813C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1104EC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9D12084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D907E2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730561AbfHOIZU convert rfc822-to-8bit (ORCPT
+        id S1730953AbfHOIZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 04:25:20 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:49674 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730213AbfHOIZU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 04:25:20 -0400
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Thu, 15 Aug 2019 04:25:19 EDT
-IronPort-SDR: vdvsQ8Iv0WG7sz1QV0nN5aS3OM7d3QEtNR3/Z3o7LWwt0fRCWkXxJvuLgQazXnA73A5OFItmt5
- 0ldGMSM4K/7zuozjL6rb32sSm1wthHTf+CdXH96Ik/Z414gGHBHjPvtuTvc0mMIjAfHT9PXFKV
- FOMkH4FZGGuw9IOSxIxt0VQtIiuigxuOPWHMX05C495/BHq7mxZDOZNqRMJoK83hEWZfkNNGqG
- waPaSPHQ0/vwcI6LV/WQ88HociRQs0YSaPmIOjJTy5dUyJGcybIkON8qMTaZsnWVXEgzXCy4Gm
- Oto=
-X-IronPort-AV: E=Sophos;i="5.64,388,1559548800"; 
-   d="scan'208";a="40453435"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa2.mentor.iphmx.com with ESMTP; 15 Aug 2019 00:18:12 -0800
-IronPort-SDR: htcRjcmG9l9zGnWMZ+4soCAXhpE2Zibe/ltCHmq+74d1fR0FdNoga33DgrUAk0Uq+YQ9Hi4Wyn
- sgJtbzWgBUbD6zg+QDNAkgOdd2PjrstZROoBjDV/wQ4r1IijKrpyGUh9i8NvPweyTNqcnKg3qp
- Z0Pr1LfQIF4tJhZqOCb7dQTusDqUheV2JBIuFyb5x2lQtrNjRwVkQKoFBGUWIRmRGbCfcRgnNv
- HLFrD1pLTEWB9k9qWw6B0+nCbVJW3c4lerAipRd5wYa07jIqv5/2R5f5O/dI8t7RqhofTcicvI
- WlM=
-From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-To:     Wei Yang <richard.weiyang@gmail.com>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "bp@suse.de" <bp@suse.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "richardw.yang@linux.intel.com" <richardw.yang@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: AW: [PATCH v2] kernel/resource.c: invalidate parent when freed
- resource has childs
-Thread-Topic: [PATCH v2] kernel/resource.c: invalidate parent when freed
- resource has childs
-Thread-Index: AQHVUq5kcb5Ex7JpNUSktSjVjdFue6b6xMYAgAEUHnA=
-Date:   Thu, 15 Aug 2019 08:18:06 +0000
-Message-ID: <c925c7d1041f478c99863da56c24b8a7@SVR-IES-MBX-03.mgc.mentorg.com>
-References: <1565278859475.1962@mentor.com> <1565358624103.3694@mentor.com>
- <20190809223831.fk4uyrzscr366syr@master>
- <CAHk-=wi_9sdMxurjZ1MbNnxt-pA=dqoyf8Fdn9aYc8xvjjnTBg@mail.gmail.com>
- <1565794104204.54092@mentor.com> <20190814162932.alwo7g4664c2dtp3@master>
-In-Reply-To: <20190814162932.alwo7g4664c2dtp3@master>
-Accept-Language: de-DE, en-IE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [137.202.0.90]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 15 Aug 2019 04:25:34 -0400
+Received: from mga05.intel.com ([192.55.52.43]:48394 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729838AbfHOIZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 04:25:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 01:25:33 -0700
+X-IronPort-AV: E=Sophos;i="5.64,388,1559545200"; 
+   d="scan'208";a="184561788"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 01:25:28 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 7CD1B20BCA; Thu, 15 Aug 2019 11:24:22 +0300 (EEST)
+Date:   Thu, 15 Aug 2019 11:24:22 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
+        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
+        Jacob Chen <cc@rock-chips.com>,
+        Allon Huang <allon.huang@rock-chips.com>
+Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
+Message-ID: <20190815082422.GM6133@paasikivi.fi.intel.com>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-6-helen.koike@collabora.com>
+ <20190808091406.GQ21370@paasikivi.fi.intel.com>
+ <da6c1d01-e3f6-ad73-db55-145d7832a665@collabora.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <da6c1d01-e3f6-ad73-db55-145d7832a665@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>When a resource is freed and has children, the childrens are
-> 
-> s/childrens/children/
->
-oh, missed that. Too many children ... ;-)
- 
->>+		__release_child_resources(tmp, warn);
-> 
-> This function will release all the children.
-> 
-> Is this what Linus suggest?
-> 
-> From his code snippet, I just see siblings parent is set to NULL. I may miss
-> some point?
->
-At the point we are here, there should be no children, and children of
-children at all ...
-So they are all more or less lost in the wild.
-That was why i didn't copy Linus' code 1:1 but reused an already existing
-function doing similar thing.
-It's anyway worth of thinking about this.
+Hi Helen,
 
-What i have in mind here (example):
-Parent: iomem map 0x1000..0x1FFF
-  Child1: iomem map 0x1000..0x17FF
-    Child11: iomem map 0x1000..0x13FF
-    Child12: iomem map 0x1400..0x17FF
-  Child2: iomem map 0x1800..0x1FFF
-    Child21: iomem map 0x1800..0x1BFF
-    Child22: iomem map 0x1C00..0x1FFF
+On Wed, Aug 14, 2019 at 09:58:05PM -0300, Helen Koike wrote:
 
-When releasing the parent, how can children 11, 12, 21 and 22 still be valid?
-They don't know about their grandfather died ...
-Looking at the __release_child_resources, i exactly found that all children are
-invalidated/released in the way Linus did for the parent's children list.
-Doesn't it make sense to do the same for all?
+...
 
-Please comment.
-
-> >+static void check_children(struct resource *parent)
-> >+{
-> >+	if (parent->child) {
-> >+		/* warn and release all children */
-> >+		WARN_ONCE(1, "%s: %s has child %s, release all children\n",
-> >+				__func__, parent->name, parent->child-
-> >name);
-> >+		write_lock(&resource_lock);
+> >> +static int rkisp1_isp_sd_set_fmt(struct v4l2_subdev *sd,
+> >> +				 struct v4l2_subdev_pad_config *cfg,
+> >> +				 struct v4l2_subdev_format *fmt)
+> >> +{
+> >> +	struct rkisp1_device *isp_dev = sd_to_isp_dev(sd);
+> >> +	struct rkisp1_isp_subdev *isp_sd = &isp_dev->isp_sdev;
+> >> +	struct v4l2_mbus_framefmt *mf = &fmt->format;
+> >> +
+> > 
+> > Note that for sub-device nodes, the driver is itself responsible for
+> > serialising the access to its data structures.
 > 
-> In previous version, lock is grasped before parent->child is checked.
-> 
-> Not sure why you change the order?
-> 
-To hold the lock as short as possible.
-But yes, you are right, this could lead to problems if releasing of the
-children is done in a parallel thread on a multicore ...
-I'll change that to cover the whole resource access within the lock.
-Not a big thing ...
+> But looking at subdev_do_ioctl_lock(), it seems that it serializes the
+> ioctl calls for subdevs, no? Or I'm misunderstanding something (which is
+> most probably) ?
 
-Best regards
-Carsten
+Good question. I had missed this change --- subdev_do_ioctl_lock() is
+relatively new. But setting that lock is still not possible as the struct
+is allocated in the framework and the device is registered before the
+driver gets hold of it. It's a good idea to provide the same serialisation
+for subdevs as well.
+
+I'll get back to this later.
+
+...
+
+> >> +static int rkisp1_isp_sd_s_power(struct v4l2_subdev *sd, int on)
+> > 
+> > If you support runtime PM, you shouldn't implement the s_power op.
+> 
+> Is is ok to completly remove the usage of runtime PM then?
+> Like this http://ix.io/1RJb ?
+
+Please use runtime PM instead. In the long run we should get rid of the
+s_power op. Drivers themselves know better when the hardware they control
+should be powered on or off.
+
+> 
+> tbh I'm not that familar with runtime PM and I'm not sure what is the
+> difference of it and using s_power op (and Documentation/power/runtime_pm.rst
+> is not being that helpful tbh).
+
+You can find a simple example e.g. in
+drivers/media/platform/atmel/atmel-isi.c .
+
+> 
+> > 
+> > You'll still need to call s_power on external subdevs though.
+> > 
+> >> +{
+> >> +	struct rkisp1_device *isp_dev = sd_to_isp_dev(sd);
+> >> +	int ret;
+> >> +
+> >> +	v4l2_dbg(1, rkisp1_debug, &isp_dev->v4l2_dev, "s_power: %d\n", on);
+> >> +
+> >> +	if (on) {
+> >> +		ret = pm_runtime_get_sync(isp_dev->dev);
+> 
+> If this is not ok to remove suport for runtime PM, then where should I put
+> the call to pm_runtime_get_sync() if not in this s_power op ?
+
+Basically the runtime_resume and runtime_suspend callbacks are where the
+device power state changes are implemented, and pm_runtime_get_sync and
+pm_runtime_put are how the driver controls the power state.
+
+So you no longer need the s_power() op at all. The op needs to be called on
+the pipeline however, as there are drivers that still use it.
+
+> 
+> >> +		if (ret < 0)
+> >> +			return ret;
+> >> +
+> >> +		rkisp1_config_clk(isp_dev);
+> >> +	} else {
+> >> +		ret = pm_runtime_put(isp_dev->dev);
+> >> +		if (ret < 0)
+> >> +			return ret;
+> >> +	}
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int rkisp1_subdev_link_validate(struct media_link *link)
+> >> +{
+> >> +	if (link->source->index == RKISP1_ISP_PAD_SINK_PARAMS)
+> > 
+> > Is this test correct? The source is the source end of the link, i.e. the
+> > video node.
+> 
+> Ah yes, it should be link->sink->index (and not source), thanks for spotting this.
+> 
+> > 
+> > How about the links that end in a video node?
+> 
+> I thought that the only possibilities were sensor->isp1 and params->isp1 (where params
+> is an output video node that should be catched by the corrected version of the if
+> statement above.
+> 
+> Or do you mean another thing?
+
+The link_validate of the sink entity will be called only, for the knowledge
+what is possible is generally in that end.
+
+So you'll need this for all the sink pads this driver is in control of.
+I suppose this means the sub-devices as well as capture video nodes in
+practice.
+
+> 
+> > 
+> >> +		return 0;
+> >> +
+> >> +	return v4l2_subdev_link_validate(link);
+> >> +}
+> >> +
+> >> +static int rkisp1_subdev_fmt_link_validate(struct v4l2_subdev *sd,
+> >> +					struct media_link *link,
+> >> +					struct v4l2_subdev_format *source_fmt,
+> >> +					struct v4l2_subdev_format *sink_fmt)
+> >> +{
+> >> +	if (source_fmt->format.code != sink_fmt->format.code)
+> >> +		return -EINVAL;
+> 
+> ops, should be -EPIPE
+> 
+> >> +
+> >> +	/* Crop is available */
+> >> +	if (source_fmt->format.width < sink_fmt->format.width ||
+> >> +	    source_fmt->format.height < sink_fmt->format.height)
+> >> +		return -EINVAL;
+> 
+> -EPIPE
+> 
+> >> +
+> > 
+> > Could you use v4l2_subdev_link_validate_default()?
+> 
+> v4l2_subdev_link_validate_default() only allows for an exact width/height match,
+> but here we allow the sink to be smaller then the source for cropping, no?
+
+The width and height generally must match over a link. But cropping takes
+place inside a sub-device, it is not a concern in link validation as such.
+
+> 
+> Thanks again for your review!
+
+You're welcome!
+
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
