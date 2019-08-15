@@ -2,84 +2,89 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB3CC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37F0C3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59A22086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7282086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:04:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t+CAzhjH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732300AbfHOODf (ORCPT
+        id S1732713AbfHOOED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:03:35 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33563 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732334AbfHOODf (ORCPT
+        Thu, 15 Aug 2019 10:04:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44516 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731963AbfHOOED (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:03:35 -0400
-Received: by mail-wr1-f65.google.com with SMTP id u16so2353246wrr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 07:03:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=P6jtmJQJAOxQmjY3PzD+zR33iq9AQ8OzIHihVYNbvtU=;
-        b=ifl6rCnO2Dv/9auJxn5GlKeaWTvupWDKCJYlwQChNBDy6wSKENrKCAHZH20F40XTlj
-         szPFLA8RwXitFKGe7K3KzLVW2HITw/17MliS4niZO28mlAstc8h+6O/4TTHtX51mvg27
-         a5hf2MjhYxAZeDoFAlc69KM2mC0wwzmhj/kw3wtJ0D55Cpmrnk3Ikg9xGxhRNxV4BQe7
-         tPeGtIizcdxsDTmTkPwy1bZWO4/HUhopHMHAj0ltFcnCPUdfwuZMfXYyT/Vcv0GVocv0
-         08LNdYQufZPn6gAAs/XiFNz6yNQyr02rCwCVUkH1DxehzZjisUb0vGptWYqnZYCCuGyl
-         p97w==
-X-Gm-Message-State: APjAAAU1ypWkZa+NVZGIvrnsC+uSYg+Nh7xvIHEH+Td4Pc7fudI/WQtZ
-        xmhm01Q3MiUi3k61V0uef9ECHA==
-X-Google-Smtp-Source: APXvYqz3n13iAarvnk398GKr173OsqGUtiGpYz002s0J1/siYVBnI9MVpRe8PGn9JMKu1I5a55aTDw==
-X-Received: by 2002:adf:f204:: with SMTP id p4mr5874439wro.317.1565877813345;
-        Thu, 15 Aug 2019 07:03:33 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id t198sm2803371wmt.39.2019.08.15.07.03.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 07:03:32 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, mst@redhat.com,
-        rkrcmar@redhat.com, jmattson@google.com, yu.c.zhang@intel.com,
-        alazar@bitdefender.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com
-Subject: Re: [PATCH RESEND v4 5/9] KVM: VMX: Add init/set/get functions for SPP
-In-Reply-To: <20190815134329.GA11449@local-michael-cet-test>
-References: <20190814070403.6588-1-weijiang.yang@intel.com> <20190814070403.6588-6-weijiang.yang@intel.com> <87a7cbapdw.fsf@vitty.brq.redhat.com> <20190815134329.GA11449@local-michael-cet-test>
-Date:   Thu, 15 Aug 2019 16:03:31 +0200
-Message-ID: <87o90q8r0s.fsf@vitty.brq.redhat.com>
+        Thu, 15 Aug 2019 10:04:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FgGZiYXjX5p6iXeIo9sIPhrcGThmyFQ9KdVBSYt6xy4=; b=t+CAzhjHmlbWiEABajJnEJ9Xw
+        ewduxXdizGkzLNO2QGuZ4NEejL81zqQflcITrJFxxCx/CEqDqEjX8xq9LSVcd87H78Sgv+SCjE/wA
+        hGgYGs/ivclk3xfyTHAa9wDyqehoV3pxfX2XLnJqDHqbP11y+jxNqZdlAVxuMluoVXzbPvJLDq3yu
+        QqENAoxcIgBrZWQSGsqW4uy/z7/NNwp60s6VsBBSKmwYc1XG8Q5qbxqFkINYoGaCA7fzFeTDZrAFp
+        mgd2ZwQv7VsHPlxBSN8j0hp2ffLRA6ZU+WQnV1OVuTvqZ6uPf8xK6rSuF5Mv/aP7H36iZGO7Jlee5
+        9dUqfe5tA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hyGM7-0002vt-TH; Thu, 15 Aug 2019 14:03:55 +0000
+Date:   Thu, 15 Aug 2019 07:03:55 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Brian Foster <bfoster@redhat.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Nick Bowler <nbowler@draconx.ca>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH v5 01/18] xfs: compat_ioctl: use compat_ptr()
+Message-ID: <20190815140355.GA11012@infradead.org>
+References: <20190814204259.120942-1-arnd@arndb.de>
+ <20190814204259.120942-2-arnd@arndb.de>
+ <20190814213753.GP6129@dread.disaster.area>
+ <20190815071314.GA6960@infradead.org>
+ <CAK8P3a2Hjfd49XY18cDr04ZpvC5ZBGudzxqpCesbSsDf1ydmSA@mail.gmail.com>
+ <20190815080211.GA17055@infradead.org>
+ <20190815102649.GA10821@infradead.org>
+ <20190815121511.GR6129@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815121511.GR6129@dread.disaster.area>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yang Weijiang <weijiang.yang@intel.com> writes:
+On Thu, Aug 15, 2019 at 10:15:12PM +1000, Dave Chinner wrote:
+> > http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-ioctl-table
+> 
+> Lots to like in that handful of patches. :)
+> 
+> It can easily go before or after Arnd's patch, and the merge
+> conflict either way would be minor, so I'm not really fussed either
+> way this gets sorted out...
 
-> After looked into the issue and others, I feel to make SPP co-existing
-> with nested VM is not good, the major reason is, L1 pages protected by
-> SPP are transparent to L1 VM, if it launches L2 VM, probably the
-> pages would be allocated to L2 VM, and that will bother to L1 and L2.
-> Given the feature is new and I don't see nested VM can benefit
-> from it right now, I would like to make SPP and nested feature mutually
-> exclusive, i.e., detecting if the other part is active before activate one
-> feature,what do you think of it? 
+The other thing we could do is to just pick the two important ones:
 
-I was mostly worried about creating a loophole (if I understand
-correctly) for guests to defeat SPP protection: just launching a nested
-guest and giving it a protected page. I don't see a problem if we limit
-SPP to non-nested guests as step 1: we, however, need to document this
-side-effect of the ioctl. Also, if you decide to do this enforecement,
-I'd suggest you forbid VMLAUCH/VMRESUME and not VMXON as kvm module
-loads in linux guests automatically when the hardware is suitable.
+http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-ioctl-table-5.3
 
-Thanks,
-
--- 
-Vitaly
+and throw that into Arnds series, or even 5.3, and then defer the
+table thing until later.
