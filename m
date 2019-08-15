@@ -4,28 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E84C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70F9C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEFA2086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97EE62089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387563AbfHOUKh (ORCPT
+        id S2387569AbfHOUKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 16:10:37 -0400
-Received: from mga18.intel.com ([134.134.136.126]:43474 "EHLO mga18.intel.com"
+        Thu, 15 Aug 2019 16:10:42 -0400
+Received: from mga18.intel.com ([134.134.136.126]:43476 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733284AbfHOUJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 16:09:48 -0400
+        id S1733277AbfHOUJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 16:09:47 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 13:09:42 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
-   d="scan'208";a="188596230"
+   d="scan'208";a="188596217"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga002.jf.intel.com with ESMTP; 15 Aug 2019 13:09:42 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -41,9 +42,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>, "Yi Liu" <yi.l.liu@intel.com>,
         Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
         "Lu Baolu" <baolu.lu@linux.intel.com>,
         Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v5 11/19] iommu/vt-d: Add custom allocator for IOASID
-Date:   Thu, 15 Aug 2019 13:13:17 -0700
-Message-Id: <1565900005-62508-12-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v5 07/19] iommu: Add I/O ASID allocator
+Date:   Thu, 15 Aug 2019 13:13:13 -0700
+Message-Id: <1565900005-62508-8-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565900005-62508-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1565900005-62508-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -52,146 +53,273 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When VT-d driver runs in the guest, PASID allocation must be
-performed via virtual command interface. This patch registers a
-custom IOASID allocator which takes precedence over the default
-XArray based allocator. The resulting IOASID allocation will always
-come from the host. This ensures that PASID namespace is system-
-wide.
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+Some devices might support multiple DMA address spaces, in particular
+those that have the PCI PASID feature. PASID (Process Address Space ID)
+allows to share process address spaces with devices (SVA), partition a
+device into VM-assignable entities (VFIO mdev) or simply provide
+multiple DMA address space to kernel drivers. Add a global PASID
+allocator usable by different drivers at the same time. Name it I/O ASID
+to avoid confusion with ASIDs allocated by arch code, which are usually
+a separate ID space.
+
+The IOASID space is global. Each device can have its own PASID space,
+but by convention the IOMMU ended up having a global PASID space, so
+that with SVA, each mm_struct is associated to a single PASID.
+
+The allocator is primarily used by IOMMU subsystem but in rare occasions
+drivers would like to allocate PASIDs for devices that aren't managed by
+an IOMMU, using the same ID space as IOMMU.
+
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- drivers/iommu/Kconfig       |  1 +
- drivers/iommu/intel-iommu.c | 67 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/intel-iommu.h |  2 ++
- 3 files changed, 70 insertions(+)
+ drivers/iommu/Kconfig  |   4 ++
+ drivers/iommu/Makefile |   1 +
+ drivers/iommu/ioasid.c | 151 +++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/ioasid.h |  47 +++++++++++++++
+ 4 files changed, 203 insertions(+)
+ create mode 100644 drivers/iommu/ioasid.c
+ create mode 100644 include/linux/ioasid.h
 
 diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 0ade8a0..d5ca821 100644
+index e15cdcd..0ade8a0 100644
 --- a/drivers/iommu/Kconfig
 +++ b/drivers/iommu/Kconfig
-@@ -210,6 +210,7 @@ config INTEL_IOMMU_SVM
- 	bool "Support for Shared Virtual Memory with Intel IOMMU"
- 	depends on INTEL_IOMMU && X86
- 	select PCI_PASID
-+	select IOASID
- 	select MMU_NOTIFIER
- 	help
- 	  Shared Virtual Memory (SVM) provides a facility for devices
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index bdaed2d..b15ec58 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1693,6 +1693,8 @@ static void free_dmar_iommu(struct intel_iommu *iommu)
- 		if (ecap_prs(iommu->ecap))
- 			intel_svm_finish_prq(iommu);
- 	}
-+	ioasid_unregister_allocator(&iommu->pasid_allocator);
-+
- #endif
- }
+@@ -3,6 +3,10 @@
+ config IOMMU_IOVA
+ 	tristate
  
-@@ -4619,6 +4621,46 @@ static int __init probe_acpi_namespace_devices(void)
- 	return 0;
- }
- 
-+#ifdef CONFIG_INTEL_IOMMU_SVM
-+static ioasid_t intel_ioasid_alloc(ioasid_t min, ioasid_t max, void *data)
-+{
-+	struct intel_iommu *iommu = data;
-+	ioasid_t ioasid;
++# The IOASID library may also be used by non-IOMMU_API users
++config IOASID
++	tristate
 +
-+	/*
-+	 * VT-d virtual command interface always uses the full 20 bit
-+	 * PASID range. Host can partition guest PASID range based on
-+	 * policies but it is out of guest's control.
-+	 */
-+	if (min < PASID_MIN || max > PASID_MAX)
-+		return INVALID_IOASID;
-+
-+	if (vcmd_alloc_pasid(iommu, &ioasid))
-+		return INVALID_IOASID;
-+
-+	return ioasid;
-+}
-+
-+static void intel_ioasid_free(ioasid_t ioasid, void *data)
-+{
-+	struct iommu_pasid_alloc_info *svm;
-+	struct intel_iommu *iommu = data;
-+
-+	if (!iommu)
-+		return;
-+	/*
-+	 * Sanity check the ioasid owner is done at upper layer, e.g. VFIO
-+	 * We can only free the PASID when all the devices are unbond.
-+	 */
-+	svm = ioasid_find(NULL, ioasid, NULL);
-+	if (!svm) {
-+		pr_warn("Freeing unbond IOASID %d\n", ioasid);
-+		return;
-+	}
-+	vcmd_free_pasid(iommu, ioasid);
-+}
-+#endif
-+
- int __init intel_iommu_init(void)
- {
- 	int ret = -ENODEV;
-@@ -4722,6 +4764,31 @@ int __init intel_iommu_init(void)
- 				       "%s", iommu->name);
- 		iommu_device_set_ops(&iommu->iommu, &intel_iommu_ops);
- 		iommu_device_register(&iommu->iommu);
-+#ifdef CONFIG_INTEL_IOMMU_SVM
-+		if (cap_caching_mode(iommu->cap) && sm_supported(iommu)) {
-+			/*
-+			 * Register a custom ASID allocator if we are running
-+			 * in a guest, the purpose is to have a system wide PASID
-+			 * namespace among all PASID users.
-+			 * There can be multiple vIOMMUs in each guest but only
-+			 * one allocator is active. All vIOMMU allocators will
-+			 * eventually be calling the same host allocator.
-+			 */
-+			iommu->pasid_allocator.alloc = intel_ioasid_alloc;
-+			iommu->pasid_allocator.free = intel_ioasid_free;
-+			iommu->pasid_allocator.pdata = (void *)iommu;
-+			ret = ioasid_register_allocator(&iommu->pasid_allocator);
-+			if (ret) {
-+				pr_warn("Custom PASID allocator registeration failed\n");
-+				/*
-+				 * Disable scalable mode on this IOMMU if there
-+				 * is no custom allocator. Mixing SM capable vIOMMU
-+				 * and non-SM vIOMMU are not supported.
-+				 */
-+				intel_iommu_sm = 0;
-+			}
-+		}
-+#endif
- 	}
- 
- 	bus_set_iommu(&pci_bus_type, &intel_iommu_ops);
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 37fb0c9..80318c5 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -19,6 +19,7 @@
- #include <linux/iommu.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include <linux/dmar.h>
+ # IOMMU_API always gets selected by whoever wants it.
+ config IOMMU_API
+ 	bool
+diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+index f13f36a..011429e 100644
+--- a/drivers/iommu/Makefile
++++ b/drivers/iommu/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_IOMMU_DMA) += dma-iommu.o
+ obj-$(CONFIG_IOMMU_IO_PGTABLE) += io-pgtable.o
+ obj-$(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) += io-pgtable-arm-v7s.o
+ obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
++obj-$(CONFIG_IOASID) += ioasid.o
+ obj-$(CONFIG_IOMMU_IOVA) += iova.o
+ obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
+ obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
+diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+new file mode 100644
+index 0000000..6fbea76
+--- /dev/null
++++ b/drivers/iommu/ioasid.c
+@@ -0,0 +1,151 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * I/O Address Space ID allocator. There is one global IOASID space, split into
++ * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
++ * free IOASIDs with ioasid_alloc and ioasid_free.
++ */
 +#include <linux/ioasid.h>
- 
- #include <asm/cacheflush.h>
- #include <asm/iommu.h>
-@@ -543,6 +544,7 @@ struct intel_iommu {
- #ifdef CONFIG_INTEL_IOMMU_SVM
- 	struct page_req_dsc *prq;
- 	unsigned char prq_name[16];    /* Name for PRQ interrupt */
-+	struct ioasid_allocator_ops pasid_allocator; /* Custom allocator for PASIDs */
- #endif
- 	struct q_inval  *qi;            /* Queued invalidation info */
- 	u32 *iommu_state; /* Store iommu states between suspend and resume.*/
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++#include <linux/xarray.h>
++
++struct ioasid_data {
++	ioasid_t id;
++	struct ioasid_set *set;
++	void *private;
++	struct rcu_head rcu;
++};
++
++static DEFINE_XARRAY_ALLOC(ioasid_xa);
++
++/**
++ * ioasid_set_data - Set private data for an allocated ioasid
++ * @ioasid: the ID to set data
++ * @data:   the private data
++ *
++ * For IOASID that is already allocated, private data can be set
++ * via this API. Future lookup can be done via ioasid_find.
++ */
++int ioasid_set_data(ioasid_t ioasid, void *data)
++{
++	struct ioasid_data *ioasid_data;
++	int ret = 0;
++
++	xa_lock(&ioasid_xa);
++	ioasid_data = xa_load(&ioasid_xa, ioasid);
++	if (ioasid_data)
++		rcu_assign_pointer(ioasid_data->private, data);
++	else
++		ret = -ENOENT;
++	xa_unlock(&ioasid_xa);
++
++	/*
++	 * Wait for readers to stop accessing the old private data, so the
++	 * caller can free it.
++	 */
++	if (!ret)
++		synchronize_rcu();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(ioasid_set_data);
++
++/**
++ * ioasid_alloc - Allocate an IOASID
++ * @set: the IOASID set
++ * @min: the minimum ID (inclusive)
++ * @max: the maximum ID (inclusive)
++ * @private: data private to the caller
++ *
++ * Allocate an ID between @min and @max. The @private pointer is stored
++ * internally and can be retrieved with ioasid_find().
++ *
++ * Return: the allocated ID on success, or %INVALID_IOASID on failure.
++ */
++ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
++		      void *private)
++{
++	ioasid_t id;
++	struct ioasid_data *data;
++
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return INVALID_IOASID;
++
++	data->set = set;
++	data->private = private;
++
++	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
++		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
++		goto exit_free;
++	}
++	data->id = id;
++
++	return id;
++exit_free:
++	kfree(data);
++	return INVALID_IOASID;
++}
++EXPORT_SYMBOL_GPL(ioasid_alloc);
++
++/**
++ * ioasid_free - Free an IOASID
++ * @ioasid: the ID to remove
++ */
++void ioasid_free(ioasid_t ioasid)
++{
++	struct ioasid_data *ioasid_data;
++
++	ioasid_data = xa_erase(&ioasid_xa, ioasid);
++
++	kfree_rcu(ioasid_data, rcu);
++}
++EXPORT_SYMBOL_GPL(ioasid_free);
++
++/**
++ * ioasid_find - Find IOASID data
++ * @set: the IOASID set
++ * @ioasid: the IOASID to find
++ * @getter: function to call on the found object
++ *
++ * The optional getter function allows to take a reference to the found object
++ * under the rcu lock. The function can also check if the object is still valid:
++ * if @getter returns false, then the object is invalid and NULL is returned.
++ *
++ * If the IOASID exists, return the private pointer passed to ioasid_alloc.
++ * Private data can be NULL if not set. Return an error if the IOASID is not
++ * found, or if @set is not NULL and the IOASID does not belong to the set.
++ */
++void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
++		  bool (*getter)(void *))
++{
++	void *priv;
++	struct ioasid_data *ioasid_data;
++
++	rcu_read_lock();
++	ioasid_data = xa_load(&ioasid_xa, ioasid);
++	if (!ioasid_data) {
++		priv = ERR_PTR(-ENOENT);
++		goto unlock;
++	}
++	if (set && ioasid_data->set != set) {
++		/* data found but does not belong to the set */
++		priv = ERR_PTR(-EACCES);
++		goto unlock;
++	}
++	/* Now IOASID and its set is verified, we can return the private data */
++	priv = rcu_dereference(ioasid_data->private);
++	if (getter && !getter(priv))
++		priv = NULL;
++unlock:
++	rcu_read_unlock();
++
++	return priv;
++}
++EXPORT_SYMBOL_GPL(ioasid_find);
++
++MODULE_AUTHOR("Jean-Philippe Brucker <jean-philippe.brucker@arm.com>");
++MODULE_AUTHOR("Jacob Pan <jacob.jun.pan@linux.intel.com>");
++MODULE_DESCRIPTION("IO Address Space ID (IOASID) allocator");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+new file mode 100644
+index 0000000..0c272d9
+--- /dev/null
++++ b/include/linux/ioasid.h
+@@ -0,0 +1,47 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LINUX_IOASID_H
++#define __LINUX_IOASID_H
++
++#include <linux/types.h>
++
++#define INVALID_IOASID ((ioasid_t)-1)
++typedef unsigned int ioasid_t;
++
++struct ioasid_set {
++	int dummy;
++};
++
++#define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
++
++#if IS_ENABLED(CONFIG_IOASID)
++ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
++		      void *private);
++void ioasid_free(ioasid_t ioasid);
++void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
++		  bool (*getter)(void *));
++int ioasid_set_data(ioasid_t ioasid, void *data);
++
++#else /* !CONFIG_IOASID */
++static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
++				    ioasid_t max, void *private)
++{
++	return INVALID_IOASID;
++}
++
++static inline void ioasid_free(ioasid_t ioasid)
++{
++}
++
++static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
++				bool (*getter)(void *))
++{
++	return NULL;
++}
++
++static inline int ioasid_set_data(ioasid_t ioasid, void *data)
++{
++	return -ENODEV;
++}
++
++#endif /* CONFIG_IOASID */
++#endif /* __LINUX_IOASID_H */
 -- 
 2.7.4
 
