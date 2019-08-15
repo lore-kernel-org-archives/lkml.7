@@ -2,114 +2,137 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65784C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEBDC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF5620656
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB852084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:09:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="YEebXXY2"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="HCgw2LvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbfHOGGb (ORCPT
+        id S1730381AbfHOGJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 02:06:31 -0400
-Received: from mx.aristanetworks.com ([162.210.129.12]:5131 "EHLO
-        smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfHOGGa (ORCPT
+        Thu, 15 Aug 2019 02:09:35 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33896 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730354AbfHOGJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 02:06:30 -0400
-Received: from smtp.aristanetworks.com (localhost [127.0.0.1])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id B65DD42A2C7;
-        Wed, 14 Aug 2019 23:07:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-        s=Arista-A; t=1565849232;
-        bh=OG6evudYvLj50ZFoTIDecZ1Ho1oufmSz1imiu12yfjk=;
-        h=From:To:Cc:Subject:Date;
-        b=YEebXXY2Y14FST6xyHsv3SPFD9wRuNltXbAlw1y/+RiWHbr31RIpHP4zHvdIQ3LOJ
-         TUV567FDvdD8dCUPDqI7UOFUN6AS845eFF181M8SHU9z2uKDlCKCuootWa0/KsKGIB
-         PPZdMRK/cD5JjSPsPu6bUXk+H9C5abYwMpt/lTzN2oQ0pHI1J++ZDTw0m2sYmxBPPw
-         1T9KUZyjs6sLZDO0KISu9uxakqn4vyFJoL9x/omYdgzzIq36crLYBn5PsI0givIB22
-         v7nqhZD9DThU6VcPspilWEkRwT/DVxkngQtGzk0aCYC/YMCZ/uE8ftejUrYGD1FBld
-         Chec4Yp4UIKTQ==
-Received: from egc101.sjc.aristanetworks.com (unknown [172.20.210.50])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id A8B7142A296;
-        Wed, 14 Aug 2019 23:07:12 -0700 (PDT)
-From:   Edward Chron <echron@arista.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        David Rientjes <rientjes@google.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, colona@arista.com,
-        Edward Chron <echron@arista.com>
-Subject: [PATCH] mm/oom: Add killed process selection information
-Date:   Wed, 14 Aug 2019 23:06:04 -0700
-Message-Id: <20190815060604.3675-1-echron@arista.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 15 Aug 2019 02:09:35 -0400
+Received: by mail-oi1-f194.google.com with SMTP id l12so670356oil.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 23:09:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=XMIi+LTmaNSNmwfCZY1OMBoSoI8r8SgdSt1UqT4cQ6o=;
+        b=HCgw2LvPLZY6Jje0S9YSU88e7NPnFdEBTiqiAf2lQCWESEXuwYShME2coIXZg6zQny
+         +850/t+eXxXFzHO824NwYL9Z5msm3oMWOyQ3EnavaObzQEC16xK1W9QeNjQ5BfiXYp81
+         UXd/ZdnyGovwesM3haxAQTf/kVfBngrp4fXqhNijkX7IMTIuEfaNDWA+Rkz3Q04Xu2SE
+         nS+fy0nNi3lztEAvayY5NarRcmmlMSq8h2/ZlCYd9ZUkINNvc50hjlfTib8IX4KLzoIp
+         QcYWdiRaHrb9ZevecwEjEaBxg94pnJ24QUorMTprOte6KCUNG1oDa3DyYnnMMmaKFrXj
+         xvTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=XMIi+LTmaNSNmwfCZY1OMBoSoI8r8SgdSt1UqT4cQ6o=;
+        b=o3y4AXCMo35J0sapk14JjzuvWjfi7QnDne/va8Us2KTt76VRbJdAxM4f3bsW428plS
+         fmZ42ajxL97igSjeBC3Q+h6ch2PBEQv15gfhw1KjIX+gi2hDbozbf8tCItQz+g88A31E
+         VXGIJO+y8GdOLLv3gF6uZdUjhJ4Z7cbTV0XBgqXud9PL5ay/+dMyD18SJU/2k3i81CRr
+         rlNnJgn2kb0npPUXgzCts2qiOVhiAcrmYFGMy9nJzZU3avT8qBeg5v5zcjBSOMEwr3fW
+         cTRUDVZ/dAcTMJZd5PKuYS+M60B0tuWi+Xp56Uoz38c0xfJfiAshAHPPy4AQN3ou7127
+         rKbA==
+X-Gm-Message-State: APjAAAWyIhrkKK3cOxAnHDUMYv8WEWnLEVjbQXb5DoQ2iXUHvPgMwbWI
+        uUu8L/veTfgBjsZ3XmxDABspew==
+X-Google-Smtp-Source: APXvYqz5PKkXLgKIlPsZMU2gikFKRrR0ZkkZvQJRxFYRufHlAOCOfTU3LeUn1EsOvdwJgbZ1Xh6gdA==
+X-Received: by 2002:a02:b713:: with SMTP id g19mr3332113jam.77.1565849374267;
+        Wed, 14 Aug 2019 23:09:34 -0700 (PDT)
+Received: from [172.20.10.10] ([24.114.82.65])
+        by smtp.gmail.com with ESMTPSA id p3sm1186690iog.70.2019.08.14.23.09.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 23:09:33 -0700 (PDT)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <1FBF4302-FA3E-49BE-B9AA-F380518AB263@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_8279D554-5136-4116-923A-7ADF706F607E";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH] Ext4 documentation fixes.
+Date:   Thu, 15 Aug 2019 00:09:27 -0600
+In-Reply-To: <CA+UE=SNWDBGuFpS9Y7g5iurJEJX41c+LMwis3ZGotbJ=DSSaJA@mail.gmail.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>, Jonathan Corbet <corbet@lwn.net>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To:     Ayush Ranjan <ayushr2@illinois.edu>
+References: <CA+UE=SNWDBGuFpS9Y7g5iurJEJX41c+LMwis3ZGotbJ=DSSaJA@mail.gmail.com>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For an OOM event: print oom_score_adj value for the OOM Killed process
-to document what the oom score adjust value was at the time the process
-at the time of the OOM event. The value can be set by the user and it
-effects the resulting oom_score so useful to document this value.
 
-Sample message output:
-Aug 14 23:00:02 testserver kernel: Out of memory: Killed process 2692
- (oomprocs) total-vm:1056800kB, anon-rss:1052760kB, file-rss:4kB,i
- shmem-rss:0kB oom_score_adj:1000
+--Apple-Mail=_8279D554-5136-4116-923A-7ADF706F607E
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-Signed-off-by: Edward Chron <echron@arista.com>
----
- mm/oom_kill.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+On Aug 14, 2019, at 6:47 PM, Ayush Ranjan <ayushr2@illinois.edu> wrote:
+> diff --git a/Documentation/filesystems/ext4/inodes.rst =
+b/Documentation/filesystems/ext4/inodes.rst
+> index 6bd35e506..c468a3171 100644
+> --- a/Documentation/filesystems/ext4/inodes.rst
+> +++ b/Documentation/filesystems/ext4/inodes.rst
+> @@ -470,8 +470,8 @@ inode, which allows struct ext4\_inode to grow for =
+a new kernel without
+>  having to upgrade all of the on-disk inodes. Access to fields beyond
+>  EXT2\_GOOD\_OLD\_INODE\_SIZE should be verified to be within
+>  ``i_extra_isize``. By default, ext4 inode records are 256 bytes, and =
+(as
+> -of October 2013) the inode structure is 156 bytes
+> -(``i_extra_isize =3D 28``). The extra space between the end of the =
+inode
+> +of October 2013) the inode structure is 160 bytes
 
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index eda2e2a0bdc6..6b1674cac377 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -858,6 +858,7 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
- 	struct task_struct *p;
- 	struct mm_struct *mm;
- 	bool can_oom_reap = true;
-+	long adj;
- 
- 	p = find_lock_task_mm(victim);
- 	if (!p) {
-@@ -877,6 +878,8 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
- 	count_vm_event(OOM_KILL);
- 	memcg_memory_event_mm(mm, MEMCG_OOM_KILL);
- 
-+	adj = (long)victim->signal->oom_score_adj;
-+
- 	/*
- 	 * We should send SIGKILL before granting access to memory reserves
- 	 * in order to prevent the OOM victim from depleting the memory
-@@ -884,12 +887,12 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
- 	 */
- 	do_send_sig_info(SIGKILL, SEND_SIG_PRIV, victim, PIDTYPE_TGID);
- 	mark_oom_victim(victim);
--	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB\n",
-+	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB oom_score_adj:%ld\n",
- 		message, task_pid_nr(victim), victim->comm,
- 		K(victim->mm->total_vm),
- 		K(get_mm_counter(victim->mm, MM_ANONPAGES)),
- 		K(get_mm_counter(victim->mm, MM_FILEPAGES)),
--		K(get_mm_counter(victim->mm, MM_SHMEMPAGES)));
-+		K(get_mm_counter(victim->mm, MM_SHMEMPAGES)), adj);
- 	task_unlock(victim);
- 
- 	/*
--- 
-2.20.1
+This should be changed to "as of August 2019", or possibly the date on
+which the last field (i_projid) was added, namely "October, 2015".
 
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_8279D554-5136-4116-923A-7ADF706F607E
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl1U9xgACgkQcqXauRfM
+H+AigRAAjBT1bQ1441POojCHsdf5ekCI3YdUU3mc+ZlXpLiJEINu/s5yASrE+Sv/
+8ZQ7Y9I6QjuRptKQYe5bmdBULxwBSrH5XOdRSgdaHUQV6Tme1ypYmltYt4sRmbXN
+GHTATVXs0YVoO1WO9RXbf6y1FcdC6yLd3mmqPrY/S9d1HHPDJET780butz8J/JjA
+D0EIVVpa+xoGpqT4coAqSbXmlkhKhtmqxwqfsSiEvGpJpZgNbuCKFwasnKGMIypY
+Fzc6waSFyjZYCzzvd2d+OLybaM7GVrD6Z1NvZ7r1nQ6qqHiZuYxohUllFzrZ45Ti
+Z8nSMViJOz/VHfxIddt3PaE8U6XGHsayAh8FvKAVnco3zr3CUlKG5knP9aDr5nk9
+ZabmwSvcNcYfGS5O02asMQPmoIXPP2pHAVUebp3d+v697oz33dcbR0A3+xwsD4Yt
+C1C4KyPNaEWScrCARWhqJY6O7iHDY4dpAGyZJAUfj0vN6Y93vXnLi1obHgoyg9ZV
+A4UfbFFClvPl3/1TiSumnfh3YgSGUex4fnO04bs+3kVY0ALg6dZi1iSpkqj7zuTG
+sNc9zD4gJkGsoF5Pc1kjpyPit+lzA6JORqOb4n7bMY9kDKZS/hTwl5+EbI9mUphm
+m0k4LNclBsy5wFP/x77LR225ARd5VKqJfcHr20c5ok8NbZnVVIw=
+=fx1V
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_8279D554-5136-4116-923A-7ADF706F607E--
