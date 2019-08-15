@@ -2,59 +2,60 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BDEC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE02EC32753
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0852084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF052084F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:40:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="HLit6JF5"
+	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="aCwGXfz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbfHOAj4 (ORCPT
+        id S1729367AbfHOAkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 20:39:56 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44785 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbfHOAj4 (ORCPT
+        Wed, 14 Aug 2019 20:40:03 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35407 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbfHOAkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 20:39:56 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t14so361353plr.11
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 17:39:56 -0700 (PDT)
+        Wed, 14 Aug 2019 20:40:01 -0400
+Received: by mail-pl1-f196.google.com with SMTP id gn20so382108plb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 17:40:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fossix-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=x0YSOs32SeWOTVOQ0KWF9c1OVrzAFcUc9qLBib/rPvw=;
-        b=HLit6JF5DQWzxg9w/UhNxz3ldQY7I8aEK1a821lJV045ICa+D1gyVuM2z5sKTWNlh3
-         3is0gDyE4mQyCn4RIILcJVCVvevxlBRsmgKKju8MlUBdTR1BM0EsvDog+fONMOrvfric
-         ZCAEqXg2ZxHeo3A6f3SEqYGJsdtf13QXAcMXciuPC4OpCh04X7olF6pvGFmwryNULuWP
-         xRezbeGc3lT6EPGPSTznJbjsvpOCSwcYVfFr8JVTbWg3NyL/ZxFBNQvXA3i7PrOj9jpR
-         2LCej8fPHSqHatZHSFjhDcNCt7qSX/UOAdGpxho9Th3ZIhSQReL9Y5wQGRuChv/pe/5t
-         4u0g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hX9FcR9k27bW2r47hkwwmrOs6JunuLhROiik32U8Jn4=;
+        b=aCwGXfz94wukudd9tuojbYRnyA7WGGS1y8gkVhsbLxhws+h/RMlWiwFmWy8tiw/weF
+         coHyjch09dwLyo4bP/3v3iRs3oi3+SaT7ebzJ9/d+6Ng4qIi+cWMqgvTbyimIFPPm9Le
+         dO/MwznrDnYGoQwXstSsEBd9sK+g8sjYRFu/wMnGXY2a+/FN5DcPGldtOvw4cMzNAQuT
+         y7/JIRe2hdTh9HgcTX+hN/JWm8yBFjgsJ6Qina+BqBe02RcgGTwwYfK19nPEFhES5rgK
+         L0QvRTjLgkwNKfZWFxxRqoSSiEVrrfA8QA+5QCwn/u7XeVyLgfHU+DxD7yuVVGLbQxOZ
+         qP+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=x0YSOs32SeWOTVOQ0KWF9c1OVrzAFcUc9qLBib/rPvw=;
-        b=C4jKT1fF/nLA9idHEpkEbvUmBTAqdhglHmSVqipvpwxOT6lscgdvbfheys0PS+UHdU
-         AiHPzybOgIUf+6YCmeyz6PUpvjNxWytxP8e+kOYxnmSklhVZeexLxOS7uPK8/FDi6kpm
-         +zwH8oKJD/C/JZN4JdZghAbLRcdXf3DLI/KnQvO9/gVDDtgwwlWX0ulRdiUlgLY7Fdmr
-         BUdkZnwjlYXQrLWIgi1IZIlgHHAD0hWSS6/DKM0CCWPpfC/awuwaGg7GvkmtNi1nXmSS
-         +DUaCrCRiNvOH9OAgVo7kVl8idOq/iqlCMnQyLIpIF3/86658jUJs6mute7QZQDzqoKv
-         645g==
-X-Gm-Message-State: APjAAAXfSp3FIVi03lVSV0xUv2wd5C28fboWe1w7JUnyRgnHRVMQa5dw
-        0yuF/0XbbqhULJpztnqDV8qYsk7yJEbDcA==
-X-Google-Smtp-Source: APXvYqxBxK20jDgaHiiRT14L1me7iA6Q13af4LaeDPHCUs5Op3fMAOLh0+DcJZLe18SQX4vK5L7XZQ==
-X-Received: by 2002:a17:902:9698:: with SMTP id n24mr2031907plp.14.1565829595684;
-        Wed, 14 Aug 2019 17:39:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hX9FcR9k27bW2r47hkwwmrOs6JunuLhROiik32U8Jn4=;
+        b=Yw0iyX3Dr+TLUHxZ+NCqEc6vMJtmnPXNtpj4Z95OJ6UT5cY0OCfuut//y6dT9zrzzB
+         DpNHmjiQPJcFCMdR15BEVt4IphdxkRLSUlvF7HtPxyr+I8EWZ4TrRLutQQt/vESJh7m5
+         Y+za6DQoYTNpQ5lKfxwMnRnj0lMNDmD7PxX+3fuhnNFLrG0ZJ+WWe+/3kgWa5FJXwlI5
+         lpstU2Fd/WY6Z0HCw8xH9O6BVBYAdnP/tMmxh5WeZETH+INkl25pkQqU1xogfTCdGTjm
+         ZVOC85hOTdpc1EocHJsLSuADFgjJUylneX9TsjP5fbPMNku806+UeZUXc630IN705SJU
+         DbDg==
+X-Gm-Message-State: APjAAAWp8pwhuIJxryQS0R8sOLZZ9FhXPoRjsfGJ95Edm2vxRuTBSoL4
+        1eEz1DaH9vldfFDCqsGt4jBWSw==
+X-Google-Smtp-Source: APXvYqwxcOx+m23mKTnmX2OStoG3e6DOzHFNzvhFqCGTVqAhAdIJ5qOLmc4HnWhJPnrTOIHJi+F09g==
+X-Received: by 2002:a17:902:1a4:: with SMTP id b33mr1859694plb.141.1565829600382;
+        Wed, 14 Aug 2019 17:40:00 -0700 (PDT)
 Received: from santosiv.in.ibm.com ([49.205.218.176])
-        by smtp.gmail.com with ESMTPSA id g8sm815917pgk.1.2019.08.14.17.39.51
+        by smtp.gmail.com with ESMTPSA id g8sm815917pgk.1.2019.08.14.17.39.55
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 17:39:55 -0700 (PDT)
+        Wed, 14 Aug 2019 17:39:59 -0700 (PDT)
 From:   Santosh Sivaraj <santosh@fossix.org>
 To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         Linux Kernel <linux-kernel@vger.kernel.org>
@@ -65,11 +66,15 @@ Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Chandan Rajendra <chandan@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Nicholas Piggin <npiggin@gmail.com>,
-        christophe leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v10 0/7] powerpc: implement machine check safe memcpy
-Date:   Thu, 15 Aug 2019 06:09:34 +0530
-Message-Id: <20190815003941.18655-1-santosh@fossix.org>
+        christophe leroy <christophe.leroy@c-s.fr>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v10 1/7] powerpc/mce: Schedule work from irq_work
+Date:   Thu, 15 Aug 2019 06:09:35 +0530
+Message-Id: <20190815003941.18655-2-santosh@fossix.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190815003941.18655-1-santosh@fossix.org>
+References: <20190815003941.18655-1-santosh@fossix.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,126 +82,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During a memcpy from a pmem device, if a machine check exception is
-generated we end up in a panic. In case of fsdax read, this should
-only result in a -EIO. Avoid MCE by implementing memcpy_mcsafe.
+schedule_work() cannot be called from MCE exception context as MCE can
+interrupt even in interrupt disabled context.
 
-Before this patch series:
+fixes: 733e4a4c ("powerpc/mce: hookup memory_failure for UE errors")
+Suggested-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
+Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Acked-by: Balbir Singh <bsingharora@gmail.com>
+Cc: stable@vger.kernel.org # v4.15+
+---
+ arch/powerpc/kernel/mce.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-```
-bash-4.4# mount -o dax /dev/pmem0 /mnt/pmem/
-[ 7621.714094] Disabling lock debugging due to kernel taint
-[ 7621.714099] MCE: CPU0: machine check (Severe) Host UE Load/Store [Not recovered]
-[ 7621.714104] MCE: CPU0: NIP: [c000000000088978] memcpy_power7+0x418/0x7e0
-[ 7621.714107] MCE: CPU0: Hardware error
-[ 7621.714112] opal: Hardware platform error: Unrecoverable Machine Check exception
-[ 7621.714118] CPU: 0 PID: 1368 Comm: mount Tainted: G   M              5.2.0-rc5-00239-g241e39004581
-#50
-[ 7621.714123] NIP:  c000000000088978 LR: c0000000008e16f8 CTR: 00000000000001de
-[ 7621.714129] REGS: c0000000fffbfd70 TRAP: 0200   Tainted: G   M              
-(5.2.0-rc5-00239-g241e39004581)
-[ 7621.714131] MSR:  9000000002209033 <SF,HV,VEC,EE,ME,IR,DR,RI,LE>  CR: 24428840  XER: 00040000
-[ 7621.714160] CFAR: c0000000000889a8 DAR: deadbeefdeadbeef DSISR: 00008000 IRQMASK: 0
-[ 7621.714171] GPR00: 000000000e000000 c0000000f0b8b1e0 c0000000012cf100 c0000000ed8e1100 
-[ 7621.714186] GPR04: c000020000001100 0000000000010000 0000000000000200 03fffffff1272000 
-[ 7621.714201] GPR08: 0000000080000000 0000000000000010 0000000000000020 0000000000000030 
-[ 7621.714216] GPR12: 0000000000000040 00007fffb8c6d390 0000000000000050 0000000000000060 
-[ 7621.714232] GPR16: 0000000000000070 0000000000000000 0000000000000001 c0000000f0b8b960 
-[ 7621.714247] GPR20: 0000000000000001 c0000000f0b8b940 0000000000000001 0000000000010000 
-[ 7621.714262] GPR24: c000000001382560 c00c0000003b6380 c00c0000003b6380 0000000000010000 
-[ 7621.714277] GPR28: 0000000000000000 0000000000010000 c000020000000000 0000000000010000 
-[ 7621.714294] NIP [c000000000088978] memcpy_power7+0x418/0x7e0
-[ 7621.714298] LR [c0000000008e16f8] pmem_do_bvec+0xf8/0x430
-... <snip> ...
-```
-
-After this patch series:
-
-```
-bash-4.4# mount -o dax /dev/pmem0 /mnt/pmem/
-[25302.883978] Buffer I/O error on dev pmem0, logical block 0, async page read
-[25303.020816] EXT4-fs (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
-[25303.021236] EXT4-fs (pmem0): Can't read superblock on 2nd try
-[25303.152515] EXT4-fs (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
-[25303.284031] EXT4-fs (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
-[25304.084100] UDF-fs: bad mount option "dax" or missing value
-mount: /mnt/pmem: wrong fs type, bad option, bad superblock on /dev/pmem0, missing codepage or helper
-program, or other error.
-```
-
-MCE is injected on a pmem address using mambo. The last patch which adds a
-nop is only for testing on mambo, where r13 is not restored upon hitting
-vector 200.
-
-The memcpy code can be optimised by adding VMX optimizations and GAS macros
-can be used to enable code reusablity, which I will send as another series.
---
-v10: Fix authorship; add reviewed-bys and acks.
-
-v9:
-* Add a new IRQ work for UE events [mahesh]
-* Reorder patches, and copy stable
-
-v8:
-* While ignoring UE events, return was used instead of continue.
-* Checkpatch fixups for commit log
-
-v7:
-* Move schedule_work to be called from irq_work.
-
-v6:
-* Don't return pfn, all callees are expecting physical address anyway [nick]
-* Patch re-ordering: move exception table patch before memcpy_mcsafe patch [nick]
-* Reword commit log for search_exception_tables patch [nick]
-
-v5:
-* Don't use search_exception_tables since it searches for module exception tables
-  also [Nicholas]
-* Fix commit message for patch 2 [Nicholas]
-
-v4:
-* Squash return remaining bytes patch to memcpy_mcsafe implemtation patch [christophe]
-* Access ok should be checked for copy_to_user_mcsafe() [christophe]
-
-v3:
-* Drop patch which enables DR/IR for external modules
-* Drop notifier call chain, we don't want to do that in real mode
-* Return remaining bytes from memcpy_mcsafe correctly
-* We no longer restore r13 for simulator tests, rather use a nop at 
-  vector 0x200 [workaround for simulator; not to be merged]
-
-v2:
-* Don't set RI bit explicitly [mahesh]
-* Re-ordered series to get r13 workaround as the last patch
-
---
-Balbir Singh (3):
-  powerpc/mce: Fix MCE handling for huge pages
-  powerpc/memcpy: Add memcpy_mcsafe for pmem
-  powerpc/mce: Handle UE event for memcpy_mcsafe
-
-Reza Arbab (1):
-  powerpc/mce: Make machine_check_ue_event() static
-
-Santosh Sivaraj (3):
-  powerpc/mce: Schedule work from irq_work
-  extable: Add function to search only kernel exception table
-  powerpc: add machine check safe copy_to_user
-
- arch/powerpc/Kconfig                 |   1 +
- arch/powerpc/include/asm/mce.h       |   6 +-
- arch/powerpc/include/asm/string.h    |   2 +
- arch/powerpc/include/asm/uaccess.h   |  14 ++
- arch/powerpc/kernel/mce.c            |  31 +++-
- arch/powerpc/kernel/mce_power.c      |  70 ++++----
- arch/powerpc/lib/Makefile            |   2 +-
- arch/powerpc/lib/memcpy_mcsafe_64.S  | 242 +++++++++++++++++++++++++++
- arch/powerpc/platforms/pseries/ras.c |   9 +-
- include/linux/extable.h              |   2 +
- kernel/extable.c                     |  11 +-
- 11 files changed, 347 insertions(+), 43 deletions(-)
- create mode 100644 arch/powerpc/lib/memcpy_mcsafe_64.S
-
+diff --git a/arch/powerpc/kernel/mce.c b/arch/powerpc/kernel/mce.c
+index b18df633eae9..cff31d4a501f 100644
+--- a/arch/powerpc/kernel/mce.c
++++ b/arch/powerpc/kernel/mce.c
+@@ -33,6 +33,7 @@ static DEFINE_PER_CPU(struct machine_check_event[MAX_MC_EVT],
+ 					mce_ue_event_queue);
+ 
+ static void machine_check_process_queued_event(struct irq_work *work);
++static void machine_check_ue_irq_work(struct irq_work *work);
+ void machine_check_ue_event(struct machine_check_event *evt);
+ static void machine_process_ue_event(struct work_struct *work);
+ 
+@@ -40,6 +41,10 @@ static struct irq_work mce_event_process_work = {
+         .func = machine_check_process_queued_event,
+ };
+ 
++static struct irq_work mce_ue_event_irq_work = {
++	.func = machine_check_ue_irq_work,
++};
++
+ DECLARE_WORK(mce_ue_event_work, machine_process_ue_event);
+ 
+ static void mce_set_error_info(struct machine_check_event *mce,
+@@ -199,6 +204,10 @@ void release_mce_event(void)
+ 	get_mce_event(NULL, true);
+ }
+ 
++static void machine_check_ue_irq_work(struct irq_work *work)
++{
++	schedule_work(&mce_ue_event_work);
++}
+ 
+ /*
+  * Queue up the MCE event which then can be handled later.
+@@ -216,7 +225,7 @@ void machine_check_ue_event(struct machine_check_event *evt)
+ 	memcpy(this_cpu_ptr(&mce_ue_event_queue[index]), evt, sizeof(*evt));
+ 
+ 	/* Queue work to process this event later. */
+-	schedule_work(&mce_ue_event_work);
++	irq_work_queue(&mce_ue_event_irq_work);
+ }
+ 
+ /*
 -- 
 2.21.0
 
