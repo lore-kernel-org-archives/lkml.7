@@ -2,129 +2,95 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D144DC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF6AC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A85BE2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CE5A2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:50:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mEH6ZuhE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+rFIHHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730608AbfHOHqO (ORCPT
+        id S1730509AbfHOHug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 03:46:14 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54116 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbfHOHqO (ORCPT
+        Thu, 15 Aug 2019 03:50:36 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43343 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729967AbfHOHug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 03:46:14 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 10so519239wmp.3;
-        Thu, 15 Aug 2019 00:46:12 -0700 (PDT)
+        Thu, 15 Aug 2019 03:50:36 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c19so1060589lfm.10
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 00:50:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=rkW7J4us2wcg8bjWK7lkRGJB3dDndu6H2q1x50ew6oQ=;
-        b=mEH6ZuhEu6yFarO3VDilQMa9XyC1+A49PnkX4edc04GEU6SJc3soZ5GZuZOYJX/uga
-         II44mKnolNeiXF87zZbL4vGOskKrlz0q4PEJhLd6BS+WQM6abl2BI8PSeE5fWyO9jlXw
-         g/9WBLjFHYqekAOpoi6jAaG/HeTWoWaR01qBEZzqd3fYVBlaOveHuVblKB6n/vqnx3Yx
-         Lme/3C4QwErFBZqA1Cs2SYxYNl7WjJsPvK+kfMZcFbq+ae3aUuABineWLqyPDXgaANgP
-         IsHED5ocFcuvRDFGiKI0hJLQajgXkuxQ5NfEIKnnjqNGCn+s9UvWA0yV8qHiXFR8YW5I
-         AN5Q==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+HQ26YjFqd095HuQvJkZw1Unk1E5d9gNZv6ke3nfrfU=;
+        b=r+rFIHHqW5m0YFQe1g8i7BLnASGugeC2XmMV0v2rXhVAqgAuup9I5P8hJNWRuVWtxD
+         evsDnCtNZbRfrAKslsFUEAGfRiZSIw7t/8YWJCyZM+tCvItHgQLmqGHBhEtVSatfxZ+1
+         zDewhNUYNHAgGkZfvZ4BXRdZ6Wq2OaZtZMmwl+SOiWrZZID7ZIoMKK0L/U9/EOS9NUhG
+         +Pi6B8DFqwsGnCb6rZBcVrgrXs5Lu3MEN7/gRrhZZiKRQnDP0Mkn1o2o2UBIMOLAaSqa
+         2+X7n001LrALm1cKCDDZpKyHydiAtOFNIT2gBWMYynGwfqyyFFfzbCqG+kOIYBY7GO4C
+         llWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=rkW7J4us2wcg8bjWK7lkRGJB3dDndu6H2q1x50ew6oQ=;
-        b=AKIqLNqQw7czvsu2nFJCcIqgyjFKPZxu/75qQM5Oy8v4MCV4DZb+WdYzrNKULu66Ys
-         AFCOneVT3P7a9pFvvpcXCFfVdIL9gu6MFAHo5mNwxRMgzy32tFqt7xyDCxDoeaDYFgYv
-         P6xp5Iv4MdnkjaUQU1dtQjmTN9AWGsEzis2pCT7SSUFlISw9b/dZoXSlmnxFiOLxf5kZ
-         3JiEUl2A+JHSi/awOoAm+OubHrMG6itymL96ChbMgO0EMqL0d0iD+UDlkVVFPHyzMplX
-         OJekgfhu7IWlnJsZukLmsN2Sm2lvWCmEPD5AwpMMtrgGjO+itbsGZvGIUSIL1q+CYTi9
-         u1mw==
-X-Gm-Message-State: APjAAAVuvpfFn6h/nEIMGqdPYN+poObir683IJB8UoNW75BuUdsDLDo5
-        Fyg2lVqGZiQ8xM0QntW2UOueHTRr
-X-Google-Smtp-Source: APXvYqxymmS0GKrgkdyJOCRe8wdDwDozO5XtrGBowc+cVXMQQKh1aP+fDBlhuy3PyTrxrIB//ES6fg==
-X-Received: by 2002:a1c:cb0b:: with SMTP id b11mr1398279wmg.95.1565855171497;
-        Thu, 15 Aug 2019 00:46:11 -0700 (PDT)
-Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id 91sm6084837wrp.3.2019.08.15.00.46.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 00:46:11 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH] Revert "KVM: x86/mmu: Zap only the relevant pages when removing a memslot"
-Date:   Thu, 15 Aug 2019 09:46:09 +0200
-Message-Id: <1565855169-29491-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+HQ26YjFqd095HuQvJkZw1Unk1E5d9gNZv6ke3nfrfU=;
+        b=VrToq53FjM1RTi5Ky+Q7wtZjv4mO/dAia+vjpQDiJZ7UV0lK1Plf2XP1H5bK7TvxfF
+         4Caucimt3H60zl+cLPfcQtSxP5v429kw0Uec1CSUarjv0BTQYSIg+9lO9RIdnWDS+RiD
+         C5LuS5nHJodsFKkp2lsTRrzBAB1zisWvNlHzle3HjHOT7d1ZJW12IkXXGfnvbNV9uums
+         4neUg1rG/vhhmC9KnzymZLLUf4jaX+5tvLgxO8c1XMB+HmRo2i6xBt+ovg9jmMv2U4Vr
+         m8B3wd9/8IL/PM1jnlmi/VePy6dSvGUc4Q3JhrgsosoZ2FVaov6lB4dy4gNLozqw+u92
+         HJrA==
+X-Gm-Message-State: APjAAAXcXw/VrcgZZWvPr+AqAPnAAFNlYzDua/jmKIa4qvq0t3WcnchK
+        QOA83P6TI+LkAw/4k+zslBs=
+X-Google-Smtp-Source: APXvYqxPngTmU8hHwXQJ/jC6MPCH6+qWwKTY7y7FwWq4oEEAAkQYdQz/c7ZUOSXecQ0h6K3+SksSIQ==
+X-Received: by 2002:ac2:4644:: with SMTP id s4mr1709242lfo.158.1565855434435;
+        Thu, 15 Aug 2019 00:50:34 -0700 (PDT)
+Received: from localhost ([178.127.188.12])
+        by smtp.gmail.com with ESMTPSA id b6sm353677ljk.31.2019.08.15.00.50.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 00:50:33 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Thu, 15 Aug 2019 16:50:33 +0900
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/8] printk: Replace strncmp with str_has_prefix
+Message-ID: <20190815075033.GA26479@tigerII.localdomain>
+References: <20190809071034.17279-1-hslester96@gmail.com>
+ <20190814104941.qt66ozcau5fdswcs@pathway.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814104941.qt66ozcau5fdswcs@pathway.suse.cz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 4e103134b862314dc2f2f18f2fb0ab972adc3f5f.
-Alex Williamson reported regressions with device assignment with
-this patch.  Even though the bug is probably elsewhere and still
-latent, this is needed to fix the regression.
+On (08/14/19 12:49), Petr Mladek wrote:
+> On Fri 2019-08-09 15:10:34, Chuhong Yuan wrote:
+> > strncmp(str, const, len) is error-prone because len
+> > is easy to have typo.
+> > The example is the hard-coded len has counting error
+> > or sizeof(const) forgets - 1.
+> > So we prefer using newly introduced str_has_prefix()
+> > to substitute such strncmp to make code better.
+> > 
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> 
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-Fixes: 4e103134b862 ("KVM: x86/mmu: Zap only the relevant pages when removing a memslot", 2019-02-05)
-Reported-by: Alex Willamson <alex.williamson@redhat.com>
-Cc: stable@vger.kernel.org
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/mmu.c | 33 +--------------------------------
- 1 file changed, 1 insertion(+), 32 deletions(-)
+Reviewed-by:  Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 8190a195623a..d14656c5407b 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -5656,38 +5656,7 @@ static void kvm_mmu_invalidate_zap_pages_in_memslot(struct kvm *kvm,
- 			struct kvm_memory_slot *slot,
- 			struct kvm_page_track_notifier_node *node)
- {
--	struct kvm_mmu_page *sp;
--	LIST_HEAD(invalid_list);
--	unsigned long i;
--	bool flush;
--	gfn_t gfn;
--
--	spin_lock(&kvm->mmu_lock);
--
--	if (list_empty(&kvm->arch.active_mmu_pages))
--		goto out_unlock;
--
--	flush = slot_handle_all_level(kvm, slot, kvm_zap_rmapp, false);
--
--	for (i = 0; i < slot->npages; i++) {
--		gfn = slot->base_gfn + i;
--
--		for_each_valid_sp(kvm, sp, gfn) {
--			if (sp->gfn != gfn)
--				continue;
--
--			kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list);
--		}
--		if (need_resched() || spin_needbreak(&kvm->mmu_lock)) {
--			kvm_mmu_remote_flush_or_zap(kvm, &invalid_list, flush);
--			flush = false;
--			cond_resched_lock(&kvm->mmu_lock);
--		}
--	}
--	kvm_mmu_remote_flush_or_zap(kvm, &invalid_list, flush);
--
--out_unlock:
--	spin_unlock(&kvm->mmu_lock);
-+	kvm_mmu_invalidate_zap_all_pages(kvm);
- }
- 
- void kvm_mmu_init_vm(struct kvm *kvm)
--- 
-1.8.3.1
-
+	-ss
