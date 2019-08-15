@@ -2,153 +2,135 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAE0C3A59B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AC9C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2AE9208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:23:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565882601;
-	bh=3KBqf0uqTC0ABTjfZbdiuByQVZZGp/ONMP3E9R4V9jQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ks8bRpS/l/6Adv0TewoBzPMJ1OHj9+aEzOJrOeFkuH/UEjNjl/ZQuGxjGq0C/OeNC
-	 sldVc4tbQFEJDos72Kr7kil0Wevz+zA+s0Y21Rty+v/5EGh9xdSSFU2K509H+psSDX
-	 U5pKQcve+DUd7RGvayk7gRMM0Plirj16nDt+NLrA=
+	by mail.kernel.org (Postfix) with ESMTP id 76B3220644
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:25:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="p/rcF9HU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbfHOPXU (ORCPT
+        id S1729311AbfHOPZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 11:23:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728846AbfHOPXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 11:23:20 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85BCE20644;
-        Thu, 15 Aug 2019 15:23:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565882599;
-        bh=3KBqf0uqTC0ABTjfZbdiuByQVZZGp/ONMP3E9R4V9jQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qrYDyUNz5qqZaU1zX67lb+YeBx/VbjPGwOOxiCzCBPo22QkgFau7YFUkM6EaPfuDE
-         K0JZYQeaVspP7x1io+ebzsGGGULqyIcq4xFjvpe5N/CFu6xNZSsz1K4NMLZ3WIsXB2
-         5zkL7N/gFTlAPoPFQK1yfcpZRq2R+SJKkOFNys1k=
-Date:   Thu, 15 Aug 2019 16:23:14 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Zhen Lei <thunder.leizhen@huawei.com>
-Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] iommu/arm-smmu-v3: add nr_ats_masters for quickly
- check
-Message-ID: <20190815152313.apa2d5rzhqa34l7l@willie-the-truck>
-References: <20190815054439.30652-1-thunder.leizhen@huawei.com>
- <20190815054439.30652-3-thunder.leizhen@huawei.com>
+        Thu, 15 Aug 2019 11:25:01 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35547 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729151AbfHOPZB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 11:25:01 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n4so1447479pgv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 08:25:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/HAVtRJ1PsEuTkAUc5sMbDf7NKx2+25/4sGFjK/yLmI=;
+        b=p/rcF9HUaxokqqtlBD6cRzMqVS5aMb26xsT8XFZesE6GelXE2agrxezh39Oeg+hfGB
+         xAvaausfSkZJetZST//O1oxgq4aGZkjqemfeRnMo4W7+ZZ/erzX1F6adVqpbB+c90m3Q
+         V99zTMJqa9vfT5ucEAHWnJZ1WQ+Mn9yRvzAIw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/HAVtRJ1PsEuTkAUc5sMbDf7NKx2+25/4sGFjK/yLmI=;
+        b=cwGvKg+dQ75AUq78A8SjgQbH9J/DiVDc9XDU4g6HmIhgLhfxegnnNT+K9pQaWfJjEu
+         8Za71edrDRTqvQeLnpCLFwfiDU/y4wpD9tlYqw8ceKOZ4vJuX2QP1IB1n0T+EqefkzPH
+         GkiTC+hrgJMPo0MBTMsF69v4FJF6YflJhP/6tdqyC9rN0omLwUIkpmkzHYIH91ymg02M
+         kuqt8jfVw8FkNxtuh/VaO1JrKRu/Nab/CFngP7ZSDFN9/keeOuCzNPOIBVRpcaWOSSip
+         Oe/s6y16u1VHvSRDgm9c6MTQsJs1adi/xBbfzKIbgQNW2IK9ATyR+Ovdu4En7z1XfWpw
+         s0hg==
+X-Gm-Message-State: APjAAAX7h0h5J/2VSwo9NACqCNklkF5abBqAvy5JZZ/QoZzHIx864s5h
+        AeQZAjiHCoCRMJ01UgJwDiwaWA==
+X-Google-Smtp-Source: APXvYqzGZZp0X2UruoJmPDipoLHodoHbSAODCUTEnrhBXIUOdW+725CS6Bq9Bv2QKCuiId8iQb2BGw==
+X-Received: by 2002:a17:90a:a489:: with SMTP id z9mr2679120pjp.24.1565882700049;
+        Thu, 15 Aug 2019 08:25:00 -0700 (PDT)
+Received: from localhost ([172.19.216.18])
+        by smtp.gmail.com with ESMTPSA id k6sm3082851pfi.12.2019.08.15.08.24.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 08:24:59 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 11:24:42 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v3 -rcu] workqueue: Convert for_each_wq to use built-in
+ list check
+Message-ID: <20190815152442.GB12078@google.com>
+References: <20190815141842.GB20599@google.com>
+ <20190815145749.GA18474@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190815054439.30652-3-thunder.leizhen@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190815145749.GA18474@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 01:44:39PM +0800, Zhen Lei wrote:
-> When (smmu_domain->smmu->features & ARM_SMMU_FEAT_ATS) is true, even if a
-> smmu domain does not contain any ats master, the operations of
-> arm_smmu_atc_inv_to_cmd() and lock protection in arm_smmu_atc_inv_domain()
-> are always executed. This will impact performance, especially in
-> multi-core and stress scenarios. For my FIO test scenario, about 8%
-> performance reduced.
+On Thu, Aug 15, 2019 at 07:57:49AM -0700, Matthew Wilcox wrote:
+> On Thu, Aug 15, 2019 at 10:18:42AM -0400, Joel Fernandes (Google) wrote:
+> > list_for_each_entry_rcu now has support to check for RCU reader sections
+> > as well as lock. Just use the support in it, instead of explicitly
+> > checking in the caller.
 > 
-> In fact, we can use a struct member to record how many ats masters that
-> the smmu contains. And check that without traverse the list and check all
-> masters one by one in the lock protection.
+> ...
 > 
-> Fixes: 9ce27afc0830 ("iommu/arm-smmu-v3: Add support for PCI ATS")
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> ---
->  drivers/iommu/arm-smmu-v3.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+> >  #define assert_rcu_or_wq_mutex_or_pool_mutex(wq)			\
+> >  	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&			\
+> >  			 !lockdep_is_held(&wq->mutex) &&		\
 > 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 29056d9bb12aa01..154334d3310c9b8 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -631,6 +631,7 @@ struct arm_smmu_domain {
->  
->  	struct io_pgtable_ops		*pgtbl_ops;
->  	bool				non_strict;
-> +	int				nr_ats_masters;
->  
->  	enum arm_smmu_domain_stage	stage;
->  	union {
-> @@ -1531,7 +1532,16 @@ static int arm_smmu_atc_inv_domain(struct arm_smmu_domain *smmu_domain,
->  	struct arm_smmu_cmdq_ent cmd;
->  	struct arm_smmu_master *master;
->  
-> -	if (!(smmu_domain->smmu->features & ARM_SMMU_FEAT_ATS))
-> +	/*
-> +	 * The protectiom of spinlock(&iommu_domain->devices_lock) is omitted.
-> +	 * Because for a given master, its map/unmap operations should only be
-> +	 * happened after it has been attached and before it has been detached.
-> +	 * So that, if at least one master need to be atc invalidated, the
-> +	 * value of smmu_domain->nr_ats_masters can not be zero.
-> +	 *
-> +	 * This can alleviate performance loss in multi-core scenarios.
-> +	 */
+> Can't you also get rid of this macro?
 
-I find this reasoning pretty dubious, since I think you're assuming that
-an endpoint cannot issue speculative ATS translation requests once its
-ATS capability is enabled. That said, I think it also means we should enable
-ATS in the STE *before* enabling it in the endpoint -- the current logic
-looks like it's the wrong way round to me (including in detach()).
+Could be. But that should be a different patch. I am only cleaning up the RCU
+list lockdep checking in this series since the series introduces that
+concept).  Please feel free to send a patch for the same.
 
-Anyway, these speculative translations could race with a concurrent unmap()
-call and end up with the ATC containing translations for unmapped pages,
-which I think we should try to avoid.
+Arguably, keeping the macro around also can be beneficial in the future.
 
-Did the RCU approach not work out? You could use an rwlock instead as a
-temporary bodge if the performance doesn't hurt too much.
+> It's used in one place:
+> 
+> static struct pool_workqueue *unbound_pwq_by_node(struct workqueue_struct *wq,
+>                                                   int node)
+> {
+>         assert_rcu_or_wq_mutex_or_pool_mutex(wq);
+> 
+>         /*
+>          * XXX: @node can be NUMA_NO_NODE if CPU goes offline while a
+>          * delayed item is pending.  The plan is to keep CPU -> NODE
+>          * mapping valid and stable across CPU on/offlines.  Once that
+>          * happens, this workaround can be removed.
+>          */
+>         if (unlikely(node == NUMA_NO_NODE))
+>                 return wq->dfl_pwq;
+> 
+>         return rcu_dereference_raw(wq->numa_pwq_tbl[node]);
+> }
+> 
+> Shouldn't we delete that assert and use
+> 
+> +	return rcu_dereference_check(wq->numa_pwq_tbl[node],
+> +			lockdep_is_held(&wq->mutex) ||
+> +			lockdep_is_held(&wq_pool_mutex));
 
-Alternatively... maybe we could change the attach flow to do something
-like:
+Makes sense. This API also does sparse checking. Also hopefully no sparse
+issues show up because rcu_dereference_check() but anyone such issues should
+be fixed as well.
 
-	enable_ats_in_ste(master);
-	enable_ats_at_pcie_endpoint(master);
-	spin_lock(devices_lock)
-	add_to_device_list(master);
-	nr_ats_masters++;
-	spin_unlock(devices_lock);
-	invalidate_atc(master);
+thanks,
 
-in which case, the concurrent unmapper will be doing something like:
+ - Joel
 
-	issue_tlbi();
-	smp_mb();
-	if (READ_ONCE(nr_ats_masters)) {
-		...
-	}
-
-and I *think* that means that either the unmapper will see the
-nr_ats_masters update and perform the invalidation, or they'll miss
-the update but the attach will invalidate the ATC /after/ the TLBI
-in the command queue.
-
-Also, John's idea of converting this stuff over to my command batching
-mechanism should help a lot if we can defer this to sync time using the
-gather structure. Maybe an rwlock would be alright for that. Dunno.
-
-Will
+> 
