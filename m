@@ -2,166 +2,143 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB7AC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C84C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F502184D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A60752064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:28:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731505AbfHOL2h (ORCPT
+        id S1731552AbfHOL2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 07:28:37 -0400
-Received: from mga12.intel.com ([192.55.52.136]:30184 "EHLO mga12.intel.com"
+        Thu, 15 Aug 2019 07:28:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:42656 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728128AbfHOL2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 07:28:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 04:28:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
-   d="scan'208";a="194750099"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Aug 2019 04:28:33 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] platform/x86: intel_cht_int33fe: Use new API to gain access to the role switch
-Date:   Thu, 15 Aug 2019 14:28:26 +0300
-Message-Id: <20190815112826.81785-4-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190815112826.81785-1-heikki.krogerus@linux.intel.com>
-References: <20190815112826.81785-1-heikki.krogerus@linux.intel.com>
+        id S1728128AbfHOL2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 07:28:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A2E0360;
+        Thu, 15 Aug 2019 04:28:48 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD5DA3F694;
+        Thu, 15 Aug 2019 04:28:46 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 12:28:44 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Daniel Axtens <dja@axtens.net>
+Cc:     kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
+        aryabinin@virtuozzo.com, glider@google.com, luto@kernel.org,
+        linux-kernel@vger.kernel.org, dvyukov@google.com,
+        linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com
+Subject: Re: [PATCH v4 0/3] kasan: support backing vmalloc space with real
+ shadow memory
+Message-ID: <20190815112844.GC22153@lakrids.cambridge.arm.com>
+References: <20190815001636.12235-1-dja@axtens.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815001636.12235-1-dja@axtens.net>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver for the Intel USB role mux now always supplies
-software node for the role switch, so no longer checking
-that, and never creating separate node for the role switch.
-From now on using software_node_find_by_name() function to
-get the handle to the USB role switch.
+On Thu, Aug 15, 2019 at 10:16:33AM +1000, Daniel Axtens wrote:
+> Currently, vmalloc space is backed by the early shadow page. This
+> means that kasan is incompatible with VMAP_STACK, and it also provides
+> a hurdle for architectures that do not have a dedicated module space
+> (like powerpc64).
+> 
+> This series provides a mechanism to back vmalloc space with real,
+> dynamically allocated memory. I have only wired up x86, because that's
+> the only currently supported arch I can work with easily, but it's
+> very easy to wire up other architectures.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/platform/x86/intel_cht_int33fe.c | 57 +++++-------------------
- 1 file changed, 10 insertions(+), 47 deletions(-)
+I'm happy to send patches for arm64 once we've settled some conflicting
+rework going on for 52-bit VA support.
 
-diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-index 4fbdff48a4b5..1d5d877b9582 100644
---- a/drivers/platform/x86/intel_cht_int33fe.c
-+++ b/drivers/platform/x86/intel_cht_int33fe.c
-@@ -34,7 +34,6 @@ enum {
- 	INT33FE_NODE_MAX17047,
- 	INT33FE_NODE_PI3USB30532,
- 	INT33FE_NODE_DISPLAYPORT,
--	INT33FE_NODE_ROLE_SWITCH,
- 	INT33FE_NODE_USB_CONNECTOR,
- 	INT33FE_NODE_MAX,
- };
-@@ -45,7 +44,6 @@ struct cht_int33fe_data {
- 	struct i2c_client *pi3usb30532;
- 
- 	struct fwnode_handle *dp;
--	struct fwnode_handle *mux;
- };
- 
- static const struct software_node nodes[];
-@@ -139,46 +137,10 @@ static const struct software_node nodes[] = {
- 	{ "max17047", NULL, max17047_props },
- 	{ "pi3usb30532" },
- 	{ "displayport" },
--	{ "usb-role-switch" },
- 	{ "connector", &nodes[0], usb_connector_props, usb_connector_refs },
- 	{ }
- };
- 
--static int cht_int33fe_setup_mux(struct cht_int33fe_data *data)
--{
--	struct fwnode_handle *fwnode;
--	struct device *dev;
--	struct device *p;
--
--	fwnode = software_node_fwnode(&nodes[INT33FE_NODE_ROLE_SWITCH]);
--	if (!fwnode)
--		return -ENODEV;
--
--	/* First finding the platform device */
--	p = bus_find_device_by_name(&platform_bus_type, NULL,
--				    "intel_xhci_usb_sw");
--	if (!p)
--		return -EPROBE_DEFER;
--
--	/* Then the mux child device */
--	dev = device_find_child_by_name(p, "intel_xhci_usb_sw-role-switch");
--	put_device(p);
--	if (!dev)
--		return -EPROBE_DEFER;
--
--	/* If there already is a node for the mux, using that one. */
--	if (dev->fwnode)
--		fwnode_remove_software_node(fwnode);
--	else
--		dev->fwnode = fwnode;
--
--	data->mux = fwnode_handle_get(dev->fwnode);
--	put_device(dev);
--	mux_ref.node = to_software_node(data->mux);
--
--	return 0;
--}
--
- static int cht_int33fe_setup_dp(struct cht_int33fe_data *data)
- {
- 	struct fwnode_handle *fwnode;
-@@ -211,10 +173,9 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
- {
- 	software_node_unregister_nodes(nodes);
- 
--	if (data->mux) {
--		fwnode_handle_put(data->mux);
-+	if (mux_ref.node) {
-+		fwnode_handle_put(software_node_fwnode(mux_ref.node));
- 		mux_ref.node = NULL;
--		data->mux = NULL;
- 	}
- 
- 	if (data->dp) {
-@@ -235,14 +196,16 @@ static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
- 	/* The devices that are not created in this driver need extra steps. */
- 
- 	/*
--	 * There is no ACPI device node for the USB role mux, so we need to find
--	 * the mux device and assign our node directly to it. That means we
--	 * depend on the mux driver. This function will return -PROBE_DEFER
--	 * until the mux device is registered.
-+	 * There is no ACPI device node for the USB role mux, so we need to wait
-+	 * until the mux driver has created software node for the mux device.
-+	 * It means we depend on the mux driver. This function will return
-+	 * -EPROBE_DEFER until the mux device is registered.
- 	 */
--	ret = cht_int33fe_setup_mux(data);
--	if (ret)
-+	mux_ref.node = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
-+	if (!mux_ref.node) {
-+		ret = -EPROBE_DEFER;
- 		goto err_remove_nodes;
-+	}
- 
- 	/*
- 	 * The DP connector does have ACPI device node. In this case we can just
--- 
-2.20.1
+> 
+> This has been discussed before in the context of VMAP_STACK:
+>  - https://bugzilla.kernel.org/show_bug.cgi?id=202009
+>  - https://lkml.org/lkml/2018/7/22/198
+>  - https://lkml.org/lkml/2019/7/19/822
+> 
+> In terms of implementation details:
+> 
+> Most mappings in vmalloc space are small, requiring less than a full
+> page of shadow space. Allocating a full shadow page per mapping would
+> therefore be wasteful. Furthermore, to ensure that different mappings
+> use different shadow pages, mappings would have to be aligned to
+> KASAN_SHADOW_SCALE_SIZE * PAGE_SIZE.
+> 
+> Instead, share backing space across multiple mappings. Allocate
+> a backing page the first time a mapping in vmalloc space uses a
+> particular page of the shadow region. Keep this page around
+> regardless of whether the mapping is later freed - in the mean time
+> the page could have become shared by another vmalloc mapping.
+> 
+> This can in theory lead to unbounded memory growth, but the vmalloc
+> allocator is pretty good at reusing addresses, so the practical memory
+> usage appears to grow at first but then stay fairly stable.
+> 
+> If we run into practical memory exhaustion issues, I'm happy to
+> consider hooking into the book-keeping that vmap does, but I am not
+> convinced that it will be an issue.
 
+FWIW, I haven't spotted such memory exhaustion after a week of Syzkaller
+fuzzing with the last patchset, across 3 machines, so that sounds fine
+to me.
+
+Otherwise, this looks good to me now! For the x86 and fork patch, feel
+free to add:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+> 
+> v1: https://lore.kernel.org/linux-mm/20190725055503.19507-1-dja@axtens.net/
+> v2: https://lore.kernel.org/linux-mm/20190729142108.23343-1-dja@axtens.net/
+>  Address review comments:
+>  - Patch 1: use kasan_unpoison_shadow's built-in handling of
+>             ranges that do not align to a full shadow byte
+>  - Patch 3: prepopulate pgds rather than faulting things in
+> v3: https://lore.kernel.org/linux-mm/20190731071550.31814-1-dja@axtens.net/
+>  Address comments from Mark Rutland:
+>  - kasan_populate_vmalloc is a better name
+>  - handle concurrency correctly
+>  - various nits and cleanups
+>  - relax module alignment in KASAN_VMALLOC case
+> v4: Changes to patch 1 only:
+>  - Integrate Mark's rework, thanks Mark!
+>  - handle the case where kasan_populate_shadow might fail
+>  - poision shadow on free, allowing the alloc path to just
+>      unpoision memory that it uses
+> 
+> Daniel Axtens (3):
+>   kasan: support backing vmalloc space with real shadow memory
+>   fork: support VMAP_STACK with KASAN_VMALLOC
+>   x86/kasan: support KASAN_VMALLOC
+> 
+>  Documentation/dev-tools/kasan.rst | 60 +++++++++++++++++++++++++++
+>  arch/Kconfig                      |  9 +++--
+>  arch/x86/Kconfig                  |  1 +
+>  arch/x86/mm/kasan_init_64.c       | 61 ++++++++++++++++++++++++++++
+>  include/linux/kasan.h             | 24 +++++++++++
+>  include/linux/moduleloader.h      |  2 +-
+>  include/linux/vmalloc.h           | 12 ++++++
+>  kernel/fork.c                     |  4 ++
+>  lib/Kconfig.kasan                 | 16 ++++++++
+>  lib/test_kasan.c                  | 26 ++++++++++++
+>  mm/kasan/common.c                 | 67 +++++++++++++++++++++++++++++++
+>  mm/kasan/generic_report.c         |  3 ++
+>  mm/kasan/kasan.h                  |  1 +
+>  mm/vmalloc.c                      | 28 ++++++++++++-
+>  14 files changed, 308 insertions(+), 6 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
