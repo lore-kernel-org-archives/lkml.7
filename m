@@ -2,145 +2,174 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C77C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87372C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 189742083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5917D2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:46:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dvMvJYIk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I//nl4Vn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731875AbfHOSpR (ORCPT
+        id S1731893AbfHOSqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 14:45:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60700 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728579AbfHOSpQ (ORCPT
+        Thu, 15 Aug 2019 14:46:35 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:36743 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728579AbfHOSqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 14:45:16 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FIhXXE107614;
-        Thu, 15 Aug 2019 18:45:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=WLDd2r2MoB1afHQF9ZBYjTIhwOMS6/qWNuX/rgkqRU8=;
- b=dvMvJYIkj51ntmzyQg/EmgnM25LYvrZSMgbAnnq8yoL6PpUiZrc8vHCurfIGRtS8TlG7
- VvVRL7TGMkBaYmMeL/yBc1WHcolhIfDn+7gcUeXqY25Ql3hl87SQaLj3HRpC/bb75vpz
- JCHWQzM5ylTssWtImmmj4PVBz5uD+bG1IXPgX06fGAL+KMG9JZkRA4roMUwOvB1Up4/o
- CHqN0IO0qSN83PB/V1sa6XSVh/6Zss2LXNong/tSZVhG7EsEqpuC28DhMfkX11BbuRwP
- 6POQfxLSvzr31WGnM7eU1kSu8p/zwyqzkT04yvi0KfmxnKfVAs82k7brXkYo6iILQvTf CA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2u9nbtvdc7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Aug 2019 18:45:08 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FIhfxe176972;
-        Thu, 15 Aug 2019 18:45:08 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2ucmwk11yb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Aug 2019 18:45:08 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7FIj7t2002550;
-        Thu, 15 Aug 2019 18:45:07 GMT
-Received: from oracle.com (/23.233.26.138)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 15 Aug 2019 11:45:07 -0700
-Date:   Thu, 15 Aug 2019 14:45:05 -0400
-From:   "Liam R. Howlett" <Liam.Howlett@Oracle.com>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
-        "supporter:INTEL WIRELESS WIMAX CONNECTION 2400" 
-        <linux-wimax@intel.com>, "David S. Miller" <davem@davemloft.net>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] wimax/i2400m: fix a memory leak bug
-Message-ID: <20190815184505.o7o2ojt7ag4shh7u@oracle.com>
-Mail-Followup-To: Wenwen Wang <wenwen@cs.uga.edu>,
-        Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
-        "supporter:INTEL WIRELESS WIMAX CONNECTION 2400" <linux-wimax@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1565892301-2812-1-git-send-email-wenwen@cs.uga.edu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565892301-2812-1-git-send-email-wenwen@cs.uga.edu>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908150176
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908150176
+        Thu, 15 Aug 2019 14:46:35 -0400
+Received: by mail-pf1-f201.google.com with SMTP id p16so2176852pfn.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 11:46:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=KsmktdjBWzn80WIDzS6PF88MOFgM0z+buof8gWKRVNI=;
+        b=I//nl4VnNITHaZ/zkdYhbwrnEzTXdxlUQRKM86qiAYedQFYdT7P9ilN9M2Vwi3ZiHL
+         cWqViThiDBFJvpO9Mmn0xmyHlsXwlHGa4wn3jqVi8Tchjs6QWRwmU+qG9DOY6QLFIuEl
+         VJ+c+JWIO9RpTSdEG1VZwkUaRf16zZKO/8gs2AWG3B3C7upnyFcnUnXNWMGsKJ9UZPAz
+         a2PqSqvW3p/5PCBJNICnMfZVUSXI1bwdSC7bQGoQGTzaNmScjE0vzaooq1dtry7To3oV
+         g9H4nclPahH5Aetv0y9pWKiyp505sW28QAVP9rmukE8tUI8thT8INp5mgqwXwaef64o0
+         HjCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=KsmktdjBWzn80WIDzS6PF88MOFgM0z+buof8gWKRVNI=;
+        b=dInuXU7jABCNbiwRT8LRDfDZPM79WxW855gf/XL/SCjY8ktBooWDISonc0VEmYfz49
+         1mbFJV2xNonvNlC94gzOiiROKPts88JhLlinLLYphrsC5Ppae3HjjQGHwZPjLa9Bn/go
+         iHdgGxW6/W3NJbAkkAA3G4dfgYOMM/f5cgJ4de1HpmyrSA5elE20Eumi2Vsin84vqt0U
+         ysLpJcXb7Mo+w1Fw0HDAlk/zRDzAAJCV/jN10lnuwX2aAWtcBQkCVJLh1xKux6WQ6n6Z
+         fwFmsU1p39WDyyB5l/s4tI7csqIQvWWva9wkmxXDbiAg2xanVuM5vzmYvf4dwYgInegi
+         5KKQ==
+X-Gm-Message-State: APjAAAXfLeGZ63UWCW5m8VkqEI22OY5yuaFePc6g28xaQU1YeslFLGK1
+        G2LUeelqpoMcVDhSeBUs6wvOrVyZsQ==
+X-Google-Smtp-Source: APXvYqx/4reP5xWBNNvhkbTIbQc7Zy6AQSY3Q6ZpX+/WKuWIJqhPsTzfuM9MuEyMM9sEMlpjic8OwTRm5Jw=
+X-Received: by 2002:a65:57ca:: with SMTP id q10mr4745823pgr.52.1565894793853;
+ Thu, 15 Aug 2019 11:46:33 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 11:46:28 -0700
+Message-Id: <20190815184628.183186-1-yabinc@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH v3] coresight: tmc-etr: Fix perf_data check.
+From:   Yabin Cui <yabinc@google.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Wenwen Wang <wenwen@cs.uga.edu> [190815 14:05]:
-> In i2400m_barker_db_init(), 'options_orig' is allocated through kstrdup()
-> to hold the original command line options. Then, the options are parsed.
-> However, if an error occurs during the parsing process, 'options_orig' is
-> not deallocated, leading to a memory leak bug. To fix this issue, free
-> 'options_orig' before returning the error.
-> 
-> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-> ---
->  drivers/net/wimax/i2400m/fw.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wimax/i2400m/fw.c b/drivers/net/wimax/i2400m/fw.c
-> index e9fc168..6b36f6d 100644
-> --- a/drivers/net/wimax/i2400m/fw.c
-> +++ b/drivers/net/wimax/i2400m/fw.c
-> @@ -342,6 +342,7 @@ int i2400m_barker_db_init(const char *_options)
->  				       "a 32-bit number\n",
->  				       __func__, token);
->  				result = -EINVAL;
-> +				kfree(options_orig);
->  				goto error_parse;
->  			}
->  			if (barker == 0) {
-> @@ -350,8 +351,10 @@ int i2400m_barker_db_init(const char *_options)
->  				continue;
->  			}
->  			result = i2400m_barker_db_add(barker);
-> -			if (result < 0)
-> +			if (result < 0) {
-> +				kfree(options_orig);
->  				goto error_add;
+When tracing etm data of multiple threads on multiple cpus through
+perf interface, each cpu has a unique etr_perf_buffer while sharing
+the same etr device. There is no guarantee that the last cpu starts
+etm tracing also stops last. This makes perf_data check fail.
 
-I know that you didn't add this error_add label, but it seems like the
-incorrect goto label.  Although looking at the caller indicates an add
-failed, this label is used prior to and after the memory leak you are
-trying to fix.  It might be better to change this label to something
-like error_parse_add and move the kfree to the unwinding.  If a new
-label is used, it becomes more clear as to what is being undone and
-there aren't two jumps into an unwind from two very different stages of
-the function.  Adding a new label also has the benefit of moving the
-kfree to the unwind of error_parse.
+Fix it by checking etr_buf instead of etr_perf_buffer.
+Also move the code setting and clearing perf_buf to more suitable
+places.
 
-Thanks,
-Liam
+Fixes: 3147da92a8a8 ("coresight: tmc-etr: Allocate and free ETR memory buffers for CPU-wide scenarios")
+Signed-off-by: Yabin Cui <yabinc@google.com>
+---
 
+v2 -> v3:
+  moved place of setting drvdata->perf_buf based on review comment.
+  Also moved place of clearing drvdata->perf_buf from
+  tmc_update_etr_buffer() to tmc_disable_etr_sink() for below
+  situation:
 
-> +			}
->  		}
->  		kfree(options_orig);
->  	}
-> -- 
-> 2.7.4
-> 
+  cpu 0 enable etr device (set perf_buf)
+  cpu 0 update etr buffer (clear perf_buf)
+  cpu 1 enable etr device (perf_buf isn't set because pid set by cpu 0)
+  cpu 0 disable etr device
+  cpu 1 update etr buffer (perf_buf == NULL, check fails)
+
+  To fix it, we need to move clearing perf_buf to the disable function.
+
+---
+ drivers/hwtracing/coresight/coresight-tmc-etr.c | 8 ++++----
+ drivers/hwtracing/coresight/coresight-tmc.h     | 6 +++---
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index 17006705287a..80af313f55d7 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -1484,7 +1484,7 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ 		goto out;
+ 	}
+ 
+-	if (WARN_ON(drvdata->perf_data != etr_perf)) {
++	if (WARN_ON(drvdata->perf_buf != etr_buf)) {
+ 		lost = true;
+ 		spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 		goto out;
+@@ -1496,8 +1496,6 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ 	tmc_sync_etr_buf(drvdata);
+ 
+ 	CS_LOCK(drvdata->base);
+-	/* Reset perf specific data */
+-	drvdata->perf_data = NULL;
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 
+ 	size = etr_buf->len;
+@@ -1556,7 +1554,6 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
+ 	}
+ 
+ 	etr_perf->head = PERF_IDX2OFF(handle->head, etr_perf);
+-	drvdata->perf_data = etr_perf;
+ 
+ 	/*
+ 	 * No HW configuration is needed if the sink is already in
+@@ -1572,6 +1569,7 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
+ 		/* Associate with monitored process. */
+ 		drvdata->pid = pid;
+ 		drvdata->mode = CS_MODE_PERF;
++		drvdata->perf_buf = etr_perf->etr_buf;
+ 		atomic_inc(csdev->refcnt);
+ 	}
+ 
+@@ -1617,6 +1615,8 @@ static int tmc_disable_etr_sink(struct coresight_device *csdev)
+ 	/* Dissociate from monitored process. */
+ 	drvdata->pid = -1;
+ 	drvdata->mode = CS_MODE_DISABLED;
++	/* Reset perf specific data */
++	drvdata->perf_buf = NULL;
+ 
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+index 1ed50411cc3c..f9a0c95e9ba2 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.h
++++ b/drivers/hwtracing/coresight/coresight-tmc.h
+@@ -178,8 +178,8 @@ struct etr_buf {
+  *		device configuration register (DEVID)
+  * @idr:	Holds etr_bufs allocated for this ETR.
+  * @idr_mutex:	Access serialisation for idr.
+- * @perf_data:	PERF buffer for ETR.
+- * @sysfs_data:	SYSFS buffer for ETR.
++ * @sysfs_buf:	SYSFS buffer for ETR.
++ * @perf_buf:	PERF buffer for ETR.
+  */
+ struct tmc_drvdata {
+ 	void __iomem		*base;
+@@ -202,7 +202,7 @@ struct tmc_drvdata {
+ 	struct idr		idr;
+ 	struct mutex		idr_mutex;
+ 	struct etr_buf		*sysfs_buf;
+-	void			*perf_data;
++	struct etr_buf		*perf_buf;
+ };
+ 
+ struct etr_buf_operations {
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
+
