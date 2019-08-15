@@ -2,66 +2,126 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA248C3A59B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F7EC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6022084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C052084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:26:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732273AbfHONZh (ORCPT
+        id S1732307AbfHON0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:25:37 -0400
-Received: from verein.lst.de ([213.95.11.211]:46679 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730497AbfHONZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:25:37 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 5010F68AFE; Thu, 15 Aug 2019 15:25:31 +0200 (CEST)
-Date:   Thu, 15 Aug 2019 15:25:31 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Gavin Li <git@thegavinli.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Geoff Levand <geoff@infradead.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Olav Kongas <ok@artecdesign.ee>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Bin Liu <b-liu@ti.com>, linux-arm-kernel@lists.infradead.org,
-        linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: next take at setting up a dma mask by default for platform
- devices
-Message-ID: <20190815132531.GA12036@lst.de>
-References: <20190811080520.21712-1-hch@lst.de> <20190815132318.GA27208@kroah.com>
+        Thu, 15 Aug 2019 09:26:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45032 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731846AbfHON0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:26:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C4A59AE12;
+        Thu, 15 Aug 2019 13:26:22 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 1C66F1E4200; Thu, 15 Aug 2019 15:26:22 +0200 (CEST)
+Date:   Thu, 15 Aug 2019 15:26:22 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
+Message-ID: <20190815132622.GG14313@quack2.suse.cz>
+References: <20190812015044.26176-1-jhubbard@nvidia.com>
+ <20190812015044.26176-3-jhubbard@nvidia.com>
+ <20190812234950.GA6455@iweiny-DESK2.sc.intel.com>
+ <38d2ff2f-4a69-e8bd-8f7c-41f1dbd80fae@nvidia.com>
+ <20190813210857.GB12695@iweiny-DESK2.sc.intel.com>
+ <a1044a0d-059c-f347-bd68-38be8478bf20@nvidia.com>
+ <90e5cd11-fb34-6913-351b-a5cc6e24d85d@nvidia.com>
+ <20190814234959.GA463@iweiny-DESK2.sc.intel.com>
+ <2cbdf599-2226-99ae-b4d5-8909a0a1eadf@nvidia.com>
+ <ac834ac6-39bd-6df9-fca4-70b9520b6c34@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190815132318.GA27208@kroah.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ac834ac6-39bd-6df9-fca4-70b9520b6c34@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 03:23:18PM +0200, Greg Kroah-Hartman wrote:
-> I've taken the first 2 patches for 5.3-final.  Given that patch 3 needs
-> to be fixed, I'll wait for a respin of these before considering them.
+On Wed 14-08-19 20:01:07, John Hubbard wrote:
+> On 8/14/19 5:02 PM, John Hubbard wrote:
+> > On 8/14/19 4:50 PM, Ira Weiny wrote:
+> > > On Tue, Aug 13, 2019 at 05:56:31PM -0700, John Hubbard wrote:
+> > > > On 8/13/19 5:51 PM, John Hubbard wrote:
+> > > > > On 8/13/19 2:08 PM, Ira Weiny wrote:
+> > > > > > On Mon, Aug 12, 2019 at 05:07:32PM -0700, John Hubbard wrote:
+> > > > > > > On 8/12/19 4:49 PM, Ira Weiny wrote:
+> > > > > > > > On Sun, Aug 11, 2019 at 06:50:44PM -0700, john.hubbard@gmail.com wrote:
+> > > > > > > > > From: John Hubbard <jhubbard@nvidia.com>
+> > > > > > > ...
+> > > > > > Finally, I struggle with converting everyone to a new call.  It is more
+> > > > > > overhead to use vaddr_pin in the call above because now the GUP code is going
+> > > > > > to associate a file pin object with that file when in ODP we don't need that
+> > > > > > because the pages can move around.
+> > > > > 
+> > > > > What if the pages in ODP are file-backed?
+> > > > > 
+> > > > 
+> > > > oops, strike that, you're right: in that case, even the file system case is covered.
+> > > > Don't mind me. :)
+> > > 
+> > > Ok so are we agreed we will drop the patch to the ODP code?  I'm going to keep
+> > > the FOLL_PIN flag and addition in the vaddr_pin_pages.
+> > > 
+> > 
+> > Yes. I hope I'm not overlooking anything, but it all seems to make sense to
+> > let ODP just rely on the MMU notifiers.
+> > 
+> 
+> Hold on, I *was* forgetting something: this was a two part thing, and
+> you're conflating the two points, but they need to remain separate and
+> distinct. There were:
+> 
+> 1. FOLL_PIN is necessary because the caller is clearly in the use case that
+> requires it--however briefly they might be there. As Jan described it,
+> 
+> "Anything that gets page reference and then touches page data (e.g.
+> direct IO) needs the new kind of tracking so that filesystem knows
+> someone is messing with the page data." [1]
 
-I have a respun version ready, but I'd really like to hear some
-comments from usb developers about the approach before spamming
-everyone again..
+So when the GUP user uses MMU notifiers to stop writing to pages whenever
+they are writeprotected with page_mkclean(), they don't really need page
+pin - their access is then fully equivalent to any other mmap userspace
+access and filesystem knows how to deal with those. I forgot out this case
+when I wrote the above sentence.
+
+So to sum up there are three cases:
+1) DIO case - GUP references to pages serving as DIO buffers are needed for
+   relatively short time, no special synchronization with page_mkclean() or
+   munmap() => needs FOLL_PIN
+2) RDMA case - GUP references to pages serving as DMA buffers needed for a
+   long time, no special synchronization with page_mkclean() or munmap()
+   => needs FOLL_PIN | FOLL_LONGTERM
+   This case has also a special case when the pages are actually DAX. Then
+   the caller additionally needs file lease and additional file_pin
+   structure is used for tracking this usage.
+3) ODP case - GUP references to pages serving as DMA buffers, MMU notifiers
+   used to synchronize with page_mkclean() and munmap() => normal page
+   references are fine.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
