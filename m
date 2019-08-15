@@ -2,109 +2,147 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFCFC3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DE5C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32BCF2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C46E02083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:46:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="NOCyQ0RJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733189AbfHOTqi (ORCPT
+        id S1733202AbfHOTqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 15:46:38 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39855 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733171AbfHOTqh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 15:46:37 -0400
-Received: by mail-qk1-f196.google.com with SMTP id 125so2798256qkl.6;
-        Thu, 15 Aug 2019 12:46:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KdkqCNrsYGZD/efIVrpgf4pItvwMxmRiBzolCMfFZmI=;
-        b=QCa/Cdo4uDI2awDb2aD6tAFyu11TJDCYhTcqQbD8Xo6Symdikzf7+T+rvJtn31iMfg
-         FU1TEjcJum2g9L01GfgAFpeDSjj363lsonsh/bMa1pqmEt2eefHR2V/OVF0JBvBtWYJR
-         1K3OlC5F2z9JKHOHkMoc+6iJLoeM3tyCMt3ABZTHv6uEn2lKDvyxNTp22ZGLbpvnpR+f
-         7VK2/tkDQMNkQ3DTUEeGaocILjz2PqB9Nd+LH73ITfyV5/ESNQ0mhXppbK/xpRv2duIX
-         X4Ua5OqSCikh38vaYWVVOTkaoCDewiou1r2MKg/KKlKltUSWjFhYURD3Os4hApAfy9jt
-         EjZw==
-X-Gm-Message-State: APjAAAW8h6hAksu+q45zOEHNOm9byTP9rNF5LYjLBUFh8riv0v8ItSbF
-        SeQGSFvMJHK5ZI5+c1WpQn7zsZkAah6F/h5q+aE=
-X-Google-Smtp-Source: APXvYqy13T7uVMDYpTqi18IlN7TrofLdgzVCO7AjQuCbroE3LCMOg++BJL4RQskx1N+5yUUInsGdvvlV44WsYbx1mWQ=
-X-Received: by 2002:a05:620a:b:: with SMTP id j11mr5687756qki.352.1565898396389;
- Thu, 15 Aug 2019 12:46:36 -0700 (PDT)
+        Thu, 15 Aug 2019 15:46:43 -0400
+Received: from mail-eopbgr10083.outbound.protection.outlook.com ([40.107.1.83]:16619
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729779AbfHOTqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 15:46:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AejlJQM/OKLo2+k9TEkPp1nwsFoCCBMUqabBrzobO/QgkF4UIemLMS5WECx4sEdhgaSfcfmDQ+/SQhbLZ4r59pUeJCc3lAeCZQ6vuki57qRbUoF1+PWn+a0seJnkj99cpZumNVSok4Kjv+UiCWnmgc+1aAnLe/OhUZJAAP+tf+wRK/mM5BmjtiHzRh+O4Ix3G7WrPBWJDotqMfjVraeXlnTweT0BpFKfQpITo9fkWgDElkZGVQZBGsSs1tVxRmp+fHXlzR7Pag9Wk+Z24qQw5+86y8k36KHggTX6MSD9wyd920v3i5j/id8EnaYLOnneF0YQjwBAR+Gq5/qrfIOk2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w0BTBF8kBiLrHFHJkVGaHXIMzhmWMU/iNoD1oXuo9IM=;
+ b=a4g93HA7YNi34/bB4mruBaU4piOs7lnki1BwSA/APcFccMD19aOE9Sm2VLWqWJTVM0lpof2gLxiW2pw6HA/LZrTRsVdpyoeetpsa7C0WArGdUZwQR7ikuYt/z0XCx/747M1//XgjrLw/9TnMGAgh1jSyrRbKX3Ls1Nt2c42/hgvmK8hBqr7UpVgHOkUgqL+KytTXfPk9dXIY1O3QrKgEheIq/9ehx687zVu56ly0WldAhaRJiYRYwT1xj+H4t9j0L5VWXPqy4eQ0maartBDvYwe6uFwT3r0eT5uDQae8t2Cctkn6Amj73GwGiepIYsbH2Z2ygmBvgIv1euplWTH4Cw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w0BTBF8kBiLrHFHJkVGaHXIMzhmWMU/iNoD1oXuo9IM=;
+ b=NOCyQ0RJptuOlGmC66pGD1CZi5Sr530aX0F//3KLxm8rlhs/T8hWJXKdOwFXsqgg4U5DpcEpUq2cMksGRMqM689bq0J8wZKL+T+7aLbxir19IBnoxXB+lxgu3kB0tHl1YZb/1IY3Cy3az7xAZzldEgmQy3FJGB62PmZoDQA6yQU=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5168.eurprd05.prod.outlook.com (20.178.10.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.21; Thu, 15 Aug 2019 19:46:26 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
+ 19:46:26 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     "christian.koenig@amd.com" <christian.koenig@amd.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Dimitri Sivanich <sivanich@sgi.com>,
+        Gavin Shan <shangw@linux.vnet.ibm.com>,
+        Andrea Righi <andrea@betterlinux.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        =?utf-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v3 hmm 08/11] drm/radeon: use mmu_notifier_get/put for
+ struct radeon_mn
+Thread-Topic: [PATCH v3 hmm 08/11] drm/radeon: use mmu_notifier_get/put for
+ struct radeon_mn
+Thread-Index: AQHVTKz1YDgPM7GGLU27kR5zKXuwhab77XGAgAC9boA=
+Date:   Thu, 15 Aug 2019 19:46:26 +0000
+Message-ID: <20190815194621.GF22970@mellanox.com>
+References: <20190806231548.25242-1-jgg@ziepe.ca>
+ <20190806231548.25242-9-jgg@ziepe.ca>
+ <2baff2e5-b923-c39b-98e5-b3e7f77bd6d3@gmail.com>
+In-Reply-To: <2baff2e5-b923-c39b-98e5-b3e7f77bd6d3@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQBPR0101CA0057.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:1::34) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 28c89de1-b5a2-4a9a-c12d-08d721b9428c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5168;
+x-ms-traffictypediagnostic: VI1PR05MB5168:
+x-microsoft-antispam-prvs: <VI1PR05MB51681C1EF442D179C3BE8696CFAC0@VI1PR05MB5168.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01304918F3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(366004)(396003)(136003)(199004)(189003)(6506007)(305945005)(2351001)(11346002)(36756003)(186003)(2616005)(102836004)(7416002)(66476007)(14454004)(64756008)(66556008)(26005)(486006)(446003)(66446008)(76176011)(476003)(66946007)(386003)(5660300002)(52116002)(7736002)(4326008)(316002)(256004)(66066001)(71200400001)(2906002)(33656002)(54906003)(81166006)(8676002)(1076003)(6512007)(25786009)(81156014)(71190400001)(6486002)(3846002)(6116002)(66574012)(99286004)(53936002)(478600001)(5640700003)(229853002)(86362001)(6916009)(8936002)(6246003)(6436002)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5168;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: fILogM5ET6wCipH9DgoM3HqNITLwlrxJI2cgDafFx5J9icOy7soEV1u/6g/yFdRMglGjJikP8+X19/UX2lPTWyn+kxdMSMeD9cwhCSRrEAf6IuXOSlStS2IlrXHAEwvuJsqLp5ge8B5d+0MmE+0r7yT0ZiU82tFXz5lbVuFw7DmiCVKKmmmlj8UQgiI24v1LSAU09TWm7MpD2LTXmaTWVRHr6ZSmxFsNjbM+HHP6Iwlry4K9Dk/WDEXiUSWcqKuutbYNNOGSsNMra+0+54JMj4OwFocKLSrhWQBRu44Ap37S7KztIlp0xPX49c+2Uhcjz4N37WYO2tBC/Gj0RNFzoMvtiHin7s6yAiSuwO9tVerzA2tGBUDCS1Y3LvB0BPJSMPfVYE119C2WMnrvNyrimbmyChHdxlSOiMvOrFTpN5k=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2697329F3A1E3A4682A1061BFB978A84@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190814204259.120942-1-arnd@arndb.de> <20190814204259.120942-2-arnd@arndb.de>
- <20190814213753.GP6129@dread.disaster.area> <20190815071314.GA6960@infradead.org>
- <CAK8P3a2Hjfd49XY18cDr04ZpvC5ZBGudzxqpCesbSsDf1ydmSA@mail.gmail.com>
- <20190815080211.GA17055@infradead.org> <20190815102649.GA10821@infradead.org>
- <20190815121511.GR6129@dread.disaster.area> <20190815140355.GA11012@infradead.org>
- <CAK8P3a1iNu7m=gy-NauXVBky+cBk8TPWwfWXO4gSw1mRPJefJA@mail.gmail.com> <20190815192827.GE15186@magnolia>
-In-Reply-To: <20190815192827.GE15186@magnolia>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 15 Aug 2019 21:46:20 +0200
-Message-ID: <CAK8P3a2XCKF2W3ktF+DBeatarA_ALoVuGh=qGaNA+PqX1OSBog@mail.gmail.com>
-Subject: Re: [PATCH v5 01/18] xfs: compat_ioctl: use compat_ptr()
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Nick Bowler <nbowler@draconx.ca>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Dave Chinner <dchinner@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28c89de1-b5a2-4a9a-c12d-08d721b9428c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 19:46:26.7080
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wr44nuzrOFqyQ8CDBnIZBpKKVc1F/faVzxn1IB0CV8N2pnaiWwXawzoXNPWFVXppCL/XneYKDHgeBk/kLVkTpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 9:28 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
->
-> On Thu, Aug 15, 2019 at 09:20:32PM +0200, Arnd Bergmann wrote:
-> > On Thu, Aug 15, 2019 at 4:04 PM Christoph Hellwig <hch@infradead.org> wrote:
-> > >
-> > > On Thu, Aug 15, 2019 at 10:15:12PM +1000, Dave Chinner wrote:
-> > > > > http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-ioctl-table
-> > > >
-> > > > Lots to like in that handful of patches. :)
-> > > >
-> > > > It can easily go before or after Arnd's patch, and the merge
-> > > > conflict either way would be minor, so I'm not really fussed either
-> > > > way this gets sorted out...
-> > >
-> > > The other thing we could do is to just pick the two important ones:
-> > >
-> > > http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-ioctl-table-5.3
-> > >
-> > > and throw that into Arnds series, or even 5.3, and then defer the
-> > > table thing until later.
-> >
-> > If we can have your "xfs: fall back to native ioctls for unhandled compat
-> > ones" in 5.3, that would be ideal from my side, then I can just drop the
-> > corresponding patch from my series and have the rest merged for 5.4.
-> >
-> > The compat_ptr addition is independent of my series, I just added it
-> > because I noticed it was missing, so we can merged that through
-> > the xfs tree along with your other changes, either for 5.3 or 5.4.
->
-> Er... do the two patches in the -5.3 branch actually fix something
-> that's broken?  I sense s390 is missing a pointer sanitization check or
-> something...?
-
-s390 is indeed missing the pointer conversion, the other patch
-adds compat ioctl support for FS_IOC_GETFSLABEL and
-FS_IOC_SETFSLABEL, which were missing, and it ensures that
-FITRIM keeps working after I remove it from the list in
-fs/compat_ioctl.c
-
-       Arnd
+T24gVGh1LCBBdWcgMTUsIDIwMTkgYXQgMTA6Mjg6MjFBTSArMDIwMCwgQ2hyaXN0aWFuIEvDtm5p
+ZyB3cm90ZToNCj4gQW0gMDcuMDguMTkgdW0gMDE6MTUgc2NocmllYiBKYXNvbiBHdW50aG9ycGU6
+DQo+ID4gRnJvbTogSmFzb24gR3VudGhvcnBlIDxqZ2dAbWVsbGFub3guY29tPg0KPiA+IA0KPiA+
+IHJhZGVvbiBpcyB1c2luZyBhIGRldmljZSBnbG9iYWwgaGFzaCB0YWJsZSB0byB0cmFjayB3aGF0
+IG1tdV9ub3RpZmllcnMNCj4gPiBoYXZlIGJlZW4gcmVnaXN0ZXJlZCBvbiBzdHJ1Y3QgbW0uIFRo
+aXMgaXMgYmV0dGVyIHNlcnZlZCB3aXRoIHRoZSBuZXcNCj4gPiBnZXQvcHV0IHNjaGVtZSBpbnN0
+ZWFkLg0KPiA+IA0KPiA+IHJhZGVvbiBoYXMgYSBidWcgd2hlcmUgaXQgd2FzIG5vdCBibG9ja2lu
+ZyBub3RpZmllciByZWxlYXNlKCkgdW50aWwgYWxsDQo+ID4gdGhlIEJPJ3MgaGFkIGJlZW4gaW52
+YWxpZGF0ZWQuIFRoaXMgY291bGQgcmVzdWx0IGluIGEgdXNlIGFmdGVyIGZyZWUgb2YNCj4gPiBw
+YWdlcyB0aGUgQk9zLiBUaGlzIGlzIHRpZWQgaW50byBhIHNlY29uZCBidWcgd2hlcmUgcmFkZW9u
+IGxlZnQgdGhlDQo+ID4gbm90aWZpZXJzIHJ1bm5pbmcgZW5kbGVzc2x5IGV2ZW4gb25jZSB0aGUg
+aW50ZXJ2YWwgdHJlZSBiZWNhbWUNCj4gPiBlbXB0eS4gVGhpcyBjb3VsZCByZXN1bHQgaW4gYSB1
+c2UgYWZ0ZXIgZnJlZSB3aXRoIG1vZHVsZSB1bmxvYWQuDQo+ID4gDQo+ID4gQm90aCBhcmUgZml4
+ZWQgYnkgY2hhbmdpbmcgdGhlIGxpZmV0aW1lIG1vZGVsLCB0aGUgQk9zIGV4aXN0IGluIHRoZQ0K
+PiA+IGludGVydmFsIHRyZWUgd2l0aCB0aGVpciBuYXR1cmFsIGxpZmV0aW1lcyBpbmRlcGVuZGVu
+dCBvZiB0aGUgbW1fc3RydWN0DQo+ID4gbGlmZXRpbWUgdXNpbmcgdGhlIGdldC9wdXQgc2NoZW1l
+LiBUaGUgcmVsZWFzZSBydW5zIHN5bmNocm9ub3VzbHkgYW5kIGp1c3QNCj4gPiBkb2VzIGludmFs
+aWRhdGVfc3RhcnQgYWNyb3NzIHRoZSBlbnRpcmUgaW50ZXJ2YWwgdHJlZSB0byBjcmVhdGUgdGhl
+DQo+ID4gcmVxdWlyZWQgRE1BIGZlbmNlLg0KPiA+IA0KPiA+IEFkZGl0aW9ucyB0byB0aGUgaW50
+ZXJ2YWwgdHJlZSBhZnRlciByZWxlYXNlIGFyZSBhbHJlYWR5IGltcG9zc2libGUgYXMNCj4gPiBv
+bmx5IGN1cnJlbnQtPm1tIGlzIHVzZWQgZHVyaW5nIHRoZSBhZGQuDQo+ID4gDQo+ID4gU2lnbmVk
+LW9mZi1ieTogSmFzb24gR3VudGhvcnBlIDxqZ2dAbWVsbGFub3guY29tPg0KPiANCj4gQWNrZWQt
+Ynk6IENocmlzdGlhbiBLw7ZuaWcgPGNocmlzdGlhbi5rb2VuaWdAYW1kLmNvbT4NCg0KVGhhbmtz
+IQ0KDQo+IEJ1dCBJJ20gd29uZGVyaW5nIGlmIHdlIHNob3VsZG4ndCBjb21wbGV0ZWx5IGRyb3Ag
+cmFkZW9uIHVzZXJwdHIgc3VwcG9ydC4NCj4gSXQncyBqdXN0IHRvIGJ1Z2d5LA0KDQpJIHdvdWxk
+IG5vdCBvYmplY3QgOikNCg0KSmFzb24NCg==
