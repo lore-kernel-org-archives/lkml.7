@@ -2,70 +2,94 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC27C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAE2C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D344F206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:09:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565878181;
-	bh=CIem41+aGIPI0ShLoJjGUdD5jnLIgiP1Cy1SmH3wCMY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fyptSZtKgo3uwb4pieM8Umm7pw1ilipEe8RJKg15z3tyuGz46Z/g9MYTefsiCxHKx
-	 5ndjETeFK6xXTfLSsIwmy5OgiFtICpzmTIvax3b8IgEHlWOB4VpjmKHpgOYatzrO9L
-	 BfqCYx1cbcgs/l/NkkFGsSxFEHPbqKxztPwv1eN0=
+	by mail.kernel.org (Postfix) with ESMTP id 4FE36206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732738AbfHOOJk (ORCPT
+        id S1732757AbfHOOKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:09:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50388 "EHLO mail.kernel.org"
+        Thu, 15 Aug 2019 10:10:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53668 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729918AbfHOOJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:09:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729918AbfHOOKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 10:10:39 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57A3B2086C;
-        Thu, 15 Aug 2019 14:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565878179;
-        bh=CIem41+aGIPI0ShLoJjGUdD5jnLIgiP1Cy1SmH3wCMY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QYstUvpPXEPFH7IqKbs8onE5vnccfHXRMWL7vsugDA6iNjGUNE3iuIVmbmjB7vFw1
-         WY0Ie7yKZh/F0M5lTRInW0CxAZU9VD6rPVVETeM4WhXwqWcfwdufVzBO+RyQqOqjj/
-         JgVS4ZEESONECWXuedzB/Nodu5cSjO2mjtmIDMi8=
-Date:   Thu, 15 Aug 2019 16:09:37 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v5 11/18] tty: handle compat PPP ioctls
-Message-ID: <20190815140937.GB23267@kroah.com>
-References: <20190814204259.120942-1-arnd@arndb.de>
- <20190814205521.122180-2-arnd@arndb.de>
+        by mx1.redhat.com (Postfix) with ESMTPS id 7F621300146E;
+        Thu, 15 Aug 2019 14:10:38 +0000 (UTC)
+Received: from krava (unknown [10.43.17.33])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 69B1C43FCD;
+        Thu, 15 Aug 2019 14:10:36 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 16:10:35 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     John Keeping <john@metanate.com>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] perf unwind: fix libunwind when tid != pid
+Message-ID: <20190815141035.GJ30356@krava>
+References: <20190804124434.204da4ac.john@metanate.com>
+ <20190815100146.28842-1-john@metanate.com>
+ <20190815100146.28842-2-john@metanate.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190814205521.122180-2-arnd@arndb.de>
+In-Reply-To: <20190815100146.28842-2-john@metanate.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 15 Aug 2019 14:10:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 10:54:46PM +0200, Arnd Bergmann wrote:
-> Multiple tty devices are have tty devices that handle the
-> PPPIOCGUNIT and PPPIOCGCHAN ioctls. To avoid adding a compat_ioctl
-> handler to each of those, add it directly in tty_compat_ioctl
-> so we can remove the calls from fs/compat_ioctl.c.
+On Thu, Aug 15, 2019 at 11:01:45AM +0100, John Keeping wrote:
+> Commit e5adfc3e7e77 ("perf map: Synthesize maps only for thread group
+> leader") changed the recording side so that we no longer get mmap events
+> for threads other than the thread group leader (when synthesising these
+> events for threads which exist before perf is started).
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> When a file recorded after this change is loaded, the lack of mmap
+> records mean that unwinding is not set up for any other threads.
+> 
+> This can be seen in a simple record/report scenario:
+> 
+> 	perf record --call-graph=dwarf -t $TID
+> 	perf report
+> 
+> If $TID is a process ID then the report will show call graphs, but if
+> $TID is a secondary thread the output is as if --call-graph=none was
+> specified.
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+great, mucch clearler now
+
+> 
+> Following the rationale in that commit, move the libunwind fields into
+> struct map_groups and update the libunwind functions to take this
+> instead of the struct thread.  This is only required for
+> unwind__finish_access which must now be called from map_groups__delete
+> and the others are changed for symmetry.
+> 
+> Note that unwind__get_entries keeps the thread argument since it is
+> required for symbol lookup and the libdw unwind provider uses the thread
+> ID.
+> 
+> Fixes: e5adfc3e7e77 ("perf map: Synthesize maps only for thread group leader")
+
+for all 3 patches
+
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+
+thanks,
+jirka
