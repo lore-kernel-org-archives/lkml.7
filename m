@@ -2,178 +2,144 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 311B5C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2B2C3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24672083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1141621743
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:41:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Hdl4w3Gg";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="YDYl/kql"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="bRgOETsH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732292AbfHOUhI (ORCPT
+        id S1732253AbfHOUli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 16:37:08 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:54330 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730988AbfHOUhI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 16:37:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1565901428; x=1597437428;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=O+MzaVa3dUEUP3AwnyiPb55qAsw5XchBeqI8a9bshRg=;
-  b=Hdl4w3GgHgxzrgvCXm5Rbh+SbKwAM1LwTU3czoNV/tJRKIhnkP5Ayxgc
-   BewM4noFy9kgbSLKz3dlBhTCHaFpwjY3DT+1nXeyCEggrKXdIAPCHKRRk
-   B1i4wKM+SiM3pWuGSwn/n8QFqD1oJwY+zNcMXnq3SPZuu+drIu8a8uPgL
-   h0wlEcSjtkKaMHDCA4C1MYHImew5IaAVs/gQDpDM6rUMxfX2aEV7nLgaS
-   sWMx/hlMsxyuwb1c10TlbYidFyr0SMecVs3Yqtk84BsCxQXuwVWfCpwCo
-   JKVHI9I9xNmxpY8rCnKVQpWXBruv5xVW/v98jRkDqJnXnv1ZaJ8i7Q6Bc
-   g==;
-IronPort-SDR: gkxHrAO5dYNII5CtAkwSGc2X9ax57zqSuJvXzJ0A+8u0ST/AH9jsoJtW7hwYP2A68Ou/B75Ggd
- muTfxremkifNk712UjhMhaIcNuMIF5v1XQlar4VWpCVwm+O2pY8E92sQVrduI1mKwAvNHCIlvN
- UKVit8L+A7T1rAD/0gJy9xFykv8w757vOVyybvkKdIsDX4CYuWhD6CNi5S9iGFawdCK+thMiGY
- OXyPl1pfP2RJa3sNM6mhzdrEl3X13erM9J/VncYE8DKMyGjk6GHYr4UEeI9niJtKAF8lFoakHC
- xIE=
-X-IronPort-AV: E=Sophos;i="5.64,389,1559491200"; 
-   d="scan'208";a="120536498"
-Received: from mail-sn1nam04lp2056.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.56])
-  by ob1.hgst.iphmx.com with ESMTP; 16 Aug 2019 04:37:07 +0800
+        Thu, 15 Aug 2019 16:41:38 -0400
+Received: from mail-eopbgr00044.outbound.protection.outlook.com ([40.107.0.44]:50767
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728898AbfHOUli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 16:41:38 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cjh0iNvGkDjTFbFecyvOij8rd6YgQgxXJMnDOfHvCpOg7rP1iFL4NCnPIQq+CgBzirm4UmkbystWefxm9eB7VPgQVoUfclkXHuhi/IWFAS9jRH7ZrIIDuUPvrOlgMCaZnHXDEu/XOyO9BfPTacsjC6TiEqswNrKdu+4Iat3rUEQgX9YbPO8rT2zzxWeOG+I4YxxiGwx0yyHqPsvK2okMKONHPbrS9AkLpiB4pIQcTmTss0nNt8w6Ny/SdVJHW5ADNm9iX8/s0w+usYCl/z8E59lrSlgpkq3hrnuQQvUvxEuU3bW6VQm5fyS3IHVqSL34pDi/JJa1at7FYHEPaNOYMQ==
+ b=N61BRXdMrJbs+iAB67hvB7sBjTxDzxU5S+YJ+XThKFMxoXFxlKVMwkj8UU5L33blgwVQrugodymtKRAJZFljrp210LDdILJ8aXgizmnGdJn9gmLeVYESNPypX+iwpqSCSBL4ev+zxH8YFkQC+0JeHsyAHXVzisKhWUoG3tTJ/crgVz/AknkYSNmzYMKCnFMICexSlc8ygoAkV8We2U3LfFIDETC6Z1qVjzYBpZLbSrG14M1jzOgxfM+IrBc3Bw20j4CQmzlVWO6ebBzyvDEM643ZNzJ0tQtFJQpq5ep0QlDPhZjtZXbMenaOot8xJFyD7g6YDNOYhBuQqcnwCNVw8w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O+MzaVa3dUEUP3AwnyiPb55qAsw5XchBeqI8a9bshRg=;
- b=XuB5beYfsNjzG4XQpCq2Chiy2OFaMZCzppNhM8fTZhfZ6qHgiPaVY7zjWvBMWzXBbU+HTiA9Ajvi62kcghiTVCdodyPDuL0wCz91hXYjfQo8pXxFnV1MnzymB4Iln/BxRGF06lSy9Mqi25N0ccbxijrX26mBElrDRnfy5+RaFxlKU8OAB6oiPno4QMciSp5DSjUbhnONlU/eINzulV8hhTywt6F2U1Yb2Shw0gUJJcFt0sR2oPfLI10XaobwVTz4tBs7cWUOay8CtKdnHoxhdRVUfjtkBhD02ALG72rbdbh4KbVZzurvImuuT425Q35AH0hFbaAZY54IRkeI0DkVfQ==
+ bh=8J6vbzMCny0M9Y2WhM22XSfEOXaGP5rhwsX2c6YCsnE=;
+ b=CovEG8nrMPTu8cae/9fVq7tbHvVXNcfMkcWjTJouwLeV8mde9KKvAz7bVV51LGSWmyIwfP2+vcXvzeD5hNoJU30SuItBJ6PM8TdNQ+jqQ/UA1UXaOhcOiL3ngOLJIbc5ekU+Jisxzo7FL2F5AU/WeuG8SmxvEoPfZOU6BPY8raAfoeK6EQVIMo9+KdN9xv0JonHIY4oYrSVXxSn1bX1fHEJVld9jOxj7QMLucHON5hf1ykp/3AD5TlHcWSHKBuMjUyw/jtzZ4chAoDZBPbQXXKGwHxxPcFFES9i5ekEL3lPowNxxq1YiuCFQdsADEH5QzcjEhNTmIplxj8wfHT5y1A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O+MzaVa3dUEUP3AwnyiPb55qAsw5XchBeqI8a9bshRg=;
- b=YDYl/kqljC1PQGdCfN2FPJdPaAxj0mUe2CSminWXlKCvOKr72HhN8xKCMjuIHdKSK/VYuGrwAilSnL6Jx6I/w4jeGSXaME+w5NlFP+2LUYGWi+BZrhYZ8NH2NXuUe7uHO0EqIQot7Du0zH3akFea2/lN129w0/AOB2hvlp/kUHY=
-Received: from BYAPR04MB3990.namprd04.prod.outlook.com (52.135.215.29) by
- BYAPR04MB5478.namprd04.prod.outlook.com (20.178.197.203) with Microsoft SMTP
+ bh=8J6vbzMCny0M9Y2WhM22XSfEOXaGP5rhwsX2c6YCsnE=;
+ b=bRgOETsHmSCoYVqwf0dsz7VCCTSo2XHxVmPz3n5KUil5Ul15pbEAEfX/s1O7vYk5gGoGK5ZgZ+yqKUTQGkyg1g/vP8I0yoBfsrIHM6norBKuUheP1P1MXR9ZW13xksXwjNT/WbZhUWdjBZhYcY8quGU/syePyCe/DlH1+bQ7lKU=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4222.eurprd05.prod.outlook.com (52.133.12.11) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.16; Thu, 15 Aug 2019 20:37:05 +0000
-Received: from BYAPR04MB3990.namprd04.prod.outlook.com
- ([fe80::d89b:cb55:d563:79e9]) by BYAPR04MB3990.namprd04.prod.outlook.com
- ([fe80::d89b:cb55:d563:79e9%6]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
- 20:37:04 +0000
-From:   Atish Patra <Atish.Patra@wdc.com>
-To:     "hch@infradead.org" <hch@infradead.org>
-CC:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
-        "palmer@sifive.com" <palmer@sifive.com>
-Subject: Re: [PATCH] RISC-V: Issue a local tlb flush if possible.
-Thread-Topic: [PATCH] RISC-V: Issue a local tlb flush if possible.
-Thread-Index: AQHVTxz5XkoGRRVrekixM0/zCIcSeKb3ngaAgACcGwCAAO7ygIADixaA
-Date:   Thu, 15 Aug 2019 20:37:04 +0000
-Message-ID: <3f55d5878044129a3cbb72b13b712e9a1c218dc7.camel@wdc.com>
-References: <20190810014309.20838-1-atish.patra@wdc.com>
-         <20190812145631.GC26897@infradead.org>
-         <f58814e156b918531f058acfac944abef34f5fb1.camel@wdc.com>
-         <20190813143027.GA31668@infradead.org>
-In-Reply-To: <20190813143027.GA31668@infradead.org>
+ 15.20.2178.16; Thu, 15 Aug 2019 20:41:33 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
+ 20:41:33 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Jerome Glisse <jglisse@redhat.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
+Thread-Topic: [PATCH 04/15] mm: remove the pgmap field from struct
+ hmm_vma_walk
+Thread-Index: AQHVTHDc5B4IgstYQk6yBJaVfn8xGqbv9wIAgAARNACAAMySgIAJE76AgABlPQCAAGF5AIAAFowAgAHIzYCAABojAIAAAd6AgAAIBgCAAAXLAIAAAlcA
+Date:   Thu, 15 Aug 2019 20:41:33 +0000
+Message-ID: <20190815204128.GI22970@mellanox.com>
+References: <20190808065933.GA29382@lst.de>
+ <CAPcyv4hMUzw8vyXFRPe2pdwef0npbMm9tx9wiZ9MWkHGhH1V6w@mail.gmail.com>
+ <20190814073854.GA27249@lst.de> <20190814132746.GE13756@mellanox.com>
+ <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com>
+ <20190815180325.GA4920@redhat.com>
+ <CAPcyv4g4hzcEA=TPYVTiqpbtOoS30ahogRUttCvQAvXQbQjfnw@mail.gmail.com>
+ <20190815194339.GC9253@redhat.com>
+ <CAPcyv4jid8_=-8hBpn_Qm=c4S8BapL9B9RGT7e9uu303yH=Yqw@mail.gmail.com>
+ <20190815203306.GB25517@redhat.com>
+In-Reply-To: <20190815203306.GB25517@redhat.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQBPR0101CA0022.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00::35) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Atish.Patra@wdc.com; 
-x-originating-ip: [199.255.44.250]
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b4336747-6038-4a49-ea27-08d721c0557d
+x-ms-office365-filtering-correlation-id: 1b2b123c-9b15-45c8-9bad-08d721c0f58e
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB5478;
-x-ms-traffictypediagnostic: BYAPR04MB5478:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR04MB54788A8CD828EBA435C0695DFAAC0@BYAPR04MB5478.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4222;
+x-ms-traffictypediagnostic: VI1PR05MB4222:
+x-microsoft-antispam-prvs: <VI1PR05MB422243F481B0B7473E440DA4CFAC0@VI1PR05MB4222.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 01304918F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(396003)(136003)(346002)(39860400002)(189003)(199004)(7736002)(6512007)(71200400001)(476003)(66556008)(66946007)(305945005)(2906002)(316002)(186003)(86362001)(66446008)(76116006)(99286004)(229853002)(446003)(11346002)(53936002)(66476007)(2616005)(71190400001)(5640700003)(2351001)(118296001)(64756008)(6486002)(6436002)(81166006)(66066001)(6506007)(81156014)(14454004)(36756003)(486006)(5660300002)(256004)(478600001)(1730700003)(4326008)(26005)(6246003)(3846002)(8936002)(2501003)(6116002)(54906003)(25786009)(102836004)(6916009)(76176011)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5478;H:BYAPR04MB3990.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(366004)(346002)(39860400002)(199004)(189003)(86362001)(52116002)(305945005)(7736002)(76176011)(11346002)(2616005)(99286004)(446003)(486006)(6512007)(5660300002)(8936002)(7416002)(386003)(81156014)(81166006)(8676002)(6486002)(6506007)(66066001)(6436002)(229853002)(36756003)(6116002)(3846002)(71190400001)(71200400001)(66946007)(25786009)(66476007)(64756008)(66556008)(66446008)(256004)(53936002)(4744005)(476003)(186003)(14454004)(316002)(102836004)(2906002)(26005)(478600001)(54906003)(33656002)(4326008)(6916009)(1076003)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4222;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: SAYV6uu07GIc23VnkwZR8otX4ntpFrYKhIoxG7aKGOe0ZWjs/SgoVpJTbeKAHyr3jv6XpxcZpB0JZ9ubVDiPCK3sdorxor2vaUw+x1UhaIzpO03KyV9Upz4QWpA2ge3eE72Z6f0TddmsP0lMMqXCChtbF6KP88RA6yhYCe4O0RKhdOOIc99fYz0zqPwf6Pn/Tst6CstP8md8gTP6vyoxX2xhy0Ck5GzbfhA+e90Sd0myIxwf8SedF+7q2d9Er9I5d/0XqvO5hz2lmBxs3PKDzSTgfZeULTFqMMWUGIUOqe5kkfqnOVs0Oiz5FKhpFn/VvWc/CEigoxYLB3CdE2AWLRwgot+Lg7UsZRTPCBi8b+Ef9kCJ3jles2KrrZnrMl7yprwxFSDl0SVANDfSHKxyEh7AeuH+WTI7srlp3aFBilA=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9E58DB51E878DB49B49FA5E3D5869C2E@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: Hn9/f4jS1oreK6D9lcEE8F7owNFeu4pqFf5CCTXuTktZGHxtcpDmViZiustVo9MEza3PWPAYhkb0dwchQdTeJDODdQBGzXH1DdvIKO922nM6c8agb7tYoXMKRoB2d45Fb5yCKU03ZsEjgmqHyiGgykA/8EYvnHQZE6tV7bxueZPJlLLL2+mm+upD8ly7Vf5uQYHG+yS2vtMPGU5sc7JCMhhiu9D7eCuL4GwZYw/x1zB5LsWz3BYmFER+gBx4rE5uRQrdEVJAG41MfEjR2/RoUgF5uhf38a7KA/qyFcubU74bcFfGpL0sivGM3h1JoK6iqqWcSjt8VBHnrqfuaYLawN4JVmJm3w90GfAIzp9zmHJv8LCjX9IawnXyivcgUeUC1AoXufaVKfp502vvgAvKk4KtZIo2kfLGXmvR6Sb09wo=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <83C67FC496A7AF4DAD50FF0383D8AADD@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4336747-6038-4a49-ea27-08d721c0557d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 20:37:04.5688
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b2b123c-9b15-45c8-9bad-08d721c0f58e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 20:41:33.6094
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cP9q6IQJA/kKaWi/JbCpjgxVlYJgJkKwW11o/HJeqXfAZ75Fh5hei5It9hg8GD1NFyVWszr+5eOohDwmNbpVqw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5478
+X-MS-Exchange-CrossTenant-userprincipalname: R+VcSZJEpHLkhAxuqrdKAUeR8g8CXJNpnFS8GoIvcGHWg2nIDsMdHldgmhSvr4CEeb7LBr1ZLYVypM4oYNX10g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4222
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA4LTEzIGF0IDA3OjMwIC0wNzAwLCBoY2hAaW5mcmFkZWFkLm9yZyB3cm90
-ZToNCj4gT24gVHVlLCBBdWcgMTMsIDIwMTkgYXQgMTI6MTU6MTVBTSArMDAwMCwgQXRpc2ggUGF0
-cmEgd3JvdGU6DQo+ID4gSSB0aG91Z2h0IGlmIGl0IHJlY2lldmVzIGFuIGVtcHR5IGNwdW1hc2ss
-IHRoZW4gaXQgc2hvdWxkIGF0IGxlYXN0DQo+ID4gZG8gYQ0KPiA+IGxvY2FsIGZsdXNoIGlzIHRo
-ZSBleHBlY3RlZCBiZWhhdmlvci4gQXJlIHlvdSBzYXlpbmcgdGhhdCB3ZSBzaG91bGQNCj4gPiBq
-dXN0IHNraXAgYWxsIGFuZCByZXR1cm4gPyANCj4gDQo+IEhvdyBjb3VsZCB3ZSBldmVyIHJlY2Vp
-dmUgYW4gZW1wdHkgY3B1IG1hc2s/ICBJIHRoaW5rIGl0IGNvdWxkIG9ubHkNCj4gYmUgZW1wdHkg
-d2l0aG91dCB0aGUgY3VycmVudCBjcHUuICBBdCBsZWFzdCB0aGF0IGlzIG15IHJlYWRpbmcgb2YN
-Cj4gdGhlIGNhbGxlcnMgYW5kIGEgZmV3IG90aGVyIGltcGxlbWVudGF0aW9ucy4NCj4gDQoNCldl
-IGdldCB0b24gb2YgdGhlbS4gSGVyZSBpcyB0aGUgc3RhY2sgZHVtcC4NCg0KWyAgIDE2LjczNTgx
-NF0gWzxmZmZmZmZlMDAwMDM1NDk4Pl0gd2Fsa19zdGFja2ZyYW1lKzB4MC8weGEwXk0NCjI5ODQz
-NiBbICAgMTYuODE5MDM3XSBbPGZmZmZmZmUwMDAwMzU1Zjg+XSBzaG93X3N0YWNrKzB4MmEvMHgz
-NF5NDQoyOTg0MzcgWyAgIDE2Ljg5OTY0OF0gWzxmZmZmZmZlMDAwNjdiNTRjPl0gZHVtcF9zdGFj
-aysweDYyLzB4N2NeTQ0KMjk4NDM4IFsgICAxNi45Nzc0MDJdIFs8ZmZmZmZmZTAwMDBlZjZmNj5d
-IHRsYl9mbHVzaF9tbXUrMHgxNGEvMHgxNTBeTQ0KMjk4NDM5IFsgICAxNy4wNTQxOTddIFs8ZmZm
-ZmZmZTAwMDBlZjdhND5dIHRsYl9maW5pc2hfbW11KzB4NDIvMHg3Ml5NDQoyOTg0NDAgWyAgIDE3
-LjEyOTk4Nl0gWzxmZmZmZmZlMDAwMGVkZTdjPl0gZXhpdF9tbWFwKzB4OGUvMHhmYV5NDQoyOTg0
-NDEgWyAgIDE3LjIwMzY2OV0gWzxmZmZmZmZlMDAwMDM3ZDU0Pl0gbW1wdXQucGFydC4zKzB4MWEv
-MHhjNF5NDQoyOTg0NDIgWyAgIDE3LjI3NTk4NV0gWzxmZmZmZmZlMDAwMDM3ZTFlPl0gbW1wdXQr
-MHgyMC8weDI4Xk0NCjI5ODQ0MyBbICAgMTcuMzQ1MjQ4XSBbPGZmZmZmZmUwMDAxMTQzYzI+XSBm
-bHVzaF9vbGRfZXhlYysweDQxOC8weDVmOF5NDQoyOTg0NDQgWyAgIDE3LjQxNTM3MF0gWzxmZmZm
-ZmZlMDAwMTU4NDA4Pl0NCmxvYWRfZWxmX2JpbmFyeSsweDI2Mi8weGM4NF5NDQoyOTg0NDUgWyAg
-IDE3LjQ4MzY0MV0gWzxmZmZmZmZlMDAwMTE0NjE0Pl0NCnNlYXJjaF9iaW5hcnlfaGFuZGxlci5w
-YXJ0LjcrMHg3Mi8weDE3Ml5NDQoyOTg0NDYgWyAgIDE3LjU1MjA3OF0gWzxmZmZmZmZlMDAwMTE0
-YmIyPl0NCl9fZG9fZXhlY3ZlX2ZpbGUrMHg0MGMvMHg1NmFeTQ0KMjk4NDQ3IFsgICAxNy42MTc5
-MzJdIFs8ZmZmZmZmZTAwMDExNTAzZT5dIHN5c19leGVjdmUrMHgyNi8weDMyXk0NCjI5ODQ0OCBb
-ICAgMTcuNjgyMTY0XSBbPGZmZmZmZmUwMDAwMzQzN2U+XSByZXRfZnJvbV9zeXNjYWxsKzB4MC8w
-eGVeTQ0KDQpJdCBsb29rcyBsaWtlIGl0IGlzIGluIHRoZSBwYXRoIG9mIGNsZWFyaW5nIHRoZSBv
-bGQgdHJhY2VzIG9mIGFscmVhZHkNCnJ1biBzY3JpcHQgb3IgcHJvZ3JhbS4gIEkgYW0gbm90IHN1
-cmUgaWYgdGhlIGNwdW1hc2sgc3VwcG9zZWQgdG8gYmUNCmVtcHR5IGluIHRoaXMgcGF0aC4NCg0K
-UHJvYmFibHkgd2Ugc2hvdWxkIGp1c3QgaXNzdWUgdGxiIGZsdXNoIGFsbCBmb3IgYWxsIENQVXMg
-aW5zdGVhZCBvZg0KanVzdCB0aGUgbG9jYWwgQ1BVLg0KDQo+ID4gPiAJaWYgKCFjcHVtYXNrIHx8
-IGNwdW1hc2tfdGVzdF9jcHUoY3B1LCBjcHVtYXNrKSB7DQo+ID4gPiAJCWlmICgoc3RhcnQgPT0g
-MCAmJiBzaXplID09IC0xKSB8fCBzaXplID4gUEFHRV9TSVpFKQ0KPiA+ID4gCQkJbG9jYWxfZmx1
-c2hfdGxiX2FsbCgpOw0KPiA+ID4gCQllbHNlIGlmIChzaXplID09IFBBR0VfU0laRSkNCj4gPiA+
-IAkJCWxvY2FsX2ZsdXNoX3RsYl9wYWdlKHN0YXJ0KTsNCj4gPiA+IAkJY3B1bWFza19jbGVhcl9j
-cHUoY3B1aWQsIGNwdW1hc2spOw0KPiA+IA0KPiA+IFRoaXMgd2lsbCBtb2RpZnkgdGhlIG9yaWdp
-bmFsIGNwdW1hc2sgd2hpY2ggaXMgbm90IGNvcnJlY3QuIGNsZWFyDQo+ID4gcGFydA0KPiA+IGhh
-cyB0byBiZSBkb25lIG9uIGhtYXNrIHRvIGF2b2lkIGEgY29weS4NCj4gDQo+IEluZGVlZC4gIEJ1
-dCBsb29raW5nIGF0IHRoZSB4ODYgdGxiZmx1c2ggaW1wbGVtZW50YXRpb24gaXQgc2VlbXMgbGlr
-ZQ0KPiB3ZQ0KPiBjb3VsZCB1c2UgY3B1bWFza19hbnlfYnV0KCkgdG8gYXZvaWQgaGF2aW5nIHRv
-IG1vZGlmeSB0aGUgcGFzc2VkIGluDQo+IGNwdW1hc2suDQoNCkxvb2tpbmcgYXQgdGhlIHg4NiBj
-b2RlLCBpdCB1c2VzIGNwdW1hc2tfYW55X2J1dCB0byBqdXN0IHRlc3QgaWYgdGhlcmUNCmFueSBv
-dGhlciBjcHUgcHJlc2VudCBhcGFydCBmcm9tIHRoZSBjdXJyZW50IG9uZS4NCg0KSWYgeWVzLCBp
-dCBjYWxscyBzbXBfY2FsbF9mdW5jdGlvbl9tYW55IHdoaWNoIGlnbm9yZXMgdGhlIGN1cnJlbnQg
-Y3B1DQphbmQgZXhlY3V0ZSB0bGIgZmx1c2ggY29kZSBvbiBhbGwgb3RoZXIgY3B1cy4NCg0KRm9y
-IFJJU0MtViwgaXQgaGFzIHRvIHN0aWxsIHNlbmQgdGhlIGNwdW1hc2sgY29udGFpbmluZyBsb2Nh
-bCBjcHUgYW5kDQpNLW1vZGUgc29mdHdhcmUgbWF5IGRvIGEgbG9jYWwgdGxiIGZsdXNoIHRoZSB0
-bGJzIGFnYWluIGZvciBubyByZWFzb24uDQoNCg0KUmVnYXJkcywNCkF0aXNoDQo=
+On Thu, Aug 15, 2019 at 04:33:06PM -0400, Jerome Glisse wrote:
+
+> So nor HMM nor driver should dereference the struct page (i do not
+> think any iommu driver would either),
+
+Er, they do technically deref the struct page:
+
+nouveau_dmem_convert_pfn(struct nouveau_drm *drm,
+			 struct hmm_range *range)
+		struct page *page;
+		page =3D hmm_pfn_to_page(range, range->pfns[i]);
+		if (!nouveau_dmem_page(drm, page)) {
+
+
+nouveau_dmem_page(struct nouveau_drm *drm, struct page *page)
+{
+	return is_device_private_page(page) && drm->dmem =3D=3D page_to_dmem(page)
+
+
+Which does touch 'page->pgmap'
+
+Is this OK without having a get_dev_pagemap() ?
+
+Noting that the collision-retry scheme doesn't protect anything here
+as we can have a concurrent invalidation while doing the above deref.
+
+Jason
