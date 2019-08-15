@@ -2,114 +2,98 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306C7C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C08BC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF7021744
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53CEE21743
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:35:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jPedfFTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731084AbfHOIfo (ORCPT
+        id S1731095AbfHOIfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 04:35:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60888 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731070AbfHOIfn (ORCPT
+        Thu, 15 Aug 2019 04:35:47 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40954 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731076AbfHOIfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 04:35:43 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7F8WRFn049913
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 04:35:42 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ucybwqwxq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 04:35:42 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 15 Aug 2019 09:35:40 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 15 Aug 2019 09:35:37 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7F8ZaGx57344044
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Aug 2019 08:35:36 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6E298A4040;
-        Thu, 15 Aug 2019 08:35:36 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 02409A404D;
-        Thu, 15 Aug 2019 08:35:35 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.59])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 15 Aug 2019 08:35:34 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Thu, 15 Aug 2019 11:35:34 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Richard Kuo <rkuo@codeaurora.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>, linux-hexagon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH] hexagon: drop empty and unused free_initrd_mem
-Date:   Thu, 15 Aug 2019 11:35:33 +0300
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-GCONF: 00
-x-cbid: 19081508-0016-0000-0000-0000029EFDD6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081508-0017-0000-0000-000032FF1B5B
-Message-Id: <1565858133-25852-1-git-send-email-rppt@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-15_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=881 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908150091
+        Thu, 15 Aug 2019 04:35:45 -0400
+Received: by mail-lf1-f67.google.com with SMTP id b17so1143647lff.7
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 01:35:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LckeMEL++L98xkE6bRHUomn8itgtRqdrAYiiSW7aPt8=;
+        b=jPedfFTQpgM6N16VFCMmcxfHRcTAvQLEVyl2L+pi2uNbG2bAZTYPJy6zsyYd/zsq75
+         qLGM6kd/VOPA6/+zGy4f2K6XHTk26IBdEHY/QLWxecOs/9lvtdbmOJfZwKIQJ7DlE+sE
+         YPADIXmnziNit+bcqcv1rMbb3OPAfelMCc27OtpaNVFdT2cms0GzvMd1b8R0vzNSkYZj
+         89bhsFLRmjCXBeGnfb0+txiyL5JPTobZE1xPE4SJnCl4HZqvVhB6UcxWPwOK7DObetSQ
+         fffSbk6TjILxq9Q88zUiRn1VeY8FagM25tADUr0X8nG874svkQvTRhpsxvLxr4M5G22L
+         rQ2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LckeMEL++L98xkE6bRHUomn8itgtRqdrAYiiSW7aPt8=;
+        b=YX9gPKQxB9D00cjLgOQnB6McTa7F56Bshop0R3DomHI31IzSKkR4sZtvBPlnc+ejoV
+         8n55QK95Ys2ZBrmk/Kd6xWUUTg7mj1I4g6JOuNgrngJwLj0pxqVP4yltzDzMJhFTOLIg
+         dZc1E4PWaOWAoekeE4JUSYW1zUBPYiAJHH5rxl60SfSU2ufgNvo9kY9TE0yinbG6mhrJ
+         ib5ZHFfzizn0Gzc1YE/PnB2j+f1pHXWlSiE0s5+B2sf3jCEhE/fRgl1GL9yWkRbEJL8p
+         m5dwR0ZqB/18m+QJsivHNVEZMjcCOXqsbVriRQr4LhDWldetDc2pXdKPBgB/m3nlBC4n
+         8Hzg==
+X-Gm-Message-State: APjAAAVGzJwHn746mDpbNoZM3eSjjjEw6y2RKRyWmY2QqxWBnaR3Hg0z
+        oDNkfAoGJWGsvoCgVQkmeZGekDjVI7PLzdhjF/cF+Q==
+X-Google-Smtp-Source: APXvYqwK1EXF1OlxOI1zDtBRCI1LlnDOnp15wcax8wzG7tnNStvRwTaXt1N5txPI2Ni93wI6DJH8/9XBc1qmOdGdFeU=
+X-Received: by 2002:a19:ed11:: with SMTP id y17mr1783154lfy.141.1565858143676;
+ Thu, 15 Aug 2019 01:35:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190815004854.19860-1-masneyb@onstation.org> <20190815004854.19860-9-masneyb@onstation.org>
+In-Reply-To: <20190815004854.19860-9-masneyb@onstation.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 15 Aug 2019 10:35:31 +0200
+Message-ID: <CACRpkdavMPW1gv8jGUJb-48+=9XCmT=_bsMQFEx3Tk06aQNcAA@mail.gmail.com>
+Subject: Re: [PATCH 08/11] drm/msm/hdmi: silence -EPROBE_DEFER warning
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hexagon never reserves or initializes initrd and the only mention of it is
-the empty free_initrd_mem() function.
+On Thu, Aug 15, 2019 at 2:49 AM Brian Masney <masneyb@onstation.org> wrote:
 
-As we have a generic implementation of free_initrd_mem(), there is no need
-to define an empty stub for the hexagon implementation and it can be
-dropped.
+> Silence a warning message due to an -EPROBE_DEFER error to help cleanup
+> the system boot log.
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- arch/hexagon/mm/init.c | 13 -------------
- 1 file changed, 13 deletions(-)
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/arch/hexagon/mm/init.c b/arch/hexagon/mm/init.c
-index f1f6ebd..c961773 100644
---- a/arch/hexagon/mm/init.c
-+++ b/arch/hexagon/mm/init.c
-@@ -71,19 +71,6 @@ void __init mem_init(void)
- 	init_mm.context.ptbase = __pa(init_mm.pgd);
- }
- 
--/*
-- * free_initrd_mem - frees...  initrd memory.
-- * @start - start of init memory
-- * @end - end of init memory
-- *
-- * Apparently has to be passed the address of the initrd memory.
-- *
-- * Wrapped by #ifdef CONFIG_BLKDEV_INITRD
-- */
--void free_initrd_mem(unsigned long start, unsigned long end)
--{
--}
--
- void sync_icache_dcache(pte_t pte)
- {
- 	unsigned long addr;
--- 
-2.7.4
-
+Yours,
+Linus Walleij
