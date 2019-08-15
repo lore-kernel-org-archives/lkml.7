@@ -2,62 +2,67 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5C2C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E39BC32757
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BABED20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F48720665
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:08:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731712AbfHOMH2 (ORCPT
+        id S1731722AbfHOMIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:07:28 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:57246 "EHLO fornost.hmeau.com"
+        Thu, 15 Aug 2019 08:08:47 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:57280 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730300AbfHOMH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 08:07:28 -0400
+        id S1730497AbfHOMIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 08:08:46 -0400
 Received: from gondolin.me.apana.org.au ([192.168.0.6] helo=gondolin.hengli.com.au)
         by fornost.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hyEXK-0003Ll-BV; Thu, 15 Aug 2019 22:07:22 +1000
+        id 1hyEYZ-0003S4-5r; Thu, 15 Aug 2019 22:08:39 +1000
 Received: from herbert by gondolin.hengli.com.au with local (Exim 4.80)
         (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hyEXK-0007ip-7V; Thu, 15 Aug 2019 22:07:22 +1000
-Date:   Thu, 15 Aug 2019 22:07:22 +1000
+        id 1hyEYZ-0007km-02; Thu, 15 Aug 2019 22:08:39 +1000
+Date:   Thu, 15 Aug 2019 22:08:38 +1000
 From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Subject: Re: [PATCH -next] crypto: streebog - remove two unused variables
-Message-ID: <20190815120722.GG29355@gondor.apana.org.au>
-References: <20190809084905.69444-1-yuehaibing@huawei.com>
+To:     Zhou Wang <wangzhou1@hisilicon.com>
+Cc:     davem@davemloft.net, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com
+Subject: Re: [PATCH 0/5] crypto: hisilicon: Misc fixes
+Message-ID: <20190815120838.GA29793@gondor.apana.org.au>
+References: <1565774919-31853-1-git-send-email-wangzhou1@hisilicon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190809084905.69444-1-yuehaibing@huawei.com>
+In-Reply-To: <1565774919-31853-1-git-send-email-wangzhou1@hisilicon.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 04:49:05PM +0800, YueHaibing wrote:
-> crypto/streebog_generic.c:162:17: warning:
->  Pi defined but not used [-Wunused-const-variable=]
-> crypto/streebog_generic.c:151:17: warning:
->  Tau defined but not used [-Wunused-const-variable=]
+On Wed, Aug 14, 2019 at 05:28:34PM +0800, Zhou Wang wrote:
+> Patch 1~3 are fixes about kbuild errors, patch 4,5 are tiny fixes about qm
+> and zip.
 > 
-> They are never used, so can be removed.
+> This series is based on cryptodev-2.6.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  crypto/streebog_generic.c | 46 ----------------------------------------------
->  1 file changed, 46 deletions(-)
+> Zhou Wang (5):
+>   crypto: hisilicon - fix kbuild warnings
+>   crypto: hisilicon - add dependency for CRYPTO_DEV_HISI_ZIP
+>   crypto: hisilicon - init curr_sgl_dma to fix compile warning
+>   crypto: hisilicon - add missing single_release
+>   crypto: hisilicon - fix error handle in hisi_zip_create_req_q
+> 
+>  drivers/crypto/hisilicon/Kconfig          | 1 +
+>  drivers/crypto/hisilicon/qm.c             | 7 ++++---
+>  drivers/crypto/hisilicon/sgl.c            | 2 +-
+>  drivers/crypto/hisilicon/zip/zip_crypto.c | 6 ++++--
+>  4 files changed, 10 insertions(+), 6 deletions(-)
 
-Patch applied.  Thanks.
+All applied.  Thanks.
 -- 
 Email: Herbert Xu <herbert@gondor.apana.org.au>
 Home Page: http://gondor.apana.org.au/~herbert/
