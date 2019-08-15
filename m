@@ -2,121 +2,138 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25828C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BAFC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F423A2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B45E32064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731441AbfHORcj (ORCPT
+        id S1731677AbfHORdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:32:39 -0400
-Received: from mga14.intel.com ([192.55.52.115]:17145 "EHLO mga14.intel.com"
+        Thu, 15 Aug 2019 13:33:16 -0400
+Received: from mga18.intel.com ([134.134.136.126]:31604 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbfHORcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:32:39 -0400
+        id S1726203AbfHORdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:33:15 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 10:32:38 -0700
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 10:32:49 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
-   d="scan'208";a="260880031"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga001.jf.intel.com with ESMTP; 15 Aug 2019 10:32:37 -0700
-Date:   Thu, 15 Aug 2019 10:32:37 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
-Message-ID: <20190815173237.GA30924@iweiny-DESK2.sc.intel.com>
-References: <20190812234950.GA6455@iweiny-DESK2.sc.intel.com>
- <38d2ff2f-4a69-e8bd-8f7c-41f1dbd80fae@nvidia.com>
- <20190813210857.GB12695@iweiny-DESK2.sc.intel.com>
- <a1044a0d-059c-f347-bd68-38be8478bf20@nvidia.com>
- <90e5cd11-fb34-6913-351b-a5cc6e24d85d@nvidia.com>
- <20190814234959.GA463@iweiny-DESK2.sc.intel.com>
- <2cbdf599-2226-99ae-b4d5-8909a0a1eadf@nvidia.com>
- <ac834ac6-39bd-6df9-fca4-70b9520b6c34@nvidia.com>
- <20190815132622.GG14313@quack2.suse.cz>
- <20190815133510.GA21302@quack2.suse.cz>
+   d="scan'208";a="176934043"
+Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
+  by fmsmga008.fm.intel.com with ESMTP; 15 Aug 2019 10:32:49 -0700
+Date:   Thu, 15 Aug 2019 10:30:03 -0700
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v5 2/7] PCI/ATS: Initialize PRI in pci_ats_init()
+Message-ID: <20190815173003.GB139211@skuppusw-desk.amr.corp.intel.com>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <3dd8c36177ac52d9a87655badb000d11785a5a4a.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190815044657.GD253360@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190815133510.GA21302@quack2.suse.cz>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20190815044657.GD253360@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 03:35:10PM +0200, Jan Kara wrote:
-> On Thu 15-08-19 15:26:22, Jan Kara wrote:
-> > On Wed 14-08-19 20:01:07, John Hubbard wrote:
-> > > On 8/14/19 5:02 PM, John Hubbard wrote:
-> > > 
-> > > Hold on, I *was* forgetting something: this was a two part thing, and
-> > > you're conflating the two points, but they need to remain separate and
-> > > distinct. There were:
-> > > 
-> > > 1. FOLL_PIN is necessary because the caller is clearly in the use case that
-> > > requires it--however briefly they might be there. As Jan described it,
-> > > 
-> > > "Anything that gets page reference and then touches page data (e.g.
-> > > direct IO) needs the new kind of tracking so that filesystem knows
-> > > someone is messing with the page data." [1]
+On Wed, Aug 14, 2019 at 11:46:57PM -0500, Bjorn Helgaas wrote:
+> On Thu, Aug 01, 2019 at 05:05:59PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > > 
-> > So when the GUP user uses MMU notifiers to stop writing to pages whenever
-> > they are writeprotected with page_mkclean(), they don't really need page
-> > pin - their access is then fully equivalent to any other mmap userspace
-> > access and filesystem knows how to deal with those. I forgot out this case
-> > when I wrote the above sentence.
+> > Currently, PRI Capability checks are repeated across all PRI API's.
+> > Instead, cache the capability check result in pci_pri_init() and use it
+> > in other PRI API's. Also, since PRI is a shared resource between PF/VF,
+> > initialize default values for common PRI features in pci_pri_init().
 > > 
-> > So to sum up there are three cases:
-> > 1) DIO case - GUP references to pages serving as DIO buffers are needed for
-> >    relatively short time, no special synchronization with page_mkclean() or
-> >    munmap() => needs FOLL_PIN
-> > 2) RDMA case - GUP references to pages serving as DMA buffers needed for a
-> >    long time, no special synchronization with page_mkclean() or munmap()
-> >    => needs FOLL_PIN | FOLL_LONGTERM
-> >    This case has also a special case when the pages are actually DAX. Then
-> >    the caller additionally needs file lease and additional file_pin
-> >    structure is used for tracking this usage.
-> > 3) ODP case - GUP references to pages serving as DMA buffers, MMU notifiers
-> >    used to synchronize with page_mkclean() and munmap() => normal page
-> >    references are fine.
+> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > ---
+> >  drivers/pci/ats.c       | 80 ++++++++++++++++++++++++++++-------------
+> >  include/linux/pci-ats.h |  5 +++
+> >  include/linux/pci.h     |  1 +
+> >  3 files changed, 61 insertions(+), 25 deletions(-)
+> > 
 > 
-> I want to add that I'd like to convert users in cases 1) and 2) from using
-> GUP to using differently named function. Users in case 3) can stay as they
-> are for now although ultimately I'd like to denote such use cases in a
-> special way as well...
+> > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> > index cdd936d10f68..280be911f190 100644
+> > --- a/drivers/pci/ats.c
+> > +++ b/drivers/pci/ats.c
 > 
+> > @@ -28,6 +28,8 @@ void pci_ats_init(struct pci_dev *dev)
+> >  		return;
+> >  
+> >  	dev->ats_cap = pos;
+> > +
+> > +	pci_pri_init(dev);
+> >  }
+> >  
+> >  /**
+> > @@ -170,36 +172,72 @@ int pci_ats_page_aligned(struct pci_dev *pdev)
+> >  EXPORT_SYMBOL_GPL(pci_ats_page_aligned);
+> >  
+> >  #ifdef CONFIG_PCI_PRI
+> > +
+> > +void pci_pri_init(struct pci_dev *pdev)
+> > +{
+> > ...
+> > +}
+> 
+> > diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> > index 1a0bdaee2f32..33653d4ca94f 100644
+> > --- a/include/linux/pci-ats.h
+> > +++ b/include/linux/pci-ats.h
+> > @@ -6,6 +6,7 @@
+> >  
+> >  #ifdef CONFIG_PCI_PRI
+> >  
+> > +void pci_pri_init(struct pci_dev *pdev);
+> 
+> pci_pri_init() is implemented and called in drivers/pci/ats.c.  Unless
+> there's a need to call this from outside ats.c, it should be static
+> and should not be declared here.
+> 
+> If you can make it static, please also reorder the code so you don't
+> need a forward declaration in ats.c.
+Initially I did implement it as static function in drivers/pci/ats.c
+and protected the calling of pci_pri_init() with #ifdef CONFIG_PCI_PRI.
+But Keith did not like the implementation using #ifdefs and asked me to
+define empty functions. That's the reason for moving it to header file.
+In your previous review to this patch, since this is not used outside ats.c
+you asked me to move the declaraion to drivers/pci/pci.h. So I was planing
+to move it to drivers/pci/pci.h in next version. Let me know if you are in
+agreement.
+> 
+> >  int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
+> >  void pci_disable_pri(struct pci_dev *pdev);
+> >  void pci_restore_pri_state(struct pci_dev *pdev);
+> > @@ -13,6 +14,10 @@ int pci_reset_pri(struct pci_dev *pdev);
+> >  
+> >  #else /* CONFIG_PCI_PRI */
+> >  
+> > +static inline void pci_pri_init(struct pci_dev *pdev)
+> > +{
+> > +}
+> > +
+> >  static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+> >  {
+> >  	return -ENODEV;
 
-Ok just to make this clear I threw up my current tree with your patches here:
-
-https://github.com/weiny2/linux-kernel/commits/mmotm-rdmafsdax-b0-v4
-
-I'm talking about dropping the final patch:
-05fd2d3afa6b rdma/umem_odp: Use vaddr_pin_pages_remote() in ODP
-
-The other 2 can stay.  I split out the *_remote() call.  We don't have a user
-but I'll keep it around for a bit.
-
-This tree is still WIP as I work through all the comments.  So I've not changed
-names or variable types etc...  Just wanted to settle this.
-
-Ira
-
+-- 
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
