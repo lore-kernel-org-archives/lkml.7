@@ -2,95 +2,104 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A96C32753
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 01:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B30C32753
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 01:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C67206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 01:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69178208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 01:53:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="k0n8568w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbfHOBko (ORCPT
+        id S1729106AbfHOBxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 21:40:44 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:2250 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726221AbfHOBkn (ORCPT
+        Wed, 14 Aug 2019 21:53:13 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45139 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbfHOBxN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 21:40:43 -0400
-X-UUID: 153b63453c964d65b347271be224daca-20190815
-X-UUID: 153b63453c964d65b347271be224daca-20190815
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 817517570; Thu, 15 Aug 2019 09:40:35 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 15 Aug 2019 09:40:36 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 15 Aug 2019 09:40:36 +0800
-Message-ID: <1565833236.24305.2.camel@mtksdaap41>
-Subject: Re: [PATCH v2 0/2] drm/mediatek: make imported PRIME buffers
- contiguous
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Alexandre Courbot <acourbot@chromium.org>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Thu, 15 Aug 2019 09:40:36 +0800
-In-Reply-To: <20190729053335.251379-1-acourbot@chromium.org>
-References: <20190729053335.251379-1-acourbot@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+        Wed, 14 Aug 2019 21:53:13 -0400
+Received: by mail-pg1-f196.google.com with SMTP id o13so548803pgp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 18:53:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B+urqSWm85wzvKtnrzAL/ED40jwSYxyNjNBdxhrRvuU=;
+        b=k0n8568wNHHsx6zXvAubvU8j+UJLpdwV3DXPjhBjHWiytO90eILwvNbmMyhHXPvvFh
+         OmQRZw4zukae4HtVxY8cxBgO55bggVvef2Bmci6q+mRJn7GGHoWlhcA85DFwziG6hSom
+         jd9nTZqqPAiI2dNUWoyDdDWXoRt+M5UuLrLedkgh9vJ7/NCAaPE7PVaUNQhQ07CXhWPX
+         OXBnh7s9ZiG+CFkFPzUd+zlaKrTTtmkLznfpe1kjOGy5yuNKyXCvus0rU0aNddN2Rdgn
+         1HpqOysxM8ZTMBz3CBELPSDLWAXHgfRsU0oggWry1iThcBbfLvZASjqxukZoZsF5IOBJ
+         zg/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=B+urqSWm85wzvKtnrzAL/ED40jwSYxyNjNBdxhrRvuU=;
+        b=auNhg/j5TFhtpnw18eRxo8PrwjRX2Kucnpb4NQQKdOTU0rmssvk29wFSCuqGISZPma
+         ocyZU45yKm43TRE5YUtbiUIRZ6MYva1VpK6wM8pj7OP35eAeiTvB7tNWPyhTe/Sho5sM
+         XWl/mdmlqWzGI29qXSJw0+CoznQxAGGNnZcRNRoPT+0RBno08BvxzZLnggjJvaIL6I4G
+         LTwN5YFpNEEbSnjWHLDsGryGq8Wvpt9zQvHqM/L+O3FAkYLb8jiKUYbQ+hfi6pcEtDb1
+         HEGGQ1rF6mWj7Yj14rKmoduImhOjR+/Yiwt2t9pvWct8SOqIDSmzMsk6Z87W6URstYcl
+         IQWw==
+X-Gm-Message-State: APjAAAULMWv6DjlCYqhKNvBAyOtBGeNtXXmrXrSVCHGuqigWMQ8LiuLJ
+        vt05e5sGW/KtwW+8LrbG15FUuw==
+X-Google-Smtp-Source: APXvYqweNZweFB0WkL9RkgxC0FIbRYfV4E4lwj7UZo12deQWJbuFOYlGUuOtHlqdw3Q2kaXl0/yDgw==
+X-Received: by 2002:a62:76d5:: with SMTP id r204mr2959889pfc.252.1565833992329;
+        Wed, 14 Aug 2019 18:53:12 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id 64sm1187819pfe.128.2019.08.14.18.53.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 18:53:11 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 18:53:11 -0700 (PDT)
+X-Google-Original-Date: Wed, 14 Aug 2019 18:49:57 PDT (-0700)
+Subject:     Re: [PATCH v2 2/2] riscv: Make __fstate_clean() work correctly.
+In-Reply-To: <87mugbv1ch.fsf@igel.home>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, vincent.chen@sifive.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     schwab@linux-m68k.org
+Message-ID: <mhng-cde08804-6424-4966-84cb-359f3ae393fa@palmer-si-x1c4>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Alexandre:
+On Wed, 14 Aug 2019 15:17:18 PDT (-0700), schwab@linux-m68k.org wrote:
+> On Aug 14 2019, Palmer Dabbelt <palmer@sifive.com> wrote:
+>
+>> On Wed, 14 Aug 2019 13:32:50 PDT (-0700), Paul Walmsley wrote:
+>>> On Wed, 14 Aug 2019, Vincent Chen wrote:
+>>>
+>>>> Make the __fstate_clean() function correctly set the
+>>>> state of sstatus.FS in pt_regs to SR_FS_CLEAN.
+>>>>
+>>>> Fixes: 7db91e5 ("RISC-V: Task implementation")
+>>>> Cc: linux-stable <stable@vger.kernel.org>
+>>>> Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+>>>> Reviewed-by: Anup Patel <anup@brainfault.org>
+>>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>>>
+>>> Thanks, I extended the "Fixes" commit ID to 12 digits, as is the usual
+>>> practice here, and have queued the following for v5.3-rc.
+>>
+>> For reference, something like "git config core.abbrev=12" (or whatever you
+>> write to get this in your .gitconfig)
+>>
+>>    https://github.com/palmer-dabbelt/home/blob/master/.gitconfig.in#L23
+>>
+>> causes git to do the right thing.
+>
+> Actually, the right setting is core.abbrev=auto (or leaving it unset).
+> It lets git chose the appropriate length depending on the repository
+> contents.  For the linux repository it will chose 13 right now.
 
-On Mon, 2019-07-29 at 14:33 +0900, Alexandre Courbot wrote:
-> The default DMA segment size was used when importing PRIME buffers,
-> which resulted in a chance of them not being contiguous in the virtual
-> IO space of the device and mtk_gem_prime_import_sg_table() complaining
-> that the SG table was not contiguous as it expects.
-> 
-> This series fixes this issue by
-> 
-> 1) Using the correct DMA device when importing PRIME buffers,
-> 2) Setting a more suitable DMA segment size on the DMA device than the
-> default 64KB.
-
-For the series, applied to mediatek-drm-fixes-5.3 [1], thanks.
-
-[1]
-https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-fixes-5.3
-
-> 
-> Changes since v1:
-> - Split into two patches,
-> - Fixed an error path that would have returned 0.
-> 
-> Alexandre Courbot (2):
->   drm/mediatek: use correct device to import PRIME buffers
->   drm/mediatek: set DMA max segment size
-> 
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 49 ++++++++++++++++++++++++--
->  drivers/gpu/drm/mediatek/mtk_drm_drv.h |  2 ++
->  2 files changed, 48 insertions(+), 3 deletions(-)
-> 
-
-
+Awesome, thanks!  I've updated my config :)
