@@ -6,93 +6,74 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C36AC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08428C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD512083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA542133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:49:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731688AbfHOLsM (ORCPT
+        id S1730571AbfHOLtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 07:48:12 -0400
-Received: from sauhun.de ([88.99.104.3]:60696 "EHLO pokefinder.org"
+        Thu, 15 Aug 2019 07:49:33 -0400
+Received: from mga04.intel.com ([192.55.52.120]:9829 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbfHOLsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 07:48:12 -0400
-Received: from localhost (p54B33431.dip0.t-ipconnect.de [84.179.52.49])
-        by pokefinder.org (Postfix) with ESMTPSA id 8B1D12C2704;
-        Thu, 15 Aug 2019 13:48:09 +0200 (CEST)
-Date:   Thu, 15 Aug 2019 13:48:09 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Max Staudt <max@enpas.org>
-Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-m68k@vger.kernel.org,
-        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
-Subject: Re: [PATCH v2 1/4] i2c/busses: Add i2c-icy for I2C on m68k/Amiga
-Message-ID: <20190815114809.GA1916@kunai>
-References: <20190812235237.21797-1-max@enpas.org>
- <20190814194714.GB9756@kunai>
- <f33ef44e-61e8-0392-7f5c-5a0bd7b42fff@enpas.org>
- <20190815071228.GA1054@kunai>
- <276714fb-6b3a-1e99-0744-bfd037305724@enpas.org>
+        id S1726120AbfHOLtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 07:49:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 04:49:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
+   d="scan'208";a="184600893"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Aug 2019 04:49:29 -0700
+Subject: Re: [PATCH v2] mmc: tegra: Implement enable_dma() to set dma_mask
+To:     Nicolin Chen <nicoleotsuka@gmail.com>, ulf.hansson@linaro.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc:     linux-mmc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vdumpa@nvidia.com
+References: <20190814005741.13331-1-nicoleotsuka@gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <09d9ba41-f4cd-e515-cd2d-0b4134648059@intel.com>
+Date:   Thu, 15 Aug 2019 14:48:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
-Content-Disposition: inline
-In-Reply-To: <276714fb-6b3a-1e99-0744-bfd037305724@enpas.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190814005741.13331-1-nicoleotsuka@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 14/08/19 3:57 AM, Nicolin Chen wrote:
+> [ Integrated the change and commit message made by Thierry Reding ]
+> 
+> The SDHCI controller found in early Tegra SoCs (from Tegra20 through
+> Tegra114) used an AHB interface to the memory controller, which allowed
+> only 32 bits of memory to be addressed.
+> 
+> Starting with Tegra124, this limitation was removed by making the SDHCI
+> controllers native MCCIF clients, which means that they got increased
+> bandwidth and better arbitration to the memory controller as well as an
+> address range extended to 40 bits, out of which only 34 were actually
+> used (bits 34-39 are tied to 0 in the controller).
+> 
+> For Tegra186, all of the 40 bits can be used; For Tegra194, 39-bit can
+> be used.
+> 
+> So far, sdhci-tegra driver has been relying on sdhci core to configure
+> the DMA_BIT_MASK between 32-bit or 64-bit, using one of quirks2 flags:
+> SDHCI_QUIRK2_BROKEN_64_BIT_DMA. However, there is a common way, being
+> mentioned in sdhci.c file, to set dma_mask via enable_dma() callback in
+> the device driver directly.
+> 
+> So this patch implements an enable_dma() callback in the sdhci-tegra,
+> in order to set an accurate DMA_BIT_MASK, other than just 32/64 bits.
 
---YiEDa0DAkWCtVeE4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-
-> Well, the other option is to remove it, and then add it back once
-> somebody complains - which is unlikely to happen. The clock parameter
-> is PCF8584 specific anyway, and  I think removing it is a good option,
-
-My suggestion is to do that incrementally. First, get your driver
-accepted. Second, do the cleanups which affect elektor as well later.
-
-> as I've done the same with getown() (where in i2c-elektor, 'own' sets
-> the PCF8584's own address).
-
-I wondered about that. Can the PCF8584 really act as a slave, too?
-Somewhen I need to check its datasheet.
-
-> Question is, if I remove the parameter, I'd like it to be
-> non-destructive. Do you know of anything that can go wrong if the I2C
-> master is running the bus on a wrong clock?
-
-Not sure if I understand you correctly, but if the bus freq is too fast
-then devices won't respond. Too slow is not a problem.
-
-
---YiEDa0DAkWCtVeE4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1VRnUACgkQFA3kzBSg
-KbZm5w//ZH5bqq0+UY1jHI1GqmJONqeU3hd2TQSeY1JC2ZO44Z+s5p/G/9bV1tJQ
-fU4JTMH46HRgwHP3NmmLlPXJ7IjQIPxEkRt63EJ7SNcLuRGUoB4vlRWLQlNFb6gV
-8+y9h6v/VjVUBIiL+INntV4EN7PHKOgic1unur9Mlmu+PxZJ0HP5gQfLgvTBYzy2
-KaPlhcgD+FMioAq2lLjioZadkDGnlR6teppe60ot9lBo1awbvV0iS4Shyc5kF8BH
-WohI+0Ipt+dkz76hsUFEd9FdxUZ+Uv7YQDvfHhjBKyECajeWGwgFC7ToB4aMj4V1
-ncFQBO+jHrs49Qn2d1st1QzpCru+zs02f8cb3H5cwYOQmIbXuhyGQKJcbM6+JBbe
-2iCbQ8Rk03QUSKsa7VB09l7bZEsaChMoT0Swb1R9BFV+PtfEyPWpnlU0HJ3nh516
-qEQfqjrQ+g9QMCEjnIYyKPvwDnmLBl4yxce4F5Su9O8N6gRAQuajnvVWAgs0NlTh
-s3yOm8tFVxzaMwgoEUp+sQwlgZuYWwb1iOQlgQWKFANpupLSRJ03M+d6Jp+EmjrK
-RVN01YsbiQmEQMCx/aMPKPpulXLD12briv+OLTVY/UxtuwC5RikHHl2rKkWtW8Oi
-eOEGP2+cYmZCXrSHhFN4n0wwgsS11aGyu2tnDQ4pMsanAZcnNf0=
-=5C0S
------END PGP SIGNATURE-----
-
---YiEDa0DAkWCtVeE4--
+Is there a reason this cannot be done at probe time?
