@@ -2,133 +2,184 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE13C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D375C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 436F8205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565889352;
-	bh=oSvmXiLO/EWWpPrqvhCsHsG2X+AkvcbxKbDwQLBXB/0=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=GQPU/WEreIw/hSJRB4o8Okgn5oH+GM7BaaUIEaTj7aPct0shHfN+RA8MuATg56H9B
-	 PlLciZb/UPlKBkGvMm7cMI0o1HjJpexlR1s3z79BshJpP9r1R3g+C8baxGRadz9NEp
-	 xXTKq4abxPiqrZwGdgIqj+t2/ivFTH327+T6Lxh4=
+	by mail.kernel.org (Postfix) with ESMTP id E9515205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:16:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="LyKrHHML"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732146AbfHORPv (ORCPT
+        id S1730641AbfHORQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:15:51 -0400
-Received: from mail-wr1-f98.google.com ([209.85.221.98]:43353 "EHLO
-        mail-wr1-f98.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731493AbfHORO0 (ORCPT
+        Thu, 15 Aug 2019 13:16:26 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35378 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729109AbfHORQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:14:26 -0400
-Received: by mail-wr1-f98.google.com with SMTP id y8so2836923wrn.10
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:24 -0700 (PDT)
+        Thu, 15 Aug 2019 13:16:25 -0400
+Received: by mail-qt1-f196.google.com with SMTP id u34so3130839qte.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:16:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bWQUZxVbgX8q+7/XNaaPkBz6uudNI37srtiH/YJRLMA=;
+        b=LyKrHHML5qsAHOuu+3liATWbTb6DyVTWCsOvlxwJdwkXlE0Lc7JX8x425zP9bIasr/
+         z234649hCY9AqF83cc5SAoIRaIGSRUwvwesHrGgGC/flGkruF6oA300ue/onshbs0F/i
+         avAkH6M1hqae7FbSfWx+SXEeVdRgVe8bp9cLBXMdWZAUwtclZPY109M3LnNxQRmTehbp
+         A7+xYYueXtM+21QPDvDrdSYFg/+07W6wRbHEVPua8v1p5B4JKdw3uruExAedVopc4WP7
+         Joi5pFjarqFpfyVffxS7kdZQFyZ5RbTa72w3H2Rr5rdf2MgdFsBu794ulKvyqyrX+GuO
+         iHvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=8OKTosr+JapOEyKfTFu5/cIoWSDJg3p0VdlQDgNuNVQ=;
-        b=LLjmpTnXEZoe/Zwuu5K+ngxq0/QWUAL2Oaqd6NFiPrndc3jf1XxQc+gInuiE7Ipedr
-         4E7GgiB4dhasqc6tZ5FGNxPbL+75x1m+jL2khpFzYB/G6KWFYnOI99jWUjcsEAuH5MIj
-         Cy4+fOVUOnf2SoFEwcjm/z4/ZiqS2eIeXDKArflQDIOo9LCd7incwl61deWTPbem+J1S
-         WTlbBpUzCPXR0OkxY8TTQAqD0/6a3nyeDK2z9zhG1Xbm5t1Sn/D+ddKnyel/L54lVJuD
-         JHQbHUosxz/LXWTAmgM+kdw0SCWpEJSfiuX9VvD4BtkfH/CRD5ux0NfWxd8hM/zCYNgO
-         jPxQ==
-X-Gm-Message-State: APjAAAVl0oHR/UJBx4vJsEacxJczS0GYxfeY3TxFn7jIio8ePGr0VyTS
-        iNWwJqfLcQs+Y3NnoAGq5TQgK73j0+hbXFyJW+rkam8ZEEOwQFoievfogzG3SPxkCA==
-X-Google-Smtp-Source: APXvYqyFff08HZqpINQezwtCcVwX7DUZ5s6kk7CY/pdV4LdEuXHc8dJVbAquvNC4Dzb1jfopyWtKL7V3K3UB
-X-Received: by 2002:a05:6000:1c8:: with SMTP id t8mr6337203wrx.296.1565889263829;
-        Thu, 15 Aug 2019 10:14:23 -0700 (PDT)
-Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id d26sm57082wrb.30.2019.08.15.10.14.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 10:14:23 -0700 (PDT)
-X-Relaying-Domain: sirena.org.uk
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hyJKR-00051M-IF; Thu, 15 Aug 2019 17:14:23 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id EA7D62742BC7; Thu, 15 Aug 2019 18:14:22 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org, info@metux.net,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: es8328: Fix copy-paste error in es8328_right_line_controls" to the asoc tree
-In-Reply-To: <20190815092300.68712-1-yuehaibing@huawei.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190815171422.EA7D62742BC7@ypsilon.sirena.org.uk>
-Date:   Thu, 15 Aug 2019 18:14:22 +0100 (BST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bWQUZxVbgX8q+7/XNaaPkBz6uudNI37srtiH/YJRLMA=;
+        b=dJ/NZPU29U1zTLcPpDz/sS1q57B4kPLp348NWTj6efUxLuSmVqxqEvmLLk0ljtwbPz
+         2SxbY6k2x303On40QzLcs7oWj6gpg844DNuji2ymjfc6fy1pxYVEIYESqEuEQNwzMdVs
+         os9IVJ0ytlSOs/NVWraZ0ewt0PyRhLeJt21ar+pRYyE2UboqLxWmxi2tav8h6GCcYvP2
+         Up+EgScYMzFc1vaXW9OUYvvvlBhbN7/A9SPQbivQoshvL3L+/YgMGfuGFvVGftzchCL1
+         Xap3TvFeJJX1b5oj5vGcTJ7IAZGEPvnZ1MQE8QZl1QkwLkBz+jh/897VW5ThWLKdhVX6
+         05dw==
+X-Gm-Message-State: APjAAAV/WvwQ864SPxT8sqHN2oUR/M7qsA66xwc7vf4RHwSCStc7PNSu
+        xNjFX6iPDWcxcdSzqXm6wJ6ZOQ==
+X-Google-Smtp-Source: APXvYqzhMs0H6HOINgldm0wqFeedn0yeVMbyJrKiVDfNKdY5nOzLsfj8OD4YZcVQ3nL9Fvat5g8RJg==
+X-Received: by 2002:a0c:9d0d:: with SMTP id m13mr4071346qvf.174.1565889383869;
+        Thu, 15 Aug 2019 10:16:23 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id l11sm1685225qtr.11.2019.08.15.10.16.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 15 Aug 2019 10:16:23 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hyJMM-0006lb-QQ; Thu, 15 Aug 2019 14:16:22 -0300
+Date:   Thu, 15 Aug 2019 14:16:22 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
+Message-ID: <20190815171622.GL21596@ziepe.ca>
+References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
+ <20190814202027.18735-3-daniel.vetter@ffwll.ch>
+ <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
+ <20190815084429.GE9477@dhcp22.suse.cz>
+ <20190815130415.GD21596@ziepe.ca>
+ <CAKMK7uE9zdmBuvxa788ONYky=46GN=5Up34mKDmsJMkir4x7MQ@mail.gmail.com>
+ <20190815143759.GG21596@ziepe.ca>
+ <CAKMK7uEJQ6mPQaOWbT_6M+55T-dCVbsOxFnMC6KzLAMQNa-RGg@mail.gmail.com>
+ <20190815151028.GJ21596@ziepe.ca>
+ <20190815163238.GA30781@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815163238.GA30781@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Thu, Aug 15, 2019 at 12:32:38PM -0400, Jerome Glisse wrote:
+> On Thu, Aug 15, 2019 at 12:10:28PM -0300, Jason Gunthorpe wrote:
+> > On Thu, Aug 15, 2019 at 04:43:38PM +0200, Daniel Vetter wrote:
+> > 
+> > > You have to wait for the gpu to finnish current processing in
+> > > invalidate_range_start. Otherwise there's no point to any of this
+> > > really. So the wait_event/dma_fence_wait are unavoidable really.
+> > 
+> > I don't envy your task :|
+> > 
+> > But, what you describe sure sounds like a 'registration cache' model,
+> > not the 'shadow pte' model of coherency.
+> > 
+> > The key difference is that a regirstationcache is allowed to become
+> > incoherent with the VMA's because it holds page pins. It is a
+> > programming bug in userspace to change VA mappings via mmap/munmap/etc
+> > while the device is working on that VA, but it does not harm system
+> > integrity because of the page pin.
+> > 
+> > The cache ensures that each initiated operation sees a DMA setup that
+> > matches the current VA map when the operation is initiated and allows
+> > expensive device DMA setups to be re-used.
+> > 
+> > A 'shadow pte' model (ie hmm) *really* needs device support to
+> > directly block DMA access - ie trigger 'device page fault'. ie the
+> > invalidate_start should inform the device to enter a fault mode and
+> > that is it.  If the device can't do that, then the driver probably
+> > shouldn't persue this level of coherency. The driver would quickly get
+> > into the messy locking problems like dma_fence_wait from a notifier.
+> 
+> I think here we do not agree on the hardware requirement. For GPU
+> we will always need to be able to wait for some GPU fence from inside
+> the notifier callback, there is just no way around that for many of
+> the GPUs today (i do not see any indication of that changing).
 
-   ASoC: es8328: Fix copy-paste error in es8328_right_line_controls
+I didn't say you couldn't wait, I was trying to say that the wait
+should only be contigent on the HW itself. Ie you can wait on a GPU
+page table lock, and you can wait on a GPU page table flush completion
+via IRQ.
 
-has been applied to the asoc tree at
+What is troubling is to wait till some other thread gets a GPU command
+completion and decr's a kref on the DMA buffer - which kinda looks
+like what this dma_fence() stuff is all about. A driver like that
+would have to be super careful to ensure consistent forward progress
+toward dma ref == 0 when the system is under reclaim. 
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+ie by running it's entire IRQ flow under fs_reclaim locking.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> associated with the mm_struct. In all GPU driver so far it is a short
+> lived lock and nothing blocking is done while holding it (it is just
+> about updating page table directory really wether it is filling it or
+> clearing it).
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+The main blocking I expect in a shadow PTE flow is waiting for the HW
+to complete invalidations of its PTE cache.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> > It is important to identify what model you are going for as defining a
+> > 'registration cache' coherence expectation allows the driver to skip
+> > blocking in invalidate_range_start. All it does is invalidate the
+> > cache so that future operations pick up the new VA mapping.
+> > 
+> > Intel's HFI RDMA driver uses this model extensively, and I think it is
+> > well proven, within some limitations of course.
+> > 
+> > At least, 'registration cache' is the only use model I know of where
+> > it is acceptable to skip invalidate_range_end.
+> 
+> Here GPU are not in the registration cache model, i know it might looks
+> like it because of GUP but GUP was use just because hmm did not exist
+> at the time.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+It is not because of GUP, it is because of the lack of
+invalidate_range_end. A driver cannot correctly implement the SPTE
+model without invalidate_range_end, even if it holds the page pins via
+GUP.
 
-Thanks,
-Mark
+So, I've been assuming the few drivers without invalidate_range_end
+are trying to do registration caching, rather than assuming they are
+broken.
 
-From d63887bc4f50fede7013bda7c733d58ecc43efc1 Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 15 Aug 2019 17:23:00 +0800
-Subject: [PATCH] ASoC: es8328: Fix copy-paste error in
- es8328_right_line_controls
-
-It seems 'es8328_rline_enum' should be used
-in es8328_right_line_controls
-
-Fixes: 567e4f98922c ("ASoC: add es8328 codec driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190815092300.68712-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/codecs/es8328.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/codecs/es8328.c b/sound/soc/codecs/es8328.c
-index 4a3d303fedfb..fdf64c29f563 100644
---- a/sound/soc/codecs/es8328.c
-+++ b/sound/soc/codecs/es8328.c
-@@ -227,7 +227,7 @@ static const struct soc_enum es8328_rline_enum =
- 			      ARRAY_SIZE(es8328_line_texts),
- 			      es8328_line_texts);
- static const struct snd_kcontrol_new es8328_right_line_controls =
--	SOC_DAPM_ENUM("Route", es8328_lline_enum);
-+	SOC_DAPM_ENUM("Route", es8328_rline_enum);
- 
- /* Left Mixer */
- static const struct snd_kcontrol_new es8328_left_mixer_controls[] = {
--- 
-2.20.1
-
+Jason
