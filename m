@@ -2,139 +2,112 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5285AC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E72BC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7EA206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24BA8206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:14:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gBYs3AHj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732819AbfHOOOo (ORCPT
+        id S1732869AbfHOOOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:14:44 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:37957 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731849AbfHOOOn (ORCPT
+        Thu, 15 Aug 2019 10:14:47 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:46460 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731849AbfHOOOp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:14:43 -0400
-Received: from [IPv6:2001:420:44c1:2579:f038:4b04:f67a:276f] ([IPv6:2001:420:44c1:2579:f038:4b04:f67a:276f])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id yGWUhwFTBDqPeyGWXhYSlG; Thu, 15 Aug 2019 16:14:41 +0200
-Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-3-jacopo@jmondi.org>
- <20190814224340.GD5015@pendragon.ideasonboard.com>
- <664fe7b3-9051-30da-736e-710a4e9cecde@xs4all.nl>
-Message-ID: <d60e4664-3a3f-1723-6c96-4fc822b6a7bb@xs4all.nl>
-Date:   Thu, 15 Aug 2019 16:14:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 15 Aug 2019 10:14:45 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8EC442AF;
+        Thu, 15 Aug 2019 16:14:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1565878483;
+        bh=CpWruMPwP6AjzSnh7pkBxx25Ie389i+DKRZU7zUWBn4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gBYs3AHjWSM3z/BNO/Qh4DDFXlRIByhKgXhqLdbs9maiJWWP0H6KTlIicnHJcJ5e5
+         gnDCiqT4MDTafxfHq6ddvkKxqikOPrkue9pJ0BnXaGBOssOAREAOjchw3RAOMu8YJG
+         ZlEnUoO1lmQ8SvW4BS1RqJ3gndEFC95FrgUWnnhw=
+Date:   Thu, 15 Aug 2019 17:14:40 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, Eric Anholt <eric@anholt.net>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v2 3/9] drm: Rename drm_bridge_timings to drm_timings
+Message-ID: <20190815141440.GA20322@pendragon.ideasonboard.com>
+References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1565867073-24746-4-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190815131838.GP5011@pendragon.ideasonboard.com>
+ <20190815140400.GA7174@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <664fe7b3-9051-30da-736e-710a4e9cecde@xs4all.nl>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfAp0N0pJwn5h1zan4pHjw8p+P0B1uNZBUOKalZ1aVx2u5TwLAPrQTimvcqy7qAZEwnd/USuFj45V6BA/d53Y/6dD90lrU9K+5keME5RuzgkXBoiD0G6c
- IOkTGPdJ91DvOJND8anpvlPW5wISF5XYWExuXYHS//gJSzgbmDSPZiBvJrOyykxAR0PRahCocbwtcZV62CRBoMYl6KiBfeDjvL72HUZhzRSbQ6pE0Ja2fYQ3
- gwiZ/g3gvf44HeOMbKVEpXryM/TqV/+Zk1DBfaXZ2RKKXGHTbj1UDdEktK1CZRljmdiUKMMyun2c/uoT99ayq470uUfhSXDeR5JSrd1VlF+/7v4gY9dG0x/J
- 1sd58X3BVUnKVHSOsBJ/BbaxcIa/Be4Hl3ozSlgkvjWYhQLZewddqD9GLnRc5ytg0I5L7wG9bLmH6G2aWh5qXViBR/EWq6/IqxvPaJgZ/71pmkDaG5Yb0+Bq
- RFmNyN32331MuksV
+Content-Disposition: inline
+In-Reply-To: <20190815140400.GA7174@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/15/19 4:10 PM, Hans Verkuil wrote:
-> On 8/15/19 12:43 AM, Laurent Pinchart wrote:
->> Hi Jacopo,
->>
->> Thank you for the patch.
->>
->> On Wed, Aug 14, 2019 at 10:28:12PM +0200, Jacopo Mondi wrote:
->>> Add documentation for the V4L2_CID_LOCATION camera control. The newly
->>> added read-only control reports the camera device mounting position.
->>>
->>> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
->>> ---
->>>  .../media/uapi/v4l/ext-ctrls-camera.rst       | 23 +++++++++++++++++++
->>>  1 file changed, 23 insertions(+)
->>>
->>> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
->>> index 51c1d5c9eb00..fc0a02eee6d4 100644
->>> --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
->>> +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
->>> @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
->>>      value down. A value of zero stops the motion if one is in progress
->>>      and has no effect otherwise.
->>>
->>> +``V4L2_CID_LOCATION (integer)``
->>
->> Maybe V4L2_CID_CAMERA_SENSOR_LOCATION ? Same for the values below.
+Hi Greg,
+
+On Thu, Aug 15, 2019 at 04:04:00PM +0200, Greg Kroah-Hartman wrote:
+> On Thu, Aug 15, 2019 at 04:18:38PM +0300, Laurent Pinchart wrote:
+> > Hi Fabrizio,
+> > 
+> > (CC'ing Greg as the architect of the SPDX move)
 > 
-> Probably a better name, if a bit long. But we might need other location
-> controls in the future (e.g. flash location), so CID_LOCATION is just too
-> generic.
+> _one of_, not the one that did the most of he work, that would be Thomas :)
+> 
+> > On Thu, Aug 15, 2019 at 12:04:27PM +0100, Fabrizio Castro wrote:
+> > > The information represented by drm_bridge_timings is also
+> > > needed by panels, therefore rename drm_bridge_timings to
+> > > drm_timings.
+> > > 
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > Link: https://www.spinics.net/lists/linux-renesas-soc/msg43271.html
+> > > 
+> > > ---
+> > > v1->v2:
+> > > * new patch
+> > > 
+> > > I have copied the license from include/drm/drm_bridge.h as that's
+> > > where the struct originally came from. What's the right SPDX license
+> > > to use in this case?
+> > 
+> > https://wiki.spdx.org/view/Legal_Team/Decisions/Dealing_with_Public_Domain_within_SPDX_Files
+> > 
+> > Greg, any idea on how we should handle this ?
+> 
+> Ugh, what lunacy.  But drm_bridge.h is NOT under any "public domain"
+> license, so why is that an issue here?  This looks like a "normal" bsd 3
+> clause license to me, right?
 
-Note that the location defines themselves can most likely be used with any
-LOCATION control, so V4L2_LOCATION_FRONT would be fine with any control.
+You're right, I overread part of the text in drm_bridge.h, it seems to
+indeed be covered by a BSD 3 clause license. Sorry for the noise.
 
+> So I would just use "BSD-3-Clause" as the SPDX license here, if I were
+> doing this patch...
+
+-- 
 Regards,
 
-	Hans
-
-> 
-> Regards,
-> 
-> 	Hans
-> 
->>
->>> +    This read-only control describes the camera location by reporting its
->>
->> Here too I would mention camera sensor instead of just camera (or
->> possibly imaging sensor).
->>
->>> +    mounting position on the device where the camera is installed. This
->>> +    control is particularly meaningful for devices which have a well defined
->>> +    orientation, such as phones, laptops and portable devices as the camera
->>> +    location is expressed as a position relative to the device intended
->>> +    usage position. In example, a camera installed on the user-facing side
->>> +    of a phone device is said to be installed in the ``V4L2_LOCATION_FRONT``
->>> +    position.
->>
->> The DT bindings could use such an example :-) I would extend this to
->> tablets and laptops.
->>
->>> +
->>> +
->>> +
->>
->> Do we need three blank lines ?
->>
->>> +.. flat-table::
->>> +    :header-rows:  0
->>> +    :stub-columns: 0
->>> +
->>> +    * - ``V4L2_LOCATION_FRONT``
->>> +      - The camera device is located on the front side of the device.
->>> +    * - ``V4L2_LOCATION_BACK``
->>> +      - The camera device is located on the back side of the device.
->>> +
->>> +
->>> +
->>>  .. [#f1]
->>>     This control may be changed to a menu control in the future, if more
->>>     options are required.
->>
-> 
-
+Laurent Pinchart
