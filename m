@@ -2,70 +2,154 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DF4C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49069C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55E4D2133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565876454;
-	bh=8fkos3bJ03vfzr91v3bkBePjiTgQUfL0AC+nbnlTyX4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1yhKj8A4g0wd1345j+si7cmbl5qKNpr656Q0/Xx0MDTBRW0n2AXmoXh7MKIABfIxM
-	 dQISn9+aFeZDiKun3WagevXd4NLzCjwniCYhBktEMwVnR8lXhtzKY37qLT/tRe8F7D
-	 1j/x3AnyTUS7bv2UUaQcQ7F/gAK6xm8co9WN9oRY=
+	by mail.kernel.org (Postfix) with ESMTP id 0D12F2133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732409AbfHONkx (ORCPT
+        id S1732395AbfHONl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732267AbfHONkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:40:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF5F7206C1;
-        Thu, 15 Aug 2019 13:40:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565876452;
-        bh=8fkos3bJ03vfzr91v3bkBePjiTgQUfL0AC+nbnlTyX4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GaOhF6vbyf+T7aulWg92TMC6bUDvEbaPxwD2xqLBCY4CHHdPDRWT9gjWEDCpwNFt7
-         QWxfcdLHp1h0+mTzJ+LulblqiIx4HaWbkhXARaJs2a3K06CdvLBjy+BiEDHMruilXF
-         YsizqWrmueY4Bb4qqkAyMln60GbfTZ1pf47HE0k0=
-Date:   Thu, 15 Aug 2019 15:40:49 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     soc@kernel.org, Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v2 11/13] serial: lpc32xx: allow compile testing
-Message-ID: <20190815134049.GA3372@kroah.com>
-References: <20190809144043.476786-1-arnd@arndb.de>
- <20190809144043.476786-12-arnd@arndb.de>
+        Thu, 15 Aug 2019 09:41:59 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:52025 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729918AbfHONl7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:41:59 -0400
+Received: from [IPv6:2001:420:44c1:2579:f038:4b04:f67a:276f] ([IPv6:2001:420:44c1:2579:f038:4b04:f67a:276f])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id yG0nhw2wxDqPeyG0rhYLfe; Thu, 15 Aug 2019 15:41:57 +0200
+Subject: Re: [RFC 3/5] media: v4l2-ctrls: Add support for V4L2_CID_LOCATION
+To:     Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-4-jacopo@jmondi.org>
+ <20190814225353.GE5015@pendragon.ideasonboard.com>
+ <20190815130245.usat55oqffe4abvi@uno.localdomain>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <f16bc961-1410-a38b-9973-eddb7293b4b2@xs4all.nl>
+Date:   Thu, 15 Aug 2019 15:41:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809144043.476786-12-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190815130245.usat55oqffe4abvi@uno.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfIvVw+YP1TjkGK30wylgD6dnQvfhOlyHaEe0FibFsnIf1SzNCUBu4Lg1dARQ5/qQlNOvjTpyAmCPciO0E4SXdUEVoRyN4ZahzeD7vP64wcCZuuhSwSV9
+ Ae6m7jUizYjQhmLqQjyMC1CuIg2C6qVe7l3rZ9NP5Fg5tZZRcF2XD3yh2bvA4z0vvN3PE+7KgBStvALUuGBT9LJyTxPVfhB3C6yVlor3zfGxsTuXBaZsmj28
+ Qb6PYK94zj6tJZwnVz/tqKMjavS2xTetrpHjDav/sKh9E27l4n1jIo6ibi7FuYW2IbBjFl/YoJRcNs1CoWWeND/lTM5y7L6y53wIK1ag/8/z5qQMU9Bs/hQc
+ G5azbalFXNE4PhxNtm7d3PibnyUYuiCf08PCJOeqNDvuJXhSwCcxBo/jTjS3CHjucndFL4B2iNyWZae600eMm523vWoWJSMOlmb+z5KG0sY6OSjWQb0GtdVG
+ n8NUdWgNx5ysbfSP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 04:40:37PM +0200, Arnd Bergmann wrote:
-> The lpc32xx_loopback_set() function in hte lpc32xx_hs driver is the
-> one thing that relies on platform header files. Move that into the
-> core platform code so we only need a variable declaration for it,
-> and enable COMPILE_TEST building.
+On 8/15/19 3:02 PM, Jacopo Mondi wrote:
+> Hi Laurent,
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> On Thu, Aug 15, 2019 at 01:53:53AM +0300, Laurent Pinchart wrote:
+>> Hi Jacopo,
+>>
+>> Thank you for the patch.
+>>
+>> On Wed, Aug 14, 2019 at 10:28:13PM +0200, Jacopo Mondi wrote:
+>>> Add support for the newly defined V4L2_CID_LOCATION read-only control
+>>> used to report the camera device mounting position.
+>>>
+>>> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+>>> ---
+>>>  drivers/media/v4l2-core/v4l2-ctrls.c | 7 +++++++
+>>>  include/uapi/linux/v4l2-controls.h   | 4 ++++
+>>>  2 files changed, 11 insertions(+)
+>>>
+>>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+>>> index 7d3a33258748..8ab0857df59a 100644
+>>> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+>>> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+>>> @@ -943,6 +943,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>>>  	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
+>>>  	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
+>>>  	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
+>>> +	case V4L2_CID_LOCATION:			return "Location";
+>>
+>> Depending on what we decide to name the control (see review of 2/5), you
+>> should adjust the description accordingly.
+>>
+>>>
+>>>  	/* FM Radio Modulator controls */
+>>>  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+>>> @@ -1300,6 +1301,12 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>>>  		break;
+>>>  	case V4L2_CID_MPEG_VIDEO_FWHT_PARAMS:
+>>>  		*type = V4L2_CTRL_TYPE_FWHT_PARAMS;
+>>> +	case V4L2_CID_LOCATION:
+>>> +		*type = V4L2_CTRL_TYPE_INTEGER;
+>>> +		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
+>>> +		*min = V4L2_LOCATION_FRONT;
+>>> +		*max = V4L2_LOCATION_BACK;
+>>
+>> I don't think the control should have a min and a max different than the
+>> current value, as it's a fully static control. I'd drop those two lines
+>> here, and drivers will have to set value = min = max = V4L2_LOCATION_xxx
+>> when creating the control. That why you should be able to collapse this
+>> with V4L2_CID_MIN_BUFFERS_FOR_OUTPUT.
+>>
+> 
+> Ah, I thought min/max should report the actual control values limits.
+> Anyway, if we move this to be an integer menu control with an helper
+> to parse the DT property and register the control on behalf of
+> drivers, this will change.
+> 
+>>> +		*step = 1;
+>>>  		break;
+>>>  	default:
+>>>  		*type = V4L2_CTRL_TYPE_INTEGER;
+>>> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+>>> index 37807f23231e..5c4c7b245921 100644
+>>> --- a/include/uapi/linux/v4l2-controls.h
+>>> +++ b/include/uapi/linux/v4l2-controls.h
+>>> @@ -889,6 +889,10 @@ enum v4l2_auto_focus_range {
+>>>  #define V4L2_CID_PAN_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+32)
+>>>  #define V4L2_CID_TILT_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+33)
+>>>
+>>> +#define V4L2_CID_LOCATION			(V4L2_CID_CAMERA_CLASS_BASE+34)
+>>> +#define V4L2_LOCATION_FRONT			(0 << 0)
+>>> +#define V4L2_LOCATION_BACK			(1 << 0)
+>>
+>> Why not just 0 and 1 ?
+> 
+> Or why not BIT(). I saw that the (1 << x) style is the mostly used one in
+> this header file when defining macros like this one so I went for
+> consistency with the existing code.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Definitely not right. This is an enumeration, so just number from 0, 1, 2, ...
+
+Nothing to do with bits/bitmasks.
+
+Regards,
+
+	Hans
+
+> 
+>>
+>>> +
+>>>  /* FM Modulator class control IDs */
+>>>
+>>>  #define V4L2_CID_FM_TX_CLASS_BASE		(V4L2_CTRL_CLASS_FM_TX | 0x900)
+>>
+>> --
+>> Regards,
+>>
+>> Laurent Pinchart
+
