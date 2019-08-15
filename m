@@ -4,71 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B3DC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202FEC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422572084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9F572084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565889316;
-	bh=EiVcocz0Gwntc4j3w+DKCxpn9+p6sHgLTY/F3JiXdWA=;
+	s=default; t=1565889321;
+	bh=wuCyLKB65cEdh1j+2STrvKTR8nB98C5ntLd/YxOV6N0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=pjuWl63EBqNoge4f8hpW1KLnFL1YhfvDhRkfW+HvwB6Kqh3KR9rsA5HMB09OXBa/w
-	 Kmp8JoeCGeYEiLX17mYVVjpddQ/m1MYCZxYk5QQWqFMhcyDRBYMBJinC71ScWim1O5
-	 4+lnOpGnkWW2v7kbyjg1d4oBlKDoIv9Vki/aEHuY=
+	b=JiubHvT28y5kouoMCk4dg9Meyyd8B0sKj/R5akrG1+5u/GqNIbH2Aifq30WCTttd8
+	 wF6EmBeZiWie2YaT8xOzcQSiaIsnKQFYgD6GiMORg7EUGlbsl0jAXEBvoHUVzP1f8h
+	 An87hmotGUNHez5R0TIAEbEY4sQhW13slhq6a7W4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732031AbfHORPM (ORCPT
+        id S1731661AbfHORO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:15:12 -0400
-Received: from mail-wm1-f98.google.com ([209.85.128.98]:35485 "EHLO
-        mail-wm1-f98.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731637AbfHOROa (ORCPT
+        Thu, 15 Aug 2019 13:14:29 -0400
+Received: from mail-wr1-f100.google.com ([209.85.221.100]:38488 "EHLO
+        mail-wr1-f100.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731500AbfHORO0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:14:30 -0400
-Received: by mail-wm1-f98.google.com with SMTP id l2so1867527wmg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:29 -0700 (PDT)
+        Thu, 15 Aug 2019 13:14:26 -0400
+Received: by mail-wr1-f100.google.com with SMTP id g17so2869387wrr.5
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=qK+K3lvg5j7KBSfj3mqp/CfZUMLY6IjIIgyqWda7qdY=;
-        b=jrptLSSGaEhsZnemGxbQsiutDVJEabMLnUvAlPyQGJ1J2DRRSxl3aed33cLWjtrSnU
-         BNpPXVllF4JO1NUGW6ibpxzSeRJfWFQKzo4l9YL8KpWt/MPylUaJyS6+7u8SpZcxT/sa
-         VTZoiWPQY9oBAVWJnfR2AH4Pe+JcUl1KAUhIQwr7SK2nKlZPAPUQALzGiGjK7l5r0+iA
-         e49bHtgp8/5tqjPnky06s/v0+XljlPblYh8OPAro9kc0d3NqCkUkcCvqhuntQW80ltvl
-         wNPKg5Cu5634CuuJx6TwPIs6+eUGSaHYCiSQdArtqxuSTnk9+feRvgQ3kIC+p9xPj81f
-         G02A==
-X-Gm-Message-State: APjAAAUdRFnxw7eOG/wl35qnIPWhpaydoLNdVKnLGiAD/NesoHukKwnI
-        LWbvEcG5BdswM/9upUyHDgB1lz+gfs/Coj3ZJ5DjNnC3z0gqqZfQYgh60YsqptmbRA==
-X-Google-Smtp-Source: APXvYqzwc/xYr8huKOghn9vmtQMt/8YLWEaKPN+5vpK0OgbJx4iilw7n+VrgNxOG+/p65MKqhugGqHofkiLa
-X-Received: by 2002:a7b:c198:: with SMTP id y24mr3681836wmi.131.1565889268536;
-        Thu, 15 Aug 2019 10:14:28 -0700 (PDT)
+        bh=q2b27kNIK6EqgSJpM3zfR9hAioAbBxEiISceYvWjTXE=;
+        b=jA0ooqhU/LMo0ahmfH1SatsPj6sMrofAPchfbt+voyZN9dP5J6euTvglj362SY0Dpd
+         9pLYZg7g2n0VckX/j+bwi/0ao9SUiNSlUVPMKgrgBwG/XzMGdoqu+s/0Vvhc2N6nppgX
+         c3ZliPxa6I3HlHmhlNEAJQmyvCCbewtebb73C62rtCOlSSnpyLozwDPUV1i9th05l1Yb
+         hLgKMexDG0rjsuy4bsEpbVJ1VCspr90CweuwPdzvATOWrVeCTTQig/eB5XHWWW2XVGiG
+         S3lvPh9ehFDJxb+XaDkhfSwFp553TRZztdvUIzrCqds4LbBC8ictPCVHFxmQxoA9MIA7
+         i/CQ==
+X-Gm-Message-State: APjAAAX6Fwwo/W9Wc7Ksn4s9VZhi4Pi+GKeLPX2vf389uzAqcSqseTG7
+        OPI8yiLC2DmD0N/I2NCrWTu+gDS+c+pC6gEqmOmLzOUYu2O6XmrwWVIjCj1GkmjrZQ==
+X-Google-Smtp-Source: APXvYqzOz+Zqdf+HSDNjzGbbh9zF2epB8ziADuAl2ufBlIUuKwF+X8RjGSMHN6MqxNFhp+aitzIJF7ZNxJOD
+X-Received: by 2002:a5d:6a45:: with SMTP id t5mr6944280wrw.228.1565889265011;
+        Thu, 15 Aug 2019 10:14:25 -0700 (PDT)
 Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id r12sm59823wrw.27.2019.08.15.10.14.28
+        by smtp-relay.gmail.com with ESMTPS id b7sm61334wrv.31.2019.08.15.10.14.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 10:14:28 -0700 (PDT)
+        Thu, 15 Aug 2019 10:14:25 -0700 (PDT)
 X-Relaying-Domain: sirena.org.uk
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1hyJKW-00052a-AD; Thu, 15 Aug 2019 17:14:28 +0000
+        id 1hyJKS-00051c-It; Thu, 15 Aug 2019 17:14:24 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D1B542742BD6; Thu, 15 Aug 2019 18:14:27 +0100 (BST)
+        id 034DC2742BD6; Thu, 15 Aug 2019 18:14:23 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Masanari Iida <standby24x7@gmail.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, perex@perex.cz,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>, peter.ujfalusi@ti.com,
-        tiwai@suse.com
-Subject: Applied "ASoC: ti: Fix typos in ti/Kconfig" to the asoc tree
-In-Reply-To: <20190813034235.30673-1-standby24x7@gmail.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     alsa-devel@alsa-project.org, bardliao@realtek.com,
+        broonie@kernel.org, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        oder_chiou@realtek.com, perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: rt1011: remove unused variable 'dac_vol_tlv' and 'adc_vol_tlv'" to the asoc tree
+In-Reply-To: <20190815090602.9000-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190815171427.D1B542742BD6@ypsilon.sirena.org.uk>
-Date:   Thu, 15 Aug 2019 18:14:27 +0100 (BST)
+Message-Id: <20190815171424.034DC2742BD6@ypsilon.sirena.org.uk>
+Date:   Thu, 15 Aug 2019 18:14:23 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,7 +75,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: ti: Fix typos in ti/Kconfig
+   ASoC: rt1011: remove unused variable 'dac_vol_tlv' and 'adc_vol_tlv'
 
 has been applied to the asoc tree at
 
@@ -101,43 +100,40 @@ to this mail.
 Thanks,
 Mark
 
-From ae3a5901dde2ab136ec0cebda2fccc48e810d2ec Mon Sep 17 00:00:00 2001
-From: Masanari Iida <standby24x7@gmail.com>
-Date: Tue, 13 Aug 2019 12:42:35 +0900
-Subject: [PATCH] ASoC: ti: Fix typos in ti/Kconfig
+From 5b366753c1c12feead0ae53b45482f569ed5399c Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Thu, 15 Aug 2019 17:06:02 +0800
+Subject: [PATCH] ASoC: rt1011: remove unused variable 'dac_vol_tlv' and
+ 'adc_vol_tlv'
 
-This patch fixes some spelling typo in Kconfig.
+sound/soc/codecs/rt1011.c:981:35: warning:
+ dac_vol_tlv defined but not used [-Wunused-const-variable=]
+sound/soc/codecs/rt1011.c:982:35: warning:
+ adc_vol_tlv defined but not used [-Wunused-const-variable=]
 
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20190813034235.30673-1-standby24x7@gmail.com
+They are never used, so can be removed.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20190815090602.9000-1-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/ti/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/rt1011.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/sound/soc/ti/Kconfig b/sound/soc/ti/Kconfig
-index 2197f3e1eaed..87a9b9dd4e98 100644
---- a/sound/soc/ti/Kconfig
-+++ b/sound/soc/ti/Kconfig
-@@ -12,7 +12,7 @@ config SND_SOC_TI_SDMA_PCM
+diff --git a/sound/soc/codecs/rt1011.c b/sound/soc/codecs/rt1011.c
+index 638abcaf52b3..fa34565a3938 100644
+--- a/sound/soc/codecs/rt1011.c
++++ b/sound/soc/codecs/rt1011.c
+@@ -978,9 +978,6 @@ static bool rt1011_readable_register(struct device *dev, unsigned int reg)
+ 	}
+ }
  
- comment "Texas Instruments DAI support for:"
- config SND_SOC_DAVINCI_ASP
--	tristate "daVinci Audio Serial Port (ASP) or McBSP suport"
-+	tristate "daVinci Audio Serial Port (ASP) or McBSP support"
- 	depends on ARCH_DAVINCI || COMPILE_TEST
- 	select SND_SOC_TI_EDMA_PCM
- 	help
-@@ -33,7 +33,7 @@ config SND_SOC_DAVINCI_MCASP
- 	  - Keystone devices
- 
- config SND_SOC_DAVINCI_VCIF
--	tristate "daVinci Voice Interface (VCIF) suport"
-+	tristate "daVinci Voice Interface (VCIF) support"
- 	depends on ARCH_DAVINCI || COMPILE_TEST
- 	select SND_SOC_TI_EDMA_PCM
- 	help
+-static const DECLARE_TLV_DB_SCALE(dac_vol_tlv, -9435, 37, 0);
+-static const DECLARE_TLV_DB_SCALE(adc_vol_tlv, -1739, 37, 0);
+-
+ static const char * const rt1011_din_source_select[] = {
+ 	"Left",
+ 	"Right",
 -- 
 2.20.1
 
