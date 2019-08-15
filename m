@@ -2,102 +2,125 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8305C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 05:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CEDC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 05:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4A5206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 05:59:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltx3L04W"
+	by mail.kernel.org (Postfix) with ESMTP id 3CEAD2173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 05:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565848774;
+	bh=AWvtkVoMveX+367jfIigRFuEKXKgex3lO3WvrMEOtwk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=Wgb32trweZNttt0Hv480fuVMVVIdquAJoI4iTgRlCt3RXEB0ZuU719sUVvdZj3f+O
+	 llXu5Xzah+XPOsQAPEBr2PDzNXmBhYeXAN5Q0s459Di2xUOBa4YPN+tf9uOa5okQQD
+	 kIckmsgx6lQzYwNI3bXnYGpwZyFtJZWQgeBf9tdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730246AbfHOF7K (ORCPT
+        id S1730280AbfHOF7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 01:59:10 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37427 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbfHOF7K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 01:59:10 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 129so849526pfa.4;
-        Wed, 14 Aug 2019 22:59:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wIN/3e7DmCq2KFrr2GT8E+NTKTLGporkmHFbvr6BdEw=;
-        b=ltx3L04WJuOQgF1LYju3dlRn4Cyjnm4+zW2PdzjSOCef1GRhhmpg5YB9ot7HJ0qAX2
-         v5UPvV4kcgPEkdP2QisSksYt35mUkjT0ap+xbT+++wFbuXd3iLCedKgZLoMhncCYykx8
-         qLi8S9OScvOEQw2uQ3ckPj+nZChss+Sa7PSgOfmWibcvWr65mWWd4Khz7J1FnIr6ZWt3
-         NMRusJXN/zBwQpXL3hNc55bSpvg3UUN+AzhQ89RiYQGYL5UwixAHZmbz5i/PPgvdwKBU
-         xAr6jneyWsGHPHAfQG5GqDTvgjC3Y7NKMahmlEMwdQEJtj6UuCaMZW27wJ7uOiRua90r
-         VYhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wIN/3e7DmCq2KFrr2GT8E+NTKTLGporkmHFbvr6BdEw=;
-        b=KaiIG0Ip7mJBQ+F9nxLavwRGlxW8SZKuesMBZJu7UhMm7iOQuuOLZDeMMYB1c2fPDQ
-         /xNCq0P3lyR11Jia8Weq2MC4Ys6XkNnV6crfAYSIwzg4cHFJQveVvMsl9zZeWJNJAeV0
-         i2E6cPtDT7KLrBEPuyckf2oq1TYdIr53nLj3rXwHRNQuBdYjW3oZBdm6hMhaAu4gb4hy
-         Ydk6FesRz6KLWuz502Ryi358cYv7isjfWdHy6iIQTvvlNQSUEeGRf4eEZxZyHGSeXNXI
-         NkhcFOhByiG+faTFGDLKQdsrYnaVuFB1Je4uUXVuA5VUntOSOgAlKbsG66vebDZxWBZG
-         UjcQ==
-X-Gm-Message-State: APjAAAXlw7aONWVAEG+7I5UNHOr2m9ES60wL4J/dCmOXHGNwMhLsFSNO
-        HptLUDkvLuqvTakb2ZQ7G/A=
-X-Google-Smtp-Source: APXvYqwPn7IfU6NrEFx18uQV6dXjBy9Te4NIGALiRj5uKRtJOZxdgllt72zHYP3InxW6dokx9buRiA==
-X-Received: by 2002:a63:e48:: with SMTP id 8mr2211940pgo.389.1565848749290;
-        Wed, 14 Aug 2019 22:59:09 -0700 (PDT)
-Received: from localhost.localdomain ([110.225.3.176])
-        by smtp.gmail.com with ESMTPSA id e7sm1760010pfn.72.2019.08.14.22.59.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 22:59:08 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] i2c: stm32f7: Make structure stm32f7_i2c_algo constant
-Date:   Thu, 15 Aug 2019 11:28:57 +0530
-Message-Id: <20190815055857.1944-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Thu, 15 Aug 2019 01:59:33 -0400
+Received: from mga18.intel.com ([134.134.136.126]:39733 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725681AbfHOF7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 01:59:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 22:59:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,388,1559545200"; 
+   d="scan'208";a="194702947"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga001.fm.intel.com with ESMTP; 14 Aug 2019 22:59:29 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Yinbo Zhu <yinbo.zhu@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Cc:     Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>,
+        Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [EXT] Re: [PATCH v1] usb: dwc3: remove the call trace of USBx_GFLADJ
+In-Reply-To: <VI1PR04MB4158B49129BE9E3C00997555E9AC0@VI1PR04MB4158.eurprd04.prod.outlook.com>
+References: <20190729064607.8131-1-yinbo.zhu@nxp.com> <875zn8nt31.fsf@gmail.com> <VI1PR04MB41580DBF1A0C2DC143EE9CE3E9D30@VI1PR04MB4158.eurprd04.prod.outlook.com> <87h86nvtqo.fsf@gmail.com> <VI1PR04MB4158B49129BE9E3C00997555E9AC0@VI1PR04MB4158.eurprd04.prod.outlook.com>
+Date:   Thu, 15 Aug 2019 08:59:28 +0300
+Message-ID: <87v9uzt1dr.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Static structure stm32f7_i2c_algo, of type i2c_algorithm, is used only
-when it is assigned to constant field algo of a variable having type
-i2c_adapter. As stm32f7_i2c_algo is therefore never modified, make it
-const as well to protect it from unintended modification.
-Issue found with Coccinelle.
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/i2c/busses/i2c-stm32f7.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi,
 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index 266d1c269b83..d36cf08461f7 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -1809,7 +1809,7 @@ static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
- 		I2C_FUNC_SMBUS_I2C_BLOCK;
- }
- 
--static struct i2c_algorithm stm32f7_i2c_algo = {
-+static const struct i2c_algorithm stm32f7_i2c_algo = {
- 	.master_xfer = stm32f7_i2c_xfer,
- 	.smbus_xfer = stm32f7_i2c_smbus_xfer,
- 	.functionality = stm32f7_i2c_func,
+Yinbo Zhu <yinbo.zhu@nxp.com> writes:
+>> Yinbo Zhu <yinbo.zhu@nxp.com> writes:
+>> >> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>> >> > index
+>> >> > 98bce85c29d0..a133d8490322 100644
+>> >> > --- a/drivers/usb/dwc3/core.c
+>> >> > +++ b/drivers/usb/dwc3/core.c
+>> >> > @@ -300,8 +300,7 @@ static void dwc3_frame_length_adjustment(struct
+>> >> > dwc3 *dwc)
+>> >> >
+>> >> >       reg = dwc3_readl(dwc->regs, DWC3_GFLADJ);
+>> >> >       dft = reg & DWC3_GFLADJ_30MHZ_MASK;
+>> >> > -     if (!dev_WARN_ONCE(dwc->dev, dft == dwc->fladj,
+>> >> > -         "request value same as default, ignoring\n")) {
+>> >> > +     if (dft != dwc->fladj) {
+>> >>
+>> >> if the value isn't different, why do you want to change it?
+>> >>
+>> >> --
+>> >> Balbi
+>> > Hi Balbi,
+>> >
+>> > I don't change any value. I was remove that call trace.
+>> 
+>> Sure you do. The splat only shows when you request a FLADJ value that's the
+>> same as the one already in the register. The reason you see the splat is because
+>> your requested value is what's already in the HW.
+>> 
+>> So, again, why are you adding this device tree property if the value is already the
+>> correct one?
+>> 
+>> > In addition that GFLADJ_30MHZ value intial value is 0, and it's value
+>> > must be 0x20, if not, usb will not work.
+>> 
+>> it's not zero, otherwise the splat wouldn't trigger. You're requesting the value
+>> that's already in your register by default.
+>> 
+>> --
+>> Balbi
+>
+> Hi Balbi,
+>    
+> According that rm doc that GFLADJ_30MHZ has a default value is 0x20,
+> when GFLADJ_30MHZ_REG_SEL is 0, this 0x20 is a hard-coded value.
+>
+> But in fact, that default value is 0, please you note!    
+>
+> Then according that xhci spec 5.2.4, that register the sixth bit if is
+> 0, then that can support Frame Lenth Timing value.
+>
+> So set GFLADJ_30MHZ_REG_SEL to 1 for use FLADJ, then I find that it
+> must use 0x20 usb will work well, even thoug xhci can permit
+> GFLADJ_30MHZ use other value
+
+You only get the splat because you try to sent GFLADJ to 0x20 and it's
+ALREADY 0x20. This means that you don't need the property in DTS.
+
+> In addition about what you said is about dts patch, and that patch had
+> merged by upstream, patch owner isn't me,
+
+Well, then remove the setting from DTS, since clearly it's not needed.
+
+> My patch is only for remove the call-trace, about why remove it commit
+> information has detail introduce please check!
+
 -- 
-2.19.1
-
+balbi
