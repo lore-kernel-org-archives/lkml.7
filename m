@@ -2,117 +2,126 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70351C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9E9C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 515D020644
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4C02133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:02:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="S1ek6ieq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730532AbfHOHBi (ORCPT
+        id S1730537AbfHOHCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 03:01:38 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:50169 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbfHOHBf (ORCPT
+        Thu, 15 Aug 2019 03:02:54 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42305 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfHOHCx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 03:01:35 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 34AD7806FD; Thu, 15 Aug 2019 09:01:20 +0200 (CEST)
-Date:   Thu, 15 Aug 2019 09:01:32 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thu, 15 Aug 2019 03:02:53 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m44so1304210edd.9
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 00:02:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bLd8iBYFMq4wTFjkCmL3dJr6BJW6TqxkGakc0u927MY=;
+        b=S1ek6ieqqCXxXcQ8v2TmGNi0QSaBD7Oz0rcz+gP77p7QRYhaeKnJXJgY2bZosfH15d
+         Ni8hW8n9vyDdI0rL0Qm9rLHR5UDjl09kQnr8hnGPoA79FnzKbeknAY4iOyGTaRNFkybF
+         h/NhNGD3n/tideJHRXRVf+P4Mmd3i1RRm//8Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=bLd8iBYFMq4wTFjkCmL3dJr6BJW6TqxkGakc0u927MY=;
+        b=t66pF3eXeIuVoMAgkUeYu9YY2P3DBISLzwH9lj7lrgJ10hsBmg6tf78MnFohYE5UBa
+         kIkrrebrg0acXwk+MkiO4WIwLHSaCmbBIVyMmQ25u73b7BF1mQ+7uZ2Enixm1wzWahsn
+         nY7VCzyb2EF2tgO0INc8o0hxGjnxR/XRlnfoRedGo8gcbIIjcfRlIF9Lvp37fVd2KrnY
+         sN4ySXs5ldk54Lhb5cpS31dJHHxZINpBVB9yUSzSpwFD6Syf+LRFX6D8wMWxz91lyIaS
+         WR9rNw6M3BiTEFSQAZiOX19p2tdWiQIJCMv5xjXzu5c8VVfaTRVxlMC3gkZxbZ8iYFnR
+         Q4zg==
+X-Gm-Message-State: APjAAAWxYPDkAbrgL5RGi3TnHpRUffOgDBnVG/LwCl2/eEBCX1ppAWyu
+        Wkz2KSC7lXNqWX9oa7SqS/dtuw==
+X-Google-Smtp-Source: APXvYqyy/rWJ7w566iUlFN1PbwXLJFUFl4vKsTEUf/2XNHZ/bMokuW0qAhlyp5n+kCjaGg6bKwGpzw==
+X-Received: by 2002:a17:906:2401:: with SMTP id z1mr3038125eja.292.1565852572404;
+        Thu, 15 Aug 2019 00:02:52 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id us11sm256760ejb.43.2019.08.15.00.02.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 00:02:51 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 09:02:49 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Richard Weinberger <richard@nod.at>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
-        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v7 08/24] erofs: add namei functions
-Message-ID: <20190815070132.GB3669@amd>
-References: <20190813091326.84652-1-gaoxiang25@huawei.com>
- <20190813091326.84652-9-gaoxiang25@huawei.com>
- <20190813114821.GB11559@amd>
- <20190813122332.GA17429@138>
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 3/5] mm, notifier: Catch sleeping/blocking for !blockable
+Message-ID: <20190815070249.GB7444@phenom.ffwll.local>
+Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
+ <20190814202027.18735-4-daniel.vetter@ffwll.ch>
+ <20190815000029.GC11200@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="MfFXiAuoTsnnDAfZ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813122332.GA17429@138>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190815000029.GC11200@ziepe.ca>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 14, 2019 at 09:00:29PM -0300, Jason Gunthorpe wrote:
+> On Wed, Aug 14, 2019 at 10:20:25PM +0200, Daniel Vetter wrote:
+> > We need to make sure implementations don't cheat and don't have a
+> > possible schedule/blocking point deeply burried where review can't
+> > catch it.
+> > 
+> > I'm not sure whether this is the best way to make sure all the
+> > might_sleep() callsites trigger, and it's a bit ugly in the code flow.
+> > But it gets the job done.
+> > 
+> > Inspired by an i915 patch series which did exactly that, because the
+> > rules haven't been entirely clear to us.
+> 
+> I thought lockdep already was able to detect:
+> 
+>  spin_lock()
+>  might_sleep();
+>  spin_unlock()
+> 
+> Am I mistaken? If yes, couldn't this patch just inject a dummy lockdep
+> spinlock?
 
---MfFXiAuoTsnnDAfZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hm ... assuming I didn't get lost in the maze I think might_sleep (well
+___might_sleep) doesn't do any lockdep checking at all. And we want
+might_sleep, since that catches a lot more than lockdep.
 
-Hi!
-
-> > > +	/*
-> > > +	 * on-disk error, let's only BUG_ON in the debugging mode.
-> > > +	 * otherwise, it will return 1 to just skip the invalid name
-> > > +	 * and go on (in consideration of the lookup performance).
-> > > +	 */
-> > > +	DBG_BUGON(qd->name > qd->end);
-> >=20
-> > I believe you should check for errors in non-debug mode, too.
->=20
-> Thanks for your kindly reply!
->=20
-> The following is just my personal thought... If I am wrong, please
-> kindly point out...
->=20
-> As you can see, this is a new prefixed string binary search algorithm
-> which can provide similar performance with hashed approach (but no
-> need to store hash value at all), so I really care about its lookup
-> performance.
->=20
-> There is something needing to be concerned, is, whether namei() should
-> report any potential on-disk issues or just return -ENOENT for these
-> corrupted dirs, I think I tend to use the latter one.
-
--ENOENT is okay for corrupted directories, as long as corrupted
-directories do not cause some kind of security bugs (memory
-corruption, crashes, ...)
-
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---MfFXiAuoTsnnDAfZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1VA0wACgkQMOfwapXb+vJ0RACeIl9SXkQ+HyKjoz6KEOY1IIxQ
-fokAoLx3vqeReYdzJjSOjFpCjcgEgtud
-=GkrJ
------END PGP SIGNATURE-----
-
---MfFXiAuoTsnnDAfZ--
+Maybe you mixed it up with the hard/softirq context stuff that lockdep
+tracks and complains about if you get it wrong?
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
