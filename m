@@ -2,74 +2,111 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404CCC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8827DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0899206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:11:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intenta.de header.i=@intenta.de header.b="p4QqYh7I"
+	by mail.kernel.org (Postfix) with ESMTP id 63680208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:11:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731292AbfHOMLC (ORCPT
+        id S1731444AbfHOMLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:11:02 -0400
-Received: from mail.intenta.de ([178.249.25.132]:34744 "EHLO mail.intenta.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729900AbfHOMLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 08:11:01 -0400
-X-Greylist: delayed 422 seconds by postgrey-1.27 at vger.kernel.org; Thu, 15 Aug 2019 08:11:01 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
-        h=Content-Type:MIME-Version:Message-ID:Subject:CC:To:From:Date; bh=tiUovoTmX8WTknD03H5cq8pLU7iviOHB1c7ypfV349k=;
-        b=p4QqYh7IcmNGRSHbu88v7pbctwn1qYSGXbdB4lNq9NsKA8K73mAUVoWO+77cte5bvgJfgDShKnVt0dvqVBHr3wrDytDvkZFUMnpi0Ie+a1VtJVUo5kwjXysHD5YxCJruUIWvl8VU/yZ/WAM+VsFEJw1T1HFvVMh07cAfIVNEvmPJ4dbvwfSxWnxy/LrbieyRbvIE4c1TN3jzL4C4mv4eHjJBQajatDIqvCyRYdHGIUJ/yeZg1RYNZ1sLc3q7zqQRrTv/7DJ/zsqV3w9/ZGdxXIM6ObuVaq6tbkG07YqofEKSEF1dkMpS4HpBiptMArloRMVeiGy7tLzAJ3BN1R6VdQ==;
-X-CTCH-RefID: str=0001.0A0C0202.5D554A2A.0078,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Date:   Thu, 15 Aug 2019 14:03:54 +0200
-From:   Helmut Grohne <helmut.grohne@intenta.de>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH] Revert "clocksource/drivers/sp804: Add COMPILE_TEST to
- CONFIG_ARM_TIMER_SP804"
-Message-ID: <20190815120352.3sakpao2cpjl3sl2@laureti-dev>
+        Thu, 15 Aug 2019 08:11:52 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50936 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730032AbfHOMLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 08:11:51 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 71EE8288D19D6B69B9DB;
+        Thu, 15 Aug 2019 20:11:40 +0800 (CST)
+Received: from HGHY4L002753561.china.huawei.com (10.133.215.186) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 15 Aug 2019 20:11:33 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        "Jean-Philippe Brucker" <jean-philippe@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        "Robin Murphy" <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        Omer Peleg <omer@cs.technion.ac.il>,
+        Adam Morrison <mad@cs.technion.ac.il>,
+        Shaohua Li <shli@fb.com>, Ben Serebrin <serebrin@google.com>,
+        David Woodhouse <David.Woodhouse@intel.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v2 1/2] iommu/iova: introduce iova_magazine_compact_pfns()
+Date:   Thu, 15 Aug 2019 20:11:03 +0800
+Message-ID: <20190815121104.29140-2-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.21.0.windows.1
+In-Reply-To: <20190815121104.29140-1-thunder.leizhen@huawei.com>
+References: <20190815121104.29140-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
- (10.10.16.48)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.133.215.186]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit dfc82faad72520769ca146f857e65c23632eed5a.
+iova_magazine_free_pfns() can only free the whole magazine buffer, add
+iova_magazine_compact_pfns() to support free part of it.
 
-The commit effectively makes ARM_TIMER_SP804 depend on COMPILE_TEST,
-which makes it unselectable for practical uses.
-
-Link: https://lore.kernel.org/lkml/20190618120719.a4kgyiuljm5uivfq@laureti-dev/
-Signed-off-by: Helmut Grohne <helmut.grohne@intenta.de>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- drivers/clocksource/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/iova.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 5e9317dc3d39..72e924374591 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -393,7 +393,7 @@ config ARM_GLOBAL_TIMER
- 	  This options enables support for the ARM global timer unit
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index 3e1a8a6755723a9..4b7a9efa0ef40af 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -795,18 +795,19 @@ static void iova_magazine_free(struct iova_magazine *mag)
+ 	kfree(mag);
+ }
  
- config ARM_TIMER_SP804
--	bool "Support for Dual Timer SP804 module" if COMPILE_TEST
-+	bool "Support for Dual Timer SP804 module"
- 	depends on GENERIC_SCHED_CLOCK && CLKDEV_LOOKUP
- 	select CLKSRC_MMIO
- 	select TIMER_OF if OF
+-static void
+-iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
++static void iova_magazine_compact_pfns(struct iova_magazine *mag,
++				       struct iova_domain *iovad,
++				       unsigned long newsize)
+ {
+ 	unsigned long flags;
+ 	int i;
+ 
+-	if (!mag)
++	if (!mag || mag->size <= newsize)
+ 		return;
+ 
+ 	spin_lock_irqsave(&iovad->iova_rbtree_lock, flags);
+ 
+-	for (i = 0 ; i < mag->size; ++i) {
++	for (i = newsize; i < mag->size; ++i) {
+ 		struct iova *iova = private_find_iova(iovad, mag->pfns[i]);
+ 
+ 		BUG_ON(!iova);
+@@ -815,7 +816,13 @@ static void iova_magazine_free(struct iova_magazine *mag)
+ 
+ 	spin_unlock_irqrestore(&iovad->iova_rbtree_lock, flags);
+ 
+-	mag->size = 0;
++	mag->size = newsize;
++}
++
++static void
++iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
++{
++	iova_magazine_compact_pfns(mag, iovad, 0);
+ }
+ 
+ static bool iova_magazine_full(struct iova_magazine *mag)
 -- 
-2.11.0
+1.8.3
+
 
