@@ -2,173 +2,203 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FF1C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AE8C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 947D7208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA8C5206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:54:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="cQGnutdO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3tDi1tZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731821AbfHOMxQ (ORCPT
+        id S1731691AbfHOMyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:53:16 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40323 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729627AbfHOMxQ (ORCPT
+        Thu, 15 Aug 2019 08:54:05 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35658 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729627AbfHOMyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 08:53:16 -0400
-Received: by mail-qk1-f194.google.com with SMTP id s145so1682786qke.7
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 05:53:15 -0700 (PDT)
+        Thu, 15 Aug 2019 08:54:05 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d85so1311181pfd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 05:54:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fsjt4TH+C2jg5iRhddzc9X6b3PVGQt0GzJbT4+qTTks=;
-        b=cQGnutdO0QYQIDqcrjKN5BavYsdcncw1zhfeROmvdu2Z+fNKnqUDT9Wjf0ZaC8+woY
-         mA49R7yqHlsDyNq8SRnGzLNHTofoK9KeXLxCWCZ7bxFVXOg+VnWX1x4qivFyvZAPyLJv
-         DkXZY75TD9L6FZeyzvaFaQX7mLon/xcopirlW0lsbXvyjx4+a563K5NQePEDDrpDSDzR
-         XN3zdVxH1b4lDhDhp+UWdgbSsNNWkQMD1SD0VxNuoESSSsnXVC3JHbDnovZyn0AVDbha
-         D6XTUwcSHCVhYpCGX9W5LVcIeR5TUa2A+V/UpZUi7LpQqwDAdORerckHT1WetGPAVJJS
-         HkjA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k3B9Z8TePpXTNa77soV+Yw4aRHM57h5fDNR35eGyOSk=;
+        b=C3tDi1tZvON2ek83YfAj6Kxd+Qu/iur7e/xho3vY5GLc0U8KDGc1m9Ri6SPy/FbS9w
+         La/YpFxayS9wUenF264SszoLB3GuanhI88D9ynsH9yrdfhTYn1JTnB4eN6dffEIZ67Ew
+         yXDCLbYJnIhPj9wglrCUr7mcnKwk3E0Qkki0WLTy1nGXyvqs1M4FiG1WX1QHOWxZAOxU
+         Wf4Xf03Yc0wDU8wxLoeJ3Ic3Bm77zMpWwk97cjxAizHp9mCQZ3UVtBD0WdqxqMraP30N
+         /IqXp3O+rE+jq+w5xqUCjMuPZlg9v5sA+tbZfJunbtfjP/ahZieUKPBHMvmmJevtPsSA
+         27Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fsjt4TH+C2jg5iRhddzc9X6b3PVGQt0GzJbT4+qTTks=;
-        b=mS0qNOIyuQeXR146GNtPOTPqx/qpjnGP6ICOhopobWgo8QojZpBOUmA/k0oFHSwaOv
-         G0PiDoMBGGraekhBQHRIESVZTh3dFn4SqDgBxTYp8k+K5s8gmI4MwtCc86inJ9J4o75N
-         37HXQgRQFEhHKVuLWBqcq5rEvg59n8N+nKHkd1QmkxxdQDcS6TdvlOpbmuO4vEQPs4HD
-         o/fp7TQdXWQDjsHUgv+Rv9Z6hXfJdP9syLI66okOt3lSpoaN/JNPHxSA7qetLNGtkJgf
-         cggEMxRb32+U9kPhlwexhp4hwnfAiQOF/FDQJM9XLUck3eHjFfTKSYzWVK2FcdI888c8
-         7jjw==
-X-Gm-Message-State: APjAAAV7oEzUKoGEb4x374zRu+4yi8Y6nS6i2DbXrv5OJkQoMXHR5Uxa
-        Rny1u02hLw0gD6Ax3AI+GFBXX2efgsU=
-X-Google-Smtp-Source: APXvYqzxadEVjz9zg9VAEExmW6NU01W2O/jedDj26RcK9MXYxH1BLTItzBlbTSuXQVQiYwDGXzxPoQ==
-X-Received: by 2002:a05:620a:691:: with SMTP id f17mr3965584qkh.470.1565873594583;
-        Thu, 15 Aug 2019 05:53:14 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id s28sm1351035qkm.5.2019.08.15.05.53.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 15 Aug 2019 05:53:14 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hyFFh-0004DD-D7; Thu, 15 Aug 2019 09:53:13 -0300
-Date:   Thu, 15 Aug 2019 09:53:13 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 4/5] mm, notifier: Add a lockdep map for
- invalidate_range_start
-Message-ID: <20190815125313.GC21596@ziepe.ca>
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
- <20190814202027.18735-5-daniel.vetter@ffwll.ch>
- <20190815000959.GD11200@ziepe.ca>
- <20190815071014.GC7444@phenom.ffwll.local>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k3B9Z8TePpXTNa77soV+Yw4aRHM57h5fDNR35eGyOSk=;
+        b=CCQqQq0u8jhcrEaMcqHyniDoqeVrzfm9q7ddnEvjfxTAtOKKptosNtic3pEFCqwH4n
+         toyTW0eWsfZm4t+UOUTElDeTR8vYkdUnGJMiH3OXX1YURGQ2kCVmb63Wrl8Shlser7Ia
+         PL0HcgvhVHSeCbRjeST7enMD7DQ2op49O0t44gHV47i+S3UtMPXg8+wx+7/Ltjkp4dSC
+         Oz8Hculq0NvjmKTQUedAVb8sk/nAL3VAbaO7haZqfv6uEy0WtbuoB+O/uLagoBn0/NlO
+         haVAVYCoWckievY+BNaxCr9Gm8mDqXes1H6MRBiuwgs2egEwFFoOmFgSMxMXtcCMB55o
+         FTFg==
+X-Gm-Message-State: APjAAAU+cWbT1+jwMP62Sn+nVTHFYihQQMfIZ8SMXv6Te1Iw2/PIJ6U3
+        9VpwMGz/gCydKqiIjm1W2mUETH4LjzVuD5DyLeE=
+X-Google-Smtp-Source: APXvYqzFJk1zO8xcEE8IP248NIhjzuuPvBpWByKcqa1XF+GU7cPijMJwvzOJEIXH2uT/HJPVO2kXwcVErFw8KCb9ITM=
+X-Received: by 2002:a63:e54f:: with SMTP id z15mr3403500pgj.4.1565873644063;
+ Thu, 15 Aug 2019 05:54:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815071014.GC7444@phenom.ffwll.local>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190815112826.81785-1-heikki.krogerus@linux.intel.com> <20190815112826.81785-4-heikki.krogerus@linux.intel.com>
+In-Reply-To: <20190815112826.81785-4-heikki.krogerus@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 15 Aug 2019 15:53:52 +0300
+Message-ID: <CAHp75VeEKczQ5sX01QqeyiQnuMKdcWQkdqMqLksVB3rDTHL_hw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] platform/x86: intel_cht_int33fe: Use new API to gain
+ access to the role switch
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 09:10:14AM +0200, Daniel Vetter wrote:
-> On Wed, Aug 14, 2019 at 09:09:59PM -0300, Jason Gunthorpe wrote:
-> > On Wed, Aug 14, 2019 at 10:20:26PM +0200, Daniel Vetter wrote:
-> > > This is a similar idea to the fs_reclaim fake lockdep lock. It's
-> > > fairly easy to provoke a specific notifier to be run on a specific
-> > > range: Just prep it, and then munmap() it.
-> > > 
-> > > A bit harder, but still doable, is to provoke the mmu notifiers for
-> > > all the various callchains that might lead to them. But both at the
-> > > same time is really hard to reliable hit, especially when you want to
-> > > exercise paths like direct reclaim or compaction, where it's not
-> > > easy to control what exactly will be unmapped.
-> > > 
-> > > By introducing a lockdep map to tie them all together we allow lockdep
-> > > to see a lot more dependencies, without having to actually hit them
-> > > in a single challchain while testing.
-> > > 
-> > > Aside: Since I typed this to test i915 mmu notifiers I've only rolled
-> > > this out for the invaliate_range_start callback. If there's
-> > > interest, we should probably roll this out to all of them. But my
-> > > undestanding of core mm is seriously lacking, and I'm not clear on
-> > > whether we need a lockdep map for each callback, or whether some can
-> > > be shared.
-> > 
-> > I was thinking about doing something like this..
-> > 
-> > IMHO only range_end needs annotation, the other ops are either already
-> > non-sleeping or only used by KVM.
+On Thu, Aug 15, 2019 at 2:28 PM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
 >
-> This isnt' about sleeping, this is about locking loops. And the biggest
-> risk for that is from driver code, and at least hmm_mirror only has the
-> driver code callback on invalidate_range_start. Once thing I discovered
-> using this (and it would be really hard to spot, it's deeply neested) is
-> that i915 userptr.
+> The driver for the Intel USB role mux now always supplies
+> software node for the role switch, so no longer checking
+> that, and never creating separate node for the role switch.
+> From now on using software_node_find_by_name() function to
+> get the handle to the USB role switch.
 
-Sorry, that came out wrong, what I ment is that only range_end and
-range_start really need annotation.
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-The other places are only used by KVM and are called in non-sleeping
-contexts, so they already can't recurse back onto the popular sleeping
-locks like mmap_sem or what not, can't do allocations, etc.  I don't
-see alot of return in investing in them.
+>
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_cht_int33fe.c | 57 +++++-------------------
+>  1 file changed, 10 insertions(+), 47 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+> index 4fbdff48a4b5..1d5d877b9582 100644
+> --- a/drivers/platform/x86/intel_cht_int33fe.c
+> +++ b/drivers/platform/x86/intel_cht_int33fe.c
+> @@ -34,7 +34,6 @@ enum {
+>         INT33FE_NODE_MAX17047,
+>         INT33FE_NODE_PI3USB30532,
+>         INT33FE_NODE_DISPLAYPORT,
+> -       INT33FE_NODE_ROLE_SWITCH,
+>         INT33FE_NODE_USB_CONNECTOR,
+>         INT33FE_NODE_MAX,
+>  };
+> @@ -45,7 +44,6 @@ struct cht_int33fe_data {
+>         struct i2c_client *pi3usb30532;
+>
+>         struct fwnode_handle *dp;
+> -       struct fwnode_handle *mux;
+>  };
+>
+>  static const struct software_node nodes[];
+> @@ -139,46 +137,10 @@ static const struct software_node nodes[] = {
+>         { "max17047", NULL, max17047_props },
+>         { "pi3usb30532" },
+>         { "displayport" },
+> -       { "usb-role-switch" },
+>         { "connector", &nodes[0], usb_connector_props, usb_connector_refs },
+>         { }
+>  };
+>
+> -static int cht_int33fe_setup_mux(struct cht_int33fe_data *data)
+> -{
+> -       struct fwnode_handle *fwnode;
+> -       struct device *dev;
+> -       struct device *p;
+> -
+> -       fwnode = software_node_fwnode(&nodes[INT33FE_NODE_ROLE_SWITCH]);
+> -       if (!fwnode)
+> -               return -ENODEV;
+> -
+> -       /* First finding the platform device */
+> -       p = bus_find_device_by_name(&platform_bus_type, NULL,
+> -                                   "intel_xhci_usb_sw");
+> -       if (!p)
+> -               return -EPROBE_DEFER;
+> -
+> -       /* Then the mux child device */
+> -       dev = device_find_child_by_name(p, "intel_xhci_usb_sw-role-switch");
+> -       put_device(p);
+> -       if (!dev)
+> -               return -EPROBE_DEFER;
+> -
+> -       /* If there already is a node for the mux, using that one. */
+> -       if (dev->fwnode)
+> -               fwnode_remove_software_node(fwnode);
+> -       else
+> -               dev->fwnode = fwnode;
+> -
+> -       data->mux = fwnode_handle_get(dev->fwnode);
+> -       put_device(dev);
+> -       mux_ref.node = to_software_node(data->mux);
+> -
+> -       return 0;
+> -}
+> -
+>  static int cht_int33fe_setup_dp(struct cht_int33fe_data *data)
+>  {
+>         struct fwnode_handle *fwnode;
+> @@ -211,10 +173,9 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
+>  {
+>         software_node_unregister_nodes(nodes);
+>
+> -       if (data->mux) {
+> -               fwnode_handle_put(data->mux);
+> +       if (mux_ref.node) {
+> +               fwnode_handle_put(software_node_fwnode(mux_ref.node));
+>                 mux_ref.node = NULL;
+> -               data->mux = NULL;
+>         }
+>
+>         if (data->dp) {
+> @@ -235,14 +196,16 @@ static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
+>         /* The devices that are not created in this driver need extra steps. */
+>
+>         /*
+> -        * There is no ACPI device node for the USB role mux, so we need to find
+> -        * the mux device and assign our node directly to it. That means we
+> -        * depend on the mux driver. This function will return -PROBE_DEFER
+> -        * until the mux device is registered.
+> +        * There is no ACPI device node for the USB role mux, so we need to wait
+> +        * until the mux driver has created software node for the mux device.
+> +        * It means we depend on the mux driver. This function will return
+> +        * -EPROBE_DEFER until the mux device is registered.
+>          */
+> -       ret = cht_int33fe_setup_mux(data);
+> -       if (ret)
+> +       mux_ref.node = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
+> +       if (!mux_ref.node) {
+> +               ret = -EPROBE_DEFER;
+>                 goto err_remove_nodes;
+> +       }
+>
+>         /*
+>          * The DP connector does have ACPI device node. In this case we can just
+> --
+> 2.20.1
+>
 
-> > BTW, I have found it strange that i915 only uses
-> > invalidate_range_start. Not really sure how it is able to do
-> > that. Would love to know the answer :)
-> 
-> I suspect it's broken :-/ Our userptr is ... not the best. Part of the
-> motivation here.
 
-I was wondering if it is what we call in RDMA a 'registration cache'
-ie you assume that userspace is well behaved while DMA is ongoing and
-just use the notifer to invalidate cached dma mappings.
-
-The hallmark of this pattern is that it holds the page pin the entire
-time DMA is active, which is why it isn't a bug, it is just best
-described as loosely coherent.
-
-But, in RDMA the best-practice is to do this in userspace with
-userfaultfd as it is very expensive to take a syscall on command
-submission to have the kernel figure it out.
-
-> > And if we do decide on the reclaim thing in my other email then the
-> > reclaim dependency can be reliably injected by doing:
-> > 
-> >  fs_reclaim_acquire();
-> >  lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
-> >  lock_map_release(&__mmu_notifier_invalidate_range_start_map);
-> >  fs_reclaim_release();
-> > 
-> > If I understand lockdep properly..
-> 
-> Ime fs_reclaim injects the mmu_notifier map here reliably as soon as
-> you've thrown out the first pagecache mmap on any process. That "make sure
-> we inject it quickly" is why the lockdep is _outside_ of the
-> mm_has_notifiers() check. So no further injection needed imo.
-
-I suspect a lot of our automated testing, like syzkaller in restricted
-kvms, probably does not reliably trigger a fs_reclaim, so I would very
-much prefer to inject it 100% of the time directly if we are sure this
-is a reclaim context because of the i_mmap_rwsem I mentioned before.
-
-Jason
+-- 
+With Best Regards,
+Andy Shevchenko
