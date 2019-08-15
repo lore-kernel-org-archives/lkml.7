@@ -2,210 +2,111 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8D5C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4787AC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A1F2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:58:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="kGKYX8WC"
+	by mail.kernel.org (Postfix) with ESMTP id 1AA162133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:01:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730518AbfHOG6g (ORCPT
+        id S1730429AbfHOHBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 02:58:36 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39590 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729668AbfHOG6e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 02:58:34 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g8so1315078edm.6
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 23:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9lqqkaS001tXTBszYzeiJH38HEfaSqFOiRWf4hWiQAE=;
-        b=kGKYX8WCtIWPm4IRO12hI1D0cjf/mI6eQP72qIiFFGtnNzwCY04Wmo7zjazUdqpw/d
-         Del5Qla1OnO++32rcBWEVNsFe4PD3aQALBzRK4Su/mIZ4kIuX0VTEYN8IY+6aVsSvcOZ
-         7BJQBjHzNo13izdIP+UvcB7SJ2tHQ6yPSCE5g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=9lqqkaS001tXTBszYzeiJH38HEfaSqFOiRWf4hWiQAE=;
-        b=OT4ufvkXhB3O+kUrEQFxMJUrO3dhhYAPQcJ3ExbiHUavHbve/b8KBGd9vqHX79OF/B
-         sTw4/L0+iNPG4w/AFQDypcbg/rUyTBs/dTspYmMT7/zs9I97N5+H16DnJBh9Ewm1ezU5
-         qAS+e/3SDYJR5/rwsqREAM8LFw3j99vSgktRHlDEBDRXfa+6EF//xB5UMCTdOWOIHvMe
-         7w7ywkBdRIbNUvCwAntW3jXNgXyB+6HRQxXnuh6Pxbhm57sr95BDX5/dX9eARUuBIKdK
-         8VLDtQnjpz01WB+6xooRjogJvjqMzxDhDfvKdxHmSHegxHZ0TdimnXGM/fm3fLJy4CS4
-         a8WQ==
-X-Gm-Message-State: APjAAAWrKPNFOVoMEWa2/mpxyrqDEySpDksjHxxQYSu3g5fZM1kFnva1
-        fKLnTTsH7zWJOL0WSs4cJtjdWg==
-X-Google-Smtp-Source: APXvYqxywF6ZFPpqpELjFS+YznGqSqHzYzsoNbFwgEupP5iJucMUMFx7LcA8eHspNumjBMO9waYOnw==
-X-Received: by 2002:aa7:d981:: with SMTP id u1mr3719744eds.150.1565852312360;
-        Wed, 14 Aug 2019 23:58:32 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id x11sm252024eju.26.2019.08.14.23.58.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 23:58:31 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 08:58:29 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-Message-ID: <20190815065829.GA7444@phenom.ffwll.local>
-Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Jann Horn <jannh@google.com>,
-        Feng Tang <feng.tang@intel.com>, Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
- <20190814202027.18735-3-daniel.vetter@ffwll.ch>
- <20190814235805.GB11200@ziepe.ca>
+        Thu, 15 Aug 2019 03:01:34 -0400
+Received: from mga02.intel.com ([134.134.136.20]:22803 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726384AbfHOHBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 03:01:34 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 00:01:33 -0700
+X-IronPort-AV: E=Sophos;i="5.64,388,1559545200"; 
+   d="scan'208";a="260742981"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 00:01:31 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 2F5A52069D; Thu, 15 Aug 2019 10:00:25 +0300 (EEST)
+Date:   Thu, 15 Aug 2019 10:00:25 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
+Message-ID: <20190815070025.GK6133@paasikivi.fi.intel.com>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-3-jacopo@jmondi.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190814235805.GB11200@ziepe.ca>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
+In-Reply-To: <20190814202815.32491-3-jacopo@jmondi.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 08:58:05PM -0300, Jason Gunthorpe wrote:
-> On Wed, Aug 14, 2019 at 10:20:24PM +0200, Daniel Vetter wrote:
-> > In some special cases we must not block, but there's not a
-> > spinlock, preempt-off, irqs-off or similar critical section already
-> > that arms the might_sleep() debug checks. Add a non_block_start/end()
-> > pair to annotate these.
-> > 
-> > This will be used in the oom paths of mmu-notifiers, where blocking is
-> > not allowed to make sure there's forward progress. Quoting Michal:
-> > 
-> > "The notifier is called from quite a restricted context - oom_reaper -
-> > which shouldn't depend on any locks or sleepable conditionals. The code
-> > should be swift as well but we mostly do care about it to make a forward
-> > progress. Checking for sleepable context is the best thing we could come
-> > up with that would describe these demands at least partially."
-> 
-> But this describes fs_reclaim_acquire() - is there some reason we are
-> conflating fs_reclaim with non-sleeping?
+Hi Jacopo,
 
-No idea why you tie this into fs_reclaim. We can definitly sleep in there,
-and for e.g. kswapd (which also wraps everything in fs_reclaim) we're
-event supposed to I thought. To make sure we can get at the last bit of
-memory by flushing all the queues and waiting for everything to be cleaned
-out.
+On Wed, Aug 14, 2019 at 10:28:12PM +0200, Jacopo Mondi wrote:
+> Add documentation for the V4L2_CID_LOCATION camera control. The newly
+> added read-only control reports the camera device mounting position.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> ---
+>  .../media/uapi/v4l/ext-ctrls-camera.rst       | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+> index 51c1d5c9eb00..fc0a02eee6d4 100644
+> --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+> +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+> @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
+>      value down. A value of zero stops the motion if one is in progress
+>      and has no effect otherwise.
+> 
+> +``V4L2_CID_LOCATION (integer)``
+> +    This read-only control describes the camera location by reporting its
+> +    mounting position on the device where the camera is installed. This
+> +    control is particularly meaningful for devices which have a well defined
+> +    orientation, such as phones, laptops and portable devices as the camera
+> +    location is expressed as a position relative to the device intended
+> +    usage position. In example, a camera installed on the user-facing side
 
-> ie is there some fundamental difference between the block stack
-> sleeping during reclaim while it waits for a driver to write out a
-> page and a GPU driver sleeping during OOM while it waits for it's HW
-> to fence DMA on a page?
-> 
-> Fundamentally we have invalidate_range_start() vs invalidate_range()
-> as the start() version is able to sleep. If drivers can do their work
-> without sleeping then they should be using invalidare_range() instead.
-> 
-> Thus, it doesn't seem to make any sense to ask a driver that requires a
-> sleeping API not to sleep.
-> 
-> AFAICT what is really going on here is that drivers care about only a
-> subset of the VA space, and we want to query the driver if it cares
-> about the range proposed to be OOM'd, so we can OOM ranges that are
-> do not have SPTEs.
-> 
-> ie if you look pretty much all drivers do exactly as
-> userptr_mn_invalidate_range_start() does, and bail once they detect
-> the VA range is of interest.
-> 
-> So, I'm working on a patch to lift the interval tree into the notifier
-> core and then do the VA test OOM needs without bothering the
-> driver. Drivers can retain the blocking API they require and OOM can
-> work on VA's that don't have SPTEs.
+s/In/For/
 
-Hm I figured the point of hmm_mirror is to have that interval tree for
-everyone (among other things). But yeah lifting to mmu_notifier sounds
-like a clean solution for this, but I really have not much clue about why
-we even have this for special mode in the oom case. I'm just trying to
-increase the odds that drivers hold up their end of the bargain.
+> +    of a phone device is said to be installed in the ``V4L2_LOCATION_FRONT``
+> +    position.
+> +
+> +
+> +
+> +.. flat-table::
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +
+> +    * - ``V4L2_LOCATION_FRONT``
+> +      - The camera device is located on the front side of the device.
+> +    * - ``V4L2_LOCATION_BACK``
+> +      - The camera device is located on the back side of the device.
+> +
+> +
+> +
+>  .. [#f1]
+>     This control may be changed to a menu control in the future, if more
+>     options are required.
 
-> This approach also solves the critical bug in this path:
->   https://lore.kernel.org/linux-mm/20190807191627.GA3008@ziepe.ca/
-> 
-> And solves a bunch of other bugs in the drivers.
-> 
-> > Peter also asked whether we want to catch spinlocks on top, but Michal
-> > said those are less of a problem because spinlocks can't have an
-> > indirect dependency upon the page allocator and hence close the loop
-> > with the oom reaper.
-> 
-> Again, this entirely sounds like fs_reclaim - isn't that exactly what
-> it is for?
-> 
-> I have had on my list a second and very related possible bug. I ran
-> into commit 35cfa2b0b491 ("mm/mmu_notifier: allocate mmu_notifier in
-> advance") which says that mapping->i_mmap_mutex is under fs_reclaim().
-> 
-> We do hold i_mmap_rwsem while calling invalidate_range_start():
-> 
->  unmap_mapping_pages
->   i_mmap_lock_write(mapping); // ie i_mmap_rwsem
->   unmap_mapping_range_tree
->    unmap_mapping_range_vma
->     zap_page_range_single
->      mmu_notifier_invalidate_range_start
-> 
-> So, if it is still true that i_mmap_rwsem is under fs_reclaim then
-> invalidate_range_start is *always* under fs_reclaim anyhow! (this I do
-> not know)
-> 
-> Thus we should use lockdep to force this and fix all the drivers.
-> 
-> .. and if we force fs_reclaim always, do we care about blockable
-> anymore??
+There's an effective limit of 64 for menus. ACPI has less than ten
+different locations for a device, I think 64 will be enough here.
 
-Still not sure what fs_reclaim matters here. One of the later patches
-steals the fs_reclaim idea for mmu_notifiers, but that ties together
-completely different paths.
--Daniel
+So I'd be actually in favour of switching to a menu.
+
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Sakari Ailus
+sakari.ailus@linux.intel.com
