@@ -2,138 +2,101 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BAFC3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0569C41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45E32064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B530F2133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:35:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565890503;
+	bh=jZQNTS7JeYOtb34meyZbI96CYuPKeV0gPhc+9hftCpA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H1BOC8yjEDFlB5KeDZ7CNQ3MymJX/YLQOhsqYifiIYUTnCi74uTUtGWBj3DRZyB0S
+	 6v+ZbrqcJm6iQ8z2Lr420XbC9z1SymxkGmUCGL5DR1vThjqMS/5AMhd5DaOSG1CCi2
+	 D8Q4ElpvuyPmgxYrCSU8abAn1IMBNl/9LGankP6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731677AbfHORdQ (ORCPT
+        id S1732217AbfHORfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:33:16 -0400
-Received: from mga18.intel.com ([134.134.136.126]:31604 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbfHORdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:33:15 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 10:32:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
-   d="scan'208";a="176934043"
-Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Aug 2019 10:32:49 -0700
-Date:   Thu, 15 Aug 2019 10:30:03 -0700
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v5 2/7] PCI/ATS: Initialize PRI in pci_ats_init()
-Message-ID: <20190815173003.GB139211@skuppusw-desk.amr.corp.intel.com>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <3dd8c36177ac52d9a87655badb000d11785a5a4a.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190815044657.GD253360@google.com>
+        Thu, 15 Aug 2019 13:35:03 -0400
+Received: from mail-qt1-f174.google.com ([209.85.160.174]:42981 "EHLO
+        mail-qt1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfHORfC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:35:02 -0400
+Received: by mail-qt1-f174.google.com with SMTP id t12so3148048qtp.9;
+        Thu, 15 Aug 2019 10:35:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2ZSbStm7AbDlXUhKJSg3L8e0NLU9fEch1EIrUdDIspw=;
+        b=gfG9UzxThCigCBaKBs4lpzT/DQERj6tRex3zsyhWWtC5mNoRtHY0KVhl1Eusttge/6
+         gTa0XkfdlzW5xd0gUiYLS0otjvybVrqu20zk5hDPLSTPCA42Rld4afQ1YnK0eHOHfAvx
+         XchEDv5NXEmt5CcVefyG3DYRIVtmobbNBMwDKn8GtVpQKOTUK9LexdYi+sTLctzGyNxe
+         TYWo1VhCO+dbNXL98G4TvRHHRh6LRAXKcuaLZV2w+2AsiVgzdSbIulXiEvLbHnLjM9/r
+         FAzV2hVYQhnbnkcDrUmUq0qh4De17xFpCKGwoLpS0fpwYewK6JYlJy0m2NMukOuaQRKo
+         U9Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2ZSbStm7AbDlXUhKJSg3L8e0NLU9fEch1EIrUdDIspw=;
+        b=c6DeMdCfgr+r15p7LEkHKlY1hQ37rACT/jyfedDPlBf1NrkBrzgJk66QROvwD5yo9N
+         71VpVo+EHD9GrSl18nYWCZS3cSOyz+tBElFXf2VTuOk+dz/iIRK72OdZP1pdPuGmep67
+         Wc1jn/epWHFPvkXcew9SdsctzaksMFGQWEKmLrV/380m550PvruIg0meC9+hbD647PE1
+         2kbD4mClYNIx66pcUN4SQANCC3HYOC+P1rvngtefb7OIDI/G12C1vv/qrupKnUlIhBdn
+         zMlLQWz7UOhVjZYJgycUqNxteR2IUP3GLkIN28mnCB60weUn/gasfdPFeyMSMyuL+br1
+         4k9A==
+X-Gm-Message-State: APjAAAWWCMR1VIw2YUwsflUOnAnwQLNXF/vMpi8efW+FvQ758NpASctW
+        Jl3wdBI94LQ9GvcVsuYCtyc=
+X-Google-Smtp-Source: APXvYqzlu7N6cRvS0ocSXBCf6KXcLrqKgjEDpi8R5FqcX+e5okBZTdTHSPWh9rbIZLoOA+UBtTrZqw==
+X-Received: by 2002:a0c:e588:: with SMTP id t8mr4042293qvm.179.1565890501439;
+        Thu, 15 Aug 2019 10:35:01 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:25cd])
+        by smtp.gmail.com with ESMTPSA id y194sm1687796qkb.111.2019.08.15.10.35.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 10:35:00 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 10:34:59 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     axboe@kernel.dk, hannes@cmpxchg.org, mhocko@kernel.org,
+        vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH 2/4] bdi: Add bdi->id
+Message-ID: <20190815173459.GE588936@devbig004.ftw2.facebook.com>
+References: <20190803140155.181190-1-tj@kernel.org>
+ <20190803140155.181190-3-tj@kernel.org>
+ <20190815144623.GM14313@quack2.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190815044657.GD253360@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190815144623.GM14313@quack2.suse.cz>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 11:46:57PM -0500, Bjorn Helgaas wrote:
-> On Thu, Aug 01, 2019 at 05:05:59PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > 
-> > Currently, PRI Capability checks are repeated across all PRI API's.
-> > Instead, cache the capability check result in pci_pri_init() and use it
-> > in other PRI API's. Also, since PRI is a shared resource between PF/VF,
-> > initialize default values for common PRI features in pci_pri_init().
-> > 
-> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > ---
-> >  drivers/pci/ats.c       | 80 ++++++++++++++++++++++++++++-------------
-> >  include/linux/pci-ats.h |  5 +++
-> >  include/linux/pci.h     |  1 +
-> >  3 files changed, 61 insertions(+), 25 deletions(-)
-> > 
-> 
-> > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> > index cdd936d10f68..280be911f190 100644
-> > --- a/drivers/pci/ats.c
-> > +++ b/drivers/pci/ats.c
-> 
-> > @@ -28,6 +28,8 @@ void pci_ats_init(struct pci_dev *dev)
-> >  		return;
-> >  
-> >  	dev->ats_cap = pos;
-> > +
-> > +	pci_pri_init(dev);
-> >  }
-> >  
-> >  /**
-> > @@ -170,36 +172,72 @@ int pci_ats_page_aligned(struct pci_dev *pdev)
-> >  EXPORT_SYMBOL_GPL(pci_ats_page_aligned);
-> >  
-> >  #ifdef CONFIG_PCI_PRI
-> > +
-> > +void pci_pri_init(struct pci_dev *pdev)
-> > +{
-> > ...
-> > +}
-> 
-> > diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> > index 1a0bdaee2f32..33653d4ca94f 100644
-> > --- a/include/linux/pci-ats.h
-> > +++ b/include/linux/pci-ats.h
-> > @@ -6,6 +6,7 @@
-> >  
-> >  #ifdef CONFIG_PCI_PRI
-> >  
-> > +void pci_pri_init(struct pci_dev *pdev);
-> 
-> pci_pri_init() is implemented and called in drivers/pci/ats.c.  Unless
-> there's a need to call this from outside ats.c, it should be static
-> and should not be declared here.
-> 
-> If you can make it static, please also reorder the code so you don't
-> need a forward declaration in ats.c.
-Initially I did implement it as static function in drivers/pci/ats.c
-and protected the calling of pci_pri_init() with #ifdef CONFIG_PCI_PRI.
-But Keith did not like the implementation using #ifdefs and asked me to
-define empty functions. That's the reason for moving it to header file.
-In your previous review to this patch, since this is not used outside ats.c
-you asked me to move the declaraion to drivers/pci/pci.h. So I was planing
-to move it to drivers/pci/pci.h in next version. Let me know if you are in
-agreement.
-> 
-> >  int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
-> >  void pci_disable_pri(struct pci_dev *pdev);
-> >  void pci_restore_pri_state(struct pci_dev *pdev);
-> > @@ -13,6 +14,10 @@ int pci_reset_pri(struct pci_dev *pdev);
-> >  
-> >  #else /* CONFIG_PCI_PRI */
-> >  
-> > +static inline void pci_pri_init(struct pci_dev *pdev)
-> > +{
-> > +}
-> > +
-> >  static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
-> >  {
-> >  	return -ENODEV;
+Hello,
+
+On Thu, Aug 15, 2019 at 04:46:23PM +0200, Jan Kara wrote:
+> Although I would note that here you take effort not to recycle bdi->id so
+> that you don't flush wrong devices while in patch 4 you take pretty lax
+> approach to feeding garbage into the writeback system. So these two don't
+> quite match to me...
+
+So, I was trying to avoid systemic errors where the wrong thing can be
+triggered repeatedly.  A wrong flush once in a blue moon shouldn't be
+a big problem but if they can be triggered consistently by some
+pathological behavior, it's an a lot bigger problem.
+
+Thanks.
 
 -- 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+tejun
