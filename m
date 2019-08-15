@@ -2,158 +2,94 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98178C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1627EC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75A862133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD02E208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:57:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cj4O6vp4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731507AbfHOM5A (ORCPT
+        id S1731977AbfHOM5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:57:00 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:40495 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfHOM5A (ORCPT
+        Thu, 15 Aug 2019 08:57:15 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44403 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730087AbfHOM5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 08:57:00 -0400
-Received: from uno.localdomain (host64-130-dynamic.5-87-r.retail.telecomitalia.it [87.5.130.64])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id E2778240007;
-        Thu, 15 Aug 2019 12:56:55 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 14:58:22 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
-Message-ID: <20190815125822.ik6mlcaolxdyhyd6@uno.localdomain>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-3-jacopo@jmondi.org>
- <20190814224340.GD5015@pendragon.ideasonboard.com>
+        Thu, 15 Aug 2019 08:57:14 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t14so1035471plr.11
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 05:57:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cz1MzjYMzX4D9CL1r4WIIDgSC+c8JyxTOfGaxa1b0zw=;
+        b=cj4O6vp4Eukds5YXbbO7pQY+yJMcHVcww8QLY1Vwp37C3JJcTy1Qp4qXpJJAtXWtY3
+         W8vrGcz9aUUYDKH3cJCTjgoVzyCCD5U/gl13JkYFORoIeyEql0Anw5Wb4/YvWa8UEDdC
+         H7k15MyLo/sl5B1K4VvE/rJfj96EyLvlMaCWgqCz7sjBTvMSdtYbgLAubg9zPjjkKzSR
+         2IOeh27V/7HM2+v4S4UvFgbUs9vPLKl18lM9FqSTP+oFxDDkorhEXr7nlkjqhRSB05l9
+         NAmJoR4JKxsjMvz1FuxpomI7dNndPG0WV9NrisRIb+ulKcA1FDffwpOuyvb6zy3TRkML
+         cV8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cz1MzjYMzX4D9CL1r4WIIDgSC+c8JyxTOfGaxa1b0zw=;
+        b=XDvy4TYdIqz5Z8s3cR+BUDKflVrLaGzCYqUiaNz9fj52xEEBaP7k1LyLqy1SUZ9poJ
+         MzMowKf3GOJOJPuL0bLNX0eCkN7xP7+hoSFDy+tLJIDn9ASy7L9YJJPCgmo8v75+QTdk
+         yZaG8jpj8bpSudz1kG97sE06xFT8VwiPALL/4O2Bk6A3mHGW0EwkVH5+itIED8GF9okJ
+         p295u3iG+H0H24uk28sYyTpFxpfDTPP2hsN4+cJPVXDMLtXVDPXnx5mKgFwgxwkJw4hi
+         eVYty7Z+E1PUpTXsngFviGPzNLKn/5rBd4lZMJAyMy2N5wFVENMHx+W3DRQCpQkqDPmY
+         WzKQ==
+X-Gm-Message-State: APjAAAUp5fBeqzIGEBSAAJS0kyA82cOVkvl2tqusH77H+dNerje63yk8
+        FIe3i/unDTPA/iz6PnVlZwxGEzSiwT2zXB1Y1gM=
+X-Google-Smtp-Source: APXvYqzF+djrzTK3h1BgNnvKjeyGw4DDDWA7fM8n3nU29bJPJPPhF05ukbXUPh5tCvDQR6i1TcLRnYnIbr9bzt1Qu/Q=
+X-Received: by 2002:a17:902:9349:: with SMTP id g9mr4137313plp.262.1565873833959;
+ Thu, 15 Aug 2019 05:57:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fo4e5w67urwfcyy2"
-Content-Disposition: inline
-In-Reply-To: <20190814224340.GD5015@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20180716
+References: <20190815112826.81785-1-heikki.krogerus@linux.intel.com> <20190815112826.81785-3-heikki.krogerus@linux.intel.com>
+In-Reply-To: <20190815112826.81785-3-heikki.krogerus@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 15 Aug 2019 15:57:02 +0300
+Message-ID: <CAHp75Ve6PXtP3D94B1iDB5TcO6etqX9uCrQ7HSn1wSes-B3FPQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] usb: roles: intel_xhci: Supplying software node for
+ the role mux
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---fo4e5w67urwfcyy2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Laurent,
-
-On Thu, Aug 15, 2019 at 01:43:40AM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
+On Thu, Aug 15, 2019 at 2:28 PM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
 >
-> Thank you for the patch.
->
-> On Wed, Aug 14, 2019 at 10:28:12PM +0200, Jacopo Mondi wrote:
-> > Add documentation for the V4L2_CID_LOCATION camera control. The newly
-> > added read-only control reports the camera device mounting position.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> > ---
-> >  .../media/uapi/v4l/ext-ctrls-camera.rst       | 23 +++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >
-> > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > index 51c1d5c9eb00..fc0a02eee6d4 100644
-> > --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
-> >      value down. A value of zero stops the motion if one is in progress
-> >      and has no effect otherwise.
-> >
-> > +``V4L2_CID_LOCATION (integer)``
->
-> Maybe V4L2_CID_CAMERA_SENSOR_LOCATION ? Same for the values below.
->
-> > +    This read-only control describes the camera location by reporting its
->
-> Here too I would mention camera sensor instead of just camera (or
-> possibly imaging sensor).
->
+> The primary purpose for this node will be to allow linking
+> the users of the switch to it. The users will be for example
+> USB Type-C connectors. By supplying a reference to this
+> node in the software nodes representing the USB Type-C
+> controllers or connectors, the drivers for those devices can
+> access the switch.
 
-Let's sort this out in the discussion on the dt property.
+> -static const struct usb_role_switch_desc sw_desc = {
+> +static struct usb_role_switch_desc sw_desc = {
 
-> > +    mounting position on the device where the camera is installed. This
-> > +    control is particularly meaningful for devices which have a well defined
-> > +    orientation, such as phones, laptops and portable devices as the camera
-> > +    location is expressed as a position relative to the device intended
-> > +    usage position. In example, a camera installed on the user-facing side
-> > +    of a phone device is said to be installed in the ``V4L2_LOCATION_FRONT``
-> > +    position.
->
-> The DT bindings could use such an example :-) I would extend this to
-> tablets and laptops.
+I dunno what is better, but usual approach I'm using in other drivers
+is to kmemdup() input constant structures in order to have originals
+untouched.
 
-I could copy part of the text there and expand the example device
-list.
-
->
-> > +
-> > +
-> > +
->
-> Do we need three blank lines ?
->
-
-I don't know :) I copied this style from the other tables in the file.
-There doesn't seem to a requirement about this, I just tried to keep
-the style consistent :)
-
-> > +.. flat-table::
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +
-> > +    * - ``V4L2_LOCATION_FRONT``
-> > +      - The camera device is located on the front side of the device.
-> > +    * - ``V4L2_LOCATION_BACK``
-> > +      - The camera device is located on the back side of the device.
-> > +
-> > +
-> > +
-> >  .. [#f1]
-> >     This control may be changed to a menu control in the future, if more
-> >     options are required.
->
-> --
-> Regards,
->
-> Laurent Pinchart
-
---fo4e5w67urwfcyy2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1VVu4ACgkQcjQGjxah
-Vjwveg/+JKy6+TrvF1i7DUeIFc2WRXtrmT4PHKMFySy6A1AaMdKNyuES2s/GD1Vn
-JdtbhCaWZ2Lo7WXRbx1xNJlDLfGUPx55raR/G8JuRRaBdR1PYt6S1bjpDXlNLkCn
-CeBdL379wxhbHuAal4mZoXW9iMlRj4WVco+K2DpdSwQULbeq9zisBWTwV32j9ArS
-kT+9Wikaeu4rTieHRkbZb3prIyyEaCRnhorFYXVk4vrpjJ4M0ksfSCF9Trj19FP4
-Qa/twQVHWXPksbNEoLUDgV4nUK4PPFoUiY1Vo68EpuSO0IlUsHsPJ6aOCPxjEuE/
-yrvbgbjCzC+oqbmfyaunWzkrxkAPAFYutLFjnzTUJ3m15KXd5VdA8mycVk7pxee8
-vTlpQ7h0U/zJVkQGgw8IjFOh1bw6ssq01YN88g/Z5jHdEqs2e4SX3gPxkSUw5Z/b
-TMYJJ48aqxvekt+h7p91lpDJxdIM/0PhTCPftSynX8jx7BH40i8NdnOMqIoSlk2f
-e9DcZSE/NaL3/kgJAoOv3trwjd3xOPBD4Q2qsGksu0Vej5jL1ss32zlNFpffiCs9
-Echpa4m1HPfgTfCivjIOk3Gdl9pQSmHvA2k64Kyg4BPzqI+lPRM0UbnO3gzGd1YU
-b1iOZB/L6SPKIRyw72ewQ1tps1+kozDTAOZHbAnDDrBoNHwkA8Q=
-=geG3
------END PGP SIGNATURE-----
-
---fo4e5w67urwfcyy2--
+-- 
+With Best Regards,
+Andy Shevchenko
