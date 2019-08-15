@@ -2,163 +2,184 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B4DC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58C5C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8425920656
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7765C21855
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:47:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrdfUvvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731125AbfHOKqx (ORCPT
+        id S1731162AbfHOKr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 06:46:53 -0400
-Received: from mga18.intel.com ([134.134.136.126]:62125 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbfHOKqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 06:46:53 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 03:46:27 -0700
-X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
-   d="scan'208";a="179338295"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 03:46:22 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 091E520F68; Thu, 15 Aug 2019 13:45:16 +0300 (EEST)
-Date:   Thu, 15 Aug 2019 13:45:15 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        devicetree@vger.kernel.org, Eddie Cai <eddie.cai.linux@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-        Chen Jacob <jacob2.chen@rock-chips.com>,
-        Jeffy <jeffy.chen@rock-chips.com>,
-        =?utf-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Shunqian Zheng <zhengsq@rock-chips.com>,
-        Jacob Chen <cc@rock-chips.com>,
-        Allon Huang <allon.huang@rock-chips.com>
-Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
-Message-ID: <20190815104515.GO6133@paasikivi.fi.intel.com>
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <20190730184256.30338-6-helen.koike@collabora.com>
- <20190808091406.GQ21370@paasikivi.fi.intel.com>
- <da6c1d01-e3f6-ad73-db55-145d7832a665@collabora.com>
- <20190815082422.GM6133@paasikivi.fi.intel.com>
- <CAAFQd5Cd2k5ZCDfu=a281NLOa88vpm-P7ZPWF4Nnx==iyEkn7A@mail.gmail.com>
+        Thu, 15 Aug 2019 06:47:29 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35779 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731030AbfHOKr3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 06:47:29 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w20so1777222edd.2;
+        Thu, 15 Aug 2019 03:47:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6U+9D9VuzYk/UuusQ5D1oT/kFrMb8QVt6mqzdB7pgOY=;
+        b=KrdfUvvuzk0m1+qMR6fl7FPrf+1zxRSwNUGzcCNRGla2KLdNyJNyuIVnE1xuakRAtL
+         6005Rj4jQN956PE+vCsolvwoAQwIZpwvy1IHkWo1un1yAhlU/WBje9Uy1o2KbQ2O6Zbv
+         T0T3SN8XX2Qxa8bDvrwm9b4nclmgCEOzNa6hHsKw2fFPUjBDSpMWBHzx5Uy/ZHkEZqul
+         EEQaGUAn7vaRaYpFBQs5TLfhvnHQmlctqZkmI6CIN8qwH04y16XIl7UE6OzsubU08ymS
+         9E2hIFzExuzqMeY5TidqgJYa3PIUhrxUSJMM9n6G1s0j44RdTs5l2VzX618LmlMgjnp3
+         8PLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6U+9D9VuzYk/UuusQ5D1oT/kFrMb8QVt6mqzdB7pgOY=;
+        b=nMa1hFG+ExO8r4RPBa1eAJT2kISnN0wDBly0q+1p4Q7VauitsLX1Qon3YFIKYmDO7b
+         9OJ8kFbemTny3D1HeVJa6OiGYxUfBt6ECKcaRIavTRaxCN6Ns+/3td1qL7xxnuLKeG1D
+         ziSU3GSiFLK9Kq/fTiEnB0tY4XPBwk9Zdshjzhink8P8l+HmGAtgl27U6uoQ4L+UCQhq
+         jqL2nW21SwrLn8vLLYm/sUzD1TCiNiZl4LvHj1mRJY0PhNADexOCDDdZohvo7CM9Nttt
+         HB4nxfQbSYf7YPOvtNvtGJWz+IZxdMVv4hC7a3rnRYpBwK6GYuUhrL26lwDgvvKcBNfl
+         HKtQ==
+X-Gm-Message-State: APjAAAXHI+LF5PL1uHvEO2O5Ejk4I3ZwRyb5jDZ3AGxfoxyqDcjvrKEM
+        6yJi3xNOTnRgFNgatsblTYc4sqE2UO7o1niTLVc=
+X-Google-Smtp-Source: APXvYqzmrdeI4nHryo00UaovrqqzY7SNIBF6HYZgikYNhd2vK0pG0uun+ybu7F39OpfTr/sRL1rpPsgkZ3lRM3m3Lck=
+X-Received: by 2002:a17:906:1989:: with SMTP id g9mr3716381ejd.302.1565866046214;
+ Thu, 15 Aug 2019 03:47:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAFQd5Cd2k5ZCDfu=a281NLOa88vpm-P7ZPWF4Nnx==iyEkn7A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190814214319.24087-1-andreas@kemnade.info>
+In-Reply-To: <20190814214319.24087-1-andreas@kemnade.info>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Thu, 15 Aug 2019 05:47:14 -0500
+Message-ID: <CAHCN7xL4K+1nJDXDRs7yVi6LhGL-4uPu9M+SN1dcOPu8=M8s2g@mail.gmail.com>
+Subject: Re: [PATCH v2] regulator: twl: voltage lists for vdd1/2 on twl4030
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Nishanth Menon <nm@ti.com>, vireshk@kernel.org,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 07:29:59PM +0900, Tomasz Figa wrote:
-> On Thu, Aug 15, 2019 at 5:25 PM Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
-> >
-> > Hi Helen,
-> >
-> > On Wed, Aug 14, 2019 at 09:58:05PM -0300, Helen Koike wrote:
-> >
-> > ...
-> >
-> > > >> +static int rkisp1_isp_sd_set_fmt(struct v4l2_subdev *sd,
-> > > >> +                           struct v4l2_subdev_pad_config *cfg,
-> > > >> +                           struct v4l2_subdev_format *fmt)
-> > > >> +{
-> > > >> +  struct rkisp1_device *isp_dev = sd_to_isp_dev(sd);
-> > > >> +  struct rkisp1_isp_subdev *isp_sd = &isp_dev->isp_sdev;
-> > > >> +  struct v4l2_mbus_framefmt *mf = &fmt->format;
-> > > >> +
-> > > >
-> > > > Note that for sub-device nodes, the driver is itself responsible for
-> > > > serialising the access to its data structures.
-> > >
-> > > But looking at subdev_do_ioctl_lock(), it seems that it serializes the
-> > > ioctl calls for subdevs, no? Or I'm misunderstanding something (which is
-> > > most probably) ?
-> >
-> > Good question. I had missed this change --- subdev_do_ioctl_lock() is
-> > relatively new. But setting that lock is still not possible as the struct
-> > is allocated in the framework and the device is registered before the
-> > driver gets hold of it. It's a good idea to provide the same serialisation
-> > for subdevs as well.
-> >
-> > I'll get back to this later.
-> >
-> > ...
-> >
-> > > >> +static int rkisp1_isp_sd_s_power(struct v4l2_subdev *sd, int on)
-> > > >
-> > > > If you support runtime PM, you shouldn't implement the s_power op.
-> > >
-> > > Is is ok to completly remove the usage of runtime PM then?
-> > > Like this http://ix.io/1RJb ?
-> >
-> > Please use runtime PM instead. In the long run we should get rid of the
-> > s_power op. Drivers themselves know better when the hardware they control
-> > should be powered on or off.
-> >
-> 
-> One also needs to use runtime PM to handle power domains and power
-> dependencies on auxiliary devices, e.g. IOMMU.
-> 
-> > >
-> > > tbh I'm not that familar with runtime PM and I'm not sure what is the
-> > > difference of it and using s_power op (and Documentation/power/runtime_pm.rst
-> > > is not being that helpful tbh).
-> >
-> > You can find a simple example e.g. in
-> > drivers/media/platform/atmel/atmel-isi.c .
-> >
-> > >
-> > > >
-> > > > You'll still need to call s_power on external subdevs though.
-> > > >
-> > > >> +{
-> > > >> +  struct rkisp1_device *isp_dev = sd_to_isp_dev(sd);
-> > > >> +  int ret;
-> > > >> +
-> > > >> +  v4l2_dbg(1, rkisp1_debug, &isp_dev->v4l2_dev, "s_power: %d\n", on);
-> > > >> +
-> > > >> +  if (on) {
-> > > >> +          ret = pm_runtime_get_sync(isp_dev->dev);
-> > >
-> > > If this is not ok to remove suport for runtime PM, then where should I put
-> > > the call to pm_runtime_get_sync() if not in this s_power op ?
-> >
-> > Basically the runtime_resume and runtime_suspend callbacks are where the
-> > device power state changes are implemented, and pm_runtime_get_sync and
-> > pm_runtime_put are how the driver controls the power state.
-> >
-> > So you no longer need the s_power() op at all. The op needs to be called on
-> > the pipeline however, as there are drivers that still use it.
-> >
-> 
-> For this driver, I suppose we would _get_sync() when we start
-> streaming (in the hardware, i.e. we want the ISP to start capturing
-> frames) and _put() when we stop and the driver shouldn't perform any
-> access to the hardware when the streaming is not active.
+On Wed, Aug 14, 2019 at 5:18 PM Andreas Kemnade <andreas@kemnade.info> wrote:
+>
+> _opp_supported_by_regulators() wrongly ignored errors from
+> regulator_is_supported_voltage(), so it considered errors as
+> success. Since
+> commit 498209445124 ("regulator: core: simplify return value on suported_voltage")
+> regulator_is_supported_voltage() returns a real boolean, so
+> errors make _opp_supported_by_regulators() return false.
+>
+> That reveals a problem with the declaration of the VDD1/2
+> regulators on twl4030.
+> The VDD1/VDD2 regulators on twl4030 are neither defined with
+> voltage lists nor with the continuous flag set, so
+> regulator_is_supported_voltage() returns false and an error
+> before above mentioned commit (which was considered success)
+> The result is that after the above mentioned commit cpufreq
+> does not work properly e.g. dm3730.
+>
+> [    2.490997] core: _opp_supported_by_regulators: OPP minuV: 1012500 maxuV: 1012500, not supported by regulator
+> [    2.501617] cpu cpu0: _opp_add: OPP not supported by regulators (300000000)
+> [    2.509246] core: _opp_supported_by_regulators: OPP minuV: 1200000 maxuV: 1200000, not supported by regulator
+> [    2.519775] cpu cpu0: _opp_add: OPP not supported by regulators (600000000)
+> [    2.527313] core: _opp_supported_by_regulators: OPP minuV: 1325000 maxuV: 1325000, not supported by regulator
+> [    2.537750] cpu cpu0: _opp_add: OPP not supported by regulators (800000000)
+>
+> The patch fixes declaration of VDD1/2 regulators by
+> adding proper voltage lists.
+>
+> Fixes: 498209445124 ("regulator: core: simplify return value on suported_voltage")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 
-Agreed.
+Tested-by: Adam Ford <aford173@gmail.com> #logicpd-torpedo-37xx-devkit
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+> ---
+> resent because it was rejected by mailing lists, due to technical
+> issues, sorry for the noise.
+> changes in v2:
+>   using a proper voltage list instead of misusing the continuous flag
+>   subject was regulator: twl: mark vdd1/2 as continuous on twl4030
+>
+>  drivers/regulator/twl-regulator.c | 23 ++++++++++++++++++++---
+>  1 file changed, 20 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/regulator/twl-regulator.c b/drivers/regulator/twl-regulator.c
+> index 6fa15b2d6fb3..866b4dd01da9 100644
+> --- a/drivers/regulator/twl-regulator.c
+> +++ b/drivers/regulator/twl-regulator.c
+> @@ -359,6 +359,17 @@ static const u16 VINTANA2_VSEL_table[] = {
+>         2500, 2750,
+>  };
+>
+> +/* 600mV to 1450mV in 12.5 mV steps */
+> +static const struct regulator_linear_range VDD1_ranges[] = {
+> +       REGULATOR_LINEAR_RANGE(600000, 0, 68, 12500)
+> +};
+> +
+> +/* 600mV to 1450mV in 12.5 mV steps, everything above = 1500mV */
+> +static const struct regulator_linear_range VDD2_ranges[] = {
+> +       REGULATOR_LINEAR_RANGE(600000, 0, 68, 12500),
+> +       REGULATOR_LINEAR_RANGE(1500000, 69, 69, 12500)
+> +};
+> +
+>  static int twl4030ldo_list_voltage(struct regulator_dev *rdev, unsigned index)
+>  {
+>         struct twlreg_info      *info = rdev_get_drvdata(rdev);
+> @@ -427,6 +438,8 @@ static int twl4030smps_get_voltage(struct regulator_dev *rdev)
+>  }
+>
+>  static const struct regulator_ops twl4030smps_ops = {
+> +       .list_voltage   = regulator_list_voltage_linear_range,
+> +
+>         .set_voltage    = twl4030smps_set_voltage,
+>         .get_voltage    = twl4030smps_get_voltage,
+>  };
+> @@ -466,7 +479,8 @@ static const struct twlreg_info TWL4030_INFO_##label = { \
+>                 }, \
+>         }
+>
+> -#define TWL4030_ADJUSTABLE_SMPS(label, offset, num, turnon_delay, remap_conf) \
+> +#define TWL4030_ADJUSTABLE_SMPS(label, offset, num, turnon_delay, remap_conf, \
+> +               n_volt) \
+>  static const struct twlreg_info TWL4030_INFO_##label = { \
+>         .base = offset, \
+>         .id = num, \
+> @@ -479,6 +493,9 @@ static const struct twlreg_info TWL4030_INFO_##label = { \
+>                 .owner = THIS_MODULE, \
+>                 .enable_time = turnon_delay, \
+>                 .of_map_mode = twl4030reg_map_mode, \
+> +               .n_voltages = n_volt, \
+> +               .n_linear_ranges = ARRAY_SIZE(label ## _ranges), \
+> +               .linear_ranges = label ## _ranges, \
+>                 }, \
+>         }
+>
+> @@ -518,8 +535,8 @@ TWL4030_ADJUSTABLE_LDO(VSIM, 0x37, 9, 100, 0x00);
+>  TWL4030_ADJUSTABLE_LDO(VDAC, 0x3b, 10, 100, 0x08);
+>  TWL4030_ADJUSTABLE_LDO(VINTANA2, 0x43, 12, 100, 0x08);
+>  TWL4030_ADJUSTABLE_LDO(VIO, 0x4b, 14, 1000, 0x08);
+> -TWL4030_ADJUSTABLE_SMPS(VDD1, 0x55, 15, 1000, 0x08);
+> -TWL4030_ADJUSTABLE_SMPS(VDD2, 0x63, 16, 1000, 0x08);
+> +TWL4030_ADJUSTABLE_SMPS(VDD1, 0x55, 15, 1000, 0x08, 68);
+> +TWL4030_ADJUSTABLE_SMPS(VDD2, 0x63, 16, 1000, 0x08, 69);
+>  /* VUSBCP is managed *only* by the USB subchip */
+>  TWL4030_FIXED_LDO(VINTANA1, 0x3f, 1500, 11, 100, 0x08);
+>  TWL4030_FIXED_LDO(VINTDIG, 0x47, 1500, 13, 100, 0x08);
+> --
+> 2.20.1
+>
