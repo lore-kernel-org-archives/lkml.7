@@ -2,81 +2,93 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FF0C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC88C3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A18812083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68BED2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:06:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAu+xdgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732592AbfHOSGB (ORCPT
+        id S1732601AbfHOSGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 14:06:01 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:55672 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729736AbfHOSGB (ORCPT
+        Thu, 15 Aug 2019 14:06:41 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44831 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729560AbfHOSGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 14:06:01 -0400
-Received: by mail-io1-f71.google.com with SMTP id s22so423836iot.22
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 11:06:01 -0700 (PDT)
+        Thu, 15 Aug 2019 14:06:40 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c81so1688636pfc.11;
+        Thu, 15 Aug 2019 11:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2kefMAz7f9gRkj6gIipqp7OElUm+jYSHKa3bI/ilJxk=;
+        b=mAu+xdgGUET1GDkag0jB49aHKfefXJRwDSZpt6Lkd1QSl6+2RqT5ZzGcXlbE+EZa60
+         wPRSEmb4o6yJq5mDH6JZZrigRQOTzQrglTQF6mTVD53IHa46R29ODc2ESVmDH7IyteEX
+         /QmNvQ898KmZVzxbgVcv5DvPafILMAVX3deLdXpsnX9vRQa97VNvVx9A0IBjaiylJLPC
+         pm2/KxT1ouXOazl3Q1H5Fzef5T8Yc8L6kaX2OJR7haDCQlQkv3aA3gsbS/68yEAqveBv
+         ujQqUz+UvyhRx5i6F3RlERJPtvpTv5E5sIrdAlEOmbOZaCWOquWZ5+p9yOown3CI6DRh
+         I+xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=6O8fj8Cxesz95GcJ9dIMRrMkW2S+HMSqZq3eO7hi+58=;
-        b=GePur01PuJ9YCVfotxEea2yhjn4u2QsV/x9GLS7wwJu8MOUCq7x2AaBnu9fS9Cj1zy
-         3nKyU0M1VnjJttDSrcg/rVvhRkA4UG42a9DC0v50UhrIAe5SASErUpfzeeutqyuD2Cnd
-         unlCkRJck6PaqUb9oN8tUzR3NCQbmm7KN92zJCYjPE/GL/+yH/o2TSaNM7xpj1HbSr8p
-         J6AEuWssWUmJE21xX2+O0N/H4DLxZOVQ7Sw7TBZp+H9DXKt9JUQT/naVMYtvmOATf86g
-         PDegZcvGz3P0zCr/ZIJ5vOCyqv7Rl4jQnvncnYOOj+0KhQp0j0JNyq/TbZ3gp/pSUkgC
-         r92Q==
-X-Gm-Message-State: APjAAAUKwsV6tZtT/xtdqLk4k3wpTHK5ilCmJTAD3bF97Wwtn2miACqb
-        epg4KahbJSiiONOAE9FJMyMcous8pvVbDbpsfSJqr3igryvO
-X-Google-Smtp-Source: APXvYqy5AXhfLngIaYgaBxvvQokDgu6mxb5nb/n1uzcS934nnva7+99gALTUcVp1YZPMTW8pM5S3MBUS6LmViOkPPydAWfs2qe0V
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2kefMAz7f9gRkj6gIipqp7OElUm+jYSHKa3bI/ilJxk=;
+        b=oGG/xN7SBPZgM4UWc6jXoBADIb7UYLZG1rOLm5w5nsGUEQPLRHm5N3vWYAMvmI/e9+
+         xVqlktH+gwknFs7q/1fysHto71guXIckaIzwtV2ToALSWG1VN1Q4G8nQVcq92PU+d+Cg
+         1eZbvHVYngV3Bun6VVXDFlJNtZ9UH/9stf1lcg5UvqP1TTqGo2VuzBdsiIDU4OV5pBOC
+         1tGY5Nc1bJx3NtYIYZhCV08I5TZo6xxmEtSNj9gi92OO64UhSz84FAj+izFYZHxEm9/5
+         ASmlwzjwXhCMGrOR3djvPRB3Z+tJWMmXdxiUnAZaQXoc70itXtRLEfP484glc3cK12y/
+         KFBA==
+X-Gm-Message-State: APjAAAWqYIyaBaBHePeZ/tTgKlzp0XpNog4DfL746ZuI/sAQrfoewkv9
+        lQ95grRmqgNHaoCXpzKcWxU=
+X-Google-Smtp-Source: APXvYqybP544W3Kc2fBQ0i2QzokjkYIZP2EDR9lfm2C/+9XxwPS8YhhjAgZCVolC0Q1H6kTJQfc5Ow==
+X-Received: by 2002:aa7:8a92:: with SMTP id a18mr6804034pfc.216.1565892399936;
+        Thu, 15 Aug 2019 11:06:39 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o11sm3855461pfh.114.2019.08.15.11.06.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 11:06:38 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 11:06:37 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v5 05/18] watchdog: cpwd: use generic compat_ptr_ioctl
+Message-ID: <20190815180637.GA20006@roeck-us.net>
+References: <20190814204259.120942-1-arnd@arndb.de>
+ <20190814204259.120942-6-arnd@arndb.de>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8209:: with SMTP id l9mr3454621iom.303.1565892360493;
- Thu, 15 Aug 2019 11:06:00 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 11:06:00 -0700
-In-Reply-To: <000000000000523ea3059025b11d@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e75f1805902bb919@google.com>
-Subject: Re: INFO: task hung in tls_sw_release_resources_tx
-From:   syzbot <syzbot+6a9ff159672dfbb41c95@syzkaller.appspotmail.com>
-To:     ast@kernel.org, aviadye@mellanox.com, borisp@mellanox.com,
-        bpf@vger.kernel.org, daniel@iogearbox.net, davejwatson@fb.com,
-        davem@davemloft.net, hdanton@sina.com,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
-        kafai@fb.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814204259.120942-6-arnd@arndb.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Wed, Aug 14, 2019 at 10:42:32PM +0200, Arnd Bergmann wrote:
+> The cpwd_compat_ioctl() contains a bogus mutex that dates
+> back to a leftover BKL instance.
+> 
+> Simplify the implementation by using the new compat_ptr_ioctl()
+> helper function that will do the right thing for all calls
+> here.
+> 
+> Note that WIOCSTART/WIOCSTOP don't take any arguments, so
+> the compat_ptr() conversion is not needed here, but it also
+> doesn't hurt.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-commit 130b392c6cd6b2aed1b7eb32253d4920babb4891
-Author: Dave Watson <davejwatson@fb.com>
-Date:   Wed Jan 30 21:58:31 2019 +0000
-
-     net: tls: Add tls 1.3 support
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=118e8dee600000
-start commit:   6d5afe20 sctp: fix memleak in sctp_send_reset_streams
-git tree:       net
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=138e8dee600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=158e8dee600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
-dashboard link: https://syzkaller.appspot.com/bug?extid=6a9ff159672dfbb41c95
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17cb0502600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14d5dc22600000
-
-Reported-by: syzbot+6a9ff159672dfbb41c95@syzkaller.appspotmail.com
-Fixes: 130b392c6cd6 ("net: tls: Add tls 1.3 support")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
