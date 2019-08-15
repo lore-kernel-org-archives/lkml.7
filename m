@@ -2,121 +2,100 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C2DC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07381C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 544342084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:05:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Kza/hdXh"
+	by mail.kernel.org (Postfix) with ESMTP id D63102084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:06:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733262AbfHOUFu (ORCPT
+        id S1733272AbfHOUG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 16:05:50 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38182 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731108AbfHOUFu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 16:05:50 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FK4QMk002775;
-        Thu, 15 Aug 2019 20:05:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=zbLSa6W0EuiTMTGJ10AKmzZODTdbzm2Hj3NPVCPtPyY=;
- b=Kza/hdXhucTULvENXgBL7h+svfGm7Ib/OMek9SxSFitnZYfi6p4fCdY4y1dN8Wv4rYSH
- ij3j14O4NU5LZhjtYFaKHrlWV+wEHdfpBMDENsjcfFeQu/FYZKNPtaHwau5wuap6Qtwf
- immzaTZLmgZi++Hba4eYFkMmOoIq6+EqvigEEa/zrVCUfWz8eCXtj063t2+FO1rYLqfi
- OIJfS5Hc2sgYh30TBIG5spcSQm7Clg/Ya6IOOKdjTSIj7Omqsr3GTn31XN81lVkei40F
- 07zbjvvCaQw96DbI1ZRqj1wzEx7p5NxpJQTfK77cWD+Zjy02fjbHZSAwIc8VFjnZVonv Ag== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2u9pjqvtes-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Aug 2019 20:05:41 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FK3QIj097997;
-        Thu, 15 Aug 2019 20:05:40 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2ucpyspsys-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Aug 2019 20:05:40 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7FK5aB7016146;
-        Thu, 15 Aug 2019 20:05:36 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 15 Aug 2019 13:05:35 -0700
-Date:   Thu, 15 Aug 2019 13:05:34 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [GIT PULL] xfs: fixes for 5.3-rc5
-Message-ID: <20190815200534.GF15186@magnolia>
-References: <20190815171347.GD15186@magnolia>
- <CAHk-=wiHuHLK49LKQhtERXaq0OYUnug4DJZFLPq9RHEG2Cm+bQ@mail.gmail.com>
+        Thu, 15 Aug 2019 16:06:26 -0400
+Received: from ajax.cs.uga.edu ([128.192.4.6]:58570 "EHLO ajax.cs.uga.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731699AbfHOUG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 16:06:26 -0400
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+        (authenticated bits=0)
+        by ajax.cs.uga.edu (8.14.4/8.14.4) with ESMTP id x7FK6N8I077486
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 15 Aug 2019 16:06:24 -0400
+Received: by mail-lj1-f182.google.com with SMTP id m24so3278585ljg.8;
+        Thu, 15 Aug 2019 13:06:24 -0700 (PDT)
+X-Gm-Message-State: APjAAAWLEIRuBR44EIC8J2y6T85AK92daYm6evPBeGGS/pAiZmefZnNa
+        dh1eOY9cEfudS9z635hseN4UwWtONh6ZCR7Z4jg=
+X-Google-Smtp-Source: APXvYqz4Iy/6XNX+MVvf4TD5dvd9KB0BX0Yc/8O9jSENtkExtdY3aoeqaJVHrgi3iel0+/IUUsE8rAlGqjuBfPn5ht0=
+X-Received: by 2002:a2e:b4e6:: with SMTP id s6mr3498453ljm.169.1565899583386;
+ Thu, 15 Aug 2019 13:06:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiHuHLK49LKQhtERXaq0OYUnug4DJZFLPq9RHEG2Cm+bQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908150189
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908150189
+References: <1565892301-2812-1-git-send-email-wenwen@cs.uga.edu> <20190815184505.o7o2ojt7ag4shh7u@oracle.com>
+In-Reply-To: <20190815184505.o7o2ojt7ag4shh7u@oracle.com>
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+Date:   Thu, 15 Aug 2019 16:05:47 -0400
+X-Gmail-Original-Message-ID: <CAAa=b7ctf3pkoeN0+hjeK1ZXwaZpnniO4-ypMMcS3nKuVcjo_w@mail.gmail.com>
+Message-ID: <CAAa=b7ctf3pkoeN0+hjeK1ZXwaZpnniO4-ypMMcS3nKuVcjo_w@mail.gmail.com>
+Subject: Re: [PATCH] wimax/i2400m: fix a memory leak bug
+To:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
+        "supporter:INTEL WIRELESS WIMAX CONNECTION 2400" 
+        <linux-wimax@intel.com>, "David S. Miller" <davem@davemloft.net>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 12:38:33PM -0700, Linus Torvalds wrote:
-> Pulled. Just a quick note:
-> 
-> On Thu, Aug 15, 2019 at 10:13 AM Darrick J. Wong <djwong@kernel.org> wrote:
+On Thu, Aug 15, 2019 at 2:45 PM Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
+>
+> * Wenwen Wang <wenwen@cs.uga.edu> [190815 14:05]:
+> > In i2400m_barker_db_init(), 'options_orig' is allocated through kstrdup()
+> > to hold the original command line options. Then, the options are parsed.
+> > However, if an error occurs during the parsing process, 'options_orig' is
+> > not deallocated, leading to a memory leak bug. To fix this issue, free
+> > 'options_orig' before returning the error.
 > >
-> > - Convert more directory corruption debugging asserts to actual
-> >   EFSCORRUPTED returns instead of blowing up later on.
-> 
-> The proper error code looks like an obvious improvement, but I do
-> wonder if there should be some (ratelimited) system logging too?
-> 
-> I've seen a lot of programs that don't report errors very clearly and
-> might just silently stop running and as a sysadmin I'd think I'd
-> rather have something in the system logs than users saying "my app
-> crashes at startup"/
-> 
-> Maybe the logging ends up being there already - just done later. It
-> wasn't obvious from the patch, and I didn't check the whole callchain
-> (only direct callers).
+> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> > ---
+> >  drivers/net/wimax/i2400m/fw.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/net/wimax/i2400m/fw.c b/drivers/net/wimax/i2400m/fw.c
+> > index e9fc168..6b36f6d 100644
+> > --- a/drivers/net/wimax/i2400m/fw.c
+> > +++ b/drivers/net/wimax/i2400m/fw.c
+> > @@ -342,6 +342,7 @@ int i2400m_barker_db_init(const char *_options)
+> >                                      "a 32-bit number\n",
+> >                                      __func__, token);
+> >                               result = -EINVAL;
+> > +                             kfree(options_orig);
+> >                               goto error_parse;
+> >                       }
+> >                       if (barker == 0) {
+> > @@ -350,8 +351,10 @@ int i2400m_barker_db_init(const char *_options)
+> >                               continue;
+> >                       }
+> >                       result = i2400m_barker_db_add(barker);
+> > -                     if (result < 0)
+> > +                     if (result < 0) {
+> > +                             kfree(options_orig);
+> >                               goto error_add;
+>
+> I know that you didn't add this error_add label, but it seems like the
+> incorrect goto label.  Although looking at the caller indicates an add
+> failed, this label is used prior to and after the memory leak you are
+> trying to fix.  It might be better to change this label to something
+> like error_parse_add and move the kfree to the unwinding.  If a new
+> label is used, it becomes more clear as to what is being undone and
+> there aren't two jumps into an unwind from two very different stages of
+> the function.  Adding a new label also has the benefit of moving the
+> kfree to the unwind of error_parse.
 
-Metadata update failures hitting EFSCORRUPTED will leave a fair amount
-of spew in dmesg both when we find the corrupt metadata and the update
-transaction is aborted (which takes the filesystem down).  Read errors
-get logged if we spot an error within a block but aren't consistently
-logged when we discover problems between separate metadata objects.
+Thanks for your suggestion! I will rework the patch.
 
-FWIW I've wondered off and on if the VFS syscalls should be generating
-some kind of audit trail when something returns an error message to
-userspace?
-
---D
-
->                   Linus
+Wenwen
