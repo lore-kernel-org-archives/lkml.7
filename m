@@ -2,112 +2,275 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2825C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09F5C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CEC22063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882322089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:38:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732488AbfHORi2 (ORCPT
+        id S1732506AbfHORic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:38:28 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40405 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728685AbfHORi2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:38:28 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hyJhN-0002YD-Mf; Thu, 15 Aug 2019 19:38:05 +0200
-Date:   Thu, 15 Aug 2019 19:38:04 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Safonov <dima@arista.com>
-cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv6 10/36] kernel: Add do_timens_ktime_to_host() helper
-In-Reply-To: <20190815163836.2927-11-dima@arista.com>
-Message-ID: <alpine.DEB.2.21.1908151935320.1908@nanos.tec.linutronix.de>
-References: <20190815163836.2927-1-dima@arista.com> <20190815163836.2927-11-dima@arista.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 15 Aug 2019 13:38:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49714 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728685AbfHORib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:38:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8BE42AC47;
+        Thu, 15 Aug 2019 17:38:29 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 19:38:27 +0200
+Message-ID: <s5h7e7e9vn0.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Hui Peng <benquike@gmail.com>
+Cc:     security@kernel.org, alsa-devel@alsa-project.org,
+        YueHaibing <yuehaibing@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Wenwen Wang <wang6495@umn.edu>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Fix a stack buffer overflow bug check_input_term
+In-Reply-To: <CAKpmkkWCaLOctG44fD=arD-=oogRVCSxe5rz2UNUAms5q=2pYw@mail.gmail.com>
+References: <20190815043554.16623-1-benquike@gmail.com>
+        <s5htvaj9cre.wl-tiwai@suse.de>
+        <s5hk1beapab.wl-tiwai@suse.de>
+        <CAKpmkkWCaLOctG44fD=arD-=oogRVCSxe5rz2UNUAms5q=2pYw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 15 Aug 2019, Dmitry Safonov wrote:
-> +ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim,
-> +				struct timens_offsets *ns_offsets)
-> +{
-> +	ktime_t offset;
-> +
-> +	switch (clockid) {
-> +	case CLOCK_MONOTONIC:
-> +		offset = timespec64_to_ktime(ns_offsets->monotonic);
-> +		break;
-> +	case CLOCK_BOOTTIME:
-> +	case CLOCK_BOOTTIME_ALARM:
-> +		offset = timespec64_to_ktime(ns_offsets->boottime);
-> +		break;
-> +	default:
-> +		return tim;
-> +	}
-> +
-> +	/*
-> +	 * Check that @tim value is in [offset, KTIME_MAX + offset]
-> +	 * and subtract offset.
-> +	 */
-> +	if (tim < offset) {
-> +		/*
-> +		 * User can specify @tim *absolute* value - if it's lesser than
-> +		 * the time namespace's offset - it's already expired.
-> +		 */
-> +		tim = 0;
-> +	} else if (KTIME_MAX - tim < -offset) {
-> +		/*
-> +		 * User-supplied @tim may be close or even equal KTIME_MAX
-> +		 * and time namespace offset can be negative.
-> +		 * Let's check (tim - offset) for an overflow.
-> +		 * Return KTIME_MAX in such case, as the time value is
-> +		 * thousands *years* in future anyway.
-> +		 */
-> +		tim = KTIME_MAX;
-> +	} else {
-> +		tim = ktime_sub(tim, offset);
-> +	}
+On Thu, 15 Aug 2019 19:19:10 +0200,
+Hui Peng wrote:
+> 
+> Hi, Takashi:
+> 
+> One point I want to be clear: if an endless recursive loop is detected, should
+> we return 0, or a negative error code? 
 
-While the overflow check is correct, wouldn't it be more intuitive to do:
+An error might be more appropriate, but it's no big deal, as you'll
+likely hit other errors sooner or later at parsing further :)
 
-      	  	tim = ktime_sub(tim, offset);
-		if (unlikely(tim > KTIME_MAX))
-			tim = KTIME_MAX;
 
-Thanks,
+thanks,
 
-	tglx
+Takashi
+
+> On Thu, Aug 15, 2019 at 2:58 AM Takashi Iwai <tiwai@suse.de> wrote:
+> 
+>     On Thu, 15 Aug 2019 08:13:57 +0200,
+>     Takashi Iwai wrote:
+>     >
+>     > On Thu, 15 Aug 2019 06:35:49 +0200,
+>     > Hui Peng wrote:
+>     > >
+>     > > `check_input_term` recursively calls itself with input
+>     > > from device side (e.g., uac_input_terminal_descriptor.bCSourceID)
+>     > > as argument (id). In `check_input_term`, if `check_input_term`
+>     > > is called with the same `id` argument as the caller, it triggers
+>     > > endless recursive call, resulting kernel space stack overflow.
+>     > >
+>     > > This patch fixes the bug by adding a bitmap to `struct mixer_build`
+>     > > to keep track of the checked ids by `check_input_term` and stop
+>     > > the execution if some id has been checked (similar to how
+>     > > parse_audio_unit handles unitid argument).
+>     > >
+>     > > Reported-by: Hui Peng <benquike@gmail.com>
+>     > > Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+>     > > Signed-off-by: Hui Peng <benquike@gmail.com>
+>     >
+>     > The fix looks almost good, but we need to be careful about the
+>     > bitmap check.  In theory, it's possible that multiple nodes point to
+>     > the same input terminal, and your patch would break that scenario.
+>     > For fixing that, we need to zero-clear the termbitmap at each first
+>     > invocation of check_input_term(), something like below.
+>     >
+>     > Could you check whether this works?
+>    
+>     Thinking of this further, there is another possible infinite loop.
+>     Namely, when the feature unit in the input terminal chain points to
+>     itself as the source, it'll loop endlessly without the stack
+>     overflow.
+>    
+>     So the check of the termbitmap should be inside the loop.
+>     The revised patch is below.
+> 
+>     thanks,
+>    
+>     Takashi
+>    
+>     -- 8< --
+>     From: Hui Peng <benquike@gmail.com>
+>     Subject: [PATCH] ALSA: usb-audio: Fix a stack buffer overflow bug
+>      check_input_term
+>    
+>     `check_input_term` recursively calls itself with input
+>     from device side (e.g., uac_input_terminal_descriptor.bCSourceID)
+>     as argument (id). In `check_input_term`, if `check_input_term`
+>     is called with the same `id` argument as the caller, it triggers
+>     endless recursive call, resulting kernel space stack overflow.
+>    
+>     This patch fixes the bug by adding a bitmap to `struct mixer_build`
+>     to keep track of the checked ids by `check_input_term` and stop
+>     the execution if some id has been checked (similar to how
+>     parse_audio_unit handles unitid argument).
+>    
+>     [ The termbitmap needs to be cleared at each first check of the input
+>       terminal, so the function got split now.  Also, for catching another
+>       endless loop in the input terminal chain -- where the feature unit
+>       points to itself as its source -- the termbitmap check is moved
+>       inside the parser loop. -- tiwai ]
+>    
+>     Reported-by: Hui Peng <benquike@gmail.com>
+>     Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+>     Signed-off-by: Hui Peng <benquike@gmail.com>
+>     Cc: <stable@vger.kernel.org>
+>     Signed-off-by: Takashi Iwai <tiwai@suse.de>
+>     ---
+>      sound/usb/mixer.c | 36 ++++++++++++++++++++++++++----------
+>      1 file changed, 26 insertions(+), 10 deletions(-)
+>    
+>     diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+>     index ea487378be17..aa8b046aa91f 100644
+>     --- a/sound/usb/mixer.c
+>     +++ b/sound/usb/mixer.c
+>     @@ -68,6 +68,7 @@ struct mixer_build {
+>             unsigned char *buffer;
+>             unsigned int buflen;
+>             DECLARE_BITMAP(unitbitmap, MAX_ID_ELEMS);
+>     +       DECLARE_BITMAP(termbitmap, MAX_ID_ELEMS);
+>             struct usb_audio_term oterm;
+>             const struct usbmix_name_map *map;
+>             const struct usbmix_selector_map *selector_map;
+>     @@ -775,16 +776,23 @@ static int uac_mixer_unit_get_channels(struct
+>     mixer_build *state,
+>       * parse the source unit recursively until it reaches to a terminal
+>       * or a branched unit.
+>       */
+>     -static int check_input_term(struct mixer_build *state, int id,
+>     -                           struct usb_audio_term *term)
+>     +static int __check_input_term(struct mixer_build *state, int id,
+>     +                             struct usb_audio_term *term)
+>      {
+>             int protocol = state->mixer->protocol;
+>             int err;
+>             void *p1;
+>     +       unsigned char *hdr;
+>    
+>     -       memset(term, 0, sizeof(*term));
+>     -       while ((p1 = find_audio_control_unit(state, id)) != NULL) {
+>     -               unsigned char *hdr = p1;
+>     +       for (;;) {
+>     +               /* a loop in the terminal chain? */
+>     +               if (test_and_set_bit(id, state->termbitmap))
+>     +                       break;
+>     +
+>     +               p1 = find_audio_control_unit(state, id);
+>     +               if (!p1)
+>     +                       break;
+>     +               hdr = p1;
+>                     term->id = id;
+>    
+>                     if (protocol == UAC_VERSION_1 || protocol ==
+>     UAC_VERSION_2) {
+>     @@ -802,7 +810,7 @@ static int check_input_term(struct mixer_build *state,
+>     int id,
+>    
+>                                             /* call recursively to verify that
+>     the
+>                                              * referenced clock entity is
+>     valid */
+>     -                                       err = check_input_term(state, d->
+>     bCSourceID, term);
+>     +                                       err = __check_input_term(state,
+>     d->bCSourceID, term);
+>                                             if (err < 0)
+>                                                     return err;
+>    
+>     @@ -836,7 +844,7 @@ static int check_input_term(struct mixer_build *state,
+>     int id,
+>                             case UAC2_CLOCK_SELECTOR: {
+>                                     struct uac_selector_unit_descriptor *d =
+>     p1;
+>                                     /* call recursively to retrieve the
+>     channel info */
+>     -                               err = check_input_term(state, d->
+>     baSourceID[0], term);
+>     +                               err = __check_input_term(state, d->
+>     baSourceID[0], term);
+>                                     if (err < 0)
+>                                             return err;
+>                                     term->type = UAC3_SELECTOR_UNIT << 16; /*
+>     virtual type */
+>     @@ -899,7 +907,7 @@ static int check_input_term(struct mixer_build *state,
+>     int id,
+>    
+>                                     /* call recursively to verify that the
+>                                      * referenced clock entity is valid */
+>     -                               err = check_input_term(state, d->
+>     bCSourceID, term);
+>     +                               err = __check_input_term(state, d->
+>     bCSourceID, term);
+>                                     if (err < 0)
+>                                             return err;
+>    
+>     @@ -950,7 +958,7 @@ static int check_input_term(struct mixer_build *state,
+>     int id,
+>                             case UAC3_CLOCK_SELECTOR: {
+>                                     struct uac_selector_unit_descriptor *d =
+>     p1;
+>                                     /* call recursively to retrieve the
+>     channel info */
+>     -                               err = check_input_term(state, d->
+>     baSourceID[0], term);
+>     +                               err = __check_input_term(state, d->
+>     baSourceID[0], term);
+>                                     if (err < 0)
+>                                             return err;
+>                                     term->type = UAC3_SELECTOR_UNIT << 16; /*
+>     virtual type */
+>     @@ -966,7 +974,7 @@ static int check_input_term(struct mixer_build *state,
+>     int id,
+>                                             return -EINVAL;
+>    
+>                                     /* call recursively to retrieve the
+>     channel info */
+>     -                               err = check_input_term(state, d->
+>     baSourceID[0], term);
+>     +                               err = __check_input_term(state, d->
+>     baSourceID[0], term);
+>                                     if (err < 0)
+>                                             return err;
+>    
+>     @@ -984,6 +992,14 @@ static int check_input_term(struct mixer_build
+>     *state, int id,
+>             return -ENODEV;
+>      }
+>    
+>     +static int check_input_term(struct mixer_build *state, int id,
+>     +                           struct usb_audio_term *term)
+>     +{
+>     +       memset(term, 0, sizeof(*term));
+>     +       memset(state->termbitmap, 0, sizeof(state->termbitmap));
+>     +       return __check_input_term(state, id, term);
+>     +}
+>     +
+>      /*
+>       * Feature Unit
+>       */
+>     --
+>     2.16.4
+> 
+> 
