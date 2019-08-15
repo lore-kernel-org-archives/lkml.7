@@ -2,162 +2,163 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1E3C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03002C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790AD208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC58120665
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:20:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oeHAmCVh"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nqO3JFv1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfHOETr (ORCPT
+        id S1726617AbfHOEUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:19:47 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33042 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfHOETr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:19:47 -0400
-Received: by mail-pf1-f194.google.com with SMTP id g2so739425pfq.0;
-        Wed, 14 Aug 2019 21:19:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=uOgVUn/DRFSOh5W5qyOtEQclzchLjIrxz1tzU/4/1oQ=;
-        b=oeHAmCVhAMM4BfdFg6inmhL91K0Xh/B6WX/iSl7bN7lI0lA9tXKhOM2m/RwO1LnK+F
-         T5GNe7lcDKrKHUmzE1fEqnDz9KaDaIje37NiIMjkPcE3SvmAZXWoNOuQDtdnNMp/ijlJ
-         ekJmyWHhfhofjtLEb8H09n9mnQBASh3EMv2O6FIuA7FqrtJVGXfkD9hZASiloJQ6RYCK
-         yP+ejv/LmlmAk/wgOqOwshunIdq7h3w95wWh4w076nPA0CL0Yg2ZlXlOjGGROrfUjG6U
-         znVBO0CGYb9+bSS222drzjRyOjhYy4nvZTvsy/ogIL4DX9BpA8IABdUSmVpVGI33AjdA
-         Zirg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uOgVUn/DRFSOh5W5qyOtEQclzchLjIrxz1tzU/4/1oQ=;
-        b=C3S1bo6t6c1iedJz5nWdQkTuBYIQBVGTd4jKVGmefeIb0g7AiM0tXIWbKPwjPpTy7/
-         Be7bEPM12RseSorpVa79wdw/jb+1U1W4N+gye+3MKJP95WoBcINbMWulXDgHhLk06fxM
-         6bRW7roWvp7QJHy4IZFZmr6OAeCvsuffSnOHJKBV5T2jTqsh4DuYIuOzupYiMT0w2Kew
-         a4RxPAAzeZIq0gqPb13KiWOlq3ivo2C4vIX4gu2wbcNztCl7l19Vy/0/mI1hhwzr8MUH
-         JlkOFKI7a57bsAomOIHsF+nGiPyOAqE7M4rox50LUKPdDPKaHpaB4Oa8rnxhlrgAiOn8
-         IkIQ==
-X-Gm-Message-State: APjAAAWAvFoyUzWJB3FYAWRT1LwShJIvMUvv8KgCWFl0NL9rLg9V9oOE
-        Xze2eMCETmmbxuPWBqzEBs78H7XsFQHENA==
-X-Google-Smtp-Source: APXvYqwdZObWETKuYB2zMbBui/p7/+RZufZOeNa9IaTSwnElv9QOWUK+kE/mfenGh2aR3cJEwxc4Xw==
-X-Received: by 2002:a62:b411:: with SMTP id h17mr3327430pfn.99.1565842786426;
-        Wed, 14 Aug 2019 21:19:46 -0700 (PDT)
-Received: from localhost.localdomain ([2402:7500:55d:33e8:b108:8ed7:92b9:4a86])
-        by smtp.gmail.com with ESMTPSA id p8sm1633946pfq.129.2019.08.14.21.19.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 14 Aug 2019 21:19:45 -0700 (PDT)
-From:   cy_huang <u0084500@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     cy_huang <cy_huang@richtek.com>, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, shufan_lee@richtek.com
-Subject: [PATCH] From: cy_huang <cy_huang@richtek.com> Subject: usb: add more vendor defined ops in tcpci
-Date:   Thu, 15 Aug 2019 12:19:13 +0800
-Message-Id: <1565842753-14245-1-git-send-email-u0084500@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 15 Aug 2019 00:20:46 -0400
+Received: from mail-eopbgr30047.outbound.protection.outlook.com ([40.107.3.47]:4608
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725880AbfHOEUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:20:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hRxBIOqC1115thJLJrGYfo/3+jg1REOP5nQfgis2SCg1k0ZadZ5STEIi/nXIX41MtwbPQb8Q5EkHqm0JWyJ+GMxDvkBWMRGK5YbV+cBg5jxYUmD+qPkiLslOA9TTUDhA9ya6jIV3l3OkRrYsdVMIF2pQo1QEpClxMtzaGXCJMwC0v8IvqhlQ91NeBdycN8qbgEkp4SmAzExVOR67dVf6R9McxPco+JE29aGCHjafSzlpMs+CZiA7hYGGc6en/3jixt5ZCCP/1wtQ6d4dAfKY6ITGA7TPSET8qHklFNF26RN57XNIvkZkboQMdORFalHVrFeHNX2tTdODPGripKlKyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y7YBoZUo+Dy/sbGTrQdgxIQ8HSZ4piQBNLT8/HB5sJY=;
+ b=oU8I/nF4naCNATHSpA+REdKGkDYZA2vOKCi0jO15hNc0bqFA4fau5/CNNW9Ab4kKsfdjgIHlQMIJSTi2w7TUeNP48WQJb5zcho1eQbm9agwvuqGLE9m0l/7XudkyrR1jFKeK0UeDPAcUtz8Yk8NNTCN8puRbuX52s0NBPx+rlccCf10Mn3C2BQ/z9Shh9ZzifpN0T/Kt3R6KTW8aF5QLn9D2S+G4M0K32BwwW5vtRSm65s3VubvPM+hFIHq5C9FL2Cy/Ie27rRKl+DpyRTxUAFmQ9afXXoUkJ7zICGRZ1QePEekesekpJgeYxW3RTzddYX/a9QHAVPq63K1Wzi7d/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y7YBoZUo+Dy/sbGTrQdgxIQ8HSZ4piQBNLT8/HB5sJY=;
+ b=nqO3JFv1eF1bo4gaqt5X1xVQvWJWBKkL53/apmoH1qJTHzBgTL5Rb5NvduOtf0dz71EUbSqVi1MTDBFS6mBh6tyuGnoWQ+1h6xpp39c6ZtziIU+SYC9dYzbPjFQM4t5n83M9fZM2GUVsQVMaL9Zlrg9PTElnGfTpLbqZT8nbLeg=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB4665.eurprd04.prod.outlook.com (52.135.139.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.23; Thu, 15 Aug 2019 04:20:42 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::ccc8:8:c071:8283]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::ccc8:8:c071:8283%5]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
+ 04:20:42 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        Leo Li <leoyang.li@nxp.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: rtc: pcf85363/pcf85263: fix error that failed to run
+ hwclock -w
+Thread-Topic: [EXT] Re: rtc: pcf85363/pcf85263: fix error that failed to run
+ hwclock -w
+Thread-Index: AQHVUoSfyAMvxeFinU6CH649Ec3dZ6b6a68AgAEvbGA=
+Date:   Thu, 15 Aug 2019 04:20:42 +0000
+Message-ID: <DB7PR04MB4490882B1235995B82AA67CB8FAC0@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190814093249.40065-1-biwen.li@nxp.com>
+ <20190814100930.GI3600@piout.net>
+In-Reply-To: <20190814100930.GI3600@piout.net>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 667dddcf-d96b-4006-8ac0-08d72137efe7
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4665;
+x-ms-traffictypediagnostic: DB7PR04MB4665:
+x-ms-exchange-purlcount: 2
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB4665193AC13C103B3B284CC28FAC0@DB7PR04MB4665.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 01304918F3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(366004)(39860400002)(376002)(199004)(189003)(8936002)(478600001)(14444005)(74316002)(81166006)(52536014)(99286004)(4326008)(81156014)(305945005)(25786009)(14454004)(33656002)(256004)(45080400002)(966005)(5660300002)(66066001)(2906002)(11346002)(186003)(486006)(26005)(7736002)(53936002)(6116002)(6436002)(8676002)(71190400001)(6246003)(476003)(9686003)(102836004)(446003)(316002)(44832011)(55016002)(71200400001)(6306002)(6506007)(76116006)(86362001)(66476007)(64756008)(6916009)(229853002)(66446008)(66556008)(66946007)(7696005)(76176011)(54906003)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4665;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ZYBPZAieoMZNc+rRih2JbWJ5ZncKVVt1gUwj32hRphnIaiQ+PdSXzv+Wdb0WETnkfl8Iu4aLkDXQ0cJmwxBSv9Vd5CEq+KffSUKisJR6X4L1v7LnZrKjM92Wn2c74HYFuU7RaPf5ouOBBDCa4mOzYrci1vZZ2WYIs2mNJhkZ4eURjwjQrT5KqHYgazRyo7azPtGXySsr022L4AzLimxNxn9V/R3/uGjvpTfTnbBbJcqQI9h+VjS321PY6J+e83iQ07TE+k8xacAczG7txmw5JBaIjhZPYHXKz8R5hyieN+VDueIy0XtxyGpkl3XArnLHLIecf/HT5UhQLYsCMyRFy/Zv9yx6o/QGdDM6CBMB/lfhDNYWH8WokpyZDM7/fN1AvCp5oqvSWIbGdWMbdWyOaUaVWja0jER8cY7DyAX7f5w=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 667dddcf-d96b-4006-8ac0-08d72137efe7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 04:20:42.7071
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vRSbzjzeCLg5ekTZawI5CdmQ6CeHAhzgX36M8C85mbbDIs4dk2xVQKpJAxtV6j5+iSplIgFppba3qAuJL3C6tg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4665
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: cy_huang <cy_huang@richtek.com>
+> Caution: EXT Email
+>=20
+> Hi,
+>=20
+> On 14/08/2019 17:32:49+0800, Biwen Li wrote:
+> > Issue:
+> >     # hwclock -w
+> >     hwclock: RTC_SET_TIME: Invalid argument
+> >
+> > The patch fixes error when run command hwclock -w with rtc
+> > pcf85363/pcf85263
+> >
+>=20
+> Could you describe a bit more the issue and what causes it?
+1. Relative patch: https://lkml.org/lkml/2019/4/3/55 , this patch will alwa=
+ys check for unwritable registers, it will compare reg with max_register in=
+ regmap_writeable.
 
-In real case, not all TCPCs support the tcpc PP control command.
-Sometimes, charger/OTG/CurrentLimit functions will need to externally
-control via power_supply/regulator/BC1.2(extcon). This patch add the ops
-set_vbus/get_current_limit/set_current_limit for vendors.
-
-Signed-off-by: cy_huang <cy_huang@richtek.com>
----
- drivers/usb/typec/tcpm/tcpci.c | 34 ++++++++++++++++++++++++++++++++++
- drivers/usb/typec/tcpm/tcpci.h |  5 +++++
- 2 files changed, 39 insertions(+)
-
-diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
-index c1f7073..22dfcd8 100644
---- a/drivers/usb/typec/tcpm/tcpci.c
-+++ b/drivers/usb/typec/tcpm/tcpci.c
-@@ -279,6 +279,13 @@ static int tcpci_set_vbus(struct tcpc_dev *tcpc, bool source, bool sink)
- 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
- 	int ret;
- 
-+	/* Handle vendor set vbus */
-+	if (tcpci->data->set_vbus) {
-+		ret = tcpci->data->set_vbus(tcpci, tcpci->data, source, sink);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	/* Disable both source and sink first before enabling anything */
- 
- 	if (!source) {
-@@ -346,6 +353,30 @@ static int tcpci_pd_transmit(struct tcpc_dev *tcpc,
- 	return 0;
- }
- 
-+static int tcpci_get_current_limit(struct tcpc_dev *tcpc)
-+{
-+	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-+
-+	/* Handle vendor get current limit */
-+	if (tcpci->data->get_current_limit)
-+		return tcpci->data->get_current_limit(tcpci, tcpci->data);
-+
-+	return 0;
-+}
-+
-+static int tcpci_set_current_limit(struct tcpc_dev *tcpc, u32 max_ma, u32 mv)
-+{
-+	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-+
-+	/* Handle vendor set current limit */
-+	if (tcpci->data->set_current_limit) {
-+		return tcpci->data->set_current_limit(tcpci,
-+						      tcpci->data, max_ma, mv);
-+	}
-+
-+	return 0;
-+}
-+
- static int tcpci_init(struct tcpc_dev *tcpc)
- {
- 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-@@ -521,6 +552,9 @@ struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data)
- 	tcpci->tcpc.set_roles = tcpci_set_roles;
- 	tcpci->tcpc.pd_transmit = tcpci_pd_transmit;
- 
-+	tcpci->tcpc.get_current_limit = tcpci_get_current_limit;
-+	tcpci->tcpc.set_current_limit = tcpci_set_current_limit;
-+
- 	err = tcpci_parse_config(tcpci);
- 	if (err < 0)
- 		return ERR_PTR(err);
-diff --git a/drivers/usb/typec/tcpm/tcpci.h b/drivers/usb/typec/tcpm/tcpci.h
-index 303ebde..a6754fb 100644
---- a/drivers/usb/typec/tcpm/tcpci.h
-+++ b/drivers/usb/typec/tcpm/tcpci.h
-@@ -130,6 +130,11 @@ struct tcpci_data {
- 			 bool enable);
- 	int (*start_drp_toggling)(struct tcpci *tcpci, struct tcpci_data *data,
- 				  enum typec_cc_status cc);
-+	int (*set_vbus)(struct tcpci *tcpci,
-+			struct tcpci_data *data, bool source, bool sink);
-+	int (*get_current_limit)(struct tcpci *tcpci, struct tcpci_data *data);
-+	int (*set_current_limit)(struct tcpci *tcpci,
-+				 struct tcpci_data *data, u32 max_ma, u32 mv);
- };
- 
- struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data);
--- 
-2.7.4
-
+2. In drivers/rtc/rtc-pcf85363.c, CTRL_STOP_EN is 0x2e, but DT_100THS is 0,=
+ max_regiter is 0x2f, then reg will be equal to 0x30, '0x30 < 0x2f' is fals=
+e,so regmap_writeable will return false.
+>=20
+> IIRC I wrote that code and it works on my pcf85363.
+>=20
+> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > ---
+> >  drivers/rtc/rtc-pcf85363.c | 7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/rtc/rtc-pcf85363.c b/drivers/rtc/rtc-pcf85363.c
+> > index a075e77617dc..3450d615974d 100644
+> > --- a/drivers/rtc/rtc-pcf85363.c
+> > +++ b/drivers/rtc/rtc-pcf85363.c
+> > @@ -166,7 +166,12 @@ static int pcf85363_rtc_set_time(struct device *de=
+v,
+> struct rtc_time *tm)
+> >       buf[DT_YEARS] =3D bin2bcd(tm->tm_year % 100);
+> >
+> >       ret =3D regmap_bulk_write(pcf85363->regmap, CTRL_STOP_EN,
+> > -                             tmp, sizeof(tmp));
+> > +                             tmp, 2);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D regmap_bulk_write(pcf85363->regmap, DT_100THS,
+> > +                             buf, sizeof(tmp) - 2);
+> >       if (ret)
+> >               return ret;
+> >
+> > --
+> > 2.17.1
+> >
+>=20
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fbootl=
+in.
+> com&amp;data=3D02%7C01%7Cbiwen.li%40nxp.com%7C8ef8fda7d05a48ef707
+> 308d7209f8029%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63
+> 7013741730886353&amp;sdata=3DePC651YZUzvL5ocjXAZqKT0tIZpJM01LgRNSa
+> 7i7wLE%3D&amp;reserved=3D0
