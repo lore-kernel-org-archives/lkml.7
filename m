@@ -2,144 +2,149 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C58CC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EB0C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F9AF2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565872111;
-	bh=96iPqa2gcj2s2wvlvpouXny/3Mlu7HcGG2yx2lgskqU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f/LNOKh5gRh6CLJLDyWKoKBhEww5EDSv+12XSbgMbT/6HHdDlo/QoO3bhujWpMElU
-	 jOhGp1Ychr05ft+DW66kT+LJg5mOytsiDzaieWUUm9jVnICoFnBDqU7zvMvRHRt81E
-	 OAuv1o8UNYt03j75Oxn8Q4E6yoWaFJIoyWgzN0OU=
+	by mail.kernel.org (Postfix) with ESMTP id CA20D2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:35:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="LcThbfWl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731809AbfHOM2a (ORCPT
+        id S1731716AbfHOMf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:28:30 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35448 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730442AbfHOM23 (ORCPT
+        Thu, 15 Aug 2019 08:35:58 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46203 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfHOMf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 08:28:29 -0400
-Received: by mail-lj1-f195.google.com with SMTP id l14so2092031lje.2;
-        Thu, 15 Aug 2019 05:28:28 -0700 (PDT)
+        Thu, 15 Aug 2019 08:35:58 -0400
+Received: by mail-qk1-f195.google.com with SMTP id p13so1607005qkg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 05:35:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dMM4Yh2lSK206Ipl1C50HgHP0mjyxRSuLJo2cy44isg=;
+        b=LcThbfWlDi/1kO+hot7trp2RyPL/m8trA/zLWvD92LpYSw9yeBGasQ9R8EuhQAD4Bt
+         bKTs6mxBzCYP5bxVj7suBbpQpwPmyVk9+ValBigp6E3/dN66mhkX8Njt4ppVEZtvDs7I
+         pFV8ElSL59gPu/AJrf/nBtVrnXSJNWNiktqRsXie0F6agJz4BKwmgdVzNu8UCtVSZyjt
+         8Wo1tUaZ7v0gu4catDl7h/ooM4QQ31MZD++g646hqe9H7YlNvUSIJCxR7iEcgQ6UNJ9L
+         6M/IYIm3vG+ItNPPGAvXI3A8PLTW1EGMyGgSG4iOIgZ0ADxVFk0nYIVgDLqPrtq/MGRs
+         HJ9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Mb4ocEB+lsd45gaEhTMvtmBFBk0APZUkoufygZBEO2s=;
-        b=CefZpXqVriZZkYRxzlA2O7WQWGOa/kkSwGpZzYpg/3QQnGaPVAX7Gq1XQ3zzg3/dGs
-         8/NGY0DaJp794pr8uk1Xk8jTToiE6tImTrclf1CMb8VE2gTkLlnCLrnHdZW28ygCkRJ6
-         1JAWErd1gWYQtvWqjyUis0jdUg2evgZhcIn781ZIvBEqDlRq6ZmqdMb9AYUM9dSZXH3R
-         /Dldh6aSdBlKOgHQOFoL4KbAlOEgRdtFMmnFuK+My38ePnWITfg1lkyoY1OblkF2xbB4
-         UoknhPd0uil6RSlmPoMhNxj+QRzBzALkpbZx68LEg4w+g8iWQxxSGqRgSfEgcAJtFbGO
-         q8Cw==
-X-Gm-Message-State: APjAAAU7/hlt23qOaml0Ild/P6JZ3l7SaRLm05e+o8gC9aZs4yeGsSFK
-        AIV+goaRFrN48/Ff4OxWFyPH80Vp5Kg=
-X-Google-Smtp-Source: APXvYqw49OLUyyAs3EPjQSiKfrOy5OikLFbWfbi5PwR9AsLgEKr3K14x84YAdTBo8glkPtNbj5nTEg==
-X-Received: by 2002:a2e:995a:: with SMTP id r26mr2550133ljj.107.1565872107347;
-        Thu, 15 Aug 2019 05:28:27 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id s21sm465306ljm.28.2019.08.15.05.28.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 05:28:26 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92)
-        (envelope-from <johan@kernel.org>)
-        id 1hyErj-0005zs-VM; Thu, 15 Aug 2019 14:28:28 +0200
-Date:   Thu, 15 Aug 2019 14:28:27 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Bob Ham <bob.ham@puri.sm>
-Cc:     Johan Hovold <johan@kernel.org>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>, kernel@puri.sm,
-        =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] usb: serial: option: Add the BroadMobi BM818 card
-Message-ID: <20190815122827.GF32300@localhost>
-References: <20190724145227.27169-1-angus@akkea.ca>
- <20190724145227.27169-2-angus@akkea.ca>
- <20190805114711.GF3574@localhost>
- <5fb96703-b174-eef1-5ad1-693e2bbce32f@puri.sm>
- <20190815114941.GE32300@localhost>
- <57190963-22e2-cb89-bfd0-502f135237c3@puri.sm>
+        bh=dMM4Yh2lSK206Ipl1C50HgHP0mjyxRSuLJo2cy44isg=;
+        b=ubhrthV8M4eCxqOK67zH20qKiOG5HfydXIXcksBy8T29TMyb9ehTUW+giecH3qmuvE
+         hUJHbuZ4MnjX8g72BosYIqTlXpaKucxrinChsXTdotCwghH1v+Lhzg1/JR60BlkOYxAH
+         zCBFVPGWFkR0UCDvQE4TxTmdA2CVOAAB8OD18tmNGnO57hj3GWCzO5Aba9bDB0CBM4gw
+         CEw7UYvVpgUooUuR9yTPuFtvDtPQN8YxS84iFIlWqHK4A57iN83m651OMJ61QpAFjFZq
+         +qRZ9eSxTSz2VdPN9BgAPOnix8H03KB4eyUp48xJ1RqrtKj2L4m1MXIQJCwf3LzULghn
+         C0wQ==
+X-Gm-Message-State: APjAAAUHIcLVTpvhIZOnPIjuFmaSeQy0cM4AvTb2c/oiMJi6NZOHmMPA
+        L0JACeTmbmDsStOUgfIQZakavLx+TZw=
+X-Google-Smtp-Source: APXvYqzZPQEBN057F2yrI4X3kt2D83j+OvSKMlIAqweM6AFW+AjersDlJeeVNu5FXC0uFyP+8gWENQ==
+X-Received: by 2002:a37:96c7:: with SMTP id y190mr3700663qkd.111.1565872557356;
+        Thu, 15 Aug 2019 05:35:57 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id w10sm1320862qts.37.2019.08.15.05.35.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 15 Aug 2019 05:35:56 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hyEyy-00043M-ES; Thu, 15 Aug 2019 09:35:56 -0300
+Date:   Thu, 15 Aug 2019 09:35:56 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 3/5] mm, notifier: Catch sleeping/blocking for !blockable
+Message-ID: <20190815123556.GB21596@ziepe.ca>
+References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
+ <20190814202027.18735-4-daniel.vetter@ffwll.ch>
+ <20190815000029.GC11200@ziepe.ca>
+ <20190815070249.GB7444@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="IrhDeMKUP4DT/M7F"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <57190963-22e2-cb89-bfd0-502f135237c3@puri.sm>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190815070249.GB7444@phenom.ffwll.local>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 15, 2019 at 09:02:49AM +0200, Daniel Vetter wrote:
+> On Wed, Aug 14, 2019 at 09:00:29PM -0300, Jason Gunthorpe wrote:
+> > On Wed, Aug 14, 2019 at 10:20:25PM +0200, Daniel Vetter wrote:
+> > > We need to make sure implementations don't cheat and don't have a
+> > > possible schedule/blocking point deeply burried where review can't
+> > > catch it.
+> > > 
+> > > I'm not sure whether this is the best way to make sure all the
+> > > might_sleep() callsites trigger, and it's a bit ugly in the code flow.
+> > > But it gets the job done.
+> > > 
+> > > Inspired by an i915 patch series which did exactly that, because the
+> > > rules haven't been entirely clear to us.
+> > 
+> > I thought lockdep already was able to detect:
+> > 
+> >  spin_lock()
+> >  might_sleep();
+> >  spin_unlock()
+> > 
+> > Am I mistaken? If yes, couldn't this patch just inject a dummy lockdep
+> > spinlock?
+> 
+> Hm ... assuming I didn't get lost in the maze I think might_sleep (well
+> ___might_sleep) doesn't do any lockdep checking at all. And we want
+> might_sleep, since that catches a lot more than lockdep.
 
---IrhDeMKUP4DT/M7F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Don't know how it works, but it sure looks like it does:
 
-On Thu, Aug 15, 2019 at 01:19:19PM +0100, Bob Ham wrote:
-> On 15/08/2019 12:49, Johan Hovold wrote:
-> > On Mon, Aug 05, 2019 at 03:44:30PM +0100, Bob Ham wrote:
-> >> On 05/08/2019 12:47, Johan Hovold wrote:
-> >>> On Wed, Jul 24, 2019 at 07:52:26AM -0700, Angus Ainslie (Purism) wrot=
-e:
-> >>>> From: Bob Ham <bob.ham@puri.sm>
-> >>>>
-> >>>> Add a VID:PID for the BroadModi BM818 M.2 card
-> >>>
-> >>> Would you mind posting the output of usb-devices (or lsusb -v) for th=
-is
-> >>> device?
-> >>
-> >> T:  Bus=3D01 Lev=3D03 Prnt=3D40 Port=3D03 Cnt=3D01 Dev#=3D 44 Spd=3D48=
-0 MxCh=3D 0
-> >> D:  Ver=3D 2.00 Cls=3D00(>ifc ) Sub=3D00 Prot=3D00 MxPS=3D64 #Cfgs=3D =
- 1
-> >> P:  Vendor=3D2020 ProdID=3D2060 Rev=3D00.00
-> >> S:  Manufacturer=3DQualcomm, Incorporated
-> >> S:  Product=3DQualcomm CDMA Technologies MSM
-> >> C:  #Ifs=3D 5 Cfg#=3D 1 Atr=3De0 MxPwr=3D500mA
-> >> I:  If#=3D0x0 Alt=3D 0 #EPs=3D 2 Cls=3Dff(vend.) Sub=3Dff Prot=3Dff Dr=
-iver=3D(none)
-> >> I:  If#=3D0x1 Alt=3D 0 #EPs=3D 2 Cls=3Dff(vend.) Sub=3Dff Prot=3Dff Dr=
-iver=3D(none)
-> >> I:  If#=3D0x2 Alt=3D 0 #EPs=3D 3 Cls=3Dff(vend.) Sub=3Dff Prot=3Dff Dr=
-iver=3D(none)
-> >> I:  If#=3D0x3 Alt=3D 0 #EPs=3D 3 Cls=3Dff(vend.) Sub=3Dfe Prot=3Dff Dr=
-iver=3D(none)
-> >> I:  If#=3D0x4 Alt=3D 0 #EPs=3D 3 Cls=3Dff(vend.) Sub=3Dff Prot=3Dff Dr=
-iver=3D(none)
-> >=20
-> > I amended the commit message with the above, switched to
-> > USB_DEVICE_INTERFACE_CLASS(), fixed the comment and moved the entry
-> > to the other 0x2020 entries before applying.
->=20
-> Sorry I should probably have mentioned this before but Angus has been on
-> vacation, hence the silence on the other matters.  Regardless, thanks.
+This:
+	spin_lock(&file->uobjects_lock);
+	down_read(&file->hw_destroy_rwsem);
+	up_read(&file->hw_destroy_rwsem);
+	spin_unlock(&file->uobjects_lock);
 
-Ok, no worries.
+Causes:
 
-Johan
+[   33.324729] BUG: sleeping function called from invalid context at kernel/locking/rwsem.c:1444
+[   33.325599] in_atomic(): 1, irqs_disabled(): 0, pid: 247, name: ibv_devinfo
+[   33.326115] 3 locks held by ibv_devinfo/247:
+[   33.326556]  #0: 000000009edf8379 (&uverbs_dev->disassociate_srcu){....}, at: ib_uverbs_open+0xff/0x5f0 [ib_uverbs]
+[   33.327657]  #1: 000000005e0eddf1 (&uverbs_dev->lists_mutex){+.+.}, at: ib_uverbs_open+0x16c/0x5f0 [ib_uverbs]
+[   33.328682]  #2: 00000000505f509e (&(&file->uobjects_lock)->rlock){+.+.}, at: ib_uverbs_open+0x31a/0x5f0 [ib_uverbs]
 
---IrhDeMKUP4DT/M7F
-Content-Type: application/pgp-signature; name="signature.asc"
+And this:
 
------BEGIN PGP SIGNATURE-----
+	spin_lock(&file->uobjects_lock);
+	might_sleep();
+	spin_unlock(&file->uobjects_lock);
 
-iHUEABYIAB0WIQQHbPq+cpGvN/peuzMLxc3C7H1lCAUCXVVP6AAKCRALxc3C7H1l
-CMo1APwMD0VfWrh3KkuyCmDvAanF6P1fbGAWJQAoA/T7CeleCgEA8vDvNG7aMnDc
-2kbrNPQBZPa2HBekhnq5EmNdcyDUwAQ=
-=Mz5X
------END PGP SIGNATURE-----
+Causes:
 
---IrhDeMKUP4DT/M7F--
+[   16.867211] BUG: sleeping function called from invalid context at drivers/infiniband/core/uverbs_main.c:1095
+[   16.867776] in_atomic(): 1, irqs_disabled(): 0, pid: 245, name: ibv_devinfo
+[   16.868098] 3 locks held by ibv_devinfo/245:
+[   16.868383]  #0: 000000004c5954ff (&uverbs_dev->disassociate_srcu){....}, at: ib_uverbs_open+0xf8/0x600 [ib_uverbs]
+[   16.868938]  #1: 0000000020a6fae2 (&uverbs_dev->lists_mutex){+.+.}, at: ib_uverbs_open+0x16c/0x600 [ib_uverbs]
+[   16.869568]  #2: 00000000036e6a97 (&(&file->uobjects_lock)->rlock){+.+.}, at: ib_uverbs_open+0x317/0x600 [ib_uverbs]
+
+I think this is done in some very expensive way, so it probably only
+works when lockdep is enabled..
+
+Jason
