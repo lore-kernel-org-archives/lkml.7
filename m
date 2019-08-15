@@ -7,55 +7,53 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EB8C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F5AC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F5820656
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA8720656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:36:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Y6ChTg8+"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="N0iuR5o0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731457AbfHOJgm (ORCPT
+        id S1731469AbfHOJgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 05:36:42 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:49081 "EHLO
+        Thu, 15 Aug 2019 05:36:51 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:35613 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730212AbfHOJgm (ORCPT
+        with ESMTP id S1731228AbfHOJgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 05:36:42 -0400
+        Thu, 15 Aug 2019 05:36:51 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7F9YWkM2274938
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7F9aiar2275415
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 15 Aug 2019 02:34:32 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7F9YWkM2274938
+        Thu, 15 Aug 2019 02:36:44 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7F9aiar2275415
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565861673;
-        bh=s+umhOEhsoHSyOY1TbZJ6f2SLi3+/KVSM76nm/zeXII=;
+        s=2019071901; t=1565861805;
+        bh=3HKRKHGqClWBjEMXGAW44Wa6JdPTStv+aPbdtbpPGbg=;
         h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=Y6ChTg8+XUi2R6SOe/U5o4UDQFwNwng+lfiykFdfNWLY/K0+zz3Q5DcQNeMqcSx8p
-         SebRZRoVNkqHvrb6VTIMKX7ky6EUadC6CR1FuqICXocy597fKQExEulOLWwzeCeJTw
-         fzo2HPbhqe1w421zSIirsYt/aZhC/n3gnZhQ9AR+uoDCehffY5REw2s0xOXPqPrpV7
-         pQ/ABs9T/A5VmHSkfgA5dXa9mQY52an+K6i5Nw67vlhLy6AhhFkyRBVEBKPmCvxXAq
-         fUR63HhXHN5sGADvJLCAEleRBRzKNycDC1xF/8jkHw2I7v8eCbuiU3aqcji3U2jbRZ
-         IlEk8o0jdjBFw==
+        b=N0iuR5o0qX6P0zMsgY6s1Dqedn/AoIGlo6+c02Rbb6Xqj7dAz7xog/YuJQC9+XtaE
+         Qpuh8N8dUDHQ5h5rqHooN0OaHMJSFjZWBr4uLGMwtQHxMVu2JVEgWnNNtUIR3OAv+C
+         LsKVJzqnkkQunueFYE4ancerLbhdVsoIs4LehRl+6kZonGueyvbCtP9mmD+Eg7A53v
+         JydYtt3srv9M1/ZL0p3AzsM4c5ou/K7aqiWbspYhztC+ml40qePbIW1mCydrQvNTP3
+         Z963IcKUJsROSlWeGYF6RVIJOic+dLLlZch7aDv5jnoFisXKKhKA2hq2oPLuFrg9Oe
+         jZpD8eoj0+EzA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7F9YWRP2274935;
-        Thu, 15 Aug 2019 02:34:32 -0700
-Date:   Thu, 15 Aug 2019 02:34:32 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7F9aiMn2275411;
+        Thu, 15 Aug 2019 02:36:44 -0700
+Date:   Thu, 15 Aug 2019 02:36:44 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Andy Shevchenko <tipbot@zytor.com>
-Message-ID: <tip-0ke3p64ksa0hnbueh52n3v3q@git.kernel.org>
-Cc:     tglx@linutronix.de, kafai@fb.com, ast@kernel.org, acme@redhat.com,
-        hpa@zytor.com, andriy.shevchenko@linux.intel.com, mingo@kernel.org,
-        songliubraving@fb.com, daniel@iogearbox.net, yhs@fb.com,
-        linux-kernel@vger.kernel.org
-Reply-To: acme@redhat.com, mingo@kernel.org, songliubraving@fb.com,
-          tglx@linutronix.de, kafai@fb.com, ast@kernel.org,
-          andriy.shevchenko@linux.intel.com, hpa@zytor.com,
-          daniel@iogearbox.net, yhs@fb.com, linux-kernel@vger.kernel.org
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-dda0acxqef1k72n9z4myjbjt@git.kernel.org>
+Cc:     tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com,
+        adrian.hunter@intel.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, jolsa@kernel.org, acme@redhat.com
+Reply-To: acme@redhat.com, jolsa@kernel.org, namhyung@kernel.org,
+          linux-kernel@vger.kernel.org, hpa@zytor.com,
+          adrian.hunter@intel.com, mingo@kernel.org, tglx@linutronix.de
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] tools: Keep list of tools in alphabetical order
-Git-Commit-ID: 38fe26b46f55538c2cb8b96500caed6ae9d59d46
+Subject: [tip:perf/core] perf ui: No need to set ui_browser to 1 twice
+Git-Commit-ID: 1cd8fa288eb83c1fe0dfa492b09d228a8d802fbf
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,53 +67,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  38fe26b46f55538c2cb8b96500caed6ae9d59d46
-Gitweb:     https://git.kernel.org/tip/38fe26b46f55538c2cb8b96500caed6ae9d59d46
-Author:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-AuthorDate: Fri, 28 Jun 2019 20:22:09 +0300
+Commit-ID:  1cd8fa288eb83c1fe0dfa492b09d228a8d802fbf
+Gitweb:     https://git.kernel.org/tip/1cd8fa288eb83c1fe0dfa492b09d228a8d802fbf
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Tue, 13 Aug 2019 12:07:14 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 14 Aug 2019 10:59:59 -0300
+CommitDate: Wed, 14 Aug 2019 11:00:00 -0300
 
-tools: Keep list of tools in alphabetical order
+perf ui: No need to set ui_browser to 1 twice
 
-When `make help` is executed it lists the possible tools to build,
-though couple of entries is kept unordered. Fix it here.
+We need to do it only when fallbacking from GTK to the TUI.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: https://lkml.kernel.org/n/tip-0ke3p64ksa0hnbueh52n3v3q@git.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-dda0acxqef1k72n9z4myjbjt@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/ui/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/Makefile b/tools/Makefile
-index 68defd7ecf5d..7e42f7b8bfa7 100644
---- a/tools/Makefile
-+++ b/tools/Makefile
-@@ -10,6 +10,7 @@ help:
- 	@echo 'Possible targets:'
- 	@echo ''
- 	@echo '  acpi                   - ACPI tools'
-+	@echo '  bpf                    - misc BPF tools'
- 	@echo '  cgroup                 - cgroup tools'
- 	@echo '  cpupower               - a tool for all things x86 CPU power'
- 	@echo '  debugging              - tools for debugging'
-@@ -23,12 +24,11 @@ help:
- 	@echo '  kvm_stat               - top-like utility for displaying kvm statistics'
- 	@echo '  leds                   - LEDs  tools'
- 	@echo '  liblockdep             - user-space wrapper for kernel locking-validator'
--	@echo '  bpf                    - misc BPF tools'
-+	@echo '  objtool                - an ELF object analysis tool'
- 	@echo '  pci                    - PCI tools'
- 	@echo '  perf                   - Linux performance measurement and analysis tool'
- 	@echo '  selftests              - various kernel selftests'
- 	@echo '  spi                    - spi tools'
--	@echo '  objtool                - an ELF object analysis tool'
- 	@echo '  tmon                   - thermal monitoring and tuning tool'
- 	@echo '  turbostat              - Intel CPU idle stats and freq reporting tool'
- 	@echo '  usb                    - USB testing tools'
+diff --git a/tools/perf/ui/setup.c b/tools/perf/ui/setup.c
+index 44fe824e96cd..3bc7c9a6fae9 100644
+--- a/tools/perf/ui/setup.c
++++ b/tools/perf/ui/setup.c
+@@ -89,9 +89,9 @@ void setup_browser(bool fallback_to_pager)
+ 		printf("GTK browser requested but could not find %s\n",
+ 		       PERF_GTK_DSO);
+ 		sleep(1);
++		use_browser = 1;
+ 		/* fall through */
+ 	case 1:
+-		use_browser = 1;
+ 		if (ui__init() == 0)
+ 			break;
+ 		/* fall through */
