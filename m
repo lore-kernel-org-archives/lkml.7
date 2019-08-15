@@ -2,93 +2,143 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48323C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37379C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20FD82064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BAAC2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:14:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWy0WOuF"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XSaAqhgy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732436AbfHOSMQ (ORCPT
+        id S1732270AbfHOSOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 14:12:16 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39050 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730474AbfHOSMP (ORCPT
+        Thu, 15 Aug 2019 14:14:20 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:51612 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfHOSOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 14:12:15 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u17so1632290pgi.6;
-        Thu, 15 Aug 2019 11:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=n9tUkG7lD8HBZBIfJu4sHWhJeh6vg7iC3im3UhLYB78=;
-        b=GWy0WOuF1yD+p7ShPnwB9tU5z2eta0obVE2c5a2C066QeGhwW48ZdMnzHSPRJKoe8d
-         bajI7UKzxlBpoF/5H7WbgVtUpuoTr+6E1Zkeu6O5DGIWQ3aayNSDDpfarITDEJjAg4sN
-         r/UHUb02gg9rKLcN6+pwFdQczJYFKX+6WBsarS0K4coff0Nybr9BIP63KN6gNZoCczuP
-         SgPdZJthkEGEhRMVjEzM0s3XMVY8BGwkPJcDAvoxpxS2pkTpaLt77FKBNdc96dxqyeO8
-         DvftPVphIa6BfyA6TzUuEUDblNXBjE+ux4H/+yt7rJpN32Ti3s1V/V6m7wkS2DcNFLTb
-         oL0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=n9tUkG7lD8HBZBIfJu4sHWhJeh6vg7iC3im3UhLYB78=;
-        b=RVkv3sm1luQTagjKz5lv3OKIeDQzuvW2OGYfMWuLUZlGIM7tb+4CaHBvVJbat8ugMC
-         sOOUe/vtmieUIFiSoNLGritXM0ofboCaeWhQhHmCmYOsQnTDHkOkz2+AJrKM/+3Ql9YT
-         xgNDM8MBiPbk4BI4dv1UwPcJfhuucTiXHjq+MihRH6GMIsszUnr5kQDl2DWDtQEVv7G0
-         RInBCWQr7Qj4ttPK5oxFF2koAdiBBS8uooAdvGjc90OdxI/x0WH7su25xQy4Y3CTFVwe
-         bFSIOen08F7ZjFevdLmM3aAoA5q8a7js95u5fajym98QnjnRQXH1Qq9Ls7yN3cxSXFAS
-         TRNA==
-X-Gm-Message-State: APjAAAVK4zheUq/DDYF9Qcxu+r2wh9+NTVZwIE/Yc435lJNlfYFKBMzd
-        bvQVga56bMIXQoh8YQYaie8=
-X-Google-Smtp-Source: APXvYqy3ZsrSdpCRks8cJhp/ftXr7OVvrV+UaVSt653H/GnIWE4REvYlquujbaMe2nfOmJKlPj9+tw==
-X-Received: by 2002:a62:7912:: with SMTP id u18mr7060592pfc.254.1565892735146;
-        Thu, 15 Aug 2019 11:12:15 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j1sm2558476pgl.12.2019.08.15.11.12.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 11:12:14 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 11:12:13 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-watchdog@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Rick Ramstetter <rick@anteaterllc.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 04/22] watchdog: ziirave_wdt: Don't bail out on
- unexpected timeout value
-Message-ID: <20190815181213.GA14388@roeck-us.net>
-References: <20190812200906.31344-1-andrew.smirnov@gmail.com>
- <20190812200906.31344-5-andrew.smirnov@gmail.com>
+        Thu, 15 Aug 2019 14:14:20 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 71DDB2AF;
+        Thu, 15 Aug 2019 20:14:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1565892857;
+        bh=PywuWClfJh3Sq1lkgyHqHLet8t64SevKcOFacHlNbNo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XSaAqhgyTXoRy4Ne5hd+JH48p6twbV+RWWuhcrrGbHEAPxB+p+arrDgJtFnpRyOVj
+         gQclbHy+09zseRLnoNSglCm9r3Yr6Fme88FQ5wyPhMC/97JikIbdngJR7t1rVgFhTG
+         65N0VxzrsTWu9FqSH/6LxlqNaDE/M/edOovgxdqs=
+Date:   Thu, 15 Aug 2019 21:14:13 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
+        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 11/14] dt-bindings: Document the Rockchip MIPI RX
+ D-PHY bindings
+Message-ID: <20190815181413.GZ5011@pendragon.ideasonboard.com>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-12-helen.koike@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190812200906.31344-5-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190730184256.30338-12-helen.koike@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 01:08:48PM -0700, Andrey Smirnov wrote:
-> Reprogramming bootloader on watchdog MCU will result in reported
-> default timeout value of "0". That in turn will be unnecessarily
-> rejected by the driver as invalid device (-ENODEV). Simplify probe to
-> read stored timeout value, set it to a sane default if it is bogus,
-> and then program that value unconditionally.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Rick Ramstetter <rick@anteaterllc.com>
-> Cc: linux-watchdog@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+Hi Helen,
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Thank you for the patch.
+
+On Tue, Jul 30, 2019 at 03:42:53PM -0300, Helen Koike wrote:
+> From: Jacob Chen <jacob2.chen@rock-chips.com>
+> 
+> Add DT bindings documentation for Rockchip MIPI D-PHY RX
+> 
+> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> [update for upstream]
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> 
+> ---
+> 
+> Changes in v8: None
+> Changes in v7:
+> - updated doc with new design and tested example
+> 
+>  .../bindings/media/rockchip-mipi-dphy.txt     | 38 +++++++++++++++++++
+
+Shouldn't this go to bindings/phy/ ?
+
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+> new file mode 100644
+> index 000000000000..2305d44d92db
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+> @@ -0,0 +1,38 @@
+> +Rockchip SoC MIPI RX D-PHY
+> +-------------------------------------------------------------
+
+How about already converting the bindings to yaml ? There's one example
+in bindings/phy/ that looks quite similar to what you need here. Make
+sure to have a look at Documentation/devicetree/writing-schema.md, and
+in particular to run make dt_binding_check.
+
+> +
+> +Required properties:
+> +- compatible: value should be one of the following
+> +	"rockchip,rk3288-mipi-dphy"
+> +	"rockchip,rk3399-mipi-dphy"
+> +- clocks : list of clock specifiers, corresponding to entries in
+> +	clock-names property;
+> +- clock-names: required clock name.
+> +- #phy-cells: Number of cells in a PHY specifier; Should be 0.
+> +
+> +MIPI RX D-PHY use registers in "general register files", it
+> +should be a child of the GRF.
+> +
+> +Optional properties:
+> +- reg: offset and length of the register set for the device.
+> +- rockchip,grf: MIPI TX1RX1 D-PHY not only has its own register but also
+> +		the GRF, so it is only necessary for MIPI TX1RX1 D-PHY.
+> +
+> +Device node example
+> +-------------------
+> +
+> +grf: syscon@ff770000 {
+> +	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
+> +
+> +...
+> +
+> +	dphy: mipi-dphy {
+> +		compatible = "rockchip,rk3399-mipi-dphy";
+> +		clocks = <&cru SCLK_MIPIDPHY_REF>,
+> +			<&cru SCLK_DPHY_RX0_CFG>,
+> +			<&cru PCLK_VIO_GRF>;
+> +		clock-names = "dphy-ref", "dphy-cfg", "grf";
+> +		power-domains = <&power RK3399_PD_VIO>;
+> +		#phy-cells = <0>;
+> +	};
+> +};
+
+-- 
+Regards,
+
+Laurent Pinchart
