@@ -2,97 +2,147 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8D2C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB84C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C22442084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:35:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y+FH2yaj"
+	by mail.kernel.org (Postfix) with ESMTP id A22B72084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:35:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565858140;
+	bh=754ef3+byynvZQZ8Pv24KNLNkDNNTPOU22Tr2asgScE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Pl3R9wrr66zzqOW0UWXa0tDg1/k0RsjgXiOsVVxfhLe3OvkmczZXPZdUwB4M97Tpf
+	 GTmG3bSp0PjTZDlHEMtWxn3YQuXG8K/xSF9fOp6FQaABH9FYTinp9EO8Xh16tQ6oE0
+	 dEOYC/q6sd1XKMB8ox3BhJvJUnrbHYyqavzva2so=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731057AbfHOIfZ (ORCPT
+        id S1731069AbfHOIfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 04:35:25 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46622 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730609AbfHOIfY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 04:35:24 -0400
-Received: by mail-lf1-f66.google.com with SMTP id n19so1118901lfe.13
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 01:35:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rIQuHahZHT61N3pBhyPaMSRx0lDKJTzgLeGkPUGpwnw=;
-        b=Y+FH2yajTgKkaI7nsmE3WEZkZeDokd2RUNA2EldWJj3L3ayjASGWVw8k2Ij/OubaDA
-         M5j0TR6ZH7t2zzUaVTqdINB8m5lZjQKpnPOSypEFo2alm8nos9NKEpcKFvMeG4r1uAGP
-         8AaHAOiGbMsxK4DiqokN1Oe/6ULi7Td0OYQaU6PgDrUrliFei/NY6KsdXRXQTJ6grcA2
-         +XXBHx1lgL1P0ofcfjauBj28vKllqp7gfVIDQ8OSvDzcvPiPEFztsRnRSqMrrh/2PyyG
-         Dd0SqjtUzV6NYaebRMJOREUG+7ff7D1na1lXslQREjafp/2W4q53ICtF5IW5iS9XRfz6
-         bsYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rIQuHahZHT61N3pBhyPaMSRx0lDKJTzgLeGkPUGpwnw=;
-        b=pJTyvavX66tEf4vtwzG+6EJrJSliWPoAFRtMVJ76nedHZ0qKBXVVDl4buIvldXsbGe
-         uoEPfIVYn4yrSv8931jA9fZWLmgafKZzI3elF04sDeVNhfBmE/SWqhkUdO160zwsGrZK
-         G05jqjgnfan7iN2eNp2OkuaTv9O5nfyu0r2wJnj927hQyQowE9cyow5uApQpriEYOWzp
-         8MmOTjJenqOYC8jXx0brNhHT2BRbm6VCL/A/GZSSYCVDhsoFDkhvqu1SurnLEUQtWWXM
-         zHACt7u5oa6q711coabqtaRy/xGf7knR1fAaMjqR8g9vv6NgCNjXAQnhb88yyjyKwDI3
-         c28g==
-X-Gm-Message-State: APjAAAUOzirxqu+XByPH+oTwqTpvWz1BpLzrIANmCttQjbJq5E8rfVM7
-        SDmW0Z5vhFua5/AwCw4wjo2P8J2WpO4t5vXDG5DK/A==
-X-Google-Smtp-Source: APXvYqy4JWhaSExzEs8fNpyvhhFIffJYnQjxDmgWOFMcNEneP7xcjaUdbR6c+1Du9tQXJhhtHsvVS1Z3y4aDb+ws8Qs=
-X-Received: by 2002:ac2:5939:: with SMTP id v25mr1829550lfi.115.1565858122600;
- Thu, 15 Aug 2019 01:35:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190815004854.19860-1-masneyb@onstation.org> <20190815004854.19860-4-masneyb@onstation.org>
-In-Reply-To: <20190815004854.19860-4-masneyb@onstation.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 15 Aug 2019 10:35:10 +0200
-Message-ID: <CACRpkdbCwUbn68trGZTN8pe8rF8x6SeAW1gd7bwFTs3z-6vK=A@mail.gmail.com>
-Subject: Re: [PATCH 03/11] drm/bridge: analogix-anx78xx: silence -EPROBE_DEFER warnings
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Thu, 15 Aug 2019 04:35:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38480 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730409AbfHOIfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 04:35:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6EB69B601;
+        Thu, 15 Aug 2019 08:35:37 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 10:35:36 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH 2/2] mm: memcontrol: flush percpu slab vmstats on kmem
+ offlining
+Message-ID: <20190815083536.GD9477@dhcp22.suse.cz>
+References: <20190812222911.2364802-1-guro@fb.com>
+ <20190812222911.2364802-3-guro@fb.com>
+ <20190814113242.GV17933@dhcp22.suse.cz>
+ <20190814215408.GA5584@tower.dhcp.thefacebook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814215408.GA5584@tower.dhcp.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 2:49 AM Brian Masney <masneyb@onstation.org> wrote:
+On Wed 14-08-19 21:54:12, Roman Gushchin wrote:
+> On Wed, Aug 14, 2019 at 01:32:42PM +0200, Michal Hocko wrote:
+> > On Mon 12-08-19 15:29:11, Roman Gushchin wrote:
+> > > I've noticed that the "slab" value in memory.stat is sometimes 0,
+> > > even if some children memory cgroups have a non-zero "slab" value.
+> > > The following investigation showed that this is the result
+> > > of the kmem_cache reparenting in combination with the per-cpu
+> > > batching of slab vmstats.
+> > > 
+> > > At the offlining some vmstat value may leave in the percpu cache,
+> > > not being propagated upwards by the cgroup hierarchy. It means
+> > > that stats on ancestor levels are lower than actual. Later when
+> > > slab pages are released, the precise number of pages is substracted
+> > > on the parent level, making the value negative. We don't show negative
+> > > values, 0 is printed instead.
+> > 
+> > So the difference with other counters is that slab ones are reparented
+> > and that's why we have treat them specially? I guess that is what the
+> > comment in the code suggest but being explicit in the changelog would be
+> > nice.
+> 
+> Right. And I believe the list can be extended further. Objects which
+> are often outliving the origin memory cgroup (e.g. pagecache pages)
+> are pinning dead cgroups, so it will be cool to reparent them all.
+> 
+> > 
+> > [...]
+> > > -static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg)
+> > > +static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg, bool slab_only)
+> > >  {
+> > >  	unsigned long stat[MEMCG_NR_STAT];
+> > >  	struct mem_cgroup *mi;
+> > >  	int node, cpu, i;
+> > > +	int min_idx, max_idx;
+> > >  
+> > > -	for (i = 0; i < MEMCG_NR_STAT; i++)
+> > > +	if (slab_only) {
+> > > +		min_idx = NR_SLAB_RECLAIMABLE;
+> > > +		max_idx = NR_SLAB_UNRECLAIMABLE;
+> > > +	} else {
+> > > +		min_idx = 0;
+> > > +		max_idx = MEMCG_NR_STAT;
+> > > +	}
+> > 
+> > This is just ugly has hell! I really detest how this implicitly makes
+> > counters value very special without any note in the node_stat_item
+> > definition. Is it such a big deal to have a per counter flush and do
+> > the loop over all counters resp. specific counters around it so much
+> > worse? This should be really a slow path to safe few instructions or
+> > cache misses, no?
+> 
+> I believe that it is a big deal, because it's
+> NR_VMSTAT_ITEMS * all memory cgroups * online cpus * numa nodes.
 
-> Silence two warning messages that occur due to -EPROBE_DEFER errors to
-> help cleanup the system boot log.
->
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+I am not sure I follow. I just meant to remove all for (i = 0; i < MEMCG_NR_STAT; i++)
+from flushing and do that loop around the flushing function. That would
+mean that the NR_SLAB_$FOO wouldn't have to play tricks and simply call
+the flushing for the two counters.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> If the goal is to merge it with cpu hotplug code, I'd think about passing
+> cpumask to it, and do the opposite. Also I'm not sure I understand
+> why reordering loops will make it less ugly.
 
-Yours,
-Linus Walleij
+And adding a cpu/nodemasks would just work with that as well, right.
+
+> 
+> But you're right, a comment nearby NR_SLAB_(UN)RECLAIMABLE definition
+> is totaly worth it. How about something like:
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 8b5f758942a2..231bcbe5dcc6 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -215,8 +215,9 @@ enum node_stat_item {
+>         NR_INACTIVE_FILE,       /*  "     "     "   "       "         */
+>         NR_ACTIVE_FILE,         /*  "     "     "   "       "         */
+>         NR_UNEVICTABLE,         /*  "     "     "   "       "         */
+> -       NR_SLAB_RECLAIMABLE,
+> -       NR_SLAB_UNRECLAIMABLE,
+> +       NR_SLAB_RECLAIMABLE,    /* Please, do not reorder this item */
+> +       NR_SLAB_UNRECLAIMABLE,  /* and this one without looking at
+> +                                * memcg_flush_percpu_vmstats() first. */
+>         NR_ISOLATED_ANON,       /* Temporary isolated pages from anon lru */
+>         NR_ISOLATED_FILE,       /* Temporary isolated pages from file lru */
+>         WORKINGSET_NODES,
+
+Thanks, that is an improvement.
+-- 
+Michal Hocko
+SUSE Labs
