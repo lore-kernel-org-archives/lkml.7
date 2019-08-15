@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1202FC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EF8C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D53E5206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD418206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:39:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="h8NgnlPU"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="b4qBCjuT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732454AbfHOQjJ (ORCPT
+        id S1732473AbfHOQjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:39:09 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35443 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732392AbfHOQjH (ORCPT
+        Thu, 15 Aug 2019 12:39:12 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38051 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732446AbfHOQjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:39:07 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k2so2780495wrq.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:39:06 -0700 (PDT)
+        Thu, 15 Aug 2019 12:39:10 -0400
+Received: by mail-wr1-f67.google.com with SMTP id g17so2773194wrr.5
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:39:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4hqwZO1zYMZbMHDNBtpMYOg7fTFxraqQn2eOANEclVY=;
-        b=h8NgnlPUTiF5wVsNev50I/YOtqJjKSy5vLIaU2eN9nCpZcTALr4MPd+FenrgztWbfv
-         3D0klacd/3elaTXqSlumajss4KRd/R5oZ6OS9naf4u5lmkLnR+uru5GMDkfmQQmYzE9g
-         /Il1I2wJNf6eZtgrGs0ONwchUkxhn+EqFcxr6UJOjay1lyzoU+2dutEiukEFk0+XJMqR
-         D7kCQ41b7rARv4kqAruadOaD6deYpxFHjNn+JDvHi1RgRxuo0BCJxOx5iofUxRpdSLPT
-         Ztf/9+xTXY7Tg4SBxmw8bmhYrFoeaz0CL6Iw5/ydI0drLrzZVL0IpsW1XBq+hU8Ps6G/
-         IVaA==
+        bh=LDD6ysbcq8/fi6dGyfg9N1McraInCy0n2bZF6snhbRo=;
+        b=b4qBCjuTQdhVT0a0DmGBDt27OIcVE/oifHPx8Xk2ziMixcZTCNurZMkB9t7p6ykFMo
+         cJoRdjNKK3NerjMF6YNTgxQXPO5lwrT6E+zIBjXnxsMGJiRbiwov3m35vt5TCmlwODsS
+         S7WOCJ75wVaTHiAGrQHQpbe475zAQ1bQzlC8/2rE3OLLUzNvVqaJstgGu/lWFOzSJTTL
+         pbhnWdgDVm7rfw9leeSIDakdIFUYdpezD8CPifJ9pSF6ltpAEb6bLC3/UZPwWcQWTP3m
+         nKpowXB9iObJ6wmavFsae0yVN0IJgILdn90r7D9XrpA1w1D1PX9//0GRx1tyP5mLbTYz
+         IjqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4hqwZO1zYMZbMHDNBtpMYOg7fTFxraqQn2eOANEclVY=;
-        b=jmQ2u0CUql/fSD7cwXuny+qbFrsTxWILz4xw137uRsL+8Lrv7Nk8G+YI7xcGX7HzXN
-         ykgmrwHzVAU0Fjh5oNHkFYHTe4BEG+CDOW3ycpirpj2Cg9onGsGjPloH+EVCnp5bf+O6
-         oJEIjiL2lAj4/NpWUjjMIF3aGKBVRdkYb6dV9/P1+Pv/srvB7jckXWCBCZWSTgsWUt4j
-         /sBcYOhGMBD4u0/ZKzHhJ2ZlUqhz0ttYnIHE25XyTM7+KZDQfvOlFYHPoejqKEOUvkPv
-         4a4XHyXo+DKvaqVij2AlnkrxrTLDrZiO6Kk+wrUk+A/bGIYLjrtpY1rfzEdjeB28TV6r
-         e+ow==
-X-Gm-Message-State: APjAAAUvV/df74VB2GWMHz0i4Yb9Fh2HgAgitRdW4B4Z72WrGBVNm9lP
-        GSaTYK16DgUmBLb0trTTIaYHpq4p9N4=
-X-Google-Smtp-Source: APXvYqwCIu5CCYmSqesKN8wH1344KKjZPusYqSYMWbcWtojROTGdeO5FK5una9x2h//MzJWxGG3f1A==
-X-Received: by 2002:adf:f991:: with SMTP id f17mr6087291wrr.233.1565887145365;
-        Thu, 15 Aug 2019 09:39:05 -0700 (PDT)
+        bh=LDD6ysbcq8/fi6dGyfg9N1McraInCy0n2bZF6snhbRo=;
+        b=ndxDfTgazM6ho+GBID634vJxYoHqh8r89XCK9pldSRkPVz5n4sud9U8ccXCvR+g610
+         5FnYe+P47jqQeMoa8DOiGyBuYuUCE12KO5Ljp+WMWYB5/acAfN2A8L94U+j/qUWcA63m
+         RAkIU1cIDYoAF9WAQgCuBR/YYcqXMfyyajGnFLIpgnqmCqgqupSPOerYZUDq/3jjhlUz
+         aeuOH8mgDkFPxKMZbBFNS006CLv70I62GUUeRYDKXXyXc8pFfhwipJTcxQuVlU6FaoUE
+         swTvy2+jnoyrYWvoOdxUIinXpaEuWD7+gKLQCmdWlhG7FL2cdItUOCYuQxdJ1y12Y08Q
+         ZgDQ==
+X-Gm-Message-State: APjAAAVre/7J/3+wBG6Pr2hen/mznuiNZanmcxrxhLhugmkIinmCIdky
+        0CwBd2uM1r5EfpEMmjbtbYxaAhHniQ0=
+X-Google-Smtp-Source: APXvYqwF6j5VaRNoIPJFWV8Tckhi+PRI/dVzMoI+OPEinPS+a5V1GrKb0SAQztAOJ/JdBaxD6XREkw==
+X-Received: by 2002:adf:e790:: with SMTP id n16mr6224693wrm.120.1565887148204;
+        Thu, 15 Aug 2019 09:39:08 -0700 (PDT)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id f7sm5755046wrf.8.2019.08.15.09.39.03
+        by smtp.gmail.com with ESMTPSA id f7sm5755046wrf.8.2019.08.15.09.39.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 09:39:04 -0700 (PDT)
+        Thu, 15 Aug 2019 09:39:07 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -77,9 +77,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
         linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv6 19/36] x86/vdso/Makefile: Add vobjs32
-Date:   Thu, 15 Aug 2019 17:38:19 +0100
-Message-Id: <20190815163836.2927-20-dima@arista.com>
+Subject: [PATCHv6 21/36] x86/vdso: Rename vdso_image {.data=>.text}
+Date:   Thu, 15 Aug 2019 17:38:21 +0100
+Message-Id: <20190815163836.2927-22-dima@arista.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190815163836.2927-1-dima@arista.com>
 References: <20190815163836.2927-1-dima@arista.com>
@@ -90,68 +90,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Treat ia32/i386 objects in array the same As for 64-bit vdso objects.
-This is a preparation ground to avoid code duplication on introduction
-timens vdso.
+To avoid any confusion with VVAR.
 
 Co-developed-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/x86/entry/vdso/Makefile | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ arch/x86/entry/vdso/vdso2c.h | 2 +-
+ arch/x86/entry/vdso/vma.c    | 6 +++---
+ arch/x86/include/asm/vdso.h  | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 8df549138193..d4bffc4cabd1 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -24,6 +24,8 @@ VDSO32-$(CONFIG_IA32_EMULATION)	:= y
+diff --git a/arch/x86/entry/vdso/vdso2c.h b/arch/x86/entry/vdso/vdso2c.h
+index 80be339ee93e..7556bb70ed8b 100644
+--- a/arch/x86/entry/vdso/vdso2c.h
++++ b/arch/x86/entry/vdso/vdso2c.h
+@@ -158,7 +158,7 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 	fprintf(outfile, "\n};\n\n");
  
- # files to link into the vdso
- vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
-+vobjs32-y := vdso32/note.o vdso32/system_call.o vdso32/sigreturn.o
-+vobjs32-y += vdso32/vclock_gettime.o
+ 	fprintf(outfile, "const struct vdso_image %s = {\n", image_name);
+-	fprintf(outfile, "\t.data = raw_data,\n");
++	fprintf(outfile, "\t.text = raw_data,\n");
+ 	fprintf(outfile, "\t.size = %lu,\n", mapping_size);
+ 	if (alt_sec) {
+ 		fprintf(outfile, "\t.alt = %lu,\n",
+diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+index 3f05418642a8..2dc4f0b5481c 100644
+--- a/arch/x86/entry/vdso/vma.c
++++ b/arch/x86/entry/vdso/vma.c
+@@ -32,8 +32,8 @@ void __init init_vdso_image(const struct vdso_image *image)
+ {
+ 	BUG_ON(image->size % PAGE_SIZE != 0);
  
- # files to link into kernel
- obj-y				+= vma.o
-@@ -37,10 +39,12 @@ vdso_img-$(VDSO32-y)		+= 32
- obj-$(VDSO32-y)			+= vdso32-setup.o
+-	apply_alternatives((struct alt_instr *)(image->data + image->alt),
+-			   (struct alt_instr *)(image->data + image->alt +
++	apply_alternatives((struct alt_instr *)(image->text + image->alt),
++			   (struct alt_instr *)(image->text + image->alt +
+ 						image->alt_len));
+ }
  
- vobjs := $(foreach F,$(vobjs-y),$(obj)/$F)
-+vobjs32 := $(foreach F,$(vobjs32-y),$(obj)/$F)
+@@ -47,7 +47,7 @@ static vm_fault_t vdso_fault(const struct vm_special_mapping *sm,
+ 	if (!image || (vmf->pgoff << PAGE_SHIFT) >= image->size)
+ 		return VM_FAULT_SIGBUS;
  
- $(obj)/vdso.o: $(obj)/vdso.so
+-	vmf->page = virt_to_page(image->data + (vmf->pgoff << PAGE_SHIFT));
++	vmf->page = virt_to_page(image->text + (vmf->pgoff << PAGE_SHIFT));
+ 	get_page(vmf->page);
+ 	return 0;
+ }
+diff --git a/arch/x86/include/asm/vdso.h b/arch/x86/include/asm/vdso.h
+index 230474e2ddb5..dffdc12cc7d6 100644
+--- a/arch/x86/include/asm/vdso.h
++++ b/arch/x86/include/asm/vdso.h
+@@ -11,7 +11,7 @@
+ #include <linux/mm_types.h>
  
- targets += vdso.lds $(vobjs-y)
-+targets += vdso32/vdso32.lds $(vobjs32-y)
+ struct vdso_image {
+-	void *data;
++	void *text;
+ 	unsigned long size;   /* Always a multiple of PAGE_SIZE */
  
- # Build the vDSO image C files and link them in.
- vdso_img_objs := $(vdso_img-y:%=vdso-image-%.o)
-@@ -131,10 +135,6 @@ $(obj)/vdsox32.so.dbg: $(obj)/vdsox32.lds $(vobjx32s) FORCE
- CPPFLAGS_vdso32.lds = $(CPPFLAGS_vdso.lds)
- VDSO_LDFLAGS_vdso32.lds = -m elf_i386 -soname linux-gate.so.1
- 
--targets += vdso32/vdso32.lds
--targets += vdso32/note.o vdso32/system_call.o vdso32/sigreturn.o
--targets += vdso32/vclock_gettime.o
--
- KBUILD_AFLAGS_32 := $(filter-out -m64,$(KBUILD_AFLAGS)) -DBUILD_VDSO
- $(obj)/vdso32.so.dbg: KBUILD_AFLAGS = $(KBUILD_AFLAGS_32)
- $(obj)/vdso32.so.dbg: asflags-$(CONFIG_X86_64) += -m32
-@@ -159,12 +159,7 @@ endif
- 
- $(obj)/vdso32.so.dbg: KBUILD_CFLAGS = $(KBUILD_CFLAGS_32)
- 
--$(obj)/vdso32.so.dbg: FORCE \
--		      $(obj)/vdso32/vdso32.lds \
--		      $(obj)/vdso32/vclock_gettime.o \
--		      $(obj)/vdso32/note.o \
--		      $(obj)/vdso32/system_call.o \
--		      $(obj)/vdso32/sigreturn.o
-+$(obj)/vdso32.so.dbg: $(obj)/vdso32/vdso32.lds $(vobjs32) FORCE
- 	$(call if_changed,vdso_and_check)
- 
- #
+ 	unsigned long alt, alt_len;
 -- 
 2.22.0
 
