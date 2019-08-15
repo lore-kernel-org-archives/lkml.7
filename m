@@ -7,67 +7,66 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA758C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CBFC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CEC52086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 263052084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565889323;
-	bh=V0HN4+vpnqwlBH0IBF5ZoLZgbOeKS1TfgysuiMqIPfk=;
+	s=default; t=1565889327;
+	bh=rLPOByBFsVcARV4dnYz+E3sV/XZFYkXVZtdFF/GHTdc=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=YSfwTs/dd7Uub+aKg89OLyWlHAnit4Uw8Rc0n+59WoxEMW2t27x52HfTjsCMp4KbP
-	 cVFlFLyq+Vsu3HdNM29VevP+5o1DuPcLudj2wz6eVYT9a5upAmfUUQG0UeqPq9Pjs+
-	 43BCTdj3sJQaYIdFCB7rAjUM49AQPeCcKfDplMws=
+	b=eH++SfJ1Q18hJbCaBjHiPalnZu815m/3KPUgm1Wj5AviJ+zhq8y9oYf65T59fcspN
+	 h3S+qhMJJdGSgbHZPSDyaR0ID18lDoPl/Ka9JhZpbVya4cEHZh2zZZws37n9GvLZXl
+	 PXkojyeUnLiUMaZpIhZx5jxMTTf59UX6cxM04kVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732066AbfHORPW (ORCPT
+        id S1732079AbfHORP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:15:22 -0400
-Received: from mail-wm1-f97.google.com ([209.85.128.97]:55213 "EHLO
+        Thu, 15 Aug 2019 13:15:26 -0400
+Received: from mail-wm1-f97.google.com ([209.85.128.97]:53894 "EHLO
         mail-wm1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731622AbfHORO3 (ORCPT
+        with ESMTP id S1731603AbfHORO3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 15 Aug 2019 13:14:29 -0400
-Received: by mail-wm1-f97.google.com with SMTP id p74so1872601wme.4
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:28 -0700 (PDT)
+Received: by mail-wm1-f97.google.com with SMTP id 10so1879637wmp.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=H42j7NEHlsPF3r/4bj3RbhLYDdVkIJ1yMKu66UQkvI4=;
-        b=oAzAkgNq0tPv4IhytmlfcgQvgtPa7T1FE4lOmKoYWLPh4+hJnKZVBgcOYDHTNFvVmL
-         b+Sh+QyaG3QuyNTzRlkITX6rncVlmJ+2AmZBWBjlOLUO53FEII7LTggXB6s+fRiBvdQr
-         UYrpAdSWlb5cZKS06Q/ionazQSi5h7PELm4nzxfclip2OKAb+Ms10O9zeu5Eqy1yL4+e
-         kvtCA+bHZg/0kxVZ4r86GaKGM+FAPon1bsmvzMuwuC6vhHat/2/8FGCprwvkzApT0Tx9
-         ZUfgl+Mc6Rpe22NKmkWGIDQakrgn1VhSMUX14mMYeWQdCRASqpBLt6RhCLKiGhTt6+2W
-         A9tw==
-X-Gm-Message-State: APjAAAX6B2BVrfavPJNbK1xuTVpAKYuTSSKfKD8kN4EUQrudQTHgTCJD
-        BDaxVVRSjUrDjRm4FmiksatHi5vK9eJJghp9Fph084cU0GDehBR9PoHODgG1PlXeyw==
-X-Google-Smtp-Source: APXvYqwMVHN1Cq4FcYozfOJt19P1x3Rl/aGkIkoFGx/zDiL5eHAyaKLoPUmxO54xTdVQEi0Sywi2RctYSaIS
-X-Received: by 2002:a1c:f702:: with SMTP id v2mr3843515wmh.114.1565889267826;
+        bh=ktHQVRXcVTWduz8swL4HEDKPCJFrS626b0N3hJB5CIw=;
+        b=nQknsppoLsz0AvKb44kEoo4TwwRBdlCPzB85DRpbSshc1dqNR9oGIBSRauwDzntZ3J
+         saxeM0eIRwuTupCmcfCqiorxtVWRfgCwFvJi/isnzjK/b8rrLgfNI5fp7zkGmFNjCmDf
+         Z6Q1nBT75ziLusWzM2HpgvE364FnKxPrBAZpFNzxYywufT6BIb6hQz/zV/qJ/3dUUI1D
+         mS9rPFVpHd9ndrO9BiMQIAbjjjs/1xXnnHRfB3H+KKTqcs8ND7ErcqK3CDoibWWBjBoe
+         lrcuJ6p8UndTlYfLHGHzDgyZaCESbi217MisDhOih3ECPdqcsYKocI5FVi/nDoLmApyb
+         9+xg==
+X-Gm-Message-State: APjAAAWbcL15XW/gwZG9kh32PcIdu99W5+PNXd8F8wKI7M8MqqkDM7sR
+        U5JN45rejSbsuSN1XdHa7IEgfF37Bc5JUaY8hudyhpkMQ7XIRbynoMTy+5XO7sGQww==
+X-Google-Smtp-Source: APXvYqz593JC7GQMYbu1GxOUwKcrOXtQYzMmeCdp/fhU+K9XVH/UT4jeR5d4UU5AvxOfFy4M6CfYxZQpDBTP
+X-Received: by 2002:a1c:a5c2:: with SMTP id o185mr3641291wme.172.1565889267387;
         Thu, 15 Aug 2019 10:14:27 -0700 (PDT)
 Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id 9sm7523wmf.3.2019.08.15.10.14.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        by smtp-relay.gmail.com with ESMTPS id h1sm10489wmb.39.2019.08.15.10.14.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 15 Aug 2019 10:14:27 -0700 (PDT)
 X-Relaying-Domain: sirena.org.uk
 Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1hyJKV-00052K-EL; Thu, 15 Aug 2019 17:14:27 +0000
+        id 1hyJKU-00052E-V1; Thu, 15 Aug 2019 17:14:27 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id CED5D2742BC7; Thu, 15 Aug 2019 18:14:26 +0100 (BST)
+        id 567272742BD6; Thu, 15 Aug 2019 18:14:26 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, brian.austin@cirrus.com,
-        broonie@kernel.org, Hulk Robot <hulkci@huawei.com>,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, Paul.Handrigan@cirrus.com,
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        Hulk Robot <hulkci@huawei.com>, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: cs4349: Use PM ops 'cs4349_runtime_pm'" to the asoc tree
-In-Reply-To: <20190815090157.70036-1-yuehaibing@huawei.com>
+Subject: Applied "ASoC: soc-core: Fix -Wunused-const-variable warning" to the asoc tree
+In-Reply-To: <20190813142501.13080-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190815171426.CED5D2742BC7@ypsilon.sirena.org.uk>
+Message-Id: <20190815171426.567272742BD6@ypsilon.sirena.org.uk>
 Date:   Thu, 15 Aug 2019 18:14:26 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -76,11 +75,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: cs4349: Use PM ops 'cs4349_runtime_pm'
+   ASoC: soc-core: Fix -Wunused-const-variable warning
 
 has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -101,38 +100,46 @@ to this mail.
 Thanks,
 Mark
 
-From 9b4275c415acca6264a3d7f1182589959c93d530 Mon Sep 17 00:00:00 2001
+From 0faf1237c60a3791d7ff32035d3097d3e022e68f Mon Sep 17 00:00:00 2001
 From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 15 Aug 2019 17:01:57 +0800
-Subject: [PATCH] ASoC: cs4349: Use PM ops 'cs4349_runtime_pm'
+Date: Tue, 13 Aug 2019 22:25:01 +0800
+Subject: [PATCH] ASoC: soc-core: Fix -Wunused-const-variable warning
 
-sound/soc/codecs/cs4349.c:358:32: warning:
- cs4349_runtime_pm defined but not used [-Wunused-const-variable=]
+If CONFIG_DMI is not set, gcc warns:
 
-cs4349_runtime_pm ops already defined, it seems
-we should enable it.
+sound/soc/soc-core.c:81:27: warning:
+ dmi_blacklist defined but not used [-Wunused-const-variable=]
+
+Add #ifdef guard around it.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e40da86 ("ASoC: cs4349: Add support for Cirrus Logic CS4349")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190815090157.70036-1-yuehaibing@huawei.com
+Link: https://lore.kernel.org/r/20190813142501.13080-1-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/cs4349.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/soc-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/codecs/cs4349.c b/sound/soc/codecs/cs4349.c
-index 09716fab1e26..3381209a882d 100644
---- a/sound/soc/codecs/cs4349.c
-+++ b/sound/soc/codecs/cs4349.c
-@@ -378,6 +378,7 @@ static struct i2c_driver cs4349_i2c_driver = {
- 	.driver = {
- 		.name		= "cs4349",
- 		.of_match_table	= cs4349_of_match,
-+		.pm = &cs4349_runtime_pm,
- 	},
- 	.id_table	= cs4349_i2c_id,
- 	.probe		= cs4349_i2c_probe,
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index e9f44505cc3e..abe2f47cee6e 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -73,6 +73,7 @@ static int pmdown_time = 5000;
+ module_param(pmdown_time, int, 0);
+ MODULE_PARM_DESC(pmdown_time, "DAPM stream powerdown time (msecs)");
+ 
++#ifdef CONFIG_DMI
+ /*
+  * If a DMI filed contain strings in this blacklist (e.g.
+  * "Type2 - Board Manufacturer" or "Type1 - TBD by OEM"), it will be taken
+@@ -87,6 +88,7 @@ static const char * const dmi_blacklist[] = {
+ 	"Board Product Name",
+ 	NULL,	/* terminator */
+ };
++#endif
+ 
+ static ssize_t pmdown_time_show(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
 -- 
 2.20.1
 
