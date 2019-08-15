@@ -2,80 +2,130 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E98C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EEFC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305622064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8957F2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:36:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="TEE2VTSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732417AbfHORfT (ORCPT
+        id S1732434AbfHORf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:35:19 -0400
-Received: from mga03.intel.com ([134.134.136.65]:6871 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbfHORfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:35:18 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 10:34:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
-   d="scan'208";a="376449664"
-Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
-  by fmsmga005.fm.intel.com with ESMTP; 15 Aug 2019 10:34:19 -0700
-Date:   Thu, 15 Aug 2019 10:31:34 -0700
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v5 3/7] PCI/ATS: Initialize PASID in pci_ats_init()
-Message-ID: <20190815173134.GC139211@skuppusw-desk.amr.corp.intel.com>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <5edb0209f7657e0706d4e5305ea0087873603daf.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190815045659.GF253360@google.com>
+        Thu, 15 Aug 2019 13:35:59 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45952 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfHORf7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:35:59 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m2so2433719qki.12
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3I0/JtshV0JYc9v5er9Nyt2RkR0gXgFBErZRF2qt5m0=;
+        b=TEE2VTSv3tx1ZS4nODo3IOEMW+jHQ+D+qi1QIiUZkTdg3tRdtrDS1Yi2Ge0OnwlQjy
+         9uKji7u3GHzFOTQr/5OvgUSnhcrBXLslyqF2JAqkQ3GgIk6PLNtVym1yiMIGLCNKTOL1
+         iQXtVYo5wmF7eZRIICfA54N3DHqUUMZ+9l5FqFEVzN+v0bu03kcn014mCrD0u20coYbC
+         eOTlerFgdQ1Hl3pSxKkr16MDtNGjVedbFoafrOTqsODAG2Dy9iAybdLDz91AheE0jhP3
+         csOgvcEu4MCFZjOLKT0QXJJsbsK8STjBB7eCxSDOzDzFeZfx8mVvw4ErfTv55+OVi7LQ
+         HPJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3I0/JtshV0JYc9v5er9Nyt2RkR0gXgFBErZRF2qt5m0=;
+        b=tTbEERheDjAZ11g3djUUAdeq1scrEVYHnRTkMAXPzZVrUJa734W4YPUBJC92Ae3hOE
+         ErgiEjdNjwtk99tAxZcogcMuIzIHG6J8LqEpGzDqWeaQtDoLMs33UaX4BdCAlXmE2GHC
+         diDhYz/3voZJSOTJRuOMFueLg8XK8yKW+M8EK8dttOQZI0T+kNgsiPKUG3XDlLayDxU9
+         qjRIDr2gXTQ5RSUakTkcm8MYS2Vpl408DO6pYajVvsbpoLZJgRB1n0/95+30ObmlLVUP
+         BUVoEO0fgerbJ/Pawgh8zWbI7VXdhewiksx725/6g9DCDa27K1bPXPxA+/JVfT3rvBK5
+         kuPQ==
+X-Gm-Message-State: APjAAAXGobVnjSCqMeYjSaoBaDCMMcSN8vtpF7iQST0I83W6zYiL1jZV
+        liKpFtmEqIYd02NWNWl9Y5QuyQ==
+X-Google-Smtp-Source: APXvYqxCT6Z6k6qpPIV0VSEi+Ea/Upm35vjesy1M0E1G5PDQA92PUo48Y+Ame9Jik9oEIwW+jp3Waw==
+X-Received: by 2002:ae9:f707:: with SMTP id s7mr5159848qkg.0.1565890558329;
+        Thu, 15 Aug 2019 10:35:58 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id e3sm1552304qkg.91.2019.08.15.10.35.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 15 Aug 2019 10:35:58 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hyJfJ-0006yS-GO; Thu, 15 Aug 2019 14:35:57 -0300
+Date:   Thu, 15 Aug 2019 14:35:57 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
+Message-ID: <20190815173557.GN21596@ziepe.ca>
+References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
+ <20190814202027.18735-3-daniel.vetter@ffwll.ch>
+ <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
+ <20190815084429.GE9477@dhcp22.suse.cz>
+ <20190815130415.GD21596@ziepe.ca>
+ <CAKMK7uE9zdmBuvxa788ONYky=46GN=5Up34mKDmsJMkir4x7MQ@mail.gmail.com>
+ <20190815143759.GG21596@ziepe.ca>
+ <CAKMK7uEJQ6mPQaOWbT_6M+55T-dCVbsOxFnMC6KzLAMQNa-RGg@mail.gmail.com>
+ <20190815151028.GJ21596@ziepe.ca>
+ <CAKMK7uG33FFCGJrDV4-FHT2FWi+Z5SnQ7hoyBQd4hignzm1C-A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190815045659.GF253360@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAKMK7uG33FFCGJrDV4-FHT2FWi+Z5SnQ7hoyBQd4hignzm1C-A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 11:56:59PM -0500, Bjorn Helgaas wrote:
-> On Thu, Aug 01, 2019 at 05:06:00PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > 
-> > Currently, PASID Capability checks are repeated across all PASID API's.
-> > Instead, cache the capability check result in pci_pasid_init() and use
-> > it in other PASID API's. Also, since PASID is a shared resource between
-> > PF/VF, initialize PASID features with default values in pci_pasid_init().
-> > 
-> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> > + * TODO: Since PASID is a shared resource between PF/VF, don't update
-> > + * PASID features in the same API as a per device feature.
-> 
-> This comment is slightly misleading (at least, it misled *me* :))
-> because it hints that PASID might be specific to SR-IOV.  But I don't
-> think that's true, so if you keep a comment like this, please reword
-> it along the lines of "for SR-IOV devices, the PF's PASID is shared
-> between the PF and all VFs" so it leaves open the possibility of
-> non-SR-IOV devices using PASID as well.
-Ok. I will fix it in next version.
-> 
-> Bjorn
+On Thu, Aug 15, 2019 at 06:25:16PM +0200, Daniel Vetter wrote:
 
--- 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+> I'm not really well versed in the details of our userptr, but both
+> amdgpu and i915 wait for the gpu to complete from
+> invalidate_range_start. Jerome has at least looked a lot at the amdgpu
+> one, so maybe he can explain what exactly it is we're doing ...
+
+amdgpu is (wrongly) using hmm for something, I can't really tell what
+it is trying to do. The calls to dma_fence under the
+invalidate_range_start do not give me a good feeling.
+
+However, i915 shows all the signs of trying to follow the registration
+cache model, it even has a nice comment in
+i915_gem_userptr_get_pages() explaining that the races it has don't
+matter because it is a user space bug to change the VA mapping in the
+first place. That just screams registration cache to me.
+
+So it is fine to run HW that way, but if you do, there is no reason to
+fence inside the invalidate_range end. Just orphan the DMA buffer and
+clean it up & release the page pins when all DMA buffer refs go to
+zero. The next access to that VA should get a new DMA buffer with the
+right mapping.
+
+In other words the invalidation should be very simple without
+complicated locking, or wait_event's. Look at hfi1 for example.
+
+Jason
