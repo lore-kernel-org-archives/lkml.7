@@ -2,51 +2,55 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CEDC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 05:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6D4C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEAD2173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 05:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EDF8206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:00:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565848774;
-	bh=AWvtkVoMveX+367jfIigRFuEKXKgex3lO3WvrMEOtwk=;
+	s=default; t=1565848822;
+	bh=H4z0Pzr09fcDeWjap4b6GZiWrof6x1hWlmv5spb7cc0=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=Wgb32trweZNttt0Hv480fuVMVVIdquAJoI4iTgRlCt3RXEB0ZuU719sUVvdZj3f+O
-	 llXu5Xzah+XPOsQAPEBr2PDzNXmBhYeXAN5Q0s459Di2xUOBa4YPN+tf9uOa5okQQD
-	 kIckmsgx6lQzYwNI3bXnYGpwZyFtJZWQgeBf9tdY=
+	b=tNp0+sq1YJkPHA7QChVpVj6n/JR3rWmvRTdJ6r/xFxl9ifHuOX2bsam0o4yPVYpKK
+	 Zq2yKxObK6O4jwKOA51aozMnS90cPYyfUC7x0H+uyeBlCbNn/XHSexeU9BayVallUw
+	 nQHidFWa6oNI40zCet3eetPUqUk4HsVBGfYvOUdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730280AbfHOF7d (ORCPT
+        id S1730288AbfHOGAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 01:59:33 -0400
-Received: from mga18.intel.com ([134.134.136.126]:39733 "EHLO mga18.intel.com"
+        Thu, 15 Aug 2019 02:00:21 -0400
+Received: from mga18.intel.com ([134.134.136.126]:39804 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbfHOF7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 01:59:32 -0400
+        id S1726008AbfHOGAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 02:00:21 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 22:59:32 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 23:00:20 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,388,1559545200"; 
-   d="scan'208";a="194702947"
+   d="scan'208";a="352148825"
 Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga001.fm.intel.com with ESMTP; 14 Aug 2019 22:59:29 -0700
+  by orsmga005.jf.intel.com with ESMTP; 14 Aug 2019 23:00:17 -0700
 From:   Felipe Balbi <balbi@kernel.org>
-To:     Yinbo Zhu <yinbo.zhu@nxp.com>,
+To:     Vicente Bergas <vicencb@gmail.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Matthias Brugger <mbrugger@suse.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Cc:     Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>,
-        Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [EXT] Re: [PATCH v1] usb: dwc3: remove the call trace of USBx_GFLADJ
-In-Reply-To: <VI1PR04MB4158B49129BE9E3C00997555E9AC0@VI1PR04MB4158.eurprd04.prod.outlook.com>
-References: <20190729064607.8131-1-yinbo.zhu@nxp.com> <875zn8nt31.fsf@gmail.com> <VI1PR04MB41580DBF1A0C2DC143EE9CE3E9D30@VI1PR04MB4158.eurprd04.prod.outlook.com> <87h86nvtqo.fsf@gmail.com> <VI1PR04MB4158B49129BE9E3C00997555E9AC0@VI1PR04MB4158.eurprd04.prod.outlook.com>
-Date:   Thu, 15 Aug 2019 08:59:28 +0300
-Message-ID: <87v9uzt1dr.fsf@gmail.com>
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: kexec on rk3399
+In-Reply-To: <4fc3e5b5-31fe-41f6-8031-b37454f21437@gmail.com>
+References: <ebcb52be-2063-4e2c-9a09-fdcacb94f855@gmail.com> <c6993a1e-6fc2-44ab-b59e-152142e2ff4d@gmail.com> <87v9uzaocj.fsf@gmail.com> <4fc3e5b5-31fe-41f6-8031-b37454f21437@gmail.com>
+Date:   Thu, 15 Aug 2019 09:00:16 +0300
+Message-ID: <87sgq3t1cf.fsf@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,70 +61,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-Yinbo Zhu <yinbo.zhu@nxp.com> writes:
->> Yinbo Zhu <yinbo.zhu@nxp.com> writes:
->> >> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
->> >> > index
->> >> > 98bce85c29d0..a133d8490322 100644
->> >> > --- a/drivers/usb/dwc3/core.c
->> >> > +++ b/drivers/usb/dwc3/core.c
->> >> > @@ -300,8 +300,7 @@ static void dwc3_frame_length_adjustment(struct
->> >> > dwc3 *dwc)
->> >> >
->> >> >       reg = dwc3_readl(dwc->regs, DWC3_GFLADJ);
->> >> >       dft = reg & DWC3_GFLADJ_30MHZ_MASK;
->> >> > -     if (!dev_WARN_ONCE(dwc->dev, dft == dwc->fladj,
->> >> > -         "request value same as default, ignoring\n")) {
->> >> > +     if (dft != dwc->fladj) {
->> >>
->> >> if the value isn't different, why do you want to change it?
->> >>
->> >> --
->> >> Balbi
->> > Hi Balbi,
->> >
->> > I don't change any value. I was remove that call trace.
->> 
->> Sure you do. The splat only shows when you request a FLADJ value that's the
->> same as the one already in the register. The reason you see the splat is because
->> your requested value is what's already in the HW.
->> 
->> So, again, why are you adding this device tree property if the value is already the
->> correct one?
->> 
->> > In addition that GFLADJ_30MHZ value intial value is 0, and it's value
->> > must be 0x20, if not, usb will not work.
->> 
->> it's not zero, otherwise the splat wouldn't trigger. You're requesting the value
->> that's already in your register by default.
->> 
->> --
->> Balbi
+Vicente Bergas <vicencb@gmail.com> writes:
+>> Vicente Bergas <vicencb@gmail.com> writes:
+>>> On Monday, July 22, 2019 4:31:27 PM CEST, Vicente Bergas wrote:
+>>>> Hi, i have been running linux on rk3399 booted with kexec fine until 5.2
+>>>> From 5.2 onwards, there are memory corruption issues as reported here:
+>>>> http://lkml.iu.edu/hypermail/linux/kernel/1906.2/07211.html
+>>>> kexec has been identified as the principal reason for the issues.
+>>>> 
+>>>> It turns out that kexec has never worked reliably on this platform, ...
+>>> 
+>>> Thank you all for your suggestions on where the issue could be.
+>>> 
+>>> It seems that it was the USB driver.
+>>> Now using v5.2.8 booted with kexec from v5.2.8 with a workaround and
+>>> so far so good. It is being tested on the Sapphire board.
+>>> 
+>>> The workaround is:
+>>> --- a/drivers/usb/dwc3/dwc3-of-simple.c
+>>> +++ b/drivers/usb/dwc3/dwc3-of-simple.c
+>>> @@ -133,6 +133,13 @@
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +static void dwc3_of_simple_shutdown(struct platform_device *pdev)
+>>> +{
+>>> +	struct dwc3_of_simple *simple = platform_get_drvdata(pdev);
+>>> +
+>>> +	reset_control_assert(simple->resets);
+>>> +}
+>>> +
+>>>  static int __maybe_unused dwc3_of_simple_runtime_suspend(struct device 
+>>> *dev)
+>>>  {
+>>>  	struct dwc3_of_simple	*simple = dev_get_drvdata(dev);
+>>> @@ -190,6 +197,7 @@
+>>>  static struct platform_driver dwc3_of_simple_driver = {
+>>>  	.probe		= dwc3_of_simple_probe,
+>>>  	.remove		= dwc3_of_simple_remove,
+>>> +	.shutdown	= dwc3_of_simple_shutdown,
+>>>  	.driver		= {
+>>>  		.name	= "dwc3-of-simple",
+>>>  		.of_match_table = of_dwc3_simple_match,
+>>> 
+>>> If this patch is OK after review i can resubmit it as a pull request.
+>>
+>> not a pull request, just send a patch using git send-email
+>>
+>>> Should a similar change be applied to drivers/usb/dwc3/core.c ?
+>>
+>> Is it necessary? We haven't had any bug reports regarding that. Also, if
+>> we have reset control support in the core driver, why do we need it in
+>> of_simple? Seems like of_simple could just rely on what core does.
 >
-> Hi Balbi,
->    
-> According that rm doc that GFLADJ_30MHZ has a default value is 0x20,
-> when GFLADJ_30MHZ_REG_SEL is 0, this 0x20 is a hard-coded value.
+> the workaround has been tested patching only core.c with
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -1561,6 +1561,13 @@
+>  	return 0;
+>  }
+>  
+> +static void dwc3_shutdown(struct platform_device *pdev)
+> +{
+> +	struct dwc3 *dwc = platform_get_drvdata(pdev);
+> +
+> +	reset_control_assert(dwc->reset);
+> +}
+> +
+>  #ifdef CONFIG_PM
+>  static int dwc3_core_init_for_resume(struct dwc3 *dwc)
+>  {
+> @@ -1866,6 +1873,7 @@
+>  static struct platform_driver dwc3_driver = {
+>  	.probe		= dwc3_probe,
+>  	.remove		= dwc3_remove,
+> +	.shutdown	= dwc3_shutdown,
+>  	.driver		= {
+>  		.name	= "dwc3",
+>  		.of_match_table	= of_match_ptr(of_dwc3_match),
 >
-> But in fact, that default value is 0, please you note!    
->
-> Then according that xhci spec 5.2.4, that register the sixth bit if is
-> 0, then that can support Frame Lenth Timing value.
->
-> So set GFLADJ_30MHZ_REG_SEL to 1 for use FLADJ, then I find that it
-> must use 0x20 usb will work well, even thoug xhci can permit
-> GFLADJ_30MHZ use other value
+> and leaving dwc3-of-simple.c as is, the issue persisted.
 
-You only get the splat because you try to sent GFLADJ to 0x20 and it's
-ALREADY 0x20. This means that you don't need the property in DTS.
-
-> In addition about what you said is about dts patch, and that patch had
-> merged by upstream, patch owner isn't me,
-
-Well, then remove the setting from DTS, since clearly it's not needed.
-
-> My patch is only for remove the call-trace, about why remove it commit
-> information has detail introduce please check!
+That's because your reset controller is not passed to dwc3 core, only to
+your glue layer.
 
 -- 
 balbi
