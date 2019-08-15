@@ -2,117 +2,99 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EBFC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CF6C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B81D2206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 102E2206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:21:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b6z6Kd9S"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NM3/XVGy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732816AbfHOSUe (ORCPT
+        id S1732817AbfHOSVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 14:20:34 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:55173 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731603AbfHOSUe (ORCPT
+        Thu, 15 Aug 2019 14:21:35 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35600 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731537AbfHOSVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 14:20:34 -0400
-Received: by mail-qk1-f202.google.com with SMTP id x28so2840495qki.21
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 11:20:33 -0700 (PDT)
+        Thu, 15 Aug 2019 14:21:35 -0400
+Received: by mail-pf1-f194.google.com with SMTP id d85so1743600pfd.2;
+        Thu, 15 Aug 2019 11:21:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=H21ITYUHPl8jPlR91yWJPzMgLH3swJ34NAnanW4jJ2Y=;
-        b=b6z6Kd9S5maj6QhxrUZQJPhZwPpI2GEo6rAtgpN8eGHPNELcPY8nV0pZ3LqVj09M/D
-         7c3bO/0XfuWYTky3qxJD+D7BxXk3gZllSawZe6fCXXnuX14a747DMMOoLZT0PEIiJwPN
-         +uYRjR0xML8Rios0oin3umT48cQluUB4XnrE01sAXajZIvoeWI9CRAHmmtaunbR/W1zv
-         0PRL0iZ1pjYYEkObmTc/eXr6M7RIUvCTEI/ZfA+O2S0s3F8o5H9dHoljjQtLA0vsvo0X
-         9oLfwj7q7mulTToGtTPzaIF4aD9Qil7QIGz0A/OLkkMxlnkZjDRdfVaz0vIB1fYGRhue
-         J8Nw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+zin5GlnhSNH+SOpEU9khhnTmInFEF1UEDwKlB5C9kA=;
+        b=NM3/XVGy9SF1jaOxiVpiItX5VfkWoZN2fUxinb4xMbPEBPkNwhKWY8Dp/309ZW8yXC
+         jN8dXnlqxKjUP8936OMbskSk1i3laVJ1iMYZsBdw7MiA68MZkIaGATe7S2Ah+MYnYIxO
+         A2+dBuNNniiDlOZSDpBHW+TiI3olQddjLconyXHCdzG+MKMX7V8W++HrcOWR/e0dd4io
+         BDlHJiXLLJXCGwPGrudVDJsZs4+AAZdSf/9uKLkx2qc3hvNM+e6pPBug0NjegV0qsohC
+         119kvupu/v0jkzmix3eLnHnu9cNO5LdteQHf9EG/QGQXN81hQHSXkDWRZZDN5kL8zZPL
+         f+vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=H21ITYUHPl8jPlR91yWJPzMgLH3swJ34NAnanW4jJ2Y=;
-        b=rVdqkxbsDbE3Oh2thi/HWogUqoM3t3djp9BOWk/3nZeIzd3NBOp/3kyXtnDro0sb+y
-         nrFlW/l9dcamLIs+y/4zgxkV6ctG8UGWwgkAQuyizNZ2KpcgRvRTWpDSkQ+pduYZ0vi0
-         bs8CwJJbPxIZgxZTH/cb/H1Dm2WB1QfFHKGRU7K57o0bhLfc36ileXW4xWEliYB5THgY
-         Xop5r+EPlF2aXS2SsA4HWzBY6g9tsW4bhRbeVde/NAizZVkEeI9in/dcowFHZQJ20HlR
-         8SVKfZcKOvA2z4J/4dICVDLQDwRKpKvM8jpcAs59DFNHd4OaRY4qYM1102/hYt/61kV5
-         bHvg==
-X-Gm-Message-State: APjAAAXhV3ehKn2NbPsuz+uKO68XqV5Yx+eaP9hggZY9L1VrWuM3GQgm
-        up4s8i6BqvDA48lHyZagzeESqZTMjA==
-X-Google-Smtp-Source: APXvYqwz2YZ0acx0DMhcQ5rg/7AdnLU8fO1vU4S8pkloDlLcaqG50CCTgNCTfBUA71BqDS4N8OUCcqMOqA==
-X-Received: by 2002:a0c:db88:: with SMTP id m8mr4275575qvk.143.1565893232928;
- Thu, 15 Aug 2019 11:20:32 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 11:20:29 -0700
-Message-Id: <20190815182029.197604-1-nhuck@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-Subject: [PATCH] kbuild: Require W=1 for -Wimplicit-fallthrough with clang
-From:   Nathan Huckleberry <nhuck@google.com>
-To:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        joe@perches.com, miguel.ojeda.sandonis@gmail.com
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Huckleberry <nhuck@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+zin5GlnhSNH+SOpEU9khhnTmInFEF1UEDwKlB5C9kA=;
+        b=VJ5frl8r9kI6RwhK32IoRvoQi4/sxbY9M4TZ2vTVCfaEGDrvQcPFC477Ns+9xtrLbb
+         HdPGAWIB4aow+6EAxYwUGioRdOs3MpN65fkjxU+Hr4SqAJopk+Rsgi1nWfj9/BnSsoI7
+         poLgNVKxUPJG3Scya9xitGiq9DOHzndUKr/FFidyU1m/pEPvObit7DhNkr0dmqcXQLES
+         4fphztg0bg/66+HWfulESpXr73fzgYHT03Kg3Zhq91IorA4Dytq58ZOSseA/3MZ68S4j
+         Nh/D65+QOQDlGOFb2YKhqWzKnxfFlXDPPMNhKet6satXz0zt1Rtjf5CvkQ+Fv/Bf9r6+
+         9hgg==
+X-Gm-Message-State: APjAAAVf8dzzwbfV4NtgqXAFlOm6FWpK9ilBPULW9NKGjbY+VEqZo0hQ
+        /Gnh0H7c+e9+POuTEMIW29o=
+X-Google-Smtp-Source: APXvYqx9xGc4TT6bQ/YTud9tbTwe0CxuDxND95fhSIIhxSN8yG01XmJqeuaXxw3p7z8DFq1ipwVAFQ==
+X-Received: by 2002:a62:f208:: with SMTP id m8mr6572323pfh.108.1565893294902;
+        Thu, 15 Aug 2019 11:21:34 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f27sm2763485pgm.60.2019.08.15.11.21.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 11:21:34 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 11:21:33 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-watchdog@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Rick Ramstetter <rick@anteaterllc.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 14/22] watchdog: ziirave_wdt: Don't try to program
+ readonly flash
+Message-ID: <20190815182133.GJ14388@roeck-us.net>
+References: <20190812200906.31344-1-andrew.smirnov@gmail.com>
+ <20190812200906.31344-15-andrew.smirnov@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812200906.31344-15-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang is updating to support -Wimplicit-fallthrough on C
-https://reviews.llvm.org/D64838. Since clang does not
-support the comment version of fallthrough annotations
-this update causes an additional 50k warnings. Most
-of these warnings (>49k) are duplicates from header files.
+On Mon, Aug 12, 2019 at 01:08:58PM -0700, Andrey Smirnov wrote:
+> Bootloader code will ignore any attempts to write data to any flash
+> area outside of [ZIIRAVE_FIRM_FLASH_MEMORY_START;
+> ZIIRAVE_FIRM_FLASH_MEMORY_END]. Firmware update code already have an
+> appropriate check to skip those areas when validating updated
+> firmware. Firmware programming code, OTOH, does not and will
+> needlessly send no-op I2C traffic. Add an appropriate check to
+> __ziirave_firm_write_pkt() so as to save all of that wasted effort.
+> 
+> While at it, normalize all of the address handling code to use full
+> 32-bit address in units of bytes and convert it to an appropriate
+> value only in places where that is necessary.
+> 
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Rick Ramstetter <rick@anteaterllc.com>
+> Cc: linux-watchdog@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
 
-This patch is intended to be reverted after the warnings
-have been cleaned up.
-
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
----
- Makefile                   | 4 ++++
- scripts/Makefile.extrawarn | 3 +++
- 2 files changed, 7 insertions(+)
-
-diff --git a/Makefile b/Makefile
-index 1b23f95db176..93b9744e66a2 100644
---- a/Makefile
-+++ b/Makefile
-@@ -846,7 +846,11 @@ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
- KBUILD_CFLAGS += -Wdeclaration-after-statement
- 
- # Warn about unmarked fall-throughs in switch statement.
-+# If the compiler is clang, this warning is only enabled if W=1 in
-+# Makefile.extrawarn
-+ifndef CONFIG_CC_IS_CLANG
- KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
-+endif
- 
- # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
- KBUILD_CFLAGS += -Wvla
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index a74ce2e3c33e..e12359d69bb7 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -30,6 +30,9 @@ warning-1 += $(call cc-option, -Wunused-but-set-variable)
- warning-1 += $(call cc-option, -Wunused-const-variable)
- warning-1 += $(call cc-option, -Wpacked-not-aligned)
- warning-1 += $(call cc-option, -Wstringop-truncation)
-+ifdef CONFIG_CC_IS_CLANG
-+KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
-+endif
- # The following turn off the warnings enabled by -Wextra
- warning-1 += -Wno-missing-field-initializers
- warning-1 += -Wno-sign-compare
--- 
-2.23.0.rc1.153.gdeed80330f-goog
-
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
