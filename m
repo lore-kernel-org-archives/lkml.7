@@ -2,141 +2,95 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECF2C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88026C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE00206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 648C42133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731936AbfHOMyZ (ORCPT
+        id S1731945AbfHOMyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:54:25 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:42443 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729627AbfHOMyZ (ORCPT
+        Thu, 15 Aug 2019 08:54:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39742 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731873AbfHOMyi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 08:54:25 -0400
-Received: from uno.localdomain (host64-130-dynamic.5-87-r.retail.telecomitalia.it [87.5.130.64])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 9640A200002;
-        Thu, 15 Aug 2019 12:54:21 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 14:55:48 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC 1/5] media: dt-bindings: Document 'location' property
-Message-ID: <20190815125548.kh2pdxzysafltswc@uno.localdomain>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-2-jacopo@jmondi.org>
- <20190815065635.GJ6133@paasikivi.fi.intel.com>
+        Thu, 15 Aug 2019 08:54:38 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hyFGz-0004Ri-1T; Thu, 15 Aug 2019 14:54:33 +0200
+Date:   Thu, 15 Aug 2019 14:54:32 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+cc:     Paul Menzel <pmenzel@molgen.mpg.de>, x86@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: =?ISO-8859-7?Q?Re=3A_warning=3A_=A1memset=A2_offset_=5B197=2C_4?=
+ =?ISO-8859-7?Q?48=5D_from_the_object_at_=A1boot=5Fparams=A2_i?=
+ =?ISO-8859-7?Q?s_out_of_the_bounds_of_referenced_subobject?=
+ =?ISO-8859-7?Q?_=A1ext=5Framdisk=5Fimage=A2_with_type=2C_=A1unsig?=
+ =?ISO-8859-7?Q?ned_int=A2_at_offset_192_=5B-Warray-bounds=5D?=
+In-Reply-To: <20190815124306.GA17581@kroah.com>
+Message-ID: <alpine.DEB.2.21.1908151452250.1923@nanos.tec.linutronix.de>
+References: <7e44d224-ce7e-909d-e91e-9a643b5fcd71@molgen.mpg.de> <20190815124306.GA17581@kroah.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="guiyz7n4y2542mup"
-Content-Disposition: inline
-In-Reply-To: <20190815065635.GJ6133@paasikivi.fi.intel.com>
-User-Agent: NeoMutt/20180716
+Content-Type: multipart/mixed; boundary="8323329-1831806387-1565873673=:1923"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---guiyz7n4y2542mup
+--8323329-1831806387-1565873673=:1923
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
 
-Hi Sakari,
+On Thu, 15 Aug 2019, Greg KH wrote:
+> On Tue, Aug 13, 2019 at 06:15:51PM +0200, Paul Menzel wrote:
+> > Dear Linux folks,
+> > 
+> > 
+> > No idea, if you are interested in these reports. Building Linux 5.3-rc4,
+> > GCC 9.2.0 shows the warning below.
+> > 
+> > ```
+> > In file included from arch/x86/kernel/head64.c:35:
+> > In function ‘sanitize_boot_params’,
+> >     inlined from ‘copy_bootdata’ at arch/x86/kernel/head64.c:391:2:
+> > ./arch/x86/include/asm/bootparam_utils.h:40:3: warning: ‘memset’ offset [197, 448] from the object at ‘boot_params’ is out of the bounds of referenced subobject ‘ext_ramdisk_image’ with type
+> >  ‘unsigned int’ at offset 192 [-Warray-bounds]
+> >    40 |   memset(&boot_params->ext_ramdisk_image, 0,
+> >       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >    41 |          (char *)&boot_params->efi_info -
+> >       |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >    42 |    (char *)&boot_params->ext_ramdisk_image);
+> >       |    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > ./arch/x86/include/asm/bootparam_utils.h:43:3: warning: ‘memset’ offset [493, 497] from the object at ‘boot_params’ is out of the bounds of referenced subobject ‘kbd_status’ with type ‘unsig
+> > ned char’ at offset 491 [-Warray-bounds]
+> >    43 |   memset(&boot_params->kbd_status, 0,
+> >       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >    44 |          (char *)&boot_params->hdr -
+> >       |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >    45 |          (char *)&boot_params->kbd_status);
+> >       |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > ```
+> 
+> Yeah, it shows up on my builds as well :(
+> 
+> Any chance you can make a fix for this?
 
-On Thu, Aug 15, 2019 at 09:56:35AM +0300, Sakari Ailus wrote:
-> Hi Jacopo,
->
-> On Wed, Aug 14, 2019 at 10:28:11PM +0200, Jacopo Mondi wrote:
-> > Add the 'location' device property, used to specify the camera device
-> > mounting position. The property is particularly meaningful for mobile
-> > devices with a well defined usage orientation.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> > ---
-> >  Documentation/devicetree/bindings/media/video-interfaces.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > index f884ada0bffc..819077b2649c 100644
-> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > @@ -89,6 +89,10 @@ Optional properties
-> >    but a number of degrees counter clockwise. Typical values are 0 and 180
-> >    (upside down).
-> >
-> > +- location: The camera device mounting position, relative to the device
-> > +  usage orientation. Possible values are:
-> > +  0 - Front camera. The image sensor is mounted on the front side of the device.
-> > +  1 - Back camera. The image sensor is mounted on the back side of the device.
->
-> Would it make sense to make this a little more generic? Such as s/image
-> sensor/ device/, for instance?
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/boot&id=a156cadef2fe445ac423670eace517b39a01ccd0
 
-Laurent seems to be of the opposite opinion, but i think staying as
-generic as possible might be a good idea. Now I have a linguistic
-problem though.
-
- +- location: The device mounting position, relative to the device
- +  usage orientation. Possible values are:
- +  0 - Front. The device is mounted on the front side of the device.
- +  1 - Back. The device is mounted on the back side of the device.
-
-So I need one "device" to indicate the lens/flash/image sensor and one
-to indicate the device they're installed on :) Any idea?
-
->
-> Is this also relevant for flash or lens devices?
->
-> Flash (torch) devices could be present, at least principle, without a
-> camera. There once was even such a Nokia phone, 1100 unless I'm mistaken.
-> :-)
-
-Not to mention that lenses are indeed installed in the same package as
-the camera sensor, but they're described as separate device nodes as
-flash leds are, so the mounting location might need to be specified in their
-device node properties too, even if it would be the same as the image
-sensor one.
-
->
-> --
-> Regards,
->
-> Sakari Ailus
-> sakari.ailus@linux.intel.com
-
---guiyz7n4y2542mup
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1VVlMACgkQcjQGjxah
-Vjzusg//X9PG4Cmjuk3pVya27qa6x9ghMPj/jf4z/DUsywmOUgyZ5iVpmOzJBCL0
-FwHslnBZ03WbUjBVIvqnYNbLzd6yIbSE1EyTnjBDfhmeJ8iqTjN+qetPc1hM804S
-5dKlthkP7UFG3PShJbFJoU+26eGfQi3rt94jtpX4I4WawodSCLf6neueow56V/O7
-CBjH5d2oqkk0+gyXNwn8YZyeaUPaFlN7wKuGQqg/O7OgbuV0LZJCoFFEaKZNhJcJ
-gzDXFk7I9ywmlySZ340gLNH3GUiCSqUQYTVkv0vUxihagAtA1HpYEeRde75DOe/4
-1bCrHrb75K0AYOjza0sKoMo6qI6yulSkGepWU9QNwjinWV/3Z/g7GkTABVwCSBNH
-wVOiwxqj834941oqb5vxCAKWrg4i3pA6YWgCJ5oMFuxrCE4FjjQm7V0kCyErSFUL
-QFlt+KhM8AhQETJ/uS5u/nwh70WFpVpcI0A4yAbgbCIZLl7Ta4SaOJOiqDZs1XQU
-c1nTGXbXOjo2bHqGRabHupNF876E38CHUYB+ubvjkzJEzczvk94gTFNfqeaEdiOq
-XB17wFZT7UHTKaKrIEOnKvPdJd5hMp0fTkNoDM6g0is8m1vqXixf+aHQcJEpIA7S
-i4IiRb6s4ipRLI9ymsmNBysjXJZ9z1SsHhUFbaJy6WbbhBKA668=
-=+0WF
------END PGP SIGNATURE-----
-
---guiyz7n4y2542mup--
+I guess I need to reprioritize that and mark it for stable....
+--8323329-1831806387-1565873673=:1923--
