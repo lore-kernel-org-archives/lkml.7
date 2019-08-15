@@ -4,68 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F25C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380C1C3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 266842084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042482084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565889280;
-	bh=XlB3EbayOSrDJPAc7mG/skmWI+reBdAXbZrxQX47lPc=;
+	s=default; t=1565889286;
+	bh=qUIIGpvuFgwUbEDSa1GLQ61HvZRWV1u1BG//aUjLwwg=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=c5C7H3mAcy0ZbG71hVhBAE32pxQWtSxKPfZ+KF/XD0yT5KjYR7BfO2sYbeuzJX6rJ
-	 A8Pe+oadiseaWhpPwr1dV1Ol9fxOnVtqjn8P3mzZCuK2cYuWuzg9FAPH/mZdTMwlKM
-	 SbFvtovmK8aTtbcxBMSdBTqx35JjPxaTJDADcqUE=
+	b=vAlpwhvfqLHRV/zYIIL6qXShBgiBXhvMBTknRCuvPYmNYKZwz5X5ZV/xRGurV5u4h
+	 AYKK7UNgvNba5m5EWObpfsWc9EysRGR0xkM+gSe3Ale+Rh0JZfSC2Y0nchyXXDLLCL
+	 dUb/MdHaQsOLt2xsNjyYjXiESMrEFsn15ulqnXoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731884AbfHOROj (ORCPT
+        id S1731908AbfHOROo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:14:39 -0400
-Received: from mail-wm1-f99.google.com ([209.85.128.99]:50344 "EHLO
-        mail-wm1-f99.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731784AbfHOROg (ORCPT
+        Thu, 15 Aug 2019 13:14:44 -0400
+Received: from mail-ed1-f99.google.com ([209.85.208.99]:38371 "EHLO
+        mail-ed1-f99.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731827AbfHOROi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:14:36 -0400
-Received: by mail-wm1-f99.google.com with SMTP id v15so1882697wml.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:35 -0700 (PDT)
+        Thu, 15 Aug 2019 13:14:38 -0400
+Received: by mail-ed1-f99.google.com with SMTP id r12so2720786edo.5
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=gE06bHYUuZ3QYmVI3yQvlrzHi0/sRfjaZGC6+azO7fM=;
-        b=KGezymgVibZPJA9h9lnkvRX6FXinDYdsFg73ExOmV+cR+0eX4SO2ghL/g7YWXOb9wM
-         CUfLte4aR7YYimv7+Xq/8ycyYJj+Fn/vXm5QSqQyRZ+rAD42Z4hC+/bULByj4zvHB8ez
-         6aVpriJzvXwOTk61Eyfis2lwcpGJOI2iNVuidY14dI4drrNb8cH09P4GRzod/9B6sGVG
-         rkJsN111CM0ns2Zlmr/q+ECmt/34OgdhWgSFlzpROkLrw6nTWMQ0o7gfw2vQkEpyOYex
-         XxqeZh39YYG19HTni1K+JiBD462+6bN6feio5Pv+lL7+RytDhxtvzeemJ0+CuqP08ozb
-         IL4g==
-X-Gm-Message-State: APjAAAUnKDlNRtpVLN/kltK3FznRWjOKjUWu06uLZBANVcnMK3W1cxN5
-        pOfMA7nfC3B7xeiR2wj5nOvDFRKzVw7K6O7vq14nTZTYzMk7gM34E5m66eHQ1w9bhg==
-X-Google-Smtp-Source: APXvYqx8H4C2nURJML4ac5xRNzSLHJnRxhU9cISiLhVP/yaYThltxH7sBXT+ks64GHr0RxGbY54V/Qu1F5xE
-X-Received: by 2002:a05:600c:2411:: with SMTP id 17mr3424992wmp.171.1565889275152;
-        Thu, 15 Aug 2019 10:14:35 -0700 (PDT)
+        bh=STOMTB8soQ9SpdsHI1kcwCTKID5AQX15fSXLD/Rbf0M=;
+        b=KQXFVqadKbd1VdjiK57cz927LmQtxURTQpOaEGLNxjgItx7zMHta+bfTWi6Khup+LX
+         cPUflXNUhiMKTsRrC0VcqYaHla9xAeGNrIbwhZWfRyOok469IeXsL+7VOj3ckmhwokUI
+         0ik2iDy39ZMBFGg64q5jRTObzLhBo1DeTiWlrn69Hr3XIUBUp53oNaIXh3N8F9NXe/bx
+         jr4J2CbW6wCl0GFYgZtPb7EV1hQs0QHAAdDSeD/GOFCEW1ZOuxH5fWzzO1te3ILJLhRy
+         dL/MiCHRCf57MfiPUJOXfiGfE+DrE6jGCimLCPdpJ90daRnXR7yVP3GXbLI5refOATPC
+         crXg==
+X-Gm-Message-State: APjAAAU8CySGQSv8r0GJ5V/JYOBJwDmK3oqg+amo7b/vDoNvAZS6ARZL
+        mhznZmPTJ7NCFZqq3HgqNnvFp87U+qhHI2FqiO3poDNdLQSzL93Z/NkS16rV9caRfQ==
+X-Google-Smtp-Source: APXvYqzyLgL1YBE8FNASctPwC+Lz8lFYO0GlBacef5FmFcI+vyr96Ej3Sj0TANIE49KimsRnjlx4FWa+dJ98
+X-Received: by 2002:a50:ba81:: with SMTP id x1mr6456670ede.257.1565889276186;
+        Thu, 15 Aug 2019 10:14:36 -0700 (PDT)
 Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id e9sm57426wre.37.2019.08.15.10.14.35
+        by smtp-relay.gmail.com with ESMTPS id m17sm21059ejc.94.2019.08.15.10.14.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 10:14:35 -0700 (PDT)
+        Thu, 15 Aug 2019 10:14:36 -0700 (PDT)
 X-Relaying-Domain: sirena.org.uk
 Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1hyJKc-00052p-TE; Thu, 15 Aug 2019 17:14:34 +0000
+        id 1hyJKd-000531-Qb; Thu, 15 Aug 2019 17:14:35 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 4C4D62742BC7; Thu, 15 Aug 2019 18:14:34 +0100 (BST)
+        id 3A8AC2742BC7; Thu, 15 Aug 2019 18:14:35 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     broonie@kernel.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: core: Add label to collate of_node_put() statements" to the regulator tree
-In-Reply-To: <20190815053704.32156-1-nishkadg.linux@gmail.com>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     Adam Ford <aford173@gmail.com>, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, nm@ti.com, sboyd@kernel.org,
+        stable@vger.kernel.org, tony@atomide.com, vireshk@kernel.org
+Subject: Applied "regulator: twl: voltage lists for vdd1/2 on twl4030" to the regulator tree
+In-Reply-To: <20190814214319.24087-1-andreas@kemnade.info>
 X-Patchwork-Hint: ignore
-Message-Id: <20190815171434.4C4D62742BC7@ypsilon.sirena.org.uk>
-Date:   Thu, 15 Aug 2019 18:14:34 +0100 (BST)
+Message-Id: <20190815171435.3A8AC2742BC7@ypsilon.sirena.org.uk>
+Date:   Thu, 15 Aug 2019 18:14:35 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -73,11 +76,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: core: Add label to collate of_node_put() statements
+   regulator: twl: voltage lists for vdd1/2 on twl4030
 
 has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -98,53 +101,109 @@ to this mail.
 Thanks,
 Mark
 
-From 81eeb0a35c2e40bcaf122c6aae3be4f7d9abe201 Mon Sep 17 00:00:00 2001
-From: Nishka Dasgupta <nishkadg.linux@gmail.com>
-Date: Thu, 15 Aug 2019 11:07:04 +0530
-Subject: [PATCH] regulator: core: Add label to collate of_node_put()
- statements
+From 3829100a63724f6dbf264b2a7f06e7f638ed952d Mon Sep 17 00:00:00 2001
+From: Andreas Kemnade <andreas@kemnade.info>
+Date: Wed, 14 Aug 2019 23:43:19 +0200
+Subject: [PATCH] regulator: twl: voltage lists for vdd1/2 on twl4030
 
-In function of_get_child_regulator(), the loop for_each_child_of_node()
-contains two mid-loop return statements, each preceded by a statement
-putting child. In order to reduce this repetition, create a new label,
-err_node_put, that puts child and then returns the required value;
-edit the mid-loop return blocks to instead go to this new label.
+_opp_supported_by_regulators() wrongly ignored errors from
+regulator_is_supported_voltage(), so it considered errors as
+success. Since
+commit 498209445124 ("regulator: core: simplify return value on suported_voltage")
+regulator_is_supported_voltage() returns a real boolean, so
+errors make _opp_supported_by_regulators() return false.
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-Link: https://lore.kernel.org/r/20190815053704.32156-1-nishkadg.linux@gmail.com
+That reveals a problem with the declaration of the VDD1/2
+regulators on twl4030.
+The VDD1/VDD2 regulators on twl4030 are neither defined with
+voltage lists nor with the continuous flag set, so
+regulator_is_supported_voltage() returns false and an error
+before above mentioned commit (which was considered success)
+The result is that after the above mentioned commit cpufreq
+does not work properly e.g. dm3730.
+
+[    2.490997] core: _opp_supported_by_regulators: OPP minuV: 1012500 maxuV: 1012500, not supported by regulator
+[    2.501617] cpu cpu0: _opp_add: OPP not supported by regulators (300000000)
+[    2.509246] core: _opp_supported_by_regulators: OPP minuV: 1200000 maxuV: 1200000, not supported by regulator
+[    2.519775] cpu cpu0: _opp_add: OPP not supported by regulators (600000000)
+[    2.527313] core: _opp_supported_by_regulators: OPP minuV: 1325000 maxuV: 1325000, not supported by regulator
+[    2.537750] cpu cpu0: _opp_add: OPP not supported by regulators (800000000)
+
+The patch fixes declaration of VDD1/2 regulators by
+adding proper voltage lists.
+
+Fixes: 498209445124 ("regulator: core: simplify return value on suported_voltage")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Tested-by: Adam Ford <aford173@gmail.com> #logicpd-torpedo-37xx-devkit
+Link: https://lore.kernel.org/r/20190814214319.24087-1-andreas@kemnade.info
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/core.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/regulator/twl-regulator.c | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 7a5d52948703..4a27a46ec6e7 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -380,16 +380,17 @@ static struct device_node *of_get_child_regulator(struct device_node *parent,
+diff --git a/drivers/regulator/twl-regulator.c b/drivers/regulator/twl-regulator.c
+index 6fa15b2d6fb3..866b4dd01da9 100644
+--- a/drivers/regulator/twl-regulator.c
++++ b/drivers/regulator/twl-regulator.c
+@@ -359,6 +359,17 @@ static const u16 VINTANA2_VSEL_table[] = {
+ 	2500, 2750,
+ };
  
- 		if (!regnode) {
- 			regnode = of_get_child_regulator(child, prop_name);
--			if (regnode) {
--				of_node_put(child);
--				return regnode;
--			}
-+			if (regnode)
-+				goto err_node_put;
- 		} else {
--			of_node_put(child);
--			return regnode;
-+			goto err_node_put;
- 		}
- 	}
- 	return NULL;
++/* 600mV to 1450mV in 12.5 mV steps */
++static const struct regulator_linear_range VDD1_ranges[] = {
++	REGULATOR_LINEAR_RANGE(600000, 0, 68, 12500)
++};
 +
-+err_node_put:
-+	of_node_put(child);
-+	return regnode;
++/* 600mV to 1450mV in 12.5 mV steps, everything above = 1500mV */
++static const struct regulator_linear_range VDD2_ranges[] = {
++	REGULATOR_LINEAR_RANGE(600000, 0, 68, 12500),
++	REGULATOR_LINEAR_RANGE(1500000, 69, 69, 12500)
++};
++
+ static int twl4030ldo_list_voltage(struct regulator_dev *rdev, unsigned index)
+ {
+ 	struct twlreg_info	*info = rdev_get_drvdata(rdev);
+@@ -427,6 +438,8 @@ static int twl4030smps_get_voltage(struct regulator_dev *rdev)
  }
  
- /**
+ static const struct regulator_ops twl4030smps_ops = {
++	.list_voltage   = regulator_list_voltage_linear_range,
++
+ 	.set_voltage	= twl4030smps_set_voltage,
+ 	.get_voltage	= twl4030smps_get_voltage,
+ };
+@@ -466,7 +479,8 @@ static const struct twlreg_info TWL4030_INFO_##label = { \
+ 		}, \
+ 	}
+ 
+-#define TWL4030_ADJUSTABLE_SMPS(label, offset, num, turnon_delay, remap_conf) \
++#define TWL4030_ADJUSTABLE_SMPS(label, offset, num, turnon_delay, remap_conf, \
++		n_volt) \
+ static const struct twlreg_info TWL4030_INFO_##label = { \
+ 	.base = offset, \
+ 	.id = num, \
+@@ -479,6 +493,9 @@ static const struct twlreg_info TWL4030_INFO_##label = { \
+ 		.owner = THIS_MODULE, \
+ 		.enable_time = turnon_delay, \
+ 		.of_map_mode = twl4030reg_map_mode, \
++		.n_voltages = n_volt, \
++		.n_linear_ranges = ARRAY_SIZE(label ## _ranges), \
++		.linear_ranges = label ## _ranges, \
+ 		}, \
+ 	}
+ 
+@@ -518,8 +535,8 @@ TWL4030_ADJUSTABLE_LDO(VSIM, 0x37, 9, 100, 0x00);
+ TWL4030_ADJUSTABLE_LDO(VDAC, 0x3b, 10, 100, 0x08);
+ TWL4030_ADJUSTABLE_LDO(VINTANA2, 0x43, 12, 100, 0x08);
+ TWL4030_ADJUSTABLE_LDO(VIO, 0x4b, 14, 1000, 0x08);
+-TWL4030_ADJUSTABLE_SMPS(VDD1, 0x55, 15, 1000, 0x08);
+-TWL4030_ADJUSTABLE_SMPS(VDD2, 0x63, 16, 1000, 0x08);
++TWL4030_ADJUSTABLE_SMPS(VDD1, 0x55, 15, 1000, 0x08, 68);
++TWL4030_ADJUSTABLE_SMPS(VDD2, 0x63, 16, 1000, 0x08, 69);
+ /* VUSBCP is managed *only* by the USB subchip */
+ TWL4030_FIXED_LDO(VINTANA1, 0x3f, 1500, 11, 100, 0x08);
+ TWL4030_FIXED_LDO(VINTDIG, 0x47, 1500, 13, 100, 0x08);
 -- 
 2.20.1
 
