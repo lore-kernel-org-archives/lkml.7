@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B09C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A204DC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19CE21852
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8306B206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731498AbfHOLSX (ORCPT
+        id S1731568AbfHOLS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 07:18:23 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:38038 "EHLO inva020.nxp.com"
+        Thu, 15 Aug 2019 07:18:28 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:42662 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731080AbfHOLSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 07:18:20 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 004A81A0268;
-        Thu, 15 Aug 2019 13:18:18 +0200 (CEST)
+        id S1731216AbfHOLSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 07:18:23 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C82F42000B7;
+        Thu, 15 Aug 2019 13:18:20 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1CA8D1A00FE;
-        Thu, 15 Aug 2019 13:18:10 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E3819200296;
+        Thu, 15 Aug 2019 13:18:12 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 534E44030E;
-        Thu, 15 Aug 2019 19:18:00 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8A56340313;
+        Thu, 15 Aug 2019 19:18:03 +0800 (SGT)
 From:   Anson.Huang@nxp.com
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
@@ -37,9 +37,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-pm@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 4/6] cpufreq: imx-cpufreq-dt: Add i.MX8MN support
-Date:   Thu, 15 Aug 2019 06:59:41 -0400
-Message-Id: <1565866783-19672-4-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 6/6] arm64: dts: imx8mn: Add cpu-freq support
+Date:   Thu, 15 Aug 2019 06:59:43 -0400
+Message-Id: <1565866783-19672-6-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565866783-19672-1-git-send-email-Anson.Huang@nxp.com>
 References: <1565866783-19672-1-git-send-email-Anson.Huang@nxp.com>
@@ -51,58 +51,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-i.MX8MN has different speed grading definition as below, it has 4 bits
-to define speed grading, add support for it.
-
- SPEED_GRADE[3:0]    MHz
-    0000            2300
-    0001            2200
-    0010            2100
-    0011            2000
-    0100            1900
-    0101            1800
-    0110            1700
-    0111            1600
-    1000            1500
-    1001            1400
-    1010            1300
-    1011            1200
-    1100            1100
-    1101            1000
-    1110             900
-    1111             800
+Add A53 OPP table, cpu regulator and speed grading node to
+support cpu-freq driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/cpufreq/imx-cpufreq-dt.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts |  4 +++
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi         | 41 +++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
 
-diff --git a/drivers/cpufreq/imx-cpufreq-dt.c b/drivers/cpufreq/imx-cpufreq-dt.c
-index 4f85f31..35db14c 100644
---- a/drivers/cpufreq/imx-cpufreq-dt.c
-+++ b/drivers/cpufreq/imx-cpufreq-dt.c
-@@ -16,6 +16,7 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+index 10ebf77..11c705d 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+@@ -27,6 +27,10 @@
+ 	};
+ };
  
- #define OCOTP_CFG3_SPEED_GRADE_SHIFT	8
- #define OCOTP_CFG3_SPEED_GRADE_MASK	(0x3 << 8)
-+#define IMX8MN_OCOTP_CFG3_SPEED_GRADE_MASK	(0xf << 8)
- #define OCOTP_CFG3_MKT_SEGMENT_SHIFT    6
- #define OCOTP_CFG3_MKT_SEGMENT_MASK     (0x3 << 6)
++&A53_0 {
++	cpu-supply = <&buck2_reg>;
++};
++
+ &iomuxc {
+ 	pinctrl-names = "default";
  
-@@ -34,7 +35,12 @@ static int imx_cpufreq_dt_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+index 1d8899b..785f4c4 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+@@ -51,6 +51,9 @@
+ 			clocks = <&clk IMX8MN_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			operating-points-v2 = <&a53_opp_table>;
++			nvmem-cells = <&cpu_speed_grade>;
++			nvmem-cell-names = "speed_grade";
+ 		};
  
--	speed_grade = (cell_value & OCOTP_CFG3_SPEED_GRADE_MASK) >> OCOTP_CFG3_SPEED_GRADE_SHIFT;
-+	if (of_machine_is_compatible("fsl,imx8mn"))
-+		speed_grade = (cell_value & IMX8MN_OCOTP_CFG3_SPEED_GRADE_MASK)
-+			      >> OCOTP_CFG3_SPEED_GRADE_SHIFT;
-+	else
-+		speed_grade = (cell_value & OCOTP_CFG3_SPEED_GRADE_MASK)
-+			      >> OCOTP_CFG3_SPEED_GRADE_SHIFT;
- 	mkt_segment = (cell_value & OCOTP_CFG3_MKT_SEGMENT_MASK) >> OCOTP_CFG3_MKT_SEGMENT_SHIFT;
+ 		A53_1: cpu@1 {
+@@ -61,6 +64,7 @@
+ 			clocks = <&clk IMX8MN_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			operating-points-v2 = <&a53_opp_table>;
+ 		};
  
- 	/*
+ 		A53_2: cpu@2 {
+@@ -71,6 +75,7 @@
+ 			clocks = <&clk IMX8MN_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			operating-points-v2 = <&a53_opp_table>;
+ 		};
+ 
+ 		A53_3: cpu@3 {
+@@ -81,6 +86,7 @@
+ 			clocks = <&clk IMX8MN_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			operating-points-v2 = <&a53_opp_table>;
+ 		};
+ 
+ 		A53_L2: l2-cache0 {
+@@ -88,6 +94,35 @@
+ 		};
+ 	};
+ 
++	a53_opp_table: opp-table {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-1200000000 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <850000>;
++			opp-supported-hw = <0xb00>, <0x7>;
++			clock-latency-ns = <150000>;
++			opp-suspend;
++		};
++
++		opp-1400000000 {
++			opp-hz = /bits/ 64 <1400000000>;
++			opp-microvolt = <950000>;
++			opp-supported-hw = <0x300>, <0x7>;
++			clock-latency-ns = <150000>;
++			opp-suspend;
++		};
++
++		opp-1500000000 {
++			opp-hz = /bits/ 64 <1500000000>;
++			opp-microvolt = <1000000>;
++			opp-supported-hw = <0x100>, <0x3>;
++			clock-latency-ns = <150000>;
++			opp-suspend;
++		};
++	};
++
+ 	memory@40000000 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000 0 0x80000000>;
+@@ -288,6 +323,12 @@
+ 				compatible = "fsl,imx8mn-ocotp", "fsl,imx7d-ocotp", "syscon";
+ 				reg = <0x30350000 0x10000>;
+ 				clocks = <&clk IMX8MN_CLK_OCOTP_ROOT>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				cpu_speed_grade: speed-grade@10 {
++					reg = <0x10 4>;
++				};
+ 			};
+ 
+ 			anatop: anatop@30360000 {
 -- 
 2.7.4
 
