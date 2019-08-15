@@ -2,319 +2,120 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94077C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFA5C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5856B205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC78F2086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:23:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FqJsEUX9"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FZR9lfPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387738AbfHOXVn (ORCPT
+        id S2387750AbfHOXX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 19:21:43 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41073 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731980AbfHOXVn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 19:21:43 -0400
-Received: by mail-ot1-f66.google.com with SMTP id o101so7978945ota.8
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 16:21:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dKki/EwYrEwHcUw/EYpE1A8bRtkdaIPBT0A+rYW833k=;
-        b=FqJsEUX9p2wJpt0QFo4kVRltYAd4kE8/zf05Glq1awj72YkDCwC7a2k5uFBU8npGFL
-         QfYnI4GpcsTnPpFAbdygnd05TGAIKRFnqfDyPf1s8A8s3zdt06ymK68sFO94ObOkpukU
-         f77EXc5p++cCSZo5EWrNoeATWln0Aon7ESr2igTXrlIW7h2UxzLx5qRdXCFUd+4L2mqR
-         0/HdgDUqKqKE+TmIdJqJojMsY54IVcR3kezx3rZzTLHkwY9BGRmvU4vruBdo+LjP1GQD
-         hjbEkdLrRtnI/f1w+2MFsO7qmpaMyEaSQV6lNZZ6u9vW6V232fdmmy18YUIlZyySIxwF
-         BXOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dKki/EwYrEwHcUw/EYpE1A8bRtkdaIPBT0A+rYW833k=;
-        b=An4rTJJQATnQYNFaPexVGuc/JLauPg8VpbaKOPNFrFH6ntoOR66s489f03DL7I74on
-         4XTp29MJbg6FoxHkKysEdo4pEQ80m2BFnIWuzE4hktjvm42lxV5NL3hCARMoGqn3c6UN
-         bgGwFiaDn0du0dQgudTA0+jMiNV2pZN9RYr/K00i5p0lmr/2z0QY+v6IQONerXm7otPu
-         +2rmu1eyTqHkpVmLZ95lejdDExYzI5xVC1nHsgFbq77u8nfeIdfW90xmT6ekec+AW63s
-         fRrrzW3+717aOyqaLn6rPzaiIERvQYI6bLeXXsUtkVUD+ObY8/XBdSInB5+X2qQJuIa2
-         eY9g==
-X-Gm-Message-State: APjAAAWd/3idi7P1eGj3eU7qBNif8R+8ihnaFxLJykW1qKk1BPmzWC3h
-        21qNP429AB15RA1v8StNAltUbHn7dndGiIwmvR4VVA==
-X-Google-Smtp-Source: APXvYqxSjZHhbV1aP2RGVVFy2EPRPYaaT1UXVhJW6VhVjBobqiJVhmRI6Ldx53tmxKJWmjGthsUVUJgqdFvYe2CWjjc=
-X-Received: by 2002:a9d:6508:: with SMTP id i8mr5532464otl.355.1565911301709;
- Thu, 15 Aug 2019 16:21:41 -0700 (PDT)
+        Thu, 15 Aug 2019 19:23:57 -0400
+Received: from ozlabs.org ([203.11.71.1]:59781 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731476AbfHOXX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 19:23:57 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 468jFQ4x00z9sDB;
+        Fri, 16 Aug 2019 09:23:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565911435;
+        bh=kks2UrOgD/eep7ZxAVkInH+kO1NgToNJBllyhwrLo4s=;
+        h=Date:From:To:Cc:Subject:From;
+        b=FZR9lfPSSyw5DZVXfhI5bxPAeKEsaiJZt3w7SFFA1S5D06IDbUuT6KusRKbzZTmq/
+         fYGlWBYQFd5N3HlGYoxfa/bzzoXc6+eCjlLuAmER25tqJLI+3PFW/USn2OBrK6Xx28
+         K5kB6kcPRBmsWhWJ0z9c/DyU/cQUFHRJO7izRUKFabD/0Oc8JJgvejjoiqBc/kvUNZ
+         fjKKwE73T6eMBN0Li39DC4xmyZYkzl03EhFt5K1upmht/90Dgyow5KLaG5QG1iYUhy
+         WIhUe6EKUPBDbTqroipCXeu/NJj+rYL42uF2i8otCPa2TAVGsNrGDT4nckOw3s9R/2
+         V23iGaVpnQXug==
+Date:   Fri, 16 Aug 2019 09:23:41 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        ARM <linux-arm-kernel@lists.infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the arm-soc tree
+Message-ID: <20190816092341.06899516@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190808231340.53601-1-almasrymina@google.com> <20190815035352.14952-1-hdanton@sina.com>
-In-Reply-To: <20190815035352.14952-1-hdanton@sina.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Thu, 15 Aug 2019 16:21:30 -0700
-Message-ID: <CAHS8izP5dJsDmLuL14q8aJS_hhd1svq1FPpTNL+qKW8+6mm76g@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 1/5] hugetlb_cgroup: Add hugetlb_cgroup reservation counter
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>, shuah <shuah@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>, akpm@linux-foundation.org,
-        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/OoFaWTzmhYPTaAT95jsTflI";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 8:54 PM Hillf Danton <hdanton@sina.com> wrote:
->
->
-> On Thu,  8 Aug 2019 16:13:36 -0700 Mina Almasry wrote:
-> >
-> > These counters will track hugetlb reservations rather than hugetlb
-> > memory faulted in. This patch only adds the counter, following patches
-> > add the charging and uncharging of the counter.
-> > ---
->
->   !?!
->
+--Sig_/OoFaWTzmhYPTaAT95jsTflI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for reviewing. I'm not sure what you're referring to though.
-What's wrong here?
+Hi all,
 
-> >  include/linux/hugetlb.h |  2 +-
-> >  mm/hugetlb_cgroup.c     | 86 +++++++++++++++++++++++++++++++++++++----
-> >  2 files changed, 80 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-> > index edfca42783192..6777b3013345d 100644
-> > --- a/include/linux/hugetlb.h
-> > +++ b/include/linux/hugetlb.h
-> > @@ -340,7 +340,7 @@ struct hstate {
-> >       unsigned int surplus_huge_pages_node[MAX_NUMNODES];
-> >  #ifdef CONFIG_CGROUP_HUGETLB
-> >       /* cgroup control files */
-> > -     struct cftype cgroup_files[5];
-> > +     struct cftype cgroup_files[9];
->
-> Move that enum in this header file and replace numbers with characters
-> to easy both reading and maintaining.
-> >  #endif
-> >       char name[HSTATE_NAME_LEN];
-> >  };
-> > diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-> > index 68c2f2f3c05b7..708103663988a 100644
-> > --- a/mm/hugetlb_cgroup.c
-> > +++ b/mm/hugetlb_cgroup.c
-> > @@ -25,6 +25,10 @@ struct hugetlb_cgroup {
-> >        * the counter to account for hugepages from hugetlb.
-> >        */
-> >       struct page_counter hugepage[HUGE_MAX_HSTATE];
-> > +     /*
-> > +      * the counter to account for hugepage reservations from hugetlb.
-> > +      */
-> > +     struct page_counter reserved_hugepage[HUGE_MAX_HSTATE];
-> >  };
-> >
-> >  #define MEMFILE_PRIVATE(x, val)      (((x) << 16) | (val))
-> > @@ -33,6 +37,15 @@ struct hugetlb_cgroup {
-> >
-> >  static struct hugetlb_cgroup *root_h_cgroup __read_mostly;
-> >
-> > +static inline
-> > +struct page_counter *get_counter(struct hugetlb_cgroup *h_cg, int idx,
-> > +                              bool reserved)
->
-> s/get_/hugetlb_cgroup_get_/ to make it not too generic.
-> > +{
-> > +     if (reserved)
-> > +             return  &h_cg->reserved_hugepage[idx];
-> > +     return &h_cg->hugepage[idx];
-> > +}
-> > +
-> >  static inline
-> >  struct hugetlb_cgroup *hugetlb_cgroup_from_css(struct cgroup_subsys_state *s)
-> >  {
-> > @@ -256,28 +269,42 @@ void hugetlb_cgroup_uncharge_cgroup(int idx, unsigned long nr_pages,
-> >
-> >  enum {
-> >       RES_USAGE,
-> > +     RES_RESERVATION_USAGE,
-> >       RES_LIMIT,
-> > +     RES_RESERVATION_LIMIT,
-> >       RES_MAX_USAGE,
-> > +     RES_RESERVATION_MAX_USAGE,
-> >       RES_FAILCNT,
-> > +     RES_RESERVATION_FAILCNT,
-> >  };
-> >
-> >  static u64 hugetlb_cgroup_read_u64(struct cgroup_subsys_state *css,
-> >                                  struct cftype *cft)
-> >  {
-> >       struct page_counter *counter;
-> > +     struct page_counter *reserved_counter;
-> >       struct hugetlb_cgroup *h_cg = hugetlb_cgroup_from_css(css);
-> >
-> >       counter = &h_cg->hugepage[MEMFILE_IDX(cft->private)];
-> > +     reserved_counter = &h_cg->reserved_hugepage[MEMFILE_IDX(cft->private)];
-> >
-> >       switch (MEMFILE_ATTR(cft->private)) {
-> >       case RES_USAGE:
-> >               return (u64)page_counter_read(counter) * PAGE_SIZE;
-> > +     case RES_RESERVATION_USAGE:
-> > +             return (u64)page_counter_read(reserved_counter) * PAGE_SIZE;
-> >       case RES_LIMIT:
-> >               return (u64)counter->max * PAGE_SIZE;
-> > +     case RES_RESERVATION_LIMIT:
-> > +             return (u64)reserved_counter->max * PAGE_SIZE;
-> >       case RES_MAX_USAGE:
-> >               return (u64)counter->watermark * PAGE_SIZE;
-> > +     case RES_RESERVATION_MAX_USAGE:
-> > +             return (u64)reserved_counter->watermark * PAGE_SIZE;
-> >       case RES_FAILCNT:
-> >               return counter->failcnt;
-> > +     case RES_RESERVATION_FAILCNT:
-> > +             return reserved_counter->failcnt;
-> >       default:
-> >               BUG();
-> >       }
-> > @@ -291,6 +318,7 @@ static ssize_t hugetlb_cgroup_write(struct kernfs_open_file *of,
-> >       int ret, idx;
-> >       unsigned long nr_pages;
-> >       struct hugetlb_cgroup *h_cg = hugetlb_cgroup_from_css(of_css(of));
-> > +     bool reserved = false;
-> >
-> >       if (hugetlb_cgroup_is_root(h_cg)) /* Can't set limit on root */
-> >               return -EINVAL;
-> > @@ -303,10 +331,16 @@ static ssize_t hugetlb_cgroup_write(struct kernfs_open_file *of,
-> >       idx = MEMFILE_IDX(of_cft(of)->private);
-> >       nr_pages = round_down(nr_pages, 1 << huge_page_order(&hstates[idx]));
-> >
-> > +     if (MEMFILE_ATTR(of_cft(of)->private) == RES_RESERVATION_LIMIT) {
-> > +             reserved = true;
-> > +     }
-> > +
-> >       switch (MEMFILE_ATTR(of_cft(of)->private)) {
-> > +     case RES_RESERVATION_LIMIT:
->                 reserved = true;
->                 /* fall thru */
->
-> >       case RES_LIMIT:
-> >               mutex_lock(&hugetlb_limit_mutex);
-> > -             ret = page_counter_set_max(&h_cg->hugepage[idx], nr_pages);
-> > +             ret = page_counter_set_max(get_counter(h_cg, idx, reserved),
-> > +                                        nr_pages);
-> >               mutex_unlock(&hugetlb_limit_mutex);
-> >               break;
-> >       default:
-> > @@ -320,18 +354,26 @@ static ssize_t hugetlb_cgroup_reset(struct kernfs_open_file *of,
-> >                                   char *buf, size_t nbytes, loff_t off)
-> >  {
-> >       int ret = 0;
-> > -     struct page_counter *counter;
-> > +     struct page_counter *counter, *reserved_counter;
-> >       struct hugetlb_cgroup *h_cg = hugetlb_cgroup_from_css(of_css(of));
-> >
-> >       counter = &h_cg->hugepage[MEMFILE_IDX(of_cft(of)->private)];
-> > +     reserved_counter = &h_cg->reserved_hugepage[
-> > +             MEMFILE_IDX(of_cft(of)->private)];
-> >
-> >       switch (MEMFILE_ATTR(of_cft(of)->private)) {
-> >       case RES_MAX_USAGE:
-> >               page_counter_reset_watermark(counter);
-> >               break;
-> > +     case RES_RESERVATION_MAX_USAGE:
-> > +             page_counter_reset_watermark(reserved_counter);
-> > +             break;
-> >       case RES_FAILCNT:
-> >               counter->failcnt = 0;
-> >               break;
-> > +     case RES_RESERVATION_FAILCNT:
-> > +             reserved_counter->failcnt = 0;
-> > +             break;
-> >       default:
-> >               ret = -EINVAL;
-> >               break;
-> > @@ -357,7 +399,7 @@ static void __init __hugetlb_cgroup_file_init(int idx)
-> >       struct hstate *h = &hstates[idx];
-> >
-> >       /* format the size */
-> > -     mem_fmt(buf, 32, huge_page_size(h));
-> > +     mem_fmt(buf, sizeof(buf), huge_page_size(h));
-> >
-> >       /* Add the limit file */
-> >       cft = &h->cgroup_files[0];
-> > @@ -366,28 +408,58 @@ static void __init __hugetlb_cgroup_file_init(int idx)
-> >       cft->read_u64 = hugetlb_cgroup_read_u64;
-> >       cft->write = hugetlb_cgroup_write;
-> >
-> > -     /* Add the usage file */
-> > +     /* Add the reservation limit file */
-> >       cft = &h->cgroup_files[1];
-> > +     snprintf(cft->name, MAX_CFTYPE_NAME, "%s.reservation_limit_in_bytes",
-> > +              buf);
-> > +     cft->private = MEMFILE_PRIVATE(idx, RES_RESERVATION_LIMIT);
-> > +     cft->read_u64 = hugetlb_cgroup_read_u64;
-> > +     cft->write = hugetlb_cgroup_write;
-> > +
-> > +     /* Add the usage file */
-> > +     cft = &h->cgroup_files[2];
-> >       snprintf(cft->name, MAX_CFTYPE_NAME, "%s.usage_in_bytes", buf);
-> >       cft->private = MEMFILE_PRIVATE(idx, RES_USAGE);
-> >       cft->read_u64 = hugetlb_cgroup_read_u64;
-> >
-> > +     /* Add the reservation usage file */
-> > +     cft = &h->cgroup_files[3];
-> > +     snprintf(cft->name, MAX_CFTYPE_NAME, "%s.reservation_usage_in_bytes",
-> > +                     buf);
-> > +     cft->private = MEMFILE_PRIVATE(idx, RES_RESERVATION_USAGE);
-> > +     cft->read_u64 = hugetlb_cgroup_read_u64;
-> > +
-> >       /* Add the MAX usage file */
-> > -     cft = &h->cgroup_files[2];
-> > +     cft = &h->cgroup_files[4];
-> >       snprintf(cft->name, MAX_CFTYPE_NAME, "%s.max_usage_in_bytes", buf);
-> >       cft->private = MEMFILE_PRIVATE(idx, RES_MAX_USAGE);
-> >       cft->write = hugetlb_cgroup_reset;
-> >       cft->read_u64 = hugetlb_cgroup_read_u64;
-> >
-> > +     /* Add the MAX reservation usage file */
-> > +     cft = &h->cgroup_files[5];
-> > +     snprintf(cft->name, MAX_CFTYPE_NAME,
-> > +                     "%s.reservation_max_usage_in_bytes", buf);
-> > +     cft->private = MEMFILE_PRIVATE(idx, RES_RESERVATION_MAX_USAGE);
-> > +     cft->write = hugetlb_cgroup_reset;
-> > +     cft->read_u64 = hugetlb_cgroup_read_u64;
-> > +
-> >       /* Add the failcntfile */
-> > -     cft = &h->cgroup_files[3];
-> > +     cft = &h->cgroup_files[6];
-> >       snprintf(cft->name, MAX_CFTYPE_NAME, "%s.failcnt", buf);
-> >       cft->private  = MEMFILE_PRIVATE(idx, RES_FAILCNT);
-> >       cft->write = hugetlb_cgroup_reset;
-> >       cft->read_u64 = hugetlb_cgroup_read_u64;
-> >
-> > +     /* Add the reservation failcntfile */
-> > +     cft = &h->cgroup_files[7];
-> > +     snprintf(cft->name, MAX_CFTYPE_NAME, "%s.reservation_failcnt", buf);
-> > +     cft->private  = MEMFILE_PRIVATE(idx, RES_FAILCNT);
-> > +     cft->write = hugetlb_cgroup_reset;
-> > +     cft->read_u64 = hugetlb_cgroup_read_u64;
-> > +
-> >       /* NULL terminate the last cft */
-> > -     cft = &h->cgroup_files[4];
-> > +     cft = &h->cgroup_files[8];
-> >       memset(cft, 0, sizeof(*cft));
->
-> Replace numbers with characters.
-> >
-> >       WARN_ON(cgroup_add_legacy_cftypes(&hugetlb_cgrp_subsys,
-> > --
-> > 2.23.0.rc1.153.gdeed80330f-goog
->
+After merging the arm-soc tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
+
+In file included from include/linux/kernel.h:15,
+                 from include/linux/list.h:9,
+                 from include/linux/module.h:9,
+                 from drivers/dma/iop-adma.c:13:
+drivers/dma/iop-adma.c: In function '__iop_adma_slot_cleanup':
+drivers/dma/iop-adma.c:118:12: warning: format '%x' expects argument of typ=
+e 'unsigned int', but argument 6 has type 'dma_addr_t' {aka 'long long unsi=
+gned int'} [-Wformat=3D]
+   pr_debug("\tcookie: %d slot: %d busy: %d "
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/linux/printk.h:288:21: note: in definition of macro 'pr_fmt'
+ #define pr_fmt(fmt) fmt
+                     ^~~
+include/linux/dynamic_debug.h:143:2: note: in expansion of macro '__dynamic=
+_func_call'
+  __dynamic_func_call(__UNIQUE_ID(ddebug), fmt, func, ##__VA_ARGS__)
+  ^~~~~~~~~~~~~~~~~~~
+include/linux/dynamic_debug.h:153:2: note: in expansion of macro '_dynamic_=
+func_call'
+  _dynamic_func_call(fmt, __dynamic_pr_debug,  \
+  ^~~~~~~~~~~~~~~~~~
+include/linux/printk.h:336:2: note: in expansion of macro 'dynamic_pr_debug'
+  dynamic_pr_debug(fmt, ##__VA_ARGS__)
+  ^~~~~~~~~~~~~~~~
+drivers/dma/iop-adma.c:118:3: note: in expansion of macro 'pr_debug'
+   pr_debug("\tcookie: %d slot: %d busy: %d "
+   ^~~~~~~~
+drivers/dma/iop-adma.c:119:18: note: format string is defined here
+    "this_desc: %#x next_desc: %#llx ack: %d\n",
+                ~~^
+                %#llx
+
+Introduced (or exposed?) by commit
+
+  00c9755524fb ("dmaengine: iop-adma: use correct printk format strings")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/OoFaWTzmhYPTaAT95jsTflI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1V6X0ACgkQAVBC80lX
+0GwpOAf9H72e03ULtColpkz7dumUbcWHXgwX0b8iR5caWpy0CsiEISXuvI0eHnYW
+aIu1KZ68rlWww/31dBIuFBzu7rF5mENS7RcoJTgLWy6UfeJCHD8o/kycgW33GoaE
+Sc0VWEq8UiW0oFgIlcY8ubQ/ntDx2GlWn3ekNxuzngMyj+GsQvLNSfy+ttww9DYI
+Z+XvOTvtLmc5Qp+laSFGWZi5nL1buCHyLPW1529ynqQFSm12N4h+zbJJP5RrIXpU
+vMCJ0Qv1KcaUG4cBzFJxN1NdDAxHtolLjNpn03iOH/jxUrPLh9EjECX2XKQMrZ4S
+OjqlAx/HATz7uOARvEtPiG3P4IUbew==
+=DzRo
+-----END PGP SIGNATURE-----
+
+--Sig_/OoFaWTzmhYPTaAT95jsTflI--
