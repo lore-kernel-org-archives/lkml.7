@@ -2,151 +2,128 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C897AC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E04EEC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDD92133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:14:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WTmKoUil"
+	by mail.kernel.org (Postfix) with ESMTP id BD62F208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbfHOEO4 (ORCPT
+        id S1726614AbfHOEPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:14:56 -0400
-Received: from mail-eopbgr10074.outbound.protection.outlook.com ([40.107.1.74]:61861
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725875AbfHOEO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:14:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VlvaQqA20oGFE+Q4Z6MSyap5QL1/LIeYS8bFadts/q54LaWsFzB7qqDTMn+OCg2SnMsKopEUbsb9i6d7jbETK6DjkojMSFpFbkzM1Q66fjdxnc24j9Jv9oClK4dAyfTfX7CH05RilrNXIrjiaGAM814NbT0emVbvi4kTH5k8J2qzigw9oy7xs0pl+g4LhP0STX04weFiizCt8OSGw1OrS1GfeL0MmYKR+08AEmLXjSqUEdgEdjMRzVVGhQCSR7HZv/VuNxscTJBZkTiEkXKy9S5wcCwn/i0WIbNGBpQJmjFhNOCCg+rCKMPwuB8V/zJzZejKVx9hsLGczzFi91FGEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ff2QWEEgVH5vAIeKiVGTpQ4IpNUEcdfesUwKiVCrUNw=;
- b=ks9A8y63OjmQoTVuOsG4evm0jgR6+DJKSjmL5k0qkM/CLImUYMnEm1mqbVZqzvsKKMT5a7MOi6UhASrM8ZX0NkZOktqfnnJWomzHpK+3z81u0d8DugY9S1bob+4rLh7DRs4aOz1Eu9iiBCvenBGR/cvN/REcaMnoXLfX9DY5q+rAcFzV8QXWd59XJ3845p4ZPP3uw5WckLqJDolHBF5Lm7N103YH6KgJe09yYlQWvbgOKOPwOiiRjFmJrjAw5bu2tqeJXJb9gBWacqZtC90hRXtGx5MZt6XVOkYdmYqXj1yxp2fLJsEIqyRgvyqqx2AvUYiG9icNnBkY8XWe++WhcA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ff2QWEEgVH5vAIeKiVGTpQ4IpNUEcdfesUwKiVCrUNw=;
- b=WTmKoUilDkwpr0ox0DXLLOBv3HFjJVRjio3yauxnrLjqQ/iJKIL1SWU7ksuw+0Vy032DkA6SprUAdyHrt5hw8sxrIy+ATvzSRGn+ydfSD/0aKE/wyVK9QL6cbRG+LkqppqvskDH3UAUumcYnECcjtsDGXeKdWajLyCu8s+UrHCo=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB4665.eurprd04.prod.outlook.com (52.135.139.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.23; Thu, 15 Aug 2019 04:14:51 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::ccc8:8:c071:8283]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::ccc8:8:c071:8283%5]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
- 04:14:51 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Leo Li <leoyang.li@nxp.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: rtc: pcf85363/pcf85263: fix error that failed to run hwclock -w
-Thread-Topic: rtc: pcf85363/pcf85263: fix error that failed to run hwclock -w
-Thread-Index: AQHVUoSfyAMvxeFinU6CH649Ec3dZ6b6+iOAgAB7elA=
-Date:   Thu, 15 Aug 2019 04:14:51 +0000
-Message-ID: <DB7PR04MB449054F05411CBDC935605F28FAC0@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190814093249.40065-1-biwen.li@nxp.com>
- <VE1PR04MB66875AF7A38BF43351970EB08FAD0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-In-Reply-To: <VE1PR04MB66875AF7A38BF43351970EB08FAD0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 873857c3-037c-49f6-b264-08d721371eaf
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4665;
-x-ms-traffictypediagnostic: DB7PR04MB4665:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB466554D4BB7E8DD340CBB0BE8FAC0@DB7PR04MB4665.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1201;
-x-forefront-prvs: 01304918F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(366004)(396003)(346002)(136003)(199004)(189003)(71190400001)(6436002)(8676002)(55016002)(44832011)(102836004)(9686003)(6246003)(476003)(316002)(446003)(2906002)(66066001)(11346002)(7736002)(6116002)(53936002)(486006)(186003)(26005)(66446008)(229853002)(66946007)(66556008)(64756008)(54906003)(76176011)(3846002)(7696005)(6506007)(76116006)(6306002)(71200400001)(110136005)(2201001)(66476007)(86362001)(2501003)(4326008)(99286004)(81156014)(74316002)(14444005)(478600001)(8936002)(52536014)(81166006)(256004)(5660300002)(966005)(14454004)(33656002)(25786009)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4665;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: QXtHl3N3pS9XsgY+yPJS9MdKAWUHFU6rdOkg9aGDVliXwDBPmSEVvP4ynhmZD5N710NW36EKve314/dQmfg/2hr+7C5LasOGY8n+lxFL+DJpVLcZnY4xuk657v5unSrRZZxIEnkjabdl6elrGL6akJPcw8t16YPXCaJ6MyXxQAQc/9hEhkJuHygJiroBgyxEjDMttWuOVWKzZ7V01xJR/Dbt4NTGEqFC/lLDxu9R7Eid/qvqmtNHIqmA9LYqshsjA8Bsmps5rKgum87Ju3BBCQy/L9pyUsthYmJ6IVLGPZi77DtgdAK0uRE2OUgO3cYpsyv4ps3e7hf+07Q0hXJb7jAUV6XOvrPl+tsIekt/CeCNBRQJcKr+TfRaE+pC2rdKAJcPVaE+kAi5IYOzvv9ByATaxg0/mv4sWvU19vnca0A=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 15 Aug 2019 00:15:21 -0400
+Received: from mga04.intel.com ([192.55.52.120]:58501 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725875AbfHOEPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:15:20 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 21:15:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,387,1559545200"; 
+   d="scan'208";a="184514859"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 Aug 2019 21:15:18 -0700
+Date:   Thu, 15 Aug 2019 11:58:04 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, mdf@kernel.org,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        atull@kernel.org, Ananda Ravuri <ananda.ravuri@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: Re: [PATCH v3 01/12] fpga: dfl: fme: support 512bit data width PR
+Message-ID: <20190815035804.GA29090@hao-dev>
+References: <1563857495-26692-1-git-send-email-hao.wu@intel.com>
+ <1563857495-26692-2-git-send-email-hao.wu@intel.com>
+ <20190724093532.GB29532@kroah.com>
+ <20190724142235.GE8463@hao-dev>
+ <32c46e3de1a6641eb0d5940868f7d8b8a30181d3.camel@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 873857c3-037c-49f6-b264-08d721371eaf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 04:14:51.7533
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IxqPlZ+9Rs4JdP4/lG0mF9Us/ehwhq7cBd4srARqZQjPEF4leMOSXsB8TLm7ekg6Y+wXUw2JjhE6CI9IilfRZw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4665
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <32c46e3de1a6641eb0d5940868f7d8b8a30181d3.camel@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Subject: rtc: pcf85363/pcf85263: fix error that failed to run hwclock
-> > -w
-> >
-> > Issue:
-> >     # hwclock -w
-> >     hwclock: RTC_SET_TIME: Invalid argument
-> >
-> > The patch fixes error when run command hwclock -w with rtc
-> > pcf85363/pcf85263
->=20
-> Can you explain a little bit more in the commit message on how the change=
-s fix
-> the above issue?   It is not that clear just from the code.
-1. Relative patch: https://lkml.org/lkml/2019/4/3/55 , this patch will alwa=
-ys
-check for unwritable registers, it will compare reg with max_register in re=
-gmap_writeable.
+On Wed, Aug 14, 2019 at 11:34:15AM -0500, Scott Wood wrote:
+> On Wed, 2019-07-24 at 22:22 +0800, Wu Hao wrote:
+> > On Wed, Jul 24, 2019 at 11:35:32AM +0200, Greg KH wrote:
+> > > On Tue, Jul 23, 2019 at 12:51:24PM +0800, Wu Hao wrote:
+> > > >  
+> > > > @@ -67,8 +69,43 @@
+> > > >  #define PR_WAIT_TIMEOUT   8000000
+> > > >  #define PR_HOST_STATUS_IDLE	0
+> > > >  
+> > > > +#if defined(CONFIG_X86) && defined(CONFIG_AS_AVX512)
+> > > > +
+> > > > +#include <linux/cpufeature.h>
+> > > > +#include <asm/fpu/api.h>
+> > > > +
+> > > > +static inline int is_cpu_avx512_enabled(void)
+> > > > +{
+> > > > +	return cpu_feature_enabled(X86_FEATURE_AVX512F);
+> > > > +}
+> > > 
+> > > That's a very arch specific function, why would a driver ever care about
+> > > this?
+> > 
+> > Yes, this is only applied to a specific FPGA solution, which FPGA
+> > has been integrated with XEON. Hardware indicates this using register
+> > to software. As it's cpu integrated solution, so CPU always has this
+> > AVX512 capability. The only check we do, is make sure this is not
+> > manually disabled by kernel.
+> > 
+> > With this hardware, software could use AVX512 to accelerate the FPGA
+> > partial reconfiguration as mentioned in the patch commit message.
+> > It brings performance benifits to people who uses it. This is only one
+> > optimization (512 vs 32bit data write to hw) for a specific hardware.
+> 
+> I thought earlier you said that 512 bit accesses were required for this
+> particular integrated-only version of the device, and not just an
+> optimization?
 
-2. In drivers/rtc/rtc-pcf85363.c, CTRL_STOP_EN is 0x2e, but DT_100THS is 0,=
- max_regiter is 0x2f,
-then reg will be equal to 0x30, '0x30 < 0x2f' is false,so regmap_writeable =
-will return false.
+yes, some optimization implemented in a specific integrated-only version
+of hardware, this patch is used to support that particular hardware. This
+is also the reason you see code here to check hardware revision in this
+patch.
 
->=20
-> >
-> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > ---
-> >  drivers/rtc/rtc-pcf85363.c | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/rtc/rtc-pcf85363.c b/drivers/rtc/rtc-pcf85363.c
-> > index a075e77617dc..3450d615974d 100644
-> > --- a/drivers/rtc/rtc-pcf85363.c
-> > +++ b/drivers/rtc/rtc-pcf85363.c
-> > @@ -166,7 +166,12 @@ static int pcf85363_rtc_set_time(struct device
-> > *dev, struct rtc_time *tm)
-> >  	buf[DT_YEARS] =3D bin2bcd(tm->tm_year % 100);
-> >
-> >  	ret =3D regmap_bulk_write(pcf85363->regmap, CTRL_STOP_EN,
-> > -				tmp, sizeof(tmp));
-> > +				tmp, 2);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret =3D regmap_bulk_write(pcf85363->regmap, DT_100THS,
-> > +				buf, sizeof(tmp) - 2);
-> >  	if (ret)
-> >  		return ret;
-> >
-> > --
-> > 2.17.1
+> 
+> > > > +#else
+> > > > +static inline int is_cpu_avx512_enabled(void)
+> > > > +{
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +static inline void copy512(const void *src, void __iomem *dst)
+> > > > +{
+> > > > +	WARN_ON_ONCE(1);
+> > > 
+> > > Are you trying to get reports from syzbot?  :)
+> > 
+> > Oh.. no.. I will remove it. :)
+> > 
+> > Thank you very much!
+> 
+> What's wrong with this?  The driver should never call copy512() if
+> is_cpu_avx512_enabled() returns 0, and if syzbot can somehow make the driver
+> do so, then yes we do want a report.
 
+Yes, you are right, in previous version, it doesn't have avx512 enable check
+there, so it's possible to have false reporting, it should be fine after
+driver does early check on this during probe. As this patch has been dropped
+from main patchset, may rework it later and resubmit. Thanks for the comments.
+
+Hao
+
+> 
+> -Scott
+> 
