@@ -2,106 +2,249 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9CEC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C565AC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069FF20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:25:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ft2ZIUgZ"
+	by mail.kernel.org (Postfix) with ESMTP id 95EE020644
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:27:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbfHOPZw (ORCPT
+        id S1729595AbfHOP13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 11:25:52 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44664 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729151AbfHOPZv (ORCPT
+        Thu, 15 Aug 2019 11:27:29 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51550 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfHOP13 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 11:25:51 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t14so1175800plr.11;
-        Thu, 15 Aug 2019 08:25:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AkYthp7LCueG9x2IINcBzpO2jlClSAIZLBrJ2UUQFGE=;
-        b=Ft2ZIUgZ5Tm+zKB8GUWHYDJlgKa9TJgKcw7PqXTlwXzTWYw1tAluAzGxaWLoa3B6nE
-         sY5iL51DIF2tSJ7ldSn9rAvZ/2/FR6G6wV5hhrgLxQMyBiQdGGy4u3AKEyLlMLjSmMJB
-         z9dMsq8xify2qHYL8bbQWWGqqa37K1n+Ve/paDyLaMsRIpgBDeWPXntdc8Sf8zVUqJhi
-         OLnlkRQcFTFFF8jin7n2cjjbNz0gQ6ig8u+dF4evbd0KK/xM3u84SuvTebV34P49CBXq
-         AEY6K3ijY0Q+cr3PLmu+YAcHg1V5SHy//sx5cWTeVz5n8RqL1VhQdpctfNV4V6k16I2m
-         IHHA==
+        Thu, 15 Aug 2019 11:27:29 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 207so1605743wma.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 08:27:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AkYthp7LCueG9x2IINcBzpO2jlClSAIZLBrJ2UUQFGE=;
-        b=NAkqMc2EqrAi7hxtpLKdGrvTY59RV6ydkv1lEolYpi87yvgRGy9RLVI3UT5DCVTR19
-         B4wOjkd3TFbE4P6PPqGtyUHUUeiTojstjSCXQUOf7voU08WXu34kZro+lyhVrRIYuNRz
-         galgucO5sMSlSTrrDAgTa4u4fE02G0Po9FpRU8YYaCi5qu7/5KhJ98VzVjpEMiQUe0Es
-         gstmxyjZBz3V7n5xmX7sOa03eAt/7CBiMY+P62s+3KgGUVDAh6L+evDf34ouipvFHOj2
-         kZW/bz0JwxRCuk3rfUvhxRhY+RA4a10CSw19lTCBqeQMwEXVaf+npzb8OAD7XgbEYBhI
-         db3Q==
-X-Gm-Message-State: APjAAAVlRDAGgUj1sjB+iiLy0OiGVIKbVwwIWhg4e+oJrgWXuVo4Hzln
-        fFZnhtUC0Lgc0z/BERVh/rU=
-X-Google-Smtp-Source: APXvYqy5xv1v79GwuL1+TFWhMNCNXA0yRttfL5Zr+vUkNMu3x3jxt8Ltekrpv45iYEGRHZ1Ac9qvMg==
-X-Received: by 2002:a17:902:2ac7:: with SMTP id j65mr4888600plb.242.1565882751110;
-        Thu, 15 Aug 2019 08:25:51 -0700 (PDT)
-Received: from localhost.localdomain ([125.142.23.13])
-        by smtp.gmail.com with ESMTPSA id h70sm2588166pgc.36.2019.08.15.08.25.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 08:25:50 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 00:25:44 +0900
-From:   Suwan Kim <suwan.kim027@gmail.com>
-To:     shuah <shuah@kernel.org>, Greg KH <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     valentina.manea.m@gmail.com, stern@rowland.harvard.edu,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/2] usbip: Implement SG support
-Message-ID: <20190815152544.GA4533@localhost.localdomain>
-References: <20190808155435.10050-1-suwan.kim027@gmail.com>
- <20190814131951.GA1437@infradead.org>
- <20190815132356.GB27208@kroah.com>
- <0cf92881-53c7-09d4-18ac-593034a1a56c@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XyD06YZS2Z9vjlAjxD/F+RLqC6OCWBrblTJoR3CHyz0=;
+        b=AYmc6659pGyiAZLYbmUkciln9wAf5qCeAHgfuQ5LtehtSDZxWO4EA4jmnbnTMUWGMO
+         Vmwj9yGcmdIm4aghq03zpaAzOJjOooju8z9Zb1JgGh2SNCvWwrEX6h/WTpjGk0wRgvP1
+         UB7hWymnt0ERHAu3uA7QlNG9jmaGCIvFFkxnmoBPW2wvwBZMaQKK2KrDNZp7ZqHsOcsG
+         CdIzir7Sf84ZwzEk/ZWtoJktmpXDscxTdq24XTA2r2TLCnaQqLbfvcYEglRfX9qHC4ud
+         P2SSiYWv8GOKOQWznBx/H3XI0HiQVUII0LgVGBqLExJ9XjD86UklRUcl9XDwotShbIy6
+         aUdA==
+X-Gm-Message-State: APjAAAXnp/HbMJt+C5UfaD/jfuR0S79tXN6bVdOJvFRuIOTExXnxqxUA
+        ec9XK3AASuX1XtLJPoaPcpbxww==
+X-Google-Smtp-Source: APXvYqxe3J9geeNRz3vyjHD53+OQ9de7Rnny6r2RtTiMr5lRzviRCKfNI6NE/YpaOkqoNTszUrn39g==
+X-Received: by 2002:a1c:f20a:: with SMTP id s10mr3397376wmc.145.1565882846338;
+        Thu, 15 Aug 2019 08:27:26 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id d16sm3726349wrj.47.2019.08.15.08.27.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Aug 2019 08:27:25 -0700 (PDT)
+Subject: Re: [PATCH v2] usb: xhci-pci: reorder removal to avoid use-after-free
+To:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>
+Cc:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <1565782781938.37795@mentor.com>
+ <15aa45c7-6e45-d03f-9336-4291f8b2dc66@redhat.com>
+ <29aadcf136bb4d5285afb4fc5b500b49@SVR-IES-MBX-03.mgc.mentorg.com>
+ <662c2014-f52c-a4a7-cbf0-78d43c3a4f22@redhat.com>
+ <1565793165678.11527@mentor.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <3cb06e75-70a8-0f59-ae08-5bbd99abbead@redhat.com>
+Date:   Thu, 15 Aug 2019 17:27:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0cf92881-53c7-09d4-18ac-593034a1a56c@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <1565793165678.11527@mentor.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 08:10:49AM -0600, shuah wrote:
-> On 8/15/19 7:23 AM, Greg KH wrote:
-> > On Wed, Aug 14, 2019 at 06:19:51AM -0700, Christoph Hellwig wrote:
-> > > FYI, I think my
-> > > 
-> > >     "usb: add a HCD_DMA flag instead of guestimating DMA capabilities"
-> > > 
-> > > is the proper core fix for what your patch 1 works around, as the USB
-> > > core should not assume DMA capabilities based on the presence of a DMA
-> > > mask.
-> > 
-> > I agree.  Let's wait for Christoph's series to be applied before taking
-> > this one.
-> > 
+Hi,
+
+On 14-08-19 16:32, Schmid, Carsten wrote:
+> On driver removal, the platform_device_unregister call
+> attached through devm_add_action_or_reset was executed
+> after usb_hcd_pci_remove.
+> This lead to a use-after-free for the iomem resorce of
+> the xhci-ext-caps driver in the platform removal
+> because the parent of the resource was freed earlier.
 > 
-> Great. Thanks you both looking at these. Makes sense.
+> Fix this by reordering of the removal sequence.
+> 
+> Signed-off-by: Carsten Schmid <carsten_schmid@mentor.com>
 
-Ok. Then I will drop the patch 1 and leave vhci flags without
-including the HCD_DMA flag to skip dma mapping.
+Patch looks good to me:
 
-BTW, in my patch 2, I set URB_DMA_MAP_SG flag in
-vhci_map_urb_for_dma() of patch 1 to tell the server to use SG.
-I will fix it by setting URB_DMA_MAP_SG flag in other place and
-resend v6. Is it ok?
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Regards
-Suwan Kim
+Regards,
+
+Hans
+
+
+
+> ---
+> v2:
+>    - more speaking name for private data element
+>    - consider failure in driver init sequence
+>    - fix minor issues found by checkpatch.pl
+> ---
+>   drivers/usb/host/xhci-ext-caps.c | 25 +++++++++++++++----------
+>   drivers/usb/host/xhci-pci.c      |  8 +++++++-
+>   drivers/usb/host/xhci-pci.h      | 20 ++++++++++++++++++++
+>   drivers/usb/host/xhci.h          |  1 +
+>   4 files changed, 43 insertions(+), 11 deletions(-)
+>   create mode 100644 drivers/usb/host/xhci-pci.h
+> 
+> diff --git a/drivers/usb/host/xhci-ext-caps.c b/drivers/usb/host/xhci-ext-caps.c
+> index 399113f9fc5c..28a7d53ecf2c 100644
+> --- a/drivers/usb/host/xhci-ext-caps.c
+> +++ b/drivers/usb/host/xhci-ext-caps.c
+> @@ -7,21 +7,19 @@
+>   
+>   #include <linux/platform_device.h>
+>   #include "xhci.h"
+> +#include "xhci-pci.h"
+>   
+>   #define USB_SW_DRV_NAME		"intel_xhci_usb_sw"
+>   #define USB_SW_RESOURCE_SIZE	0x400
+>   
+> -static void xhci_intel_unregister_pdev(void *arg)
+> -{
+> -	platform_device_unregister(arg);
+> -}
+> -
+>   static int xhci_create_intel_xhci_sw_pdev(struct xhci_hcd *xhci, u32 cap_offset)
+>   {
+>   	struct usb_hcd *hcd = xhci_to_hcd(xhci);
+>   	struct device *dev = hcd->self.controller;
+>   	struct platform_device *pdev;
+>   	struct resource	res = { 0, };
+> +	struct xhci_pci_priv *priv = (struct xhci_pci_priv *)xhci->priv;
+> +
+>   	int ret;
+>   
+>   	pdev = platform_device_alloc(USB_SW_DRV_NAME, PLATFORM_DEVID_NONE);
+> @@ -52,11 +50,7 @@ static int xhci_create_intel_xhci_sw_pdev(struct xhci_hcd *xhci, u32 cap_offset)
+>   		return ret;
+>   	}
+>   
+> -	ret = devm_add_action_or_reset(dev, xhci_intel_unregister_pdev, pdev);
+> -	if (ret) {
+> -		dev_err(dev, "couldn't add unregister action for intel_xhci_usb_sw pdev\n");
+> -		return ret;
+> -	}
+> +	priv->role_switch_pdev = pdev;
+>   
+>   	return 0;
+>   }
+> @@ -88,3 +82,14 @@ int xhci_ext_cap_init(struct xhci_hcd *xhci)
+>   	return 0;
+>   }
+>   EXPORT_SYMBOL_GPL(xhci_ext_cap_init);
+> +
+> +void xhci_ext_cap_remove(struct xhci_hcd *xhci)
+> +{
+> +	struct xhci_pci_priv *priv = (struct xhci_pci_priv *)xhci->priv;
+> +
+> +	if (priv->role_switch_pdev) {
+> +		platform_device_unregister(priv->role_switch_pdev);
+> +		priv->role_switch_pdev = NULL;
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(xhci_ext_cap_remove);
+> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> index c2fe218e051f..f2201f380c17 100644
+> --- a/drivers/usb/host/xhci-pci.c
+> +++ b/drivers/usb/host/xhci-pci.c
+> @@ -14,6 +14,7 @@
+>   #include <linux/acpi.h>
+>   
+>   #include "xhci.h"
+> +#include "xhci-pci.h"
+>   #include "xhci-trace.h"
+>   
+>   #define SSIC_PORT_NUM		2
+> @@ -62,6 +63,7 @@ static struct hc_driver __read_mostly xhci_pci_hc_driver;
+>   static int xhci_pci_setup(struct usb_hcd *hcd);
+>   
+>   static const struct xhci_driver_overrides xhci_pci_overrides __initconst = {
+> +	.extra_priv_size = sizeof(struct xhci_pci_priv),
+>   	.reset = xhci_pci_setup,
+>   };
+>   
+> @@ -350,7 +352,7 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>   	retval = usb_add_hcd(xhci->shared_hcd, dev->irq,
+>   			IRQF_SHARED);
+>   	if (retval)
+> -		goto put_usb3_hcd;
+> +		goto remove_ext_cap;
+>   	/* Roothub already marked as USB 3.0 speed */
+>   
+>   	if (!(xhci->quirks & XHCI_BROKEN_STREAMS) &&
+> @@ -368,6 +370,8 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>   
+>   	return 0;
+>   
+> +remove_ext_cap:
+> +	xhci_ext_cap_remove(xhci);
+>   put_usb3_hcd:
+>   	usb_put_hcd(xhci->shared_hcd);
+>   dealloc_usb2_hcd:
+> @@ -393,6 +397,8 @@ static void xhci_pci_remove(struct pci_dev *dev)
+>   		xhci->shared_hcd = NULL;
+>   	}
+>   
+> +	xhci_ext_cap_remove(xhci);
+> +
+>   	/* Workaround for spurious wakeups at shutdown with HSW */
+>   	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
+>   		pci_set_power_state(dev, PCI_D3hot);
+> diff --git a/drivers/usb/host/xhci-pci.h b/drivers/usb/host/xhci-pci.h
+> new file mode 100644
+> index 000000000000..fc0cde231679
+> --- /dev/null
+> +++ b/drivers/usb/host/xhci-pci.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0
+> + *
+> + * xhci-pci.h - xHCI extended capability handling platform Glue.
+> + *
+> + * Copyright (C) 2019 Mentor Graphics (Deutschland) GmbH
+> + * Derived from xhci-plat.h
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * version 2 as published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef _XHCI_PCI_H
+> +#define _XHCI_PCI_H
+> +
+> +struct xhci_pci_priv {
+> +	struct platform_device *role_switch_pdev;
+> +};
+> +
+> +#endif	/* _XHCI_PCI_H */
+> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+> index fabbce1c542a..847d2021fc2c 100644
+> --- a/drivers/usb/host/xhci.h
+> +++ b/drivers/usb/host/xhci.h
+> @@ -2052,6 +2052,7 @@ void xhci_init_driver(struct hc_driver *drv,
+>   		      const struct xhci_driver_overrides *over);
+>   int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id);
+>   int xhci_ext_cap_init(struct xhci_hcd *xhci);
+> +void xhci_ext_cap_remove(struct xhci_hcd *xhci);
+>   
+>   int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup);
+>   int xhci_resume(struct xhci_hcd *xhci, bool hibernated);
+> 
