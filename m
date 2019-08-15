@@ -2,106 +2,81 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F42C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99072C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB47D206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:31:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E9uVc3iP"
+	by mail.kernel.org (Postfix) with ESMTP id 2C5272171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:31:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565908312;
+	bh=JUGSZP1OX5849QbPzVQs+ETR+b8Pn+G4+/yEBBC8o+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x2/9/9K/UfHGKlmR+AOykE+g3ywGIFnI5NAJiUSVuCDJiQzVKzv4xh+3uyvDvRYUt
+	 +uORFydG0XIvMXAkFFUst/8mgvlS2jTZF8yWebPTZy6kn/TQXY87oc1xzn63aA9lis
+	 ar5Xsh3Jz9SZm8Q/+df0dCwDRAriwSM6EKZrghAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733088AbfHOWba (ORCPT
+        id S1733300AbfHOWbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 18:31:30 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35489 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728861AbfHOWba (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 18:31:30 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n4so1938416pgv.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 15:31:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7Ds0h1FP0bEgRj2xqqDvmLUZg/XyAVILJjOYQC+kx/s=;
-        b=E9uVc3iPa0qz5N5StTnHPAFEPpJeYe7gXMF2B36UCHogMYyWsSbfD0+7W4J/YkG6K8
-         fdCEcLiWwTaEvD+t4DC6yVIFiOO3rsJDqJiR+PX+3AbENbO1MPCzBtE3SK63sVl/P2JO
-         9jSmyHGs8JOZArcxdthVT7gUCtpG8VoPbBjig=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7Ds0h1FP0bEgRj2xqqDvmLUZg/XyAVILJjOYQC+kx/s=;
-        b=CXNS8mw1UTCfROfC48wfo2yQ6ylXzLDNrC8Mn+SMeUEJvqheCSychYYY8HO6KHo9ck
-         6afOy3I9wT0LKXTjDrUcPQztksGzhA4e8GL1uvIKxt1n2A9XRtk5apEfgZ62b0608QIu
-         rIFWFPJrtITmdtLVtqjjeFtpKbrXhSFIWIKjam/CVihKCrbhYroPD8jEwSBQ8WiUEhGE
-         OZnyhCp8NCnyBRDW0DysXFGv0BbpkKS8XFSBrK2u9QyNJ50ivSuUo0ay8cpQGHZWYYQ5
-         Duf/CDAl/GnqHXjePZ3zNdiIuQaMrxJeKKpCHcHZDS/yOn1JltZH9fvvb18tKQzKLbY3
-         W6kQ==
-X-Gm-Message-State: APjAAAVNsUzlnxQZNMAr2+SAMSZTOYEl2YLRvDmhRgOb+SPW7xhcoCkm
-        5Jfc22ASMeOAMdviz4IaO0PIvQ==
-X-Google-Smtp-Source: APXvYqyVrT6W+ijiPawxCGqxDfkC1EwU/6edenQf8Or9qPivlqdJEkA1rFY43ONK+WAdSHwCx61icA==
-X-Received: by 2002:a17:90b:911:: with SMTP id bo17mr4047836pjb.40.1565908289602;
-        Thu, 15 Aug 2019 15:31:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p20sm3338967pgj.47.2019.08.15.15.31.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 15 Aug 2019 15:31:28 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 15:31:27 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     hpa@zytor.com, Peter Zijlstra <peterz@infradead.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
+        Thu, 15 Aug 2019 18:31:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733095AbfHOWbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 18:31:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA09C206C1;
+        Thu, 15 Aug 2019 22:31:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565908309;
+        bh=JUGSZP1OX5849QbPzVQs+ETR+b8Pn+G4+/yEBBC8o+U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cRfJuEyWeJJuhd9QF7crXoOFqXFb+u+wQN6XqXf1A1x1kjJt2OFpxR0Zn6CilZfuI
+         g4GvJ0Im/niVAq3tSBh6zxznh1Yt8PhcLV4iAGXGv08V7S9O/836zf21UbFSB5cfSw
+         +uWad/+kXkvUhW72IUR2yLoAfpfPav4JWdYr7JRQ=
+Date:   Fri, 16 Aug 2019 00:31:47 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        security@kernel.org, linux-doc@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shawn Landden <shawn@git.icu>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo
- keyword for switch/case use
-Message-ID: <201908151530.D4B1EF76AA@keescook>
-References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
- <1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com>
- <20190731171429.GA24222@amd>
- <ccc7fa72d0f83ddd62067092b105bd801479004b.camel@perches.com>
- <765E740C-4259-4835-A58D-432006628BAC@zytor.com>
- <20190731184832.GZ31381@hirez.programming.kicks-ass.net>
- <201907311301.EC1D84F@keescook>
- <201908151049.809B9AFBA9@keescook>
+        Jiri Kosina <jkosina@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: [PATCH] Documentation/admin-guide: Embargoed hardware security
+ issues
+Message-ID: <20190815223147.GA28275@kroah.com>
+References: <20190725130113.GA12932@kroah.com>
+ <20190725151302.16a3e0e3@lwn.net>
+ <20190815212019.GB12041@kroah.com>
+ <e3ae0d66-b9eb-97ba-647a-57f3e2eb4af2@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <201908151049.809B9AFBA9@keescook>
+In-Reply-To: <e3ae0d66-b9eb-97ba-647a-57f3e2eb4af2@infradead.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 11:15:53AM -0700, Kees Cook wrote:
-> I want to recant my position on Coverity coverage being a requirement
-> here. While I was originally concerned about suddenly adding thousands
-> more warnings to Coverity scans (if it doesn't support the flag --
-> I should know soon), it's been made clear to me we're now at the point
+On Thu, Aug 15, 2019 at 03:12:34PM -0700, Randy Dunlap wrote:
+> On 8/15/19 2:20 PM, Greg Kroah-Hartman wrote:
+> >>> +The hardware security team will provide a per incident specific encrypted
+> >> s/per incident specific/incident-specific/
+> > Fixed.  And changed /a/ to /an/
+> 
+> eh?  still should be /a per incident/
 
-For the record, Coverity *does*[1] support the attribute flag.
+The sentence was changed to:
+	The hardware security team will provide an incident-specific
+	encrypted...
 
--Kees
+is not "an" correct here?
 
-[1] This should be visible with a Coverity account:
-    https://scan3.coverity.com/reports.htm#v39370/p12360/fileInstanceId=27181923&defectInstanceId=7915635&mergedDefectId=220491
+thanks,
 
--- 
-Kees Cook
+greg k-h
