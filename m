@@ -2,126 +2,137 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122BCC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B808C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52C720578
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:32:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="BP+2uBTq"
+	by mail.kernel.org (Postfix) with ESMTP id 3703220578
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731929AbfHOQcS (ORCPT
+        id S1731947AbfHOQco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:32:18 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35923 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730705AbfHOQcS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:32:18 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g4so1267659plo.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:32:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=e5AR81pVrLpSOkNr7/eYssnE7D9iHMmdgw/0YazKbLk=;
-        b=BP+2uBTqPhkx+piVq9TF3dGBmo3jHkuJ+wMRP2Ui/bokbaIh0Vg5Adz/5MbS45QDKd
-         j0WRkqK6Q+z7BqfoXAf9sBzbU4N+WhobFjNL4dJUmTmdcf6kSETk6jWBYs4PUw5i8HXH
-         n5X01pxkbnMYus7IbvZ3lMcIt4i8HpBZLLXrg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e5AR81pVrLpSOkNr7/eYssnE7D9iHMmdgw/0YazKbLk=;
-        b=SmC2QFxFdrXT6odF4fYJKMI/AKbErHBORL9xCPjW0v1KRMEKu1USFVR448ORz/W9Eu
-         GqximLBjD+yLYthq21euODQgzmQJkxrN+zcgbkYyDS+BjuZNRDcR3uPITAyy6vJJ+pVU
-         YULvg+iU44GtfqxGwA0m4xHAUalYoV5Wt2yaIUOwsSi42ehRnJPrDzs76wOjh0/1DMP2
-         fGofa9Dytx+8NhSw591kRfAPkGPtELwxtzFGEH/mRyHH8leIiDW74Ahiuq3PLSw5fts/
-         TTKhHeaFjzwLkrAwcCtJIPTCT5i4FCcZVCsNBfzpS1nqPin9NkY/U+m7YkO3d1cSIs2g
-         f2OA==
-X-Gm-Message-State: APjAAAUjtL7/TNhLzGmNv1NPq2jsHOp6JxU/ZD+RSAiTywwCRbdgNu6w
-        5uifGEzOKiInqBdYbjPwRAaINA==
-X-Google-Smtp-Source: APXvYqxbKVoQ2qS9wmLpyTLXKjkjdL92B8ZELrIIY7OLzcGJImUb56OlBZSn6Y0vBcYiZkQmIpVxuA==
-X-Received: by 2002:a17:902:7286:: with SMTP id d6mr5095323pll.61.1565886737439;
-        Thu, 15 Aug 2019 09:32:17 -0700 (PDT)
-Received: from localhost ([172.19.216.18])
-        by smtp.gmail.com with ESMTPSA id p5sm3442540pfg.184.2019.08.15.09.32.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 09:32:16 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 12:31:59 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Hridya Valsaraju <hridya@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH v3 2/2] binder: Validate the default binderfs device
- names.
-Message-ID: <20190815163159.GC75595@google.com>
-References: <20190808222727.132744-1-hridya@google.com>
- <20190808222727.132744-3-hridya@google.com>
+        Thu, 15 Aug 2019 12:32:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49182 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730705AbfHOQcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 12:32:43 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C67853E2D3;
+        Thu, 15 Aug 2019 16:32:42 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A8BCB17AD1;
+        Thu, 15 Aug 2019 16:32:40 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 12:32:38 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
+Message-ID: <20190815163238.GA30781@redhat.com>
+References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
+ <20190814202027.18735-3-daniel.vetter@ffwll.ch>
+ <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
+ <20190815084429.GE9477@dhcp22.suse.cz>
+ <20190815130415.GD21596@ziepe.ca>
+ <CAKMK7uE9zdmBuvxa788ONYky=46GN=5Up34mKDmsJMkir4x7MQ@mail.gmail.com>
+ <20190815143759.GG21596@ziepe.ca>
+ <CAKMK7uEJQ6mPQaOWbT_6M+55T-dCVbsOxFnMC6KzLAMQNa-RGg@mail.gmail.com>
+ <20190815151028.GJ21596@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190808222727.132744-3-hridya@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190815151028.GJ21596@ziepe.ca>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 15 Aug 2019 16:32:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 03:27:26PM -0700, Hridya Valsaraju wrote:
-> Length of a binderfs device name cannot exceed BINDERFS_MAX_NAME.
-> This patch adds a check in binderfs_init() to ensure the same
-> for the default binder devices that will be created in every
-> binderfs instance.
+On Thu, Aug 15, 2019 at 12:10:28PM -0300, Jason Gunthorpe wrote:
+> On Thu, Aug 15, 2019 at 04:43:38PM +0200, Daniel Vetter wrote:
 > 
-> Co-developed-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Signed-off-by: Hridya Valsaraju <hridya@google.com>
-> ---
-
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
-thanks,
-
- - Joel
-
->  drivers/android/binderfs.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> > You have to wait for the gpu to finnish current processing in
+> > invalidate_range_start. Otherwise there's no point to any of this
+> > really. So the wait_event/dma_fence_wait are unavoidable really.
 > 
-> diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-> index aee46dd1be91..55c5adb87585 100644
-> --- a/drivers/android/binderfs.c
-> +++ b/drivers/android/binderfs.c
-> @@ -570,6 +570,18 @@ static struct file_system_type binder_fs_type = {
->  int __init init_binderfs(void)
->  {
->  	int ret;
-> +	const char *name;
-> +	size_t len;
-> +
-> +	/* Verify that the default binderfs device names are valid. */
-> +	name = binder_devices_param;
-> +	for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
-> +		if (len > BINDERFS_MAX_NAME)
-> +			return -E2BIG;
-> +		name += len;
-> +		if (*name == ',')
-> +			name++;
-> +	}
->  
->  	/* Allocate new major number for binderfs. */
->  	ret = alloc_chrdev_region(&binderfs_dev, 0, BINDERFS_MAX_MINOR,
-> -- 
-> 2.22.0.770.g0f2c4a37fd-goog
+> I don't envy your task :|
 > 
+> But, what you describe sure sounds like a 'registration cache' model,
+> not the 'shadow pte' model of coherency.
+> 
+> The key difference is that a regirstationcache is allowed to become
+> incoherent with the VMA's because it holds page pins. It is a
+> programming bug in userspace to change VA mappings via mmap/munmap/etc
+> while the device is working on that VA, but it does not harm system
+> integrity because of the page pin.
+> 
+> The cache ensures that each initiated operation sees a DMA setup that
+> matches the current VA map when the operation is initiated and allows
+> expensive device DMA setups to be re-used.
+> 
+> A 'shadow pte' model (ie hmm) *really* needs device support to
+> directly block DMA access - ie trigger 'device page fault'. ie the
+> invalidate_start should inform the device to enter a fault mode and
+> that is it.  If the device can't do that, then the driver probably
+> shouldn't persue this level of coherency. The driver would quickly get
+> into the messy locking problems like dma_fence_wait from a notifier.
+
+I think here we do not agree on the hardware requirement. For GPU
+we will always need to be able to wait for some GPU fence from inside
+the notifier callback, there is just no way around that for many of
+the GPUs today (i do not see any indication of that changing).
+
+Driver should avoid lock complexity by using wait queue so that the
+driver notifier callback can wait without having to hold some driver
+lock. However there will be at least one lock needed to update the
+internal driver state for the range being invalidated. That lock is
+just the device driver page table lock for the GPU page table
+associated with the mm_struct. In all GPU driver so far it is a short
+lived lock and nothing blocking is done while holding it (it is just
+about updating page table directory really wether it is filling it or
+clearing it).
+
+
+> 
+> It is important to identify what model you are going for as defining a
+> 'registration cache' coherence expectation allows the driver to skip
+> blocking in invalidate_range_start. All it does is invalidate the
+> cache so that future operations pick up the new VA mapping.
+> 
+> Intel's HFI RDMA driver uses this model extensively, and I think it is
+> well proven, within some limitations of course.
+> 
+> At least, 'registration cache' is the only use model I know of where
+> it is acceptable to skip invalidate_range_end.
+
+Here GPU are not in the registration cache model, i know it might looks
+like it because of GUP but GUP was use just because hmm did not exist
+at the time.
+
+Cheers,
+Jérôme
