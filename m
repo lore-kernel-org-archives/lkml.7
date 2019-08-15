@@ -2,109 +2,83 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91F4C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E17C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85AB82173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:49:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="YIJ7YIpM"
+	by mail.kernel.org (Postfix) with ESMTP id 49C7321721
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:51:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732667AbfHOUto (ORCPT
+        id S1732768AbfHOUvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 16:49:44 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34341 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730540AbfHOUto (ORCPT
+        Thu, 15 Aug 2019 16:51:13 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:50078 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730540AbfHOUvM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 16:49:44 -0400
-Received: by mail-oi1-f195.google.com with SMTP id l12so3271681oil.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 13:49:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lgnLIsY3NAF2I8cARaxRotDmNV7GudD+acm8febioSE=;
-        b=YIJ7YIpMxznBPHgTdpSwquDHILTgLsnpo12EU8rkd+AHKFJZ5ZwqKoIwrRqaFSFR8y
-         OSm/+kJt94YLyv2W7RB5Syzoulous/GPdyhQE4c6S/acM0xv4AIF2T1fqDaLkhBzGFIm
-         8xguUk+swY546hiuNvL1kRCs6fhSMGv4cUMt8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lgnLIsY3NAF2I8cARaxRotDmNV7GudD+acm8febioSE=;
-        b=O/N57L+yU54H45dwsxKDPkzetnFuDtTfo1s9q2L9WSnHtl+zNl/MvrhE8IHP1ri2U4
-         f3WMOeJU67dw8t2I82zIqiZN+AF87Ix5Sx54oWNSJtO6yUPIBOSLbs9BmASG45qscIHn
-         CnDcFCo11hL8mobY7QJAiu8ogcgUMV9OqmRmZA7nwohNwu/gKgf9A9psWWZNJ7OttkW7
-         r+kV8uqLjyYv3kA1h3f+Hj682G27j/1y0svu9encN/S39s2/DXqxmFBLH3eisYGZrYNq
-         A5ZjC349Cu0dGRWRkROIKMMC2ZoeevtLOshSWIvFYgZJxyJbJnL1WmEN41ilsU6TjjCO
-         ndwg==
-X-Gm-Message-State: APjAAAWtSPO7gfazr8YZYo+v1PqczmjAN2O7Y0Zy6bz/g3px8DeE7aM8
-        4TNbAlsBJp7PmBZTisZXyr1fzkfKHECrE2ghpEDUiw==
-X-Google-Smtp-Source: APXvYqwzZ/kApGN6PiSs4Jakj+3xLiJKsdwsUzoZ79QigfmdRjFBzCS/DYJGNsj8cG6QhlWGKnUS/ZCe5UFKl5trWe8=
-X-Received: by 2002:aca:4994:: with SMTP id w142mr2705861oia.132.1565902183316;
- Thu, 15 Aug 2019 13:49:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190815132127.GI9477@dhcp22.suse.cz> <20190815141219.GF21596@ziepe.ca>
- <20190815155950.GN9477@dhcp22.suse.cz> <20190815165631.GK21596@ziepe.ca>
- <20190815174207.GR9477@dhcp22.suse.cz> <20190815182448.GP21596@ziepe.ca>
- <20190815190525.GS9477@dhcp22.suse.cz> <20190815191810.GR21596@ziepe.ca>
- <20190815193526.GT9477@dhcp22.suse.cz> <CAKMK7uH42EgdxL18yce-7yay=x=Gb21nBs3nY7RA92Nsd-HCNA@mail.gmail.com>
- <20190815202721.GV21596@ziepe.ca>
-In-Reply-To: <20190815202721.GV21596@ziepe.ca>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Thu, 15 Aug 2019 22:49:31 +0200
-Message-ID: <CAKMK7uER0u1TqeJBXarKakphnyZTHOmedOfXXqLGVDE2mE-mAQ@mail.gmail.com>
-Subject: Re: [Intel-gfx] [PATCH 2/5] kernel.h: Add non_block_start/end()
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Michal Hocko <mhocko@kernel.org>, Feng Tang <feng.tang@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Jann Horn <jannh@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux MM <linux-mm@kvack.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Rientjes <rientjes@google.com>,
-        Wei Wang <wvw@google.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 15 Aug 2019 16:51:12 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D40871401D397;
+        Thu, 15 Aug 2019 13:51:11 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 13:51:11 -0700 (PDT)
+Message-Id: <20190815.135111.1048854967874803531.davem@davemloft.net>
+To:     wenwen@cs.uga.edu
+Cc:     rfontana@redhat.com, allison@lohutok.net, alexios.zavras@intel.com,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: pch_gbe: Fix memory leaks
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <CAAa=b7duRXsiVBfzbvHhoU000gGh53Mme3ZKCO5SoiTdgRaXtg@mail.gmail.com>
+References: <CAAa=b7ft-crBJm+H9U7Bn2dcgfjQsE8o53p2ryBWK3seQoF3Cg@mail.gmail.com>
+        <20190815.134230.1028411309377288636.davem@davemloft.net>
+        <CAAa=b7duRXsiVBfzbvHhoU000gGh53Mme3ZKCO5SoiTdgRaXtg@mail.gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 15 Aug 2019 13:51:12 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:27 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> On Thu, Aug 15, 2019 at 10:16:43PM +0200, Daniel Vetter wrote:
-> > So if someone can explain to me how that works with lockdep I can of
-> > course implement it. But afaics that doesn't exist (I tried to explain
-> > that somewhere else already), and I'm no really looking forward to
-> > hacking also on lockdep for this little series.
->
-> Hmm, kind of looks like it is done by calling preempt_disable()
+From: Wenwen Wang <wenwen@cs.uga.edu>
+Date: Thu, 15 Aug 2019 16:46:05 -0400
 
-Yup. That was v1, then came the suggestion that disabling preemption
-is maybe not the best thing (the oom reaper could still run for a long
-time comparatively, if it's cleaning out gigabytes of process memory
-or what not, hence this dedicated debug infrastructure).
+> On Thu, Aug 15, 2019 at 4:42 PM David Miller <davem@davemloft.net> wrote:
+>>
+>> From: Wenwen Wang <wenwen@cs.uga.edu>
+>> Date: Thu, 15 Aug 2019 16:03:39 -0400
+>>
+>> > On Thu, Aug 15, 2019 at 3:34 PM David Miller <davem@davemloft.net> wrote:
+>> >>
+>> >> From: Wenwen Wang <wenwen@cs.uga.edu>
+>> >> Date: Tue, 13 Aug 2019 20:33:45 -0500
+>> >>
+>> >> > In pch_gbe_set_ringparam(), if netif_running() returns false, 'tx_old' and
+>> >> > 'rx_old' are not deallocated, leading to memory leaks. To fix this issue,
+>> >> > move the free statements after the if branch.
+>> >> >
+>> >> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+>> >>
+>> >> Why would they be "deallocated"?  They are still assigned to
+>> >> adapter->tx_ring and adapter->rx_ring.
+>> >
+>> > 'adapter->tx_ring' and 'adapter->rx_ring' has been covered by newly
+>> > allocated 'txdr' and 'rxdr' respectively before this if statement.
+>>
+>> That only happens inside of the if() statement, that's why rx_old and
+>> tx_old are only freed in that code path.
+> 
+> That happens not only inside of the if statement, but also before the
+> if statement, just after 'txdr' and 'rxdr' are allocated.
 
-> Probably the debug option is CONFIG_DEBUG_PREEMPT, not lockdep?
+Then the assignments inside of the if() statement are redundant.
 
-CONFIG_DEBUG_ATOMIC_SLEEP. Like in my patch.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Something doesn't add up here, please make the code consistent.
