@@ -2,156 +2,137 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE71C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE55C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4A920656
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:23:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="P+RSFj2M"
+	by mail.kernel.org (Postfix) with ESMTP id D3E5420656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:25:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565897132;
+	bh=ftQgnf8Wp1pOnS7KP/vvpjSrKFv7s9UE0yLRopLUuLA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cxDi3ZvHVhmrqC/3JuHAuMxoHmYfBAlsCu1ElqHOzmX0rVDjJStPRzo3mLpA4Clm9
+	 iKxINoIwnjZYeoX+57Wc1BADPubFPBcWDwnsWWU0fbiv4qVU8//8mEcLGRDAqsHSsi
+	 Lk4VDPRW6Q3/J4M0apUcLLXthtEBsDWvDclNT9p4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732870AbfHOTXq (ORCPT
+        id S1731322AbfHOTZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 15:23:46 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:8753 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728979AbfHOTXq (ORCPT
+        Thu, 15 Aug 2019 15:25:31 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38086 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728979AbfHOTZb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 15:23:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d55b1430000>; Thu, 15 Aug 2019 12:23:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 15 Aug 2019 12:23:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 15 Aug 2019 12:23:45 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 15 Aug
- 2019 19:23:44 +0000
-Subject: Re: [PATCHv2] mm/migrate: clean up useless code in
- migrate_vma_collect_pmd()
-To:     Jerome Glisse <jglisse@redhat.com>,
-        Pingfan Liu <kernelfans@gmail.com>
-CC:     <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Jan Kara <jack@suse.cz>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190807052858.GA9749@mypc>
- <1565167272-21453-1-git-send-email-kernelfans@gmail.com>
- <20190815171918.GC30916@redhat.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <d0a8ab6e-1122-a101-6139-9d7dadb9e999@nvidia.com>
-Date:   Thu, 15 Aug 2019 12:23:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 15 Aug 2019 15:25:31 -0400
+Received: by mail-qt1-f196.google.com with SMTP id x4so3537596qts.5;
+        Thu, 15 Aug 2019 12:25:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VqHwIynmGrKgqY+nHdfPQktZY37Sg0s5gGwFKh7tZZA=;
+        b=ah3cZCrDLz+hC9ug8hgYGTl8gXP1zafRFk2hKslTt9xpBrwf+o4L1cVWCz9ZTFadP9
+         uqbweIXyXAnQRAR8KS/9CQbNQ2Ifp+PvcgieV52JZapVueVkVFXnz3wq2v3A7y62jEvX
+         GoSZHLESJLRnXCaW66Gl5WrRWSxmluaR6qzoSIBJ+Y9fnEMLrmXVqgJxDyMtU5MdQhBV
+         m/Ld/N5QzGwF6L8WVonGM78+NODF4H6l2FtHWeCjbsB/cdymv9J8pspEJB3Uh2KCyl20
+         xq4HelVmj+8kKO2D3mFpGtfM9YL1wQqPd875auUKl5/L1viQWjxJ88iDjkfAXVDXCU+O
+         xq0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VqHwIynmGrKgqY+nHdfPQktZY37Sg0s5gGwFKh7tZZA=;
+        b=P5UBfklpKVN1mZPA/XeVH5ItAUEuf4Gr0uZfWUT9YEIvGMSS/b+Clgs75Hg7ACHvl7
+         0we1ifir838fuvuVlBl8Us+00q1OGb7PsS3t4OWBlAe+jBWvehbAXIg8bAUJV7XcvB1B
+         89MZ7OhmMWJrv9D2XB6Ehhh7n00uZKOSNSliwd99fgTONpBtXi5NvAY7uNdpnooSGWdT
+         DOJ9M66QsO7g7vVzDJxoBmZhpJc7jsUm4r2WbWl2K/JkfB1QFsPjHIKIY5FCrUf07Yvh
+         DPbLuwpjymAueWVaZy8GvJQ5A168PEt0wF3p67u7PYVMCtjTZ1HcVfw5fIPX+zPALuC6
+         1+FA==
+X-Gm-Message-State: APjAAAURS6LxYhCaiFtfCNCA2T9gIZEx8mMARie2hqPjzWGYZIxkbpIt
+        cuBXzQBMMU2A4dfPYt0u8W5obc8M
+X-Google-Smtp-Source: APXvYqzB29L4nILMp6U0eQCVyc9qYHk5Zl3/Dy4gC/rNKNLQuQ0Ji2+Lc00bwgB6x8sY1nqSjAdvGw==
+X-Received: by 2002:a0c:94a4:: with SMTP id j33mr4402041qvj.135.1565897129952;
+        Thu, 15 Aug 2019 12:25:29 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:25cd])
+        by smtp.gmail.com with ESMTPSA id n93sm1741247qte.1.2019.08.15.12.25.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 12:25:29 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 12:25:28 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>
+Cc:     linux-block@vger.kernel.org, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 block 1/2] writeback, cgroup: Adjust WB_FRN_TIME_CUT_DIV
+ to accelerate foreign inode switching
+Message-ID: <20190815192528.GA2240241@devbig004.ftw2.facebook.com>
+References: <20190802190738.GB136335@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190815171918.GC30916@redhat.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565897027; bh=vkjRswpUjtZfCjVU2R9I+hlvzvOMVMgQk4AI8p27uwY=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=P+RSFj2MK6qwETLKT3U+Kgh8Zs/QjjEaL0NaxpNb2FGAew8lBC7SrZjoYTNsxIUBC
-         sRqNyCTBmnUsDzC54aJbweOncfryqggz82LyC5JFGjngwplsubbikkOzZ6adhvbyfm
-         NTC5la+MqrS4VXQRgugtcuB7+IFTLxd5VIbuak6jhvOI9uPTRM+jRB7FepjPo2S25t
-         gfWzV2WehEd1RnVieZvPRERjdwuq1jhfHZ8cJftn4CDkCLF8s+Lp8Q7f+n4shOekD/
-         3AnIjoPlvxEWtSGAzchogN8DcBDpOrFqqJHROWMLYQQ3oW3aoKWxRyCq9hqP+rhLpm
-         s/RnpwxqsXG6A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802190738.GB136335@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+WB_FRN_TIME_CUT_DIV is used to tell the foreign inode detection logic
+to ignore short writeback rounds to prevent getting confused by a
+burst of short writebacks.  The parameter is currently 2 meaning that
+anything smaller than half of the running average writback duration
+will be ignored.
 
-On 8/15/19 10:19 AM, Jerome Glisse wrote:
-> On Wed, Aug 07, 2019 at 04:41:12PM +0800, Pingfan Liu wrote:
->> Clean up useless 'pfn' variable.
->=20
-> NAK there is a bug see below:
->=20
->>
->> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
->> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Mel Gorman <mgorman@techsingularity.net>
->> Cc: Jan Kara <jack@suse.cz>
->> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Mike Kravetz <mike.kravetz@oracle.com>
->> Cc: Andrea Arcangeli <aarcange@redhat.com>
->> Cc: Matthew Wilcox <willy@infradead.org>
->> To: linux-mm@kvack.org
->> Cc: linux-kernel@vger.kernel.org
->> ---
->>   mm/migrate.c | 9 +++------
->>   1 file changed, 3 insertions(+), 6 deletions(-)
->>
->> diff --git a/mm/migrate.c b/mm/migrate.c
->> index 8992741..d483a55 100644
->> --- a/mm/migrate.c
->> +++ b/mm/migrate.c
->> @@ -2225,17 +2225,15 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
->>   		pte_t pte;
->>  =20
->>   		pte =3D *ptep;
->> -		pfn =3D pte_pfn(pte);
->>  =20
->>   		if (pte_none(pte)) {
->>   			mpfn =3D MIGRATE_PFN_MIGRATE;
->>   			migrate->cpages++;
->> -			pfn =3D 0;
->>   			goto next;
->>   		}
->>  =20
->>   		if (!pte_present(pte)) {
->> -			mpfn =3D pfn =3D 0;
->> +			mpfn =3D 0;
->>  =20
->>   			/*
->>   			 * Only care about unaddressable device page special
->> @@ -2252,10 +2250,10 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
->>   			if (is_write_device_private_entry(entry))
->>   				mpfn |=3D MIGRATE_PFN_WRITE;
->>   		} else {
->> +			pfn =3D pte_pfn(pte);
->>   			if (is_zero_pfn(pfn)) {
->>   				mpfn =3D MIGRATE_PFN_MIGRATE;
->>   				migrate->cpages++;
->> -				pfn =3D 0;
->>   				goto next;
->>   			}
->>   			page =3D vm_normal_page(migrate->vma, addr, pte);
->> @@ -2265,10 +2263,9 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
->>  =20
->>   		/* FIXME support THP */
->>   		if (!page || !page->mapping || PageTransCompound(page)) {
->> -			mpfn =3D pfn =3D 0;
->> +			mpfn =3D 0;
->>   			goto next;
->>   		}
->> -		pfn =3D page_to_pfn(page);
->=20
-> You can not remove that one ! Otherwise it will break the device
-> private case.
->=20
+This is unnecessarily aggressive.  The detection logic uses 16 history
+slots and is already reasonably protected against some short bursts
+confusing it and the current parameter can lead to tens of seconds of
+missed detection depending on the writeback pattern.
 
-I don't understand. The only use of "pfn" I see is in the "else"
-clause above where it is set just before using it.
+Let's change the parameter to 8, so that it only ignores writeback
+with are smaller than 12.5% of the current running average.
+
+v2: Add comment explaining what's going on with the foreign detection
+    parameters.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Jan Kara <jack@suse.cz>
+---
+ fs/fs-writeback.c |   22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -224,10 +224,28 @@ static void wb_wait_for_completion(struc
+ 
+ #ifdef CONFIG_CGROUP_WRITEBACK
+ 
+-/* parameters for foreign inode detection, see wb_detach_inode() */
++/*
++ * Parameters for foreign inode detection, see wbc_detach_inode() to see
++ * how they're used.
++ *
++ * These paramters are inherently heuristical as the detection target
++ * itself is fuzzy.  All we want to do is detaching an inode from the
++ * current owner if it's being written to by some other cgroups too much.
++ *
++ * The current cgroup writeback is built on the assumption that multiple
++ * cgroups writing to the same inode concurrently is very rare and a mode
++ * of operation which isn't well supported.  As such, the goal is not
++ * taking too long when a different cgroup takes over an inode while
++ * avoiding too aggressive flip-flops from occasional foreign writes.
++ *
++ * We record, very roughly, 2s worth of IO time history and if more than
++ * half of that is foreign, trigger the switch.  The recording is quantized
++ * to 16 slots.  To avoid tiny writes from swinging the decision too much,
++ * writes smaller than 1/8 of avg size are ignored.
++ */
+ #define WB_FRN_TIME_SHIFT	13	/* 1s = 2^13, upto 8 secs w/ 16bit */
+ #define WB_FRN_TIME_AVG_SHIFT	3	/* avg = avg * 7/8 + new * 1/8 */
+-#define WB_FRN_TIME_CUT_DIV	2	/* ignore rounds < avg / 2 */
++#define WB_FRN_TIME_CUT_DIV	8	/* ignore rounds < avg / 8 */
+ #define WB_FRN_TIME_PERIOD	(2 * (1 << WB_FRN_TIME_SHIFT))	/* 2s */
+ 
+ #define WB_FRN_HIST_SLOTS	16	/* inode->i_wb_frn_history is 16bit */
