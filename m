@@ -2,432 +2,201 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E963C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BDEC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2531A2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:27:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565828846;
-	bh=4QD7Yk9ya09l1BYXkFzaH6f/MQAdtDiTlU/hy2yf93s=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=gCeg40nvhvLuTv41x9MKLXfni225GUgVzxmqVtvjwUAj3FFZutJi2IxbX1IBj+YQ5
-	 WSI7Wf+YTuT5q7mCf7aNnLI//inNZJXW0r8C5mRdzcel+2GlzR7m1aNS77/RwhZEM/
-	 tlrunZmJlY01nsQEaVU6Fsg80erXNd8aQRN0q2ik=
+	by mail.kernel.org (Postfix) with ESMTP id 2B0852084F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:39:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="HLit6JF5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbfHOA1Y (ORCPT
+        id S1729303AbfHOAj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 20:27:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbfHOA1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 20:27:23 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A71C72083B;
-        Thu, 15 Aug 2019 00:27:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565828841;
-        bh=4QD7Yk9ya09l1BYXkFzaH6f/MQAdtDiTlU/hy2yf93s=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=GWEev4ti/zpH5NkWvdRHWHVC5rtGnCFwG9y0sBVYQBJp6ooktPmxhpe9Lvyd9C5dj
-         ORtsiqRQ/hl+Q//gM3NuYjiRF/V6lDE7d8o0a4hGuTY3mGZCGhxENp0572tM7+mePH
-         kcvE2LJVBvyBLaLD6Hhj0BSxxvxQOQwo08dN1r2c=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 14 Aug 2019 20:39:56 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44785 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbfHOAj4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 20:39:56 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t14so361353plr.11
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 17:39:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fossix-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x0YSOs32SeWOTVOQ0KWF9c1OVrzAFcUc9qLBib/rPvw=;
+        b=HLit6JF5DQWzxg9w/UhNxz3ldQY7I8aEK1a821lJV045ICa+D1gyVuM2z5sKTWNlh3
+         3is0gDyE4mQyCn4RIILcJVCVvevxlBRsmgKKju8MlUBdTR1BM0EsvDog+fONMOrvfric
+         ZCAEqXg2ZxHeo3A6f3SEqYGJsdtf13QXAcMXciuPC4OpCh04X7olF6pvGFmwryNULuWP
+         xRezbeGc3lT6EPGPSTznJbjsvpOCSwcYVfFr8JVTbWg3NyL/ZxFBNQvXA3i7PrOj9jpR
+         2LCej8fPHSqHatZHSFjhDcNCt7qSX/UOAdGpxho9Th3ZIhSQReL9Y5wQGRuChv/pe/5t
+         4u0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x0YSOs32SeWOTVOQ0KWF9c1OVrzAFcUc9qLBib/rPvw=;
+        b=C4jKT1fF/nLA9idHEpkEbvUmBTAqdhglHmSVqipvpwxOT6lscgdvbfheys0PS+UHdU
+         AiHPzybOgIUf+6YCmeyz6PUpvjNxWytxP8e+kOYxnmSklhVZeexLxOS7uPK8/FDi6kpm
+         +zwH8oKJD/C/JZN4JdZghAbLRcdXf3DLI/KnQvO9/gVDDtgwwlWX0ulRdiUlgLY7Fdmr
+         BUdkZnwjlYXQrLWIgi1IZIlgHHAD0hWSS6/DKM0CCWPpfC/awuwaGg7GvkmtNi1nXmSS
+         +DUaCrCRiNvOH9OAgVo7kVl8idOq/iqlCMnQyLIpIF3/86658jUJs6mute7QZQDzqoKv
+         645g==
+X-Gm-Message-State: APjAAAXfSp3FIVi03lVSV0xUv2wd5C28fboWe1w7JUnyRgnHRVMQa5dw
+        0yuF/0XbbqhULJpztnqDV8qYsk7yJEbDcA==
+X-Google-Smtp-Source: APXvYqxBxK20jDgaHiiRT14L1me7iA6Q13af4LaeDPHCUs5Op3fMAOLh0+DcJZLe18SQX4vK5L7XZQ==
+X-Received: by 2002:a17:902:9698:: with SMTP id n24mr2031907plp.14.1565829595684;
+        Wed, 14 Aug 2019 17:39:55 -0700 (PDT)
+Received: from santosiv.in.ibm.com ([49.205.218.176])
+        by smtp.gmail.com with ESMTPSA id g8sm815917pgk.1.2019.08.14.17.39.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 14 Aug 2019 17:39:55 -0700 (PDT)
+From:   Santosh Sivaraj <santosh@fossix.org>
+To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Reza Arbab <arbab@linux.ibm.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        christophe leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v10 0/7] powerpc: implement machine check safe memcpy
+Date:   Thu, 15 Aug 2019 06:09:34 +0530
+Message-Id: <20190815003941.18655-1-santosh@fossix.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1562924653-10056-6-git-send-email-macpaul.lin@mediatek.com>
-References: <1562924653-10056-1-git-send-email-macpaul.lin@mediatek.com> <1562924653-10056-6-git-send-email-macpaul.lin@mediatek.com>
-Subject: Re: [PATCH v6 5/8] clk: mediatek: Add MT6765 clock support
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-clk@vger.kernel.org,
-        Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Macpaul Lin <macpaul.lin@mediatek.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Mars Cheng <mars.cheng@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-User-Agent: alot/0.8.1
-Date:   Wed, 14 Aug 2019 17:27:20 -0700
-Message-Id: <20190815002721.A71C72083B@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Macpaul Lin (2019-07-12 02:43:41)
-> diff --git a/drivers/clk/mediatek/clk-mt6765-audio.c b/drivers/clk/mediat=
-ek/clk-mt6765-audio.c
-> new file mode 100644
-> index 000000000000..41f19343dfb9
-> --- /dev/null
-> +++ b/drivers/clk/mediatek/clk-mt6765-audio.c
-> @@ -0,0 +1,109 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Owen Chen <owen.chen@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
+During a memcpy from a pmem device, if a machine check exception is
+generated we end up in a panic. In case of fsdax read, this should
+only result in a -EIO. Avoid MCE by implementing memcpy_mcsafe.
 
-Please use SPDX tags.
+Before this patch series:
 
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "clk-mtk.h"
-> +#include "clk-gate.h"
-> +
-> diff --git a/drivers/clk/mediatek/clk-mt6765-vcodec.c b/drivers/clk/media=
-tek/clk-mt6765-vcodec.c
-> new file mode 100644
-> index 000000000000..eb9ae1c2c99c
-> --- /dev/null
-> +++ b/drivers/clk/mediatek/clk-mt6765-vcodec.c
-> @@ -0,0 +1,79 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Owen Chen <owen.chen@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+```
+bash-4.4# mount -o dax /dev/pmem0 /mnt/pmem/
+[ 7621.714094] Disabling lock debugging due to kernel taint
+[ 7621.714099] MCE: CPU0: machine check (Severe) Host UE Load/Store [Not recovered]
+[ 7621.714104] MCE: CPU0: NIP: [c000000000088978] memcpy_power7+0x418/0x7e0
+[ 7621.714107] MCE: CPU0: Hardware error
+[ 7621.714112] opal: Hardware platform error: Unrecoverable Machine Check exception
+[ 7621.714118] CPU: 0 PID: 1368 Comm: mount Tainted: G   M              5.2.0-rc5-00239-g241e39004581
+#50
+[ 7621.714123] NIP:  c000000000088978 LR: c0000000008e16f8 CTR: 00000000000001de
+[ 7621.714129] REGS: c0000000fffbfd70 TRAP: 0200   Tainted: G   M              
+(5.2.0-rc5-00239-g241e39004581)
+[ 7621.714131] MSR:  9000000002209033 <SF,HV,VEC,EE,ME,IR,DR,RI,LE>  CR: 24428840  XER: 00040000
+[ 7621.714160] CFAR: c0000000000889a8 DAR: deadbeefdeadbeef DSISR: 00008000 IRQMASK: 0
+[ 7621.714171] GPR00: 000000000e000000 c0000000f0b8b1e0 c0000000012cf100 c0000000ed8e1100 
+[ 7621.714186] GPR04: c000020000001100 0000000000010000 0000000000000200 03fffffff1272000 
+[ 7621.714201] GPR08: 0000000080000000 0000000000000010 0000000000000020 0000000000000030 
+[ 7621.714216] GPR12: 0000000000000040 00007fffb8c6d390 0000000000000050 0000000000000060 
+[ 7621.714232] GPR16: 0000000000000070 0000000000000000 0000000000000001 c0000000f0b8b960 
+[ 7621.714247] GPR20: 0000000000000001 c0000000f0b8b940 0000000000000001 0000000000010000 
+[ 7621.714262] GPR24: c000000001382560 c00c0000003b6380 c00c0000003b6380 0000000000010000 
+[ 7621.714277] GPR28: 0000000000000000 0000000000010000 c000020000000000 0000000000010000 
+[ 7621.714294] NIP [c000000000088978] memcpy_power7+0x418/0x7e0
+[ 7621.714298] LR [c0000000008e16f8] pmem_do_bvec+0xf8/0x430
+... <snip> ...
+```
 
-SPDX tags.
+After this patch series:
 
-> diff --git a/drivers/clk/mediatek/clk-mt6765.c b/drivers/clk/mediatek/clk=
--mt6765.c
-> new file mode 100644
-> index 000000000000..f716a48a926d
-> --- /dev/null
-> +++ b/drivers/clk/mediatek/clk-mt6765.c
-> @@ -0,0 +1,961 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Owen Chen <owen.chen@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
+```
+bash-4.4# mount -o dax /dev/pmem0 /mnt/pmem/
+[25302.883978] Buffer I/O error on dev pmem0, logical block 0, async page read
+[25303.020816] EXT4-fs (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
+[25303.021236] EXT4-fs (pmem0): Can't read superblock on 2nd try
+[25303.152515] EXT4-fs (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
+[25303.284031] EXT4-fs (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
+[25304.084100] UDF-fs: bad mount option "dax" or missing value
+mount: /mnt/pmem: wrong fs type, bad option, bad superblock on /dev/pmem0, missing codepage or helper
+program, or other error.
+```
 
-SPDX tags.
+MCE is injected on a pmem address using mambo. The last patch which adds a
+nop is only for testing on mambo, where r13 is not restored upon hitting
+vector 200.
 
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/slab.h>
-> +#include <linux/mfd/syscon.h>
+The memcpy code can be optimised by adding VMX optimizations and GAS macros
+can be used to enable code reusablity, which I will send as another series.
+--
+v10: Fix authorship; add reviewed-bys and acks.
 
-Is this used? Maybe I deleted it.
+v9:
+* Add a new IRQ work for UE events [mahesh]
+* Reorder patches, and copy stable
 
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-[...]
-> +
-> +static const char * const axi_parents[] =3D {
-> +       "clk26m",
-> +       "syspll_d7",
-> +       "syspll1_d4",
-> +       "syspll3_d2"
-> +};
-> +
-> +static const char * const mem_parents[] =3D {
-> +       "clk26m",
-> +       "dmpll_ck",
-> +       "apll1_ck"
-> +};
-> +
-> +static const char * const mm_parents[] =3D {
-> +       "clk26m",
-> +       "mmpll_ck",
-> +       "syspll1_d2",
-> +       "syspll_d5",
-> +       "syspll1_d4",
-> +       "univpll_d5",
-> +       "univpll1_d2",
-> +       "mmpll_d2"
-> +};
-> +
-> +static const char * const scp_parents[] =3D {
-> +       "clk26m",
-> +       "syspll4_d2",
-> +       "univpll2_d2",
-> +       "syspll1_d2",
-> +       "univpll1_d2",
-> +       "syspll_d3",
-> +       "univpll_d3"
-> +};
-> +
-> +static const char * const mfg_parents[] =3D {
-> +       "clk26m",
-> +       "mfgpll_ck",
-> +       "syspll_d3",
-> +       "univpll_d3"
-> +};
-> +
-> +static const char * const atb_parents[] =3D {
-> +       "clk26m",
-> +       "syspll1_d4",
-> +       "syspll1_d2"
-> +};
-> +
-> +static const char * const camtg_parents[] =3D {
-> +       "clk26m",
-> +       "usb20_192m_d8",
-> +       "univpll2_d8",
-> +       "usb20_192m_d4",
-> +       "univpll2_d32",
-> +       "usb20_192m_d16",
-> +       "usb20_192m_d32"
-> +};
-> +
-> +static const char * const uart_parents[] =3D {
-> +       "clk26m",
-> +       "univpll2_d8"
-> +};
-> +
-> +static const char * const spi_parents[] =3D {
-> +       "clk26m",
-> +       "syspll3_d2",
-> +       "syspll4_d2",
-> +       "syspll2_d4"
-> +};
-> +
-> +static const char * const msdc5hclk_parents[] =3D {
-> +       "clk26m",
-> +       "syspll1_d2",
-> +       "univpll1_d4",
-> +       "syspll2_d2"
-> +};
-> +
-> +static const char * const msdc50_0_parents[] =3D {
-> +       "clk26m",
-> +       "msdcpll_ck",
-> +       "syspll2_d2",
-> +       "syspll4_d2",
-> +       "univpll1_d2",
-> +       "syspll1_d2",
-> +       "univpll_d5",
-> +       "univpll1_d4"
-> +};
-> +
-> +static const char * const msdc30_1_parents[] =3D {
-> +       "clk26m",
-> +       "msdcpll_d2",
-> +       "univpll2_d2",
-> +       "syspll2_d2",
-> +       "syspll1_d4",
-> +       "univpll1_d4",
-> +       "usb20_192m_d4",
-> +       "syspll2_d4"
-> +};
-> +
-> +static const char * const audio_parents[] =3D {
-> +       "clk26m",
-> +       "syspll3_d4",
-> +       "syspll4_d4",
-> +       "syspll1_d16"
-> +};
-> +
-> +static const char * const aud_intbus_parents[] =3D {
-> +       "clk26m",
-> +       "syspll1_d4",
-> +       "syspll4_d2"
-> +};
-> +
-> +static const char * const aud_1_parents[] =3D {
-> +       "clk26m",
-> +       "apll1_ck"
-> +};
-> +
-> +static const char * const aud_engen1_parents[] =3D {
-> +       "clk26m",
-> +       "apll1_d2",
-> +       "apll1_d4",
-> +       "apll1_d8"
-> +};
-> +
-> +static const char * const disp_pwm_parents[] =3D {
-> +       "clk26m",
-> +       "univpll2_d4",
-> +       "ulposc1_d2",
-> +       "ulposc1_d8"
-> +};
-> +
-> +static const char * const sspm_parents[] =3D {
-> +       "clk26m",
-> +       "syspll1_d2",
-> +       "syspll_d3"
-> +};
-> +
-> +static const char * const dxcc_parents[] =3D {
-> +       "clk26m",
-> +       "syspll1_d2",
-> +       "syspll1_d4",
-> +       "syspll1_d8"
-> +};
-> +
-> +static const char * const usb_top_parents[] =3D {
-> +       "clk26m",
-> +       "univpll3_d4"
-> +};
-> +
-> +static const char * const spm_parents[] =3D {
-> +       "clk26m",
-> +       "syspll1_d8"
-> +};
-> +
-> +static const char * const i2c_parents[] =3D {
-> +       "clk26m",
-> +       "univpll3_d4",
-> +       "univpll3_d2",
-> +       "syspll1_d8",
-> +       "syspll2_d8"
-> +};
-> +
-> +static const char * const pwm_parents[] =3D {
-> +       "clk26m",
-> +       "univpll3_d4",
-> +       "syspll1_d8"
-> +};
-> +
-> +static const char * const seninf_parents[] =3D {
-> +       "clk26m",
-> +       "univpll1_d4",
-> +       "univpll1_d2",
-> +       "univpll2_d2"
-> +};
-> +
-> +static const char * const aes_fde_parents[] =3D {
-> +       "clk26m",
-> +       "msdcpll_ck",
-> +       "univpll_d3",
-> +       "univpll2_d2",
-> +       "univpll1_d2",
-> +       "syspll1_d2"
-> +};
-> +
-> +static const char * const ulposc_parents[] =3D {
-> +       "clk26m",
-> +       "ulposc1_d4",
-> +       "ulposc1_d8",
-> +       "ulposc1_d16",
-> +       "ulposc1_d32"
-> +};
-> +
-> +static const char * const camtm_parents[] =3D {
-> +       "clk26m",
-> +       "univpll1_d4",
-> +       "univpll1_d2",
-> +       "univpll2_d2"
-> +};
-> +
+v8:
+* While ignoring UE events, return was used instead of continue.
+* Checkpatch fixups for commit log
 
-Can you migrate this driver to the new way of specifying clk parents?
-That way we don't just have lists of strings.
+v7:
+* Move schedule_work to be called from irq_work.
 
-> +#define INVALID_UPDATE_REG 0xFFFFFFFF
-> +#define INVALID_UPDATE_SHIFT -1
-> +#define INVALID_MUX_GATE -1
-> +
-> +static const struct mtk_mux top_muxes[] =3D {
-> +       /* CLK_CFG_0 */
-> +       MUX_GATE_CLR_SET_UPD_FLAGS(CLK_TOP_AXI_SEL, "axi_sel", axi_parent=
-s,
-> +                             CLK_CFG_0, CLK_CFG_0_SET, CLK_CFG_0_CLR,
-> +                             0, 2, 7, CLK_CFG_UPDATE, 0, CLK_IS_CRITICAL=
-),
+v6:
+* Don't return pfn, all callees are expecting physical address anyway [nick]
+* Patch re-ordering: move exception table patch before memcpy_mcsafe patch [nick]
+* Reword commit log for search_exception_tables patch [nick]
 
-Please add a comment why CLK_IS_CRITICAL flag is used in each place.
+v5:
+* Don't use search_exception_tables since it searches for module exception tables
+  also [Nicholas]
+* Fix commit message for patch 2 [Nicholas]
 
-> +       MUX_GATE_CLR_SET_UPD_FLAGS(CLK_TOP_MEM_SEL, "mem_sel", mem_parent=
-s,
-> +                             CLK_CFG_0, CLK_CFG_0_SET, CLK_CFG_0_CLR,
-> +                             8, 2, 15, CLK_CFG_UPDATE, 1, CLK_IS_CRITICA=
-L),
-> +       MUX_GATE_CLR_SET_UPD(CLK_TOP_MM_SEL, "mm_sel", mm_parents, CLK_CF=
-G_0,
-> +                       CLK_CFG_0_SET, CLK_CFG_0_CLR, 16, 3, 23,
-> +                       CLK_CFG_UPDATE, 2),
-> +       MUX_GATE_CLR_SET_UPD(CLK_TOP_SCP_SEL, "scp_sel", scp_parents, CLK=
-_CFG_0,
-> +                       CLK_CFG_0_SET, CLK_CFG_0_CLR, 24, 3, 31,
-> +                       CLK_CFG_UPDATE, 3),
-[...]
-> +       }, {
-> +               .compatible =3D "mediatek,mt6765-topckgen",
-> +               .data =3D clk_mt6765_top_probe,
-> +       }, {
-> +               .compatible =3D "mediatek,mt6765-infracfg",
-> +               .data =3D clk_mt6765_ifr_probe,
-> +       }, {
-> +               /* sentinel */
-> +       }
-> +};
-> +
-> +static int clk_mt6765_probe(struct platform_device *pdev)
-> +{
-> +       int (*clk_probe)(struct platform_device *d);
-> +       int r;
-> +
-> +       clk_probe =3D of_device_get_match_data(&pdev->dev);
-> +       if (!clk_probe)
-> +               return -EINVAL;
-> +
-> +       r =3D clk_probe(pdev);
-> +       if (r)
-> +               dev_err(&pdev->dev,
-> +                       "could not register clock provider: %s: %d\n",
-> +                       pdev->name, r);
-> +
-> +       return r;
-> +}
-> +
-> +static struct platform_driver clk_mt6765_drv =3D {
-> +       .probe =3D clk_mt6765_probe,
-> +       .driver =3D {
-> +               .name =3D "clk-mt6765",
-> +               .owner =3D THIS_MODULE,
+v4:
+* Squash return remaining bytes patch to memcpy_mcsafe implemtation patch [christophe]
+* Access ok should be checked for copy_to_user_mcsafe() [christophe]
 
-Remove this line, platform_driver_register() should take care of it.
+v3:
+* Drop patch which enables DR/IR for external modules
+* Drop notifier call chain, we don't want to do that in real mode
+* Return remaining bytes from memcpy_mcsafe correctly
+* We no longer restore r13 for simulator tests, rather use a nop at 
+  vector 0x200 [workaround for simulator; not to be merged]
 
-> +               .of_match_table =3D of_match_clk_mt6765,
-> +       },
-> +};
-> +
+v2:
+* Don't set RI bit explicitly [mahesh]
+* Re-ordered series to get r13 workaround as the last patch
+
+--
+Balbir Singh (3):
+  powerpc/mce: Fix MCE handling for huge pages
+  powerpc/memcpy: Add memcpy_mcsafe for pmem
+  powerpc/mce: Handle UE event for memcpy_mcsafe
+
+Reza Arbab (1):
+  powerpc/mce: Make machine_check_ue_event() static
+
+Santosh Sivaraj (3):
+  powerpc/mce: Schedule work from irq_work
+  extable: Add function to search only kernel exception table
+  powerpc: add machine check safe copy_to_user
+
+ arch/powerpc/Kconfig                 |   1 +
+ arch/powerpc/include/asm/mce.h       |   6 +-
+ arch/powerpc/include/asm/string.h    |   2 +
+ arch/powerpc/include/asm/uaccess.h   |  14 ++
+ arch/powerpc/kernel/mce.c            |  31 +++-
+ arch/powerpc/kernel/mce_power.c      |  70 ++++----
+ arch/powerpc/lib/Makefile            |   2 +-
+ arch/powerpc/lib/memcpy_mcsafe_64.S  | 242 +++++++++++++++++++++++++++
+ arch/powerpc/platforms/pseries/ras.c |   9 +-
+ include/linux/extable.h              |   2 +
+ kernel/extable.c                     |  11 +-
+ 11 files changed, 347 insertions(+), 43 deletions(-)
+ create mode 100644 arch/powerpc/lib/memcpy_mcsafe_64.S
+
+-- 
+2.21.0
+
