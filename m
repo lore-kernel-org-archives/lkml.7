@@ -2,116 +2,102 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01444C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 05:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8305C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 05:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5898206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 05:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B4A5206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 05:59:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltx3L04W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730178AbfHOF5P (ORCPT
+        id S1730246AbfHOF7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 01:57:15 -0400
-Received: from mga06.intel.com ([134.134.136.31]:34810 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfHOF5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 01:57:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 22:57:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,388,1559545200"; 
-   d="scan'208";a="176784513"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga008.fm.intel.com with ESMTP; 14 Aug 2019 22:57:12 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Christopher S . Hall" <christopher.s.hall@intel.com>
-Subject: Re: [RFC PATCH 1/5] x86: tsc: add tsc to art helpers
-In-Reply-To: <alpine.DEB.2.21.1907160952040.1767@nanos.tec.linutronix.de>
-References: <20190716072038.8408-1-felipe.balbi@linux.intel.com> <20190716072038.8408-2-felipe.balbi@linux.intel.com> <alpine.DEB.2.21.1907160952040.1767@nanos.tec.linutronix.de>
-Date:   Thu, 15 Aug 2019 08:57:11 +0300
-Message-ID: <87y2zvt1hk.fsf@gmail.com>
+        Thu, 15 Aug 2019 01:59:10 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37427 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbfHOF7K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 01:59:10 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 129so849526pfa.4;
+        Wed, 14 Aug 2019 22:59:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wIN/3e7DmCq2KFrr2GT8E+NTKTLGporkmHFbvr6BdEw=;
+        b=ltx3L04WJuOQgF1LYju3dlRn4Cyjnm4+zW2PdzjSOCef1GRhhmpg5YB9ot7HJ0qAX2
+         v5UPvV4kcgPEkdP2QisSksYt35mUkjT0ap+xbT+++wFbuXd3iLCedKgZLoMhncCYykx8
+         qLi8S9OScvOEQw2uQ3ckPj+nZChss+Sa7PSgOfmWibcvWr65mWWd4Khz7J1FnIr6ZWt3
+         NMRusJXN/zBwQpXL3hNc55bSpvg3UUN+AzhQ89RiYQGYL5UwixAHZmbz5i/PPgvdwKBU
+         xAr6jneyWsGHPHAfQG5GqDTvgjC3Y7NKMahmlEMwdQEJtj6UuCaMZW27wJ7uOiRua90r
+         VYhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wIN/3e7DmCq2KFrr2GT8E+NTKTLGporkmHFbvr6BdEw=;
+        b=KaiIG0Ip7mJBQ+F9nxLavwRGlxW8SZKuesMBZJu7UhMm7iOQuuOLZDeMMYB1c2fPDQ
+         /xNCq0P3lyR11Jia8Weq2MC4Ys6XkNnV6crfAYSIwzg4cHFJQveVvMsl9zZeWJNJAeV0
+         i2E6cPtDT7KLrBEPuyckf2oq1TYdIr53nLj3rXwHRNQuBdYjW3oZBdm6hMhaAu4gb4hy
+         Ydk6FesRz6KLWuz502Ryi358cYv7isjfWdHy6iIQTvvlNQSUEeGRf4eEZxZyHGSeXNXI
+         NkhcFOhByiG+faTFGDLKQdsrYnaVuFB1Je4uUXVuA5VUntOSOgAlKbsG66vebDZxWBZG
+         UjcQ==
+X-Gm-Message-State: APjAAAXlw7aONWVAEG+7I5UNHOr2m9ES60wL4J/dCmOXHGNwMhLsFSNO
+        HptLUDkvLuqvTakb2ZQ7G/A=
+X-Google-Smtp-Source: APXvYqwPn7IfU6NrEFx18uQV6dXjBy9Te4NIGALiRj5uKRtJOZxdgllt72zHYP3InxW6dokx9buRiA==
+X-Received: by 2002:a63:e48:: with SMTP id 8mr2211940pgo.389.1565848749290;
+        Wed, 14 Aug 2019 22:59:09 -0700 (PDT)
+Received: from localhost.localdomain ([110.225.3.176])
+        by smtp.gmail.com with ESMTPSA id e7sm1760010pfn.72.2019.08.14.22.59.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 14 Aug 2019 22:59:08 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH] i2c: stm32f7: Make structure stm32f7_i2c_algo constant
+Date:   Thu, 15 Aug 2019 11:28:57 +0530
+Message-Id: <20190815055857.1944-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Static structure stm32f7_i2c_algo, of type i2c_algorithm, is used only
+when it is assigned to constant field algo of a variable having type
+i2c_adapter. As stm32f7_i2c_algo is therefore never modified, make it
+const as well to protect it from unintended modification.
+Issue found with Coccinelle.
 
-Hi,
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+---
+ drivers/i2c/busses/i2c-stm32f7.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Thomas Gleixner <tglx@linutronix.de> writes:
-
-> Felipe,
->
-> On Tue, 16 Jul 2019, Felipe Balbi wrote:
->
-> -ENOCHANGELOG
->
-> As you said in the cover letter:
->
->>  (3) The change in arch/x86/kernel/tsc.c needs to be reviewed at length
->>      before going in.
->
-> So some information what those interfaces are used for and why they are
-> needed would be really helpful.
-
-Okay, I have some more details about this. The TGPIO device itself uses
-ART since TSC is not directly available to anything other than the
-CPU. The 'problem' here is that reading ART incurs extra latency which
-we would like to avoid. Therefore, we use TSC and scale it to
-nanoseconds which, would be the same as ART to ns.
-
->> +void get_tsc_ns(struct system_counterval_t *tsc_counterval, u64 *tsc_ns)
->> +{
->> +	u64 tmp, res, rem;
->> +	u64 cycles;
->> +
->> +	tsc_counterval->cycles = clocksource_tsc.read(NULL);
->> +	cycles = tsc_counterval->cycles;
->> +	tsc_counterval->cs = art_related_clocksource;
->> +
->> +	rem = do_div(cycles, tsc_khz);
->> +
->> +	res = cycles * USEC_PER_SEC;
->> +	tmp = rem * USEC_PER_SEC;
->> +
->> +	do_div(tmp, tsc_khz);
->> +	res += tmp;
->> +
->> +	*tsc_ns = res;
->> +}
->> +EXPORT_SYMBOL(get_tsc_ns);
->> +
->> +u64 get_art_ns_now(void)
->> +{
->> +	struct system_counterval_t tsc_cycles;
->> +	u64 tsc_ns;
->> +
->> +	get_tsc_ns(&tsc_cycles, &tsc_ns);
->> +
->> +	return tsc_ns;
->> +}
->> +EXPORT_SYMBOL(get_art_ns_now);
->
-> While the changes look innocuous I'm missing the big picture why this needs
-> to emulate ART instead of simply using TSC directly.
-
-i don't think we're emulating ART here (other than the name in the
-function). We're just reading TSC and converting to nanoseconds, right?
-
-Cheers
-
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 266d1c269b83..d36cf08461f7 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -1809,7 +1809,7 @@ static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
+ 		I2C_FUNC_SMBUS_I2C_BLOCK;
+ }
+ 
+-static struct i2c_algorithm stm32f7_i2c_algo = {
++static const struct i2c_algorithm stm32f7_i2c_algo = {
+ 	.master_xfer = stm32f7_i2c_xfer,
+ 	.smbus_xfer = stm32f7_i2c_smbus_xfer,
+ 	.functionality = stm32f7_i2c_func,
 -- 
-balbi
+2.19.1
+
