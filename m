@@ -2,97 +2,124 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11172C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FC8C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA5A92086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591472086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:18:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565911106;
+	bh=iJhe6y6JGRGDCMzyg3rw4IDGMv4To3vHo/3eeEQyvLg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=HA93X3DnRODuKpqo89FUBaCAlDjwVzyb7EbnupWoACL5ck648iH58cRYG7Pa1Y3oz
+	 YCvmLytkV84WR+5Ar1HNxkuaFQhCirGI1uTl3b3kq6r7mQ8R5MDSNJOuWsDnvKncf+
+	 NY1bK80zfKRBoF+QySRgbQ+dEWK/k4IzPl4wKeU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387697AbfHOXRk (ORCPT
+        id S2387710AbfHOXSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 19:17:40 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36585 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731640AbfHOXRk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 19:17:40 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k18so8054584otr.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 16:17:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FHzn0YAhkzkDUdc/IdDANTSNQr5IznYphFQTCaPi3SI=;
-        b=gHwzBh6YljIbZ39cEeo616RlX4XgbkRV18HamXeTK0Eq6lXnAT46eMotywJzs94Pkq
-         PjOrKdTnyFYnJEzi/uVx1QYLRZdIhRCaT/nrZ5Y5G1dYGMkB3PGWA8rFjN9okE4eF57E
-         KJFs8Ayv2VvIVeuxuQU4WcLqmLyvxnctw/6/S8zi7JUjCsB8wXFqzHAxY7HsdAG+aOEe
-         JFbSTbK3WChxwi0jlTACvPU+NYQIxg50tykhrVLkRZfF5hx83RPrQr2ENaP6ToNI+hRp
-         2ISd09mRNFBQgJtXhQj3p6hLzM/lzmnxboP11oCtz/RQkYZCCvZkt/IUOt/fEA9rZsLu
-         AQeA==
-X-Gm-Message-State: APjAAAVkjyyB3S7ABWUN20ZH6ayuji/rBjIVNXL8xGA1eTXz74sEx7aQ
-        eczzGaClihmZ01SIotEwLifv3xMfc/c=
-X-Google-Smtp-Source: APXvYqw/wpzNjGrcUGn79CG372lHazAh96pxWzP1ufE9YP8r8/zegYBjQVxA77nSYgtMtZAv7DMFdg==
-X-Received: by 2002:a05:6830:13d9:: with SMTP id e25mr547439otq.197.1565911059162;
-        Thu, 15 Aug 2019 16:17:39 -0700 (PDT)
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com. [209.85.167.181])
-        by smtp.gmail.com with ESMTPSA id n109sm1567594ota.36.2019.08.15.16.17.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Aug 2019 16:17:38 -0700 (PDT)
-Received: by mail-oi1-f181.google.com with SMTP id y8so3482453oih.10
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 16:17:38 -0700 (PDT)
-X-Received: by 2002:aca:1a0e:: with SMTP id a14mr3062547oia.51.1565911058646;
- Thu, 15 Aug 2019 16:17:38 -0700 (PDT)
+        Thu, 15 Aug 2019 19:18:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732278AbfHOXSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 19:18:25 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8579E2083B;
+        Thu, 15 Aug 2019 23:18:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565911104;
+        bh=iJhe6y6JGRGDCMzyg3rw4IDGMv4To3vHo/3eeEQyvLg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=IhO632crOR6eYMBweQJSP5H1+7IbfN4OwDJ7QF5x3ujTb3wWBdBrmZjEuNcjSeCtX
+         ftNUKBS9Ixy+M6JqOL3m2kk2aj1OdwPmXzDucHzC3E5S+WMOuhLnB3dF0WlJdE9nvE
+         5ivGmIi1O+GhXuCbfop4x9HJxqBF19zvvO6kQJRc=
+Subject: Re: [PATCHv6 30/36] selftest/timens: Add Time Namespace test for
+ supported clocks
+To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org, shuah <shuah@kernel.org>
+References: <20190815163836.2927-1-dima@arista.com>
+ <20190815163836.2927-31-dima@arista.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <02add700-b626-a1b4-09e1-1e4d5cd242f2@kernel.org>
+Date:   Thu, 15 Aug 2019 17:18:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1562165800-30721-1-git-send-email-ioana.ciornei@nxp.com> <1562165800-30721-3-git-send-email-ioana.ciornei@nxp.com>
-In-Reply-To: <1562165800-30721-3-git-send-email-ioana.ciornei@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Thu, 15 Aug 2019 18:17:27 -0500
-X-Gmail-Original-Message-ID: <CADRPPNSx5HUx3BJv-cxn=C7341wnC=yympQF7VM9jCroeUa7qA@mail.gmail.com>
-Message-ID: <CADRPPNSx5HUx3BJv-cxn=C7341wnC=yympQF7VM9jCroeUa7qA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] soc: fsl: dpio: remove explicit device_link_remove
-To:     Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Roy Pledge <Roy.Pledge@nxp.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190815163836.2927-31-dima@arista.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 9:58 AM Ioana Ciornei <ioana.ciornei@nxp.com> wrote:
->
-> Starting with commit 72175d4ea4c4 ("driver core: Make driver core
-> own stateful device links") stateful device links are owned by the
-> driver core and should not be explicitly removed on device unbind.
-> Delete all device_link_remove appearances from the dpio driver.
->
-> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+Hi Dmitry,
 
-Applied for next.  Thanks.
+Thanks for the patch.
 
+On 8/15/19 10:38 AM, Dmitry Safonov wrote:
+> A test to check that all supported clocks work on host and inside
+> a new time namespace. Use both ways to get time: through VDSO and
+> by entering the kernel with implicit syscall.
+> 
+> Introduce a new timens directory in selftests framework for
+> the next timens tests.
+> 
+> Co-developed-by: Andrei Vagin <avagin@openvz.org>
+> Signed-off-by: Andrei Vagin <avagin@openvz.org>
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
 > ---
->  drivers/soc/fsl/dpio/dpio-service.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/soc/fsl/dpio/dpio-service.c b/drivers/soc/fsl/dpio/dpio-service.c
-> index b9539ef2c3cd..518a8e081b49 100644
-> --- a/drivers/soc/fsl/dpio/dpio-service.c
-> +++ b/drivers/soc/fsl/dpio/dpio-service.c
-> @@ -305,8 +305,6 @@ void dpaa2_io_service_deregister(struct dpaa2_io *service,
->         list_del(&ctx->node);
->         spin_unlock_irqrestore(&d->lock_notifications, irqflags);
->
-> -       if (dev)
-> -               device_link_remove(dev, d->dev);
->  }
->  EXPORT_SYMBOL_GPL(dpaa2_io_service_deregister);
->
-> --
-> 1.9.1
->
+>   tools/testing/selftests/Makefile          |   1 +
+>   tools/testing/selftests/timens/.gitignore |   1 +
+>   tools/testing/selftests/timens/Makefile   |   5 +
+>   tools/testing/selftests/timens/config     |   1 +
+>   tools/testing/selftests/timens/log.h      |  26 +++
+>   tools/testing/selftests/timens/timens.c   | 185 ++++++++++++++++++++++
+>   tools/testing/selftests/timens/timens.h   |  63 ++++++++
+>   7 files changed, 282 insertions(+)
+>   create mode 100644 tools/testing/selftests/timens/.gitignore
+>   create mode 100644 tools/testing/selftests/timens/Makefile
+>   create mode 100644 tools/testing/selftests/timens/config
+>   create mode 100644 tools/testing/selftests/timens/log.h
+>   create mode 100644 tools/testing/selftests/timens/timens.c
+>   create mode 100644 tools/testing/selftests/timens/timens.h
+> 
+> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+> index 25b43a8c2b15..6fc63b84a857 100644
+> --- a/tools/testing/selftests/Makefile
+> +++ b/tools/testing/selftests/Makefile
+> @@ -47,6 +47,7 @@ TARGETS += splice
+>   TARGETS += static_keys
+>   TARGETS += sync
+>   TARGETS += sysctl
+> +TARGETS += timens
+
+How long does this test run for? Does this test need to be run
+as root? If yes, please add a root check and skip the test.
+
+What does the test output looks like for skip and pass/fail cases?
+
+thanks,
+-- Shuah
