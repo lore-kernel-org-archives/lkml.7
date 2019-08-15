@@ -2,83 +2,219 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BC0C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A85BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E0220665
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C597120665
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:32:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BdQMSyc7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731075AbfHOLcE (ORCPT
+        id S1731295AbfHOLcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 07:32:04 -0400
-Received: from mga05.intel.com ([192.55.52.43]:60872 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbfHOLcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 07:32:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 04:32:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
-   d="scan'208";a="184598389"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Aug 2019 04:32:02 -0700
-Subject: Re: [PATCH v3 2/3] PCI: Add Genesys Logic, Inc. Vendor ID
-To:     "Michael K. Johnson" <johnsonm@danlj.org>
-Cc:     ulf.hansson@linaro.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org,
-        Ben Chuang <ben.chuang@genesyslogic.com.tw>
-References: <20190726020754.GA12078@people.danlj.org>
- <62a756ff-6432-fd43-5e90-038eb28045cd@intel.com>
- <20190812225730.GB30758@people.danlj.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <0b195576-48ef-0cff-80c1-b5da47452e96@intel.com>
-Date:   Thu, 15 Aug 2019 14:30:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 15 Aug 2019 07:32:52 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35681 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfHOLcw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 07:32:52 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d85so1226024pfd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 04:32:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6yyNNZcoZXd04iOxCA2uv7QHQpYeH3o1GL76tGnvZsI=;
+        b=BdQMSyc7Ew3WW/RLs9+hxDLI4sxwJvXm8pIJM78jiMehrBRUjW+8VSjLqWzqtwoFZn
+         Esj/v9R8BWdvpkoa0amEwj8W1IG3tgXWbyiYUqEDHkDvdarSI3uAogTd25i00Umn2DZ1
+         tAYIG0r3PM5WaOf2/6Ix2ZU83b83MImN/bJKcbbhVVegy3Gict/B0VTDGpmXW3KWqB45
+         9UdCJi9C/lodmvIaiSLzOI1jNmnfOHHv3bOAJX82boWFEJ3aK0+YhKCbrllvi5V7jVWk
+         EcDaBlgsSE3R+QchaiNUDjooXbQNZO4O1md6PP5OlqJncyCrfx5nWsYX3yIK1xVHj4cE
+         xZoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6yyNNZcoZXd04iOxCA2uv7QHQpYeH3o1GL76tGnvZsI=;
+        b=aEduRcaeAffL3d/Ah4QguWfiQwGVF8BZ+sGnj3V01sr/nReiPvKRbBfnHauLk6/Fb/
+         DHHouRoFp2is/AQmblkAjJOm2kAiM3b0zTClKU/g/aS75jUNeNVErNFt7HLDMkULvxrH
+         3Yu6vc7kdJ4TeSBPJSGixiCrdD4droRmIzBrE1RxruU/0+JZxQM6BoDE/WesJf/ULF+Q
+         aNneKz2JaCfENWMJnnVtxcmaNtdW3f6OlD3hNQLkScpgIK797jmZTp5lJOqv6dThhfnZ
+         Yt8RrIziI8J/+SiaIM4W3mZ1ZqAtLKS7Igf2zS9S7Rc8ht7f1DPbu8gtzMYH1qnlNRCc
+         01oA==
+X-Gm-Message-State: APjAAAW+yu/zSlzAhS7S+jBMgob32xJ8RgLLgrdNxt//Hc5CNPTEyeYj
+        WB6Ov3ptGRJttm7sWzFtsNEGqw==
+X-Google-Smtp-Source: APXvYqwgHmgCJuJEfgUj6l4fxv/gOjQK+RkzIq0qwwxYOQmPh1Tiut8Hgxg0E93Jt/4ki2OwB4k+8A==
+X-Received: by 2002:a17:90a:bc06:: with SMTP id w6mr1878592pjr.130.1565868771311;
+        Thu, 15 Aug 2019 04:32:51 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li456-16.members.linode.com. [50.116.10.16])
+        by smtp.gmail.com with ESMTPSA id t6sm1190242pjy.18.2019.08.15.04.32.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 15 Aug 2019 04:32:50 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 19:32:42 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5] perf machine: arm/arm64: Improve completeness for
+ kernel address space
+Message-ID: <20190815113242.GA28881@leoy-ThinkPad-X240s>
+References: <20190815082521.16885-1-leo.yan@linaro.org>
+ <d874e6b3-c115-6c8c-bb12-160cfd600505@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190812225730.GB30758@people.danlj.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d874e6b3-c115-6c8c-bb12-160cfd600505@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/08/19 1:57 AM, Michael K. Johnson wrote:
-> Add the Genesys Logic, Inc. verndor ID to pci_ids.h.
+Hi Adrian,
 
-verndor -> vendor
+On Thu, Aug 15, 2019 at 11:54:54AM +0300, Adrian Hunter wrote:
 
+[...]
+
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index e4988f49ea79..d7ff839d8b20 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -48,9 +48,20 @@ ifeq ($(SRCARCH),x86)
+> >    NO_PERF_REGS := 0
+> >  endif
+> >  
+> > +ARM_PRE_START_SIZE := 0
+> > +
+> >  ifeq ($(SRCARCH),arm)
+> >    NO_PERF_REGS := 0
+> >    LIBUNWIND_LIBS = -lunwind -lunwind-arm
+> > +  ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds),)
+> > +    # Extract info from lds:
+> > +    #   . = ((0xC0000000)) + 0x00208000;
+> > +    # ARM_PRE_START_SIZE := 0x00208000
+> > +    ARM_PRE_START_SIZE := $(shell egrep ' \. \= \({2}0x[0-9a-fA-F]+\){2}' \
+> > +      $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds | \
+> > +      sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
+> > +      awk -F' ' '{printf "0x%x", $$2}' 2>/dev/null)
+> > +  endif
+> >  endif
+> >  
+> >  ifeq ($(SRCARCH),arm64)
+> > @@ -58,8 +69,19 @@ ifeq ($(SRCARCH),arm64)
+> >    NO_SYSCALL_TABLE := 0
+> >    CFLAGS += -I$(OUTPUT)arch/arm64/include/generated
+> >    LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
+> > +  ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds),)
+> > +    # Extract info from lds:
+> > +    #  . = ((((((((0xffffffffffffffff)) - (((1)) << (48)) + 1) + (0)) + (0x08000000))) + (0x08000000))) + 0x00080000;
+> > +    # ARM_PRE_START_SIZE := (0x08000000 + 0x08000000 + 0x00080000) = 0x10080000
+> > +    ARM_PRE_START_SIZE := $(shell egrep ' \. \= \({8}0x[0-9a-fA-F]+\){2}' \
+> > +      $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds | \
+> > +      sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
+> > +      awk -F' ' '{printf "0x%x", $$6+$$7+$$8}' 2>/dev/null)
+> > +  endif
 > 
-> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-> Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
+> So, that is not going to work if you take a perf.data file to a non-arm machine?
 
-Did you mean for this patch to be "From:" Ben Chuang because otherwise
-"Co-developed-by" the author is redundant.
+Yeah, this patch will only allow perf to work correctly when perf
+run natively on arm/arm64, so it can resolve partial of the issue.
 
-> Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
+> How come you cannot use kallsyms to get the information?
+
+Thanks for pointing out this.  Sorry I skipped your comment "I don't
+know how you intend to calculate ARM_PRE_START_SIZE" when you reviewed
+the patch v3, I should use that chance to elaborate the detailed idea
+and so can get more feedback/guidance before procceed.
+
+Actually, I have considered to use kallsyms when worked on the previous
+patch set.
+
+As mentioned in patch set v4's cover letter, I tried to implement
+machine__create_extra_kernel_maps() for arm/arm64, the purpose is to
+parse kallsyms so can find more kernel maps and thus also can fixup
+the kernel start address.  But I found the 'perf script' tool directly
+calls machine__get_kernel_start() instead of running into the flow for
+machine__create_extra_kernel_maps(); so I finally gave up to use
+machine__create_extra_kernel_maps() for tweaking kernel start address
+and went back to use this patch's approach by parsing lds files.
+
+So for next step, I want to get some guidances:
+
+- One method is to add a new weak function, e.g.
+  arch__fix_kernel_text_start(), then every arch can implement its own
+  function to fixup the kernel start address;
+
+  For arm/arm64, can use kallsyms to find the symbols with least
+  address and fixup for kernel start address.
+
+- Another method is to directly parse kallsyms in the function
+  machine__get_kernel_start(), thus the change can be used for all
+  archs;
+
+Seems to me the second method is to address this issue as a common
+issue crossing all archs.  But not sure if this is the requirement for
+all archs or just this is only required for arm/arm64.  Please let me
+know what's your preference or other thoughts.  Thanks a lot!
+
+Leo.
+
+> >  endif
+> >  
+> > +CFLAGS += -DARM_PRE_START_SIZE=$(ARM_PRE_START_SIZE)
+> > +
+> >  ifeq ($(SRCARCH),csky)
+> >    NO_PERF_REGS := 0
+> >  endif
+> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > index f6ee7fbad3e4..e993f891bb82 100644
+> > --- a/tools/perf/util/machine.c
+> > +++ b/tools/perf/util/machine.c
+> > @@ -2687,13 +2687,26 @@ int machine__get_kernel_start(struct machine *machine)
+> >  	machine->kernel_start = 1ULL << 63;
+> >  	if (map) {
+> >  		err = map__load(map);
+> > +		if (err)
+> > +			return err;
+> > +
+> >  		/*
+> >  		 * On x86_64, PTI entry trampolines are less than the
+> >  		 * start of kernel text, but still above 2^63. So leave
+> >  		 * kernel_start = 1ULL << 63 for x86_64.
+> >  		 */
+> > -		if (!err && !machine__is(machine, "x86_64"))
+> > +		if (!machine__is(machine, "x86_64"))
+> >  			machine->kernel_start = map->start;
+> > +
+> > +		/*
+> > +		 * On arm/arm64, the kernel uses some memory regions which are
+> > +		 * prior to '_stext' symbol; to reflect the complete kernel
+> > +		 * address space, compensate these pre-defined regions for
+> > +		 * kernel start address.
+> > +		 */
+> > +		if (!strcmp(perf_env__arch(machine->env), "arm") ||
+> > +		    !strcmp(perf_env__arch(machine->env), "arm64"))
+> > +			machine->kernel_start -= ARM_PRE_START_SIZE;
+> >  	}
+> >  	return err;
+> >  }
+> > 
 > 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 70e86148cb1e..4f7e12772a14 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2403,6 +2403,8 @@
->  #define PCI_DEVICE_ID_RDC_R6061		0x6061
->  #define PCI_DEVICE_ID_RDC_D1010		0x1010
->  
-> +#define PCI_VENDOR_ID_GLI		0x17a0
-> +
->  #define PCI_VENDOR_ID_LENOVO		0x17aa
->  
->  #define PCI_VENDOR_ID_QCOM		0x17cb
-> 
-
