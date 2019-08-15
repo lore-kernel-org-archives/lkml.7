@@ -2,134 +2,119 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726EAC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A364C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4518D206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EAB4206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:04:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FmOkGWme"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="IuZwSs1/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732149AbfHONDt (ORCPT
+        id S1732161AbfHONER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:03:49 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41033 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731939AbfHONDs (ORCPT
+        Thu, 15 Aug 2019 09:04:17 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36098 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732150AbfHONER (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:03:48 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m24so2145866ljg.8
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 06:03:47 -0700 (PDT)
+        Thu, 15 Aug 2019 09:04:17 -0400
+Received: by mail-qk1-f196.google.com with SMTP id d23so1790473qko.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 06:04:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0dWebL9fI0U8v/Hpo+dz8Sut2HpNVnveufAiPqP0BQw=;
-        b=FmOkGWme0a9zngByt8Xx69NGtzkfYQoKULWmL12BZ2cCel3xo9BWxubi9OjatpqIqa
-         aCblyK/wBtn4LHnnByVR4FkegV/JwUl6aY5bnqtdVQLwtSTU6w0E8FXGwiwGtBwQfhyQ
-         1JVGMgzHRIlY4UXyQriDsZFP2cdhFeyc1HbJRyOzuWxjQomyJM1V+qrCyl3BNnkYTAVu
-         ok0fgZ5VuX3x7AI+Ve0xGQg2kqeYy1kg7OVkRp2VOwzeNu5BTeXusBlqXVAPhVZ4k83W
-         anplh+2FtjGKTwwlufYZFFPtJPPN0vuHErIzzrGWR6BJCeQMLPrC6u+PFzzjAuH26anN
-         2vOQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+sQD+zsr7vGI2rnBo9g+oJW06UyfnJhHIGQAqNbFxW4=;
+        b=IuZwSs1/sg2gs7X8/HMGOKYXzgvI7hKzDGdggZttJSURMRYxJVZftP0NCXoTx9kR26
+         O/sfZwzz3+w3TlMh5kO0BfG0INa47kk9US5Bl/a8MKcvzoVehrnJPWGzU7V9y+o2d5Nk
+         Kju7MceUpwoVwA5wyNNFaVyXu7PG6ntN3MFy/C4bxnPqmzJLs9UnB1hl3gHgOa65jxUB
+         Hvu5s57zRVawIe+YlelM+eNZ9DvN83kuurmv37XNGarrXfBulYC73YTxo9UVkxrcQTnK
+         C9zb4BzCqLARK8nWnPlz/aG4w3K7tBt1aXiP8Ag8AjtMBvt7ltpyGMaiGvt2NqgiRt4O
+         TqYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0dWebL9fI0U8v/Hpo+dz8Sut2HpNVnveufAiPqP0BQw=;
-        b=P3pV1Qih09RiZbe9AxSk/x7941sNyEcbFcr3r16vDop+/TQZISJ7hjBd5o43qOCd+W
-         Ody+atMb7SGO7j2TBSSHizGLfwWKraANvw2aelFYoYPfeB9BCNsL3jMns4iU9sOq9L6y
-         gKSx2wdgeEiXljA6eS0SsWw49NrCdkdpGOiOlG9B8E6KLvOakR2vwJUyjKzAzsqWp0LB
-         lMP96+jm57Ry5duByAA1Lfo1BjpyFUms/2r0aalGDHz2YNLMk4WRKBU80vUM8KJ6n3nv
-         OZSOgOn5FqHjP9jt13NYvipe3WOZBg7NDlKffq2kTtFSJ5nCQyLtGOzxFbYUsdgt7LK4
-         xWWQ==
-X-Gm-Message-State: APjAAAX+7aDdflwYlt6zUqV0/3BecOj8daSMos5JULEOVemUL48n1PzY
-        IqzAg4XRwOWG1Kji4vLel5lQxf/hhzUuAmc0nCVPXA==
-X-Google-Smtp-Source: APXvYqz1/QQoHBf2h86ZFsG2s6PVvHb8R6MnNm7oO5lIAJpXQ5PL7Zmvi79AuEfoFIn8Z79YsusZkO8EhOrspBcsfmU=
-X-Received: by 2002:a05:651c:104a:: with SMTP id x10mr2522077ljm.238.1565874226938;
- Thu, 15 Aug 2019 06:03:46 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+sQD+zsr7vGI2rnBo9g+oJW06UyfnJhHIGQAqNbFxW4=;
+        b=c9pH0kvsZo2q2toB+mZPY4dwM7FCykTraAH0UPbXz11MbC6dzlS5EIjCFMZNelzG0h
+         id8UjLRlBNpgfVvSNqTJmitA9PjAfdema6gXCoUyTbXjMeTaCrdEA8yvFWZAvHVui8XS
+         sVkIGBLk2Ah6bvgLBMzNKvqrtMsZhYhpZqehY6I3+1O/jJJ0IIYo4KRoTzWsPDKUR1/N
+         eijoOplBs4L9iK+9hntNQ7nMDB0uG3Xm9su6gW3OXVsTqLv48fiMbitPBmRrytNw+Mra
+         JqyMrPicRhZI58k0TjPpKN1UalQJr8PVrSHIhOQU8dBvkyBi4RiKkhZbtQFsCj4Wcu6n
+         RiBg==
+X-Gm-Message-State: APjAAAWs8Qi1zfM6NrgjunnNNy4d0ECkaiQWLd5ionSvYeOKJB6L/Lnr
+        DEXOLGAbfdxioE5SuEJvdjCmJg==
+X-Google-Smtp-Source: APXvYqxbHXTewYAACJxzRXNX2TlZ2cOD0GDfUS0iL50gokJ8s5uWAlQ8FDekdfBBzYw8ePlgf2CSQA==
+X-Received: by 2002:a05:620a:52e:: with SMTP id h14mr4017748qkh.358.1565874256038;
+        Thu, 15 Aug 2019 06:04:16 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id z7sm1468623qki.88.2019.08.15.06.04.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 15 Aug 2019 06:04:15 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hyFQN-0004HN-58; Thu, 15 Aug 2019 10:04:15 -0300
+Date:   Thu, 15 Aug 2019 10:04:15 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
+Message-ID: <20190815130415.GD21596@ziepe.ca>
+References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
+ <20190814202027.18735-3-daniel.vetter@ffwll.ch>
+ <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
+ <20190815084429.GE9477@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <1565682784-10234-1-git-send-email-sumit.garg@linaro.org> <1565789078.10490.10.camel@kernel.org>
-In-Reply-To: <1565789078.10490.10.camel@kernel.org>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Thu, 15 Aug 2019 18:33:35 +0530
-Message-ID: <CAFA6WYPU0oREaHROhhRsEXJTijvER8G4riBk4e4=Bd5XgGFqtQ@mail.gmail.com>
-Subject: Re: [RFC/RFT v4 0/5] Add generic trusted keys framework/subsystem
-To:     Mimi Zohar <zohar@kernel.org>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, dhowells@redhat.com,
-        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
-        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815084429.GE9477@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mimi,
+On Thu, Aug 15, 2019 at 10:44:29AM +0200, Michal Hocko wrote:
 
-On Wed, 14 Aug 2019 at 18:54, Mimi Zohar <zohar@kernel.org> wrote:
->
-> Hi Sumit,
->
-> On Tue, 2019-08-13 at 13:22 +0530, Sumit Garg wrote:
-> > This patch-set is an outcome of discussion here [1]. It has evolved very
-> > much since v1 to create, consolidate and generalize trusted keys
-> > subsystem.
-> >
-> > This framework has been tested with trusted keys support provided via TEE
-> > but I wasn't able to test it with a TPM device as I don't possess one. It
-> > would be really helpful if others could test this patch-set using a TPM
-> > device.
->
-> With the "CONFIG_HEADER_TEST" and "CONFIG_KERNEL_HEADER_TEST" config
-> options enabled, which is required for linux-next, it fails to build.
->
+> As the oom reaper is the primary guarantee of the oom handling forward
+> progress it cannot be blocked on anything that might depend on blockable
+> memory allocations. These are not really easy to track because they
+> might be indirect - e.g. notifier blocks on a lock which other context
+> holds while allocating memory or waiting for a flusher that needs memory
+> to perform its work.
 
-TBH, I wasn't aware about this test feature for headers. It looks like
-the header which fails this test is "include/keys/trusted_tpm.h" which
-is basically a rename of "include/keys/trusted.h" plus changes in this
-patch-set.
+But lockdep *does* track all this and fs_reclaim_acquire() was created
+to solve exactly this problem.
 
-And "include/keys/trusted.h" header is already put under blacklist
-here: "include/Kbuild +68" as it fails to build. So its that rename
-due to which build failure is observed now.
+fs_reclaim is a lock and it flows through all the usual lockdep
+schemes like any other lock. Any time the page allocator wants to do
+something the would deadlock with reclaim it takes the lock.
 
-It seems to be an easy fix for this build failure via following changes:
+Failure is expressed by a deadlock cycle in the lockdep map, and
+lockdep can handle arbitary complexity through layers of locks, work
+queues, threads, etc.
 
-diff --git a/include/keys/trusted_tpm.h b/include/keys/trusted_tpm.h
-index 7b593447920b..ca1bec0ef65d 100644
---- a/include/keys/trusted_tpm.h
-+++ b/include/keys/trusted_tpm.h
-@@ -2,6 +2,9 @@
- #ifndef __TRUSTED_TPM_H
- #define __TRUSTED_TPM_H
+What is missing?
 
-+#include <keys/trusted-type.h>
-+#include <linux/tpm_command.h>
-+
- /* implementation specific TPM constants */
- #define MAX_BUF_SIZE                   1024
- #define TPM_GETRANDOM_SIZE             14
-
-So I will include above changes in this patch-set and also remove
-"include/keys/trusted.h" header from the blacklist.
-
--Sumit
-
-> Mimi
+Jason
