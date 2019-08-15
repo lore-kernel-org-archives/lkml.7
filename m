@@ -2,87 +2,63 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B76C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 21:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E602C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 21:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB2F205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 21:01:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RN9JoNnS"
+	by mail.kernel.org (Postfix) with ESMTP id EADA02063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 21:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731533AbfHOVBw (ORCPT
+        id S1733043AbfHOVCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 17:01:52 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40762 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfHOVBv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 17:01:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w16so1931398pfn.7;
-        Thu, 15 Aug 2019 14:01:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=4T64qkcAdXmbepae4c9HCTfQGPBnJoejyWFEjIneg2s=;
-        b=RN9JoNnS4VX0rzGS2CSyjnUzPIPErSpNO8+HGiJvK6ZIxUwz6q+/aZsqvLfBetDQ5S
-         iMa4wkqjaCQytGxrsOSIAebJ08Sx00bEiI2x9SFU9F6978G0e4ndNwZIzjrkZkVe4KTF
-         H+ebL06LoowsGWpHJ6gZCEQXEfHl39a8zr9PaiPUpvn6dNy22g9oA2y+dzYIOj3HtZ6O
-         gLQ60pqFPuni4FhgBzdNCXd8CIc+naFzs48zdPoDM+OxUd8DC8s94gVgmfor4QUKSdbS
-         WVkqNbtY5pu2fqpLhMiWMb+YIZLlbCdm1UkhIOzpwBAUcfRxY0fZzsZNEsH/Hwh4ToT5
-         LZ4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=4T64qkcAdXmbepae4c9HCTfQGPBnJoejyWFEjIneg2s=;
-        b=p+9QFkKAxJlo0B7WRg1SWLfX0/U2rskFIDFw/FfDuNWhtLxM+S0nSIb+gZHhpUPzAp
-         CYs/j6g5vn1XFtHuFoBeGBHZ1ZAUdmrsC5puZAZvs5rJJmV4ZjpAaqV08pTULD8tm+V+
-         X7B1P0WhGzb4zrf/qHwVKtnn/eW73LzL7pwErqMV5YeLjhtJfAszyOYs5cw6ReeOMk+s
-         QCDlrelXNFOZG3CwIuZLFH9p9H/xTk8+NZQONxVR2W/9AchrAwHiorp6uqKJOSqGpWxn
-         mpueCnPyRpViF2ppR6T2+KGedVb7uztj6OT2bLAFlD8vDf/ecwvnrB1++Q11l6E8C2Lt
-         fiKw==
-X-Gm-Message-State: APjAAAWbvtneQXQ1604JMhV9FoR+R97eZZed4JAuSz7MYbValWp9vQ/L
-        d9F+WoM3ZSsvslKAqPYAUgY=
-X-Google-Smtp-Source: APXvYqzoyCZOMcdfxkJb1szIM39Ur1skzzb4WHfq9bjFGTO4eIIks53+RyyheGBGWshT0f+I9dUqgQ==
-X-Received: by 2002:a17:90b:949:: with SMTP id dw9mr3974290pjb.49.1565902910671;
-        Thu, 15 Aug 2019 14:01:50 -0700 (PDT)
-Received: from [172.20.53.208] ([2620:10d:c090:200::3:fd5d])
-        by smtp.gmail.com with ESMTPSA id 195sm4163508pfu.75.2019.08.15.14.01.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 14:01:50 -0700 (PDT)
-From:   "Jonathan Lemon" <jonathan.lemon@gmail.com>
-To:     "Ivan Khoronzhuk" <ivan.khoronzhuk@linaro.org>
-Cc:     bjorn.topel@intel.com, magnus.karlsson@intel.com,
-        davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf 1/1] xdp: unpin xdp umem pages in error path
-Date:   Thu, 15 Aug 2019 14:01:48 -0700
-X-Mailer: MailMate (1.12.5r5635)
-Message-ID: <1194DC32-76CC-4C7E-9D21-47886C704367@gmail.com>
-In-Reply-To: <20190815205635.6536-1-ivan.khoronzhuk@linaro.org>
-References: <20190815205635.6536-1-ivan.khoronzhuk@linaro.org>
+        Thu, 15 Aug 2019 17:02:07 -0400
+Received: from mga17.intel.com ([192.55.52.151]:49995 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbfHOVCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 17:02:06 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 14:02:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
+   d="scan'208";a="176987523"
+Received: from schuberw-mobl.ger.corp.intel.com (HELO localhost) ([10.252.38.145])
+  by fmsmga008.fm.intel.com with ESMTP; 15 Aug 2019 14:02:02 -0700
+Date:   Fri, 16 Aug 2019 00:02:01 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     peterhuewe@gmx.de, mark.rutland@arm.com, robh+dt@kernel.org,
+        jgg@ziepe.ca, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH] tpm/tpm_ftpm_tee: trivial checkpatch fixes
+Message-ID: <20190815210201.yhc7dosvnafcayfu@linux.intel.com>
+References: <20190813130559.16936-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813130559.16936-1-sashal@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 13, 2019 at 09:05:59AM -0400, Sasha Levin wrote:
+> Fixes a few checkpatch warnings (and ignores some), mostly around
+> spaces/tabs and documentation.
+> 
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
+Thank you!
 
-On 15 Aug 2019, at 13:56, Ivan Khoronzhuk wrote:
+I'll squash these to the existing patches.
 
-> Fix mem leak caused by missed unpin routine for umem pages.
-> Fixes: 8aef7340ae9695 ("commit xsk: introduce xdp_umem_page")
->
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+/Jarkko
