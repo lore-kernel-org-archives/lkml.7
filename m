@@ -2,139 +2,194 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333A1C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F133AC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEED42054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565898989;
-	bh=AtLbiaZ+VQlrktIPUORYmJysPW8SdO78vpZ66TK/sa4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=NEWTKsAVpwdNVV+J65HyqaS39SGN90PcFQdWXdFEaDQ68619t26FxB3LD2DlUtwSp
-	 H8yPFS193RSrKTZmLhPF46j9i/w4csoLqFQ+43D6sRJfMxadVl5xj89kPtpH/iC1K1
-	 eAGJ04KOf62UNgCY/iUp0DppTun90TffpjIu8Ehg=
+	by mail.kernel.org (Postfix) with ESMTP id BBF82206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:56:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BxFVHZYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732098AbfHOT42 (ORCPT
+        id S1732275AbfHOT43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 15:56:28 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40011 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731379AbfHOT41 (ORCPT
+        Thu, 15 Aug 2019 15:56:29 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40847 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731366AbfHOT42 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 15:56:27 -0400
-Received: by mail-qk1-f196.google.com with SMTP id s145so2817686qke.7;
-        Thu, 15 Aug 2019 12:56:27 -0700 (PDT)
+        Thu, 15 Aug 2019 15:56:28 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c3so3250145wrd.7;
+        Thu, 15 Aug 2019 12:56:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=8z1El4joEJPfZv/LOFE6htKfEd+io5Oqo8kE5bpDZI8=;
-        b=IV591KQoCqfTve5OPjwQ47qHrWwJRQf3xrEvs5BOJAkNcxSizdrKC6TUcjcAaz9PoQ
-         px/g/rn3BTUn77UIp7bkv6L/1d9qTjvMhw/OQX8nroblfWcmVo93BMhaqjBRFoBlA1RI
-         10S1uDqFaHcg1R8CS7xKdqNFnQrkMfSNbLm4P9cBlbgE6j91TZWgHEUnVYF9rHSpnhuW
-         tpDQZcemdcad6WXNjgVDo9e+re3W/IsVX5KPyDXUnuJvt8FOYQOOy8yprthlx9FQfKP2
-         WjO9IZw+8e0pI6aAhBHhlJ2AmcWyozZKtW9efPWWbwtSQ+6Ecj79f0juQPYo17z08IuK
-         FaFQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=g9gYXoDI8x/e6fYrmXGn/1ayuYBgMKowuhsSXyNfgGk=;
+        b=BxFVHZYKa5FJrzI4dPgxhphpWrPJX2/swt830QW256gBUwXxM+yJC5IcwYLsVK7nDX
+         YJfjPvRIeaA5/1BBNJXoqsgHTewr/PGetGNR+nY8LcUb106z3sVc1BGnzwC66iGgyvBi
+         +mZLEhnELdlHg5W9w2aWb5ElMS7FgSEkhszGxlzux9iKt0MowKuNOJLEMUsF+38EitOx
+         aWGA01aulScsS+DFbHrtKj7iyTuIPYhoHtdzLh8PvOBthQUYT/SsM7uXPDDj4Q1D9eSV
+         8Sy3e80DmLJG96aLV8uckZ39ffojhwRHHccpX8EVLTaFDo7W+D2mPyxmub0qfUW0foGm
+         Ocvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=8z1El4joEJPfZv/LOFE6htKfEd+io5Oqo8kE5bpDZI8=;
-        b=dSmrRTlNcO8rSow0cIqMZnh3XKC8/ki2yrGpE6AfJsOuunEt+UbTJ+uH9NN6idYTY1
-         oiWaOX95uBPKO2onrq/V3e6umFbol4tvD6i7zbI10cYWEOFRsKgyEe5KwiJGYXJl2LG5
-         O+NtX68aTqbiRsWY5DtaUZzL96WUZ6eO8a0cV6a2wJtDq/pFHlZ0tYr0+voipgMSKxOH
-         oE82OLPSil3rnpf65I9y0zZmNmaT4YuELTL+g42n4/lryhrvN1L8ZzxYXkfXmHgkBdiL
-         qrIIcOgSfzeEfvNfAlTltPKcWuIRYuzQhUz9P2NI+zdxIh69vCA8NVDkDUeia4TnFJbv
-         fjSg==
-X-Gm-Message-State: APjAAAUvFy3YAZ6QNrKIMDHGmRxW4y3oLY4UHYKIIuJVkyT9XMJ+ePt8
-        YLzqnaBb/3/CoXNoj3ztCyk=
-X-Google-Smtp-Source: APXvYqyFEhAOKMzIeJih4yO72MRxGcpcdDYyJTV1V8osLQRoZK31+m6+Tv7/N0fkfX3fOJV0l5MUVQ==
-X-Received: by 2002:a37:4791:: with SMTP id u139mr5430488qka.386.1565898981989;
-        Thu, 15 Aug 2019 12:56:21 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:25cd])
-        by smtp.gmail.com with ESMTPSA id c13sm1817004qtn.77.2019.08.15.12.56.20
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=g9gYXoDI8x/e6fYrmXGn/1ayuYBgMKowuhsSXyNfgGk=;
+        b=WY0uWMNmoDVdt4uHTPD+laP/aIjuylqU5Ax1x0NP7ay7htP9BMKUcRFlnanla1JHsw
+         DAUqBfuB9FnNbhasprLYVcJunzW30ZWiZfcAWnKeTKTEAaysLNHt+PXuPHUqVHkU2ly8
+         +vxUyJaKQIASIX6Mdt51JqULA3TlEnzcO2vdWLocDiDgxibcW/xon4ixq/xaGCZwJWLH
+         sXZS2k+s7KN9HD3k6S+y6dt447bo8eA9KyRfwAFCIN8/9vvCDbDrdQVkhqEiZO3ciGf7
+         Vc6qMZY/PVZBDTWDsM5psQWHQEl8J9f1BowefIkUWdM7ZjcEu7ZdkVGL0yo/INWi8wO/
+         mD4Q==
+X-Gm-Message-State: APjAAAUSWkWan8Fjk9aOrIoc9gGePmQotfJxP2zAyLVuDTOcFccgOovP
+        yRZSY4HaSZqritDT9jRGsY8=
+X-Google-Smtp-Source: APXvYqxCRww3HZkI3tRakEQwmbHT9qSGZgIG7df34SLn3B0yW2ltqN9deIrgqnjQ87uU/8wJDAOtvQ==
+X-Received: by 2002:adf:ffc2:: with SMTP id x2mr3219310wrs.338.1565898984599;
+        Thu, 15 Aug 2019 12:56:24 -0700 (PDT)
+Received: from [172.30.88.191] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
+        by smtp.gmail.com with ESMTPSA id h2sm1762739wmb.28.2019.08.15.12.56.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 12:56:21 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 12:56:19 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, guro@fb.com, akpm@linux-foundation.org
-Subject: [PATCHSET v2] writeback, memcg: Implement foreign inode flushing
-Message-ID: <20190815195619.GA2263813@devbig004.ftw2.facebook.com>
+        Thu, 15 Aug 2019 12:56:23 -0700 (PDT)
+Subject: Re: [PATCH 04/22] media: Move v4l2_fwnode_parse_link from v4l2 to
+ driver base
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Len Brown <lenb@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "moderated list:ARM/ZYNQ ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Enrico Weigelt <info@metux.net>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>
+References: <20190805233505.21167-1-slongerbeam@gmail.com>
+ <20190805233505.21167-5-slongerbeam@gmail.com>
+ <CAHp75VcOh8bOf_s6t0ehwGtcYn64QFGj303SVvpHrztEOhTRgg@mail.gmail.com>
+ <4750b347-b421-6569-600f-0ced8406460e@gmail.com>
+ <20190814103054.GI13294@shell.armlinux.org.uk>
+ <e0a19469-af9d-d9de-499f-4ffbf04542b3@gmail.com>
+ <20190814220437.GJ13294@shell.armlinux.org.uk>
+ <1842bf8f-4f97-6294-41db-74f9f8e2befd@gmail.com>
+ <20190814231509.GK13294@shell.armlinux.org.uk>
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+Message-ID: <9b9ca684-9309-cadd-2e58-9ae73162a807@gmail.com>
+Date:   Thu, 15 Aug 2019 12:56:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190814231509.GK13294@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-Changes from v1[1]:
 
-* More comments explaining the parameters.
+On 8/14/19 4:15 PM, Russell King - ARM Linux admin wrote:
+> On Wed, Aug 14, 2019 at 04:00:30PM -0700, Steve Longerbeam wrote:
+>>
+>> On 8/14/19 3:04 PM, Russell King - ARM Linux admin wrote:
+>>> On Wed, Aug 14, 2019 at 12:04:41PM -0700, Steve Longerbeam wrote:
+>>>> On 8/14/19 3:30 AM, Russell King - ARM Linux admin wrote:
+>>>>> On Tue, Aug 06, 2019 at 09:53:41AM -0700, Steve Longerbeam wrote:
+>>>>>> The full patchset doesn't seem to be up yet, but see [1] for the cover
+>>>>>> letter.
+>>>>> Was the entire series copied to the mailing lists, or just selected
+>>>>> patches?  I only saw 4, 9, 11 and 13-22 via lakml.
+>>>> The whole series was posted to the linux-media ML, see [1]. At the time,
+>>>> none of the linux-media ML archives had the whole series.
+>>>>
+>>>>> In the absence of the other patches, will this solve imx-media binding
+>>>>> the internal subdevs of sensor devices to the CSI2 interface?
+>>>> "internal subdevs of sensor devices" ?? That doesn't make any sense.
+>>> Sorry, but it makes complete sense when you consider that sensor
+>>> devices may have more than one subdev, but there should be only one
+>>> that is the "output" to whatever the camera is attached to.  The
+>>> other subdevs are internal to the sensor.
+>> Ah, thanks for the clarification. Yes, by "internal subdevs" I understand
+>> what you mean now. The adv748x and smiapp are examples.
+>>
+>>> subdevs are not purely the remit of SoC drivers.
+>> So there is no binding of internal subdevs to the receiver CSI-2. The
+>> receiver CSI-2 subdev will create media links to the subdev that has an
+>> externally exposed fwnode endpoint that connects with the CSI-2 sink pad.
+> Maybe - with 5.2, I get:
+>
+> - entity 15: imx6-mipi-csi2 (5 pads, 6 links)
+>               type V4L2 subdev subtype Unknown flags 0
+>               device node name /dev/v4l-subdev2
+>          pad0: Sink
+> ...
+>                  <- "imx219 0-0010":0 []
+>                  <- "imx219 pixel 0-0010":0 []
+>
+> Adding some debug in gives:
+>
+> [   11.963362] imx-media: imx_media_create_of_links() for imx6-mipi-csi2
+> [   11.963396] imx-media: create_of_link(): /soc/aips-bus@2000000/iomuxc-gpr@20e0000/ipu1_csi0_mux
+> [   11.963422] imx-media: create_of_link(): /soc/ipu@2400000
+> [   11.963450] imx-media: create_of_link(): /soc/ipu@2800000
+> [   11.963478] imx-media: create_of_link(): /soc/aips-bus@2000000/iomuxc-gpr@20e0000/ipu2_csi1_mux
+> [   11.963489] imx-media: imx6-mipi-csi2:4 -> ipu2_csi1_mux:0
+> [   11.963522] imx-media: create_of_link(): /soc/aips-bus@2100000/i2c@21a0000/camera@10
+> [   11.963533] imx-media: imx219 0-0010:0 -> imx6-mipi-csi2:0
+> [   11.963549] imx-media: imx_media_create_of_links() for imx219 pixel 0-0010
+> [   11.963577] imx-media: create_of_link(): /soc/aips-bus@2100000/mipi@21dc000
+> [   11.963587] imx-media: imx219 pixel 0-0010:0 -> imx6-mipi-csi2:0
+> [   11.963602] imx-media: imx_media_create_of_links() for imx219 0-0010
+>
+> Note that it's not created by imx6-mipi-csi2, but by imx-media delving
+> around in the imx219 subdevs.
+>
+>  From what I can see, smiapp does the same thing that I do in imx219 -
+> sets the subdev->dev member to point at the struct device, which then
+> means that v4l2_device_register_subdev() will associate the same fwnode
+> with both "imx219 pixel 0-0010" and "imx219 0-0010".
 
-* 0003-writeback-Separate-out-wb_get_lookup-from-wb_get_create.patch
-  added and avoid spuriously creating missing wbs for foreign
-  flushing.
+Ok, understood.
 
-There's an inherent mismatch between memcg and writeback.  The former
-trackes ownership per-page while the latter per-inode.  This was a
-deliberate design decision because honoring per-page ownership in the
-writeback path is complicated, may lead to higher CPU and IO overheads
-and deemed unnecessary given that write-sharing an inode across
-different cgroups isn't a common use-case.
+I realize imx_media_create_of_link() is a bit intrusive, and that's one 
+of the things I'm trying to get rid of in this patchset. Unfortunately 
+it's there for a reason which is described in patch 0021. But to explain 
+here, the imx6-mipi-csi2 receiver outputs its four virtual channels on 
+four separate source pads, and those connect to four different 
+subdevices (video mux's and CSI's), and the problem is that only the 
+first subdev that adds imx6-mipi-csi2 to its notifier asd list will get 
+a notifier bind() callback (where links can be created to 
+imx6-mipi-csi2) -- the other subdevs don't contain it in their asd lists 
+so they never create the links to imx6-mipi-csi2. So until the 
+requirement in v4l2-async that no notifiers can contain the same asd in 
+its list is relaxed, this function will have to remain, but I can make 
+it less intrusive (only create the missing links from imx6-mipi-csi2). 
+I'm not able to find a cleaner workaround at the moment.
 
-Combined with inode majority-writer ownership switching, this works
-well enough in most cases but there are some pathological cases.  For
-example, let's say there are two cgroups A and B which keep writing to
-different but confined parts of the same inode.  B owns the inode and
-A's memory is limited far below B's.  A's dirty ratio can rise enough
-to trigger balance_dirty_pages() sleeps but B's can be low enough to
-avoid triggering background writeback.  A will be slowed down without
-a way to make writeback of the dirty pages happen.
+Steve
 
-This patchset implements foreign dirty recording and foreign mechanism
-so that when a memcg encounters a condition as above it can trigger
-flushes on bdi_writebacks which can clean its pages.  Please see the
-last patch for more details.
-
-This patchset contains the following four patches.
-
- 0001-writeback-Generalize-and-expose-wb_completion.patch
- 0002-bdi-Add-bdi-id.patch
- 0003-writeback-Separate-out-wb_get_lookup-from-wb_get_create.patch
- 0004-writeback-memcg-Implement-cgroup_writeback_by_id.patch
- 0005-writeback-memcg-Implement-foreign-dirty-flushing.patch
-
-0001-0004 are prep patches which expose wb_completion and implement
-bdi->id and flushing by bdi and memcg IDs.
-
-0005 implements foreign inode flushing.
-
-Thanks.  diffstat follows.
-
- fs/fs-writeback.c                |  114 +++++++++++++++++++++++----------
- include/linux/backing-dev-defs.h |   23 ++++++
- include/linux/backing-dev.h      |    5 +
- include/linux/memcontrol.h       |   39 +++++++++++
- include/linux/writeback.h        |    2 
- mm/backing-dev.c                 |  120 +++++++++++++++++++++++++++++------
- mm/memcontrol.c                  |  132 +++++++++++++++++++++++++++++++++++++++
- mm/page-writeback.c              |    4 +
- 8 files changed, 386 insertions(+), 53 deletions(-)
-
---
-tejun
-
-[1] http://lkml.kernel.org/r/20190803140155.181190-1-tj@kernel.org
