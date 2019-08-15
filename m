@@ -2,255 +2,410 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7736DC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615E4C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1EC20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBB520578
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:38:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UhntzMAf"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="UzmIROz4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732026AbfHOQgz (ORCPT
+        id S1732043AbfHOQin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:36:55 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51712 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728348AbfHOQgy (ORCPT
+        Thu, 15 Aug 2019 12:38:43 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40799 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731759AbfHOQim (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:36:54 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FGYQWJ191500;
-        Thu, 15 Aug 2019 16:36:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=tQp5b+UWyvDkv+mGHv76dD+bCogpkczjZQzmfVTQMNA=;
- b=UhntzMAfWALdFCA48bRct57tOumFWBA3G42PC/w+X4/OsjQIx41oHRuI/w6t3OOZyIoF
- NdG1hCNIGQzZiOLbgkVJUHsKNM0j+Mps4ca0ICeOhOXb0mKZJqQdZFh/ZFrjOPj0MRlg
- encRmoGw4lQYevOL2Wpi2UQbHCLBM4iVnNT8/oDXVNdEWD0sfLW2rRn9L+ebu8qRhH8b
- 7Qg8rhhmpzZLubHbFue+jNF415ZfYdlqhvZXai/tjb0BvJDNK8/AR2fEcReBiDzcd7/n
- tbVDn1OQgbBWhExDCWddjeU1b0Zt04eP0HSxO3qTH2mjQg7z4Rfbzr8ggAJz7Ap4I+3M 1w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2u9nbturdd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Aug 2019 16:36:37 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FGX7Yv003161;
-        Thu, 15 Aug 2019 16:34:36 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2ucs8858qr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Aug 2019 16:34:36 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7FGYZ0S027609;
-        Thu, 15 Aug 2019 16:34:35 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 15 Aug 2019 09:34:35 -0700
-Date:   Thu, 15 Aug 2019 09:34:34 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     hch@infradead.org, akpm@linux-foundation.org, tytso@mit.edu,
-        viro@zeniv.linux.org.uk
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        fstests <fstests@vger.kernel.org>
-Subject: [PATCH RFC 3/2] fstests: check that we can't write to swap files
-Message-ID: <20190815163434.GA15186@magnolia>
-References: <156588514105.111054.13645634739408399209.stgit@magnolia>
+        Thu, 15 Aug 2019 12:38:42 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v19so1775589wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:38:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fssuGudxqPedOcs3pdfTW+Jmy3XNXcYZlllCnLZ0eg4=;
+        b=UzmIROz4RTdq8dLLbk5w/wmDu7fJ8ieGUWzS41G27je6KfslmU/YBGGyoCCr4RQ3Nk
+         Sv5R3+Z9ntabadXlrwTSPGNiDTtoP79KbMoTkpHLhBrK1xl8aJuFuiLicWd0tkYltrYG
+         dOIu20PWQ7QHxUv6KHxEwTNrCOwehk/HGFjYo2nw4f6FP5iFe8uW6P/mqhDmd3nlahQ8
+         xHT7PS2yFdIlLumXIPKzPl0pE9SesaJ92Px+94DqNmbQCxhx9bBRSM3nLb/awJaKWvCE
+         fWZcCbVSW/QYlwI+LvEhyRoEb80hwcLhtcfjnn5uyFXlusRSSfszVm16arfaIV/WSe3w
+         q92w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fssuGudxqPedOcs3pdfTW+Jmy3XNXcYZlllCnLZ0eg4=;
+        b=FlmcuCKPPnQ9lG+iuCtbd+TrOPjxn95vk8Kry2aj1jSu8wD5F116crM5/Pc3bw/Qaq
+         3O3lPZxmgCq98XEhCwggexN/SPmD71ng+y5uVZdEY0GT656ld98jWv8KwphArfaTk2/2
+         CcWInUUBno2Habxih80QYW3ajjX3wj6hGLqPocs/c6YEN+4FztseeNtaF94wxsB826z0
+         F83MfJVHpsELq9UWcZjxmX3a8pWUHb8xKatir8MmpXUbZ+jK8WLJDXaDnpf46QNJJpQS
+         bQzfRm8SNxe1/bguHrm+nvFN7YG5VfjfnAuEBpG6sLLTLW+HT8jvteDAr7PIwUsn/fom
+         AYHw==
+X-Gm-Message-State: APjAAAWXIlq+OlJPEdOoyL0Bn7gyDOUb2wc7wDQekWBusatQaWYS2zQQ
+        w/ZWyiWGR3nF25kXj4X7Nc3FThP9yRg=
+X-Google-Smtp-Source: APXvYqxjS9b8SSWLzaR6C+Snf2W51qVCF+kjkRBYarj4cNxay6jmom9UpdkL4k6kXL5aZ++jQpFZ4w==
+X-Received: by 2002:a1c:1f4e:: with SMTP id f75mr3480161wmf.137.1565887118371;
+        Thu, 15 Aug 2019 09:38:38 -0700 (PDT)
+Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id f7sm5755046wrf.8.2019.08.15.09.38.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 09:38:37 -0700 (PDT)
+From:   Dmitry Safonov <dima@arista.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org,
+        Andrei Vagin <avagin@gmail.com>
+Subject: [PATCHv6 00/36] kernel: Introduce Time Namespace
+Date:   Thu, 15 Aug 2019 17:38:00 +0100
+Message-Id: <20190815163836.2927-1-dima@arista.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156588514105.111054.13645634739408399209.stgit@magnolia>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908150161
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908150161
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Discussions around time namespace are there for a long time. The first
+attempt to implement it was in 2006 by Jeff Dike. From that time, the
+topic appears on and off in various discussions.
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+There are two main use cases for time namespaces:
+1. change date and time inside a container;
+2. adjust clocks for a container restored from a checkpoint.
 
-While active, the media backing a swap file is leased to the kernel.
-Userspace has no business writing to it.  Make sure we can't do this.
+“It seems like this might be one of the last major obstacles keeping
+migration from being used in production systems, given that not all
+containers and connections can be migrated as long as a time dependency
+is capable of messing it up.” (by github.com/dav-ell)
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- tests/generic/717     |   60 +++++++++++++++++++++++++++++++++++++++++++++++++
- tests/generic/717.out |    7 ++++++
- tests/generic/718     |   46 ++++++++++++++++++++++++++++++++++++++
- tests/generic/718.out |    5 ++++
- tests/generic/group   |    2 ++
- 5 files changed, 120 insertions(+)
- create mode 100755 tests/generic/717
- create mode 100644 tests/generic/717.out
- create mode 100755 tests/generic/718
- create mode 100644 tests/generic/718.out
+The kernel provides access to several clocks: CLOCK_REALTIME,
+CLOCK_MONOTONIC, CLOCK_BOOTTIME. Last two clocks are monotonous, but the
+start points for them are not defined and are different for each
+system. When a container is migrated from one node to another, all
+clocks have to be restored into consistent states; in other words, they
+have to continue running from the same points where they have been
+dumped.
 
-diff --git a/tests/generic/717 b/tests/generic/717
-new file mode 100755
-index 00000000..ab12ee4d
---- /dev/null
-+++ b/tests/generic/717
-@@ -0,0 +1,60 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-newer
-+# Copyright (c) 2019, Oracle and/or its affiliates.  All Rights Reserved.
-+#
-+# FS QA Test No. 717
-+#
-+# Check that we can't modify a file that's an active swap file.
-+
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1    # failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	swapoff $testfile
-+	rm -rf $tmp.* $testfile
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+
-+# real QA test starts here
-+_supported_os Linux
-+_supported_fs generic
-+_require_scratch_swapfile
-+
-+rm -f $seqres.full
-+
-+_scratch_mkfs > $seqres.full 2>&1
-+_scratch_mount >> $seqres.full 2>&1
-+
-+testfile=$SCRATCH_MNT/$seq.swap
-+
-+_format_swapfile $testfile 20m
-+swapon $testfile 2>&1 | _filter_scratch
-+
-+# Can we write to it?
-+$XFS_IO_PROG -c 'pwrite -S 0x59 64k 64k' $testfile
-+$XFS_IO_PROG -d -c 'pwrite -S 0x60 64k 64k' $testfile
-+$XFS_IO_PROG -c 'mmap -rw 64k 64k' -c 'mwrite -S 0x61 64k 64k' $testfile
-+
-+# Can we change the file size?
-+$XFS_IO_PROG -c 'truncate 18m' $testfile
-+
-+# Can you fallocate the file?
-+$XFS_IO_PROG -c 'falloc 0 32m' $testfile
-+
-+# We test that you can't reflink, dedupe, or copy_file_range into a swapfile
-+# in other tests.
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/generic/717.out b/tests/generic/717.out
-new file mode 100644
-index 00000000..2cd9bcdb
---- /dev/null
-+++ b/tests/generic/717.out
-@@ -0,0 +1,7 @@
-+QA output created by 717
-+pwrite: Text file busy
-+pwrite: Text file busy
-+mmap: Text file busy
-+no mapped regions, try 'help mmap'
-+ftruncate: Text file busy
-+fallocate: Text file busy
-diff --git a/tests/generic/718 b/tests/generic/718
-new file mode 100755
-index 00000000..35cf718f
---- /dev/null
-+++ b/tests/generic/718
-@@ -0,0 +1,46 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-newer
-+# Copyright (c) 2019, Oracle and/or its affiliates.  All Rights Reserved.
-+#
-+# FS QA Test No. 718
-+#
-+# Check that we can't modify a block device that's an active swap device.
-+
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1    # failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	swapoff $SCRATCH_DEV
-+	rm -rf $tmp.*
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+
-+# real QA test starts here
-+_supported_os Linux
-+_supported_fs generic
-+_require_scratch_nocheck
-+
-+rm -f $seqres.full
-+
-+$MKSWAP_PROG "$SCRATCH_DEV" >> $seqres.full
-+swapon $SCRATCH_DEV 2>&1 | _filter_scratch
-+
-+# Can we write to it?
-+$XFS_IO_PROG -c 'pwrite -S 0x59 64k 64k' $SCRATCH_DEV
-+$XFS_IO_PROG -d -c 'pwrite -S 0x60 64k 64k' $SCRATCH_DEV
-+$XFS_IO_PROG -c 'mmap -rw 64k 64k' -c 'mwrite -S 0x61 64k 64k' $SCRATCH_DEV
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/generic/718.out b/tests/generic/718.out
-new file mode 100644
-index 00000000..5cd25b9a
---- /dev/null
-+++ b/tests/generic/718.out
-@@ -0,0 +1,5 @@
-+QA output created by 718
-+pwrite: Text file busy
-+pwrite: Text file busy
-+mmap: Text file busy
-+no mapped regions, try 'help mmap'
-diff --git a/tests/generic/group b/tests/generic/group
-index 003fa963..c58d41e3 100644
---- a/tests/generic/group
-+++ b/tests/generic/group
-@@ -570,3 +570,5 @@
- 565 auto quick copy_range
- 715 auto quick rw
- 716 auto quick rw
-+717 auto quick rw swap
-+718 auto quick rw swap
+The main idea of this patch set is adding per-namespace offsets for
+system clocks. When a process in a non-root time namespace requests
+time of a clock, a namespace offset is added to the current value of
+this clock and the sum is returned.
+
+All offsets are placed on a separate page, this allows us to map it as
+part of VVAR into user processes and use offsets from VDSO calls.
+
+Now offsets are implemented for CLOCK_MONOTONIC and CLOCK_BOOTTIME
+clocks.
+
+v5..v6 Changes:
+* Used current_is_single_threaded() instead of thread_group_empty()
+  (Thanks for the review, Andy).
+* Changed errno code when there are threads on timens joining to
+  something more grepabble (EUSERS).
+* posix_get_timespec() should have been posix_get_monotonic_timespec()
+  (Thanks, Thomas)
+* timens_add_monotonic() & timens_add_boottime() were relocated to
+  the patch that introduces (struct timens_offsets) (Thomas)
+* Avoid breaking alarmtimer for ALARM_REALTIME (Thanks, Thomas)
+* Nested namespace inherits father's offsets now
+  (Andrei while working on CRIU side for time namespace)
+* A minor conflict with commit dbc1625fc9de ("hrtimer: Consolidate
+  hrtimer_init() + hrtimer_init_sleeper() calls") in linux-next
+  [Sending against next-20190814]
+
+[v1..v5 Changelogs is at the very bottom here]
+
+Our performance measurements show that the price of VDSO's clock_gettime()
+in a child time namespace is about 8% with a hot CPU cache and about 90%
+with a cold CPU cache. There is no performance regression for host
+processes outside time namespace on those tests.
+
+We wrote two small benchmarks. The first one gettime_perf.c calls
+clock_gettime() in a loop for 3 seconds. It shows us performance with
+a hot CPU cache (more clock_gettime() cycles - the better):
+
+        | before    | CONFIG_TIME_NS=n | host      | inside timens
+--------------------------------------------------------------
+        | 161822960 | 161147792        | 160187142 | 150584782
+        | 161891728 | 161489804        | 159914989 | 150417019
+        | 161891770 | 161098734        | 160123179 | 150601277
+        | 161687686 | 161114738        | 159874249 | 150243276
+        | 161247151 | 161411636        | 159096392 | 149637536
+--------------------------------------------------------------
+avg     | 161708259 | 161252540        | 159839190 | 150296778
+diff %  | 100       | 99.7             | 98.8      | 92.9
+-------------------------------------------------------------
+stdev % | 0.2       | 0.1              | 0.1       | 0.2
+
+The gettime_perf_cold test does 10K iterations. In each iteration, it
+drops cpu caches for vdso pages, clflush is used for this, then it runs
+rdtsc(); clock_gettime; rdtsc(); and prints the number of tsc cycles.
+
+(lesser tsc per cycle - the better):
+
+           | before    | CONFIG_TIME_NS=n | host      | inside timens
+--------------------------------------------------------------
+tsc        | 434       | 433              | 437       | 477
+stdev(tsc) | 5         | 5                | 5         | 3
+diff (%)   | 1         | 1                | 100.1     | 109
+
+vdsotest results: https://gist.github.com/avagin/f290afb8b721ae0522a561d585f34de0
+
+The numbers gathered on Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz.
+
+Cc: Adrian Reber <adrian@lisas.de>
+Cc: Andrei Vagin <avagin@openvz.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Cyrill Gorcunov <gorcunov@openvz.org>
+Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Jeff Dike <jdike@addtoit.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Pavel Emelyanov <xemul@virtuozzo.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: containers@lists.linux-foundation.org
+Cc: criu@openvz.org
+Cc: linux-api@vger.kernel.org
+Cc: x86@kernel.org
+
+v6 on github (if someone prefers `git pull` or `git log`):
+https://github.com/0x7f454c46/linux/tree/timens-v6
+
+v5: https://lkml.kernel.org/r/20190729215758.28405-1-dima@arista.com
+v4: https://lkml.kernel.org/r/20190612192628.23797-1-dima@arista.com
+v3: https://lkml.kernel.org/r/20190425161416.26600-1-dima@arista.com
+v2: https://lore.kernel.org/lkml/20190206001107.16488-1-dima@arista.com/
+RFC: https://lkml.kernel.org/r/20180919205037.9574-1-dima@arista.com/
+
+v4..v5 Changes:
+* Rebased over generic vdso (already in master)
+* Addressing review comments by Thomas Gleixner
+  (thanks much for your time and patience):
+  - Dropping `timens` prefix from subjects (it's not a subsystem)
+  - Keeping commit messages in a neutral technical form
+  - Splitting unreasonably large patches
+  - Document code with missing comments
+  - Dropped dead code that's not compiled with !CONFIG_TIME_NS
+* Updated performance results [here, at the bottom]
+* Split vdso jump tables patch
+* Allow unshare() with many threads: it's safe until fork()/clone(),
+  where we check for CLONE_THREADS
+* Add missed check in setns() for CLONE_VM | CLONE_THREADS
+* Fixed compilation with !CONFIG_UTS_NS
+* Add a plan in selftests (prevents new warning "Planned tests != run tests")
+* Set jump table section address & size to (-1UL) just in case if there
+  is no such section while running vdso2c (and WARN() on boot in such
+  case)
+
+v3..v4 Changes:
+
+* CLOCKE_NEWTIME is unshare()-only flag now (CLON_PIDFD took previous value)
+* Addressing Jann Horn's feedback - we don't allow CLONE_THREAD or
+  CLONE_VM together with CLONE_NEWTIME (thanks for spotting!)
+* Addressing issues found by Thomas - removed unmaintainable CLOCK_TIMENS
+  and introduced another call back into k_clock to get ktime instead
+  of getting timespec and converting it (Patch 03)
+* Renaming timens_offsets members to omit _offset postfix
+  (thanks Cyrill for the suggestion)
+* Suggestions, renaming and making code more maintainable from Thomas's
+  feedback (thanks much!)
+* Fixing out-of-bounds and other issues in procfs file (kudos Jann Horn)
+* vdso_fault() can be called on a remote task by /proc/$pid/mem or
+  process_vm_readv() - addressed by adding a slow-path with searching
+  for owner's namespace (thanks for spotting this unobvious issue, Jann)
+* Other nits by Jann Horn
+
+v2..v3: Major changes:
+
+* Simplify two VDSO images by using static_branch() in vclock_gettime()
+  Removes unwanted conflicts with generic VDSO movement patches and
+  simplifies things by dropping too invasive linker magic.
+  As an alternative to static_branch() we tested an attempt to introduce
+  home-made dynamic patching called retcalls:
+  https://github.com/0x7f454c46/linux/commit/4cc0180f6d65
+  Considering some theoretical problems with toolchains, we decided to go
+  with long well-tested nop-patching in static_branch(). Though, it was
+  needed to provide backend for relative code.
+
+* address Thomas' comments.
+* add sanity checks for offsets:
+  - the current clock time in a namespace has to be in [0, KTIME_MAX / 2).
+    KTIME_MAX is divided by two here to be sure that the KTIME_MAX limit
+    is still unreachable.
+Link: https://lkml.org/lkml/2018/9/19/950
+Link: https://lkml.org/lkml/2019/2/5/867
+
+v1..v2: There are two major changes:
+
+* Two versions of the VDSO library to avoid a performance penalty for
+  host tasks outside time namespace (as suggested by Andy and Thomas).
+
+  As it has been discussed on timens RFC, adding a new conditional branch
+  `if (inside_time_ns)` on VDSO for all processes is undesirable.
+  It will add a penalty for everybody as branch predictor may mispredict
+  the jump. Also there are instruction cache lines wasted on cmp/jmp.
+
+  Those effects of introducing time namespace are very much unwanted
+  having in mind how much work have been spent on micro-optimisation
+  VDSO code.
+
+  Addressing those problems, there are two versions of VDSO's .so:
+  for host tasks (without any penalty) and for processes inside of time
+  namespace with clk_to_ns() that subtracts offsets from host's time.
+
+
+* Allow to set clock offsets for a namespace only before any processes
+  appear in it.
+
+  Now a time namespace looks similar to a pid namespace in a way how it is
+  created: unshare(CLONE_NEWTIME) system call creates a new time namespace,
+  but doesn't set it to the current process. Then all children of
+  the process will be born in the new time namespace, or a process can
+  use the setns() system call to join a namespace.
+
+  This scheme allows to create a new time namespaces, set clock offsets
+  and then populate the namespace with processes.
+
+Andrei Vagin (24):
+  ns: Introduce Time Namespace
+  timens: Add timens_offsets
+  posix-clocks: Rename the clock_get() into clock_get_timespec()
+  posix-clocks: Rename .clock_get_timespec() callbacks accordingly
+  alarmtimer: Rename gettime() callback to get_ktime()
+  alarmtimer: Provide get_timespec() callback
+  posix-clocks: Introduce clock_get_ktime() callback
+  posix-timers: Use clock_get_ktime() in common_timer_get()
+  posix-clocks: Wire up clock_gettime() with timens offsets
+  kernel: Add do_timens_ktime_to_host() helper
+  timerfd: Make timerfd_settime() time namespace aware
+  posix-timers: Make timer_settime() time namespace aware
+  alarmtimer: Make nanosleep time namespace aware
+  hrtimers: Prepare hrtimer_nanosleep() for time namespaces
+  posix-timers: Make clock_nanosleep() time namespace aware
+  x86/vdso: Add offsets page in vvar
+  vdso: Introduce vdso_static_branch_unlikely()
+  x86/vdso: Enable static branches for the timens vdso
+  fs/proc: Introduce /proc/pid/timens_offsets
+  selftest/timens: Add a test for timerfd
+  selftest/timens: Add a test for clock_nanosleep()
+  selftest/timens: Add timer offsets test
+  selftests/timens: Add a simple perf test for clock_gettime()
+  selftest/timens: Check that a right vdso is mapped after fork and exec
+
+Dmitry Safonov (12):
+  fd/proc: Respect boottime inside time namespace for /proc/uptime
+  x86/vdso2c: Correct err messages on file opening
+  x86/vdso2c: Convert iterator to unsigned
+  x86/vdso/Makefile: Add vobjs32
+  x86/vdso: Restrict splitting VVAR VMA
+  x86/vdso: Rename vdso_image {.data=>.text}
+  x86/vdso: Allocate timens vdso
+  x86/vdso: Switch image on setns()/clone()
+  x86/vdso2c: Process jump tables
+  posix-clocks: Add align for timens_offsets
+  selftest/timens: Add Time Namespace test for supported clocks
+  selftest/timens: Add procfs selftest
+
+ MAINTAINERS                                   |   3 +
+ arch/Kconfig                                  |   5 +
+ arch/x86/Kconfig                              |   1 +
+ arch/x86/entry/vdso/Makefile                  |  15 +-
+ arch/x86/entry/vdso/vdso-layout.lds.S         |  10 +-
+ arch/x86/entry/vdso/vdso2c.c                  |   7 +-
+ arch/x86/entry/vdso/vdso2c.h                  |  22 +-
+ arch/x86/entry/vdso/vma.c                     | 177 +++++++-
+ arch/x86/include/asm/jump_label.h             |  14 +
+ arch/x86/include/asm/vdso.h                   |  14 +-
+ arch/x86/kernel/jump_label.c                  |  14 +
+ fs/proc/base.c                                |  95 +++++
+ fs/proc/namespaces.c                          |   4 +
+ fs/proc/uptime.c                              |   3 +
+ fs/timerfd.c                                  |   3 +
+ include/linux/hrtimer.h                       |   2 +-
+ include/linux/jump_label.h                    |   8 +
+ include/linux/nsproxy.h                       |   2 +
+ include/linux/posix-timers.h                  |   3 +
+ include/linux/proc_ns.h                       |   3 +
+ include/linux/time_namespace.h                | 114 ++++++
+ include/linux/timens_offsets.h                |  18 +
+ include/linux/user_namespace.h                |   1 +
+ include/uapi/linux/sched.h                    |   6 +
+ init/Kconfig                                  |   9 +
+ kernel/Makefile                               |   1 +
+ kernel/fork.c                                 |  16 +-
+ kernel/nsproxy.c                              |  41 +-
+ kernel/time/alarmtimer.c                      |  68 ++-
+ kernel/time/hrtimer.c                         |   8 +-
+ kernel/time/posix-clock.c                     |   8 +-
+ kernel/time/posix-cpu-timers.c                |  32 +-
+ kernel/time/posix-stubs.c                     |  15 +-
+ kernel/time/posix-timers.c                    |  88 ++--
+ kernel/time/posix-timers.h                    |   7 +-
+ kernel/time_namespace.c                       | 387 ++++++++++++++++++
+ lib/vdso/gettimeofday.c                       |  53 +++
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/timens/.gitignore     |   8 +
+ tools/testing/selftests/timens/Makefile       |  12 +
+ .../selftests/timens/clock_nanosleep.c        | 102 +++++
+ tools/testing/selftests/timens/config         |   1 +
+ tools/testing/selftests/timens/exec.c         |  93 +++++
+ tools/testing/selftests/timens/gettime_perf.c | 101 +++++
+ .../selftests/timens/gettime_perf_cold.c      | 160 ++++++++
+ tools/testing/selftests/timens/log.h          |  26 ++
+ tools/testing/selftests/timens/procfs.c       | 144 +++++++
+ tools/testing/selftests/timens/timens.c       | 185 +++++++++
+ tools/testing/selftests/timens/timens.h       |  63 +++
+ tools/testing/selftests/timens/timer.c        | 118 ++++++
+ tools/testing/selftests/timens/timerfd.c      | 129 ++++++
+ 51 files changed, 2305 insertions(+), 115 deletions(-)
+ create mode 100644 include/linux/time_namespace.h
+ create mode 100644 include/linux/timens_offsets.h
+ create mode 100644 kernel/time_namespace.c
+ create mode 100644 tools/testing/selftests/timens/.gitignore
+ create mode 100644 tools/testing/selftests/timens/Makefile
+ create mode 100644 tools/testing/selftests/timens/clock_nanosleep.c
+ create mode 100644 tools/testing/selftests/timens/config
+ create mode 100644 tools/testing/selftests/timens/exec.c
+ create mode 100644 tools/testing/selftests/timens/gettime_perf.c
+ create mode 100644 tools/testing/selftests/timens/gettime_perf_cold.c
+ create mode 100644 tools/testing/selftests/timens/log.h
+ create mode 100644 tools/testing/selftests/timens/procfs.c
+ create mode 100644 tools/testing/selftests/timens/timens.c
+ create mode 100644 tools/testing/selftests/timens/timens.h
+ create mode 100644 tools/testing/selftests/timens/timer.c
+ create mode 100644 tools/testing/selftests/timens/timerfd.c
+
+-- 
+2.22.0
+
