@@ -2,113 +2,88 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF10C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFC6C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 795702084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B902084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732310AbfHONbF (ORCPT
+        id S1732319AbfHONcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:31:05 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:38627 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730304AbfHONbF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:31:05 -0400
-Received: from [IPv6:2001:420:44c1:2579:f038:4b04:f67a:276f] ([IPv6:2001:420:44c1:2579:f038:4b04:f67a:276f])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id yFqFhvymaDqPeyFqIhYJJF; Thu, 15 Aug 2019 15:31:03 +0200
-Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
-To:     Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-3-jacopo@jmondi.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <02b40da5-c30c-f1f3-2351-c04da932e94a@xs4all.nl>
-Date:   Thu, 15 Aug 2019 15:30:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 15 Aug 2019 09:32:13 -0400
+Received: from verein.lst.de ([213.95.11.211]:46747 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730635AbfHONcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:32:12 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id AA62D68BFE; Thu, 15 Aug 2019 15:32:04 +0200 (CEST)
+Date:   Thu, 15 Aug 2019 15:32:04 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        linux-arch@vger.kernel.org, Olav Kongas <ok@artecdesign.ee>,
+        Gavin Li <git@thegavinli.com>, linuxppc-dev@lists.ozlabs.org,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Geoff Levand <geoff@infradead.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-usb@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>,
+        iommu@lists.linux-foundation.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Shawn Guo <shawnguo@kernel.org>, Bin Liu <b-liu@ti.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 6/6] driver core: initialize a default DMA mask for
+ platform device
+Message-ID: <20190815133204.GD12036@lst.de>
+References: <20190811080520.21712-1-hch@lst.de> <20190811080520.21712-7-hch@lst.de> <fbea6e6d-7721-b51d-0501-582e8446e9c9@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190814202815.32491-3-jacopo@jmondi.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBdaL9CUlLAxiTYaWce8qe1j1V1MqCdBUtDToW+yQU9QKTKVNpxJlwx/BkbsApxRyqXD/QEXGRYXDHz0vKzuYhtMnrQYsJGkozQB8K8wGvKNNf3aSPfu
- iiO97ULMfRaxQpZPVsBB95BYo9jZuLgU4r/4LT38LxwbgXB/bklxeXkq34Wa/1Rvee6gJhDIzTADF+MNDiUyqpJNYIs2p9VCh3f7xGZ7f2q0yavq21xMKXh5
- mGQOCZAr6TzxcHHy3OOutbszghMX+SqUuOVvRSdrwTBpb7+uUrglV0qX9D3pwTcY9rm1wIIkLrBV/oLGuRv3WffJW6I6Rt4W0/MbcX4XdoLZ05iW4zP8Nl+t
- OEKfsIyWE9ygEZi76JO7GunTub5gDrSPJ0Su2ndxSEqOP+mIi4LLS64EEhLLqwazZY5HMCeYTakddqGRPv9UxK5w6g/QGvOdixlFFKsZSDeYeqDwKWz1VvIv
- XbMBCU2nadJw4hrI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fbea6e6d-7721-b51d-0501-582e8446e9c9@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/19 10:28 PM, Jacopo Mondi wrote:
-> Add documentation for the V4L2_CID_LOCATION camera control. The newly
-> added read-only control reports the camera device mounting position.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> ---
->  .../media/uapi/v4l/ext-ctrls-camera.rst       | 23 +++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> index 51c1d5c9eb00..fc0a02eee6d4 100644
-> --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
->      value down. A value of zero stops the motion if one is in progress
->      and has no effect otherwise.
-> 
-> +``V4L2_CID_LOCATION (integer)``
-> +    This read-only control describes the camera location by reporting its
-> +    mounting position on the device where the camera is installed. This
-> +    control is particularly meaningful for devices which have a well defined
-> +    orientation, such as phones, laptops and portable devices as the camera
-> +    location is expressed as a position relative to the device intended
-> +    usage position. In example, a camera installed on the user-facing side
-> +    of a phone device is said to be installed in the ``V4L2_LOCATION_FRONT``
-> +    position.
+On Wed, Aug 14, 2019 at 04:49:13PM +0100, Robin Murphy wrote:
+>> because we have to support platform_device structures that are
+>> statically allocated.
+>
+> This would be a good point to also get rid of the long-standing bodge in 
+> platform_device_register_full().
 
-When should this control be created? If there is only one location (e.g.
-all sensors are front-facing) would you still expose this? Or does it depend
-on the type of device?
+platform_device_register_full looks odd to start with, especially
+as the coumentation is rather lacking..
 
-And is the sensor in a digital camera front or back facing? (Just curious
-about what you think about that situation!)
+>>   +static void setup_pdev_archdata(struct platform_device *pdev)
+>
+> Bikeshed: painting the generic DMA API properties as "archdata" feels a bit 
+> off-target :/
+>
+>> +{
+>> +	if (!pdev->dev.coherent_dma_mask)
+>> +		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+>> +	if (!pdev->dma_mask)
+>> +		pdev->dma_mask = DMA_BIT_MASK(32);
+>> +	if (!pdev->dev.dma_mask)
+>> +		pdev->dev.dma_mask = &pdev->dma_mask;
+>> +	arch_setup_pdev_archdata(pdev);
+>
+> AFAICS m68k's implementation of that arch hook becomes entirely redundant 
+> after this change, so may as well go. That would just leave powerpc's 
+> actual archdata, which at a glance looks like it could probably be cleaned 
+> up with not *too* much trouble.
 
-Regards,
-
-	Hans
-
-> +
-> +
-> +
-> +.. flat-table::
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +
-> +    * - ``V4L2_LOCATION_FRONT``
-> +      - The camera device is located on the front side of the device.
-> +    * - ``V4L2_LOCATION_BACK``
-> +      - The camera device is located on the back side of the device.
-> +
-> +
-> +
->  .. [#f1]
->     This control may be changed to a menu control in the future, if more
->     options are required.
-> --
-> 2.22.0
-> 
-
+Actually I think we can just kill both off.  At the point archdata
+is indeed entirely misnamed.
