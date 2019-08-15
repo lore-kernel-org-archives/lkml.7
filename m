@@ -2,106 +2,105 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F52C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6EFC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F19F0206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA3B206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:44:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qCJImpwQ"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="Z707lNUj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732938AbfHOWnp (ORCPT
+        id S1733150AbfHOWoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 18:43:45 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44430 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731244AbfHOWno (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 18:43:44 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c81so2037457pfc.11;
-        Thu, 15 Aug 2019 15:43:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jS6ShQKayPnRfpjr7j4ASXzzmaziPz8YNcXH2Dd4cGI=;
-        b=qCJImpwQOUspMCTLKbwvXVRgGObb7V6OYqGLS8BjgWthmzLXv8hotcavowknGzXCsU
-         Q8skwEIjCthehtVk/rrbB8uvTRNBz9JUxcdnkDVdVZ0M36fO2wT7xX6/Xbx4opoTXA1s
-         1rq8b6rSC8MaKo/AC4WBP2sNJLP/3NHdi09MbtoVVCFZo6CvEq8DaKWs1wTJD3W2bsP1
-         /jxVMaot27wvz+Hv2FTmH2z3QhLuRqqOH1/LpcqVTWuKsnIQV6yY52EY6dli+6xL9HV3
-         oAYfeFgy8vXMr5FMuIilsg+TfMDP7J7qr8ca8uRAYkGXbwcTmGqNa13K4vK2JLWNZ8Bt
-         fcTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jS6ShQKayPnRfpjr7j4ASXzzmaziPz8YNcXH2Dd4cGI=;
-        b=Rr5iOmAgsGEY1wwgaV0zxSzVg+dRhlkvzeIu6LPalg5joIhS00eDzm441MLC/twKy5
-         1f6kqWJmtq0O44WLykvH86oUF3jFbm0wdnMGuPEkG21BzuHPEZ2saeNA+WDIp0lrjCOJ
-         dZv8uwSPFU+uflDZbSSQVrB2n7EiO05siBM6nFS/4xM3GQu/YDbCEt1hSGCBIFsMi0o/
-         h2WmFAFMqmW9KAbsQVZDqVJLFxKlYnbu5wBhUEWH0vo+h7MpZ7M+auhGfV24LrrzlliR
-         JOpMyutyLRkjIh+frA+rjkdHsf0lRYw679XRYPtRscggaWaJuB8n3+XAQpVbDJ9dWkS3
-         nwSA==
-X-Gm-Message-State: APjAAAWtosj8nWt36hFxXNUAf0+nGewwDI1OtgejGpA0TK734FEgX6xl
-        8/37Ed4XjwnRa0RmFA6AwTXcGavd
-X-Google-Smtp-Source: APXvYqy9PwdVKsaODSdLLrFGTDC0/CiqF1mCACd5317pAaqx6ZPgD8PIEXqW90ku1YNHlCgfqc4bZQ==
-X-Received: by 2002:aa7:9e9a:: with SMTP id p26mr7875391pfq.25.1565909023971;
-        Thu, 15 Aug 2019 15:43:43 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 16sm6203783pfc.66.2019.08.15.15.43.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 15:43:42 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 15:43:41 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Max Staudt <max@enpas.org>
-Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>, linux-m68k@vger.kernel.org,
-        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
-Subject: Re: [PATCH v3 2/3] hwmon/ltc2990: Generalise DT to fwnode support
-Message-ID: <20190815224341.GA12420@roeck-us.net>
-References: <20190815125802.16500-1-max@enpas.org>
- <20190815125802.16500-2-max@enpas.org>
- <6920f2da-3139-6fc8-b02c-3678cc17912e@enpas.org>
+        Thu, 15 Aug 2019 18:44:20 -0400
+Received: from onstation.org ([52.200.56.107]:49656 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731244AbfHOWoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 18:44:20 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id B4B0B3E998;
+        Thu, 15 Aug 2019 22:44:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1565909059;
+        bh=czM1Vfno+UFHpzvoNlZgvzbIsi/W/guZt8ysTusqBg8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z707lNUjzuIsbtPXSccR8bANmWJFP6d0utJUK+yc8rOPnV4fltz0acMoPYc0Gth9O
+         9UmsjR4gMyWahWR+mUwz0JP9vIZHWTzezy6ZO8awAhHdaSSFZsP5nzvVceVqRxtZ6G
+         FF0g1ay6/KWQatmMJPp2UFMvfQyb5QJEn8UXok28=
+Date:   Thu, 15 Aug 2019 18:44:17 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Subject: Re: [PATCH 09/11] ARM: dts: qcom: pm8941: add 5vs2 regulator node
+Message-ID: <20190815224417.GA32072@onstation.org>
+References: <20190815004854.19860-1-masneyb@onstation.org>
+ <20190815004854.19860-10-masneyb@onstation.org>
+ <CACRpkdYU-6LvFKRkj0yMMCmAnX0XtGe7rMwbXbhf2GCp77Ciyw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6920f2da-3139-6fc8-b02c-3678cc17912e@enpas.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CACRpkdYU-6LvFKRkj0yMMCmAnX0XtGe7rMwbXbhf2GCp77Ciyw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 12:19:42AM +0200, Max Staudt wrote:
-> On 08/15/2019 02:58 PM, Max Staudt wrote:
-> > -	if (of_node) {
-> > -		ret = of_property_read_u32_array(of_node, "lltc,meas-mode",
-> > -						 data->mode, 2);
-> > +	if (i2c->dev.of_node || i2c->dev.fwnode) {
+On Thu, Aug 15, 2019 at 10:34:17AM +0200, Linus Walleij wrote:
+> On Thu, Aug 15, 2019 at 2:49 AM Brian Masney <masneyb@onstation.org> wrote:
 > 
-> One more idea, would it be better here to do the following?
+> > pm8941 is missing the 5vs2 regulator node so let's add it since its
+> > needed to get the external display working. This regulator was already
+> > configured in the interrupts property on the parent node.
+> >
+> > Note that this regulator is referred to as mvs2 in the downstream MSM
+> > kernel sources.
 > 
-> 	if (device_property_present(i2c->dev, "lltc,meas-mode")) {
-> 		ret = of_property_read_u32_array(of_node, "lltc,meas-mode",
-> 						 data->mode, 2);
-> 	}
+> When I looked at it it seemed like this convention is used for power
+> supplies that appear on both the main PMIC and the "extra (boot? basic?
+> low power?) PMIC that the main 80xx PMIC has mvs1 and the
+> other 89xx PMIC has mvs2.
+
+According to the downstream MSM sources, the 5vs1 and 5vs2 rails are
+both on the second pm8941 PMIC:
+
+https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/arch/arm/boot/dts/msm8974-regulator.dtsi#L18
+
+> I suppose it is named "mvs" on both PMICs and this is just a rail
+> name so as not to confuse the schematic?
+
+That sounds reasonable.
+
+> > Signed-off-by: Brian Masney <masneyb@onstation.org>
 > 
-> I'm happy to prepare a patch if you wish to have this in - just let me know whether it should be on top of the last one, or instead of it.
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-That would be semantically different. The property is currently mandatory.
-The above code would make it optional. This might work:
+Thank you!
 
-	if (dev_fwnode(&i2c->dev)) {
-		ret = device_property_read_u32_array(...);
-		...
-	}
-
-Feel free to send another version of your patch.
-
-Thanks,
-Guenter
+Brian
