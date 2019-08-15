@@ -2,106 +2,84 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0695C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB3CC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A524E20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B59A22086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:03:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732690AbfHOODR (ORCPT
+        id S1732300AbfHOODf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:03:17 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38608 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732300AbfHOODQ (ORCPT
+        Thu, 15 Aug 2019 10:03:35 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33563 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732334AbfHOODf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:03:16 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g17so2329025wrr.5
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 07:03:14 -0700 (PDT)
+        Thu, 15 Aug 2019 10:03:35 -0400
+Received: by mail-wr1-f65.google.com with SMTP id u16so2353246wrr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 07:03:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4sFRcD1ANoWWQjD+WhW2uig+aUbXyWs74RzRVjo7E7o=;
-        b=RYyXNCdG9S3+p2B9CBHPtQo8qJBkvcwoB1MX0yf2euRRDYkPBUMNBkMqxi+RaK7B1Y
-         HOTHXeAgH2B+TMgVzI2/lXpWDdoX1Z9eWQ9xR+nx4eF/Rfb0bvsbn+QLQMvDF34Rbifa
-         iW3BMrJdrKi01hkCS04dq3MQ08KQO7UPTRuPHcWIsQ5BT/VUMKzFJUZw+6+sbhrWxZqZ
-         J5JsK1t1jKMdA6jI7gPFViN6C6gSxEKIfsqKbmxwrxaiVxDBqWLQmnjXUSp3/F/fiVU5
-         R3sLXEJU1iCaFXCFh183YohS2A7R+uq57ThnZPKg7Gmgjd73ZXcEoznVCtQ13QgZiV0H
-         itHw==
-X-Gm-Message-State: APjAAAVLs/v3Xp4gFclF4O5pFehMGLHcYze7y8UoVyxV3fsBXjwkgvnn
-        NZxvH5ZS26qu+6GpBosKLyh3Pcl+wyY=
-X-Google-Smtp-Source: APXvYqwOA1TUL5mIA6h1Tmg6qNpWnTKtEDEY963alOerUO+bTFmeEckdF/0ltUvBOOFFdQ5wGxXd6g==
-X-Received: by 2002:adf:f0ce:: with SMTP id x14mr5695032wro.31.1565877793938;
-        Thu, 15 Aug 2019 07:03:13 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id t63sm1590627wmt.6.2019.08.15.07.03.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Aug 2019 07:03:13 -0700 (PDT)
-Subject: Re: [PATCH 0/3] usb: typec: fusb302: Small changes
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190814132419.39759-1-heikki.krogerus@linux.intel.com>
- <a826c351-4e9d-8a33-ad0f-764d13aeb1ed@redhat.com>
- <20190815125544.GC24270@kroah.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <3f44f67a-9f13-3851-e218-7f9c14d8f996@redhat.com>
-Date:   Thu, 15 Aug 2019 16:03:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=P6jtmJQJAOxQmjY3PzD+zR33iq9AQ8OzIHihVYNbvtU=;
+        b=ifl6rCnO2Dv/9auJxn5GlKeaWTvupWDKCJYlwQChNBDy6wSKENrKCAHZH20F40XTlj
+         szPFLA8RwXitFKGe7K3KzLVW2HITw/17MliS4niZO28mlAstc8h+6O/4TTHtX51mvg27
+         a5hf2MjhYxAZeDoFAlc69KM2mC0wwzmhj/kw3wtJ0D55Cpmrnk3Ikg9xGxhRNxV4BQe7
+         tPeGtIizcdxsDTmTkPwy1bZWO4/HUhopHMHAj0ltFcnCPUdfwuZMfXYyT/Vcv0GVocv0
+         08LNdYQufZPn6gAAs/XiFNz6yNQyr02rCwCVUkH1DxehzZjisUb0vGptWYqnZYCCuGyl
+         p97w==
+X-Gm-Message-State: APjAAAU1ypWkZa+NVZGIvrnsC+uSYg+Nh7xvIHEH+Td4Pc7fudI/WQtZ
+        xmhm01Q3MiUi3k61V0uef9ECHA==
+X-Google-Smtp-Source: APXvYqz3n13iAarvnk398GKr173OsqGUtiGpYz002s0J1/siYVBnI9MVpRe8PGn9JMKu1I5a55aTDw==
+X-Received: by 2002:adf:f204:: with SMTP id p4mr5874439wro.317.1565877813345;
+        Thu, 15 Aug 2019 07:03:33 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id t198sm2803371wmt.39.2019.08.15.07.03.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 07:03:32 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, mst@redhat.com,
+        rkrcmar@redhat.com, jmattson@google.com, yu.c.zhang@intel.com,
+        alazar@bitdefender.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com
+Subject: Re: [PATCH RESEND v4 5/9] KVM: VMX: Add init/set/get functions for SPP
+In-Reply-To: <20190815134329.GA11449@local-michael-cet-test>
+References: <20190814070403.6588-1-weijiang.yang@intel.com> <20190814070403.6588-6-weijiang.yang@intel.com> <87a7cbapdw.fsf@vitty.brq.redhat.com> <20190815134329.GA11449@local-michael-cet-test>
+Date:   Thu, 15 Aug 2019 16:03:31 +0200
+Message-ID: <87o90q8r0s.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190815125544.GC24270@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Yang Weijiang <weijiang.yang@intel.com> writes:
 
-On 15-08-19 14:55, Greg Kroah-Hartman wrote:
-> On Wed, Aug 14, 2019 at 03:42:46PM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 14-08-19 15:24, Heikki Krogerus wrote:
->>> Hi,
->>>
->>> This series removes the deprecated fusb302 specific properties, and
->>> stops using struct tcpc_config in the driver.
->>
->> Series looks good to me:
->>
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->>
->> This has a small conflict with my
->> "[PATCH] usb: typec: fusb302: Call fusb302_debugfs_init earlier"
->> patch.
->>
->> Since we've agreed to do the rootdir leak fix as a separate patch
->> (which I will write when I find some time probably tomorrow), I
->> was wondering if we can merge my patch first. I would like to see
->> a "Cc: stable@vger.kernel.org" added to my patch and then it would
->> be good to have it merged first.
->>
->> Regardless we should probable prepare one series with all patches
->> for Greg to make this easy to merge for him.
-> 
-> I'll take this series now, and you can redo your patch based on my
-> usb-next branch with them in it.
+> After looked into the issue and others, I feel to make SPP co-existing
+> with nested VM is not good, the major reason is, L1 pages protected by
+> SPP are transparent to L1 VM, if it launches L2 VM, probably the
+> pages would be allocated to L2 VM, and that will bother to L1 and L2.
+> Given the feature is new and I don't see nested VM can benefit
+> from it right now, I would like to make SPP and nested feature mutually
+> exclusive, i.e., detecting if the other part is active before activate one
+> feature,what do you think of it? 
 
-Ok.
+I was mostly worried about creating a loophole (if I understand
+correctly) for guests to defeat SPP protection: just launching a nested
+guest and giving it a protected page. I don't see a problem if we limit
+SPP to non-nested guests as step 1: we, however, need to document this
+side-effect of the ioctl. Also, if you decide to do this enforecement,
+I'd suggest you forbid VMLAUCH/VMRESUME and not VMXON as kvm module
+loads in linux guests automatically when the hardware is suitable.
 
-Regards,
+Thanks,
 
-Hans
+-- 
+Vitaly
