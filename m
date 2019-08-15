@@ -2,108 +2,126 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD72DC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D6EC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89DD72084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 344F82084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730475AbfHOG4W (ORCPT
+        id S1730494AbfHOG4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 02:56:22 -0400
-Received: from smtprelay0219.hostedemail.com ([216.40.44.219]:46145 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726098AbfHOG4W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 02:56:22 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 381FB8368EFC;
-        Thu, 15 Aug 2019 06:56:20 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: shirt04_19e6b128f1714
-X-Filterd-Recvd-Size: 3207
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 15 Aug 2019 06:56:17 +0000 (UTC)
-Message-ID: <9973b4a89e54296a6a033c790fc0837397a14a5d.camel@perches.com>
-Subject: Re: [PATCH] netfilter: nft_bitwise: Adjust parentheses to fix
- memcmp size argument
-From:   Joe Perches <joe@perches.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        kbuild test robot <lkp@intel.com>
-Date:   Wed, 14 Aug 2019 23:56:16 -0700
-In-Reply-To: <20190814165809.46421-1-natechancellor@gmail.com>
-References: <20190814165809.46421-1-natechancellor@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Thu, 15 Aug 2019 02:56:45 -0400
+Received: from mga11.intel.com ([192.55.52.93]:41130 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726098AbfHOG4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 02:56:44 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 23:56:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,388,1559545200"; 
+   d="scan'208";a="171034750"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga008.jf.intel.com with ESMTP; 14 Aug 2019 23:56:40 -0700
+Cc:     baolu.lu@linux.intel.com, corbet@lwn.net, tony.luck@intel.com,
+        fenghua.yu@intel.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Thomas.Lendacky@amd.com, Suravee.Suthikulpanit@amd.com,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 08/10] iommu: Set default domain type at runtime
+To:     Joerg Roedel <joro@8bytes.org>
+References: <20190814133841.7095-1-joro@8bytes.org>
+ <20190814133841.7095-9-joro@8bytes.org>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <a8e804dd-a8ae-2e0d-6b3c-698fbc96bf75@linux.intel.com>
+Date:   Thu, 15 Aug 2019 14:55:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190814133841.7095-9-joro@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-08-14 at 09:58 -0700, Nathan Chancellor wrote:
-> clang warns:
+Hi,
+
+On 8/14/19 9:38 PM, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> net/netfilter/nft_bitwise.c:138:50: error: size argument in 'memcmp'
-> call is a comparison [-Werror,-Wmemsize-comparison]
->         if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
->                                       ~~~~~~~~~~~~~~~~~~^~
-> net/netfilter/nft_bitwise.c:138:6: note: did you mean to compare the
-> result of 'memcmp' instead?
->         if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
->             ^
->                                                        )
-> net/netfilter/nft_bitwise.c:138:32: note: explicitly cast the argument
-> to size_t to silence this warning
->         if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
->                                       ^
->                                       (size_t)(
-> 1 error generated.
+> Set the default domain-type at runtime, not at compile-time.
+> This keeps default domain type setting in one place when we
+> have to change it at runtime.
 > 
-> Adjust the parentheses so that the result of the sizeof is used for the
-> size argument in memcmp, rather than the result of the comparison (which
-> would always be true because sizeof is a non-zero number).
-> 
-> Fixes: bd8699e9e292 ("netfilter: nft_bitwise: add offload support")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/638
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
 > ---
->  net/netfilter/nft_bitwise.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>   drivers/iommu/iommu.c | 23 +++++++++++++++--------
+>   1 file changed, 15 insertions(+), 8 deletions(-)
 > 
-> diff --git a/net/netfilter/nft_bitwise.c b/net/netfilter/nft_bitwise.c
-[]
-> @@ -135,8 +135,8 @@ static int nft_bitwise_offload(struct nft_offload_ctx *ctx,
->  {
->  	const struct nft_bitwise *priv = nft_expr_priv(expr);
->  
-> -	if (memcmp(&priv->xor, &zero, sizeof(priv->xor) ||
-> -	    priv->sreg != priv->dreg))
-> +	if (memcmp(&priv->xor, &zero, sizeof(priv->xor)) ||
-> +	    priv->sreg != priv->dreg)
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 233bc22b487e..96cc7cc8ab21 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -26,11 +26,8 @@
+>   
+>   static struct kset *iommu_group_kset;
+>   static DEFINE_IDA(iommu_group_ida);
+> -#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
+> -static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_IDENTITY;
+> -#else
+> -static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
+> -#endif
+> +
+> +static unsigned int iommu_def_domain_type __read_mostly;
+>   static bool iommu_dma_strict __read_mostly = true;
+>   static u32 iommu_cmd_line __read_mostly;
+>   
+> @@ -76,7 +73,7 @@ static void iommu_set_cmd_line_dma_api(void)
+>   	iommu_cmd_line |= IOMMU_CMD_LINE_DMA_API;
+>   }
+>   
+> -static bool __maybe_unused iommu_cmd_line_dma_api(void)
+> +static bool iommu_cmd_line_dma_api(void)
+>   {
+>   	return !!(iommu_cmd_line & IOMMU_CMD_LINE_DMA_API);
+>   }
+> @@ -115,8 +112,18 @@ static const char *iommu_domain_type_str(unsigned int t)
+>   
+>   static int __init iommu_subsys_init(void)
+>   {
+> -	pr_info("Default domain type: %s\n",
+> -		iommu_domain_type_str(iommu_def_domain_type));
+> +	bool cmd_line = iommu_cmd_line_dma_api();
+> +
+> +	if (!cmd_line) {
+> +		if (IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH))
+> +			iommu_set_default_passthrough();
+> +		else
+> +			iommu_set_default_translated();
 
-This code should use memchr_inv and not compare against a
-static uninitialized struct.
+This overrides kernel parameters parsed in iommu_setup(), for example,
+iommu=pt won't work anymore.
 
-Perhaps linux should introduce and use memcchr like bsd. 
-or just add something like #define memcchr memchr_inv
+Best regards,
+Lu Baolu
 
-
-
-
+> +	}
+> +
+> +	pr_info("Default domain type: %s %s\n",
+> +		iommu_domain_type_str(iommu_def_domain_type),
+> +		cmd_line ? "(set via kernel command line)" : "");
+>   
+>   	return 0;
+>   }
+> 
