@@ -2,114 +2,103 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D405C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2B3C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35F9B2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2F420656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:07:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730459AbfHOHFa (ORCPT
+        id S1730492AbfHOHHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 03:05:30 -0400
-Received: from mga06.intel.com ([134.134.136.31]:39293 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbfHOHF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 03:05:29 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 00:05:29 -0700
-X-IronPort-AV: E=Sophos;i="5.64,388,1559545200"; 
-   d="scan'208";a="328302004"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 00:05:27 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 0718C2069D; Thu, 15 Aug 2019 10:04:21 +0300 (EEST)
-Date:   Thu, 15 Aug 2019 10:04:20 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 4/5] media: i2c: ov5670: Report the camera location
-Message-ID: <20190815070420.GL6133@paasikivi.fi.intel.com>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-5-jacopo@jmondi.org>
+        Thu, 15 Aug 2019 03:07:42 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52158 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730186AbfHOHHm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 03:07:42 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 114F880BC7; Thu, 15 Aug 2019 09:07:26 +0200 (CEST)
+Date:   Thu, 15 Aug 2019 09:07:39 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 024/113] tty: serial: msm_serial: avoid system
+ lockup condition
+Message-ID: <20190815070739.GA3906@amd>
+References: <20190729190655.455345569@linuxfoundation.org>
+ <20190729190701.631193260@linuxfoundation.org>
+ <20190731190533.GA4630@amd>
+ <ca8ee0ab-dac5-28db-cac2-20e188473da6@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
 Content-Disposition: inline
-In-Reply-To: <20190814202815.32491-5-jacopo@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ca8ee0ab-dac5-28db-cac2-20e188473da6@linaro.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
 
-On Wed, Aug 14, 2019 at 10:28:14PM +0200, Jacopo Mondi wrote:
-> The camera location is retrieved from the firmware interface parsing
-> the "location" device property and reported through the read-only
-> V4L2_CID_LOCATION control.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> ---
->  drivers/media/i2c/ov5670.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/ov5670.c b/drivers/media/i2c/ov5670.c
-> index 041fcbb4eebd..1446aef1fc1e 100644
-> --- a/drivers/media/i2c/ov5670.c
-> +++ b/drivers/media/i2c/ov5670.c
-> @@ -2059,10 +2059,12 @@ static const struct v4l2_ctrl_ops ov5670_ctrl_ops = {
->  /* Initialize control handlers */
->  static int ov5670_init_controls(struct ov5670 *ov5670)
->  {
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov5670->sd);
->  	struct v4l2_ctrl_handler *ctrl_hdlr;
->  	s64 vblank_max;
->  	s64 vblank_def;
->  	s64 vblank_min;
-> +	u32 location;
->  	s64 exposure_max;
->  	int ret;
->  
-> @@ -2124,6 +2126,15 @@ static int ov5670_init_controls(struct ov5670 *ov5670)
->  				     ARRAY_SIZE(ov5670_test_pattern_menu) - 1,
->  				     0, 0, ov5670_test_pattern_menu);
->  
-> +	ret = device_property_read_u32(&client->dev, "location", &location);
-> +	if (!ret) {
-> +		v4l2_ctrl_new_std(ctrl_hdlr, &ov5670_ctrl_ops,
-> +				  V4L2_CID_LOCATION, V4L2_LOCATION_FRONT,
-> +				  V4L2_LOCATION_BACK, 1,
-> +				  location == V4L2_LOCATION_FRONT ?
+--nFreZHaLTZJo0R7j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-To do this, you'll need to document that the control values match DT
-binding values. I don't think that's there currently.
+Hi!
 
-A switch would be nicer, to check that the value that is not front is
-something else meaningful. Otherwise I wouldn't create the control at all.
+> >> [ Upstream commit ba3684f99f1b25d2a30b6956d02d339d7acb9799 ]
 
-A helper function for drivers to use would be nice.
+> > Should it use something like 5000*udelay(100), instead, as that has
+> > chance to result in closer-to-500msec wait?
+>=20
+> the half a second timeout didnt mean to be accurate but a worst case
+> scenario...I am not sure accuracy matters.
 
-> +				  V4L2_LOCATION_FRONT : V4L2_LOCATION_BACK);
-> +	}
-> +
->  	if (ctrl_hdlr->error) {
->  		ret = ctrl_hdlr->error;
->  		goto error;
+Well, I'd be afraid that it would wait 5 seconds, not half a
+second. udelay(1) may be very inaccurate.
 
--- 
-Regards,
+> >>  	while (!(msm_read(port, UART_SR) & UART_SR_TX_EMPTY)) {
+> >>  		if (msm_read(port, UART_ISR) & UART_ISR_TX_READY)
+> >>  			break;
+> >>  		udelay(1);
+> >> +		if (!timeout--)
+> >> +			break;
+> >>  	}
+> >>  	msm_write(port, UART_CR_CMD_RESET_TX_READY, UART_CR);
+> >>  }
+> >=20
+> > Plus, should it do some kind of dev_err() to let users know that
+> > something went very wrong with their serial?
+>=20
+> I did consider this but then I thought that 1/2 second without
+> interrupts on the core should not go unnoticed. But I might be wrong.
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Well, maybe it will be noticed, but user will have no idea what caused
+it.
+
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--nFreZHaLTZJo0R7j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1VBLsACgkQMOfwapXb+vJ/JACeLdowu6zpV4u3EcD06Nal+ndM
+VtUAn1YYozTjmj0qVSW+pNe3KSrsOK3X
+=Nl4A
+-----END PGP SIGNATURE-----
+
+--nFreZHaLTZJo0R7j--
