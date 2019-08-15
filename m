@@ -2,148 +2,112 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31737C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 03:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DAFC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 03:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBE0208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 03:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A780320656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 03:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbfHODgp (ORCPT
+        id S1729701AbfHODmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 23:36:45 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:40284 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728320AbfHODgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 23:36:44 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3FCE120041A;
-        Thu, 15 Aug 2019 05:36:42 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BD0EA2001A0;
-        Thu, 15 Aug 2019 05:36:36 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C2696402A2;
-        Thu, 15 Aug 2019 11:36:29 +0800 (SGT)
-From:   Yinbo Zhu <yinbo.zhu@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     yinbo.zhu@nxp.com, xiaobo.xie@nxp.com, jiafei.pan@nxp.com,
-        yangbo.lu@nxp.com, Ashish Kumar <Ashish.Kumar@nxp.com>
-Subject: [PATCH v5] arm64: dts: ls1028a: Add esdhc node in dts
-Date:   Thu, 15 Aug 2019 11:39:01 +0800
-Message-Id: <20190815033901.18696-1-yinbo.zhu@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 14 Aug 2019 23:42:21 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34345 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbfHODmV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 23:42:21 -0400
+Received: by mail-pl1-f193.google.com with SMTP id i2so588814plt.1;
+        Wed, 14 Aug 2019 20:42:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JANJxBWQQ/lmx3e6gQBBNY3HZrSKplwd+VTRdmaTTlA=;
+        b=m8pmtReVir4X9hTmwI/DVm70xLq/sckFKZ0fxqepBQyDnehARfhvK3FzAhvKWKTR3M
+         MiWzaYrEunYOfWRD2nLbGfOk5R54jXdfUdd0uPbb80XK+kLgMtH694whbUBtWqtnK+JL
+         yzJCaUKHpRNkBlAlwGPZy5zDpHaatVsZHRfcBDl2IzuoC/qFj80ARE4n/VKkBZ/p/CTx
+         9uNnJjME1Gy8hmI6iBjkYFSZO0Rr+NAwnurbTb2uctc3k5NbUHYKJr5PZ5C0bXdWG15z
+         HgMc96l56wn5cTFPSznZMKiFq7k7VD/lbsLfr1dl81RhgsHeV+NxFXCuwbX7uASNPwYE
+         y4dg==
+X-Gm-Message-State: APjAAAXBR/ew7ZjQCV1DBtQBBcprSWh7+82tZFaw1ZsZ/0bKjL7B/l+z
+        2jXnxD0jr4fwcgLUcdMwCcXQHJxqN0A=
+X-Google-Smtp-Source: APXvYqx81wrPhXH/lYFj4J2/x/boo2UlT8ODFpdBydweGYIHtn18VNQq90jQEYeDTlyS2mxJb39Ung==
+X-Received: by 2002:a17:902:8302:: with SMTP id bd2mr2539863plb.9.1565840539761;
+        Wed, 14 Aug 2019 20:42:19 -0700 (PDT)
+Received: from asus.site ([2601:647:4000:7f38:138a:21ca:d24:734b])
+        by smtp.gmail.com with ESMTPSA id y188sm1376690pfy.57.2019.08.14.20.42.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Aug 2019 20:42:18 -0700 (PDT)
+Subject: Re: [5.3.0-rc4-next][bisected 882632][qla2xxx] WARNING: CPU: 10 PID:
+ 425 at drivers/scsi/qla2xxx/qla_isr.c:2784 qla2x00_status_entry.isra
+To:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-next <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        martin.petersen@oracle.com, hmadhani@marvell.com,
+        sachinp <sachinp@linux.vnet.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1565801523.6908.6.camel@abdul>
+ <cafb1d40-a11e-c137-db06-4564e5f5caf5@acm.org>
+ <1565803123.6908.10.camel@abdul>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <7fc59d4c-b3d5-5ec8-cb7c-51cb863f2a77@acm.org>
+Date:   Wed, 14 Aug 2019 20:42:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1565803123.6908.10.camel@abdul>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ashish Kumar <Ashish.Kumar@nxp.com>
+On 8/14/19 10:18 AM, Abdul Haleem wrote:
+> On Wed, 2019-08-14 at 10:05 -0700, Bart Van Assche wrote:
+>> On 8/14/19 9:52 AM, Abdul Haleem wrote:
+>>> Greeting's
+>>>
+>>> Today's linux-next kernel (5.3.0-rc4-next-20190813)  booted with warning on my powerpc power 8 lpar
+>>>
+>>> The WARN_ON_ONCE() was introduced by commit 88263208 (scsi: qla2xxx: Complain if sp->done() is not...)
+>>>
+>>> boot logs:
+>>>
+>>> WARNING: CPU: 10 PID: 425 at drivers/scsi/qla2xxx/qla_isr.c:2784
+>>
+>> Hi Abdul,
+>>
+>> Thank you for having reported this. Is that the only warning reported on your setup by the qla2xxx
+>> driver? If that warning is commented out, does the qla2xxx driver work as expected?
+> 
+> boot warning did not show up when the commit is reverted.
+> 
+> should I comment out only the WARN_ON_ONCE() which is causing the issue,
+> and not the other one ?
 
-This patch is to add esdhc node and enable SD UHS-I,
-eMMC HS200 for ls1028ardb/ls1028aqds board.
+Yes please. Commit 88263208 introduced five kernel warnings but I think 
+only one of these should be removed again, e.g. as follows:
 
-Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
----
-Change in v5:
-		Fix indent.
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index cd39ac18c5fd..d81b5ecce24b 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -2780,8 +2780,6 @@ qla2x00_status_entry(scsi_qla_host_t *vha, struct 
+rsp_que *rsp, void *pkt)
 
- arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |  8 +++++++
- arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 13 +++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    | 27 +++++++++++++++++++++++
- 3 files changed, 48 insertions(+)
+  	if (rsp->status_srb == NULL)
+  		sp->done(sp, res);
+-	else
+-		WARN_ON_ONCE(true);
+  }
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-index de6ef39..5e14e5a 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -95,6 +95,14 @@
- 	status = "okay";
- };
- 
-+&esdhc {
-+	status = "okay";
-+};
-+
-+&esdhc1 {
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-index 9fb9113..1a69221 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-@@ -83,6 +83,19 @@
- 	};
- };
- 
-+&esdhc {
-+	sd-uhs-sdr104;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr12;
-+	status = "okay";
-+};
-+
-+&esdhc1 {
-+	mmc-hs200-1_8v;
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 7975519..f299075 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -245,6 +245,33 @@
- 			status = "disabled";
- 		};
- 
-+		esdhc: mmc@2140000 {
-+			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
-+			reg = <0x0 0x2140000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <0>; /* fixed up by bootloader */
-+			clocks = <&clockgen 2 1>;
-+			voltage-ranges = <1800 1800 3300 3300>;
-+			sdhci,auto-cmd12;
-+			little-endian;
-+			bus-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		esdhc1: mmc@2150000 {
-+			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
-+			reg = <0x0 0x2150000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <0>; /* fixed up by bootloader */
-+			clocks = <&clockgen 2 1>;
-+			voltage-ranges = <1800 1800 3300 3300>;
-+			sdhci,auto-cmd12;
-+			broken-cd;
-+			little-endian;
-+			bus-width = <4>;
-+			status = "disabled";
-+		};
-+
- 		duart0: serial@21c0500 {
- 			compatible = "fsl,ns16550", "ns16550a";
- 			reg = <0x00 0x21c0500 0x0 0x100>;
--- 
-2.9.5
-
+  /**
