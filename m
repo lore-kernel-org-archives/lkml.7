@@ -2,130 +2,87 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CCEC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC31C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC6762133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:48:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="iI7FG4A3"
+	by mail.kernel.org (Postfix) with ESMTP id EF2462171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:48:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732514AbfHONsy (ORCPT
+        id S1732525AbfHONs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:48:54 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:46064 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732122AbfHONsy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:48:54 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E141C2AF;
-        Thu, 15 Aug 2019 15:48:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1565876932;
-        bh=xowyGRiP4/YVXIEzA/PZn8BUaXGf008qzpBzfZbm7g0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iI7FG4A3hy7aFaZLKOforRcR9n5x1GpjnRZ/oNE0bvk2jsJETaf/mnqUBcBZ80j9r
-         MiZnTKuLSXk+YEgSIMXZsiXI7Cypb1cVOo3MLCcwrNBiGu3H0rMtvyW5IH/o8yWGrI
-         K6tS3lSFCq/AVUarbp8nklxxuVRBkbeENn61GoOo=
-Date:   Thu, 15 Aug 2019 16:48:48 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
-Message-ID: <20190815134848.GA20020@pendragon.ideasonboard.com>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-3-jacopo@jmondi.org>
- <02b40da5-c30c-f1f3-2351-c04da932e94a@xs4all.nl>
+        Thu, 15 Aug 2019 09:48:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55786 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732504AbfHONsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:48:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 14CD9AF9F;
+        Thu, 15 Aug 2019 13:48:54 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 87ACA1E4200; Thu, 15 Aug 2019 15:48:53 +0200 (CEST)
+Date:   Thu, 15 Aug 2019 15:48:53 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        linux-block@vger.kernel.org, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH block 1/2] writeback, cgroup: Adjust WB_FRN_TIME_CUT_DIV
+ to accelerate foreign inode switching
+Message-ID: <20190815134853.GH14313@quack2.suse.cz>
+References: <20190802190738.GB136335@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <02b40da5-c30c-f1f3-2351-c04da932e94a@xs4all.nl>
+In-Reply-To: <20190802190738.GB136335@devbig004.ftw2.facebook.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
-
-On Thu, Aug 15, 2019 at 03:30:59PM +0200, Hans Verkuil wrote:
-> On 8/14/19 10:28 PM, Jacopo Mondi wrote:
-> > Add documentation for the V4L2_CID_LOCATION camera control. The newly
-> > added read-only control reports the camera device mounting position.
-> > 
-> > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> > ---
-> >  .../media/uapi/v4l/ext-ctrls-camera.rst       | 23 +++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> > 
-> > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > index 51c1d5c9eb00..fc0a02eee6d4 100644
-> > --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
-> >      value down. A value of zero stops the motion if one is in progress
-> >      and has no effect otherwise.
-> > 
-> > +``V4L2_CID_LOCATION (integer)``
-> > +    This read-only control describes the camera location by reporting its
-> > +    mounting position on the device where the camera is installed. This
-> > +    control is particularly meaningful for devices which have a well defined
-> > +    orientation, such as phones, laptops and portable devices as the camera
-> > +    location is expressed as a position relative to the device intended
-> > +    usage position. In example, a camera installed on the user-facing side
-> > +    of a phone device is said to be installed in the ``V4L2_LOCATION_FRONT``
-> > +    position.
+On Fri 02-08-19 12:07:38, Tejun Heo wrote:
+> WB_FRN_TIME_CUT_DIV is used to tell the foreign inode detection logic
+> to ignore short writeback rounds to prevent getting confused by a
+> burst of short writebacks.  The parameter is currently 2 meaning that
+> anything smaller than half of the running average writback duration
+> will be ignored.
 > 
-> When should this control be created? If there is only one location (e.g.
-> all sensors are front-facing) would you still expose this? Or does it depend
-> on the type of device?
+> This is unnecessarily aggressive.  The detection logic uses 16 history
+> slots and is already reasonably protected against some short bursts
+> confusing it and the current parameter can lead to tens of seconds of
+> missed detection depending on the writeback pattern.
+> 
+> Let's change the parameter to 8, so that it only ignores writeback
+> with are smaller than 12.5% of the current running average.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
 
-Those are important questions that need to be answered :-) Going forward
-I think all camera sensors should expose this, and I'd like a helper
-function to create the control and set its value based on firmware
-properties that all (or most) camera sensor drivers should use. That
-helper function should also create the other mandatory or optional
-standard controls for camera sensors, such as the pixel rate or link
-frequency controls.
+Makes sense to me. You can add:
 
-> And is the sensor in a digital camera front or back facing? (Just curious
-> about what you think about that situation!)
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-I think we should include here a list of supported device types, and for
-each device type, define what the front location is. All other locations
-are then derived from that. For a digital camera I would define the
-front side as facing the scene being photographed.
+								Honza
 
-> > +
-> > +
-> > +
-> > +.. flat-table::
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +
-> > +    * - ``V4L2_LOCATION_FRONT``
-> > +      - The camera device is located on the front side of the device.
-> > +    * - ``V4L2_LOCATION_BACK``
-> > +      - The camera device is located on the back side of the device.
-> > +
-> > +
-> > +
-> >  .. [#f1]
-> >     This control may be changed to a menu control in the future, if more
-> >     options are required.
-
+> ---
+>  fs/fs-writeback.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/fs/fs-writeback.c
+> +++ b/fs/fs-writeback.c
+> @@ -227,7 +227,7 @@ static void wb_wait_for_completion(struc
+>  /* parameters for foreign inode detection, see wb_detach_inode() */
+>  #define WB_FRN_TIME_SHIFT	13	/* 1s = 2^13, upto 8 secs w/ 16bit */
+>  #define WB_FRN_TIME_AVG_SHIFT	3	/* avg = avg * 7/8 + new * 1/8 */
+> -#define WB_FRN_TIME_CUT_DIV	2	/* ignore rounds < avg / 2 */
+> +#define WB_FRN_TIME_CUT_DIV	8	/* ignore rounds < avg / 8 */
+>  #define WB_FRN_TIME_PERIOD	(2 * (1 << WB_FRN_TIME_SHIFT))	/* 2s */
+>  
+>  #define WB_FRN_HIST_SLOTS	16	/* inode->i_wb_frn_history is 16bit */
 -- 
-Regards,
-
-Laurent Pinchart
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
