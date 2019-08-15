@@ -2,192 +2,318 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25AEC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFCAC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7769E2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D40132084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:06:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="g8Wp22Rc"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="S0+BEgcY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730283AbfHOQGT (ORCPT
+        id S1730575AbfHOQGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:06:19 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47096 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfHOQGT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:06:19 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FG3sVD003017;
-        Thu, 15 Aug 2019 16:06:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=VP7sCuMn0gxFRzE/Z9kn9dLvV5aSB5uEzEdCLBDAUN0=;
- b=g8Wp22RcUI/HyKFOJzzL++o/Q50ury1Dgif2c3GyYrt/ptsNkEtihQkvPOC/ZyoleOl2
- GBbOKD22/A9RvP0XzO2QzX0KwfaGMljHqaxHIqxWDDnfuEYmv9jJrWyoMeP6Ltgk28M2
- F6//Uz4RETgbhY+qUHobUQeNDoNOxiaERb/a7qgmFqb110dPSgrMh+GIj0LnT4HXq7kB
- nIXOLQsPQamu7WDJ06qPYYlGbSDZbB8Z3ZZV0fgw5VtgayPybYlZTXS6WvikWtaBhKR9
- yUxhefgNndcfkNReJ4+TIK8szOsIe+Bj7dm5ThPa0JE6EB5eQkosOl+IkyzK86KWdNrp CA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2u9nvpkp4d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Aug 2019 16:06:06 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FG30Qd054300;
-        Thu, 15 Aug 2019 16:06:05 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2ucpysg627-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Aug 2019 16:06:05 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7FG64Jb002753;
-        Thu, 15 Aug 2019 16:06:04 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 15 Aug 2019 09:06:03 -0700
-Subject: [PATCH 2/2] vfs: don't allow writes to swap files
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     hch@infradead.org, akpm@linux-foundation.org, tytso@mit.edu,
-        viro@zeniv.linux.org.uk, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Date:   Thu, 15 Aug 2019 09:05:56 -0700
-Message-ID: <156588515613.111054.13578448017133006248.stgit@magnolia>
-In-Reply-To: <156588514105.111054.13645634739408399209.stgit@magnolia>
-References: <156588514105.111054.13645634739408399209.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 15 Aug 2019 12:06:37 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47390 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726120AbfHOQGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 12:06:36 -0400
+Received: from zn.tnic (p200300EC2F0B52001DDC45CCE62FC494.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:5200:1ddc:45cc:e62f:c494])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4A5CD1EC04CD;
+        Thu, 15 Aug 2019 18:06:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565885195;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=bPhqNHq9xLg3oM0xhMw8/A7vsTm8jGZ/OhyfKfI6CJw=;
+        b=S0+BEgcYrFPvV35Uu8HTodRJwAgyRR//ra0yGHJdXMdijeCgSL++u86I7+Wves5VqY+XqN
+        0WYfoVGCvH2pIC1PL3gSieEnBrkrrtbNgKg/rwLbm7/tEKwybLQUPGNfs+Phba8leQO7Of
+        JzhKlHYmuqZ48IAnzt2BZsYjEuSimQY=
+Date:   Thu, 15 Aug 2019 18:07:19 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 05/28] x86/asm: annotate local pseudo-functions
+Message-ID: <20190815160719.GI15313@zn.tnic>
+References: <20190808103854.6192-1-jslaby@suse.cz>
+ <20190808103854.6192-6-jslaby@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908150157
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908150158
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190808103854.6192-6-jslaby@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Thu, Aug 08, 2019 at 12:38:31PM +0200, Jiri Slaby wrote:
+> Use the newly added SYM_CODE_START_LOCAL* to annotate starts of all
+> pseudo-functions (those ending END until now) which do not have ".globl"
+> annotation. This is needed to balance END for tools that generate
+> debuginfo. Note that we switch from END to SYM_CODE_END too so that
+> everybody can see the pairing.
 
-Don't let userspace write to an active swap file because the kernel
-effectively has a long term lease on the storage and things could get
-seriously corrupted if we let this happen.
+Please get rid of the "we" etc personal pronouns in the commit messages
+and make them all impartial and passive.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/block_dev.c |    3 +++
- mm/filemap.c   |    3 +++
- mm/memory.c    |    4 ++++
- mm/mmap.c      |    8 ++++++--
- mm/swapfile.c  |   12 +++++++++++-
- 5 files changed, 27 insertions(+), 3 deletions(-)
+> We are not annotating C-like functions (which handle frame ptr etc.)
+> here, hence we use SYM_CODE_* macros here, not SYM_FUNC_*.  Note that
+> early_idt_handler_common already had ENDPROC -- switch that to
+> SYM_CODE_END for the same reason as above.
+> 
+> bogus_64_magic, bad_address, bad_get_user*, and bad_put_user are now
+> aligned, as they are separate functions. They do not mind to be aligned
+> -- no need to be compact there.
+> 
+> early_idt_handler_common is aligned now too, as it is after
+> early_idt_handler_array, so as well no need to be compact there.
+> 
+> verify_cpu is self-standing and included in other .S files, so align it
+> too.
+> 
+> The others have alignment preserved to what it used to be (using the
+> _NOALIGN variant of macros).
+> 
+> [v3] annotate more functions
+> [v4] describe the alignments changes
+> 
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: <x86@kernel.org>
+> ---
+>  arch/x86/entry/entry_64.S        | 3 ++-
+>  arch/x86/kernel/acpi/wakeup_64.S | 3 ++-
+>  arch/x86/kernel/head_32.S        | 4 ++--
+>  arch/x86/kernel/head_64.S        | 4 ++--
+>  arch/x86/kernel/verify_cpu.S     | 4 ++--
+>  arch/x86/lib/getuser.S           | 6 ++++--
+>  arch/x86/lib/putuser.S           | 3 ++-
+>  7 files changed, 16 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+> index 9701464341e4..68cb3a9ee65e 100644
+> --- a/arch/x86/entry/entry_64.S
+> +++ b/arch/x86/entry/entry_64.S
+> @@ -1059,7 +1059,7 @@ EXPORT_SYMBOL(native_load_gs_index)
+>  	_ASM_EXTABLE(.Lgs_change, bad_gs)
+>  	.section .fixup, "ax"
+>  	/* running with kernelgs */
+> -bad_gs:
+> +SYM_CODE_START_LOCAL_NOALIGN(bad_gs)
+>  	SWAPGS					/* switch back to user gs */
+>  .macro ZAP_GS
+>  	/* This can't be a string because the preprocessor needs to see it. */
+> @@ -1070,6 +1070,7 @@ bad_gs:
+>  	xorl	%eax, %eax
+>  	movl	%eax, %gs
+>  	jmp	2b
+> +SYM_CODE_END(bad_gs)
+>  	.previous
+>  
 
+That can be made a local label:
 
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index eb657ab94060..017f46719ebe 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -2011,6 +2011,9 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	if (bdev_read_only(I_BDEV(bd_inode)))
- 		return -EPERM;
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index be9ca198c581..ed4f2b6e29d5 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1058,11 +1058,12 @@ ENTRY(native_load_gs_index)
+ ENDPROC(native_load_gs_index)
+ EXPORT_SYMBOL(native_load_gs_index)
  
-+	if (IS_SWAPFILE(bd_inode))
-+		return -ETXTBSY;
+-	_ASM_EXTABLE(.Lgs_change, bad_gs)
++	_ASM_EXTABLE(.Lgs_change, .Lbad_gs)
+ 	.section .fixup, "ax"
+ 	/* running with kernelgs */
+-bad_gs:
++.Lbad_gs:
+ 	SWAPGS					/* switch back to user gs */
 +
- 	if (!iov_iter_count(from))
- 		return 0;
- 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index d0cf700bf201..40667c2f3383 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2988,6 +2988,9 @@ inline ssize_t generic_write_checks(struct kiocb *iocb, struct iov_iter *from)
- 	loff_t count;
- 	int ret;
- 
-+	if (IS_SWAPFILE(inode))
-+		return -ETXTBSY;
-+
- 	if (!iov_iter_count(from))
- 		return 0;
- 
-diff --git a/mm/memory.c b/mm/memory.c
-index e2bb51b6242e..b1dff75640b7 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2196,6 +2196,10 @@ static vm_fault_t do_page_mkwrite(struct vm_fault *vmf)
- 
- 	vmf->flags = FAULT_FLAG_WRITE|FAULT_FLAG_MKWRITE;
- 
-+	if (vmf->vma->vm_file &&
-+	    IS_SWAPFILE(vmf->vma->vm_file->f_mapping->host))
-+		return VM_FAULT_SIGBUS;
-+
- 	ret = vmf->vma->vm_ops->page_mkwrite(vmf);
- 	/* Restore original flags so that caller is not surprised */
- 	vmf->flags = old_flags;
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 7e8c3e8ae75f..6bc21fca20bc 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1483,8 +1483,12 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- 		case MAP_SHARED_VALIDATE:
- 			if (flags & ~flags_mask)
- 				return -EOPNOTSUPP;
--			if ((prot&PROT_WRITE) && !(file->f_mode&FMODE_WRITE))
--				return -EACCES;
-+			if (prot & PROT_WRITE) {
-+				if (!(file->f_mode & FMODE_WRITE))
-+					return -EACCES;
-+				if (IS_SWAPFILE(file->f_mapping->host))
-+					return -ETXTBSY;
-+			}
- 
- 			/*
- 			 * Make sure we don't allow writing to an append-only
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index a53b7c49b40e..dab43523afdd 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -3275,6 +3275,17 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
- 	if (error)
- 		goto bad_swap;
- 
-+	/*
-+	 * Flush any pending IO and dirty mappings before we start using this
-+	 * swap device.
-+	 */
-+	inode->i_flags |= S_SWAPFILE;
-+	error = inode_drain_writes(inode);
-+	if (error) {
-+		inode->i_flags &= ~S_SWAPFILE;
-+		goto bad_swap;
-+	}
-+
- 	mutex_lock(&swapon_mutex);
- 	prio = -1;
- 	if (swap_flags & SWAP_FLAG_PREFER)
-@@ -3295,7 +3306,6 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
- 	atomic_inc(&proc_poll_event);
- 	wake_up_interruptible(&proc_poll_wait);
- 
--	inode->i_flags |= S_SWAPFILE;
- 	error = 0;
- 	goto out;
- bad_swap:
+ .macro ZAP_GS
+ 	/* This can't be a string because the preprocessor needs to see it. */
+ 	movl $__USER_DS, %eax
 
+>  /* Call softirq on interrupt stack. Interrupts are off. */
+> diff --git a/arch/x86/kernel/acpi/wakeup_64.S b/arch/x86/kernel/acpi/wakeup_64.S
+> index a142c5ee0d4f..9f1852428a2d 100644
+> --- a/arch/x86/kernel/acpi/wakeup_64.S
+> +++ b/arch/x86/kernel/acpi/wakeup_64.S
+> @@ -37,8 +37,9 @@ ENTRY(wakeup_long64)
+>  	jmp	*%rax
+>  ENDPROC(wakeup_long64)
+>  
+> -bogus_64_magic:
+> +SYM_CODE_START_LOCAL(bogus_64_magic)
+>  	jmp	bogus_64_magic
+> +SYM_CODE_END(bogus_64_magic)
+
+That thing is not really needed if we do the below.
+
+It even tries to say that the magic was bad in %rcx if you can inspect
+registers when the endless loop happens...
+
+:-)
+
+diff --git a/arch/x86/kernel/acpi/wakeup_64.S b/arch/x86/kernel/acpi/wakeup_64.S
+index a142c5ee0d4f..2ae21cc5a67c 100644
+--- a/arch/x86/kernel/acpi/wakeup_64.S
++++ b/arch/x86/kernel/acpi/wakeup_64.S
+@@ -18,10 +18,16 @@ ENTRY(wakeup_long64)
+ 	movq	saved_magic, %rax
+ 	movq	$0x123456789abcdef0, %rdx
+ 	cmpq	%rdx, %rax
+-	jne	bogus_64_magic
++	je	2f
+ 
++	/* stop here on a saved_magic mismatch */
++	movq	$0xbad0fa61c, %rcx
++1:
++	jmp	1b
++
++2:
+ 	movw	$__KERNEL_DS, %ax
+-	movw	%ax, %ss	
++	movw	%ax, %ss
+ 	movw	%ax, %ds
+ 	movw	%ax, %es
+ 	movw	%ax, %fs
+@@ -37,9 +43,6 @@ ENTRY(wakeup_long64)
+ 	jmp	*%rax
+ ENDPROC(wakeup_long64)
+ 
+-bogus_64_magic:
+-	jmp	bogus_64_magic
+-
+ ENTRY(do_suspend_lowlevel)
+ 	FRAME_BEGIN
+ 	subq	$8, %rsp
+
+>  
+>  ENTRY(do_suspend_lowlevel)
+>  	FRAME_BEGIN
+> diff --git a/arch/x86/kernel/head_32.S b/arch/x86/kernel/head_32.S
+> index d1e213da4782..0bae769b7b59 100644
+> --- a/arch/x86/kernel/head_32.S
+> +++ b/arch/x86/kernel/head_32.S
+> @@ -409,7 +409,7 @@ ENTRY(early_idt_handler_array)
+>  	.endr
+>  ENDPROC(early_idt_handler_array)
+>  	
+> -early_idt_handler_common:
+> +SYM_CODE_START_LOCAL(early_idt_handler_common)
+>  	/*
+>  	 * The stack is the hardware frame, an error code or zero, and the
+>  	 * vector number.
+> @@ -460,7 +460,7 @@ early_idt_handler_common:
+>  	decl	%ss:early_recursion_flag
+>  	addl	$4, %esp	/* pop pt_regs->orig_ax */
+>  	iret
+> -ENDPROC(early_idt_handler_common)
+> +SYM_CODE_END(early_idt_handler_common)
+>  
+>  /* This is the default interrupt "handler" :-) */
+>  ENTRY(early_ignore_irq)
+
+Can be a local label...
+
+> diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+> index 6c1bf7ae55ff..6fedcda37634 100644
+> --- a/arch/x86/kernel/head_64.S
+> +++ b/arch/x86/kernel/head_64.S
+> @@ -291,7 +291,7 @@ ENTRY(early_idt_handler_array)
+>  	UNWIND_HINT_IRET_REGS offset=16
+>  END(early_idt_handler_array)
+>  
+> -early_idt_handler_common:
+> +SYM_CODE_START_LOCAL(early_idt_handler_common)
+>  	/*
+>  	 * The stack is the hardware frame, an error code or zero, and the
+>  	 * vector number.
+> @@ -333,7 +333,7 @@ early_idt_handler_common:
+>  20:
+>  	decl early_recursion_flag(%rip)
+>  	jmp restore_regs_and_return_to_kernel
+> -END(early_idt_handler_common)
+> +SYM_CODE_END(early_idt_handler_common)
+>  
+>  	__INITDATA
+>  
+
+Ditto:
+
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 6fedcda37634..68e8d0332873 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -283,7 +283,7 @@ ENTRY(early_idt_handler_array)
+ 		UNWIND_HINT_IRET_REGS offset=8
+ 	.endif
+ 	pushq $i		# 72(%rsp) Vector number
+-	jmp early_idt_handler_common
++	jmp .Learly_idt_handler_common
+ 	UNWIND_HINT_IRET_REGS
+ 	i = i + 1
+ 	.fill early_idt_handler_array + i*EARLY_IDT_HANDLER_SIZE - ., 1, 0xcc
+@@ -291,7 +291,7 @@ ENTRY(early_idt_handler_array)
+ 	UNWIND_HINT_IRET_REGS offset=16
+ END(early_idt_handler_array)
+ 
+-SYM_CODE_START_LOCAL(early_idt_handler_common)
++SYM_CODE_START_LOCAL(.Learly_idt_handler_common)
+ 	/*
+ 	 * The stack is the hardware frame, an error code or zero, and the
+ 	 * vector number.
+@@ -333,7 +333,7 @@ SYM_CODE_START_LOCAL(early_idt_handler_common)
+ 20:
+ 	decl early_recursion_flag(%rip)
+ 	jmp restore_regs_and_return_to_kernel
+-SYM_CODE_END(early_idt_handler_common)
++SYM_CODE_END(.Learly_idt_handler_common)
+ 
+ 	__INITDATA
+ 
+
+> diff --git a/arch/x86/kernel/verify_cpu.S b/arch/x86/kernel/verify_cpu.S
+> index a024c4f7ba56..641f0fe1e5b4 100644
+> --- a/arch/x86/kernel/verify_cpu.S
+> +++ b/arch/x86/kernel/verify_cpu.S
+> @@ -31,7 +31,7 @@
+>  #include <asm/cpufeatures.h>
+>  #include <asm/msr-index.h>
+>  
+> -ENTRY(verify_cpu)
+> +SYM_FUNC_START_LOCAL(verify_cpu)
+>  	pushf				# Save caller passed flags
+>  	push	$0			# Kill any dangerous flags
+>  	popf
+> @@ -137,4 +137,4 @@ ENTRY(verify_cpu)
+>  	popf				# Restore caller passed flags
+>  	xorl %eax, %eax
+>  	ret
+> -ENDPROC(verify_cpu)
+> +SYM_FUNC_END(verify_cpu)
+
+All except this one can be local labels and be removed from vmlinux'
+symtable:
+
+$ readelf -a vmlinux | grep -E "(bad_(gs|(get|put)_user)|bogus_64_magic|early_idt_handler_common|verify_cpu)"
+    45: ffffffff810000e0   241 FUNC    LOCAL  DEFAULT    1 verify_cpu
+$
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
