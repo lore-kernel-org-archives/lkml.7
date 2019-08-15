@@ -2,212 +2,67 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9E9C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE72C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6232086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:45:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="b9kRCnh+"
+	by mail.kernel.org (Postfix) with ESMTP id ECCDE2086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbfHOLpV (ORCPT
+        id S1731670AbfHOLp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 07:45:21 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:43552 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfHOLpV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 07:45:21 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5E88D2B2;
-        Thu, 15 Aug 2019 13:45:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1565869518;
-        bh=cXJOaGd6roVYEcQram2z0isBJsQRvKBwHbGE0Jggb90=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b9kRCnh+o4UkN5EGQTETqEkcKCYiV3qp9/a7tjTApUZ8fW/1sZPaSjeGg5X7vXDSN
-         IsCrViB01nplCxKmGuf4WJTJ8Z68cJL2hNj5E33LxUmq+QylEM8irSegVsHHr+szKE
-         MPUQnXJPCCjYN4uS3OulrETd8DxqrUbuqyb1IJMs=
-Date:   Thu, 15 Aug 2019 14:45:15 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: Re: [PATCH v2 1/9] dt-bindings: panel: lvds: Add dual-link LVDS
- display support
-Message-ID: <20190815114515.GH5011@pendragon.ideasonboard.com>
-References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1565867073-24746-2-git-send-email-fabrizio.castro@bp.renesas.com>
+        Thu, 15 Aug 2019 07:45:59 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42034 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726317AbfHOLp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 07:45:58 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C4184EF3A2264704D489;
+        Thu, 15 Aug 2019 19:45:56 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 15 Aug 2019 19:45:48 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     Chao Yu <yuchao0@huawei.com>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+Subject: [PATCH 1/3] f2fs: use wrapped IS_SWAPFILE()
+Date:   Thu, 15 Aug 2019 19:45:34 +0800
+Message-ID: <20190815114536.114255-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1565867073-24746-2-git-send-email-fabrizio.castro@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrizio,
+Just cleanup, no logic change.
 
-On Thu, Aug 15, 2019 at 12:04:25PM +0100, Fabrizio Castro wrote:
-> Dual-link LVDS displays have two ports, therefore document this
-> with the bindings.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> 
-> ---
-> v1->v2:
-> * Reworked the description of the ports property
-> * lvds0_panel_in in the example has been renamed to panel_in0
-> * lvds1_panel_in in the example has been renamed to panel_in1
-> 
-> Laurent,
-> 
-> in linux-next they are now working with:
-> Documentation/devicetree/bindings/display/panel/lvds.yaml
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/f2fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Documentation/devicetree/bindings/display/panel/lvds.yaml is in
-drm-misc-next, so I would advise rebasing on top of that.
-
-> What should I do here?
-> 
->  .../bindings/display/panel/panel-lvds.txt          | 95 ++++++++++++++++------
->  1 file changed, 71 insertions(+), 24 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-> index 250850a..5231243 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-> @@ -41,7 +41,12 @@ Required nodes:
->  
->  - panel-timing: See panel-common.txt.
->  - ports: See panel-common.txt. These bindings require a single port subnode
-> -  corresponding to the panel LVDS input.
-> +  (for a single link panel) corresponding to the panel LVDS input, or two port
-> +  subnodes (for a dual link panel) corresponding to the panel LVDS inputs.
-> +  Dual-link LVDS panels expect even pixels (0, 2, 4, etc.) and odd pixels (1, 3,
-> +  5, etc.) on different input ports, it's up to the panel-specific bindings to
-> +  specify what port is expecting even pixels, and what port is expecting odd
-> +  pixels.
->  
->  
->  LVDS data mappings are defined as follows.
-> @@ -92,30 +97,72 @@ CTL3: 0
->  Example
->  -------
->  
-> -panel {
-> -	compatible = "mitsubishi,aa121td01", "panel-lvds";
-> -
-> -	width-mm = <261>;
-> -	height-mm = <163>;
-> -
-> -	data-mapping = "jeida-24";
-> -
-> -	panel-timing {
-> -		/* 1280x800 @60Hz */
-> -		clock-frequency = <71000000>;
-> -		hactive = <1280>;
-> -		vactive = <800>;
-> -		hsync-len = <70>;
-> -		hfront-porch = <20>;
-> -		hback-porch = <70>;
-> -		vsync-len = <5>;
-> -		vfront-porch = <3>;
-> -		vback-porch = <15>;
-> +Single port:
-> +	panel {
-> +		compatible = "mitsubishi,aa121td01", "panel-lvds";
-> +
-> +		width-mm = <261>;
-> +		height-mm = <163>;
-> +
-> +		data-mapping = "jeida-24";
-> +
-> +		panel-timing {
-> +			/* 1280x800 @60Hz */
-> +			clock-frequency = <71000000>;
-> +			hactive = <1280>;
-> +			vactive = <800>;
-> +			hsync-len = <70>;
-> +			hfront-porch = <20>;
-> +			hback-porch = <70>;
-> +			vsync-len = <5>;
-> +			vfront-porch = <3>;
-> +			vback-porch = <15>;
-> +		};
-> +
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&lvds_encoder>;
-> +			};
-> +		};
->  	};
->  
-> -	port {
-> -		panel_in: endpoint {
-> -			remote-endpoint = <&lvds_encoder>;
-> +Two ports:
-> +	panel {
-> +		compatible = "advantech,idk-2121wr", "panel-lvds";
-> +
-> +		width-mm = <476>;
-> +		height-mm = <268>;
-> +
-> +		data-mapping = "vesa-24";
-> +
-> +		panel-timing {
-> +			clock-frequency = <148500000>;
-> +			hactive = <1920>;
-> +			vactive = <1080>;
-> +			hsync-len = <44>;
-> +			hfront-porch = <88>;
-> +			hback-porch = <148>;
-> +			vfront-porch = <4>;
-> +			vback-porch = <36>;
-> +			vsync-len = <5>;
-> +		};
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				panel_in0: endpoint {
-> +					remote-endpoint = <&lvds0_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				panel_in1: endpoint {
-> +					remote-endpoint = <&lvds1_out>;
-> +				};
-> +			};
->  		};
->  	};
-> -};
-
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 73e007dca3bb..d2b718e33f88 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3706,7 +3706,7 @@ static inline bool f2fs_force_buffered_io(struct inode *inode,
+ 				block_unaligned_IO(inode, iocb, iter))
+ 		return true;
+ 	if (is_sbi_flag_set(F2FS_I_SB(inode), SBI_CP_DISABLED) &&
+-					!(inode->i_flags & S_SWAPFILE))
++					!IS_SWAPFILE(inode))
+ 		return true;
+ 
+ 	return false;
 -- 
-Regards,
+2.18.0.rc1
 
-Laurent Pinchart
