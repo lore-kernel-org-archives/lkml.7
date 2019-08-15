@@ -4,71 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380C1C3A59B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50D4C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042482084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725C22084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565889286;
-	bh=qUIIGpvuFgwUbEDSa1GLQ61HvZRWV1u1BG//aUjLwwg=;
+	s=default; t=1565889291;
+	bh=rdAhgsU/T0rdvWxEh/u6PJv5I20N9L1WrHHsK1wuhcQ=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=vAlpwhvfqLHRV/zYIIL6qXShBgiBXhvMBTknRCuvPYmNYKZwz5X5ZV/xRGurV5u4h
-	 AYKK7UNgvNba5m5EWObpfsWc9EysRGR0xkM+gSe3Ale+Rh0JZfSC2Y0nchyXXDLLCL
-	 dUb/MdHaQsOLt2xsNjyYjXiESMrEFsn15ulqnXoE=
+	b=Kk/b1P9xTYdQYlGGV++m2NRiV5ILaT/E8sUibHEa0vu7eN8Eujs0xIW7gn/uXLl1/
+	 XwVkztHb62g9WnP0SwGfcLbi7WylHoj7s1TgRjlJeDk72y7z+CAspVdXbrqCcVH6XO
+	 Ilg2+1VAFENNrJkGwRsmMR9r+Zyp+MT/81aqsj8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731908AbfHOROo (ORCPT
+        id S1731944AbfHOROu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:14:44 -0400
-Received: from mail-ed1-f99.google.com ([209.85.208.99]:38371 "EHLO
-        mail-ed1-f99.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731827AbfHOROi (ORCPT
+        Thu, 15 Aug 2019 13:14:50 -0400
+Received: from mail-wr1-f100.google.com ([209.85.221.100]:33967 "EHLO
+        mail-wr1-f100.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731780AbfHOROh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:14:38 -0400
-Received: by mail-ed1-f99.google.com with SMTP id r12so2720786edo.5
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:36 -0700 (PDT)
+        Thu, 15 Aug 2019 13:14:37 -0400
+Received: by mail-wr1-f100.google.com with SMTP id s18so2101811wrn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=STOMTB8soQ9SpdsHI1kcwCTKID5AQX15fSXLD/Rbf0M=;
-        b=KQXFVqadKbd1VdjiK57cz927LmQtxURTQpOaEGLNxjgItx7zMHta+bfTWi6Khup+LX
-         cPUflXNUhiMKTsRrC0VcqYaHla9xAeGNrIbwhZWfRyOok469IeXsL+7VOj3ckmhwokUI
-         0ik2iDy39ZMBFGg64q5jRTObzLhBo1DeTiWlrn69Hr3XIUBUp53oNaIXh3N8F9NXe/bx
-         jr4J2CbW6wCl0GFYgZtPb7EV1hQs0QHAAdDSeD/GOFCEW1ZOuxH5fWzzO1te3ILJLhRy
-         dL/MiCHRCf57MfiPUJOXfiGfE+DrE6jGCimLCPdpJ90daRnXR7yVP3GXbLI5refOATPC
-         crXg==
-X-Gm-Message-State: APjAAAU8CySGQSv8r0GJ5V/JYOBJwDmK3oqg+amo7b/vDoNvAZS6ARZL
-        mhznZmPTJ7NCFZqq3HgqNnvFp87U+qhHI2FqiO3poDNdLQSzL93Z/NkS16rV9caRfQ==
-X-Google-Smtp-Source: APXvYqzyLgL1YBE8FNASctPwC+Lz8lFYO0GlBacef5FmFcI+vyr96Ej3Sj0TANIE49KimsRnjlx4FWa+dJ98
-X-Received: by 2002:a50:ba81:: with SMTP id x1mr6456670ede.257.1565889276186;
-        Thu, 15 Aug 2019 10:14:36 -0700 (PDT)
+        bh=ySpgobJR5bj4Xkb3PdeTkzIbBwuG8mGjmRLvJCEofTc=;
+        b=a/dPmYrMLi/4hMXMhIHoXiGPMILJa1FF5XHZm0thylxo8L9iCWHjEsCOVJnMLNkbci
+         GAeUwOt3jHMEZ6GTnFt13ecx42HaxDD6wT9YB48n7OOrlsvNaTpM3WL+uySHUQZG/F5E
+         oWwfN4icozbrAkE5Qk79hzLhjcs8pcWd6EuSqAjWQgfT2FTa/4onL4Bvj9EbvGbSF8hY
+         6FsfbByYfIzmg1r8qI9SnEeRsXES0ti0dLkarM+n0Jg0UIX0FZWTVRlR99OPwlrK8eN1
+         UIhSAaBqv6G+ZF+Yu2gDg2yB2g3V72UHyi0a/Krh9rbrJfTKkAKAx4R+pdSKmAlvh42K
+         T2zA==
+X-Gm-Message-State: APjAAAWxKDiod6VQUlCkrIrPZB83gmXeSX3m//KGZ/1HG1nkfWWKVzqf
+        7yL6gncS0qSaaas7vrRjB2WWwTX8emYjSwL+/DY2vIVfQIErEDNQ19ANbumOmbB8cQ==
+X-Google-Smtp-Source: APXvYqwtMysVdYskzvMOV85slj/0NfBByAhnxSu/8L2/jUmAQ6wO16GiTZtHF4dbwP0rFEb32eLYnsVRgZj6
+X-Received: by 2002:adf:e782:: with SMTP id n2mr6427390wrm.1.1565889274755;
+        Thu, 15 Aug 2019 10:14:34 -0700 (PDT)
 Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id m17sm21059ejc.94.2019.08.15.10.14.36
+        by smtp-relay.gmail.com with ESMTPS id w13sm46868wrp.62.2019.08.15.10.14.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 10:14:36 -0700 (PDT)
+        Thu, 15 Aug 2019 10:14:34 -0700 (PDT)
 X-Relaying-Domain: sirena.org.uk
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1hyJKd-000531-Qb; Thu, 15 Aug 2019 17:14:35 +0000
+        id 1hyJKc-00052o-CW; Thu, 15 Aug 2019 17:14:34 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 3A8AC2742BC7; Thu, 15 Aug 2019 18:14:35 +0100 (BST)
+        id E2AC82742B9E; Thu, 15 Aug 2019 18:14:33 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     Adam Ford <aford173@gmail.com>, broonie@kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, nm@ti.com, sboyd@kernel.org,
-        stable@vger.kernel.org, tony@atomide.com, vireshk@kernel.org
-Subject: Applied "regulator: twl: voltage lists for vdd1/2 on twl4030" to the regulator tree
-In-Reply-To: <20190814214319.24087-1-andreas@kemnade.info>
+To:     Raag Jadav <raagjadav@gmail.com>
+Cc:     devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Applied "regulator: act8865: operating mode and suspend state support" to the regulator tree
+In-Reply-To: <1565721176-8955-2-git-send-email-raagjadav@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190815171435.3A8AC2742BC7@ypsilon.sirena.org.uk>
-Date:   Thu, 15 Aug 2019 18:14:35 +0100 (BST)
+Message-Id: <20190815171433.E2AC82742B9E@ypsilon.sirena.org.uk>
+Date:   Thu, 15 Aug 2019 18:14:33 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,11 +75,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: twl: voltage lists for vdd1/2 on twl4030
+   regulator: act8865: operating mode and suspend state support
 
 has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -101,109 +100,283 @@ to this mail.
 Thanks,
 Mark
 
-From 3829100a63724f6dbf264b2a7f06e7f638ed952d Mon Sep 17 00:00:00 2001
-From: Andreas Kemnade <andreas@kemnade.info>
-Date: Wed, 14 Aug 2019 23:43:19 +0200
-Subject: [PATCH] regulator: twl: voltage lists for vdd1/2 on twl4030
+From 955741a5120bb1ed19d3b12da90bb947d3a0cb99 Mon Sep 17 00:00:00 2001
+From: Raag Jadav <raagjadav@gmail.com>
+Date: Wed, 14 Aug 2019 00:02:55 +0530
+Subject: [PATCH] regulator: act8865: operating mode and suspend state support
 
-_opp_supported_by_regulators() wrongly ignored errors from
-regulator_is_supported_voltage(), so it considered errors as
-success. Since
-commit 498209445124 ("regulator: core: simplify return value on suported_voltage")
-regulator_is_supported_voltage() returns a real boolean, so
-errors make _opp_supported_by_regulators() return false.
+Implement ->set_mode(), ->get_mode() and ->set_suspend_xx() hooks
+for act8865 with unlocked expert registers.
 
-That reveals a problem with the declaration of the VDD1/2
-regulators on twl4030.
-The VDD1/VDD2 regulators on twl4030 are neither defined with
-voltage lists nor with the continuous flag set, so
-regulator_is_supported_voltage() returns false and an error
-before above mentioned commit (which was considered success)
-The result is that after the above mentioned commit cpufreq
-does not work properly e.g. dm3730.
+Based on work done by Borris Brezillon on [1].
+[1] https://www.spinics.net/lists/kernel/msg2942960.html
 
-[    2.490997] core: _opp_supported_by_regulators: OPP minuV: 1012500 maxuV: 1012500, not supported by regulator
-[    2.501617] cpu cpu0: _opp_add: OPP not supported by regulators (300000000)
-[    2.509246] core: _opp_supported_by_regulators: OPP minuV: 1200000 maxuV: 1200000, not supported by regulator
-[    2.519775] cpu cpu0: _opp_add: OPP not supported by regulators (600000000)
-[    2.527313] core: _opp_supported_by_regulators: OPP minuV: 1325000 maxuV: 1325000, not supported by regulator
-[    2.537750] cpu cpu0: _opp_add: OPP not supported by regulators (800000000)
-
-The patch fixes declaration of VDD1/2 regulators by
-adding proper voltage lists.
-
-Fixes: 498209445124 ("regulator: core: simplify return value on suported_voltage")
-Cc: stable@vger.kernel.org
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Tested-by: Adam Ford <aford173@gmail.com> #logicpd-torpedo-37xx-devkit
-Link: https://lore.kernel.org/r/20190814214319.24087-1-andreas@kemnade.info
+Signed-off-by: Raag Jadav <raagjadav@gmail.com>
+Link: https://lore.kernel.org/r/1565721176-8955-2-git-send-email-raagjadav@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/twl-regulator.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+ drivers/regulator/act8865-regulator.c | 187 +++++++++++++++++++++++++-
+ 1 file changed, 186 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/twl-regulator.c b/drivers/regulator/twl-regulator.c
-index 6fa15b2d6fb3..866b4dd01da9 100644
---- a/drivers/regulator/twl-regulator.c
-+++ b/drivers/regulator/twl-regulator.c
-@@ -359,6 +359,17 @@ static const u16 VINTANA2_VSEL_table[] = {
- 	2500, 2750,
+diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+index 6a90d3c7a452..0fa97f934df4 100644
+--- a/drivers/regulator/act8865-regulator.c
++++ b/drivers/regulator/act8865-regulator.c
+@@ -19,6 +19,7 @@
+ #include <linux/power_supply.h>
+ #include <linux/regulator/of_regulator.h>
+ #include <linux/regmap.h>
++#include <dt-bindings/regulator/active-semi,8865-regulator.h>
+ 
+ /*
+  * ACT8600 Global Register Map.
+@@ -90,23 +91,31 @@
+  */
+ #define	ACT8865_SYS_MODE	0x00
+ #define	ACT8865_SYS_CTRL	0x01
++#define	ACT8865_SYS_UNLK_REGS	0x0b
+ #define	ACT8865_DCDC1_VSET1	0x20
+ #define	ACT8865_DCDC1_VSET2	0x21
+ #define	ACT8865_DCDC1_CTRL	0x22
++#define	ACT8865_DCDC1_SUS	0x24
+ #define	ACT8865_DCDC2_VSET1	0x30
+ #define	ACT8865_DCDC2_VSET2	0x31
+ #define	ACT8865_DCDC2_CTRL	0x32
++#define	ACT8865_DCDC2_SUS	0x34
+ #define	ACT8865_DCDC3_VSET1	0x40
+ #define	ACT8865_DCDC3_VSET2	0x41
+ #define	ACT8865_DCDC3_CTRL	0x42
++#define	ACT8865_DCDC3_SUS	0x44
+ #define	ACT8865_LDO1_VSET	0x50
+ #define	ACT8865_LDO1_CTRL	0x51
++#define	ACT8865_LDO1_SUS	0x52
+ #define	ACT8865_LDO2_VSET	0x54
+ #define	ACT8865_LDO2_CTRL	0x55
++#define	ACT8865_LDO2_SUS	0x56
+ #define	ACT8865_LDO3_VSET	0x60
+ #define	ACT8865_LDO3_CTRL	0x61
++#define	ACT8865_LDO3_SUS	0x62
+ #define	ACT8865_LDO4_VSET	0x64
+ #define	ACT8865_LDO4_CTRL	0x65
++#define	ACT8865_LDO4_SUS	0x66
+ #define	ACT8865_MSTROFF		0x20
+ 
+ /*
+@@ -225,6 +234,171 @@ static const struct regulator_linear_range act8600_sudcdc_voltage_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(41400000, 248, 255, 0),
  };
  
-+/* 600mV to 1450mV in 12.5 mV steps */
-+static const struct regulator_linear_range VDD1_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(600000, 0, 68, 12500)
-+};
++static int act8865_set_suspend_state(struct regulator_dev *rdev, bool enable)
++{
++	struct regmap *regmap = rdev->regmap;
++	int id = rdev->desc->id, reg, val;
 +
-+/* 600mV to 1450mV in 12.5 mV steps, everything above = 1500mV */
-+static const struct regulator_linear_range VDD2_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(600000, 0, 68, 12500),
-+	REGULATOR_LINEAR_RANGE(1500000, 69, 69, 12500)
-+};
++	switch (id) {
++	case ACT8865_ID_DCDC1:
++		reg = ACT8865_DCDC1_SUS;
++		val = 0xa8;
++		break;
++	case ACT8865_ID_DCDC2:
++		reg = ACT8865_DCDC2_SUS;
++		val = 0xa8;
++		break;
++	case ACT8865_ID_DCDC3:
++		reg = ACT8865_DCDC3_SUS;
++		val = 0xa8;
++		break;
++	case ACT8865_ID_LDO1:
++		reg = ACT8865_LDO1_SUS;
++		val = 0xe8;
++		break;
++	case ACT8865_ID_LDO2:
++		reg = ACT8865_LDO2_SUS;
++		val = 0xe8;
++		break;
++	case ACT8865_ID_LDO3:
++		reg = ACT8865_LDO3_SUS;
++		val = 0xe8;
++		break;
++	case ACT8865_ID_LDO4:
++		reg = ACT8865_LDO4_SUS;
++		val = 0xe8;
++		break;
++	default:
++		return -EINVAL;
++	}
 +
- static int twl4030ldo_list_voltage(struct regulator_dev *rdev, unsigned index)
- {
- 	struct twlreg_info	*info = rdev_get_drvdata(rdev);
-@@ -427,6 +438,8 @@ static int twl4030smps_get_voltage(struct regulator_dev *rdev)
++	if (enable)
++		val |= BIT(4);
++
++	/*
++	 * Ask the PMIC to enable/disable this output when entering hibernate
++	 * mode.
++	 */
++	return regmap_write(regmap, reg, val);
++}
++
++static int act8865_set_suspend_enable(struct regulator_dev *rdev)
++{
++	return act8865_set_suspend_state(rdev, true);
++}
++
++static int act8865_set_suspend_disable(struct regulator_dev *rdev)
++{
++	return act8865_set_suspend_state(rdev, false);
++}
++
++static unsigned int act8865_of_map_mode(unsigned int mode)
++{
++	switch (mode) {
++	case ACT8865_REGULATOR_MODE_FIXED:
++		return REGULATOR_MODE_FAST;
++	case ACT8865_REGULATOR_MODE_NORMAL:
++		return REGULATOR_MODE_NORMAL;
++	case ACT8865_REGULATOR_MODE_LOWPOWER:
++		return REGULATOR_MODE_STANDBY;
++	default:
++		return REGULATOR_MODE_INVALID;
++	}
++}
++
++static int act8865_set_mode(struct regulator_dev *rdev, unsigned int mode)
++{
++	struct regmap *regmap = rdev->regmap;
++	int id = rdev_get_id(rdev);
++	int reg, val = 0;
++
++	switch (id) {
++	case ACT8865_ID_DCDC1:
++		reg = ACT8865_DCDC1_CTRL;
++		break;
++	case ACT8865_ID_DCDC2:
++		reg = ACT8865_DCDC2_CTRL;
++		break;
++	case ACT8865_ID_DCDC3:
++		reg = ACT8865_DCDC3_CTRL;
++		break;
++	case ACT8865_ID_LDO1:
++		reg = ACT8865_LDO1_CTRL;
++		break;
++	case ACT8865_ID_LDO2:
++		reg = ACT8865_LDO2_CTRL;
++		break;
++	case ACT8865_ID_LDO3:
++		reg = ACT8865_LDO3_CTRL;
++		break;
++	case ACT8865_ID_LDO4:
++		reg = ACT8865_LDO4_CTRL;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	switch (mode) {
++	case REGULATOR_MODE_FAST:
++	case REGULATOR_MODE_NORMAL:
++		if (id <= ACT8865_ID_DCDC3)
++			val = BIT(5);
++		break;
++	case REGULATOR_MODE_STANDBY:
++		if (id > ACT8865_ID_DCDC3)
++			val = BIT(5);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return regmap_update_bits(regmap, reg, BIT(5), val);
++}
++
++static unsigned int act8865_get_mode(struct regulator_dev *rdev)
++{
++	struct regmap *regmap = rdev->regmap;
++	int id = rdev_get_id(rdev);
++	int reg, ret, val = 0;
++
++	switch (id) {
++	case ACT8865_ID_DCDC1:
++		reg = ACT8865_DCDC1_CTRL;
++		break;
++	case ACT8865_ID_DCDC2:
++		reg = ACT8865_DCDC2_CTRL;
++		break;
++	case ACT8865_ID_DCDC3:
++		reg = ACT8865_DCDC3_CTRL;
++		break;
++	case ACT8865_ID_LDO1:
++		reg = ACT8865_LDO1_CTRL;
++		break;
++	case ACT8865_ID_LDO2:
++		reg = ACT8865_LDO2_CTRL;
++		break;
++	case ACT8865_ID_LDO3:
++		reg = ACT8865_LDO3_CTRL;
++		break;
++	case ACT8865_ID_LDO4:
++		reg = ACT8865_LDO4_CTRL;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	ret = regmap_read(regmap, reg, &val);
++	if (ret)
++		return ret;
++
++	if (id <= ACT8865_ID_DCDC3 && (val & BIT(5)))
++		return REGULATOR_MODE_FAST;
++	else if	(id > ACT8865_ID_DCDC3 && !(val & BIT(5)))
++		return REGULATOR_MODE_NORMAL;
++	else
++		return REGULATOR_MODE_STANDBY;
++}
++
+ static const struct regulator_ops act8865_ops = {
+ 	.list_voltage		= regulator_list_voltage_linear_range,
+ 	.map_voltage		= regulator_map_voltage_linear_range,
+@@ -232,7 +406,11 @@ static const struct regulator_ops act8865_ops = {
+ 	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
+ 	.enable			= regulator_enable_regmap,
+ 	.disable		= regulator_disable_regmap,
++	.set_mode		= act8865_set_mode,
++	.get_mode		= act8865_get_mode,
+ 	.is_enabled		= regulator_is_enabled_regmap,
++	.set_suspend_enable	= act8865_set_suspend_enable,
++	.set_suspend_disable	= act8865_set_suspend_disable,
+ };
+ 
+ static const struct regulator_ops act8865_ldo_ops = {
+@@ -242,7 +420,11 @@ static const struct regulator_ops act8865_ldo_ops = {
+ 	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
+ 	.enable			= regulator_enable_regmap,
+ 	.disable		= regulator_disable_regmap,
++	.set_mode		= act8865_set_mode,
++	.get_mode		= act8865_get_mode,
+ 	.is_enabled		= regulator_is_enabled_regmap,
++	.set_suspend_enable	= act8865_set_suspend_enable,
++	.set_suspend_disable	= act8865_set_suspend_disable,
+ 	.set_pull_down		= regulator_set_pull_down_regmap,
+ };
+ 
+@@ -256,6 +438,7 @@ static const struct regulator_ops act8865_fixed_ldo_ops = {
+ 	[_family##_ID_##_id] = {					\
+ 		.name			= _name,			\
+ 		.of_match		= of_match_ptr(_name),		\
++		.of_map_mode		= act8865_of_map_mode,		\
+ 		.regulators_node	= of_match_ptr("regulators"),	\
+ 		.supply_name		= _supply,			\
+ 		.id			= _family##_ID_##_id,		\
+@@ -590,7 +773,9 @@ static int act8865_pmic_probe(struct i2c_client *client,
+ 
+ 	i2c_set_clientdata(client, act8865);
+ 
+-	return 0;
++	/* Unlock expert registers for ACT8865. */
++	return type != ACT8865 ? 0 : regmap_write(act8865->regmap,
++						  ACT8865_SYS_UNLK_REGS, 0xef);
  }
  
- static const struct regulator_ops twl4030smps_ops = {
-+	.list_voltage   = regulator_list_voltage_linear_range,
-+
- 	.set_voltage	= twl4030smps_set_voltage,
- 	.get_voltage	= twl4030smps_get_voltage,
- };
-@@ -466,7 +479,8 @@ static const struct twlreg_info TWL4030_INFO_##label = { \
- 		}, \
- 	}
- 
--#define TWL4030_ADJUSTABLE_SMPS(label, offset, num, turnon_delay, remap_conf) \
-+#define TWL4030_ADJUSTABLE_SMPS(label, offset, num, turnon_delay, remap_conf, \
-+		n_volt) \
- static const struct twlreg_info TWL4030_INFO_##label = { \
- 	.base = offset, \
- 	.id = num, \
-@@ -479,6 +493,9 @@ static const struct twlreg_info TWL4030_INFO_##label = { \
- 		.owner = THIS_MODULE, \
- 		.enable_time = turnon_delay, \
- 		.of_map_mode = twl4030reg_map_mode, \
-+		.n_voltages = n_volt, \
-+		.n_linear_ranges = ARRAY_SIZE(label ## _ranges), \
-+		.linear_ranges = label ## _ranges, \
- 		}, \
- 	}
- 
-@@ -518,8 +535,8 @@ TWL4030_ADJUSTABLE_LDO(VSIM, 0x37, 9, 100, 0x00);
- TWL4030_ADJUSTABLE_LDO(VDAC, 0x3b, 10, 100, 0x08);
- TWL4030_ADJUSTABLE_LDO(VINTANA2, 0x43, 12, 100, 0x08);
- TWL4030_ADJUSTABLE_LDO(VIO, 0x4b, 14, 1000, 0x08);
--TWL4030_ADJUSTABLE_SMPS(VDD1, 0x55, 15, 1000, 0x08);
--TWL4030_ADJUSTABLE_SMPS(VDD2, 0x63, 16, 1000, 0x08);
-+TWL4030_ADJUSTABLE_SMPS(VDD1, 0x55, 15, 1000, 0x08, 68);
-+TWL4030_ADJUSTABLE_SMPS(VDD2, 0x63, 16, 1000, 0x08, 69);
- /* VUSBCP is managed *only* by the USB subchip */
- TWL4030_FIXED_LDO(VINTANA1, 0x3f, 1500, 11, 100, 0x08);
- TWL4030_FIXED_LDO(VINTDIG, 0x47, 1500, 13, 100, 0x08);
+ static const struct i2c_device_id act8865_ids[] = {
 -- 
 2.20.1
 
