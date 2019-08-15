@@ -2,93 +2,168 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D6BC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D91FC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA1F20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29A8C2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:53:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565880785;
+	bh=bRZvm6yxXSrefvnsJeDbE6ci/lTE+/CpIr134zPqLQA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QAq/kaYvPN4U0IE+F8vKJHizu7KmLcDTvg5yPwry1KESHg7rQ0yYSkCuoyhCkR3Ic
+	 gRS/81tS114xmkkoAzRFUzm6wbaNgB6Ga/jkSKaaeRdWO7eb/aKA36O1ME7B8KJb/v
+	 NFB8Q/7Bf6ZttUpZ+2i1YH+VuBZaqU5wPWT7/C7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733191AbfHOOwF (ORCPT
+        id S1731871AbfHOOxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:52:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:45178 "EHLO foss.arm.com"
+        Thu, 15 Aug 2019 10:53:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733165AbfHOOwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:52:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D321B1596;
-        Thu, 15 Aug 2019 07:51:59 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D0B813F706;
-        Thu, 15 Aug 2019 07:51:58 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        tglx@linutronix.de, qais.yousef@arm.com
-Subject: [PATCH v2 3/4] sched/fair: Check for CFS tasks before detach_one_task()
-Date:   Thu, 15 Aug 2019 15:51:06 +0100
-Message-Id: <20190815145107.5318-4-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190815145107.5318-1-valentin.schneider@arm.com>
-References: <20190815145107.5318-1-valentin.schneider@arm.com>
+        id S1726120AbfHOOxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 10:53:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CFBF2067D;
+        Thu, 15 Aug 2019 14:53:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565880782;
+        bh=bRZvm6yxXSrefvnsJeDbE6ci/lTE+/CpIr134zPqLQA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q2nQc79vb2vvtXIZoJ5+ep0LduuzugDb84RMSrRmkNDQ4znUasvwCqpfzuXOuPGNZ
+         FWDAHTC5tF89vXDgv9N3Hfs3AWngTYoAaq1iY6r5s0pemq6o9gKhWcLavGGuajLMoa
+         CaVPbQ+fbgyQaslbWr4uHynOoJUiDi4BPR6os2jY=
+Date:   Thu, 15 Aug 2019 16:53:00 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, Eric Anholt <eric@anholt.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v2 3/9] drm: Rename drm_bridge_timings to drm_timings
+Message-ID: <20190815145300.GA15016@kroah.com>
+References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1565867073-24746-4-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190815131838.GP5011@pendragon.ideasonboard.com>
+ <20190815140400.GA7174@kroah.com>
+ <20190815141440.GA20322@pendragon.ideasonboard.com>
+ <TY1PR01MB1770404C560F6967FA81D521C0AC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB1770404C560F6967FA81D521C0AC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-detach_one_task() (and the CFS load-balancer in general) can only ever
-pull CFS tasks, so we should check if there's any before invoking the
-cpu stopper.
+On Thu, Aug 15, 2019 at 02:31:26PM +0000, Fabrizio Castro wrote:
+> Hi Greg, hi Laurent,
+> 
+> Thank you for your feedback!
+> 
+> > From: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> On Behalf Of Laurent Pinchart
+> > Sent: 15 August 2019 15:15
+> > Subject: Re: [PATCH v2 3/9] drm: Rename drm_bridge_timings to drm_timings
+> > 
+> > Hi Greg,
+> > 
+> > On Thu, Aug 15, 2019 at 04:04:00PM +0200, Greg Kroah-Hartman wrote:
+> > > On Thu, Aug 15, 2019 at 04:18:38PM +0300, Laurent Pinchart wrote:
+> > > > Hi Fabrizio,
+> > > >
+> > > > (CC'ing Greg as the architect of the SPDX move)
+> > >
+> > > _one of_, not the one that did the most of he work, that would be Thomas :)
+> > >
+> > > > On Thu, Aug 15, 2019 at 12:04:27PM +0100, Fabrizio Castro wrote:
+> > > > > The information represented by drm_bridge_timings is also
+> > > > > needed by panels, therefore rename drm_bridge_timings to
+> > > > > drm_timings.
+> > > > >
+> > > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > > > Link: https://www.spinics.net/lists/linux-renesas-soc/msg43271.html
+> > > > >
+> > > > > ---
+> > > > > v1->v2:
+> > > > > * new patch
+> > > > >
+> > > > > I have copied the license from include/drm/drm_bridge.h as that's
+> > > > > where the struct originally came from. What's the right SPDX license
+> > > > > to use in this case?
+> > > >
+> > > > https://wiki.spdx.org/view/Legal_Team/Decisions/Dealing_with_Public_Domain_within_SPDX_Files
+> > > >
+> > > > Greg, any idea on how we should handle this ?
+> > >
+> > > Ugh, what lunacy.  But drm_bridge.h is NOT under any "public domain"
+> > > license, so why is that an issue here?  This looks like a "normal" bsd 3
+> > > clause license to me, right?
+> > 
+> > You're right, I overread part of the text in drm_bridge.h, it seems to
+> > indeed be covered by a BSD 3 clause license. Sorry for the noise.
+> 
+> Mmm... This is the template for the BSD-3-Clause:
+> 
+> Copyright (c) <YEAR>, <OWNER>                                                    
+> All rights reserved.                                                             
+>                                                                                  
+> Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+>                                                                                  
+> Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+> Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+> Neither the name of the <ORGANIZATION> nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+> THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> 
+> And this is the license coming from include/drm/drm_bridge.h:
+> 
+> /*                                                                                                                                                                                                                                                                              
+>  * Copyright (c) 2016 Intel Corporation                                          
+>  *                                                                               
+>  * Permission to use, copy, modify, distribute, and sell this software and its   
+>  * documentation for any purpose is hereby granted without fee, provided that    
+>  * the above copyright notice appear in all copies and that both that copyright  
+>  * notice and this permission notice appear in supporting documentation, and     
+>  * that the name of the copyright holders not be used in advertising or          
+>  * publicity pertaining to distribution of the software without specific,        
+>  * written prior permission.  The copyright holders make no representations      
+>  * about the suitability of this software for any purpose.  It is provided "as   
+>  * is" without express or implied warranty.                                      
+>  *                                                                               
+>  * THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,   
+>  * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO        
+>  * EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY SPECIAL, INDIRECT OR      
+>  * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,   
+>  * DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER        
+>  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE  
+>  * OF THIS SOFTWARE.                                                             
+>  */
+> 
+> Perhaps I am completely wrong here, and I am not a lawyer, but the wording seems different enough to me...
+> I am happy to use "BSD-3-Clause" though. Laurent please double check.
 
-Likewise, when the cpu stopper is already up, we can bail out slightly
-earlier when we see there's no CFS task to detach.
+Please talk to your lawyers about this, we are not them...
 
-Check for CFS tasks at the top of need_active_balance(), and add a
-similar check in active_load_balance_cpu_stop().
+thanks,
 
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
----
-Note that this only touches the active load balance paths. IMO
-load_balance() could go through a similar treatment
-(s/rq.nr_running/rq.cfs.h_nr_running/ before going to detach_tasks())
-but that conflicts with Vincent's rework, so I've not included it
-here.
----
- kernel/sched/fair.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 751f41085f47..8f5f6cad5008 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8776,6 +8776,10 @@ static inline enum alb_status active_load_balance(struct lb_env *env)
- 
- 	raw_spin_lock_irqsave(&busiest->lock, flags);
- 
-+	/* Is there actually anything to pull? */
-+	if (busiest->cfs.h_nr_running < 1)
-+		goto unlock;
-+
- 	/*
- 	 * Don't kick the active_load_balance_cpu_stop, if the curr task on
- 	 * busiest CPU can't be moved to dst_cpu:
-@@ -9142,8 +9146,8 @@ static int active_load_balance_cpu_stop(void *data)
- 		     !busiest_rq->active_balance))
- 		goto out_unlock;
- 
--	/* Is there any task to move? */
--	if (busiest_rq->nr_running <= 1)
-+	/* Is there any CFS task to move? */
-+	if (busiest_rq->cfs.h_nr_running < 1)
- 		goto out_unlock;
- 
- 	/*
--- 
-2.22.0
-
+greg k-h
