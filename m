@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F6FC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BB5C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10BD020644
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD22A20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:56:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rz9tzWZN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkhZBqbf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387509AbfHOW4h (ORCPT
+        id S2387528AbfHOW4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 18:56:37 -0400
-Received: from mail-pf1-f177.google.com ([209.85.210.177]:44701 "EHLO
-        mail-pf1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730124AbfHOW4h (ORCPT
+        Thu, 15 Aug 2019 18:56:53 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43577 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730124AbfHOW4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 18:56:37 -0400
-Received: by mail-pf1-f177.google.com with SMTP id c81so2051577pfc.11
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 15:56:36 -0700 (PDT)
+        Thu, 15 Aug 2019 18:56:52 -0400
+Received: by mail-pl1-f196.google.com with SMTP id 4so1614491pld.10
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 15:56:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=lBeHl2jtMwHYakZpvAoVtLhYASWZoTSHQbP+zFH2IpU=;
-        b=Rz9tzWZNIWtHh5dDDmJJ9uqk02zg0ISisfoTcVI+9NlsfHjqyiVzim/MQsmW9j8/zX
-         JpDm2M1O7op7BCRivCODP6c5q/iwwiBBpgMK/0f4pmBKRdCnI2ZOPrqM6ZTdYYBTq+9s
-         EBTfN0j+0LlqCy0BbWfUqARjGKcxqBu6uua+WMD0jUhXLLuABwOVKBTDgEXOEBaDmbDw
-         aLefR5SbnA5hqshrZj5SbubNC9O8WQMWoiZpCI2+zAovWb8qpUu4KcF9mgGakj/Tpkz1
-         VNwQauYB0skjQI67catRxPDk9qhvBE5I43ZLOFHj7c1YWnM36exWUU2n6CyyXtOiLiD7
-         q7kw==
+        bh=k1idU8Xq6hhWx14UIqaY9Rq9ig+3aprjuOtZjiDONKE=;
+        b=YkhZBqbfCk1Ko7vJ6WDQM8L6chno+V86bJn+cnF8X7aSW6hBVDObZiN5WJ17hMRBKq
+         /Btn3/Z+yobLcycXO7YDY8uOPheeKM2jnrRK58W9Hxa85OSA1km0kovKpiPNULEQrLL6
+         ERjX4nU3Tlu9zmJNagcwlPcA5jy9S8saT2fjdxzK7b2fJ5k8wfrvhotlaho8EYg+bLcL
+         mumDpLjOLg1jefHHdMufOAHruXyjSSC/2b6st6+DlPM1Neg/Bd1oUiTc11wC7FXvMRm/
+         3CSiIecms0QmlJ+yqZHOk490dBjRAVL7p/SYKh76vXMQ1W99w3g1lzZMW5MBzAvhDo4F
+         sE/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=lBeHl2jtMwHYakZpvAoVtLhYASWZoTSHQbP+zFH2IpU=;
-        b=drjZMOXLEVMo0+PsjjF/w2fxiUKdan0Ysp+cQmrzeghPg79OQgxwWwFjg6RFr1n8fR
-         ImATbRoeNISMM1Oj724DyylZ8KlkjHTf7VTyBzgnyB1yzFHF/0kLhITMsJgTr+R0P7Ty
-         GsQOLcLSupQrWYE81WmBY6/wSuNGqbBIfDa0rMAMA51kse8DjGpsnw2XM6VEll/bYtq7
-         2TZV/rydMMC77zzXlSOUvzXcHfepQuH2zU03G8MDd5cpQiuZP5BAkqtmSfC4vyxWEcxk
-         eF7n8QDGXjI5/cCyWPomVzuvJ9qLqBsE+XiCBZpwo1h23tzWhAbiG2UINYvv+dQFhzlD
-         1TBQ==
-X-Gm-Message-State: APjAAAUlviyhfDhWSijJeXY4lu3+dSzg7+yZFs1WW91YzqT6pw91ODtW
-        74k1v53GqJfeCiMKnefbWeg=
-X-Google-Smtp-Source: APXvYqx7sVhpG6oS7KQ+yWoCPDx4SjEN9PEXJcjd2EjXFAQ9xkOF5MTpRHV5E6uD1KYXwsMJVVVraQ==
-X-Received: by 2002:a65:68d9:: with SMTP id k25mr5258933pgt.337.1565909796347;
-        Thu, 15 Aug 2019 15:56:36 -0700 (PDT)
+        bh=k1idU8Xq6hhWx14UIqaY9Rq9ig+3aprjuOtZjiDONKE=;
+        b=aS+8QXUAW07ExBMxRrWZ028UtvPtC5JyVzu0yktinOUcp9WKY2P4JkGNPP7R7HOJHe
+         OseTXoiChO/Gy5vvGBwxoewJ4y4GlvKo03+oQeG5KayGUlTHzajTk3W+O4ccaQgdr93N
+         kbXRFQEiap4e9Qj/LKJ6kmTmQNzhZYUNUYB8opRgQFZ9ohUsGxZ4LHMxmFAO7SAPazGH
+         WJ0+GNb2qOITIBciADMqabMuoP/pJjZu9+ro825BVo93l2L5QfGPYn1qoIyReVaYYFkJ
+         jEPs/ZtzDyas/N0doWs3ztTbrEqLdJwZ+fLSca6sCQTNdSWZczLmxM9WbsqEW1cKtYkO
+         2nQA==
+X-Gm-Message-State: APjAAAX0faFnt8NoAF6u391pdEjr9HyGzEl7Hy8cUJSYybbU1tyUTIa3
+        bnMQTvNZOhZKLmt2Wj5eE44=
+X-Google-Smtp-Source: APXvYqxMJGBNcPTBZ0h+q6UAEVcmOWZ7emWkOre2m+YQ8Eso5wBsO8bhqKZfmAm2pB+ov8ym5Suhlw==
+X-Received: by 2002:a17:902:1107:: with SMTP id d7mr6292166pla.184.1565909811833;
+        Thu, 15 Aug 2019 15:56:51 -0700 (PDT)
 Received: from [10.67.49.31] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id b24sm3785618pfd.91.2019.08.15.15.56.34
+        by smtp.googlemail.com with ESMTPSA id f10sm292037pjw.14.2019.08.15.15.56.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 15:56:35 -0700 (PDT)
-Subject: Re: [GIT PULL 1/3] bcm2835-dt-next-2019-08-15
+        Thu, 15 Aug 2019 15:56:51 -0700 (PDT)
+Subject: Re: [GIT PULL 2/3] bcm2835-defconfig-next-2019-08-15
 To:     Stefan Wahren <wahrenst@gmx.net>,
         Florian Fainelli <f.fainelli@gmail.com>
 Cc:     Eric Anholt <eric@anholt.net>, linux-kernel@vger.kernel.org,
@@ -67,6 +67,7 @@ Cc:     Eric Anholt <eric@anholt.net>, linux-kernel@vger.kernel.org,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
 References: <1565894043-5249-1-git-send-email-wahrenst@gmx.net>
+ <1565894043-5249-2-git-send-email-wahrenst@gmx.net>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
@@ -123,12 +124,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
  M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <6a6d1526-7184-f520-c944-0c268eeec79e@gmail.com>
-Date:   Thu, 15 Aug 2019 15:56:34 -0700
+Message-ID: <398abe33-b556-bb89-7148-7f059e9cfe2a@gmail.com>
+Date:   Thu, 15 Aug 2019 15:56:50 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1565894043-5249-1-git-send-email-wahrenst@gmx.net>
+In-Reply-To: <1565894043-5249-2-git-send-email-wahrenst@gmx.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -146,23 +147,18 @@ On 8/15/19 11:34 AM, Stefan Wahren wrote:
 > 
 > are available in the git repository at:
 > 
->   git://github.com/anholt/linux tags/bcm2835-dt-next-2019-08-15
+>   git://github.com/anholt/linux tags/bcm2835-defconfig-next-2019-08-15
 > 
-> for you to fetch changes up to 60c833d5664e1b3f71c4471233469790adf505ca:
+> for you to fetch changes up to 4c6f5d4038af2c7332630bdd75cfdc0309e97242:
 > 
->   ARM: dts: bcm283x: Enable HDMI at board level (2019-08-15 19:35:15 +0200)
-> 
-> ----------------------------------------------------------------
-> This pull request prepares the BCM2835 DTS files for the introduction
-> of the new SoC BCM2711.
+>   ARM: defconfig: enable cpufreq driver for RPi (2019-07-23 22:53:35 +0200)
 > 
 > ----------------------------------------------------------------
-> Stefan Wahren (4):
->       ARM: bcm283x: Reduce register ranges for UART, SPI and I2C
->       ARM: dts: bcm283x: Define MMC interfaces at board level
->       ARM: dts: bcm283x: Define memory at board level
->       ARM: dts: bcm283x: Enable HDMI at board level
+> This pull request enables the new RPi cpufreq driver in the 32-bit
+> defconfigs.
+> 
+> ----------------------------------------------------------------
 
-Merged into devicetree/next, thanks Stefan!
+Merged into defconfig/next, thanks Stefan!
 -- 
 Florian
