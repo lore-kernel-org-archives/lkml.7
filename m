@@ -2,102 +2,221 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E52C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 317E5C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4EAE2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:57:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G4SzC/FI"
+	by mail.kernel.org (Postfix) with ESMTP id 0E43D20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732050AbfHOO5w (ORCPT
+        id S1732544AbfHOO6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:57:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53404 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728500AbfHOO5w (ORCPT
+        Thu, 15 Aug 2019 10:58:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39964 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbfHOO6d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:57:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UtWqCtB9PpyWQIYQ9Bi5TbzICHIqvshf8py52+rLl2U=; b=G4SzC/FI8VrUVgg7x5ogth9Nh
-        eAj/6iV92t37KP0hcby0OvU4pn8r6qqwRQ+mDiAPDs4lpknfHrfHkvHqI9TSiRXds5/waTwwDGfHF
-        meMxFAZEAl7Cf8B3VueEMtJ03PDeZzImMALQq+XqBrXv2Wh3O5SAROxdfXpLFnbEdDqoghvy+AKzz
-        Aslj1+3wskB0Si6q83aZmd0wXVIj68QrgyZ0M7NabLUSPJ5Jun8mYQIMZueZUzaBuMtHc/Fm3Iw4v
-        fgF6wXhvCpPTQdQMHPWud1FNTNvrq5cCkHtEImFxPIsqrSSwAHNS9ER9O9pSyPHqq6VmpUQ4hUGZ8
-        KPH0cs0qg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hyHCH-0003uM-LN; Thu, 15 Aug 2019 14:57:49 +0000
-Date:   Thu, 15 Aug 2019 07:57:49 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v3 -rcu] workqueue: Convert for_each_wq to use built-in
- list check
-Message-ID: <20190815145749.GA18474@bombadil.infradead.org>
-References: <20190815141842.GB20599@google.com>
+        Thu, 15 Aug 2019 10:58:33 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos.glx-home)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hyHCu-0007SL-HD; Thu, 15 Aug 2019 16:58:28 +0200
+Date:   Thu, 15 Aug 2019 16:58:27 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ben Luo <luoben@linux.alibaba.com>
+cc:     alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
+        tao.ma@linux.alibaba.com, gerry@linux.alibaba.com,
+        nanhai.zou@linux.alibaba.com, linyunsheng@huawei.com
+Subject: Re: [PATCH v3 2/3] genirq: introduce update_irq_devid()
+In-Reply-To: <6343a7e34ffdd0ddcd730996fc5dad3024e42251.1565857737.git.luoben@linux.alibaba.com>
+Message-ID: <alpine.DEB.2.21.1908151622410.1908@nanos.tec.linutronix.de>
+References: <cover.1565857737.git.luoben@linux.alibaba.com> <6343a7e34ffdd0ddcd730996fc5dad3024e42251.1565857737.git.luoben@linux.alibaba.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815141842.GB20599@google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:18:42AM -0400, Joel Fernandes (Google) wrote:
-> list_for_each_entry_rcu now has support to check for RCU reader sections
-> as well as lock. Just use the support in it, instead of explicitly
-> checking in the caller.
+Ben,
 
-...
+On Thu, 15 Aug 2019, Ben Luo wrote:
 
->  #define assert_rcu_or_wq_mutex_or_pool_mutex(wq)			\
->  	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&			\
->  			 !lockdep_is_held(&wq->mutex) &&		\
+> Sometimes, only the dev_id field of irqaction need to be changed.
+> E.g. KVM VM with device passthru via VFIO may switch irq injection
+> path between KVM irqfd and userspace eventfd. These two paths
+> share the same irq num and handler for the same vector of a device,
 
-Can't you also get rid of this macro?
+s/irq num/interrupt number/
 
-It's used in one place:
+Changelogs are text and should not contain cryptic abbreviations.
 
-static struct pool_workqueue *unbound_pwq_by_node(struct workqueue_struct *wq,
-                                                  int node)
-{
-        assert_rcu_or_wq_mutex_or_pool_mutex(wq);
+> only with different dev_id referencing to different fds' contexts.
+> 
+> So, instead of free/request irq, only update dev_id of irqaction.
 
-        /*
-         * XXX: @node can be NUMA_NO_NODE if CPU goes offline while a
-         * delayed item is pending.  The plan is to keep CPU -> NODE
-         * mapping valid and stable across CPU on/offlines.  Once that
-         * happens, this workaround can be removed.
-         */
-        if (unlikely(node == NUMA_NO_NODE))
-                return wq->dfl_pwq;
+Please write functions like this: function_name() so they can be easily
+identified in the text as such.
 
-        return rcu_dereference_raw(wq->numa_pwq_tbl[node]);
-}
+> This narrows the gap for setting up new irq (and irte, if has)
 
-Shouldn't we delete that assert and use
+What does that mean: "narrows the gap"
 
-+	return rcu_dereference_check(wq->numa_pwq_tbl[node],
-+			lockdep_is_held(&wq->mutex) ||
-+			lockdep_is_held(&wq_pool_mutex));
+What's the gap and why is it only made smaller and not closed?
 
+> and also gains some performance benefit.
+> 
+> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
+> Reviewed-by: Liu Jiang <gerry@linux.alibaba.com>
+
+I prefer to see the 'reviewed-by' as a reply on LKML rather than coming
+from some internal process.
+
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+
+While I reviewed the previous version, I surely did not give a
+'Reviewed-by' tag. That tag means that the person did review the patch and
+did not find an issue. I surely found issues, right?
+
+> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+> index 6f9b20f..a76ef61 100644
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -2064,6 +2064,84 @@ int request_threaded_irq(unsigned int irq, irq_handler_t handler,
+>  EXPORT_SYMBOL(request_threaded_irq);
+>  
+>  /**
+> + *	update_irq_devid - update irq dev_id to a new one
+
+Can you please name this: irq_update_devid(). We try to have a consistent
+name space for new functions.
+
+> + *	@irq: Interrupt line to update
+> + *	@dev_id: A cookie to find the irqaction to update
+> + *	@new_dev_id: New cookie passed to the handler function
+
+Can you please arrange these in tabular fashion:
+
+ *	@irq:		Interrupt line to update
+ *	@dev_id:	A cookie to find the irqaction to update
+ *	@new_dev_id:	New cookie passed to the handler function
+
+> + *	Sometimes, only the cookie data need to be changed.
+> + *	Instead of free/request irq, only update dev_id here
+> + *	Not only to gain some performance benefit, but also
+> + *	reduce the risk of losing interrupt.
+> + *
+> + *	E.g. irq affinity setting in a VM with VFIO passthru
+
+Again. Please write it out 'interrupt' and everything else.
+
+> + *	device is carried out in a free-then-request-irq way
+> + *	since lack of this very function. The free_irq()
+
+That does not make sense. The function is there for such a use case. So
+immediately when the VFIO change is merged this comment is stale and bogus.
+
+> + *	eventually triggers deactivation of IR domain, which
+> + *	will cleanup IRTE. There is a gap before request_irq()
+> + *	finally setup the IRTE again. In this gap, a in-flight
+> + *	irq buffering in hardware layer may trigger DMAR fault
+> + *	and be lost.
+
+Exactly this information wants to be in the changelog.
+
+> + *
+> + *	On failure, it returns a negative value. On success,
+> + *	it returns 0
+> + */
+> +int update_irq_devid(unsigned int irq, void *dev_id, void *new_dev_id)
+> +{
+> +	struct irq_desc *desc = irq_to_desc(irq);
+> +	struct irqaction *action, **action_ptr;
+> +	unsigned long flags;
+> +
+> +	if (in_interrupt()) {
+> +		WARN(1, "Trying to update IRQ %d (dev_id %p to %p) from IRQ context!\n",
+> +		     irq, dev_id, new_dev_id);
+> +		return -EPERM;
+> +	}
+
+  	if (WARN(....)
+
+> +
+> +	if (!desc)
+> +		return -EINVAL;
+> +
+> +	chip_bus_lock(desc);
+
+This does not need to take bus lock. The action pointer is sufficiently
+protected by desc->lock.
+
+> +	raw_spin_lock_irqsave(&desc->lock, flags);
+> +
+> +	/*
+> +	 * There can be multiple actions per IRQ descriptor, find the right
+> +	 * one based on the dev_id:
+> +	 */
+> +	action_ptr = &desc->action;
+> +	for (;;) {
+> +		action = *action_ptr;
+> +
+> +		if (!action) {
+> +			raw_spin_unlock_irqrestore(&desc->lock, flags);
+> +			chip_bus_sync_unlock(desc);
+> +			WARN(1, "Trying to update already-free IRQ %d (dev_id %p to %p)\n",
+> +			     irq, dev_id, new_dev_id);
+> +			return -ENXIO;
+> +		}
+> +
+> +		if (action->dev_id == dev_id) {
+> +			action->dev_id = new_dev_id;
+> +			break;
+> +		}
+> +		action_ptr = &action->next;
+> +	}
+> +
+> +	raw_spin_unlock_irqrestore(&desc->lock, flags);
+> +	chip_bus_sync_unlock(desc);
+> +
+> +	/*
+> +	 * Make sure it's not being used on another CPU:
+> +	 * There is a risk of UAF for old *dev_id, if it is
+> +	 * freed in a short time after this func returns
+
+function please. Also it does not matter whether the time is short or
+not. The point is:
+
+     	 Ensure that an interrupt in flight on another CPU which uses the
+     	 old 'dev_id' has completed because the caller can free the memory
+	 to which it points after this function returns.
+
+But this has another twist:
+
+    CPU0				CPU1
+
+    interrupt
+    	primary_handler(old_dev_id)
+	   do_stuff_on(old_dev_id)
+	   return WAKE_THREAD;		update_dev_id()
+        wakeup_thread();
+					  action->dev_id = new_dev_id;
+    irq_thread()
+        secondary_handler(new_dev_id)
+	
+That's broken and synchronize_irq() does not protect against it.
+
+> +	 */
+> +	synchronize_irq(irq);
+
+Thanks,
+
+	tglx
