@@ -2,113 +2,74 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2528C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59639C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE67D2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3074C2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565875440;
+	bh=PfwTzVCSXr21dQ1ordez0gev34AC45wWlAybBgaGBsE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KzLbopzcRQi8GC9XYKpgbug4b2YxN/Yk7E+4mic6tct/sHawgPGxrgxGYoA2HlRTS
+	 RBZPd27496tY6JyrCAzWC8dB6eMm20W1+FokvAYrV/RwQPbkbtCtsue+HSzKcVE2q0
+	 RPWmHN4L/milwrXotoliH7bIMncJMSBsHOQtVv1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732289AbfHONXy (ORCPT
+        id S1732297AbfHONX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:23:54 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:58521 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730497AbfHONXy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:23:54 -0400
-Received: from [IPv6:2001:420:44c1:2579:f038:4b04:f67a:276f] ([IPv6:2001:420:44c1:2579:f038:4b04:f67a:276f])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id yFjHhvwAJDqPeyFjKhYHte; Thu, 15 Aug 2019 15:23:52 +0200
-Subject: Re: [RFC 3/5] media: v4l2-ctrls: Add support for V4L2_CID_LOCATION
-To:     Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-4-jacopo@jmondi.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <6c9460e2-b607-9863-f8f0-1a94773c6556@xs4all.nl>
-Date:   Thu, 15 Aug 2019 15:23:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 15 Aug 2019 09:23:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56970 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730497AbfHONX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:23:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3AAF2084D;
+        Thu, 15 Aug 2019 13:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565875438;
+        bh=PfwTzVCSXr21dQ1ordez0gev34AC45wWlAybBgaGBsE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EHJND28g6rME3qs2Q21unyp3Xy6nkSOiAXJR4Iw2eTD+eAyW4Jv6/PJioVx7vE0zu
+         q+0yVVe/4S1C59OV2tvND93whR91u8cK5Tc3/3B6JsokvofQ/6+bHBHALZscMLyUgi
+         fxfi2hZngnAiEkhUDwn/UAeJ2jFcVicKbgGU+KQw=
+Date:   Thu, 15 Aug 2019 15:23:56 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Suwan Kim <suwan.kim027@gmail.com>, shuah@kernel.org,
+        valentina.manea.m@gmail.com, stern@rowland.harvard.edu,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/2] usbip: Implement SG support
+Message-ID: <20190815132356.GB27208@kroah.com>
+References: <20190808155435.10050-1-suwan.kim027@gmail.com>
+ <20190814131951.GA1437@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190814202815.32491-4-jacopo@jmondi.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfA+Q18XfWqRoIglqwR8iaXdKQGQMt86mT33jQPkY2hKikyDDUd3AR1zr1BTBPpYZYKMQWcdo56ZCRMcGytCBTVh/LLU0YPGzDJbq45xf7Mc3CwKwnAkQ
- ffeALGTy6+++r4B1ulwgzNkkrxkU/SCNM7PFub0vLwrWW8OT85sGLlRP+MIpdxNRAx5NdRkn+CuobNtUKisbIN+fMbJ3cBkoG0gSpNLIWSPpJLGW7w39MaS/
- iFOsipFH1mSiZ0qxQEOAaT8yIkjKW3IfcsZXb2oN2ctGLpqAAbrNdUV1rCFLp9D1PiDBO8Yal9cTJ4NTjuMdJjPkE5hwli5y2DT+8a1Gt74+Mmg4UtssGNmU
- jEZmPetZUcwVh0A04EyV0oxB/KMIy6bLceE7QMGs+W3QSq2E9RB5OX6pzPUbPOXjmoPd0lriWHwMKJeW3SNbfIFicLhs+OPnRmoczLNhEgcvZvrpkV7W8WfK
- TFCK+K9+qk7DVu2n
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814131951.GA1437@infradead.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/19 10:28 PM, Jacopo Mondi wrote:
-> Add support for the newly defined V4L2_CID_LOCATION read-only control
-> used to report the camera device mounting position.
+On Wed, Aug 14, 2019 at 06:19:51AM -0700, Christoph Hellwig wrote:
+> FYI, I think my
 > 
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> ---
->  drivers/media/v4l2-core/v4l2-ctrls.c | 7 +++++++
->  include/uapi/linux/v4l2-controls.h   | 4 ++++
->  2 files changed, 11 insertions(+)
+>    "usb: add a HCD_DMA flag instead of guestimating DMA capabilities"
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index 7d3a33258748..8ab0857df59a 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -943,6 +943,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
->  	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
->  	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
-> +	case V4L2_CID_LOCATION:			return "Location";
->  
->  	/* FM Radio Modulator controls */
->  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-> @@ -1300,6 +1301,12 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
->  		break;
->  	case V4L2_CID_MPEG_VIDEO_FWHT_PARAMS:
->  		*type = V4L2_CTRL_TYPE_FWHT_PARAMS;
+> is the proper core fix for what your patch 1 works around, as the USB
+> core should not assume DMA capabilities based on the presence of a DMA
+> mask.
 
-Missing break!
+I agree.  Let's wait for Christoph's series to be applied before taking
+this one.
 
-Regards,
+thanks,
 
-	Hans
-
-> +	case V4L2_CID_LOCATION:
-> +		*type = V4L2_CTRL_TYPE_INTEGER;
-> +		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
-> +		*min = V4L2_LOCATION_FRONT;
-> +		*max = V4L2_LOCATION_BACK;
-> +		*step = 1;
->  		break;
->  	default:
->  		*type = V4L2_CTRL_TYPE_INTEGER;
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index 37807f23231e..5c4c7b245921 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -889,6 +889,10 @@ enum v4l2_auto_focus_range {
->  #define V4L2_CID_PAN_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+32)
->  #define V4L2_CID_TILT_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+33)
->  
-> +#define V4L2_CID_LOCATION			(V4L2_CID_CAMERA_CLASS_BASE+34)
-> +#define V4L2_LOCATION_FRONT			(0 << 0)
-> +#define V4L2_LOCATION_BACK			(1 << 0)
-> +
->  /* FM Modulator class control IDs */
->  
->  #define V4L2_CID_FM_TX_CLASS_BASE		(V4L2_CTRL_CLASS_FM_TX | 0x900)
-> 
-
+greg k-h
