@@ -2,147 +2,117 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D90C32753
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2252BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C292171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E967A216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:13:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="g0iXAp9G"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="kQ7rO4Rr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbfHOALk (ORCPT
+        id S1728996AbfHOANY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 20:11:40 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38023 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbfHOALj (ORCPT
+        Wed, 14 Aug 2019 20:13:24 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45388 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726865AbfHOANX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 20:11:39 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x4so660335qts.5
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 17:11:39 -0700 (PDT)
+        Wed, 14 Aug 2019 20:13:23 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m2so538213qki.12
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 17:13:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=sa+zQVwF/Kg2yH2R3qjmRo+nBMZgWEgWy9VtHzhObIQ=;
-        b=g0iXAp9GLKjmJUCykogXNEfQUbyHV9nCucIjUntdM1KKe6wGTXBPlF2UOoTWZOGfJl
-         AmajYGKP63nxK6g4uAQuCBhnJ9E6JBx7+PoQJl4H925pXAjlhGkj572kQrS2NActiipP
-         kxwRxIXOfJDm8mccWD6WHhV9xJyTZoODJcRJWpuRBg9qbQQk4EiIxDhaFEh+gSkvInRl
-         wmPRmh/bNa5dNbX8qh2MmqKpcoUwYdco5Q1f/jvTQoW1q8UlyeXxKNaG6oETdo4lI4Kt
-         Lzy3yHCgAJpdYNwrpVyOegXvj1unwKdFwN8pNkz4YjlDTDEUIixQQUpKRN+VZGMEPnlq
-         qHLw==
+         :content-disposition:in-reply-to:user-agent;
+        bh=qzhD8inHCWGPsSExfxoS4FMI+7+fcQwlxaBDgT12qb4=;
+        b=kQ7rO4RrHFSZ6MZuuxxoF8VbnBnjRycJLb07elyvEnUiIa4wJgsVinEba3cE2MqTB9
+         fJulQuWx6Y5tYTxlddWTc11PBfISadqD+ExfUHnpoPQON92Ku+S5Y/WG1rnAqUDmFm/t
+         sZdh11B/5WH1wkWaQw580ROrmY5paRB/mKD6yO6YRdOAjXFOKeMa/lNRNHsDHR11a2YM
+         fH5CrO9kz+3OETBgm2cIOfKwCC5iyZs6YtbJwN/rErrCwql6u7WwlNfS1W19r/IYCdLa
+         OB/xGbNt8+DZYg3Zcz43LE9VgkFuylrF77Y+9lVNSAp5BzomHMMBV2AknnHcgTQXagXw
+         j3Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=sa+zQVwF/Kg2yH2R3qjmRo+nBMZgWEgWy9VtHzhObIQ=;
-        b=hnupdlRtyqr9NsACncvI7nDapGlJioizRrWtcYddFqUycbVI29AXqsSktlc/dxogw7
-         evbcOBb5LhNWFaZvfohfkQDrfhyzcp6SkcdRLklFWsp5MC5DXlGDy1T6+FpuhMxFpOkg
-         0QrgK0AnydVSgEVQRKRU2VjTl/zoMSp2qIxXVVL+z2ouVjGEAbdwyPEeDviGZO/QTfoS
-         7O+kwtnj8RVbxMCAkXwZhjkP5L+AejxBTkPJLG9UBzMc2XvBNVq2A4zJZjZyXf+psou6
-         fY8Gq79HN9+UJa3lPCI4X3luj+Ud5je7AmRBHYxwkJfrI8epzHrByXPcJKom5CuzJT1O
-         3fBQ==
-X-Gm-Message-State: APjAAAUHv9hNfDLHnokF+48nzy09z0vTXmyGgQpGZNN3GvObvgW7daSE
-        XP5/VUB0OIPWWZmzhXiiQhO6Jg==
-X-Google-Smtp-Source: APXvYqycoMish4JR7Yhk7POc91EfS5nVJ1Ns5md0NOId7Ywyc7vJCJUYwUMZE0JVH6XYbdhlVPx8eg==
-X-Received: by 2002:ad4:45e3:: with SMTP id q3mr1591887qvu.140.1565827898756;
-        Wed, 14 Aug 2019 17:11:38 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qzhD8inHCWGPsSExfxoS4FMI+7+fcQwlxaBDgT12qb4=;
+        b=ckP6UJZYY9sCmrOoxKvB183O+Lktq5YnrxvkxNo28ih1PFFbKEXYOGOcvQ1nLHtuSp
+         WuwT1S0TtyDZNk9G4XxbuacZ3cwWpy0HxDC4jIkKHqTzEg4nCY7k9vmU25zdYTVQo9cS
+         GJaCQ7P7TzrqGItaaMO9uWE9zj29XNsD5Dzxo5/Qqwr5aFxobpG0BNN7iRo70ZMsAIrp
+         PMeAcOdXz/gfp1XW5/q1fZvnAcUhsRp3hYcgbXsJe9/XKXnxVmujEbndEF5D6AShJkkN
+         IAajQZDD0fvOrIVBVz1+7KGQMlQt5Bj6+m2sKDWaTmsyN1HUS7l3g1cl5qVwJ7nm3Dt8
+         KXkg==
+X-Gm-Message-State: APjAAAX/qrXuvlJalnkergaAjKaTOx6aEeTXEACHoGE3ZnVkd6OXrevj
+        1QPJ36LZSRwBcUEp6S9qwm8W3Q==
+X-Google-Smtp-Source: APXvYqxctXlgOtCTuI+nHfly9zVzKydMCFWuaFknzokpvDUX3JdzMaNu+TsBvuyQsnsSgXcVbMLc+w==
+X-Received: by 2002:a05:620a:130d:: with SMTP id o13mr1851841qkj.285.1565828000618;
+        Wed, 14 Aug 2019 17:13:20 -0700 (PDT)
 Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id f20sm939480qtf.68.2019.08.14.17.11.38
+        by smtp.gmail.com with ESMTPSA id i5sm756517qti.0.2019.08.14.17.13.20
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 17:11:38 -0700 (PDT)
+        Wed, 14 Aug 2019 17:13:20 -0700 (PDT)
 Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
         (envelope-from <jgg@ziepe.ca>)
-        id 1hy3Mf-0003aK-TC; Wed, 14 Aug 2019 21:11:37 -0300
-Date:   Wed, 14 Aug 2019 21:11:37 -0300
+        id 1hy3OJ-0003bl-SN; Wed, 14 Aug 2019 21:13:19 -0300
+Date:   Wed, 14 Aug 2019 21:13:19 -0300
 From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     linux-mm@kvack.org, Andrea Arcangeli <aarcange@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
         John Hubbard <jhubbard@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
         =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 5/5] mm/hmm: WARN on illegal ->sync_cpu_device_pagetables
- errors
-Message-ID: <20190815001137.GE11200@ziepe.ca>
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
- <20190814202027.18735-6-daniel.vetter@ffwll.ch>
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Dimitri Sivanich <sivanich@sgi.com>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org,
+        Gavin Shan <shangw@linux.vnet.ibm.com>,
+        Andrea Righi <andrea@betterlinux.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v3 hmm 03/11] mm/mmu_notifiers: add a get/put scheme for
+ the registration
+Message-ID: <20190815001319.GF11200@ziepe.ca>
+References: <20190806231548.25242-1-jgg@ziepe.ca>
+ <20190806231548.25242-4-jgg@ziepe.ca>
+ <0a23adb8-b827-cd90-503e-bfa84166c67e@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190814202027.18735-6-daniel.vetter@ffwll.ch>
+In-Reply-To: <0a23adb8-b827-cd90-503e-bfa84166c67e@nvidia.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 10:20:27PM +0200, Daniel Vetter wrote:
-> Similar to the warning in the mmu notifer, warning if an hmm mirror
-> callback gets it's blocking vs. nonblocking handling wrong, or if it
-> fails with anything else than -EAGAIN.
+On Wed, Aug 14, 2019 at 02:20:31PM -0700, Ralph Campbell wrote:
 > 
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Ralph Campbell <rcampbell@nvidia.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Balbir Singh <bsingharora@gmail.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Souptick Joarder <jrdr.linux@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: "Jérôme Glisse" <jglisse@redhat.com>
-> Cc: linux-mm@kvack.org
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
->  mm/hmm.c | 3 +++
->  1 file changed, 3 insertions(+)
+> On 8/6/19 4:15 PM, Jason Gunthorpe wrote:
+> > From: Jason Gunthorpe <jgg@mellanox.com>
+> > 
+> > Many places in the kernel have a flow where userspace will create some
+> > object and that object will need to connect to the subsystem's
+> > mmu_notifier subscription for the duration of its lifetime.
+> > 
+> > In this case the subsystem is usually tracking multiple mm_structs and it
+> > is difficult to keep track of what struct mmu_notifier's have been
+> > allocated for what mm's.
+> > 
+> > Since this has been open coded in a variety of exciting ways, provide core
+> > functionality to do this safely.
+> > 
+> > This approach uses the strct mmu_notifier_ops * as a key to determine if
 > 
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index 16b6731a34db..52ac59384268 100644
-> +++ b/mm/hmm.c
-> @@ -205,6 +205,9 @@ static int hmm_invalidate_range_start(struct mmu_notifier *mn,
->  			ret = -EAGAIN;
->  			break;
->  		}
-> +		WARN(ret, "%pS callback failed with %d in %sblockable context\n",
-> +		     mirror->ops->sync_cpu_device_pagetables, ret,
-> +		     update.blockable ? "" : "non-");
->  	}
->  	up_read(&hmm->mirrors_sem);
+> s/strct/struct
 
-Didn't I beat you to this?
+Yes, thanks for all of this, I like having comments, but I'm a
+terrible proofreader :(
 
-	list_for_each_entry(mirror, &hmm->mirrors, list) {
-		int rc;
-
-		rc = mirror->ops->sync_cpu_device_pagetables(mirror, &update);
-		if (rc) {
-			if (WARN_ON(update.blockable || rc != -EAGAIN))
-				continue;
-			ret = -EAGAIN;
-			break;
-		}
-	}
-
-Thanks,
 Jason
