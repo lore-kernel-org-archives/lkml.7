@@ -2,77 +2,296 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F8FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 03:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C21C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 03:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FDB3208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 03:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE386208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 03:34:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D6xWg31e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbfHOD2N (ORCPT
+        id S1729240AbfHODel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 23:28:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60636 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727750AbfHOD2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 23:28:12 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BD71CC055673;
-        Thu, 15 Aug 2019 03:28:12 +0000 (UTC)
-Received: from [10.72.12.184] (ovpn-12-184.pek2.redhat.com [10.72.12.184])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8A9C85D9DC;
-        Thu, 15 Aug 2019 03:28:07 +0000 (UTC)
-Subject: Re: [PATCH V5 0/9] Fixes for vhost metadata acceleration
-To:     Christoph Hellwig <hch@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20190809054851.20118-1-jasowang@redhat.com>
- <20190810134948-mutt-send-email-mst@kernel.org>
- <360a3b91-1ac5-84c0-d34b-a4243fa748c4@redhat.com>
- <20190812054429-mutt-send-email-mst@kernel.org>
- <20190812130252.GE24457@ziepe.ca>
- <9a9641fe-b48f-f32a-eecc-af9c2f4fbe0e@redhat.com>
- <20190813115707.GC29508@ziepe.ca> <20190813164105.GD22640@infradead.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <bba46127-ea43-f9f3-eece-0910243782c5@redhat.com>
-Date:   Thu, 15 Aug 2019 11:28:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 14 Aug 2019 23:34:41 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45357 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728381AbfHODel (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 23:34:41 -0400
+Received: by mail-oi1-f193.google.com with SMTP id m206so288430oib.12
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 20:34:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0JIQRQ+xNbbHKLeC4kEeQF0KjMCRGExp2a+6cMV/Yzs=;
+        b=D6xWg31eAx37dbBFh2UHPoO7jB0Tj7vTtasYLZ0gi3iI06sjjzXJC4DyDWnCz4kCv7
+         y/TyN35MAbuMvqjy/NElFecs5Mokai3s2vydtylLX3adVdeV+EKVR5Dmh7anWNvtt9p6
+         nAdEx7zhH0wdDkuF0QbggALjJK0UGBmg8GawwnGk14xA8mp4AyaS7NKtRSuSgWJAKi/9
+         kXUu/229gpfmb3SSAHpmQwFUvn8SzhAc0ZyZTQ9O7r8GKvBCTdeGZgs6Cj8rQlzFJJte
+         b59lJI6LYNXvAFrm/MQMn/VAJiR9zjBcGUNP5AD25l5fhu0zvsOAUgV6ZaXewIpT1DOb
+         23rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0JIQRQ+xNbbHKLeC4kEeQF0KjMCRGExp2a+6cMV/Yzs=;
+        b=knuCMGlVpjrMn0nnC9BwWvKu0RPbcoTPiamoH5DsUPHpE2nF/6qRCFzK5zcxk2awNk
+         w16Rt0GwTZAjs4Um3bxCcZzjwov9BjEscxZiG0GghHRJKJqy16XwkxnFQjyOGhOvWP2O
+         XZKJo9hP9jpbGfmpCiv+WjZsomt2iJQ0PZJFkhjvF415Y+vmt2rUWL71gXT5n4iRR8Vx
+         nAWijwf8dTFvgMH+zhR+cL0dYXW+71I2GGSwB0ngZv53dSOC8qRcnj0itm35nLqdP9sA
+         W7uqGyGkrKVVGGzLFXSOVxME8lUKc/O8L4WhTPkMI0w6UBSIB+JKw81sIK7TAxFlBVjP
+         TYWQ==
+X-Gm-Message-State: APjAAAXP9mOQcpMTVmNupvMXGkls9qbCLt/JHpAOYPld8afdg9Vxi9SP
+        3npx3dTqBaFJAIWz/IEUPtwsPfyJ1b9cpBmlghpVDA==
+X-Google-Smtp-Source: APXvYqz2WW/ZUZs3f9DE3/5TOF72f8NVhhdHDWXWLqGs3GshPIHar7YD+ZZAObNfFBIbBv2aGU+AZ1O4ADcHpCaMGWM=
+X-Received: by 2002:aca:6056:: with SMTP id u83mr255579oib.27.1565840079545;
+ Wed, 14 Aug 2019 20:34:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190813164105.GD22640@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 15 Aug 2019 03:28:12 +0000 (UTC)
+References: <65a34dd943b0260bfe45ec76dcf414a67e5d8343.1565785291.git.baolin.wang@linaro.org>
+ <446eb284a096a1fd8998765669b1c9a2f78d7d22.1565785291.git.baolin.wang@linaro.org>
+ <20190814150304.x44lalde3cwp67ge@pengutronix.de>
+In-Reply-To: <20190814150304.x44lalde3cwp67ge@pengutronix.de>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Thu, 15 Aug 2019 11:34:27 +0800
+Message-ID: <CAMz4kuLiS=cGTA=uEi9ABOVAOb1M0Pcd2a_xU5VsdLo1DGd0Hg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] pwm: sprd: Add Spreadtrum PWM support
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Uwe,
 
-On 2019/8/14 上午12:41, Christoph Hellwig wrote:
-> On Tue, Aug 13, 2019 at 08:57:07AM -0300, Jason Gunthorpe wrote:
->> On Tue, Aug 13, 2019 at 04:31:07PM +0800, Jason Wang wrote:
->>
->>> What kind of issues do you see? Spinlock is to synchronize GUP with MMU
->>> notifier in this series.
->> A GUP that can't sleep can't pagefault which makes it a really weird
->> pattern
-> get_user_pages/get_user_pages_fast must not be called under a spinlock.
-> We have the somewhat misnamed __get_user_page_fast that just does a
-> lookup for existing pages and never faults for a few places that need
-> to do that lookup from contexts where we can't sleep.
+On Wed, 14 Aug 2019 at 23:03, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Wed, Aug 14, 2019 at 08:46:11PM +0800, Baolin Wang wrote:
+
+> > +
+> > +     /*
+> > +      * The hardware provides a counter that is feed by the source clo=
+ck.
+> > +      * The period length is (PRESCALE + 1) * MOD counter steps.
+> > +      * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
+> > +      * Thus the period_ns and duty_ns calculation formula should be:
+> > +      * period_ns =3D NSEC_PER_SEC * (prescale + 1) * mod / clk_rate
+> > +      * duty_ns =3D NSEC_PER_SEC * (prescale + 1) * duty / clk_rate
+> > +      */
+> > +     val =3D sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE);
+> > +     prescale =3D val & SPRD_PWM_PRESCALE_MSK;
+> > +     tmp =3D (prescale + 1) * NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
+> > +     state->period =3D DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
+> > +
+> > +     val =3D sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY);
+> > +     duty =3D val & SPRD_PWM_DUTY_MSK;
+> > +     tmp =3D (prescale + 1) * NSEC_PER_SEC * duty;
+> > +     state->duty_cycle =3D DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
+> > +
+> > +     /* Disable PWM clocks if the PWM channel is not in enable state. =
+*/
+> > +     if (!state->enabled)
+> > +             clk_bulk_disable_unprepare(SPRD_PWM_CHN_CLKS_NUM, chn->cl=
+ks);
+> > +}
+> > +
+> > +static int sprd_pwm_config(struct sprd_pwm_chip *spc, struct pwm_devic=
+e *pwm,
+> > +                        int duty_ns, int period_ns)
+> > +{
+> > +     struct sprd_pwm_chn *chn =3D &spc->chn[pwm->hwpwm];
+> > +     u32 prescale, duty;
+> > +     u64 tmp;
+> > +
+> > +     /*
+> > +      * The hardware provides a counter that is feed by the source clo=
+ck.
+> > +      * The period length is (PRESCALE + 1) * MOD counter steps.
+> > +      * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
+> > +      *
+> > +      * To keep the maths simple we're always using MOD =3D SPRD_PWM_M=
+OD_MAX.
+>
+> Did you spend some thoughts about how wrong your period can get because
+> of that "lazyness"?
+>
+> Let's assume a clk rate of 100/3 MHz. Then the available period lengths
+> are:
+>
+>         PRESCALE =3D  0  ->  period =3D   7.65 =C2=B5s
+>         PRESCALE =3D  1  ->  period =3D  15.30 =C2=B5s
+>         ...
+>         PRESCALE =3D 17  ->  period =3D 137.70 =C2=B5s
+>         PRESCALE =3D 18  ->  period =3D 145.35 =C2=B5s
+>
+> So the error can be up to (nearly) 7.65 =C2=B5s (or in general
+
+Yes, but for our use case (pwm backlight), the precision can meet our
+requirement. Moreover, we usually do not change the period, just
+adjust the duty to change the back light.
+
+> 255 / clk_rate) because if 145.34 =C2=B5s is requested you configure
+> PRESCALE =3D 17 and so yield a period of 137.70 =C2=B5s. If however you'd=
+ pick
+
+I did not get you here, if period is 145.34, we still get the
+corresponding PRESCALE =3D 18 by below formula:
+
+tmp =3D (u64)chn->clk_rate * period_ns;
+do_div(tmp, NSEC_PER_SEC);
+prescale =3D DIV_ROUND_CLOSEST_ULL(tmp, SPRD_PWM_MOD_MAX) - 1;
+
+> PRESCALE =3D 18 and MOD =3D 254 you get a period of 144.78 =C2=B5s and so=
+ the
+> error is only 0.56 =C2=B5s which is a factor of 13 better.
+>
+> Hmm.
+>
+> > +      * The value for PRESCALE is selected such that the resulting per=
+iod
+> > +      * gets the maximal length not bigger than the requested one with=
+ the
+> > +      * given settings (MOD =3D SPRD_PWM_MOD_MAX and input clock).
+> > +      */
+> > +     duty =3D duty_ns * SPRD_PWM_MOD_MAX / period_ns;
+>
+> I wonder if you loose some precision here as you use period_ns but might
+> actually implement a shorter period.
+>
+> Quick example, again consider clk_rate =3D 100 / 3 MHz,
+> period_ns =3D 145340, duty_ns =3D 72670. Then you end up with
+>
+>         PRESCALE =3D 17
+>         MOD =3D 255
+>         DUTY =3D 127
+
+Incorrect, we will get PRESCALE =3D 18,  MOD =3D 255, DUTY =3D 127.
+
+> That corresponds to period_ns =3D 137700, duty_ns =3D 68580. With DUTY =
+=3D 134
+> you get 72360 ns which is still smaller than the requested 72670 ns.
+
+Incorrect, with DUTY =3D 134 (PRESCALE =3D 18  ->  period =3D 145.35 =C2=B5=
+s),
+duty_ns =3D 76380ns
+
+> (But then again it is not obvious which of the two is the "better"
+> approximation because Thierry doesn't seem to see the necessity to
+> discuss or define a policy here.)
+
+Like I said, this is the simple calculation formula which can meet our
+requirement (we limit our DUTY value can only be 0 - 254).
+duty =3D duty_ns * SPRD_PWM_MOD_MAX / period_ns;
+
+>
+> (And to pick up the thoughts about not using SPRD_PWM_MOD_MAX
+> unconditionally, you could also use
+>
+>         PRESCALE =3D 18
+>         MOD =3D 254
+>         DUTY =3D 127
+>
+> yielding period_ns =3D 144780 and duty_ns =3D 72390. Summary:
+>
+>         Request:                 72670 / 145340
+>         your result:             68580 / 137700
+>         also possible:           72390 / 144780
+>
+> Judge yourself.)
+>
+> > +     tmp =3D (u64)chn->clk_rate * period_ns;
+> > +     do_div(tmp, NSEC_PER_SEC);
+> > +     prescale =3D DIV_ROUND_CLOSEST_ULL(tmp, SPRD_PWM_MOD_MAX) - 1;
+>
+> Now that you use DIV_ROUND_CLOSEST_ULL the comment is wrong because you
+> might provide a period bigger than the requested one. Also you divide
+
+Again, that's the precision can meet our requirement.
+
+> twice instead of once before. (I don't know what architecture your SoC
+> uses, but compared to a multiplication a division is usually expensive.)
+> Also the math is more complicated now as you have a round-down div and a
+> round-closest div.
+>
+> My preference for how to fix that is to restore the behaviour of v2 that
+> matches the comment and adapt .get_state() instead.
+
+Using DIV_ROUND_CLOSEST_ULL can get a same prescale which matches with
+.get_state().
+
+>
+> For .get_state() this should then be:
+>
+>         val =3D sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE);
+>         prescale =3D FIELD_GET(SPRD_PWM_PRESCALE_MSK, val);
+>
+>         tmp =3D (prescale + 1) * NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
+>         state->period =3D DIV_ROUND_UP_ULL(tmp, chn->clk_rate);
+>
+> > +     if (prescale > SPRD_PWM_PRESCALE_MSK)
+> > +             prescale =3D SPRD_PWM_PRESCALE_MSK;
+> > +
+> > +     /*
+> > +      * Note: Writing DUTY triggers the hardware to actually apply the
+> > +      * values written to MOD and DUTY to the output, so must keep wri=
+ting
+> > +      * DUTY last.
+> > +      *
+> > +      * The hardware can ensures that current running period is comple=
+ted
+> > +      * before changing a new configuration to avoid mixed settings.
+>
+> I'm not a native English speaker, but I would write:
+>
+>         * The hardware ensures that currently running period is
+>         * completed before changing to the new configuration to avoid
+>         * mixed settings.
+
+Sure
+
+>
+> Does this mechanism also apply to PRESCALE? If yes, please include it in
+
+Yes.
+
+> your description. If not there is still a possibility for a wrong
+> period.
+>
+> > +      */
+> > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PRESCALE, prescale);
+> > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_MOD, SPRD_PWM_MOD_MAX);
+> > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_DUTY, duty);
+> > +
+> > +     return 0;
+> > +}
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
 
 
-Yes, I do use __get_user_pages_fast() in the code.
 
-Thanks
-
+--=20
+Baolin Wang
+Best Regards
