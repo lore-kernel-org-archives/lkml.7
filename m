@@ -2,101 +2,153 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B574EC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 702ACC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4772173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 472E32173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:00:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XoChd+oX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730801AbfHOMAS (ORCPT
+        id S1731301AbfHOMAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:00:18 -0400
-Received: from www381.your-server.de ([78.46.137.84]:59664 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729818AbfHOMAS (ORCPT
+        Thu, 15 Aug 2019 08:00:21 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:44574 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730379AbfHOMAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 08:00:18 -0400
-X-Greylist: delayed 1174 seconds by postgrey-1.27 at vger.kernel.org; Thu, 15 Aug 2019 08:00:17 EDT
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1hyE7Q-0004qd-Ce; Thu, 15 Aug 2019 13:40:36 +0200
-Received: from [93.104.111.225] (helo=[192.168.178.20])
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <lars@metafoo.de>)
-        id 1hyE7Q-000IFI-3p; Thu, 15 Aug 2019 13:40:36 +0200
-Subject: Re: static analysis bug report in drivers/staging/iio/dac/ad5380.c
-To:     Colin Ian King <colin.king@canonical.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.ne>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        linux-iio@vger.kernel.org,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <dd9e8ad0-31c8-a06f-be6b-e665e9b2c1c2@canonical.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <1f73a6d5-9e77-6f2f-8fcf-ec87f5ffa54d@metafoo.de>
-Date:   Thu, 15 Aug 2019 13:40:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 15 Aug 2019 08:00:19 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 336662AF;
+        Thu, 15 Aug 2019 14:00:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1565870417;
+        bh=A0ss3R3Sk7I88U0odL2MqAjBB4gXoIuYHegStKY3AHY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XoChd+oXcLPj9rbrHCc/1MOquMvsYcM438HTcgWHOl6bUra8+85htemNo9adOKA7T
+         wzc1syp1AeBbmbfL8qjKKpB799GZgVqgINMX8b6lKRe8Fa9gd69vRpGtbrwohseQoW
+         gIJpoH/Ec687kqEuukEhalpDysx9QgQa8v7eUQEk=
+Date:   Thu, 15 Aug 2019 15:00:14 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v2 4/9] drm/timings: Add link flags
+Message-ID: <20190815120014.GK5011@pendragon.ideasonboard.com>
+References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1565867073-24746-5-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <dd9e8ad0-31c8-a06f-be6b-e665e9b2c1c2@canonical.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25542/Thu Aug 15 10:25:56 2019)
+Content-Disposition: inline
+In-Reply-To: <1565867073-24746-5-git-send-email-fabrizio.castro@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/15/19 12:21 PM, Colin Ian King wrote:
-> Hi,
-> 
-> Static analysis with Coverity Scan has detected a potential assignment
-> bug in ad5380.c:
-> 
-> 217        case IIO_CHAN_INFO_CALIBBIAS:
-> 218                ret = regmap_read(st->regmap,
-> AD5380_REG_OFFSET(chan->address),
-> 219                                        val);
-> 220                if (ret)
-> 221                        return ret;
-> 222                *val >>= chan->scan_type.shift;
-> 
-> CID 43178 (#1 of 1): Unused value (UNUSED_VALUE)assigned_pointer:
-> Assigning value from val - (1 << chan->scan_type.realbits) / 2 to val
-> here, but that stored value is not used.
-> 
-> 223                val -= (1 << chan->scan_type.realbits) / 2;
-> 224                return IIO_VAL_INT;
-> 
-> val is a pointer and so updating it before a return is probably not the
-> intention.  I suspect the intention was probably:
-> 
-> 		   *val -= (1 << chan->scan_type.realbits) / 2;
-> 
-> However, I'm not confident about this as the following case has:
-> 
-> 225        case IIO_CHAN_INFO_SCALE:
-> 226                *val = 2 * st->vref;
-> 227                *val2 = chan->scan_type.realbits;
-> 228                return IIO_VAL_FRACTIONAL_LOG2;
-> 
-> which may imply the update maybe to *val2 instead, e.g.:
-> 
-> 		*val2 -= (1 << chan->scan_type.realbits) / 2;
-> 
-> Any ideas?
+Hi Fabrizio,
 
-Updating changing val to *val is the right fix in this case.
+Thank you for the patch.
+
+On Thu, Aug 15, 2019 at 12:04:28PM +0100, Fabrizio Castro wrote:
+> We need more information to describe dual-LVDS links, therefore
+> introduce link_flags.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> ---
+> v1->v2:
+> * new patch
+> 
+>  include/drm/drm_timings.h | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/include/drm/drm_timings.h b/include/drm/drm_timings.h
+> index 4af8814..58fbf1b 100644
+> --- a/include/drm/drm_timings.h
+> +++ b/include/drm/drm_timings.h
+> @@ -1,4 +1,6 @@
+>  /*
+> + * Copyright (C) 2019 Renesas Electronics Corporation
+> + *
+>   * Permission to use, copy, modify, distribute, and sell this software and its
+>   * documentation for any purpose is hereby granted without fee, provided that
+>   * the above copyright notice appear in all copies and that both that copyright
+> @@ -21,6 +23,24 @@
+>  #ifndef __DRM_TIMINGS_H__
+>  #define __DRM_TIMINGS_H__
+>  
+> +#include <linux/bits.h>
+> +
+> +/**
+> + * enum drm_link_flags - link_flags for &drm_timings
+> + *
+> + * This enum defines the details of the link.
+> + *
+> + * @DRM_LINK_DUAL_LVDS_ODD_EVEN:	Dual-LVDS link, with odd pixels (1,3,5,
+> + *					etc.) coming through the first port, and
+> + *					even pixels (0,2,4,etc.) coming through
+> + *					the second port. If not specified for a
+> + *					dual-LVDS panel, it is assumed that even
+> + *					pixels are coming through the first port
+> + */
+> +enum drm_link_flags {
+
+The text will be easier to read if you inline it here.
+
+	/**
+	 * @DRM_LINK_DUAL_LVDS_ODD_EVEN: Dual-LVDS link, with odd pixels (1,3,5,
+	 * etc.) coming through the first port, and  even pixels (0,2,4,etc.)
+	 ...
+
+> +	DRM_LINK_DUAL_LVDS_ODD_EVEN = BIT(0),
+
+I would remove the dual_link field and add a DRM_LINK_DUAL_LVDS (or
+alternatively two flags, dual lvds odd-even and dual lvds even-odd).
+
+> +};
+> +
+>  /**
+>   * struct drm_timings - timing information
+>   */
+> @@ -55,6 +75,12 @@ struct drm_timings {
+>  	 * and odd-numbered pixels are received on separate links.
+>  	 */
+>  	bool dual_link;
+> +	/**
+> +	 * @link_flags
+> +	 *
+> +	 * Provides detailed information about the link.
+
+I think this calls for a bit more information than "detailed
+information". What information do you want to store in this field ?
+
+> +	 */
+> +	enum drm_link_flags link_flags;
+>  };
+>  
+>  #endif /* __DRM_TIMINGS_H__ */
+> -- 
+> 2.7.4
+> 
+
+-- 
+Regards,
+
+Laurent Pinchart
