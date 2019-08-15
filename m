@@ -2,139 +2,114 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D72EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65784C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEC3206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:06:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565849168;
-	bh=t5cM3jBnJQk9VnnLKPuNpYG8ZS+2LWxl5fs8ygmHR+s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=A+l+EXkopWCiYKZRl/CSMNajVOySPvY3aZkcRrimDyqHW+tuEbNrbdwj2QBxKW7ev
-	 xdh+eZ+mhB6jvjsNWBF1/qVX7iJy+pkvCjds+7uJ53hIOz8iZ9sqTvMA12nW+hVVIO
-	 I9MrXYWly9npi0xGQnLs74ISGkWDs5VLnAFz2lRk=
+	by mail.kernel.org (Postfix) with ESMTP id 2CF5620656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:06:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="YEebXXY2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730057AbfHOGGH (ORCPT
+        id S1730349AbfHOGGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 02:06:07 -0400
-Received: from mga18.intel.com ([134.134.136.126]:40175 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbfHOGGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 02:06:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 23:06:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,388,1559545200"; 
-   d="scan'208";a="181785528"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga006.jf.intel.com with ESMTP; 14 Aug 2019 23:06:03 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Vicente Bergas <vicencb@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: kexec on rk3399
-In-Reply-To: <59055782-7fc2-4b16-af8b-a56fb845a43f@gmail.com>
-References: <ebcb52be-2063-4e2c-9a09-fdcacb94f855@gmail.com> <c6993a1e-6fc2-44ab-b59e-152142e2ff4d@gmail.com> <0408cb6c-1b16-eacb-d47e-17f4ff89e2b8@arm.com> <59055782-7fc2-4b16-af8b-a56fb845a43f@gmail.com>
-Date:   Thu, 15 Aug 2019 09:06:02 +0300
-Message-ID: <87pnl7t12t.fsf@gmail.com>
+        Thu, 15 Aug 2019 02:06:31 -0400
+Received: from mx.aristanetworks.com ([162.210.129.12]:5131 "EHLO
+        smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfHOGGa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 02:06:30 -0400
+Received: from smtp.aristanetworks.com (localhost [127.0.0.1])
+        by smtp.aristanetworks.com (Postfix) with ESMTP id B65DD42A2C7;
+        Wed, 14 Aug 2019 23:07:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+        s=Arista-A; t=1565849232;
+        bh=OG6evudYvLj50ZFoTIDecZ1Ho1oufmSz1imiu12yfjk=;
+        h=From:To:Cc:Subject:Date;
+        b=YEebXXY2Y14FST6xyHsv3SPFD9wRuNltXbAlw1y/+RiWHbr31RIpHP4zHvdIQ3LOJ
+         TUV567FDvdD8dCUPDqI7UOFUN6AS845eFF181M8SHU9z2uKDlCKCuootWa0/KsKGIB
+         PPZdMRK/cD5JjSPsPu6bUXk+H9C5abYwMpt/lTzN2oQ0pHI1J++ZDTw0m2sYmxBPPw
+         1T9KUZyjs6sLZDO0KISu9uxakqn4vyFJoL9x/omYdgzzIq36crLYBn5PsI0givIB22
+         v7nqhZD9DThU6VcPspilWEkRwT/DVxkngQtGzk0aCYC/YMCZ/uE8ftejUrYGD1FBld
+         Chec4Yp4UIKTQ==
+Received: from egc101.sjc.aristanetworks.com (unknown [172.20.210.50])
+        by smtp.aristanetworks.com (Postfix) with ESMTP id A8B7142A296;
+        Wed, 14 Aug 2019 23:07:12 -0700 (PDT)
+From:   Edward Chron <echron@arista.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, colona@arista.com,
+        Edward Chron <echron@arista.com>
+Subject: [PATCH] mm/oom: Add killed process selection information
+Date:   Wed, 14 Aug 2019 23:06:04 -0700
+Message-Id: <20190815060604.3675-1-echron@arista.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For an OOM event: print oom_score_adj value for the OOM Killed process
+to document what the oom score adjust value was at the time the process
+at the time of the OOM event. The value can be set by the user and it
+effects the resulting oom_score so useful to document this value.
 
-Hi,
+Sample message output:
+Aug 14 23:00:02 testserver kernel: Out of memory: Killed process 2692
+ (oomprocs) total-vm:1056800kB, anon-rss:1052760kB, file-rss:4kB,i
+ shmem-rss:0kB oom_score_adj:1000
 
-Vicente Bergas <vicencb@gmail.com> writes:
+Signed-off-by: Edward Chron <echron@arista.com>
+---
+ mm/oom_kill.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-> On Wednesday, August 14, 2019 3:12:26 PM CEST, Robin Murphy wrote:
->> On 14/08/2019 13:53, Vicente Bergas wrote:
->>> On Monday, July 22, 2019 4:31:27 PM CEST, Vicente Bergas wrote: ...
->>
->> This particular change looks like it's implicitly specific to 
->> RK3399, which wouldn't be ideal. Presumably if the core dwc3 
->> driver implemented shutdown correctly (echoing parts of 
->> dwc3_remove(), I guess) then the glue layers shouldn't need 
->> anything special anyway.
->>
->> Robin.
->
-> I just checked simple->resets from dwc3-of-simple.c and it is an array
-> with multiple resets whereas dwc->reset from core.c is NULL.
-> So the reset seems specific to the glue layers.
-> Is there another way than resetting the thing that is
-> generic enough to go to core.c and allows kexec?
-
-This is a really odd 'failure'. We do full soft reset during driver
-initialization on dwc3. We shouldn't need to assert reset on shutdown,
-really.
-
-I think the problem is here:
-
-	if (simple->pulse_resets) {
-		ret = reset_control_reset(simple->resets);
-		if (ret)
-			goto err_resetc_put;
-	} else {
-		ret = reset_control_deassert(simple->resets);
-		if (ret)
-			goto err_resetc_put;
-	}
-
-Note that if pulse_resets is set, we will run a reset. But if
-pulse_resets is false and need_reset is true, we deassert the reset.
-
-I think below patch is enough:
-
-diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
-index bdac3e7d7b18..9a2f3e09aa2e 100644
---- a/drivers/usb/dwc3/dwc3-of-simple.c
-+++ b/drivers/usb/dwc3/dwc3-of-simple.c
-@@ -72,7 +72,15 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
- 		ret = reset_control_reset(simple->resets);
- 		if (ret)
- 			goto err_resetc_put;
--	} else {
-+	}
-+
-+	if (simple->need_reset) {
-+		ret = reset_control_assert(simple->resets);
-+		if (ret)
-+			goto err_resetc_put;
-+
-+		usleep_range(1000, 2000);
-+
- 		ret = reset_control_deassert(simple->resets);
- 		if (ret)
- 			goto err_resetc_put;
-@@ -121,9 +129,6 @@ static int dwc3_of_simple_remove(struct platform_device *pdev)
- 	clk_bulk_put_all(simple->num_clocks, simple->clks);
- 	simple->num_clocks = 0;
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index eda2e2a0bdc6..6b1674cac377 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -858,6 +858,7 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
+ 	struct task_struct *p;
+ 	struct mm_struct *mm;
+ 	bool can_oom_reap = true;
++	long adj;
  
--	if (!simple->pulse_resets)
--		reset_control_assert(simple->resets);
--
- 	reset_control_put(simple->resets);
+ 	p = find_lock_task_mm(victim);
+ 	if (!p) {
+@@ -877,6 +878,8 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
+ 	count_vm_event(OOM_KILL);
+ 	memcg_memory_event_mm(mm, MEMCG_OOM_KILL);
  
- 	pm_runtime_disable(dev);
-
-Can you test?
-
++	adj = (long)victim->signal->oom_score_adj;
++
+ 	/*
+ 	 * We should send SIGKILL before granting access to memory reserves
+ 	 * in order to prevent the OOM victim from depleting the memory
+@@ -884,12 +887,12 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
+ 	 */
+ 	do_send_sig_info(SIGKILL, SEND_SIG_PRIV, victim, PIDTYPE_TGID);
+ 	mark_oom_victim(victim);
+-	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB\n",
++	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB oom_score_adj:%ld\n",
+ 		message, task_pid_nr(victim), victim->comm,
+ 		K(victim->mm->total_vm),
+ 		K(get_mm_counter(victim->mm, MM_ANONPAGES)),
+ 		K(get_mm_counter(victim->mm, MM_FILEPAGES)),
+-		K(get_mm_counter(victim->mm, MM_SHMEMPAGES)));
++		K(get_mm_counter(victim->mm, MM_SHMEMPAGES)), adj);
+ 	task_unlock(victim);
+ 
+ 	/*
 -- 
-balbi
+2.20.1
+
