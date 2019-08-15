@@ -2,221 +2,161 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 317E5C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19C0C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E43D20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D14220656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:59:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7wMkduA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732544AbfHOO6d (ORCPT
+        id S1733198AbfHOO7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:58:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39964 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728500AbfHOO6d (ORCPT
+        Thu, 15 Aug 2019 10:59:23 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:32829 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbfHOO7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:58:33 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos.glx-home)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hyHCu-0007SL-HD; Thu, 15 Aug 2019 16:58:28 +0200
-Date:   Thu, 15 Aug 2019 16:58:27 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ben Luo <luoben@linux.alibaba.com>
-cc:     alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
-        tao.ma@linux.alibaba.com, gerry@linux.alibaba.com,
-        nanhai.zou@linux.alibaba.com, linyunsheng@huawei.com
-Subject: Re: [PATCH v3 2/3] genirq: introduce update_irq_devid()
-In-Reply-To: <6343a7e34ffdd0ddcd730996fc5dad3024e42251.1565857737.git.luoben@linux.alibaba.com>
-Message-ID: <alpine.DEB.2.21.1908151622410.1908@nanos.tec.linutronix.de>
-References: <cover.1565857737.git.luoben@linux.alibaba.com> <6343a7e34ffdd0ddcd730996fc5dad3024e42251.1565857737.git.luoben@linux.alibaba.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 15 Aug 2019 10:59:23 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p77so1192588wme.0;
+        Thu, 15 Aug 2019 07:59:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mEoiihgfqWUe3ZoUXL4XK4SNuss4X3uooLaEcvpyGVE=;
+        b=M7wMkduAfusSeOrXSO6pVR8ElCfcK2BWDzneYnMQryY5Y0rhUjuctKHFo8yuXhsAe1
+         lONO2Kp+qR3j2K+fhCx4irZbZ1aN4T6Qx+MPtR/FBuTcz2C5K8RxKlGXITBASJq5rVr1
+         ERl85HXAoFCfl5FZVh+h5nhkjkr9XHED98fJvOdJa/J5bqu/V3CHvvBv/B1AjNqTtqky
+         q5ZT8ujNx/26Fw/zaCclLg5GrzK2Up/z+KD/Oi5vtSMCE5CxMShR/WzHCXWY5xnZRFKu
+         ZUUKGL5DKQqyt6/eMC+R4mIzHyt8Jr5Lwr8WgQmi8C18XojrxgQTYx9SRmMPm0Ldi85J
+         aKoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mEoiihgfqWUe3ZoUXL4XK4SNuss4X3uooLaEcvpyGVE=;
+        b=M9bPeIdygVvjFOD5TKBnRTXxEgDpHiFtJHEfMJdO1GGXG2VVoLZJN1MQo9UCXNhO5I
+         zw+JVd7Jde+LvCRjUTNjYlKXOsn64iJyc++jJK97B1w7ft4dcD2MHMQ2AB8lEYhrUCB2
+         TTsFBgEO/PiPjV+LG5wTcdwwAIpTO5euTA3vg0Lsl97OmsWyT1gghHFaclC2l3jEpA01
+         ElP8GElT2KiqvTTCMOcBmD6ASbMZ10E9QpdwQd2E1XATo8eTAx3jM6fUZSq0kGR82Yta
+         IlyzJkyjmSJ8ZsAKg6TccMhbWDtV+iMEy0+3nprxbNAFVTK6YGGf4RE4b7mer1SkTFLb
+         C5Ww==
+X-Gm-Message-State: APjAAAXfNv5e4ng3db7z1tc+Xs18uOXPQOwo0uCLzXLSpe1gj2uHYIJ2
+        B+t3O0fwH6ZQ6WDZCfD+MSkqRD2wEkrtTQxMXNM=
+X-Google-Smtp-Source: APXvYqzOJKvOEo4Aw/+I/NXXfXKxeMLMU/eP2LAGZSEPkkphZ36bVSOCsC64JbJOgeSpIbeS5NdJOb3hNAkOJ3fLIfc=
+X-Received: by 2002:a1c:4e10:: with SMTP id g16mr3280114wmh.67.1565881161065;
+ Thu, 15 Aug 2019 07:59:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190814213118.28473-1-kherbst@redhat.com> <20190814213118.28473-2-kherbst@redhat.com>
+ <CAPM=9ty7yEUqKrcixV1tTuWCpyh6UikA3rxX8BF1E3fDb6WLQQ@mail.gmail.com>
+ <5e05532328324d01bc554c573f6298f8@AUSX13MPC101.AMER.DELL.COM>
+ <CACO55tsDA1WpMGtAPqUJpWt0AmPDnv9LuC09g2KB5GXB-VSCew@mail.gmail.com>
+ <3fc22fe8bcaf4304bb07534b61c4de90@AUSX13MPC101.AMER.DELL.COM>
+ <CACO55tvDfxYMZr0BGv2ROSNEVB4GvXZnBnWBy=RDPOG5hnk7OA@mail.gmail.com> <CADnq5_Nv6tsW0J20td5rQSLq048HtTcw1b4c25jP6ZR6XWZ-eA@mail.gmail.com>
+In-Reply-To: <CADnq5_Nv6tsW0J20td5rQSLq048HtTcw1b4c25jP6ZR6XWZ-eA@mail.gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 15 Aug 2019 10:59:09 -0400
+Message-ID: <CADnq5_Oo4CMSx3Bi-41xXDCYKB9RRX33Gke9UyvAGZq1i+VOLA@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
+ enable dGPU direct output"
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     Mario.Limonciello@dell.com,
+        nouveau <nouveau@lists.freedesktop.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>,
+        Alex Hung <alex.hung@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ben,
+On Thu, Aug 15, 2019 at 10:37 AM Alex Deucher <alexdeucher@gmail.com> wrote:
+>
+> On Thu, Aug 15, 2019 at 10:25 AM Karol Herbst <kherbst@redhat.com> wrote:
+> >
+> > On Thu, Aug 15, 2019 at 4:20 PM <Mario.Limonciello@dell.com> wrote:
+> > >
+> > > > > There are definitely going to be regressions on machines in the field with the
+> > > > > in tree drivers by reverting this.  I think we should have an answer for all of
+> > > > those
+> > > > > before this revert is accepted.
+> > > > >
+> > > > > Regarding systems with Intel+NVIDIA, we'll have to work with partners to
+> > > > collect
+> > > > > some information on the impact of reverting this.
+> > > > >
+> > > > > When this is used on a system with Intel+AMD the ASL configures AMD GPU to
+> > > > use
+> > > > > "Hybrid Graphics" when on Windows and "Power Express" and "Switchable
+> > > > Graphics"
+> > > > > when on Linux.
+> > > >
+> > > > and what's exactly the difference between those? And what's the actual
+> > > > issue here?
+> > >
+> > > DP/HDMI is not detected unless plugged in at bootup.  It's due to missing HPD
+> > > events.
+> > >
+> >
+> > afaik Lyude was working on fixing all that, at least for some drivers.
+> > If there is something wrong, we still should fix the drivers, not
+> > adding ACPI workarounds.
+> >
+> > Alex: do you know if there are remaining issues regarding that with amdgpu?
+>
+> There was an issue with hpd events not making it to the audio side
+> when things were powered down that was fixed with this patch set:
+> https://patchwork.freedesktop.org/patch/316793/
+> Those patches depended on a bunch of alsa changes as well which may
+> have not been available in the distro used for a particular OEM
+> program.
+>
+> >
+> > > >
+> > > > We already have the PRIME offloading in place and if that's not
+> > > > enough, we should work on extending it, not adding some ACPI based
+> > > > workarounds, because that's exactly how that looks like.
+> > > >
+> > > > Also, was this discussed with anybody involved in the drm subsystem?
+> > > >
+> > > > >
+> > > > > I feel we need a knob and/or DMI detection to affect the changes that the ASL
+> > > > > normally performs.
+> > > >
+> > > > Why do we have to do that on a firmware level at all?
+> > >
+> > > Folks from AMD Graphics team recommended this approach.  From their perspective
+> > > it's not a workaround.  They view this as a different architecture for AMD graphics driver on
+> > > Windows and AMD graphics w/ amdgpu driver.  They have different ASL paths used for
+> > > each.
+> >
+> > @alex: is this true?
+>
+> I'm not familiar with this patches in particular, but I know we've
+> done things with OEM programs to support Linux on platforms where
+> Linux support is lacking for in new features for the target distros.
+> E.g., when the first hybrid graphics laptops were coming out, Linux
+> didn't support it too well or at all depending on the timing, so the
+> bios exposed power express which was working well at the time if the
+> OS told ACPI it was Linux.
 
-On Thu, 15 Aug 2019, Ben Luo wrote:
+FWIW, windows does something similar.  I don't think windows 7
+supports hybrid graphics either so if the OS tells ACPI it's windows
+7, it gets power express instead of hybrid graphics as well.  At least
+on laptops that support windows 7 in the first place.
 
-> Sometimes, only the dev_id field of irqaction need to be changed.
-> E.g. KVM VM with device passthru via VFIO may switch irq injection
-> path between KVM irqfd and userspace eventfd. These two paths
-> share the same irq num and handler for the same vector of a device,
+Alex
 
-s/irq num/interrupt number/
-
-Changelogs are text and should not contain cryptic abbreviations.
-
-> only with different dev_id referencing to different fds' contexts.
-> 
-> So, instead of free/request irq, only update dev_id of irqaction.
-
-Please write functions like this: function_name() so they can be easily
-identified in the text as such.
-
-> This narrows the gap for setting up new irq (and irte, if has)
-
-What does that mean: "narrows the gap"
-
-What's the gap and why is it only made smaller and not closed?
-
-> and also gains some performance benefit.
-> 
-> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
-> Reviewed-by: Liu Jiang <gerry@linux.alibaba.com>
-
-I prefer to see the 'reviewed-by' as a reply on LKML rather than coming
-from some internal process.
-
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-
-While I reviewed the previous version, I surely did not give a
-'Reviewed-by' tag. That tag means that the person did review the patch and
-did not find an issue. I surely found issues, right?
-
-> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-> index 6f9b20f..a76ef61 100644
-> --- a/kernel/irq/manage.c
-> +++ b/kernel/irq/manage.c
-> @@ -2064,6 +2064,84 @@ int request_threaded_irq(unsigned int irq, irq_handler_t handler,
->  EXPORT_SYMBOL(request_threaded_irq);
->  
->  /**
-> + *	update_irq_devid - update irq dev_id to a new one
-
-Can you please name this: irq_update_devid(). We try to have a consistent
-name space for new functions.
-
-> + *	@irq: Interrupt line to update
-> + *	@dev_id: A cookie to find the irqaction to update
-> + *	@new_dev_id: New cookie passed to the handler function
-
-Can you please arrange these in tabular fashion:
-
- *	@irq:		Interrupt line to update
- *	@dev_id:	A cookie to find the irqaction to update
- *	@new_dev_id:	New cookie passed to the handler function
-
-> + *	Sometimes, only the cookie data need to be changed.
-> + *	Instead of free/request irq, only update dev_id here
-> + *	Not only to gain some performance benefit, but also
-> + *	reduce the risk of losing interrupt.
-> + *
-> + *	E.g. irq affinity setting in a VM with VFIO passthru
-
-Again. Please write it out 'interrupt' and everything else.
-
-> + *	device is carried out in a free-then-request-irq way
-> + *	since lack of this very function. The free_irq()
-
-That does not make sense. The function is there for such a use case. So
-immediately when the VFIO change is merged this comment is stale and bogus.
-
-> + *	eventually triggers deactivation of IR domain, which
-> + *	will cleanup IRTE. There is a gap before request_irq()
-> + *	finally setup the IRTE again. In this gap, a in-flight
-> + *	irq buffering in hardware layer may trigger DMAR fault
-> + *	and be lost.
-
-Exactly this information wants to be in the changelog.
-
-> + *
-> + *	On failure, it returns a negative value. On success,
-> + *	it returns 0
-> + */
-> +int update_irq_devid(unsigned int irq, void *dev_id, void *new_dev_id)
-> +{
-> +	struct irq_desc *desc = irq_to_desc(irq);
-> +	struct irqaction *action, **action_ptr;
-> +	unsigned long flags;
-> +
-> +	if (in_interrupt()) {
-> +		WARN(1, "Trying to update IRQ %d (dev_id %p to %p) from IRQ context!\n",
-> +		     irq, dev_id, new_dev_id);
-> +		return -EPERM;
-> +	}
-
-  	if (WARN(....)
-
-> +
-> +	if (!desc)
-> +		return -EINVAL;
-> +
-> +	chip_bus_lock(desc);
-
-This does not need to take bus lock. The action pointer is sufficiently
-protected by desc->lock.
-
-> +	raw_spin_lock_irqsave(&desc->lock, flags);
-> +
-> +	/*
-> +	 * There can be multiple actions per IRQ descriptor, find the right
-> +	 * one based on the dev_id:
-> +	 */
-> +	action_ptr = &desc->action;
-> +	for (;;) {
-> +		action = *action_ptr;
-> +
-> +		if (!action) {
-> +			raw_spin_unlock_irqrestore(&desc->lock, flags);
-> +			chip_bus_sync_unlock(desc);
-> +			WARN(1, "Trying to update already-free IRQ %d (dev_id %p to %p)\n",
-> +			     irq, dev_id, new_dev_id);
-> +			return -ENXIO;
-> +		}
-> +
-> +		if (action->dev_id == dev_id) {
-> +			action->dev_id = new_dev_id;
-> +			break;
-> +		}
-> +		action_ptr = &action->next;
-> +	}
-> +
-> +	raw_spin_unlock_irqrestore(&desc->lock, flags);
-> +	chip_bus_sync_unlock(desc);
-> +
-> +	/*
-> +	 * Make sure it's not being used on another CPU:
-> +	 * There is a risk of UAF for old *dev_id, if it is
-> +	 * freed in a short time after this func returns
-
-function please. Also it does not matter whether the time is short or
-not. The point is:
-
-     	 Ensure that an interrupt in flight on another CPU which uses the
-     	 old 'dev_id' has completed because the caller can free the memory
-	 to which it points after this function returns.
-
-But this has another twist:
-
-    CPU0				CPU1
-
-    interrupt
-    	primary_handler(old_dev_id)
-	   do_stuff_on(old_dev_id)
-	   return WAKE_THREAD;		update_dev_id()
-        wakeup_thread();
-					  action->dev_id = new_dev_id;
-    irq_thread()
-        secondary_handler(new_dev_id)
-	
-That's broken and synchronize_irq() does not protect against it.
-
-> +	 */
-> +	synchronize_irq(irq);
-
-Thanks,
-
-	tglx
+>
+> Alex
