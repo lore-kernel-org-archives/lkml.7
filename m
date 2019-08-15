@@ -2,121 +2,128 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19221C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BCBC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95AB2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1C4208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:10:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwFFNodo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732104AbfHONJ6 (ORCPT
+        id S1732138AbfHONKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:09:58 -0400
-Received: from mga04.intel.com ([192.55.52.120]:15062 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730635AbfHONJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:09:57 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 06:09:57 -0700
-X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
-   d="scan'208";a="194763653"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 06:09:55 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 426BB206FD; Thu, 15 Aug 2019 16:08:49 +0300 (EEST)
-Date:   Thu, 15 Aug 2019 16:08:49 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
-Message-ID: <20190815130849.GQ6133@paasikivi.fi.intel.com>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-3-jacopo@jmondi.org>
- <20190815070025.GK6133@paasikivi.fi.intel.com>
- <20190815125938.GI13823@pendragon.ideasonboard.com>
+        Thu, 15 Aug 2019 09:10:37 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36353 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730635AbfHONKh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:10:37 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w2so1324768pfi.3;
+        Thu, 15 Aug 2019 06:10:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O7UsU+IB0EE7NVhDIGHpvj8aJpCdK3kTtUuGx3BwSGI=;
+        b=gwFFNodooT/qbINiYVSeCDxk71mXjZiC7S+XJFZbRt1moD9TF+wTC//3cCZ6/gW7e2
+         +GFwiNW47z0zBpVZX//63Au4UIdulWLXm/DQAOnR4MsJiW67WdTTSklMMeSwxBhb5JcO
+         t0l6Ec2FpTnKg344AKoeu8+lrDnIRHI5ItTDxzG+Z7rFrRvkOJyIQfycFlBwI15/YKmv
+         4/ia0TG1iMaObQpMJqDXIEPM4sSipwr51IWwAW4JWjrI01Mzg4kOzP+x7Qc0d+bN/Y+4
+         f1PzORsZDI+3mI0MHPrAoHtD7KFd9HtvtOTp+i9clArOf/kp+wcamMYifFFuSEPGcq/Q
+         P9ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O7UsU+IB0EE7NVhDIGHpvj8aJpCdK3kTtUuGx3BwSGI=;
+        b=grmq7xnZeyI/mrokkMvf9HmJqCaf9Y209sAPVX6/AEHIMBqo747vZvEFYfY5uL5q9q
+         M3odjgoPYzr5IQR1xIrp6WovcOjcmXVEkqYZ8YF1qKvnpM1Rzg8qsHOw+4xHpRepcBpi
+         6SR5CyCJPr0VJDwPiSRJI4h+qLGFrkEXP6/lUz0AaKWl3iUc5+QJR7U/16pdakwENSav
+         TvmAWiMUvWRL1Wp9gTc5Ba48a8uWA/qXvOtgY+A+DAzD0jQP5nvxWzEk7k8HuN1KcjGG
+         KkiiRkemtJaS7d2hzOhUTEdpRSSYa60tf0W/LVPMVL7RZ0FQDqfhh5bF6g0qSze8qmdA
+         g8Nw==
+X-Gm-Message-State: APjAAAUODzYGo4YsHzhTLfC3XkBzHWJ6wRal6tAiEZwvA4TwTc1ibBv4
+        bXIZ4rF6ibLNWypCSgTNqEX7hVNuEPnfPhb6N+uC3LZm
+X-Google-Smtp-Source: APXvYqx8IquyCXVRV8V1mOek+yuM6k8+je0LcuDmJciyOCZuG5B1qZv11I1EODVf93jqY/FOYUV2IGqY6ihgUkQsk2Q=
+X-Received: by 2002:a05:6a00:8e:: with SMTP id c14mr5173336pfj.241.1565874636467;
+ Thu, 15 Aug 2019 06:10:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815125938.GI13823@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <5D514D6F.4090904@hisilicon.com>
+In-Reply-To: <5D514D6F.4090904@hisilicon.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 15 Aug 2019 16:10:24 +0300
+Message-ID: <CAHp75VcKNZeq80hw5qjKKuh8Qg=WUrXPSpcy6yx5h-_7RHah+g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pl061: Fix the issue failed to register the ACPI interruption
+To:     Wei Xu <xuwei5@hisilicon.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        huangdaode <huangdaode@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 03:59:38PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
-> 
-> On Thu, Aug 15, 2019 at 10:00:25AM +0300, Sakari Ailus wrote:
-> > On Wed, Aug 14, 2019 at 10:28:12PM +0200, Jacopo Mondi wrote:
-> > > Add documentation for the V4L2_CID_LOCATION camera control. The newly
-> > > added read-only control reports the camera device mounting position.
-> > > 
-> > > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> > > ---
-> > >  .../media/uapi/v4l/ext-ctrls-camera.rst       | 23 +++++++++++++++++++
-> > >  1 file changed, 23 insertions(+)
-> > > 
-> > > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > > index 51c1d5c9eb00..fc0a02eee6d4 100644
-> > > --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > > +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > > @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
-> > >      value down. A value of zero stops the motion if one is in progress
-> > >      and has no effect otherwise.
-> > > 
-> > > +``V4L2_CID_LOCATION (integer)``
-> > > +    This read-only control describes the camera location by reporting its
-> > > +    mounting position on the device where the camera is installed. This
-> > > +    control is particularly meaningful for devices which have a well defined
-> > > +    orientation, such as phones, laptops and portable devices as the camera
-> > > +    location is expressed as a position relative to the device intended
-> > > +    usage position. In example, a camera installed on the user-facing side
-> > 
-> > s/In/For/
-> > 
-> > > +    of a phone device is said to be installed in the ``V4L2_LOCATION_FRONT``
-> > > +    position.
-> > > +
-> > > +
-> > > +
-> > > +.. flat-table::
-> > > +    :header-rows:  0
-> > > +    :stub-columns: 0
-> > > +
-> > > +    * - ``V4L2_LOCATION_FRONT``
-> > > +      - The camera device is located on the front side of the device.
-> > > +    * - ``V4L2_LOCATION_BACK``
-> > > +      - The camera device is located on the back side of the device.
-> > > +
-> > > +
-> > > +
-> > >  .. [#f1]
-> > >     This control may be changed to a menu control in the future, if more
-> > >     options are required.
-> > 
-> > There's an effective limit of 64 for menus. ACPI has less than ten
-> > different locations for a device, I think 64 will be enough here.
-> > 
-> > So I'd be actually in favour of switching to a menu.
-> 
-> Why ? As you explained yourself, it's a static read-only control, all it
-> needs to report is a single value.
+On Mon, Aug 12, 2019 at 2:30 PM Wei Xu <xuwei5@hisilicon.com> wrote:
+>
+> Invoke acpi_gpiochip_request_interrupts after the acpi data has been
+> attached to the pl061 acpi node to register interruption.
+>
+> Otherwise it will be failed to register interruption for the ACPI case.
+> Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
+> after gpiochip_add_irqchip but at that time the acpi data has not been
+> attached yet.
+>
+> Tested with below steps on QEMU v4.1.0-rc3 and Linux kernel v5.3-rc4,
+> and found pl061 interruption is missed in the /proc/interrupts:
+> 1.
+> qemu-system-aarch64 \
+> -machine virt,gic-version=3 -cpu cortex-a57 \
+> -m 1G,maxmem=4G,slots=4 \
+> -kernel Image -initrd rootfs.cpio.gz \
+> -net none -nographic  \
+> -bios QEMU_EFI.fd  \
+> -append "console=ttyAMA0 acpi=force earlycon=pl011,0x9000000"
+>
+> 2. cat /proc/interrupts in the guest console:
+> estuary:/$ cat /proc/interrupts
+> CPU0
+> 2:       3228     GICv3  27 Level     arch_timer
+> 4:         15     GICv3  33 Level     uart-pl011
+> 42:          0     GICv3  23 Level     arm-pmu
+> IPI0:         0       Rescheduling interrupts
+> IPI1:         0       Function call interrupts
+> IPI2:         0       CPU stop interrupts
+> IPI3:         0       CPU stop (for crash dump) interrupts
+> IPI4:         0       Timer broadcast interrupts
+> IPI5:         0       IRQ work interrupts
+> IPI6:         0       CPU wake-up interrupts
+> Err:          0
+>
+> Fixes: 04ce935c6b2a ("gpio: pl061: Pass irqchip when adding gpiochip")
 
-Yes. That's true. It wasn't meant for this but it's nevertheless a
-convenient API to get that information, both as integer and string.
+Linus, I'm wondering if we can do this for all inside the GPIO library.
+Thoughts?
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+--
+With Best Regards,
+Andy Shevchenko
