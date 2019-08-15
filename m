@@ -2,83 +2,105 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E17C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7970FC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C7321721
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FFD620578
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732768AbfHOUvN (ORCPT
+        id S1732850AbfHOUvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 16:51:13 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:50078 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730540AbfHOUvM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 16:51:12 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D40871401D397;
-        Thu, 15 Aug 2019 13:51:11 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 13:51:11 -0700 (PDT)
-Message-Id: <20190815.135111.1048854967874803531.davem@davemloft.net>
-To:     wenwen@cs.uga.edu
-Cc:     rfontana@redhat.com, allison@lohutok.net, alexios.zavras@intel.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: pch_gbe: Fix memory leaks
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <CAAa=b7duRXsiVBfzbvHhoU000gGh53Mme3ZKCO5SoiTdgRaXtg@mail.gmail.com>
-References: <CAAa=b7ft-crBJm+H9U7Bn2dcgfjQsE8o53p2ryBWK3seQoF3Cg@mail.gmail.com>
-        <20190815.134230.1028411309377288636.davem@davemloft.net>
-        <CAAa=b7duRXsiVBfzbvHhoU000gGh53Mme3ZKCO5SoiTdgRaXtg@mail.gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 15 Aug 2019 13:51:12 -0700 (PDT)
+        Thu, 15 Aug 2019 16:51:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49862 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730540AbfHOUvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 16:51:36 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CD57286663;
+        Thu, 15 Aug 2019 20:51:35 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C77D017B64;
+        Thu, 15 Aug 2019 20:51:34 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 16:51:33 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
+Message-ID: <20190815205132.GC25517@redhat.com>
+References: <CAPcyv4hMUzw8vyXFRPe2pdwef0npbMm9tx9wiZ9MWkHGhH1V6w@mail.gmail.com>
+ <20190814073854.GA27249@lst.de>
+ <20190814132746.GE13756@mellanox.com>
+ <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com>
+ <20190815180325.GA4920@redhat.com>
+ <CAPcyv4g4hzcEA=TPYVTiqpbtOoS30ahogRUttCvQAvXQbQjfnw@mail.gmail.com>
+ <20190815194339.GC9253@redhat.com>
+ <CAPcyv4jid8_=-8hBpn_Qm=c4S8BapL9B9RGT7e9uu303yH=Yqw@mail.gmail.com>
+ <20190815203306.GB25517@redhat.com>
+ <20190815204128.GI22970@mellanox.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190815204128.GI22970@mellanox.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 15 Aug 2019 20:51:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
-Date: Thu, 15 Aug 2019 16:46:05 -0400
-
-> On Thu, Aug 15, 2019 at 4:42 PM David Miller <davem@davemloft.net> wrote:
->>
->> From: Wenwen Wang <wenwen@cs.uga.edu>
->> Date: Thu, 15 Aug 2019 16:03:39 -0400
->>
->> > On Thu, Aug 15, 2019 at 3:34 PM David Miller <davem@davemloft.net> wrote:
->> >>
->> >> From: Wenwen Wang <wenwen@cs.uga.edu>
->> >> Date: Tue, 13 Aug 2019 20:33:45 -0500
->> >>
->> >> > In pch_gbe_set_ringparam(), if netif_running() returns false, 'tx_old' and
->> >> > 'rx_old' are not deallocated, leading to memory leaks. To fix this issue,
->> >> > move the free statements after the if branch.
->> >> >
->> >> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
->> >>
->> >> Why would they be "deallocated"?  They are still assigned to
->> >> adapter->tx_ring and adapter->rx_ring.
->> >
->> > 'adapter->tx_ring' and 'adapter->rx_ring' has been covered by newly
->> > allocated 'txdr' and 'rxdr' respectively before this if statement.
->>
->> That only happens inside of the if() statement, that's why rx_old and
->> tx_old are only freed in that code path.
+On Thu, Aug 15, 2019 at 08:41:33PM +0000, Jason Gunthorpe wrote:
+> On Thu, Aug 15, 2019 at 04:33:06PM -0400, Jerome Glisse wrote:
 > 
-> That happens not only inside of the if statement, but also before the
-> if statement, just after 'txdr' and 'rxdr' are allocated.
+> > So nor HMM nor driver should dereference the struct page (i do not
+> > think any iommu driver would either),
+> 
+> Er, they do technically deref the struct page:
+> 
+> nouveau_dmem_convert_pfn(struct nouveau_drm *drm,
+> 			 struct hmm_range *range)
+> 		struct page *page;
+> 		page = hmm_pfn_to_page(range, range->pfns[i]);
+> 		if (!nouveau_dmem_page(drm, page)) {
+> 
+> 
+> nouveau_dmem_page(struct nouveau_drm *drm, struct page *page)
+> {
+> 	return is_device_private_page(page) && drm->dmem == page_to_dmem(page)
+> 
+> 
+> Which does touch 'page->pgmap'
+> 
+> Is this OK without having a get_dev_pagemap() ?
+>
+> Noting that the collision-retry scheme doesn't protect anything here
+> as we can have a concurrent invalidation while doing the above deref.
 
-Then the assignments inside of the if() statement are redundant.
+Uh ? How so ? We are not reading the same code i think.
 
-Something doesn't add up here, please make the code consistent.
+My read is that function is call when holding the device
+lock which exclude any racing mmu notifier from making
+forward progress and it is also protected by the range so
+at the time this happens it is safe to dereference the
+struct page. In this case any way we can update the
+nouveau_dmem_page() to check that page page->pgmap == the
+expected pgmap.
+
+Cheers,
+Jérôme
