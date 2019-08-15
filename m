@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62961C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4676DC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44252206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2053B2063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731064AbfHOJO7 (ORCPT
+        id S1731073AbfHOJQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 05:14:59 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37184 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730500AbfHOJO6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 05:14:58 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hyBqQ-0000tX-SG; Thu, 15 Aug 2019 09:14:54 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Hannes Reinecke <hare@suse.de>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: fcoe: remove redundant call to skb_transport_header
-Date:   Thu, 15 Aug 2019 10:14:54 +0100
-Message-Id: <20190815091454.13430-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 15 Aug 2019 05:16:00 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4695 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728128AbfHOJQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 05:16:00 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id DDFDB7BEC2ECEE5EFB79;
+        Thu, 15 Aug 2019 17:15:51 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 15 Aug 2019
+ 17:15:40 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <allison@lohutok.net>,
+        <kstewart@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ASoC: tlv320aic23: remove unused variable 'tlv320aic23_rec_src'
+Date:   Thu, 15 Aug 2019 17:15:34 +0800
+Message-ID: <20190815091534.57780-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+sound/soc/codecs/tlv320aic23.c:70:29: warning:
+ tlv320aic23_rec_src defined but not used [-Wunused-const-variable=]
 
-Pointer fh is being assigned a return value from the call to
-skb_transport_header however this value is never read and fh
-is being re-assigned immediately afterwards with a new value.
-Since there are side-effects from calling skb_transport_header
-the call is redundant and can be removed.
+It is never used, so can be removed.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/scsi/fcoe/fcoe.c | 1 -
- 1 file changed, 1 deletion(-)
+ sound/soc/codecs/tlv320aic23.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/scsi/fcoe/fcoe.c b/drivers/scsi/fcoe/fcoe.c
-index 587d4bbb7d22..6fd61555120a 100644
---- a/drivers/scsi/fcoe/fcoe.c
-+++ b/drivers/scsi/fcoe/fcoe.c
-@@ -1617,7 +1617,6 @@ static inline int fcoe_filter_frames(struct fc_lport *lport,
- 	else
- 		fr_flags(fp) |= FCPHF_CRC_UNCHECKED;
+diff --git a/sound/soc/codecs/tlv320aic23.c b/sound/soc/codecs/tlv320aic23.c
+index 080a840..f8e2f4b 100644
+--- a/sound/soc/codecs/tlv320aic23.c
++++ b/sound/soc/codecs/tlv320aic23.c
+@@ -67,8 +67,6 @@ static SOC_ENUM_SINGLE_DECL(rec_src_enum,
+ static const struct snd_kcontrol_new tlv320aic23_rec_src_mux_controls =
+ SOC_DAPM_ENUM("Input Select", rec_src_enum);
  
--	fh = (struct fc_frame_header *) skb_transport_header(skb);
- 	fh = fc_frame_header_get(fp);
- 	if (fh->fh_r_ctl == FC_RCTL_DD_SOL_DATA && fh->fh_type == FC_TYPE_FCP)
- 		return 0;
+-static SOC_ENUM_SINGLE_DECL(tlv320aic23_rec_src,
+-			    TLV320AIC23_ANLG, 2, rec_src_text);
+ static SOC_ENUM_SINGLE_DECL(tlv320aic23_deemph,
+ 			    TLV320AIC23_DIGT, 1, deemph_text);
+ 
 -- 
-2.20.1
+2.7.4
+
 
