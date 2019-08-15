@@ -2,83 +2,129 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC12C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D144DC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF5D2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A85BE2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:46:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mEH6ZuhE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730587AbfHOHpA (ORCPT
+        id S1730608AbfHOHqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 03:45:00 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4271 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726008AbfHOHo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 03:44:59 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7EA442442DD3B4FC2EE7;
-        Thu, 15 Aug 2019 15:44:51 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 15 Aug 2019 15:44:44 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <agross@kernel.org>, <georgi.djakov@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Mao Wenan" <maowenan@huawei.com>
-Subject: [PATCH linux-next] qcom: qcs404: remove COMPILE_TEST from CONFIG_INTERCONNECT_QCOM_QCS404
-Date:   Thu, 15 Aug 2019 15:48:48 +0800
-Message-ID: <20190815074848.195806-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        Thu, 15 Aug 2019 03:46:14 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54116 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726865AbfHOHqO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 03:46:14 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 10so519239wmp.3;
+        Thu, 15 Aug 2019 00:46:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=rkW7J4us2wcg8bjWK7lkRGJB3dDndu6H2q1x50ew6oQ=;
+        b=mEH6ZuhEu6yFarO3VDilQMa9XyC1+A49PnkX4edc04GEU6SJc3soZ5GZuZOYJX/uga
+         II44mKnolNeiXF87zZbL4vGOskKrlz0q4PEJhLd6BS+WQM6abl2BI8PSeE5fWyO9jlXw
+         g/9WBLjFHYqekAOpoi6jAaG/HeTWoWaR01qBEZzqd3fYVBlaOveHuVblKB6n/vqnx3Yx
+         Lme/3C4QwErFBZqA1Cs2SYxYNl7WjJsPvK+kfMZcFbq+ae3aUuABineWLqyPDXgaANgP
+         IsHED5ocFcuvRDFGiKI0hJLQajgXkuxQ5NfEIKnnjqNGCn+s9UvWA0yV8qHiXFR8YW5I
+         AN5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=rkW7J4us2wcg8bjWK7lkRGJB3dDndu6H2q1x50ew6oQ=;
+        b=AKIqLNqQw7czvsu2nFJCcIqgyjFKPZxu/75qQM5Oy8v4MCV4DZb+WdYzrNKULu66Ys
+         AFCOneVT3P7a9pFvvpcXCFfVdIL9gu6MFAHo5mNwxRMgzy32tFqt7xyDCxDoeaDYFgYv
+         P6xp5Iv4MdnkjaUQU1dtQjmTN9AWGsEzis2pCT7SSUFlISw9b/dZoXSlmnxFiOLxf5kZ
+         3JiEUl2A+JHSi/awOoAm+OubHrMG6itymL96ChbMgO0EMqL0d0iD+UDlkVVFPHyzMplX
+         OJekgfhu7IWlnJsZukLmsN2Sm2lvWCmEPD5AwpMMtrgGjO+itbsGZvGIUSIL1q+CYTi9
+         u1mw==
+X-Gm-Message-State: APjAAAVuvpfFn6h/nEIMGqdPYN+poObir683IJB8UoNW75BuUdsDLDo5
+        Fyg2lVqGZiQ8xM0QntW2UOueHTRr
+X-Google-Smtp-Source: APXvYqxymmS0GKrgkdyJOCRe8wdDwDozO5XtrGBowc+cVXMQQKh1aP+fDBlhuy3PyTrxrIB//ES6fg==
+X-Received: by 2002:a1c:cb0b:: with SMTP id b11mr1398279wmg.95.1565855171497;
+        Thu, 15 Aug 2019 00:46:11 -0700 (PDT)
+Received: from 640k.localdomain.com ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id 91sm6084837wrp.3.2019.08.15.00.46.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 00:46:11 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH] Revert "KVM: x86/mmu: Zap only the relevant pages when removing a memslot"
+Date:   Thu, 15 Aug 2019 09:46:09 +0200
+Message-Id: <1565855169-29491-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is one compilation error when CONFIG_INTERCONNECT_QCOM_QCS404=y and
-CONFIG_INTERCONNECT_QCOM_SMD_RPM=y, as well as CONFIG_COMPILE_TEST=y,
-but CONFIG_QCOM_SMD_RPM is not set, logs as below:
+This reverts commit 4e103134b862314dc2f2f18f2fb0ab972adc3f5f.
+Alex Williamson reported regressions with device assignment with
+this patch.  Even though the bug is probably elsewhere and still
+latent, this is needed to fix the regression.
 
-drivers/interconnect/qcom/smd-rpm.o: In function `qcom_icc_rpm_smd_send':
-smd-rpm.c:(.text+0xe4): undefined reference to `qcom_rpm_smd_write'
-Makefile:1071: recipe for target 'vmlinux' failed
-make: *** [vmlinux] Error 1
-
-This is because
-INTERCONNECT_QCOM_QCS404 depends on QCOM_SMD_RPM || COMPILE_TEST.
-Here CONFIG_COMPILE_TEST=y, so CONFIG_INTERCONNECT_QCOM_SMD_RPM
-is selected. If CONFIG_QCOM_SMD_RPM is not set, then
-qcom_rpm_smd_write() is not defined, and compilation error happen.
-Fix this by removing COMPILE_TEST from CONFIG_INTERCONNECT_QCOM_QCS404.
-
-Fixes: 5e4e6c4d3ae0 ("interconnect: qcom: Add QCS404 interconnect provider driver")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Fixes: 4e103134b862 ("KVM: x86/mmu: Zap only the relevant pages when removing a memslot", 2019-02-05)
+Reported-by: Alex Willamson <alex.williamson@redhat.com>
+Cc: stable@vger.kernel.org
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- drivers/interconnect/qcom/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/mmu.c | 33 +--------------------------------
+ 1 file changed, 1 insertion(+), 32 deletions(-)
 
-diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-index 339e8f1..6ab4012 100644
---- a/drivers/interconnect/qcom/Kconfig
-+++ b/drivers/interconnect/qcom/Kconfig
-@@ -8,7 +8,7 @@ config INTERCONNECT_QCOM
- config INTERCONNECT_QCOM_QCS404
- 	tristate "Qualcomm QCS404 interconnect driver"
- 	depends on INTERCONNECT_QCOM
--	depends on QCOM_SMD_RPM || COMPILE_TEST
-+	depends on QCOM_SMD_RPM
- 	select INTERCONNECT_QCOM_SMD_RPM
- 	help
- 	  This is a driver for the Qualcomm Network-on-Chip on qcs404-based
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index 8190a195623a..d14656c5407b 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -5656,38 +5656,7 @@ static void kvm_mmu_invalidate_zap_pages_in_memslot(struct kvm *kvm,
+ 			struct kvm_memory_slot *slot,
+ 			struct kvm_page_track_notifier_node *node)
+ {
+-	struct kvm_mmu_page *sp;
+-	LIST_HEAD(invalid_list);
+-	unsigned long i;
+-	bool flush;
+-	gfn_t gfn;
+-
+-	spin_lock(&kvm->mmu_lock);
+-
+-	if (list_empty(&kvm->arch.active_mmu_pages))
+-		goto out_unlock;
+-
+-	flush = slot_handle_all_level(kvm, slot, kvm_zap_rmapp, false);
+-
+-	for (i = 0; i < slot->npages; i++) {
+-		gfn = slot->base_gfn + i;
+-
+-		for_each_valid_sp(kvm, sp, gfn) {
+-			if (sp->gfn != gfn)
+-				continue;
+-
+-			kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list);
+-		}
+-		if (need_resched() || spin_needbreak(&kvm->mmu_lock)) {
+-			kvm_mmu_remote_flush_or_zap(kvm, &invalid_list, flush);
+-			flush = false;
+-			cond_resched_lock(&kvm->mmu_lock);
+-		}
+-	}
+-	kvm_mmu_remote_flush_or_zap(kvm, &invalid_list, flush);
+-
+-out_unlock:
+-	spin_unlock(&kvm->mmu_lock);
++	kvm_mmu_invalidate_zap_all_pages(kvm);
+ }
+ 
+ void kvm_mmu_init_vm(struct kvm *kvm)
 -- 
-2.7.4
+1.8.3.1
 
