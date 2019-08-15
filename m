@@ -2,143 +2,86 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A806C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DFFC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C91206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F6C206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:49:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565876977;
+	bh=XILyYvenM8mueUzNTt0fyDFTra78z6GvF3WvF2wiNso=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QRiujxF0G8gAXn3YFGIlXLNl1klD2yZlsGO0SgVowDkNN0eatb8kXzB6OfxQOPVQN
+	 CDeOgd397iBSjbvuciVMx5bk26acHDjfe2WInzmZvY4aPnBQ5jJMYgdRSoCK77R9Zr
+	 pbSd18ufNBN9GXq79pZJeqUTghgN5wIITBj4Tg44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732550AbfHONtT (ORCPT
+        id S1732565AbfHONtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:49:19 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:45307 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732504AbfHONtS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:49:18 -0400
-X-Originating-IP: 87.5.130.64
-Received: from uno.localdomain (host64-130-dynamic.5-87-r.retail.telecomitalia.it [87.5.130.64])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 8F425C0006;
-        Thu, 15 Aug 2019 13:49:15 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 15:50:42 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 3/5] media: v4l2-ctrls: Add support for V4L2_CID_LOCATION
-Message-ID: <20190815135042.mm2co73badsv2wbo@uno.localdomain>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-4-jacopo@jmondi.org>
- <6c9460e2-b607-9863-f8f0-1a94773c6556@xs4all.nl>
+        Thu, 15 Aug 2019 09:49:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732504AbfHONtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:49:35 -0400
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27F41206C1;
+        Thu, 15 Aug 2019 13:49:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565876975;
+        bh=XILyYvenM8mueUzNTt0fyDFTra78z6GvF3WvF2wiNso=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xunLVaA83Fbaa6Fdti3e4WAjMNv4cWDwWALoTHbKoJOHxmuauGkPVQJlmV+RDwQlG
+         H8fjrcVizEavv92/eMqItyQQinbOvS+TnLvnKeEGQHFX4xCd8+6eAt0AKDM8z60vSM
+         iLPyBVsIhxv6ifTeBNGEur8tiClV+4wpqBhIAjuQ=
+Received: by mail-qt1-f172.google.com with SMTP id b11so2344805qtp.10;
+        Thu, 15 Aug 2019 06:49:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAUa//32Hjekuim1sKAQL3tafU86s6dgQchZvFaqA6OED2ol8mjM
+        DbOdaCGh8OStA+xgRCSSviYlOESAzGB5/TvRTA==
+X-Google-Smtp-Source: APXvYqzFcbqOCFWw/Uma4l3oy2DjH+0PUBG+XVA7ZEMtPj5MPqhwFmHx+kGVwQMVzpYeB6DyLNHy3kVz0QEYq2nh2R4=
+X-Received: by 2002:ac8:386f:: with SMTP id r44mr4130599qtb.300.1565876974383;
+ Thu, 15 Aug 2019 06:49:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ipri7ukjihz5d7ak"
-Content-Disposition: inline
-In-Reply-To: <6c9460e2-b607-9863-f8f0-1a94773c6556@xs4all.nl>
-User-Agent: NeoMutt/20180716
+References: <20190815101613.22872-1-wen.he_1@nxp.com>
+In-Reply-To: <20190815101613.22872-1-wen.he_1@nxp.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 15 Aug 2019 07:49:23 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLp4BB+=kdGkMuH+-QQWHt8vRB_DSxjDYBFHLcHUg5V=A@mail.gmail.com>
+Message-ID: <CAL_JsqLp4BB+=kdGkMuH+-QQWHt8vRB_DSxjDYBFHLcHUg5V=A@mail.gmail.com>
+Subject: Re: [v2 1/3] dt/bindings: clk: Add YAML schemas for LS1028A Display
+ Clock bindings
+To:     Wen He <wen.he_1@nxp.com>
+Cc:     linux-devel@linux.nxdi.nxp.com,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Yang-Leo Li <leoyang.li@nxp.com>,
+        Liviu Dudau <liviu.dudau@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---ipri7ukjihz5d7ak
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Hans,
-
-On Thu, Aug 15, 2019 at 03:23:47PM +0200, Hans Verkuil wrote:
-> On 8/14/19 10:28 PM, Jacopo Mondi wrote:
-> > Add support for the newly defined V4L2_CID_LOCATION read-only control
-> > used to report the camera device mounting position.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> > ---
-> >  drivers/media/v4l2-core/v4l2-ctrls.c | 7 +++++++
-> >  include/uapi/linux/v4l2-controls.h   | 4 ++++
-> >  2 files changed, 11 insertions(+)
-> >
-> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > index 7d3a33258748..8ab0857df59a 100644
-> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > @@ -943,6 +943,7 @@ const char *v4l2_ctrl_get_name(u32 id)
-> >  	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
-> >  	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
-> >  	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
-> > +	case V4L2_CID_LOCATION:			return "Location";
-> >
-> >  	/* FM Radio Modulator controls */
-> >  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-> > @@ -1300,6 +1301,12 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
-> >  		break;
-> >  	case V4L2_CID_MPEG_VIDEO_FWHT_PARAMS:
-> >  		*type = V4L2_CTRL_TYPE_FWHT_PARAMS;
+On Thu, Aug 15, 2019 at 4:26 AM Wen He <wen.he_1@nxp.com> wrote:
 >
-> Missing break!
+> LS1028A has a clock domain PXLCLK0 used for provide pixel clocks to Display
+> output interface. Add a YAML schema for this.
 >
-
-Sorry, this was a trivial mistake. Thanks for spotting!
-
-> Regards,
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> ---
+> change in v2:
+>         - Convert bindings to YAML format
 >
-> 	Hans
->
-> > +	case V4L2_CID_LOCATION:
-> > +		*type = V4L2_CTRL_TYPE_INTEGER;
-> > +		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
-> > +		*min = V4L2_LOCATION_FRONT;
-> > +		*max = V4L2_LOCATION_BACK;
-> > +		*step = 1;
-> >  		break;
-> >  	default:
-> >  		*type = V4L2_CTRL_TYPE_INTEGER;
-> > diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> > index 37807f23231e..5c4c7b245921 100644
-> > --- a/include/uapi/linux/v4l2-controls.h
-> > +++ b/include/uapi/linux/v4l2-controls.h
-> > @@ -889,6 +889,10 @@ enum v4l2_auto_focus_range {
-> >  #define V4L2_CID_PAN_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+32)
-> >  #define V4L2_CID_TILT_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+33)
-> >
-> > +#define V4L2_CID_LOCATION			(V4L2_CID_CAMERA_CLASS_BASE+34)
-> > +#define V4L2_LOCATION_FRONT			(0 << 0)
-> > +#define V4L2_LOCATION_BACK			(1 << 0)
-> > +
-> >  /* FM Modulator class control IDs */
-> >
-> >  #define V4L2_CID_FM_TX_CLASS_BASE		(V4L2_CTRL_CLASS_FM_TX | 0x900)
-> >
->
+>  .../devicetree/bindings/clock/fsl,plldig.yaml | 43 +++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/fsl,plldig.yaml
 
---ipri7ukjihz5d7ak
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1VYzEACgkQcjQGjxah
-VjyXGg//TtjdcaQodf+iq7So6at1omA6DRghCTKwiwhy/mXsNnNp6O3SHF42nFsU
-3Mv9EBaYdzpcmaASPMiT82hxUufOT16IOVQ1L/bBs+/JHnVv0fPtw0LbmuVPIQwD
-gzGHQDKRkgzCzcp54oodPZ9UvtEvxRyUWU/GEzmewd8QTa5kccKEj9+VYPHrRhoz
-SLXzVXSj6ux5kQOvnv9Ys3a3k3EVXhEnNAGvq5kYLohvhlFeI46rQJoSZYsFOfpx
-aFLxfcoRYhOU33LEFLiOykQsIPzUyRMkzbfPOkLUSSUlgFjF8g2tAkusdOWGtU4Q
-KGd9XF4u51zc2O/nUAb0dWjgSOCmALq/Gn6hwH4rFV1pj0m9kfALYOJCwoMpCFrF
-pwxK6sVPkYRrihMz3t0aEEV6iPei9z06S5Ri7hGT+xlE6nfwn2MRy1Biia+NN95Y
-y/AJx9KzSQKba2idsSXMXYBakFJah5p5RnJhIxE1WZef0e0fdTiXnQKp9lvFhA82
-Q9s/48w/bQ2xMyM8A7G8z4NOoxeGeQEfFkytSiR2jxW9cgleDc63zVvwQdUBU+ZW
-4Doso5lGdaUBlkv84HqCAknKF3sQOcMEmpe40eDxYswJ7cTiR2h5bw3ur1VwPhRP
-eIBta5yHl9GShlIXTG5jaSLXIMHp8ZKScISLWuNl0y86ETm+JnM=
-=UjlD
------END PGP SIGNATURE-----
-
---ipri7ukjihz5d7ak--
+Reviewed-by: Rob Herring <robh@kernel.org>
