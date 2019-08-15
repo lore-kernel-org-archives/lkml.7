@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C61C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE08C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BABC3206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF3420578
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:40:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="oW3BaWcA"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="ogoZopR8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730718AbfHOQky (ORCPT
+        id S1732207AbfHOQix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:40:54 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35327 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732192AbfHOQiy (ORCPT
+        Thu, 15 Aug 2019 12:38:53 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54686 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732146AbfHOQiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:38:54 -0400
-Received: by mail-wm1-f66.google.com with SMTP id l2so1781345wmg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:38:53 -0700 (PDT)
+        Thu, 15 Aug 2019 12:38:51 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p74so1783531wme.4
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:38:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DgthrFCCKSo+iwig8awK/irhrugdjtVPjaNJ5aevwic=;
-        b=oW3BaWcAALvFELODEh+GSpdhaYHLrmF4DF1wzs3nqCAQGkASCaH/aeisAlnYFMmjvN
-         tgGuiwEasLmfpI2W9lm9bMqVaemhLcH3Kx7iY9FvUZajbMdi2wRW4JsoPVwkw+A8IQK5
-         ezw+wSNJ7pAUHfy1AspwqH9jtVShxEczbVlcLMVfxvS/wkgZK9RfOnsQ67nF5olRRrq2
-         aIbHBwm3OHPQa15kPGIYh1K+3sG1PcxIIyPFGrIOE1mf6fMUhxkzvidhm1WqUiL8sx6E
-         ZwtOtmQcfy5Gpxaf6si32vME3QQcga9oOQg+R33iHOFrYLvA2tMcYj7UJ+wUI0XCLGpo
-         zWwg==
+        bh=6riYHreczqodkxWi+cMzcb34SnBjuw/gFUTmbPSlBhc=;
+        b=ogoZopR8kxLSbNtSnxJcM7HYNpPxnloMNhkRdQzlOBpdPYVl4ZiQTJAeM8YKOWpqUX
+         3Ig+Iloyg2LvDe9nfSnDI92lol2If9rNtkaIr8AOiOgzWOfPGzfWWHcMU1bWeGlt03MP
+         CxIzInneqPrIqGAGKK8S0J7L8Aq1XDCHSvwQYmECySE6FuMxutZJ10inWluZfxXxxXve
+         /+Y9kxV0KAGSpvo+au+s7JTukh71cUd88Lmo7tIJS1zvVKfFp+Rh/O3nLnWB4cjl+qh7
+         9n5UuJbA8AZxMrAZLsTT7aBr1fYrpOUi0GhuS51iWr5vSFfvfkcdWdw3HLtt8Hsujuno
+         N8yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DgthrFCCKSo+iwig8awK/irhrugdjtVPjaNJ5aevwic=;
-        b=aeMKh7TKQ00MNcfY5xhyPZK4YJyyk0CSn1S/fHqARnoy1tKcvDI4GQC/7oZa1Uh9qE
-         dZ1H3lzahsneG16hyISBbcosc/cBa94EYWoiwXJ06wh3OpV0UC1MIq1NytcwuofVUMcr
-         J9vx5Oiiuc6R82Fzjo2sn7kx7OCtl+yFZiL2b6k9sg7N/m1ZfhGvpO1d2iXiNbM0OufW
-         SG9x3/+ovquB/xHa4knfdPt5l5Y35+y1ElF7oivb5e1dinLfpKZP97lGo2ktkgckfxOD
-         FMBodcC9iUpFbdNHhc3BWdpTLUOCDTApFccUJsunEUKxpgCTqy/za2AhKzz14cRQsIia
-         +cPw==
-X-Gm-Message-State: APjAAAXvlfgJFt9K/qwimL8cS529nY5l9zkc3csbeNbMX782pNi0erNH
-        L1pEWY4WgwNbE9ok8bvIdjzbaQ74BXg=
-X-Google-Smtp-Source: APXvYqzTQJAXQS5sEnwrK9Bf47nd6xLGeXzGg3gFSvpJt4T0339TtBkkbgjXfGaSmUeUa3jH1NBFZw==
-X-Received: by 2002:a05:600c:2311:: with SMTP id 17mr3569521wmo.68.1565887132404;
-        Thu, 15 Aug 2019 09:38:52 -0700 (PDT)
+        bh=6riYHreczqodkxWi+cMzcb34SnBjuw/gFUTmbPSlBhc=;
+        b=MFnzP7Or1Gd5dIBDrkco5Ga6q11UAEfQXluHigXWwwm/Fy5JD05PRmgQm3c173lFyh
+         ZLMZTrXbZBuJgu9Br5gnaU6uA0GSCSlMnQB1qm6zHbu29gDxtMfui+GbmnInQucELc1D
+         Kln0EWe24rbJmg5Aq9iW48+e/zE4V35UObW0FNgrrS/pNspqJpOw9m/0vPU46ZN0VsHE
+         cHyEnr8CO6PqxO0PpliaM6OQLkQHxw8BYKrvoNAkYsQqlQKtYFwvm8RDbAJaFLBf4FVc
+         ZOGx2CT4paV5KGJ8L637WEvWeLf+wF8EQqht8DGILDV2J2F2uXo2qfUo8VazYKIM87Rq
+         dykA==
+X-Gm-Message-State: APjAAAVdLRGtV1A7owF/DOWJOkewhXenvItFNdvjSaEo4UaUag1PL6aG
+        pNGpDBFNHVrKGivpHFlZUSOKoxYHf/I=
+X-Google-Smtp-Source: APXvYqzLGVLjiKtzvNe5FU0arXM4WVBkh0Fh7PQV+Wr8fi9/4cCubo+pJQ4l+P/lanXaNYZAkTqcwQ==
+X-Received: by 2002:a1c:c90c:: with SMTP id f12mr3448398wmb.23.1565887128296;
+        Thu, 15 Aug 2019 09:38:48 -0700 (PDT)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id f7sm5755046wrf.8.2019.08.15.09.38.51
+        by smtp.gmail.com with ESMTPSA id f7sm5755046wrf.8.2019.08.15.09.38.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 09:38:51 -0700 (PDT)
+        Thu, 15 Aug 2019 09:38:47 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -77,9 +77,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
         linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv6 10/36] kernel: Add do_timens_ktime_to_host() helper
-Date:   Thu, 15 Aug 2019 17:38:10 +0100
-Message-Id: <20190815163836.2927-11-dima@arista.com>
+Subject: [PATCHv6 07/36] posix-clocks: Introduce clock_get_ktime() callback
+Date:   Thu, 15 Aug 2019 17:38:07 +0100
+Message-Id: <20190815163836.2927-8-dima@arista.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190815163836.2927-1-dima@arista.com>
 References: <20190815163836.2927-1-dima@arista.com>
@@ -92,106 +92,183 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andrei Vagin <avagin@gmail.com>
 
-The helper subtracts namespace's clock offset from the given time
-and checks that the result is in [0, KTIME_MAX].
+The callsite in common_timer_get() has already a comment:
+    /*
+     * The timespec64 based conversion is suboptimal, but it's not
+     * worth to implement yet another callback.
+     */
+    kc->clock_get(timr->it_clock, &ts64);
+    now = timespec64_to_ktime(ts64);
 
+The upcoming support for time namespaces requires to have access to:
+- The time in a task's time namespace for sys_clock_gettime()
+- The time in the root name space for common_timer_get()
+
+That adds a valid reason to finally implement a separate callback which
+returns the time in ktime_t format.
+
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Andrei Vagin <avagin@gmail.com>
 Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- include/linux/time_namespace.h | 17 ++++++++++++++
- kernel/time_namespace.c        | 43 ++++++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
+ kernel/time/alarmtimer.c   | 19 ++++++++++++++++++-
+ kernel/time/posix-timers.c | 26 +++++++++++++++++++++++++-
+ kernel/time/posix-timers.h |  3 +++
+ 3 files changed, 46 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
-index 334c1a1c6607..9ba9664ff0ab 100644
---- a/include/linux/time_namespace.h
-+++ b/include/linux/time_namespace.h
-@@ -56,6 +56,18 @@ static inline void timens_add_boottime(struct timespec64 *ts)
- 		*ts = timespec64_add(*ts, ns_offsets->boottime);
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index 7732f0aabf6a..c8f8cf3d7d08 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -651,7 +651,7 @@ static int alarm_clock_getres(const clockid_t which_clock, struct timespec64 *tp
+  * @which_clock: clockid
+  * @tp: timespec to fill.
+  *
+- * Provides the underlying alarm base time.
++ * Provides the underlying alarm base time in a tasks time namespace.
+  */
+ static int alarm_clock_get_timespec(clockid_t which_clock, struct timespec64 *tp)
+ {
+@@ -663,6 +663,22 @@ static int alarm_clock_get_timespec(clockid_t which_clock, struct timespec64 *tp
+ 	return base->get_timespec(base->base_clockid, tp);
  }
  
-+ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim,
-+				struct timens_offsets *offsets);
-+static inline ktime_t timens_ktime_to_host(clockid_t clockid, ktime_t tim)
++/**
++ * alarm_clock_get_ktime - posix clock_get_ktime interface
++ * @which_clock: clockid
++ *
++ * Provides the underlying alarm base time in the root namespace.
++ */
++static ktime_t alarm_clock_get_ktime(clockid_t which_clock)
 +{
-+	struct timens_offsets *offsets = current->nsproxy->time_ns->offsets;
++	struct alarm_base *base = &alarm_bases[clock2alarm(which_clock)];
 +
-+	if (!offsets)
-+		return tim;
++	if (!alarmtimer_get_rtcdev())
++		return -EINVAL;
 +
-+	return do_timens_ktime_to_host(clockid, tim, offsets);
++	return base->get_ktime();
 +}
 +
- #else
- static inline struct time_namespace *get_time_ns(struct time_namespace *ns)
+ /**
+  * alarm_timer_create - posix timer_create interface
+  * @new_timer: k_itimer pointer to manage
+@@ -826,6 +842,7 @@ static int alarm_timer_nsleep(const clockid_t which_clock, int flags,
+ 
+ const struct k_clock alarm_clock = {
+ 	.clock_getres		= alarm_clock_getres,
++	.clock_get_ktime	= alarm_clock_get_ktime,
+ 	.clock_get_timespec	= alarm_clock_get_timespec,
+ 	.timer_create		= alarm_timer_create,
+ 	.timer_set		= common_timer_set,
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index 43049c5f1a22..7cf1216050d1 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -171,6 +171,11 @@ int posix_get_realtime_timespec(clockid_t which_clock, struct timespec64 *tp)
+ 	return 0;
+ }
+ 
++static ktime_t posix_get_realtime_ktime(clockid_t which_clock)
++{
++	return ktime_get_real();
++}
++
+ /* Set clock_realtime */
+ static int posix_clock_realtime_set(const clockid_t which_clock,
+ 				    const struct timespec64 *tp)
+@@ -193,6 +198,11 @@ static int posix_get_monotonic_timespec(clockid_t which_clock, struct timespec64
+ 	return 0;
+ }
+ 
++static ktime_t posix_get_monotonic_ktime(clockid_t which_clock)
++{
++	return ktime_get();
++}
++
+ /*
+  * Get monotonic-raw time for posix timers
+  */
+@@ -228,12 +238,22 @@ int posix_get_boottime_timespec(const clockid_t which_clock, struct timespec64 *
+ 	return 0;
+ }
+ 
++static ktime_t posix_get_boottime_ktime(const clockid_t which_clock)
++{
++	return ktime_get_boottime();
++}
++
+ static int posix_get_tai_timespec(clockid_t which_clock, struct timespec64 *tp)
  {
-@@ -82,6 +94,11 @@ static inline int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *ts
+ 	ktime_get_clocktai_ts64(tp);
+ 	return 0;
+ }
  
- static inline void timens_add_monotonic(struct timespec64 *ts) {}
- static inline void timens_add_boottime(struct timespec64 *ts) {}
-+
-+static inline ktime_t timens_ktime_to_host(clockid_t clockid, ktime_t tim)
++static ktime_t posix_get_tai_ktime(clockid_t which_clock)
 +{
-+	return tim;
-+}
- #endif
- 
- #endif /* _LINUX_TIMENS_H */
-diff --git a/kernel/time_namespace.c b/kernel/time_namespace.c
-index 394a9e168e7c..ff2c5de7e815 100644
---- a/kernel/time_namespace.c
-+++ b/kernel/time_namespace.c
-@@ -16,6 +16,49 @@
- #include <linux/err.h>
- #include <linux/mm.h>
- 
-+ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim,
-+				struct timens_offsets *ns_offsets)
-+{
-+	ktime_t offset;
-+
-+	switch (clockid) {
-+	case CLOCK_MONOTONIC:
-+		offset = timespec64_to_ktime(ns_offsets->monotonic);
-+		break;
-+	case CLOCK_BOOTTIME:
-+	case CLOCK_BOOTTIME_ALARM:
-+		offset = timespec64_to_ktime(ns_offsets->boottime);
-+		break;
-+	default:
-+		return tim;
-+	}
-+
-+	/*
-+	 * Check that @tim value is in [offset, KTIME_MAX + offset]
-+	 * and subtract offset.
-+	 */
-+	if (tim < offset) {
-+		/*
-+		 * User can specify @tim *absolute* value - if it's lesser than
-+		 * the time namespace's offset - it's already expired.
-+		 */
-+		tim = 0;
-+	} else if (KTIME_MAX - tim < -offset) {
-+		/*
-+		 * User-supplied @tim may be close or even equal KTIME_MAX
-+		 * and time namespace offset can be negative.
-+		 * Let's check (tim - offset) for an overflow.
-+		 * Return KTIME_MAX in such case, as the time value is
-+		 * thousands *years* in future anyway.
-+		 */
-+		tim = KTIME_MAX;
-+	} else {
-+		tim = ktime_sub(tim, offset);
-+	}
-+
-+	return tim;
++	return ktime_get_clocktai();
 +}
 +
- static struct ucounts *inc_time_namespaces(struct user_namespace *ns)
+ static int posix_get_hrtimer_res(clockid_t which_clock, struct timespec64 *tp)
  {
- 	return inc_ucount(ns, current_euid(), UCOUNT_TIME_NAMESPACES);
+ 	tp->tv_sec = 0;
+@@ -781,7 +801,7 @@ static void common_hrtimer_arm(struct k_itimer *timr, ktime_t expires,
+ 	 * Posix magic: Relative CLOCK_REALTIME timers are not affected by
+ 	 * clock modifications, so they become CLOCK_MONOTONIC based under the
+ 	 * hood. See hrtimer_init(). Update timr->kclock, so the generic
+-	 * functions which use timr->kclock->clock_get_timespec() work.
++	 * functions which use timr->kclock->clock_get_*() work.
+ 	 *
+ 	 * Note: it_clock stays unmodified, because the next timer_set() might
+ 	 * use ABSTIME, so it needs to switch back.
+@@ -1268,6 +1288,7 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
+ static const struct k_clock clock_realtime = {
+ 	.clock_getres		= posix_get_hrtimer_res,
+ 	.clock_get_timespec	= posix_get_realtime_timespec,
++	.clock_get_ktime	= posix_get_realtime_ktime,
+ 	.clock_set		= posix_clock_realtime_set,
+ 	.clock_adj		= posix_clock_realtime_adj,
+ 	.nsleep			= common_nsleep,
+@@ -1285,6 +1306,7 @@ static const struct k_clock clock_realtime = {
+ static const struct k_clock clock_monotonic = {
+ 	.clock_getres		= posix_get_hrtimer_res,
+ 	.clock_get_timespec	= posix_get_monotonic_timespec,
++	.clock_get_ktime	= posix_get_monotonic_ktime,
+ 	.nsleep			= common_nsleep,
+ 	.timer_create		= common_timer_create,
+ 	.timer_set		= common_timer_set,
+@@ -1314,6 +1336,7 @@ static const struct k_clock clock_monotonic_coarse = {
+ 
+ static const struct k_clock clock_tai = {
+ 	.clock_getres		= posix_get_hrtimer_res,
++	.clock_get_ktime	= posix_get_tai_ktime,
+ 	.clock_get_timespec	= posix_get_tai_timespec,
+ 	.nsleep			= common_nsleep,
+ 	.timer_create		= common_timer_create,
+@@ -1329,6 +1352,7 @@ static const struct k_clock clock_tai = {
+ 
+ static const struct k_clock clock_boottime = {
+ 	.clock_getres		= posix_get_hrtimer_res,
++	.clock_get_ktime	= posix_get_boottime_ktime,
+ 	.clock_get_timespec	= posix_get_boottime_timespec,
+ 	.nsleep			= common_nsleep,
+ 	.timer_create		= common_timer_create,
+diff --git a/kernel/time/posix-timers.h b/kernel/time/posix-timers.h
+index b3cc9ee36a6b..183994f7e466 100644
+--- a/kernel/time/posix-timers.h
++++ b/kernel/time/posix-timers.h
+@@ -6,8 +6,11 @@ struct k_clock {
+ 				struct timespec64 *tp);
+ 	int	(*clock_set)(const clockid_t which_clock,
+ 			     const struct timespec64 *tp);
++	/* Returns the clock value in the current time namespace. */
+ 	int	(*clock_get_timespec)(const clockid_t which_clock,
+ 				      struct timespec64 *tp);
++	/* Returns the clock value in the root time namespace. */
++	ktime_t	(*clock_get_ktime)(const clockid_t which_clock);
+ 	int	(*clock_adj)(const clockid_t which_clock, struct __kernel_timex *tx);
+ 	int	(*timer_create)(struct k_itimer *timer);
+ 	int	(*nsleep)(const clockid_t which_clock, int flags,
 -- 
 2.22.0
 
