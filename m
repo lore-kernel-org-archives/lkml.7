@@ -2,72 +2,140 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F64CC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00339C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC4AC2086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:12:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GlWiNQ+L"
+	by mail.kernel.org (Postfix) with ESMTP id C258820644
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565907172;
+	bh=G/b2bcj6Snv17mmT0yDLb7pCowc74GtOlBXWNz/6aGA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xAO1nhMky2KbEebzfBU+84W2i65NHiDHznXdWad7Lh1oYqHapY5X2eeLKlc910evI
+	 ct1joy6GUZAwps6HVPWxSLVXjjEZNwKMzv8CPDmQz5VafflAMvtE/OEJyMjE2zm0OF
+	 WuTjD61BkgdsUFA+qxVjdQS61gD++Qhr6THMkd08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731451AbfHOWMo (ORCPT
+        id S1731771AbfHOWMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 18:12:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:32982 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbfHOWMo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 18:12:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CS1ls6fq54lREgwpnKLgVGit1qnhnnyNRdGhQ3qigkg=; b=GlWiNQ+LLSaNEkZ0BtXZ+duZ7
-        +wAVJ8xYVOA2PT3bcgaKgpvarmXa3aaKlXWhLa17eINI2gLof1x1+CDNfGVXJ8aBbYVxwZDggtDDg
-        hFGXiEnjjev2s03n/ij0hZ94oF6WKYjXcHj3xdIsxga4iiSKqQW91gvhVwvL9E4a5KBiBGpRYBKgG
-        QO6h69iijBSguBdWVGTFDyRLioWNjiQzKewAsDRnrh1ZW2VMIa6J3Trfs1C10z4KlxlJODYiztaZt
-        grtia0YECRIdf2kYntNWkXqlNOFH1pg0v4uHfWxy8hDmTYJDGWy4iI3Y64gDPY52PzRvBLc+egKra
-        6z7/JCLqA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hyNz3-0006jw-Cr; Thu, 15 Aug 2019 22:12:37 +0000
-Subject: Re: [PATCH] Documentation/admin-guide: Embargoed hardware security
- issues
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-kernel@vger.kernel.org, security@kernel.org,
-        linux-doc@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Kosina <jkosina@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-References: <20190725130113.GA12932@kroah.com>
- <20190725151302.16a3e0e3@lwn.net> <20190815212019.GB12041@kroah.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e3ae0d66-b9eb-97ba-647a-57f3e2eb4af2@infradead.org>
-Date:   Thu, 15 Aug 2019 15:12:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 15 Aug 2019 18:12:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726357AbfHOWMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 18:12:51 -0400
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61A6A20644;
+        Thu, 15 Aug 2019 22:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565907170;
+        bh=G/b2bcj6Snv17mmT0yDLb7pCowc74GtOlBXWNz/6aGA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Ehmx0dlYnGogaJaM5WZqce4bZUoxVsgGVsAiQFAGEiNR9KEoqKw/EzSIJFAhAJlvo
+         HsMAOJ93DKqEe618RPA0l8QXFSBvI4olXgam3VpvTDFZ3YNCPaNUFNEcLHOGagas5f
+         +ubsFh5u/jBdK+B6WBfPSJ82EQAsmAqHE+Zuj2dw=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-omap@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH] clk: ti: Don't reference clk_init_data after registration
+Date:   Thu, 15 Aug 2019 15:12:49 -0700
+Message-Id: <20190815221249.53235-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
 MIME-Version: 1.0
-In-Reply-To: <20190815212019.GB12041@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/15/19 2:20 PM, Greg Kroah-Hartman wrote:
->>> +The hardware security team will provide a per incident specific encrypted
->> s/per incident specific/incident-specific/
-> Fixed.  And changed /a/ to /an/
+A future patch is going to change semantics of clk_register() so that
+clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
+referencing this member here so that we don't run into NULL pointer
+exceptions.
 
-eh?  still should be /a per incident/
+Cc: Tero Kristo <t-kristo@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
 
+This might be causing boot regressions in linux-next. Not sure.
+
+ drivers/clk/ti/apll.c | 9 +++++----
+ drivers/clk/ti/dpll.c | 9 +++++----
+ 2 files changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/clk/ti/apll.c b/drivers/clk/ti/apll.c
+index 015a657d3382..ac5bc8857a51 100644
+--- a/drivers/clk/ti/apll.c
++++ b/drivers/clk/ti/apll.c
+@@ -140,6 +140,7 @@ static void __init omap_clk_register_apll(void *user,
+ 	struct clk_hw_omap *clk_hw = to_clk_hw_omap(hw);
+ 	struct dpll_data *ad = clk_hw->dpll_data;
+ 	struct clk *clk;
++	const struct clk_init_data *init = clk_hw->hw.init;
+ 
+ 	clk = of_clk_get(node, 0);
+ 	if (IS_ERR(clk)) {
+@@ -168,15 +169,15 @@ static void __init omap_clk_register_apll(void *user,
+ 	clk = ti_clk_register_omap_hw(NULL, &clk_hw->hw, node->name);
+ 	if (!IS_ERR(clk)) {
+ 		of_clk_add_provider(node, of_clk_src_simple_get, clk);
+-		kfree(clk_hw->hw.init->parent_names);
+-		kfree(clk_hw->hw.init);
++		kfree(init->parent_names);
++		kfree(init);
+ 		return;
+ 	}
+ 
+ cleanup:
+ 	kfree(clk_hw->dpll_data);
+-	kfree(clk_hw->hw.init->parent_names);
+-	kfree(clk_hw->hw.init);
++	kfree(init->parent_names);
++	kfree(init);
+ 	kfree(clk_hw);
+ }
+ 
+diff --git a/drivers/clk/ti/dpll.c b/drivers/clk/ti/dpll.c
+index 659dadb23279..f3f609c465a7 100644
+--- a/drivers/clk/ti/dpll.c
++++ b/drivers/clk/ti/dpll.c
+@@ -165,6 +165,7 @@ static void __init _register_dpll(void *user,
+ 	struct clk_hw_omap *clk_hw = to_clk_hw_omap(hw);
+ 	struct dpll_data *dd = clk_hw->dpll_data;
+ 	struct clk *clk;
++	const struct clk_init_data *init = hw->init;
+ 
+ 	clk = of_clk_get(node, 0);
+ 	if (IS_ERR(clk)) {
+@@ -196,15 +197,15 @@ static void __init _register_dpll(void *user,
+ 
+ 	if (!IS_ERR(clk)) {
+ 		of_clk_add_provider(node, of_clk_src_simple_get, clk);
+-		kfree(clk_hw->hw.init->parent_names);
+-		kfree(clk_hw->hw.init);
++		kfree(init->parent_names);
++		kfree(init);
+ 		return;
+ 	}
+ 
+ cleanup:
+ 	kfree(clk_hw->dpll_data);
+-	kfree(clk_hw->hw.init->parent_names);
+-	kfree(clk_hw->hw.init);
++	kfree(init->parent_names);
++	kfree(init);
+ 	kfree(clk_hw);
+ }
+ 
 -- 
-~Randy
+Sent by a computer through tubes
+
