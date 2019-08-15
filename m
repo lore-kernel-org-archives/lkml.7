@@ -2,106 +2,198 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E377FC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D57C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B61292089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565885536;
-	bh=Kb2LiuIF1S/oXcqeHW1qMfCRG37dm3QbSZje55wpusU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e+sTT0JXiN/kUbMytxbgujQYIJdsEUsqKoYhMgQDlFgl+G0xASdJVOMK3OjC8hd2D
-	 kYJc/RD9aPosQSb+GIRjOSRuazWoJYLPJum2SM6am4phs0vNsD2uUsZfU1TXoa6/A0
-	 jmcUi0pV/dGK9tLPZafKJyHqwf4c8eZHnrDGtlkQ=
+	by mail.kernel.org (Postfix) with ESMTP id AE6AA2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:12:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eiC7bBGV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730619AbfHOQMQ (ORCPT
+        id S1730654AbfHOQMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:12:16 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42095 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729151AbfHOQMP (ORCPT
+        Thu, 15 Aug 2019 12:12:55 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43424 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbfHOQMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:12:15 -0400
-Received: by mail-qt1-f194.google.com with SMTP id t12so2870936qtp.9;
-        Thu, 15 Aug 2019 09:12:14 -0700 (PDT)
+        Thu, 15 Aug 2019 12:12:55 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y8so2669519wrn.10
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:12:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iTIKIuhQjFmLzffUqNs0d7EM6m2UJCFz471NWYlW/kA=;
-        b=QXjkEAHzvaI4d+a1jTu1uuBdBcwkiUcidF6xSV/xQKF2N7ucXBCF5Hej38FIPF0Lm3
-         9fWE+N6hf68OLIhzBONo5J5LQOEGzbqPKECQp+aEdwFdT+opMpMJ1qGxqzQD9gdQCPEz
-         IecizOukDzYwhTyD2KWejogmiAgKaK1vXPLIaF4L9biBH+TFPKprcr2WQ/6fGoTrK2rx
-         p6Un0uytpeqSTUTd8k+dvepjTTMJOAFXt4wObsUiZTFbAJFHR3q+4a3Y/b8ZvK/foXDm
-         wpA60ZcOdP6GWCrYCNX13gHb4P/T2mGkfQelkmBGCL+lGa6+8NnbqBd7hYAfkgZPkPEV
-         CS9w==
+        d=linaro.org; s=google;
+        h=subject:to:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lqiqYNpMEwE3vp9HpU1QGUTltN60oHlM1/c3puuxpJk=;
+        b=eiC7bBGVZ39pEFW/EDFlf9ynLuq1YbN9SoqgXB+7p7+riposGCbB9b0vGUohZImO+8
+         8PA6q0hgVUjO8eExZoXTf2qa7OVQjqKnCqtJk1+Wg15mclOqMrWU95i3XrPztxbcgkSK
+         0yNTH4AujaQCyxFRKYxi4m1FaWoyuq80WCI2aDZfTVVuUXdkS2Nm36BHS3QwUTeT+WYu
+         X9DUSGYRtYvZZcHDl8cAuLBS+6rsBHxvqn5e5A2zDNTXOfNs9uLGqYIlnSKfGwE5qnI/
+         YM4so0pb9EOr8VI/v3l8hi8hDDjJkFbpEdW81efIx3VitriFyq3ov+x1pHA65G/rdi9F
+         0GAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iTIKIuhQjFmLzffUqNs0d7EM6m2UJCFz471NWYlW/kA=;
-        b=DshGSZyBDDUsy6n0MdXUVPNma+jMuvlxlFrUV5h7A9AeJz9Nevh/ZRjX1hRnWsoQqH
-         IVWDB/OOyqs4n6nDeuPap1i8UtdE2uYP+dLnKlQ1Xr441meYWrUunrkQWVpAfLuCRCik
-         ysGyKelbR2Np/zJErNvm+FlR+Hcmd4XHpR/TRH42oSODMXVfblXvsi9HB5bSndgKjmha
-         50lydEXjH0Z0psxIc2rcs4qwha8eQN0v0sbzHigXyDe0dP8FCz3VHOpUwSMtcJ+F8Uh3
-         QU7OzYGkmU63aNRi2LO7hsLy4uEvEqp8R6koRceXbbZjFCYSk2rkt8Abf13ht5NHCfbZ
-         hQUQ==
-X-Gm-Message-State: APjAAAVjqL2yviom4OtbQgwb1fO41o+JVXMkiLziG0MbPcXRrU1+WCEW
-        n4uFlrdt8aMdJhR77Ppp2DI=
-X-Google-Smtp-Source: APXvYqyI+etnk5089VErOMk8XqgTxfwAkSptHHANrHUw1yrHJeZLiH5w0UkWbcFYiSOmm16KjfaZlA==
-X-Received: by 2002:ac8:6b8f:: with SMTP id z15mr4797796qts.62.1565885534276;
-        Thu, 15 Aug 2019 09:12:14 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:25cd])
-        by smtp.gmail.com with ESMTPSA id a21sm1430581qtj.5.2019.08.15.09.12.13
+        h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=lqiqYNpMEwE3vp9HpU1QGUTltN60oHlM1/c3puuxpJk=;
+        b=TFmNjOyntVXcY5WBAt8KUcy3qEB16gFV0Wg8ERDCn2I59bFE+PUwXx2gZ+m1R1QzeL
+         jHu/h7QdBdmK4cy3EjePQLh9VWwUHYhi2zKwwq3KexvKui9m+FXMze9lX5jvUp7Rbofk
+         OkGaXFzk+fV2P/ZG/lxGAsMfSYqUtFQtBtBoEOaS9ZYrs0J2vIPcLzJW8+ZeZFi2Chtt
+         s9Xa5R1mfOP0RwzNO3GvlQGWfF/iicSimHIAgWjjasOkh38+eu9RJv95QqYNpKrl2aoK
+         TbiylSyOc1PLMq3cht7yiyiHtHgKDxnx/WxgUaGO6AKlVA4LBBddQpWH9oPrzolv8B3k
+         eM9Q==
+X-Gm-Message-State: APjAAAU7h2AgCmioL543BWgx0FZcf8hwRPnO7CqM7wOytlxEKOZc7J+W
+        KfR0/dWK9OX8gYhmvst2BwcrUA==
+X-Google-Smtp-Source: APXvYqyoeSWzfMHJxYuIR0JuauY1YoJyaqepJYnL78QPvsTh/t3747HGVi+MWLA6qCvGIC2pnXqVdA==
+X-Received: by 2002:adf:e4c6:: with SMTP id v6mr5944264wrm.315.1565885572647;
+        Thu, 15 Aug 2019 09:12:52 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:d199:47e7:7c84:8d62? ([2a01:e34:ed2f:f020:d199:47e7:7c84:8d62])
+        by smtp.googlemail.com with ESMTPSA id e4sm5392184wrh.39.2019.08.15.09.12.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 09:12:13 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 09:12:11 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     axboe@kernel.dk, hannes@cmpxchg.org, mhocko@kernel.org,
-        vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH 3/4] writeback, memcg: Implement cgroup_writeback_by_id()
-Message-ID: <20190815161211.GC588936@devbig004.ftw2.facebook.com>
-References: <20190803140155.181190-1-tj@kernel.org>
- <20190803140155.181190-4-tj@kernel.org>
- <20190815145421.GN14313@quack2.suse.cz>
+        Thu, 15 Aug 2019 09:12:52 -0700 (PDT)
+Subject: Re: [PATCH V5 5/5] arm64: dts: imx8mm: Enable cpu-idle driver
+To:     Anson.Huang@nxp.com, catalin.marinas@arm.com, will@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, tglx@linutronix.de, leonard.crestez@nxp.com,
+        aisheng.dong@nxp.com, daniel.baluta@nxp.com, ping.bai@nxp.com,
+        l.stach@pengutronix.de, abel.vesa@nxp.com,
+        andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca,
+        agx@sigxcpu.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20190710063056.35689-1-Anson.Huang@nxp.com>
+ <20190710063056.35689-5-Anson.Huang@nxp.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <34c03d76-ae61-63b4-153f-3f9911cc962e@linaro.org>
+Date:   Thu, 15 Aug 2019 18:12:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815145421.GN14313@quack2.suse.cz>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190710063056.35689-5-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 04:54:21PM +0200, Jan Kara wrote:
-> > +	/* and find the associated wb */
-> > +	wb = wb_get_create(bdi, memcg_css, GFP_NOWAIT | __GFP_NOWARN);
-> > +	if (!wb) {
-> > +		ret = -ENOMEM;
-> > +		goto out_css_put;
-> > +	}
-> 
-> One more thought: You don't want the "_create" part here, do you? If
-> there's any point in writing back using this wb, it must be attached to
-> some inode and thus it must exist. In the normal case wb_get_create() will
-> just fetch the reference and be done with it but when you feed garbage into
-> this function due to id going stale or frn structures getting corrupted due
-> to concurrent access, you can be creating bogus wb structures in bdi...
 
-Yeah, it can create wbs unnecessarily which isn't critical but also is
-easy to fix.  Will update.
+Hi Anson,
 
-Thanks.
+sorry for the late review, I've been pretty busy.
+
+If Shawn is ok, I can pick the patches 1-4 in my tree and then this one
+after you fix the comments below.
+
+On 10/07/2019 08:30, Anson.Huang@nxp.com wrote:
+
+[ ... ]
+
+> +		idle-states {
+> +			entry-method = "psci";
+> +
+> +			cpu_sleep_wait: cpu-sleep-wait {
+
+Is that a retention state or a powerdown? It is preferable to change the
+name to the idle state naming convention given in the PSCI documentation
+[1] page 16-17
+
+
+> +				compatible = "arm,idle-state";
+> +				arm,psci-suspend-param = <0x0010033>;
+> +				local-timer-stop;
+> +				entry-latency-us = <1000>;
+> +				exit-latency-us = <700>;
+> +				min-residency-us = <2700>;
+> +				wakeup-latency-us = <1500>;
+
+It is pointless to specify the entry + exit *and* the wakeup-latency [2].
+
+Thanks
+
+  -- Daniel
+
+[1]
+http://infocenter.arm.com/help/topic/com.arm.doc.den0022d/Power_State_Coordination_Interface_PDD_v1_1_DEN0022D.pdf
+
+[2]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/cpuidle/dt_idle_states.c#n41
+
+
 
 -- 
-tejun
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
