@@ -2,153 +2,103 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B642CC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA1EC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82ACC2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F79820578
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:34:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0I5b9um"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k3H9xxK5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731961AbfHOQeU (ORCPT
+        id S1731994AbfHOQe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:34:20 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33394 "EHLO
+        Thu, 15 Aug 2019 12:34:58 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46114 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730156AbfHOQeT (ORCPT
+        with ESMTP id S1730156AbfHOQe6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:34:19 -0400
-Received: by mail-wr1-f67.google.com with SMTP id u16so2783696wrr.0;
-        Thu, 15 Aug 2019 09:34:18 -0700 (PDT)
+        Thu, 15 Aug 2019 12:34:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z1so2719328wru.13;
+        Thu, 15 Aug 2019 09:34:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pTn+NtsTL+V0D+GdWsANpO5LDlMDujGKQnBTFznYvrg=;
-        b=b0I5b9umvFU/dTbkGZ8lpI4IO0BntAfcK/I9nuYpwuBM+8XbOgALyBm+ZWw4KA8Rpq
-         5QjqOnGNaJK6h456JXrc9md8wR77ry1v2+nExuB1/of/Cx6VQTNlp3zqUydXrs595iLN
-         xi5g99hILsigrn9aspf7eQbiNtWPbG3/EiHghM18mEQ2KHNbqW5o0b8YGihRneXoAX1x
-         CZGuMee8ohk2PO5cChypZvO4/JWYSUCII8yJCbl1gNJFDyTXDAQ8qKIzq9hW7w2ZpoOq
-         veLzzO3eA0lFHqAH2iGJPr8p7wHKS9A17modOPj5hy8g31swF7edmPtCA2tm+NsPkqeN
-         nzZw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZEfHwjG9N7iHX8ZUQFtAly9eYKVm35bhOLQ3YSQSUqs=;
+        b=k3H9xxK5XwKo6ni03t5dNepf9zvvZPX0K0P+Rj0+R+d2xgyd8S71Wnw6qmlQtExo6W
+         HoQHlqwRWxLZnjOJX0YsUX2HJpZfpSc9GNFmqhJllOcXBpqzTwdJq+b26z8gLHmgF0Wk
+         BEs2obOnQ0BSlI0S2g83zTzy0nTMAnbML/vCYsLB+J5tvHnxYeti0Y7PBLLltwWVWHhQ
+         vX07Movo4p+zNu0VzFsy5pSqfcLfgjVRsIw6mu+ndADyN5r1Telo1eaG/54SMcbBqN2d
+         7k50g3rwoBcmrfSusd5XFaJ5GLstlfgWfSh6UL+BKeZQP9BThWiFmN0KUEDI1/dPU3YC
+         Y7bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pTn+NtsTL+V0D+GdWsANpO5LDlMDujGKQnBTFznYvrg=;
-        b=AHqeCZKgBRsoEAs4kxiOI0EoDhnUw+SSXjunR+OwNfRbSOsuepmp3l8Eil8AtN85dL
-         /QD76zKWlTkPw81YLpxwGfFjkoXYBomFVlAbq+w0YiNyUWohMv4dMWJT6Axk5Hxi9s4F
-         5frhXVOsQluMS+ZLl0fJbNnDuo+Iqws7b+Ea7TXI6BMUKv8v5F6ZMOtAzXTQ88ryPfez
-         D23cSEvK4Qx6xHk3f/cj1YxePklYjTC7KEijDPFo+CE275h1sKzDvbIsdYs27hqqyAeG
-         ZkNTxnxLTL2Y9fA8KHSUix2TMcM39OJUFEXVhBZICG9wZmtJg0/tZEksgSheNf6rnb+v
-         4UNQ==
-X-Gm-Message-State: APjAAAUwN8x9o0b4EVJ2LN83mgEZZey2soZRlLxbG13afrFJSMtmI9sW
-        ZKbVVr+pqsgBj6xh56jBNzk=
-X-Google-Smtp-Source: APXvYqwOrCQJCIbbsm7t9XfeonICJnDff2rMsiIMCZSORG7Bv+ZFuT2VYG1FcFnDQtFQ42EJPkFZjA==
-X-Received: by 2002:adf:b64e:: with SMTP id i14mr6486128wre.248.1565886857510;
-        Thu, 15 Aug 2019 09:34:17 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f2f:3200:c0f5:392f:547b:417a? (p200300EA8F2F3200C0F5392F547B417A.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:c0f5:392f:547b:417a])
-        by smtp.googlemail.com with ESMTPSA id g14sm5756141wrb.38.2019.08.15.09.34.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 09:34:16 -0700 (PDT)
-Subject: Re: [PATCH net-next 1/1] Added BASE-T1 PHY support to PHY Subsystem
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Christian Herber <christian.herber@nxp.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-References: <20190815153209.21529-1-christian.herber@nxp.com>
- <20190815153209.21529-2-christian.herber@nxp.com>
- <20190815155613.GE15291@lunn.ch>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <2ca68436-8e49-b0b2-2460-4fcac3094b09@gmail.com>
-Date:   Thu, 15 Aug 2019 18:34:11 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZEfHwjG9N7iHX8ZUQFtAly9eYKVm35bhOLQ3YSQSUqs=;
+        b=aXdWiRtikExGYiSuo4L3ngx8qnq55D2BDhQQ8SXZc2JqhFzbjs40JESiJqs60g4Ip/
+         UVETNfs6Jryd4sQ+ZWggc42Dn7p6+n9TZeozwyeC7ZyKllfTQhrbLUY71Ma+4O3O9OQg
+         cv/11C3tTdBKiKsFhtxRqx1RzIOZqt+jbJ4NqZW3dUkluC3uicEcXdHHX4TTp+m2hQt7
+         I4+DHWHJ+7A/ioETEylaX/kaBAMlE7G0F3XyNsP1o+G3PyVKzVQ7Od3P9Cx5toooVIsA
+         FWU3eE3jY9K6fr53uByS1DgCOOwmpKuCgd4sghza4f/ATohPqU6k/u/dYukdhHff4seO
+         NmUQ==
+X-Gm-Message-State: APjAAAWmj7mLncFcde1nRjp30MCT7qqcj5N5WjegT4ryrXW3v1sBsqZo
+        JA/6cm14Ch/cI0C4hu2xZF4YSAEJc9EhkZgdQsA=
+X-Google-Smtp-Source: APXvYqzG5kqXWgwL2+xEhTWxHtT5Xl5CZ06ZoRoALleqe6tLsCTLHX2skX6B6gIWHtosFoKmVW++A78TeZ6XFunWey4=
+X-Received: by 2002:adf:e4c6:: with SMTP id v6mr6043426wrm.315.1565886896202;
+ Thu, 15 Aug 2019 09:34:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190815155613.GE15291@lunn.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190814103244.92518-1-maco@android.com> <20190814113348.GA525@ming.t460p>
+ <CAB0TPYHdaOTUKf5ix-oU7cXsV12ZW6YDYBsG+VKr6zk=RCW2NA@mail.gmail.com>
+ <20190814114646.GA14561@ming.t460p> <CAB0TPYGc8H1pJZrDX1r5wO1gyYV9rzgi3acT9mp-vxxrdA-pyA@mail.gmail.com>
+In-Reply-To: <CAB0TPYGc8H1pJZrDX1r5wO1gyYV9rzgi3acT9mp-vxxrdA-pyA@mail.gmail.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Fri, 16 Aug 2019 00:34:44 +0800
+Message-ID: <CACVXFVP0JrpUgterqHs5bvCQn7L9a-XrjDCD3BmQOLe+rgC1KQ@mail.gmail.com>
+Subject: Re: [PATCH] RFC: loop: Avoid calling blk_mq_freeze_queue() when possible.
+To:     Martijn Coenen <maco@android.com>
+Cc:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>, kernel-team@android.com,
+        Narayan Kamath <narayan@google.com>,
+        Dario Freni <dariofreni@google.com>,
+        Nikita Ioffe <ioffe@google.com>,
+        Jiyong Park <jiyong@google.com>,
+        Martijn Coenen <maco@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.08.2019 17:56, Andrew Lunn wrote:
-> On Thu, Aug 15, 2019 at 03:32:29PM +0000, Christian Herber wrote:
->> BASE-T1 is a category of Ethernet PHYs.
->> They use a single copper pair for transmission.
->> This patch add basic support for this category of PHYs.
->> It coveres the discovery of abilities and basic configuration.
->> It includes setting fixed speed and enabling auto-negotiation.
->> BASE-T1 devices should always Clause-45 managed.
->> Therefore, this patch extends phy-c45.c.
->> While for some functions like auto-neogtiation different registers are
->> used, the layout of these registers is the same for the used fields.
->> Thus, much of the logic of basic Clause-45 devices can be reused.
->>
->> Signed-off-by: Christian Herber <christian.herber@nxp.com>
->> ---
->>  drivers/net/phy/phy-c45.c    | 113 +++++++++++++++++++++++++++++++----
->>  drivers/net/phy/phy-core.c   |   4 +-
->>  include/uapi/linux/ethtool.h |   2 +
->>  include/uapi/linux/mdio.h    |  21 +++++++
->>  4 files changed, 129 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
->> index b9d4145781ca..9ff0b8c785de 100644
->> --- a/drivers/net/phy/phy-c45.c
->> +++ b/drivers/net/phy/phy-c45.c
->> @@ -8,13 +8,23 @@
->>  #include <linux/mii.h>
->>  #include <linux/phy.h>
->>  
->> +#define IS_100BASET1(phy) (linkmode_test_bit( \
->> +			   ETHTOOL_LINK_MODE_100baseT1_Full_BIT, \
->> +			   (phy)->supported))
->> +#define IS_1000BASET1(phy) (linkmode_test_bit( \
->> +			    ETHTOOL_LINK_MODE_1000baseT1_Full_BIT, \
->> +			    (phy)->supported))
-> 
-> Hi Christian
-> 
-> We already have the flag phydev->is_gigabit_capable. Maybe add a flag
-> phydev->is_t1_capable
-> 
->> +
->> +static u32 get_aneg_ctrl(struct phy_device *phydev);
->> +static u32 get_aneg_stat(struct phy_device *phydev);
-> 
-> No forward declarations please. Put the code in the right order so
-> they are not needed.
-> 
-> Thanks
-> 
->      Andrew
-> 
+On Thu, Aug 15, 2019 at 11:38 PM Martijn Coenen <maco@android.com> wrote:
+>
+> On Wed, Aug 14, 2019 at 12:47 PM Ming Lei <ming.lei@redhat.com> wrote:
+> > blk_queue_init_done() is only called in blk_queue_init_done() for
+> > this purpose, so this approach should be fine, IMO.
+>
+> I was thinking somebody might add more stuff to "init" in the future,
+> and then that new stuff would now no longer be executed for the loop
+> driver. The name "init" is pretty generic...but if that's not a
+> concern I'm happy with your proposal as well. There's one more
+> "freeze" I'd like to get rid of - we also call LOOP_SET_STATUS(64),
+> and there's a freeze in there because lo->transfer is modified. That
+> makes sense, but I was hoping we can make that freeze conditional on
+> whether lo->transfer would actually change value; if it stays the
+> same, I think freezing is not necessary.
 
-For whatever reason I don't have the original mail in my netdev inbox (yet).
+The queue freeze in SET_STATUS may not be avoided, not only
+.transfer, there are also .lo_offset, .size, filename, dio and others.
 
-+	if (IS_100BASET1(phydev) || IS_1000BASET1(phydev))
-+		ctrl = MDIO_AN_BT1_CTRL;
+If nothing will change, why does the userspace bother to send
+SET_STATUS?
 
-Code like this could be problematic once a PHY supports one of the T1 modes
-AND normal modes. Then normal modes would be unusable.
 
-I think this scenario isn't completely hypothetical. See the Aquantia
-AQCS109 that supports normal modes and (proprietary) 1000Base-T2.
-
-Maybe we need separate versions of the generic functions for T1.
-Then it would be up to the PHY driver to decide when to use which
-version.
-
-Heiner
+Thanks,
+Ming Lei
