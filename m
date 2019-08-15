@@ -7,61 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A25EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EB8C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D128F208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F5820656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:36:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="uRvTfM3C"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Y6ChTg8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731450AbfHOJfb (ORCPT
+        id S1731457AbfHOJgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 05:35:31 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:60813 "EHLO
+        Thu, 15 Aug 2019 05:36:42 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:49081 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730213AbfHOJfb (ORCPT
+        with ESMTP id S1730212AbfHOJgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 05:35:31 -0400
+        Thu, 15 Aug 2019 05:36:42 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7F9ZF2O2275041
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7F9YWkM2274938
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 15 Aug 2019 02:35:16 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7F9ZF2O2275041
+        Thu, 15 Aug 2019 02:34:32 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7F9YWkM2274938
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565861716;
-        bh=dm16HIFA/tXkgLfMM0ox8GYhHgm8U+WBAdBwW0jWldM=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=uRvTfM3CiuSckvF5rP+ZwyiI0iT0YtszK1q8XlSORTkROf+6pulYhXMxBF1GjOIN+
-         6DKJ/sRtndOOq/GBfK9uBqSG6gUXeHM7c4Ily14Z6jWlzSl+pquISmsQhmv2VpNSpA
-         qSAxze+FOfqZyEHJbGs7Q2SldKFaMpCwrNDoevwb27mVys38kbjDadxr/Wuw6+xMv7
-         pkHc8F+93a2UOJOdIuSlOzl1JIgYcbQ622eVqV24XboXOav6vyE0r2HB+3O8TkQq0t
-         MF49709HdCEHniHEuFnUwjplx4aEZ0wKp2el+WA4Lvge/9+5kAemZvYuhH78HFEqYb
-         k4BImthz66IPw==
+        s=2019071901; t=1565861673;
+        bh=s+umhOEhsoHSyOY1TbZJ6f2SLi3+/KVSM76nm/zeXII=;
+        h=Date:From:Cc:Reply-To:To:Subject:From;
+        b=Y6ChTg8+XUi2R6SOe/U5o4UDQFwNwng+lfiykFdfNWLY/K0+zz3Q5DcQNeMqcSx8p
+         SebRZRoVNkqHvrb6VTIMKX7ky6EUadC6CR1FuqICXocy597fKQExEulOLWwzeCeJTw
+         fzo2HPbhqe1w421zSIirsYt/aZhC/n3gnZhQ9AR+uoDCehffY5REw2s0xOXPqPrpV7
+         pQ/ABs9T/A5VmHSkfgA5dXa9mQY52an+K6i5Nw67vlhLy6AhhFkyRBVEBKPmCvxXAq
+         fUR63HhXHN5sGADvJLCAEleRBRzKNycDC1xF/8jkHw2I7v8eCbuiU3aqcji3U2jbRZ
+         IlEk8o0jdjBFw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7F9ZFBv2275035;
-        Thu, 15 Aug 2019 02:35:15 -0700
-Date:   Thu, 15 Aug 2019 02:35:15 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7F9YWRP2274935;
+        Thu, 15 Aug 2019 02:34:32 -0700
+Date:   Thu, 15 Aug 2019 02:34:32 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Vince Weaver <tipbot@zytor.com>
-Message-ID: <tip-3143906c2770778d89b730e0342b745d1b4a8303@git.kernel.org>
-Cc:     ak@linux.intel.com, chongjiang@chromium.org,
-        linux-kernel@vger.kernel.org, jolsa@kernel.org, sque@chromium.org,
-        hpa@zytor.com, vincent.weaver@maine.edu, adrian.hunter@intel.com,
-        namhyung@kernel.org, acme@redhat.com, mingo@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de,
-        alexander.shishkin@linux.intel.com
-Reply-To: vincent.weaver@maine.edu, adrian.hunter@intel.com, hpa@zytor.com,
-          peterz@infradead.org, alexander.shishkin@linux.intel.com,
-          tglx@linutronix.de, namhyung@kernel.org, mingo@kernel.org,
-          acme@redhat.com, chongjiang@chromium.org, ak@linux.intel.com,
-          sque@chromium.org, jolsa@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <alpine.DEB.2.21.1908011425240.14303@macbook-air>
-References: <alpine.DEB.2.21.1908011425240.14303@macbook-air>
+From:   tip-bot for Andy Shevchenko <tipbot@zytor.com>
+Message-ID: <tip-0ke3p64ksa0hnbueh52n3v3q@git.kernel.org>
+Cc:     tglx@linutronix.de, kafai@fb.com, ast@kernel.org, acme@redhat.com,
+        hpa@zytor.com, andriy.shevchenko@linux.intel.com, mingo@kernel.org,
+        songliubraving@fb.com, daniel@iogearbox.net, yhs@fb.com,
+        linux-kernel@vger.kernel.org
+Reply-To: acme@redhat.com, mingo@kernel.org, songliubraving@fb.com,
+          tglx@linutronix.de, kafai@fb.com, ast@kernel.org,
+          andriy.shevchenko@linux.intel.com, hpa@zytor.com,
+          daniel@iogearbox.net, yhs@fb.com, linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf.data documentation: Clarify
- HEADER_SAMPLE_TOPOLOGY format
-Git-Commit-ID: 3143906c2770778d89b730e0342b745d1b4a8303
+Subject: [tip:perf/core] tools: Keep list of tools in alphabetical order
+Git-Commit-ID: 38fe26b46f55538c2cb8b96500caed6ae9d59d46
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -75,68 +69,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3143906c2770778d89b730e0342b745d1b4a8303
-Gitweb:     https://git.kernel.org/tip/3143906c2770778d89b730e0342b745d1b4a8303
-Author:     Vince Weaver <vincent.weaver@maine.edu>
-AuthorDate: Thu, 1 Aug 2019 14:30:43 -0400
+Commit-ID:  38fe26b46f55538c2cb8b96500caed6ae9d59d46
+Gitweb:     https://git.kernel.org/tip/38fe26b46f55538c2cb8b96500caed6ae9d59d46
+Author:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+AuthorDate: Fri, 28 Jun 2019 20:22:09 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 14 Aug 2019 10:59:59 -0300
 
-perf.data documentation: Clarify HEADER_SAMPLE_TOPOLOGY format
+tools: Keep list of tools in alphabetical order
 
-The perf.data file format documentation for HEADER_SAMPLE_TOPOLOGY
-specifies the layout in a confusing manner that doesn't match the rest
-of the document.  This patch attempts to describe things consistent with
-the rest of the file.
+When `make help` is executed it lists the possible tools to build,
+though couple of entries is kept unordered. Fix it here.
 
-Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Chong Jiang <chongjiang@chromium.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Simon Que <sque@chromium.org>
-Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1908011425240.14303@macbook-air
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Link: https://lkml.kernel.org/n/tip-0ke3p64ksa0hnbueh52n3v3q@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf.data-file-format.txt | 25 +++++++++++++---------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+ tools/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-index d030c87ed9f5..b0152e1095c5 100644
---- a/tools/perf/Documentation/perf.data-file-format.txt
-+++ b/tools/perf/Documentation/perf.data-file-format.txt
-@@ -298,16 +298,21 @@ Physical memory map and its node assignments.
- 
- The format of data in MEM_TOPOLOGY is as follows:
- 
--   0 - version          | for future changes
--   8 - block_size_bytes | /sys/devices/system/memory/block_size_bytes
--  16 - count            | number of nodes
--
--For each node we store map of physical indexes:
--
--  32 - node id          | node index
--  40 - size             | size of bitmap
--  48 - bitmap           | bitmap of memory indexes that belongs to node
--                        | /sys/devices/system/node/node<NODE>/memory<INDEX>
-+	u64 version;            // Currently 1
-+	u64 block_size_bytes;   // /sys/devices/system/memory/block_size_bytes
-+	u64 count;              // number of nodes
-+
-+struct memory_node {
-+        u64 node_id;            // node index
-+        u64 size;               // size of bitmap
-+        struct bitmap {
-+		/* size of bitmap again */
-+                u64 bitmapsize;
-+		/* bitmap of memory indexes that belongs to node     */
-+		/* /sys/devices/system/node/node<NODE>/memory<INDEX> */
-+                u64 entries[(bitmapsize/64)+1];
-+        }
-+}[count];
- 
- The MEM_TOPOLOGY can be displayed with following command:
- 
+diff --git a/tools/Makefile b/tools/Makefile
+index 68defd7ecf5d..7e42f7b8bfa7 100644
+--- a/tools/Makefile
++++ b/tools/Makefile
+@@ -10,6 +10,7 @@ help:
+ 	@echo 'Possible targets:'
+ 	@echo ''
+ 	@echo '  acpi                   - ACPI tools'
++	@echo '  bpf                    - misc BPF tools'
+ 	@echo '  cgroup                 - cgroup tools'
+ 	@echo '  cpupower               - a tool for all things x86 CPU power'
+ 	@echo '  debugging              - tools for debugging'
+@@ -23,12 +24,11 @@ help:
+ 	@echo '  kvm_stat               - top-like utility for displaying kvm statistics'
+ 	@echo '  leds                   - LEDs  tools'
+ 	@echo '  liblockdep             - user-space wrapper for kernel locking-validator'
+-	@echo '  bpf                    - misc BPF tools'
++	@echo '  objtool                - an ELF object analysis tool'
+ 	@echo '  pci                    - PCI tools'
+ 	@echo '  perf                   - Linux performance measurement and analysis tool'
+ 	@echo '  selftests              - various kernel selftests'
+ 	@echo '  spi                    - spi tools'
+-	@echo '  objtool                - an ELF object analysis tool'
+ 	@echo '  tmon                   - thermal monitoring and tuning tool'
+ 	@echo '  turbostat              - Intel CPU idle stats and freq reporting tool'
+ 	@echo '  usb                    - USB testing tools'
