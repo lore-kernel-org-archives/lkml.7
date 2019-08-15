@@ -2,144 +2,116 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2B2C3A59B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A638C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1141621743
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:41:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="bRgOETsH"
+	by mail.kernel.org (Postfix) with ESMTP id 1D4752084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:42:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565901746;
+	bh=hhC4rC6xCUmWnx1og4XNg/kus15+Bgh/12mXOCRGfGg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w7I/ukKkytGzRmoM+o9zSNMP3D6iYpmmiZplViNLcJL32OYYE/5gM1L8Qr6uRqt7h
+	 YhPCmvSA7MFfT9Jgo1OR4zcKwTywkG6+t+fWlK0vyd3S1aeHuN23RKre6uPeh5nBHb
+	 bqnvnYa8+8sDr/kiaJh3b/mgOAQJ8DMLRsP5F2D0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732253AbfHOUli (ORCPT
+        id S1732394AbfHOUmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 16:41:38 -0400
-Received: from mail-eopbgr00044.outbound.protection.outlook.com ([40.107.0.44]:50767
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728898AbfHOUli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 16:41:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N61BRXdMrJbs+iAB67hvB7sBjTxDzxU5S+YJ+XThKFMxoXFxlKVMwkj8UU5L33blgwVQrugodymtKRAJZFljrp210LDdILJ8aXgizmnGdJn9gmLeVYESNPypX+iwpqSCSBL4ev+zxH8YFkQC+0JeHsyAHXVzisKhWUoG3tTJ/crgVz/AknkYSNmzYMKCnFMICexSlc8ygoAkV8We2U3LfFIDETC6Z1qVjzYBpZLbSrG14M1jzOgxfM+IrBc3Bw20j4CQmzlVWO6ebBzyvDEM643ZNzJ0tQtFJQpq5ep0QlDPhZjtZXbMenaOot8xJFyD7g6YDNOYhBuQqcnwCNVw8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8J6vbzMCny0M9Y2WhM22XSfEOXaGP5rhwsX2c6YCsnE=;
- b=CovEG8nrMPTu8cae/9fVq7tbHvVXNcfMkcWjTJouwLeV8mde9KKvAz7bVV51LGSWmyIwfP2+vcXvzeD5hNoJU30SuItBJ6PM8TdNQ+jqQ/UA1UXaOhcOiL3ngOLJIbc5ekU+Jisxzo7FL2F5AU/WeuG8SmxvEoPfZOU6BPY8raAfoeK6EQVIMo9+KdN9xv0JonHIY4oYrSVXxSn1bX1fHEJVld9jOxj7QMLucHON5hf1ykp/3AD5TlHcWSHKBuMjUyw/jtzZ4chAoDZBPbQXXKGwHxxPcFFES9i5ekEL3lPowNxxq1YiuCFQdsADEH5QzcjEhNTmIplxj8wfHT5y1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8J6vbzMCny0M9Y2WhM22XSfEOXaGP5rhwsX2c6YCsnE=;
- b=bRgOETsHmSCoYVqwf0dsz7VCCTSo2XHxVmPz3n5KUil5Ul15pbEAEfX/s1O7vYk5gGoGK5ZgZ+yqKUTQGkyg1g/vP8I0yoBfsrIHM6norBKuUheP1P1MXR9ZW13xksXwjNT/WbZhUWdjBZhYcY8quGU/syePyCe/DlH1+bQ7lKU=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB4222.eurprd05.prod.outlook.com (52.133.12.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Thu, 15 Aug 2019 20:41:33 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
- 20:41:33 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Jerome Glisse <jglisse@redhat.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
-Thread-Topic: [PATCH 04/15] mm: remove the pgmap field from struct
- hmm_vma_walk
-Thread-Index: AQHVTHDc5B4IgstYQk6yBJaVfn8xGqbv9wIAgAARNACAAMySgIAJE76AgABlPQCAAGF5AIAAFowAgAHIzYCAABojAIAAAd6AgAAIBgCAAAXLAIAAAlcA
-Date:   Thu, 15 Aug 2019 20:41:33 +0000
-Message-ID: <20190815204128.GI22970@mellanox.com>
-References: <20190808065933.GA29382@lst.de>
- <CAPcyv4hMUzw8vyXFRPe2pdwef0npbMm9tx9wiZ9MWkHGhH1V6w@mail.gmail.com>
- <20190814073854.GA27249@lst.de> <20190814132746.GE13756@mellanox.com>
- <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com>
- <20190815180325.GA4920@redhat.com>
- <CAPcyv4g4hzcEA=TPYVTiqpbtOoS30ahogRUttCvQAvXQbQjfnw@mail.gmail.com>
- <20190815194339.GC9253@redhat.com>
- <CAPcyv4jid8_=-8hBpn_Qm=c4S8BapL9B9RGT7e9uu303yH=Yqw@mail.gmail.com>
- <20190815203306.GB25517@redhat.com>
-In-Reply-To: <20190815203306.GB25517@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YQBPR0101CA0022.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00::35) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1b2b123c-9b15-45c8-9bad-08d721c0f58e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4222;
-x-ms-traffictypediagnostic: VI1PR05MB4222:
-x-microsoft-antispam-prvs: <VI1PR05MB422243F481B0B7473E440DA4CFAC0@VI1PR05MB4222.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 01304918F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(366004)(346002)(39860400002)(199004)(189003)(86362001)(52116002)(305945005)(7736002)(76176011)(11346002)(2616005)(99286004)(446003)(486006)(6512007)(5660300002)(8936002)(7416002)(386003)(81156014)(81166006)(8676002)(6486002)(6506007)(66066001)(6436002)(229853002)(36756003)(6116002)(3846002)(71190400001)(71200400001)(66946007)(25786009)(66476007)(64756008)(66556008)(66446008)(256004)(53936002)(4744005)(476003)(186003)(14454004)(316002)(102836004)(2906002)(26005)(478600001)(54906003)(33656002)(4326008)(6916009)(1076003)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4222;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Hn9/f4jS1oreK6D9lcEE8F7owNFeu4pqFf5CCTXuTktZGHxtcpDmViZiustVo9MEza3PWPAYhkb0dwchQdTeJDODdQBGzXH1DdvIKO922nM6c8agb7tYoXMKRoB2d45Fb5yCKU03ZsEjgmqHyiGgykA/8EYvnHQZE6tV7bxueZPJlLLL2+mm+upD8ly7Vf5uQYHG+yS2vtMPGU5sc7JCMhhiu9D7eCuL4GwZYw/x1zB5LsWz3BYmFER+gBx4rE5uRQrdEVJAG41MfEjR2/RoUgF5uhf38a7KA/qyFcubU74bcFfGpL0sivGM3h1JoK6iqqWcSjt8VBHnrqfuaYLawN4JVmJm3w90GfAIzp9zmHJv8LCjX9IawnXyivcgUeUC1AoXufaVKfp502vvgAvKk4KtZIo2kfLGXmvR6Sb09wo=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <83C67FC496A7AF4DAD50FF0383D8AADD@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 15 Aug 2019 16:42:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728898AbfHOUmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 16:42:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 324D22083B;
+        Thu, 15 Aug 2019 20:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565901743;
+        bh=hhC4rC6xCUmWnx1og4XNg/kus15+Bgh/12mXOCRGfGg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Sadzo9zxEY/CgW6rsSNRtzb0kkw5VgC8VS5HQh22WLllJbue/j36be1WWSmf0O9qZ
+         KWyPJbFX8yD+SHg8jF++dc3hLn1lLukp0+739BMYBxl/7bPKobBQ0fYD9+II3RJB1k
+         CzhsSL7A+C+f7Edu2dafQsIFyU/6kt+dHFKv2SJ0=
+Date:   Thu, 15 Aug 2019 22:42:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        torvalds@linux-foundation.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/91] 4.19.67-stable review
+Message-ID: <20190815204221.GA6782@kroah.com>
+References: <20190814165748.991235624@linuxfoundation.org>
+ <aa683926-3df0-6f60-841a-7ea5a5e3566d@roeck-us.net>
+ <CAEUSe78A6Cvt2irKzysfRSHubVxDaEGUVaLf2UF5EHzTeiOVOw@mail.gmail.com>
+ <20190815193716.GG30437@kroah.com>
+ <20190815202004.GA1192@roeck-us.net>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b2b123c-9b15-45c8-9bad-08d721c0f58e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 20:41:33.6094
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: R+VcSZJEpHLkhAxuqrdKAUeR8g8CXJNpnFS8GoIvcGHWg2nIDsMdHldgmhSvr4CEeb7LBr1ZLYVypM4oYNX10g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4222
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190815202004.GA1192@roeck-us.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 04:33:06PM -0400, Jerome Glisse wrote:
+On Thu, Aug 15, 2019 at 01:20:04PM -0700, Guenter Roeck wrote:
+> On Thu, Aug 15, 2019 at 09:37:16PM +0200, Greg Kroah-Hartman wrote:
+> > On Thu, Aug 15, 2019 at 08:58:55AM -0500, Daniel Díaz wrote:
+> > > Hello!
+> > > 
+> > > On Thu, 15 Aug 2019 at 08:29, Guenter Roeck <linux@roeck-us.net> wrote:
+> > > >
+> > > > On 8/14/19 10:00 AM, Greg Kroah-Hartman wrote:
+> > > > > This is the start of the stable review cycle for the 4.19.67 release.
+> > > > > There are 91 patches in this series, all will be posted as a response
+> > > > > to this one.  If anyone has any issues with these being applied, please
+> > > > > let me know.
+> > > > >
+> > > > > Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
+> > > > > Anything received after that time might be too late.
+> > > > >
+> > > >
+> > > > Building x86_64:tools/perf ... failed
+> > > > --------------
+> > > > Error log:
+> > > > Warning: arch/x86/include/asm/cpufeatures.h differs from kernel
+> > > > Warning: arch/x86/include/uapi/asm/kvm.h differs from kernel
+> > > >    PERF_VERSION = 4.9.189.ge000f87
+> > > > util/machine.c: In function ‘machine__create_module’:
+> > > > util/machine.c:1088:43: error: ‘size’ undeclared (first use in this function); did you mean ‘die’?
+> > > >    if (arch__fix_module_text_start(&start, &size, name) < 0)
+> > > >                                             ^~~~
+> > > >                                             die
+> > > > util/machine.c:1088:43: note: each undeclared identifier is reported only once for each function it appears in
+> > > 
+> > > We noticed this exact failure but not on 4.19. For us, 4.19's perf builds fine.
+> > > 
+> > > On 4.9, perf failed with the error you described, as it looks like
+> > > it's missing 9ad4652b66f1 ("perf record: Fix wrong size in
+> > > perf_record_mmap for last kernel module"), though I have not verified
+> > > yet.
+> > 
+> > I've queued that up now, and will push out the 4.9-rc tree, so let's see
+> > if that fixes it or not.
+> > 
+> I think you may have pushed the 4.19 branch. Sorry for the confusion
+> I caused by attributing the problem to the wrong branch.
 
-> So nor HMM nor driver should dereference the struct page (i do not
-> think any iommu driver would either),
+Ah, I did, good catch.  I've pushed the 4.9 one now.  At least I applied
+the patch to the correct branch :)
 
-Er, they do technically deref the struct page:
+thanks,
 
-nouveau_dmem_convert_pfn(struct nouveau_drm *drm,
-			 struct hmm_range *range)
-		struct page *page;
-		page =3D hmm_pfn_to_page(range, range->pfns[i]);
-		if (!nouveau_dmem_page(drm, page)) {
-
-
-nouveau_dmem_page(struct nouveau_drm *drm, struct page *page)
-{
-	return is_device_private_page(page) && drm->dmem =3D=3D page_to_dmem(page)
-
-
-Which does touch 'page->pgmap'
-
-Is this OK without having a get_dev_pagemap() ?
-
-Noting that the collision-retry scheme doesn't protect anything here
-as we can have a concurrent invalidation while doing the above deref.
-
-Jason
+greg k-h
