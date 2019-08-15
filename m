@@ -2,137 +2,134 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE55C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62192C3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E5420656
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:25:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565897132;
-	bh=ftQgnf8Wp1pOnS7KP/vvpjSrKFv7s9UE0yLRopLUuLA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cxDi3ZvHVhmrqC/3JuHAuMxoHmYfBAlsCu1ElqHOzmX0rVDjJStPRzo3mLpA4Clm9
-	 iKxINoIwnjZYeoX+57Wc1BADPubFPBcWDwnsWWU0fbiv4qVU8//8mEcLGRDAqsHSsi
-	 Lk4VDPRW6Q3/J4M0apUcLLXthtEBsDWvDclNT9p4=
+	by mail.kernel.org (Postfix) with ESMTP id 371D420656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:29:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IK17GYF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731322AbfHOTZb (ORCPT
+        id S1732063AbfHOT3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 15:25:31 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38086 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728979AbfHOTZb (ORCPT
+        Thu, 15 Aug 2019 15:29:04 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:45764 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfHOT3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 15:25:31 -0400
-Received: by mail-qt1-f196.google.com with SMTP id x4so3537596qts.5;
-        Thu, 15 Aug 2019 12:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VqHwIynmGrKgqY+nHdfPQktZY37Sg0s5gGwFKh7tZZA=;
-        b=ah3cZCrDLz+hC9ug8hgYGTl8gXP1zafRFk2hKslTt9xpBrwf+o4L1cVWCz9ZTFadP9
-         uqbweIXyXAnQRAR8KS/9CQbNQ2Ifp+PvcgieV52JZapVueVkVFXnz3wq2v3A7y62jEvX
-         GoSZHLESJLRnXCaW66Gl5WrRWSxmluaR6qzoSIBJ+Y9fnEMLrmXVqgJxDyMtU5MdQhBV
-         m/Ld/N5QzGwF6L8WVonGM78+NODF4H6l2FtHWeCjbsB/cdymv9J8pspEJB3Uh2KCyl20
-         xq4HelVmj+8kKO2D3mFpGtfM9YL1wQqPd875auUKl5/L1viQWjxJ88iDjkfAXVDXCU+O
-         xq0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VqHwIynmGrKgqY+nHdfPQktZY37Sg0s5gGwFKh7tZZA=;
-        b=P5UBfklpKVN1mZPA/XeVH5ItAUEuf4Gr0uZfWUT9YEIvGMSS/b+Clgs75Hg7ACHvl7
-         0we1ifir838fuvuVlBl8Us+00q1OGb7PsS3t4OWBlAe+jBWvehbAXIg8bAUJV7XcvB1B
-         89MZ7OhmMWJrv9D2XB6Ehhh7n00uZKOSNSliwd99fgTONpBtXi5NvAY7uNdpnooSGWdT
-         DOJ9M66QsO7g7vVzDJxoBmZhpJc7jsUm4r2WbWl2K/JkfB1QFsPjHIKIY5FCrUf07Yvh
-         DPbLuwpjymAueWVaZy8GvJQ5A168PEt0wF3p67u7PYVMCtjTZ1HcVfw5fIPX+zPALuC6
-         1+FA==
-X-Gm-Message-State: APjAAAURS6LxYhCaiFtfCNCA2T9gIZEx8mMARie2hqPjzWGYZIxkbpIt
-        cuBXzQBMMU2A4dfPYt0u8W5obc8M
-X-Google-Smtp-Source: APXvYqzB29L4nILMp6U0eQCVyc9qYHk5Zl3/Dy4gC/rNKNLQuQ0Ji2+Lc00bwgB6x8sY1nqSjAdvGw==
-X-Received: by 2002:a0c:94a4:: with SMTP id j33mr4402041qvj.135.1565897129952;
-        Thu, 15 Aug 2019 12:25:29 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:25cd])
-        by smtp.gmail.com with ESMTPSA id n93sm1741247qte.1.2019.08.15.12.25.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 12:25:29 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 12:25:28 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>
-Cc:     linux-block@vger.kernel.org, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 block 1/2] writeback, cgroup: Adjust WB_FRN_TIME_CUT_DIV
- to accelerate foreign inode switching
-Message-ID: <20190815192528.GA2240241@devbig004.ftw2.facebook.com>
-References: <20190802190738.GB136335@devbig004.ftw2.facebook.com>
+        Thu, 15 Aug 2019 15:29:04 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FJNdsN148804;
+        Thu, 15 Aug 2019 19:28:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=ZT5a+8dUwW0M4VLS2r56lOj+0JmBlziHNtV1s3yEJP0=;
+ b=IK17GYF/plFP2TzPawGlzDk9h9rTV3nmfBkoYmfOKapDBv+RuPZ/3vMT4kzayRRqCFHb
+ 3c5hXWTzQ+bUcizALwiWwWhKLaxLYdfR+oM0u7ZF8TwIgnvotpkbfw5jUUsWU8l1rGZo
+ ExccHw/l9TDXa3GMchdA+FZaKFAeCfOBVqcrIihk6bezKRr7yRbZ2d0ldHanvLarCwBK
+ cUT+ltGR3cYN6VQ5W1w6gctc3FSkk56IzSkWApGGkNKf9oHlUgH2Km/o5s2TCEgCMWXf
+ ZNbbNz9MP7RxwZp8VoPkBHnDoICfg5GE46q0ezjpU5fEcKezh4Lg0mrzM0hUL3lSYxbw PQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2u9nbtvqwh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Aug 2019 19:28:32 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FJMoSm088307;
+        Thu, 15 Aug 2019 19:28:32 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2ucmwk2gcy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Aug 2019 19:28:32 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7FJSTFd014811;
+        Thu, 15 Aug 2019 19:28:29 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 15 Aug 2019 12:28:29 -0700
+Date:   Thu, 15 Aug 2019 12:28:27 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Brian Foster <bfoster@redhat.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Nick Bowler <nbowler@draconx.ca>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH v5 01/18] xfs: compat_ioctl: use compat_ptr()
+Message-ID: <20190815192827.GE15186@magnolia>
+References: <20190814204259.120942-1-arnd@arndb.de>
+ <20190814204259.120942-2-arnd@arndb.de>
+ <20190814213753.GP6129@dread.disaster.area>
+ <20190815071314.GA6960@infradead.org>
+ <CAK8P3a2Hjfd49XY18cDr04ZpvC5ZBGudzxqpCesbSsDf1ydmSA@mail.gmail.com>
+ <20190815080211.GA17055@infradead.org>
+ <20190815102649.GA10821@infradead.org>
+ <20190815121511.GR6129@dread.disaster.area>
+ <20190815140355.GA11012@infradead.org>
+ <CAK8P3a1iNu7m=gy-NauXVBky+cBk8TPWwfWXO4gSw1mRPJefJA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190802190738.GB136335@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAK8P3a1iNu7m=gy-NauXVBky+cBk8TPWwfWXO4gSw1mRPJefJA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=809
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908150184
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=855 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908150184
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WB_FRN_TIME_CUT_DIV is used to tell the foreign inode detection logic
-to ignore short writeback rounds to prevent getting confused by a
-burst of short writebacks.  The parameter is currently 2 meaning that
-anything smaller than half of the running average writback duration
-will be ignored.
+On Thu, Aug 15, 2019 at 09:20:32PM +0200, Arnd Bergmann wrote:
+> On Thu, Aug 15, 2019 at 4:04 PM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > On Thu, Aug 15, 2019 at 10:15:12PM +1000, Dave Chinner wrote:
+> > > > http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-ioctl-table
+> > >
+> > > Lots to like in that handful of patches. :)
+> > >
+> > > It can easily go before or after Arnd's patch, and the merge
+> > > conflict either way would be minor, so I'm not really fussed either
+> > > way this gets sorted out...
+> >
+> > The other thing we could do is to just pick the two important ones:
+> >
+> > http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-ioctl-table-5.3
+> >
+> > and throw that into Arnds series, or even 5.3, and then defer the
+> > table thing until later.
+> 
+> If we can have your "xfs: fall back to native ioctls for unhandled compat
+> ones" in 5.3, that would be ideal from my side, then I can just drop the
+> corresponding patch from my series and have the rest merged for 5.4.
+> 
+> The compat_ptr addition is independent of my series, I just added it
+> because I noticed it was missing, so we can merged that through
+> the xfs tree along with your other changes, either for 5.3 or 5.4.
 
-This is unnecessarily aggressive.  The detection logic uses 16 history
-slots and is already reasonably protected against some short bursts
-confusing it and the current parameter can lead to tens of seconds of
-missed detection depending on the writeback pattern.
+Er... do the two patches in the -5.3 branch actually fix something
+that's broken?  I sense s390 is missing a pointer sanitization check or
+something...?
 
-Let's change the parameter to 8, so that it only ignores writeback
-with are smaller than 12.5% of the current running average.
+--D
 
-v2: Add comment explaining what's going on with the foreign detection
-    parameters.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Jan Kara <jack@suse.cz>
----
- fs/fs-writeback.c |   22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
-
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -224,10 +224,28 @@ static void wb_wait_for_completion(struc
- 
- #ifdef CONFIG_CGROUP_WRITEBACK
- 
--/* parameters for foreign inode detection, see wb_detach_inode() */
-+/*
-+ * Parameters for foreign inode detection, see wbc_detach_inode() to see
-+ * how they're used.
-+ *
-+ * These paramters are inherently heuristical as the detection target
-+ * itself is fuzzy.  All we want to do is detaching an inode from the
-+ * current owner if it's being written to by some other cgroups too much.
-+ *
-+ * The current cgroup writeback is built on the assumption that multiple
-+ * cgroups writing to the same inode concurrently is very rare and a mode
-+ * of operation which isn't well supported.  As such, the goal is not
-+ * taking too long when a different cgroup takes over an inode while
-+ * avoiding too aggressive flip-flops from occasional foreign writes.
-+ *
-+ * We record, very roughly, 2s worth of IO time history and if more than
-+ * half of that is foreign, trigger the switch.  The recording is quantized
-+ * to 16 slots.  To avoid tiny writes from swinging the decision too much,
-+ * writes smaller than 1/8 of avg size are ignored.
-+ */
- #define WB_FRN_TIME_SHIFT	13	/* 1s = 2^13, upto 8 secs w/ 16bit */
- #define WB_FRN_TIME_AVG_SHIFT	3	/* avg = avg * 7/8 + new * 1/8 */
--#define WB_FRN_TIME_CUT_DIV	2	/* ignore rounds < avg / 2 */
-+#define WB_FRN_TIME_CUT_DIV	8	/* ignore rounds < avg / 8 */
- #define WB_FRN_TIME_PERIOD	(2 * (1 << WB_FRN_TIME_SHIFT))	/* 2s */
- 
- #define WB_FRN_HIST_SLOTS	16	/* inode->i_wb_frn_history is 16bit */
+>      Arnd
