@@ -2,161 +2,110 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D19C0C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CDBC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D14220656
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19E6620656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:00:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7wMkduA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ApNJyRL/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733198AbfHOO7X (ORCPT
+        id S1733207AbfHOPAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:59:23 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:32829 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728500AbfHOO7X (ORCPT
+        Thu, 15 Aug 2019 11:00:10 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35723 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbfHOPAJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:59:23 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p77so1192588wme.0;
-        Thu, 15 Aug 2019 07:59:21 -0700 (PDT)
+        Thu, 15 Aug 2019 11:00:09 -0400
+Received: by mail-wm1-f66.google.com with SMTP id l2so1515973wmg.0;
+        Thu, 15 Aug 2019 08:00:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mEoiihgfqWUe3ZoUXL4XK4SNuss4X3uooLaEcvpyGVE=;
-        b=M7wMkduAfusSeOrXSO6pVR8ElCfcK2BWDzneYnMQryY5Y0rhUjuctKHFo8yuXhsAe1
-         lONO2Kp+qR3j2K+fhCx4irZbZ1aN4T6Qx+MPtR/FBuTcz2C5K8RxKlGXITBASJq5rVr1
-         ERl85HXAoFCfl5FZVh+h5nhkjkr9XHED98fJvOdJa/J5bqu/V3CHvvBv/B1AjNqTtqky
-         q5ZT8ujNx/26Fw/zaCclLg5GrzK2Up/z+KD/Oi5vtSMCE5CxMShR/WzHCXWY5xnZRFKu
-         ZUUKGL5DKQqyt6/eMC+R4mIzHyt8Jr5Lwr8WgQmi8C18XojrxgQTYx9SRmMPm0Ldi85J
-         aKoQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=AT6SBdTWCfB14GGqz8HhPxiAnTof/RZXopdQCtNlMj0=;
+        b=ApNJyRL/CtWMWEcvsfuxy75j5hDH3+3l3U/kUEtfatsU2jCDnFU0JrjJhQqztHEyVX
+         ZBf+AF8sureX3Rn0e6llWGEb5Nd6DZ1S5rN3LdSFztPdlulQkx0Lvr4xt/On6LZN60g/
+         tiBWi6Vs3fymYZyyA76bcOH1RIdfjS+S0VceNFjXR0FIMDgOeqH5SBRuedUGtxsYFdmI
+         lZqn5nWsMkiBDsaz072rwM1j3ceP7ouFgT6SuUwUEWhLSFwaeUtxW2E/lUuVTkk1TD27
+         OAJuq6bM5OmdSyfB94TnVHqniYn3/IcSH9tUobrC7q/G6555+iHmDszSluR5cddEmtpa
+         Pg+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mEoiihgfqWUe3ZoUXL4XK4SNuss4X3uooLaEcvpyGVE=;
-        b=M9bPeIdygVvjFOD5TKBnRTXxEgDpHiFtJHEfMJdO1GGXG2VVoLZJN1MQo9UCXNhO5I
-         zw+JVd7Jde+LvCRjUTNjYlKXOsn64iJyc++jJK97B1w7ft4dcD2MHMQ2AB8lEYhrUCB2
-         TTsFBgEO/PiPjV+LG5wTcdwwAIpTO5euTA3vg0Lsl97OmsWyT1gghHFaclC2l3jEpA01
-         ElP8GElT2KiqvTTCMOcBmD6ASbMZ10E9QpdwQd2E1XATo8eTAx3jM6fUZSq0kGR82Yta
-         IlyzJkyjmSJ8ZsAKg6TccMhbWDtV+iMEy0+3nprxbNAFVTK6YGGf4RE4b7mer1SkTFLb
-         C5Ww==
-X-Gm-Message-State: APjAAAXfNv5e4ng3db7z1tc+Xs18uOXPQOwo0uCLzXLSpe1gj2uHYIJ2
-        B+t3O0fwH6ZQ6WDZCfD+MSkqRD2wEkrtTQxMXNM=
-X-Google-Smtp-Source: APXvYqzOJKvOEo4Aw/+I/NXXfXKxeMLMU/eP2LAGZSEPkkphZ36bVSOCsC64JbJOgeSpIbeS5NdJOb3hNAkOJ3fLIfc=
-X-Received: by 2002:a1c:4e10:: with SMTP id g16mr3280114wmh.67.1565881161065;
- Thu, 15 Aug 2019 07:59:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190814213118.28473-1-kherbst@redhat.com> <20190814213118.28473-2-kherbst@redhat.com>
- <CAPM=9ty7yEUqKrcixV1tTuWCpyh6UikA3rxX8BF1E3fDb6WLQQ@mail.gmail.com>
- <5e05532328324d01bc554c573f6298f8@AUSX13MPC101.AMER.DELL.COM>
- <CACO55tsDA1WpMGtAPqUJpWt0AmPDnv9LuC09g2KB5GXB-VSCew@mail.gmail.com>
- <3fc22fe8bcaf4304bb07534b61c4de90@AUSX13MPC101.AMER.DELL.COM>
- <CACO55tvDfxYMZr0BGv2ROSNEVB4GvXZnBnWBy=RDPOG5hnk7OA@mail.gmail.com> <CADnq5_Nv6tsW0J20td5rQSLq048HtTcw1b4c25jP6ZR6XWZ-eA@mail.gmail.com>
-In-Reply-To: <CADnq5_Nv6tsW0J20td5rQSLq048HtTcw1b4c25jP6ZR6XWZ-eA@mail.gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 15 Aug 2019 10:59:09 -0400
-Message-ID: <CADnq5_Oo4CMSx3Bi-41xXDCYKB9RRX33Gke9UyvAGZq1i+VOLA@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
- enable dGPU direct output"
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Mario.Limonciello@dell.com,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>,
-        Alex Hung <alex.hung@canonical.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AT6SBdTWCfB14GGqz8HhPxiAnTof/RZXopdQCtNlMj0=;
+        b=TU2cVBghejT3dqzWFQ/ZqYFumypDked6DXqbj6sIhui3ErewqQEejGFiml18h4AFob
+         1DNXXHBhgCiftOTFiz1cRRwVAEey77si0gNkVdRg7OAlJtp32klXjldcvt9utuZva43W
+         JFwMYa4d4mq2R0Yevfa/oc8GLlMruPHC8moOYbLi4n2Vi711jMkjCGnNfwn5mRNVkT6u
+         SvI3/2q2WO9tUzWKtkdQKdENaZ0csFd9+pcMr1n4g6/grJbu6lXJ/iUKdW3x7t4o/tU9
+         H9HtMrajsBV8Od3TDZeUWDgyRoVLrhx0hfP9iZBzSg9cp47d2b3b6/0ol/vB5zCmQSnQ
+         cdXg==
+X-Gm-Message-State: APjAAAXo0cGdeVAidiAT7kqBtygL6LadVSlHmeHhRu4jv4wR6t8mqJyT
+        FuhyRfrqMFMbIKwFeG2voYc=
+X-Google-Smtp-Source: APXvYqwpWvZ1WlKqFH37YuDJYaoQiQ/o/sdZdjkNO2n8K67kXq9JE4ht1IQu4MKhy1WxTgZ5nbaVRw==
+X-Received: by 2002:a1c:ed06:: with SMTP id l6mr3077053wmh.128.1565881206601;
+        Thu, 15 Aug 2019 08:00:06 -0700 (PDT)
+Received: from localhost.localdomain ([94.204.252.234])
+        by smtp.gmail.com with ESMTPSA id e4sm5041054wrh.39.2019.08.15.08.00.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 15 Aug 2019 08:00:05 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Benjamin Valentin <benpicco@googlemail.com>,
+        Sean Young <sean@mess.org>, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH 0/7] media: rc: Add keymaps for common STB/SBC devices
+Date:   Thu, 15 Aug 2019 18:59:10 +0400
+Message-Id: <1565881157-14644-1-git-send-email-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:37 AM Alex Deucher <alexdeucher@gmail.com> wrote:
->
-> On Thu, Aug 15, 2019 at 10:25 AM Karol Herbst <kherbst@redhat.com> wrote:
-> >
-> > On Thu, Aug 15, 2019 at 4:20 PM <Mario.Limonciello@dell.com> wrote:
-> > >
-> > > > > There are definitely going to be regressions on machines in the field with the
-> > > > > in tree drivers by reverting this.  I think we should have an answer for all of
-> > > > those
-> > > > > before this revert is accepted.
-> > > > >
-> > > > > Regarding systems with Intel+NVIDIA, we'll have to work with partners to
-> > > > collect
-> > > > > some information on the impact of reverting this.
-> > > > >
-> > > > > When this is used on a system with Intel+AMD the ASL configures AMD GPU to
-> > > > use
-> > > > > "Hybrid Graphics" when on Windows and "Power Express" and "Switchable
-> > > > Graphics"
-> > > > > when on Linux.
-> > > >
-> > > > and what's exactly the difference between those? And what's the actual
-> > > > issue here?
-> > >
-> > > DP/HDMI is not detected unless plugged in at bootup.  It's due to missing HPD
-> > > events.
-> > >
-> >
-> > afaik Lyude was working on fixing all that, at least for some drivers.
-> > If there is something wrong, we still should fix the drivers, not
-> > adding ACPI workarounds.
-> >
-> > Alex: do you know if there are remaining issues regarding that with amdgpu?
->
-> There was an issue with hpd events not making it to the audio side
-> when things were powered down that was fixed with this patch set:
-> https://patchwork.freedesktop.org/patch/316793/
-> Those patches depended on a bunch of alsa changes as well which may
-> have not been available in the distro used for a particular OEM
-> program.
->
-> >
-> > > >
-> > > > We already have the PRIME offloading in place and if that's not
-> > > > enough, we should work on extending it, not adding some ACPI based
-> > > > workarounds, because that's exactly how that looks like.
-> > > >
-> > > > Also, was this discussed with anybody involved in the drm subsystem?
-> > > >
-> > > > >
-> > > > > I feel we need a knob and/or DMI detection to affect the changes that the ASL
-> > > > > normally performs.
-> > > >
-> > > > Why do we have to do that on a firmware level at all?
-> > >
-> > > Folks from AMD Graphics team recommended this approach.  From their perspective
-> > > it's not a workaround.  They view this as a different architecture for AMD graphics driver on
-> > > Windows and AMD graphics w/ amdgpu driver.  They have different ASL paths used for
-> > > each.
-> >
-> > @alex: is this true?
->
-> I'm not familiar with this patches in particular, but I know we've
-> done things with OEM programs to support Linux on platforms where
-> Linux support is lacking for in new features for the target distros.
-> E.g., when the first hybrid graphics laptops were coming out, Linux
-> didn't support it too well or at all depending on the timing, so the
-> bios exposed power express which was working well at the time if the
-> OS told ACPI it was Linux.
+This series submits keymaps for a number of Android STB/SBC devices that
+are regularly used with the Kodi mediacentre distro LibreELEC.
 
-FWIW, windows does something similar.  I don't think windows 7
-supports hybrid graphics either so if the OS tells ACPI it's windows
-7, it gets power express instead of hybrid graphics as well.  At least
-on laptops that support windows 7 in the first place.
+Keymaps list buttons in rows, top-down, to aid visual comparison against
+devices. It's common for users of other no-name Android boxes to try a
+number of keymaps trying to find one that works and this reduces some of
+the guesswork. If the assigned key differs from the marked key, e.g.
+where Android 'mouse' buttons have been given a more useful purpose, the
+keymap has been commented.
 
-Alex
+Christian Hewitt (7):
+  media: rc: add keymap for Amediatech X96-MAX remote
+  media: rc: add keymap for Khadas VIM/EDGE remote
+  media: rc: add keymap for Tanix TX3 mini remote
+  media: rc: add keymap for Tanix TX5 max remote
+  media: rc: add keymap for WeTek Hub remote
+  media: rc: add keymap for WeTeK Play 2 remote
+  media: rc: add keymap for HardKernel ODROID remote
 
->
-> Alex
+ drivers/media/rc/keymaps/Makefile           |  7 +++
+ drivers/media/rc/keymaps/rc-khadas.c        | 56 +++++++++++++++++
+ drivers/media/rc/keymaps/rc-odroid.c        | 51 ++++++++++++++++
+ drivers/media/rc/keymaps/rc-tanix-tx3mini.c | 79 ++++++++++++++++++++++++
+ drivers/media/rc/keymaps/rc-tanix-tx5max.c  | 71 +++++++++++++++++++++
+ drivers/media/rc/keymaps/rc-wetek-hub.c     | 55 +++++++++++++++++
+ drivers/media/rc/keymaps/rc-wetek-play2.c   | 95 +++++++++++++++++++++++++++++
+ drivers/media/rc/keymaps/rc-x96max.c        | 85 ++++++++++++++++++++++++++
+ include/media/rc-map.h                      |  7 +++
+ 9 files changed, 506 insertions(+)
+ create mode 100644 drivers/media/rc/keymaps/rc-khadas.c
+ create mode 100644 drivers/media/rc/keymaps/rc-odroid.c
+ create mode 100644 drivers/media/rc/keymaps/rc-tanix-tx3mini.c
+ create mode 100644 drivers/media/rc/keymaps/rc-tanix-tx5max.c
+ create mode 100644 drivers/media/rc/keymaps/rc-wetek-hub.c
+ create mode 100644 drivers/media/rc/keymaps/rc-wetek-play2.c
+ create mode 100644 drivers/media/rc/keymaps/rc-x96max.c
+
+-- 
+2.7.4
+
