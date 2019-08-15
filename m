@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A425AC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03488C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFC52067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3E32067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729896AbfHOEmu (ORCPT
+        id S1729917AbfHOEmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:42:50 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4263 "EHLO huawei.com"
+        Thu, 15 Aug 2019 00:42:52 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35350 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725440AbfHOEmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:42:49 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1CCD09568751657BCD2F;
-        Thu, 15 Aug 2019 12:42:43 +0800 (CST)
+        id S1729826AbfHOEmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:42:50 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2B21C64196D58C2F8BEF;
+        Thu, 15 Aug 2019 12:42:48 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 15 Aug
- 2019 12:42:36 +0800
+ 2019 12:42:41 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         "Alexander Viro" <viro@zeniv.linux.org.uk>
@@ -46,9 +46,9 @@ CC:     LKML <linux-kernel@vger.kernel.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v8 05/24] erofs: add inode operations
-Date:   Thu, 15 Aug 2019 12:41:36 +0800
-Message-ID: <20190815044155.88483-6-gaoxiang25@huawei.com>
+Subject: [PATCH v8 08/24] erofs: add namei functions
+Date:   Thu, 15 Aug 2019 12:41:39 +0800
+Message-ID: <20190815044155.88483-9-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190815044155.88483-1-gaoxiang25@huawei.com>
 References: <20190815044155.88483-1-gaoxiang25@huawei.com>
@@ -61,24 +61,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds core functions to get, read an inode.
-It adds statx support as well.
+This commit adds functions that transfer names to inodes.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/inode.c | 293 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 293 insertions(+)
- create mode 100644 fs/erofs/inode.c
+ fs/erofs/namei.c | 249 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 249 insertions(+)
+ create mode 100644 fs/erofs/namei.c
 
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
 new file mode 100644
-index 000000000000..9960edaf6f7a
+index 000000000000..98b9e8cebca5
 --- /dev/null
-+++ b/fs/erofs/inode.c
-@@ -0,0 +1,293 @@
++++ b/fs/erofs/namei.c
+@@ -0,0 +1,249 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * linux/fs/erofs/inode.c
++ * linux/fs/erofs/namei.c
 + *
 + * Copyright (C) 2017-2018 HUAWEI, Inc.
 + *             http://www.huawei.com/
@@ -88,284 +87,240 @@ index 000000000000..9960edaf6f7a
 +
 +#include <trace/events/erofs.h>
 +
-+/* no locking */
-+static int read_inode(struct inode *inode, void *data)
++struct erofs_qstr {
++	const unsigned char *name;
++	const unsigned char *end;
++};
++
++/* based on the end of qn is accurate and it must have the trailing '\0' */
++static inline int dirnamecmp(const struct erofs_qstr *qn,
++			     const struct erofs_qstr *qd,
++			     unsigned int *matched)
 +{
-+	struct erofs_vnode *vi = EROFS_V(inode);
-+	struct erofs_inode_v1 *v1 = data;
-+	const unsigned int advise = le16_to_cpu(v1->i_advise);
-+	erofs_blk_t nblks = 0;
++	unsigned int i = *matched;
 +
-+	vi->datamode = __inode_data_mapping(advise);
++	/*
++	 * on-disk error, let's only BUG_ON in the debugging mode.
++	 * otherwise, it will return 1 to just skip the invalid name
++	 * and go on (in consideration of the lookup performance).
++	 */
++	DBG_BUGON(qd->name > qd->end);
 +
-+	if (unlikely(vi->datamode >= EROFS_INODE_LAYOUT_MAX)) {
-+		errln("unsupported data mapping %u of nid %llu",
-+		      vi->datamode, vi->nid);
-+		DBG_BUGON(1);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (__inode_version(advise) == EROFS_INODE_LAYOUT_V2) {
-+		struct erofs_inode_v2 *v2 = data;
-+
-+		vi->inode_isize = sizeof(struct erofs_inode_v2);
-+		vi->xattr_isize = ondisk_xattr_ibody_size(v2->i_xattr_icount);
-+
-+		inode->i_mode = le16_to_cpu(v2->i_mode);
-+		vi->raw_blkaddr = le32_to_cpu(v2->i_u.raw_blkaddr);
-+
-+		i_uid_write(inode, le32_to_cpu(v2->i_uid));
-+		i_gid_write(inode, le32_to_cpu(v2->i_gid));
-+		set_nlink(inode, le32_to_cpu(v2->i_nlink));
-+
-+		/* ns timestamp */
-+		inode->i_mtime.tv_sec = inode->i_ctime.tv_sec =
-+			le64_to_cpu(v2->i_ctime);
-+		inode->i_mtime.tv_nsec = inode->i_ctime.tv_nsec =
-+			le32_to_cpu(v2->i_ctime_nsec);
-+
-+		inode->i_size = le64_to_cpu(v2->i_size);
-+
-+		/* total blocks for compressed files */
-+		if (is_inode_layout_compression(inode))
-+			nblks = le32_to_cpu(v2->i_u.compressed_blocks);
-+	} else if (__inode_version(advise) == EROFS_INODE_LAYOUT_V1) {
-+		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
-+
-+		vi->inode_isize = sizeof(struct erofs_inode_v1);
-+		vi->xattr_isize = ondisk_xattr_ibody_size(v1->i_xattr_icount);
-+
-+		inode->i_mode = le16_to_cpu(v1->i_mode);
-+		vi->raw_blkaddr = le32_to_cpu(v1->i_u.raw_blkaddr);
-+
-+		i_uid_write(inode, le16_to_cpu(v1->i_uid));
-+		i_gid_write(inode, le16_to_cpu(v1->i_gid));
-+		set_nlink(inode, le16_to_cpu(v1->i_nlink));
-+
-+		/* use build time to derive all file time */
-+		inode->i_mtime.tv_sec = inode->i_ctime.tv_sec =
-+			sbi->build_time;
-+		inode->i_mtime.tv_nsec = inode->i_ctime.tv_nsec =
-+			sbi->build_time_nsec;
-+
-+		inode->i_size = le32_to_cpu(v1->i_size);
-+		if (is_inode_layout_compression(inode))
-+			nblks = le32_to_cpu(v1->i_u.compressed_blocks);
-+	} else {
-+		errln("unsupported on-disk inode version %u of nid %llu",
-+		      __inode_version(advise), vi->nid);
-+		DBG_BUGON(1);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (!nblks)
-+		/* measure inode.i_blocks as generic filesystems */
-+		inode->i_blocks = roundup(inode->i_size, EROFS_BLKSIZ) >> 9;
-+	else
-+		inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
-+	return 0;
-+}
-+
-+/*
-+ * try_lock can be required since locking order is:
-+ *   file data(fs_inode)
-+ *        meta(bd_inode)
-+ * but the majority of the callers is "iget",
-+ * in that case we are pretty sure no deadlock since
-+ * no data operations exist. However I tend to
-+ * try_lock since it takes no much overhead and
-+ * will success immediately.
-+ */
-+static int fill_inline_data(struct inode *inode, void *data,
-+			    unsigned int m_pofs)
-+{
-+	struct erofs_vnode *vi = EROFS_V(inode);
-+	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
-+
-+	/* should be inode inline C */
-+	if (!is_inode_flat_inline(inode))
-+		return 0;
-+
-+	/* fast symlink (following ext4) */
-+	if (S_ISLNK(inode->i_mode) && inode->i_size < PAGE_SIZE) {
-+		char *lnk = erofs_kmalloc(sbi, inode->i_size + 1, GFP_KERNEL);
-+
-+		if (unlikely(!lnk))
-+			return -ENOMEM;
-+
-+		m_pofs += vi->inode_isize + vi->xattr_isize;
-+
-+		/* inline symlink data shouldn't across page boundary as well */
-+		if (unlikely(m_pofs + inode->i_size > PAGE_SIZE)) {
-+			kfree(lnk);
-+			errln("inline data cross block boundary @ nid %llu",
-+			      vi->nid);
-+			DBG_BUGON(1);
-+			return -EFSCORRUPTED;
++	/* qd could not have trailing '\0' */
++	/* However it is absolutely safe if < qd->end */
++	while (qd->name + i < qd->end && qd->name[i] != '\0') {
++		if (qn->name[i] != qd->name[i]) {
++			*matched = i;
++			return qn->name[i] > qd->name[i] ? 1 : -1;
 +		}
-+
-+		/* get in-page inline data */
-+		memcpy(lnk, data + m_pofs, inode->i_size);
-+		lnk[inode->i_size] = '\0';
-+
-+		inode->i_link = lnk;
-+		set_inode_fast_symlink(inode);
++		++i;
 +	}
-+	return 0;
++	*matched = i;
++	/* See comments in __d_alloc on the terminating NUL character */
++	return qn->name[i] == '\0' ? 0 : 1;
 +}
 +
-+static int fill_inode(struct inode *inode, int isdir)
++#define nameoff_from_disk(off, sz)	(le16_to_cpu(off) & ((sz) - 1))
++
++static struct erofs_dirent *find_target_dirent(struct erofs_qstr *name,
++					       u8 *data,
++					       unsigned int dirblksize,
++					       const int ndirents)
 +{
-+	struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
-+	struct erofs_vnode *vi = EROFS_V(inode);
++	int head, back;
++	unsigned int startprfx, endprfx;
++	struct erofs_dirent *const de = (struct erofs_dirent *)data;
++
++	/* since the 1st dirent has been evaluated previously */
++	head = 1;
++	back = ndirents - 1;
++	startprfx = endprfx = 0;
++
++	while (head <= back) {
++		const int mid = head + (back - head) / 2;
++		const int nameoff = nameoff_from_disk(de[mid].nameoff,
++						      dirblksize);
++		unsigned int matched = min(startprfx, endprfx);
++		struct erofs_qstr dname = {
++			.name = data + nameoff,
++			.end = unlikely(mid >= ndirents - 1) ?
++				data + dirblksize :
++				data + nameoff_from_disk(de[mid + 1].nameoff,
++							 dirblksize)
++		};
++
++		/* string comparison without already matched prefix */
++		int ret = dirnamecmp(name, &dname, &matched);
++
++		if (unlikely(!ret)) {
++			return de + mid;
++		} else if (ret > 0) {
++			head = mid + 1;
++			startprfx = matched;
++		} else {
++			back = mid - 1;
++			endprfx = matched;
++		}
++	}
++
++	return ERR_PTR(-ENOENT);
++}
++
++static struct page *find_target_block_classic(struct inode *dir,
++					      struct erofs_qstr *name,
++					      int *_ndirents)
++{
++	unsigned int startprfx, endprfx;
++	int head, back;
++	struct address_space *const mapping = dir->i_mapping;
++	struct page *candidate = ERR_PTR(-ENOENT);
++
++	startprfx = endprfx = 0;
++	head = 0;
++	back = inode_datablocks(dir) - 1;
++
++	while (head <= back) {
++		const int mid = head + (back - head) / 2;
++		struct page *page = read_mapping_page(mapping, mid, NULL);
++
++		if (!IS_ERR(page)) {
++			struct erofs_dirent *de = kmap_atomic(page);
++			const int nameoff = nameoff_from_disk(de->nameoff,
++							      EROFS_BLKSIZ);
++			const int ndirents = nameoff / sizeof(*de);
++			int diff;
++			unsigned int matched;
++			struct erofs_qstr dname;
++
++			if (unlikely(!ndirents)) {
++				kunmap_atomic(de);
++				put_page(page);
++				errln("corrupted dir block %d @ nid %llu",
++				      mid, EROFS_V(dir)->nid);
++				DBG_BUGON(1);
++				page = ERR_PTR(-EFSCORRUPTED);
++				goto out;
++			}
++
++			matched = min(startprfx, endprfx);
++
++			dname.name = (u8 *)de + nameoff;
++			if (ndirents == 1)
++				dname.end = (u8 *)de + EROFS_BLKSIZ;
++			else
++				dname.end = (u8 *)de +
++					nameoff_from_disk(de[1].nameoff,
++							  EROFS_BLKSIZ);
++
++			/* string comparison without already matched prefix */
++			diff = dirnamecmp(name, &dname, &matched);
++			kunmap_atomic(de);
++
++			if (unlikely(!diff)) {
++				*_ndirents = 0;
++				goto out;
++			} else if (diff > 0) {
++				head = mid + 1;
++				startprfx = matched;
++
++				if (!IS_ERR(candidate))
++					put_page(candidate);
++				candidate = page;
++				*_ndirents = ndirents;
++			} else {
++				put_page(page);
++
++				back = mid - 1;
++				endprfx = matched;
++			}
++			continue;
++		}
++out:		/* free if the candidate is valid */
++		if (!IS_ERR(candidate))
++			put_page(candidate);
++		return page;
++	}
++	return candidate;
++}
++
++int erofs_namei(struct inode *dir,
++		struct qstr *name,
++		erofs_nid_t *nid, unsigned int *d_type)
++{
++	int ndirents;
 +	struct page *page;
 +	void *data;
-+	int err;
-+	erofs_blk_t blkaddr;
-+	unsigned int ofs;
++	struct erofs_dirent *de;
++	struct erofs_qstr qn;
 +
-+	trace_erofs_fill_inode(inode, isdir);
++	if (unlikely(!dir->i_size))
++		return -ENOENT;
 +
-+	blkaddr = erofs_blknr(iloc(sbi, vi->nid));
-+	ofs = erofs_blkoff(iloc(sbi, vi->nid));
++	qn.name = name->name;
++	qn.end = name->name + name->len;
 +
-+	debugln("%s, reading inode nid %llu at %u of blkaddr %u",
-+		__func__, vi->nid, ofs, blkaddr);
++	ndirents = 0;
++	page = find_target_block_classic(dir, &qn, &ndirents);
 +
-+	page = erofs_get_meta_page(inode->i_sb, blkaddr, isdir);
-+
-+	if (IS_ERR(page)) {
-+		errln("failed to get inode (nid: %llu) page, err %ld",
-+		      vi->nid, PTR_ERR(page));
++	if (IS_ERR(page))
 +		return PTR_ERR(page);
++
++	data = kmap_atomic(page);
++	/* the target page has been mapped */
++	if (ndirents)
++		de = find_target_dirent(&qn, data, EROFS_BLKSIZ, ndirents);
++	else
++		de = (struct erofs_dirent *)data;
++
++	if (!IS_ERR(de)) {
++		*nid = le64_to_cpu(de->nid);
++		*d_type = de->file_type;
 +	}
 +
-+	DBG_BUGON(!PageUptodate(page));
-+	data = page_address(page);
-+
-+	err = read_inode(inode, data + ofs);
-+	if (!err) {
-+		/* setup the new inode */
-+		if (S_ISREG(inode->i_mode)) {
-+			inode->i_op = &erofs_generic_iops;
-+			inode->i_fop = &generic_ro_fops;
-+		} else if (S_ISDIR(inode->i_mode)) {
-+			inode->i_op = &erofs_dir_iops;
-+			inode->i_fop = &erofs_dir_fops;
-+		} else if (S_ISLNK(inode->i_mode)) {
-+			/* by default, page_get_link is used for symlink */
-+			inode->i_op = &erofs_symlink_iops;
-+			inode_nohighmem(inode);
-+		} else {
-+			err = -EFSCORRUPTED;
-+			goto out_unlock;
-+		}
-+
-+		if (is_inode_layout_compression(inode)) {
-+			err = -EOPNOTSUPP;
-+			goto out_unlock;
-+		}
-+
-+		inode->i_mapping->a_ops = &erofs_raw_access_aops;
-+
-+		/* fill last page if inline data is available */
-+		err = fill_inline_data(inode, data, ofs);
-+	}
-+
-+out_unlock:
-+	unlock_page(page);
++	kunmap_atomic(data);
 +	put_page(page);
-+	return err;
++
++	return PTR_ERR_OR_ZERO(de);
 +}
 +
-+/*
-+ * erofs nid is 64bits, but i_ino is 'unsigned long', therefore
-+ * we should do more for 32-bit platform to find the right inode.
-+ */
-+#if BITS_PER_LONG == 32
-+static int erofs_ilookup_test_actor(struct inode *inode, void *opaque)
++/* NOTE: i_mutex is already held by vfs */
++static struct dentry *erofs_lookup(struct inode *dir,
++				   struct dentry *dentry,
++				   unsigned int flags)
 +{
-+	const erofs_nid_t nid = *(erofs_nid_t *)opaque;
++	int err;
++	erofs_nid_t nid;
++	unsigned int d_type;
++	struct inode *inode;
 +
-+	return EROFS_V(inode)->nid == nid;
-+}
++	DBG_BUGON(!d_really_is_negative(dentry));
++	/* dentry must be unhashed in lookup, no need to worry about */
++	DBG_BUGON(!d_unhashed(dentry));
 +
-+static int erofs_iget_set_actor(struct inode *inode, void *opaque)
-+{
-+	const erofs_nid_t nid = *(erofs_nid_t *)opaque;
++	trace_erofs_lookup(dir, dentry, flags);
 +
-+	inode->i_ino = erofs_inode_hash(nid);
-+	return 0;
-+}
-+#endif
++	/* file name exceeds fs limit */
++	if (unlikely(dentry->d_name.len > EROFS_NAME_LEN))
++		return ERR_PTR(-ENAMETOOLONG);
 +
-+static inline struct inode *erofs_iget_locked(struct super_block *sb,
-+					      erofs_nid_t nid)
-+{
-+	const unsigned long hashval = erofs_inode_hash(nid);
++	/* false uninitialized warnings on gcc 4.8.x */
++	err = erofs_namei(dir, &dentry->d_name, &nid, &d_type);
 +
-+#if BITS_PER_LONG >= 64
-+	/* it is safe to use iget_locked for >= 64-bit platform */
-+	return iget_locked(sb, hashval);
-+#else
-+	return iget5_locked(sb, hashval, erofs_ilookup_test_actor,
-+		erofs_iget_set_actor, &nid);
-+#endif
-+}
-+
-+struct inode *erofs_iget(struct super_block *sb,
-+			 erofs_nid_t nid,
-+			 bool isdir)
-+{
-+	struct inode *inode = erofs_iget_locked(sb, nid);
-+
-+	if (unlikely(!inode))
-+		return ERR_PTR(-ENOMEM);
-+
-+	if (inode->i_state & I_NEW) {
-+		int err;
-+		struct erofs_vnode *vi = EROFS_V(inode);
-+
-+		vi->nid = nid;
-+
-+		err = fill_inode(inode, isdir);
-+		if (likely(!err))
-+			unlock_new_inode(inode);
-+		else {
-+			iget_failed(inode);
-+			inode = ERR_PTR(err);
-+		}
++	if (err == -ENOENT) {
++		/* negative dentry */
++		inode = NULL;
++	} else if (unlikely(err)) {
++		inode = ERR_PTR(err);
++	} else {
++		debugln("%s, %s (nid %llu) found, d_type %u", __func__,
++			dentry->d_name.name, nid, d_type);
++		inode = erofs_iget(dir->i_sb, nid, d_type == EROFS_FT_DIR);
 +	}
-+	return inode;
++	return d_splice_alias(inode, dentry);
 +}
 +
-+int erofs_getattr(const struct path *path, struct kstat *stat,
-+		  u32 request_mask, unsigned int query_flags)
-+{
-+	struct inode *const inode = d_inode(path->dentry);
-+
-+	if (is_inode_layout_compression(inode))
-+		stat->attributes |= STATX_ATTR_COMPRESSED;
-+
-+	stat->attributes |= STATX_ATTR_IMMUTABLE;
-+	stat->attributes_mask |= (STATX_ATTR_COMPRESSED |
-+				  STATX_ATTR_IMMUTABLE);
-+
-+	generic_fillattr(inode, stat);
-+	return 0;
-+}
-+
-+const struct inode_operations erofs_generic_iops = {
-+	.getattr = erofs_getattr,
-+};
-+
-+const struct inode_operations erofs_symlink_iops = {
-+	.get_link = page_get_link,
-+	.getattr = erofs_getattr,
-+};
-+
-+const struct inode_operations erofs_fast_symlink_iops = {
-+	.get_link = simple_get_link,
++const struct inode_operations erofs_dir_iops = {
++	.lookup = erofs_lookup,
 +	.getattr = erofs_getattr,
 +};
 +
