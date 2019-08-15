@@ -2,178 +2,165 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D2DC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B77AC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837D4206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36CAA206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:33:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="i9FMzTDJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732973AbfHOOdA (ORCPT
+        id S1732987AbfHOOdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:33:00 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:42981 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729668AbfHOOdA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:33:00 -0400
-Received: from uno.localdomain (host64-130-dynamic.5-87-r.retail.telecomitalia.it [87.5.130.64])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id CE3A9240006;
-        Thu, 15 Aug 2019 14:32:56 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 16:34:23 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
-Message-ID: <20190815143423.vaoswb4jvzd2blxp@uno.localdomain>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-3-jacopo@jmondi.org>
- <20190814224340.GD5015@pendragon.ideasonboard.com>
- <664fe7b3-9051-30da-736e-710a4e9cecde@xs4all.nl>
- <d60e4664-3a3f-1723-6c96-4fc822b6a7bb@xs4all.nl>
+        Thu, 15 Aug 2019 10:33:02 -0400
+Received: from mail-eopbgr1410121.outbound.protection.outlook.com ([40.107.141.121]:42603
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730930AbfHOOdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 10:33:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TAWOlnT/7qC+lgpVCT+MUG03P7bwjwZDnDdQyYtX6As77SAR0EiE3ip8f1Ju2es0ORPmVHt/a0DRUXJWhsXs/H25m1u61kYTDNJSeA0nc3f2i55hzVb5IH8zDB3VmNwGKvrlgVRrEpMm6ANLGN90FrpHg8TTqIiB+GApyPSUlaB6kBkBEbbrdMrh9oO0eLIdHOTA9aWAMvbuqOGoB5GvXxjo7DgPa8KHOjKg0IXVcuMZug6UNsBmKa1AjQZs5DwhJZxl9+ItPqkxNhlugv308Sh54TOht8Adm+dgvAuCYhp/wI4ozhB/VUu9pAl9PA73XJxPObjTz+X1i3uv1TutGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZQJ4nhZJ+GUsczZ/Dg4hOcDkXlYjWEc4Y/CgTuy/GME=;
+ b=cN6FPkEERZklbyz40wdy5+GKnZ82v1V91cMaQhuIOr9vP17UGE3bSb0we3C7O43KZxK75smBzql6zxg6jo9IKkELWn9/AC/4jHaI3XiSubPJyA3kUoJ8oOvJNKX0DgWSyOp3UpM40Ma3NRghd7I8d2e5BeZEe1LpXGhKvumkHZBLwa2ZHUb3qOFq0O86WiiIaT10xanRklmkZNBu6Ipc8nnwjE4G3NUbwS80SJYEp4z+5RXGwr09zHdhBwpt5OL53LHRZbWRWD8yh6H1mzyt5SNZag53UtwearRaxJKrKyRIkbyNeuTKGzEpf3KwEUU9kXQSLy7DA8AeSFYVDtZIPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZQJ4nhZJ+GUsczZ/Dg4hOcDkXlYjWEc4Y/CgTuy/GME=;
+ b=i9FMzTDJcaqtQ6twQiiJXaGc4FPs0cZpmQQSVUKqycbjtx/Qh+UwwmsOyUNK7HCQ7p3zHlQNEgyUc7HfrJ/nVdf1tZI/b87qL/r2KZnio0VDzTdF1nFOko8IRdQvMehUafrLFfrGTo6TCsut266CsYjF01bBPfpn4QLZsUcRyOk=
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
+ TY1PR01MB1482.jpnprd01.prod.outlook.com (52.133.163.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.18; Thu, 15 Aug 2019 14:32:58 +0000
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::d881:cb74:8277:5a16]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::d881:cb74:8277:5a16%7]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
+ 14:32:58 +0000
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+CC:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Eric Anholt <eric@anholt.net>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>,
+        "ebiharaml@si-linux.co.jp" <ebiharaml@si-linux.co.jp>
+Subject: RE: [PATCH v2 0/9] Add dual-LVDS panel support to EK874
+Thread-Topic: [PATCH v2 0/9] Add dual-LVDS panel support to EK874
+Thread-Index: AQHVU1lCzWPU8rN+20OeSTkBlzlJDqb8QTmAgAAEdbA=
+Date:   Thu, 15 Aug 2019 14:32:57 +0000
+Message-ID: <TY1PR01MB17704B86A76BB8A0762570E2C0AC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190815141559.GB2437@ravnborg.org>
+In-Reply-To: <20190815141559.GB2437@ravnborg.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4ae527f3-bc51-4e21-a7c4-08d7218d77e7
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1482;
+x-ms-traffictypediagnostic: TY1PR01MB1482:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY1PR01MB14823520DB647516F602C332C0AC0@TY1PR01MB1482.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01304918F3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(376002)(136003)(39860400002)(366004)(346002)(189003)(199004)(66946007)(305945005)(64756008)(52536014)(446003)(74316002)(25786009)(6116002)(2906002)(256004)(14444005)(66066001)(7736002)(186003)(478600001)(476003)(6246003)(229853002)(76116006)(53936002)(44832011)(3846002)(66476007)(66556008)(66446008)(6436002)(76176011)(26005)(966005)(71190400001)(6916009)(55016002)(8676002)(86362001)(5660300002)(316002)(8936002)(6306002)(102836004)(11346002)(486006)(6506007)(81156014)(9686003)(99286004)(54906003)(4326008)(53546011)(33656002)(81166006)(7416002)(14454004)(7696005)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1482;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: uT95COjexG7arA5j1AppjzOihbOxDacBxwO3GL2fU8IRggFIc6x+tS5Ta/YW5HETtEvxaPJPvRKJ9S29hlfcClwpi6uJHK/hPQShYrRtxfqgZVEyfd7jNp2pcnBRO6FiFMML7GzkGoUy/A1GIXUS7RRfKfNanv7TcRpeIYsE7e9bOfanV52hFD23a9iRggkqzdr1LdNBvvRv6r9z5Q4cUUXTDV0BAkp2Uk8GJlQzmv62TSvNaDdeiP0GTX2NoTjxLOHC7XWr+SxhYo6WNQpjBYHFOoMeDwlnRhtsS8ytDPK5Al1TzJX0uFpIV3aZaYfoIx7vsH5lyhaCED8aLmLWjtSyy7kdoIluqZVZZyLq0N/V1LXHJx7q1AaIPczGzwE/mHMKm+abUouiANvVezjtv4sV8zbhvMBqFpixm0WBolY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fixbluj3hgdhxc76"
-Content-Disposition: inline
-In-Reply-To: <d60e4664-3a3f-1723-6c96-4fc822b6a7bb@xs4all.nl>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ae527f3-bc51-4e21-a7c4-08d7218d77e7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 14:32:57.9381
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: S/LWXf/R6aHysZWIbdgI7jq8oU7SnXCSG9IZgkcKzOBnY0LjhCQPJpIPt2qBLpOl16dI9mE52m+t+evQcEjsy1zxUc63zHJlQqXB6dotlzI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1482
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sam,
 
---fixbluj3hgdhxc76
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Thank you for your feedback!
 
-Hi Hans,
-
-On Thu, Aug 15, 2019 at 04:14:38PM +0200, Hans Verkuil wrote:
-> On 8/15/19 4:10 PM, Hans Verkuil wrote:
-> > On 8/15/19 12:43 AM, Laurent Pinchart wrote:
-> >> Hi Jacopo,
-> >>
-> >> Thank you for the patch.
-> >>
-> >> On Wed, Aug 14, 2019 at 10:28:12PM +0200, Jacopo Mondi wrote:
-> >>> Add documentation for the V4L2_CID_LOCATION camera control. The newly
-> >>> added read-only control reports the camera device mounting position.
-> >>>
-> >>> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> >>> ---
-> >>>  .../media/uapi/v4l/ext-ctrls-camera.rst       | 23 +++++++++++++++++++
-> >>>  1 file changed, 23 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> >>> index 51c1d5c9eb00..fc0a02eee6d4 100644
-> >>> --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> >>> +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> >>> @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
-> >>>      value down. A value of zero stops the motion if one is in progress
-> >>>      and has no effect otherwise.
-> >>>
-> >>> +``V4L2_CID_LOCATION (integer)``
-> >>
-> >> Maybe V4L2_CID_CAMERA_SENSOR_LOCATION ? Same for the values below.
+> From: Sam Ravnborg <sam@ravnborg.org>
+> Sent: 15 August 2019 15:16
+> Subject: Re: [PATCH v2 0/9] Add dual-LVDS panel support to EK874
+>=20
+> Hi Fabrizio
+>=20
+> > it appears that Rob has been busy converting the dt-bindings relevant t=
+o this
+> > series, and his changes are now found in linux-next. Most notably
+> > Documentation/devicetree/bindings/display/panel/panel-lvds.txt has now =
+become
+> > Documentation/devicetree/bindings/display/panel/lvds.yaml
 > >
-> > Probably a better name, if a bit long. But we might need other location
-> > controls in the future (e.g. flash location), so CID_LOCATION is just too
-> > generic.
->
-
-Thanks for the feedback.
-
-> Note that the location defines themselves can most likely be used with any
-> LOCATION control, so V4L2_LOCATION_FRONT would be fine with any control.
->
-
-What do you think instead of the control type? Would a single integer
-control do or an integer menu one would be better? I see merit in both
-proposals actually...
-
-Once this is clarified, I can send a proper v1.
-
-Thanks
-  j
-
-> Regards,
->
-> 	Hans
->
+> > You have already taken patch:
+> > https://patchwork.kernel.org/patch/11072749/
 > >
-> > Regards,
+> > as such the patch I am sending you is still related to:
+> > Documentation/devicetree/bindings/display/panel/panel-lvds.txt
 > >
-> > 	Hans
+> > Patch "dt-bindings: display: Add bindings for Advantech IDK-2121WR" is =
+still
+> > assuming the format is .txt, as I am not too sure about what the protoc=
+ol is in
+> > this case? Shall we take this patch and convert it later to .yaml or sh=
+all I
+> > convert it to .yaml straight away?
 > >
-> >>
-> >>> +    This read-only control describes the camera location by reporting its
-> >>
-> >> Here too I would mention camera sensor instead of just camera (or
-> >> possibly imaging sensor).
-> >>
-> >>> +    mounting position on the device where the camera is installed. This
-> >>> +    control is particularly meaningful for devices which have a well defined
-> >>> +    orientation, such as phones, laptops and portable devices as the camera
-> >>> +    location is expressed as a position relative to the device intended
-> >>> +    usage position. In example, a camera installed on the user-facing side
-> >>> +    of a phone device is said to be installed in the ``V4L2_LOCATION_FRONT``
-> >>> +    position.
-> >>
-> >> The DT bindings could use such an example :-) I would extend this to
-> >> tablets and laptops.
-> >>
-> >>> +
-> >>> +
-> >>> +
-> >>
-> >> Do we need three blank lines ?
-> >>
-> >>> +.. flat-table::
-> >>> +    :header-rows:  0
-> >>> +    :stub-columns: 0
-> >>> +
-> >>> +    * - ``V4L2_LOCATION_FRONT``
-> >>> +      - The camera device is located on the front side of the device.
-> >>> +    * - ``V4L2_LOCATION_BACK``
-> >>> +      - The camera device is located on the back side of the device.
-> >>> +
-> >>> +
-> >>> +
-> >>>  .. [#f1]
-> >>>     This control may be changed to a menu control in the future, if more
-> >>>     options are required.
-> >>
-> >
->
+> > Please, let me know what's the best course of action.
+>=20
+> It is preferred that all new display and panel bindings uses the new
+> meta-schema format.
+> And that the writers uses the available tools to verify the bindings
+> submission.
+> This is one way to avoid simple mistakes in examples.
 
---fixbluj3hgdhxc76
-Content-Type: application/pgp-signature; name="signature.asc"
+Will give the meta-schema format a shot.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+Fab
 
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1VbW8ACgkQcjQGjxah
-VjyARQ/+Mz9rvMdvMsyusC3DTUqrvRKQL6Fqjb9FJWy2lR184bCc8/Z6ocreqs+p
-JDbXdSyDkDP4TaXcoz70xsLOiWUdPCR4Vr2SKNRffqCO+idS9BzK8uYu6pR4KnIz
-AveQ9A2onENTf5CNUg3sodDAuMXHk1LDGX0gI+l6kDHtOc/4sG6H0rOoeDQ67sFP
-MDeWk93Tnr+xet+q2wmKIP7EJrQTwVgt6Ovc2cBl9af798dTyIShYnmO4Gzi7ixH
-sGhoa4X7xpJtPnHb0zGvYszit0E4xP4maNp9kPahcFFSiwsClToDloj1SjhXnJJ6
-2ff8iKpuTWIDOj6jVtad8gmy6GdUvk671VopwtC1EQO0mmKnmXus55EKjKRJFWnb
-fGwBj4u/nVHQ4zYoniUsiW868TXZC/v5r2pAaxaVscpquR0s1FoGnQE//w7cn96y
-xYRRRZ4CXuGVXSgEX8lZTAtsQO8RrsPawyh1yyOAx2K3AX/n9y0Y+Rj9ZP/HSIjD
-hbrVSgI3DCFdd4cPaAmjQguVQDcE5jto6pGtLuCTB2oAw6ejhPWRl9HPc9BAwFAB
-RokMl5MKS4PRuSoV5BFHKb+Gju5WxiM9M77hzmoYSjooF+W7BNKw4uyH175Br2X/
-doOiWAEEGEliKsYQnTFBrs2XJkf0LDdwNX55LVPEmzplTHss/+w=
-=2ECY
------END PGP SIGNATURE-----
-
---fixbluj3hgdhxc76--
+>=20
+> 	Sam
