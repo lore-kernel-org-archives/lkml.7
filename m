@@ -2,218 +2,271 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1104EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971A3C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D907E2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C1D2133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:25:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ujE9YZn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbfHOIZe (ORCPT
+        id S1730972AbfHOIZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 04:25:34 -0400
-Received: from mga05.intel.com ([192.55.52.43]:48394 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729838AbfHOIZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 04:25:33 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 01:25:33 -0700
-X-IronPort-AV: E=Sophos;i="5.64,388,1559545200"; 
-   d="scan'208";a="184561788"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 01:25:28 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 7CD1B20BCA; Thu, 15 Aug 2019 11:24:22 +0300 (EEST)
-Date:   Thu, 15 Aug 2019 11:24:22 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
-        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
-        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, hans.verkuil@cisco.com,
-        laurent.pinchart@ideasonboard.com, kernel@collabora.com,
-        ezequiel@collabora.com, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
-        Jacob Chen <cc@rock-chips.com>,
-        Allon Huang <allon.huang@rock-chips.com>
-Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
-Message-ID: <20190815082422.GM6133@paasikivi.fi.intel.com>
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <20190730184256.30338-6-helen.koike@collabora.com>
- <20190808091406.GQ21370@paasikivi.fi.intel.com>
- <da6c1d01-e3f6-ad73-db55-145d7832a665@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da6c1d01-e3f6-ad73-db55-145d7832a665@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 15 Aug 2019 04:25:47 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41286 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729838AbfHOIZr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 04:25:47 -0400
+Received: by mail-pg1-f196.google.com with SMTP id x15so1008036pgg.8
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 01:25:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=30cHDPSODRjzx60oee0Lo4biVeqVEQUgsOye86CZdQ0=;
+        b=ujE9YZn8x6/VcmU/0Z+b4S3X6Cc16ZsAIPvkqSVtQwq16OT9HflIeTaqoSW2FR/Ke7
+         pu0uhXzPhdpX9DiT3XQgShPJlpuqBxJdNZs8Aaj4cB7dfExAZzxyM39q8LLWdC+UpKOz
+         k90c82vCno8LxDjEONoJFd2bg3U4bdlt53Fjr9zXU3s7TlwjqTN4SbME2Rzl7e8n0ylT
+         gi2S+9nTPjn00Unn9INJNJx7m+ofE0Y8KoJqrT5whrrkCi72chH938iGwKZsohAywF77
+         TKe7KYSqgpYalJHvwHRD5S4s2yVrMCYUwk9A3QGiG047eiYL1AX6eLc0rqvqgn2Wj0MD
+         qFjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=30cHDPSODRjzx60oee0Lo4biVeqVEQUgsOye86CZdQ0=;
+        b=L0V6aYr5ilrVXUjR/WXY0T8XfTw4K1Cn8qDq4X3jddEnNKdR/ZiZ9OmsO1MSsgSxrb
+         i82fH0cBVRUwFkNV0xLPpuA38MJh8DQNRnk6vbowkhUzwb9ltVb3/6uEv8+rmK7LA2is
+         83qab28ctt72GTGlM1tIbeTrbiFMHZFTv/y672bOLdZWkEdIWa7U/STlYjkBJHKh5Lpf
+         TF/4A6j7ppqwE7o9jj/k1rCQs/5HHjxBvqP9mWDzrpkSx6wyw2T7cySR+ZkSjOpvd+I/
+         PYnkuSu4SsIAdhkULmWmt5wuCm42Nmz6n6xylIfrO9ZCVCZRJaPr93JDxUyEyoEfW9zJ
+         wWJg==
+X-Gm-Message-State: APjAAAVs0u+4iryn44L8wHu/gl+Uc51v0rDg3vY42ixNw1AqHsO51nVY
+        fJc67VvhqipEa/d3wXrlTiolGA==
+X-Google-Smtp-Source: APXvYqwjBEsniOi5hJVUrh23+U47HSZ1lTJaoKAz8PwNLCTH7NTTuxiXAdNbrYWwQMmDwCRhuMpAuQ==
+X-Received: by 2002:aa7:87d5:: with SMTP id i21mr4259475pfo.70.1565857546207;
+        Thu, 15 Aug 2019 01:25:46 -0700 (PDT)
+Received: from localhost.localdomain (li456-16.members.linode.com. [50.116.10.16])
+        by smtp.gmail.com with ESMTPSA id e6sm2399223pfl.37.2019.08.15.01.25.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 01:25:45 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v5] perf machine: arm/arm64: Improve completeness for kernel address space
+Date:   Thu, 15 Aug 2019 16:25:21 +0800
+Message-Id: <20190815082521.16885-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
+Arm and arm64 architecture reserve some memory regions prior to the
+symbol '_stext' and these memory regions later will be used by device
+module and BPF jit.  The current code misses to consider these memory
+regions thus any address in the regions will be taken as user space
+mode, but perf cannot find the corresponding dso with the wrong CPU
+mode so we misses to generate samples for device module and BPF
+related trace data.
 
-On Wed, Aug 14, 2019 at 09:58:05PM -0300, Helen Koike wrote:
+This patch parse the link scripts to get the memory size prior to start
+address and reduce this size from 'machine>->kernel_start', then can
+get a fixed up kernel start address which contain memory regions for
+device module and BPF.  Finally, machine__get_kernel_start() can reflect
+more complete kernel memory regions and perf can successfully generate
+samples.
 
-...
+The reason for parsing the link scripts is Arm architecture changes text
+offset dependent on different platforms, which define multiple text
+offsets in $kernel/arch/arm/Makefile.  This offset is decided when build
+kernel and the final value is extended in the link script, so we can
+extract the used value from the link script.  We use the same way to
+parse arm64 link script as well.  If fail to find the link script, the
+pre start memory size is assumed as zero, in this case it has no any
+change caused with this patch.
 
-> >> +static int rkisp1_isp_sd_set_fmt(struct v4l2_subdev *sd,
-> >> +				 struct v4l2_subdev_pad_config *cfg,
-> >> +				 struct v4l2_subdev_format *fmt)
-> >> +{
-> >> +	struct rkisp1_device *isp_dev = sd_to_isp_dev(sd);
-> >> +	struct rkisp1_isp_subdev *isp_sd = &isp_dev->isp_sdev;
-> >> +	struct v4l2_mbus_framefmt *mf = &fmt->format;
-> >> +
-> > 
-> > Note that for sub-device nodes, the driver is itself responsible for
-> > serialising the access to its data structures.
-> 
-> But looking at subdev_do_ioctl_lock(), it seems that it serializes the
-> ioctl calls for subdevs, no? Or I'm misunderstanding something (which is
-> most probably) ?
+Below is detailed info for testing this patch:
 
-Good question. I had missed this change --- subdev_do_ioctl_lock() is
-relatively new. But setting that lock is still not possible as the struct
-is allocated in the framework and the device is registered before the
-driver gets hold of it. It's a good idea to provide the same serialisation
-for subdevs as well.
+- Install or build LLVM/Clang;
 
-I'll get back to this later.
+- Configure perf with ~/.perfconfig:
 
-...
+  root@debian:~# cat ~/.perfconfig
+  # this file is auto-generated.
+  [llvm]
+          clang-path = /mnt/build/llvm-build/build/install/bin/clang
+          kbuild-dir = /mnt/linux-kernel/linux-cs-dev/
+          clang-opt = "-g"
+          dump-obj = true
 
-> >> +static int rkisp1_isp_sd_s_power(struct v4l2_subdev *sd, int on)
-> > 
-> > If you support runtime PM, you shouldn't implement the s_power op.
-> 
-> Is is ok to completly remove the usage of runtime PM then?
-> Like this http://ix.io/1RJb ?
+  [trace]
+          show_zeros = yes
+          show_duration = no
+          no_inherit = yes
+          show_timestamp = no
+          show_arg_names = no
+          args_alignment = 40
+          show_prefix = yes
 
-Please use runtime PM instead. In the long run we should get rid of the
-s_power op. Drivers themselves know better when the hardware they control
-should be powered on or off.
+- Run 'perf trace' command with eBPF event:
 
-> 
-> tbh I'm not that familar with runtime PM and I'm not sure what is the
-> difference of it and using s_power op (and Documentation/power/runtime_pm.rst
-> is not being that helpful tbh).
+  root@debian:~# perf trace -e string \
+      -e $kernel/tools/perf/examples/bpf/augmented_raw_syscalls.c
 
-You can find a simple example e.g. in
-drivers/media/platform/atmel/atmel-isi.c .
+- Read eBPF program memory mapping in kernel:
 
-> 
-> > 
-> > You'll still need to call s_power on external subdevs though.
-> > 
-> >> +{
-> >> +	struct rkisp1_device *isp_dev = sd_to_isp_dev(sd);
-> >> +	int ret;
-> >> +
-> >> +	v4l2_dbg(1, rkisp1_debug, &isp_dev->v4l2_dev, "s_power: %d\n", on);
-> >> +
-> >> +	if (on) {
-> >> +		ret = pm_runtime_get_sync(isp_dev->dev);
-> 
-> If this is not ok to remove suport for runtime PM, then where should I put
-> the call to pm_runtime_get_sync() if not in this s_power op ?
+  root@debian:~# echo 1 > /proc/sys/net/core/bpf_jit_kallsyms
+  root@debian:~# cat /proc/kallsyms | grep -E "bpf_prog_.+_sys_[enter|exit]"
+  ffff00000008a0d0 t bpf_prog_e470211b846088d5_sys_enter  [bpf]
+  ffff00000008c6a4 t bpf_prog_29c7ae234d79bd5c_sys_exit   [bpf]
 
-Basically the runtime_resume and runtime_suspend callbacks are where the
-device power state changes are implemented, and pm_runtime_get_sync and
-pm_runtime_put are how the driver controls the power state.
+- Launch any program which accesses file system frequently so can hit
+  the system calls trace flow with eBPF event;
 
-So you no longer need the s_power() op at all. The op needs to be called on
-the pipeline however, as there are drivers that still use it.
+- Capture CoreSight trace data with filtering eBPF program:
 
-> 
-> >> +		if (ret < 0)
-> >> +			return ret;
-> >> +
-> >> +		rkisp1_config_clk(isp_dev);
-> >> +	} else {
-> >> +		ret = pm_runtime_put(isp_dev->dev);
-> >> +		if (ret < 0)
-> >> +			return ret;
-> >> +	}
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static int rkisp1_subdev_link_validate(struct media_link *link)
-> >> +{
-> >> +	if (link->source->index == RKISP1_ISP_PAD_SINK_PARAMS)
-> > 
-> > Is this test correct? The source is the source end of the link, i.e. the
-> > video node.
-> 
-> Ah yes, it should be link->sink->index (and not source), thanks for spotting this.
-> 
-> > 
-> > How about the links that end in a video node?
-> 
-> I thought that the only possibilities were sensor->isp1 and params->isp1 (where params
-> is an output video node that should be catched by the corrected version of the if
-> statement above.
-> 
-> Or do you mean another thing?
+  root@debian:~# perf record -e cs_etm/@tmc_etr0/ \
+	--filter 'filter 0xffff00000008a0d0/0x800' -a sleep 5s
 
-The link_validate of the sink entity will be called only, for the knowledge
-what is possible is generally in that end.
+- Decode the eBPF program symbol 'bpf_prog_f173133dc38ccf87_sys_enter':
 
-So you'll need this for all the sink pads this driver is in control of.
-I suppose this means the sub-devices as well as capture video nodes in
-practice.
+  root@debian:~# perf script -F,ip,sym
+  Frame deformatter: Found 4 FSYNCS
+                  0 [unknown]
+   ffff00000008a1ac bpf_prog_e470211b846088d5_sys_enter
+   ffff00000008a250 bpf_prog_e470211b846088d5_sys_enter
+                  0 [unknown]
+   ffff00000008a124 bpf_prog_e470211b846088d5_sys_enter
+                  0 [unknown]
+   ffff00000008a14c bpf_prog_e470211b846088d5_sys_enter
+   ffff00000008a13c bpf_prog_e470211b846088d5_sys_enter
+   ffff00000008a14c bpf_prog_e470211b846088d5_sys_enter
+                  0 [unknown]
+   ffff00000008a180 bpf_prog_e470211b846088d5_sys_enter
+                  0 [unknown]
+   ffff00000008a1ac bpf_prog_e470211b846088d5_sys_enter
+   ffff00000008a190 bpf_prog_e470211b846088d5_sys_enter
+   ffff00000008a1ac bpf_prog_e470211b846088d5_sys_enter
+   ffff00000008a250 bpf_prog_e470211b846088d5_sys_enter
+                  0 [unknown]
+   ffff00000008a124 bpf_prog_e470211b846088d5_sys_enter
+                  0 [unknown]
+   ffff00000008a14c bpf_prog_e470211b846088d5_sys_enter
+                  0 [unknown]
+   ffff00000008a180 bpf_prog_e470211b846088d5_sys_enter
+   [...]
 
-> 
-> > 
-> >> +		return 0;
-> >> +
-> >> +	return v4l2_subdev_link_validate(link);
-> >> +}
-> >> +
-> >> +static int rkisp1_subdev_fmt_link_validate(struct v4l2_subdev *sd,
-> >> +					struct media_link *link,
-> >> +					struct v4l2_subdev_format *source_fmt,
-> >> +					struct v4l2_subdev_format *sink_fmt)
-> >> +{
-> >> +	if (source_fmt->format.code != sink_fmt->format.code)
-> >> +		return -EINVAL;
-> 
-> ops, should be -EPIPE
-> 
-> >> +
-> >> +	/* Crop is available */
-> >> +	if (source_fmt->format.width < sink_fmt->format.width ||
-> >> +	    source_fmt->format.height < sink_fmt->format.height)
-> >> +		return -EINVAL;
-> 
-> -EPIPE
-> 
-> >> +
-> > 
-> > Could you use v4l2_subdev_link_validate_default()?
-> 
-> v4l2_subdev_link_validate_default() only allows for an exact width/height match,
-> but here we allow the sink to be smaller then the source for cropping, no?
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: coresight@lists.linaro.org
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/Makefile.config | 22 ++++++++++++++++++++++
+ tools/perf/util/machine.c  | 15 ++++++++++++++-
+ 2 files changed, 36 insertions(+), 1 deletion(-)
 
-The width and height generally must match over a link. But cropping takes
-place inside a sub-device, it is not a concern in link validation as such.
-
-> 
-> Thanks again for your review!
-
-You're welcome!
-
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index e4988f49ea79..d7ff839d8b20 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -48,9 +48,20 @@ ifeq ($(SRCARCH),x86)
+   NO_PERF_REGS := 0
+ endif
+ 
++ARM_PRE_START_SIZE := 0
++
+ ifeq ($(SRCARCH),arm)
+   NO_PERF_REGS := 0
+   LIBUNWIND_LIBS = -lunwind -lunwind-arm
++  ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds),)
++    # Extract info from lds:
++    #   . = ((0xC0000000)) + 0x00208000;
++    # ARM_PRE_START_SIZE := 0x00208000
++    ARM_PRE_START_SIZE := $(shell egrep ' \. \= \({2}0x[0-9a-fA-F]+\){2}' \
++      $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds | \
++      sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
++      awk -F' ' '{printf "0x%x", $$2}' 2>/dev/null)
++  endif
+ endif
+ 
+ ifeq ($(SRCARCH),arm64)
+@@ -58,8 +69,19 @@ ifeq ($(SRCARCH),arm64)
+   NO_SYSCALL_TABLE := 0
+   CFLAGS += -I$(OUTPUT)arch/arm64/include/generated
+   LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
++  ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds),)
++    # Extract info from lds:
++    #  . = ((((((((0xffffffffffffffff)) - (((1)) << (48)) + 1) + (0)) + (0x08000000))) + (0x08000000))) + 0x00080000;
++    # ARM_PRE_START_SIZE := (0x08000000 + 0x08000000 + 0x00080000) = 0x10080000
++    ARM_PRE_START_SIZE := $(shell egrep ' \. \= \({8}0x[0-9a-fA-F]+\){2}' \
++      $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds | \
++      sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
++      awk -F' ' '{printf "0x%x", $$6+$$7+$$8}' 2>/dev/null)
++  endif
+ endif
+ 
++CFLAGS += -DARM_PRE_START_SIZE=$(ARM_PRE_START_SIZE)
++
+ ifeq ($(SRCARCH),csky)
+   NO_PERF_REGS := 0
+ endif
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index f6ee7fbad3e4..e993f891bb82 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2687,13 +2687,26 @@ int machine__get_kernel_start(struct machine *machine)
+ 	machine->kernel_start = 1ULL << 63;
+ 	if (map) {
+ 		err = map__load(map);
++		if (err)
++			return err;
++
+ 		/*
+ 		 * On x86_64, PTI entry trampolines are less than the
+ 		 * start of kernel text, but still above 2^63. So leave
+ 		 * kernel_start = 1ULL << 63 for x86_64.
+ 		 */
+-		if (!err && !machine__is(machine, "x86_64"))
++		if (!machine__is(machine, "x86_64"))
+ 			machine->kernel_start = map->start;
++
++		/*
++		 * On arm/arm64, the kernel uses some memory regions which are
++		 * prior to '_stext' symbol; to reflect the complete kernel
++		 * address space, compensate these pre-defined regions for
++		 * kernel start address.
++		 */
++		if (!strcmp(perf_env__arch(machine->env), "arm") ||
++		    !strcmp(perf_env__arch(machine->env), "arm64"))
++			machine->kernel_start -= ARM_PRE_START_SIZE;
+ 	}
+ 	return err;
+ }
 -- 
-Kind regards,
+2.17.1
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
