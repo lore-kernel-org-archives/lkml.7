@@ -2,124 +2,245 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4891C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B549BC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED29205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786A6205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:13:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vGzWIbKl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731382AbfHORMB (ORCPT
+        id S1731440AbfHORNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:12:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:20203 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730474AbfHORMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:12:01 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 732FD30832E1;
-        Thu, 15 Aug 2019 17:12:00 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9562687A9;
-        Thu, 15 Aug 2019 17:11:58 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 13:11:56 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thu, 15 Aug 2019 13:13:37 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:42914 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730932AbfHORNh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:13:37 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 201so2391498qkm.9
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:13:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=k01EdK39fXAsy433GSANuRrBTV+5yuWxEMUTAVxIQUk=;
+        b=vGzWIbKluro4GsouXwOpDks7+UxNjjDqwWhiKSsqlzP8jzrTXDYWfCbQeq7BCMu8WA
+         e2Ttkq2xoR3YOoSzvJ5L64HV+1Af63s/uMI9EI/qiK8f6wo2l5//wAEqZoJ9fM0k5415
+         0MCl6uP/GobxxuDNBnjSNDmgctwKRKzEi+4upPZJxmgaw5ZXURT1gkiS/23Ns7DUNj4G
+         78VGpJt0IKFMXD1UayB0RFlSErAsPlng2VAdOlMZgnIZmIHBr+oVwFdg5+tvDZ7FVLbX
+         vdw+pM8UB1qokK0zwUX4yj4hISB+1PTtB+nAbt9n+Zen3xuS3vDlpVFpiD/irLGgD8l/
+         a0ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=k01EdK39fXAsy433GSANuRrBTV+5yuWxEMUTAVxIQUk=;
+        b=j9GgBjhK5gjr/36mZz0dd5Xyz/90Aw5pzefYFBpe/wgiOm8I0nW8C808HHbdosuW89
+         BA51aPxaS8NCplAglhCeOVAmdl+NzJXpKxr+jhTZN2LKoReyxbYk+ycxSw7WvbUv1vx9
+         9Of0+Ao1rjDgXVkdmctEqBQ0r7zKq+ScYSSm/yoV80eqV0sPTVHEoqEmmoYg1orWf350
+         ILx2vW5oosroMB3AMEoCHk0jkzPf9RxbczaztDr/kk/mzA9WtSWt8OiR7NIrqa45r/MQ
+         ZNFp2Hb8ZYM6foupJP1R1gfQKMb6XLCaA7vmIKbPxuxdDu9NU3yV0+/iFamyeawcqjsu
+         Eshg==
+X-Gm-Message-State: APjAAAUfJDD3/badByxA2JMr/4RLu2cjS/vFp2wocuAkEq6RiWnhVSeW
+        m5F2y8pnUbdF2ZvA4S6vHWg=
+X-Google-Smtp-Source: APXvYqwud3JQQVpp9Zix1svSLQ4bKesHtvFJNW99NMeM3u3A3fvmpgtJLzatV7SmPym2P9GgpORdpw==
+X-Received: by 2002:a37:484a:: with SMTP id v71mr5033584qka.29.1565889215618;
+        Thu, 15 Aug 2019 10:13:35 -0700 (PDT)
+Received: from localhost.localdomain ([191.177.180.86])
+        by smtp.googlemail.com with ESMTPSA id j66sm1646474qkf.86.2019.08.15.10.13.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 10:13:35 -0700 (PDT)
+From:   Daniel Stuart <daniel.stuart14@gmail.com>
+Cc:     cezary.rojewski@intel.com,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Daniel Stuart <daniel.stuart@pucpr.edu.br>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-Message-ID: <20190815171156.GB30916@redhat.com>
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
- <20190814202027.18735-3-daniel.vetter@ffwll.ch>
- <20190814235805.GB11200@ziepe.ca>
- <20190815065829.GA7444@phenom.ffwll.local>
- <20190815122344.GA21596@ziepe.ca>
- <20190815132127.GI9477@dhcp22.suse.cz>
- <20190815141219.GF21596@ziepe.ca>
- <20190815155950.GN9477@dhcp22.suse.cz>
- <20190815165631.GK21596@ziepe.ca>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190815165631.GK21596@ziepe.ca>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 15 Aug 2019 17:12:00 +0000 (UTC)
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: intel: cht_bsw_max98090_ti: Add all Chromebooks that need pmc_plt_clk_0 quirk
+Date:   Thu, 15 Aug 2019 14:12:55 -0300
+Message-Id: <20190815171300.30126-1-daniel.stuart14@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 01:56:31PM -0300, Jason Gunthorpe wrote:
-> On Thu, Aug 15, 2019 at 06:00:41PM +0200, Michal Hocko wrote:
-> 
-> > > AFAIK 'GFP_NOWAIT' is characterized by the lack of __GFP_FS and
-> > > __GFP_DIRECT_RECLAIM..
-> > >
-> > > This matches the existing test in __need_fs_reclaim() - so if you are
-> > > OK with GFP_NOFS, aka __GFP_IO which triggers try_to_compact_pages(),
-> > > allocations during OOM, then I think fs_reclaim already matches what
-> > > you described?
-> > 
-> > No GFP_NOFS is equally bad. Please read my other email explaining what
-> > the oom_reaper actually requires. In short no blocking on direct or
-> > indirect dependecy on memory allocation that might sleep.
-> 
-> It is much easier to follow with some hints on code, so the true
-> requirement is that the OOM repear not block on GFP_FS and GFP_IO
-> allocations, great, that constraint is now clear.
-> 
-> > If you can express that in the existing lockdep machinery. All
-> > fine. But then consider deployments where lockdep is no-no because
-> > of the overhead.
-> 
-> This is all for driver debugging. The point of lockdep is to find all
-> these paths without have to hit them as actual races, using debug
-> kernels.
-> 
-> I don't think we need this kind of debugging on production kernels?
-> 
-> > > The best we got was drivers tested the VA range and returned success
-> > > if they had no interest. Which is a big win to be sure, but it looks
-> > > like getting any more is not really posssible.
-> > 
-> > And that is already a great win! Because many notifiers only do care
-> > about particular mappings. Please note that backing off unconditioanlly
-> > will simply cause that the oom reaper will have to back off not doing
-> > any tear down anything.
-> 
-> Well, I'm working to propose that we do the VA range test under core
-> mmu notifier code that cannot block and then we simply remove the idea
-> of blockable from drivers using this new 'range notifier'. 
-> 
-> I think this pretty much solves the concern?
+Every single baytrail chromebook sets PMC to 0, as can be seeing
+below by searching through coreboot source code:
+	$ grep -rl "PMC_PLT_CLK\[0\]" .
+	./rambi/variants/glimmer/devicetree.cb
+	./rambi/variants/clapper/devicetree.cb
+	./rambi/variants/swanky/devicetree.cb
+	./rambi/variants/enguarde/devicetree.cb
+	./rambi/variants/winky/devicetree.cb
+	./rambi/variants/kip/devicetree.cb
+	./rambi/variants/squawks/devicetree.cb
+	./rambi/variants/orco/devicetree.cb
+	./rambi/variants/ninja/devicetree.cb
+	./rambi/variants/heli/devicetree.cb
+	./rambi/variants/sumo/devicetree.cb
+	./rambi/variants/banjo/devicetree.cb
+	./rambi/variants/candy/devicetree.cb
+	./rambi/variants/gnawty/devicetree.cb
+	./rambi/variants/rambi/devicetree.cb
+	./rambi/variants/quawks/devicetree.cb
 
-I am not sure i follow what you propose here ? Like i pointed out in
-another email for GPU we do need to be able to sleep (we might get
-lucky and not need too but this is runtime thing) within notifier
-range_start callback. This has been something allow by notifier since
-it has been introduced in the kernel.
+Plus, Cyan (only non-baytrail chromebook with max98090) also needs
+this patch for audio to work.
 
-Cheers,
-Jérôme
+Thus, this commit adds all the missing devices to bsw_max98090 quirk
+table, implemented by commit a182ecd3809c ("ASoC: intel:
+cht_bsw_max98090_ti: Add quirk for boards using pmc_plt_clk_0").
+
+Signed-off-by: Daniel Stuart <daniel.stuart14@gmail.com>
+---
+ sound/soc/intel/boards/cht_bsw_max98090_ti.c | 98 ++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+
+diff --git a/sound/soc/intel/boards/cht_bsw_max98090_ti.c b/sound/soc/intel/boards/cht_bsw_max98090_ti.c
+index 33eb72545be6..83b978e7b4c4 100644
+--- a/sound/soc/intel/boards/cht_bsw_max98090_ti.c
++++ b/sound/soc/intel/boards/cht_bsw_max98090_ti.c
+@@ -399,6 +399,20 @@ static struct snd_soc_card snd_soc_card_cht = {
+ };
+ 
+ static const struct dmi_system_id cht_max98090_quirk_table[] = {
++	{
++		/* Banjo model Chromebook */
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Banjo"),
++		},
++		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
++	},
++	{
++		/* Candy model Chromebook */
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Candy"),
++		},
++		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
++	},
+ 	{
+ 		/* Clapper model Chromebook */
+ 		.matches = {
+@@ -406,6 +420,27 @@ static const struct dmi_system_id cht_max98090_quirk_table[] = {
+ 		},
+ 		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
+ 	},
++	{
++		/* Cyan model Chromebook */
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Cyan"),
++		},
++		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
++	},
++	{
++		/* Enguarde model Chromebook */
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Enguarde"),
++		},
++		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
++	},
++	{
++		/* Glimmer model Chromebook */
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Glimmer"),
++		},
++		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
++	},
+ 	{
+ 		/* Gnawty model Chromebook (Acer Chromebook CB3-111) */
+ 		.matches = {
+@@ -413,6 +448,62 @@ static const struct dmi_system_id cht_max98090_quirk_table[] = {
+ 		},
+ 		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
+ 	},
++	{
++		/* Heli model Chromebook */
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Heli"),
++		},
++		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
++	},
++	{
++		/* Kip model Chromebook */
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Kip"),
++		},
++		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
++	},
++	{
++		/* Ninja model Chromebook */
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Ninja"),
++		},
++		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
++	},
++	{
++		/* Orco model Chromebook */
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Orco"),
++		},
++		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
++	},
++	{
++		/* Quawks model Chromebook */
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Quawks"),
++		},
++		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
++	},
++	{
++		/* Rambi model Chromebook */
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Rambi"),
++		},
++		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
++	},
++	{
++		/* Squawks model Chromebook */
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Squawks"),
++		},
++		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
++	},
++	{
++		/* Sumo model Chromebook */
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Sumo"),
++		},
++		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
++	},
+ 	{
+ 		/* Swanky model Chromebook (Toshiba Chromebook 2) */
+ 		.matches = {
+@@ -420,6 +511,13 @@ static const struct dmi_system_id cht_max98090_quirk_table[] = {
+ 		},
+ 		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
+ 	},
++	{
++		/* Winky model Chromebook */
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Winky"),
++		},
++		.driver_data = (void *)QUIRK_PMC_PLT_CLK_0,
++	},
+ 	{}
+ };
+ 
+-- 
+2.17.1
+
