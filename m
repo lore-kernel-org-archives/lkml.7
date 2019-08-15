@@ -2,98 +2,135 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 359C4C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F813C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0966D208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:25:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VwGU6RQs"
+	by mail.kernel.org (Postfix) with ESMTP id 6F9D12084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730943AbfHOIZV (ORCPT
+        id S1730561AbfHOIZU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 04:25:21 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36537 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729838AbfHOIZU (ORCPT
+        Thu, 15 Aug 2019 04:25:20 -0400
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:49674 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730213AbfHOIZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 15 Aug 2019 04:25:20 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j17so1145579lfp.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 01:25:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P02BSDCRijPbd9yK/6Voa9R/D56p990RHfEVvViY/Bo=;
-        b=VwGU6RQs7iolsd3xhQ/RkLbxvAo8VLkErvnXtuEhQmdWmK+++AzDqwQcuwgE0X927k
-         Xk1vn5vYXh3iYZc1Ah5SkL8Dn0uUnfO+jYr1jwuAmBphIqlCxmDSCATpGnl27Ai5CXWm
-         YD4wkOLZrBYoyhR4aN8RpI18MKGPkk/YYbjfPEW9G4/iO/Kbz/73F0C5g9LIiZM+7NW+
-         SWMSaC74D0zgMt6U1z7UYiWvzxRj+tYEBacypVR9VrNjLFL2Uy/AVDacXEKsfVm9BBZ7
-         DjX2KwkQOk7M498JD3EVo4RSmkCSboE7ziaIIdobStjnVp99VmOZudUnn/aaxrywezgs
-         OKHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P02BSDCRijPbd9yK/6Voa9R/D56p990RHfEVvViY/Bo=;
-        b=UuBEIKTP1iPN4slYitRXtyuk9qBN5PAZ8cHtzBr9zHDIBzjIalIFrLJxvzZ+DxZJJf
-         AKj09m6/Yyz/hNQFFAFNk3k0oQabSLsGHV6vfsvE3YySdqolzjqVdpB3Sx6DpES3RcOo
-         WEgG5xt1IbtwLu9o+Bq3MIf0TFTDJLq2qwZnCTDl8e1BeLNjTk+f14ni3u2KmZuDgTv/
-         Z1IRmVhyBcQd0cG6aBfsRbzCkUj7p6RJ2FgIhW+Zb7A9NZEn7scJozb+4/EV/6d02j0O
-         6y1Jw4/5vEUCVmOUchdoJQEnyIoGAm62oj9ZRrx5aoW0zc1AKx3ae2a9/yLSb+9YGnhu
-         OV5Q==
-X-Gm-Message-State: APjAAAVR0wQ+FIJBqZ4Dr0yz/+Lzk5KKBG/IhTgKp7wMf/YmVZeFpArM
-        Xxf4lGbYkSQZZkWZ39d6rc1bR8uQvsxgSGEnn49JfQ==
-X-Google-Smtp-Source: APXvYqwuz6gUlIPqwTv4NphE9CuB8QLz9uvS26JNUXQ4p8UjA/NuXYuyNh1rl3LRryriamcIaIyf7prYAZZock0AxlY=
-X-Received: by 2002:ac2:4c07:: with SMTP id t7mr1613650lfq.152.1565857518224;
- Thu, 15 Aug 2019 01:25:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190815004854.19860-1-masneyb@onstation.org> <20190815004854.19860-11-masneyb@onstation.org>
-In-Reply-To: <20190815004854.19860-11-masneyb@onstation.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 15 Aug 2019 10:25:06 +0200
-Message-ID: <CACRpkdYkmLXOJHGy5S55r60zZVY9dg5m9j87S3wx=banFxx6aQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 10/11] ARM: dts: qcom: msm8974: add HDMI nodes
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Thu, 15 Aug 2019 04:25:19 EDT
+IronPort-SDR: vdvsQ8Iv0WG7sz1QV0nN5aS3OM7d3QEtNR3/Z3o7LWwt0fRCWkXxJvuLgQazXnA73A5OFItmt5
+ 0ldGMSM4K/7zuozjL6rb32sSm1wthHTf+CdXH96Ik/Z414gGHBHjPvtuTvc0mMIjAfHT9PXFKV
+ FOMkH4FZGGuw9IOSxIxt0VQtIiuigxuOPWHMX05C495/BHq7mxZDOZNqRMJoK83hEWZfkNNGqG
+ waPaSPHQ0/vwcI6LV/WQ88HociRQs0YSaPmIOjJTy5dUyJGcybIkON8qMTaZsnWVXEgzXCy4Gm
+ Oto=
+X-IronPort-AV: E=Sophos;i="5.64,388,1559548800"; 
+   d="scan'208";a="40453435"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa2.mentor.iphmx.com with ESMTP; 15 Aug 2019 00:18:12 -0800
+IronPort-SDR: htcRjcmG9l9zGnWMZ+4soCAXhpE2Zibe/ltCHmq+74d1fR0FdNoga33DgrUAk0Uq+YQ9Hi4Wyn
+ sgJtbzWgBUbD6zg+QDNAkgOdd2PjrstZROoBjDV/wQ4r1IijKrpyGUh9i8NvPweyTNqcnKg3qp
+ Z0Pr1LfQIF4tJhZqOCb7dQTusDqUheV2JBIuFyb5x2lQtrNjRwVkQKoFBGUWIRmRGbCfcRgnNv
+ HLFrD1pLTEWB9k9qWw6B0+nCbVJW3c4lerAipRd5wYa07jIqv5/2R5f5O/dI8t7RqhofTcicvI
+ WlM=
+From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
+To:     Wei Yang <richard.weiyang@gmail.com>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "bp@suse.de" <bp@suse.de>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "richardw.yang@linux.intel.com" <richardw.yang@linux.intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: AW: [PATCH v2] kernel/resource.c: invalidate parent when freed
+ resource has childs
+Thread-Topic: [PATCH v2] kernel/resource.c: invalidate parent when freed
+ resource has childs
+Thread-Index: AQHVUq5kcb5Ex7JpNUSktSjVjdFue6b6xMYAgAEUHnA=
+Date:   Thu, 15 Aug 2019 08:18:06 +0000
+Message-ID: <c925c7d1041f478c99863da56c24b8a7@SVR-IES-MBX-03.mgc.mentorg.com>
+References: <1565278859475.1962@mentor.com> <1565358624103.3694@mentor.com>
+ <20190809223831.fk4uyrzscr366syr@master>
+ <CAHk-=wi_9sdMxurjZ1MbNnxt-pA=dqoyf8Fdn9aYc8xvjjnTBg@mail.gmail.com>
+ <1565794104204.54092@mentor.com> <20190814162932.alwo7g4664c2dtp3@master>
+In-Reply-To: <20190814162932.alwo7g4664c2dtp3@master>
+Accept-Language: de-DE, en-IE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [137.202.0.90]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 2:49 AM Brian Masney <masneyb@onstation.org> wrote:
-
-> Add HDMI tx and phy nodes to support an external display that can be
-> connected over the SlimPort. This is based on work from Jonathan Marek.
+>>When a resource is freed and has children, the childrens are
+> 
+> s/childrens/children/
 >
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+oh, missed that. Too many children ... ;-)
+ 
+>>+		__release_child_resources(tmp, warn);
+> 
+> This function will release all the children.
+> 
+> Is this what Linus suggest?
+> 
+> From his code snippet, I just see siblings parent is set to NULL. I may miss
+> some point?
+>
+At the point we are here, there should be no children, and children of
+children at all ...
+So they are all more or less lost in the wild.
+That was why i didn't copy Linus' code 1:1 but reused an already existing
+function doing similar thing.
+It's anyway worth of thinking about this.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+What i have in mind here (example):
+Parent: iomem map 0x1000..0x1FFF
+  Child1: iomem map 0x1000..0x17FF
+    Child11: iomem map 0x1000..0x13FF
+    Child12: iomem map 0x1400..0x17FF
+  Child2: iomem map 0x1800..0x1FFF
+    Child21: iomem map 0x1800..0x1BFF
+    Child22: iomem map 0x1C00..0x1FFF
 
-Yours,
-Linus Walleij
+When releasing the parent, how can children 11, 12, 21 and 22 still be valid?
+They don't know about their grandfather died ...
+Looking at the __release_child_resources, i exactly found that all children are
+invalidated/released in the way Linus did for the parent's children list.
+Doesn't it make sense to do the same for all?
+
+Please comment.
+
+> >+static void check_children(struct resource *parent)
+> >+{
+> >+	if (parent->child) {
+> >+		/* warn and release all children */
+> >+		WARN_ONCE(1, "%s: %s has child %s, release all children\n",
+> >+				__func__, parent->name, parent->child-
+> >name);
+> >+		write_lock(&resource_lock);
+> 
+> In previous version, lock is grasped before parent->child is checked.
+> 
+> Not sure why you change the order?
+> 
+To hold the lock as short as possible.
+But yes, you are right, this could lead to problems if releasing of the
+children is done in a parallel thread on a multicore ...
+I'll change that to cover the whole resource access within the lock.
+Not a big thing ...
+
+Best regards
+Carsten
