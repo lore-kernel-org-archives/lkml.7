@@ -2,137 +2,153 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B808C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B642CC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3703220578
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82ACC2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:34:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0I5b9um"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731947AbfHOQco (ORCPT
+        id S1731961AbfHOQeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:32:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49182 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730705AbfHOQcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:32:43 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C67853E2D3;
-        Thu, 15 Aug 2019 16:32:42 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A8BCB17AD1;
-        Thu, 15 Aug 2019 16:32:40 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 12:32:38 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-Message-ID: <20190815163238.GA30781@redhat.com>
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
- <20190814202027.18735-3-daniel.vetter@ffwll.ch>
- <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
- <20190815084429.GE9477@dhcp22.suse.cz>
- <20190815130415.GD21596@ziepe.ca>
- <CAKMK7uE9zdmBuvxa788ONYky=46GN=5Up34mKDmsJMkir4x7MQ@mail.gmail.com>
- <20190815143759.GG21596@ziepe.ca>
- <CAKMK7uEJQ6mPQaOWbT_6M+55T-dCVbsOxFnMC6KzLAMQNa-RGg@mail.gmail.com>
- <20190815151028.GJ21596@ziepe.ca>
+        Thu, 15 Aug 2019 12:34:20 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33394 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730156AbfHOQeT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 12:34:19 -0400
+Received: by mail-wr1-f67.google.com with SMTP id u16so2783696wrr.0;
+        Thu, 15 Aug 2019 09:34:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pTn+NtsTL+V0D+GdWsANpO5LDlMDujGKQnBTFznYvrg=;
+        b=b0I5b9umvFU/dTbkGZ8lpI4IO0BntAfcK/I9nuYpwuBM+8XbOgALyBm+ZWw4KA8Rpq
+         5QjqOnGNaJK6h456JXrc9md8wR77ry1v2+nExuB1/of/Cx6VQTNlp3zqUydXrs595iLN
+         xi5g99hILsigrn9aspf7eQbiNtWPbG3/EiHghM18mEQ2KHNbqW5o0b8YGihRneXoAX1x
+         CZGuMee8ohk2PO5cChypZvO4/JWYSUCII8yJCbl1gNJFDyTXDAQ8qKIzq9hW7w2ZpoOq
+         veLzzO3eA0lFHqAH2iGJPr8p7wHKS9A17modOPj5hy8g31swF7edmPtCA2tm+NsPkqeN
+         nzZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pTn+NtsTL+V0D+GdWsANpO5LDlMDujGKQnBTFznYvrg=;
+        b=AHqeCZKgBRsoEAs4kxiOI0EoDhnUw+SSXjunR+OwNfRbSOsuepmp3l8Eil8AtN85dL
+         /QD76zKWlTkPw81YLpxwGfFjkoXYBomFVlAbq+w0YiNyUWohMv4dMWJT6Axk5Hxi9s4F
+         5frhXVOsQluMS+ZLl0fJbNnDuo+Iqws7b+Ea7TXI6BMUKv8v5F6ZMOtAzXTQ88ryPfez
+         D23cSEvK4Qx6xHk3f/cj1YxePklYjTC7KEijDPFo+CE275h1sKzDvbIsdYs27hqqyAeG
+         ZkNTxnxLTL2Y9fA8KHSUix2TMcM39OJUFEXVhBZICG9wZmtJg0/tZEksgSheNf6rnb+v
+         4UNQ==
+X-Gm-Message-State: APjAAAUwN8x9o0b4EVJ2LN83mgEZZey2soZRlLxbG13afrFJSMtmI9sW
+        ZKbVVr+pqsgBj6xh56jBNzk=
+X-Google-Smtp-Source: APXvYqwOrCQJCIbbsm7t9XfeonICJnDff2rMsiIMCZSORG7Bv+ZFuT2VYG1FcFnDQtFQ42EJPkFZjA==
+X-Received: by 2002:adf:b64e:: with SMTP id i14mr6486128wre.248.1565886857510;
+        Thu, 15 Aug 2019 09:34:17 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f2f:3200:c0f5:392f:547b:417a? (p200300EA8F2F3200C0F5392F547B417A.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:c0f5:392f:547b:417a])
+        by smtp.googlemail.com with ESMTPSA id g14sm5756141wrb.38.2019.08.15.09.34.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 09:34:16 -0700 (PDT)
+Subject: Re: [PATCH net-next 1/1] Added BASE-T1 PHY support to PHY Subsystem
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Christian Herber <christian.herber@nxp.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+References: <20190815153209.21529-1-christian.herber@nxp.com>
+ <20190815153209.21529-2-christian.herber@nxp.com>
+ <20190815155613.GE15291@lunn.ch>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <2ca68436-8e49-b0b2-2460-4fcac3094b09@gmail.com>
+Date:   Thu, 15 Aug 2019 18:34:11 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190815151028.GJ21596@ziepe.ca>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 15 Aug 2019 16:32:43 +0000 (UTC)
+In-Reply-To: <20190815155613.GE15291@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 12:10:28PM -0300, Jason Gunthorpe wrote:
-> On Thu, Aug 15, 2019 at 04:43:38PM +0200, Daniel Vetter wrote:
+On 15.08.2019 17:56, Andrew Lunn wrote:
+> On Thu, Aug 15, 2019 at 03:32:29PM +0000, Christian Herber wrote:
+>> BASE-T1 is a category of Ethernet PHYs.
+>> They use a single copper pair for transmission.
+>> This patch add basic support for this category of PHYs.
+>> It coveres the discovery of abilities and basic configuration.
+>> It includes setting fixed speed and enabling auto-negotiation.
+>> BASE-T1 devices should always Clause-45 managed.
+>> Therefore, this patch extends phy-c45.c.
+>> While for some functions like auto-neogtiation different registers are
+>> used, the layout of these registers is the same for the used fields.
+>> Thus, much of the logic of basic Clause-45 devices can be reused.
+>>
+>> Signed-off-by: Christian Herber <christian.herber@nxp.com>
+>> ---
+>>  drivers/net/phy/phy-c45.c    | 113 +++++++++++++++++++++++++++++++----
+>>  drivers/net/phy/phy-core.c   |   4 +-
+>>  include/uapi/linux/ethtool.h |   2 +
+>>  include/uapi/linux/mdio.h    |  21 +++++++
+>>  4 files changed, 129 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
+>> index b9d4145781ca..9ff0b8c785de 100644
+>> --- a/drivers/net/phy/phy-c45.c
+>> +++ b/drivers/net/phy/phy-c45.c
+>> @@ -8,13 +8,23 @@
+>>  #include <linux/mii.h>
+>>  #include <linux/phy.h>
+>>  
+>> +#define IS_100BASET1(phy) (linkmode_test_bit( \
+>> +			   ETHTOOL_LINK_MODE_100baseT1_Full_BIT, \
+>> +			   (phy)->supported))
+>> +#define IS_1000BASET1(phy) (linkmode_test_bit( \
+>> +			    ETHTOOL_LINK_MODE_1000baseT1_Full_BIT, \
+>> +			    (phy)->supported))
 > 
-> > You have to wait for the gpu to finnish current processing in
-> > invalidate_range_start. Otherwise there's no point to any of this
-> > really. So the wait_event/dma_fence_wait are unavoidable really.
+> Hi Christian
 > 
-> I don't envy your task :|
+> We already have the flag phydev->is_gigabit_capable. Maybe add a flag
+> phydev->is_t1_capable
 > 
-> But, what you describe sure sounds like a 'registration cache' model,
-> not the 'shadow pte' model of coherency.
+>> +
+>> +static u32 get_aneg_ctrl(struct phy_device *phydev);
+>> +static u32 get_aneg_stat(struct phy_device *phydev);
 > 
-> The key difference is that a regirstationcache is allowed to become
-> incoherent with the VMA's because it holds page pins. It is a
-> programming bug in userspace to change VA mappings via mmap/munmap/etc
-> while the device is working on that VA, but it does not harm system
-> integrity because of the page pin.
+> No forward declarations please. Put the code in the right order so
+> they are not needed.
 > 
-> The cache ensures that each initiated operation sees a DMA setup that
-> matches the current VA map when the operation is initiated and allows
-> expensive device DMA setups to be re-used.
+> Thanks
 > 
-> A 'shadow pte' model (ie hmm) *really* needs device support to
-> directly block DMA access - ie trigger 'device page fault'. ie the
-> invalidate_start should inform the device to enter a fault mode and
-> that is it.  If the device can't do that, then the driver probably
-> shouldn't persue this level of coherency. The driver would quickly get
-> into the messy locking problems like dma_fence_wait from a notifier.
+>      Andrew
+> 
 
-I think here we do not agree on the hardware requirement. For GPU
-we will always need to be able to wait for some GPU fence from inside
-the notifier callback, there is just no way around that for many of
-the GPUs today (i do not see any indication of that changing).
+For whatever reason I don't have the original mail in my netdev inbox (yet).
 
-Driver should avoid lock complexity by using wait queue so that the
-driver notifier callback can wait without having to hold some driver
-lock. However there will be at least one lock needed to update the
-internal driver state for the range being invalidated. That lock is
-just the device driver page table lock for the GPU page table
-associated with the mm_struct. In all GPU driver so far it is a short
-lived lock and nothing blocking is done while holding it (it is just
-about updating page table directory really wether it is filling it or
-clearing it).
++	if (IS_100BASET1(phydev) || IS_1000BASET1(phydev))
++		ctrl = MDIO_AN_BT1_CTRL;
 
+Code like this could be problematic once a PHY supports one of the T1 modes
+AND normal modes. Then normal modes would be unusable.
 
-> 
-> It is important to identify what model you are going for as defining a
-> 'registration cache' coherence expectation allows the driver to skip
-> blocking in invalidate_range_start. All it does is invalidate the
-> cache so that future operations pick up the new VA mapping.
-> 
-> Intel's HFI RDMA driver uses this model extensively, and I think it is
-> well proven, within some limitations of course.
-> 
-> At least, 'registration cache' is the only use model I know of where
-> it is acceptable to skip invalidate_range_end.
+I think this scenario isn't completely hypothetical. See the Aquantia
+AQCS109 that supports normal modes and (proprietary) 1000Base-T2.
 
-Here GPU are not in the registration cache model, i know it might looks
-like it because of GUP but GUP was use just because hmm did not exist
-at the time.
+Maybe we need separate versions of the generic functions for T1.
+Then it would be up to the PHY driver to decide when to use which
+version.
 
-Cheers,
-Jérôme
+Heiner
