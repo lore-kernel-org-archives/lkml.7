@@ -2,101 +2,178 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.4 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD2BC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F96C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A792084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A792084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:23:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t7j5WaaL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hpm1cOi1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732849AbfHOSXB (ORCPT
+        id S1732871AbfHOSXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 14:23:01 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43760 "EHLO
+        Thu, 15 Aug 2019 14:23:20 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42423 "EHLO
         mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729565AbfHOSXB (ORCPT
+        with ESMTP id S1729565AbfHOSXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 14:23:01 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v12so1714399pfn.10;
-        Thu, 15 Aug 2019 11:23:00 -0700 (PDT)
+        Thu, 15 Aug 2019 14:23:19 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i30so1719828pfk.9;
+        Thu, 15 Aug 2019 11:23:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I6r9xkUCIDGW06+ejaTpiSeJRRLD5vi4+EJ3xtafcno=;
-        b=t7j5WaaLgIimZFUmKcUwkdWOUn+nGVIAK23dZp6RwRENhysF47CtajMMjHyRc2CkKt
-         0fQgzsv75xAd1bzfLRjsjaqqIfJfusCNvrmh3YwZFecLutgyP2thTwa/9M3UN1dupGrr
-         wH8LLB3Ymciyeiy3xD47RkA81rzt3FA7bNR4xJJzyy84rgwyT4rBgYpj5uxreqD034kw
-         mJ+NJNGXADaGVLMyTIiwcmsf7ikBRHNzLqT+0H7jVl+V85cr8UZM68vdJh2WROGXzsxi
-         s2L/JWVqM35gfwIAvOvGgvJcjnkZJxUI3buHQexC0XttahPRS+CgmkElzuBXTs/A8LkV
-         M1Bg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version;
+        bh=l7ROvwBmxyo8/D3YRRi0Igp8QJbgJTkQ4GmMpySCWJw=;
+        b=hpm1cOi18/fG/NCX5oXTspgxisZB91yz5SIdJ02JxUbw/62uEAeqLtdoNBJRGFRYor
+         ku4lr4oiVTFODDWfudvhhBIsqWBYHYhtAYHiIbHlaozuOtyg8o37i7DC3tbD9CqxD/L3
+         EiuCHQFVoeGVDJM7/BE+PACPExAbF8lHmZSJwKPR0gfBMNEuiUSJbFUa2oeQxzgSQ7eP
+         m1R2fLOQgmv8QSFPhFGQSroZ7hJSVKP7ZlzcGJ2yjezmqxkXcuIEymlzQOS8tWg5ydKj
+         yO6j+6roOJEInH2iZSpMzcpS/5RbOah+Czx0HKl1aveFzlklWDiIqZWIAgIkIXVzxbQ8
+         4LCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I6r9xkUCIDGW06+ejaTpiSeJRRLD5vi4+EJ3xtafcno=;
-        b=s3PrQA1+pOakdfvEP5CkRltDhH6gKhabnetGpc91+WtMwqUUZ062UGaA66JuIJPBWE
-         JQr4mo5MTaJ3t04EflwTHE+96VorKqF+VkmjOyyFFvttaHOGjDBQ9bfzNxoItliu3gWy
-         KfLtHBrpON3uVZpKwlF4bUglue2SVDx1tD7ORd0dQ1f8xePEeal8u6S8Sq84gKJacnaV
-         bw6fakezRrm9lVq3rX5RIyXQxcTcU/cvaPOIECt24kaa7TNCllngVOp7R3/LsO7BFzal
-         r/pJ0yfwp0ZAXYpcgn1MVFYRfsrDKYSskXxJR/7dUe+bvd058iUVn86935pWL0fKCKsL
-         uNDw==
-X-Gm-Message-State: APjAAAUVz9sF0Fwf8TrwgAP6/b7aj8lzUMi09mUyd+IxamW17EGpAwM0
-        McjeYCpscmXY02Fn5eZ8VZc=
-X-Google-Smtp-Source: APXvYqzhC5UI9d5ry1PZ/csR99PGtScRk8UUAYK7skX/O9eHPNaZWiTRcSDxByRBqnxMgjKmSqxxrQ==
-X-Received: by 2002:a63:1918:: with SMTP id z24mr4365232pgl.94.1565893380493;
-        Thu, 15 Aug 2019 11:23:00 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d189sm3976808pfd.165.2019.08.15.11.22.59
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version;
+        bh=l7ROvwBmxyo8/D3YRRi0Igp8QJbgJTkQ4GmMpySCWJw=;
+        b=GCA3ZlxFfZDSv4qwTZAmLH2KtB0Wjv8xcQgZ/UtNbAD4uDEV11do9ZaOt2yNABbJZh
+         KM+OWkqtHp0OzglYhspJiS83v4jJSypgnCV4A1tZXiHnUBSsOlmdCpQz+Aa32Law7X5J
+         u9NwwGejZS+xEEFdPPuqwDUWPmKZAAD5PqqXT+HfP59c0SOAT7XiZ/XPz0MmtYriGLgk
+         zA6JvkppDV83wJZf4LVjddjN2+CeKiO1BfAPbjpdrEVrTjKwduNr5E1OA29jXMkPq+Lw
+         Qeik3Nk9b46Ml57KFoFZQROYn3B5yKC5MaynrD2LhPZz6nwu4lt3F8fRqHdrNt74hTMM
+         ctuw==
+X-Gm-Message-State: APjAAAU8QwL/cINb/PvAB/+CG5+nyiL0J4uBfgHYsasFTBySgxydI5GE
+        GV+tTFoXsqBQOqwKKTm0E+M=
+X-Google-Smtp-Source: APXvYqwgna4XblK6OdGHyhlLPS69ayd9Afhl6vvTAwfLAjyGRADSZs4VsLbGeinUJvzxhf9FCCdshw==
+X-Received: by 2002:a63:5550:: with SMTP id f16mr4717026pgm.426.1565893398599;
+        Thu, 15 Aug 2019 11:23:18 -0700 (PDT)
+Received: from [172.20.53.208] ([2620:10d:c090:200::3:fd5d])
+        by smtp.gmail.com with ESMTPSA id ay7sm1948348pjb.4.2019.08.15.11.23.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 11:23:00 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 11:22:59 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-watchdog@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Rick Ramstetter <rick@anteaterllc.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 16/22] watchdog: ziirave_wdt: Fix JUMP_TO_BOOTLOADER
- payload
-Message-ID: <20190815182259.GL14388@roeck-us.net>
-References: <20190812200906.31344-1-andrew.smirnov@gmail.com>
- <20190812200906.31344-17-andrew.smirnov@gmail.com>
+        Thu, 15 Aug 2019 11:23:17 -0700 (PDT)
+From:   "Jonathan Lemon" <jonathan.lemon@gmail.com>
+To:     "Ivan Khoronzhuk" <ivan.khoronzhuk@linaro.org>
+Cc:     magnus.karlsson@intel.com, bjorn.topel@intel.com,
+        davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
+        jakub.kicinski@netronome.com, daniel@iogearbox.net,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yhs@fb.com, andrii.nakryiko@gmail.com
+Subject: Re: [PATCH bpf-next v2 2/3] xdp: xdp_umem: replace kmap on vmap for
+ umem map
+Date:   Thu, 15 Aug 2019 11:23:16 -0700
+X-Mailer: MailMate (1.12.5r5635)
+Message-ID: <5B58D364-609F-498E-B7DF-4457D454A14D@gmail.com>
+In-Reply-To: <20190815121356.8848-3-ivan.khoronzhuk@linaro.org>
+References: <20190815121356.8848-1-ivan.khoronzhuk@linaro.org>
+ <20190815121356.8848-3-ivan.khoronzhuk@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812200906.31344-17-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 01:09:00PM -0700, Andrey Smirnov wrote:
-> Bootloader firmware expects the following traffic for
-> JUMP_TO_BOOTLOADER:
-> 
-> S Addr Wr [A] 0x0c [A] 0x01 [A] P
-> 
-> using ziirave_firm_write_byte() will result in
-> 
-> S Addr Wr [A] 0x0c [A] 0x01 [A] 0x01 [A] P
-> 
-> which happens to work because firmware will ignore any extra bytes and
-> expected magic value matches byte count sent by
-> i2c_smbus_write_block_data(). Fix this by converting the code to use
-> i2c_smbus_write_byte_data() instead.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Rick Ramstetter <rick@anteaterllc.com>
-> Cc: linux-watchdog@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+On 15 Aug 2019, at 5:13, Ivan Khoronzhuk wrote:
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> For 64-bit there is no reason to use vmap/vunmap, so use page_address
+> as it was initially. For 32 bits, in some apps, like in samples
+> xdpsock_user.c when number of pgs in use is quite big, the kmap
+> memory can be not enough, despite on this, kmap looks like is
+> deprecated in such cases as it can block and should be used rather
+> for dynamic mm.
+>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> ---
+>  net/xdp/xdp_umem.c | 36 ++++++++++++++++++++++++++++++------
+>  1 file changed, 30 insertions(+), 6 deletions(-)
+>
+> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+> index a0607969f8c0..d740c4f8810c 100644
+> --- a/net/xdp/xdp_umem.c
+> +++ b/net/xdp/xdp_umem.c
+> @@ -14,7 +14,7 @@
+>  #include <linux/netdevice.h>
+>  #include <linux/rtnetlink.h>
+>  #include <linux/idr.h>
+> -#include <linux/highmem.h>
+> +#include <linux/vmalloc.h>
+>
+>  #include "xdp_umem.h"
+>  #include "xsk_queue.h"
+> @@ -170,7 +170,30 @@ static void xdp_umem_unmap_pages(struct xdp_umem 
+> *umem)
+>  	unsigned int i;
+>
+>  	for (i = 0; i < umem->npgs; i++)
+> -		kunmap(umem->pgs[i]);
+> +		if (PageHighMem(umem->pgs[i]))
+> +			vunmap(umem->pages[i].addr);
+> +}
+> +
+> +static int xdp_umem_map_pages(struct xdp_umem *umem)
+> +{
+> +	unsigned int i;
+> +	void *addr;
+> +
+> +	for (i = 0; i < umem->npgs; i++) {
+> +		if (PageHighMem(umem->pgs[i]))
+> +			addr = vmap(&umem->pgs[i], 1, VM_MAP, PAGE_KERNEL);
+> +		else
+> +			addr = page_address(umem->pgs[i]);
+> +
+> +		if (!addr) {
+> +			xdp_umem_unmap_pages(umem);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		umem->pages[i].addr = addr;
+> +	}
+> +
+> +	return 0;
+>  }
+
+You'll want a __xdp_umem_unmap_pages() helper here that takes an
+count of the number of pages to unmap, so it can be called from
+xdp_umem_unmap_pages() in the normal case, and xdp_umem_map_pages()
+in the error case.  Otherwise the error case ends up calling
+PageHighMem on a null page.
+-- 
+Jonathan
+
+>  static void xdp_umem_unpin_pages(struct xdp_umem *umem)
+> @@ -312,7 +335,7 @@ static int xdp_umem_reg(struct xdp_umem *umem, 
+> struct xdp_umem_reg *mr)
+>  	u32 chunk_size = mr->chunk_size, headroom = mr->headroom;
+>  	unsigned int chunks, chunks_per_page;
+>  	u64 addr = mr->addr, size = mr->len;
+> -	int size_chk, err, i;
+> +	int size_chk, err;
+>
+>  	if (chunk_size < XDP_UMEM_MIN_CHUNK_SIZE || chunk_size > PAGE_SIZE) 
+> {
+>  		/* Strictly speaking we could support this, if:
+> @@ -378,10 +401,11 @@ static int xdp_umem_reg(struct xdp_umem *umem, 
+> struct xdp_umem_reg *mr)
+>  		goto out_account;
+>  	}
+>
+> -	for (i = 0; i < umem->npgs; i++)
+> -		umem->pages[i].addr = kmap(umem->pgs[i]);
+> +	err = xdp_umem_map_pages(umem);
+> +	if (!err)
+> +		return 0;
+>
+> -	return 0;
+> +	kfree(umem->pages);
+>
+>  out_account:
+>  	xdp_umem_unaccount_pages(umem);
+> -- 
+> 2.17.1
