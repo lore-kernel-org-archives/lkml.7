@@ -2,30 +2,29 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD67C32757
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D399C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D93162067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0649E2067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:43:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730232AbfHOEnd (ORCPT
+        id S1730249AbfHOEnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:43:33 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4269 "EHLO huawei.com"
+        Thu, 15 Aug 2019 00:43:39 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4690 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730089AbfHOEnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:43:25 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 82FE887EA8E85D941DED;
-        Thu, 15 Aug 2019 12:43:13 +0800 (CST)
+        id S1726109AbfHOEn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:43:29 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 53ECE65664DB74CA79FC;
+        Thu, 15 Aug 2019 12:43:03 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 15 Aug
- 2019 12:43:07 +0800
+ 2019 12:42:54 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         "Alexander Viro" <viro@zeniv.linux.org.uk>
@@ -47,9 +46,9 @@ CC:     LKML <linux-kernel@vger.kernel.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v8 24/24] erofs: add document
-Date:   Thu, 15 Aug 2019 12:41:55 +0800
-Message-ID: <20190815044155.88483-25-gaoxiang25@huawei.com>
+Subject: [PATCH v8 16/24] erofs: introduce workstation for decompression
+Date:   Thu, 15 Aug 2019 12:41:47 +0800
+Message-ID: <20190815044155.88483-17-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190815044155.88483-1-gaoxiang25@huawei.com>
 References: <20190815044155.88483-1-gaoxiang25@huawei.com>
@@ -62,246 +61,344 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This documents key features, usage, and
-on-disk design of erofs.
+This patch introduces another concept used by decompress
+subsystem called 'workstation'. It can be seen as
+a sparse array that stores pointers pointed to data
+structures related to the corresponding physical clusters.
+
+All lookups are protected by RCU read lock. Besides,
+reference count and spin_lock are also introduced
+to manage its lifetime and serialize all update
+operations.
+
+`workstation' is currently implemented on the in-kernel
+radix tree approach for backward compatibility. With the
+evolution of linux kernel, it will be migrated into
+new XArray implementation in the future.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- Documentation/filesystems/erofs.txt | 225 ++++++++++++++++++++++++++++
- 1 file changed, 225 insertions(+)
- create mode 100644 Documentation/filesystems/erofs.txt
+ fs/erofs/internal.h |  80 +++++++++++++++++++++
+ fs/erofs/super.c    |   4 ++
+ fs/erofs/utils.c    | 166 +++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 248 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/filesystems/erofs.txt b/Documentation/filesystems/erofs.txt
-new file mode 100644
-index 000000000000..457e601e0467
---- /dev/null
-+++ b/Documentation/filesystems/erofs.txt
-@@ -0,0 +1,225 @@
-+Overview
-+========
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 4bcdf32a45ad..6a2407fb3013 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -65,6 +65,9 @@ struct erofs_sb_info {
+ 	struct list_head list;
+ 	struct mutex umount_mutex;
+ 
++	/* the dedicated workstation for compression */
++	struct radix_tree_root workstn_tree;
 +
-+EROFS file-system stands for Enhanced Read-Only File System. Different
-+from other read-only file systems, it aims to be designed for flexibility,
-+scalability, but be kept simple and high performance.
+ 	unsigned int shrinker_run_no;
+ #endif	/* CONFIG_EROFS_FS_ZIP */
+ 	u32 blocks;
+@@ -150,6 +153,77 @@ static inline void *erofs_kmalloc(struct erofs_sb_info *sbi,
+ #define set_opt(sbi, option)	((sbi)->mount_opt |= EROFS_MOUNT_##option)
+ #define test_opt(sbi, option)	((sbi)->mount_opt & EROFS_MOUNT_##option)
+ 
++#ifdef CONFIG_EROFS_FS_ZIP
++#define EROFS_LOCKED_MAGIC     (INT_MIN | 0xE0F510CCL)
 +
-+It is designed as a better filesystem solution for the following scenarios:
-+ - read-only storage media or
++/* basic unit of the workstation of a super_block */
++struct erofs_workgroup {
++	/* the workgroup index in the workstation */
++	pgoff_t index;
 +
-+ - part of a fully trusted read-only solution, which means it needs to be
-+   immutable and bit-for-bit identical to the official golden image for
-+   their releases due to security and other considerations and
++	/* overall workgroup reference count */
++	atomic_t refcount;
++};
 +
-+ - hope to save some extra storage space with guaranteed end-to-end performance
-+   by using reduced metadata and transparent file compression, especially
-+   for those embedded devices with limited memory (ex, smartphone);
++#if defined(CONFIG_SMP)
++static inline bool erofs_workgroup_try_to_freeze(struct erofs_workgroup *grp,
++						 int val)
++{
++	preempt_disable();
++	if (val != atomic_cmpxchg(&grp->refcount, val, EROFS_LOCKED_MAGIC)) {
++		preempt_enable();
++		return false;
++	}
++	return true;
++}
 +
-+Here is the main features of EROFS:
-+ - Little endian on-disk design;
++static inline void erofs_workgroup_unfreeze(struct erofs_workgroup *grp,
++					    int orig_val)
++{
++	/*
++	 * other observers should notice all modifications
++	 * in the freezing period.
++	 */
++	smp_mb();
++	atomic_set(&grp->refcount, orig_val);
++	preempt_enable();
++}
 +
-+ - Currently 4KB block size (nobh) and therefore maximum 16TB address space;
++static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
++{
++	return atomic_cond_read_relaxed(&grp->refcount,
++					VAL != EROFS_LOCKED_MAGIC);
++}
++#else
++static inline bool erofs_workgroup_try_to_freeze(struct erofs_workgroup *grp,
++						 int val)
++{
++	preempt_disable();
++	/* no need to spin on UP platforms, let's just disable preemption. */
++	if (val != atomic_read(&grp->refcount)) {
++		preempt_enable();
++		return false;
++	}
++	return true;
++}
 +
-+ - Metadata & data could be mixed by design;
++static inline void erofs_workgroup_unfreeze(struct erofs_workgroup *grp,
++					    int orig_val)
++{
++	preempt_enable();
++}
 +
-+ - 2 inode versions for different requirements:
-+                          v1            v2
-+   Inode metadata size:   32 bytes      64 bytes
-+   Max file size:         4 GB          16 EB (also limited by max. vol size)
-+   Max uids/gids:         65536         4294967296
-+   File creation time:    no            yes (64 + 32-bit timestamp)
-+   Max hardlinks:         65536         4294967296
-+   Metadata reserved:     4 bytes       14 bytes
++static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
++{
++	int v = atomic_read(&grp->refcount);
 +
-+ - Support extended attributes (xattrs) as an option;
++	/* workgroup is never freezed on uniprocessor systems */
++	DBG_BUGON(v == EROFS_LOCKED_MAGIC);
++	return v;
++}
++#endif	/* !CONFIG_SMP */
++#endif	/* !CONFIG_EROFS_FS_ZIP */
 +
-+ - Support xattr inline and tail-end data inline for all files;
+ /* we strictly follow PAGE_SIZE and no buffer head yet */
+ #define LOG_BLOCK_SIZE		PAGE_SHIFT
+ 
+@@ -409,6 +483,12 @@ extern const struct file_operations erofs_dir_fops;
+ 
+ /* utils.c */
+ #ifdef CONFIG_EROFS_FS_ZIP
++int erofs_workgroup_put(struct erofs_workgroup *grp);
++struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
++					     pgoff_t index, bool *tag);
++int erofs_register_workgroup(struct super_block *sb,
++			     struct erofs_workgroup *grp, bool tag);
++static inline void erofs_workgroup_free_rcu(struct erofs_workgroup *grp) {}
+ void erofs_shrinker_register(struct super_block *sb);
+ void erofs_shrinker_unregister(struct super_block *sb);
+ int __init erofs_init_shrinker(void);
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 09992cc3b2fd..ea8d065068fa 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -338,6 +338,10 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+ 	else
+ 		sb->s_flags &= ~SB_POSIXACL;
+ 
++#ifdef CONFIG_EROFS_FS_ZIP
++	INIT_RADIX_TREE(&sbi->workstn_tree, GFP_ATOMIC);
++#endif
 +
-+ - Support POSIX.1e ACLs by using xattrs;
+ 	/* get the root inode */
+ 	inode = erofs_iget(sb, ROOT_NID(sbi), true);
+ 	if (IS_ERR(inode))
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index cab7d77c4e59..628178261056 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -7,11 +7,173 @@
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #include "internal.h"
++#include <linux/pagevec.h>
+ 
+ #ifdef CONFIG_EROFS_FS_ZIP
+ /* global shrink count (for all mounted EROFS instances) */
+ static atomic_long_t erofs_global_shrink_cnt;
+ 
++#define __erofs_workgroup_get(grp)	atomic_inc(&(grp)->refcount)
++#define __erofs_workgroup_put(grp)	atomic_dec(&(grp)->refcount)
 +
-+ - Support statx();
++static int erofs_workgroup_get(struct erofs_workgroup *grp)
++{
++	int o;
 +
-+ - Support transparent file compression as an option:
-+   LZ4 algorithm with 4 KB fixed-output compression for high performance;
++repeat:
++	o = erofs_wait_on_workgroup_freezed(grp);
++	if (unlikely(o <= 0))
++		return -1;
 +
-+The following git tree provides the file system user-space tools under
-+development (ex, formatting tool mkfs.erofs):
-+>> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git
++	if (unlikely(atomic_cmpxchg(&grp->refcount, o, o + 1) != o))
++		goto repeat;
 +
-+Bugs and patches are welcome, please kindly help us and send to the following
-+linux-erofs mailing list:
-+>> linux-erofs mailing list   <linux-erofs@lists.ozlabs.org>
++	/* decrease refcount paired by erofs_workgroup_put */
++	if (unlikely(o == 1))
++		atomic_long_dec(&erofs_global_shrink_cnt);
++	return 0;
++}
 +
-+Note that EROFS is still working in progress as a Linux staging driver,
-+Cc the staging mailing list as well is highly recommended:
-+>> Linux Driver Project Developer List <devel@driverdev.osuosl.org>
++struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
++					     pgoff_t index, bool *tag)
++{
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
++	struct erofs_workgroup *grp;
 +
-+Mount options
-+=============
++repeat:
++	rcu_read_lock();
++	grp = radix_tree_lookup(&sbi->workstn_tree, index);
++	if (grp) {
++		*tag = xa_pointer_tag(grp);
++		grp = xa_untag_pointer(grp);
 +
-+fault_injection=%d     Enable fault injection in all supported types with
-+                       specified injection rate. Supported injection type:
-+                       Type_Name                Type_Value
-+                       FAULT_KMALLOC            0x000000001
-+                       FAULT_READ_IO            0x000000002
-+(no)user_xattr         Setup Extended User Attributes. Note: xattr is enabled
-+                       by default if CONFIG_EROFS_FS_XATTR is selected.
-+(no)acl                Setup POSIX Access Control List. Note: acl is enabled
-+                       by default if CONFIG_EROFS_FS_POSIX_ACL is selected.
-+cache_strategy=%s      Select a strategy for cached decompression from now on:
-+                         disabled: In-place I/O decompression only;
-+                        readahead: Cache the last incomplete compressed physical
-+                                   cluster for further reading. It still does
-+                                   in-place I/O decompression for the rest
-+                                   compressed physical clusters;
-+                       readaround: Cache the both ends of incomplete compressed
-+                                   physical clusters for further reading.
-+                                   It still does in-place I/O decompression
-+                                   for the rest compressed physical clusters.
++		if (erofs_workgroup_get(grp)) {
++			/* prefer to relax rcu read side */
++			rcu_read_unlock();
++			goto repeat;
++		}
 +
-+Module parameters
-+=================
-+use_vmap=[0|1]         Use vmap() instead of vm_map_ram() (default 0).
++		DBG_BUGON(index != grp->index);
++	}
++	rcu_read_unlock();
++	return grp;
++}
 +
-+On-disk details
-+===============
++int erofs_register_workgroup(struct super_block *sb,
++			     struct erofs_workgroup *grp,
++			     bool tag)
++{
++	struct erofs_sb_info *sbi;
++	int err;
 +
-+Summary
-+-------
-+Different from other read-only file systems, an EROFS volume is designed
-+to be as simple as possible:
++	/* grp shouldn't be broken or used before */
++	if (unlikely(atomic_read(&grp->refcount) != 1)) {
++		DBG_BUGON(1);
++		return -EINVAL;
++	}
 +
-+                                |-> aligned with the block size
-+   ____________________________________________________________
-+  | |SB| | ... | Metadata | ... | Data | Metadata | ... | Data |
-+  |_|__|_|_____|__________|_____|______|__________|_____|______|
-+  0 +1K
++	err = radix_tree_preload(GFP_NOFS);
++	if (err)
++		return err;
 +
-+All data areas should be aligned with the block size, but metadata areas
-+may not. All metadatas can be now observed in two different spaces (views):
-+ 1. Inode metadata space
-+    Each valid inode should be aligned with an inode slot, which is a fixed
-+    value (32 bytes) and designed to be kept in line with v1 inode size.
++	sbi = EROFS_SB(sb);
++	xa_lock(&sbi->workstn_tree);
 +
-+    Each inode can be directly found with the following formula:
-+         inode offset = meta_blkaddr * block_size + 32 * nid
++	grp = xa_tag_pointer(grp, tag);
 +
-+                                |-> aligned with 8B
-+                                           |-> followed closely
-+    + meta_blkaddr blocks                                      |-> another slot
-+     _____________________________________________________________________
-+    |  ...   | inode |  xattrs  | extents  | data inline | ... | inode ...
-+    |________|_______|(optional)|(optional)|__(optional)_|_____|__________
-+             |-> aligned with the inode slot size
-+                  .                   .
-+                .                         .
-+              .                              .
-+            .                                    .
-+          .                                         .
-+        .                                              .
-+      .____________________________________________________|-> aligned with 4B
-+      | xattr_ibody_header | shared xattrs | inline xattrs |
-+      |____________________|_______________|_______________|
-+      |->    12 bytes    <-|->x * 4 bytes<-|               .
-+                          .                .                 .
-+                    .                      .                   .
-+               .                           .                     .
-+           ._______________________________.______________________.
-+           | id | id | id | id |  ... | id | ent | ... | ent| ... |
-+           |____|____|____|____|______|____|_____|_____|____|_____|
-+                                           |-> aligned with 4B
-+                                                       |-> aligned with 4B
++	/*
++	 * Bump up reference count before making this workgroup
++	 * visible to other users in order to avoid potential UAF
++	 * without serialized by workstn_lock.
++	 */
++	__erofs_workgroup_get(grp);
 +
-+    Inode could be 32 or 64 bytes, which can be distinguished from a common
-+    field which all inode versions have -- i_advise:
++	err = radix_tree_insert(&sbi->workstn_tree, grp->index, grp);
++	if (unlikely(err))
++		/*
++		 * it's safe to decrease since the workgroup isn't visible
++		 * and refcount >= 2 (cannot be freezed).
++		 */
++		__erofs_workgroup_put(grp);
 +
-+        __________________               __________________
-+       |     i_advise     |             |     i_advise     |
-+       |__________________|             |__________________|
-+       |        ...       |             |        ...       |
-+       |                  |             |                  |
-+       |__________________| 32 bytes    |                  |
-+                                        |                  |
-+                                        |__________________| 64 bytes
++	xa_unlock(&sbi->workstn_tree);
++	radix_tree_preload_end();
++	return err;
++}
 +
-+    Xattrs, extents, data inline are followed by the corresponding inode with
-+    proper alignes, and they could be optional for different data mappings,
-+    _currently_ there are totally 3 valid data mappings supported:
++static void  __erofs_workgroup_free(struct erofs_workgroup *grp)
++{
++	atomic_long_dec(&erofs_global_shrink_cnt);
++	erofs_workgroup_free_rcu(grp);
++}
 +
-+     1) flat file data without data inline (no extent);
-+     2) fixed-output size data compression (must have extents);
-+     3) flat file data with tail-end data inline (no extent);
++int erofs_workgroup_put(struct erofs_workgroup *grp)
++{
++	int count = atomic_dec_return(&grp->refcount);
 +
-+    The size of the optional xattrs is indicated by i_xattr_count in inode
-+    header. Large xattrs or xattrs shared by many different files can be
-+    stored in shared xattrs metadata rather than inlined right after inode.
++	if (count == 1)
++		atomic_long_inc(&erofs_global_shrink_cnt);
++	else if (!count)
++		__erofs_workgroup_free(grp);
++	return count;
++}
 +
-+ 2. Shared xattrs metadata space
-+    Shared xattrs space is similar to the above inode space, started with
-+    a specific block indicated by xattr_blkaddr, organized one by one with
-+    proper align.
++/* for nocache case, no customized reclaim path at all */
++static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
++					   struct erofs_workgroup *grp,
++					   bool cleanup)
++{
++	int cnt = atomic_read(&grp->refcount);
 +
-+    Each share xattr can also be directly found by the following formula:
-+         xattr offset = xattr_blkaddr * block_size + 4 * xattr_id
++	DBG_BUGON(cnt <= 0);
++	DBG_BUGON(cleanup && cnt != 1);
 +
-+                           |-> aligned by  4 bytes
-+    + xattr_blkaddr blocks                     |-> aligned with 4 bytes
-+     _________________________________________________________________________
-+    |  ...   | xattr_entry |  xattr data | ... |  xattr_entry | xattr data  ...
-+    |________|_____________|_____________|_____|______________|_______________
++	if (cnt > 1)
++		return false;
 +
-+Directories
-+-----------
-+All directories are now organized in a compact on-disk format. Note that
-+each directory block is divided into index and name areas in order to support
-+random file lookup, and all directory entries are _strictly_ recorded in
-+alphabetical order in order to support improved prefix binary search
-+algorithm (could refer to the related source code).
++	DBG_BUGON(xa_untag_pointer(radix_tree_delete(&sbi->workstn_tree,
++						     grp->index)) != grp);
 +
-+                 ___________________________
-+                /                           |
-+               /              ______________|________________
-+              /              /              | nameoff1       | nameoffN-1
-+ ____________.______________._______________v________________v__________
-+| dirent | dirent | ... | dirent | filename | filename | ... | filename |
-+|___.0___|____1___|_____|___N-1__|____0_____|____1_____|_____|___N-1____|
-+     \                           ^
-+      \                          |                           * could have
-+       \                         |                             trailing '\0'
-+        \________________________| nameoff0
++	/* (rarely) could be grabbed again when freeing */
++	erofs_workgroup_put(grp);
++	return true;
++}
 +
-+                             Directory block
++static unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
++					      unsigned long nr_shrink,
++					      bool cleanup)
++{
++	pgoff_t first_index = 0;
++	void *batch[PAGEVEC_SIZE];
++	unsigned int freed = 0;
 +
-+Note that apart from the offset of the first filename, nameoff0 also indicates
-+the total number of directory entries in this block since it is no need to
-+introduce another on-disk field at all.
++	int i, found;
++repeat:
++	xa_lock(&sbi->workstn_tree);
 +
-+Compression
-+-----------
-+Currently, EROFS supports 4KB fixed-output clustersize transparent file
-+compression, as illustrated below:
++	found = radix_tree_gang_lookup(&sbi->workstn_tree,
++				       batch, first_index, PAGEVEC_SIZE);
 +
-+         |---- Variant-Length Extent ----|-------- VLE --------|----- VLE -----
-+         clusterofs                      clusterofs            clusterofs
-+         |                               |                     |   logical data
-+_________v_______________________________v_____________________v_______________
-+... |    .        |             |        .    |             |  .          | ...
-+____|____.________|_____________|________.____|_____________|__.__________|____
-+    |-> cluster <-|-> cluster <-|-> cluster <-|-> cluster <-|-> cluster <-|
-+         size          size          size          size          size
-+          .                             .                .                   .
-+           .                       .               .                  .
-+            .                  .              .                .
-+      _______._____________._____________._____________._____________________
-+         ... |             |             |             | ... physical data
-+      _______|_____________|_____________|_____________|_____________________
-+             |-> cluster <-|-> cluster <-|-> cluster <-|
-+                  size          size          size
++	for (i = 0; i < found; ++i) {
++		struct erofs_workgroup *grp = xa_untag_pointer(batch[i]);
 +
-+Currently each on-disk physical cluster can contain 4KB (un)compressed data
-+at most. For each logical cluster, there is a corresponding on-disk index to
-+describe its cluster type, physical cluster address, etc.
++		first_index = grp->index + 1;
 +
-+See "struct z_erofs_vle_decompressed_index" in erofs_fs.h for more details.
++		/* try to shrink each valid workgroup */
++		if (!erofs_try_to_release_workgroup(sbi, grp, cleanup))
++			continue;
 +
++		++freed;
++		if (unlikely(!--nr_shrink))
++			break;
++	}
++	xa_unlock(&sbi->workstn_tree);
++
++	if (i && nr_shrink)
++		goto repeat;
++	return freed;
++}
++
+ /* protected by 'erofs_sb_list_lock' */
+ static unsigned int shrinker_run_no;
+ 
+@@ -35,7 +197,7 @@ void erofs_shrinker_unregister(struct super_block *sb)
+ 	struct erofs_sb_info *const sbi = EROFS_SB(sb);
+ 
+ 	mutex_lock(&sbi->umount_mutex);
+-	/* will add shrink final handler here */
++	erofs_shrink_workstation(sbi, ~0UL, true);
+ 
+ 	spin_lock(&erofs_sb_list_lock);
+ 	list_del(&sbi->list);
+@@ -84,7 +246,7 @@ static unsigned long erofs_shrink_scan(struct shrinker *shrink,
+ 		spin_unlock(&erofs_sb_list_lock);
+ 		sbi->shrinker_run_no = run_no;
+ 
+-		/* will add shrink handler here */
++		freed += erofs_shrink_workstation(sbi, nr, false);
+ 
+ 		spin_lock(&erofs_sb_list_lock);
+ 		/* Get the next list element before we move this one */
 -- 
 2.17.1
 
