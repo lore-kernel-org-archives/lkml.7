@@ -2,111 +2,87 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCD2C3A59B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FDCC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E76020656
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:51:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dU2EhV+6"
+	by mail.kernel.org (Postfix) with ESMTP id EC01320644
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:51:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733142AbfHOOvE (ORCPT
+        id S1733151AbfHOOvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:51:04 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39757 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731269AbfHOOvE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:51:04 -0400
-Received: by mail-qk1-f195.google.com with SMTP id 125so2017849qkl.6
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 07:51:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=z90nPpYO8UuUUSb9IN8rKS3L0KsgC8zXmObZdfo6ctQ=;
-        b=dU2EhV+6EWSs1MNrZJWfU76DaiGX5NQgWL4uohTv/GZxgH6FeggKTIKZ+d/6xxWmB5
-         Uq7EirJG422MX6svb2pK3O0rmVD5upXZhrC0obDyAVUsClwMUccie10LZ+VusUXs6G5t
-         Cfxm7G3duJErwOwTzL6wlTMWxPvhXqi0t55/HXZYJ0ksP5CllSxCeRSJEwA3qeLb3Mw+
-         H9tQF6/hs2KVjejIpKYI3tuEWzOasQMSO5OrPdyS6Tf6gZNSrPhr0d7BWVqY895GeZU7
-         3vhMlzFvKziDCq6pld4ycFVFRE1zOEJ/X+8kNMBCMNIgJ/nYLqTQqzhkO3QmO9Oxi/p7
-         z4xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z90nPpYO8UuUUSb9IN8rKS3L0KsgC8zXmObZdfo6ctQ=;
-        b=MumGr/uMWnLz91B5M6phTelnTAcQ/cB+lcGtNteFLe0lWP7AdF8KzVkNuUHJW98udL
-         nYnogWJfVBDJQL8VFVKu3P9CqFjA3aYVOsTiLfGl+gbnGtb25KpGGkwiFo340qc/dA4h
-         0k1VizyD268qCTzpQdBzkAJMHXzYB2Tzsdk6NxKK9vrKGJfD3DiUTwH1rl/Oraen2CIm
-         2rIGRpDikyVVhZ7XIfmkGgJPlwiWGQLpM5MO77ieaw3iLRvNzDb5VsWL4PhAsTEmdzoE
-         atR1DcIp4R+SkCtKjIAPNi0YDN74ELmbBPwlGezjoY3XJldAsaCrgKllQ3Zi1N9CL0a9
-         +Omw==
-X-Gm-Message-State: APjAAAUdPrWRZTPj9YtwykQLiXja/uX0VnMw8WgJiWYutZMa8kc3GcRn
-        G8ZzNeffbu2GUh+HTKxYqGas4w==
-X-Google-Smtp-Source: APXvYqyMHfwmFKSYVNb8WeeauLH7Hep/WJZ+jheCJjAwrLvMcjUnfX6gEreyk5eeamBSEzYzpviglQ==
-X-Received: by 2002:a05:620a:71a:: with SMTP id 26mr4357407qkc.374.1565880663323;
-        Thu, 15 Aug 2019 07:51:03 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id e15sm805595qtr.51.2019.08.15.07.51.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 15 Aug 2019 07:51:02 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hyH5i-0005L9-BH; Thu, 15 Aug 2019 11:51:02 -0300
-Date:   Thu, 15 Aug 2019 11:51:02 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jan Kara <jack@suse.cz>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
-Message-ID: <20190815145102.GH21596@ziepe.ca>
-References: <20190812234950.GA6455@iweiny-DESK2.sc.intel.com>
- <38d2ff2f-4a69-e8bd-8f7c-41f1dbd80fae@nvidia.com>
- <20190813210857.GB12695@iweiny-DESK2.sc.intel.com>
- <a1044a0d-059c-f347-bd68-38be8478bf20@nvidia.com>
- <90e5cd11-fb34-6913-351b-a5cc6e24d85d@nvidia.com>
- <20190814234959.GA463@iweiny-DESK2.sc.intel.com>
- <2cbdf599-2226-99ae-b4d5-8909a0a1eadf@nvidia.com>
- <ac834ac6-39bd-6df9-fca4-70b9520b6c34@nvidia.com>
- <20190815132622.GG14313@quack2.suse.cz>
- <20190815133510.GA21302@quack2.suse.cz>
+        Thu, 15 Aug 2019 10:51:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:45138 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbfHOOvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 10:51:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 515E1344;
+        Thu, 15 Aug 2019 07:51:51 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4E13F3F706;
+        Thu, 15 Aug 2019 07:51:50 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        tglx@linutronix.de, qais.yousef@arm.com
+Subject: [PATCH v2 0/4] sched/fair: Active balancer RT/DL preemption fix
+Date:   Thu, 15 Aug 2019 15:51:03 +0100
+Message-Id: <20190815145107.5318-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815133510.GA21302@quack2.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 03:35:10PM +0200, Jan Kara wrote:
+Vincent's load balance rework [1] got me thinking about how and where we
+use rq.nr_running vs rq.cfs.h_nr_running checks, and this lead me to
+stare intently at the active load balancer.
 
-> > 3) ODP case - GUP references to pages serving as DMA buffers, MMU notifiers
-> >    used to synchronize with page_mkclean() and munmap() => normal page
-> >    references are fine.
-> 
-> I want to add that I'd like to convert users in cases 1) and 2) from using
-> GUP to using differently named function. Users in case 3) can stay as they
-> are for now although ultimately I'd like to denote such use cases in a
-> special way as well...
+I haven't seen it happen (yet), but from reading the code it really looks
+like we can have some scenarios where the cpu_stopper ends up preempting
+a > CFS class task, since we never actually look at what's the remote rq's
+running task.
 
-3) users also want a special function and path, right now it is called
-hmm_range_fault() but perhaps it would be good to harmonize it more
-with the GUP infrastructure?
+This series shuffles things around the CFS active load balancer to prevent
+this from happening.
 
-I'm not quite sure what the best plan for that is yet.
+- Patch 1 is a freebie cleanup
+- Patch 2 is a preparatory code move
+- Patch 3 adds h_nr_running checks
+- Patch 4 adds a sched class check + detach_one_task() to the active balance
 
-Jason
+This is based on top of today's tip/sched/core:
+  a46d14eca7b7 ("sched/fair: Use rq_lock/unlock in online_fair_sched_group")
+
+v1 -> v2:
+  - (new patch) Added need_active_balance() cleanup
+
+  - Tweaked active balance code move to respect existing
+    sd->nr_balance_failed modifications
+  - Added explicit checks of active_load_balance()'s return value
+  
+  - Added an h_nr_running < 1 check before kicking the cpu_stopper
+
+  - Added a detach_one_task() call in active_load_balance() when the remote
+    rq's running task is > CFS
+
+[1]: https://lore.kernel.org/lkml/1564670424-26023-1-git-send-email-vincent.guittot@linaro.org/
+
+Valentin Schneider (4):
+  sched/fair: Make need_active_balance() return bools
+  sched/fair: Move active balance logic to its own function
+  sched/fair: Check for CFS tasks before detach_one_task()
+  sched/fair: Prevent active LB from preempting higher sched classes
+
+ kernel/sched/fair.c | 151 ++++++++++++++++++++++++++++----------------
+ 1 file changed, 95 insertions(+), 56 deletions(-)
+
+--
+2.22.0
+
