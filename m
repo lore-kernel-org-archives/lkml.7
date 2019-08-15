@@ -2,120 +2,105 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1114C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C248C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8914206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:59:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mIsb0y5c"
+	by mail.kernel.org (Postfix) with ESMTP id 7D027206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:00:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731972AbfHOM7o (ORCPT
+        id S1732010AbfHONAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:59:44 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:45250 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729818AbfHOM7n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 08:59:43 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3057C2AF;
-        Thu, 15 Aug 2019 14:59:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1565873982;
-        bh=9RXPYkKMdR+TDC9Nqxfdpw80GoGOeN54oma8IugNDuE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mIsb0y5cdOx+hT9MJGCnoxY5cpeQ41AmcekNyBw1XHfEUBbeeFOphB7fFreTbYbHF
-         mUgbDNRmGcVLZZJ7Ql3MFVNvdztZ4h4McVu1iu4qkHNZY88Cx3nta2tZbIcNISfofp
-         Nq8II5XtcOhJiXu5vyuC86jJwA1LZfUMMWQZl4Gk=
-Date:   Thu, 15 Aug 2019 15:59:38 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
-Message-ID: <20190815125938.GI13823@pendragon.ideasonboard.com>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-3-jacopo@jmondi.org>
- <20190815070025.GK6133@paasikivi.fi.intel.com>
+        Thu, 15 Aug 2019 09:00:42 -0400
+Received: from mga07.intel.com ([134.134.136.100]:65275 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729818AbfHONAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:00:42 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 06:00:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
+   d="scan'208";a="167737330"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.163])
+  by orsmga007.jf.intel.com with ESMTP; 15 Aug 2019 06:00:12 -0700
+Date:   Thu, 15 Aug 2019 16:00:11 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Andrey Pronin <apronin@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>
+Subject: Re: [PATCH v3 4/4] tpm: add driver for cr50 on SPI
+Message-ID: <20190815130011.6xxofsf3onf775p4@linux.intel.com>
+References: <20190806220750.86597-1-swboyd@chromium.org>
+ <20190806220750.86597-5-swboyd@chromium.org>
+ <e7951cb251116e903cf0040ee6f271dc4e68ff2e.camel@linux.intel.com>
+ <5d51d02c.1c69fb81.6f113.f06a@mx.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190815070025.GK6133@paasikivi.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5d51d02c.1c69fb81.6f113.f06a@mx.google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
-
-On Thu, Aug 15, 2019 at 10:00:25AM +0300, Sakari Ailus wrote:
-> On Wed, Aug 14, 2019 at 10:28:12PM +0200, Jacopo Mondi wrote:
-> > Add documentation for the V4L2_CID_LOCATION camera control. The newly
-> > added read-only control reports the camera device mounting position.
+On Mon, Aug 12, 2019 at 01:46:35PM -0700, Stephen Boyd wrote:
+> Quoting Jarkko Sakkinen (2019-08-09 13:31:04)
+> > On Tue, 2019-08-06 at 15:07 -0700, Stephen Boyd wrote:
+> > > From: Andrey Pronin <apronin@chromium.org>
+> > > 
+> > > Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
+> > > firmware. The firmware running on the currently supported H1
+> > > Secure Microcontroller requires a special driver to handle its
+> > > specifics:
+> > > 
+> > >  - need to ensure a certain delay between spi transactions, or else
+> > >    the chip may miss some part of the next transaction;
+> > >  - if there is no spi activity for some time, it may go to sleep,
+> > >    and needs to be waken up before sending further commands;
+> > >  - access to vendor-specific registers.
 > > 
-> > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> > ---
-> >  .../media/uapi/v4l/ext-ctrls-camera.rst       | 23 +++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
+> > Which Chromebook models have this chip?
+> 
+> Pretty much all Chromebooks released in the last year or two have this
+> chip in them. I don't have an exhaustive list, but you can usually check
+> this by putting your device into dev mode and then looking at the driver
+> attached to the TPM device in sysfs or by grepping the dmesg output for
+> cr50.
+> 
 > > 
-> > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > index 51c1d5c9eb00..fc0a02eee6d4 100644
-> > --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
-> >      value down. A value of zero stops the motion if one is in progress
-> >      and has no effect otherwise.
+> > If I had an access to one, how do I do kernel testing with it i.e.
+> > how do I get it to boot initramfs and bzImage from a USB stick?
 > > 
-> > +``V4L2_CID_LOCATION (integer)``
-> > +    This read-only control describes the camera location by reporting its
-> > +    mounting position on the device where the camera is installed. This
-> > +    control is particularly meaningful for devices which have a well defined
-> > +    orientation, such as phones, laptops and portable devices as the camera
-> > +    location is expressed as a position relative to the device intended
-> > +    usage position. In example, a camera installed on the user-facing side
+> > 
 > 
-> s/In/For/
+> You can follow the developer guide[1] and build a USB image for the
+> board you have. You can usually checkout the latest upstream kernel in
+> place of where the kernel is built from in the chroot, typically
+> ~/trunk/src/third_party/kernel/<version number>. The build should pick
+> up that it's an upstream tree and try to use some default defconfig.
+> This driver isn't upstream yet, so you may need to enable it in the
+> defconfig, located in
+> ~/trunk/src/third_party/chromiumos-overlay/eclass/cros-kernel/ so that
+> the driver is actually built. After that, use 'cros flash' to flash the
+> new kernel image to your USB stick and boot from USB with 'ctrl+u' and
+> you should be on your way to chromeos kernel testing.
 > 
-> > +    of a phone device is said to be installed in the ``V4L2_LOCATION_FRONT``
-> > +    position.
-> > +
-> > +
-> > +
-> > +.. flat-table::
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +
-> > +    * - ``V4L2_LOCATION_FRONT``
-> > +      - The camera device is located on the front side of the device.
-> > +    * - ``V4L2_LOCATION_BACK``
-> > +      - The camera device is located on the back side of the device.
-> > +
-> > +
-> > +
-> >  .. [#f1]
-> >     This control may be changed to a menu control in the future, if more
-> >     options are required.
-> 
-> There's an effective limit of 64 for menus. ACPI has less than ten
-> different locations for a device, I think 64 will be enough here.
-> 
-> So I'd be actually in favour of switching to a menu.
+> [1] https://chromium.googlesource.com/chromiumos/docs/+/master/developer_guide.md
 
-Why ? As you explained yourself, it's a static read-only control, all it
-needs to report is a single value.
+Hey, thanks for info! I'll see if I can get my hands on one.
 
--- 
-Regards,
-
-Laurent Pinchart
+/Jarkko
