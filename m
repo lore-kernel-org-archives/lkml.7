@@ -7,67 +7,68 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202FEC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA758C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9F572084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CEC52086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565889321;
-	bh=wuCyLKB65cEdh1j+2STrvKTR8nB98C5ntLd/YxOV6N0=;
+	s=default; t=1565889323;
+	bh=V0HN4+vpnqwlBH0IBF5ZoLZgbOeKS1TfgysuiMqIPfk=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=JiubHvT28y5kouoMCk4dg9Meyyd8B0sKj/R5akrG1+5u/GqNIbH2Aifq30WCTttd8
-	 wF6EmBeZiWie2YaT8xOzcQSiaIsnKQFYgD6GiMORg7EUGlbsl0jAXEBvoHUVzP1f8h
-	 An87hmotGUNHez5R0TIAEbEY4sQhW13slhq6a7W4=
+	b=YSfwTs/dd7Uub+aKg89OLyWlHAnit4Uw8Rc0n+59WoxEMW2t27x52HfTjsCMp4KbP
+	 cVFlFLyq+Vsu3HdNM29VevP+5o1DuPcLudj2wz6eVYT9a5upAmfUUQG0UeqPq9Pjs+
+	 43BCTdj3sJQaYIdFCB7rAjUM49AQPeCcKfDplMws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731661AbfHORO3 (ORCPT
+        id S1732066AbfHORPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:14:29 -0400
-Received: from mail-wr1-f100.google.com ([209.85.221.100]:38488 "EHLO
-        mail-wr1-f100.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731500AbfHORO0 (ORCPT
+        Thu, 15 Aug 2019 13:15:22 -0400
+Received: from mail-wm1-f97.google.com ([209.85.128.97]:55213 "EHLO
+        mail-wm1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731622AbfHORO3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:14:26 -0400
-Received: by mail-wr1-f100.google.com with SMTP id g17so2869387wrr.5
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:25 -0700 (PDT)
+        Thu, 15 Aug 2019 13:14:29 -0400
+Received: by mail-wm1-f97.google.com with SMTP id p74so1872601wme.4
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=q2b27kNIK6EqgSJpM3zfR9hAioAbBxEiISceYvWjTXE=;
-        b=jA0ooqhU/LMo0ahmfH1SatsPj6sMrofAPchfbt+voyZN9dP5J6euTvglj362SY0Dpd
-         9pLYZg7g2n0VckX/j+bwi/0ao9SUiNSlUVPMKgrgBwG/XzMGdoqu+s/0Vvhc2N6nppgX
-         c3ZliPxa6I3HlHmhlNEAJQmyvCCbewtebb73C62rtCOlSSnpyLozwDPUV1i9th05l1Yb
-         hLgKMexDG0rjsuy4bsEpbVJ1VCspr90CweuwPdzvATOWrVeCTTQig/eB5XHWWW2XVGiG
-         S3lvPh9ehFDJxb+XaDkhfSwFp553TRZztdvUIzrCqds4LbBC8ictPCVHFxmQxoA9MIA7
-         i/CQ==
-X-Gm-Message-State: APjAAAX6Fwwo/W9Wc7Ksn4s9VZhi4Pi+GKeLPX2vf389uzAqcSqseTG7
-        OPI8yiLC2DmD0N/I2NCrWTu+gDS+c+pC6gEqmOmLzOUYu2O6XmrwWVIjCj1GkmjrZQ==
-X-Google-Smtp-Source: APXvYqzOz+Zqdf+HSDNjzGbbh9zF2epB8ziADuAl2ufBlIUuKwF+X8RjGSMHN6MqxNFhp+aitzIJF7ZNxJOD
-X-Received: by 2002:a5d:6a45:: with SMTP id t5mr6944280wrw.228.1565889265011;
-        Thu, 15 Aug 2019 10:14:25 -0700 (PDT)
+        bh=H42j7NEHlsPF3r/4bj3RbhLYDdVkIJ1yMKu66UQkvI4=;
+        b=oAzAkgNq0tPv4IhytmlfcgQvgtPa7T1FE4lOmKoYWLPh4+hJnKZVBgcOYDHTNFvVmL
+         b+Sh+QyaG3QuyNTzRlkITX6rncVlmJ+2AmZBWBjlOLUO53FEII7LTggXB6s+fRiBvdQr
+         UYrpAdSWlb5cZKS06Q/ionazQSi5h7PELm4nzxfclip2OKAb+Ms10O9zeu5Eqy1yL4+e
+         kvtCA+bHZg/0kxVZ4r86GaKGM+FAPon1bsmvzMuwuC6vhHat/2/8FGCprwvkzApT0Tx9
+         ZUfgl+Mc6Rpe22NKmkWGIDQakrgn1VhSMUX14mMYeWQdCRASqpBLt6RhCLKiGhTt6+2W
+         A9tw==
+X-Gm-Message-State: APjAAAX6B2BVrfavPJNbK1xuTVpAKYuTSSKfKD8kN4EUQrudQTHgTCJD
+        BDaxVVRSjUrDjRm4FmiksatHi5vK9eJJghp9Fph084cU0GDehBR9PoHODgG1PlXeyw==
+X-Google-Smtp-Source: APXvYqwMVHN1Cq4FcYozfOJt19P1x3Rl/aGkIkoFGx/zDiL5eHAyaKLoPUmxO54xTdVQEi0Sywi2RctYSaIS
+X-Received: by 2002:a1c:f702:: with SMTP id v2mr3843515wmh.114.1565889267826;
+        Thu, 15 Aug 2019 10:14:27 -0700 (PDT)
 Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id b7sm61334wrv.31.2019.08.15.10.14.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 10:14:25 -0700 (PDT)
+        by smtp-relay.gmail.com with ESMTPS id 9sm7523wmf.3.2019.08.15.10.14.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 15 Aug 2019 10:14:27 -0700 (PDT)
 X-Relaying-Domain: sirena.org.uk
 Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1hyJKS-00051c-It; Thu, 15 Aug 2019 17:14:24 +0000
+        id 1hyJKV-00052K-EL; Thu, 15 Aug 2019 17:14:27 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 034DC2742BD6; Thu, 15 Aug 2019 18:14:23 +0100 (BST)
+        id CED5D2742BC7; Thu, 15 Aug 2019 18:14:26 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, bardliao@realtek.com,
-        broonie@kernel.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        oder_chiou@realtek.com, perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: rt1011: remove unused variable 'dac_vol_tlv' and 'adc_vol_tlv'" to the asoc tree
-In-Reply-To: <20190815090602.9000-1-yuehaibing@huawei.com>
+Cc:     alsa-devel@alsa-project.org, brian.austin@cirrus.com,
+        broonie@kernel.org, Hulk Robot <hulkci@huawei.com>,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, Paul.Handrigan@cirrus.com,
+        perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: cs4349: Use PM ops 'cs4349_runtime_pm'" to the asoc tree
+In-Reply-To: <20190815090157.70036-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190815171424.034DC2742BD6@ypsilon.sirena.org.uk>
-Date:   Thu, 15 Aug 2019 18:14:23 +0100 (BST)
+Message-Id: <20190815171426.CED5D2742BC7@ypsilon.sirena.org.uk>
+Date:   Thu, 15 Aug 2019 18:14:26 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -75,11 +76,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: rt1011: remove unused variable 'dac_vol_tlv' and 'adc_vol_tlv'
+   ASoC: cs4349: Use PM ops 'cs4349_runtime_pm'
 
 has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -100,40 +101,38 @@ to this mail.
 Thanks,
 Mark
 
-From 5b366753c1c12feead0ae53b45482f569ed5399c Mon Sep 17 00:00:00 2001
+From 9b4275c415acca6264a3d7f1182589959c93d530 Mon Sep 17 00:00:00 2001
 From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 15 Aug 2019 17:06:02 +0800
-Subject: [PATCH] ASoC: rt1011: remove unused variable 'dac_vol_tlv' and
- 'adc_vol_tlv'
+Date: Thu, 15 Aug 2019 17:01:57 +0800
+Subject: [PATCH] ASoC: cs4349: Use PM ops 'cs4349_runtime_pm'
 
-sound/soc/codecs/rt1011.c:981:35: warning:
- dac_vol_tlv defined but not used [-Wunused-const-variable=]
-sound/soc/codecs/rt1011.c:982:35: warning:
- adc_vol_tlv defined but not used [-Wunused-const-variable=]
+sound/soc/codecs/cs4349.c:358:32: warning:
+ cs4349_runtime_pm defined but not used [-Wunused-const-variable=]
 
-They are never used, so can be removed.
+cs4349_runtime_pm ops already defined, it seems
+we should enable it.
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: e40da86 ("ASoC: cs4349: Add support for Cirrus Logic CS4349")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190815090602.9000-1-yuehaibing@huawei.com
+Link: https://lore.kernel.org/r/20190815090157.70036-1-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/rt1011.c | 3 ---
- 1 file changed, 3 deletions(-)
+ sound/soc/codecs/cs4349.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/codecs/rt1011.c b/sound/soc/codecs/rt1011.c
-index 638abcaf52b3..fa34565a3938 100644
---- a/sound/soc/codecs/rt1011.c
-+++ b/sound/soc/codecs/rt1011.c
-@@ -978,9 +978,6 @@ static bool rt1011_readable_register(struct device *dev, unsigned int reg)
- 	}
- }
- 
--static const DECLARE_TLV_DB_SCALE(dac_vol_tlv, -9435, 37, 0);
--static const DECLARE_TLV_DB_SCALE(adc_vol_tlv, -1739, 37, 0);
--
- static const char * const rt1011_din_source_select[] = {
- 	"Left",
- 	"Right",
+diff --git a/sound/soc/codecs/cs4349.c b/sound/soc/codecs/cs4349.c
+index 09716fab1e26..3381209a882d 100644
+--- a/sound/soc/codecs/cs4349.c
++++ b/sound/soc/codecs/cs4349.c
+@@ -378,6 +378,7 @@ static struct i2c_driver cs4349_i2c_driver = {
+ 	.driver = {
+ 		.name		= "cs4349",
+ 		.of_match_table	= cs4349_of_match,
++		.pm = &cs4349_runtime_pm,
+ 	},
+ 	.id_table	= cs4349_i2c_id,
+ 	.probe		= cs4349_i2c_probe,
 -- 
 2.20.1
 
