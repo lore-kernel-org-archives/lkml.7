@@ -2,112 +2,78 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14DDC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD889C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D07D2089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:15:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565907312;
-	bh=uN4VcpeCW2jBJTI1Si370+ePLjzfshSmi9q5RwHK3zw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=k+l3FlTbUNv47bCIHF8Iu3fcUY5fUxvNpOloMTvnRUwwytDO2FQy/rNoal9ldbzTE
-	 dmYwX8AOTGWlRgYwLmzkhHsxBWy9JLFC2FHb0EF/8KSEVjw3Vi6hQouS/nguwb2w55
-	 jhCmeXunxY/fePcJNSNHR6qmYkhP4LfvtVXZ57ns=
+	by mail.kernel.org (Postfix) with ESMTP id 788972086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:15:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CZnD/c6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731992AbfHOWPL (ORCPT
+        id S1732585AbfHOWP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 18:15:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728685AbfHOWPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 18:15:11 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C578E20644;
-        Thu, 15 Aug 2019 22:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565907310;
-        bh=uN4VcpeCW2jBJTI1Si370+ePLjzfshSmi9q5RwHK3zw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aTOvUoVh3yDGHY2VKKGjzrt2j37IUIAGRxiOv+BFw5caUUjN4/hUeJnHSChr2JqpI
-         ttZvBwHNpv3VJSotvsrCun1FEqYSEDpoeVcWA9n9Ed8qlXTHvUVYtRTbD5b2RUVVCX
-         GolZZPhsHLpPwXJ8M/alcsoSO7uLILhwTOk/xb7I=
-Date:   Thu, 15 Aug 2019 15:15:09 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thu, 15 Aug 2019 18:15:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33040 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728685AbfHOWP0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 18:15:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JSn/G2Oy/FEQuWnzNZ5SW7BflOV+7FNEUWnKN4qTV8o=; b=CZnD/c6lx99rtJ5klCe9PqogQ
+        ijPThQc2FBWmVtYxTy5kSEWa0oKbBuvT5Iii7Ky+NstSfLmOty7W2Ip8XkYXAQglBeeY7KsfZadpa
+        sZEQw40B93sR1nApKujoUOAnILefYgrB6bff7NLpOcJi3YShA1MDPdlpUFJpyt8rPAzH290TqPDMC
+        0ntpVTbLYaSLOlrXbzmT6ZV5CGr3JnOTtjVcCXvHX/6bdiOqYFwZttk0L8ARJT0DrPQ94Ahjv45pe
+        clOMD3/4ThGYL3HtbiIUbkBAkRbjRFqAppuLj2XsIKNYLozH0fQpEt+/SwWzLhey1yOPigMz7D88C
+        SeJKC6niQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hyO1Y-0007yN-A5; Thu, 15 Aug 2019 22:15:12 +0000
+Subject: Re: [PATCH v2] Documentation/admin-guide: Embargoed hardware security
+ issues
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Cc:     security@kernel.org, linux-doc@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-Message-Id: <20190815151509.9ddbd1f11fb9c4c3e97a67a5@linux-foundation.org>
-In-Reply-To: <20190815084429.GE9477@dhcp22.suse.cz>
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
-        <20190814202027.18735-3-daniel.vetter@ffwll.ch>
-        <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
-        <20190815084429.GE9477@dhcp22.suse.cz>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Jiri Kosina <jkosina@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jiri Kosina <jkosina@suse.cz>
+References: <20190725130113.GA12932@kroah.com>
+ <20190815212505.GC12041@kroah.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <635f5f3d-dc1e-90a0-8d85-d26a786bb910@infradead.org>
+Date:   Thu, 15 Aug 2019 15:15:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190815212505.GC12041@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 15 Aug 2019 10:44:29 +0200 Michal Hocko <mhocko@kernel.org> wrote:
+On 8/15/19 2:25 PM, Greg Kroah-Hartman wrote:
+> v2: updated list of people with document from Jiri as I had the old one
+>     grammer tweaks based on Jon's review
+>     moved document to Documentation/process/
 
-> > I continue to struggle with this.  It introduces a new kernel state
-> > "running preemptibly but must not call schedule()".  How does this make
-> > any sense?
-> > 
-> > Perhaps a much, much more detailed description of the oom_reaper
-> > situation would help out.
->  
-> The primary point here is that there is a demand of non blockable mmu
-> notifiers to be called when the oom reaper tears down the address space.
-> As the oom reaper is the primary guarantee of the oom handling forward
-> progress it cannot be blocked on anything that might depend on blockable
-> memory allocations. These are not really easy to track because they
-> might be indirect - e.g. notifier blocks on a lock which other context
-> holds while allocating memory or waiting for a flusher that needs memory
-> to perform its work. If such a blocking state happens that we can end up
-> in a silent hang with an unusable machine.
-> Now we hope for reasonable implementations of mmu notifiers (strong
-> words I know ;) and this should be relatively simple and effective catch
-> all tool to detect something suspicious is going on.
-> 
-> Does that make the situation more clear?
+If you get to do a v3, you can change the $Subject also.
 
-Yes, thanks, much.  Maybe a code comment along the lines of
-
-  This is on behalf of the oom reaper, specifically when it is
-  calling the mmu notifiers.  The problem is that if the notifier were
-  to block on, for example, mutex_lock() and if the process which holds
-  that mutex were to perform a sleeping memory allocation, the oom
-  reaper is now blocked on completion of that memory allocation.
-
-btw, do we need task_struct.non_block_count?  Perhaps the oom reaper
-thread could set a new PF_NONBLOCK (which would be more general than
-PF_OOM_REAPER).  If we run out of PF_ flags, use (current == oom_reaper_th).
-
+-- 
+~Randy
