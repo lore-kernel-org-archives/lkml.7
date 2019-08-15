@@ -2,160 +2,234 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30B8C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58E7C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB5ED2086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:22:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="CKnq2pWf"
+	by mail.kernel.org (Postfix) with ESMTP id 7827820656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732315AbfHOTWt (ORCPT
+        id S1732860AbfHOTXH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 15:22:49 -0400
-Received: from mail-eopbgr150041.outbound.protection.outlook.com ([40.107.15.41]:32257
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729514AbfHOTWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 15:22:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eEMVp3IIsC/6+RlDi6BW1b7S/KaSDST+fT/09/JqlDCNGOOqCuaRu8TJLriY1KPSZvwHnupvuH8LnqmHCApl14yLf/CLayEqjojJfK+d6mIGAn7TWquxbtRFy0E5CGWgrkDNlKFKxr9tY4Dcd1kULiwN/1BW00yPp22B1ecUZLYjn15dG4FI3hCIQe6Maw6s9iToiE3bonZH5fVpKbq2W6OR90tqGaIFCBaRylGEJF/N1wKeZOxiB0uejAeqJpU5vsx5WXP+uVt7hF+uedgRdyujCtf38VbPikU/7pc0C9/c+TdCp1s69/kUiib6KAI9l6TGCAe8wxdWYOyxJC50nA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C+Nsz8JNQsDfD+B9cwVgtusZSzpn1jdQQMMPk9A1PfE=;
- b=BIlnRDgl0Vusv3dNMyk2Vw9FsM6qqX2p9SLuxjY2W7TbR/SE3Nwrsfgoou6+MroWAuNde4aC7nuYk1PiZS2MUAoPJleut0s6Ez0SO/9mFg1XNZKQzC6LnD5fVRlLvc6Dv47MkcHJotb4cJepsfeZ+ynCJrBgG2gAmCXre0lbSvnYTYFvmbo7Ilyf0JCUUKomFGTRIJqjmv70DHIsHcVU7yeXZDcOTfSEAt2kNxkz4GV0fAnP4G/3eEduP7LbnycyEn7Zn6YFZKa5/T3EwdRzCp++Bw5n+lgzi08tCXGW+7zXj6nejbVosz6zmQoPbyCCAKuMNkvpmCiCr3gxzbnTJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C+Nsz8JNQsDfD+B9cwVgtusZSzpn1jdQQMMPk9A1PfE=;
- b=CKnq2pWfwkJWkxrvw7vLKijTlbzNmf2PVV+ALVhA736j4aYd+Vfo3z5l2o3NWQ1vFShmzG5p3YeIPT37d27NLHlGpVNhZx/2Dz9ZBxwAaig/vTwLbHV2nPWeuBwMnjToIybbXPE651rU2/0K5t45823U5xIkKXdE1O+9PAEIXgA=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6207.eurprd05.prod.outlook.com (20.178.123.218) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.23; Thu, 15 Aug 2019 19:22:03 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
- 19:22:02 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Jerome Glisse <jglisse@redhat.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
-Thread-Topic: [PATCH 04/15] mm: remove the pgmap field from struct
- hmm_vma_walk
-Thread-Index: AQHVTHDc5B4IgstYQk6yBJaVfn8xGqbv9wIAgAARNACAAMySgIAJE76AgABlPQCAAGF5AIAAFowAgAHIzYCAABXxgA==
-Date:   Thu, 15 Aug 2019 19:22:02 +0000
-Message-ID: <20190815192157.GB22970@mellanox.com>
-References: <20190806160554.14046-1-hch@lst.de>
- <20190806160554.14046-5-hch@lst.de> <20190807174548.GJ1571@mellanox.com>
- <CAPcyv4hPCuHBLhSJgZZEh0CbuuJNPLFDA3f-79FX5uVOO0yubA@mail.gmail.com>
- <20190808065933.GA29382@lst.de>
- <CAPcyv4hMUzw8vyXFRPe2pdwef0npbMm9tx9wiZ9MWkHGhH1V6w@mail.gmail.com>
- <20190814073854.GA27249@lst.de> <20190814132746.GE13756@mellanox.com>
- <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com>
- <20190815180325.GA4920@redhat.com>
-In-Reply-To: <20190815180325.GA4920@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YQBPR0101CA0035.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00::48) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e8e868ce-1e09-4fe7-c19f-08d721b5da06
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6207;
-x-ms-traffictypediagnostic: VI1PR05MB6207:
-x-microsoft-antispam-prvs: <VI1PR05MB62073BCAE334CC1F11F8D415CFAC0@VI1PR05MB6207.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01304918F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(366004)(346002)(396003)(189003)(199004)(66066001)(25786009)(6246003)(8676002)(14454004)(478600001)(6916009)(7736002)(76176011)(81166006)(102836004)(386003)(186003)(26005)(53546011)(6506007)(71200400001)(256004)(305945005)(52116002)(8936002)(71190400001)(64756008)(66446008)(5660300002)(99286004)(66946007)(446003)(486006)(476003)(2616005)(66476007)(316002)(81156014)(66556008)(54906003)(11346002)(2906002)(33656002)(53936002)(86362001)(1076003)(6116002)(7416002)(4326008)(6512007)(6436002)(6486002)(229853002)(36756003)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6207;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: SvLJ8MxOIqnPXh5qm0c3ngH3VI+0afAR4OX2IzZmLgTZd6sx8zPtyffMvRGo6FEFrYLx7iEcja8FIYDlOwDF+qIyWavv7QWQi9ioqw14T7+ftmpo59w+ZbNxx4WclurmTcCVgQrQ80JUZvSB9KUBj/ka7vKvIhFD4g4hPKbPx2urMgUWafmstjr36Tbw9Y87opcmjdyFTwgN+Kg9pT2YmtJela/1FI/Gy0YWbl43sDgiVR1GJQDs/JKt+W6rnkp5v99+7y4wOq4ujJZ7o75SfnzlgoOd1W5sxL8H22K6fFkNbZaHcQSZmgsGbJuOnnhOra0dmm7uNvN5Vu++DOoLP8HXswJ3R/Sadhh3NtUYM2vyuQaSeZ0nLEbceAhlfM4219VhdBHHZXpbv9JRyBK399dR9z7bgqkdmzWfE36wCao=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <45C50639B74BC0449B53AC8E6F4A6DDB@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 15 Aug 2019 15:23:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48438 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726545AbfHOTXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 15:23:07 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 19D2C307CDD1;
+        Thu, 15 Aug 2019 19:23:06 +0000 (UTC)
+Received: from [10.18.17.163] (dhcp-17-163.bos.redhat.com [10.18.17.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3F08E8CBB9;
+        Thu, 15 Aug 2019 19:22:55 +0000 (UTC)
+Subject: Re: [RFC][Patch v12 1/2] mm: page_reporting: core infrastructure
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        Pankaj Gupta <pagupta@redhat.com>,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
+        john.starks@microsoft.com, Dave Hansen <dave.hansen@intel.com>,
+        Michal Hocko <mhocko@suse.com>, cohuck@redhat.com
+References: <20190812131235.27244-1-nitesh@redhat.com>
+ <20190812131235.27244-2-nitesh@redhat.com>
+ <CAKgT0UcSabyrO=jUwq10KpJKLSuzorHDnKAGrtWVigKVgvD-6Q@mail.gmail.com>
+ <6d5b57ca-41ff-5c54-ab20-2b1631a6ce29@redhat.com>
+ <CAKgT0UfavuUT4ZvfxVdm3h25qc86ksxPO=GFpFkf8zbGAjHPvg@mail.gmail.com>
+ <09c6fbef-fa53-3a25-d3d6-460b9b6b2020@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <6241ef40-9403-1cb0-4e91-a1b86fcf1388@redhat.com>
+Date:   Thu, 15 Aug 2019 15:22:54 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8e868ce-1e09-4fe7-c19f-08d721b5da06
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 19:22:02.9196
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2vFTB0+yKuq5On5J5G9lbqd9I2G6xXxCbN/18vAq7tme5oNNCFMxgV8VNc2bYgLIod3sA7R5ZR0XiZlpqMy0Xw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6207
+In-Reply-To: <09c6fbef-fa53-3a25-d3d6-460b9b6b2020@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 15 Aug 2019 19:23:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 02:03:25PM -0400, Jerome Glisse wrote:
-> On Wed, Aug 14, 2019 at 07:48:28AM -0700, Dan Williams wrote:
-> > On Wed, Aug 14, 2019 at 6:28 AM Jason Gunthorpe <jgg@mellanox.com> wrot=
-e:
-> > >
-> > > On Wed, Aug 14, 2019 at 09:38:54AM +0200, Christoph Hellwig wrote:
-> > > > On Tue, Aug 13, 2019 at 06:36:33PM -0700, Dan Williams wrote:
-> > > > > Section alignment constraints somewhat save us here. The only exa=
-mple
-> > > > > I can think of a PMD not containing a uniform pgmap association f=
-or
-> > > > > each pte is the case when the pgmap overlaps normal dram, i.e. sh=
-ares
-> > > > > the same 'struct memory_section' for a given span. Otherwise, dis=
-tinct
-> > > > > pgmaps arrange to manage their own exclusive sections (and now
-> > > > > subsections as of v5.3). Otherwise the implementation could not
-> > > > > guarantee different mapping lifetimes.
-> > > > >
-> > > > > That said, this seems to want a better mechanism to determine "pf=
-n is
-> > > > > ZONE_DEVICE".
-> > > >
-> > > > So I guess this patch is fine for now, and once you provide a bette=
-r
-> > > > mechanism we can switch over to it?
-> > >
-> > > What about the version I sent to just get rid of all the strange
-> > > put_dev_pagemaps while scanning? Odds are good we will work with only
-> > > a single pagemap, so it makes some sense to cache it once we find it?
-> >=20
-> > Yes, if the scan is over a single pmd then caching it makes sense.
->=20
-> Quite frankly an easier an better solution is to remove the pagemap
-> lookup as HMM user abide by mmu notifier it means we will not make
-> use or dereference the struct page so that we are safe from any
-> racing hotunplug of dax memory (as long as device driver using hmm
-> do not have a bug).
 
-Yes, I also would prefer to drop the confusing checks entirely -
-Christoph can you resend this patch?
+On 8/15/19 9:15 AM, Nitesh Narayan Lal wrote:
+> On 8/14/19 12:11 PM, Alexander Duyck wrote:
+>> On Wed, Aug 14, 2019 at 8:49 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>>> On 8/12/19 2:47 PM, Alexander Duyck wrote:
+>>>> On Mon, Aug 12, 2019 at 6:13 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>>>>> This patch introduces the core infrastructure for free page reporting in
+>>>>> virtual environments. It enables the kernel to track the free pages which
+>>>>> can be reported to its hypervisor so that the hypervisor could
+>>>>> free and reuse that memory as per its requirement.
+>>>>>
+>>>>> While the pages are getting processed in the hypervisor (e.g.,
+>>>>> via MADV_DONTNEED), the guest must not use them, otherwise, data loss
+>>>>> would be possible. To avoid such a situation, these pages are
+>>>>> temporarily removed from the buddy. The amount of pages removed
+>>>>> temporarily from the buddy is governed by the backend(virtio-balloon
+>>>>> in our case).
+>>>>>
+>>>>> To efficiently identify free pages that can to be reported to the
+>>>>> hypervisor, bitmaps in a coarse granularity are used. Only fairly big
+>>>>> chunks are reported to the hypervisor - especially, to not break up THP
+>>>>> in the hypervisor - "MAX_ORDER - 2" on x86, and to save space. The bits
+>>>>> in the bitmap are an indication whether a page *might* be free, not a
+>>>>> guarantee. A new hook after buddy merging sets the bits.
+>>>>>
+>>>>> Bitmaps are stored per zone, protected by the zone lock. A workqueue
+>>>>> asynchronously processes the bitmaps, trying to isolate and report pages
+>>>>> that are still free. The backend (virtio-balloon) is responsible for
+>>>>> reporting these batched pages to the host synchronously. Once reporting/
+>>>>> freeing is complete, isolated pages are returned back to the buddy.
+>>>>>
+>>>>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+>>> [...]
+>>>>> +}
+>>>>> +
+>>>>> +/**
+>>>>> + * __page_reporting_enqueue - tracks the freed page in the respective zone's
+>>>>> + * bitmap and enqueues a new page reporting job to the workqueue if possible.
+>>>>> + */
+>>>>> +void __page_reporting_enqueue(struct page *page)
+>>>>> +{
+>>>>> +       struct page_reporting_config *phconf;
+>>>>> +       struct zone *zone;
+>>>>> +
+>>>>> +       rcu_read_lock();
+>>>>> +       /*
+>>>>> +        * We should not process this page if either page reporting is not
+>>>>> +        * yet completely enabled or it has been disabled by the backend.
+>>>>> +        */
+>>>>> +       phconf = rcu_dereference(page_reporting_conf);
+>>>>> +       if (!phconf)
+>>>>> +               return;
+>>>>> +
+>>>>> +       zone = page_zone(page);
+>>>>> +       bitmap_set_bit(page, zone);
+>>>>> +
+>>>>> +       /*
+>>>>> +        * We should not enqueue a job if a previously enqueued reporting work
+>>>>> +        * is in progress or we don't have enough free pages in the zone.
+>>>>> +        */
+>>>>> +       if (atomic_read(&zone->free_pages) >= phconf->max_pages &&
+>>>>> +           !atomic_cmpxchg(&phconf->refcnt, 0, 1))
+>>>> This doesn't make any sense to me. Why are you only incrementing the
+>>>> refcount if it is zero? Combining this with the assignment above, this
+>>>> isn't really a refcnt. It is just an oversized bitflag.
+>>> The intent for having an extra variable was to ensure that at a time only one
+>>> reporting job is enqueued. I do agree that for that purpose I really don't need
+>>> a reference counter and I should have used something like bool
+>>> 'page_hinting_active'. But with bool, I think there could be a possible chance
+>>> of race. Maybe I should rename this variable and keep it as atomic.
+>>> Any thoughts?
+>> You could just use a bitflag to achieve what you are doing here. That
+>> is the primary use case for many of the test_and_set_bit type
+>> operations. However one issue with doing it as a bitflag is that you
+>> have no way of telling that you took care of all requesters.
+> I think you are right, I might end up missing on certain reporting
+> opportunities in some special cases. Specifically when the pages which are
+> part of this new reporting request belongs to a section of the bitmap which
+> has already been scanned. Although, I have failed to reproduce this kind of
+> situation in an actual setup.
+>
+>>  That is
+>> where having an actual reference count comes in handy as you know
+>> exactly how many zones are requesting to be reported on.
+>
+> True.
+>
+>>>> Also I am pretty sure this results in the opportunity to miss pages
+>>>> because there is nothing to prevent you from possibly missing a ton of
+>>>> pages you could hint on if a large number of pages are pushed out all
+>>>> at once and then the system goes idle in terms of memory allocation
+>>>> and freeing.
+>>> I was looking at how you are enqueuing/processing reporting jobs for each zone.
+>>> I am wondering if I should also consider something on similar lines as having
+>>> that I might be able to address the concern which you have raised above. But it
+>>> would also mean that I have to add an additional flag in the zone_flags. :)
+>> You could do it either in the zone or outside the zone as yet another
+>> bitmap. I decided to put the flags inside the zone because there was a
+>> number of free bits there and it should be faster since we were
+>> already using the zone structure.
+> There are two possibilities which could happen while I am reporting:
+> 1. Another request might come in for a different zone.
+> 2. Another request could come in for the same zone and the pages belong to a
+>     section of the bitmap which has already been scanned.
+>
+> Having a per zone flag to indicate reporting status will solve the first
+> issue and to an extent the second as well. Having refcnt will possibly solve
+> both of them. What I am wondering about is that in my case I could easily
+> impact the performance negatively by performing more bitmap scanning.
+>
+>
 
-Thanks,
-Jason=20
+I realized that it may not be possible for me to directly adopt either refcnt
+or zone flags just because of the way I have page reporting setup right now.
+
+For now, I will just replace the refcnt with a bitflag as that should work
+for most of the cases.  Nevertheless, I will also keep looking for a better way.
+
+-- 
+Thanks
+Nitesh
+
