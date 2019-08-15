@@ -2,108 +2,102 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7840C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E52C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD5AE2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4EAE2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:57:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="bhktrSAq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G4SzC/FI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731981AbfHOO5k (ORCPT
+        id S1732050AbfHOO5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:57:40 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44558 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728500AbfHOO5k (ORCPT
+        Thu, 15 Aug 2019 10:57:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53404 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbfHOO5w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:57:40 -0400
-Received: by mail-lj1-f195.google.com with SMTP id e24so2460476ljg.11
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 07:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UPE/R7dk1PRW4fz9vq+RV8lPmiFDXVaOGpxZBaywzos=;
-        b=bhktrSAq2ebXuUMlotB3r4hNLUEjLMFMqFzHRJWuSwfrGwo18FrUderietEAXPL+T9
-         d/wc7hvHdj6X2uZ3KOFI3MdsNM9sRxthqttD8sH39xh4RllH4Y7BhXmKlznmLujipKKa
-         wN4oPfY/UFCb9e1HqEHgTSJRo/y0T7NWp3EunitU/zQyVdSKXLsau5mDr7z3C99T5qQx
-         fRbaC9NJnKtq7X/QFcz61tNLw8Km7PFMrhruxFRjsH2DVkQt6mQZvQSAK1n1m8wC8aSK
-         zz/ip/EHHSc94JfJRnhOa4RPgG1zKYHM0DZ1GIAP8Sxd4P0m1Fe3hOPJkMEFbevdRGGF
-         ridw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UPE/R7dk1PRW4fz9vq+RV8lPmiFDXVaOGpxZBaywzos=;
-        b=bEwyRUcFaVMtryToAH1NaUpJRmE5sSVZN77w9LMXPzHIDcT+iEGJ8j94A4cTPGw/wl
-         pbxBvp+G+8t/IMXsZle/aBbQA9wdO6oc3N3mx1mNqKTPSnENLpXaMw7wyjbEbz+SMqok
-         xn32otwOKZPRLsgmQY7akWmRkinjBETwt8+7RfHDQAfgAeqymKsNQ3XhzZnJ0RYdALrm
-         FjNJttIgWPywOpdLfMxnMaRa5rntO8pVJbU9fGChpYRa5nqCxSOnxlZZyLkjivtNxSc0
-         yVGvkEEkm7g/aIcx/1/YL+RHSMg6Xl9rgNTT+fexgXXrNka5+lvcw5onekAvy6AENTWO
-         6GXA==
-X-Gm-Message-State: APjAAAXt29yukOySCZpIy64Zjo6SSk2/0+omO9S9jg+o1elgX7u2Ma+6
-        +kKO9Hmk2U6xdeuVpbUfk+B6I3srmrg55M2Cm+TbfQ==
-X-Google-Smtp-Source: APXvYqx8kBH1+wRLS/yGdm+aRT258MQm7az0BIAH5tA8X8DE1Rya7NvYSJ/zmx1zxfnJVVhU6dpgv2yrSpICirgs/ps=
-X-Received: by 2002:a2e:860d:: with SMTP id a13mr2918768lji.215.1565881058066;
- Thu, 15 Aug 2019 07:57:38 -0700 (PDT)
+        Thu, 15 Aug 2019 10:57:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=UtWqCtB9PpyWQIYQ9Bi5TbzICHIqvshf8py52+rLl2U=; b=G4SzC/FI8VrUVgg7x5ogth9Nh
+        eAj/6iV92t37KP0hcby0OvU4pn8r6qqwRQ+mDiAPDs4lpknfHrfHkvHqI9TSiRXds5/waTwwDGfHF
+        meMxFAZEAl7Cf8B3VueEMtJ03PDeZzImMALQq+XqBrXv2Wh3O5SAROxdfXpLFnbEdDqoghvy+AKzz
+        Aslj1+3wskB0Si6q83aZmd0wXVIj68QrgyZ0M7NabLUSPJ5Jun8mYQIMZueZUzaBuMtHc/Fm3Iw4v
+        fgF6wXhvCpPTQdQMHPWud1FNTNvrq5cCkHtEImFxPIsqrSSwAHNS9ER9O9pSyPHqq6VmpUQ4hUGZ8
+        KPH0cs0qg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hyHCH-0003uM-LN; Thu, 15 Aug 2019 14:57:49 +0000
+Date:   Thu, 15 Aug 2019 07:57:49 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v3 -rcu] workqueue: Convert for_each_wq to use built-in
+ list check
+Message-ID: <20190815145749.GA18474@bombadil.infradead.org>
+References: <20190815141842.GB20599@google.com>
 MIME-Version: 1.0
-References: <20190814103244.92518-1-maco@android.com> <20190814113348.GA525@ming.t460p>
- <CAB0TPYHdaOTUKf5ix-oU7cXsV12ZW6YDYBsG+VKr6zk=RCW2NA@mail.gmail.com> <20190814114646.GA14561@ming.t460p>
-In-Reply-To: <20190814114646.GA14561@ming.t460p>
-From:   Martijn Coenen <maco@android.com>
-Date:   Thu, 15 Aug 2019 15:57:27 +0100
-Message-ID: <CAB0TPYGc8H1pJZrDX1r5wO1gyYV9rzgi3acT9mp-vxxrdA-pyA@mail.gmail.com>
-Subject: Re: [PATCH] RFC: loop: Avoid calling blk_mq_freeze_queue() when possible.
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>, kernel-team@android.com,
-        Narayan Kamath <narayan@google.com>,
-        Dario Freni <dariofreni@google.com>,
-        Nikita Ioffe <ioffe@google.com>,
-        Jiyong Park <jiyong@google.com>,
-        Martijn Coenen <maco@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815141842.GB20599@google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 12:47 PM Ming Lei <ming.lei@redhat.com> wrote:
-> blk_queue_init_done() is only called in blk_queue_init_done() for
-> this purpose, so this approach should be fine, IMO.
+On Thu, Aug 15, 2019 at 10:18:42AM -0400, Joel Fernandes (Google) wrote:
+> list_for_each_entry_rcu now has support to check for RCU reader sections
+> as well as lock. Just use the support in it, instead of explicitly
+> checking in the caller.
 
-I was thinking somebody might add more stuff to "init" in the future,
-and then that new stuff would now no longer be executed for the loop
-driver. The name "init" is pretty generic...but if that's not a
-concern I'm happy with your proposal as well. There's one more
-"freeze" I'd like to get rid of - we also call LOOP_SET_STATUS(64),
-and there's a freeze in there because lo->transfer is modified. That
-makes sense, but I was hoping we can make that freeze conditional on
-whether lo->transfer would actually change value; if it stays the
-same, I think freezing is not necessary.
+...
 
->
-> > switching q_usage_counter to per-cpu mode in the block layer in
-> > general, until the first request comes in?
->
-> This approach may not help your issue on loop, IO request comes
-> just after disk is added, such as by systemd, or reading partition table.
+>  #define assert_rcu_or_wq_mutex_or_pool_mutex(wq)			\
+>  	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&			\
+>  			 !lockdep_is_held(&wq->mutex) &&		\
 
-That's a good point, I thought we could avoid the partition scan, but
-on some Android devices we'll have max_part set, and there will be a
-partition scan.
+Can't you also get rid of this macro?
 
-Thanks,
-Martijn
+It's used in one place:
 
->
-> However, loop only starts to handle IO really after it becomes 'Lo_bound'.
->
-> thanks,
-> Ming
+static struct pool_workqueue *unbound_pwq_by_node(struct workqueue_struct *wq,
+                                                  int node)
+{
+        assert_rcu_or_wq_mutex_or_pool_mutex(wq);
+
+        /*
+         * XXX: @node can be NUMA_NO_NODE if CPU goes offline while a
+         * delayed item is pending.  The plan is to keep CPU -> NODE
+         * mapping valid and stable across CPU on/offlines.  Once that
+         * happens, this workaround can be removed.
+         */
+        if (unlikely(node == NUMA_NO_NODE))
+                return wq->dfl_pwq;
+
+        return rcu_dereference_raw(wq->numa_pwq_tbl[node]);
+}
+
+Shouldn't we delete that assert and use
+
++	return rcu_dereference_check(wq->numa_pwq_tbl[node],
++			lockdep_is_held(&wq->mutex) ||
++			lockdep_is_held(&wq_pool_mutex));
+
