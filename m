@@ -2,195 +2,459 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2900C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8543AC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E985208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:37:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="c0TluoxT"
+	by mail.kernel.org (Postfix) with ESMTP id 42F7E206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732343AbfHONhn (ORCPT
+        id S1732354AbfHONh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:37:43 -0400
-Received: from mail-eopbgr1410109.outbound.protection.outlook.com ([40.107.141.109]:1216
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732059AbfHONhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:37:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eNMuzlqHQZklgTvubrLgaz75HVGUM+uh2udbEOn+cIYAphw+dr9QRawjbSWT79WpBucpx1Hhhz2BUHuOHxOu2NXvWuYelDhWZr+7i5jlY8751ZouBLBwXqYQvu48pNJYWp9kNBikK8+DaynHjrR15sC3i+TCyv2K8qQPwbn7hJkR2o22fn2AgRlfLafG9qrJEFm+JMhMzucmiaMgV09+1BDulzwpmGYLXhwohTYnu4pAABSp6caxEAdYeppCM82XyTkcudwai0Wexb+XbwR3JFRDK+MjJbiE1qliP6BwbaMEKL+mIzik8+LAGCKJZBxZ/4QgwAQDTTqGYXWAbq6sAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iMsa/ND03M2Rda13bghfC3y8VhPof3YVBt12ythMVaY=;
- b=YSEYMqT7LF4l+I9N/YCNRYR82TbwIrnjJ9d5+srvmpTgD8nfveNPgQZE2JyCr0OnAlbnn+k6sYY652/4bbmPs1AMPyqZZo0B1v4K024lo6HlhEwzEjHgf+s9kFGQFLOz1XzWiuMjXv9TUVn2sRayifN/nXF0wcYdYzGzKz6/19KZSzYA1qV/OVjDdmQdMQUql3yQV/W2OfptrM2aAsvm4voWwG8LV9pd4n5SFAiQgOSZcG+FaqF8lUQUYyE1Ighj7Q8OVupgMQNrYwTAwpT5c+NWnS5bcb1dNiQs1gzm/3ij3Af3NX2s+CDvnJLA39fVGGIdwXJOBeZDukfjN5I0ZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iMsa/ND03M2Rda13bghfC3y8VhPof3YVBt12ythMVaY=;
- b=c0TluoxT0e93MUjhXgpjPG0MEcybojxB8FVsXRf18oUl0teb6DOrgoo0KgmnTIlLof/KVpySpEU6AgwyHcAvXLB2ACwqfAeAStGO6u7HGUMwsbfR5eJhBW+vlwdiPv66/obaGz15V/dMa5pKjUW7cnypSRN7+AW+dAEteW7qmvc=
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
- TY1PR01MB1852.jpnprd01.prod.outlook.com (52.133.164.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.20; Thu, 15 Aug 2019 13:37:38 +0000
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::d881:cb74:8277:5a16]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::d881:cb74:8277:5a16%7]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
- 13:37:38 +0000
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: RE: [PATCH v2 1/9] dt-bindings: panel: lvds: Add dual-link LVDS
- display support
-Thread-Topic: [PATCH v2 1/9] dt-bindings: panel: lvds: Add dual-link LVDS
- display support
-Thread-Index: AQHVU1lFdIlwd432g0qpjiqqiII4lqb8FxyAgAAfOSA=
-Date:   Thu, 15 Aug 2019 13:37:38 +0000
-Message-ID: <TY1PR01MB1770B076A94B922978E54341C0AC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1565867073-24746-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190815114515.GH5011@pendragon.ideasonboard.com>
-In-Reply-To: <20190815114515.GH5011@pendragon.ideasonboard.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9a5f89dc-197a-4ee3-5e31-08d72185bd2d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1852;
-x-ms-traffictypediagnostic: TY1PR01MB1852:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TY1PR01MB1852DEBCB024A0A342DC1FAEC0AC0@TY1PR01MB1852.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01304918F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(396003)(346002)(366004)(39860400002)(189003)(199004)(54906003)(316002)(7416002)(8936002)(25786009)(74316002)(71190400001)(71200400001)(86362001)(478600001)(2906002)(26005)(186003)(66066001)(5660300002)(81156014)(81166006)(7696005)(76176011)(8676002)(64756008)(66446008)(102836004)(66556008)(76116006)(66946007)(66476007)(52536014)(7736002)(14454004)(33656002)(53546011)(6506007)(6436002)(3846002)(6246003)(229853002)(256004)(55016002)(6116002)(53936002)(486006)(446003)(476003)(4326008)(6916009)(11346002)(9686003)(305945005)(99286004)(44832011);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1852;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8gbt9ipF3r8FHpxyRjd1SmaWfXYvVM6QkvkZPUi0lwvSsw77L/aeJ9uN7Uw1yzV0FAYoTACRw4S2CujGz59GFLPPWFSGvucfcBbykILNHaojNcK+d7UIJx2wgcW2BcuMq+/wrEFgy2Tw5lIHvDThNenkb3euCrSjcdTHfKVArUWQMFR7aDkD+AfZw4EpvPDtVIK1yGuY3AVnmBa0/p+YoLakrDfqlAorrIIjtFTCcsi79nwJW3MSLcY4SzUcZ7yMVfljg6p55yLGjP7b004U3AjMItBeouRZry/0+c0bzdq9pPnj9gtx0jGo/pcHJGCKBFudf2PF2OQWCtbhZJJxZn+HwA6Wn4jIfO9DCqy8VbZ0bcJTtTaYsvj117lOoHsUzCj+OgcuoHqwC83yKLftyhk6xv0hakPzzKIFclb7eBg=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 15 Aug 2019 09:37:58 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27926 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732344AbfHONh5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:37:57 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7FDYdJA039526
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:37:52 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ud5e2enc5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:37:51 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 15 Aug 2019 14:37:48 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 15 Aug 2019 14:37:42 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7FDbfZv52166774
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Aug 2019 13:37:42 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC9964C04A;
+        Thu, 15 Aug 2019 13:37:41 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B8F9C4C040;
+        Thu, 15 Aug 2019 13:37:40 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.59])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 15 Aug 2019 13:37:40 +0000 (GMT)
+Date:   Thu, 15 Aug 2019 16:37:39 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Chester Lin <clin@suse.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "guillaume.gardet@arm.com" <guillaume.gardet@arm.com>,
+        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "geert@linux-m68k.org" <geert@linux-m68k.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, Gary Lin <GLin@suse.com>,
+        Juergen Gross <JGross@suse.com>, Joey Lee <JLee@suse.com>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] efi/arm: fix allocation failure when reserving the
+ kernel base
+References: <20190802053744.5519-1-clin@suse.com>
+ <CAKv+Gu-yaNYsLQOOcr8srW91-nt-w0e+RBqxXGOagiGGT69n1Q@mail.gmail.com>
+ <CAKv+Gu8uwbY-JtjNbgoyY230X_M6xLchVM3OUg_oNWOJrF=iCg@mail.gmail.com>
+ <20190815111543.GA4728@linux-8mug>
+ <CAKv+Gu-5M-4=SbOzbqbLUYnfFw29vhfcrVD=N9j_APYpKjq2wQ@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a5f89dc-197a-4ee3-5e31-08d72185bd2d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 13:37:38.1170
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wID9JiuWqYkTvdArDgBpf2dGRoZ2IhSCQkqHxNSckUnXg7pg2532oBrisS900LMweZUo+wlBTS77pQY86lv0pkcwp8uoVl6UTbXe7A+QUv8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1852
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu-5M-4=SbOzbqbLUYnfFw29vhfcrVD=N9j_APYpKjq2wQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19081513-0012-0000-0000-0000033F1158
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081513-0013-0000-0000-00002179281F
+Message-Id: <20190815133738.GA2483@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-15_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908150144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB5b3VyIGZlZWRiYWNrIQ0KDQo+IEZyb206IGxp
-bnV4LWtlcm5lbC1vd25lckB2Z2VyLmtlcm5lbC5vcmcgPGxpbnV4LWtlcm5lbC1vd25lckB2Z2Vy
-Lmtlcm5lbC5vcmc+IE9uIEJlaGFsZiBPZiBMYXVyZW50IFBpbmNoYXJ0DQo+IFNlbnQ6IDE1IEF1
-Z3VzdCAyMDE5IDEyOjQ1DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS85XSBkdC1iaW5kaW5n
-czogcGFuZWw6IGx2ZHM6IEFkZCBkdWFsLWxpbmsgTFZEUyBkaXNwbGF5IHN1cHBvcnQNCj4gDQo+
-IEhpIEZhYnJpemlvLA0KPiANCj4gT24gVGh1LCBBdWcgMTUsIDIwMTkgYXQgMTI6MDQ6MjVQTSAr
-MDEwMCwgRmFicml6aW8gQ2FzdHJvIHdyb3RlOg0KPiA+IER1YWwtbGluayBMVkRTIGRpc3BsYXlz
-IGhhdmUgdHdvIHBvcnRzLCB0aGVyZWZvcmUgZG9jdW1lbnQgdGhpcw0KPiA+IHdpdGggdGhlIGJp
-bmRpbmdzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXpp
-by5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+ID4NCj4gPiAtLS0NCj4gPiB2MS0+djI6DQo+ID4g
-KiBSZXdvcmtlZCB0aGUgZGVzY3JpcHRpb24gb2YgdGhlIHBvcnRzIHByb3BlcnR5DQo+ID4gKiBs
-dmRzMF9wYW5lbF9pbiBpbiB0aGUgZXhhbXBsZSBoYXMgYmVlbiByZW5hbWVkIHRvIHBhbmVsX2lu
-MA0KPiA+ICogbHZkczFfcGFuZWxfaW4gaW4gdGhlIGV4YW1wbGUgaGFzIGJlZW4gcmVuYW1lZCB0
-byBwYW5lbF9pbjENCj4gPg0KPiA+IExhdXJlbnQsDQo+ID4NCj4gPiBpbiBsaW51eC1uZXh0IHRo
-ZXkgYXJlIG5vdyB3b3JraW5nIHdpdGg6DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvcGFuZWwvbHZkcy55YW1sDQo+IA0KPiBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9sdmRzLnlhbWwgaXMgaW4NCj4gZHJtLW1pc2Mt
-bmV4dCwgc28gSSB3b3VsZCBhZHZpc2UgcmViYXNpbmcgb24gdG9wIG9mIHRoYXQuDQoNCldpbGwg
-ZG8uDQoNClRoYW5rcywNCkZhYg0KDQo+IA0KPiA+IFdoYXQgc2hvdWxkIEkgZG8gaGVyZT8NCj4g
-Pg0KPiA+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1sdmRzLnR4dCAgICAgICAg
-ICB8IDk1ICsrKysrKysrKysrKysrKystLS0tLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDcxIGlu
-c2VydGlvbnMoKyksIDI0IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWx2ZHMudHh0
-DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFu
-ZWwtbHZkcy50eHQNCj4gPiBpbmRleCAyNTA4NTBhLi41MjMxMjQzIDEwMDY0NA0KPiA+IC0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWx2
-ZHMudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvcGFuZWwvcGFuZWwtbHZkcy50eHQNCj4gPiBAQCAtNDEsNyArNDEsMTIgQEAgUmVxdWlyZWQg
-bm9kZXM6DQo+ID4NCj4gPiAgLSBwYW5lbC10aW1pbmc6IFNlZSBwYW5lbC1jb21tb24udHh0Lg0K
-PiA+ICAtIHBvcnRzOiBTZWUgcGFuZWwtY29tbW9uLnR4dC4gVGhlc2UgYmluZGluZ3MgcmVxdWly
-ZSBhIHNpbmdsZSBwb3J0IHN1Ym5vZGUNCj4gPiAtICBjb3JyZXNwb25kaW5nIHRvIHRoZSBwYW5l
-bCBMVkRTIGlucHV0Lg0KPiA+ICsgIChmb3IgYSBzaW5nbGUgbGluayBwYW5lbCkgY29ycmVzcG9u
-ZGluZyB0byB0aGUgcGFuZWwgTFZEUyBpbnB1dCwgb3IgdHdvIHBvcnQNCj4gPiArICBzdWJub2Rl
-cyAoZm9yIGEgZHVhbCBsaW5rIHBhbmVsKSBjb3JyZXNwb25kaW5nIHRvIHRoZSBwYW5lbCBMVkRT
-IGlucHV0cy4NCj4gPiArICBEdWFsLWxpbmsgTFZEUyBwYW5lbHMgZXhwZWN0IGV2ZW4gcGl4ZWxz
-ICgwLCAyLCA0LCBldGMuKSBhbmQgb2RkIHBpeGVscyAoMSwgMywNCj4gPiArICA1LCBldGMuKSBv
-biBkaWZmZXJlbnQgaW5wdXQgcG9ydHMsIGl0J3MgdXAgdG8gdGhlIHBhbmVsLXNwZWNpZmljIGJp
-bmRpbmdzIHRvDQo+ID4gKyAgc3BlY2lmeSB3aGF0IHBvcnQgaXMgZXhwZWN0aW5nIGV2ZW4gcGl4
-ZWxzLCBhbmQgd2hhdCBwb3J0IGlzIGV4cGVjdGluZyBvZGQNCj4gPiArICBwaXhlbHMuDQo+ID4N
-Cj4gPg0KPiA+ICBMVkRTIGRhdGEgbWFwcGluZ3MgYXJlIGRlZmluZWQgYXMgZm9sbG93cy4NCj4g
-PiBAQCAtOTIsMzAgKzk3LDcyIEBAIENUTDM6IDANCj4gPiAgRXhhbXBsZQ0KPiA+ICAtLS0tLS0t
-DQo+ID4NCj4gPiAtcGFuZWwgew0KPiA+IC0JY29tcGF0aWJsZSA9ICJtaXRzdWJpc2hpLGFhMTIx
-dGQwMSIsICJwYW5lbC1sdmRzIjsNCj4gPiAtDQo+ID4gLQl3aWR0aC1tbSA9IDwyNjE+Ow0KPiA+
-IC0JaGVpZ2h0LW1tID0gPDE2Mz47DQo+ID4gLQ0KPiA+IC0JZGF0YS1tYXBwaW5nID0gImplaWRh
-LTI0IjsNCj4gPiAtDQo+ID4gLQlwYW5lbC10aW1pbmcgew0KPiA+IC0JCS8qIDEyODB4ODAwIEA2
-MEh6ICovDQo+ID4gLQkJY2xvY2stZnJlcXVlbmN5ID0gPDcxMDAwMDAwPjsNCj4gPiAtCQloYWN0
-aXZlID0gPDEyODA+Ow0KPiA+IC0JCXZhY3RpdmUgPSA8ODAwPjsNCj4gPiAtCQloc3luYy1sZW4g
-PSA8NzA+Ow0KPiA+IC0JCWhmcm9udC1wb3JjaCA9IDwyMD47DQo+ID4gLQkJaGJhY2stcG9yY2gg
-PSA8NzA+Ow0KPiA+IC0JCXZzeW5jLWxlbiA9IDw1PjsNCj4gPiAtCQl2ZnJvbnQtcG9yY2ggPSA8
-Mz47DQo+ID4gLQkJdmJhY2stcG9yY2ggPSA8MTU+Ow0KPiA+ICtTaW5nbGUgcG9ydDoNCj4gPiAr
-CXBhbmVsIHsNCj4gPiArCQljb21wYXRpYmxlID0gIm1pdHN1YmlzaGksYWExMjF0ZDAxIiwgInBh
-bmVsLWx2ZHMiOw0KPiA+ICsNCj4gPiArCQl3aWR0aC1tbSA9IDwyNjE+Ow0KPiA+ICsJCWhlaWdo
-dC1tbSA9IDwxNjM+Ow0KPiA+ICsNCj4gPiArCQlkYXRhLW1hcHBpbmcgPSAiamVpZGEtMjQiOw0K
-PiA+ICsNCj4gPiArCQlwYW5lbC10aW1pbmcgew0KPiA+ICsJCQkvKiAxMjgweDgwMCBANjBIeiAq
-Lw0KPiA+ICsJCQljbG9jay1mcmVxdWVuY3kgPSA8NzEwMDAwMDA+Ow0KPiA+ICsJCQloYWN0aXZl
-ID0gPDEyODA+Ow0KPiA+ICsJCQl2YWN0aXZlID0gPDgwMD47DQo+ID4gKwkJCWhzeW5jLWxlbiA9
-IDw3MD47DQo+ID4gKwkJCWhmcm9udC1wb3JjaCA9IDwyMD47DQo+ID4gKwkJCWhiYWNrLXBvcmNo
-ID0gPDcwPjsNCj4gPiArCQkJdnN5bmMtbGVuID0gPDU+Ow0KPiA+ICsJCQl2ZnJvbnQtcG9yY2gg
-PSA8Mz47DQo+ID4gKwkJCXZiYWNrLXBvcmNoID0gPDE1PjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4g
-PiArCQlwb3J0IHsNCj4gPiArCQkJcGFuZWxfaW46IGVuZHBvaW50IHsNCj4gPiArCQkJCXJlbW90
-ZS1lbmRwb2ludCA9IDwmbHZkc19lbmNvZGVyPjsNCj4gPiArCQkJfTsNCj4gPiArCQl9Ow0KPiA+
-ICAJfTsNCj4gPg0KPiA+IC0JcG9ydCB7DQo+ID4gLQkJcGFuZWxfaW46IGVuZHBvaW50IHsNCj4g
-PiAtCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsdmRzX2VuY29kZXI+Ow0KPiA+ICtUd28gcG9ydHM6
-DQo+ID4gKwlwYW5lbCB7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJhZHZhbnRlY2gsaWRrLTIxMjF3
-ciIsICJwYW5lbC1sdmRzIjsNCj4gPiArDQo+ID4gKwkJd2lkdGgtbW0gPSA8NDc2PjsNCj4gPiAr
-CQloZWlnaHQtbW0gPSA8MjY4PjsNCj4gPiArDQo+ID4gKwkJZGF0YS1tYXBwaW5nID0gInZlc2Et
-MjQiOw0KPiA+ICsNCj4gPiArCQlwYW5lbC10aW1pbmcgew0KPiA+ICsJCQljbG9jay1mcmVxdWVu
-Y3kgPSA8MTQ4NTAwMDAwPjsNCj4gPiArCQkJaGFjdGl2ZSA9IDwxOTIwPjsNCj4gPiArCQkJdmFj
-dGl2ZSA9IDwxMDgwPjsNCj4gPiArCQkJaHN5bmMtbGVuID0gPDQ0PjsNCj4gPiArCQkJaGZyb250
-LXBvcmNoID0gPDg4PjsNCj4gPiArCQkJaGJhY2stcG9yY2ggPSA8MTQ4PjsNCj4gPiArCQkJdmZy
-b250LXBvcmNoID0gPDQ+Ow0KPiA+ICsJCQl2YmFjay1wb3JjaCA9IDwzNj47DQo+ID4gKwkJCXZz
-eW5jLWxlbiA9IDw1PjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQlwb3J0cyB7DQo+ID4gKwkJ
-CSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsJCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiAr
-DQo+ID4gKwkJCXBvcnRAMCB7DQo+ID4gKwkJCQlyZWcgPSA8MD47DQo+ID4gKwkJCQlwYW5lbF9p
-bjA6IGVuZHBvaW50IHsNCj4gPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmx2ZHMwX291dD47
-DQo+ID4gKwkJCQl9Ow0KPiA+ICsJCQl9Ow0KPiA+ICsNCj4gPiArCQkJcG9ydEAxIHsNCj4gPiAr
-CQkJCXJlZyA9IDwxPjsNCj4gPiArCQkJCXBhbmVsX2luMTogZW5kcG9pbnQgew0KPiA+ICsJCQkJ
-CXJlbW90ZS1lbmRwb2ludCA9IDwmbHZkczFfb3V0PjsNCj4gPiArCQkJCX07DQo+ID4gKwkJCX07
-DQo+ID4gIAkJfTsNCj4gPiAgCX07DQo+ID4gLX07DQo+IA0KPiAtLQ0KPiBSZWdhcmRzLA0KPiAN
-Cj4gTGF1cmVudCBQaW5jaGFydA0K
+On Thu, Aug 15, 2019 at 02:32:50PM +0300, Ard Biesheuvel wrote:
+> (adding Mike)
+> 
+> On Thu, 15 Aug 2019 at 14:28, Chester Lin <clin@suse.com> wrote:
+> >
+> > Hi Ard,
+> >
+> > On Thu, Aug 15, 2019 at 10:59:43AM +0300, Ard Biesheuvel wrote:
+> > > On Sun, 4 Aug 2019 at 10:57, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> > > >
+> > > > Hello Chester,
+> > > >
+> > > > On Fri, 2 Aug 2019 at 08:40, Chester Lin <clin@suse.com> wrote:
+> > > > >
+> > > > > In some cases the arm32 efistub could fail to allocate memory for
+> > > > > uncompressed kernel. For example, we got the following error message when
+> > > > > verifying EFI stub on Raspberry Pi-2 [kernel-5.2.1 + grub-2.04] :
+> > > > >
+> > > > >   EFI stub: Booting Linux Kernel...
+> > > > >   EFI stub: ERROR: Unable to allocate memory for uncompressed kernel.
+> > > > >   EFI stub: ERROR: Failed to relocate kernel
+> > > > >
+> > > > > After checking the EFI memory map we found that the first page [0 - 0xfff]
+> > > > > had been reserved by Raspberry Pi-2's firmware, and the efistub tried to
+> > > > > set the dram base at 0, which was actually in a reserved region.
+> > > > >
+> > > >
+> > > > This by itself is a violation of the Linux boot protocol for 32-bit
+> > > > ARM when using the decompressor. The decompressor rounds down its own
+> > > > base address to a multiple of 128 MB, and assumes the whole area is
+> > > > available for the decompressed kernel and related data structures.
+> > > > (The first TEXT_OFFSET bytes are no longer used in practice, which is
+> > > > why putting a reserved region of 4 KB bytes works at the moment, but
+> > > > this is fragile). Note that the decompressor does not look at any DT
+> > > > or EFI provided memory maps *at all*.
+> > > >
+> > > > So unfortunately, this is not something we can fix in the kernel, but
+> > > > we should fix it in the bootloader or in GRUB, so it does not put any
+> > > > reserved regions in the first 128 MB of memory,
+> > > >
+> > >
+> > > OK, perhaps we can fix this by taking TEXT_OFFSET into account. The
+> > > ARM boot protocol docs are unclear about whether this memory should be
+> > > used or not, but it is no longer used for its original purpose (page
+> > > tables), and the RPi loader already keeps data there.
+> > >
+> > > Can you check whether the following patch works for you?
+> > >
+> > > diff --git a/drivers/firmware/efi/libstub/Makefile
+> > > b/drivers/firmware/efi/libstub/Makefile
+> > > index 0460c7581220..ee0661ddb25b 100644
+> > > --- a/drivers/firmware/efi/libstub/Makefile
+> > > +++ b/drivers/firmware/efi/libstub/Makefile
+> > > @@ -52,6 +52,7 @@ lib-$(CONFIG_EFI_ARMSTUB)     += arm-stub.o fdt.o
+> > > string.o random.o \
+> > >
+> > >  lib-$(CONFIG_ARM)              += arm32-stub.o
+> > >  lib-$(CONFIG_ARM64)            += arm64-stub.o
+> > > +CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+> > >  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+> > >
+> > >  #
+> > > diff --git a/drivers/firmware/efi/libstub/arm32-stub.c
+> > > b/drivers/firmware/efi/libstub/arm32-stub.c
+> > > index e8f7aefb6813..66ff0c8ec269 100644
+> > > --- a/drivers/firmware/efi/libstub/arm32-stub.c
+> > > +++ b/drivers/firmware/efi/libstub/arm32-stub.c
+> > > @@ -204,7 +204,7 @@ efi_status_t
+> > > handle_kernel_image(efi_system_table_t *sys_table,
+> > >          * loaded. These assumptions are made by the decompressor,
+> > >          * before any memory map is available.
+> > >          */
+> > > -       dram_base = round_up(dram_base, SZ_128M);
+> > > +       dram_base = round_up(dram_base, SZ_128M) + TEXT_OFFSET;
+> > >
+> > >         status = reserve_kernel_base(sys_table, dram_base, reserve_addr,
+> > >                                      reserve_size);
+> > >
+> >
+> > I tried your patch on rpi2 and got the following panic. Just a reminder that I
+> > have replaced some log messages with "......" since it might be too long to
+> > post all.
+> >
+> 
+> OK. Good to know that this change helps you to get past the EFI stub boot issue.
+> 
+> > In this case the kernel failed to reserve cma, which should hit the issue of
+> > memblock_limit=0x1000 as I had mentioned in my patch description. The first
+> > block [0-0xfff] was scanned in adjust_lowmem_bounds(), but it did not align
+> > with PMD_SIZE so the cma reservation failed because the memblock.current_limit
+> > was extremely low. That's why I expand the first reservation from 1 PAGESIZE to
+> > 1 PMD_SIZE in my patch in order to avoid this issue. Please kindly let me know
+> > if any suggestion, thank you.
+
+ 
+> This looks like it is a separate issue. The memblock/cma code should
+> not choke on a reserved page of memory at 0x0.
+> 
+> Perhaps Russell or Mike (cc'ed) have an idea how to address this?
+
+Presuming that the last memblock dump comes from the end of
+arm_memblock_init() with the this memory map 
+ 
+memory[0x0] [0x0000000000000000-0x0000000000000fff], 0x0000000000001000 bytes flags: 0x4
+memory[0x1] [0x0000000000001000-0x0000000007ef5fff], 0x0000000007ef5000 bytes flags: 0x0
+memory[0x2] [0x0000000007ef6000-0x0000000007f09fff], 0x0000000000014000 bytes flags: 0x4
+memory[0x3] [0x0000000007f0a000-0x000000003cb3efff], 0x0000000034c35000 bytes flags: 0x0
+
+adjust_lowmem_bounds() will set the memblock_limit (and respectively global
+memblock.current_limit) to 0x1000 and any further memblock_alloc*() will
+happily fail.
+
+I believe that the assumption for memblock_limit calculations was that the
+first bank has several megs at least.
+
+I wonder if this hack would help:
+
+diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
+index d9a0038..948e5b9 100644
+--- a/arch/arm/mm/mmu.c
++++ b/arch/arm/mm/mmu.c
+@@ -1206,7 +1206,7 @@ void __init adjust_lowmem_bounds(void)
+ 			 * allocated when mapping the start of bank 0, which
+ 			 * occurs before any free memory is mapped.
+ 			 */
+-			if (!memblock_limit) {
++			if (memblock_limit < PMD_SIZE) {
+ 				if (!IS_ALIGNED(block_start, PMD_SIZE))
+ 					memblock_limit = block_start;
+ 				else if (!IS_ALIGNED(block_end, PMD_SIZE))
+ 
+> > boot-log:
+> > --------
+> >
+> > Loading Linux test ...
+> > EFI stub: Booting Linux Kernel...
+> > EFI stub: Using DTB from configuration table
+> > EFI stub: Exiting boot services and installing virtual address map...
+> > Uncompressing Linux... done, booting the kernel.
+> > [    0.000000] Booting Linux on physical CPU 0xf00
+> > [    0.000000] Linux version 5.2.1-lpae (chester@linux-8mug) (......)
+> > [    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=30c5387d
+> > [    0.000000] CPU: div instructions available: patching division code
+> > [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+> > [    0.000000] OF: fdt: Machine model: Raspberry Pi 2 Model B Rev 1.1
+> > [    0.000000] printk: bootconsole [earlycon0] enabled
+> > [    0.000000] Memory policy: Data cache writealloc
+> > [    0.000000] efi: Getting EFI parameters from FDT:
+> > [    0.000000] efi:   System Table: 0x000000003df757c0
+> > [    0.000000] efi:   MemMap Address: 0x000000002c1c5040
+> > [    0.000000] efi:   MemMap Size: 0x000003c0
+> > [    0.000000] efi:   MemMap Desc. Size: 0x00000028
+> > [    0.000000] efi:   MemMap Desc. Version: 0x00000001
+> > [    0.000000] efi: EFI v2.70 by Das U-Boot
+> > [    0.000000] efi:  SMBIOS=0x3cb62000  MEMRESERVE=0x3cb3d040
+> > [    0.000000] memblock_reserve: [0x000000003cb3d040-0x000000003cb3d04f] efi_config_parse_tables+0x25c/0x2d8
+> > [    0.000000] efi: Processing EFI memory map:
+> > [    0.000000] MEMBLOCK configuration:
+> > [    0.000000]  memory size = 0x000000003e000000 reserved size = 0x0000000000000010
+> > [    0.000000]  memory.cnt  = 0x1
+> > [    0.000000]  memory[0x0]     [0x0000000000000000-0x000000003dffffff], 0x000000003e000000 bytes flags: 0x0
+> > [    0.000000]  reserved.cnt  = 0x1
+> > [    0.000000]  reserved[0x0]   [0x000000003cb3d040-0x000000003cb3d04f], 0x0000000000000010 bytes flags: 0x0
+> > [    0.000000] memblock_remove: [0x0000000000000000-0xfffffffffffffffe] reserve_regions+0x68/0x23c
+> > [    0.000000] efi:   0x000000000000-0x000000000fff [Reserved           |   |  |  |  |  |  |  |   |WB|  |  |  ]
+> > [    0.000000] memblock_add: [0x0000000000000000-0x0000000000000fff] early_init_dt_add_memory_arch+0x164/0x178
+> > [    0.000000] efi:   0x000000001000-0x000000307fff [Conventional Memory|   |  |  |  |  |  |  |   |WB|  |  |  ]
+> > [    0.000000] memblock_add: [0x0000000000001000-0x0000000000307fff] early_init_dt_add_memory_arch+0x164/0x178
+> > [    0.000000] efi:   0x000000308000-0x000002307fff [Boot Data          |   |  |  |  |  |  |  |   |WB|  |  |  ]
+> > [    0.000000] memblock_add: [0x0000000000308000-0x0000000002307fff] early_init_dt_add_memory_arch+0x164/0x178
+> > [    0.000000] efi:   0x000002308000-0x000002a93fff [Loader Data        |   |  |  |  |  |  |  |   |WB|  |  |  ]
+> > [    0.000000] memblock_add: [0x0000000002308000-0x0000000002a93fff] early_init_dt_add_memory_arch+0x164/0x178
+> > [    0.000000] efi:   0x000002a94000-0x000007cf5fff [Conventional Memory|   |  |  |  |  |  |  |   |WB|  |  |  ]
+> > [    0.000000] memblock_add: [0x0000000002a94000-0x0000000007cf5fff] early_init_dt_add_memory_arch+0x164/0x178
+> > ......
+> > ......
+> > [    0.000000] memblock_add: [0x000000003df76000-0x000000003dffffff] early_init_dt_add_memory_arch+0x164/0x178
+> > [    0.000000] efi:   0x00003f100000-0x00003f100fff [Memory Mapped I/O  |RUN|  |  |  |  |  |  |   |  |  |  |  ]
+> > [    0.000000] memblock_reserve: [0x000000002c1c5000-0x000000002c1c5fff] efi_init+0xd8/0x1c8
+> > [    0.000000] memblock_reserve: [0x0000000000400000-0x0000000001df2cef] arm_memblock_init+0x44/0x19c
+> > [    0.000000] memblock_reserve: [0x0000000000303000-0x0000000000307fff] arm_mm_memblock_reserve+0x30/0x38
+> > [    0.000000] memblock_reserve: [0x0000000007cf6000-0x0000000007cfc5c4] early_init_dt_reserve_memory_arch+0x2c/0x30
+> > [    0.000000] cma: Failed to reserve 64 MiB
+> > [    0.000000] MEMBLOCK configuration:
+> > [    0.000000]  memory size = 0x000000003e000000 reserved size = 0x00000000019ff2c5
+> > [    0.000000]  memory.cnt  = 0xa
+> > [    0.000000]  memory[0x0]     [0x0000000000000000-0x0000000000000fff], 0x0000000000001000 bytes flags: 0x4
+> > [    0.000000]  memory[0x1]     [0x0000000000001000-0x0000000007ef5fff], 0x0000000007ef5000 bytes flags: 0x0
+> > [    0.000000]  memory[0x2]     [0x0000000007ef6000-0x0000000007f09fff], 0x0000000000014000 bytes flags: 0x4
+> > [    0.000000]  memory[0x3]     [0x0000000007f0a000-0x000000003cb3efff], 0x0000000034c35000 bytes flags: 0x0
+> > [    0.000000]  memory[0x4]     [0x000000003cb3f000-0x000000003cb3ffff], 0x0000000000001000 bytes flags: 0x4
+> > [    0.000000]  memory[0x5]     [0x000000003cb40000-0x000000003cb5ffff], 0x0000000000020000 bytes flags: 0x0
+> > [    0.000000]  memory[0x6]     [0x000000003cb60000-0x000000003cb68fff], 0x0000000000009000 bytes flags: 0x4
+> > [    0.000000]  memory[0x7]     [0x000000003cb69000-0x000000003df74fff], 0x000000000140c000 bytes flags: 0x0
+> > [    0.000000]  memory[0x8]     [0x000000003df75000-0x000000003df75fff], 0x0000000000001000 bytes flags: 0x4
+> > [    0.000000]  memory[0x9]     [0x000000003df76000-0x000000003dffffff], 0x000000000008a000 bytes flags: 0x0
+> > [    0.000000]  reserved.cnt  = 0x5
+> > [    0.000000]  reserved[0x0]   [0x0000000000303000-0x0000000000307fff], 0x0000000000005000 bytes flags: 0x0
+> > [    0.000000]  reserved[0x1]   [0x0000000000400000-0x0000000001df2cef], 0x00000000019f2cf0 bytes flags: 0x0
+> > [    0.000000]  reserved[0x2]   [0x0000000007cf6000-0x0000000007cfc5c4], 0x00000000000065c5 bytes flags: 0x0
+> > [    0.000000]  reserved[0x3]   [0x000000002c1c5000-0x000000002c1c5fff], 0x0000000000001000 bytes flags: 0x0
+> > [    0.000000]  reserved[0x4]   [0x000000003cb3d040-0x000000003cb3d04f], 0x0000000000000010 bytes flags: 0x0
+> > [    0.000000] memblock_alloc_try_nid: 4096 bytes align=0x1000 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 early_alloc+0x44/0x70
+> > [    0.000000] Kernel panic - not syncing: early_alloc: Failed to allocate 4096 bytes align=0x1000
+> > [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 5.2.1-lpae #1 openSUSE Tumbleweed (unreleased)
+> > [    0.000000] Hardware name: BCM2835
+> > [    0.000000] Backtrace:
+> > [    0.000000] [<c043fafc>] (dump_backtrace) from [<c043fd84>] (show_stack+0x20/0x24)
+> > [    0.000000]  r7:c1800000 r6:00000000 r5:600001d3 r4:c1901ba0
+> > [    0.000000] [<c043fd64>] (show_stack) from [<c0df9400>] (dump_stack+0xd0/0x104)
+> > [    0.000000] [<c0df9330>] (dump_stack) from [<c048061c>] (panic+0xf8/0x32c)
+> > [    0.000000]  r10:c0307000 r9:c0001000 r8:00000003 r7:00000000 r6:00000000 r5:c181df04
+> > [    0.000000]  r4:c192b8d8 r3:00000001
+> > [    0.000000] [<c0480528>] (panic) from [<c1609728>] (early_alloc+0x60/0x70)
+> > [    0.000000]  r3:00001000 r2:00001000 r1:c10037e8 r0:c12fe64c
+> > [    0.000000]  r7:00000000
+> > [    0.000000] [<c16096c8>] (early_alloc) from [<c1609114>] (arm_pte_alloc+0x34/0x94)
+> > [    0.000000]  r7:00000000 r6:00000000 r4:c0307000
+> > [    0.000000] [<c16090e0>] (arm_pte_alloc) from [<c1609384>] (__create_mapping+0x210/0x2c0)
+> > [    0.000000]  r9:c0001000 r8:c0001000 r7:00000001 r6:c13f22e0 r5:c0200000 r4:c0400000
+> > [    0.000000] [<c1609174>] (__create_mapping) from [<c160951c>] (create_mapping+0xe8/0x108)
+> > [    0.000000]  r10:c0400000 r9:c16a2110 r8:c19c7a80 r7:00000000 r6:00400000 r5:c13f2000
+> > [    0.000000]  r4:c1801ef0
+> > [    0.000000] [<c1609434>] (create_mapping) from [<c1609f50>] (paging_init+0x350/0x75c)
+> > [    0.000000]  r4:c1842d40
+> >
+> >
+> > > >
+> > > > >   grub> lsefimmap
+> > > > >   Type      Physical start  - end             #Pages        Size Attributes
+> > > > >   reserved  0000000000000000-0000000000000fff 00000001      4KiB WB
+> > > > >   conv-mem  0000000000001000-0000000007ef5fff 00007ef5 130004KiB WB
+> > > > >   RT-data   0000000007ef6000-0000000007f09fff 00000014     80KiB RT WB
+> > > > >   conv-mem  0000000007f0a000-000000002d871fff 00025968 615840KiB WB
+> > > > >   .....
+> > > > >
+> > > > > To avoid a reserved address, we have to ignore the memory regions which are
+> > > > > marked as EFI_RESERVED_TYPE, and only conventional memory regions can be
+> > > > > chosen. If the region before the kernel base is unaligned, it will be
+> > > > > marked as EFI_RESERVED_TYPE and let kernel ignore it so that memblock_limit
+> > > > > will not be sticked with a very low address such as 0x1000.
+> > > > >
+> > >
+> > > This is a separate issue, so it should be handled in a separate patch.
+> > >
+> > > > > Signed-off-by: Chester Lin <clin@suse.com>
+> > > > > ---
+> > > > >  arch/arm/mm/mmu.c                         |  3 ++
+> > > > >  drivers/firmware/efi/libstub/arm32-stub.c | 43 ++++++++++++++++++-----
+> > > > >  2 files changed, 37 insertions(+), 9 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
+> > > > > index f3ce34113f89..909b11ba48d8 100644
+> > > > > --- a/arch/arm/mm/mmu.c
+> > > > > +++ b/arch/arm/mm/mmu.c
+> > > > > @@ -1184,6 +1184,9 @@ void __init adjust_lowmem_bounds(void)
+> > > > >                 phys_addr_t block_start = reg->base;
+> > > > >                 phys_addr_t block_end = reg->base + reg->size;
+> > > > >
+> > > > > +               if (memblock_is_nomap(reg))
+> > > > > +                       continue;
+> > > > > +
+> > > > >                 if (reg->base < vmalloc_limit) {
+> > > > >                         if (block_end > lowmem_limit)
+> > > > >                                 /*
+> > > > > diff --git a/drivers/firmware/efi/libstub/arm32-stub.c b/drivers/firmware/efi/libstub/arm32-stub.c
+> > > > > index e8f7aefb6813..10d33d36df00 100644
+> > > > > --- a/drivers/firmware/efi/libstub/arm32-stub.c
+> > > > > +++ b/drivers/firmware/efi/libstub/arm32-stub.c
+> > > > > @@ -128,7 +128,7 @@ static efi_status_t reserve_kernel_base(efi_system_table_t *sys_table_arg,
+> > > > >
+> > > > >         for (l = 0; l < map_size; l += desc_size) {
+> > > > >                 efi_memory_desc_t *desc;
+> > > > > -               u64 start, end;
+> > > > > +               u64 start, end, spare, kernel_base;
+> > > > >
+> > > > >                 desc = (void *)memory_map + l;
+> > > > >                 start = desc->phys_addr;
+> > > > > @@ -144,27 +144,52 @@ static efi_status_t reserve_kernel_base(efi_system_table_t *sys_table_arg,
+> > > > >                 case EFI_BOOT_SERVICES_DATA:
+> > > > >                         /* Ignore types that are released to the OS anyway */
+> > > > >                         continue;
+> > > > > -
+> > > > > +               case EFI_RESERVED_TYPE:
+> > > > > +                       /* Ignore reserved regions */
+> > > > > +                       continue;
+> > > > >                 case EFI_CONVENTIONAL_MEMORY:
+> > > > >                         /*
+> > > > >                          * Reserve the intersection between this entry and the
+> > > > >                          * region.
+> > > > >                          */
+> > > > >                         start = max(start, (u64)dram_base);
+> > > > > -                       end = min(end, (u64)dram_base + MAX_UNCOMP_KERNEL_SIZE);
+> > > > > +                       kernel_base = round_up(start, PMD_SIZE);
+> > > > > +                       spare = kernel_base - start;
+> > > > > +                       end = min(end, kernel_base + MAX_UNCOMP_KERNEL_SIZE);
+> > > > > +
+> > > > > +                       status = efi_call_early(allocate_pages,
+> > > > > +                                       EFI_ALLOCATE_ADDRESS,
+> > > > > +                                       EFI_LOADER_DATA,
+> > > > > +                                       MAX_UNCOMP_KERNEL_SIZE / EFI_PAGE_SIZE,
+> > > > > +                                       &kernel_base);
+> > > > > +                       if (status != EFI_SUCCESS) {
+> > > > > +                               pr_efi_err(sys_table_arg,
+> > > > > +                                       "reserve_kernel_base: alloc failed.\n");
+> > > > > +                               goto out;
+> > > > > +                       }
+> > > > > +                       *reserve_addr = kernel_base;
+> > > > >
+> > > > > +                       if (!spare)
+> > > > > +                               break;
+> > > > > +                       /*
+> > > > > +                        * If there's a gap between start and kernel_base,
+> > > > > +                        * it needs be reserved so that the memblock_limit
+> > > > > +                        * will not fall on a very low address when running
+> > > > > +                        * adjust_lowmem_bounds(), wchich could eventually
+> > > > > +                        * cause CMA reservation issue.
+> > > > > +                        */
+> > > > >                         status = efi_call_early(allocate_pages,
+> > > > >                                                 EFI_ALLOCATE_ADDRESS,
+> > > > > -                                               EFI_LOADER_DATA,
+> > > > > -                                               (end - start) / EFI_PAGE_SIZE,
+> > > > > +                                               EFI_RESERVED_TYPE,
+> > > > > +                                               spare / EFI_PAGE_SIZE,
+> > > > >                                                 &start);
+> > > > >                         if (status != EFI_SUCCESS) {
+> > > > >                                 pr_efi_err(sys_table_arg,
+> > > > > -                                       "reserve_kernel_base(): alloc failed.\n");
+> > > > > +                                       "reserve spare-region failed\n");
+> > > > >                                 goto out;
+> > > > >                         }
+> > > > > -                       break;
+> > > > >
+> > > > > +                       break;
+> > > > >                 case EFI_LOADER_CODE:
+> > > > >                 case EFI_LOADER_DATA:
+> > > > >                         /*
+> > > > > @@ -220,7 +245,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
+> > > > >         *image_size = image->image_size;
+> > > > >         status = efi_relocate_kernel(sys_table, image_addr, *image_size,
+> > > > >                                      *image_size,
+> > > > > -                                    dram_base + MAX_UNCOMP_KERNEL_SIZE, 0);
+> > > > > +                                    *reserve_addr + MAX_UNCOMP_KERNEL_SIZE, 0);
+> > > > >         if (status != EFI_SUCCESS) {
+> > > > >                 pr_efi_err(sys_table, "Failed to relocate kernel.\n");
+> > > > >                 efi_free(sys_table, *reserve_size, *reserve_addr);
+> > > > > @@ -233,7 +258,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
+> > > > >          * in memory. The kernel determines the base of DRAM from the
+> > > > >          * address at which the zImage is loaded.
+> > > > >          */
+> > > > > -       if (*image_addr + *image_size > dram_base + ZIMAGE_OFFSET_LIMIT) {
+> > > > > +       if (*image_addr + *image_size > *reserve_addr + ZIMAGE_OFFSET_LIMIT) {
+> > > > >                 pr_efi_err(sys_table, "Failed to relocate kernel, no low memory available.\n");
+> > > > >                 efi_free(sys_table, *reserve_size, *reserve_addr);
+> > > > >                 *reserve_size = 0;
+> > > > > --
+> > > > > 2.22.0
+> > > > >
+> > >
+> 
+
+-- 
+Sincerely yours,
+Mike.
+
