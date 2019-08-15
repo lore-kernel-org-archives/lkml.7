@@ -2,92 +2,100 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D91C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71037C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E762084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 433E7206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:52:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731928AbfHOMvU (ORCPT
+        id S1731652AbfHOMw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:51:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41486 "EHLO mx1.redhat.com"
+        Thu, 15 Aug 2019 08:52:56 -0400
+Received: from sauhun.de ([88.99.104.3]:32984 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731645AbfHOMvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 08:51:20 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D7E06C057EC6;
-        Thu, 15 Aug 2019 12:51:19 +0000 (UTC)
-Received: from krava (unknown [10.43.17.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0557A5D6A9;
-        Thu, 15 Aug 2019 12:51:16 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 14:51:16 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, kstewart@linuxfoundation.org,
-        gregkh@linuxfoundation.org, jeremie.galarneau@efficios.com,
-        shawn@git.icu, tstoyanov@vmware.com, tglx@linutronix.de,
-        alexey.budankov@linux.intel.com, adrian.hunter@intel.com,
-        songliubraving@fb.com, ravi.bangoria@linux.ibm.com
-Subject: Re: [PATCH]Perf: Return error code for perf_session__new function on
- failure
-Message-ID: <20190815125116.GG30356@krava>
-References: <20190814092654.7781.81601.stgit@localhost.localdomain>
+        id S1729627AbfHOMw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 08:52:56 -0400
+Received: from localhost (p54B33431.dip0.t-ipconnect.de [84.179.52.49])
+        by pokefinder.org (Postfix) with ESMTPSA id 48BCF2C2704;
+        Thu, 15 Aug 2019 14:52:53 +0200 (CEST)
+Date:   Thu, 15 Aug 2019 14:52:52 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Max Staudt <max@enpas.org>
+Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, linux-m68k@vger.kernel.org,
+        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
+Subject: Re: [PATCH v2 1/4] i2c/busses: Add i2c-icy for I2C on m68k/Amiga
+Message-ID: <20190815125252.GC1916@kunai>
+References: <20190812235237.21797-1-max@enpas.org>
+ <20190814194714.GB9756@kunai>
+ <f33ef44e-61e8-0392-7f5c-5a0bd7b42fff@enpas.org>
+ <20190815071228.GA1054@kunai>
+ <276714fb-6b3a-1e99-0744-bfd037305724@enpas.org>
+ <20190815114809.GA1916@kunai>
+ <54185c85-8c26-916e-41b1-af9b55223e7b@enpas.org>
+ <20190815120430.GB1916@kunai>
+ <4661d2f3-13e1-ff62-22e1-e4391ccc38b2@enpas.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lCAWRPmW1mITcIfM"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190814092654.7781.81601.stgit@localhost.localdomain>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 15 Aug 2019 12:51:20 +0000 (UTC)
+In-Reply-To: <4661d2f3-13e1-ff62-22e1-e4391ccc38b2@enpas.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 03:02:18PM +0530, Mamatha Inamdar wrote:
 
-SNIP
-
->  		symbol_conf.pid_list_str = strdup(trace->opts.target.pid);
-> diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-> index ddbcd59..dbc6dc2 100644
-> --- a/tools/perf/util/data-convert-bt.c
-> +++ b/tools/perf/util/data-convert-bt.c
-> @@ -1619,8 +1619,10 @@ int bt_convert__perf2ctf(const char *input, const char *path,
->  	err = -1;
->  	/* perf.data session */
->  	session = perf_session__new(&data, 0, &c.tool);
-> -	if (!session)
-> +	if (IS_ERR(session)) {
-> +		err = PTR_ERR(session);
->  		goto free_writer;
-> +	}
->  
->  	if (c.queue_size) {
->  		ordered_events__set_alloc_size(&session->ordered_events,
-
-I'm getting:
-
-  CC       util/data-convert-bt.o
-util/data-convert-bt.c: In function ‘bt_convert__perf2ctf’:
-util/data-convert-bt.c:1622:6: error: implicit declaration of function ‘IS_ERR’; did you mean ‘SIG_ERR’? [-Werror=implicit-function-declaration]
- 1622 |  if (IS_ERR(session)) {
-      |      ^~~~~~
-      |      SIG_ERR
-util/data-convert-bt.c:1622:6: error: nested extern declaration of ‘IS_ERR’ [-Werror=nested-externs]
-util/data-convert-bt.c:1623:9: error: implicit declaration of function ‘PTR_ERR’ [-Werror=implicit-function-declaration]
- 1623 |   err = PTR_ERR(session);
+--lCAWRPmW1mITcIfM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 
-jirka
+> The callback, just like getclock(), is from the existing i2c-algo-pcf,
+> which I don't want to touch right now. So I'm afraid it has to stay,
+> even if it returns a fixed number.
 
+Sure. I was just thinking loud and did not expect you to do it. Maybe I
+will do it once your driver is upstream.
+
+> Touching or forking i2c-algo-pcf will be necessary in order to
+> implement IRQ support, if I ever get around to it. I've wasted too
+> much time on debugging IRQ support, and would rather do it another
+> time, if ever ;) I've left a comment block at the start of i2c-icy.c
+> for anyone interested in the gory details.
+
+Yeah, I read it. I like such documentation. Really helpful!
+
+> If this is okay with you, I'll send another round of patches. :)
+
+Perfect!
+
+
+--lCAWRPmW1mITcIfM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1VVaAACgkQFA3kzBSg
+KbbhYxAApqbkKmM/SfvqaGNqdQxFvjTFrV3E08Ct31M28y210CPVO5YMz4tkj+hq
+OEi7NDuA7+XTlgNAeuJJb3UQYOlkEUwR8x/6oZMWj4Nh379Bmk3TmlkMqHRwIwJ3
+OqItq+oIN3MAcICCf4D/66/WUFoZIzZAprXASzbtdfGQma4Wue3lXxGPvhndYqzR
+HpO4yhOTRs87PJrHUavD07BV1+bk+VIKBG/NkehpG1BmiIsd+5XrzQtbuMNVaKBN
+mnpL6uwRROG6nz8NamnHUu+KPKquwakTTW1Nx7KeZs6Th7ySAyCOlhFcbx7x0AbK
+h8oSwpmrSukBc1pKc+ZDvoqZNppE0ixVBF3AdgZP5Msgrm15xfa0EEXM7/s8o/EE
+iasali4Zj1S34JX0MFBYXmeRUTxWOVtT/2dDVhNYrPzt5GpXsuG32NyQo+PkTAv6
+LwvbOQ1JVU49rqsyYinniA6zGZeSNeJw7z2TRKb7zR9FGZUa+NSmNQs8IciSsnrv
+H9VOPDviPuTEGQjLdOMzNDPPQ5ZizPkQvRNiYwNCGqgXAFSU++RDwksEsAnUsRVz
+VPnmIjxE4IC73MzyM/76ILtRBVyvu/+AjGoygjifpNP36a5bhOXysRxwbLZGt1ww
++AGF+JAJznrW6JUIRgoaUo+vaxFwW8oFjJff/zezVXOX2+o4UoY=
+=0mSM
+-----END PGP SIGNATURE-----
+
+--lCAWRPmW1mITcIfM--
