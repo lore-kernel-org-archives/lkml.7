@@ -2,105 +2,92 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6A3C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4CAC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C660C2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4C02086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:59:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D+oh9EMl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YinilCEz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387556AbfHOW7L (ORCPT
+        id S2387574AbfHOW7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 18:59:11 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:54846 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732541AbfHOW7K (ORCPT
+        Thu, 15 Aug 2019 18:59:48 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40964 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732541AbfHOW7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 18:59:10 -0400
-Received: by mail-pl1-f201.google.com with SMTP id g9so2138198plo.21
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 15:59:10 -0700 (PDT)
+        Thu, 15 Aug 2019 18:59:48 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m24so3615530ljg.8;
+        Thu, 15 Aug 2019 15:59:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bsc+oL3W9Qap3NqyiuNHWglQP2bNTVPp35x6p7f/ATk=;
-        b=D+oh9EMlMt/QrNGNxmKtbHKxtThq4UQj8l+9apxFZP4dZXqtTpOJs9bJLmToApG59S
-         GaOY6ObFUzKYpVIG9qdvaiG0+kZuwnpwJw8LK23gCHiVWgXJtibE17rzKZox21eWijh2
-         ciaSQNYIJbqYg7VZa9USfTiUlCTe26mCTeT/9e40VkPiYHibcjbOvK4BJCgdic37Nebe
-         xOvvGO9Ob0Advw2z3JY/EUdh+RhFtDLU6IhE7uGqF84dsk7ImMtLOvuZPmQ0LhNJfki5
-         eyi5ukjCrDZC8GDJxetUCfuWb6/MWSKsotN7XWqqukpiQJqO9StPF50y0Dg/Hc9+jJeO
-         2rnQ==
+        bh=/TruZIxtpLXDniXG8O8y0k/AZstmN0fZMWSKysTNg+I=;
+        b=YinilCEz2FvlapVPOpHYLoIDWKMnIR2S2bDHIEIHXa6xOPKV01N4Yg2bZBsENH8/S1
+         dZ00MSy84lL8SyKrRzIjalUKli5/qREprdVq5DCnkfPfNnsIPLwiIWZHSgGfGTjVzMqc
+         2NbFMS+OVmpGmeDJrdLSnMY3D2EFZEN1orNY5aOCclR5vVbHVJIm/aAbVd653W7fit2C
+         i5HWPfe5NeL1Lc6b51b+9LjI1AFZWvYx648HZVDGd6sf62niTgHgcQ6VrortSqxKOuqY
+         Fv6aclHGXgkjbj55eqRBh7NCUM4AxLtmZekugiFM5sZJYoZOViZ32XYAUSMVChEtvhyl
+         Qzxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=bsc+oL3W9Qap3NqyiuNHWglQP2bNTVPp35x6p7f/ATk=;
-        b=J4kX8M8STsd83Bo5OVpg57qRiqP+M4vr5XWqyfaBg5kkU82Geb89O5PObUg8Fe8Unj
-         gb/fSPIjru9a/YKot+TdynveZoOuyxvwl5eZGF4lRou1QNt8wpp10/i32mQxzJ8QgjBy
-         dDO35IppR6pM2tDoDAQImpMSwqFhtjm1bdACQmD4LYbnc3CuHQhLOJaH5OqUco9LHzNi
-         Fch2FmlEC0qwffI2SS3tk/Fk9UpccuM8lJnKrKGo/rZqcjSgaBjzM28dMhQ0gLIdcc7h
-         fOQ4pVM8aw03vVBp4DsGTqLyufcFLKr9qVsCUHpT0XBpi9SCS2Uhky1fw2qJG4oF2Tj6
-         3n4A==
-X-Gm-Message-State: APjAAAVvozkw+1kjxafpZTiGiQ1JxvWEsU+sclK9QBrT7o5cZnJNGv6M
-        T+m4zvrocY7pgA95ZnDtJrH1S2DC4Q==
-X-Google-Smtp-Source: APXvYqxXDHy3HLU992MgApTbMZ1Xyyi/HhIlYlYEpdvdMcL06xUXNlzd8fHMXPFb5Ux6ET2bsEqM0hMy0g==
-X-Received: by 2002:a63:c442:: with SMTP id m2mr5399788pgg.286.1565909949663;
- Thu, 15 Aug 2019 15:59:09 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 15:58:44 -0700
-In-Reply-To: <CAKwvOdk+NQCKZ4EXAukaKYK4R9CDaNWVY_aDxXaeQrLfo_Z=nw@mail.gmail.com>
-Message-Id: <20190815225844.145726-1-nhuck@google.com>
-Mime-Version: 1.0
-References: <CAKwvOdk+NQCKZ4EXAukaKYK4R9CDaNWVY_aDxXaeQrLfo_Z=nw@mail.gmail.com>
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-Subject: [PATCH v2] kbuild: Require W=1 for -Wimplicit-fallthrough with clang
-From:   Nathan Huckleberry <nhuck@google.com>
-To:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        joe@perches.com, miguel.ojeda.sandonis@gmail.com
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Huckleberry <nhuck@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/TruZIxtpLXDniXG8O8y0k/AZstmN0fZMWSKysTNg+I=;
+        b=T4r8nLUtnfOj1r6Kr5X+HVuWwq9MQAQkOT6fAbvraNmRBmYRvtxt9qPcPp0LEYD6Ok
+         XbfuIeoMR+25OITveaiOMgGe6+L+JcCJyNt8B9O32I+bZFLiLliUkxMe6Cusb7AxpQhg
+         JhRAKJ3N83fXph3nNX3xRX5WGbOiYanuxq42lqemqP0rq9JObImQOHRIUed+FVEQDPbW
+         VoPG2OvKMlMCy7ObtC+CFTJLy+KmuON1E/GnIo33bUwpTHckFSL50KZwYXgD6Oa6quy+
+         il5/ZM/y9QSAOn7DP6cFwCe4Mzuq9YG9cWxdu6aHPWjrRgf9RvMLvDypX7uLG/Ya18cy
+         04EQ==
+X-Gm-Message-State: APjAAAU/FNEEM9/SwyXMrSO9YJNQpbvMsUanCarVXQu1dHFNCjXY46Di
+        iDKB8Gj+i+p4BCbrPWapsGAAPkQE0hYeSk/18tY=
+X-Google-Smtp-Source: APXvYqzlhxK6FXeVO7+suXBanf7qrmXBNE9OCCL5y/uLTvQi8unGqTMYkR6+ubvMZcNrcQ85W3MJNDskk/XOGQevYAo=
+X-Received: by 2002:a2e:9252:: with SMTP id v18mr2746420ljg.93.1565909986126;
+ Thu, 15 Aug 2019 15:59:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190815182029.197604-1-nhuck@google.com> <20190815204529.GA69414@archlinux-threadripper>
+In-Reply-To: <20190815204529.GA69414@archlinux-threadripper>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 16 Aug 2019 00:59:34 +0200
+Message-ID: <CANiq72nM4d-rc_qUMUEisXyEU9A0mbW=O_w5X0zoqWNPLacuNw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Require W=1 for -Wimplicit-fallthrough with clang
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Nathan Huckleberry <nhuck@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Joe Perches <joe@perches.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang is updating to support -Wimplicit-fallthrough on C
-https://reviews.llvm.org/D64838. Since clang does not
-support the comment version of fallthrough annotations
-this update causes an additional 50k warnings. Most
-of these warnings (>49k) are duplicates from header files.
+On Thu, Aug 15, 2019 at 10:45 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> I am still not a huge fan of the CONFIG_CC_IS_CLANG ifdefs but I don't
+> really see a much cleaner way to get around this. Some that come to
+> mind:
 
-This patch is intended to be reverted after the warnings
-have been cleaned up.
+Yeah...
 
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
----
-Changes v1->v2
-* Move code to preexisting ifdef
- scripts/Makefile.extrawarn | 1 +
- 1 file changed, 1 insertion(+)
+> * Revert commit bfd77145f35c ("Makefile: Convert -Wimplicit-fallthrough=3
+> to just -Wimplicit-fallthrough for clang") for the time being and just
+> rely on adding -Wimplicit-fallthrough to KCFLAGS for testing.
 
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index a74ce2e3c33e..95973a1ee999 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -70,5 +70,6 @@ KBUILD_CFLAGS += -Wno-initializer-overrides
- KBUILD_CFLAGS += -Wno-format
- KBUILD_CFLAGS += -Wno-sign-compare
- KBUILD_CFLAGS += -Wno-format-zero-length
-+KBUILD_CFLAGS += $(call cc-option,-Wno-implicit-fallthrough)
- endif
- endif
--- 
-2.23.0.rc1.153.gdeed80330f-goog
+I would avoid applying commits that will have to be reverted just for
+Clang, particularly since it is not fully supported yet.
 
+Cheers,
+Miguel
