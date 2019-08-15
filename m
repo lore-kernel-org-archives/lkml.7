@@ -2,112 +2,97 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B226C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B12C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F08902067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:05:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRKfezk6"
+	by mail.kernel.org (Postfix) with ESMTP id 8D6402133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:10:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565842240;
+	bh=8F3KRsBxdhyWon/KQ5t5lXGBquSIxOV11AsIVZq7ikQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=z4LWhotFkIi4bDY3vy0t4UM9Ppwm5NEAjVbmpIyRqRkoh55dttFbWfSid47MUPPkm
+	 Tn87nICC3CEdfPJvcXhifyGwOiWYz+++iuGfbD4TF0hq0FF3xYDHnpQ58T2wpyszLn
+	 EPcrDsn24FsM6spOy6zXgj6RwO+gf/NoKBvmZGcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbfHOEFH (ORCPT
+        id S1726082AbfHOEKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:05:07 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46387 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfHOEFG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:05:06 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z17so3149624otk.13;
-        Wed, 14 Aug 2019 21:05:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hhpSNDDdJjVXj/ea1nbfBdH4ileub7FSt2+byXY5COo=;
-        b=dRKfezk6wLD8aeBoV6dH6+vP9uNj1ixyut6Qx2AstL4Y5PpAq14H7YOqmG+p8A+z8D
-         0gN0atNkD5mDPadJCGPyINoFRUtUelAe4iZubONrQYxCCr3LLR3wtDlEaPJeWqYpgTq7
-         +p0D31Tm61pVtELl/nsBAOxhihrjRFr05jvAfhYK0xzAx08R6DUbq+aOHvrPPfIoX7rj
-         y0lDwwgRqbZuCGU4jzX7lF4eYrFNdmvGVKwFbMbjiIrS+0lkRWamMrtacBSuOez0uUvx
-         Txsk6yGwGQGpSX3e9ff2dgxs4xC7ieBwS0Mbf/KVgCM1AIsTDeI4J4y611MQXp1UFq2d
-         j4FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hhpSNDDdJjVXj/ea1nbfBdH4ileub7FSt2+byXY5COo=;
-        b=S6Dkd5el8MvSSSy3Rir58l2pobhjt05oABC8VlJap990FZnz19/8E+X1ddACpda8YU
-         k18pGFk6bBzDHzPjM47gI7m94wqwmvqz0h8v09ZG+zSslJeroTH9/bdDGD7bLaFnEMg/
-         ZVV3EOuKRVlEu0NgKfB/15JxwMoVe4RIRyNgjeO1XDo7yO9RaKylYl5xWdcpcIR7XiZ1
-         JkoZCRPsGkGZ9OU65eNqAMVSMXA6XSOFTMq0ow+DGx+gJO8U8H5e4Ch6SFyjfXo++PcQ
-         uskaQoSlKWEJkEBktaQVL1ULdoKQ74ntS2jAHwTgGE0KD36HBluI8/8rC3s5UYXUUylM
-         GjqQ==
-X-Gm-Message-State: APjAAAWsCXIkCTAey4vbwJ1nHucMtUZPvkgSWdZi0aTgQYUOkptgb52L
-        YLMb1BiSAle2w7qSFRz2dRZ7LGxKB+icW8PEdXpWqVDS
-X-Google-Smtp-Source: APXvYqwCRTwWTw7SR/A8Wq6QJdAx2Jdsxrh64E6D2IWQ6kUf7znfSKE12dj2jIshA0cUhR08ojSDKlBLMIXUh1+TZCI=
-X-Received: by 2002:a05:6830:144b:: with SMTP id w11mr2012289otp.185.1565841905602;
- Wed, 14 Aug 2019 21:05:05 -0700 (PDT)
+        Thu, 15 Aug 2019 00:10:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725832AbfHOEKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:10:38 -0400
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37CF9208C2;
+        Thu, 15 Aug 2019 04:10:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565842238;
+        bh=8F3KRsBxdhyWon/KQ5t5lXGBquSIxOV11AsIVZq7ikQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QHwVyyn3C/XQA4Csutk/Nfs1u2TaBaXhbnpmmiQs9nwObS17SgmrWrpd5PCpCRTJo
+         U7MMeOVGYnOx/aanAWmj0gRPLfFw+/kW0LnoUDXenr3muZyvliLInjrX1NaYUi3ASY
+         dfEXFC1qN/ue9gWK+TSQHvSsJmG7PmiTR7/lAqXI=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH] clk: sunxi: Don't call clk_hw_get_name() on a hw that isn't registered
+Date:   Wed, 14 Aug 2019 21:10:37 -0700
+Message-Id: <20190815041037.3470-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
 MIME-Version: 1.0
-References: <1565329531-12327-1-git-send-email-wanpengli@tencent.com>
- <fad8ceed-8b98-8fc4-5b6a-63bbca4059a8@redhat.com> <CANRm+CwMMUEyZXmiUu5Y8GA=BEUYGLw31CRyZTc2uA+ct4Bamg@mail.gmail.com>
- <ba07fb02-9b55-15e4-d240-24da59e09369@redhat.com>
-In-Reply-To: <ba07fb02-9b55-15e4-d240-24da59e09369@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 15 Aug 2019 12:04:48 +0800
-Message-ID: <CANRm+CzGNyST4=BtE-eKvjB-PUVVoM-gUC2Np8NH7tm0Gp2_nQ@mail.gmail.com>
-Subject: Re: [PATCH] KVM: LAPIC: Periodically revaluate appropriate lapic_timer_advance_ns
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 at 20:50, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 12/08/19 11:06, Wanpeng Li wrote:
-> > On Fri, 9 Aug 2019 at 18:24, Paolo Bonzini <pbonzini@redhat.com> wrote:
-> >>
-> >> On 09/08/19 07:45, Wanpeng Li wrote:
-> >>> From: Wanpeng Li <wanpengli@tencent.com>
-> >>>
-> >>> Even if for realtime CPUs, cache line bounces, frequency scaling, presence
-> >>> of higher-priority RT tasks, etc can cause different response. These
-> >>> interferences should be considered and periodically revaluate whether
-> >>> or not the lapic_timer_advance_ns value is the best, do nothing if it is,
-> >>> otherwise recaluate again.
-> >>
-> >> How much fluctuation do you observe between different runs?
-> >
-> > Sometimes can ~1000 cycles after converting to guest tsc freq.
->
-> Hmm, I wonder if we need some kind of continuous smoothing.  Something like
+The implementation of clk_hw_get_name() relies on the clk_core
+associated with the clk_hw pointer existing. If of_clk_hw_register()
+fails, there isn't a clk_core created yet, so calling clk_hw_get_name()
+here fails. Extract the name first so we can print it later.
 
-Actually this can fluctuate drastically instead of continuous
-smoothing during testing (running linux guest instead of
-kvm-unit-tests).
+Fixes: 1d80c14248d6 ("clk: sunxi-ng: Add common infrastructure")
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/sunxi-ng/ccu_common.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
->
->         if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE) {
->                 /* no update for random fluctuations */
->                 return;
->         }
->
->         if (unlikely(timer_advance_ns > 5000))
->                 timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
->         apic->lapic_timer.timer_advance_ns = timer_advance_ns;
->
-> and removing all the timer_advance_adjust_done stuff.  What do you think?
+diff --git a/drivers/clk/sunxi-ng/ccu_common.c b/drivers/clk/sunxi-ng/ccu_common.c
+index 7fe3ac980e5f..2e20e650b6c0 100644
+--- a/drivers/clk/sunxi-ng/ccu_common.c
++++ b/drivers/clk/sunxi-ng/ccu_common.c
+@@ -97,14 +97,15 @@ int sunxi_ccu_probe(struct device_node *node, void __iomem *reg,
+ 
+ 	for (i = 0; i < desc->hw_clks->num ; i++) {
+ 		struct clk_hw *hw = desc->hw_clks->hws[i];
++		const char *name;
+ 
+ 		if (!hw)
+ 			continue;
+ 
++		name = hw->init->name;
+ 		ret = of_clk_hw_register(node, hw);
+ 		if (ret) {
+-			pr_err("Couldn't register clock %d - %s\n",
+-			       i, clk_hw_get_name(hw));
++			pr_err("Couldn't register clock %d - %s\n", i, name);
+ 			goto err_clk_unreg;
+ 		}
+ 	}
 
-I just sent out v2, periodically revaluate and get a minimal
-conservative value from these revaluate points. Please have a look. :)
+base-commit: 5f9e832c137075045d15cd6899ab0505cfb2ca4b
+-- 
+Sent by a computer through tubes
 
-Regards,
-Wanpeng Li
