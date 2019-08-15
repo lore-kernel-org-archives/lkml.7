@@ -2,105 +2,72 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC7CC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8CFC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04D421744
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565866349;
-	bh=0iwh4It9DTUtLTh6DHbA8L+rgka8HF2BN9oR2BEsK24=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ioHhwxX3t1p0zHfuZ1ak59CtU20jdIWI7SPEceM352ZPuuKFWlYN2foeMXLIiVumi
-	 qpVP/X7MGqD1t937IWGPAJxYgo0lVK9oPZX1sogfXIKVEcsVc3m9pzQPe2P08lfgek
-	 F4EQbfFyhNEpun97Pt9hzHZ9U5SL6Uc26XTFy4Ss=
+	by mail.kernel.org (Postfix) with ESMTP id DB01220665
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:53:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731276AbfHOKw2 (ORCPT
+        id S1731313AbfHOKxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 06:52:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731246AbfHOKw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 06:52:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F13C20665;
-        Thu, 15 Aug 2019 10:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565866347;
-        bh=0iwh4It9DTUtLTh6DHbA8L+rgka8HF2BN9oR2BEsK24=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KFbvlL/XpSfYFoaaYLK7CUkPh+jvKby1YKjr5f1OTsHNkM0HYdfLNsekt7Uz5OUv5
-         DkIJtPtFCAFLs1fLjIe8PRZ8w8N0brEMdi+52WcblAe7dyzPZaDkXHGQuKblYoUhTg
-         hPPfq/LeRdXGdeIOor9P5AMnRHYPSCE1slVTm8xg=
-Date:   Thu, 15 Aug 2019 12:52:25 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Knut Omang <knut.omang@oracle.com>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Shreyans Devendra Doshi <0xinfosect0r@gmail.com>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Hidenori Yamaji <hidenori.yamaji@sony.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Timothy Bird <Tim.Bird@sony.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [RFC 06/19] ktf: A simple debugfs interface to test results
-Message-ID: <20190815105225.GA16395@kroah.com>
-References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
- <ae6c38384e2338aa3cfb8a4e4dd1002833789253.1565676440.git-series.knut.omang@oracle.com>
- <20190813082152.GA17627@kroah.com>
- <a63bea757e02656a38463cc794da7da15273dd16.camel@oracle.com>
- <20190815084921.GE3512@kroah.com>
- <9629068a41a160de0145a18dd22924bce70f37fe.camel@oracle.com>
+        Thu, 15 Aug 2019 06:53:20 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39113 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731079AbfHOKxT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 06:53:19 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hyDNa-0000sQ-R6; Thu, 15 Aug 2019 10:53:14 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: comedi: usbduxsigma: remove redundant assignment to variable fx2delay
+Date:   Thu, 15 Aug 2019 11:53:14 +0100
+Message-Id: <20190815105314.5756-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9629068a41a160de0145a18dd22924bce70f37fe.camel@oracle.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 12:35:26PM +0200, Knut Omang wrote:
-> On Thu, 2019-08-15 at 10:49 +0200, Greg Kroah-Hartman wrote:
-> > > I perfectly agree with you that reducing the hole for a race condition 
-> > > is generally a bad idea, but from the above mail thread 
-> > > it seems that's the only available choice for older kernels?
-> > 
-> > I have no idea, but please, do not use that pattern of code as it is
-> > racy in all kernels, from all of time.
-> 
-> Ok, will remove it :-)
-> 
-> I tried in vain to find the commit from Al Viro that made the code safe,
-> to identify which kernels that are safe from this issue,
-> but he has a **lot** of commits, do you have a clue for what/where to look?
-> 
-> It will be good to have a mention/comment on this for future reference, 
-> like the earliest kernel version where this is safe.
+From: Colin Ian King <colin.king@canonical.com>
 
-Always use a "newer" kernel to be "safe" and you will be fine :)
+Variable fx2delay is being initialized with a value that is never read
+and fx2delay is being re-assigned a little later on. The assignment is
+redundant and hence can be removed.
 
-> Maybe we can even get rid of some more of the remaining of these too..
-> (I notice there's 65 cases of 'if (!try_module_get(THIS_MODULE))'
-> right now)
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/staging/comedi/drivers/usbduxsigma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Something to put on a TODO list somewhere...
+diff --git a/drivers/staging/comedi/drivers/usbduxsigma.c b/drivers/staging/comedi/drivers/usbduxsigma.c
+index 3cc40d2544be..54d7605e909f 100644
+--- a/drivers/staging/comedi/drivers/usbduxsigma.c
++++ b/drivers/staging/comedi/drivers/usbduxsigma.c
+@@ -1074,7 +1074,7 @@ static int usbduxsigma_pwm_period(struct comedi_device *dev,
+ 				  unsigned int period)
+ {
+ 	struct usbduxsigma_private *devpriv = dev->private;
+-	int fx2delay = 255;
++	int fx2delay;
+ 
+ 	if (period < MIN_PWM_PERIOD)
+ 		return -EAGAIN;
+-- 
+2.20.1
 
-thanks,
-
-greg k-h
