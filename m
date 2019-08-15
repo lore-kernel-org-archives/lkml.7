@@ -2,114 +2,121 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E46AC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C2DC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBED92089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 544342084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:05:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Kza/hdXh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733245AbfHOUEY (ORCPT
+        id S1733262AbfHOUFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 16:04:24 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40754 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731196AbfHOUEX (ORCPT
+        Thu, 15 Aug 2019 16:05:50 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38182 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731108AbfHOUFu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 16:04:23 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hyLyt-0005AL-Cb; Thu, 15 Aug 2019 22:04:19 +0200
-Date:   Thu, 15 Aug 2019 22:04:18 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Kernel User <linux-kernel@riseup.net>
-cc:     LKML <linux-kernel@vger.kernel.org>, mhocko@suse.com,
-        x86@kernel.org
-Subject: Re: /sys/devices/system/cpu/vulnerabilities/ doesn't show all known
- CPU vulnerabilities
-In-Reply-To: <20190815223730.0b5c6c13@localhost>
-Message-ID: <alpine.DEB.2.21.1908152140460.1908@nanos.tec.linutronix.de>
-References: <20190813232829.3a1962cc@localhost> <20190813212115.GO16770@zn.tnic> <20190814010041.098fe4be@localhost> <20190814070457.GA26456@zn.tnic> <20190814121154.12f488f7@localhost> <alpine.DEB.2.21.1908151054090.2241@nanos.tec.linutronix.de>
- <20190815223730.0b5c6c13@localhost>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 15 Aug 2019 16:05:50 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FK4QMk002775;
+        Thu, 15 Aug 2019 20:05:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=zbLSa6W0EuiTMTGJ10AKmzZODTdbzm2Hj3NPVCPtPyY=;
+ b=Kza/hdXhucTULvENXgBL7h+svfGm7Ib/OMek9SxSFitnZYfi6p4fCdY4y1dN8Wv4rYSH
+ ij3j14O4NU5LZhjtYFaKHrlWV+wEHdfpBMDENsjcfFeQu/FYZKNPtaHwau5wuap6Qtwf
+ immzaTZLmgZi++Hba4eYFkMmOoIq6+EqvigEEa/zrVCUfWz8eCXtj063t2+FO1rYLqfi
+ OIJfS5Hc2sgYh30TBIG5spcSQm7Clg/Ya6IOOKdjTSIj7Omqsr3GTn31XN81lVkei40F
+ 07zbjvvCaQw96DbI1ZRqj1wzEx7p5NxpJQTfK77cWD+Zjy02fjbHZSAwIc8VFjnZVonv Ag== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2u9pjqvtes-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Aug 2019 20:05:41 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FK3QIj097997;
+        Thu, 15 Aug 2019 20:05:40 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2ucpyspsys-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Aug 2019 20:05:40 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7FK5aB7016146;
+        Thu, 15 Aug 2019 20:05:36 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 15 Aug 2019 13:05:35 -0700
+Date:   Thu, 15 Aug 2019 13:05:34 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [GIT PULL] xfs: fixes for 5.3-rc5
+Message-ID: <20190815200534.GF15186@magnolia>
+References: <20190815171347.GD15186@magnolia>
+ <CAHk-=wiHuHLK49LKQhtERXaq0OYUnug4DJZFLPq9RHEG2Cm+bQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiHuHLK49LKQhtERXaq0OYUnug4DJZFLPq9RHEG2Cm+bQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908150189
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908150189
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 15 Aug 2019, Kernel User wrote:
-> On Thu, 15 Aug 2019 11:03:35 +0200 (CEST) Thomas Gleixner wrote:
+On Thu, Aug 15, 2019 at 12:38:33PM -0700, Linus Torvalds wrote:
+> Pulled. Just a quick note:
 > 
-> > It's used to denote vulnerability classes and their mitigations:
-> > 
-> >   - Spectre v1
-> >   - Spectre v2
-> >   - Meltdown
-> >   - SSB
-> >   - L1TF
-> >   - MDS
+> On Thu, Aug 15, 2019 at 10:13 AM Darrick J. Wong <djwong@kernel.org> wrote:
+> >
+> > - Convert more directory corruption debugging asserts to actual
+> >   EFSCORRUPTED returns instead of blowing up later on.
 > 
-> In the Wikipedia article there are:
+> The proper error code looks like an obvious improvement, but I do
+> wonder if there should be some (ratelimited) system logging too?
 > 
-> + Bounds Check Bypass (Spectre, Variant 1)
-> + Branch Target Injection (Spectre, Variant 2)
-> + Rogue Data Cache Load (Meltdown, Variant 3)
-> - Rogue System Register Read (Spectre-NG, Variant 3a)
-
-Is a subclass of Meltdown, but cannot be mitigated in software and we don't
-know whether the micro-code contains a fix or not unless the CPU/microcode
-tells us that Meltdown is fixed, which includes 3a. We report that
-correctly.
-
-It's also not a really spectacular issue. The only valuable data you might
-get out of it is info to break KASLR, but there are a gazillion other ways
-to do so.
-
-> + Speculative Store Bypass (Spectre-NG, Variant 4)
-> - Lazy FP state restore (Spectre-NG)
-
-The kernel is not using lazy restore. Dead kernels did, but they got
-patched and no longer allow the lazy mode. So, nothing to see here.
-
-> - Bounds Check Bypass Store (Spectre-NG)
-
-Is a subclass of Spectre V1 similar to the recently published SWAPGS issue.
-
-> + Foreshadow
-> - Spoiler
-
-Spoiler cannot be mitigated by any means. It's like Rowhammer. Nothing we
-can do about and nothing to show.
-
-> + Microarchitectural Data Sampling
+> I've seen a lot of programs that don't report errors very clearly and
+> might just silently stop running and as a sysadmin I'd think I'd
+> rather have something in the system logs than users saying "my app
+> crashes at startup"/
 > 
-> I have marked with '+' those which I recognize in the list you provided
-> and with '-' those which are not.
-> 
-> > We are not tracking subclasses and their individual CVEs.
-> 
-> Why do you say that? In your list only L1TF and MDS are not subclasses,
-> i.e. subclasses are in the list. So why not have the others? Also
-> Spoiler seems to be a separate class.
+> Maybe the logging ends up being there already - just done later. It
+> wasn't obvious from the patch, and I didn't check the whole callchain
+> (only direct callers).
 
-What? Spectre V1, V2 and Meltdown and SSB are different classes despite the
-variant 1,2,3,4 enumeration. They are different classes because they
-utilize different parts of the whole speculative execution machinery and
-need very different mitigation mechanisms.
+Metadata update failures hitting EFSCORRUPTED will leave a fair amount
+of spew in dmesg both when we find the corrupt metadata and the update
+transaction is aborted (which takes the filesystem down).  Read errors
+get logged if we spot an error within a block but aren't consistently
+logged when we discover problems between separate metadata objects.
 
-Just because Wikipedia has a list of some sort does not mean that we have
-to blindly follow it.
+FWIW I've wondered off and on if the VFS syscalls should be generating
+some kind of audit trail when something returns an error message to
+userspace?
 
-Thanks,
+--D
 
-	tglx
+>                   Linus
