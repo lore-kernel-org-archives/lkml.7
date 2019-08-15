@@ -2,210 +2,97 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D67C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8D2C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC2A02084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22442084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:35:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y+FH2yaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731042AbfHOIez (ORCPT
+        id S1731057AbfHOIfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 04:34:55 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41915 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730446AbfHOIey (ORCPT
+        Thu, 15 Aug 2019 04:35:25 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46622 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730609AbfHOIfY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 04:34:54 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w5so1483341edl.8;
-        Thu, 15 Aug 2019 01:34:52 -0700 (PDT)
+        Thu, 15 Aug 2019 04:35:24 -0400
+Received: by mail-lf1-f66.google.com with SMTP id n19so1118901lfe.13
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 01:35:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rIQuHahZHT61N3pBhyPaMSRx0lDKJTzgLeGkPUGpwnw=;
+        b=Y+FH2yajTgKkaI7nsmE3WEZkZeDokd2RUNA2EldWJj3L3ayjASGWVw8k2Ij/OubaDA
+         M5j0TR6ZH7t2zzUaVTqdINB8m5lZjQKpnPOSypEFo2alm8nos9NKEpcKFvMeG4r1uAGP
+         8AaHAOiGbMsxK4DiqokN1Oe/6ULi7Td0OYQaU6PgDrUrliFei/NY6KsdXRXQTJ6grcA2
+         +XXBHx1lgL1P0ofcfjauBj28vKllqp7gfVIDQ8OSvDzcvPiPEFztsRnRSqMrrh/2PyyG
+         Dd0SqjtUzV6NYaebRMJOREUG+7ff7D1na1lXslQREjafp/2W4q53ICtF5IW5iS9XRfz6
+         bsYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vbUMFR/CGCvpvCBVKVjJLXYqx2oevZB4Y5/vjWqmzQw=;
-        b=ClOS2ipbEB+BwTSXgiel/UQhS35PPA33EBkJRESWZXGUmxdDljMM0aMvMJUiemp8HV
-         XoL2/PBY1cD8Ue+xuBasECDZh3XN3Z1sQAtZ3SaIqygJncYtJHMI1ung5BuJR5egXDrr
-         nKH3o1dENZaMV1h8oWxbCi/TClQC67wh+MeR0JniiNpAJGzKlDcfasm5+t+/ZxPu8qlu
-         t165EtpIp6mLLux3+7TrbohDeZEFXnk+5n/+RxdBIxm7RRBQsEiAyx2ytaEmgeMXpZJj
-         gcT3EMqKKARFmWJ+py9KJu3W1ltda4ksrfJ/Sb+/Jn4wQIaw+nHONtL4lesz9mId0JIg
-         sxHg==
-X-Gm-Message-State: APjAAAXIDqxB83qyHNtFzNf2SWwNCEMVabB84Ak75riljSpcKWH+JtGQ
-        4Qyq2OSWRhKH/jhMO00TtuTWqRcjWbI=
-X-Google-Smtp-Source: APXvYqy7G4oef9WoXphmBEE3/xoJrrO7iqEKDk+b5UCXVnZ7s5WTlHiD5+7QBc5JKT6ssRicW2bKEQ==
-X-Received: by 2002:a17:906:5391:: with SMTP id g17mr3373734ejo.61.1565858091147;
-        Thu, 15 Aug 2019 01:34:51 -0700 (PDT)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com. [209.85.128.49])
-        by smtp.gmail.com with ESMTPSA id nw21sm284206ejb.15.2019.08.15.01.34.50
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 01:34:50 -0700 (PDT)
-Received: by mail-wm1-f49.google.com with SMTP id 207so623942wma.1;
-        Thu, 15 Aug 2019 01:34:50 -0700 (PDT)
-X-Received: by 2002:a05:600c:292:: with SMTP id 18mr1600234wmk.51.1565858090304;
- Thu, 15 Aug 2019 01:34:50 -0700 (PDT)
+        bh=rIQuHahZHT61N3pBhyPaMSRx0lDKJTzgLeGkPUGpwnw=;
+        b=pJTyvavX66tEf4vtwzG+6EJrJSliWPoAFRtMVJ76nedHZ0qKBXVVDl4buIvldXsbGe
+         uoEPfIVYn4yrSv8931jA9fZWLmgafKZzI3elF04sDeVNhfBmE/SWqhkUdO160zwsGrZK
+         G05jqjgnfan7iN2eNp2OkuaTv9O5nfyu0r2wJnj927hQyQowE9cyow5uApQpriEYOWzp
+         8MmOTjJenqOYC8jXx0brNhHT2BRbm6VCL/A/GZSSYCVDhsoFDkhvqu1SurnLEUQtWWXM
+         zHACt7u5oa6q711coabqtaRy/xGf7knR1fAaMjqR8g9vv6NgCNjXAQnhb88yyjyKwDI3
+         c28g==
+X-Gm-Message-State: APjAAAUOzirxqu+XByPH+oTwqTpvWz1BpLzrIANmCttQjbJq5E8rfVM7
+        SDmW0Z5vhFua5/AwCw4wjo2P8J2WpO4t5vXDG5DK/A==
+X-Google-Smtp-Source: APXvYqy4JWhaSExzEs8fNpyvhhFIffJYnQjxDmgWOFMcNEneP7xcjaUdbR6c+1Du9tQXJhhtHsvVS1Z3y4aDb+ws8Qs=
+X-Received: by 2002:ac2:5939:: with SMTP id v25mr1829550lfi.115.1565858122600;
+ Thu, 15 Aug 2019 01:35:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.34bcd988943a26671681eaf849aacab51fab1cfe.1562847292.git-series.maxime.ripard@bootlin.com>
- <110dd9ff1784c29fa16304825a41d1603a33f166.1562847292.git-series.maxime.ripard@bootlin.com>
-In-Reply-To: <110dd9ff1784c29fa16304825a41d1603a33f166.1562847292.git-series.maxime.ripard@bootlin.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Thu, 15 Aug 2019 16:34:36 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64nx2AuWZN+RxCneE0pqvXr_d7u6mQ+=nCHv2VJ1MNtrQ@mail.gmail.com>
-Message-ID: <CAGb2v64nx2AuWZN+RxCneE0pqvXr_d7u6mQ+=nCHv2VJ1MNtrQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+References: <20190815004854.19860-1-masneyb@onstation.org> <20190815004854.19860-4-masneyb@onstation.org>
+In-Reply-To: <20190815004854.19860-4-masneyb@onstation.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 15 Aug 2019 10:35:10 +0200
+Message-ID: <CACRpkdbCwUbn68trGZTN8pe8rF8x6SeAW1gd7bwFTs3z-6vK=A@mail.gmail.com>
+Subject: Re: [PATCH 03/11] drm/bridge: analogix-anx78xx: silence -EPROBE_DEFER warnings
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh@kernel.org>
+        Andy Gross <agross@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        freedreno <freedreno@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Aug 15, 2019 at 2:49 AM Brian Masney <masneyb@onstation.org> wrote:
 
-Sorry for chiming in so late.
-
-On Thu, Jul 11, 2019 at 8:15 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> Silence two warning messages that occur due to -EPROBE_DEFER errors to
+> help cleanup the system boot log.
 >
-> The Allwinner A10 CMOS Sensor Interface is a camera capture interface also
-> used in later (A10s, A13, A20, R8 and GR8) SoCs.
->
-> On some SoCs, like the A10, there's multiple instances of that controller,
-> with one instance supporting more channels and having an ISP.
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 94 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 94 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
->
-> diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> new file mode 100644
-> index 000000000000..97c9fc3b5050
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> @@ -0,0 +1,94 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
-> +
-> +maintainers:
-> +  - Chen-Yu Tsai <wens@csie.org>
-> +  - Maxime Ripard <maxime.ripard@bootlin.com>
-> +
-> +description: |-
-> +  The Allwinner A10 and later has a CMOS Sensor Interface to retrieve
-> +  frames from a parallel or BT656 sensor.
-> +
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - allwinner,sun7i-a20-csi0
-> +          - const: allwinner,sun4i-a10-csi0
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 
-CSI0 on the A10 has an ISP. Do we know if the one in the A20 does
-as well? It certainly doesn't say so in the user manual. If not,
-then we can't claim that A20 CSI0 is compatible with A10 CSI0.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> +
-> +      - items:
-> +          - const: allwinner,sun4i-a10-csi0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: The CSI interface clock
-> +      - description: The CSI module clock
-> +      - description: The CSI ISP clock
-> +      - description: The CSI DRAM clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: bus
-> +      - const: mod
-
-I doubt this actually is a module clock. Based on the usage in your
-device tree patch, and the csi driver in the old linux-sunxi kernel,
-the clock rate is set to 24 MHz, or whatever the sensor requires for
-MCLK.
-
-ChenYu
-
-> +      - const: isp
-> +      - const: ram
-> +
-> +  resets:
-> +    description: The reset line driver this IP
-> +    maxItems: 1
-> +
-> +  pinctrl-0:
-> +    minItems: 1
-> +
-> +  pinctrl-names:
-> +    const: default
-> +
-> +  port:
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      endpoint:
-> +        properties:
-> +          bus-width:
-> +            const: 8
-> +            description: Number of data lines actively used.
-> +
-> +          data-active: true
-> +          hsync-active: true
-> +          pclk-sample: true
-> +          remote-endpoint: true
-> +          vsync-active: true
-> +
-> +        required:
-> +          - bus-width
-> +          - data-active
-> +          - hsync-active
-> +          - pclk-sample
-> +          - remote-endpoint
-> +          - vsync-active
-> +
-> +    required:
-> +      - endpoint
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +
-> +additionalProperties: false
-> +...
-> --
-> git-series 0.9.1
+Yours,
+Linus Walleij
