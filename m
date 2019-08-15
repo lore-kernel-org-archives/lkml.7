@@ -2,291 +2,151 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A720DC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F55C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD96206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3252067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730853AbfHOLIp (ORCPT
+        id S1730912AbfHOLJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 07:08:45 -0400
-Received: from mga02.intel.com ([134.134.136.20]:40208 "EHLO mga02.intel.com"
+        Thu, 15 Aug 2019 07:09:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:42118 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730573AbfHOLIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 07:08:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 04:08:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
-   d="scan'208";a="184593363"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Aug 2019 04:08:42 -0700
-Subject: Re: [PATCH V6 3/3] mmc: sdhci: Fix O2 Host data read/write DLL Lock
- Phase shift issue
-To:     "Shirley Her (SC)" <shirley.her@bayhubtech.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
-        "Shaper Liu (WH)" <shaper.liu@bayhubtech.com>,
-        "Xiaoguang Yu (WH)" <xiaoguang.yu@bayhubtech.com>,
-        "Max Huang (SC)" <max.huang@bayhubtech.com>
-References: <1565372331-4716-1-git-send-email-shirley.her@bayhubtech.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <47cb4374-4237-05c8-d822-a686bafc7cc9@intel.com>
-Date:   Thu, 15 Aug 2019 14:07:33 +0300
+        id S1730032AbfHOLJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 07:09:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 866DC28;
+        Thu, 15 Aug 2019 04:09:29 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D5AD3F694;
+        Thu, 15 Aug 2019 04:09:27 -0700 (PDT)
+Subject: Re: kexec on rk3399
+To:     Felipe Balbi <balbi@kernel.org>, Vicente Bergas <vicencb@gmail.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <ebcb52be-2063-4e2c-9a09-fdcacb94f855@gmail.com>
+ <c6993a1e-6fc2-44ab-b59e-152142e2ff4d@gmail.com>
+ <0408cb6c-1b16-eacb-d47e-17f4ff89e2b8@arm.com>
+ <59055782-7fc2-4b16-af8b-a56fb845a43f@gmail.com> <87pnl7t12t.fsf@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <4d18d4f7-a00e-bd60-6361-51054eba3bca@arm.com>
+Date:   Thu, 15 Aug 2019 12:09:25 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1565372331-4716-1-git-send-email-shirley.her@bayhubtech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <87pnl7t12t.fsf@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/08/19 8:38 PM, Shirley Her (SC) wrote:
-> Fix data read/write error in HS200 mode due to chip DLL lock phase shift
+On 15/08/2019 07:06, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Vicente Bergas <vicencb@gmail.com> writes:
+> 
+>> On Wednesday, August 14, 2019 3:12:26 PM CEST, Robin Murphy wrote:
+>>> On 14/08/2019 13:53, Vicente Bergas wrote:
+>>>> On Monday, July 22, 2019 4:31:27 PM CEST, Vicente Bergas wrote: ...
+>>>
+>>> This particular change looks like it's implicitly specific to
+>>> RK3399, which wouldn't be ideal. Presumably if the core dwc3
+>>> driver implemented shutdown correctly (echoing parts of
+>>> dwc3_remove(), I guess) then the glue layers shouldn't need
+>>> anything special anyway.
+>>>
+>>> Robin.
+>>
+>> I just checked simple->resets from dwc3-of-simple.c and it is an array
+>> with multiple resets whereas dwc->reset from core.c is NULL.
+>> So the reset seems specific to the glue layers.
+>> Is there another way than resetting the thing that is
+>> generic enough to go to core.c and allows kexec?
+> 
+> This is a really odd 'failure'. We do full soft reset during driver
+> initialization on dwc3. We shouldn't need to assert reset on shutdown,
+> really.
 
-Please change subject to:
+Probing/initialisation has never been the problem. The issue for the 
+kexec case is that when the first kernel shuts down, there is currently 
+nothing to quiesce the controller (since only driver->shutdown gets 
+called, not driver->remove), and thus (presumably) external USB activity 
+causes it to keep writing back over the memory where the 
+descriptors/command ring used to be while the second kernel boots. The 
+second kernel will eventually probe and reset it appropriately, but by 
+that time the damage is already done.
 
-mmc: sdhci-pci-o2micro: Fix O2 Host data read/write DLL Lock Phase shift issue
+Yanking on a hardware reset line when the first kernel shuts down is 
+certainly one way to stop any memory accesses if such a control is 
+available, but presumably there's a general software way to gracefully 
+disable the controller's DMA functions until a subsequent probe can 
+fully reset it again - I think that would be the preferable solution.
 
+Robin.
+
+> I think the problem is here:
 > 
-> Signed-off-by:Shirley Her <shirley.her@bayhubtech.com>
-> ---
-> change in V6:
->  1. define constant by using array size
->  2. add more explanation for the code
->  3. fix loop forever code error
+> 	if (simple->pulse_resets) {
+> 		ret = reset_control_reset(simple->resets);
+> 		if (ret)
+> 			goto err_resetc_put;
+> 	} else {
+> 		ret = reset_control_deassert(simple->resets);
+> 		if (ret)
+> 			goto err_resetc_put;
+> 	}
 > 
-> change in V5:
->  1. split 2 patches into 3 patches
->  2. make dll_adjust_count start from 0
->  3. fix ret overwritten issue
->  4. use break instead of goto
+> Note that if pulse_resets is set, we will run a reset. But if
+> pulse_resets is false and need_reset is true, we deassert the reset.
 > 
-> change in V4:
->  1. add a bug fix for V3
+> I think below patch is enough:
 > 
-> change in V3:
->  1. add more explanation in dll_recovery and execute_tuning function
->  2. move dll_adjust_count to O2_host struct
->  3. fix some coding style error
->  4. renaming O2_PLL_WDT_CONTROL1 TO O2_PLL_DLL_WDT_CONTROL1
-> 
-> change in V2:
->  1. use usleep_range instead of udelay
->  2. move dll_adjust_count to sdhci-pci-o2micro.c
-> 
-> chagne in V1:
->  1. add error recovery function to relock DLL with correct phase
->  2. retuning HS200 after DLL locked
-> ---
->  drivers/mmc/host/sdhci-pci-o2micro.c | 128 ++++++++++++++++++++++++++++++++++-
->  1 file changed, 127 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-> index c780888..8cb516d 100644
-> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
-> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-> @@ -55,9 +55,18 @@
->  #define  O2_PLL_FORCE_ACTIVE	BIT(18)
->  #define  O2_PLL_LOCK_STATUS	BIT(14)
->  #define  O2_PLL_SOFT_RESET	BIT(12)
-> +#define  O2_DLL_LOCK_STATUS	BIT(11)
->  
->  #define O2_SD_DETECT_SETTING 0x324
->  
-> +static const u32 dmdn_table[] = {0x2B1C0000,
-> +	0x2C1A0000, 0x371B0000, 0x35100000};
-> +#define DMDN_SZ ARRAY_SIZE(dmdn_table)
-> +
-> +struct o2_host {
-> +	u8 dll_adjust_count;
-> +};
-> +
->  static void sdhci_o2_wait_card_detect_stable(struct sdhci_host *host)
->  {
->  	ktime_t timeout;
-> @@ -153,6 +162,38 @@ static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
->  			       O2_SD_PLL_SETTING, scratch_32);
->  }
->  
-> +/*
-> + * This function is used to detect dll lock status.
-> + * Before detect, need wait 5ms for dll status stable.
-> + * In order to detect the toggle of dll lock status bit,
-> + * we should fast polling this bit status without delay.
-> + */
-> +static int sdhci_o2_wait_dll_detect_lock(struct sdhci_host *host)
-> +{
-> +	ktime_t timeout;
-> +	u32 scratch32;
-> +
-> +	usleep_range(5000, 6000);
-> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> +	if (!(scratch32 & O2_DLL_LOCK_STATUS)) {
-> +		pr_warn("%s: DLL is still unlocked after wait 5ms\n",
-> +			mmc_hostname(host->mmc));
+> diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
+> index bdac3e7d7b18..9a2f3e09aa2e 100644
+> --- a/drivers/usb/dwc3/dwc3-of-simple.c
+> +++ b/drivers/usb/dwc3/dwc3-of-simple.c
+> @@ -72,7 +72,15 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
+>   		ret = reset_control_reset(simple->resets);
+>   		if (ret)
+>   			goto err_resetc_put;
+> -	} else {
 > +	}
 > +
-> +	/* Detect 1 s */
-> +	timeout = ktime_add_ms(ktime_get(), 1000);
-> +	while (1) {
-> +		bool timedout = ktime_after(ktime_get(), timeout);
+> +	if (simple->need_reset) {
+> +		ret = reset_control_assert(simple->resets);
+> +		if (ret)
+> +			goto err_resetc_put;
 > +
-> +		scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> +		if (!(scratch32 & O2_DLL_LOCK_STATUS))
-> +			return 0;
+> +		usleep_range(1000, 2000);
 > +
-> +		if (timedout)
-> +			return 1;
-
-Please put a suitable usleep_range() here
-
-> +	}
-> +}
-> +
->  static void sdhci_o2_set_tuning_mode(struct sdhci_host *host)
->  {
->  	u16 reg;
-> @@ -190,6 +231,78 @@ static void __sdhci_o2_execute_tuning(struct sdhci_host *host, u32 opcode)
->  	sdhci_reset_tuning(host);
->  }
->  
-> +/*
-> + * This function is used to fix o2 dll shift issue.
-> + * It isn't necessary to detect card present before recovery.
-> + * Firstly, it is used by bht emmc card, which is embedded.
-> + * Second, before call recovery card present will be detected
-> + * outside of the execute tuning function.
-> + */
-> +static int sdhci_o2_dll_recovery(struct sdhci_host *host)
-> +{
-> +	int ret = 0;
-> +	u8 scratch_8 = 0;
-> +	u32 scratch_32 = 0;
-> +	struct sdhci_pci_slot *slot = sdhci_priv(host);
-> +	struct sdhci_pci_chip *chip = slot->chip;
-> +	struct o2_host *o2_host = sdhci_pci_priv(slot);
-> +
-> +	/* UnLock WP */
-> +	pci_read_config_byte(chip->pdev,
-> +			O2_SD_LOCK_WP, &scratch_8);
-> +	scratch_8 &= 0x7f;
-> +	pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch_8);
-> +	while (o2_host->dll_adjust_count < DMDN_SZ && !ret) {
-> +		/* Disable clock */
-> +		sdhci_writeb(host, 0, SDHCI_CLOCK_CONTROL);
-> +
-> +		/* PLL software reset */
-> +		scratch_32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> +		scratch_32 |= O2_PLL_SOFT_RESET;
-> +		sdhci_writel(host, scratch_32, O2_PLL_DLL_WDT_CONTROL1);
-> +
-> +		pci_read_config_dword(chip->pdev,
-> +					    O2_SD_FUNC_REG4,
-> +					    &scratch_32);
-> +		/* Enable Base Clk setting change */
-> +		scratch_32 |= O2_SD_FREG4_ENABLE_CLK_SET;
-> +		pci_write_config_dword(chip->pdev, O2_SD_FUNC_REG4, scratch_32);
-> +		o2_pci_set_baseclk(chip, dmdn_table[o2_host->dll_adjust_count]);
-> +
-> +		/* Enable internal clock */
-> +		scratch_8 = SDHCI_CLOCK_INT_EN;
-> +		sdhci_writeb(host, scratch_8, SDHCI_CLOCK_CONTROL);
-> +
-> +		if (sdhci_o2_get_cd(host->mmc)) {
-> +			if (sdhci_o2_wait_dll_detect_lock(host)) {
-> +				scratch_8 |= SDHCI_CLOCK_CARD_EN;
-> +				sdhci_writeb(host, scratch_8,
-> +					SDHCI_CLOCK_CONTROL);
-> +				ret = 1;
-> +			} else {
-> +				pr_warn("%s: DLL unlocked when dll_adjust_count is %d.\n",
-> +					mmc_hostname(host->mmc),
-> +					o2_host->dll_adjust_count);
-> +			}
-> +		} else {
-> +			pr_err("%s: card present detect failed.\n",
-> +				mmc_hostname(host->mmc));
-> +			break;
-> +		}
-> +
-> +		o2_host->dll_adjust_count++;
-> +	}
-> +	if (!ret && o2_host->dll_adjust_count == DMDN_SZ)
-> +		pr_err("%s: DLL adjust over max times\n",
-> +		mmc_hostname(host->mmc));
-> +	/* Lock WP */
-> +	pci_read_config_byte(chip->pdev,
-> +				   O2_SD_LOCK_WP, &scratch_8);
-> +	scratch_8 |= 0x80;
-> +	pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch_8);
-> +	return ret;
-> +}
-> +
->  static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  {
->  	struct sdhci_host *host = mmc_priv(mmc);
-> @@ -204,7 +317,16 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  
->  	if (WARN_ON(opcode != MMC_SEND_TUNING_BLOCK_HS200))
->  		return -EINVAL;
+>   		ret = reset_control_deassert(simple->resets);
+>   		if (ret)
+>   			goto err_resetc_put;
+> @@ -121,9 +129,6 @@ static int dwc3_of_simple_remove(struct platform_device *pdev)
+>   	clk_bulk_put_all(simple->num_clocks, simple->clks);
+>   	simple->num_clocks = 0;
+>   
+> -	if (!simple->pulse_resets)
+> -		reset_control_assert(simple->resets);
 > -
-> +	/*
-> +	 * Judge the tuning reason, whether caused by dll shift
-> +	 * If cause by dll shift, should call sdhci_o2_dll_recovery
-> +	 */
-> +	if (!sdhci_o2_wait_dll_detect_lock(host))
-> +		if (!sdhci_o2_dll_recovery(host)) {
-> +			pr_err("%s: o2 dll recovery failed\n",
-> +				mmc_hostname(host->mmc));
-> +			return -EINVAL;
-> +		}
->  	/*
->  	 * o2 sdhci host didn't support 8bit emmc tuning
->  	 */
-> @@ -372,6 +494,7 @@ static void sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
->  	clk |= SDHCI_CLOCK_INT_EN;
->  	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
->  
-> +	sdhci_o2_enable_internal_clock(host);
->  	if (sdhci_o2_get_cd(host->mmc)) {
->  		clk |= SDHCI_CLOCK_CARD_EN;
->  		sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
-> @@ -397,12 +520,14 @@ int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
->  {
->  	struct sdhci_pci_chip *chip;
->  	struct sdhci_host *host;
-> +	struct o2_host *o2_host = sdhci_pci_priv(slot);
->  	u32 reg, caps;
->  	int ret;
->  
->  	chip = slot->chip;
->  	host = slot->host;
->  
-> +	o2_host->dll_adjust_count = 0;
->  	caps = sdhci_readl(host, SDHCI_CAPABILITIES);
->  
->  	/*
-> @@ -689,4 +814,5 @@ const struct sdhci_pci_fixes sdhci_o2 = {
->  	.resume = sdhci_pci_o2_resume,
->  #endif
->  	.ops = &sdhci_pci_o2_ops,
-> +	.priv_size = sizeof(struct o2_host),
->  };
+>   	reset_control_put(simple->resets);
+>   
+>   	pm_runtime_disable(dev);
 > 
-
+> Can you test?
+> 
