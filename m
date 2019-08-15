@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B150C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A047C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 660D92067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A71521721
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:44:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729983AbfHOEnC (ORCPT
+        id S1730313AbfHOEoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:43:02 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35630 "EHLO huawei.com"
+        Thu, 15 Aug 2019 00:44:15 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35268 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729921AbfHOEm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:42:59 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3F5FD2DFFAEAA067A104;
-        Thu, 15 Aug 2019 12:42:53 +0800 (CST)
+        id S1729826AbfHOEnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:43:02 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 220879B9A0C0C4CAF949;
+        Thu, 15 Aug 2019 12:42:48 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 15 Aug
- 2019 12:42:44 +0800
+ 2019 12:42:37 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         "Alexander Viro" <viro@zeniv.linux.org.uk>
@@ -46,9 +46,9 @@ CC:     LKML <linux-kernel@vger.kernel.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v8 10/24] erofs: update Kconfig and Makefile
-Date:   Thu, 15 Aug 2019 12:41:41 +0800
-Message-ID: <20190815044155.88483-11-gaoxiang25@huawei.com>
+Subject: [PATCH v8 06/24] erofs: support special inode
+Date:   Thu, 15 Aug 2019 12:41:37 +0800
+Message-ID: <20190815044155.88483-7-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190815044155.88483-1-gaoxiang25@huawei.com>
 References: <20190815044155.88483-1-gaoxiang25@huawei.com>
@@ -61,97 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds Makefile and Kconfig for erofs, and
-updates Makefile and Kconfig files in the fs directory.
+This patch adds to support special inode, such as
+block dev, char, socket, pipe inode.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/Kconfig        |  1 +
- fs/Makefile       |  1 +
- fs/erofs/Kconfig  | 36 ++++++++++++++++++++++++++++++++++++
- fs/erofs/Makefile |  9 +++++++++
- 4 files changed, 47 insertions(+)
- create mode 100644 fs/erofs/Kconfig
- create mode 100644 fs/erofs/Makefile
+ fs/erofs/inode.c | 32 ++++++++++++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
 
-diff --git a/fs/Kconfig b/fs/Kconfig
-index bfb1c6095c7a..669d46550e6d 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -261,6 +261,7 @@ source "fs/romfs/Kconfig"
- source "fs/pstore/Kconfig"
- source "fs/sysv/Kconfig"
- source "fs/ufs/Kconfig"
-+source "fs/erofs/Kconfig"
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 9960edaf6f7a..f55193856359 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -34,7 +34,16 @@ static int read_inode(struct inode *inode, void *data)
+ 		vi->xattr_isize = ondisk_xattr_ibody_size(v2->i_xattr_icount);
  
- endif # MISC_FILESYSTEMS
+ 		inode->i_mode = le16_to_cpu(v2->i_mode);
+-		vi->raw_blkaddr = le32_to_cpu(v2->i_u.raw_blkaddr);
++		if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
++		    S_ISLNK(inode->i_mode))
++			vi->raw_blkaddr = le32_to_cpu(v2->i_u.raw_blkaddr);
++		else if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode))
++			inode->i_rdev =
++				new_decode_dev(le32_to_cpu(v2->i_u.rdev));
++		else if (S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode))
++			inode->i_rdev = 0;
++		else
++			goto bogusimode;
  
-diff --git a/fs/Makefile b/fs/Makefile
-index d60089fd689b..b2e4973a0bea 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -130,3 +130,4 @@ obj-$(CONFIG_F2FS_FS)		+= f2fs/
- obj-$(CONFIG_CEPH_FS)		+= ceph/
- obj-$(CONFIG_PSTORE)		+= pstore/
- obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
-+obj-$(CONFIG_EROFS_FS)		+= erofs/
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-new file mode 100644
-index 000000000000..98f05043448a
---- /dev/null
-+++ b/fs/erofs/Kconfig
-@@ -0,0 +1,36 @@
-+# SPDX-License-Identifier: GPL-2.0-only
+ 		i_uid_write(inode, le32_to_cpu(v2->i_uid));
+ 		i_gid_write(inode, le32_to_cpu(v2->i_gid));
+@@ -58,7 +67,16 @@ static int read_inode(struct inode *inode, void *data)
+ 		vi->xattr_isize = ondisk_xattr_ibody_size(v1->i_xattr_icount);
+ 
+ 		inode->i_mode = le16_to_cpu(v1->i_mode);
+-		vi->raw_blkaddr = le32_to_cpu(v1->i_u.raw_blkaddr);
++		if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
++		    S_ISLNK(inode->i_mode))
++			vi->raw_blkaddr = le32_to_cpu(v1->i_u.raw_blkaddr);
++		else if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode))
++			inode->i_rdev =
++				new_decode_dev(le32_to_cpu(v1->i_u.rdev));
++		else if (S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode))
++			inode->i_rdev = 0;
++		else
++			goto bogusimode;
+ 
+ 		i_uid_write(inode, le16_to_cpu(v1->i_uid));
+ 		i_gid_write(inode, le16_to_cpu(v1->i_gid));
+@@ -86,6 +104,11 @@ static int read_inode(struct inode *inode, void *data)
+ 	else
+ 		inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
+ 	return 0;
 +
-+config EROFS_FS
-+	tristate "EROFS filesystem support"
-+	depends on BLOCK
-+	help
-+	  EROFS (Enhanced Read-Only File System) is a lightweight
-+	  read-only file system with modern designs (eg. page-sized
-+	  blocks, inline xattrs/data, etc.) for scenarios which need
-+	  high-performance read-only requirements, e.g. Android OS
-+	  for mobile phones and LIVECDs.
-+
-+	  It also provides fixed-sized output compression support,
-+	  which improves storage density, keeps relatively higher
-+	  compression ratios, which is more useful to achieve high
-+	  performance for embedded devices with limited memory.
-+
-+	  If unsure, say N.
-+
-+config EROFS_FS_DEBUG
-+	bool "EROFS debugging feature"
-+	depends on EROFS_FS
-+	help
-+	  Print debugging messages and enable more BUG_ONs which check
-+	  filesystem consistency and find potential issues aggressively,
-+	  which can be used for Android eng build, for example.
-+
-+	  For daily use, say N.
-+
-+config EROFS_FAULT_INJECTION
-+	bool "EROFS fault injection facility"
-+	depends on EROFS_FS
-+	help
-+	  Test EROFS to inject faults such as ENOMEM, EIO, and so on.
-+	  If unsure, say N.
-+
-diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-new file mode 100644
-index 000000000000..c3f4e549ef90
---- /dev/null
-+++ b/fs/erofs/Makefile
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+EROFS_VERSION = "1.0"
-+
-+ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
-+
-+obj-$(CONFIG_EROFS_FS) += erofs.o
-+erofs-objs := super.o inode.o data.o namei.o dir.o
-+
++bogusimode:
++	errln("bogus i_mode (%o) @ nid %llu", inode->i_mode, vi->nid);
++	DBG_BUGON(1);
++	return -EFSCORRUPTED;
+ }
+ 
+ /*
+@@ -178,6 +201,11 @@ static int fill_inode(struct inode *inode, int isdir)
+ 			/* by default, page_get_link is used for symlink */
+ 			inode->i_op = &erofs_symlink_iops;
+ 			inode_nohighmem(inode);
++		} else if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode) ||
++			S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode)) {
++			inode->i_op = &erofs_generic_iops;
++			init_special_inode(inode, inode->i_mode, inode->i_rdev);
++			goto out_unlock;
+ 		} else {
+ 			err = -EFSCORRUPTED;
+ 			goto out_unlock;
 -- 
 2.17.1
 
