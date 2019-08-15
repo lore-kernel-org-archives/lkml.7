@@ -2,96 +2,110 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F95C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96803C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D249B206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C6B206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:04:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="HDOdOuua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbfHORE1 (ORCPT
+        id S1731258AbfHOREh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:04:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34500 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbfHORE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:04:27 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DC48D51EE1;
-        Thu, 15 Aug 2019 17:04:26 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 512EF43FD5;
-        Thu, 15 Aug 2019 17:04:26 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 13:04:24 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
+        Thu, 15 Aug 2019 13:04:37 -0400
+Received: from sonic301-22.consmr.mail.ir2.yahoo.com ([77.238.176.99]:41320
+        "EHLO sonic301-22.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726098AbfHOREg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:04:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1565888674; bh=B1CDKmFfj6aDeTiNOiZadWEgT+fWeNQZxcrgAnVsmOs=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=HDOdOuuayJtJ4At+QPaPyvRwQCfBsUapF49QasrPrPcoc252mv8LHcNr7nXZZpsa4R/w0rw4WA4xIStpwqmQ40wDlNFvzHHNZpw/8DEMsR2eGPp215VYPIAXK5Z8mmaQI43ltmJzM3xplwtyYqILGlUUpBiM2wAy0OtqGuPUNGehJCt4l2PzMxkrzGRlkYXb5oyoM2RnGH1ZrYlW3LBYizvW/hsaVNw+Mc6BEHtoQhex/oFj+i1DsDvGpxV3NfqFWwKHn7RAiEUl+sB45lz6xMp7Oht9uQNNmVeqauMY0wBuFuUMwdbMS0Ypkwwpnh6nFwe7XPVO6VMktbruGsb0rA==
+X-YMail-OSG: UCM0UGEVM1k.ECZKTxS2OqaNxzGHhhZ.pF6bQgH1V5pop2SUDTzFWfBv_5CJXjN
+ lmzvdcgsctqscHstS.D3ySu2diMWMVLd1NlS_.QLBfWHJgiZJNUUORUdNzd_1JBEHhl23GXEI9Cr
+ SkA.ME94KDhq3JYnKqfxE3lBqx1qsUoxTDPcsaK7CSV9uXRuC_rVeJWQGHFrLSxBUMlfKTCwLK1Q
+ SRwutEVv7UDXOJfgMG4dfSMV8ocaxYvcBM__Q2ClXC6IYJVrJ4YY.flrgyQVVBvoCL7eNBwLxq..
+ E_cKvKeO5.MMCvhwZl.6UTiEJwVPemSOCL9d9MpkZyzrjgsHgpLwmbmm4TZE9yC7ZV5IgDV.cfqj
+ 6yNGkLoZdle_xiEedxjALL37oIp1kh0B0AnA.rfKPdq.uwJVIgTQW3DfVqlf6iKhB6uy5RFkNXRD
+ IlR3ZLEMzYftGCwgQzomL.99B5RdayKOfbP7ZfTyQFsQfXaxma1dQwsDzs1eJW7MlH6NvdnIH6v0
+ bl_66yAONv0NOGPRWVKJ2AUkGWWM5HBJDnqQZDhfj2vYWjXijuZiUOYh218tDbWkiNOWjMiXRv5w
+ Nco0gD6FUD9TZNJowGp.fNnHLIWQcSoJvyGArd42Ffch7Cx6LrmtIkLSBB96xZiAkDsIdZSQCSc6
+ dkew2LYcnzCsBKEhae3KwsT1sQGkuPPJHLa0xazi.g4qhenO1N9UemS55UuwOF0X0QuNam0ArZVe
+ B33q0v8eDbA3TkRAhrspGG0NCt8Bw54BjY6.zQd4f7PTFB76.fPLd7UUF5LElwll.bgQ7L6fQplJ
+ OkBMAzSujJwqSD6EqYHLE0a5NAsbBhO9VISE_me1hH17bSBl7PczHs72rzmHz7y4Ct6M2jZQpSB6
+ tHWM.i.sGQksU1s5UcKLX3g9nFurGU02ehnJtJH_DkBr5b75yV8_Kwlosn0Z.4gGb_AUmPY7CvEN
+ MUT_Hs1lwsxl9CamXd_8IYJNCuCjCl439CIsZhETFo1_kc3Ym_ysi0jzwtdzhSf3nvYG65HHjczN
+ 02AhHEXoNChDFLMmb35Zbz597Zwjb_yN.f8l32.wP_8j2dFd61e9qAPZ9feIO1mnYh8jMP9.8gtC
+ Iuhc0t6IPpsXPvLhXu6mLkFuALJhX9VT7QJomXTsg2k0BTOmxpOPmc4KbWEtgl.qKtaeqJBXu.Lh
+ U2PQwdOgTlMhmhp4bmv2LeLI40LC8k3GvxgXsEOLJJHFKc4uiqRbwrVnkKviQ..NTaE3gXl6T8yc
+ dtaTogao_6wD2HNBCXC2GNMHbgcUmop8L_06agRcMtFBrCsI-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.ir2.yahoo.com with HTTP; Thu, 15 Aug 2019 17:04:34 +0000
+Received: by smtp432.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID ed96a2e86c060211f0b97b71e44301c9;
+          Thu, 15 Aug 2019 17:04:32 +0000 (UTC)
+Date:   Fri, 16 Aug 2019 01:04:14 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-accelerators@lists.ozlabs.org
-Subject: Re: [PATCH 0/2] A General Accelerator Framework, WarpDrive
-Message-ID: <20190815170424.GA30916@redhat.com>
-References: <1565775265-21212-1-git-send-email-zhangfei.gao@linaro.org>
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+        devel@driverdev.osuosl.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Richard Weinberger <richard@nod.at>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-erofs@lists.ozlabs.org
+Subject: Re: [PATCH v8 00/24] erofs: promote erofs from staging v8
+Message-ID: <20190815170409.GB4958@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190815044155.88483-1-gaoxiang25@huawei.com>
+ <20190815090603.GD4938@kroah.com>
+ <CAHk-=wjKz7JLd=mj0w2LUiWC2_VOeNWhTTrw1j-i-KyEHH5g5w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1565775265-21212-1-git-send-email-zhangfei.gao@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 15 Aug 2019 17:04:27 +0000 (UTC)
+In-Reply-To: <CAHk-=wjKz7JLd=mj0w2LUiWC2_VOeNWhTTrw1j-i-KyEHH5g5w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 05:34:23PM +0800, Zhangfei Gao wrote:
-> *WarpDrive* is a general accelerator framework for the user application to
-> access the hardware without going through the kernel in data path.
+Hi Linus,
+
+On Thu, Aug 15, 2019 at 09:18:12AM -0700, Linus Torvalds wrote:
+> On Thu, Aug 15, 2019 at 2:06 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > I know everyone is busy, but given the length this has been in staging,
+> > and the constant good progress toward cleaning it all up that has been
+> > happening, I want to get this moved out of staging soon.
 > 
-> WarpDrive is the name for the whole framework. The component in kernel
-> is called uacce, meaning "Unified/User-space-access-intended Accelerator
-> Framework". It makes use of the capability of IOMMU to maintain a
-> unified virtual address space between the hardware and the process.
+> Since it doesn't touch anything outside of its own filesystem, I have
+> no real objections. We've never had huge problems with odd
+> filesystems.
 > 
-> WarpDrive is intended to be used with Jean Philippe Brucker's SVA
-> patchset[1], which enables IO side page fault and PASID support. 
-> We have keep verifying with Jean's sva/current [2]
-> We also keep verifying with Eric's SMMUv3 Nested Stage patch [3]
+> I read through the patches to look for syntactic stuff (ie very much
+> *not* looking at actual code working or not), and had only one
+> comment. It's not critical, but it would be nice to do as part of (or
+> before) the "get it out of staging".
+
+Thanks for your kind reply!
+
+OK, I will submit a patch later to address your comment and
+a pending formal moving patch with a suggestion by Stephen earlier
+for Greg as well.
+
+Thanks,
+Gao Xiang
+
 > 
-> This series and related zip & qm driver as well as dummy driver for qemu test:
-> https://github.com/Linaro/linux-kernel-warpdrive/tree/5.3-rc1-warpdrive-v1
-> zip driver already been upstreamed.
-> zip supporting uacce will be the next step.
-> 
-> The library and user application:
-> https://github.com/Linaro/warpdrive/tree/wdprd-v1-current
-
-Do we want a new framework ? I think that is the first question that
-should be answer here. Accelerator are in many forms and so far they
-never have been enough commonality to create a framework, even GPUs
-with the drm is an example of that, drm only offer share framework
-for the modesetting part of the GPU (as thankfully monitor connector
-are not specific to GPU brands :))
-
-FPGA is another example the only common code expose to userspace is
-about bitstream management AFAIK.
-
-I would argue that a framework should only be created once there is
-enough devices with same userspace API. Meanwhile you can provide
-in kernel helper that allow driver to expose same API. If after a
-while we have enough device driver which all use that same in kernel
-helpers API then it will a good time to introduce a new framework.
-Meanwhile this will allow individual device driver to tinker with
-their API and maybe get to something useful to more devices in the
-end.
-
-Note that what i propose also allow userspace code sharing for all
-driver that use the same in kernel helper.
-
-Cheers,
-Jérôme
+>                  Linus
