@@ -2,128 +2,225 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C93C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71675C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97922206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:13:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565885621;
-	bh=+uEmJo/K1S3t/sO1LBEt4JZWxFC3fADysWvtxqUG5XA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fjYG5Jt4b2dGSz5IsRwsOab3ykuOfZFO43vgaLMEIgcV7qOM1K7hY7vSo22Sg/dVz
-	 w66BYNX8e/cIwHpvytyJmvbq1dyJzW1iKnq1rXpf0g/iUzBtuAH11SZ8lGNcit15Sn
-	 19dpg8QWnXbIApKDf8DnAGddl2b7JQC9Tb3Mzzw4=
+	by mail.kernel.org (Postfix) with ESMTP id 3C92E20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:19:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ydMINYfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbfHOQNk (ORCPT
+        id S1730708AbfHOQTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:13:40 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42448 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728956AbfHOQNk (ORCPT
+        Thu, 15 Aug 2019 12:19:53 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37716 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730517AbfHOQTw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:13:40 -0400
-Received: by mail-lj1-f193.google.com with SMTP id l14so2690235ljj.9
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:13:38 -0700 (PDT)
+        Thu, 15 Aug 2019 12:19:52 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c9so2032731lfh.4
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:19:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FuOQKA7vgPA06is52x9xKpXiDGgbCZoxJgLKNkyGfUs=;
-        b=GiMGu61r0de7kE+jxFqk2ISTMZec3MCIu0HBqAiSXGeSP8AeU/RC1ZhX/syTNiFag1
-         vef2zaQMkRgI5yQRnEcUQA2HqnQz4O2DAMgPqxYorQxLdg6N07Qt35SI/EEKkX7h+ocx
-         AGxQCZHY70aVP3rFrb29kL6nHWXMwFLTwSK+g=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sRy0HGkkwueoNntrvDsZNILMk3C4/I8h6a3uq64hOBI=;
+        b=ydMINYfpYUGZbA9ACQan1VPtHfcdEg+Eww++zFwxCu/4Oo6Q56sPdMh88RK8Lkbtji
+         x+QfheLZoqaNk+LuLQXcblUSyc2BzPM222BFXpnIXzEPciqrUJQSfZpZ15umLFHD+muz
+         y8tHSdcINQV/WMLMQjGvKjCcF8yVEGKx+CJla/p9H4229ECvVuDs31bEf9pCHyZ6r7CS
+         VrUYumiERxsm2GkmrKULXDYlDJCUVLwcR1uZ1bjtdp72PT4Ij2vv6uslklUWtFga5BzS
+         bBdF1FYvRAQuqFvlfLFth6IFhagFZ9kD9hN1uT3O7qsH5PD9nhVJH8/pMhfOXvP7Jw0F
+         PLHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FuOQKA7vgPA06is52x9xKpXiDGgbCZoxJgLKNkyGfUs=;
-        b=lPPZY90SjzMj+mAyPwzLGV5MXZafJRuMAS8fzcBylezvPzkb1r0Vpxpy1nU2R7axyf
-         R5721WmtAZRjbTYw1J8bge5ZPh1f2bwKG2tmSApACUR92cMAsXgwDMgNKMgJ8mup9+EM
-         LIQ/FBKQA9vbk34FPdEXkU4+I1f81/5xwvFYnz6gd/TEpWGiRQI8/ksD5i7YM/dFgx5V
-         8Lw4FNXJT/JNlQL5ZDnYrajYlLalq9A34MKqu+Z4wHQ9RiOMzxGmWqPaznGNbzPzWvEO
-         uB+MT/OMIl2RDerRH7goEX1VsZKPUrhak+toTxEGa8d/WDt/97PTRHpVU0zHceLQ+7U2
-         TKYg==
-X-Gm-Message-State: APjAAAVBv8YrrsSOQg0oDWydHVlGp0wfi35bE+dI0whOXi29mc40+j9m
-        9l/MEvbZEzAUVYyCYGsRpUE+Hf6nTFs=
-X-Google-Smtp-Source: APXvYqxs+6VjJwpzPDOHwLAawmU0Cph8wP3PiVW2ER2B0jmksyLw6IOYBh2npVQD00lmpM39uFX2rg==
-X-Received: by 2002:a2e:8ed5:: with SMTP id e21mr3123242ljl.156.1565885617130;
-        Thu, 15 Aug 2019 09:13:37 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id d21sm513224lfc.73.2019.08.15.09.13.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Aug 2019 09:13:36 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id m24so2693298ljg.8
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:13:35 -0700 (PDT)
-X-Received: by 2002:a2e:7018:: with SMTP id l24mr3046966ljc.165.1565885615360;
- Thu, 15 Aug 2019 09:13:35 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sRy0HGkkwueoNntrvDsZNILMk3C4/I8h6a3uq64hOBI=;
+        b=IVHyvSEyecNbZkwpqCzkl/zPjdgcUlrM/SdWLZj389RZ9PvZ7B15+6ppWqnf+VlQJs
+         R/x/lCsLpK82llAV6WkB+jNZMgvItI+eAg+t+Qzk07sp7b60YK5q24Y83DfzvtQJGoLF
+         NtDEV7rKYWyCOtTz/gDfkU0OuqfnEKoXqkwpm98tXiSHr2QNKMbXu5Etw1dXYhqhDgg3
+         nTLERrZP0DkE1wYNQNtv42W6/Ag4jZ4u1OUY5k7gPK9YWmuHiazvCO0Sgxy3zWm8EI50
+         xC5Y1UGGkpwE44IgMovORKatWchLvQPKYKHRJ4Avhu92ZrbpSoJtTUA52koss8bkN8UP
+         +nzQ==
+X-Gm-Message-State: APjAAAVhknT2xq99WEDiHKvyXrv5CjqJ+Otpqcm2R0H7cc5KsBLT0qJV
+        3kUeYzLkBPtJPDNOHVhBACbKe0NxGZ4=
+X-Google-Smtp-Source: APXvYqzr+unM1x8AG+bUo1brUXtoWu76G6a4YxVfXpyjHb+cqnX3+LQRYm9IpfUgdBLvaMy/a5BxFw==
+X-Received: by 2002:ac2:428d:: with SMTP id m13mr2755522lfh.52.1565885989674;
+        Thu, 15 Aug 2019 09:19:49 -0700 (PDT)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id d21sm515144lfc.73.2019.08.15.09.19.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 09:19:48 -0700 (PDT)
+Subject: Re: [PATCH v5 0/3] Introduce Bandwidth OPPs for interconnects
+To:     Saravana Kannan <saravanak@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
+        daidavid1@codeaurora.org, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190807223111.230846-1-saravanak@google.com>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <b8a6020f-eda5-0c3d-b365-a294c28b9650@linaro.org>
+Date:   Thu, 15 Aug 2019 19:19:44 +0300
 MIME-Version: 1.0
-References: <20190815044155.88483-1-gaoxiang25@huawei.com> <20190815044155.88483-8-gaoxiang25@huawei.com>
-In-Reply-To: <20190815044155.88483-8-gaoxiang25@huawei.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 15 Aug 2019 09:13:19 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiUs+b=iVKM3mVooXgVk7cmmC67KTmnAuL0cd_cMMVAKw@mail.gmail.com>
-Message-ID: <CAHk-=wiUs+b=iVKM3mVooXgVk7cmmC67KTmnAuL0cd_cMMVAKw@mail.gmail.com>
-Subject: Re: [PATCH v8 07/24] erofs: add directory operations
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        devel@driverdev.osuosl.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Theodore Ts'o" <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Richard Weinberger <richard@nod.at>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190807223111.230846-1-saravanak@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 9:42 PM Gao Xiang <gaoxiang25@huawei.com> wrote:
->
-> +
-> +static const unsigned char erofs_filetype_table[EROFS_FT_MAX] = {
-> +       [EROFS_FT_UNKNOWN]      = DT_UNKNOWN,
-> +       [EROFS_FT_REG_FILE]     = DT_REG,
-> +       [EROFS_FT_DIR]          = DT_DIR,
-> +       [EROFS_FT_CHRDEV]       = DT_CHR,
-> +       [EROFS_FT_BLKDEV]       = DT_BLK,
-> +       [EROFS_FT_FIFO]         = DT_FIFO,
-> +       [EROFS_FT_SOCK]         = DT_SOCK,
-> +       [EROFS_FT_SYMLINK]      = DT_LNK,
-> +};
+Hi,
 
-Hmm.
+On 8/8/19 01:31, Saravana Kannan wrote:
+> Interconnects and interconnect paths quantify their performance levels in
+> terms of bandwidth and not in terms of frequency. So similar to how we have
+> frequency based OPP tables in DT and in the OPP framework, we need
+> bandwidth OPP table support in DT and in the OPP framework.
+> 
+> So with the DT bindings added in this patch series, the DT for a GPU
+> that does bandwidth voting from GPU to Cache and GPU to DDR would look
+> something like this:
+> 
+> gpu_cache_opp_table: gpu_cache_opp_table {
+> 	compatible = "operating-points-v2";
+> 
+> 	gpu_cache_3000: opp-3000 {
+> 		opp-peak-KBps = <3000000>;
+> 		opp-avg-KBps = <1000000>;
+> 	};
+> 	gpu_cache_6000: opp-6000 {
+> 		opp-peak-KBps = <6000000>;
+> 		opp-avg-KBps = <2000000>;
+> 	};
+> 	gpu_cache_9000: opp-9000 {
+> 		opp-peak-KBps = <9000000>;
+> 		opp-avg-KBps = <9000000>;
+> 	};
+> };
+> 
+> gpu_ddr_opp_table: gpu_ddr_opp_table {
+> 	compatible = "operating-points-v2";
+> 
+> 	gpu_ddr_1525: opp-1525 {
+> 		opp-peak-KBps = <1525000>;
+> 		opp-avg-KBps = <452000>;
+> 	};
+> 	gpu_ddr_3051: opp-3051 {
+> 		opp-peak-KBps = <3051000>;
+> 		opp-avg-KBps = <915000>;
+> 	};
+> 	gpu_ddr_7500: opp-7500 {
+> 		opp-peak-KBps = <7500000>;
+> 		opp-avg-KBps = <3000000>;
+> 	};
+> };
+> 
+> gpu_opp_table: gpu_opp_table {
+> 	compatible = "operating-points-v2";
+> 	opp-shared;
+> 
+> 	opp-200000000 {
+> 		opp-hz = /bits/ 64 <200000000>;
+> 	};
+> 	opp-400000000 {
+> 		opp-hz = /bits/ 64 <400000000>;
+> 	};
+> };
+> 
+> gpu@7864000 {
+> 	...
+> 	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
+> 	...
+> };
+> 
+> v1 -> v3:
+> - Lots of patch additions that were later dropped
+> v3 -> v4:
+> - Fixed typo bugs pointed out by Sibi.
+> - Fixed bug that incorrectly reset rate to 0 all the time
+> - Added units documentation
+> - Dropped interconnect-opp-table property and related changes
+> v4->v5:
+> - Replaced KBps with kBps
+> - Minor documentation fix
+> 
+> Cheers,
+> Saravana
+> 
+> Saravana Kannan (3):
+>   dt-bindings: opp: Introduce opp-peak-kBps and opp-avg-kBps bindings
+>   OPP: Add support for bandwidth OPP tables
+>   OPP: Add helper function for bandwidth OPP tables
+> 
+>  Documentation/devicetree/bindings/opp/opp.txt | 15 ++++--
+>  .../devicetree/bindings/property-units.txt    |  4 ++
+>  drivers/opp/core.c                            | 51 +++++++++++++++++++
+>  drivers/opp/of.c                              | 41 +++++++++++----
+>  drivers/opp/opp.h                             |  4 +-
+>  include/linux/pm_opp.h                        | 19 +++++++
+>  6 files changed, 121 insertions(+), 13 deletions(-)
+> 
 
-The EROFS_FT_XYZ values seem to match the normal FT_XYZ values, and
-we've lately tried to just have filesystems use the standard ones
-instead of having a (pointless) duplicate conversion between the two.
+For the series:
+Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-And then you can use the common "fs_ftype_to_dtype()" to convert from
-FT_XYZ to DT_XYZ.
-
-Maybe I'm missing something, and the EROFS_FT_x list actually differs
-from the normal FT_x list some way, but it would be good to not
-introduce another case of this in normal filesystems, just as we've
-been getting rid of them.
-
-See for example commit e10892189428 ("ext2: use common file type conversion").
-
-               Linus
+Thanks,
+Georgi
