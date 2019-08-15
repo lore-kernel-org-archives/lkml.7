@@ -2,101 +2,105 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC701C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC7CC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A86C208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04D421744
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565866349;
+	bh=0iwh4It9DTUtLTh6DHbA8L+rgka8HF2BN9oR2BEsK24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ioHhwxX3t1p0zHfuZ1ak59CtU20jdIWI7SPEceM352ZPuuKFWlYN2foeMXLIiVumi
+	 qpVP/X7MGqD1t937IWGPAJxYgo0lVK9oPZX1sogfXIKVEcsVc3m9pzQPe2P08lfgek
+	 F4EQbfFyhNEpun97Pt9hzHZ9U5SL6Uc26XTFy4Ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731245AbfHOKuK (ORCPT
+        id S1731276AbfHOKw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 06:50:10 -0400
-Received: from verein.lst.de ([213.95.11.211]:45603 "EHLO verein.lst.de"
+        Thu, 15 Aug 2019 06:52:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730969AbfHOKuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 06:50:10 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9FC9468AFE; Thu, 15 Aug 2019 12:50:03 +0200 (CEST)
-Date:   Thu, 15 Aug 2019 12:50:02 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Takashi Iwai <tiwai@suse.de>, Helge Deller <deller@gmx.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Michal Simek <monstr@monstr.eu>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/8] parisc: don't set ARCH_NO_COHERENT_DMA_MMAP
-Message-ID: <20190815105002.GA30805@lst.de>
-References: <20190808160005.10325-1-hch@lst.de> <20190808160005.10325-8-hch@lst.de> <1565861152.2963.7.camel@HansenPartnership.com>
+        id S1731246AbfHOKw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 06:52:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F13C20665;
+        Thu, 15 Aug 2019 10:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565866347;
+        bh=0iwh4It9DTUtLTh6DHbA8L+rgka8HF2BN9oR2BEsK24=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KFbvlL/XpSfYFoaaYLK7CUkPh+jvKby1YKjr5f1OTsHNkM0HYdfLNsekt7Uz5OUv5
+         DkIJtPtFCAFLs1fLjIe8PRZ8w8N0brEMdi+52WcblAe7dyzPZaDkXHGQuKblYoUhTg
+         hPPfq/LeRdXGdeIOor9P5AMnRHYPSCE1slVTm8xg=
+Date:   Thu, 15 Aug 2019 12:52:25 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Knut Omang <knut.omang@oracle.com>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Shreyans Devendra Doshi <0xinfosect0r@gmail.com>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Hidenori Yamaji <hidenori.yamaji@sony.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Timothy Bird <Tim.Bird@sony.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [RFC 06/19] ktf: A simple debugfs interface to test results
+Message-ID: <20190815105225.GA16395@kroah.com>
+References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
+ <ae6c38384e2338aa3cfb8a4e4dd1002833789253.1565676440.git-series.knut.omang@oracle.com>
+ <20190813082152.GA17627@kroah.com>
+ <a63bea757e02656a38463cc794da7da15273dd16.camel@oracle.com>
+ <20190815084921.GE3512@kroah.com>
+ <9629068a41a160de0145a18dd22924bce70f37fe.camel@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1565861152.2963.7.camel@HansenPartnership.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <9629068a41a160de0145a18dd22924bce70f37fe.camel@oracle.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:25:52AM +0100, James Bottomley wrote:
-> >  which means exporting normally cachable memory to userspace is
-> > relatively dangrous due to cache aliasing.
+On Thu, Aug 15, 2019 at 12:35:26PM +0200, Knut Omang wrote:
+> On Thu, 2019-08-15 at 10:49 +0200, Greg Kroah-Hartman wrote:
+> > > I perfectly agree with you that reducing the hole for a race condition 
+> > > is generally a bad idea, but from the above mail thread 
+> > > it seems that's the only available choice for older kernels?
 > > 
-> > But normally cachable memory is only allocated by dma_alloc_coherent
-> > on parisc when using the sba_iommu or ccio_iommu drivers, so just
-> > remove the .mmap implementation for them so that we don't have to set
-> > ARCH_NO_COHERENT_DMA_MMAP, which I plan to get rid of.
+> > I have no idea, but please, do not use that pattern of code as it is
+> > racy in all kernels, from all of time.
 > 
-> So I don't think this is quite right.  We have three architectural
-> variants essentially (hidden behind about 12 cpu types):
+> Ok, will remove it :-)
 > 
->    1. pa70xx: These can't turn off page caching, so they were the non
->       coherent problem case
->    2. pa71xx: These can manufacture coherent memory simply by turning off
->       the cache on a per page basis
->    3. pa8xxx: these have a full cache flush coherence mechanism.
+> I tried in vain to find the commit from Al Viro that made the code safe,
+> to identify which kernels that are safe from this issue,
+> but he has a **lot** of commits, do you have a clue for what/where to look?
 > 
-> (I might have this slightly wrong: I vaguely remember the pa71xxlc
-> variants have some weird cache quirks for DMA as well)
-> 
-> So I think pa70xx we can't mmap.  pa71xx we can provided we mark the
-> page as uncached ... which should already have happened in the allocate
-> and pa8xxx which can always mmap dma memory without any special tricks.
+> It will be good to have a mention/comment on this for future reference, 
+> like the earliest kernel version where this is safe.
 
-Except for the different naming scheme vs the code this matches my
-assumptions.
+Always use a "newer" kernel to be "safe" and you will be fine :)
 
-In the code we have three cases (and a fourth EISA case mention in
-comments, but not actually implemented as far as I can tell):
+> Maybe we can even get rid of some more of the remaining of these too..
+> (I notice there's 65 cases of 'if (!try_module_get(THIS_MODULE))'
+> right now)
 
-arch/parisc/kernel/pci-dma.c says in the top of file comments:
+Something to put on a TODO list somewhere...
 
-** AFAIK, all PA7100LC and PA7300LC platforms can use this code.
+thanks,
 
-and the handles two different case.  for cpu_type == pcxl or pcxl2
-it maps the memory as uncached for dma_alloc_coherent, and for all
-other cpu types it fails the coherent allocations.
-
-In addition to that there are the ccio and sba iommu drivers, of which
-according to your above comment one is always present for pa8xxx.
-
-Which brings us back to this patch, which ensures that no cacheable
-memory is exported to userspace by removing ->mmap from ccio and sba.
-It then enabled dma_mmap_coherent for the pcxl or pcxl2 case that
-allocates uncached memory, which dma_mmap_coherent does not work
-because dma_alloc_coherent already failed for the !pcxl && !pcxl2
-and thus there is no memory to mmap.
-
-So if the description is too confusing please suggest a better
-one, I'm a little lost between all these code names and product
-names (arch/parisc/include/asm/dma-mapping.h uses yet another set).
+greg k-h
