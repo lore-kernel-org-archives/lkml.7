@@ -2,95 +2,153 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06C0C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80B1C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B949F2086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837EA20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732484AbfHOTUv (ORCPT
+        id S1732591AbfHOTVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 15:20:51 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33800 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728762AbfHOTUu (ORCPT
+        Thu, 15 Aug 2019 15:21:50 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40660 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730790AbfHOTVu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 15:20:50 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m10so2811586qkk.1;
-        Thu, 15 Aug 2019 12:20:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j0lUY9T5fW9DD8Z/WYckZ7IOSLlu2YMChdXw9ONqN60=;
-        b=uYlU9pMmwmXULnKEMB51Cdc9LsMwfZDVEFxhjYL5MToOBup0WetBpBmUY3mAGi5W0g
-         7JCKYWefKVUJYwBER0d5w08jh/9vDyTHrYF0noASjA1RIV/CIebgiQgxhM59ZypRj9aP
-         4XjmheUqEJNKa49vsASgoRE1zQg1kpZtRnIg8XwQxV37gTxy0hEEcAtEKuLhdf9NBH6e
-         2jqJ39VX9w8eIgp1w9Z5+mkH9cXr9i75ymq1gpjmJtZjlvmI1bGMBE6RY/tuC43WP4jq
-         SYw3c8hRi/K81G8r2Tvm/y6RzRYeaLpXvXUwpVNt2NL6XG5AdVK646flEWzvIktPL5Ch
-         dnUA==
-X-Gm-Message-State: APjAAAXfRPFI5s4ZtaSa5Phvz8+VgWRMDvSI1L+jpL0Gq2m4PQL/S06c
-        uB6Ef5lHNK1mLswmXuZ45FX5VkyTgW5aeXVQ0SM=
-X-Google-Smtp-Source: APXvYqxX/tHpG9h/OJBhMq363Q18QRmF3x01hoRWTAAzITEuCxNGnYVfEJbyDSvcOIWBAaVl9ipsiC+7TX8uI+zxqbI=
-X-Received: by 2002:a37:4fcf:: with SMTP id d198mr5521517qkb.394.1565896849491;
- Thu, 15 Aug 2019 12:20:49 -0700 (PDT)
+        Thu, 15 Aug 2019 15:21:50 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hyLJL-0004V8-6e; Thu, 15 Aug 2019 21:21:23 +0200
+Date:   Thu, 15 Aug 2019 21:21:21 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dmitry Safonov <dima@arista.com>
+cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org,
+        Andrei Vagin <avagin@gmail.com>
+Subject: Re: [PATCHv6 22/36] x86/vdso: Add offsets page in vvar
+In-Reply-To: <20190815163836.2927-23-dima@arista.com>
+Message-ID: <alpine.DEB.2.21.1908152117231.1908@nanos.tec.linutronix.de>
+References: <20190815163836.2927-1-dima@arista.com> <20190815163836.2927-23-dima@arista.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190814204259.120942-1-arnd@arndb.de> <20190814204259.120942-2-arnd@arndb.de>
- <20190814213753.GP6129@dread.disaster.area> <20190815071314.GA6960@infradead.org>
- <CAK8P3a2Hjfd49XY18cDr04ZpvC5ZBGudzxqpCesbSsDf1ydmSA@mail.gmail.com>
- <20190815080211.GA17055@infradead.org> <20190815102649.GA10821@infradead.org>
- <20190815121511.GR6129@dread.disaster.area> <20190815140355.GA11012@infradead.org>
-In-Reply-To: <20190815140355.GA11012@infradead.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 15 Aug 2019 21:20:32 +0200
-Message-ID: <CAK8P3a1iNu7m=gy-NauXVBky+cBk8TPWwfWXO4gSw1mRPJefJA@mail.gmail.com>
-Subject: Re: [PATCH v5 01/18] xfs: compat_ioctl: use compat_ptr()
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Nick Bowler <nbowler@draconx.ca>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Dave Chinner <dchinner@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 4:04 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Thu, Aug 15, 2019 at 10:15:12PM +1000, Dave Chinner wrote:
-> > > http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-ioctl-table
-> >
-> > Lots to like in that handful of patches. :)
-> >
-> > It can easily go before or after Arnd's patch, and the merge
-> > conflict either way would be minor, so I'm not really fussed either
-> > way this gets sorted out...
->
-> The other thing we could do is to just pick the two important ones:
->
-> http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-ioctl-table-5.3
->
-> and throw that into Arnds series, or even 5.3, and then defer the
-> table thing until later.
+On Thu, 15 Aug 2019, Dmitry Safonov wrote:
+> ---
+>  arch/Kconfig                          |  5 +++
+>  arch/x86/Kconfig                      |  1 +
+>  arch/x86/entry/vdso/vdso-layout.lds.S |  9 ++++-
+>  arch/x86/entry/vdso/vdso2c.c          |  3 ++
+>  arch/x86/entry/vdso/vma.c             | 12 +++++++
+>  arch/x86/include/asm/vdso.h           |  1 +
+>  init/Kconfig                          |  1 +
+>  lib/vdso/gettimeofday.c               | 47 +++++++++++++++++++++++++++
 
-If we can have your "xfs: fall back to native ioctls for unhandled compat
-ones" in 5.3, that would be ideal from my side, then I can just drop the
-corresponding patch from my series and have the rest merged for 5.4.
+This needs to be split into the generic lib/vdso part and then x86 making
+use of it.
 
-The compat_ptr addition is independent of my series, I just added it
-because I noticed it was missing, so we can merged that through
-the xfs tree along with your other changes, either for 5.3 or 5.4.
+> +#ifdef CONFIG_TIME_NS
 
-     Arnd
+This should be COMPILE_WITH_TIME_NS and not CONFIG_TIME_NS
+
+> +extern u8 timens_page
+> +	__attribute__((visibility("hidden")));
+> +
+> +notrace static __always_inline void clk_to_ns(clockid_t clk, struct __kernel_timespec *ts)
+
+This needs notrace because?
+
+> +{
+> +	struct timens_offsets *timens = (struct timens_offsets *) &timens_page;
+> +	struct timespec64 *offset64;
+> +
+> +	switch (clk) {
+> +	case CLOCK_MONOTONIC:
+> +	case CLOCK_MONOTONIC_COARSE:
+> +	case CLOCK_MONOTONIC_RAW:
+> +		offset64 = &timens->monotonic;
+> +		break;
+> +	case CLOCK_BOOTTIME:
+> +		offset64 = &timens->boottime;
+> +		break;
+> +	default:
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * The kernel allows to set a negative offset only if the current clock
+> +	 * value in a namespace is positive, so the result tv_sec can't be
+> +	 * negative here.
+> +	 */
+> +	ts->tv_nsec += offset64->tv_nsec;
+> +	ts->tv_sec += offset64->tv_sec;
+> +	if (ts->tv_nsec >= NSEC_PER_SEC) {
+> +		ts->tv_nsec -= NSEC_PER_SEC;
+> +		ts->tv_sec++;
+> +	}
+> +	if (ts->tv_nsec < 0) {
+> +		ts->tv_nsec += NSEC_PER_SEC;
+> +		ts->tv_sec--;
+> +	}
+
+That's broken for 32bit user space on 64bit hosts. On LE due to
+misalignment and on BE because 32bit will read always 0.
+
+> +}
+> +#else
+> +notrace static __always_inline void clk_to_ns(clockid_t clk, struct __kernel_timespec *ts) {}
+> +#endif
+> +
+>  static int do_hres(const struct vdso_data *vd, clockid_t clk,
+>  		   struct __kernel_timespec *ts)
+>  {
+> @@ -65,6 +108,8 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
+>  	ts->tv_sec = sec + __iter_div_u64_rem(ns, NSEC_PER_SEC, &ns);
+>  	ts->tv_nsec = ns;
+>  
+> +	clk_to_ns(clk, ts);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -79,6 +124,8 @@ static void do_coarse(const struct vdso_data *vd, clockid_t clk,
+>  		ts->tv_sec = vdso_ts->sec;
+>  		ts->tv_nsec = vdso_ts->nsec;
+>  	} while (unlikely(vdso_read_retry(vd, seq)));
+> +
+> +	clk_to_ns(clk, ts);
+>  }
+>  
+>  static __maybe_unused int
+> -- 
+> 2.22.0
+> 
+> 
