@@ -2,100 +2,113 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 818F3C41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2528C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5922321744
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:23:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565875402;
-	bh=v8T3qwF6qiZM++7vAT7AL0JPe0r/NT0kv4QeyOYP/rE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=18Vg5jP7b2PGYwngjM7mHPMvkQxy6XJxAZlEZb+S2vEpqy3N7+GPT+X1MyvGXgpLf
-	 kWmsWXLZDEpsgu5/X0Aey4Ozpz7SHp68dhyKDKE6RMkfRc0IVr/6q8ysXMP2ix5+iW
-	 51OF0K6aJM0tSE03+G4+wKkGKQ0pCQqF+kaGw/yA=
+	by mail.kernel.org (Postfix) with ESMTP id CE67D2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732286AbfHONXV (ORCPT
+        id S1732289AbfHONXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:23:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731660AbfHONXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:23:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B11572084D;
-        Thu, 15 Aug 2019 13:23:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565875400;
-        bh=v8T3qwF6qiZM++7vAT7AL0JPe0r/NT0kv4QeyOYP/rE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PIdKCMQ/Lb50XgkTlSzI4dcJJpEBGXjfxY4vMHFbCuhE6F7PCaSzRKr5kWXihgsd6
-         CYq+SBnCJXFALaYcaG3aif6qNMb45WH5wI6jKS8CZyb2VbP+PYmponIEA+124IIRAp
-         rJJ2vhvhUrSSeOp1mohuc3t3W+bL3ZyLQHR5jtR4=
-Date:   Thu, 15 Aug 2019 15:23:18 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Gavin Li <git@thegavinli.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Geoff Levand <geoff@infradead.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Olav Kongas <ok@artecdesign.ee>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Bin Liu <b-liu@ti.com>, linux-arm-kernel@lists.infradead.org,
-        linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: next take at setting up a dma mask by default for platform
- devices
-Message-ID: <20190815132318.GA27208@kroah.com>
-References: <20190811080520.21712-1-hch@lst.de>
+        Thu, 15 Aug 2019 09:23:54 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:58521 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730497AbfHONXy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:23:54 -0400
+Received: from [IPv6:2001:420:44c1:2579:f038:4b04:f67a:276f] ([IPv6:2001:420:44c1:2579:f038:4b04:f67a:276f])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id yFjHhvwAJDqPeyFjKhYHte; Thu, 15 Aug 2019 15:23:52 +0200
+Subject: Re: [RFC 3/5] media: v4l2-ctrls: Add support for V4L2_CID_LOCATION
+To:     Jacopo Mondi <jacopo@jmondi.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-4-jacopo@jmondi.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <6c9460e2-b607-9863-f8f0-1a94773c6556@xs4all.nl>
+Date:   Thu, 15 Aug 2019 15:23:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190811080520.21712-1-hch@lst.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190814202815.32491-4-jacopo@jmondi.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfA+Q18XfWqRoIglqwR8iaXdKQGQMt86mT33jQPkY2hKikyDDUd3AR1zr1BTBPpYZYKMQWcdo56ZCRMcGytCBTVh/LLU0YPGzDJbq45xf7Mc3CwKwnAkQ
+ ffeALGTy6+++r4B1ulwgzNkkrxkU/SCNM7PFub0vLwrWW8OT85sGLlRP+MIpdxNRAx5NdRkn+CuobNtUKisbIN+fMbJ3cBkoG0gSpNLIWSPpJLGW7w39MaS/
+ iFOsipFH1mSiZ0qxQEOAaT8yIkjKW3IfcsZXb2oN2ctGLpqAAbrNdUV1rCFLp9D1PiDBO8Yal9cTJ4NTjuMdJjPkE5hwli5y2DT+8a1Gt74+Mmg4UtssGNmU
+ jEZmPetZUcwVh0A04EyV0oxB/KMIy6bLceE7QMGs+W3QSq2E9RB5OX6pzPUbPOXjmoPd0lriWHwMKJeW3SNbfIFicLhs+OPnRmoczLNhEgcvZvrpkV7W8WfK
+ TFCK+K9+qk7DVu2n
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 10:05:14AM +0200, Christoph Hellwig wrote:
-> Hi all,
+On 8/14/19 10:28 PM, Jacopo Mondi wrote:
+> Add support for the newly defined V4L2_CID_LOCATION read-only control
+> used to report the camera device mounting position.
 > 
-> this is another attempt to make sure the dma_mask pointer is always
-> initialized for platform devices.  Not doing so lead to lots of
-> boilerplate code, and makes platform devices different from all our
-> major busses like PCI where we always set up a dma_mask.  In the long
-> run this should also help to eventually make dma_mask a scalar value
-> instead of a pointer and remove even more cruft.
+> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> ---
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 7 +++++++
+>  include/uapi/linux/v4l2-controls.h   | 4 ++++
+>  2 files changed, 11 insertions(+)
 > 
-> The bigger blocker for this last time was the fact that the usb
-> subsystem uses the presence or lack of a dma_mask to check if the core
-> should do dma mapping for the driver, which is highly unusual.  So we
-> fix this first.  Note that this has some overlap with the pending
-> desire to use the proper dma_mmap_coherent helper for mapping usb
-> buffers.  The first two patches from this series should probably
-> go into 5.3 and then uses as the basis for the decision to use
-> dma_mmap_coherent.
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 7d3a33258748..8ab0857df59a 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -943,6 +943,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
+>  	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
+>  	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
+> +	case V4L2_CID_LOCATION:			return "Location";
+>  
+>  	/* FM Radio Modulator controls */
+>  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+> @@ -1300,6 +1301,12 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  		break;
+>  	case V4L2_CID_MPEG_VIDEO_FWHT_PARAMS:
+>  		*type = V4L2_CTRL_TYPE_FWHT_PARAMS;
 
-I've taken the first 2 patches for 5.3-final.  Given that patch 3 needs
-to be fixed, I'll wait for a respin of these before considering them.
+Missing break!
 
-thanks,
+Regards,
 
-greg k-h
+	Hans
+
+> +	case V4L2_CID_LOCATION:
+> +		*type = V4L2_CTRL_TYPE_INTEGER;
+> +		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> +		*min = V4L2_LOCATION_FRONT;
+> +		*max = V4L2_LOCATION_BACK;
+> +		*step = 1;
+>  		break;
+>  	default:
+>  		*type = V4L2_CTRL_TYPE_INTEGER;
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index 37807f23231e..5c4c7b245921 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -889,6 +889,10 @@ enum v4l2_auto_focus_range {
+>  #define V4L2_CID_PAN_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+32)
+>  #define V4L2_CID_TILT_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+33)
+>  
+> +#define V4L2_CID_LOCATION			(V4L2_CID_CAMERA_CLASS_BASE+34)
+> +#define V4L2_LOCATION_FRONT			(0 << 0)
+> +#define V4L2_LOCATION_BACK			(1 << 0)
+> +
+>  /* FM Modulator class control IDs */
+>  
+>  #define V4L2_CID_FM_TX_CLASS_BASE		(V4L2_CTRL_CLASS_FM_TX | 0x900)
+> 
+
