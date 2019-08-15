@@ -2,495 +2,194 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5522C3A59B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0F9C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91DC62089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:41:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vXmEa2DY"
+	by mail.kernel.org (Postfix) with ESMTP id 32704205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:42:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565898138;
+	bh=V/bV/eNrBUhW8p4Dveyxe8UfiMadmtfVk4phoDwo768=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Z/uqMgmjYg8grecCSM/rYaaHZ+nalqX4O/8sFC6w8K6+uI9YQ7zMHKTSS4ds92rhd
+	 9HXTTKCjNUA1SWTBvfJK8STmHsYsKdzJjjNxB5wX6E3acXzt+As5k8KNDlYavz86hg
+	 BxOYVuIYoABusBpvw7U3J9qUrGlQ0QfBXF8gXn7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733013AbfHOTlG (ORCPT
+        id S1733036AbfHOTmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 15:41:06 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44468 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730578AbfHOTlF (ORCPT
+        Thu, 15 Aug 2019 15:42:17 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42310 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731625AbfHOTmQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 15:41:05 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so1723112pgl.11;
-        Thu, 15 Aug 2019 12:41:05 -0700 (PDT)
+        Thu, 15 Aug 2019 15:42:16 -0400
+Received: by mail-io1-f67.google.com with SMTP id e20so1528371iob.9
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 12:42:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=6D7B/ZT63OMrfAjYjjMuqz09mz7kuFuUTksfhFip4xY=;
-        b=vXmEa2DYFFFgNFO96/91n84pZ+T5mWtq4NixZhP5DR14B7UzWynz7U/Kbg5UeypYlD
-         PdHv4TPX64eLwyJn+EQpr0RjhUKedS9wj8WhhYyiCs3UREOtL8x+B6tychE8lDp+jKGv
-         /yyf3NsrsjqGOmEWxMteakIHYZFKIIAIeLUH3ejWqtcbQJcYPlJm0o2EEY8MHRbAy6Qx
-         au+TIrb7duPXc1vV9Pb7/9f0QUrdKIu4LfY7uRBdaKVgf98EGZcOolziqCvPRwHKLa43
-         EZzURHglVsFDQB5BQR4Rmtc5CrjgLSJ1Tk3hGexADMaOWlFFOT0dsHjcMXnj+EA9I+7t
-         QuLA==
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fdeUDnIIJr/lvtRblubrloL6VFzDFPRgR9hA+XA26mE=;
+        b=SQMxZ8teg004ySCkI/0Zr6jFx3rY72qjetgxGNV/bEZoELYa5/+30wpuXr77cfhCEl
+         JcLIX9IUXhmVcvH6M9RjroqNsJ/EM5nzGzxtVrTqujcRhqhEL9/nhUB9OUvWkMXyhkzk
+         gQ1itkV8dIOKepCpqo5v8m/sQa/U+wJoQ/qyo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=6D7B/ZT63OMrfAjYjjMuqz09mz7kuFuUTksfhFip4xY=;
-        b=EYIGbD0PngYlHy9skqfAU2gyblNDzjnLr5jJvFnxXQUIolpeiCIGawOdmcvqiQwh0L
-         pxOkT31clWpRFzKaliDrKBpYgyQa6nnyb26T9mg7UZxzoKiTFGF0ReHRDf3Scm4goCup
-         v2BJuGYanv9b56S2OM5uVhVdmg4Ay1sX8NJ9I+1NoKhAwOzKtDLEEtuf91kHiyEXC/gy
-         ZEez29SDjAQhwXLKwKdyABtylwFUK+y5QoDvrqJBg07GUDaBlSk0mOpbD+iMYto+VkVr
-         EMLTXab++NdfYD9a+qJvsgscOtrvOOkWHW43MWldKm2znuTh+XmIXEcov5fbVBYyzARI
-         KnXg==
-X-Gm-Message-State: APjAAAW9DP3XV57ZJMeYbrRdLKt0IxDJA7/ocO9RTMvqzit/x9J8qDXy
-        uEoX4wjejvkrsGnr5lTTFQ7g9Cxt
-X-Google-Smtp-Source: APXvYqyfFd25MwgsZC3klvzm7+UlWfmNmgTBmzSuLyH+EE81+5ZMC8vFRf8LTlqQOLZzcxFTkjXhcA==
-X-Received: by 2002:a63:3ec7:: with SMTP id l190mr4867511pga.334.1565898064695;
-        Thu, 15 Aug 2019 12:41:04 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q69sm2627050pjb.0.2019.08.15.12.41.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 12:41:03 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 12:41:02 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Vijay Khemka <vijaykhemka@fb.com>
-Cc:     John Wang <wangzqbj@inspur.com>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        "duanzhijia01@inspur.com" <duanzhijia01@inspur.com>,
-        "mine260309@gmail.com" <mine260309@gmail.com>,
-        "joel@jms.id.au" <joel@jms.id.au>
-Subject: Re: [PATCH v4 2/2] hwmon: pmbus: Add Inspur Power System power
- supply driver
-Message-ID: <20190815194102.GA11916@roeck-us.net>
-References: <20190813083412.8668-1-wangzqbj@inspur.com>
- <70B3A211-2F43-4712-9B92-D407AA3C3934@fb.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fdeUDnIIJr/lvtRblubrloL6VFzDFPRgR9hA+XA26mE=;
+        b=HjZAGoYjNJXJ5WN84/ajzRhwJL/zEvdtD2ii5VAsgWYo0PDcGQYzTUIN57Lh6zvtzG
+         nY4rpdHh6yItGCHVVYal8VZydSXKyJaYz0kQU4xTDfJw/aD7MPy+ffQgAz3sc5QZ5bRR
+         mLge22kiGI7xDHC0byqO5QSxTVDZ8Rh099AzY0Lf6kWWZ2fGwWzZf0erwhlPfUQjOmSg
+         xVdV/CbvZ2ydYmam6Oy5crTsnEf/EZOEidO6WHT30u1bTPsW5JcVWM0+IUjIQa00TsmS
+         EugZyBrYf4Ebm85g91BRh+Y70TXhbhyfOolBfETKJW77yHWFKzjRvJTU+m2/RIredYB4
+         BHxQ==
+X-Gm-Message-State: APjAAAX6iXvj4SrBufGyvx50jQ8v5tt7S1rzsb2+JS4HD1K7DdRbeXTn
+        pWNgQTloH0YqsWAtsqMEAHv9MQ==
+X-Google-Smtp-Source: APXvYqzzg/kSWN+TWqTtlTte5KSl8bMafVmCGFeLnx9iyc4QBoyt7wQxlDMSXTaxIqVmv3AG12cPHg==
+X-Received: by 2002:a5d:860e:: with SMTP id f14mr7212001iol.242.1565898135816;
+        Thu, 15 Aug 2019 12:42:15 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id j16sm3624268iok.34.2019.08.15.12.42.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 12:42:15 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     mchehab@kernel.org, helen.koike@collabora.com, hverkuil@xs4all.nl,
+        laurent.pinchart@ideasonboard.com, andrealmeid@collabora.com
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+Subject: [PATCH v2 0/2] Collapse vimc into single monolithic driver
+Date:   Thu, 15 Aug 2019 13:42:11 -0600
+Message-Id: <cover.1565740213.git.skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <70B3A211-2F43-4712-9B92-D407AA3C3934@fb.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 06:43:52PM +0000, Vijay Khemka wrote:
-> 
-> 
-> ﻿On 8/13/19, 1:36 AM, "openbmc on behalf of John Wang" <openbmc-bounces+vijaykhemka=fb.com@lists.ozlabs.org on behalf of wangzqbj@inspur.com> wrote:
-> 
->     Add the driver to monitor Inspur Power System power supplies
->     with hwmon over pmbus.
->     
->     This driver adds sysfs attributes for additional power supply data,
->     including vendor, model, part_number, serial number,
->     firmware revision, hardware revision, and psu mode(active/standby).
->     
->     Signed-off-by: John Wang <wangzqbj@inspur.com>
->     ---
->     v4:
->         - Remove the additional tabs in the Makefile
->         - Rebased on 5.3-rc4, not 5.2
->     v3:
->         - Sort kconfig/makefile entries alphabetically
->         - Remove unnecessary initialization
->         - Use ATTRIBUTE_GROUPS instead of expanding directly
->         - Use memscan to avoid reimplementation
->     v2:
->         - Fix typos in commit message
->         - Invert Christmas tree
->         - Configure device with sysfs attrs, not debugfs entries
->         - Fix errno in fw_version_read, ENODATA to EPROTO
->         - Change the print format of fw-version
->         - Use sysfs_streq instead of strcmp("xxx" "\n", "xxx")
->         - Document sysfs attributes
->     ---
->      Documentation/hwmon/inspur-ipsps1.rst |  79 +++++++++
->      drivers/hwmon/pmbus/Kconfig           |   9 +
->      drivers/hwmon/pmbus/Makefile          |   1 +
->      drivers/hwmon/pmbus/inspur-ipsps.c    | 226 ++++++++++++++++++++++++++
->      4 files changed, 315 insertions(+)
->      create mode 100644 Documentation/hwmon/inspur-ipsps1.rst
->      create mode 100644 drivers/hwmon/pmbus/inspur-ipsps.c
->     
->     diff --git a/Documentation/hwmon/inspur-ipsps1.rst b/Documentation/hwmon/inspur-ipsps1.rst
->     new file mode 100644
->     index 000000000000..aa19f0ccc8b0
->     --- /dev/null
->     +++ b/Documentation/hwmon/inspur-ipsps1.rst
->     @@ -0,0 +1,79 @@
->     +Kernel driver inspur-ipsps1
->     +=======================
->     +
->     +Supported chips:
->     +
->     +  * Inspur Power System power supply unit
->     +
->     +Author: John Wang <wangzqbj@inspur.com>
->     +
->     +Description
->     +-----------
->     +
->     +This driver supports Inspur Power System power supplies. This driver
->     +is a client to the core PMBus driver.
->     +
->     +Usage Notes
->     +-----------
->     +
->     +This driver does not auto-detect devices. You will have to instantiate the
->     +devices explicitly. Please see Documentation/i2c/instantiating-devices for
->     +details.
->     +
->     +Sysfs entries
->     +-------------
->     +
->     +The following attributes are supported:
->     +
->     +======================= ======================================================
->     +curr1_input             Measured input current
->     +curr1_label             "iin"
->     +curr1_max               Maximum current
->     +curr1_max_alarm         Current high alarm
->     +curr2_input		Measured output current in mA.
->     +curr2_label		"iout1"
->     +curr2_crit              Critical maximum current
->     +curr2_crit_alarm        Current critical high alarm
->     +curr2_max               Maximum current
->     +curr2_max_alarm         Current high alarm
->     +
-> Please align above details.
->     +fan1_alarm		Fan 1 warning.
->     +fan1_fault		Fan 1 fault.
->     +fan1_input		Fan 1 speed in RPM.
->     +
->     +in1_alarm		Input voltage under-voltage alarm.
->     +in1_input		Measured input voltage in mV.
->     +in1_label		"vin"
->     +in2_input		Measured output voltage in mV.
->     +in2_label		"vout1"
->     +in2_lcrit               Critical minimum output voltage
->     +in2_lcrit_alarm         Output voltage critical low alarm
->     +in2_max                 Maximum output voltage
->     +in2_max_alarm           Output voltage high alarm
->     +in2_min                 Minimum output voltage
->     +in2_min_alarm           Output voltage low alarm
->     +
->     +power1_alarm		Input fault or alarm.
->     +power1_input		Measured input power in uW.
->     +power1_label		"pin"
->     +power1_max              Input power limit
->     +power2_max_alarm	Output power high alarm
->     +power2_max              Output power limit
->     +power2_input		Measured output power in uW.
->     +power2_label		"pout"
->     +
-> Same alignment issue in description.
->     +temp[1-3]_input		Measured temperature
->     +temp[1-2]_max		Maximum temperature
->     +temp[1-3]_max_alarm	Temperature high alarm
->     +
->     +vendor                  Manufacturer name
->     +model                   Product model
->     +part_number             Product part number
->     +serial_number           Product serial number
->     +fw_version              Firmware version
->     +hw_version              Hardware version
->     +mode                    Work mode. Can be set to active or
->     +                        standby, when set to standby, PSU will
->     +                        automatically switch between standby
->     +                        and redundancy mode.
->     +======================= ======================================================
->     diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
->     index b6588483fae1..d62d69bb7e49 100644
->     --- a/drivers/hwmon/pmbus/Kconfig
->     +++ b/drivers/hwmon/pmbus/Kconfig
->     @@ -46,6 +46,15 @@ config SENSORS_IBM_CFFPS
->      	  This driver can also be built as a module. If so, the module will
->      	  be called ibm-cffps.
->      
->     +config SENSORS_INSPUR_IPSPS
->     +	tristate "INSPUR Power System Power Supply"
->     +	help
->     +	  If you say yes here you get hardware monitoring support for the INSPUR
->     +	  Power System power supply.
->     +
->     +	  This driver can also be built as a module. If so, the module will
->     +	  be called inspur-ipsps.
->     +
->      config SENSORS_IR35221
->      	tristate "Infineon IR35221"
->      	help
->     diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
->     index c950ea9a5d00..03bacfcfd660 100644
->     --- a/drivers/hwmon/pmbus/Makefile
->     +++ b/drivers/hwmon/pmbus/Makefile
->     @@ -7,6 +7,7 @@ obj-$(CONFIG_PMBUS)		+= pmbus_core.o
->      obj-$(CONFIG_SENSORS_PMBUS)	+= pmbus.o
->      obj-$(CONFIG_SENSORS_ADM1275)	+= adm1275.o
->      obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
->     +obj-$(CONFIG_SENSORS_INSPUR_IPSPS) += inspur-ipsps.o
->      obj-$(CONFIG_SENSORS_IR35221)	+= ir35221.o
->      obj-$(CONFIG_SENSORS_IR38064)	+= ir38064.o
->      obj-$(CONFIG_SENSORS_IRPS5401)	+= irps5401.o
->     diff --git a/drivers/hwmon/pmbus/inspur-ipsps.c b/drivers/hwmon/pmbus/inspur-ipsps.c
->     new file mode 100644
->     index 000000000000..fa981b881a60
->     --- /dev/null
->     +++ b/drivers/hwmon/pmbus/inspur-ipsps.c
->     @@ -0,0 +1,226 @@
->     +// SPDX-License-Identifier: GPL-2.0-or-later
->     +/*
->     + * Copyright 2019 Inspur Corp.
->     + */
->     +
->     +#include <linux/debugfs.h>
->     +#include <linux/device.h>
->     +#include <linux/fs.h>
->     +#include <linux/i2c.h>
->     +#include <linux/module.h>
->     +#include <linux/pmbus.h>
->     +#include <linux/hwmon-sysfs.h>
->     +
->     +#include "pmbus.h"
->     +
->     +#define IPSPS_REG_VENDOR_ID	0x99
->     +#define IPSPS_REG_MODEL		0x9A
->     +#define IPSPS_REG_FW_VERSION	0x9B
->     +#define IPSPS_REG_PN		0x9C
->     +#define IPSPS_REG_SN		0x9E
->     +#define IPSPS_REG_HW_VERSION	0xB0
->     +#define IPSPS_REG_MODE		0xFC
->     +
->     +#define MODE_ACTIVE		0x55
->     +#define MODE_STANDBY		0x0E
->     +#define MODE_REDUNDANCY		0x00
->     +
->     +#define MODE_ACTIVE_STRING		"active"
->     +#define MODE_STANDBY_STRING		"standby"
->     +#define MODE_REDUNDANCY_STRING		"redundancy"
->     +
->     +enum ipsps_index {
->     +	vendor,
->     +	model,
->     +	fw_version,
->     +	part_number,
->     +	serial_number,
->     +	hw_version,
->     +	mode,
->     +	num_regs,
->     +};
->     +
->     +static const u8 ipsps_regs[num_regs] = {
->     +	[vendor] = IPSPS_REG_VENDOR_ID,
->     +	[model] = IPSPS_REG_MODEL,
->     +	[fw_version] = IPSPS_REG_FW_VERSION,
->     +	[part_number] = IPSPS_REG_PN,
->     +	[serial_number] = IPSPS_REG_SN,
->     +	[hw_version] = IPSPS_REG_HW_VERSION,
->     +	[mode] = IPSPS_REG_MODE,
->     +};
->     +
->     +static ssize_t ipsps_string_show(struct device *dev,
->     +				 struct device_attribute *devattr,
->     +				 char *buf)
->     +{
->     +	u8 reg;
->     +	int rc;
->     +	char *p;
->     +	char data[I2C_SMBUS_BLOCK_MAX + 1];
->     +	struct i2c_client *client = to_i2c_client(dev->parent);
->     +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
->     +
->     +	reg = ipsps_regs[attr->index];
->     +	rc = i2c_smbus_read_block_data(client, reg, data);
->     +	if (rc < 0)
->     +		return rc;
->     +
->     +	/* filled with printable characters, ending with # */
->     +	p = memscan(data, '#', rc);
->     +	*p = '\0';
->     +
->     +	return snprintf(buf, PAGE_SIZE, "%s\n", data);
->     +}
->     +
->     +static ssize_t ipsps_fw_version_show(struct device *dev,
->     +				     struct device_attribute *devattr,
->     +				     char *buf)
->     +{
->     +	u8 reg;
->     +	int rc;
->     +	u8 data[I2C_SMBUS_BLOCK_MAX] = { 0 };
->     +	struct i2c_client *client = to_i2c_client(dev->parent);
->     +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
->     +
->     +	reg = ipsps_regs[attr->index];
->     +	rc = i2c_smbus_read_block_data(client, reg, data);
->     +	if (rc < 0)
->     +		return rc;
->     +
->     +	if (rc != 6)
->     +		return -EPROTO;
->     +
->     +	return snprintf(buf, PAGE_SIZE, "%u.%02u%u-%u.%02u\n",
->     +			data[1], data[2]/* < 100 */, data[3]/*< 10*/,
->     +			data[4], data[5]/* < 100 */);
->     +}
->     +
->     +static ssize_t ipsps_mode_show(struct device *dev,
->     +			       struct device_attribute *devattr, char *buf)
->     +{
->     +	u8 reg;
->     +	int rc;
->     +	struct i2c_client *client = to_i2c_client(dev->parent);
->     +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
->     +
->     +	reg = ipsps_regs[attr->index];
->     +	rc = i2c_smbus_read_byte_data(client, reg);
->     +	if (rc < 0)
->     +		return rc;
->     +
->     +	switch (rc) {
->     +	case MODE_ACTIVE:
->     +		return snprintf(buf, PAGE_SIZE, "[%s] %s %s\n",
->     +				MODE_ACTIVE_STRING,
->     +				MODE_STANDBY_STRING, MODE_REDUNDANCY_STRING);
->     +	case MODE_STANDBY:
->     +		return snprintf(buf, PAGE_SIZE, "%s [%s] %s\n",
->     +				MODE_ACTIVE_STRING,
->     +				MODE_STANDBY_STRING, MODE_REDUNDANCY_STRING);
->     +	case MODE_REDUNDANCY:
->     +		return snprintf(buf, PAGE_SIZE, "%s %s [%s]\n",
->     +				MODE_ACTIVE_STRING,
->     +				MODE_STANDBY_STRING, MODE_REDUNDANCY_STRING);
->     +	default:
->     +		return snprintf(buf, PAGE_SIZE, "unspecified\n");
->     +	}
->     +}
->     +
->     +static ssize_t ipsps_mode_store(struct device *dev,
->     +				struct device_attribute *devattr,
->     +				const char *buf, size_t count)
->     +{
->     +	u8 reg;
->     +	int rc;
->     +	struct i2c_client *client = to_i2c_client(dev->parent);
->     +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
->     +
->     +	reg = ipsps_regs[attr->index];
->     +	if (sysfs_streq(MODE_STANDBY_STRING, buf)) {
->     +		rc = i2c_smbus_write_byte_data(client, reg,
->     +					       MODE_STANDBY);
->     +		if (rc < 0)
->     +			return rc;
->     +		return count;
->     +	} else if (sysfs_streq(MODE_ACTIVE_STRING, buf)) {
->     +		rc = i2c_smbus_write_byte_data(client, reg,
->     +					       MODE_ACTIVE);
->     +		if (rc < 0)
->     +			return rc;
->     +		return count;
->     +	}
->     +
->     +	return -EINVAL;
->     +}
->     +
->     +static SENSOR_DEVICE_ATTR_RO(vendor, ipsps_string, vendor);
->     +static SENSOR_DEVICE_ATTR_RO(model, ipsps_string, model);
->     +static SENSOR_DEVICE_ATTR_RO(part_number, ipsps_string, part_number);
->     +static SENSOR_DEVICE_ATTR_RO(serial_number, ipsps_string, serial_number);
->     +static SENSOR_DEVICE_ATTR_RO(hw_version, ipsps_string, hw_version);
->     +static SENSOR_DEVICE_ATTR_RO(fw_version, ipsps_fw_version, fw_version);
->     +static SENSOR_DEVICE_ATTR_RW(mode, ipsps_mode, mode);
->     +
->     +static struct attribute *ipsps_attrs[] = {
->     +	&sensor_dev_attr_vendor.dev_attr.attr,
->     +	&sensor_dev_attr_model.dev_attr.attr,
->     +	&sensor_dev_attr_part_number.dev_attr.attr,
->     +	&sensor_dev_attr_serial_number.dev_attr.attr,
->     +	&sensor_dev_attr_hw_version.dev_attr.attr,
->     +	&sensor_dev_attr_fw_version.dev_attr.attr,
->     +	&sensor_dev_attr_mode.dev_attr.attr,
->     +	NULL,
->     +};
->     +
->     +ATTRIBUTE_GROUPS(ipsps);
->     +
->     +static struct pmbus_driver_info ipsps_info = {
->     +	.pages = 1,
->     +	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
->     +		PMBUS_HAVE_IIN | PMBUS_HAVE_POUT | PMBUS_HAVE_PIN |
->     +		PMBUS_HAVE_FAN12 | PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 |
->     +		PMBUS_HAVE_TEMP3 | PMBUS_HAVE_STATUS_VOUT |
->     +		PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_STATUS_INPUT |
->     +		PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_STATUS_FAN12,
-> This can be dynamic read by chip identify function
+vimc uses Component API to split the driver into functional components.
+The real hardware resembles a monolith structure than component and
+component structure added a level of complexity making it hard to
+maintain without adding any real benefit.
 
-PMBUS_SKIP_STATUS_CHECK weakens auto-detetcion to some degree,
-and auto-detection takes time since it needs to poll all registers
-to determine if they exist. I don't mind if you insist, but I don't
-immediately see the benefits.
+The sensor is one vimc component that would makes sense to be a separate
+module to closely align with the real hardware. It would be easier to
+collapse vimc into single monolithic driver first and then split the
+sensor off as a separate module.
 
->     +	.groups = ipsps_groups,
->     +};
->     +
->     +static struct pmbus_platform_data ipsps_pdata = {
->     +	.flags = PMBUS_SKIP_STATUS_CHECK,
->     +};
->     +
->     +static int ipsps_probe(struct i2c_client *client,
->     +		       const struct i2c_device_id *id)
->     +{
->     +	client->dev.platform_data = &ipsps_pdata;
-> Allocate memory for this platform data inside tis function rather than having global variable.
+This patch series removes the component API and makes minimal changes to
+the code base preserving the functional division of the code structure.
+Preserving the functional structure allows us to split the sensor off
+as a separate module in the future.
 
-Does that have any value other than consuming more memory
-if there are multiple instances of the driver ?
+Major design elements in this change are:
+    - Use existing struct vimc_ent_config and struct vimc_pipeline_config
+      to drive the initialization of the functional components.
+    - Make vimc_device and vimc_ent_config global by moving them to
+      vimc-common.h
+    - Add two new hooks add and rm to initialize and register, unregister
+      and free subdevs.
+    - All component API is now gone and bind and unbind hooks are modified
+      to do "add" and "rm" with minimal changes to just add and rm subdevs.
+    - vimc-core's bind and unbind are now register and unregister.
+    - vimc-core invokes "add" hooks from its vimc_register_devices().
+      The "add" hooks remain the same and register subdevs. They don't
+      create platform devices of their own and use vimc's pdev.dev as
+      their reference device. The "add" hooks save their vimc_ent_device(s)
+      in the corresponding vimc_ent_config.
+    - vimc-core invokes "rm" hooks from its unregister to unregister
+      subdevs and cleanup.
+    - vimc-core invokes "add" and "rm" hooks with pointer to struct
+      vimc_device and the corresponding struct vimc_ent_config pointer.
 
->     +	return pmbus_do_probe(client, id, &ipsps_info);
->     +}
->     +
->     +static const struct i2c_device_id ipsps_id[] = {
->     +	{ "inspur_ipsps1", 0 },
->     +	{}
->     +};
->     +MODULE_DEVICE_TABLE(i2c, ipsps_id);
->     +
->     +static const struct of_device_id ipsps_of_match[] = {
->     +	{ .compatible = "inspur,ipsps1" },
->     +	{}
->     +};
->     +MODULE_DEVICE_TABLE(of, ipsps_of_match);
->     +
->     +static struct i2c_driver ipsps_driver = {
->     +	.driver = {
->     +		.name = "inspur-ipsps",
->     +		.of_match_table = ipsps_of_match,
->     +	},
->     +	.probe = ipsps_probe,
->     +	.remove = pmbus_do_remove,
->     +	.id_table = ipsps_id,
->     +};
->     +
->     +module_i2c_driver(ipsps_driver);
->     +
->     +MODULE_AUTHOR("John Wang");
->     +MODULE_DESCRIPTION("PMBus driver for Inspur Power System power supplies");
->     +MODULE_LICENSE("GPL");
->     -- 
->     2.17.1
->     
->     
-> 
+The following configure and stream test works on all devices.
+
+    media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
+    media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
+    media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
+    media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
+
+    v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
+    v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
+    v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
+
+    v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video1
+    v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
+    v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
+
+The second patch in the series fixes a general protection fault found
+when rmmod is done while stream is active.
+
+- rmmod while streaming returns vimc is in use
+- rmmod without active stream works correctly
+
+Changes since v1:
+Patch 1 & 2: (patch 1 in this series)
+- Collapsed the two patches into one
+- Added common defines (vimc_device and vimc_ent_config) to vimc-common.h
+  based on our discussion.
+- Addressed review comments from Helen and Laurent
+- Use vimc-common.h instead of creating a new file.
+- Other minor comments from Helen on int vs. unsigned int and
+  not needing to initialize ret in vimc_add_subdevs()
+Patch 3 (patch 2 in this series):
+- The second patch is the fix for gpf. Updated the patch after looking
+  at the test results from Andre and Helen. This problem is in a common
+  code and impacts all subdevs. The fix addresses the core problem and
+  fixes it. Fix removes pads release from v4l2_device_unregister_subdev()
+  and pads are now released from the sd release handler with all other
+  resources.
+
+Outstanding:
+- Update documentation with the correct topology.
+- There is one outstanding gpf remaining in the unbind path. I will
+  fix that in a separate patch. This is an existing problem and will
+  be easier to fix on top of this patch series.
+
+vimc_print_dot (--print-dot) topology after this change: (no change
+compared to media master)
+digraph board {
+        rankdir=TB
+        n00000001 [label="{{} | Sensor A\n/dev/v4l-subdev0 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000001:port0 -> n00000005:port0 [style=bold]
+        n00000001:port0 -> n0000000b [style=bold]
+        n00000003 [label="{{} | Sensor B\n/dev/v4l-subdev1 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000003:port0 -> n00000008:port0 [style=bold]
+        n00000003:port0 -> n0000000f [style=bold]
+        n00000005 [label="{{<port0> 0} | Debayer A\n/dev/v4l-subdev2 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000005:port1 -> n00000015:port0
+        n00000008 [label="{{<port0> 0} | Debayer B\n/dev/v4l-subdev3 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000008:port1 -> n00000015:port0 [style=dashed]
+        n0000000b [label="Raw Capture 0\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
+        n0000000f [label="Raw Capture 1\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
+        n00000013 [label="{{} | RGB/YUV Input\n/dev/v4l-subdev4 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000013:port0 -> n00000015:port0 [style=dashed]
+        n00000015 [label="{{<port0> 0} | Scaler\n/dev/v4l-subdev5 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000015:port1 -> n00000018 [style=bold]
+        n00000018 [label="RGB/YUV Capture\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
+
+Shuah Khan (2):
+  media: vimc: Collapse component structure into a single monolithic
+    driver
+  media: vimc: Fix gpf in rmmod path when stream is active
+
+ drivers/media/platform/vimc/Makefile       |   7 +-
+ drivers/media/platform/vimc/vimc-capture.c |  75 ++-------
+ drivers/media/platform/vimc/vimc-common.c  |   3 +-
+ drivers/media/platform/vimc/vimc-common.h  |  54 ++++++
+ drivers/media/platform/vimc/vimc-core.c    | 182 +++++++--------------
+ drivers/media/platform/vimc/vimc-debayer.c |  69 ++------
+ drivers/media/platform/vimc/vimc-scaler.c  |  69 ++------
+ drivers/media/platform/vimc/vimc-sensor.c  |  70 ++------
+ 8 files changed, 161 insertions(+), 368 deletions(-)
+
+-- 
+2.17.1
+
