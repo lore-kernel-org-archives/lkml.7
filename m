@@ -2,408 +2,195 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E674FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4B9C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A891621783
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 312A02084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:30:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="boxOmV2A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E4+0ImEE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730415AbfHOI2d (ORCPT
+        id S1730618AbfHOIaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 04:28:33 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46184 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfHOI2c (ORCPT
+        Thu, 15 Aug 2019 04:30:21 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37347 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730534AbfHOIaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 04:28:32 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z1so1476351wru.13;
-        Thu, 15 Aug 2019 01:28:29 -0700 (PDT)
+        Thu, 15 Aug 2019 04:30:21 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d1so424398pgp.4
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 01:30:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=reply-to:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=2n57inVfSie2OKAeFsC4Tdlnlo7oR3PchxqlwbFyHws=;
-        b=boxOmV2AXJMNv7ExG5zcaNwxY8gLHePrB+8HL/cmSKDM3jIErtI774h9HjnDRzm8Tx
-         Wq9PWfYT0Sh5Po0fBclwEP4xbBfvwCFnk9C/SG/rshZcYo9N1euWPNu2UGL7EWCo3+MP
-         O2rnBrRJ7qLQnlMsBq3iYl5Gx16rioJyY8NHWzFHk6PJR3Mao4BkmwMKCPfIMe58HB2/
-         YomndBe6Ptr1r/DdLANhMMeLvEc+gN/2G78qBq1yiqedrcEA+VyitQg3m/MavBlIoO5/
-         kdqkjsndmpbzsFCRWVN8vW/8XkaogWEHGqhOo5gXtwC44YcIRAqSJ/YLJRfC4UpsUc3l
-         MU5g==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=+667Tp6aRb+fNZrEkEuQBATyuYVr9DkCsoqrznJa5gI=;
+        b=E4+0ImEEmPUTDK4fbSUSMUuBr6/4JC/FSu2THIDBKuiY0uw4dfY0PcLLac2NKV4fdL
+         Lu1s/lkKD6MbnYfJbTSSjBaxItiA+hRYtey95pRKPsZFxiDVxCF+8bajbx72J0ES0vBX
+         pw2uYBoIHgnFvVUqdEeY+QSlr0JVcAWvI0ZUCVn5QLLkqpMUIu0b0qmLyTkVxEgnKLNs
+         5n1am8WziPrOPbM3o96E1pU2e62cCZawGs89rgQNOoSHQi3RHy5j6Nn1ZLXeSZQGMgw9
+         n7VCHaPMlt545E535ERJLwEchIyLatWHMEwcKBg9P6MYEwMGt073PlwjDm5xDeuIKQCz
+         4DNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding:content-language;
-        bh=2n57inVfSie2OKAeFsC4Tdlnlo7oR3PchxqlwbFyHws=;
-        b=LrCUuDJkXKtFwak2YuzHyKsmkRnk2Rjp/hoADcSiWt8Hrv/l4ERLXkwtSOu25QX5xS
-         vPZufOXxmqwBGzNQu8XTh25bcfPlQv67pOTZA3RIgjF5ELMVOWNtxgclejkc7evVAa3J
-         gGqzOhQl1/6Y7jPLVbcIaSFE0SDlwQGcKKdbWKZhW8Zu/C/CoLKVNuLRGQp6oRiJoP9C
-         ystcNsPZmvWeQfVSOXKNrXS4iieqf7YJ0JYOU/e5Cd4osIA+oqRm1PgG6i5OFAmzDYaZ
-         F4KlmJaytNvWP9PZnQIoj99GejNPGyVtmSw2gWUnc0MkG3cl6Gl5ZBouj9zd3id5ibJ7
-         dFZQ==
-X-Gm-Message-State: APjAAAX6t8tZDktfwV7+j/c1rkWz8Bhz2CPBERhRY6h41aGQWMC8+kxp
-        J7a0RbBgE03xHkShPIcyAFA=
-X-Google-Smtp-Source: APXvYqwfqKb8EbCeeUml+x+2Tj1Kf6iL08f84CLc1WiMnwcV+bykZNDjSVZQ4BJrVYueAZkugq/uJg==
-X-Received: by 2002:a05:6000:cb:: with SMTP id q11mr1965676wrx.50.1565857709125;
-        Thu, 15 Aug 2019 01:28:29 -0700 (PDT)
-Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
-        by smtp.gmail.com with ESMTPSA id w5sm711796wmm.43.2019.08.15.01.28.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 01:28:28 -0700 (PDT)
-Reply-To: christian.koenig@amd.com
-Subject: Re: [PATCH v3 hmm 08/11] drm/radeon: use mmu_notifier_get/put for
- struct radeon_mn
-To:     Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Dimitri Sivanich <sivanich@sgi.com>,
-        Gavin Shan <shangw@linux.vnet.ibm.com>,
-        Andrea Righi <andrea@betterlinux.com>,
-        linux-rdma@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        iommu@lists.linux-foundation.org, amd-gfx@lists.freedesktop.org,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        intel-gfx@lists.freedesktop.org, Christoph Hellwig <hch@lst.de>
-References: <20190806231548.25242-1-jgg@ziepe.ca>
- <20190806231548.25242-9-jgg@ziepe.ca>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-Message-ID: <2baff2e5-b923-c39b-98e5-b3e7f77bd6d3@gmail.com>
-Date:   Thu, 15 Aug 2019 10:28:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190806231548.25242-9-jgg@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+667Tp6aRb+fNZrEkEuQBATyuYVr9DkCsoqrznJa5gI=;
+        b=OtDqfKK+XLE4q52PFH6YjhvVKT1C6GacM4uXI1zrWkHJowV+JMvuYYYfwBj4huXX2G
+         T7nq4gnAIQjdaREMg/gxKHxh3ZEnScSTrEnB1jlDS03YZYKKFeSgqs7T8eNPtcKioc7M
+         vAy3d9nDa8FTQwdRxuf8B1h9OoR9f+yRNrcBQKZGWRENnRgGex0RUp1EsJyyTmDD3Crq
+         LHRBFAEEf2zUohwTSjWOze8TSr5G7HTZS0armnkDAxYsROFhEOcOdTvU4FfV4MdZijq5
+         JrfctRKHgvoGAzPWMQIWnbX68Qdj90JtFgPN9obtYelckiHCstjzY7L+GsEnFDYKsN66
+         6jGg==
+X-Gm-Message-State: APjAAAWWSUi+LBAv+Uroj9Wf2gji1bBLxmtNrBU3MJ82oFIN6++qdYMe
+        zIMy8j+p18dVcYTxcb8br4br7A==
+X-Google-Smtp-Source: APXvYqwEan4dWW0vagWBHt1IU/UkTTnvsCHImQm26AyFYF184BYwU6WZnfEB7b72g23UQobubOoXHA==
+X-Received: by 2002:a65:690f:: with SMTP id s15mr2562324pgq.432.1565857819808;
+        Thu, 15 Aug 2019 01:30:19 -0700 (PDT)
+Received: from localhost.localdomain (li456-16.members.linode.com. [50.116.10.16])
+        by smtp.gmail.com with ESMTPSA id 1sm2217413pfx.56.2019.08.15.01.30.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 01:30:19 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>, Mike Leach <mike.leach@linaro.org>,
+        Robert Walker <robert.walker@arm.com>,
+        coresight@lists.linaro.org
+Subject: [PATCH 1/2] perf cs-etm: Support sample flags 'insn' and 'insnlen'
+Date:   Thu, 15 Aug 2019 16:28:54 +0800
+Message-Id: <20190815082854.18191-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 07.08.19 um 01:15 schrieb Jason Gunthorpe:
-> From: Jason Gunthorpe <jgg@mellanox.com>
->
-> radeon is using a device global hash table to track what mmu_notifiers
-> have been registered on struct mm. This is better served with the new
-> get/put scheme instead.
->
-> radeon has a bug where it was not blocking notifier release() until all
-> the BO's had been invalidated. This could result in a use after free of
-> pages the BOs. This is tied into a second bug where radeon left the
-> notifiers running endlessly even once the interval tree became
-> empty. This could result in a use after free with module unload.
->
-> Both are fixed by changing the lifetime model, the BOs exist in the
-> interval tree with their natural lifetimes independent of the mm_struct
-> lifetime using the get/put scheme. The release runs synchronously and just
-> does invalidate_start across the entire interval tree to create the
-> required DMA fence.
->
-> Additions to the interval tree after release are already impossible as
-> only current->mm is used during the add.
->
-> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+The synthetic branch and instruction samples are missed to set
+instruction related info, thus perf tool fails to display samples with
+flags '-F,+insn,+insnlen'.
 
-Acked-by: Christian König <christian.koenig@amd.com>
+CoreSight trace decoder has provided sufficient information to decide
+the instruction size based on the isa type: A64/A32 instruction are
+32-bit size, but one exception is the T32 instruction size, which might
+be 32-bit or 16-bit.
 
-But I'm wondering if we shouldn't completely drop radeon userptr support.
+This patch handles for these cases and it reads the instruction values
+from DSO file; thus can support flags '-F,+insn,+insnlen'.
 
-It's just to buggy,
-Christian.
+Before:
 
-> ---
->   drivers/gpu/drm/radeon/radeon.h        |   3 -
->   drivers/gpu/drm/radeon/radeon_device.c |   2 -
->   drivers/gpu/drm/radeon/radeon_drv.c    |   2 +
->   drivers/gpu/drm/radeon/radeon_mn.c     | 157 ++++++-------------------
->   4 files changed, 38 insertions(+), 126 deletions(-)
->
-> AMD team: I wonder if kfd has similar lifetime issues?
->
-> diff --git a/drivers/gpu/drm/radeon/radeon.h b/drivers/gpu/drm/radeon/radeon.h
-> index 32808e50be12f8..918164f90b114a 100644
-> --- a/drivers/gpu/drm/radeon/radeon.h
-> +++ b/drivers/gpu/drm/radeon/radeon.h
-> @@ -2451,9 +2451,6 @@ struct radeon_device {
->   	/* tracking pinned memory */
->   	u64 vram_pin_size;
->   	u64 gart_pin_size;
-> -
-> -	struct mutex	mn_lock;
-> -	DECLARE_HASHTABLE(mn_hash, 7);
->   };
->   
->   bool radeon_is_px(struct drm_device *dev);
-> diff --git a/drivers/gpu/drm/radeon/radeon_device.c b/drivers/gpu/drm/radeon/radeon_device.c
-> index dceb554e567446..788b1d8a80e660 100644
-> --- a/drivers/gpu/drm/radeon/radeon_device.c
-> +++ b/drivers/gpu/drm/radeon/radeon_device.c
-> @@ -1325,8 +1325,6 @@ int radeon_device_init(struct radeon_device *rdev,
->   	init_rwsem(&rdev->pm.mclk_lock);
->   	init_rwsem(&rdev->exclusive_lock);
->   	init_waitqueue_head(&rdev->irq.vblank_queue);
-> -	mutex_init(&rdev->mn_lock);
-> -	hash_init(rdev->mn_hash);
->   	r = radeon_gem_init(rdev);
->   	if (r)
->   		return r;
-> diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-> index a6cbe11f79c611..b6535ac91fdb74 100644
-> --- a/drivers/gpu/drm/radeon/radeon_drv.c
-> +++ b/drivers/gpu/drm/radeon/radeon_drv.c
-> @@ -35,6 +35,7 @@
->   #include <linux/module.h>
->   #include <linux/pm_runtime.h>
->   #include <linux/vga_switcheroo.h>
-> +#include <linux/mmu_notifier.h>
->   
->   #include <drm/drm_crtc_helper.h>
->   #include <drm/drm_drv.h>
-> @@ -624,6 +625,7 @@ static void __exit radeon_exit(void)
->   {
->   	pci_unregister_driver(pdriver);
->   	radeon_unregister_atpx_handler();
-> +	mmu_notifier_synchronize();
->   }
->   
->   module_init(radeon_init);
-> diff --git a/drivers/gpu/drm/radeon/radeon_mn.c b/drivers/gpu/drm/radeon/radeon_mn.c
-> index 8c3871ed23a9f0..fc8254273a800b 100644
-> --- a/drivers/gpu/drm/radeon/radeon_mn.c
-> +++ b/drivers/gpu/drm/radeon/radeon_mn.c
-> @@ -37,17 +37,8 @@
->   #include "radeon.h"
->   
->   struct radeon_mn {
-> -	/* constant after initialisation */
-> -	struct radeon_device	*rdev;
-> -	struct mm_struct	*mm;
->   	struct mmu_notifier	mn;
->   
-> -	/* only used on destruction */
-> -	struct work_struct	work;
-> -
-> -	/* protected by rdev->mn_lock */
-> -	struct hlist_node	node;
-> -
->   	/* objects protected by lock */
->   	struct mutex		lock;
->   	struct rb_root_cached	objects;
-> @@ -58,55 +49,6 @@ struct radeon_mn_node {
->   	struct list_head		bos;
->   };
->   
-> -/**
-> - * radeon_mn_destroy - destroy the rmn
-> - *
-> - * @work: previously sheduled work item
-> - *
-> - * Lazy destroys the notifier from a work item
-> - */
-> -static void radeon_mn_destroy(struct work_struct *work)
-> -{
-> -	struct radeon_mn *rmn = container_of(work, struct radeon_mn, work);
-> -	struct radeon_device *rdev = rmn->rdev;
-> -	struct radeon_mn_node *node, *next_node;
-> -	struct radeon_bo *bo, *next_bo;
-> -
-> -	mutex_lock(&rdev->mn_lock);
-> -	mutex_lock(&rmn->lock);
-> -	hash_del(&rmn->node);
-> -	rbtree_postorder_for_each_entry_safe(node, next_node,
-> -					     &rmn->objects.rb_root, it.rb) {
-> -
-> -		interval_tree_remove(&node->it, &rmn->objects);
-> -		list_for_each_entry_safe(bo, next_bo, &node->bos, mn_list) {
-> -			bo->mn = NULL;
-> -			list_del_init(&bo->mn_list);
-> -		}
-> -		kfree(node);
-> -	}
-> -	mutex_unlock(&rmn->lock);
-> -	mutex_unlock(&rdev->mn_lock);
-> -	mmu_notifier_unregister(&rmn->mn, rmn->mm);
-> -	kfree(rmn);
-> -}
-> -
-> -/**
-> - * radeon_mn_release - callback to notify about mm destruction
-> - *
-> - * @mn: our notifier
-> - * @mn: the mm this callback is about
-> - *
-> - * Shedule a work item to lazy destroy our notifier.
-> - */
-> -static void radeon_mn_release(struct mmu_notifier *mn,
-> -			      struct mm_struct *mm)
-> -{
-> -	struct radeon_mn *rmn = container_of(mn, struct radeon_mn, mn);
-> -	INIT_WORK(&rmn->work, radeon_mn_destroy);
-> -	schedule_work(&rmn->work);
-> -}
-> -
->   /**
->    * radeon_mn_invalidate_range_start - callback to notify about mm change
->    *
-> @@ -183,65 +125,44 @@ static int radeon_mn_invalidate_range_start(struct mmu_notifier *mn,
->   	return ret;
->   }
->   
-> -static const struct mmu_notifier_ops radeon_mn_ops = {
-> -	.release = radeon_mn_release,
-> -	.invalidate_range_start = radeon_mn_invalidate_range_start,
-> -};
-> +static void radeon_mn_release(struct mmu_notifier *mn, struct mm_struct *mm)
-> +{
-> +	struct mmu_notifier_range range = {
-> +		.mm = mm,
-> +		.start = 0,
-> +		.end = ULONG_MAX,
-> +		.flags = 0,
-> +		.event = MMU_NOTIFY_UNMAP,
-> +	};
-> +
-> +	radeon_mn_invalidate_range_start(mn, &range);
-> +}
->   
-> -/**
-> - * radeon_mn_get - create notifier context
-> - *
-> - * @rdev: radeon device pointer
-> - *
-> - * Creates a notifier context for current->mm.
-> - */
-> -static struct radeon_mn *radeon_mn_get(struct radeon_device *rdev)
-> +static struct mmu_notifier *radeon_mn_alloc_notifier(struct mm_struct *mm)
->   {
-> -	struct mm_struct *mm = current->mm;
->   	struct radeon_mn *rmn;
-> -	int r;
-> -
-> -	if (down_write_killable(&mm->mmap_sem))
-> -		return ERR_PTR(-EINTR);
-> -
-> -	mutex_lock(&rdev->mn_lock);
-> -
-> -	hash_for_each_possible(rdev->mn_hash, rmn, node, (unsigned long)mm)
-> -		if (rmn->mm == mm)
-> -			goto release_locks;
->   
->   	rmn = kzalloc(sizeof(*rmn), GFP_KERNEL);
-> -	if (!rmn) {
-> -		rmn = ERR_PTR(-ENOMEM);
-> -		goto release_locks;
-> -	}
-> +	if (!rmn)
-> +		return ERR_PTR(-ENOMEM);
->   
-> -	rmn->rdev = rdev;
-> -	rmn->mm = mm;
-> -	rmn->mn.ops = &radeon_mn_ops;
->   	mutex_init(&rmn->lock);
->   	rmn->objects = RB_ROOT_CACHED;
-> -	
-> -	r = __mmu_notifier_register(&rmn->mn, mm);
-> -	if (r)
-> -		goto free_rmn;
-> -
-> -	hash_add(rdev->mn_hash, &rmn->node, (unsigned long)mm);
-> -
-> -release_locks:
-> -	mutex_unlock(&rdev->mn_lock);
-> -	up_write(&mm->mmap_sem);
-> -
-> -	return rmn;
-> -
-> -free_rmn:
-> -	mutex_unlock(&rdev->mn_lock);
-> -	up_write(&mm->mmap_sem);
-> -	kfree(rmn);
-> +	return &rmn->mn;
-> +}
->   
-> -	return ERR_PTR(r);
-> +static void radeon_mn_free_notifier(struct mmu_notifier *mn)
-> +{
-> +	kfree(container_of(mn, struct radeon_mn, mn));
->   }
->   
-> +static const struct mmu_notifier_ops radeon_mn_ops = {
-> +	.release = radeon_mn_release,
-> +	.invalidate_range_start = radeon_mn_invalidate_range_start,
-> +	.alloc_notifier = radeon_mn_alloc_notifier,
-> +	.free_notifier = radeon_mn_free_notifier,
-> +};
-> +
->   /**
->    * radeon_mn_register - register a BO for notifier updates
->    *
-> @@ -254,15 +175,16 @@ static struct radeon_mn *radeon_mn_get(struct radeon_device *rdev)
->   int radeon_mn_register(struct radeon_bo *bo, unsigned long addr)
->   {
->   	unsigned long end = addr + radeon_bo_size(bo) - 1;
-> -	struct radeon_device *rdev = bo->rdev;
-> +	struct mmu_notifier *mn;
->   	struct radeon_mn *rmn;
->   	struct radeon_mn_node *node = NULL;
->   	struct list_head bos;
->   	struct interval_tree_node *it;
->   
-> -	rmn = radeon_mn_get(rdev);
-> -	if (IS_ERR(rmn))
-> -		return PTR_ERR(rmn);
-> +	mn = mmu_notifier_get(&radeon_mn_ops, current->mm);
-> +	if (IS_ERR(mn))
-> +		return PTR_ERR(mn);
-> +	rmn = container_of(mn, struct radeon_mn, mn);
->   
->   	INIT_LIST_HEAD(&bos);
->   
-> @@ -309,22 +231,13 @@ int radeon_mn_register(struct radeon_bo *bo, unsigned long addr)
->    */
->   void radeon_mn_unregister(struct radeon_bo *bo)
->   {
-> -	struct radeon_device *rdev = bo->rdev;
-> -	struct radeon_mn *rmn;
-> +	struct radeon_mn *rmn = bo->mn;
->   	struct list_head *head;
->   
-> -	mutex_lock(&rdev->mn_lock);
-> -	rmn = bo->mn;
-> -	if (rmn == NULL) {
-> -		mutex_unlock(&rdev->mn_lock);
-> -		return;
-> -	}
-> -
->   	mutex_lock(&rmn->lock);
->   	/* save the next list entry for later */
->   	head = bo->mn_list.next;
->   
-> -	bo->mn = NULL;
->   	list_del(&bo->mn_list);
->   
->   	if (list_empty(head)) {
-> @@ -335,5 +248,7 @@ void radeon_mn_unregister(struct radeon_bo *bo)
->   	}
->   
->   	mutex_unlock(&rmn->lock);
-> -	mutex_unlock(&rdev->mn_lock);
-> +
-> +	mmu_notifier_put(&rmn->mn);
-> +	bo->mn = NULL;
->   }
+  # perf script -F,insn,insnlen,ip,sym
+                0 [unknown] ilen: 0
+     ffff97174044 _start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+
+  [...]
+
+After:
+
+  # perf script -F,insn,insnlen,ip,sym
+                0 [unknown] ilen: 0
+     ffff97174044 _start ilen: 4 insn: 2f 02 00 94
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+
+  [...]
+
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: Robert Walker <robert.walker@arm.com>
+Cc: coresight@lists.linaro.org
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/util/cs-etm.c | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index ed6f7fd5b90b..b3a5daaf1a8f 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1076,6 +1076,35 @@ bool cs_etm__etmq_is_timeless(struct cs_etm_queue *etmq)
+ 	return !!etmq->etm->timeless_decoding;
+ }
+ 
++static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
++			      u64 trace_chan_id,
++			      const struct cs_etm_packet *packet,
++			      struct perf_sample *sample)
++{
++	/*
++	 * It's pointless to read instructions for the CS_ETM_DISCONTINUITY
++	 * packet, so directly bail out with 'insn_len' = 0.
++	 */
++	if (packet->sample_type == CS_ETM_DISCONTINUITY) {
++		sample->insn_len = 0;
++		return;
++	}
++
++	/*
++	 * T32 instruction size might be 32-bit or 16-bit, decide by calling
++	 * cs_etm__t32_instr_size().
++	 */
++	if (packet->isa == CS_ETM_ISA_T32)
++		sample->insn_len = cs_etm__t32_instr_size(etmq, trace_chan_id,
++							  sample->ip);
++	/* Otherwise, A64 and A32 instruction size are always 32-bit. */
++	else
++		sample->insn_len = 4;
++
++	cs_etm__mem_access(etmq, trace_chan_id, sample->ip,
++			   sample->insn_len, (void *)sample->insn);
++}
++
+ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+ 					    struct cs_etm_traceid_queue *tidq,
+ 					    u64 addr, u64 period)
+@@ -1097,9 +1126,10 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+ 	sample.period = period;
+ 	sample.cpu = tidq->packet->cpu;
+ 	sample.flags = tidq->prev_packet->flags;
+-	sample.insn_len = 1;
+ 	sample.cpumode = event->sample.header.misc;
+ 
++	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->packet, &sample);
++
+ 	if (etm->synth_opts.last_branch) {
+ 		cs_etm__copy_last_branch_rb(etmq, tidq);
+ 		sample.branch_stack = tidq->last_branch;
+@@ -1159,6 +1189,9 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
+ 	sample.flags = tidq->prev_packet->flags;
+ 	sample.cpumode = event->sample.header.misc;
+ 
++	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->prev_packet,
++			  &sample);
++
+ 	/*
+ 	 * perf report cannot handle events without a branch stack
+ 	 */
+-- 
+2.17.1
 
