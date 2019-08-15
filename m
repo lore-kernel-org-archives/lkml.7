@@ -2,124 +2,135 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAE4C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A37AC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E2F2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565844509;
-	bh=eJoKIAKFOaVxC/CSNxG99YuD4m+X/ugeNrGPcSoTiAk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HeOaj/aAyvvl0DZssWUW96mZI5ZBnhP4z3zk8490oyisUSmpBoWMasWncqY9quWYo
-	 RnXJdtltPzmh8S0X16b8wfQ5vrkkv6xpzKzyFgyzDT3hGEsv4H9ZXVVJXOG6eF808G
-	 e557w8vm8Dets3Lkpz4GN8yipqWacH90gox9u8ks=
+	by mail.kernel.org (Postfix) with ESMTP id 526922067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:52:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729902AbfHOEs2 (ORCPT
+        id S1729486AbfHOEv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:48:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbfHOEs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:48:28 -0400
-Received: from localhost (c-73-15-1-175.hsd1.ca.comcast.net [73.15.1.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FDDD2067D;
-        Thu, 15 Aug 2019 04:48:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565844507;
-        bh=eJoKIAKFOaVxC/CSNxG99YuD4m+X/ugeNrGPcSoTiAk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dGUiFK0iNyMhj0wJolegwNmoUdH7PxzwSqC2romohG0/Boa6PyZmpAIxyrCN1kTFD
-         cbsqcAuHjt2+bM8v4T06KK4YTQBwNoda8ujhNTX3Y7pSuNLMFjYs6PNIIn92Y37b9J
-         zB6otBvA9ambess7rG/CmEhpHVxt1T4kDHCwQ8Po=
-Date:   Wed, 14 Aug 2019 23:48:26 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v5 3/7] PCI/ATS: Initialize PASID in pci_ats_init()
-Message-ID: <20190815044826.GE253360@google.com>
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <5edb0209f7657e0706d4e5305ea0087873603daf.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Thu, 15 Aug 2019 00:51:59 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:60229 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725977AbfHOEv7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:51:59 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TZWDJRR_1565844709;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TZWDJRR_1565844709)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 15 Aug 2019 12:51:52 +0800
+Subject: Re: [RESEND PATCH 1/2 -mm] mm: account lazy free pages separately
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
+        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1565308665-24747-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190809083216.GM18351@dhcp22.suse.cz>
+ <1a3c4185-c7ab-8d6f-8191-77dce02025a7@linux.alibaba.com>
+ <20190809180238.GS18351@dhcp22.suse.cz>
+ <79c90f6b-fcac-02e1-015a-0eaa4eafdf7d@linux.alibaba.com>
+ <fb1f4958-5147-2fab-531f-d234806c2f37@linux.alibaba.com>
+ <20190812093430.GD5117@dhcp22.suse.cz>
+ <297aefa2-ba64-cb91-d2c8-733054db01a3@linux.alibaba.com>
+ <20190814110850.GT17933@dhcp22.suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <a8005ff4-4749-8c71-ee4e-7ebda5c49de6@linux.alibaba.com>
+Date:   Wed, 14 Aug 2019 21:51:47 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5edb0209f7657e0706d4e5305ea0087873603daf.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190814110850.GT17933@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 05:06:00PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> Currently, PASID Capability checks are repeated across all PASID API's.
-> Instead, cache the capability check result in pci_pasid_init() and use
-> it in other PASID API's. Also, since PASID is a shared resource between
-> PF/VF, initialize PASID features with default values in pci_pasid_init().
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/pci/ats.c       | 74 +++++++++++++++++++++++++++++------------
->  include/linux/pci-ats.h |  5 +++
->  include/linux/pci.h     |  1 +
->  3 files changed, 59 insertions(+), 21 deletions(-)
-> 
 
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index 280be911f190..1f4be27a071d 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -30,6 +30,8 @@ void pci_ats_init(struct pci_dev *dev)
->  	dev->ats_cap = pos;
->  
->  	pci_pri_init(dev);
-> +
-> +	pci_pasid_init(dev);
->  }
->  
->  /**
-> @@ -315,6 +317,40 @@ EXPORT_SYMBOL_GPL(pci_reset_pri);
->  #endif /* CONFIG_PCI_PRI */
->  
->  #ifdef CONFIG_PCI_PASID
-> +
-> +void pci_pasid_init(struct pci_dev *pdev)
-> +{
-> ...
-> +}
 
-> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> index 33653d4ca94f..bc7f815d38ff 100644
-> --- a/include/linux/pci-ats.h
-> +++ b/include/linux/pci-ats.h
-> @@ -40,6 +40,7 @@ static inline int pci_reset_pri(struct pci_dev *pdev)
->  
->  #ifdef CONFIG_PCI_PASID
->  
-> +void pci_pasid_init(struct pci_dev *pdev);
+On 8/14/19 4:08 AM, Michal Hocko wrote:
+> On Mon 12-08-19 10:00:17, Yang Shi wrote:
+>>
+>> On 8/12/19 2:34 AM, Michal Hocko wrote:
+>>> On Fri 09-08-19 16:54:43, Yang Shi wrote:
+>>>> On 8/9/19 11:26 AM, Yang Shi wrote:
+>>>>> On 8/9/19 11:02 AM, Michal Hocko wrote:
+>>> [...]
+>>>>>> I have to study the code some more but is there any reason why those
+>>>>>> pages are not accounted as proper THPs anymore? Sure they are partially
+>>>>>> unmaped but they are still THPs so why cannot we keep them accounted
+>>>>>> like that. Having a new counter to reflect that sounds like papering
+>>>>>> over the problem to me. But as I've said I might be missing something
+>>>>>> important here.
+>>>>> I think we could keep those pages accounted for NR_ANON_THPS since they
+>>>>> are still THP although they are unmapped as you mentioned if we just
+>>>>> want to fix the improper accounting.
+>>>> By double checking what NR_ANON_THPS really means,
+>>>> Documentation/filesystems/proc.txt says "Non-file backed huge pages mapped
+>>>> into userspace page tables". Then it makes some sense to dec NR_ANON_THPS
+>>>> when removing rmap even though they are still THPs.
+>>>>
+>>>> I don't think we would like to change the definition, if so a new counter
+>>>> may make more sense.
+>>> Yes, changing NR_ANON_THPS semantic sounds like a bad idea. Let
+>>> me try whether I understand the problem. So we have some THP in
+>>> limbo waiting for them to be split and unmapped parts to be freed,
+>>> right? I can see that page_remove_anon_compound_rmap does correctly
+>>> decrement NR_ANON_MAPPED for sub pages that are no longer mapped by
+>>> anybody. LRU pages seem to be accounted properly as well.  As you've
+>>> said NR_ANON_THPS reflects the number of THPs mapped and that should be
+>>> reflecting the reality already IIUC.
+>>>
+>>> So the only problem seems to be that deferred THP might aggregate a lot
+>>> of immediately freeable memory (if none of the subpages are mapped) and
+>>> that can confuse MemAvailable because it doesn't know about the fact.
+>>> Has an skewed counter resulted in a user observable behavior/failures?
+>> No. But the skewed counter may make big difference for a big scale cluster.
+>> The MemAvailable is an important factor for cluster scheduler to determine
+>> the capacity.
+> But MemAvailable is a very rough estimation. Is relying on it really a
+> good measure? I mean there is a lot of reclaimable memory that is not
+> reflected there (some fs. internal data structures, networking buffers
+> etc.)
 
-This also looks like it should be static in ats.c.
+Yes, I agree there are other freeable objects not accounted into 
+MemAvailable. Their size depends on the workload. But, deferred split 
+THPs seems more common with the common workloads. A simple run with 
+MariaDB test of mmtest shows it could generate over fifteen thousand 
+deferred split THPs (accumulated around 30G in one hour run, 75% of 40G 
+memory for my VM). So, it may be worth accounting deferred split THPs in 
+MemAvailable.
 
->  int pci_enable_pasid(struct pci_dev *pdev, int features);
->  void pci_disable_pasid(struct pci_dev *pdev);
->  void pci_restore_pasid_state(struct pci_dev *pdev);
-> @@ -48,6 +49,10 @@ int pci_max_pasids(struct pci_dev *pdev);
->  
->  #else  /* CONFIG_PCI_PASID */
->  
-> +static inline void pci_pasid_init(struct pci_dev *pdev)
-> +{
-> +}
-> +
->  static inline int pci_enable_pasid(struct pci_dev *pdev, int features)
->  {
->  	return -EINVAL;
+>
+> [...]
+>
+>>> accounting the full THP correct? What if subpages are still mapped?
+>> "Deferred split" definitely doesn't mean they are free. When memory pressure
+>> is hit, they would be split, then the unmapped normal pages would be freed.
+>> So, when calculating MemAvailable, they are not accounted 100%, but like
+>> "available += lazyfree - min(lazyfree / 2, wmark_low)", just like how page
+>> cache is accounted.
+> Then this is even more dubious IMHO.
+>
+>> We could get more accurate account, i.e. checking each sub page's mapcount
+>> when accounting, but it may change before shrinker start scanning. So, just
+>> use the ballpark estimation to trade off the complexity for accurate
+>> accounting.
+> I do not see much point in fixing up one particular counter when there
+> is a whole lot that is even not considered. I would rather live with the
+> fact that MemAvailable is only very rough estimate then whack a mole on
+> any memory consumer that is freeable directly or indirectly via memory
+> reclaim. Because this is likely to be always subtly broken and only
+> visible under very specific workloads so there is no way to test for it.
+
+I saw Vlastimil suggested KReclaimable, it seems a good fit. If so we 
+don't need create a new counter anymore.
+
+
