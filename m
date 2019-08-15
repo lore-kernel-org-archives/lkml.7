@@ -2,111 +2,117 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4787AC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70351C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA162133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 515D020644
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:01:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730429AbfHOHBe (ORCPT
+        id S1730532AbfHOHBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 03:01:34 -0400
-Received: from mga02.intel.com ([134.134.136.20]:22803 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbfHOHBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 03:01:34 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 00:01:33 -0700
-X-IronPort-AV: E=Sophos;i="5.64,388,1559545200"; 
-   d="scan'208";a="260742981"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 00:01:31 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 2F5A52069D; Thu, 15 Aug 2019 10:00:25 +0300 (EEST)
-Date:   Thu, 15 Aug 2019 10:00:25 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
-Message-ID: <20190815070025.GK6133@paasikivi.fi.intel.com>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-3-jacopo@jmondi.org>
+        Thu, 15 Aug 2019 03:01:38 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:50169 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbfHOHBf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 03:01:35 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 34AD7806FD; Thu, 15 Aug 2019 09:01:20 +0200 (CEST)
+Date:   Thu, 15 Aug 2019 09:01:32 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Pavel Machek <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Richard Weinberger <richard@nod.at>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
+        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v7 08/24] erofs: add namei functions
+Message-ID: <20190815070132.GB3669@amd>
+References: <20190813091326.84652-1-gaoxiang25@huawei.com>
+ <20190813091326.84652-9-gaoxiang25@huawei.com>
+ <20190813114821.GB11559@amd>
+ <20190813122332.GA17429@138>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="MfFXiAuoTsnnDAfZ"
 Content-Disposition: inline
-In-Reply-To: <20190814202815.32491-3-jacopo@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190813122332.GA17429@138>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
 
-On Wed, Aug 14, 2019 at 10:28:12PM +0200, Jacopo Mondi wrote:
-> Add documentation for the V4L2_CID_LOCATION camera control. The newly
-> added read-only control reports the camera device mounting position.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> ---
->  .../media/uapi/v4l/ext-ctrls-camera.rst       | 23 +++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> index 51c1d5c9eb00..fc0a02eee6d4 100644
-> --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
->      value down. A value of zero stops the motion if one is in progress
->      and has no effect otherwise.
-> 
-> +``V4L2_CID_LOCATION (integer)``
-> +    This read-only control describes the camera location by reporting its
-> +    mounting position on the device where the camera is installed. This
-> +    control is particularly meaningful for devices which have a well defined
-> +    orientation, such as phones, laptops and portable devices as the camera
-> +    location is expressed as a position relative to the device intended
-> +    usage position. In example, a camera installed on the user-facing side
+--MfFXiAuoTsnnDAfZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-s/In/For/
+Hi!
 
-> +    of a phone device is said to be installed in the ``V4L2_LOCATION_FRONT``
-> +    position.
-> +
-> +
-> +
-> +.. flat-table::
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +
-> +    * - ``V4L2_LOCATION_FRONT``
-> +      - The camera device is located on the front side of the device.
-> +    * - ``V4L2_LOCATION_BACK``
-> +      - The camera device is located on the back side of the device.
-> +
-> +
-> +
->  .. [#f1]
->     This control may be changed to a menu control in the future, if more
->     options are required.
+> > > +	/*
+> > > +	 * on-disk error, let's only BUG_ON in the debugging mode.
+> > > +	 * otherwise, it will return 1 to just skip the invalid name
+> > > +	 * and go on (in consideration of the lookup performance).
+> > > +	 */
+> > > +	DBG_BUGON(qd->name > qd->end);
+> >=20
+> > I believe you should check for errors in non-debug mode, too.
+>=20
+> Thanks for your kindly reply!
+>=20
+> The following is just my personal thought... If I am wrong, please
+> kindly point out...
+>=20
+> As you can see, this is a new prefixed string binary search algorithm
+> which can provide similar performance with hashed approach (but no
+> need to store hash value at all), so I really care about its lookup
+> performance.
+>=20
+> There is something needing to be concerned, is, whether namei() should
+> report any potential on-disk issues or just return -ENOENT for these
+> corrupted dirs, I think I tend to use the latter one.
 
-There's an effective limit of 64 for menus. ACPI has less than ten
-different locations for a device, I think 64 will be enough here.
+-ENOENT is okay for corrupted directories, as long as corrupted
+directories do not cause some kind of security bugs (memory
+corruption, crashes, ...)
 
-So I'd be actually in favour of switching to a menu.
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--MfFXiAuoTsnnDAfZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1VA0wACgkQMOfwapXb+vJ0RACeIl9SXkQ+HyKjoz6KEOY1IIxQ
+fokAoLx3vqeReYdzJjSOjFpCjcgEgtud
+=GkrJ
+-----END PGP SIGNATURE-----
+
+--MfFXiAuoTsnnDAfZ--
