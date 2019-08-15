@@ -2,74 +2,79 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617FAC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B43C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DEA0218A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121AB218A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:03:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730861AbfHOJCS (ORCPT
+        id S1730879AbfHOJDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 05:02:18 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34986 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730213AbfHOJCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 05:02:18 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 538DF26465B66BEFD894;
-        Thu, 15 Aug 2019 17:02:10 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 15 Aug 2019
- 17:02:02 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <brian.austin@cirrus.com>, <Paul.Handrigan@cirrus.com>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] ASoC: cs4349: Use PM ops 'cs4349_runtime_pm'
-Date:   Thu, 15 Aug 2019 17:01:57 +0800
-Message-ID: <20190815090157.70036-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 15 Aug 2019 05:03:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39247 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728464AbfHOJDi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 05:03:38 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hyBfT-000871-G3; Thu, 15 Aug 2019 11:03:35 +0200
+Date:   Thu, 15 Aug 2019 11:03:35 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Kernel User <linux-kernel@riseup.net>
+cc:     LKML <linux-kernel@vger.kernel.org>, mhocko@suse.com,
+        x86@kernel.org
+Subject: Re: /sys/devices/system/cpu/vulnerabilities/ doesn't show all known
+ CPU vulnerabilities
+In-Reply-To: <20190814121154.12f488f7@localhost>
+Message-ID: <alpine.DEB.2.21.1908151054090.2241@nanos.tec.linutronix.de>
+References: <20190813232829.3a1962cc@localhost> <20190813212115.GO16770@zn.tnic> <20190814010041.098fe4be@localhost> <20190814070457.GA26456@zn.tnic> <20190814121154.12f488f7@localhost>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sound/soc/codecs/cs4349.c:358:32: warning:
- cs4349_runtime_pm defined but not used [-Wunused-const-variable=]
+On Wed, 14 Aug 2019, Kernel User wrote:
+> On Wed, 14 Aug 2019 09:04:57 +0200 Borislav Petkov wrote:
+> 
+> > IMO, what you want does not belong in sysfs but in documentation.
+> 
+> How would documentation (a fixed static text file) tell whether a
+> particular system is vulnerable or not?
+> 
+> > I partially see your point that a table of sorts mapping all those CPU
+> > vulnerability names to (possible) mitigations is needed for users
+> > which would like to know whether they're covered, without having to
+> > run some scripts from github,
+> 
+> Correct.
+> 
+> > but sysfs just ain't the place.
+> 
+> Then why is it currently used for some of the vulnerabilities?
 
-cs4349_runtime_pm ops already defined, it seems
-we should enable it.
+It's used to denote vulnerability classes and their mitigations:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e40da86 ("ASoC: cs4349: Add support for Cirrus Logic CS4349")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- sound/soc/codecs/cs4349.c | 1 +
- 1 file changed, 1 insertion(+)
+  - Spectre v1
+  - Spectre v2
+  - Meltdown
+  - SSB
+  - L1TF
+  - MDS
 
-diff --git a/sound/soc/codecs/cs4349.c b/sound/soc/codecs/cs4349.c
-index 09716fa..e0d44f6 100644
---- a/sound/soc/codecs/cs4349.c
-+++ b/sound/soc/codecs/cs4349.c
-@@ -378,6 +378,7 @@ static struct i2c_driver cs4349_i2c_driver = {
- 	.driver = {
- 		.name		= "cs4349",
- 		.of_match_table	= cs4349_of_match,
-+		.pm = &cs4349_runtime_pm,
- 	},
- 	.id_table	= cs4349_i2c_id,
- 	.probe		= cs4349_i2c_probe,
--- 
-2.7.4
+We are not tracking subclasses and their individual CVEs. The sysfs
+interface is accurate (including SMT state) and the mapping to subclasses
+and CVEs can be done by user space tools if required.
 
+Thanks,
 
+	tglx
