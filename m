@@ -2,95 +2,71 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BD2C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E97C7C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC342086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565853595;
-	bh=pBw8ORQn4mttXj6tf+hS7vuCm6iM+ZgsBbeZqNFrqxs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RN3XQQd3pKRCSlcz5DzE8yhH0SbPc3nf0cuFJokdbHYi/7iwZGqXCcHygJOOdVkaW
-	 L1VT0BHfkHuJqdJKoyDXmMKd0VF5PRTGEu1UsA8z7YWMuU263fObExJNzsBuFtkQ/x
-	 PZA96t4u/q3l44WUlRu1DvbjpBG0N8REacMiQrJI=
+	by mail.kernel.org (Postfix) with ESMTP id BBAA42173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730680AbfHOHTy (ORCPT
+        id S1730709AbfHOHT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 03:19:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51314 "EHLO mail.kernel.org"
+        Thu, 15 Aug 2019 03:19:58 -0400
+Received: from 8bytes.org ([81.169.241.247]:49730 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726366AbfHOHTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 03:19:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FC1C206C2;
-        Thu, 15 Aug 2019 07:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565853592;
-        bh=pBw8ORQn4mttXj6tf+hS7vuCm6iM+ZgsBbeZqNFrqxs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vZndUSmcGXon7Fv0PxATNy0NmDuAiaWbAXYVoSFRhFXP8X4GnGhw4VaieO2B/ZOK9
-         kTC/NjdQ1PDjD5z8jdgJSD058Z4DvY27HVnuiqn/M6ZDfxFCK8UqSVC73DFVWMfJtm
-         cb47dWIS2KM5YzPqTvnDw/07l+jZ++51M1XEWBJs=
-Date:   Thu, 15 Aug 2019 09:19:50 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.2 000/144] 5.2.9-stable review
-Message-ID: <20190815071950.GB26670@kroah.com>
-References: <20190814165759.466811854@linuxfoundation.org>
- <CA+G9fYuTC_TWJVD4mug6UdrmNwK59uZAbUYT4zLETvcjZpr0VA@mail.gmail.com>
+        id S1726366AbfHOHT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 03:19:57 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 027072F9; Thu, 15 Aug 2019 09:19:54 +0200 (CEST)
+Date:   Thu, 15 Aug 2019 09:19:54 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     corbet@lwn.net, tony.luck@intel.com, fenghua.yu@intel.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, linux-doc@vger.kernel.org,
+        linux-ia64@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Thomas.Lendacky@amd.com,
+        Suravee.Suthikulpanit@amd.com, Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 06/10] iommu: Remember when default domain type was set
+ on kernel command line
+Message-ID: <20190815071954.GD22669@8bytes.org>
+References: <20190814133841.7095-1-joro@8bytes.org>
+ <20190814133841.7095-7-joro@8bytes.org>
+ <754a526e-a6d4-8a3f-0b35-9dd3def5d24b@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYuTC_TWJVD4mug6UdrmNwK59uZAbUYT4zLETvcjZpr0VA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <754a526e-a6d4-8a3f-0b35-9dd3def5d24b@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 07:04:45AM +0530, Naresh Kamboju wrote:
-> On Wed, 14 Aug 2019 at 22:33, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.2.9 release.
-> > There are 144 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.9-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
+Hey Lu Baolu,
+
+thanks for your review!
+
+On Thu, Aug 15, 2019 at 01:01:57PM +0800, Lu Baolu wrote:
+> > +#define IOMMU_CMD_LINE_DMA_API		(1 << 0)
 > 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+> Prefer BIT() micro?
 
-Thanks for testing all of these and letting me know.
+Yes, I'll change that.
 
-greg k-h
+> > +	iommu_set_cmd_line_dma_api();
+> 
+> IOMMU command line is also set in other places, for example,
+> iommu_setup() (arch/x86/kernel/pci-dma.c). Need to call this there as
+> well?
+
+You are right, I'll better add a 'bool cmd_line' parameter to the
+iommu_set_default_*() functions and tell the IOMMU core this way. That
+will also fix iommu=pt/nopt.
+
+Thanks,
+
+	Joerg
