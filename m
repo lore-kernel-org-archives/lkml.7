@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67206C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A20C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35493218C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF43B219BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731104AbfHOIry (ORCPT
+        id S1731186AbfHOIsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 04:47:54 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:59514 "EHLO inva020.nxp.com"
+        Thu, 15 Aug 2019 04:48:18 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:60338 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730932AbfHOIrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 04:47:53 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E591C1A0468;
-        Thu, 15 Aug 2019 10:47:51 +0200 (CEST)
+        id S1730456AbfHOIrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 04:47:48 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E0D4320028A;
+        Thu, 15 Aug 2019 10:47:46 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3CA191A0031;
-        Thu, 15 Aug 2019 10:47:43 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 36078200035;
+        Thu, 15 Aug 2019 10:47:38 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C9E8A4030F;
-        Thu, 15 Aug 2019 16:47:32 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 60F3C40313;
+        Thu, 15 Aug 2019 16:47:27 +0800 (SGT)
 From:   Xiaowei Bao <xiaowei.bao@nxp.com>
 To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
         bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
@@ -38,9 +38,9 @@ To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH 06/10] PCI: layerscape: Modify the MSIX to the doorbell way
-Date:   Thu, 15 Aug 2019 16:37:12 +0800
-Message-Id: <20190815083716.4715-6-xiaowei.bao@nxp.com>
+Subject: [PATCH 03/10] PCI: designware-ep: Move the function of getting MSI capability forward
+Date:   Thu, 15 Aug 2019 16:37:09 +0800
+Message-Id: <20190815083716.4715-3-xiaowei.bao@nxp.com>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20190815083716.4715-1-xiaowei.bao@nxp.com>
 References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
@@ -50,28 +50,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The layerscape platform use the doorbell way to trigger MSIX
-interrupt in EP mode.
+Move the function of getting MSI capability to the front of init
+function, because the init function of the EP platform driver will use
+the return value by the function of getting MSI capability.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 ---
- drivers/pci/controller/dwc/pci-layerscape-ep.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-index 9404ca0..a0cd5ff 100644
---- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-@@ -74,7 +74,8 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	case PCI_EPC_IRQ_MSI:
- 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
- 	case PCI_EPC_IRQ_MSIX:
--		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
-+		return dw_pcie_ep_raise_msix_irq_doorbell(ep, func_no,
-+							  interrupt_num);
- 	default:
- 		dev_err(pci->dev, "UNKNOWN IRQ type\n");
- 		return -EINVAL;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index e3a7cdf..0c27c7b 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -631,6 +631,10 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 	if (ret < 0)
+ 		epc->pf_offset = 0;
+ 
++	ep->msi_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSI);
++
++	ep->msix_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSIX);
++
+ 	if (ep->ops->ep_init)
+ 		ep->ops->ep_init(ep);
+ 
+@@ -647,9 +651,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+ 		return -ENOMEM;
+ 	}
+-	ep->msi_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSI);
+-
+-	ep->msix_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSIX);
+ 
+ 	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+ 	if (offset) {
 -- 
 2.9.5
 
