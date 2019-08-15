@@ -2,136 +2,344 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BA5C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C054C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C1C2089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516AA2086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:20:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565907655;
+	bh=GnGBBL1yQoCJVQg8Jj/AKJ5/pDfAxhVJvaj1qWyCkBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZHcfs4G3scdQujv/1ndFm1Mk4UrK+G3rhzjH/NZuM1Zpz5qbRk0dZO3dMPe9XWflp
+	 QbAzUt7KN4A1YZNFP3+vBeSs8KIX9MeUfOZJKhAesn3K9Fsaay0/I/sQI9khRT8Mma
+	 EqgNN7AAkl6+VelhPAHBYL5jObq8vVeiYM/2kWPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733002AbfHOWTs (ORCPT
+        id S1733039AbfHOWUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 18:19:48 -0400
-Received: from enpas.org ([46.38.239.100]:32778 "EHLO mail.enpas.org"
+        Thu, 15 Aug 2019 18:20:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727119AbfHOWTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 18:19:46 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        by mail.enpas.org (Postfix) with ESMTPSA id B562610011E;
-        Thu, 15 Aug 2019 22:19:42 +0000 (UTC)
-Subject: Re: [PATCH v3 2/3] hwmon/ltc2990: Generalise DT to fwnode support
-To:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-m68k@vger.kernel.org, linux-kernel@vger.kernel.org,
-        glaubitz@physik.fu-berlin.de
-References: <20190815125802.16500-1-max@enpas.org>
- <20190815125802.16500-2-max@enpas.org>
-From:   Max Staudt <max@enpas.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=max@enpas.org; prefer-encrypt=mutual; keydata=
- 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
- urZIw0nz8zec+73Bv/qF4GHHftLYfA==
-Message-ID: <6920f2da-3139-6fc8-b02c-3678cc17912e@enpas.org>
-Date:   Fri, 16 Aug 2019 00:19:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1730444AbfHOWUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 18:20:54 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7760C20644;
+        Thu, 15 Aug 2019 22:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565907653;
+        bh=GnGBBL1yQoCJVQg8Jj/AKJ5/pDfAxhVJvaj1qWyCkBg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R+g5W/NNLZ1EzYDz/mnjh6Nf2yzFOkKsjGGdKFYwXWVgoZgxG3lohXt6WwJQn7e3r
+         9/Qml1sdHc6yMCGn+8mrx6czZoFXtNoVZ/ex/ETyfprhM+m3OozFkBoSlpU+Xofn0x
+         AEScOLp8MWR9ADBL3m+jIctJMvxhGcAZPJxf92pg=
+Date:   Thu, 15 Aug 2019 17:20:49 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v5 4/7] PCI/ATS: Add PRI support for PCIe VF devices
+Message-ID: <20190815222049.GL253360@google.com>
+References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <827d051ef8c8bbfa815908ce927e607870780cb6.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190815125802.16500-2-max@enpas.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <827d051ef8c8bbfa815908ce927e607870780cb6.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/15/2019 02:58 PM, Max Staudt wrote:
-> -	if (of_node) {
-> -		ret = of_property_read_u32_array(of_node, "lltc,meas-mode",
-> -						 data->mode, 2);
-> +	if (i2c->dev.of_node || i2c->dev.fwnode) {
+[+cc Joerg, David, iommu list: because IOMMU drivers are the only
+callers of pci_enable_pri() and pci_enable_pasid()]
 
-One more idea, would it be better here to do the following?
+On Thu, Aug 01, 2019 at 05:06:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> When IOMMU tries to enable Page Request Interface (PRI) for VF device
+> in iommu_enable_dev_iotlb(), it always fails because PRI support for
+> PCIe VF device is currently broken. Current implementation expects
+> the given PCIe device (PF & VF) to implement PRI capability before
+> enabling the PRI support. But this assumption is incorrect. As per PCIe
+> spec r4.0, sec 9.3.7.11, all VFs associated with PF can only use the
+> PRI of the PF and not implement it. Hence we need to create exception
+> for handling the PRI support for PCIe VF device.
+> 
+> Also, since PRI is a shared resource between PF/VF, following rules
+> should apply.
+> 
+> 1. Use proper locking before accessing/modifying PF resources in VF
+>    PRI enable/disable call.
+> 2. Use reference count logic to track the usage of PRI resource.
+> 3. Disable PRI only if the PRI reference count (pri_ref_cnt) is zero.
 
-	if (device_property_present(i2c->dev, "lltc,meas-mode")) {
-		ret = of_property_read_u32_array(of_node, "lltc,meas-mode",
-						 data->mode, 2);
-	}
+Wait, why do we need this at all?  I agree the spec says VFs may not
+implement PRI or PASID capabilities and that VFs use the PRI and
+PASID of the PF.
 
-I'm happy to prepare a patch if you wish to have this in - just let me know whether it should be on top of the last one, or instead of it.
+But why do we need to support pci_enable_pri() and pci_enable_pasid()
+for VFs?  There's nothing interesting we can *do* in the VF, and
+passing it off to the PF adds all this locking mess.  For VFs, can we
+just make them do nothing or return -EINVAL?  What functionality would
+we be missing if we did that?
 
-Thanks,
-Max
+(Obviously returning -EINVAL would require tweaks in the callers to
+either avoid the call for VFs or handle the -EINVAL gracefully.)
+
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Suggested-by: Ashok Raj <ashok.raj@intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/pci/ats.c   | 143 ++++++++++++++++++++++++++++++++++----------
+>  include/linux/pci.h |   2 +
+>  2 files changed, 112 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> index 1f4be27a071d..079dc5444444 100644
+> --- a/drivers/pci/ats.c
+> +++ b/drivers/pci/ats.c
+> @@ -189,6 +189,8 @@ void pci_pri_init(struct pci_dev *pdev)
+>  	if (pdev->is_virtfn)
+>  		return;
+>  
+> +	mutex_init(&pdev->pri_lock);
+> +
+>  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+>  	if (!pos)
+>  		return;
+> @@ -221,29 +223,57 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+>  {
+>  	u16 control, status;
+>  	u32 max_requests;
+> +	int ret = 0;
+> +	struct pci_dev *pf = pci_physfn(pdev);
+>  
+> -	if (WARN_ON(pdev->pri_enabled))
+> -		return -EBUSY;
+> +	mutex_lock(&pf->pri_lock);
+>  
+> -	if (!pdev->pri_cap)
+> -		return -EINVAL;
+> +	if (WARN_ON(pdev->pri_enabled)) {
+> +		ret = -EBUSY;
+> +		goto pri_unlock;
+> +	}
+>  
+> -	pci_read_config_word(pdev, pdev->pri_cap + PCI_PRI_STATUS, &status);
+> -	if (!(status & PCI_PRI_STATUS_STOPPED))
+> -		return -EBUSY;
+> +	if (!pf->pri_cap) {
+> +		ret = -EINVAL;
+> +		goto pri_unlock;
+> +	}
+> +
+> +	if (pdev->is_virtfn && pf->pri_enabled)
+> +		goto update_status;
+> +
+> +	/*
+> +	 * Before updating PRI registers, make sure there is no
+> +	 * outstanding PRI requests.
+> +	 */
+> +	pci_read_config_word(pf, pf->pri_cap + PCI_PRI_STATUS, &status);
+> +	if (!(status & PCI_PRI_STATUS_STOPPED)) {
+> +		ret = -EBUSY;
+> +		goto pri_unlock;
+> +	}
+>  
+> -	pci_read_config_dword(pdev, pdev->pri_cap + PCI_PRI_MAX_REQ,
+> -			      &max_requests);
+> +	pci_read_config_dword(pf, pf->pri_cap + PCI_PRI_MAX_REQ, &max_requests);
+>  	reqs = min(max_requests, reqs);
+> -	pdev->pri_reqs_alloc = reqs;
+> -	pci_write_config_dword(pdev, pdev->pri_cap + PCI_PRI_ALLOC_REQ, reqs);
+> +	pf->pri_reqs_alloc = reqs;
+> +	pci_write_config_dword(pf, pf->pri_cap + PCI_PRI_ALLOC_REQ, reqs);
+>  
+>  	control = PCI_PRI_CTRL_ENABLE;
+> -	pci_write_config_word(pdev, pdev->pri_cap + PCI_PRI_CTRL, control);
+> +	pci_write_config_word(pf, pf->pri_cap + PCI_PRI_CTRL, control);
+>  
+> -	pdev->pri_enabled = 1;
+> +	/*
+> +	 * If PRI is not already enabled in PF, increment the PF
+> +	 * pri_ref_cnt to track the usage of PRI interface.
+> +	 */
+> +	if (pdev->is_virtfn && !pf->pri_enabled) {
+> +		atomic_inc(&pf->pri_ref_cnt);
+> +		pf->pri_enabled = 1;
+> +	}
+>  
+> -	return 0;
+> +update_status:
+> +	atomic_inc(&pf->pri_ref_cnt);
+> +	pdev->pri_enabled = 1;
+> +pri_unlock:
+> +	mutex_unlock(&pf->pri_lock);
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_enable_pri);
+>  
+> @@ -256,18 +286,30 @@ EXPORT_SYMBOL_GPL(pci_enable_pri);
+>  void pci_disable_pri(struct pci_dev *pdev)
+>  {
+>  	u16 control;
+> +	struct pci_dev *pf = pci_physfn(pdev);
+>  
+> -	if (WARN_ON(!pdev->pri_enabled))
+> -		return;
+> +	mutex_lock(&pf->pri_lock);
+>  
+> -	if (!pdev->pri_cap)
+> -		return;
+> +	if (WARN_ON(!pdev->pri_enabled) || !pf->pri_cap)
+> +		goto pri_unlock;
+> +
+> +	atomic_dec(&pf->pri_ref_cnt);
+>  
+> -	pci_read_config_word(pdev, pdev->pri_cap + PCI_PRI_CTRL, &control);
+> +	/*
+> +	 * If pri_ref_cnt is not zero, then don't modify hardware
+> +	 * registers.
+> +	 */
+> +	if (atomic_read(&pf->pri_ref_cnt))
+> +		goto done;
+> +
+> +	pci_read_config_word(pf, pf->pri_cap + PCI_PRI_CTRL, &control);
+>  	control &= ~PCI_PRI_CTRL_ENABLE;
+> -	pci_write_config_word(pdev, pdev->pri_cap + PCI_PRI_CTRL, control);
+> +	pci_write_config_word(pf, pf->pri_cap + PCI_PRI_CTRL, control);
+>  
+> +done:
+>  	pdev->pri_enabled = 0;
+> +pri_unlock:
+> +	mutex_unlock(&pf->pri_lock);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_disable_pri);
+>  
+> @@ -277,17 +319,31 @@ EXPORT_SYMBOL_GPL(pci_disable_pri);
+>   */
+>  void pci_restore_pri_state(struct pci_dev *pdev)
+>  {
+> -	u16 control = PCI_PRI_CTRL_ENABLE;
+> -	u32 reqs = pdev->pri_reqs_alloc;
+> +	u16 control;
+> +	u32 reqs;
+> +	struct pci_dev *pf = pci_physfn(pdev);
+>  
+>  	if (!pdev->pri_enabled)
+>  		return;
+>  
+> -	if (!pdev->pri_cap)
+> +	if (!pf->pri_cap)
+>  		return;
+>  
+> -	pci_write_config_dword(pdev, pdev->pri_cap + PCI_PRI_ALLOC_REQ, reqs);
+> -	pci_write_config_word(pdev, pdev->pri_cap + PCI_PRI_CTRL, control);
+> +	mutex_lock(&pf->pri_lock);
+> +
+> +	/* If PRI is already enabled by other VF's or PF, return */
+> +	pci_read_config_word(pf, pf->pri_cap + PCI_PRI_CTRL, &control);
+> +	if (control & PCI_PRI_CTRL_ENABLE)
+> +		goto pri_unlock;
+> +
+> +	reqs = pf->pri_reqs_alloc;
+> +	control = PCI_PRI_CTRL_ENABLE;
+> +
+> +	pci_write_config_dword(pf, pf->pri_cap + PCI_PRI_ALLOC_REQ, reqs);
+> +	pci_write_config_word(pf, pf->pri_cap + PCI_PRI_CTRL, control);
+> +
+> +pri_unlock:
+> +	mutex_unlock(&pf->pri_lock);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_restore_pri_state);
+>  
+> @@ -300,18 +356,32 @@ EXPORT_SYMBOL_GPL(pci_restore_pri_state);
+>   */
+>  int pci_reset_pri(struct pci_dev *pdev)
+>  {
+> +	struct pci_dev *pf = pci_physfn(pdev);
+>  	u16 control;
+> +	int ret = 0;
+>  
+> -	if (WARN_ON(pdev->pri_enabled))
+> -		return -EBUSY;
+> +	mutex_lock(&pf->pri_lock);
+>  
+> -	if (!pdev->pri_cap)
+> -		return -EINVAL;
+> +	if (WARN_ON(pdev->pri_enabled)) {
+> +		ret = -EBUSY;
+> +		goto done;
+> +	}
+> +
+> +	if (!pf->pri_cap) {
+> +		ret = -EINVAL;
+> +		goto done;
+> +	}
+> +
+> +	/* If PRI is already enabled by other VF's or PF, return 0 */
+> +	if (pf->pri_enabled)
+> +		goto done;
+>  
+>  	control = PCI_PRI_CTRL_RESET;
+> -	pci_write_config_word(pdev, pdev->pri_cap + PCI_PRI_CTRL, control);
+>  
+> -	return 0;
+> +	pci_write_config_word(pf, pf->pri_cap + PCI_PRI_CTRL, control);
+> +done:
+> +	mutex_unlock(&pf->pri_lock);
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_reset_pri);
+>  #endif /* CONFIG_PCI_PRI */
+> @@ -475,11 +545,18 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
+>  int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+>  {
+>  	u16 status;
+> +	struct pci_dev *pf = pci_physfn(pdev);
+> +
+> +	mutex_lock(&pf->pri_lock);
+>  
+> -	if (!pdev->pri_cap)
+> +	if (!pf->pri_cap) {
+> +		mutex_unlock(&pf->pri_lock);
+>  		return 0;
+> +	}
+> +
+> +	pci_read_config_word(pf, pf->pri_cap + PCI_PRI_STATUS, &status);
+>  
+> -	pci_read_config_word(pdev, pdev->pri_cap + PCI_PRI_STATUS, &status);
+> +	mutex_unlock(&pf->pri_lock);
+>  
+>  	if (status & PCI_PRI_STATUS_PASID)
+>  		return 1;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 27224c0db849..3c9c4c82be27 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -455,8 +455,10 @@ struct pci_dev {
+>  	atomic_t	ats_ref_cnt;	/* Number of VFs with ATS enabled */
+>  #endif
+>  #ifdef CONFIG_PCI_PRI
+> +	struct mutex	pri_lock;	/* PRI enable lock */
+>  	u16		pri_cap;	/* PRI Capability offset */
+>  	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
+> +	atomic_t	pri_ref_cnt;	/* Number of PF/VF PRI users */
+>  #endif
+>  #ifdef CONFIG_PCI_PASID
+>  	u16		pasid_cap;	/* PASID Capability offset */
+> -- 
+> 2.21.0
+> 
