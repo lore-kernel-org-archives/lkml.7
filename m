@@ -2,144 +2,123 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68835C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AD5C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BFCF218AD
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:06:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565859968;
-	bh=Mc3YrEyyDx8AvnWtpvQCsXoWv0AaiAhsDt9By4lPmxc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x1aI5zNScv7Tehgt/wqHxxbct41zvlx5voP1gCb31E2B4pCwX07W2OoSvlx0rGAUO
-	 zN2s9k+mbSA+VMLQ7NfjY0Ja2LWCaWt6UC0dxrCHE7mI9OmIRWXuMLBilidRjFj9W1
-	 U12lUlJ131n+zQXMdVpamPbVE/OB3ABRuMfp47aA=
+	by mail.kernel.org (Postfix) with ESMTP id 611002133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:08:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlyDTQw/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730926AbfHOJGG (ORCPT
+        id S1730979AbfHOJIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 05:06:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730212AbfHOJGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 05:06:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEF3A218A6;
-        Thu, 15 Aug 2019 09:06:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565859965;
-        bh=Mc3YrEyyDx8AvnWtpvQCsXoWv0AaiAhsDt9By4lPmxc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K3L5k2vJ2kFpsG2wfCLVkOngcZzZqI9yll1frug6xM0uM7bdwF/+iA26VOaSAndDN
-         v6ed2vDKBv2obKuG2LL7maD7MOtU/i9uIyZSa3nZVUd+iYA5s3wlBu9pi47qQOVRbO
-         /OliDX5MrGyc2/QiINacfpFQxVdBu/vbpytThbqc=
-Date:   Thu, 15 Aug 2019 11:06:03 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Pavel Machek <pavel@denx.de>, Jan Kara <jack@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dave Chinner <david@fromorbit.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        David Sterba <dsterba@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        Miao Xie <miaoxie@huawei.com>, Fang Wei <fangwei1@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v8 00/24] erofs: promote erofs from staging v8
-Message-ID: <20190815090603.GD4938@kroah.com>
-References: <20190815044155.88483-1-gaoxiang25@huawei.com>
+        Thu, 15 Aug 2019 05:08:50 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33666 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730212AbfHOJIu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 05:08:50 -0400
+Received: by mail-lj1-f196.google.com with SMTP id z17so1669523ljz.0;
+        Thu, 15 Aug 2019 02:08:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0UE6srbxTSzeQEGUqQmtIA5ElC0/7wYx3fPkt29gctA=;
+        b=XlyDTQw/LApnV+/jl3INSQ0k5kkAC/D/oC26vZ9uWE9MEg3xW3781+knczAv4Aaf2a
+         dDTP8F6TCi/OyI8bPVdVCN57ntl7atgf2pmtMC4foq3XyLYv54jwaSDTyigDmaFJTuLN
+         HTYTpKOlcK2VdKCMk8hfpSwDNOy1+V/tesvKx3CEkop4q6eSIwmZjdmvxmfgW0VLzJpo
+         VpiFsTYq9biPd7m6Uq3jDpyl2233BEL5+bvbFpJGe+zqxEAugwnqxL34d4WJhoZJQ/2G
+         QKS1ERct7SoOBMBQ65iClNzCB5N9LYZ54uUvZj8xrYylAk3KOoTygKBs5tRFQQ6eXQyL
+         LmQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0UE6srbxTSzeQEGUqQmtIA5ElC0/7wYx3fPkt29gctA=;
+        b=a+voiIiLIwi5NsBzcfZcSslBsoILh0dphdCbQOOf5lK8bBWSYkdpfKPvs6ztlhxx2e
+         2Mxr5KeTgPvNCha+zpoECKnaV90VC+pSX5TDA08D/dpaaWJH3VpOjzLgJnA5wwhyVvTs
+         TbzIpwJ+3lRb6kSzCZPekrVt34cT1Jcqic3k5ItprtlauVuSuVy57hxDnZ15wYGQpH9j
+         kNuSKcgdXEvPw8kYxVHwVfUMvTc1eDzwDZEN6zVsxlKS4H4gzYHHp8MlgZx+UWjDrc+M
+         E6kjtfOqhUs1uvd8YQDCngTslf4aJyK5Y/NYKEPxINf/1hKAfvQTwsJQhK2LFhUXVez4
+         bP2w==
+X-Gm-Message-State: APjAAAUuxxQqzmMhUYuqLaesWinnzDaUr2XuaD8PMc+k2cqAGUZEon9j
+        gRsOKlRi8nuiuIWwe+sULCBIjh9cv2nHbVeBoa0=
+X-Google-Smtp-Source: APXvYqwMEUAJffcAHkjsEhd8NMusg/7M2UPC/oaiZA76NFZ6YUgtOx0nJ3OvlVQjfSslMzS/Nsbw4g+olqzqauqWEC8=
+X-Received: by 2002:a2e:9252:: with SMTP id v18mr1033100ljg.93.1565860127855;
+ Thu, 15 Aug 2019 02:08:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815044155.88483-1-gaoxiang25@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190812215052.71840-1-ndesaulniers@google.com>
+ <20190812215052.71840-12-ndesaulniers@google.com> <20190813082744.xmzmm4j675rqiz47@willie-the-truck>
+ <CANiq72mAfJ23PyWzZAELgbKQDCX2nvY0z+dmOMe14qz=wa6eFg@mail.gmail.com>
+ <20190813170829.c3lryb6va3eopxd7@willie-the-truck> <CAKwvOdk4hca8WzWzhcPEvxXnJVLbXGnhBdDZbeL_W_H91Ttjqw@mail.gmail.com>
+In-Reply-To: <CAKwvOdk4hca8WzWzhcPEvxXnJVLbXGnhBdDZbeL_W_H91Ttjqw@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 15 Aug 2019 11:08:36 +0200
+Message-ID: <CANiq72mGoGpx7EAVUPcGuhVkLit8sB3bR-k1XBDyeM8HBUaDZw@mail.gmail.com>
+Subject: Re: [PATCH 12/16] arm64: prefer __section from compiler_attributes.h
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Yonghong Song <yhs@fb.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 12:41:31PM +0800, Gao Xiang wrote:
-> [I strip the previous cover letter, the old one can be found in v6:
->  https://lore.kernel.org/r/20190802125347.166018-1-gaoxiang25@huawei.com/]
-> 
-> We'd like to submit a formal moving patch applied to staging tree
-> for 5.4, before that we'd like to hear if there are some ACKs,
-> suggestions or NAKs, objections of EROFS. Therefore, we can improve
-> it in this round or rethink about the whole thing.
-> 
-> As related materials mentioned [1] [2], the goal of EROFS is to
-> save extra storage space with guaranteed end-to-end performance
-> for read-only files, which has better performance over exist Linux
-> compression filesystems based on fixed-sized output compression
-> and inplace decompression. It even has better performance in
-> a large compression ratio range compared with generic uncompressed
-> filesystems with proper CPU-storage combinations. And we think this
-> direction is correct and a dedicated kernel team is continuously /
-> actively working on improving it, enough testers and beta / end
-> users using it.
-> 
-> EROFS has been applied to almost all in-service HUAWEI smartphones
-> (Yes, the number is still increasing by time) and it seems like
-> a success. It can be used in more wider scenarios. We think it's
-> useful for Linux / Android OS community and it's the time moving
-> out of staging.
-> 
-> In order to get started, latest stable mkfs.erofs is available at
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b dev
-> 
-> with README in the repository.
-> 
-> We are still tuning sequential read performance for ultra-fast
-> speed NVME SSDs like Samsung 970PRO, but at least now you can
-> try on your PC with some data with proper compression ratio,
-> the latest Linux kernel, USB stick for convenience sake and
-> a not very old-fashioned CPU. There are also benchmarks available
-> in the above materials mentioned.
-> 
-> EROFS is a self-contained filesystem driver. Although there are
-> still some TODOs to be more generic, we will actively keep on
-> developping / tuning EROFS with the evolution of Linux kernel
-> as the other in-kernel filesystems.
-> 
-> As I mentioned before in LSF/MM 2019, in the future, we'd like
-> to generalize the decompression engine into a library for other
-> fses to use after the whole system is mature like fscrypt.
-> However, such metadata should be designed respectively for
-> each fs, and synchronous metadata read cost will be larger
-> than EROFS because of those ondisk limitation. Therefore EROFS
-> is still a better choice for read-only scenarios.
-> 
-> EROFS is now ready for reviewing and moving, and the code is
-> already cleaned up as shiny floors... Please kindly take some
-> precious time, share your comments about EROFS and let us know
-> your opinion about this. It's really important for us since
-> generally speaking, we like to use Linux _in-tree_ stuffs rather
-> than lack of supported out-of-tree / orphan stuffs as well.
+On Thu, Aug 15, 2019 at 12:20 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> This lone patch of the series is just cosmetic, but patch 14/16 fixes
+> a real boot issue:
+> https://github.com/ClangBuiltLinux/linux/issues/619
+> Miguel, I'd like to get that one landed ASAP; the rest are just for consistency.
 
-I know everyone is busy, but given the length this has been in staging,
-and the constant good progress toward cleaning it all up that has been
-happening, I want to get this moved out of staging soon.
+Ah, interesting. It would be best to have sent that one independently
+to the others, plus adding a commit message mentioning this in
+particular. Let's talk about that in the thread.
 
-So, unless there are any objections, I'll take this patchset in a week
-into my staging tree to move the filesystem into the "real" part of the
-kernel.
+> Miguel, how do you want to take the rest of these patches? Will picked
+> up the arm64 one, I think the SuperH one got picked up.  There was
+> feedback to add more info to individual commits' commit messages.
 
-thanks,
+Yes, I told Will I would pick up whatever is not already picked up by
+individual maintainers.
 
-greg k-h
+> I kept these tree wide changes separate to improve the likelihood that
+> they'd backport to stable cleanly, but could always squash if you'd
+> prefer to have 1 patch instead of a series.  Just let me know.
+
+Since you already did the splitting work, let's take advantage of it.
+I prefer them to be split anyway, since that gives maintainers a
+chance to pick them up individually if they prefer to do so.
+
+Cheers,
+Miguel
