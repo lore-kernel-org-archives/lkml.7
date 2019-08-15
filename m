@@ -2,132 +2,168 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A36C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C073C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD402083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:12:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Za9fYZAv"
+	by mail.kernel.org (Postfix) with ESMTP id 098D02083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732177AbfHONM2 (ORCPT
+        id S1732180AbfHONNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:12:28 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46787 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731840AbfHONM2 (ORCPT
+        Thu, 15 Aug 2019 09:13:37 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:59528 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731933AbfHONNh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:12:28 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z17so5603172otk.13
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 06:12:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nLAvE7lDJNY/2hXIcylLI9QM83e4RDXFU2y4iIE01K4=;
-        b=Za9fYZAvz38c7q5/yD99Bw30IvGPgKhHThVM4vKevIWU3/BW35bi+F3ppSbkTaFkbT
-         fo2CpvHM7cVjqc50yRgI9kWHHLUpxwV9lKj2e5yAkPWwg/XLsgOFJ9+5aRlUooRkXMat
-         8A59WCTr5lrTYXQcbNjUgSTq+i4lJG3Axdh94=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nLAvE7lDJNY/2hXIcylLI9QM83e4RDXFU2y4iIE01K4=;
-        b=QFt5DEp446KNuxL+oFtMeJZ2TebTj87CiXVZ2N21usCSBGSyqj8/pVZ7tybjdnzLw6
-         z6YfKo0yaE7LhHxk0IPpehYxxaOlQ1py4GaRvIoJi4yMA/cdMS4bhsrgzh+0NVF9h6qH
-         azuGRqApDB7e7fZs/lRiEMHnamzut3SqNKZoIt6ZBr12J4+yu6u6VniBfzXjpmG/ovQd
-         SrxTZHwbQveUGH2oTdkqMf+mDM7Shn/c3OQ0NaYXaAydEk2TTYifnwVTMxcNdHLRth5X
-         m/amtK0kl1u0f1giKsItrZ7ExcK5DqMwqzXdqwbEv/xCpsLAFsnKF4Yuqo4I/cJjm3Hs
-         JWWg==
-X-Gm-Message-State: APjAAAVbVGmq2bSfIsE/Z5fL4I4yiguaijeUTRJkU/7Bcmw56SxGRZR3
-        7ir32HujB/PIQOeYETaevF6fLXK2u5i1gL7FAzdnCQ==
-X-Google-Smtp-Source: APXvYqwb4/fPJEfbvz7yWzpngUJACAlVMwrTaPlMWn6ej36UzkLB2ub99QrSaO1zkI7AqPQMI7LKYD8gIiKyzGjESHY=
-X-Received: by 2002:a9d:7cc9:: with SMTP id r9mr3688645otn.188.1565874747163;
- Thu, 15 Aug 2019 06:12:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
- <20190814202027.18735-3-daniel.vetter@ffwll.ch> <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
- <20190815084429.GE9477@dhcp22.suse.cz> <20190815130415.GD21596@ziepe.ca>
-In-Reply-To: <20190815130415.GD21596@ziepe.ca>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Thu, 15 Aug 2019 15:12:11 +0200
-Message-ID: <CAKMK7uE9zdmBuvxa788ONYky=46GN=5Up34mKDmsJMkir4x7MQ@mail.gmail.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 15 Aug 2019 09:13:37 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TZYF1iF_1565874193;
+Received: from localhost(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0TZYF1iF_1565874193)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 15 Aug 2019 21:03:19 +0800
+From:   Ben Luo <luoben@linux.alibaba.com>
+To:     tglx@linutronix.de, alex.williamson@redhat.com
+Cc:     linux-kernel@vger.kernel.org, tao.ma@linux.alibaba.com,
+        gerry@linux.alibaba.com, nanhai.zou@linux.alibaba.com,
+        linyunsheng@huawei.com
+Subject: [PATCH v3 2/3] genirq: introduce update_irq_devid()
+Date:   Thu, 15 Aug 2019 21:03:00 +0800
+Message-Id: <6343a7e34ffdd0ddcd730996fc5dad3024e42251.1565857737.git.luoben@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <cover.1565857737.git.luoben@linux.alibaba.com>
+References: <cover.1565857737.git.luoben@linux.alibaba.com>
+In-Reply-To: <cover.1565857737.git.luoben@linux.alibaba.com>
+References: <cover.1565857737.git.luoben@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 3:04 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Thu, Aug 15, 2019 at 10:44:29AM +0200, Michal Hocko wrote:
->
-> > As the oom reaper is the primary guarantee of the oom handling forward
-> > progress it cannot be blocked on anything that might depend on blockable
-> > memory allocations. These are not really easy to track because they
-> > might be indirect - e.g. notifier blocks on a lock which other context
-> > holds while allocating memory or waiting for a flusher that needs memory
-> > to perform its work.
->
-> But lockdep *does* track all this and fs_reclaim_acquire() was created
-> to solve exactly this problem.
->
-> fs_reclaim is a lock and it flows through all the usual lockdep
-> schemes like any other lock. Any time the page allocator wants to do
-> something the would deadlock with reclaim it takes the lock.
->
-> Failure is expressed by a deadlock cycle in the lockdep map, and
-> lockdep can handle arbitary complexity through layers of locks, work
-> queues, threads, etc.
->
-> What is missing?
+Sometimes, only the dev_id field of irqaction need to be changed.
+E.g. KVM VM with device passthru via VFIO may switch irq injection
+path between KVM irqfd and userspace eventfd. These two paths
+share the same irq num and handler for the same vector of a device,
+only with different dev_id referencing to different fds' contexts.
 
-Lockdep doens't seen everything by far. E.g. a wait_event will be
-caught by the annotations here, but not by lockdep. Plus lockdep does
-not see through the wait_event, and doesn't realize if e.g. that event
-will never signal because the worker is part of the deadlock loop.
-cross-release was supposed to fix that, but seems like that will never
-land.
+So, instead of free/request irq, only update dev_id of irqaction.
+This narrows the gap for setting up new irq (and irte, if has)
+and also gains some performance benefit.
 
-And since we're talking about mmu notifiers here and gpus/dma engines.
-We have dma_fence_wait, which can wait for any hw/driver in the system
-that takes part in shared/zero-copy buffer processing. Which at least
-on the graphics side is everything. This pulls in enormous amounts of
-deadlock potential that lockdep simply is blind about and will never
-see.
+Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
+Reviewed-by: Liu Jiang <gerry@linux.alibaba.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ include/linux/interrupt.h |  3 ++
+ kernel/irq/manage.c       | 78 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 81 insertions(+)
 
-Arming might_sleep catches them all.
-
-Cheers, Daniel
-
-PS: Don't ask me about why we need these semantics for oom_reaper,
-like I said just trying to follow the rules.
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 5b8328a..6060c5a 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -172,6 +172,9 @@ struct irqaction {
+ request_percpu_nmi(unsigned int irq, irq_handler_t handler,
+ 		   const char *devname, void __percpu *dev);
+ 
++extern int __must_check
++update_irq_devid(unsigned int irq, void *dev_id, void *new_dev_id);
++
+ extern const void *free_irq(unsigned int, void *);
+ extern void free_percpu_irq(unsigned int, void __percpu *);
+ 
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 6f9b20f..a76ef61 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -2064,6 +2064,84 @@ int request_threaded_irq(unsigned int irq, irq_handler_t handler,
+ EXPORT_SYMBOL(request_threaded_irq);
+ 
+ /**
++ *	update_irq_devid - update irq dev_id to a new one
++ *	@irq: Interrupt line to update
++ *	@dev_id: A cookie to find the irqaction to update
++ *	@new_dev_id: New cookie passed to the handler function
++ *
++ *	Sometimes, only the cookie data need to be changed.
++ *	Instead of free/request irq, only update dev_id here
++ *	Not only to gain some performance benefit, but also
++ *	reduce the risk of losing interrupt.
++ *
++ *	E.g. irq affinity setting in a VM with VFIO passthru
++ *	device is carried out in a free-then-request-irq way
++ *	since lack of this very function. The free_irq()
++ *	eventually triggers deactivation of IR domain, which
++ *	will cleanup IRTE. There is a gap before request_irq()
++ *	finally setup the IRTE again. In this gap, a in-flight
++ *	irq buffering in hardware layer may trigger DMAR fault
++ *	and be lost.
++ *
++ *	On failure, it returns a negative value. On success,
++ *	it returns 0
++ */
++int update_irq_devid(unsigned int irq, void *dev_id, void *new_dev_id)
++{
++	struct irq_desc *desc = irq_to_desc(irq);
++	struct irqaction *action, **action_ptr;
++	unsigned long flags;
++
++	if (in_interrupt()) {
++		WARN(1, "Trying to update IRQ %d (dev_id %p to %p) from IRQ context!\n",
++		     irq, dev_id, new_dev_id);
++		return -EPERM;
++	}
++
++	if (!desc)
++		return -EINVAL;
++
++	chip_bus_lock(desc);
++	raw_spin_lock_irqsave(&desc->lock, flags);
++
++	/*
++	 * There can be multiple actions per IRQ descriptor, find the right
++	 * one based on the dev_id:
++	 */
++	action_ptr = &desc->action;
++	for (;;) {
++		action = *action_ptr;
++
++		if (!action) {
++			raw_spin_unlock_irqrestore(&desc->lock, flags);
++			chip_bus_sync_unlock(desc);
++			WARN(1, "Trying to update already-free IRQ %d (dev_id %p to %p)\n",
++			     irq, dev_id, new_dev_id);
++			return -ENXIO;
++		}
++
++		if (action->dev_id == dev_id) {
++			action->dev_id = new_dev_id;
++			break;
++		}
++		action_ptr = &action->next;
++	}
++
++	raw_spin_unlock_irqrestore(&desc->lock, flags);
++	chip_bus_sync_unlock(desc);
++
++	/*
++	 * Make sure it's not being used on another CPU:
++	 * There is a risk of UAF for old *dev_id, if it is
++	 * freed in a short time after this func returns
++	 */
++	synchronize_irq(irq);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(update_irq_devid);
++
++/**
+  *	request_any_context_irq - allocate an interrupt line
+  *	@irq: Interrupt line to allocate
+  *	@handler: Function to be called when the IRQ occurs.
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+1.8.3.1
+
