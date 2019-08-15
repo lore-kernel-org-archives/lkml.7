@@ -2,204 +2,169 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F9CC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4943C32757
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ADBA2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8122173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:47:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="d5M6DY0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731684AbfHOLrL (ORCPT
+        id S1731378AbfHOLr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 07:47:11 -0400
-Received: from mga01.intel.com ([192.55.52.88]:55622 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726317AbfHOLrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 07:47:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 04:47:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
-   d="scan'208";a="184600470"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Aug 2019 04:47:06 -0700
-Subject: Re: [PATCH v5] perf machine: arm/arm64: Improve completeness for
- kernel address space
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-References: <20190815082521.16885-1-leo.yan@linaro.org>
- <d874e6b3-c115-6c8c-bb12-160cfd600505@intel.com>
- <20190815113242.GA28881@leoy-ThinkPad-X240s>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <e0919e39-7607-815b-3a12-96f098e45a5f@intel.com>
-Date:   Thu, 15 Aug 2019 14:45:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 15 Aug 2019 07:47:26 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:43608 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729668AbfHOLr0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 07:47:26 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1E32B2B2;
+        Thu, 15 Aug 2019 13:47:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1565869643;
+        bh=7YHIexGsypHKPBrHkKhWFogXO6dZbIw8bhIG8muuOqI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d5M6DY0HUEV5MQtRh5Vn9NcRMQ4In57gkO1EnrM4iMjn/aX7onIcfXLuV3h5mEqFR
+         CV1YluX1JPfiNsIUYD///aVF/Hu4JXSMkF1m7k/LzushWEVVK5R8v7xjI1HtQl/hXb
+         Xfb4p1TAEnYx4/Wm2xWhNTeNdsrTGSDAGlFvwmmM=
+Date:   Thu, 15 Aug 2019 14:47:19 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v2 2/9] dt-bindings: display: Add bindings for Advantech
+ IDK-2121WR
+Message-ID: <20190815114719.GI5011@pendragon.ideasonboard.com>
+References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1565867073-24746-3-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20190815113242.GA28881@leoy-ThinkPad-X240s>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <1565867073-24746-3-git-send-email-fabrizio.castro@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/08/19 2:32 PM, Leo Yan wrote:
-> Hi Adrian,
-> 
-> On Thu, Aug 15, 2019 at 11:54:54AM +0300, Adrian Hunter wrote:
-> 
-> [...]
-> 
->>> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
->>> index e4988f49ea79..d7ff839d8b20 100644
->>> --- a/tools/perf/Makefile.config
->>> +++ b/tools/perf/Makefile.config
->>> @@ -48,9 +48,20 @@ ifeq ($(SRCARCH),x86)
->>>    NO_PERF_REGS := 0
->>>  endif
->>>  
->>> +ARM_PRE_START_SIZE := 0
->>> +
->>>  ifeq ($(SRCARCH),arm)
->>>    NO_PERF_REGS := 0
->>>    LIBUNWIND_LIBS = -lunwind -lunwind-arm
->>> +  ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds),)
->>> +    # Extract info from lds:
->>> +    #   . = ((0xC0000000)) + 0x00208000;
->>> +    # ARM_PRE_START_SIZE := 0x00208000
->>> +    ARM_PRE_START_SIZE := $(shell egrep ' \. \= \({2}0x[0-9a-fA-F]+\){2}' \
->>> +      $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds | \
->>> +      sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
->>> +      awk -F' ' '{printf "0x%x", $$2}' 2>/dev/null)
->>> +  endif
->>>  endif
->>>  
->>>  ifeq ($(SRCARCH),arm64)
->>> @@ -58,8 +69,19 @@ ifeq ($(SRCARCH),arm64)
->>>    NO_SYSCALL_TABLE := 0
->>>    CFLAGS += -I$(OUTPUT)arch/arm64/include/generated
->>>    LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
->>> +  ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds),)
->>> +    # Extract info from lds:
->>> +    #  . = ((((((((0xffffffffffffffff)) - (((1)) << (48)) + 1) + (0)) + (0x08000000))) + (0x08000000))) + 0x00080000;
->>> +    # ARM_PRE_START_SIZE := (0x08000000 + 0x08000000 + 0x00080000) = 0x10080000
->>> +    ARM_PRE_START_SIZE := $(shell egrep ' \. \= \({8}0x[0-9a-fA-F]+\){2}' \
->>> +      $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds | \
->>> +      sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
->>> +      awk -F' ' '{printf "0x%x", $$6+$$7+$$8}' 2>/dev/null)
->>> +  endif
->>
->> So, that is not going to work if you take a perf.data file to a non-arm machine?
-> 
-> Yeah, this patch will only allow perf to work correctly when perf
-> run natively on arm/arm64, so it can resolve partial of the issue.
-> 
->> How come you cannot use kallsyms to get the information?
-> 
-> Thanks for pointing out this.  Sorry I skipped your comment "I don't
-> know how you intend to calculate ARM_PRE_START_SIZE" when you reviewed
-> the patch v3, I should use that chance to elaborate the detailed idea
-> and so can get more feedback/guidance before procceed.
-> 
-> Actually, I have considered to use kallsyms when worked on the previous
-> patch set.
-> 
-> As mentioned in patch set v4's cover letter, I tried to implement
-> machine__create_extra_kernel_maps() for arm/arm64, the purpose is to
-> parse kallsyms so can find more kernel maps and thus also can fixup
-> the kernel start address.  But I found the 'perf script' tool directly
-> calls machine__get_kernel_start() instead of running into the flow for
-> machine__create_extra_kernel_maps();
+Hi Fabrizio,
 
-Doesn't it just need to loop through each kernel map to find the lowest
-start address?
+On Thu, Aug 15, 2019 at 12:04:26PM +0100, Fabrizio Castro wrote:
+> This panel is handled through the generic lvds-panel bindings,
+> so only needs its additional compatible specified.
+> 
+> Some panel-specific documentation can be found here:
+> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> ---
+> v1->v2:
+> * Reworked according to Laurent's feedback
+> * Renamed lvds0_panel_in to panel_in0
+> * Renamed lvds1_panel_in to panel_in1
+> 
+> Laurent,
+> 
+> Should this be a .yaml file already?
 
->                                      so I finally gave up to use
-> machine__create_extra_kernel_maps() for tweaking kernel start address
-> and went back to use this patch's approach by parsing lds files.
+It's not a strict requirement, but I'm sure Rob would really appreciate.
+I've converted a DT binding to yaml recently (for a panel too), and I
+have to say I'm impressed by the validation yaml brings, both for DT
+sources and for DT bindings. It even validates the example in the
+bindings, which is great. Documentation/devicetree/writing-schema.md
+should give you a few pointers to get started (in particular make sure
+you run make dt_binding_check for your new bindings).
+
+>  .../display/panel/advantech,idk-2121wr.txt         | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
 > 
-> So for next step, I want to get some guidances:
-> 
-> - One method is to add a new weak function, e.g.
->   arch__fix_kernel_text_start(), then every arch can implement its own
->   function to fixup the kernel start address;
-> 
->   For arm/arm64, can use kallsyms to find the symbols with least
->   address and fixup for kernel start address.
-> 
-> - Another method is to directly parse kallsyms in the function
->   machine__get_kernel_start(), thus the change can be used for all
->   archs;
-> 
-> Seems to me the second method is to address this issue as a common
-> issue crossing all archs.  But not sure if this is the requirement for
-> all archs or just this is only required for arm/arm64.  Please let me
-> know what's your preference or other thoughts.  Thanks a lot!
-> 
-> Leo.
-> 
->>>  endif
->>>  
->>> +CFLAGS += -DARM_PRE_START_SIZE=$(ARM_PRE_START_SIZE)
->>> +
->>>  ifeq ($(SRCARCH),csky)
->>>    NO_PERF_REGS := 0
->>>  endif
->>> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
->>> index f6ee7fbad3e4..e993f891bb82 100644
->>> --- a/tools/perf/util/machine.c
->>> +++ b/tools/perf/util/machine.c
->>> @@ -2687,13 +2687,26 @@ int machine__get_kernel_start(struct machine *machine)
->>>  	machine->kernel_start = 1ULL << 63;
->>>  	if (map) {
->>>  		err = map__load(map);
->>> +		if (err)
->>> +			return err;
->>> +
->>>  		/*
->>>  		 * On x86_64, PTI entry trampolines are less than the
->>>  		 * start of kernel text, but still above 2^63. So leave
->>>  		 * kernel_start = 1ULL << 63 for x86_64.
->>>  		 */
->>> -		if (!err && !machine__is(machine, "x86_64"))
->>> +		if (!machine__is(machine, "x86_64"))
->>>  			machine->kernel_start = map->start;
->>> +
->>> +		/*
->>> +		 * On arm/arm64, the kernel uses some memory regions which are
->>> +		 * prior to '_stext' symbol; to reflect the complete kernel
->>> +		 * address space, compensate these pre-defined regions for
->>> +		 * kernel start address.
->>> +		 */
->>> +		if (!strcmp(perf_env__arch(machine->env), "arm") ||
->>> +		    !strcmp(perf_env__arch(machine->env), "arm64"))
->>> +			machine->kernel_start -= ARM_PRE_START_SIZE;
->>>  	}
->>>  	return err;
->>>  }
->>>
->>
+> diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+> new file mode 100644
+> index 0000000..6ee1d1b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+> @@ -0,0 +1,56 @@
+> +Advantech Co., Ltd. IDK-2121WR 21.5" LVDS panel
+> +===============================================
+> +
+> +Required properties:
+> +- compatible: should be "advantech,idk-2121wr" followed by "panel-lvds"
+> +
+> +This binding is compatible with the lvds-panel binding, which is specified
+> +in panel-lvds.txt in this directory.
+> +The panel operates in dual-link mode and thus requires two port nodes,
+> +the first port node expects odd pixels (1, 3, 5, etc.) and the second port
+> +expects even pixels (0, 2, 4, etc.).
+> +
+> +Example
+> +-------
+> +
+> +	panel {
+> +		compatible = "advantech,idk-2121wr", "panel-lvds";
+> +
+> +		width-mm = <476>;
+> +		height-mm = <268>;
+> +
+> +		data-mapping = "vesa-24";
+> +
+> +		panel-timing {
+> +			clock-frequency = <148500000>;
+> +			hactive = <1920>;
+> +			vactive = <1080>;
+> +			hsync-len = <44>;
+> +			hfront-porch = <88>;
+> +			hback-porch = <148>;
+> +			vfront-porch = <4>;
+> +			vback-porch = <36>;
+> +			vsync-len = <5>;
+> +		};
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				/* Odd pixels */
+> +				reg = <0>;
+> +				panel_in0: endpoint {
+> +					remote-endpoint = <&lvds0_out>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				/* Even pixels */
+> +				reg = <1>;
+> +				panel_in1: endpoint {
+> +					remote-endpoint = <&lvds1_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> -- 
+> 2.7.4
 > 
 
+-- 
+Regards,
+
+Laurent Pinchart
