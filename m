@@ -2,157 +2,165 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB114C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F94C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2A921783
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:01:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="rsRDSWtN"
+	by mail.kernel.org (Postfix) with ESMTP id 3ECC52133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732027AbfHONBU (ORCPT
+        id S1732040AbfHONBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:01:20 -0400
-Received: from mail-eopbgr780073.outbound.protection.outlook.com ([40.107.78.73]:37760
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729818AbfHONBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:01:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZZq21s6YSeSWWwD7tmCAZceMwaA41/oKh+IoC52YNKjXCjfrvdigYithqmD9MiyBH12Dd/F+AjBmbzcw/nqMvnX8vPkdqzNMZOSBAkkGEjnWHuBdHSEjr2bMdtw6+YE3d+IXUJG/ALA5W0wAun48fbEqac3OiLibSdpdXirYmkhUKDA9hTemsI+qVt0Dsuweh0cxWN769JIZfRe8yd2+bYRb0a9oW8WxU6zBxK/stuf9sybYx2loks5LHv5we13GhShZYYYAJbP9vcBABu/KGfQnAPcwz25DTahkqdOlS2ugrOWYzX2TP7Yj4W1YjOFP5VVLNAWKBf7Ybirezy4jzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GWg0YO9pydI5mkD0dxgdJFJzj5JRMDVTM1huuYoRgso=;
- b=DyB6idtGEf7owmmynUNn97hI20NZ9BsZAB7DCBJr2pbs+yIxQTWSFbr+uTnQA4RJcGnDZ91PAAnsMEv2eqLlTDVl8vJgnpYVKTQFHNJwIS05wP7QxHWLzyF5C3K4SgvMBA1Bws6DuexJzJD0ewBJuYiHTfGtaLeGj6ovQ/OLc5/HmzE6S2BHVDl43hld1Knw0NHXOJeExerjutWcXfenU3FCme1moJjjtk7wZMyh0EX8ItcF3Oadnoxr8q9gO4a/mwPJD3yIvdB8IVVpTHUEspaWjLhT0jF4gBZP1NNa6YnhEPGwdg9/MqfirfSyU3tM9glErpFSJqyw1n3mYscn/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GWg0YO9pydI5mkD0dxgdJFJzj5JRMDVTM1huuYoRgso=;
- b=rsRDSWtN0oJudmjcfUUX56Q3T0o1HXuG2oou6m4rSrFTiKxva4xFy4O8JFDulSs9dXteqfEAbhUGdvnPXga6HgV0l+vwEJXhaBrUAmyJLD0dHukfEn6BZX5sZqL5FlhXbvU4s+/ag2db6cykjiVw9a92ndC7nf0GwDMWT5s/Mr8=
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
- DM6PR12MB3226.namprd12.prod.outlook.com (20.179.105.94) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.14; Thu, 15 Aug 2019 13:01:16 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::9c3d:8593:906c:e4f7]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::9c3d:8593:906c:e4f7%6]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
- 13:01:16 +0000
-From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-To:     Pavel Machek <pavel@ucw.cz>, "tytso@mit.edu" <tytso@mit.edu>,
-        "nhorman@tuxdriver.com" <nhorman@tuxdriver.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Chen Yu <yu.c.chen@intel.com>, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: Non-random RDRAND Re: [PATCH] x86/CPU/AMD: Clear RDRAND CPUID bit
- on AMD family 15h/16h
-Thread-Topic: Non-random RDRAND Re: [PATCH] x86/CPU/AMD: Clear RDRAND CPUID
- bit on AMD family 15h/16h
-Thread-Index: AQHVUuW0/upDXQeDUkyQJLUEYNL76ab7SRKAgADkKwA=
-Date:   Thu, 15 Aug 2019 13:01:16 +0000
-Message-ID: <0ea34954-10d4-03f9-fce6-d25aa574bb43@amd.com>
-References: <776cb5c2d33e7fd0d2893904724c0e52b394f24a.1565817448.git.thomas.lendacky@amd.com>
- <20190814232434.GA31769@amd>
-In-Reply-To: <20190814232434.GA31769@amd>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0501CA0055.namprd05.prod.outlook.com
- (2603:10b6:803:41::32) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:182::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 175f34da-59d4-481f-af64-08d72180a886
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3226;
-x-ms-traffictypediagnostic: DM6PR12MB3226:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DM6PR12MB3226F830FB265D2613CBDB4FECAC0@DM6PR12MB3226.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01304918F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(136003)(396003)(39850400004)(199004)(189003)(305945005)(316002)(7736002)(81166006)(6116002)(6512007)(36756003)(81156014)(3846002)(7416002)(53936002)(8936002)(8676002)(66556008)(64756008)(486006)(66946007)(66476007)(26005)(66446008)(14444005)(256004)(31696002)(186003)(86362001)(54906003)(2201001)(110136005)(5660300002)(2616005)(476003)(2501003)(11346002)(446003)(386003)(76176011)(53546011)(52116002)(2906002)(14454004)(6506007)(16799955002)(102836004)(6306002)(6436002)(66066001)(31686004)(2171002)(6246003)(71190400001)(71200400001)(229853002)(6486002)(4326008)(478600001)(99286004)(25786009)(966005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3226;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /Q5V1x9uxyv2Y8RiR1m4MQNxU9lR3sOoszutgTClQa8s+XJlO7yduamm+ID/DsGQkP/6xUdupXtSD0BnYGl7ncU3JzHscapjKVQoJy4HPQkpxTQI0NN0A7ZVo19M/Wlr1sRj6fMcxxnV6HEAduP5D8TI1kwlfTPjurTY9UgcRzcvyd0drddygKM/GdavTiH4Vd0W7xNmCPW3p+jozAwMZ3h8qNrDo/3Unpx35AvuCdnxcWc6ONRi5GSpCeIED6/3qzRVX/mFxHd70BQFG2yeaFYFcdzVwE6DXnoowERqakehQDXw1g8LZd60n8/cKunRejbS1cEIulICe8e2Nxje7v/8x7D9i9GXdRlp8dlm56CGcm6X2F4iJXDdxTPEnE0/VHsNJgUdR2HoBO3PEEPPkET30FE/LYmF8eImuzUb9k4=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <EAB7E492129AD847B61182E76A8937CB@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 15 Aug 2019 09:01:23 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:33075 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729818AbfHONBW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:01:22 -0400
+X-Originating-IP: 87.5.130.64
+Received: from uno.localdomain (host64-130-dynamic.5-87-r.retail.telecomitalia.it [87.5.130.64])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 2A4F31C0004;
+        Thu, 15 Aug 2019 13:01:18 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 15:02:45 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 3/5] media: v4l2-ctrls: Add support for V4L2_CID_LOCATION
+Message-ID: <20190815130245.usat55oqffe4abvi@uno.localdomain>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-4-jacopo@jmondi.org>
+ <20190814225353.GE5015@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 175f34da-59d4-481f-af64-08d72180a886
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 13:01:16.4723
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yGB6BsYMYc05brOA2q2mdG8cJzjWB/DXpkVm8cGAah4ngvK1VR7hI1QdYRnvnNIpY2g1f36p+aLYO/gJ51iSkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3226
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="q3wploq7haya4lpx"
+Content-Disposition: inline
+In-Reply-To: <20190814225353.GE5015@pendragon.ideasonboard.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/19 6:24 PM, Pavel Machek wrote:
-> On Wed 2019-08-14 21:17:41, Lendacky, Thomas wrote:
->> From: Tom Lendacky <thomas.lendacky@amd.com>
->>
->> There have been reports of RDRAND issues after resuming from suspend on
->> some AMD family 15h and family 16h systems. This issue stems from BIOS
->> not performing the proper steps during resume to ensure RDRAND continues
->> to function properly.
->=20
-> Burn it with fire!
->=20
-> I mean... people were afraid RDRAND would be backdoored, and you now
-> confirm ... it indeed _is_ backdoored? /., here's news for you!
->=20
-> So what is the impact? Does it give random-looking but predictable
-> numbers after resume? Does it give all zeros? Something else?
 
-See this article:
-https://www.phoronix.com/scan.php?page=3Dnews_item&px=3DAMD-CPUs-RdRand-Sus=
-pend
+--q3wploq7haya4lpx
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Thanks,
-Tom
+Hi Laurent,
 
->=20
->> =20
->> +	rdrand_force	[X86]
->> +			On certain AMD processors, the advertisement of the
->> +			RDRAND instruction has been disabled by the kernel
->> +			because of buggy BIOS support, specifically around the
->> +			suspend/resume path. This option allows for overriding
->> +			that decision if it is known that the BIOS support for
->> +			RDRAND is not buggy on the system.
->=20
-> But this is not how we normally deal with buggy BIOSes. We don't want
-> user to have to decide this...
->=20
-> Should we introduce black-list or white-list of BIOS versions?
->=20
-> Hmm. Actually.
->=20
-> You are the CPU vendor. Surely you can tell us how to init RDRAND in
-> kernel if BIOS failed to do that... can you?
->=20
-> 									Pavel
->=20
+On Thu, Aug 15, 2019 at 01:53:53AM +0300, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> Thank you for the patch.
+>
+> On Wed, Aug 14, 2019 at 10:28:13PM +0200, Jacopo Mondi wrote:
+> > Add support for the newly defined V4L2_CID_LOCATION read-only control
+> > used to report the camera device mounting position.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> > ---
+> >  drivers/media/v4l2-core/v4l2-ctrls.c | 7 +++++++
+> >  include/uapi/linux/v4l2-controls.h   | 4 ++++
+> >  2 files changed, 11 insertions(+)
+> >
+> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > index 7d3a33258748..8ab0857df59a 100644
+> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > @@ -943,6 +943,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+> >  	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
+> >  	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
+> >  	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
+> > +	case V4L2_CID_LOCATION:			return "Location";
+>
+> Depending on what we decide to name the control (see review of 2/5), you
+> should adjust the description accordingly.
+>
+> >
+> >  	/* FM Radio Modulator controls */
+> >  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+> > @@ -1300,6 +1301,12 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+> >  		break;
+> >  	case V4L2_CID_MPEG_VIDEO_FWHT_PARAMS:
+> >  		*type = V4L2_CTRL_TYPE_FWHT_PARAMS;
+> > +	case V4L2_CID_LOCATION:
+> > +		*type = V4L2_CTRL_TYPE_INTEGER;
+> > +		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> > +		*min = V4L2_LOCATION_FRONT;
+> > +		*max = V4L2_LOCATION_BACK;
+>
+> I don't think the control should have a min and a max different than the
+> current value, as it's a fully static control. I'd drop those two lines
+> here, and drivers will have to set value = min = max = V4L2_LOCATION_xxx
+> when creating the control. That why you should be able to collapse this
+> with V4L2_CID_MIN_BUFFERS_FOR_OUTPUT.
+>
+
+Ah, I thought min/max should report the actual control values limits.
+Anyway, if we move this to be an integer menu control with an helper
+to parse the DT property and register the control on behalf of
+drivers, this will change.
+
+> > +		*step = 1;
+> >  		break;
+> >  	default:
+> >  		*type = V4L2_CTRL_TYPE_INTEGER;
+> > diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> > index 37807f23231e..5c4c7b245921 100644
+> > --- a/include/uapi/linux/v4l2-controls.h
+> > +++ b/include/uapi/linux/v4l2-controls.h
+> > @@ -889,6 +889,10 @@ enum v4l2_auto_focus_range {
+> >  #define V4L2_CID_PAN_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+32)
+> >  #define V4L2_CID_TILT_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+33)
+> >
+> > +#define V4L2_CID_LOCATION			(V4L2_CID_CAMERA_CLASS_BASE+34)
+> > +#define V4L2_LOCATION_FRONT			(0 << 0)
+> > +#define V4L2_LOCATION_BACK			(1 << 0)
+>
+> Why not just 0 and 1 ?
+
+Or why not BIT(). I saw that the (1 << x) style is the mostly used one in
+this header file when defining macros like this one so I went for
+consistency with the existing code.
+
+>
+> > +
+> >  /* FM Modulator class control IDs */
+> >
+> >  #define V4L2_CID_FM_TX_CLASS_BASE		(V4L2_CTRL_CLASS_FM_TX | 0x900)
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+
+--q3wploq7haya4lpx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1VV/UACgkQcjQGjxah
+VjyxEw/+IkrGu9/F2R9FbjT2wZtvpOv4r7HsQbNglpGhV+JJ6ub5fO65zCAHrIL5
+PaeZFoKVIhxipY8cZDuRrUcxVxO4q1sS7JiE76wFG4tr82JFFRUCSEcVc47r21H+
+RYRh4aymQKL010QxcnnrixvIAaBedweGHfhae/V+NvRR0aIsSm6wZsJr4HmJnYy8
+5SB3NNsiUjRXGPvtYbFUf1/8+fsKm59AyT7hLYi+jf6ZphX/qxEHf/zluLJFbxkX
+XLGw04z3x+lnKSpAOvjlOB/NLis65uqd2bV9/53r7BgUZ0agchBcxwK1ZJYzoe2c
+rvLuadej00BzfkFKqCRB24qfAc51RrUfvJx5eksR26L/moAYdqOxyHuQZBx895L9
+e3cEFKSMBlQhQIMC2Q255ViKO41KViT/UL0/OQ0wv4DCZmMVfrILLNcylG5oVqCA
+hs1B2aT9PFkhaaCUqGOGMwJpLhwQRcFsXpBeSqonB0DDo4j+Z2Y3ybszRJ0S15ob
+gobCLRGr6NLK9bHbHRqYS6rKXgMAmxOamvFfDPjEdeBqIQTG6n5HNQQC2EofXF+5
+DeC+f3JbpggYraA/LVfDsI7Tv4MLN/PPXaaohgWf4RoTcMigYxwOBH7LlPCNdk+N
+zZoKqIAYDyfmmEQtPlnuzN+JoxdVR3bgjI0vCf4MhgXQIETwG84=
+=KSit
+-----END PGP SIGNATURE-----
+
+--q3wploq7haya4lpx--
