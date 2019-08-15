@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11867C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEE4C32757
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8AB52067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DEA32067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbfHOEnX (ORCPT
+        id S1730180AbfHOEn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:43:23 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4265 "EHLO huawei.com"
+        Thu, 15 Aug 2019 00:43:26 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4268 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730066AbfHOEnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:43:19 -0400
+        id S1730087AbfHOEnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:43:20 -0400
 Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 65472A79A2EA0AA8F78C;
-        Thu, 15 Aug 2019 12:43:08 +0800 (CST)
+        by Forcepoint Email with ESMTP id 77BC94A34F69037C2F95;
+        Thu, 15 Aug 2019 12:43:13 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 15 Aug
- 2019 12:43:01 +0800
+ 2019 12:43:06 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         "Alexander Viro" <viro@zeniv.linux.org.uk>
@@ -47,9 +46,9 @@ CC:     LKML <linux-kernel@vger.kernel.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v8 20/24] erofs: introduce generic decompression backend
-Date:   Thu, 15 Aug 2019 12:41:51 +0800
-Message-ID: <20190815044155.88483-21-gaoxiang25@huawei.com>
+Subject: [PATCH v8 23/24] erofs: introduce cached decompression
+Date:   Thu, 15 Aug 2019 12:41:54 +0800
+Message-ID: <20190815044155.88483-24-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190815044155.88483-1-gaoxiang25@huawei.com>
 References: <20190815044155.88483-1-gaoxiang25@huawei.com>
@@ -62,452 +61,564 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds decompression backend to EROFS, which
-supports uncompressed and LZ4 compressed data.
-
-For compressed data, it uses the following strategy:
-1) If outputsize is very small (totally less than a threshold),
-   decompress to the per-CPU buffer and do memcpy directly
-   in order to avoid vmap() overhead;
-2) Otherwise it will fill bounced pages if needed and vmap
-   all output pages into a continuous virtual memory area,
-   memcpy compressed data to the per-CPU buffer for inplace
-   I/O [1] and decompress.
-
-Since LZ4 is a lz77-based algorithm which has a dynamically
-populated ("sliding window") dictionary and the maximum
-lookback distance is 65535. Therefore the number of bounced
-pages could be limited by erofs based on this property.
-
-[1] `LZ4 decompression inplace' will eliminate the extra memcpy
-    if iend - oend margin is safe enough, see the following patch.
+This patch adds strategies which can be selected
+by users in order to cache both incomplete ends of
+compressed physical clusters as a complement of
+in-place I/O in order to boost random read, but
+it costs more memory than the in-place I/O only.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/Makefile       |   2 +-
- fs/erofs/compress.h     |  62 ++++++++
- fs/erofs/decompressor.c | 332 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 395 insertions(+), 1 deletion(-)
- create mode 100644 fs/erofs/compress.h
- create mode 100644 fs/erofs/decompressor.c
+ fs/erofs/internal.h |  16 +++++
+ fs/erofs/super.c    | 126 ++++++++++++++++++++++++++++++++-
+ fs/erofs/utils.c    |  40 ++++++++---
+ fs/erofs/zdata.c    | 165 ++++++++++++++++++++++++++++++++++++++++++--
+ fs/erofs/zdata.h    |   7 +-
+ 5 files changed, 336 insertions(+), 18 deletions(-)
 
-diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-index 930770be124f..5594abca6f95 100644
---- a/fs/erofs/Makefile
-+++ b/fs/erofs/Makefile
-@@ -7,5 +7,5 @@ ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
- obj-$(CONFIG_EROFS_FS) += erofs.o
- erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
- erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
--erofs-$(CONFIG_EROFS_FS_ZIP) += zmap.o
-+erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 2be1ae700aca..ad3b6ba75979 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -72,6 +72,12 @@ struct erofs_sb_info {
+ 	unsigned int max_sync_decompress_pages;
  
-diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
-new file mode 100644
-index 000000000000..57035b7646ef
---- /dev/null
-+++ b/fs/erofs/compress.h
-@@ -0,0 +1,62 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * linux/fs/erofs/compress.h
-+ *
-+ * Copyright (C) 2019 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
-+ */
-+#ifndef __EROFS_FS_COMPRESS_H
-+#define __EROFS_FS_COMPRESS_H
+ 	unsigned int shrinker_run_no;
 +
-+#include "internal.h"
++	/* current strategy of how to use managed cache */
++	unsigned char cache_strategy;
 +
++	/* pseudo inode to manage cached pages */
++	struct inode *managed_cache;
+ #endif	/* CONFIG_EROFS_FS_ZIP */
+ 	u32 blocks;
+ 	u32 meta_blkaddr;
+@@ -157,6 +163,12 @@ static inline void *erofs_kmalloc(struct erofs_sb_info *sbi,
+ #define test_opt(sbi, option)	((sbi)->mount_opt & EROFS_MOUNT_##option)
+ 
+ #ifdef CONFIG_EROFS_FS_ZIP
 +enum {
-+	Z_EROFS_COMPRESSION_SHIFTED = Z_EROFS_COMPRESSION_MAX,
-+	Z_EROFS_COMPRESSION_RUNTIME_MAX
++	EROFS_ZIP_CACHE_DISABLED,
++	EROFS_ZIP_CACHE_READAHEAD,
++	EROFS_ZIP_CACHE_READAROUND
 +};
 +
-+struct z_erofs_decompress_req {
-+	struct super_block *sb;
-+	struct page **in, **out;
+ #define EROFS_LOCKED_MAGIC     (INT_MIN | 0xE0F510CCL)
+ 
+ /* basic unit of the workstation of a super_block */
+@@ -524,6 +536,10 @@ int __init erofs_init_shrinker(void);
+ void erofs_exit_shrinker(void);
+ int __init z_erofs_init_zip_subsystem(void);
+ void z_erofs_exit_zip_subsystem(void);
++int erofs_try_to_free_all_cached_pages(struct erofs_sb_info *sbi,
++				       struct erofs_workgroup *egrp);
++int erofs_try_to_free_cached_page(struct address_space *mapping,
++				  struct page *page);
+ #else
+ static inline void erofs_shrinker_register(struct super_block *sb) {}
+ static inline void erofs_shrinker_unregister(struct super_block *sb) {}
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index bdac8abf3aa7..95187619b3e3 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -197,10 +197,45 @@ static unsigned int erofs_get_fault_rate(struct erofs_sb_info *sbi)
+ }
+ #endif
+ 
++#ifdef CONFIG_EROFS_FS_ZIP
++static int erofs_build_cache_strategy(struct erofs_sb_info *sbi,
++				      substring_t *args)
++{
++	const char *cs = match_strdup(args);
++	int err = 0;
 +
-+	unsigned short pageofs_out;
-+	unsigned int inputsize, outputsize;
++	if (!cs) {
++		errln("Not enough memory to store cache strategy");
++		return -ENOMEM;
++	}
 +
-+	/* indicate the algorithm will be used for decompression */
-+	unsigned int alg;
-+	bool inplace_io, partial_decoding;
++	if (!strcmp(cs, "disabled")) {
++		sbi->cache_strategy = EROFS_ZIP_CACHE_DISABLED;
++	} else if (!strcmp(cs, "readahead")) {
++		sbi->cache_strategy = EROFS_ZIP_CACHE_READAHEAD;
++	} else if (!strcmp(cs, "readaround")) {
++		sbi->cache_strategy = EROFS_ZIP_CACHE_READAROUND;
++	} else {
++		errln("Unrecognized cache strategy \"%s\"", cs);
++		err = -EINVAL;
++	}
++	kfree(cs);
++	return err;
++}
++#else
++static int erofs_build_cache_strategy(struct erofs_sb_info *sbi,
++				      substring_t *args)
++{
++	infoln("EROFS compression is disabled, so cache strategy is ignored");
++	return 0;
++}
++#endif
++
+ /* set up default EROFS parameters */
+ static void default_options(struct erofs_sb_info *sbi)
+ {
+ #ifdef CONFIG_EROFS_FS_ZIP
++	sbi->cache_strategy = EROFS_ZIP_CACHE_READAROUND;
+ 	sbi->max_sync_decompress_pages = 3;
+ #endif
+ #ifdef CONFIG_EROFS_FS_XATTR
+@@ -217,6 +252,7 @@ enum {
+ 	Opt_acl,
+ 	Opt_noacl,
+ 	Opt_fault_injection,
++	Opt_cache_strategy,
+ 	Opt_err
+ };
+ 
+@@ -226,6 +262,7 @@ static match_table_t erofs_tokens = {
+ 	{Opt_acl, "acl"},
+ 	{Opt_noacl, "noacl"},
+ 	{Opt_fault_injection, "fault_injection=%u"},
++	{Opt_cache_strategy, "cache_strategy=%s"},
+ 	{Opt_err, NULL}
+ };
+ 
+@@ -283,6 +320,11 @@ static int parse_options(struct super_block *sb, char *options)
+ 			if (err)
+ 				return err;
+ 			break;
++		case Opt_cache_strategy:
++			err = erofs_build_cache_strategy(EROFS_SB(sb), args);
++			if (err)
++				return err;
++			break;
+ 		default:
+ 			errln("Unrecognized mount option \"%s\" or missing value", p);
+ 			return -EINVAL;
+@@ -291,6 +333,65 @@ static int parse_options(struct super_block *sb, char *options)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_EROFS_FS_ZIP
++static const struct address_space_operations managed_cache_aops;
++
++static int managed_cache_releasepage(struct page *page, gfp_t gfp_mask)
++{
++	int ret = 1;	/* 0 - busy */
++	struct address_space *const mapping = page->mapping;
++
++	DBG_BUGON(!PageLocked(page));
++	DBG_BUGON(mapping->a_ops != &managed_cache_aops);
++
++	if (PagePrivate(page))
++		ret = erofs_try_to_free_cached_page(mapping, page);
++
++	return ret;
++}
++
++static void managed_cache_invalidatepage(struct page *page,
++					 unsigned int offset,
++					 unsigned int length)
++{
++	const unsigned int stop = length + offset;
++
++	DBG_BUGON(!PageLocked(page));
++
++	/* Check for potential overflow in debug mode */
++	DBG_BUGON(stop > PAGE_SIZE || stop < length);
++
++	if (offset == 0 && stop == PAGE_SIZE)
++		while (!managed_cache_releasepage(page, GFP_NOFS))
++			cond_resched();
++}
++
++static const struct address_space_operations managed_cache_aops = {
++	.releasepage = managed_cache_releasepage,
++	.invalidatepage = managed_cache_invalidatepage,
 +};
 +
-+/*
-+ * - 0x5A110C8D ('sallocated', Z_EROFS_MAPPING_STAGING) -
-+ * used to mark temporary allocated pages from other
-+ * file/cached pages and NULL mapping pages.
-+ */
-+#define Z_EROFS_MAPPING_STAGING         ((void *)0x5A110C8D)
-+
-+/* check if a page is marked as staging */
-+static inline bool z_erofs_page_is_staging(struct page *page)
++static int erofs_init_managed_cache(struct super_block *sb)
 +{
-+	return page->mapping == Z_EROFS_MAPPING_STAGING;
++	struct erofs_sb_info *const sbi = EROFS_SB(sb);
++	struct inode *const inode = new_inode(sb);
++
++	if (unlikely(!inode))
++		return -ENOMEM;
++
++	set_nlink(inode, 1);
++	inode->i_size = OFFSET_MAX;
++
++	inode->i_mapping->a_ops = &managed_cache_aops;
++	mapping_set_gfp_mask(inode->i_mapping,
++			     GFP_NOFS | __GFP_HIGHMEM | __GFP_MOVABLE);
++	sbi->managed_cache = inode;
++	return 0;
 +}
-+
-+static inline bool z_erofs_put_stagingpage(struct list_head *pagepool,
-+					   struct page *page)
-+{
-+	if (!z_erofs_page_is_staging(page))
-+		return false;
-+
-+	/* staging pages should not be used by others at the same time */
-+	if (page_ref_count(page) > 1)
-+		put_page(page);
-+	else
-+		list_add(&page->lru, pagepool);
-+	return true;
-+}
-+
-+int z_erofs_decompress(struct z_erofs_decompress_req *rq,
-+		       struct list_head *pagepool);
-+
++#else
++static int erofs_init_managed_cache(struct super_block *sb) { return 0; }
 +#endif
 +
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-new file mode 100644
-index 000000000000..2374dd3c967c
---- /dev/null
-+++ b/fs/erofs/decompressor.c
-@@ -0,0 +1,332 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * linux/fs/erofs/decompressor.c
-+ *
-+ * Copyright (C) 2019 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
-+ */
-+#include "compress.h"
-+#include <linux/module.h>
-+#include <linux/lz4.h>
+ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+ {
+ 	struct inode *inode;
+@@ -325,7 +426,6 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+ #ifdef CONFIG_EROFS_FS_XATTR
+ 	sb->s_xattr = erofs_xattr_handlers;
+ #endif
+-
+ 	/* set erofs default mount options */
+ 	default_options(sbi);
+ 
+@@ -362,6 +462,10 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+ 		return -ENOMEM;
+ 
+ 	erofs_shrinker_register(sb);
++	/* sb->s_umount is already locked, SB_ACTIVE and SB_BORN are not set */
++	err = erofs_init_managed_cache(sb);
++	if (unlikely(err))
++		return err;
+ 
+ 	if (!silent)
+ 		infoln("mounted on %s with opts: %s.", sb->s_id, (char *)data);
+@@ -397,7 +501,15 @@ static void erofs_kill_sb(struct super_block *sb)
+ /* called when ->s_root is non-NULL */
+ static void erofs_put_super(struct super_block *sb)
+ {
++	struct erofs_sb_info *const sbi = EROFS_SB(sb);
 +
-+#ifndef LZ4_DISTANCE_MAX	/* history window size */
-+#define LZ4_DISTANCE_MAX 65535	/* set to maximum value by default */
++	DBG_BUGON(!sbi);
++
+ 	erofs_shrinker_unregister(sb);
++#ifdef CONFIG_EROFS_FS_ZIP
++	iput(sbi->managed_cache);
++	sbi->managed_cache = NULL;
 +#endif
+ }
+ 
+ static struct file_system_type erofs_fs_type = {
+@@ -495,6 +607,18 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
+ 	if (test_opt(sbi, FAULT_INJECTION))
+ 		seq_printf(seq, ",fault_injection=%u",
+ 			   erofs_get_fault_rate(sbi));
++#ifdef CONFIG_EROFS_FS_ZIP
++	if (sbi->cache_strategy == EROFS_ZIP_CACHE_DISABLED) {
++		seq_puts(seq, ",cache_strategy=disabled");
++	} else if (sbi->cache_strategy == EROFS_ZIP_CACHE_READAHEAD) {
++		seq_puts(seq, ",cache_strategy=readahead");
++	} else if (sbi->cache_strategy == EROFS_ZIP_CACHE_READAROUND) {
++		seq_puts(seq, ",cache_strategy=readaround");
++	} else {
++		seq_puts(seq, ",cache_strategy=(unknown)");
++		DBG_BUGON(1);
++	}
++#endif
+ 	return 0;
+ }
+ 
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index ae6362abed67..c48e417d3926 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -144,24 +144,48 @@ int erofs_workgroup_put(struct erofs_workgroup *grp)
+ 	return count;
+ }
+ 
+-/* for nocache case, no customized reclaim path at all */
++static void erofs_workgroup_unfreeze_final(struct erofs_workgroup *grp)
++{
++	erofs_workgroup_unfreeze(grp, 0);
++	__erofs_workgroup_free(grp);
++}
 +
-+#define LZ4_MAX_DISTANCE_PAGES	(DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE) + 1)
-+
-+struct z_erofs_decompressor {
+ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
+ 					   struct erofs_workgroup *grp,
+ 					   bool cleanup)
+ {
+-	int cnt = atomic_read(&grp->refcount);
+-
+-	DBG_BUGON(cnt <= 0);
+-	DBG_BUGON(cleanup && cnt != 1);
 +	/*
-+	 * if destpages have sparsed pages, fill them with bounce pages.
-+	 * it also check whether destpages indicate continuous physical memory.
++	 * If managed cache is on, refcount of workgroups
++	 * themselves could be < 0 (freezed). In other words,
++	 * there is no guarantee that all refcounts > 0.
 +	 */
-+	int (*prepare_destpages)(struct z_erofs_decompress_req *rq,
-+				 struct list_head *pagepool);
-+	int (*decompress)(struct z_erofs_decompress_req *rq, u8 *out);
-+	char *name;
-+};
++	if (!erofs_workgroup_try_to_freeze(grp, 1))
++		return false;
+ 
+-	if (cnt > 1)
++	/*
++	 * Note that all cached pages should be unattached
++	 * before deleted from the radix tree. Otherwise some
++	 * cached pages could be still attached to the orphan
++	 * old workgroup when the new one is available in the tree.
++	 */
++	if (erofs_try_to_free_all_cached_pages(sbi, grp)) {
++		erofs_workgroup_unfreeze(grp, 1);
+ 		return false;
++	}
+ 
++	/*
++	 * It's impossible to fail after the workgroup is freezed,
++	 * however in order to avoid some race conditions, add a
++	 * DBG_BUGON to observe this in advance.
++	 */
+ 	DBG_BUGON(xa_untag_pointer(radix_tree_delete(&sbi->workstn_tree,
+ 						     grp->index)) != grp);
+ 
+-	/* (rarely) could be grabbed again when freeing */
+-	erofs_workgroup_put(grp);
++	/*
++	 * If managed cache is on, last refcount should indicate
++	 * the related workstation.
++	 */
++	erofs_workgroup_unfreeze_final(grp);
+ 	return true;
+ }
+ 
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index ffa64b1d8908..24be7d98bce3 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -167,7 +167,110 @@ static void preload_compressed_pages(struct z_erofs_collector *clt,
+ 				     enum z_erofs_cache_alloctype type,
+ 				     struct list_head *pagepool)
+ {
+-	/* nowhere to load compressed pages from */
++	const struct z_erofs_pcluster *pcl = clt->pcl;
++	const unsigned int clusterpages = BIT(pcl->clusterbits);
++	struct page **pages = clt->compressedpages;
++	pgoff_t index = pcl->obj.index + (pages - pcl->compressed_pages);
++	bool standalone = true;
 +
-+static bool use_vmap;
-+module_param(use_vmap, bool, 0444);
-+MODULE_PARM_DESC(use_vmap, "Use vmap() instead of vm_map_ram() (default 0)");
++	if (clt->mode < COLLECT_PRIMARY_FOLLOWED)
++		return;
 +
-+static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
-+				 struct list_head *pagepool)
-+{
-+	const unsigned int nr =
-+		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
-+	struct page *availables[LZ4_MAX_DISTANCE_PAGES] = { NULL };
-+	unsigned long bounced[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
-+					   BITS_PER_LONG)] = { 0 };
-+	void *kaddr = NULL;
-+	unsigned int i, j, top;
++	for (; pages < pcl->compressed_pages + clusterpages; ++pages) {
++		struct page *page;
++		compressed_page_t t;
 +
-+	top = 0;
-+	for (i = j = 0; i < nr; ++i, ++j) {
-+		struct page *const page = rq->out[i];
-+		struct page *victim;
++		/* the compressed page was loaded before */
++		if (READ_ONCE(*pages))
++			continue;
 +
-+		if (j >= LZ4_MAX_DISTANCE_PAGES)
-+			j = 0;
-+
-+		/* 'valid' bounced can only be tested after a complete round */
-+		if (test_bit(j, bounced)) {
-+			DBG_BUGON(i < LZ4_MAX_DISTANCE_PAGES);
-+			DBG_BUGON(top >= LZ4_MAX_DISTANCE_PAGES);
-+			availables[top++] = rq->out[i - LZ4_MAX_DISTANCE_PAGES];
-+		}
++		page = find_get_page(mc, index);
 +
 +		if (page) {
-+			__clear_bit(j, bounced);
-+			if (kaddr) {
-+				if (kaddr + PAGE_SIZE == page_address(page))
-+					kaddr += PAGE_SIZE;
-+				else
-+					kaddr = NULL;
-+			} else if (!i) {
-+				kaddr = page_address(page);
-+			}
++			t = tag_compressed_page_justfound(page);
++		} else if (type == DELAYEDALLOC) {
++			t = tagptr_init(compressed_page_t, PAGE_UNALLOCATED);
++		} else {	/* DONTALLOC */
++			if (standalone)
++				clt->compressedpages = pages;
++			standalone = false;
 +			continue;
 +		}
-+		kaddr = NULL;
-+		__set_bit(j, bounced);
 +
-+		if (top) {
-+			victim = availables[--top];
-+			get_page(victim);
-+		} else {
-+			victim = erofs_allocpage(pagepool, GFP_KERNEL, false);
-+			if (unlikely(!victim))
-+				return -ENOMEM;
-+			victim->mapping = Z_EROFS_MAPPING_STAGING;
-+		}
-+		rq->out[i] = victim;
++		if (!cmpxchg_relaxed(pages, NULL, tagptr_cast_ptr(t)))
++			continue;
++
++		if (page)
++			put_page(page);
 +	}
-+	return kaddr ? 1 : 0;
++
++	if (standalone)		/* downgrade to PRIMARY_FOLLOWED_NOINPLACE */
++		clt->mode = COLLECT_PRIMARY_FOLLOWED_NOINPLACE;
 +}
 +
-+static void *generic_copy_inplace_data(struct z_erofs_decompress_req *rq,
-+				       u8 *src, unsigned int pageofs_in)
++/* called by erofs_shrinker to get rid of all compressed_pages */
++int erofs_try_to_free_all_cached_pages(struct erofs_sb_info *sbi,
++				       struct erofs_workgroup *grp)
 +{
-+	/*
-+	 * if in-place decompression is ongoing, those decompressed
-+	 * pages should be copied in order to avoid being overlapped.
-+	 */
-+	struct page **in = rq->in;
-+	u8 *const tmp = erofs_get_pcpubuf(0);
-+	u8 *tmpp = tmp;
-+	unsigned int inlen = rq->inputsize - pageofs_in;
-+	unsigned int count = min_t(uint, inlen, PAGE_SIZE - pageofs_in);
-+
-+	while (tmpp < tmp + inlen) {
-+		if (!src)
-+			src = kmap_atomic(*in);
-+		memcpy(tmpp, src + pageofs_in, count);
-+		kunmap_atomic(src);
-+		src = NULL;
-+		tmpp += count;
-+		pageofs_in = 0;
-+		count = PAGE_SIZE;
-+		++in;
-+	}
-+	return tmp;
-+}
-+
-+static int lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
-+{
-+	unsigned int inputmargin, inlen;
-+	u8 *src;
-+	bool copied;
-+	int ret;
-+
-+	if (rq->inputsize > PAGE_SIZE)
-+		return -EOPNOTSUPP;
-+
-+	src = kmap_atomic(*rq->in);
-+	inputmargin = 0;
-+
-+	copied = false;
-+	inlen = rq->inputsize - inputmargin;
-+	if (rq->inplace_io) {
-+		src = generic_copy_inplace_data(rq, src, inputmargin);
-+		inputmargin = 0;
-+		copied = true;
-+	}
-+
-+	ret = LZ4_decompress_safe_partial(src + inputmargin, out,
-+					  inlen, rq->outputsize,
-+					  rq->outputsize);
-+	if (ret < 0) {
-+		errln("%s, failed to decompress, in[%p, %u, %u] out[%p, %u]",
-+		      __func__, src + inputmargin, inlen, inputmargin,
-+		      out, rq->outputsize);
-+		WARN_ON(1);
-+		print_hex_dump(KERN_DEBUG, "[ in]: ", DUMP_PREFIX_OFFSET,
-+			       16, 1, src + inputmargin, inlen, true);
-+		print_hex_dump(KERN_DEBUG, "[out]: ", DUMP_PREFIX_OFFSET,
-+			       16, 1, out, rq->outputsize, true);
-+		ret = -EIO;
-+	}
-+
-+	if (copied)
-+		erofs_put_pcpubuf(src);
-+	else
-+		kunmap_atomic(src);
-+	return ret;
-+}
-+
-+static struct z_erofs_decompressor decompressors[] = {
-+	[Z_EROFS_COMPRESSION_SHIFTED] = {
-+		.name = "shifted"
-+	},
-+	[Z_EROFS_COMPRESSION_LZ4] = {
-+		.prepare_destpages = lz4_prepare_destpages,
-+		.decompress = lz4_decompress,
-+		.name = "lz4"
-+	},
-+};
-+
-+static void copy_from_pcpubuf(struct page **out, const char *dst,
-+			      unsigned short pageofs_out,
-+			      unsigned int outputsize)
-+{
-+	const char *end = dst + outputsize;
-+	const unsigned int righthalf = PAGE_SIZE - pageofs_out;
-+	const char *cur = dst - pageofs_out;
-+
-+	while (cur < end) {
-+		struct page *const page = *out++;
-+
-+		if (page) {
-+			char *buf = kmap_atomic(page);
-+
-+			if (cur >= dst) {
-+				memcpy(buf, cur, min_t(uint, PAGE_SIZE,
-+						       end - cur));
-+			} else {
-+				memcpy(buf + pageofs_out, cur + pageofs_out,
-+				       min_t(uint, righthalf, end - cur));
-+			}
-+			kunmap_atomic(buf);
-+		}
-+		cur += PAGE_SIZE;
-+	}
-+}
-+
-+static void *erofs_vmap(struct page **pages, unsigned int count)
-+{
-+	int i = 0;
-+
-+	if (use_vmap)
-+		return vmap(pages, count, VM_MAP, PAGE_KERNEL);
-+
-+	while (1) {
-+		void *addr = vm_map_ram(pages, count, -1, PAGE_KERNEL);
-+
-+		/* retry two more times (totally 3 times) */
-+		if (addr || ++i >= 3)
-+			return addr;
-+		vm_unmap_aliases();
-+	}
-+	return NULL;
-+}
-+
-+static void erofs_vunmap(const void *mem, unsigned int count)
-+{
-+	if (!use_vmap)
-+		vm_unmap_ram(mem, count);
-+	else
-+		vunmap(mem);
-+}
-+
-+static int decompress_generic(struct z_erofs_decompress_req *rq,
-+			      struct list_head *pagepool)
-+{
-+	const unsigned int nrpages_out =
-+		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
-+	const struct z_erofs_decompressor *alg = decompressors + rq->alg;
-+	unsigned int dst_maptype;
-+	void *dst;
-+	int ret;
-+
-+	if (nrpages_out == 1 && !rq->inplace_io) {
-+		DBG_BUGON(!*rq->out);
-+		dst = kmap_atomic(*rq->out);
-+		dst_maptype = 0;
-+		goto dstmap_out;
-+	}
++	struct z_erofs_pcluster *const pcl =
++		container_of(grp, struct z_erofs_pcluster, obj);
++	struct address_space *const mapping = MNGD_MAPPING(sbi);
++	const unsigned int clusterpages = BIT(pcl->clusterbits);
++	int i;
 +
 +	/*
-+	 * For the case of small output size (especially much less
-+	 * than PAGE_SIZE), memcpy the decompressed data rather than
-+	 * compressed data is preferred.
++	 * refcount of workgroup is now freezed as 1,
++	 * therefore no need to worry about available decompression users.
 +	 */
-+	if (rq->outputsize <= PAGE_SIZE * 7 / 8) {
-+		dst = erofs_get_pcpubuf(0);
-+		if (IS_ERR(dst))
-+			return PTR_ERR(dst);
++	for (i = 0; i < clusterpages; ++i) {
++		struct page *page = pcl->compressed_pages[i];
 +
-+		rq->inplace_io = false;
-+		ret = alg->decompress(rq, dst);
-+		if (!ret)
-+			copy_from_pcpubuf(rq->out, dst, rq->pageofs_out,
-+					  rq->outputsize);
++		if (!page)
++			continue;
 +
-+		erofs_put_pcpubuf(dst);
-+		return ret;
++		/* block other users from reclaiming or migrating the page */
++		if (!trylock_page(page))
++			return -EBUSY;
++
++		if (unlikely(page->mapping != mapping))
++			continue;
++
++		/* barrier is implied in the following 'unlock_page' */
++		WRITE_ONCE(pcl->compressed_pages[i], NULL);
++		set_page_private(page, 0);
++		ClearPagePrivate(page);
++
++		unlock_page(page);
++		put_page(page);
 +	}
-+
-+	ret = alg->prepare_destpages(rq, pagepool);
-+	if (ret < 0) {
-+		return ret;
-+	} else if (ret) {
-+		dst = page_address(*rq->out);
-+		dst_maptype = 1;
-+		goto dstmap_out;
-+	}
-+
-+	dst = erofs_vmap(rq->out, nrpages_out);
-+	if (!dst)
-+		return -ENOMEM;
-+	dst_maptype = 2;
-+
-+dstmap_out:
-+	ret = alg->decompress(rq, dst + rq->pageofs_out);
-+
-+	if (!dst_maptype)
-+		kunmap_atomic(dst);
-+	else if (dst_maptype == 2)
-+		erofs_vunmap(dst, nrpages_out);
-+	return ret;
-+}
-+
-+static int shifted_decompress(const struct z_erofs_decompress_req *rq,
-+			      struct list_head *pagepool)
-+{
-+	const unsigned int nrpages_out =
-+		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
-+	const unsigned int righthalf = PAGE_SIZE - rq->pageofs_out;
-+	unsigned char *src, *dst;
-+
-+	if (nrpages_out > 2) {
-+		DBG_BUGON(1);
-+		return -EIO;
-+	}
-+
-+	if (rq->out[0] == *rq->in) {
-+		DBG_BUGON(nrpages_out != 1);
-+		return 0;
-+	}
-+
-+	src = kmap_atomic(*rq->in);
-+	if (!rq->out[0]) {
-+		dst = NULL;
-+	} else {
-+		dst = kmap_atomic(rq->out[0]);
-+		memcpy(dst + rq->pageofs_out, src, righthalf);
-+	}
-+
-+	if (rq->out[1] == *rq->in) {
-+		memmove(src, src + righthalf, rq->pageofs_out);
-+	} else if (nrpages_out == 2) {
-+		if (dst)
-+			kunmap_atomic(dst);
-+		DBG_BUGON(!rq->out[1]);
-+		dst = kmap_atomic(rq->out[1]);
-+		memcpy(dst, src + righthalf, rq->pageofs_out);
-+	}
-+	if (dst)
-+		kunmap_atomic(dst);
-+	kunmap_atomic(src);
 +	return 0;
 +}
 +
-+int z_erofs_decompress(struct z_erofs_decompress_req *rq,
-+		       struct list_head *pagepool)
++int erofs_try_to_free_cached_page(struct address_space *mapping,
++				  struct page *page)
 +{
-+	if (rq->alg == Z_EROFS_COMPRESSION_SHIFTED)
-+		return shifted_decompress(rq, pagepool);
-+	return decompress_generic(rq, pagepool);
++	struct z_erofs_pcluster *const pcl = (void *)page_private(page);
++	const unsigned int clusterpages = BIT(pcl->clusterbits);
++	int ret = 0;	/* 0 - busy */
++
++	if (erofs_workgroup_try_to_freeze(&pcl->obj, 1)) {
++		unsigned int i;
++
++		for (i = 0; i < clusterpages; ++i) {
++			if (pcl->compressed_pages[i] == page) {
++				WRITE_ONCE(pcl->compressed_pages[i], NULL);
++				ret = 1;
++				break;
++			}
++		}
++		erofs_workgroup_unfreeze(&pcl->obj, 1);
++
++		if (ret) {
++			ClearPagePrivate(page);
++			put_page(page);
++		}
++	}
++	return ret;
+ }
+ 
+ /* page_type must be Z_EROFS_PAGE_TYPE_EXCLUSIVE */
+@@ -434,6 +537,20 @@ static inline struct page *__stagingpage_alloc(struct list_head *pagepool,
+ 	return page;
+ }
+ 
++static bool should_alloc_managed_pages(struct z_erofs_decompress_frontend *fe,
++				       unsigned int cachestrategy,
++				       erofs_off_t la)
++{
++	if (cachestrategy <= EROFS_ZIP_CACHE_DISABLED)
++		return false;
++
++	if (fe->backmost)
++		return true;
++
++	return cachestrategy >= EROFS_ZIP_CACHE_READAROUND &&
++		la < fe->headoffset;
 +}
 +
+ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 				struct page *page,
+ 				struct list_head *pagepool)
+@@ -488,7 +605,13 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 		goto err_out;
+ 
+ 	/* preload all compressed pages (maybe downgrade role if necessary) */
+-	preload_compressed_pages(clt, MNGD_MAPPING(sbi), DONTALLOC, pagepool);
++	if (should_alloc_managed_pages(fe, sbi->cache_strategy, map->m_la))
++		cache_strategy = DELAYEDALLOC;
++	else
++		cache_strategy = DONTALLOC;
++
++	preload_compressed_pages(clt, MNGD_MAPPING(sbi),
++				 cache_strategy, pagepool);
+ 
+ 	tight &= (clt->mode >= COLLECT_PRIMARY_HOOKED);
+ hitted:
+@@ -987,6 +1110,7 @@ static struct z_erofs_unzip_io *jobqueue_init(struct super_block *sb,
+ 
+ /* define decompression jobqueue types */
+ enum {
++	JQ_BYPASS,
+ 	JQ_SUBMIT,
+ 	NR_JOBQUEUES,
+ };
+@@ -997,6 +1121,13 @@ static void *jobqueueset_init(struct super_block *sb,
+ 			      struct z_erofs_unzip_io *fgq,
+ 			      bool forcefg)
+ {
++	/*
++	 * if managed cache is enabled, bypass jobqueue is needed,
++	 * no need to read from device for all pclusters in this queue.
++	 */
++	q[JQ_BYPASS] = jobqueue_init(sb, fgq + JQ_BYPASS, true);
++	qtail[JQ_BYPASS] = &q[JQ_BYPASS]->head;
++
+ 	q[JQ_SUBMIT] = jobqueue_init(sb, fgq + JQ_SUBMIT, forcefg);
+ 	qtail[JQ_SUBMIT] = &q[JQ_SUBMIT]->head;
+ 
+@@ -1007,17 +1138,34 @@ static void move_to_bypass_jobqueue(struct z_erofs_pcluster *pcl,
+ 				    z_erofs_next_pcluster_t qtail[],
+ 				    z_erofs_next_pcluster_t owned_head)
+ {
+-	/* impossible to bypass submission for managed cache disabled */
+-	DBG_BUGON(1);
++	z_erofs_next_pcluster_t *const submit_qtail = qtail[JQ_SUBMIT];
++	z_erofs_next_pcluster_t *const bypass_qtail = qtail[JQ_BYPASS];
++
++	DBG_BUGON(owned_head == Z_EROFS_PCLUSTER_TAIL_CLOSED);
++	if (owned_head == Z_EROFS_PCLUSTER_TAIL)
++		owned_head = Z_EROFS_PCLUSTER_TAIL_CLOSED;
++
++	WRITE_ONCE(pcl->next, Z_EROFS_PCLUSTER_TAIL_CLOSED);
++
++	WRITE_ONCE(*submit_qtail, owned_head);
++	WRITE_ONCE(*bypass_qtail, &pcl->next);
++
++	qtail[JQ_BYPASS] = &pcl->next;
+ }
+ 
+ static bool postsubmit_is_all_bypassed(struct z_erofs_unzip_io *q[],
+ 				       unsigned int nr_bios,
+ 				       bool force_fg)
+ {
+-	/* bios should be >0 if managed cache is disabled */
+-	DBG_BUGON(!nr_bios);
+-	return false;
++	/*
++	 * although background is preferred, no one is pending for submission.
++	 * don't issue workqueue for decompression but drop it directly instead.
++	 */
++	if (force_fg || nr_bios)
++		return false;
++
++	kvfree(container_of(q[JQ_SUBMIT], struct z_erofs_unzip_io_sb, io));
++	return true;
+ }
+ 
+ static bool z_erofs_vle_submit_all(struct super_block *sb,
+@@ -1130,6 +1278,9 @@ static void z_erofs_submit_and_unzip(struct super_block *sb,
+ 				    pagepool, io, force_fg))
+ 		return;
+ 
++	/* decompress no I/O pclusters immediately */
++	z_erofs_vle_unzip_all(sb, &io[JQ_BYPASS], pagepool);
++
+ 	if (!force_fg)
+ 		return;
+ 
+diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
+index 3a82ae933015..506ca46727db 100644
+--- a/fs/erofs/zdata.h
++++ b/fs/erofs/zdata.h
+@@ -101,9 +101,12 @@ struct z_erofs_unzip_io_sb {
+ 	struct super_block *sb;
+ };
+ 
+-#define MNGD_MAPPING(sbi)	(NULL)
++#define MNGD_MAPPING(sbi)	((sbi)->managed_cache->i_mapping)
+ static inline bool erofs_page_is_managed(const struct erofs_sb_info *sbi,
+-					 struct page *page) { return false; }
++					 struct page *page)
++{
++	return page->mapping == MNGD_MAPPING(sbi);
++}
+ 
+ #define Z_EROFS_ONLINEPAGE_COUNT_BITS   2
+ #define Z_EROFS_ONLINEPAGE_COUNT_MASK   ((1 << Z_EROFS_ONLINEPAGE_COUNT_BITS) - 1)
 -- 
 2.17.1
 
