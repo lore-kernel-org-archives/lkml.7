@@ -2,150 +2,169 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459CEC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFA5C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6A32084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:52:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="YBWFagRx"
+	by mail.kernel.org (Postfix) with ESMTP id A93A92084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:55:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbfHOGw0 (ORCPT
+        id S1730334AbfHOGzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 02:52:26 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45377 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfHOGw0 (ORCPT
+        Thu, 15 Aug 2019 02:55:04 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42230 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726098AbfHOGzE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 02:52:26 -0400
-Received: by mail-ed1-f68.google.com with SMTP id x19so1273784eda.12
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 23:52:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AdThTK4irWjRHbKRNPRojupEGI8CuxNqyMHUGO6haU0=;
-        b=YBWFagRxj3AfoQNeT1UBuJe04QemjMpngCbeoAlxYRV7G8aAfyWVf43ySnd4OGigxl
-         Ns4xbcsW7Azu5FyzHwpJgyFbWPQVJjetlQmlGonoYkSnreGT+4qCoMjbqjRsUQV31Hvp
-         z9jyRdBKqwQdDr3jRTT1T/yIfgsHR8yJHCyq0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=AdThTK4irWjRHbKRNPRojupEGI8CuxNqyMHUGO6haU0=;
-        b=j0D72ASffdqk9F3nlMVnPfcC6N2XPZ3glgI7wZQJlgyV2Oc50wfC8byAdTcKqjnPRx
-         cOWicgu4T7QXjAbzb7cA74yk9JOpt0MXt8vB2AF4yb+CpjYa7lhnVG1TQ/j6ONbQRbPm
-         cD++tlrku+r6Tp3n4tufRel86DMBCELXRBp8XKa0g4EMJWh5RGdIBYTsB0GLCsY2klMm
-         WKGDek/FOImNT3yZfS37eYyvX64xrJiYC15s9v/+1ICYpirhkN1k9uXu6K1CBwA8b4vl
-         U3lrtUmwGVuIb4AjNaaXMgViwYHwDgtxucfQMUEAUAy/TcYocNBFWlFMLrcdvFGuDIu6
-         eUnA==
-X-Gm-Message-State: APjAAAVK0cRS2Kvj2yfkxfsDJDxmHiIz0AY443ia9REOZSygY0dBmh+/
-        3L5KqHPzRHK9zAntN+fPVxoKKQ==
-X-Google-Smtp-Source: APXvYqzKfh04I5n5jqpFb/od47twmHRq+smHNDBFxhta5k8M0iVd0qgYIIokvl2AA/0YJfkhp6dXOw==
-X-Received: by 2002:a50:a485:: with SMTP id w5mr3690508edb.277.1565851944641;
-        Wed, 14 Aug 2019 23:52:24 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id w3sm391183edu.4.2019.08.14.23.52.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 23:52:23 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 08:52:21 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thu, 15 Aug 2019 02:55:04 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7F6pkoj092889
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 02:55:03 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ucwk40cxb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 02:55:02 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 15 Aug 2019 07:55:00 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 15 Aug 2019 07:54:56 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7F6stfi50921518
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Aug 2019 06:54:55 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 68AA9A4060;
+        Thu, 15 Aug 2019 06:54:55 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 31DEEA4054;
+        Thu, 15 Aug 2019 06:54:54 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.59])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 15 Aug 2019 06:54:54 +0000 (GMT)
+Date:   Thu, 15 Aug 2019 09:54:52 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     alastair@d-silva.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Qian Cai <cai@lca.pw>, Allison Randal <allison@lohutok.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-Message-ID: <20190815065221.GZ7444@phenom.ffwll.local>
-Mail-Followup-To: Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Jann Horn <jannh@google.com>,
-        Feng Tang <feng.tang@intel.com>, Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
- <20190814202027.18735-3-daniel.vetter@ffwll.ch>
- <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
+        Nicholas Piggin <npiggin@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] powerpc: Chunk calls to flush_dcache_range in
+ arch_*_memory
+References: <20190815041057.13627-1-alastair@au1.ibm.com>
+ <20190815041057.13627-5-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190815041057.13627-5-alastair@au1.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19081506-0028-0000-0000-0000038FF606
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081506-0029-0000-0000-000024520BD9
+Message-Id: <20190815065452.GB19609@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-15_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908150071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 01:45:58PM -0700, Andrew Morton wrote:
-> On Wed, 14 Aug 2019 22:20:24 +0200 Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+On Thu, Aug 15, 2019 at 02:10:49PM +1000, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> > In some special cases we must not block, but there's not a
-> > spinlock, preempt-off, irqs-off or similar critical section already
-> > that arms the might_sleep() debug checks. Add a non_block_start/end()
-> > pair to annotate these.
-> > 
-> > This will be used in the oom paths of mmu-notifiers, where blocking is
-> > not allowed to make sure there's forward progress. Quoting Michal:
-> > 
-> > "The notifier is called from quite a restricted context - oom_reaper -
-> > which shouldn't depend on any locks or sleepable conditionals. The code
-> > should be swift as well but we mostly do care about it to make a forward
-> > progress. Checking for sleepable context is the best thing we could come
-> > up with that would describe these demands at least partially."
-> > 
-> > Peter also asked whether we want to catch spinlocks on top, but Michal
-> > said those are less of a problem because spinlocks can't have an
-> > indirect dependency upon the page allocator and hence close the loop
-> > with the oom reaper.
+> When presented with large amounts of memory being hotplugged
+> (in my test case, ~890GB), the call to flush_dcache_range takes
+> a while (~50 seconds), triggering RCU stalls.
 > 
-> I continue to struggle with this.  It introduces a new kernel state
-> "running preemptibly but must not call schedule()".  How does this make
-> any sense?
+> This patch breaks up the call into 16GB chunks, calling
+> cond_resched() inbetween to allow the scheduler to run.
 > 
-> Perhaps a much, much more detailed description of the oom_reaper
-> situation would help out.
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>  arch/powerpc/mm/mem.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> index 5400da87a804..fb0d5e9aa11b 100644
+> --- a/arch/powerpc/mm/mem.c
+> +++ b/arch/powerpc/mm/mem.c
+> @@ -104,11 +104,14 @@ int __weak remove_section_mapping(unsigned long start, unsigned long end)
+>  	return -ENODEV;
+>  }
+> 
+> +#define FLUSH_CHUNK_SIZE (16ull * 1024ull * 1024ull * 1024ull)
 
-I agree on both points, but I guess I'm not the expert to explain why we
-have this. All I'm trying to do is that drivers hold up their side. If you
-want to have better documentation for why the oom case needs this special
-new mode, you're looking at the wrong guy for that :-)
+IMHO this begs for adding SZ_16G to include/linux/sizes.h and using it here
 
-Of course if you folks all decide that you just don't want to be
-remembered about that I guess we can drop this one here, but you're just
-shooting the messenger I think.
--Daniel
+> +
+>  int __ref arch_add_memory(int nid, u64 start, u64 size,
+>  			struct mhp_restrictions *restrictions)
+>  {
+>  	unsigned long start_pfn = start >> PAGE_SHIFT;
+>  	unsigned long nr_pages = size >> PAGE_SHIFT;
+> +	unsigned long i;
+>  	int rc;
+> 
+>  	resize_hpt_for_hotplug(memblock_phys_mem_size());
+> @@ -120,7 +123,11 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
+>  			start, start + size, rc);
+>  		return -EFAULT;
+>  	}
+> -	flush_dcache_range(start, start + size);
+> +
+> +	for (i = 0; i < size; i += FLUSH_CHUNK_SIZE) {
+> +		flush_dcache_range(start + i, min(start + size, start + i + FLUSH_CHUNK_SIZE));
+> +		cond_resched();
+> +	}
+> 
+>  	return __add_pages(nid, start_pfn, nr_pages, restrictions);
+>  }
+> @@ -131,13 +138,18 @@ void __ref arch_remove_memory(int nid, u64 start, u64 size,
+>  	unsigned long start_pfn = start >> PAGE_SHIFT;
+>  	unsigned long nr_pages = size >> PAGE_SHIFT;
+>  	struct page *page = pfn_to_page(start_pfn) + vmem_altmap_offset(altmap);
+> +	unsigned long i;
+>  	int ret;
+> 
+>  	__remove_pages(page_zone(page), start_pfn, nr_pages, altmap);
+> 
+>  	/* Remove htab bolted mappings for this section of memory */
+>  	start = (unsigned long)__va(start);
+> -	flush_dcache_range(start, start + size);
+> +	for (i = 0; i < size; i += FLUSH_CHUNK_SIZE) {
+> +		flush_dcache_range(start + i, min(start + size, start + i + FLUSH_CHUNK_SIZE));
+> +		cond_resched();
+> +	}
+> +
+>  	ret = remove_section_mapping(start, start + size);
+>  	WARN_ON_ONCE(ret);
+> 
+> -- 
+> 2.21.0
+> 
+
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Sincerely yours,
+Mike.
+
