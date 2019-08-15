@@ -4,30 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9059CC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC75C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F3C206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F75E206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:18:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731252AbfHOLST (ORCPT
+        id S1731544AbfHOLSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 07:18:19 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:37996 "EHLO inva020.nxp.com"
+        Thu, 15 Aug 2019 07:18:24 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:38084 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730969AbfHOLSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 07:18:18 -0400
+        id S1730969AbfHOLSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 07:18:21 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 631FB1A000E;
-        Thu, 15 Aug 2019 13:18:16 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 997881A00FE;
+        Thu, 15 Aug 2019 13:18:19 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7F9A51A01EB;
-        Thu, 15 Aug 2019 13:18:08 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B639B1A0115;
+        Thu, 15 Aug 2019 13:18:11 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AA42B402EC;
-        Thu, 15 Aug 2019 19:17:58 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E3E9B402F1;
+        Thu, 15 Aug 2019 19:18:01 +0800 (SGT)
 From:   Anson.Huang@nxp.com
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
@@ -37,9 +38,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-pm@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/6] cpufreq: Use imx-cpufreq-dt for i.MX8MN's speed grading
-Date:   Thu, 15 Aug 2019 06:59:40 -0400
-Message-Id: <1565866783-19672-3-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 5/6] clk: imx8mn: Add necessary frequency support for ARM PLL table
+Date:   Thu, 15 Aug 2019 06:59:42 -0400
+Message-Id: <1565866783-19672-5-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565866783-19672-1-git-send-email-Anson.Huang@nxp.com>
 References: <1565866783-19672-1-git-send-email-Anson.Huang@nxp.com>
@@ -51,26 +52,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Add i.MX8MN to blacklist, so that imx-cpufreq-dt driver can handle
-speed grading bits just like other i.MX8M SoCs.
+i.MX8MN supports CPU running at 1.5GHz/1.4GHz/1.2GHz, add missing
+frequency for ARM PLL table.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/imx/clk-imx8mn.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index ec2057d..febcec8 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -109,6 +109,7 @@ static const struct of_device_id blacklist[] __initconst = {
- 	{ .compatible = "fsl,imx7d", },
- 	{ .compatible = "fsl,imx8mq", },
- 	{ .compatible = "fsl,imx8mm", },
-+	{ .compatible = "fsl,imx8mn", },
+diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
+index ecd1062..3f1239a 100644
+--- a/drivers/clk/imx/clk-imx8mn.c
++++ b/drivers/clk/imx/clk-imx8mn.c
+@@ -42,6 +42,8 @@ enum {
+ static const struct imx_pll14xx_rate_table imx8mn_pll1416x_tbl[] = {
+ 	PLL_1416X_RATE(1800000000U, 225, 3, 0),
+ 	PLL_1416X_RATE(1600000000U, 200, 3, 0),
++	PLL_1416X_RATE(1500000000U, 375, 3, 1),
++	PLL_1416X_RATE(1400000000U, 350, 3, 1),
+ 	PLL_1416X_RATE(1200000000U, 300, 3, 1),
+ 	PLL_1416X_RATE(1000000000U, 250, 3, 1),
+ 	PLL_1416X_RATE(800000000U,  200, 3, 1),
+@@ -82,6 +84,7 @@ static struct imx_pll14xx_clk imx8mn_dram_pll = {
+ static struct imx_pll14xx_clk imx8mn_arm_pll = {
+ 		.type = PLL_1416X,
+ 		.rate_table = imx8mn_pll1416x_tbl,
++		.rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
+ };
  
- 	{ .compatible = "marvell,armadaxp", },
- 
+ static struct imx_pll14xx_clk imx8mn_gpu_pll = {
 -- 
 2.7.4
 
