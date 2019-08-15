@@ -2,115 +2,157 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB8FC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D091C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8D82063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A2482063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:41:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hnGKfGQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732254AbfHORj1 (ORCPT
+        id S1729603AbfHORl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:39:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54144 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbfHORj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:39:26 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 500082A09BD;
-        Thu, 15 Aug 2019 17:39:26 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 90D51841D7;
-        Thu, 15 Aug 2019 17:39:24 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 13:39:22 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-Message-ID: <20190815173922.GH30916@redhat.com>
-References: <20190814202027.18735-3-daniel.vetter@ffwll.ch>
- <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
- <20190815084429.GE9477@dhcp22.suse.cz>
- <20190815130415.GD21596@ziepe.ca>
- <CAKMK7uE9zdmBuvxa788ONYky=46GN=5Up34mKDmsJMkir4x7MQ@mail.gmail.com>
- <20190815143759.GG21596@ziepe.ca>
- <CAKMK7uEJQ6mPQaOWbT_6M+55T-dCVbsOxFnMC6KzLAMQNa-RGg@mail.gmail.com>
- <20190815151028.GJ21596@ziepe.ca>
- <CAKMK7uG33FFCGJrDV4-FHT2FWi+Z5SnQ7hoyBQd4hignzm1C-A@mail.gmail.com>
- <20190815173557.GN21596@ziepe.ca>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190815173557.GN21596@ziepe.ca>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 15 Aug 2019 17:39:26 +0000 (UTC)
+        Thu, 15 Aug 2019 13:41:28 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39786 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfHORl1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:41:27 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u17so1595833pgi.6;
+        Thu, 15 Aug 2019 10:41:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ItZidBUf697ScM1HdSkE4tHlaXM51upzkEib4CqA/pY=;
+        b=hnGKfGQe01l3dSshgshM4c/cZvihrL5Rh4HV5BO3ByLpi8+P2VUEyFKzjbo6j8jZOO
+         5i9jEfAeoqMqID44E7uDRarzUw/OyOI1YcPC5WJAuFtRWYsSoLyN1psGijTSUG/dXbTE
+         JO44Qo8Xv8vrA/HNtYEIyuS1X9mRjTtiLrQRKrbM+psCqnG6j/NYKOIYWHJ43s+OdB69
+         cfWXpi0sFStjTTAOAxdkjNEsfPfUK1JXZ0YesXFQzwM65d9rwftySgsaNaoId6porTrx
+         1hZo6lZZXibKHZTxd1PSIQK5z2EKpkr1OJxuIYFp95vKs4ZRSYFGdjgDHz/ab38R1D9t
+         c3UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ItZidBUf697ScM1HdSkE4tHlaXM51upzkEib4CqA/pY=;
+        b=WujqhhXRWp9yTnWM39Wy9ysxGnIZyOohxvy7lOLTPSJhoM/KUp/qvJxhoaLRnuQGGc
+         nBPfsad/vlfYYpgoeUYzn4tZY+6X9Vd6ducL1szRqQnljBY0MxEixBmm12KZOV9vPwyV
+         YP3Nw+bH6eM0azFfdHFA1XugvSvCNJkoqSd2Kjs/uDadRqGcj9SJ547R6ClPJC4g42dV
+         8xYUDWmEV2FPIhPZnPi3UH4b8ToVt86KW8USaPiSumS7NDuGJgurQcaEig4LZtlCAYia
+         hkb7bZUqDEFmjzxISM+8l8PcfNaqqUv2n5quYlIpQAKmBlVsGXMH4e/M+j4Qo1/+gDSm
+         oBVw==
+X-Gm-Message-State: APjAAAXFwFuy7ci+WyMyi4Uaz9lWl9M0Rk2tgAsUTZ/og7g/G3Jv20Ri
+        wbH07xhxkFv0qiTDfrevaVo=
+X-Google-Smtp-Source: APXvYqz4+9crOMkf9DxJf0OwlOMNnnUVYR1SUToP0xKojERpDXMDfeCIPRu8mKC6Iu/TDiCaCfUc5w==
+X-Received: by 2002:a17:90a:d151:: with SMTP id t17mr3312753pjw.60.1565890887150;
+        Thu, 15 Aug 2019 10:41:27 -0700 (PDT)
+Received: from e6f2834286fb.pdc.gateworks.com (68-189-91-139.static.snlo.ca.charter.com. [68.189.91.139])
+        by smtp.gmail.com with ESMTPSA id s24sm2756670pgm.3.2019.08.15.10.41.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 10:41:26 -0700 (PDT)
+From:   Matthew Michilot <matthew.michilot@gmail.com>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthew Michilot <matthew.michilot@gmail.com>
+Subject: [PATCH v2] USB: serial: ftdi_sio: add support for FT232H CBUS gpios
+Date:   Thu, 15 Aug 2019 17:40:54 +0000
+Message-Id: <20190815174054.20240-1-matthew.michilot@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190808222348.4428-1-matthew.michilot@gmail.com>
+References: <20190808222348.4428-1-matthew.michilot@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 02:35:57PM -0300, Jason Gunthorpe wrote:
-> On Thu, Aug 15, 2019 at 06:25:16PM +0200, Daniel Vetter wrote:
-> 
-> > I'm not really well versed in the details of our userptr, but both
-> > amdgpu and i915 wait for the gpu to complete from
-> > invalidate_range_start. Jerome has at least looked a lot at the amdgpu
-> > one, so maybe he can explain what exactly it is we're doing ...
-> 
-> amdgpu is (wrongly) using hmm for something, I can't really tell what
-> it is trying to do. The calls to dma_fence under the
-> invalidate_range_start do not give me a good feeling.
-> 
-> However, i915 shows all the signs of trying to follow the registration
-> cache model, it even has a nice comment in
-> i915_gem_userptr_get_pages() explaining that the races it has don't
-> matter because it is a user space bug to change the VA mapping in the
-> first place. That just screams registration cache to me.
-> 
-> So it is fine to run HW that way, but if you do, there is no reason to
-> fence inside the invalidate_range end. Just orphan the DMA buffer and
-> clean it up & release the page pins when all DMA buffer refs go to
-> zero. The next access to that VA should get a new DMA buffer with the
-> right mapping.
-> 
-> In other words the invalidation should be very simple without
-> complicated locking, or wait_event's. Look at hfi1 for example.
+Enable support for cbus gpios on FT232H. The cbus configuration is
+stored in one word in the EEPROM at byte-offset 0x1a with the mux
+config for ACBUS5, ACBUS6, ACBUS8 and ACBUS9 (only pins that can be
+configured as I/O mode).
 
-This would break the today usage model of uptr and it will
-break userspace expectation ie if GPU is writting to that
-memory and that memory then the userspace want to make sure
-that it will see what the GPU write.
+Tested using FT232H by configuring one ACBUS pin at a time.
 
-Yes i915 is broken in respect to not having a end notifier
-and tracking active invalidation for a range but the GUP
-side of thing kind of hide this bug and it shrinks the window
-for bad to happen to something so small that i doubt anyone
-could ever hit it (still a bug thought).
+Signed-off-by: Matthew Michilot <matthew.michilot@gmail.com>
+Reviewed-by: Tim Harvey <tharvey@gateworks.com>
+---
+V2:
+- made hex notation all lowercase for consistency
+- allocated 4 bytes instead of 2 bytes for buffer
+- improved documentation on FT232H CBUS memory mapping
+- fixed CBUS pins being incorrectly mapped to the wrong gpios
+- sorted case labels alphabetically
+---
+ drivers/usb/serial/ftdi_sio.c | 43 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-Cheers,
-Jérôme
+diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
+index 4b3a049561f3..01e4ecccd079 100644
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -2023,6 +2023,46 @@ static int ftdi_read_eeprom(struct usb_serial *serial, void *dst, u16 addr,
+ 	return 0;
+ }
+ 
++static int ftdi_gpio_init_ft232h(struct usb_serial_port *port)
++{
++	struct ftdi_private *priv = usb_get_serial_port_data(port);
++	u8 *buf;
++	u16 cbus_config;
++	int ret;
++	int i;
++
++	buf = kmalloc(4, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	ret = ftdi_read_eeprom(port->serial, buf, 0x1a, 4);
++	if (ret < 0)
++		goto out_free;
++
++	/*
++	 * FT232H CBUS Memory Map
++	 *
++	 * 0x1a: X- (upper nibble -> AC5)
++	 * 0x1b: -X (lower nibble -> AC6)
++	 * 0x1c: XX (upper nibble -> AC9 | lower nibble -> AC8)
++	 */
++	cbus_config = buf[2] << 8 | (buf[1] & 0xf) << 4 | (buf[0] & 0xf0) >> 4;
++
++	priv->gc.ngpio = 4;
++	priv->gpio_altfunc = 0xff;
++
++	for (i = 0; i < priv->gc.ngpio; ++i) {
++		if ((cbus_config & 0xf) == FTDI_FTX_CBUS_MUX_GPIO)
++			priv->gpio_altfunc &= ~BIT(i);
++		cbus_config >>= 4;
++	}
++
++out_free:
++	kfree(buf);
++
++	return ret;
++}
++
+ static int ftdi_gpio_init_ft232r(struct usb_serial_port *port)
+ {
+ 	struct ftdi_private *priv = usb_get_serial_port_data(port);
+@@ -2098,6 +2138,9 @@ static int ftdi_gpio_init(struct usb_serial_port *port)
+ 	int result;
+ 
+ 	switch (priv->chip_type) {
++	case FT232H:
++		result = ftdi_gpio_init_ft232h(port);
++		break;
+ 	case FT232RL:
+ 		result = ftdi_gpio_init_ft232r(port);
+ 		break;
+-- 
+2.17.1
+
