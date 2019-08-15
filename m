@@ -2,114 +2,74 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4271EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F246AC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14295206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:12:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QElReFqQ"
+	by mail.kernel.org (Postfix) with ESMTP id CBA212063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731037AbfHOJM3 (ORCPT
+        id S1731048AbfHOJNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 05:12:29 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39290 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731003AbfHOJM2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 05:12:28 -0400
-Received: by mail-lj1-f193.google.com with SMTP id x4so1645470ljj.6;
-        Thu, 15 Aug 2019 02:12:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/iZpzZ2apqtPNAYN3rBQkZr4GG5AMuxH/SW/Plc3ffA=;
-        b=QElReFqQP1GK1jybq9AdaL5hGB8HmAAs0wfsjh6CmTuxeo6TEfpfCDoP/+HHCVw2A1
-         3i3+mnn+llz0xTIikJA14Xpr1gVhFAfaTwJmRt5SqcsiF1KeM0jPzS5lvDKb8OMOh+GY
-         i1vgJaEZIKCh8lSCkUui0aAgkjIg4L206m/sGzk9t6O6QQvrLU8yWFknvH19qAjVW4Fd
-         nF9QzblURTEbZ/R1/afeTL+rln+KXYM3Ne/zhEr90OEO3jzL4Ikq8WJTHukdGQn/wyhN
-         adWSLc2bj5U6uGjvYIJzNFyX46OWUcpQmn4mMK+8HUZ346uWMznEAPX5nqG0MRJz032l
-         rD3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/iZpzZ2apqtPNAYN3rBQkZr4GG5AMuxH/SW/Plc3ffA=;
-        b=Kd+whwjLkcwJZCSnANBkFC9w2J9s2rLouK+R2KdlSsJyQWXOJYasCYcBLdY5chUqA2
-         TYvuxjfF+DlWnml03GpjlKmcqSjmalkREne4+n1CydD8g4HcMNsCfu7+EFDl/EJHzXOZ
-         w/8GGri/fuVHlgQual3reAt6R031QguJDc8HPyoe8EpjZmc3MZOv10fCgm6cuEP71dSI
-         jVMxH7Q4/P2NEJ10LAlTzMeRnlfOb6PyJKRlZbGAaFiIL94LVi2h+BH5WxB1U4hrS9cW
-         FvO9ZdtEdT5IDsgvohb5jJyZas5lK3p3dFVthl+BgUUKDMIPOvfHvsLCe74DbAL36aI2
-         dU6w==
-X-Gm-Message-State: APjAAAWFjkRMngKj5LhO5LcIymFkJsGTLhD7gavEylZdg8bb8wCrwKkE
-        awYANU2xpYdBMNerIM4r5MX9fhklScco9SsRk/U=
-X-Google-Smtp-Source: APXvYqyGUoGw9duO+xloOL4EihgDXFOKCU7bXBE4DDDHi6q2U92avBXabuArt3Vzj00ddjUnjW901Y7mAjAa9KYeXcg=
-X-Received: by 2002:a05:651c:ca:: with SMTP id 10mr2132619ljr.144.1565860346166;
- Thu, 15 Aug 2019 02:12:26 -0700 (PDT)
+        Thu, 15 Aug 2019 05:13:10 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4694 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730073AbfHOJNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 05:13:09 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 347898C823010DF1A482;
+        Thu, 15 Aug 2019 17:13:06 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 15 Aug 2019
+ 17:12:56 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <bardliao@realtek.com>, <oder_chiou@realtek.com>
+CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ASoC: rt1011: remove unused variable 'dac_vol_tlv' and 'adc_vol_tlv'
+Date:   Thu, 15 Aug 2019 17:06:02 +0800
+Message-ID: <20190815090602.9000-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20190812215052.71840-1-ndesaulniers@google.com>
- <20190812215052.71840-12-ndesaulniers@google.com> <20190813082744.xmzmm4j675rqiz47@willie-the-truck>
- <CANiq72mAfJ23PyWzZAELgbKQDCX2nvY0z+dmOMe14qz=wa6eFg@mail.gmail.com>
- <20190813170829.c3lryb6va3eopxd7@willie-the-truck> <CAKwvOdk4hca8WzWzhcPEvxXnJVLbXGnhBdDZbeL_W_H91Ttjqw@mail.gmail.com>
- <CANiq72mGoGpx7EAVUPcGuhVkLit8sB3bR-k1XBDyeM8HBUaDZw@mail.gmail.com>
-In-Reply-To: <CANiq72mGoGpx7EAVUPcGuhVkLit8sB3bR-k1XBDyeM8HBUaDZw@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 15 Aug 2019 11:12:15 +0200
-Message-ID: <CANiq72nUyT-q3A9mTrYzPZ+J9Ya7Lns5MyTK7W7-7yXgFWc2xA@mail.gmail.com>
-Subject: Re: [PATCH 12/16] arm64: prefer __section from compiler_attributes.h
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Yonghong Song <yhs@fb.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 11:08 AM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Thu, Aug 15, 2019 at 12:20 AM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > This lone patch of the series is just cosmetic, but patch 14/16 fixes
-> > a real boot issue:
-> > https://github.com/ClangBuiltLinux/linux/issues/619
-> > Miguel, I'd like to get that one landed ASAP; the rest are just for consistency.
->
-> Ah, interesting. It would be best to have sent that one independently
-> to the others, plus adding a commit message mentioning this in
-> particular. Let's talk about that in the thread.
+sound/soc/codecs/rt1011.c:981:35: warning:
+ dac_vol_tlv defined but not used [-Wunused-const-variable=]
+sound/soc/codecs/rt1011.c:982:35: warning:
+ adc_vol_tlv defined but not used [-Wunused-const-variable=]
 
-Btw, I guess that is the Oops you were mentioning in the cover letter?
+They are never used, so can be removed.
 
-Cheers,
-Miguel
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ sound/soc/codecs/rt1011.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/sound/soc/codecs/rt1011.c b/sound/soc/codecs/rt1011.c
+index 638abca..fa34565 100644
+--- a/sound/soc/codecs/rt1011.c
++++ b/sound/soc/codecs/rt1011.c
+@@ -978,9 +978,6 @@ static bool rt1011_readable_register(struct device *dev, unsigned int reg)
+ 	}
+ }
+ 
+-static const DECLARE_TLV_DB_SCALE(dac_vol_tlv, -9435, 37, 0);
+-static const DECLARE_TLV_DB_SCALE(adc_vol_tlv, -1739, 37, 0);
+-
+ static const char * const rt1011_din_source_select[] = {
+ 	"Left",
+ 	"Right",
+-- 
+2.7.4
+
+
