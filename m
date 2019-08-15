@@ -2,176 +2,186 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B51C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5E4C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF645206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE7922089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NsKOuhlC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uj64cP5/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfHOXgy (ORCPT
+        id S1726462AbfHOXmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 19:36:54 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34959 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfHOXgx (ORCPT
+        Thu, 15 Aug 2019 19:42:23 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:45039 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbfHOXmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 19:36:53 -0400
-Received: by mail-pl1-f194.google.com with SMTP id gn20so1666786plb.2;
-        Thu, 15 Aug 2019 16:36:52 -0700 (PDT)
+        Thu, 15 Aug 2019 19:42:23 -0400
+Received: by mail-vs1-f68.google.com with SMTP id c7so2572115vse.11
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 16:42:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ItxQVkyoKBqZ2cSuaxThUtQAf/xYN33RqQLhEkNeQuY=;
-        b=NsKOuhlCcEMFLPbPa1xA0fEzGl25E5j6kt0vw+E5fHt3CU/YkUd568TupE86WZCw+8
-         aR1D3rvtuVoQBRkj3vuzL3S/dhkAU1I5w8sonJkztne+frhBeU63cgqdJK3KQX7AGZt1
-         vfEMbUTlbkdpcwppKErNeDWUR6VH6of50/Y9qvVirchabBh4P3lxP9Hms5utLFjyzP5N
-         9F4knCOtHEJN9cKXIu2LBdCPNjDnrUH9V54fjRqAJCcJRsSkF8f3OpbaSC9pQZZCY41A
-         t9Hz+lgefZ3xfINyNora6DshMH156wAfRK4L2E2LR+UymfBc1oGcjoulMex8fnA3koVF
-         K7Rw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=adCOu9nDiZkMdpLyTmT0+/YcmhLlfKn9ZIk2EvNGin4=;
+        b=Uj64cP5/AeOk/CghcfT2p+2nbk1bQvzFbxwrxXRumbp1HjIKC5UjhXiXj3PMo6BeTd
+         AnqZm0zZ4O6fu8jqemv8mbSLPLQ8htWTuu9VL9CYJehnRUjUjYE0ILUP+t46sq1/QMjO
+         nnbiw9NXBTi7lnlSt32X/XOIfMz31t7M6U5oTxXCNAwUnzsSGjl17Hi+eT1n2N2zG9II
+         8/MFBywmzgMh0ARxu0GQ5UrRgmoyV6rod/NVvkMmW1qWCJXm0M/5c/QDMz0JDIlwPA7I
+         yEDQhWy7I2nGi7DCj6zEXAOdL/M+niByHpAp7hnTK2GrqGkfubUYYQR3DmWHYGx4MVtW
+         +Y4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ItxQVkyoKBqZ2cSuaxThUtQAf/xYN33RqQLhEkNeQuY=;
-        b=dtpB7EbaBTzpOMpAe/Sl3K4gXbRLeeOrganrp9sUuc5gOF/nEPQs6PzzBqY9TtZr8M
-         d7jIYIEDaE8ZTR0TMsa85tYdEvJkfo4N5I/ntWyHEao9f10MWljsQXeU69aJGw3fv/HI
-         3yRLdMX+hxf2no2mMQl/IHLgksZoaf8mYbB4LfKf839c+oGW/qINJMnA29mi7mMlKiKt
-         pBdkd9mlcqMnNNZqwSrbtqwsn1XuNvXmNlZFhWTfznk0wP8xjv4xk2gfAPPAg/6tXg0q
-         8fwneyZmQNTeyTAQ+zHshGtD7imSB4XCQZnZJ2wQpTr78JeKIQOfKk/t1jEXiRTsxwZX
-         NDYg==
-X-Gm-Message-State: APjAAAWefPT77gluS41xEDrlcfeDjhJMKQCgw5FiWd84TvISX8tLVNqT
-        uGn7LggI6PNrcXXRBNC9doA=
-X-Google-Smtp-Source: APXvYqzJeh/sfsZ3Kx0kl+5LYPHmANwVXNyBTfmDpHkwFJa1MfK7qGH+J5n5dNjFFBSyfkPP6YjxPQ==
-X-Received: by 2002:a17:902:2be6:: with SMTP id l93mr6651121plb.0.1565912212360;
-        Thu, 15 Aug 2019 16:36:52 -0700 (PDT)
-Received: from [10.67.49.31] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id x25sm4323825pfa.90.2019.08.15.16.36.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 16:36:51 -0700 (PDT)
-Subject: Re: [PATCH net-next v7 3/3] net: phy: broadcom: add 1000Base-X
- support for BCM54616S
-To:     Tao Ren <taoren@fb.com>, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-References: <20190811234016.3674056-1-taoren@fb.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <d45d609b-60ea-760d-31f4-51afa379c55a@gmail.com>
-Date:   Thu, 15 Aug 2019 16:36:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=adCOu9nDiZkMdpLyTmT0+/YcmhLlfKn9ZIk2EvNGin4=;
+        b=S7lEwDVByGGtn4hJDIRXjVIliog7kP53m1FweWZo3EBzKqh46K88vOlVQwV05jtQ6D
+         +EiLGUx/Tuc8LPw7qdx8XqiHBiOVpRfrsoHv4jP3FXDQGBbP8kaGvxruJHg8BwUQvUR1
+         I55asdHQLme1m8s4xWzyb8bj0IFKmEjCsOjPXMq5onTbwHZImifnByU+Y1CextS/c23B
+         PXlm/NUR91ilkZuFHXMwHkc03V9tl2tbkcfKwm3unmw+9G/UtTQ9f1smAo1ysO5l5Dg7
+         8iBZE12phbozBB5eLUBkDxwhs2+tsKvXcdXRP/PH6tWHOJ2i+ymOqnazGRv8pYtdibkV
+         8p8A==
+X-Gm-Message-State: APjAAAV8qbC9ut8WYwL+dluP83pknVk/SIInCtgz+ckl5RUPwsePA0a0
+        KP0Ip0LVHDpBX2yiGzxs2jpEsjOQqBQqpcczooVQpg==
+X-Google-Smtp-Source: APXvYqwOgyRx9FKqQo804GjrF6fZbOZewFvcMKE8cJedUDm3jnXNo4HYJ9Gyh9H08j0Z0Kc4bxsVFkLNZaBHgEl1/q4=
+X-Received: by 2002:a67:cd9a:: with SMTP id r26mr4589218vsl.152.1565912541342;
+ Thu, 15 Aug 2019 16:42:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190811234016.3674056-1-taoren@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CAHX4x86QCrkrnPEfrup8k96wyqg=QR_vgetYLqP1AEa02fx1vw@mail.gmail.com>
+ <20190813060249.GD6670@kroah.com> <CAHX4x87DbJ4cKuwVO3OS=UzwtwSucFCV073W8bYHOPHW8NiA=A@mail.gmail.com>
+ <20190814212012.GB22618@kroah.com> <CAHX4x84YM0PcoQw17FxMz=6=NPq2+HUUw2GWZarAKzZxr+ax=A@mail.gmail.com>
+In-Reply-To: <CAHX4x84YM0PcoQw17FxMz=6=NPq2+HUUw2GWZarAKzZxr+ax=A@mail.gmail.com>
+From:   Duncan Laurie <dlaurie@google.com>
+Date:   Thu, 15 Aug 2019 17:42:05 -0600
+Message-ID: <CADv6+07pYd-kg1i0TJXOPnEO6NUp6D5+BQBkqUO0MDAE+cquow@mail.gmail.com>
+Subject: Re: Policy to keep USB ports powered in low-power states
+To:     Nick Crews <ncrews@chromium.org>
+Cc:     linux-usb@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Daniel Kurtz <djkurtz@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/11/19 4:40 PM, Tao Ren wrote:
-> The BCM54616S PHY cannot work properly in RGMII->1000Base-X mode, mainly
-> because genphy functions are designed for copper links, and 1000Base-X
-> (clause 37) auto negotiation needs to be handled differently.
-> 
-> This patch enables 1000Base-X support for BCM54616S by customizing 3
-> driver callbacks, and it's verified to be working on Facebook CMM BMC
-> platform (RGMII->1000Base-KX):
-> 
->   - probe: probe callback detects PHY's operation mode based on
->     INTERF_SEL[1:0] pins and 1000X/100FX selection bit in SerDES 100-FX
->     Control register.
-> 
->   - config_aneg: calls genphy_c37_config_aneg when the PHY is running in
->     1000Base-X mode; otherwise, genphy_config_aneg will be called.
-> 
->   - read_status: calls genphy_c37_read_status when the PHY is running in
->     1000Base-X mode; otherwise, genphy_read_status will be called.
-> 
-> Note: BCM54616S PHY can also be configured in RGMII->100Base-FX mode, and
-> 100Base-FX support is not available as of now.
-> 
-> Signed-off-by: Tao Ren <taoren@fb.com>
+On Wed, Aug 14, 2019 at 6:08 PM Nick Crews <ncrews@chromium.org> wrote:
+>
+> Adding Duncan Laurie who I think has some more intimate knowledge
+> of how this is implemented in HW. Duncan, could you correct or elaborate
+> on my answers below as you see fit? Also, sorry if I make some beginner
+> mistakes here, I'm just getting familiar with the USB subsystem, and thanks for
+> your patience.
+>
+> On Wed, Aug 14, 2019 at 3:20 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Wed, Aug 14, 2019 at 02:12:07PM -0600, Nick Crews wrote:
+> > > Thanks for the fast response!
+> > >
+> > > On Tue, Aug 13, 2019 at 12:02 AM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Mon, Aug 12, 2019 at 06:08:43PM -0600, Nick Crews wrote:
+> > > > > Hi Greg!
+> > > >
+> > > > Hi!
+> > > >
+> > > > First off, please fix your email client to not send html so that vger
+> > > > does not reject your messages :)
+> > >
+> > > Thanks, should be good now.
+> > >
+> > > >
+> > > > > I am working on a Chrome OS device that supports a policy called "USB Power
+> > > > > Share," which allows users to turn the laptop into a charge pack for their
+> > > > > phone. When the policy is enabled, power will be supplied to the USB ports
+> > > > > even when the system is in low power states such as S3 and S5. When
+> > > > > disabled, then no power will be supplied in S3 and S5. I wrote a driver
+> > > > > <https://lore.kernel.org/patchwork/patch/1062995/> for this already as part
+> > > > > of drivers/platform/chrome/, but Enric Balletbo i Serra, the maintainer,
+> > > > > had the reasonable suggestion of trying to move this into the USB subsystem.
+> > > >
+> > > > Correct suggestion.
+> > > >
+> > > > > Has anything like this been done before? Do you have any preliminary
+> > > > > thoughts on this before I start writing code? A few things that I haven't
+> > > > > figured out yet:
+> > > > > - How to make this feature only available on certain devices. Using device
+> > > > > tree? Kconfig? Making a separate driver just for this device that plugs
+> > > > > into the USB core?
+> > > > > - The feature is only supported on some USB ports, so we need a way of
+> > > > > filtering on a per-port basis.
+> > > >
+> > > > Look at the drivers/usb/typec/ code, I think that should do everything
+> > > > you need here as this is a typec standard functionality, right?
+> > >
+> > > Unfortunately this is for USB 2.0 ports, so it's not type-C.
+> > > Is the type-C code still worth looking at?
+> >
+> > If this is for USB 2, does it use the "non-standard" hub commands to
+> > turn on and off power?  If so, why not just use the usbreset userspace
+> > program for that?
+>
+> It does not use the standard hub commands. The USB ports are controlled
+> by an Embedded Controller (EC), so to control this policy we send a command
+> to the EC. Since the command to send to the EC is very specific, this would need
+> to go into a "hub driver" unique for these Wilco devices. We would make it so
+> that the normal hub registration is intercepted by something that sees this is a
+> Wilco device, and instead register the hub as a "wilco-hub", which has its own
+> special "power_share" sysfs attribute, but still is treated as a normal USB hub
+> otherwise?
+>
 
-> -		reg = bcm_phy_read_shadow(phydev, BCM5482_SHD_MODE);
-> -		bcm_phy_write_shadow(phydev, BCM5482_SHD_MODE,
-> -				     reg | BCM5482_SHD_MODE_1000BX);
-> +		reg = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
-> +		bcm_phy_write_shadow(phydev, BCM54XX_SHD_MODE,
-> +				     reg | BCM54XX_SHD_MODE_1000BX);
 
-This could have been a separate patch, but this looks reasonable to me
-and this is correct with the datasheet, thanks Tao.
+I would say it is somewhat similar to the USB port power control which
+eventually calls into usb_acpi_set_power_state() but in this case it only
+affects the behavior when the system is NOT running.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+This design has a standalone USB charge power controller on the board
+that passes through the USB2 D+/D- pins from one port and is able to do
+BC1.2 negotiation when the host controller is not powered, assuming
+the chip has been enabled by the Embedded Controller.
+
+
+>
+> >
+> > And how are you turning a USB 2 port into a power source?  That feels
+> > really odd given the spec.  Is this part of the standard somewhere or
+> > just a firmware/hardware hack that you are adding to a device?
+>
+> The EC twiddles something in the port' HW so that the port turns into a
+> DCP (Dedicated Charging Port) and only supplies power, not data. So I
+> think yes, this is a bit of a hack that does not conform to the spec.
+>
+> >
+> > Is there some port information in the firmware that describes this
+> > functionality?  If so, can you expose it through sysfs to the port that
+> > way?
+>
+> [I'm not sure I'm answering your question, but] I believe that we could
+> make the BIOS firmware describe the USB ports' capabilities, and the
+> kernel's behavior would be gated upon what the firmware reports. I see
+> that struct usb_port already contains a "quirks" field, should we add a
+> POWER_SHARE quirk to include/linux/usb/quirks.h? I would guess that
+> should that should be reserved for quirks shared between many USB
+> devices/hubs?
+>
+
+
+We could add a Device Property to the affected USB port in ACPI and
+describe it that way, similar to other properties like 'vcc-supply', 'clocks',
+'vbus-detect', etc and hook it into the phy-generic driver.
+
+However I'm not clear on whether the phy driver binding works with XHCI
+when using ACPI, so this may not be an appropriate place either.
+
+-duncan
