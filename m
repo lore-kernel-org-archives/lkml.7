@@ -2,68 +2,83 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB51C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D2FC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB25F20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:43:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="z2WIMJFq"
+	by mail.kernel.org (Postfix) with ESMTP id 320F120665
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730831AbfHOPnf (ORCPT
+        id S1730935AbfHOPsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 11:43:35 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:35100 "EHLO vps0.lunn.ch"
+        Thu, 15 Aug 2019 11:48:47 -0400
+Received: from 8bytes.org ([81.169.241.247]:49818 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729975AbfHOPne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 11:43:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=v+vEKpkiTrCRCviBkUT/dy67Acr/g1WViBiOURM2aww=; b=z2WIMJFqszQsU/fKTOspR+opOn
-        Mons+XbPSrrbrm5uyuKnlDCNbIqOzrPDuDiSqAPeYucUo+2MuLFuwV+K8dh/nx9PppS3/dQRBWWib
-        jgSwWVM7WahCIIv1c5Y5ewyY4ZImkf7BUWjdy39Ij45pgBswPfbw+Q08ql4Nto7ua+1s=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hyHuR-0001Zg-Rw; Thu, 15 Aug 2019 17:43:27 +0200
-Date:   Thu, 15 Aug 2019 17:43:27 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Christian Herber <christian.herber@nxp.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH net-next 0/1] Add BASE-T1 PHY support
-Message-ID: <20190815154327.GD15291@lunn.ch>
-References: <20190815153209.21529-1-christian.herber@nxp.com>
+        id S1730805AbfHOPsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 11:48:47 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 9919C3AA; Thu, 15 Aug 2019 17:48:45 +0200 (CEST)
+Date:   Thu, 15 Aug 2019 17:48:45 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alan Cox <alan@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@intel.com>
+Subject: Re: [PATCH v6 5/8] iommu: Add bounce page APIs
+Message-ID: <20190815154845.GA18327@8bytes.org>
+References: <20190730045229.3826-1-baolu.lu@linux.intel.com>
+ <20190730045229.3826-6-baolu.lu@linux.intel.com>
+ <20190814083842.GB22669@8bytes.org>
+ <445624e7-eb57-8089-8eb3-8687a65b1258@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190815153209.21529-1-christian.herber@nxp.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <445624e7-eb57-8089-8eb3-8687a65b1258@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 03:32:27PM +0000, Christian Herber wrote:
-> This patch adds basic support for BASE-T1 PHYs in the framework.
-> BASE-T1 PHYs main area of application are automotive and industrial.
-> BASE-T1 is standardized in IEEE 802.3, namely
-> - IEEE 802.3bw: 100BASE-T1
-> - IEEE 802.3bp 1000BASE-T1
-> - IEEE 802.3cg: 10BASE-T1L and 10BASE-T1S
+On Thu, Aug 15, 2019 at 02:15:32PM +0800, Lu Baolu wrote:
+> iommu_map/unmap() APIs haven't parameters for dma direction and
+> attributions. These parameters are elementary for DMA APIs. Say,
+> after map, if the dma direction is TO_DEVICE and a bounce buffer is
+> used, we must sync the data from the original dma buffer to the bounce
+> buffer; In the opposite direction, if dma is FROM_DEVICE, before unmap,
+> we need to sync the data from the bounce buffer onto the original
+> buffer.
 
-Hi Christian
+The DMA direction from DMA-API maps to the protections in iommu_map():
 
-Please make sure you Cc: the PHY subsystem maintainers.
+	DMA_FROM_DEVICE:	IOMMU_WRITE
+	DMA_TO_DEVICE:		IOMMU_READ
+	DMA_BIDIRECTIONAL	IOMMU_READ | IOMMU_WRITE
 
-       Andrew
+And for the sync DMA-API also has separate functions for either
+direction. So I don't see why these extra functions are needed in the
+IOMMU-API.
+
+
+Regards,
+
+	Joerg
