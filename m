@@ -2,112 +2,117 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63508C32753
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 02:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8CAC32753
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 02:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E98E2084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 02:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1962084F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 02:59:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="WAY8orSq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VPyImWLV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbfHOCxu (ORCPT
+        id S1728815AbfHOC7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 22:53:50 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37445 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbfHOCxt (ORCPT
+        Wed, 14 Aug 2019 22:59:43 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46862 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbfHOC7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 22:53:49 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f17so3010529otq.4
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 19:53:48 -0700 (PDT)
+        Wed, 14 Aug 2019 22:59:42 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c2so514768plz.13;
+        Wed, 14 Aug 2019 19:59:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hdb0nH13oEr6nRIXzGT4/+HAUBVeTsgqLpq+7aKP03Y=;
-        b=WAY8orSqrakMS/XtmJpC2hS3YEV9zeu+kWvcto/2HdUAbGMKfH8/Ea81r2vzPlglB0
-         HVVTUM/mMunfKiuGsu9W/C7CcdEUhiMiOv3aGIvO7VjNz5HeeRFDI5JGhxHjcapluMeS
-         SbMADSrANmNhcedz/64VntyqWFL1nKrRHTEmY5BNQxA1GappLw1sVV9zjBefCn8s9uqd
-         E/WC0mhGDjAxQ9LhVXY1k50D9/urECCnfGgHb6/EoDnj4nzrNueTPQQCg7z0Ao2kuScv
-         REFKuuRP7jdohRgqAm8hgg2+biS+kdVEr+idLx/TvaYe6LxPr2+eBde1SClOh6Z/37k0
-         z2Fg==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=jtcbQSdvzy5cT1Z921sK+U6eJuTaITvB/5Row+mcI0c=;
+        b=VPyImWLVUBR+YJhKD3akvkpU0i5ENU919XA+N261pXNLUFFifIFgh984CAi1BGK4vs
+         lsmnqso8RLiJ5hSxAWHUja3jeCIOxoGHPfWnJrn/ovMXJpj1WRuNX3c75AJSx0/FKszp
+         hJAAFWhE0XnpJm7uZ9mmm2LOPKDYV/PtMHUuZa6siu7IYpg/BQ8eGkZAbHfGeNJXuSpJ
+         qZeRdMNSciFbNM8VytVYUqIkSC0J+/9HhlcbAEmm69zb06ksFXU42GNGPno9eAHvtbYJ
+         ImoEBwmnFdXq0/QO62cuWxg+JxAHIe9UZFsxbrod04OUUk9CQAXBMJN8OsJE7pXhtlp8
+         G/Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hdb0nH13oEr6nRIXzGT4/+HAUBVeTsgqLpq+7aKP03Y=;
-        b=WyjYKSZmRehJiavNgF6dS35Gc8BLnlkana2HAcG2/d/cFf8Tg8/dMM0iBBRfLH7VVs
-         j0+1EaVXGjg9Scy4h6ONOMzMvT5dJW36bi2g+R6jrX+LPcTXpTVT2CfFKpa46ELRU7W+
-         zKUlbRTuSiLUIODLUhGcUqy4SDxjESJy4KHaGbvH3jNTANEDchNeF8VcKMPPU2gzXglk
-         QaP/UAhjBls3PHE7fL58wLBfWdw/CxX2S8pPuCFZwEqW5zhB0tBaHDvdbzuzjT7r+kAi
-         1jA3Oe/iojKELqyFzsSjSfBTuzy5i9NWzoSI+M6A2+5Yun/Vye7LztlCp57pX98xMmyZ
-         8PwA==
-X-Gm-Message-State: APjAAAUNfLT4Wj2wdimlT//WBqaCF3SBzlpf+GDFhT5QftAN2LmYWkYn
-        USRVcAnBZjs5CiqxouxYdUhRayEX4B63FvIwCY0sgw==
-X-Google-Smtp-Source: APXvYqw/iFDJnYcGgE5J8uAV0NYHZbpRwRf5evy2jBuuR9WT/cCD4jA2QAF4eEWu/w6jnSFkqwKZMlEFZHtBtq+Tgho=
-X-Received: by 2002:a05:6602:219a:: with SMTP id b26mr2811877iob.55.1565837628423;
- Wed, 14 Aug 2019 19:53:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <alpine.DEB.2.21.9999.1908141328440.18249@viisi.sifive.com>
- <mhng-4eded486-d381-4822-abc5-4023bf7ba591@palmer-si-x1c4> <87mugbv1ch.fsf@igel.home>
-In-Reply-To: <87mugbv1ch.fsf@igel.home>
-From:   Vincent Chen <vincent.chen@sifive.com>
-Date:   Thu, 15 Aug 2019 10:53:37 +0800
-Message-ID: <CABvJ_xgfuXzO0-vDB6LYggNchjP=vUvnreLEYuV=w=eb+bhVXw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] riscv: Make __fstate_clean() work correctly.
-To:     Andreas Schwab <schwab@linux-m68k.org>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=jtcbQSdvzy5cT1Z921sK+U6eJuTaITvB/5Row+mcI0c=;
+        b=ii6svZe9OAQ1mb0C1TYhIpCM/F2AfWjPtn81myySO0d41jkMh0Yam2eSJCjU2b2huL
+         MBcyi3jLXBeWYx4uOVCpsBmBWW7ku1IK7WAP50/udFzVENF1CuUvFBMNmeiU3cxi4u/o
+         pneanLxXxaZ6/qVJZpn3xkNamSdftHYBb6LLYSqViVOyw1Snccf0OIbf2ehhjdxFsZrc
+         2+lmOK+xQ86IxaCgqKDhfgOc+TLt8y5Egpx99ZPcG+75zGqC+56eZe8MgYFZA1SW5P5c
+         NmTYY6Y7UpNkckm1xLwVvZRDgamFNR7n6ogVg/q56vGwkXOApXiSyAeqIv9lzel9uYGN
+         T7lQ==
+X-Gm-Message-State: APjAAAWlzJ7qVCt027O19bypMSb54+CWp7KfVxV5kPloh9i2aC7y78vn
+        cYNEL5TAO4aRDt0BKCZMvHs=
+X-Google-Smtp-Source: APXvYqwQlvrnAQc0lPUHt/zfuAZ+tW3qd3Tcao4Wz1WqTtmVKnHjXDaxSx8tYi4gb6lsRg/sGGftXQ==
+X-Received: by 2002:a17:902:d715:: with SMTP id w21mr2413435ply.261.1565837982100;
+        Wed, 14 Aug 2019 19:59:42 -0700 (PDT)
+Received: from localhost.localdomain ([103.29.142.67])
+        by smtp.gmail.com with ESMTPSA id k5sm954439pgo.45.2019.08.14.19.59.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 19:59:41 -0700 (PDT)
+From:   Kever Yang <kever.yang@rock-chips.com>
+To:     heiko@sntech.de
+Cc:     linux-rockchip@lists.infradead.org,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Chen-Yu Tsai <wens@csie.org>, Jonas Karlman <jonas@kwiboo.se>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomohiro Mayama <parly-gh@iris.mystia.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm: dts: rockchip: fix vcc_host_5v regulator for usb3 host
+Date:   Thu, 15 Aug 2019 10:59:19 +0800
+Message-Id: <20190815025919.5194-1-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 6:17 AM Andreas Schwab <schwab@linux-m68k.org> wrote:
->
-> On Aug 14 2019, Palmer Dabbelt <palmer@sifive.com> wrote:
->
-> > On Wed, 14 Aug 2019 13:32:50 PDT (-0700), Paul Walmsley wrote:
-> >> On Wed, 14 Aug 2019, Vincent Chen wrote:
-> >>
-> >>> Make the __fstate_clean() function correctly set the
-> >>> state of sstatus.FS in pt_regs to SR_FS_CLEAN.
-> >>>
-> >>> Fixes: 7db91e5 ("RISC-V: Task implementation")
-> >>> Cc: linux-stable <stable@vger.kernel.org>
-> >>> Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-> >>> Reviewed-by: Anup Patel <anup@brainfault.org>
-> >>> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> >>
-> >> Thanks, I extended the "Fixes" commit ID to 12 digits, as is the usual
-> >> practice here, and have queued the following for v5.3-rc.
-> >
-Thank Paul for correcting my mistake.
+According to rock64 schemetic V2 and V3, the VCC_HOST_5V output is
+controlled by USB_20_HOST_DRV, which is the same as VCC_HOST1_5V.
 
-> > For reference, something like "git config core.abbrev=12" (or whatever you
-> > write to get this in your .gitconfig)
-> >
-> >    https://github.com/palmer-dabbelt/home/blob/master/.gitconfig.in#L23
-> >
-> > causes git to do the right thing.
->
-> Actually, the right setting is core.abbrev=auto (or leaving it unset).
-> It lets git chose the appropriate length depending on the repository
-> contents.  For the linux repository it will chose 13 right now.
->
-> Andreas.
->
-Thanks to Palmer and Andreas for sharing this useful information.
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+---
 
-> --
-> Andreas Schwab, schwab@linux-m68k.org
-> GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-> "And now for something completely different."
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+index 7cfd5ca6cc85..bd4ad1635e0b 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+@@ -35,9 +35,9 @@
+ 	vcc_host_5v: vcc-host-5v-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+-		gpio = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
++		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&usb30_host_drv>;
++		pinctrl-0 = <&usb20_host_drv>;
+ 		regulator-name = "vcc_host_5v";
+ 		regulator-always-on;
+ 		regulator-boot-on;
+@@ -320,12 +320,6 @@
+ 			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+-
+-	usb3 {
+-		usb30_host_drv: usb30-host-drv {
+-			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
+-		};
+-	};
+ };
+ 
+ &sdmmc {
+-- 
+2.17.1
+
