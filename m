@@ -2,107 +2,246 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6333EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAFEC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37C542171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:00:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="WqnDtaZO"
+	by mail.kernel.org (Postfix) with ESMTP id B7087216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:03:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565827383;
+	bh=RtMAYfIjXbyIwNtKxUn/T57yGlOX78wkZ0yS6geZUQY=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=GeyLWj0M1Y5PCpvsJUwfYkAeANa4dqwKi/Dr47o7VtqZQE7Ug+OIR6S2rGVY2IxWb
+	 Pr8LEI9GAliSMJr6Upv5pMRS0TRAVgjzc8gEDaVOGTVCCs7BzF64mDKRxkpRZCopdy
+	 jepxkatIsgOv2XA+1QdQOSi6GWv7wI7MkKa0aqh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbfHOAAc (ORCPT
+        id S1728574AbfHOADC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 20:00:32 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42238 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbfHOAAb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 20:00:31 -0400
-Received: by mail-qt1-f194.google.com with SMTP id t12so604977qtp.9
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 17:00:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uQcEycbJpYwq03WKUHr1Col8h+hbyHngyQSZBqVtuao=;
-        b=WqnDtaZOeGzmOCMQPC4We4PRD3RuiO/IALjyCYVZuuWQ7X8TuNS1arQXC7EG5H/WMM
-         QoTLuRO+le+M6rRKQ+g/kpY4oRBlm26psPwlaph+NfO/QHkvqy5y7xLVn5asu5icHcX8
-         4+cgO8/3DW0QOxaqqU3N1R3jkqcGn2CA/nu/llYZ7KTrYBM7rhgO5bNv15Mwl/qhHkFr
-         xLgkDtM4ecYPJZGJaT+5ygz3Mtzt1oLeN40DNq1h3PCmx2kj0py9uxQtJ3zyBZMMMiMa
-         2sMtpruVKWC3ihvALp2SoFVQLWI2B85dMUSqBzp9DgYpURT4u2F3Usbhyj4KoRDhvXLf
-         XwZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uQcEycbJpYwq03WKUHr1Col8h+hbyHngyQSZBqVtuao=;
-        b=L5fq2OaiKYswCjQMovvv9kqisKuKoGeekt1YfPseiZfE34H9ojD70D6HbO8WeibXHR
-         SjrCSQJLbeH3U9msBk7MMLjboHXwOQ3mO8Fp7km0I6G9Ylgo1bsA+x93TAh0rDRFxo9p
-         jdXmydIUvZwBnJmfDPfz8E1zf9EBRD2alJ5aYOY2bS0ZZfppRhp7fHMNZrOEd9nmlTl+
-         Yea36RV509BRIvpFjPy4UTZtOcbaqraHTrVyBEm7Egou5OuiQHp9HL8LpEk46nqmHxjW
-         uPzti1SOaDnMY6RLjmLrJ1+N5DVEzq0agU1Wta/g6Qm+jLbn1ka7B8CDHL2kMOGDQpb7
-         EbzQ==
-X-Gm-Message-State: APjAAAVrsem6GB3xdIOU871iQpAmCjp8AD0hokJw8EIsA/rDP+J+yHJ5
-        zF/1gscnkeNHe9baNn6SEv6sqg==
-X-Google-Smtp-Source: APXvYqwowo9TRatjr9x+Z0wkhKzzctBv0bQD6WAaHI7YUR2Bla8hl5jGs4NuJx4xbIBRiBZ2H9DzbA==
-X-Received: by 2002:ac8:5315:: with SMTP id t21mr1735710qtn.66.1565827231022;
-        Wed, 14 Aug 2019 17:00:31 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id u126sm637456qkf.132.2019.08.14.17.00.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 17:00:30 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hy3Bt-0003UN-MJ; Wed, 14 Aug 2019 21:00:29 -0300
-Date:   Wed, 14 Aug 2019 21:00:29 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 3/5] mm, notifier: Catch sleeping/blocking for !blockable
-Message-ID: <20190815000029.GC11200@ziepe.ca>
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
- <20190814202027.18735-4-daniel.vetter@ffwll.ch>
+        Wed, 14 Aug 2019 20:03:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727844AbfHOADC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 20:03:02 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ABAF2086C;
+        Thu, 15 Aug 2019 00:03:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565827381;
+        bh=RtMAYfIjXbyIwNtKxUn/T57yGlOX78wkZ0yS6geZUQY=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=Gi6hs8MhufhyIXn3oDRGHnWb4PKIOTGT7g3cIUF1p9gUr606juKvhsmvzk1QWdeR3
+         TULen+AC/P/9ssDC/6SEiWa676VANHnK6SdDuG0Vxc+8RYqcziRvC5Nv9dDc5x4YL3
+         +Sc9H+pDanpJHuW+FrqmQwYKAPUlNAyB2gVaG5Ks=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814202027.18735-4-daniel.vetter@ffwll.ch>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190521125114.20357-2-miquel.raynal@bootlin.com>
+References: <20190521125114.20357-1-miquel.raynal@bootlin.com> <20190521125114.20357-2-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v5 1/4] clk: core: link consumer with clock driver
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Russell King <linux@armlinux.org.uk>
+User-Agent: alot/0.8.1
+Date:   Wed, 14 Aug 2019 17:03:00 -0700
+Message-Id: <20190815000301.3ABAF2086C@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 10:20:25PM +0200, Daniel Vetter wrote:
-> We need to make sure implementations don't cheat and don't have a
-> possible schedule/blocking point deeply burried where review can't
-> catch it.
-> 
-> I'm not sure whether this is the best way to make sure all the
-> might_sleep() callsites trigger, and it's a bit ugly in the code flow.
-> But it gets the job done.
-> 
-> Inspired by an i915 patch series which did exactly that, because the
-> rules haven't been entirely clear to us.
+Quoting Miquel Raynal (2019-05-21 05:51:10)
+> One major concern when, for instance, suspending/resuming a platform
+> is to never access registers before the underlying clock has been
+> resumed, otherwise most of the time the kernel will just crash. One
+> solution is to use syscore operations when registering clock drivers
+> suspend/resume callbacks. One problem of using syscore_ops is that the
+> suspend/resume scheduling will depend on the order of the
+> registrations, which brings (unacceptable) randomness in the process.
+>=20
+> A feature called device links has been introduced to handle such
+> situation. It creates dependencies between consumers and providers,
+> enforcing e.g. the suspend/resume order when needed. Such feature is
+> already in use for regulators.
+>=20
+> Add device links support in the clock subsystem by creating/deleting
+> the links at get/put time.
+>=20
+> Example of a boot (ESPRESSObin, A3700 SoC) with devices linked to clocks:
+>=20
+> marvell-armada-3700-tbg-clock d0013200.tbg: Linked as a consumer to d0013=
+800.pinctrl:xtal-clk
+> marvell-armada-3700-tbg-clock d0013200.tbg: Dropping the link to d0013800=
+.pinctrl:xtal-clk
+> marvell-armada-3700-tbg-clock d0013200.tbg: Linked as a consumer to d0013=
+800.pinctrl:xtal-clk
+> marvell-armada-3700-periph-clock d0013000.nb-periph-clk: Linked as a cons=
+umer to d0013200.tbg
+> marvell-armada-3700-periph-clock d0013000.nb-periph-clk: Linked as a cons=
+umer to d0013800.pinctrl:xtal-clk
+> marvell-armada-3700-periph-clock d0018000.sb-periph-clk: Linked as a cons=
+umer to d0013200.tbg
+> mvneta d0030000.ethernet: Linked as a consumer to d0018000.sb-periph-clk
+> xhci-hcd d0058000.usb: Linked as a consumer to d0018000.sb-periph-clk
+> xenon-sdhci d00d0000.sdhci: Linked as a consumer to d0013000.nb-periph-clk
+> xenon-sdhci d00d0000.sdhci: Dropping the link to d0013000.nb-periph-clk
+> mvebu-uart d0012000.serial: Linked as a consumer to d0013800.pinctrl:xtal=
+-clk
+> advk-pcie d0070000.pcie: Linked as a consumer to d0018000.sb-periph-clk
+> xenon-sdhci d00d0000.sdhci: Linked as a consumer to d0013000.nb-periph-clk
+> xenon-sdhci d00d0000.sdhci: Linked as a consumer to regulator.1
+> cpu cpu0: Linked as a consumer to d0013000.nb-periph-clk
+> cpu cpu0: Dropping the link to d0013000.nb-periph-clk
+> cpu cpu0: Linked as a consumer to d0013000.nb-periph-clk
+>=20
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
 
-I thought lockdep already was able to detect:
+This patch doesn't apply. Things have changed upstream.
 
- spin_lock()
- might_sleep();
- spin_unlock()
+>=20
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index ec6f04dcf5e6..e6b84ab43f9f 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -1676,6 +1710,8 @@ static void clk_reparent(struct clk_core *core, str=
+uct clk_core *new_parent)
+> =20
+>                 if (was_orphan !=3D becomes_orphan)
+>                         clk_core_update_orphan_status(core, becomes_orpha=
+n);
+> +
+> +               clk_link_hierarchy(core, new_parent);
 
-Am I mistaken? If yes, couldn't this patch just inject a dummy lockdep
-spinlock?
+This isn't going to work.
 
-Jason
+ BUG: sleeping function called from invalid context at kernel/locking/mutex=
+.c:909
+ in_atomic(): 1, irqs_disabled(): 128, pid: 1, name: swapper/0
+ 3 locks held by swapper/0/1:
+  #0: (____ptrval____) (&dev->mutex){....}, at: __device_driver_lock+0x40/0=
+x4c
+  #1: (____ptrval____) (prepare_lock){+.+.}, at: clk_prepare_lock+0x18/0x94
+  #2: (____ptrval____) (enable_lock){....}, at: clk_enable_lock+0x34/0xdc
+ irq event stamp: 311516
+ hardirqs last  enabled at (311515): [<ffffff901fce5c90>] _raw_spin_unlock_=
+irqrestore+0x54/0x90
+ hardirqs last disabled at (311516): [<ffffff901f73d468>] clk_enable_lock+0=
+x28/0xdc
+ softirqs last  enabled at (311348): [<ffffff901f28188c>] __do_softirq+0x4c=
+c/0x514
+ softirqs last disabled at (311341): [<ffffff901f2f89ac>] irq_exit+0xd8/0xf8
+ CPU: 4 PID: 1 Comm: swapper/0 Tainted: G        W         5.3.0-rc4-00005-=
+g6be06bbec80ef #10
+ Hardware name: Google Cheza (rev3+) (DT)
+ Call trace:
+  dump_backtrace+0x0/0x13c
+  show_stack+0x20/0x2c
+  dump_stack+0xc4/0x12c
+  ___might_sleep+0x1b4/0x1c4
+  __might_sleep+0x50/0x88
+  __mutex_lock_common+0x5c/0xbfc
+  mutex_lock_nested+0x40/0x50
+  device_link_add+0x88/0x3ac
+  clk_reparent+0xc4/0x114
+  __clk_set_parent_before+0x74/0x90
+  clk_change_rate+0x98/0x854
+  clk_core_set_rate_nolock+0x1b0/0x21c
+  clk_set_rate+0x3c/0x6c
+  of_clk_set_defaults+0x29c/0x364
+  platform_drv_probe+0x28/0xb0
+  really_probe+0x130/0x2b4
+  driver_probe_device+0x64/0xfc
+  device_driver_attach+0x4c/0x6c
+  __driver_attach+0xb0/0xc4
+  bus_for_each_dev+0x84/0xcc
+  driver_attach+0x2c/0x38
+  bus_add_driver+0xfc/0x1d0
+  driver_register+0x64/0xf0
+  __platform_driver_register+0x4c/0x58
+  msm_drm_register+0x5c/0x60
+  do_one_initcall+0x1e0/0x478
+  do_initcall_level+0x21c/0x25c
+  do_basic_setup+0x60/0x78
+  kernel_init_freeable+0x128/0x1b0
+  kernel_init+0x14/0x100
+  ret_from_fork+0x10/0x18
+
+>         } else {
+>                 hlist_add_head(&core->child_node, &clk_orphan_list);
+>                 if (!was_orphan)
+> @@ -2402,6 +2438,8 @@ __clk_init_parent(struct clk_core *core, bool updat=
+e_orphan)
+>         if (!parent_hw)
+>                 return NULL;
+> =20
+> +       clk_link_hierarchy(core, parent_hw->core);
+> +
+
+This is the hunk that doesn't apply anymore.
+
+>         return parent_hw->core;
+>  }
+> =20
+
+The general thought is that it would be good to _not_ call the device
+link APIs from deep within the clk parent changing code or even parent
+initialization code. It would be better to make device links based on
+the possible parents of a clk controller when the clk is registered and
+after the clk prepare lock (i.e. the registration lock) is dropped. Is
+this possible? The problem is that we're deeply nested in locks that are
+already hard to reason about and get out from underneath. I don't want
+to get into some sort of ABBA deadlock scenario with the PM core. The
+usage of runtime PM in the clk framework is probably busted right now
+because it is used under the prepare lock. Ugh.
+
+Is it necessary to add the device links between different clk
+controllers either? I mean, is it necessary to create links between clks
+and their parents right now?  Maybe we can take the easy way out and
+just make links between devices that call clk_get() and the devices that
+provide those clks (the consumer side). I suppose you may want to order
+suspend/resume of a device with the parent clks of some clk that is
+acquired from clk_get(). I hope it isn't required though, because this
+is a problem to do with ordering suspend/resume of the clk tree itself,
+which isn't really solved at all.
+
+We probably need to solve that by doing something clk provider specific
+in the clk framework to figure out a way for device drivers that provide
+clks to get callbacks to suspend/resume clks in the clk tree in some
+sort of topo-sorted order. That way we can traverse the clk tree and
+call down into provider drivers for each clk it registered to do things
+like restore the clk frequency or clk enable/prepare state, etc. It
+needs to be done in a certain order and it's not possible to flatten
+that order into a sequential list of providers (that correspond 1:1 with
+devices) given that there are loops between providers.
+
+But from the perspective of a consumer driver like PCI, I don't see why
+it needs to care about the clk tree suspend/resume ordering details. It
+really only cares that the clk it's consuming, at the edge of the tree,
+is resumed before the consumer itself, PCI, is resumed. However the
+dependencies of that clk it's consuming is managed, be it with device
+links or something clk framework specific, doesn't matter to the PCI
+driver. And other clks that are parents or grandparents of the clk
+consumed by PCI could have device link dependencies themselves, on
+something like an i2c controller or such. Even then, we don't need to
+use device links in the clk tree to describe ordering between clks. We
+can do it without device links and break the device link chain when it
+crosses the clk tree.
+
+  PCI -[device link]-> PCI leaf clk provider -[clk framework ordering black=
+ box]-> parent of leaf clk -[device link]-> i2c controller=20
+
