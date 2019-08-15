@@ -6,93 +6,101 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E98C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16117C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 627062083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7CB2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731934AbfHOSD2 (ORCPT
+        id S1731882AbfHOSD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 15 Aug 2019 14:03:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42196 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731200AbfHOSD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from Galois.linutronix.de ([193.142.43.55]:40508 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbfHOSD2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 15 Aug 2019 14:03:28 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 161762A09AF;
-        Thu, 15 Aug 2019 18:03:28 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F1A13600CD;
-        Thu, 15 Aug 2019 18:03:26 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 14:03:25 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>, Christoph Hellwig <hch@lst.de>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
-Message-ID: <20190815180325.GA4920@redhat.com>
-References: <20190806160554.14046-1-hch@lst.de>
- <20190806160554.14046-5-hch@lst.de>
- <20190807174548.GJ1571@mellanox.com>
- <CAPcyv4hPCuHBLhSJgZZEh0CbuuJNPLFDA3f-79FX5uVOO0yubA@mail.gmail.com>
- <20190808065933.GA29382@lst.de>
- <CAPcyv4hMUzw8vyXFRPe2pdwef0npbMm9tx9wiZ9MWkHGhH1V6w@mail.gmail.com>
- <20190814073854.GA27249@lst.de>
- <20190814132746.GE13756@mellanox.com>
- <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com>
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hyK5X-0002zv-Le; Thu, 15 Aug 2019 20:03:03 +0200
+Date:   Thu, 15 Aug 2019 20:03:02 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dmitry Safonov <dima@arista.com>
+cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv6 25/36] vdso: Introduce vdso_static_branch_unlikely()
+In-Reply-To: <20190815163836.2927-26-dima@arista.com>
+Message-ID: <alpine.DEB.2.21.1908151956470.1908@nanos.tec.linutronix.de>
+References: <20190815163836.2927-1-dima@arista.com> <20190815163836.2927-26-dima@arista.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 15 Aug 2019 18:03:28 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 07:48:28AM -0700, Dan Williams wrote:
-> On Wed, Aug 14, 2019 at 6:28 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
-> >
-> > On Wed, Aug 14, 2019 at 09:38:54AM +0200, Christoph Hellwig wrote:
-> > > On Tue, Aug 13, 2019 at 06:36:33PM -0700, Dan Williams wrote:
-> > > > Section alignment constraints somewhat save us here. The only example
-> > > > I can think of a PMD not containing a uniform pgmap association for
-> > > > each pte is the case when the pgmap overlaps normal dram, i.e. shares
-> > > > the same 'struct memory_section' for a given span. Otherwise, distinct
-> > > > pgmaps arrange to manage their own exclusive sections (and now
-> > > > subsections as of v5.3). Otherwise the implementation could not
-> > > > guarantee different mapping lifetimes.
-> > > >
-> > > > That said, this seems to want a better mechanism to determine "pfn is
-> > > > ZONE_DEVICE".
-> > >
-> > > So I guess this patch is fine for now, and once you provide a better
-> > > mechanism we can switch over to it?
-> >
-> > What about the version I sent to just get rid of all the strange
-> > put_dev_pagemaps while scanning? Odds are good we will work with only
-> > a single pagemap, so it makes some sense to cache it once we find it?
+On Thu, 15 Aug 2019, Dmitry Safonov wrote:
+
+> From: Andrei Vagin <avagin@gmail.com>
 > 
-> Yes, if the scan is over a single pmd then caching it makes sense.
+> As it has been discussed on timens RFC, adding a new conditional branch
+> `if (inside_time_ns)` on VDSO for all processes is undesirable.
+> 
+> Addressing those problems, there are two versions of VDSO's .so:
+> for host tasks (without any penalty) and for processes inside of time
+> namespace with clk_to_ns() that subtracts offsets from host's time.
+> 
+> Introduce vdso_static_branch_unlikely(), which is similar to
+> static_branch_unlikely(); alias it with timens_static_branch_unlikely()
+> under CONFIG_TIME_NS.
+> 
+> The timens code in vdso will look like this:
+> 
+>    if (timens_static_branch_unlikely()) {
+> 	   clk_to_ns(clk, ts);
 
-Quite frankly an easier an better solution is to remove the pagemap
-lookup as HMM user abide by mmu notifier it means we will not make
-use or dereference the struct page so that we are safe from any
-racing hotunplug of dax memory (as long as device driver using hmm
-do not have a bug).
+Please name that clk_to_namespace(). _ns() is widely used for nanoseconds.
 
-Cheers,
-Jérôme
+>    }
+> 
+> The version of vdso which is compiled from sources will never execute
+> clk_to_ns(). And then we can patch the 'no-op' in the straight-line
+> codepath with a 'jump' instruction to the out-of-line true branch and
+> get the timens version of the vdso library.
+
+Colour me confused. Why do we need that static branch at all?
+
+Why don't we compile VDSO_NO_NAMESPACE and VDSO_NAMESPACE right away? One
+has the clk_to_namespace() one does not. The you can spare the whole static
+key patching and the NO_NAMESPACE variant does not have extra 5 NOPS.
+
+The VDSO is one page IIRC, so having the extra namespace variant around
+does really not matter at all.
+
+Thanks,
+
+	tglx
+
+
