@@ -2,114 +2,210 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBFAC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809A5C32753
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61AAA2086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC822086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:04:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IgA9r9wi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a9kKTsPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbfHOADr (ORCPT
+        id S1728792AbfHOAEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 20:03:47 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:14990 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbfHOADq (ORCPT
+        Wed, 14 Aug 2019 20:04:01 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39625 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfHOAEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 20:03:46 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d54a1640000>; Wed, 14 Aug 2019 17:03:48 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 14 Aug 2019 17:03:46 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 14 Aug 2019 17:03:46 -0700
-Received: from [10.2.171.178] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 15 Aug
- 2019 00:03:45 +0000
-Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
-References: <20190812015044.26176-1-jhubbard@nvidia.com>
- <20190812015044.26176-3-jhubbard@nvidia.com>
- <20190812234950.GA6455@iweiny-DESK2.sc.intel.com>
- <38d2ff2f-4a69-e8bd-8f7c-41f1dbd80fae@nvidia.com>
- <20190813210857.GB12695@iweiny-DESK2.sc.intel.com>
- <a1044a0d-059c-f347-bd68-38be8478bf20@nvidia.com>
- <90e5cd11-fb34-6913-351b-a5cc6e24d85d@nvidia.com>
- <20190814234959.GA463@iweiny-DESK2.sc.intel.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <2cbdf599-2226-99ae-b4d5-8909a0a1eadf@nvidia.com>
-Date:   Wed, 14 Aug 2019 17:02:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 14 Aug 2019 20:04:00 -0400
+Received: by mail-oi1-f193.google.com with SMTP id 16so628389oiq.6;
+        Wed, 14 Aug 2019 17:03:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YPTBaJLD3D/u6walQ8y9NQD1N5lcuts2Kk/49zILziw=;
+        b=a9kKTsPERfA4T4/IuV7BQpfXwEmT0OefjpLqFp1KOxPeJV7X0ITbcYyTNHrxcDkP0U
+         cLZ3tX7s4hLtexS5/mGOUhUcZaXLlfOtcOOGNO6AAaEBRLlRZea+EcP42OSlRoIsAeo7
+         FeiEpZYerJsJk84Y8N3YdYC5/hF9FSYI9oY+CNRIQie4hBt6W8nAZkz3ZXhtLuzSjwn8
+         tQoKcKz0qAioZ17+nR1UFeopJQDZ2wOF7qmOd8cx5npJy8diDudk9IOX9Gio0M/ITD8H
+         TGwoc8oLl/PMcuUPa5okGq+7kUaXueotRBHcyGQpJke/zqfT8u8SKhXIcZi7jC6VNGMj
+         HPbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YPTBaJLD3D/u6walQ8y9NQD1N5lcuts2Kk/49zILziw=;
+        b=iF8X9G4tF/REIlbDkNJZA6Rz0q0XfBEHv6BQKAuB+pIqODb8Lb0Zs9LOjdQqkFrMEL
+         8DP2ZAHUWS9fb08KjApBqlr/B9ehRSV+hdhjD6AN4N1rHZ0GAvIUekGYT04JLQCLdIHo
+         ee7VMEePI4uWlKUsXPfMMR5mKL1RJq+NXUMIAIx6GxYxeq4NDiqTq2zQ60w87Pp/OD18
+         kvEey6vm88M2Wbp4vJaQyaq0DSHqFe+9RzBh8iQaxNBKlLwRSHHMoqZe5kLYHL+/hIjF
+         UGlLKmGjkynXI5ccXPNt+0HD6ihqRmvXqTYsas2y+aq58rmrM4CnAgpVipu00pDhzBLo
+         Ly9Q==
+X-Gm-Message-State: APjAAAU/nHkqzGd3+gXXPWslNBq5DogCK8B/+BgOarJLzwmal4gWQ0kw
+        KHDNxwLFWqnOtU53ngTftNU=
+X-Google-Smtp-Source: APXvYqzIS5Ql9OSvCapX12ZA26wlw4RWfNnpgchMEH4A84CibU0GviPLsji5VuKlpeaYLnc/PtnIrQ==
+X-Received: by 2002:a05:6808:2c3:: with SMTP id a3mr333060oid.121.1565827439381;
+        Wed, 14 Aug 2019 17:03:59 -0700 (PDT)
+Received: from localhost.members.linode.com ([2600:3c00::f03c:91ff:fe99:7fe5])
+        by smtp.gmail.com with ESMTPSA id k24sm455013oic.29.2019.08.14.17.03.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 17:03:58 -0700 (PDT)
+From:   Anton Protopopov <a.s.protopopov@gmail.com>
+To:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Anton Protopopov <a.s.protopopov@gmail.com>
+Subject: [PATCH bpf-next] tools: libbpf: update extended attributes version of bpf_object__open()
+Date:   Thu, 15 Aug 2019 00:03:30 +0000
+Message-Id: <20190815000330.12044-1-a.s.protopopov@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <20190814234959.GA463@iweiny-DESK2.sc.intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565827428; bh=hz8lTdgR0x8GaLCXZ+gwdewpGK5z8PDTvxWlhUrVd/U=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=IgA9r9wi9TjtWDXtQOaw18ttkfzxxnqWWK+KbZeDEl1Va/Ek14rGmc/fuZ8FVDdnK
-         F+xyO9NHzAtIOlP2woh9TTG0FbZbH+77iW7gIAu+unsfZC/stNXZzITa4Aqnt0yTNZ
-         vI4sZG0Qns16nkO3YBTG+kDr0a9dFuVA5wlTcvlVmhuQWN+nNgxRhw9igtUP6JRflT
-         uQDQO/ZLpW4Q4ozEdUVdHg4yVIQ2pCIEvM4IWIdCrd5uNC6owczN5yfsaZIYL+cTOC
-         uPCGn611bLCLb8ZDJV1A4g1ez8Fb2spQfxj6gwiWIq1/tkkUrxtUi8DkQ5uWZhQaz8
-         ImaSu3p4l2mSw==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/19 4:50 PM, Ira Weiny wrote:
-> On Tue, Aug 13, 2019 at 05:56:31PM -0700, John Hubbard wrote:
->> On 8/13/19 5:51 PM, John Hubbard wrote:
->>> On 8/13/19 2:08 PM, Ira Weiny wrote:
->>>> On Mon, Aug 12, 2019 at 05:07:32PM -0700, John Hubbard wrote:
->>>>> On 8/12/19 4:49 PM, Ira Weiny wrote:
->>>>>> On Sun, Aug 11, 2019 at 06:50:44PM -0700, john.hubbard@gmail.com wrote:
->>>>>>> From: John Hubbard <jhubbard@nvidia.com>
->>>>> ...
->>>> Finally, I struggle with converting everyone to a new call.  It is more
->>>> overhead to use vaddr_pin in the call above because now the GUP code is going
->>>> to associate a file pin object with that file when in ODP we don't need that
->>>> because the pages can move around.
->>>
->>> What if the pages in ODP are file-backed?
->>>
->>
->> oops, strike that, you're right: in that case, even the file system case is covered.
->> Don't mind me. :)
-> 
-> Ok so are we agreed we will drop the patch to the ODP code?  I'm going to keep
-> the FOLL_PIN flag and addition in the vaddr_pin_pages.
-> 
+Update the bpf_object_open_attr structure and corresponding code so that the
+bpf_object__open_xattr function could be used to open objects from buffers as
+well as from files.  The reason for this change is that the existing
+bpf_object__open_buffer function doesn't provide a way to specify neither the
+needs_kver nor flags parameters to the internal call to __bpf_object__open
+which makes it inconvenient for loading BPF objects which doesn't require a
+kernel version.
 
-Yes. I hope I'm not overlooking anything, but it all seems to make sense to
-let ODP just rely on the MMU notifiers.
+Two new fields, obj_buf and obj_buf_sz, were added to the structure, and the
+file field was union'ed with obj_name so that one can open an object like this:
 
-thanks,
+    struct bpf_object_open_attr attr = {
+        .obj_name   = name,
+        .obj_buf    = obj_buf,
+        .obj_buf_sz = obj_buf_sz,
+        .prog_type  = BPF_PROG_TYPE_UNSPEC,
+    };
+    return bpf_object__open_xattr(&attr);
+
+while still being able to use the file semantics:
+
+    struct bpf_object_open_attr attr = {
+        .file       = path,
+        .prog_type  = BPF_PROG_TYPE_UNSPEC,
+    };
+    return bpf_object__open_xattr(&attr);
+
+Another thing to note is that since the commit c034a177d3c8 ("bpf: bpftool, add
+flag to allow non-compat map definitions") which introduced a MAPS_RELAX_COMPAT
+flag to load objects with non-compat map definitions, bpf_object__open_buffer
+was called with this flag enabled (it was passed as the boolean true value in
+flags argument to __bpf_object__open).  The default behaviour for all open
+functions is to clear this flag and this patch changes bpf_object__open_buffer
+to clears this flag.  It can be enabled, if needed, by opening an object from
+buffer using __bpf_object__open_xattr.
+
+Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
+---
+ tools/lib/bpf/libbpf.c | 45 ++++++++++++++++++++++++++----------------
+ tools/lib/bpf/libbpf.h |  7 ++++++-
+ 2 files changed, 34 insertions(+), 18 deletions(-)
+
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index 2233f919dd88..7c8054afd901 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -3630,13 +3630,31 @@ __bpf_object__open(const char *path, void *obj_buf, size_t obj_buf_sz,
+ struct bpf_object *__bpf_object__open_xattr(struct bpf_object_open_attr *attr,
+ 					    int flags)
+ {
++	char tmp_name[64];
++
+ 	/* param validation */
+-	if (!attr->file)
++	if (!attr)
+ 		return NULL;
+ 
+-	pr_debug("loading %s\n", attr->file);
++	if (attr->obj_buf) {
++		if (attr->obj_buf_sz <= 0)
++			return NULL;
++		if (!attr->file) {
++			snprintf(tmp_name, sizeof(tmp_name), "%lx-%lx",
++				 (unsigned long)attr->obj_buf,
++				 (unsigned long)attr->obj_buf_sz);
++			attr->obj_name = tmp_name;
++		}
++		pr_debug("loading object '%s' from buffer\n", attr->obj_name);
++	} else if (!attr->file) {
++		return NULL;
++	} else {
++		attr->obj_buf_sz = 0;
+ 
+-	return __bpf_object__open(attr->file, NULL, 0,
++		pr_debug("loading object file '%s'\n", attr->file);
++	}
++
++	return __bpf_object__open(attr->file, attr->obj_buf, attr->obj_buf_sz,
+ 				  bpf_prog_type__needs_kver(attr->prog_type),
+ 				  flags);
+ }
+@@ -3660,21 +3678,14 @@ struct bpf_object *bpf_object__open_buffer(void *obj_buf,
+ 					   size_t obj_buf_sz,
+ 					   const char *name)
+ {
+-	char tmp_name[64];
+-
+-	/* param validation */
+-	if (!obj_buf || obj_buf_sz <= 0)
+-		return NULL;
+-
+-	if (!name) {
+-		snprintf(tmp_name, sizeof(tmp_name), "%lx-%lx",
+-			 (unsigned long)obj_buf,
+-			 (unsigned long)obj_buf_sz);
+-		name = tmp_name;
+-	}
+-	pr_debug("loading object '%s' from buffer\n", name);
++	struct bpf_object_open_attr attr = {
++		.obj_name	= name,
++		.obj_buf	= obj_buf,
++		.obj_buf_sz	= obj_buf_sz,
++		.prog_type	= BPF_PROG_TYPE_UNSPEC,
++	};
+ 
+-	return __bpf_object__open(name, obj_buf, obj_buf_sz, true, true);
++	return bpf_object__open_xattr(&attr);
+ }
+ 
+ int bpf_object__unload(struct bpf_object *obj)
+diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+index e8f70977d137..634f278578dd 100644
+--- a/tools/lib/bpf/libbpf.h
++++ b/tools/lib/bpf/libbpf.h
+@@ -63,8 +63,13 @@ LIBBPF_API libbpf_print_fn_t libbpf_set_print(libbpf_print_fn_t fn);
+ struct bpf_object;
+ 
+ struct bpf_object_open_attr {
+-	const char *file;
++	union {
++		const char *file;
++		const char *obj_name;
++	};
+ 	enum bpf_prog_type prog_type;
++	void *obj_buf;
++	size_t obj_buf_sz;
+ };
+ 
+ LIBBPF_API struct bpf_object *bpf_object__open(const char *path);
 -- 
-John Hubbard
-NVIDIA
+2.19.1
+
