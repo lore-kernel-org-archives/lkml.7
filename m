@@ -2,243 +2,415 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1CEC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DFCC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F85D2171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25EEC2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:02:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rj39qPFO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metanate.com header.i=@metanate.com header.b="DQXe0WCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731118AbfHOKBM (ORCPT
+        id S1731249AbfHOKCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 06:01:12 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40498 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730204AbfHOKBL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 06:01:11 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w16so1113479pfn.7;
-        Thu, 15 Aug 2019 03:01:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=u9M8Ie+Sea7JBN6GH+XMlP3J5MvPOCzhgB0q0n+x2T8=;
-        b=Rj39qPFOeLmI7SKd7EqTks255Mm7tsVJ5hdIEctzkS2RRpzLAuIrminpe5jHtX9WI4
-         p7F8CjI3Wbs72K1QTCM9AZiJsjZ4rdlv313NDKSOsDrVLMRT/tvklL2dDsMpLovedE6B
-         2er1SU7UEtniQTIDXOYZMsahpAM0z13Sv+2gYDUWJYGnbNgZp43QMqveuW27mjq/JB5W
-         0IpopY0RA+UPixgwV/13dpKO1g85kzEq6usDDPZfFWNXJXq/3Tx2JYFfeeH8Q6cw71vr
-         Gn77HgWaRnlLtSAz+9eYSVTRvRxr05WRmnP9TPvNN6wS3kSEypkLrb3jqgn+jEwV5b8M
-         kr1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=u9M8Ie+Sea7JBN6GH+XMlP3J5MvPOCzhgB0q0n+x2T8=;
-        b=QVi3vxUvrCCVW/GgIu1oHmsKweVEBXReia0wUrV8RP5G+C59koUzW1qiECAbeOVHG+
-         0ttgCaSv4FObo+kcVJs4RSJIr9iauv+lMy/wju77OfDCECtR0INI6pYMVbU3/RnPk5Hh
-         RYd+Ara1s80X1e020mtvjPBjNLRdXyyGcN/H/KBp6F+CZ5tMi0giS0D+09Xa1eox3rqD
-         tvedcXkYnsSX7R34uyH4sXhaKvopnRqqaGQCFf3YOQ+HdBuPSe3fG++dPrn6WMu8EpMr
-         dGjtXCQS+z9dlAb1DGSKvA4f2nI+T6cudNKzTVnDRNYEFWJQh7YsskcvaHt3lWHHsL4u
-         xOJA==
-X-Gm-Message-State: APjAAAUFjseDu57xwgUvJouzdxxUjY1Tw/lI61DR0KQnLaEdwRlOivYm
-        jgW3M0B/TMEIV7dtMKc1frM=
-X-Google-Smtp-Source: APXvYqyVC7FM1xYBZQceDYVCmIGq7PbMRzoTft6VBCeAIUTmOaKkaSA20iIVV5jLqhJ+8DWKisfq1g==
-X-Received: by 2002:a17:90a:240e:: with SMTP id h14mr1553379pje.9.1565863270769;
-        Thu, 15 Aug 2019 03:01:10 -0700 (PDT)
-Received: from localhost.localdomain (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
-        by smtp.gmail.com with ESMTPSA id j12sm2152541pff.4.2019.08.15.03.01.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 15 Aug 2019 03:01:10 -0700 (PDT)
-From:   Mark Balantzyan <mbalant3@gmail.com>
-To:     sathya.prakash@broadcom.com
-Cc:     suganath-prabu.subramani@broadcom.com,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Balantzyan <mbalant3@gmail.com>
-Subject: [PATCH v3] lsilogic mpt fusion: mptctl: Fixed race condition around mptctl_id variable using mutexes
-Date:   Thu, 15 Aug 2019 03:00:50 -0700
-Message-Id: <20190815100050.3924-1-mbalant3@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 15 Aug 2019 06:02:08 -0400
+Received: from dougal.metanate.com ([90.155.101.14]:21187 "EHLO metanate.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730737AbfHOKCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 06:02:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/simple; d=metanate.com;
+         s=stronger; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=8blkr2TAgrrLU5ErStb9NjbvRn/ljxlIFTVyJhRAASQ=; b=DQXe0WChux6D4O6/u8qn8B8Wjl
+        omIoE+Q2QqbHoJB3p9/BQiElfAvjPrT4dBMgE3WQJYH017SHngYJ2Q3as1cSTpNuJZJemcQsGCKee
+        Ne+EHE0k2tFpljH+IrrHkYP/uuBp7wa38mfbmadbZTk+gNRfx6ZedRroyjuPMulDVFeKWjKtTe03e
+        twdjHTQnoJkGywFj1xoD/r8uSNThH5AYDlwZhC/XCyd+DeS+BRgkN91uJU2dxbLRvJucaIPLoQoCa
+        hZB2Jf2lkqKmXGCQY2dz+HUjJ5Cwi/XI4tvv2RDcyJseGM5N3AVa3E8S3agfDhmS9An9AaIzGgRiz
+        tkok2q2g==;
+Received: from 188-39-28-98.static.enta.net ([188.39.28.98] helo=donbot.corp.numark.com)
+        by shrek.metanate.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <john@metanate.com>)
+        id 1hyCZv-0001ER-BC; Thu, 15 Aug 2019 11:01:55 +0100
+From:   John Keeping <john@metanate.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, John Keeping <john@metanate.com>
+Subject: [PATCH v2 2/3] perf unwind: fix libunwind when tid != pid
+Date:   Thu, 15 Aug 2019 11:01:45 +0100
+Message-Id: <20190815100146.28842-2-john@metanate.com>
+X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20190815100146.28842-1-john@metanate.com>
+References: <20190804124434.204da4ac.john@metanate.com>
+ <20190815100146.28842-1-john@metanate.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Authenticated: YES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain functions in the driver, such as mptctl_do_fw_download() and
-mptctl_do_mpt_command(), rely on the instance of mptctl_id, which does the
-id-ing. There is race condition possible when these functions operate in
-concurrency. Via, mutexes, the functions are mutually signalled to cooperate.
+Commit e5adfc3e7e77 ("perf map: Synthesize maps only for thread group
+leader") changed the recording side so that we no longer get mmap events
+for threads other than the thread group leader (when synthesising these
+events for threads which exist before perf is started).
 
-Changelog v2
+When a file recorded after this change is loaded, the lack of mmap
+records mean that unwinding is not set up for any other threads.
 
-Lacked a version number but added properly terminated else condition at
-(former) line 2300.
+This can be seen in a simple record/report scenario:
 
-Changelog v3
+	perf record --call-graph=dwarf -t $TID
+	perf report
 
-Fixes "return -EAGAIN" lines which were erroneously tabbed as if to be guarded
-by "if" conditions lying above them.
+If $TID is a process ID then the report will show call graphs, but if
+$TID is a secondary thread the output is as if --call-graph=none was
+specified.
 
-Signed-off-by: Mark Balantzyan <mbalant3@gmail.com>
+Following the rationale in that commit, move the libunwind fields into
+struct map_groups and update the libunwind functions to take this
+instead of the struct thread.  This is only required for
+unwind__finish_access which must now be called from map_groups__delete
+and the others are changed for symmetry.
 
+Note that unwind__get_entries keeps the thread argument since it is
+required for symbol lookup and the libdw unwind provider uses the thread
+ID.
+
+Fixes: e5adfc3e7e77 ("perf map: Synthesize maps only for thread group leader")
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: John Keeping <john@metanate.com>
 ---
- drivers/message/fusion/mptctl.c | 43 +++++++++++++++++++++++++--------
- 1 file changed, 33 insertions(+), 10 deletions(-)
+v2:
+- Remove unrelated change that has moved to the next patch
+- Improve commit message to describe a scenario that shows the bug
+---
+ tools/perf/util/map.c                    |  3 ++-
+ tools/perf/util/map_groups.h             |  4 +++
+ tools/perf/util/thread.c                 |  7 +++--
+ tools/perf/util/thread.h                 |  4 ---
+ tools/perf/util/unwind-libunwind-local.c | 18 ++++++-------
+ tools/perf/util/unwind-libunwind.c       | 34 ++++++++++++------------
+ tools/perf/util/unwind.h                 | 25 ++++++++---------
+ 7 files changed, 48 insertions(+), 47 deletions(-)
 
-diff --git a/drivers/message/fusion/mptctl.c b/drivers/message/fusion/mptctl.c
-index 4470630d..3270843c 100644
---- a/drivers/message/fusion/mptctl.c
-+++ b/drivers/message/fusion/mptctl.c
-@@ -816,12 +816,15 @@ mptctl_do_fw_download(int ioc, char __user *ufwbuf, size_t fwlen)
- 
- 		/*  Valid device. Get a message frame and construct the FW download message.
- 	 	*/
-+		mutex_lock(&mpctl_mutex);
- 		if ((mf = mpt_get_msg_frame(mptctl_id, iocp)) == NULL)
--			return -EAGAIN;
-+			mutex_unlock(&mpctl_mutex);
-+		return -EAGAIN;
- 	}
--
-+	mutex_lock(&mpctl_mutex);
- 	dctlprintk(iocp, printk(MYIOC_s_DEBUG_FMT
- 	    "mptctl_do_fwdl called. mptctl_id = %xh.\n", iocp->name, mptctl_id));
-+	mutex_unlock(&mpctl_mutex);
- 	dctlprintk(iocp, printk(MYIOC_s_DEBUG_FMT "DbG: kfwdl.bufp  = %p\n",
- 	    iocp->name, ufwbuf));
- 	dctlprintk(iocp, printk(MYIOC_s_DEBUG_FMT "DbG: kfwdl.fwlen = %d\n",
-@@ -943,7 +946,9 @@ mptctl_do_fw_download(int ioc, char __user *ufwbuf, size_t fwlen)
- 	ReplyMsg = NULL;
- 	SET_MGMT_MSG_CONTEXT(iocp->ioctl_cmds.msg_context, dlmsg->MsgContext);
- 	INITIALIZE_MGMT_STATUS(iocp->ioctl_cmds.status)
-+	mutex_lock(&mpctl_mutex);
- 	mpt_put_msg_frame(mptctl_id, iocp, mf);
-+	mutex_lock(&mpctl_mutex);
- 
- 	/* Now wait for the command to complete */
- retry_wait:
-@@ -1889,8 +1894,10 @@ mptctl_do_mpt_command (struct mpt_ioctl_command karg, void __user *mfPtr)
- 
- 	/* Get a free request frame and save the message context.
- 	 */
-+	mutex_lock(&mpctl_mutex);
-         if ((mf = mpt_get_msg_frame(mptctl_id, ioc)) == NULL)
--                return -EAGAIN;
-+		mutex_unlock(&mpctl_mutex);
-+        return -EAGAIN;
- 
- 	hdr = (MPIHeader_t *) mf;
- 	msgContext = le32_to_cpu(hdr->MsgContext);
-@@ -2271,11 +2278,14 @@ mptctl_do_mpt_command (struct mpt_ioctl_command karg, void __user *mfPtr)
- 		DBG_DUMP_TM_REQUEST_FRAME(ioc, (u32 *)mf);
- 
- 		if ((ioc->facts.IOCCapabilities & MPI_IOCFACTS_CAPABILITY_HIGH_PRI_Q) &&
--		    (ioc->facts.MsgVersion >= MPI_VERSION_01_05))
-+		    (ioc->facts.MsgVersion >= MPI_VERSION_01_05)) {
-+			mutex_lock(&mpctl_mutex);
- 			mpt_put_msg_frame_hi_pri(mptctl_id, ioc, mf);
--		else {
--			rc =mpt_send_handshake_request(mptctl_id, ioc,
--				sizeof(SCSITaskMgmt_t), (u32*)mf, CAN_SLEEP);
-+			mutex_unlock(&mpctl_mutex);
-+		} else {
-+			mutex_lock(&mpctl_mutex);
-+			rc = mpt_send_handshake_request(mptctl_id, ioc, sizeof(SCSITaskMgmt_t), (u32 *)mf, CAN_SLEEP);
-+			mutex_unlock(&mpctl_mutex);				
- 			if (rc != 0) {
- 				dfailprintk(ioc, printk(MYIOC_s_ERR_FMT
- 				    "send_handshake FAILED! (ioc %p, mf %p)\n",
-@@ -2287,8 +2297,11 @@ mptctl_do_mpt_command (struct mpt_ioctl_command karg, void __user *mfPtr)
- 			}
- 		}
- 
--	} else
-+	} else {
-+		mutex_lock(&mpctl_mutex);
- 		mpt_put_msg_frame(mptctl_id, ioc, mf);
-+		mutex_unlock(&mpctl_mutex);
-+	}
- 
- 	/* Now wait for the command to complete */
- 	timeout = (karg.timeout > 0) ? karg.timeout : MPT_IOCTL_DEFAULT_TIMEOUT;
-@@ -2563,7 +2576,9 @@ mptctl_hp_hostinfo(unsigned long arg, unsigned int data_size)
- 	/* 
- 	 * Gather ISTWI(Industry Standard Two Wire Interface) Data
- 	 */
-+	mutex_lock(&mpctl_mutex);
- 	if ((mf = mpt_get_msg_frame(mptctl_id, ioc)) == NULL) {
-+	mutex_unlock(&mpctl_mutex);
- 		dfailprintk(ioc, printk(MYIOC_s_WARN_FMT
- 			"%s, no msg frames!!\n", ioc->name, __func__));
- 		goto out;
-@@ -2593,7 +2608,9 @@ mptctl_hp_hostinfo(unsigned long arg, unsigned int data_size)
- 	SET_MGMT_MSG_CONTEXT(ioc->ioctl_cmds.msg_context,
- 				IstwiRWRequest->MsgContext);
- 	INITIALIZE_MGMT_STATUS(ioc->ioctl_cmds.status)
-+	mutex_lock(&mpctl_mutex);
- 	mpt_put_msg_frame(mptctl_id, ioc, mf);
-+	mutex_unlock(&mpctl_mutex);
- 
- retry_wait:
- 	timeleft = wait_for_completion_timeout(&ioc->ioctl_cmds.done,
-@@ -3010,9 +3027,11 @@ static int __init mptctl_init(void)
- 	 *  Install our handler
- 	 */
- 	++where;
-+	mutex_lock(&mpctl_mutex);
- 	mptctl_id = mpt_register(mptctl_reply, MPTCTL_DRIVER,
- 	    "mptctl_reply");
- 	if (!mptctl_id || mptctl_id >= MPT_MAX_PROTOCOL_DRIVERS) {
-+		mutex_unlock(&mpctl_mutex);
- 		printk(KERN_ERR MYNAM ": ERROR: Failed to register with Fusion MPT base driver\n");
- 		misc_deregister(&mptctl_miscdev);
- 		err = -EBUSY;
-@@ -3022,13 +3041,14 @@ static int __init mptctl_init(void)
- 	mptctl_taskmgmt_id = mpt_register(mptctl_taskmgmt_reply, MPTCTL_DRIVER,
- 	    "mptctl_taskmgmt_reply");
- 	if (!mptctl_taskmgmt_id || mptctl_taskmgmt_id >= MPT_MAX_PROTOCOL_DRIVERS) {
-+		mutex_unlock(&mpctl_mutex);
- 		printk(KERN_ERR MYNAM ": ERROR: Failed to register with Fusion MPT base driver\n");
- 		mpt_deregister(mptctl_id);
- 		misc_deregister(&mptctl_miscdev);
- 		err = -EBUSY;
- 		goto out_fail;
- 	}
--
-+	mutex_unlock(&mpctl_mutex);
- 	mpt_reset_register(mptctl_id, mptctl_ioc_reset);
- 	mpt_event_register(mptctl_id, mptctl_event_process);
- 
-@@ -3044,13 +3064,14 @@ out_fail:
- /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
- static void mptctl_exit(void)
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 44b556812e4b..27b7b102e4a2 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -647,6 +647,7 @@ struct map_groups *map_groups__new(struct machine *machine)
+ void map_groups__delete(struct map_groups *mg)
  {
-+	mutex_lock(&mpctl_mutex);
- 	misc_deregister(&mptctl_miscdev);
- 	printk(KERN_INFO MYNAM ": Deregistered /dev/%s @ (major,minor=%d,%d)\n",
- 			 mptctl_miscdev.name, MISC_MAJOR, mptctl_miscdev.minor);
- 
- 	/* De-register event handler from base module */
- 	mpt_event_deregister(mptctl_id);
--
-+	
- 	/* De-register reset handler from base module */
- 	mpt_reset_deregister(mptctl_id);
- 
-@@ -3058,6 +3079,8 @@ static void mptctl_exit(void)
- 	mpt_deregister(mptctl_taskmgmt_id);
- 	mpt_deregister(mptctl_id);
- 
-+	mutex_unlock(&mpctl_mutex);
-+
-         mpt_device_driver_deregister(MPTCTL_DRIVER);
- 
+ 	map_groups__exit(mg);
++	unwind__finish_access(mg);
+ 	free(mg);
  }
+ 
+@@ -887,7 +888,7 @@ int map_groups__clone(struct thread *thread, struct map_groups *parent)
+ 		if (new == NULL)
+ 			goto out_unlock;
+ 
+-		err = unwind__prepare_access(thread, new, NULL);
++		err = unwind__prepare_access(mg, new, NULL);
+ 		if (err)
+ 			goto out_unlock;
+ 
+diff --git a/tools/perf/util/map_groups.h b/tools/perf/util/map_groups.h
+index 5f25efa6d6bc..77252e14008f 100644
+--- a/tools/perf/util/map_groups.h
++++ b/tools/perf/util/map_groups.h
+@@ -31,6 +31,10 @@ struct map_groups {
+ 	struct maps	 maps;
+ 	struct machine	 *machine;
+ 	refcount_t	 refcnt;
++#ifdef HAVE_LIBUNWIND_SUPPORT
++	void				*addr_space;
++	struct unwind_libunwind_ops	*unwind_libunwind_ops;
++#endif
+ };
+ 
+ #define KMAP_NAME_LEN 256
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 590793cc5142..bbf7816cba31 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -105,7 +105,6 @@ void thread__delete(struct thread *thread)
+ 	}
+ 	up_write(&thread->comm_lock);
+ 
+-	unwind__finish_access(thread);
+ 	nsinfo__zput(thread->nsinfo);
+ 	srccode_state_free(&thread->srccode_state);
+ 
+@@ -252,7 +251,7 @@ static int ____thread__set_comm(struct thread *thread, const char *str,
+ 		list_add(&new->list, &thread->comm_list);
+ 
+ 		if (exec)
+-			unwind__flush_access(thread);
++			unwind__flush_access(thread->mg);
+ 	}
+ 
+ 	thread->comm_set = true;
+@@ -332,7 +331,7 @@ int thread__insert_map(struct thread *thread, struct map *map)
+ {
+ 	int ret;
+ 
+-	ret = unwind__prepare_access(thread, map, NULL);
++	ret = unwind__prepare_access(thread->mg, map, NULL);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -352,7 +351,7 @@ static int __thread__prepare_access(struct thread *thread)
+ 	down_read(&maps->lock);
+ 
+ 	for (map = maps__first(maps); map; map = map__next(map)) {
+-		err = unwind__prepare_access(thread, map, &initialized);
++		err = unwind__prepare_access(thread->mg, map, &initialized);
+ 		if (err || initialized)
+ 			break;
+ 	}
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index e97ef6977eb9..bf06113be4f3 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -44,10 +44,6 @@ struct thread {
+ 	struct thread_stack	*ts;
+ 	struct nsinfo		*nsinfo;
+ 	struct srccode_state	srccode_state;
+-#ifdef HAVE_LIBUNWIND_SUPPORT
+-	void				*addr_space;
+-	struct unwind_libunwind_ops	*unwind_libunwind_ops;
+-#endif
+ 	bool			filter;
+ 	int			filter_entry_depth;
+ };
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index 71a788921b62..ebdbb056510c 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -616,26 +616,26 @@ static unw_accessors_t accessors = {
+ 	.get_proc_name		= get_proc_name,
+ };
+ 
+-static int _unwind__prepare_access(struct thread *thread)
++static int _unwind__prepare_access(struct map_groups *mg)
+ {
+-	thread->addr_space = unw_create_addr_space(&accessors, 0);
+-	if (!thread->addr_space) {
++	mg->addr_space = unw_create_addr_space(&accessors, 0);
++	if (!mg->addr_space) {
+ 		pr_err("unwind: Can't create unwind address space.\n");
+ 		return -ENOMEM;
+ 	}
+ 
+-	unw_set_caching_policy(thread->addr_space, UNW_CACHE_GLOBAL);
++	unw_set_caching_policy(mg->addr_space, UNW_CACHE_GLOBAL);
+ 	return 0;
+ }
+ 
+-static void _unwind__flush_access(struct thread *thread)
++static void _unwind__flush_access(struct map_groups *mg)
+ {
+-	unw_flush_cache(thread->addr_space, 0, 0);
++	unw_flush_cache(mg->addr_space, 0, 0);
+ }
+ 
+-static void _unwind__finish_access(struct thread *thread)
++static void _unwind__finish_access(struct map_groups *mg)
+ {
+-	unw_destroy_addr_space(thread->addr_space);
++	unw_destroy_addr_space(mg->addr_space);
+ }
+ 
+ static int get_entries(struct unwind_info *ui, unwind_entry_cb_t cb,
+@@ -660,7 +660,7 @@ static int get_entries(struct unwind_info *ui, unwind_entry_cb_t cb,
+ 	 */
+ 	if (max_stack - 1 > 0) {
+ 		WARN_ONCE(!ui->thread, "WARNING: ui->thread is NULL");
+-		addr_space = ui->thread->addr_space;
++		addr_space = ui->thread->mg->addr_space;
+ 
+ 		if (addr_space == NULL)
+ 			return -1;
+diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
+index c0811977d7d5..b843f9d0a9ea 100644
+--- a/tools/perf/util/unwind-libunwind.c
++++ b/tools/perf/util/unwind-libunwind.c
+@@ -11,13 +11,13 @@ struct unwind_libunwind_ops __weak *local_unwind_libunwind_ops;
+ struct unwind_libunwind_ops __weak *x86_32_unwind_libunwind_ops;
+ struct unwind_libunwind_ops __weak *arm64_unwind_libunwind_ops;
+ 
+-static void unwind__register_ops(struct thread *thread,
++static void unwind__register_ops(struct map_groups *mg,
+ 			  struct unwind_libunwind_ops *ops)
+ {
+-	thread->unwind_libunwind_ops = ops;
++	mg->unwind_libunwind_ops = ops;
+ }
+ 
+-int unwind__prepare_access(struct thread *thread, struct map *map,
++int unwind__prepare_access(struct map_groups *mg, struct map *map,
+ 			   bool *initialized)
+ {
+ 	const char *arch;
+@@ -28,7 +28,7 @@ int unwind__prepare_access(struct thread *thread, struct map *map,
+ 	if (!dwarf_callchain_users)
+ 		return 0;
+ 
+-	if (thread->addr_space) {
++	if (mg->addr_space) {
+ 		pr_debug("unwind: thread map already set, dso=%s\n",
+ 			 map->dso->name);
+ 		if (initialized)
+@@ -37,14 +37,14 @@ int unwind__prepare_access(struct thread *thread, struct map *map,
+ 	}
+ 
+ 	/* env->arch is NULL for live-mode (i.e. perf top) */
+-	if (!thread->mg->machine->env || !thread->mg->machine->env->arch)
++	if (!mg->machine->env || !mg->machine->env->arch)
+ 		goto out_register;
+ 
+-	dso_type = dso__type(map->dso, thread->mg->machine);
++	dso_type = dso__type(map->dso, mg->machine);
+ 	if (dso_type == DSO__TYPE_UNKNOWN)
+ 		return 0;
+ 
+-	arch = perf_env__arch(thread->mg->machine->env);
++	arch = perf_env__arch(mg->machine->env);
+ 
+ 	if (!strcmp(arch, "x86")) {
+ 		if (dso_type != DSO__TYPE_64BIT)
+@@ -59,37 +59,37 @@ int unwind__prepare_access(struct thread *thread, struct map *map,
+ 		return 0;
+ 	}
+ out_register:
+-	unwind__register_ops(thread, ops);
++	unwind__register_ops(mg, ops);
+ 
+-	err = thread->unwind_libunwind_ops->prepare_access(thread);
++	err = mg->unwind_libunwind_ops->prepare_access(mg);
+ 	if (initialized)
+ 		*initialized = err ? false : true;
+ 	return err;
+ }
+ 
+-void unwind__flush_access(struct thread *thread)
++void unwind__flush_access(struct map_groups *mg)
+ {
+ 	if (!dwarf_callchain_users)
+ 		return;
+ 
+-	if (thread->unwind_libunwind_ops)
+-		thread->unwind_libunwind_ops->flush_access(thread);
++	if (mg->unwind_libunwind_ops)
++		mg->unwind_libunwind_ops->flush_access(mg);
+ }
+ 
+-void unwind__finish_access(struct thread *thread)
++void unwind__finish_access(struct map_groups *mg)
+ {
+ 	if (!dwarf_callchain_users)
+ 		return;
+ 
+-	if (thread->unwind_libunwind_ops)
+-		thread->unwind_libunwind_ops->finish_access(thread);
++	if (mg->unwind_libunwind_ops)
++		mg->unwind_libunwind_ops->finish_access(mg);
+ }
+ 
+ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
+ 			 struct thread *thread,
+ 			 struct perf_sample *data, int max_stack)
+ {
+-	if (thread->unwind_libunwind_ops)
+-		return thread->unwind_libunwind_ops->get_entries(cb, arg, thread, data, max_stack);
++	if (thread->mg->unwind_libunwind_ops)
++		return thread->mg->unwind_libunwind_ops->get_entries(cb, arg, thread, data, max_stack);
+ 	return 0;
+ }
+diff --git a/tools/perf/util/unwind.h b/tools/perf/util/unwind.h
+index 8a44a1569a21..3a7d00c20d86 100644
+--- a/tools/perf/util/unwind.h
++++ b/tools/perf/util/unwind.h
+@@ -6,6 +6,7 @@
+ #include <linux/types.h>
+ 
+ struct map;
++struct map_groups;
+ struct perf_sample;
+ struct symbol;
+ struct thread;
+@@ -19,9 +20,9 @@ struct unwind_entry {
+ typedef int (*unwind_entry_cb_t)(struct unwind_entry *entry, void *arg);
+ 
+ struct unwind_libunwind_ops {
+-	int (*prepare_access)(struct thread *thread);
+-	void (*flush_access)(struct thread *thread);
+-	void (*finish_access)(struct thread *thread);
++	int (*prepare_access)(struct map_groups *mg);
++	void (*flush_access)(struct map_groups *mg);
++	void (*finish_access)(struct map_groups *mg);
+ 	int (*get_entries)(unwind_entry_cb_t cb, void *arg,
+ 			   struct thread *thread,
+ 			   struct perf_sample *data, int max_stack);
+@@ -46,20 +47,20 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
+ #endif
+ 
+ int LIBUNWIND__ARCH_REG_ID(int regnum);
+-int unwind__prepare_access(struct thread *thread, struct map *map,
++int unwind__prepare_access(struct map_groups *mg, struct map *map,
+ 			   bool *initialized);
+-void unwind__flush_access(struct thread *thread);
+-void unwind__finish_access(struct thread *thread);
++void unwind__flush_access(struct map_groups *mg);
++void unwind__finish_access(struct map_groups *mg);
+ #else
+-static inline int unwind__prepare_access(struct thread *thread __maybe_unused,
++static inline int unwind__prepare_access(struct map_groups *mg __maybe_unused,
+ 					 struct map *map __maybe_unused,
+ 					 bool *initialized __maybe_unused)
+ {
+ 	return 0;
+ }
+ 
+-static inline void unwind__flush_access(struct thread *thread __maybe_unused) {}
+-static inline void unwind__finish_access(struct thread *thread __maybe_unused) {}
++static inline void unwind__flush_access(struct map_groups *mg __maybe_unused) {}
++static inline void unwind__finish_access(struct map_groups *mg __maybe_unused) {}
+ #endif
+ #else
+ static inline int
+@@ -72,14 +73,14 @@ unwind__get_entries(unwind_entry_cb_t cb __maybe_unused,
+ 	return 0;
+ }
+ 
+-static inline int unwind__prepare_access(struct thread *thread __maybe_unused,
++static inline int unwind__prepare_access(struct map_groups *mg __maybe_unused,
+ 					 struct map *map __maybe_unused,
+ 					 bool *initialized __maybe_unused)
+ {
+ 	return 0;
+ }
+ 
+-static inline void unwind__flush_access(struct thread *thread __maybe_unused) {}
+-static inline void unwind__finish_access(struct thread *thread __maybe_unused) {}
++static inline void unwind__flush_access(struct map_groups *mg __maybe_unused) {}
++static inline void unwind__finish_access(struct map_groups *mg __maybe_unused) {}
+ #endif /* HAVE_DWARF_UNWIND_SUPPORT */
+ #endif /* __UNWIND_H */
 -- 
-2.17.1
+2.22.0
 
