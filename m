@@ -2,187 +2,114 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED75C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947D1C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75102054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:26:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="gLepFjJ/"
+	by mail.kernel.org (Postfix) with ESMTP id 60F4E2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565886372;
+	bh=1G8FGo5n3tN3lmTNMeYn5S3oNOHbIP02ThCHH8jcIJA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BVHl7t+yqG5ZlyVTmdxT/gHWYJxy5Y+KXO2OQf9jBQ+/SXo99Mm75OOFJzGHFWA9z
+	 xpFXjTb6jiWpPrIi8CKKVuKaxnBtsg778lICgS2gvc1WfnFzdCfw6T6RJFIOTL5Z+N
+	 bx+yGLgBgSvbhxU0TlqNWQ03sHDrQjtwtbDx0tmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731782AbfHOQ0H (ORCPT
+        id S1731815AbfHOQ0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:26:07 -0400
-Received: from mail-eopbgr760043.outbound.protection.outlook.com ([40.107.76.43]:65343
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731441AbfHOQZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:25:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lVXyF8AdekZiLxmdvZxjJ5VrPdEZZO+ndvp1G40jk6guK/ZFwXKQE1b2TIkBwfgX091/q2vLYsHjk1Xxsd9TJ19MJ4dpq6XrWyOzYW2TsF/zW7royHk7f790QRtzpXm8MSAYoUb9+cQ7yoA1yjyS3yd8dBBmRODOpj06uP4DsZp9p/kQeByaeWZ50BR9MJseb0fHi/L8ker9NvSPCVf43uTmTTXn/wusJjqXbyU1ui8XN/4k2vGivl7R02ylKsDLYrtXMkDJe0QolVXBh25+umk0VN64xczjhdZj3Rz8aehoxJjy3CVgy5b3PtI2IrbqqNSzO6D/rxE9Nt6VoesnjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wa2tDZSFdjlCRDUD0+24Sd9lSEd8gM0SsP2nYdE1bcs=;
- b=T44Y73TUx5dO5BAP0ISMWXK6nXDZE4mxeDDO9X/ELSLHqvWAI2Of2ey9ct/rjeXV7qRCg6PObkpcTucCfQByJYNgag/M/uqhzsSZHIBYGD18ambpJEqeioHHXjx2j/E8zwG28GrxTY6svYuaOiEjlGr0GSo8AUNPcptmyGIozGocKEvv/t5L5onVlg8tKgls1Tmf9wUW4HNNoNbQCx4M2vqHMPal7tFkhfxzB+LbUBd3Palp6K+zqbtfvus//cIZqxAL70Hg4TIoXHBhbMvzH4E8BxJij1zzwJttjhQvHzVGODAtvfvDbjuw/OfKHkxN8U2mi7yiq2tzp93zKgnDDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 15 Aug 2019 12:26:11 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37900 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731752AbfHOQ0G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 12:26:06 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r9so2741576ljg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:26:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wa2tDZSFdjlCRDUD0+24Sd9lSEd8gM0SsP2nYdE1bcs=;
- b=gLepFjJ/hOkhH2vbWYr1Y8mkGbdAKl1YUFp38TEvv5yQM9T0E2vMDXIux8VeOsyh97cAiPkrmErGgQ6DYb8BZLavBNb++Yg6sHCWEEHCVSw4Ze+g8+0BbmInvwy894GkdEN2wqpMmVWKeBeM4zi+6VuW16BzKso7R2pM/utyO0E=
-Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
- DM6PR12MB2603.namprd12.prod.outlook.com (20.176.116.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.23; Thu, 15 Aug 2019 16:25:20 +0000
-Received: from DM6PR12MB2844.namprd12.prod.outlook.com
- ([fe80::e95a:d3ee:e6a0:2825]) by DM6PR12MB2844.namprd12.prod.outlook.com
- ([fe80::e95a:d3ee:e6a0:2825%7]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
- 16:25:20 +0000
-From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "graf@amazon.com" <graf@amazon.com>,
-        "jschoenh@amazon.de" <jschoenh@amazon.de>,
-        "karahmed@amazon.de" <karahmed@amazon.de>,
-        "rimasluk@amazon.com" <rimasluk@amazon.com>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>,
-        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-Subject: [PATCH v2 14/15] kvm: ioapic: Delay update IOAPIC EOI for RTC
-Thread-Topic: [PATCH v2 14/15] kvm: ioapic: Delay update IOAPIC EOI for RTC
-Thread-Index: AQHVU4YIh6tJvHdq80Sa2/XMOGUQVA==
-Date:   Thu, 15 Aug 2019 16:25:20 +0000
-Message-ID: <1565886293-115836-15-git-send-email-suravee.suthikulpanit@amd.com>
-References: <1565886293-115836-1-git-send-email-suravee.suthikulpanit@amd.com>
-In-Reply-To: <1565886293-115836-1-git-send-email-suravee.suthikulpanit@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [165.204.78.1]
-x-clientproxiedby: SN6PR04CA0084.namprd04.prod.outlook.com
- (2603:10b6:805:f2::25) To DM6PR12MB2844.namprd12.prod.outlook.com
- (2603:10b6:5:45::32)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.8.3.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 46bbc0c6-2b82-4135-1e0d-08d7219d2a60
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB2603;
-x-ms-traffictypediagnostic: DM6PR12MB2603:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB2603FDFBCE1040392CB19F68F3AC0@DM6PR12MB2603.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01304918F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(366004)(136003)(346002)(199004)(189003)(14454004)(256004)(6436002)(81166006)(81156014)(478600001)(4326008)(99286004)(14444005)(5660300002)(25786009)(15650500001)(50226002)(8936002)(305945005)(66066001)(476003)(26005)(6512007)(6116002)(186003)(102836004)(7736002)(446003)(71190400001)(53936002)(2501003)(11346002)(6506007)(2616005)(2906002)(6486002)(8676002)(386003)(36756003)(3846002)(110136005)(4720700003)(316002)(486006)(86362001)(66476007)(66946007)(66556008)(64756008)(76176011)(66446008)(54906003)(52116002)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2603;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wreklhotwQDPhTYHBA2LxN9Zj1Q80/l/tXvoqieylXeXsX3oyFHAm3LUP/euYlcLJVIaTHGMVBpwIgIKc8GiP+AuTFpy1CYhYdiQXMBP7xQfMaLLiFdVWGCSemS+DxUtSuggiyX7y3aHaxzdZdpk2oLalrX0q0wZObdqXDFOGr9B10SZpSPCBpKsVHz70e2v4Qsjis1h4a/ay3LWIVe7XmHUiIJY1qwm/faSoGXAJU9seL75cOm2N7Q23qWJ9IF4bpRmyWPWYilNvUS4XLufmuoQpqd9dRzRHsp3ucPcV5abObqByJE0R2tTO7tyADxkpHWOHAKrCSm6HnlirxBYt0+wPYv71+mD/awe8dwDFpYjezcaw8H6ujNfasOXNDcFW41Lg+8Hv9P0CTMsdHLkvK4b3r4ydcWq/egXe+SVLuw=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9Io8f1bPaeNDioMtOu6b9FaHz1PaQCP05A6nz5CudSE=;
+        b=GdUTEFZxtX4Lqzwngdfr2kBTyvwT41GJPNn6kb81iJMXzazObo52enBgWkwrOOq3lr
+         fcNdZi8U6UPgNqNDEBWhKZKeMiP71ad8QufdLOLqaXmVo1Qm1ZJcKLGCfWYtcR0rwDEt
+         373s5sBtHdFaBBHWllHqZ5/T8eYXJ/Nx4+edw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Io8f1bPaeNDioMtOu6b9FaHz1PaQCP05A6nz5CudSE=;
+        b=acNjXtthLVMpXEZibUmmO6cdz6uPluGP2QuphL2g7w6MUoBKTzK3+Bpijq+GQgD98s
+         48bEZZFHaMJ1LWv4TZRZmTr8uyS2wFg4x4m7qeHCXcG/8P+lqz1KNM7cN4UrMSZw84A7
+         HbKewOxSIqIyrX2kAuDg0C0IeLDUDwxYr2i/K5huWqdCAD3+pIUBHc8uvH21WJnAjd8K
+         E+M0aME67ovuxKIikzNM1C1fnK6Ze+PDRbQlyerHXqWADXJ5ubPvz7yJ13pNOJqAZK0R
+         E+Nu8SbKwAsdVwNZXijFxAXL9/eH5ejsx0Bym091MAhCKM9RV4djlbVmrEKw6uHFDHfy
+         mgQw==
+X-Gm-Message-State: APjAAAVKb2x/wWZcyeB07ZDhEGiZDFUoDV71y9855EcpGDWSu+LHz+pf
+        /7UUvmDX7qQu+hs8bCRry7GJIRTZIXg=
+X-Google-Smtp-Source: APXvYqzqK7bbzOWCFAEXn0DgYcooTS9AU6DgJXT4mjEY05l92ddVOJOtdVgXKFRkCUQJvhYrjcBNHw==
+X-Received: by 2002:a2e:894d:: with SMTP id b13mr2493587ljk.38.1565886363820;
+        Thu, 15 Aug 2019 09:26:03 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id f22sm551445ljh.22.2019.08.15.09.26.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Aug 2019 09:26:03 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id t3so2705360ljj.12
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:26:03 -0700 (PDT)
+X-Received: by 2002:a2e:9192:: with SMTP id f18mr3104005ljg.52.1565885908392;
+ Thu, 15 Aug 2019 09:18:28 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46bbc0c6-2b82-4135-1e0d-08d7219d2a60
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 16:25:20.3937
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tbqw0aa9wUuY731KOXq/sEojXS7VTu3h+tKZJlOnotblaLaga8bTZRJ1nOq5afwq++cPdaoOBQ2XWtSaEp3Kaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2603
+References: <20190815044155.88483-1-gaoxiang25@huawei.com> <20190815090603.GD4938@kroah.com>
+In-Reply-To: <20190815090603.GD4938@kroah.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 15 Aug 2019 09:18:12 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjKz7JLd=mj0w2LUiWC2_VOeNWhTTrw1j-i-KyEHH5g5w@mail.gmail.com>
+Message-ID: <CAHk-=wjKz7JLd=mj0w2LUiWC2_VOeNWhTTrw1j-i-KyEHH5g5w@mail.gmail.com>
+Subject: Re: [PATCH v8 00/24] erofs: promote erofs from staging v8
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Gao Xiang <gaoxiang25@huawei.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        devel@driverdev.osuosl.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Pavel Machek <pavel@denx.de>, Jan Kara <jack@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dave Chinner <david@fromorbit.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        David Sterba <dsterba@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        Miao Xie <miaoxie@huawei.com>, Fang Wei <fangwei1@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In-kernel IOAPIC does not update RTC pending EOI info with AMD SVM /w AVIC
-when interrupt is delivered as edge-triggered since AMD processors
-cannot exit on EOI for these interrupts.
+On Thu, Aug 15, 2019 at 2:06 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> I know everyone is busy, but given the length this has been in staging,
+> and the constant good progress toward cleaning it all up that has been
+> happening, I want to get this moved out of staging soon.
 
-Add code to also check LAPIC pending EOI before injecting any new RTC
-interrupts on AMD SVM when AVIC is activated.
+Since it doesn't touch anything outside of its own filesystem, I have
+no real objections. We've never had huge problems with odd
+filesystems.
 
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
----
- arch/x86/kvm/ioapic.c | 36 ++++++++++++++++++++++++++++++++----
- 1 file changed, 32 insertions(+), 4 deletions(-)
+I read through the patches to look for syntactic stuff (ie very much
+*not* looking at actual code working or not), and had only one
+comment. It's not critical, but it would be nice to do as part of (or
+before) the "get it out of staging".
 
-diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
-index 1add1bc..45e7bb0 100644
---- a/arch/x86/kvm/ioapic.c
-+++ b/arch/x86/kvm/ioapic.c
-@@ -39,6 +39,7 @@
- #include <asm/processor.h>
- #include <asm/page.h>
- #include <asm/current.h>
-+#include <asm/virtext.h>
- #include <trace/events/kvm.h>
-=20
- #include "ioapic.h"
-@@ -173,6 +174,7 @@ static bool rtc_irq_check_coalesced(struct kvm_ioapic *=
-ioapic)
- 	return false;
- }
-=20
-+#define APIC_DEST_NOSHORT		0x0
- static int ioapic_set_irq(struct kvm_ioapic *ioapic, unsigned int irq,
- 		int irq_level, bool line_status)
- {
-@@ -201,10 +203,36 @@ static int ioapic_set_irq(struct kvm_ioapic *ioapic, =
-unsigned int irq,
- 	 * interrupts lead to time drift in Windows guests.  So we track
- 	 * EOI manually for the RTC interrupt.
- 	 */
--	if (irq =3D=3D RTC_GSI && line_status &&
--		rtc_irq_check_coalesced(ioapic)) {
--		ret =3D 0;
--		goto out;
-+	if (irq =3D=3D RTC_GSI && line_status) {
-+		struct kvm *kvm =3D ioapic->kvm;
-+		union kvm_ioapic_redirect_entry *entry =3D &ioapic->redirtbl[irq];
-+
-+		/*
-+		 * Since, AMD SVM AVIC accelerates write access to APIC EOI
-+		 * register for edge-trigger interrupts, IOAPIC will not be
-+		 * able to receive the EOI. In this case, we do lazy update
-+		 * of the pending EOI when trying to set IOAPIC irq for RTC.
-+		 */
-+		if (cpu_has_svm(NULL) &&
-+		    (kvm->arch.apicv_state =3D=3D APICV_ACTIVATED) &&
-+		    (entry->fields.trig_mode =3D=3D IOAPIC_EDGE_TRIG)) {
-+			int i;
-+			struct kvm_vcpu *vcpu;
-+
-+			kvm_for_each_vcpu(i, vcpu, kvm)
-+				if (kvm_apic_match_dest(vcpu, NULL,
-+							KVM_APIC_DEST_NOSHORT,
-+							entry->fields.dest_id,
-+							entry->fields.dest_mode)) {
-+					__rtc_irq_eoi_tracking_restore_one(vcpu);
-+					break;
-+				}
-+		}
-+
-+		if (rtc_irq_check_coalesced(ioapic)) {
-+			ret =3D 0;
-+			goto out;
-+		}
- 	}
-=20
- 	old_irr =3D ioapic->irr;
---=20
-1.8.3.1
-
+                 Linus
