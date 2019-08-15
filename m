@@ -2,259 +2,216 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FA1C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDD4C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 903902067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565841745;
-	bh=P+AYYRu1UVFmoNeSvYyImLFAmUghU+0Zz4UPzpG2Yy0=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=vLLOvX8FoSMOF+RwpRnZZbQwwsnwmMmNNlSyh6vgq7+eCwco+Rly20YraAr5wJAYU
-	 lvjzUJ0IwttohY/iThKshQ8CrWLTGJCTCANmyPXfSytNFPIddL+PGyLwgSBhlm262H
-	 Ml9+toxup7/SejrTdGmZp0p1+1fVNX8ArnosMESo=
+	by mail.kernel.org (Postfix) with ESMTP id 5FD2A2067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:03:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q/uCDiqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbfHOECX (ORCPT
+        id S1726103AbfHOEDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:02:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbfHOECX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:02:23 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE28F2067D;
-        Thu, 15 Aug 2019 04:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565841742;
-        bh=P+AYYRu1UVFmoNeSvYyImLFAmUghU+0Zz4UPzpG2Yy0=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=e1esrKmYIiJzxrpLActgaq5kTqqHosEEE5O3zWfF5A/SK9lUYoFAkmC+usBwQi6zk
-         YcxWMX39kb5NmTyMZldXm+fDEBjJ9m7oHhOZe58BVf7uyEXTTSRRKNMtTuC3rS/iGf
-         As0VOLToNZBxig9tGM/OY204iEYEY8KWBDlnZa9w=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 15 Aug 2019 00:03:49 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42649 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfHOEDt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:03:49 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i30so686079pfk.9;
+        Wed, 14 Aug 2019 21:03:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4nUx+PiT1A/UTue4lI0LEVNVOUoj29u0rUjKYH9A9qA=;
+        b=q/uCDiqUBuw3t4/EZc02nEuFb8dsKLNA10EeM9XLk1200ynDcNdeWYMbUnyD14zDam
+         pkLvWY6Q71ESRSLEXVZS/1BB7wf2K1WHV+VffFCYB3ABzVCvuEJ/6VOr0QcGTbvng8yI
+         dqBEwtP1VJvxKWATMe78vViTkdlG9YpiKNFAScAddmzB/8vao8LCU0wRoj4/gHjAHlee
+         u1nrEMU+A3qWPSwPeoJaACFMSPpNnSPdlwry9cgpa3xAGhoMznD44XZ+S0A4gAAEbeHn
+         A6R3mK2htyZdjppXXFAZ5p8MlLI02T83EdaFSrcZHGjY1dvMDv33r4WLI4ClXk+CSuPj
+         1dPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4nUx+PiT1A/UTue4lI0LEVNVOUoj29u0rUjKYH9A9qA=;
+        b=A9xgC7mV4X7iNkcZLRGkwYPDANOsw/Tb1toR61A0T8uRcocFuHd81W1r7XsAAZmxOc
+         UvDgFfCnYANKeqSqhK1G1QOhsbZbP1jgTvXvJPz/YWqd+w05JvKnMaw+mRcGUSFqnGoo
+         iJYoSmObrMEakC60SYuNbjWV4qsCWUUcCPro5e2cqZmlxvPGIrfMLUfnfhgSxBdpH5ji
+         f6OEEcmnuIx9/4r65Ci2YsrRzuphwpz2D6ZKMBHx4YI+sWLRb6wWOwK6m46b7dYeoDM/
+         IXJeXeVZI2M5USMmMPn8nqQ56LA/fkrFPvmVtg4s4DfFRS057Q8r2f7Xm4RUHASoSqIQ
+         G1aQ==
+X-Gm-Message-State: APjAAAVuoilazZFyn4sSusYkNvxVkBgNU8oCYei5AwHSP+alxdxrn4hH
+        zlZvcF3B31tmgWreRU+pQXP35ktE
+X-Google-Smtp-Source: APXvYqy835FwkDxLLTJ8VauChuFS3hewWRet1cBkbwe0sDX7yV1440MiWUfblAwVA1LfS7MhfTNKHA==
+X-Received: by 2002:a17:90a:21eb:: with SMTP id q98mr471321pjc.23.1565841827920;
+        Wed, 14 Aug 2019 21:03:47 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id w11sm259423pjr.15.2019.08.14.21.03.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 14 Aug 2019 21:03:47 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH v2] KVM: LAPIC: Periodically revaluate to get conservative lapic_timer_advance_ns
+Date:   Thu, 15 Aug 2019 12:03:37 +0800
+Message-Id: <1565841817-25982-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5d54d2fd.1c69fb81.e13e5.7422@mx.google.com>
-References: <5d54d2fd.1c69fb81.e13e5.7422@mx.google.com>
-Subject: Re: clk/clk-next boot bisection: v5.3-rc1-79-g31f58d2f58cb on sun8i-h3-libretech-all-h3-cc
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     "kernelci.org bot" <bot@kernelci.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        broonie@kernel.org, enric.balletbo@collabora.com,
-        guillaume.tucker@collabora.com, khilman@baylibre.com,
-        matthew.hart@linaro.org, mgalka@collabora.com,
-        tomeu.vizoso@collabora.com, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-User-Agent: alot/0.8.1
-Date:   Wed, 14 Aug 2019 21:02:20 -0700
-Message-Id: <20190815040221.DE28F2067D@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting kernelci.org bot (2019-08-14 20:35:25)
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> * This automated bisection report was sent to you on the basis  *
-> * that you may be involved with the breaking commit it has      *
-> * found.  No manual investigation has been done to verify it,   *
-> * and the root cause of the problem may be somewhere else.      *
-> *                                                               *
-> * If you do send a fix, please include this trailer:            *
-> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-> *                                                               *
-> * Hope this helps!                                              *
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->=20
-> clk/clk-next boot bisection: v5.3-rc1-79-g31f58d2f58cb on sun8i-h3-libret=
-ech-all-h3-cc
+From: Wanpeng Li <wanpengli@tencent.com>
 
-If this is the only board that failed, great! Must be something in a
-sun8i driver that uses the init structure after registration.
+Even if for realtime CPUs, cache line bounces, frequency scaling, presence 
+of higher-priority RT tasks, etc can still cause different response. These 
+interferences should be considered and periodically revaluate whether 
+or not the lapic_timer_advance_ns value is the best, do nothing if it is,
+otherwise recaluate again. Set lapic_timer_advance_ns to the minimal 
+conservative value from all the estimated values.
 
->=20
-> Summary:
->   Start:      31f58d2f58cb Merge branch 'clk-meson' into clk-next
->   Details:    https://kernelci.org/boot/id/5d54b9d159b514324cf1226e
->   Plain log:  https://storage.kernelci.org//clk/clk-next/v5.3-rc1-79-g31f=
-58d2f58cb/arm/multi_v7_defconfig+CONFIG_SMP=3Dn/gcc-8/lab-baylibre/boot-sun=
-8i-h3-libretech-all-h3-cc.txt
->   HTML log:   https://storage.kernelci.org//clk/clk-next/v5.3-rc1-79-g31f=
-58d2f58cb/arm/multi_v7_defconfig+CONFIG_SMP=3Dn/gcc-8/lab-baylibre/boot-sun=
-8i-h3-libretech-all-h3-cc.html
->   Result:     c82987e740d1 clk: Overwrite clk_hw::init with NULL during c=
-lk_register()
->=20
-> Checks:
->   revert:     PASS
->   verify:     PASS
->=20
-> Parameters:
->   Tree:       clk
->   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.g=
-it
->   Branch:     clk-next
->   Target:     sun8i-h3-libretech-all-h3-cc
->   CPU arch:   arm
->   Lab:        lab-baylibre
->   Compiler:   gcc-8
->   Config:     multi_v7_defconfig+CONFIG_SMP=3Dn
->   Test suite: boot
->=20
-> Breaking commit found:
->=20
-> -------------------------------------------------------------------------=
-------
-> commit c82987e740d12be98b8ae8aa9221b8b9e2541271
-> Author: Stephen Boyd <sboyd@kernel.org>
-> Date:   Wed Jul 31 12:35:17 2019 -0700
->=20
->     clk: Overwrite clk_hw::init with NULL during clk_register()
->    =20
->     We don't want clk provider drivers to use the init structure after clk
->     registration time, but we leave a dangling reference to it by means of
->     clk_hw::init. Let's overwrite the member with NULL during clk_registe=
-r()
->     so that this can't be used anymore after registration time.
->    =20
->     Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
->     Cc: Doug Anderson <dianders@chromium.org>
->     Signed-off-by: Stephen Boyd <sboyd@kernel.org>
->     Link: https://lkml.kernel.org/r/20190731193517.237136-10-sboyd@kernel=
-.org
->     Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->=20
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index c0990703ce54..efac620264a2 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -3484,9 +3484,9 @@ static int clk_cpy_name(const char **dst_p, const c=
-har *src, bool must_exist)
->         return 0;
->  }
-> =20
-> -static int clk_core_populate_parent_map(struct clk_core *core)
-> +static int clk_core_populate_parent_map(struct clk_core *core,
-> +                                       const struct clk_init_data *init)
->  {
-> -       const struct clk_init_data *init =3D core->hw->init;
->         u8 num_parents =3D init->num_parents;
->         const char * const *parent_names =3D init->parent_names;
->         const struct clk_hw **parent_hws =3D init->parent_hws;
-> @@ -3566,6 +3566,14 @@ __clk_register(struct device *dev, struct device_n=
-ode *np, struct clk_hw *hw)
->  {
->         int ret;
->         struct clk_core *core;
-> +       const struct clk_init_data *init =3D hw->init;
-> +
-> +       /*
-> +        * The init data is not supposed to be used outside of registrati=
-on path.
-> +        * Set it to NULL so that provider drivers can't use it either an=
-d so that
-> +        * we catch use of hw->init early on in the core.
-> +        */
-> +       hw->init =3D NULL;
-> =20
->         core =3D kzalloc(sizeof(*core), GFP_KERNEL);
->         if (!core) {
-> @@ -3573,17 +3581,17 @@ __clk_register(struct device *dev, struct device_=
-node *np, struct clk_hw *hw)
->                 goto fail_out;
->         }
-> =20
-> -       core->name =3D kstrdup_const(hw->init->name, GFP_KERNEL);
-> +       core->name =3D kstrdup_const(init->name, GFP_KERNEL);
->         if (!core->name) {
->                 ret =3D -ENOMEM;
->                 goto fail_name;
->         }
-> =20
-> -       if (WARN_ON(!hw->init->ops)) {
-> +       if (WARN_ON(!init->ops)) {
->                 ret =3D -EINVAL;
->                 goto fail_ops;
->         }
-> -       core->ops =3D hw->init->ops;
-> +       core->ops =3D init->ops;
-> =20
->         if (dev && pm_runtime_enabled(dev))
->                 core->rpm_enabled =3D true;
-> @@ -3592,13 +3600,13 @@ __clk_register(struct device *dev, struct device_=
-node *np, struct clk_hw *hw)
->         if (dev && dev->driver)
->                 core->owner =3D dev->driver->owner;
->         core->hw =3D hw;
-> -       core->flags =3D hw->init->flags;
-> -       core->num_parents =3D hw->init->num_parents;
-> +       core->flags =3D init->flags;
-> +       core->num_parents =3D init->num_parents;
->         core->min_rate =3D 0;
->         core->max_rate =3D ULONG_MAX;
->         hw->core =3D core;
-> =20
-> -       ret =3D clk_core_populate_parent_map(core);
-> +       ret =3D clk_core_populate_parent_map(core, init);
->         if (ret)
->                 goto fail_parents;
-> =20
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index 2ae7604783dd..214c75ed62ae 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -299,7 +299,8 @@ struct clk_init_data {
->   * into the clk API
->   *
->   * @init: pointer to struct clk_init_data that contains the init data sh=
-ared
-> - * with the common clock framework.
-> + * with the common clock framework. This pointer will be set to NULL once
-> + * a clk_register() variant is called on this clk_hw pointer.
->   */
->  struct clk_hw {
->         struct clk_core *core;
-> -------------------------------------------------------------------------=
-------
->=20
->=20
-> Git bisection log:
->=20
-> -------------------------------------------------------------------------=
-------
-> git bisect start
-> # good: [21a2f76849f16d5a48d205b68e923694bc93aaf3] Merge branch 'clk-fixe=
-s' into clk-next
-> git bisect good 21a2f76849f16d5a48d205b68e923694bc93aaf3
-> # bad: [31f58d2f58cb0a8fbf58af88b6a5133bed23bf9b] Merge branch 'clk-meson=
-' into clk-next
-> git bisect bad 31f58d2f58cb0a8fbf58af88b6a5133bed23bf9b
-> # good: [1d97657a4794ab23b47bd9921978ddd82569fcf4] Merge branch 'v5.4/dt'=
- into v5.4/drivers
-> git bisect good 1d97657a4794ab23b47bd9921978ddd82569fcf4
-> # bad: [c82987e740d12be98b8ae8aa9221b8b9e2541271] clk: Overwrite clk_hw::=
-init with NULL during clk_register()
-> git bisect bad c82987e740d12be98b8ae8aa9221b8b9e2541271
-> # good: [e22cce5f419f3c5aa07c8b0d2f8860d49980dbae] clk: qcom: Don't refer=
-ence clk_init_data after registration
-> git bisect good e22cce5f419f3c5aa07c8b0d2f8860d49980dbae
-> # good: [3445b1287ac6cf410ecd4536b880172b98e6133d] clk: socfpga: Don't re=
-ference clk_init_data after registration
-> git bisect good 3445b1287ac6cf410ecd4536b880172b98e6133d
-> # good: [735822a8b114f73289679178ff075b73facd4571] phy: ti: am654-serdes:=
- Don't reference clk_init_data after registration
-> git bisect good 735822a8b114f73289679178ff075b73facd4571
-> # first bad commit: [c82987e740d12be98b8ae8aa9221b8b9e2541271] clk: Overw=
-rite clk_hw::init with NULL during clk_register()
-> -------------------------------------------------------------------------=
-------
+Testing on Skylake server, cat vcpu*/lapic_timer_advance_ns, before patch:
+1628
+4161
+4321
+3236
+...
+
+Testing on Skylake server, cat vcpu*/lapic_timer_advance_ns, after patch:
+1553
+1499
+1509
+1489
+...
+
+Testing on Haswell desktop, cat vcpu*/lapic_timer_advance_ns, before patch:
+4617
+3641
+4102
+4577
+...
+Testing on Haswell desktop, cat vcpu*/lapic_timer_advance_ns, after patch:
+2775
+2892
+2764
+2775
+...
+
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/lapic.c | 34 ++++++++++++++++++++++++++++------
+ arch/x86/kvm/lapic.h |  2 ++
+ 2 files changed, 30 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index df5cd07..8487d9c 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -69,6 +69,7 @@
+ #define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
+ /* step-by-step approximation to mitigate fluctuation */
+ #define LAPIC_TIMER_ADVANCE_ADJUST_STEP 8
++#define LAPIC_TIMER_ADVANCE_RECALC_PERIOD (600 * HZ)
+ 
+ static inline int apic_test_vector(int vec, void *bitmap)
+ {
+@@ -1480,10 +1481,21 @@ static inline void __wait_lapic_expire(struct kvm_vcpu *vcpu, u64 guest_cycles)
+ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+ 					      s64 advance_expire_delta)
+ {
+-	struct kvm_lapic *apic = vcpu->arch.apic;
+-	u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
++	struct kvm_timer *ktimer = &vcpu->arch.apic->lapic_timer;
++	u32 timer_advance_ns = ktimer->timer_advance_ns;
+ 	u64 ns;
+ 
++	/* periodic revaluate */
++	if (unlikely(ktimer->timer_advance_adjust_done)) {
++		ktimer->recalc_timer_advance_ns = jiffies +
++			LAPIC_TIMER_ADVANCE_RECALC_PERIOD;
++		if (abs(advance_expire_delta) > LAPIC_TIMER_ADVANCE_ADJUST_DONE) {
++			timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
++			ktimer->timer_advance_adjust_done = false;
++		} else
++			return;
++	}
++
+ 	/* too early */
+ 	if (advance_expire_delta < 0) {
+ 		ns = -advance_expire_delta * 1000000ULL;
+@@ -1499,12 +1511,18 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+ 	}
+ 
+ 	if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+-		apic->lapic_timer.timer_advance_adjust_done = true;
++		ktimer->timer_advance_adjust_done = true;
+ 	if (unlikely(timer_advance_ns > 5000)) {
+ 		timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+-		apic->lapic_timer.timer_advance_adjust_done = false;
++		ktimer->timer_advance_adjust_done = false;
++	}
++	ktimer->timer_advance_ns = timer_advance_ns;
++
++	if (ktimer->timer_advance_adjust_done) {
++		if (ktimer->min_timer_advance_ns > timer_advance_ns)
++			ktimer->min_timer_advance_ns = timer_advance_ns;
++		ktimer->timer_advance_ns = ktimer->min_timer_advance_ns;
+ 	}
+-	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+ }
+ 
+ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+@@ -1523,7 +1541,8 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+ 	if (guest_tsc < tsc_deadline)
+ 		__wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
+ 
+-	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
++	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done) ||
++		time_before(apic->lapic_timer.recalc_timer_advance_ns, jiffies))
+ 		adjust_lapic_timer_advance(vcpu, apic->lapic_timer.advance_expire_delta);
+ }
+ 
+@@ -2301,9 +2320,12 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
+ 	if (timer_advance_ns == -1) {
+ 		apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+ 		apic->lapic_timer.timer_advance_adjust_done = false;
++		apic->lapic_timer.recalc_timer_advance_ns = jiffies;
++		apic->lapic_timer.min_timer_advance_ns = UINT_MAX;
+ 	} else {
+ 		apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+ 		apic->lapic_timer.timer_advance_adjust_done = true;
++		apic->lapic_timer.recalc_timer_advance_ns = MAX_JIFFY_OFFSET;
+ 	}
+ 
+ 
+diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+index 50053d2..56a05eb 100644
+--- a/arch/x86/kvm/lapic.h
++++ b/arch/x86/kvm/lapic.h
+@@ -31,6 +31,8 @@ struct kvm_timer {
+ 	u32 timer_mode_mask;
+ 	u64 tscdeadline;
+ 	u64 expired_tscdeadline;
++	unsigned long recalc_timer_advance_ns;
++	u32 min_timer_advance_ns;
+ 	u32 timer_advance_ns;
+ 	s64 advance_expire_delta;
+ 	atomic_t pending;			/* accumulated triggered timers */
+-- 
+2.7.4
+
