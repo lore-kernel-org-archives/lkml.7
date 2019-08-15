@@ -2,127 +2,308 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15462C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B44EBC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60FD205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C302089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732164AbfHORTV (ORCPT
+        id S1732169AbfHORTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:19:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60766 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731134AbfHORTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:19:21 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 41DFE8535C;
-        Thu, 15 Aug 2019 17:19:21 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 24D02601A4;
-        Thu, 15 Aug 2019 17:19:20 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 13:19:18 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Jan Kara <jack@suse.cz>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2] mm/migrate: clean up useless code in
- migrate_vma_collect_pmd()
-Message-ID: <20190815171918.GC30916@redhat.com>
-References: <20190807052858.GA9749@mypc>
- <1565167272-21453-1-git-send-email-kernelfans@gmail.com>
+        Thu, 15 Aug 2019 13:19:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40302 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfHORTk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:19:40 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hyJP7-0002Bw-AF; Thu, 15 Aug 2019 19:19:13 +0200
+Date:   Thu, 15 Aug 2019 19:19:12 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dmitry Safonov <dima@arista.com>
+cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv6 01/36] ns: Introduce Time Namespace
+In-Reply-To: <20190815163836.2927-2-dima@arista.com>
+Message-ID: <alpine.DEB.2.21.1908151908230.1908@nanos.tec.linutronix.de>
+References: <20190815163836.2927-1-dima@arista.com> <20190815163836.2927-2-dima@arista.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1565167272-21453-1-git-send-email-kernelfans@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 15 Aug 2019 17:19:21 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 04:41:12PM +0800, Pingfan Liu wrote:
-> Clean up useless 'pfn' variable.
+Dmitry,
 
-NAK there is a bug see below:
+On Thu, 15 Aug 2019, Dmitry Safonov wrote:
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 420567d1519a..97b7737f5aba 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12898,6 +12898,8 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
+>  S:	Maintained
+>  F:	fs/timerfd.c
+>  F:	include/linux/timer*
+> +F:	include/linux/time_namespace.h
+> +F:	kernel/time_namespace.c
 
-> 
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: "Jérôme Glisse" <jglisse@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> To: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  mm/migrate.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 8992741..d483a55 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -2225,17 +2225,15 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
->  		pte_t pte;
->  
->  		pte = *ptep;
-> -		pfn = pte_pfn(pte);
->  
->  		if (pte_none(pte)) {
->  			mpfn = MIGRATE_PFN_MIGRATE;
->  			migrate->cpages++;
-> -			pfn = 0;
->  			goto next;
->  		}
->  
->  		if (!pte_present(pte)) {
-> -			mpfn = pfn = 0;
-> +			mpfn = 0;
->  
->  			/*
->  			 * Only care about unaddressable device page special
-> @@ -2252,10 +2250,10 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
->  			if (is_write_device_private_entry(entry))
->  				mpfn |= MIGRATE_PFN_WRITE;
->  		} else {
-> +			pfn = pte_pfn(pte);
->  			if (is_zero_pfn(pfn)) {
->  				mpfn = MIGRATE_PFN_MIGRATE;
->  				migrate->cpages++;
-> -				pfn = 0;
->  				goto next;
->  			}
->  			page = vm_normal_page(migrate->vma, addr, pte);
-> @@ -2265,10 +2263,9 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
->  
->  		/* FIXME support THP */
->  		if (!page || !page->mapping || PageTransCompound(page)) {
-> -			mpfn = pfn = 0;
-> +			mpfn = 0;
->  			goto next;
->  		}
-> -		pfn = page_to_pfn(page);
+Shouldn't this be kernel/time/namespace.c so all that stuff is lumped
+together. No strong opinion though.
 
-You can not remove that one ! Otherwise it will break the device
-private case.
+> +++ b/kernel/time_namespace.c
+> +static struct ucounts *inc_time_namespaces(struct user_namespace *ns)
+> +{
+> +	return inc_ucount(ns, current_euid(), UCOUNT_TIME_NAMESPACES);
+> +}
+> +
+> +static void dec_time_namespaces(struct ucounts *ucounts)
+> +{
+> +	dec_ucount(ucounts, UCOUNT_TIME_NAMESPACES);
+> +}
+> +
+> +static struct time_namespace *create_time_ns(void)
+> +{
+> +	struct time_namespace *time_ns;
+> +
+> +	time_ns = kmalloc(sizeof(struct time_namespace), GFP_KERNEL);
+
+Shouldn't this use kzalloc()? There are tons of members in that struct.
+
+> +	if (time_ns) {
+> +		kref_init(&time_ns->kref);
+> +		time_ns->initialized = false;
+
+And you spare this one.
+
+> +	}
+> +	return time_ns;
+> +}
+> +
+> +/*
+> + * Clone a new ns copying @old_ns, setting refcount to 1
+> + * @old_ns: namespace to clone
+> + * Return the new ns or ERR_PTR.
+
+If you use kernel-doc style then please use te proper syntax
+
+/*
+ * clone_time_ns - Clone a time namespace
+ * @old_ns:	Namespace to clone
+ *
+ * Clone @old_ns and set the clone refcount to 1
+ *
+ * Return: The new namespace or ERR_PTR.
+ */
+
+> + */
+> +static struct time_namespace *clone_time_ns(struct user_namespace *user_ns,
+> +					  struct time_namespace *old_ns)
+> +{
+> +	struct time_namespace *ns;
+> +	struct ucounts *ucounts;
+> +	int err;
+> +
+> +	err = -ENOSPC;
+> +	ucounts = inc_time_namespaces(user_ns);
+> +	if (!ucounts)
+> +		goto fail;
+> +
+> +	err = -ENOMEM;
+> +	ns = create_time_ns();
+> +	if (!ns)
+> +		goto fail_dec;
+> +
+> +	err = ns_alloc_inum(&ns->ns);
+> +	if (err)
+> +		goto fail_free;
+> +
+> +	ns->ucounts = ucounts;
+> +	ns->ns.ops = &timens_operations;
+> +	ns->user_ns = get_user_ns(user_ns);
+> +	return ns;
+> +
+> +fail_free:
+> +	kfree(ns);
+> +fail_dec:
+> +	dec_time_namespaces(ucounts);
+> +fail:
+> +	return ERR_PTR(err);
+> +}
+> +
+> +/*
+> + * Add a reference to old_ns, or clone it if @flags specify CLONE_NEWTIME.
+> + * In latter case, changes to the time of this process won't be seen by parent,
+> + * and vice versa.
+
+Ditto
+
+> + */
+> +struct time_namespace *copy_time_ns(unsigned long flags,
+> +	struct user_namespace *user_ns, struct time_namespace *old_ns)
+> +{
+> +	if (!(flags & CLONE_NEWTIME))
+> +		return get_time_ns(old_ns);
+> +
+> +	return clone_time_ns(user_ns, old_ns);
+> +}
+> +
+> +void free_time_ns(struct kref *kref)
+> +{
+> +	struct time_namespace *ns;
+> +
+> +	ns = container_of(kref, struct time_namespace, kref);
+> +	dec_time_namespaces(ns->ucounts);
+> +	put_user_ns(ns->user_ns);
+> +	ns_free_inum(&ns->ns);
+> +	kfree(ns);
+> +}
+> +
+> +static struct time_namespace *to_time_ns(struct ns_common *ns)
+> +{
+> +	return container_of(ns, struct time_namespace, ns);
+> +}
+> +
+> +static struct ns_common *timens_get(struct task_struct *task)
+> +{
+> +	struct time_namespace *ns = NULL;
+> +	struct nsproxy *nsproxy;
+> +
+> +	task_lock(task);
+> +	nsproxy = task->nsproxy;
+> +	if (nsproxy) {
+> +		ns = nsproxy->time_ns;
+> +		get_time_ns(ns);
+> +	}
+> +	task_unlock(task);
+> +
+> +	return ns ? &ns->ns : NULL;
+> +}
+> +
+> +static struct ns_common *timens_for_children_get(struct task_struct *task)
+> +{
+> +	struct time_namespace *ns = NULL;
+> +	struct nsproxy *nsproxy;
+> +
+> +	task_lock(task);
+> +	nsproxy = task->nsproxy;
+> +	if (nsproxy) {
+> +		ns = nsproxy->time_ns_for_children;
+> +		get_time_ns(ns);
+> +	}
+> +	task_unlock(task);
+> +
+> +	return ns ? &ns->ns : NULL;
+> +}
+> +
+> +static void timens_put(struct ns_common *ns)
+> +{
+> +	put_time_ns(to_time_ns(ns));
+> +}
+> +
+> +static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
+> +{
+> +	struct time_namespace *ns = to_time_ns(new);
+> +
+> +	if (!current_is_single_threaded())
+> +		return -EUSERS;
+> +
+> +	if (!ns_capable(ns->user_ns, CAP_SYS_ADMIN) ||
+> +	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
+> +		return -EPERM;
+> +
+> +	get_time_ns(ns);
+> +	get_time_ns(ns);
+
+Why is this a double get?
+
+> +	put_time_ns(nsproxy->time_ns);
+> +	put_time_ns(nsproxy->time_ns_for_children);
+> +	nsproxy->time_ns = ns;
+> +	nsproxy->time_ns_for_children = ns;
+> +	ns->initialized = true;
+> +	return 0;
+> +}
+> +
+> +int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk)
+> +{
+> +	struct ns_common *nsc = &nsproxy->time_ns_for_children->ns;
+> +	struct time_namespace *ns = to_time_ns(nsc);
+> +
+> +	if (nsproxy->time_ns == nsproxy->time_ns_for_children)
+> +		return 0;
+> +
+> +	get_time_ns(ns);
+> +	put_time_ns(nsproxy->time_ns);
+> +	nsproxy->time_ns = ns;
+> +	ns->initialized = true;
+
+Isn't that one initialized already?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static struct user_namespace *timens_owner(struct ns_common *ns)
+> +{
+> +	return to_time_ns(ns)->user_ns;
+> +}
+> +
+> +const struct proc_ns_operations timens_operations = {
+> +	.name		= "time",
+> +	.type		= CLONE_NEWTIME,
+> +	.get		= timens_get,
+> +	.put		= timens_put,
+> +	.install	= timens_install,
+> +	.owner		= timens_owner,
+> +};
+> +
+> +const struct proc_ns_operations timens_for_children_operations = {
+> +	.name		= "time_for_children",
+> +	.type		= CLONE_NEWTIME,
+> +	.get		= timens_for_children_get,
+> +	.put		= timens_put,
+> +	.install	= timens_install,
+> +	.owner		= timens_owner,
+> +};
+> +
+> +struct time_namespace init_time_ns = {
+> +	.kref = KREF_INIT(3),
+> +	.user_ns = &init_user_ns,
+> +	.ns.inum = PROC_TIME_INIT_INO,
+> +	.ns.ops = &timens_operations,
+> +};
+
+Inconsisten formatting. The above static initializers are nicely
+tabular. This on not.
+
+Thanks,
+
+	tglx
