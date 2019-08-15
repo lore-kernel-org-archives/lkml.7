@@ -2,165 +2,106 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E942C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0695C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C329208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A524E20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732677AbfHOOAj (ORCPT
+        id S1732690AbfHOODR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:00:39 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:43583 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731849AbfHOOAj (ORCPT
+        Thu, 15 Aug 2019 10:03:17 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38608 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732300AbfHOODQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:00:39 -0400
-Received: from uno.localdomain (host64-130-dynamic.5-87-r.retail.telecomitalia.it [87.5.130.64])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 3D899240006;
-        Thu, 15 Aug 2019 14:00:35 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 16:02:01 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
-Message-ID: <20190815140201.esdcv4vl7hdzkk4h@uno.localdomain>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-3-jacopo@jmondi.org>
- <02b40da5-c30c-f1f3-2351-c04da932e94a@xs4all.nl>
+        Thu, 15 Aug 2019 10:03:16 -0400
+Received: by mail-wr1-f66.google.com with SMTP id g17so2329025wrr.5
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 07:03:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4sFRcD1ANoWWQjD+WhW2uig+aUbXyWs74RzRVjo7E7o=;
+        b=RYyXNCdG9S3+p2B9CBHPtQo8qJBkvcwoB1MX0yf2euRRDYkPBUMNBkMqxi+RaK7B1Y
+         HOTHXeAgH2B+TMgVzI2/lXpWDdoX1Z9eWQ9xR+nx4eF/Rfb0bvsbn+QLQMvDF34Rbifa
+         iW3BMrJdrKi01hkCS04dq3MQ08KQO7UPTRuPHcWIsQ5BT/VUMKzFJUZw+6+sbhrWxZqZ
+         J5JsK1t1jKMdA6jI7gPFViN6C6gSxEKIfsqKbmxwrxaiVxDBqWLQmnjXUSp3/F/fiVU5
+         R3sLXEJU1iCaFXCFh183YohS2A7R+uq57ThnZPKg7Gmgjd73ZXcEoznVCtQ13QgZiV0H
+         itHw==
+X-Gm-Message-State: APjAAAVLs/v3Xp4gFclF4O5pFehMGLHcYze7y8UoVyxV3fsBXjwkgvnn
+        NZxvH5ZS26qu+6GpBosKLyh3Pcl+wyY=
+X-Google-Smtp-Source: APXvYqwOA1TUL5mIA6h1Tmg6qNpWnTKtEDEY963alOerUO+bTFmeEckdF/0ltUvBOOFFdQ5wGxXd6g==
+X-Received: by 2002:adf:f0ce:: with SMTP id x14mr5695032wro.31.1565877793938;
+        Thu, 15 Aug 2019 07:03:13 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id t63sm1590627wmt.6.2019.08.15.07.03.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Aug 2019 07:03:13 -0700 (PDT)
+Subject: Re: [PATCH 0/3] usb: typec: fusb302: Small changes
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190814132419.39759-1-heikki.krogerus@linux.intel.com>
+ <a826c351-4e9d-8a33-ad0f-764d13aeb1ed@redhat.com>
+ <20190815125544.GC24270@kroah.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <3f44f67a-9f13-3851-e218-7f9c14d8f996@redhat.com>
+Date:   Thu, 15 Aug 2019 16:03:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uzp5e4rqcbnkjq7e"
-Content-Disposition: inline
-In-Reply-To: <02b40da5-c30c-f1f3-2351-c04da932e94a@xs4all.nl>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190815125544.GC24270@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---uzp5e4rqcbnkjq7e
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+On 15-08-19 14:55, Greg Kroah-Hartman wrote:
+> On Wed, Aug 14, 2019 at 03:42:46PM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 14-08-19 15:24, Heikki Krogerus wrote:
+>>> Hi,
+>>>
+>>> This series removes the deprecated fusb302 specific properties, and
+>>> stops using struct tcpc_config in the driver.
+>>
+>> Series looks good to me:
+>>
+>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>>
+>> This has a small conflict with my
+>> "[PATCH] usb: typec: fusb302: Call fusb302_debugfs_init earlier"
+>> patch.
+>>
+>> Since we've agreed to do the rootdir leak fix as a separate patch
+>> (which I will write when I find some time probably tomorrow), I
+>> was wondering if we can merge my patch first. I would like to see
+>> a "Cc: stable@vger.kernel.org" added to my patch and then it would
+>> be good to have it merged first.
+>>
+>> Regardless we should probable prepare one series with all patches
+>> for Greg to make this easy to merge for him.
+> 
+> I'll take this series now, and you can redo your patch based on my
+> usb-next branch with them in it.
 
-Hi Hans,
+Ok.
 
-On Thu, Aug 15, 2019 at 03:30:59PM +0200, Hans Verkuil wrote:
-> On 8/14/19 10:28 PM, Jacopo Mondi wrote:
-> > Add documentation for the V4L2_CID_LOCATION camera control. The newly
-> > added read-only control reports the camera device mounting position.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> > ---
-> >  .../media/uapi/v4l/ext-ctrls-camera.rst       | 23 +++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >
-> > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > index 51c1d5c9eb00..fc0a02eee6d4 100644
-> > --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
-> >      value down. A value of zero stops the motion if one is in progress
-> >      and has no effect otherwise.
-> >
-> > +``V4L2_CID_LOCATION (integer)``
-> > +    This read-only control describes the camera location by reporting its
-> > +    mounting position on the device where the camera is installed. This
-> > +    control is particularly meaningful for devices which have a well defined
-> > +    orientation, such as phones, laptops and portable devices as the camera
-> > +    location is expressed as a position relative to the device intended
-> > +    usage position. In example, a camera installed on the user-facing side
-> > +    of a phone device is said to be installed in the ``V4L2_LOCATION_FRONT``
-> > +    position.
->
-> When should this control be created? If there is only one location (e.g.
-> all sensors are front-facing) would you still expose this? Or does it depend
-> on the type of device?
+Regards,
 
-If it's meaningful for the device, the location might be reported even
-if there's only a single camera in the system.
-
->
-> And is the sensor in a digital camera front or back facing? (Just curious
-> about what you think about that situation!)
-
-I would say it really depends on the device type. For a digital camera
-like a webcam, defining what's front or back doesn't add much value.
-Wherever the camera sensor is oriented to, that's the front :)
-
-The same way, image sensor connected through long cables to the
-remotely located base board (I'm thinking about cameras installed in
-cars and connected by coax cables) will hardly have a position
-defined in the mainline board DTS file, but if someone would like to add
-"rearview-mirror" to the list of position and use them in their DTS
-for whatever reason, this control gives a way to retrieve the
-information easily.
-
-I tried to convey this mentioning the "intended usage orientation" of
-the device, to give the idea that the position is totally dependent
-on the nature of the device the sensor is installed on. As said, it's
-easy to define what "front" is for a smartphone, not so easy for a
-camera in a car. But I would not tie themselves to device specific
-detail, but instead focus on providing a meachanism to make easy to
-expose them. In mainline, we could start with very simple "back" and
-"front" position, and then grow them when the need arises.
-
->
-> Regards,
->
-> 	Hans
->
-> > +
-> > +
-> > +
-> > +.. flat-table::
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +
-> > +    * - ``V4L2_LOCATION_FRONT``
-> > +      - The camera device is located on the front side of the device.
-> > +    * - ``V4L2_LOCATION_BACK``
-> > +      - The camera device is located on the back side of the device.
-> > +
-> > +
-> > +
-> >  .. [#f1]
-> >     This control may be changed to a menu control in the future, if more
-> >     options are required.
-> > --
-> > 2.22.0
-> >
->
-
---uzp5e4rqcbnkjq7e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1VZdkACgkQcjQGjxah
-Vjx/cBAAmPTWGBuNkSQyn422PSU5Bf0ufZEr+U7lD8rZCAsJY3FEThUOBW0pBq+B
-mmGWE8xvb1tISDHzLVcIVkMGhcgCbjemhlnBD1BnxHa1rDNxrPSWbPfIwv0md6+C
-ViFmYLPzKudBdj7w6ya67gWm3Sct+rxyZpZp3TVtIiGSXrs9k4EDEMlgujitgJcY
-WDBRZuvNZlMxq/TuY/8CBUEZmFeE1Lboq5aVUBzXPCvx36z/0RASEcdWtM3JLF2v
-vGdckQJ5Ropx+cAun3/vERxsnNp3WAlVBvj5PayF6mX0UrWSAOEIrJQUooaf7SF5
-0j7YjXm+pdmYELnAq2DOoEbpuVJFyeQItSlN8UzQJ3eBJl4rjhbPiN9h3yW5jODi
-mJ69XvzRwIEZthbZCpvjrZKtT8uf7hN76Oi49enXhQVqkvRQWktBXcsOK38zuQ5B
-keVlk6A7/bd605t87GDeTm3IGffBTYRQ5U7/Q/kAM+gF67R+YWZ4MwN1TRSvnwUl
-98JA2df7dEZYczm0NQyTHwnL6fQMN6pUj6o8O6l3cGuwHzD53W/fJQsoglgzpd4r
-AZTw+tqQKOlfC9I32ECl7B69W4BIK7YcatHENcO/Z7+9wmkZz46qM7+bDv8F4jdw
-roy+kyFkRc/LJuaj0MRDzQMDXY3oFLcjLTdV/MuQUOQu6OBt0mk=
-=y+sZ
------END PGP SIGNATURE-----
-
---uzp5e4rqcbnkjq7e--
+Hans
