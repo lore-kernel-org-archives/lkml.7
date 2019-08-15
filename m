@@ -2,81 +2,97 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5793C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E98C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFD6208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:02:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565892139;
-	bh=BbtRPnMkM9TNtxVrVxsMohoElU+idLbQFe4saSIy6Ik=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=vG2pdPd0foBViCQfTwL5BsBe57yISGFKgz3fQnr4fwZqMnS43p+yRXjJQrSjVo6Ph
-	 J50bKfqUcN1/CQGDjwWi4Ko+T73nFyTqSBcZfv/Z30hytn9Vwdcnft4vVy7/jbuYxN
-	 CN6qhVss7/oA45iCSGZCZRXu8KsaPiv57xOhc0PI=
+	by mail.kernel.org (Postfix) with ESMTP id 627062083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731829AbfHOSCS (ORCPT
+        id S1731934AbfHOSD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 14:02:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54224 "EHLO mail.kernel.org"
+        Thu, 15 Aug 2019 14:03:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42196 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731370AbfHOSCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 14:02:17 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731200AbfHOSD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 14:03:28 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6C962083B;
-        Thu, 15 Aug 2019 18:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565892137;
-        bh=BbtRPnMkM9TNtxVrVxsMohoElU+idLbQFe4saSIy6Ik=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Ax4rW/7WCUnTx5GNowUJ0KaB+J6qyHReQ7Jn1AOE8qCzD74+Pq30930f343q4K7IA
-         7hAVkHU/2jaM+U+sD3FJZCz5FvmWGKs24jnXnjZiK0NuBSvAksZjVJbdntsxW1bWDR
-         X7/DjE55PUjqaLukWb+mfqaeEDSMBdyAENIBq+Y8=
-Content-Type: text/plain; charset="utf-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id 161762A09AF;
+        Thu, 15 Aug 2019 18:03:28 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F1A13600CD;
+        Thu, 15 Aug 2019 18:03:26 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 14:03:25 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>, Christoph Hellwig <hch@lst.de>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
+Message-ID: <20190815180325.GA4920@redhat.com>
+References: <20190806160554.14046-1-hch@lst.de>
+ <20190806160554.14046-5-hch@lst.de>
+ <20190807174548.GJ1571@mellanox.com>
+ <CAPcyv4hPCuHBLhSJgZZEh0CbuuJNPLFDA3f-79FX5uVOO0yubA@mail.gmail.com>
+ <20190808065933.GA29382@lst.de>
+ <CAPcyv4hMUzw8vyXFRPe2pdwef0npbMm9tx9wiZ9MWkHGhH1V6w@mail.gmail.com>
+ <20190814073854.GA27249@lst.de>
+ <20190814132746.GE13756@mellanox.com>
+ <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190815112614.GA4841@sirena.co.uk>
-References: <5d54d2fd.1c69fb81.e13e5.7422@mx.google.com> <20190815040221.DE28F2067D@mail.kernel.org> <20190815112614.GA4841@sirena.co.uk>
-Subject: Re: clk/clk-next boot bisection: v5.3-rc1-79-g31f58d2f58cb on sun8i-h3-libretech-all-h3-cc
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     "kernelci.org bot" <bot@kernelci.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        enric.balletbo@collabora.com, guillaume.tucker@collabora.com,
-        khilman@baylibre.com, matthew.hart@linaro.org,
-        mgalka@collabora.com, tomeu.vizoso@collabora.com,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tony Lindgren <tony@atomide.com>
-To:     Mark Brown <broonie@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 15 Aug 2019 11:02:16 -0700
-Message-Id: <20190815180216.D6C962083B@mail.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 15 Aug 2019 18:03:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Mark Brown (2019-08-15 04:26:14)
-> On Wed, Aug 14, 2019 at 09:02:20PM -0700, Stephen Boyd wrote:
-> > Quoting kernelci.org bot (2019-08-14 20:35:25)
->=20
-> > > clk/clk-next boot bisection: v5.3-rc1-79-g31f58d2f58cb on sun8i-h3-li=
-bretech-all-h3-cc
->=20
-> > If this is the only board that failed, great! Must be something in a
-> > sun8i driver that uses the init structure after registration.
->=20
-> The infrastructure suppresses duplicate-seeming bisections so I'd not
-> count on it, check the reports on the web site.
+On Wed, Aug 14, 2019 at 07:48:28AM -0700, Dan Williams wrote:
+> On Wed, Aug 14, 2019 at 6:28 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
+> >
+> > On Wed, Aug 14, 2019 at 09:38:54AM +0200, Christoph Hellwig wrote:
+> > > On Tue, Aug 13, 2019 at 06:36:33PM -0700, Dan Williams wrote:
+> > > > Section alignment constraints somewhat save us here. The only example
+> > > > I can think of a PMD not containing a uniform pgmap association for
+> > > > each pte is the case when the pgmap overlaps normal dram, i.e. shares
+> > > > the same 'struct memory_section' for a given span. Otherwise, distinct
+> > > > pgmaps arrange to manage their own exclusive sections (and now
+> > > > subsections as of v5.3). Otherwise the implementation could not
+> > > > guarantee different mapping lifetimes.
+> > > >
+> > > > That said, this seems to want a better mechanism to determine "pfn is
+> > > > ZONE_DEVICE".
+> > >
+> > > So I guess this patch is fine for now, and once you provide a better
+> > > mechanism we can switch over to it?
+> >
+> > What about the version I sent to just get rid of all the strange
+> > put_dev_pagemaps while scanning? Odds are good we will work with only
+> > a single pagemap, so it makes some sense to cache it once we find it?
+> 
+> Yes, if the scan is over a single pmd then caching it makes sense.
 
-And there's something wrong with the OMAP4 panda board and tegra nyan.
-Maybe Tony has seen it.
+Quite frankly an easier an better solution is to remove the pagemap
+lookup as HMM user abide by mmu notifier it means we will not make
+use or dereference the struct page so that we are safe from any
+racing hotunplug of dax memory (as long as device driver using hmm
+do not have a bug).
 
+Cheers,
+Jérôme
