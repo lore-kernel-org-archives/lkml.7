@@ -2,119 +2,126 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A806AC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 037E5C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED31218B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565858797;
-	bh=ENG6IhLxNghztTWl+lQXdfHCKtM8l06JvxThocecHD8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0z9brmsWQ7gyCXVdtmDW6EFpCU+WZ5ThVtWmM7Kdl4zPXSLBwJkBZ8aEa7gL679Sa
-	 a8ZiUI/wmzqJlyIV1Ec+lzD3U5hpFTi1WVGcN+OcuYO7Km3v9mWYInMPVP8PM4UdLq
-	 eoWnyioBDgZSpGP0m0tfanTY8QtmC1KXa8JEiW9I=
+	by mail.kernel.org (Postfix) with ESMTP id D2B7D21952
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:47:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730893AbfHOIqg (ORCPT
+        id S1730925AbfHOIrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 04:46:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41802 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725875AbfHOIqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 04:46:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4F4BCAF0D;
-        Thu, 15 Aug 2019 08:46:34 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 10:46:33 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
-        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH 1/2 -mm] mm: account lazy free pages separately
-Message-ID: <20190815084633.GF9477@dhcp22.suse.cz>
-References: <1565308665-24747-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190809083216.GM18351@dhcp22.suse.cz>
- <1a3c4185-c7ab-8d6f-8191-77dce02025a7@linux.alibaba.com>
- <20190809180238.GS18351@dhcp22.suse.cz>
- <79c90f6b-fcac-02e1-015a-0eaa4eafdf7d@linux.alibaba.com>
- <fb1f4958-5147-2fab-531f-d234806c2f37@linux.alibaba.com>
- <20190812093430.GD5117@dhcp22.suse.cz>
- <297aefa2-ba64-cb91-d2c8-733054db01a3@linux.alibaba.com>
- <20190814110850.GT17933@dhcp22.suse.cz>
- <a8005ff4-4749-8c71-ee4e-7ebda5c49de6@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a8005ff4-4749-8c71-ee4e-7ebda5c49de6@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 15 Aug 2019 04:47:48 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:59212 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730307AbfHOIrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 04:47:47 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1AE3D1A0467;
+        Thu, 15 Aug 2019 10:47:45 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 638CC1A0013;
+        Thu, 15 Aug 2019 10:47:36 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 952794030E;
+        Thu, 15 Aug 2019 16:47:25 +0800 (SGT)
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
+        lorenzo.pieralisi@arm.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, roy.zang@nxp.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCH 02/10] PCI: designware-ep: Add the doorbell mode of MSI-X in EP mode
+Date:   Thu, 15 Aug 2019 16:37:08 +0800
+Message-Id: <20190815083716.4715-2-xiaowei.bao@nxp.com>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20190815083716.4715-1-xiaowei.bao@nxp.com>
+References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 14-08-19 21:51:47, Yang Shi wrote:
-> 
-> 
-> On 8/14/19 4:08 AM, Michal Hocko wrote:
-> > On Mon 12-08-19 10:00:17, Yang Shi wrote:
-> > > 
-> > > On 8/12/19 2:34 AM, Michal Hocko wrote:
-> > > > On Fri 09-08-19 16:54:43, Yang Shi wrote:
-> > > > > On 8/9/19 11:26 AM, Yang Shi wrote:
-> > > > > > On 8/9/19 11:02 AM, Michal Hocko wrote:
-> > > > [...]
-> > > > > > > I have to study the code some more but is there any reason why those
-> > > > > > > pages are not accounted as proper THPs anymore? Sure they are partially
-> > > > > > > unmaped but they are still THPs so why cannot we keep them accounted
-> > > > > > > like that. Having a new counter to reflect that sounds like papering
-> > > > > > > over the problem to me. But as I've said I might be missing something
-> > > > > > > important here.
-> > > > > > I think we could keep those pages accounted for NR_ANON_THPS since they
-> > > > > > are still THP although they are unmapped as you mentioned if we just
-> > > > > > want to fix the improper accounting.
-> > > > > By double checking what NR_ANON_THPS really means,
-> > > > > Documentation/filesystems/proc.txt says "Non-file backed huge pages mapped
-> > > > > into userspace page tables". Then it makes some sense to dec NR_ANON_THPS
-> > > > > when removing rmap even though they are still THPs.
-> > > > > 
-> > > > > I don't think we would like to change the definition, if so a new counter
-> > > > > may make more sense.
-> > > > Yes, changing NR_ANON_THPS semantic sounds like a bad idea. Let
-> > > > me try whether I understand the problem. So we have some THP in
-> > > > limbo waiting for them to be split and unmapped parts to be freed,
-> > > > right? I can see that page_remove_anon_compound_rmap does correctly
-> > > > decrement NR_ANON_MAPPED for sub pages that are no longer mapped by
-> > > > anybody. LRU pages seem to be accounted properly as well.  As you've
-> > > > said NR_ANON_THPS reflects the number of THPs mapped and that should be
-> > > > reflecting the reality already IIUC.
-> > > > 
-> > > > So the only problem seems to be that deferred THP might aggregate a lot
-> > > > of immediately freeable memory (if none of the subpages are mapped) and
-> > > > that can confuse MemAvailable because it doesn't know about the fact.
-> > > > Has an skewed counter resulted in a user observable behavior/failures?
-> > > No. But the skewed counter may make big difference for a big scale cluster.
-> > > The MemAvailable is an important factor for cluster scheduler to determine
-> > > the capacity.
-> > But MemAvailable is a very rough estimation. Is relying on it really a
-> > good measure? I mean there is a lot of reclaimable memory that is not
-> > reflected there (some fs. internal data structures, networking buffers
-> > etc.)
-> 
-> Yes, I agree there are other freeable objects not accounted into
-> MemAvailable. Their size depends on the workload. But, deferred split THPs
-> seems more common with the common workloads. A simple run with MariaDB test
-> of mmtest shows it could generate over fifteen thousand deferred split THPs
-> (accumulated around 30G in one hour run, 75% of 40G memory for my VM). So,
-> it may be worth accounting deferred split THPs in MemAvailable.
+Add the doorbell mode of MSI-X in EP mode.
 
-This is a very useful information to put into the changelog.
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+---
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 14 ++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h    | 14 ++++++++++++++
+ 2 files changed, 28 insertions(+)
 
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 75e2955..e3a7cdf 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -454,6 +454,20 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 	return 0;
+ }
+ 
++int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8 func_no,
++				       u16 interrupt_num)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
++	u32 msg_data;
++
++	msg_data = (func_no << PCIE_MSIX_DOORBELL_PF_SHIFT) |
++		   (interrupt_num - 1);
++
++	dw_pcie_writel_dbi(pci, PCIE_MSIX_DOORBELL, msg_data);
++
++	return 0;
++}
++
+ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 			      u16 interrupt_num)
+ {
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 2b291e8..cd903e9 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -88,6 +88,11 @@
+ #define PCIE_MISC_CONTROL_1_OFF		0x8BC
+ #define PCIE_DBI_RO_WR_EN		BIT(0)
+ 
++#define PCIE_MSIX_DOORBELL		0x948
++#define PCIE_MSIX_DOORBELL_PF_SHIFT	24
++#define PCIE_MSIX_DOORBELL_VF_SHIFT	16
++#define PCIE_MSIX_DOORBELL_VF_ACTIVE	BIT(15)
++
+ /*
+  * iATU Unroll-specific register definitions
+  * From 4.80 core version the address translation will be made by unroll
+@@ -399,6 +404,8 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 			     u8 interrupt_num);
+ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 			     u16 interrupt_num);
++int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8 func_no,
++				       u16 interrupt_num);
+ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar);
+ #else
+ static inline void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+@@ -431,6 +438,13 @@ static inline int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 	return 0;
+ }
+ 
++static inline int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep,
++						     u8 func_no,
++						     u16 interrupt_num)
++{
++	return 0;
++}
++
+ static inline void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+ {
+ }
 -- 
-Michal Hocko
-SUSE Labs
+2.9.5
+
