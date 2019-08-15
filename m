@@ -4,62 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BA6C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01997C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFE3217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC2532187F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:39:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="c0EWi/tw"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="OmKcRIuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732338AbfHOQjC (ORCPT
+        id S1732425AbfHOQjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:39:02 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39786 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732132AbfHOQi7 (ORCPT
+        Thu, 15 Aug 2019 12:39:08 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37948 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732342AbfHOQjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:38:59 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i63so1770518wmg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:38:57 -0700 (PDT)
+        Thu, 15 Aug 2019 12:39:04 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m125so1774225wmm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:39:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=w21U5bngFKdXilclts2n7wOqJHCEbT1u5FIRizZ1S/c=;
-        b=c0EWi/twY78jUReda0WJdBQZxG7p7jMo7yZUFT+ZysCUNvfYOP8Kts7S5VTmjQRoQU
-         6FOzf037WHegLsWhnMG6hI8HuG4H5CipsuXbgAKSQb/hCcdV8n1TDWBoQtOTYKChwvQ4
-         p0qeczdoZtw0c9kynyj3Xx6vSWxGGGz/ktAawJgmLv5M96xjPN/gSnA5QvwIxYt0bJsQ
-         O/PrWgc1K/Uj+5AeXo7CLAN+YQc35R2UTStxfLQvvJQq5ao7BX9J0WF7o5LXSY6mfqmM
-         0hUfqAJhfUzJ7CQl9O4FIXMWiF9qYwSw/W1peKZnMckIcIaLFIg0SMLIonYLPH3xh1NQ
-         2xFg==
+        bh=aQYuVRWeyp8z2V68VQ+ceXmiIOG++TFaEr2U30kvyLQ=;
+        b=OmKcRIucRyDa/oy2hPhsOntXWU40/6VL1vZJ8TPGS1PTHNvC+4Qu3LjJu7EZ3nqta5
+         TrEYUnl1wTw794X6uOWBYJlohk9+t50cGswnT+av/TMqfzdEHBjjkoyV46/cjzS0ieUf
+         NQq/f08lBfTHcHqVAAekwiDhuanecbcuy9p3UJQesmJ3ejiH1w+1wIjmESTqwR1fJsMF
+         C0e8zNh+D8rQ5PqrRPVEhlG8FoHiXn6L0dnsVHwJp2B0SkSl4H16aZFqmopMczjk8Qpa
+         dInTJqjocz/oJ31IqnpL0yMKt/4+V+zN6N946hK/JzgTF9Fz8LC0zyn5vDBWQsoeoB0D
+         Kngg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=w21U5bngFKdXilclts2n7wOqJHCEbT1u5FIRizZ1S/c=;
-        b=rklJrFnVL+1Hb/WInn3F/yRW9I/7FhCbQNqhjB+0EQ0TcnevG+PspAIs88b9bPTZVM
-         fjdH0Tt0XyhHU1m164ilnGYqdfdpUxTZ3DesYMhNlh+OiF/5FdnICbFt5ncS0i4DxFGj
-         Fhh9tTCCdE6Y/vczFl7MTgMJuLV7xWokwZd99Uv+tKojL5IpjhFaWTixsRYqBNcQA1jW
-         XIN9FsjVqlgat6epRlq01XS8QHrv6GSfkWGIgR+8+vF3YdONIDZ7jUWKrWkj6e9svmPD
-         ofRetBG5JU8qcD6cKoxiWy+UV2soC14Uq8/fztT98nXOKMPjB8gworf6YFXeuffhdact
-         M3DQ==
-X-Gm-Message-State: APjAAAWrS45uamfq9ARJ9NO6WuquNUon/PAYO2R/hhAJjL+0f9/jVcAH
-        B+ofq2/Mnq4hKKH1KkluC37idZ6U1og=
-X-Google-Smtp-Source: APXvYqwwrNuAVCRNzu8wppGx0EnQgu1Gb+ZKGzc9YDUNUlRiz+Y2bm1lbJ5d/QemI5aVxWM5VDuYqQ==
-X-Received: by 2002:a05:600c:2056:: with SMTP id p22mr3528853wmg.155.1565887137141;
-        Thu, 15 Aug 2019 09:38:57 -0700 (PDT)
+        bh=aQYuVRWeyp8z2V68VQ+ceXmiIOG++TFaEr2U30kvyLQ=;
+        b=E/uguAU6fnl8cOzC/3NLiI0Pah5IckVY8Q5LbZ6R4Xh80PIJlNYeKZVXDR/0yWhMIN
+         S5PvmBEDf/F4RumVGfe0ekmViaHdkY/sw7ogPm/qpGaIwXYuwXk46mjEzOTl5KrNB0tf
+         oNsau2FJhQi9kmbXDDqcLIXmGfEESEPNzkhkXICncmFGuQPU+KpPfrcM1aB2aiCFYgnI
+         Vr3wTr1oBpiAT9K65A3KYn+VKybYZAELtlhQ0vMDyKjDYFSN7Ev50lrcRq77wpbPvcMx
+         5A9mWywrKuCgNhfWVGVJYcJ3EZ5Z0qVGj6plE296cnhJGEljC7GcKJtrpk7SyD5+oXtH
+         vbKA==
+X-Gm-Message-State: APjAAAVQJS18sgxVYEj8xieMarlVNOMv52AH9sBNYCg0SyQ7QkdtP/+m
+        1Rng3IRrvbgqPVoKbT0Q9ZB3yKFZ7oU=
+X-Google-Smtp-Source: APXvYqym6qXFpduVEP81+UYhW2YRvg7TdhGKs+L69sFY8cK3y4t5e8sRZwvv3lnOutSiB5b4fj9ORQ==
+X-Received: by 2002:a1c:7a12:: with SMTP id v18mr3540883wmc.56.1565887142614;
+        Thu, 15 Aug 2019 09:39:02 -0700 (PDT)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id f7sm5755046wrf.8.2019.08.15.09.38.55
+        by smtp.gmail.com with ESMTPSA id f7sm5755046wrf.8.2019.08.15.09.39.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 09:38:56 -0700 (PDT)
+        Thu, 15 Aug 2019 09:39:01 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
         Dmitry Safonov <dima@arista.com>,
         Adrian Reber <adrian@lisas.de>,
         Andrei Vagin <avagin@openvz.org>,
@@ -77,9 +76,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
         linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv6 13/36] alarmtimer: Make nanosleep time namespace aware
-Date:   Thu, 15 Aug 2019 17:38:13 +0100
-Message-Id: <20190815163836.2927-14-dima@arista.com>
+Subject: [PATCHv6 17/36] x86/vdso2c: Correct err messages on file opening
+Date:   Thu, 15 Aug 2019 17:38:17 +0100
+Message-Id: <20190815163836.2927-18-dima@arista.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190815163836.2927-1-dima@arista.com>
 References: <20190815163836.2927-1-dima@arista.com>
@@ -90,32 +89,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Vagin <avagin@gmail.com>
+err() message in main() is misleading: it should print `outfilename`,
+which is argv[3], not argv[2].
 
-clock_nanosleep() accepts absolute values of expiration time when
-TIMER_ABSTIME flag is set. This absolute value is inside the task's
-time namespace, and has to be converted to the host's time.
+Correct error messages to be more precise about what failed and for
+which file.
 
+Co-developed-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Andrei Vagin <avagin@openvz.org>
-Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- kernel/time/alarmtimer.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/entry/vdso/vdso2c.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index fbf18b26faed..751ed7f3cab2 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -825,6 +825,8 @@ static int alarm_timer_nsleep(const clockid_t which_clock, int flags,
- 		ktime_t now = alarm_bases[type].get_ktime();
+diff --git a/arch/x86/entry/vdso/vdso2c.c b/arch/x86/entry/vdso/vdso2c.c
+index 3a4d8d4d39f8..ce67370d14e5 100644
+--- a/arch/x86/entry/vdso/vdso2c.c
++++ b/arch/x86/entry/vdso/vdso2c.c
+@@ -184,7 +184,7 @@ static void map_input(const char *name, void **addr, size_t *len, int prot)
  
- 		exp = ktime_add_safe(now, exp);
-+	} else {
-+		exp = timens_ktime_to_host(which_clock, exp);
- 	}
+ 	int fd = open(name, O_RDONLY);
+ 	if (fd == -1)
+-		err(1, "%s", name);
++		err(1, "open(%s)", name);
  
- 	ret = alarmtimer_do_nsleep(&alarm, exp, type);
+ 	tmp_len = lseek(fd, 0, SEEK_END);
+ 	if (tmp_len == (off_t)-1)
+@@ -237,7 +237,7 @@ int main(int argc, char **argv)
+ 	outfilename = argv[3];
+ 	outfile = fopen(outfilename, "w");
+ 	if (!outfile)
+-		err(1, "%s", argv[2]);
++		err(1, "fopen(%s)", outfilename);
+ 
+ 	go(raw_addr, raw_len, stripped_addr, stripped_len, outfile, name);
+ 
 -- 
 2.22.0
 
