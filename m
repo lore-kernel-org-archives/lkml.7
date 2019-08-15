@@ -2,94 +2,121 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89448C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71A4C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C405206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9378020656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732885AbfHOOQI (ORCPT
+        id S1732899AbfHOOQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:16:08 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:51980 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731822AbfHOOQI (ORCPT
+        Thu, 15 Aug 2019 10:16:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39873 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732829AbfHOOQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:16:08 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 8CFE920049;
-        Thu, 15 Aug 2019 16:16:00 +0200 (CEST)
-Date:   Thu, 15 Aug 2019 16:15:59 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Eric Anholt <eric@anholt.net>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        xu_shunji@hoperun.com, ebiharaml@si-linux.co.jp
-Subject: Re: [PATCH v2 0/9] Add dual-LVDS panel support to EK874
-Message-ID: <20190815141559.GB2437@ravnborg.org>
-References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
+        Thu, 15 Aug 2019 10:16:31 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos.glx-home)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hyGY3-0006TL-He; Thu, 15 Aug 2019 16:16:15 +0200
+Date:   Thu, 15 Aug 2019 16:16:09 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>
+cc:     Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Christopher S . Hall" <christopher.s.hall@intel.com>
+Subject: Re: [RFC PATCH 1/5] x86: tsc: add tsc to art helpers
+In-Reply-To: <87y2zvt1hk.fsf@gmail.com>
+Message-ID: <alpine.DEB.2.21.1908151458560.1923@nanos.tec.linutronix.de>
+References: <20190716072038.8408-1-felipe.balbi@linux.intel.com> <20190716072038.8408-2-felipe.balbi@linux.intel.com> <alpine.DEB.2.21.1907160952040.1767@nanos.tec.linutronix.de> <87y2zvt1hk.fsf@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8
-        a=xQ1MIdX7YOo3YP1MDUoA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrizio
+Felipe,
 
-> it appears that Rob has been busy converting the dt-bindings relevant to this
-> series, and his changes are now found in linux-next. Most notably
-> Documentation/devicetree/bindings/display/panel/panel-lvds.txt has now become
-> Documentation/devicetree/bindings/display/panel/lvds.yaml
+On Thu, 15 Aug 2019, Felipe Balbi wrote:
+> Thomas Gleixner <tglx@linutronix.de> writes:
+> > On Tue, 16 Jul 2019, Felipe Balbi wrote:
+> >
+> > So some information what those interfaces are used for and why they are
+> > needed would be really helpful.
 > 
-> You have already taken patch:
-> https://patchwork.kernel.org/patch/11072749/
-> 
-> as such the patch I am sending you is still related to:
-> Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-> 
-> Patch "dt-bindings: display: Add bindings for Advantech IDK-2121WR" is still
-> assuming the format is .txt, as I am not too sure about what the protocol is in
-> this case? Shall we take this patch and convert it later to .yaml or shall I
-> convert it to .yaml straight away?
-> 
-> Please, let me know what's the best course of action.
+> Okay, I have some more details about this. The TGPIO device itself uses
+> ART since TSC is not directly available to anything other than the
+> CPU. The 'problem' here is that reading ART incurs extra latency which
+> we would like to avoid. Therefore, we use TSC and scale it to
+> nanoseconds which, would be the same as ART to ns.
 
-It is preferred that all new display and panel bindings uses the new
-meta-schema format.
-And that the writers uses the available tools to verify the bindings
-submission.
-This is one way to avoid simple mistakes in examples.
+Fine. But that's not really correct:
 
-	Sam
+      TSC = art_to_tsc_offset + ART * scale;
+ 
+> >> +void get_tsc_ns(struct system_counterval_t *tsc_counterval, u64 *tsc_ns)
+
+Why is this not returning the result instead of having that pointer
+indirection?
+
+> >> +{
+> >> +	u64 tmp, res, rem;
+> >> +	u64 cycles;
+> >> +
+> >> +	tsc_counterval->cycles = clocksource_tsc.read(NULL);
+> >> +	cycles = tsc_counterval->cycles;
+> >> +	tsc_counterval->cs = art_related_clocksource;
+
+So this does more than returning the TSC time converted to nanoseconds. The
+function name should reflect this. Plus both functions want kernel-doc
+explaining what they do.
+
+> >> +	rem = do_div(cycles, tsc_khz);
+> >> +
+> >> +	res = cycles * USEC_PER_SEC;
+> >> +	tmp = rem * USEC_PER_SEC;
+> >> +
+> >> +	do_div(tmp, tsc_khz);
+> >> +	res += tmp;
+> >> +
+> >> +	*tsc_ns = res;
+> >> +}
+> >> +EXPORT_SYMBOL(get_tsc_ns);
+> >> +
+> >> +u64 get_art_ns_now(void)
+> >> +{
+> >> +	struct system_counterval_t tsc_cycles;
+> >> +	u64 tsc_ns;
+> >> +
+> >> +	get_tsc_ns(&tsc_cycles, &tsc_ns);
+> >> +
+> >> +	return tsc_ns;
+> >> +}
+> >> +EXPORT_SYMBOL(get_art_ns_now);
+> >
+> > While the changes look innocuous I'm missing the big picture why this needs
+> > to emulate ART instead of simply using TSC directly.
+> 
+> i don't think we're emulating ART here (other than the name in the
+> function). We're just reading TSC and converting to nanoseconds, right?
+
+Well, the function name says clearly: get_art_ns_now(). But you are not
+using ART, you use the TSC and derive the ART value from it (incorrectly).
+
+Thanks,
+
+	tglx
+
