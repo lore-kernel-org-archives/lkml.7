@@ -2,96 +2,111 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B8EC3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFA2C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C567F2089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:29:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565911793;
-	bh=UUdMem/EasFhb4Dfk05FjFveBpohgSiNrTN38IFMTeQ=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=1HwcQc0NtE875b7Gg7EQmrpTI5L8UFkU2wKtp9BDMfB7T4KjxQbt459gpVKxcD/XY
-	 6RAZHhRkjWaT32jImaBOpyU/KBAiLxkGXNCshJToDgjsGIDv6dJqX+7EuYtRQjJiET
-	 oEBOqLBLEiZOMV+biVw/Zk03wDjpZEL1XLO3bnyg=
+	by mail.kernel.org (Postfix) with ESMTP id E22F2206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:32:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbfHOX3x (ORCPT
+        id S1726193AbfHOXb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 19:29:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfHOX3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 19:29:52 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA402206C2;
-        Thu, 15 Aug 2019 23:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565911791;
-        bh=UUdMem/EasFhb4Dfk05FjFveBpohgSiNrTN38IFMTeQ=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=cfJ9mKIJWeIdXMeH4f51/xiWPrnLZ/QFwdEMi7GNTJysZFmqGa5ZBvZnYudct4+Em
-         0GbVgeMDcVG4oOG5fhnvU9VKqaCIkuYNBl/PQMa9aic7snRGH+hVR/5nLjC9bhOPrn
-         cr/yUJhQunmDeASMSZWRRYmrx6ettOs04pSg5jSQ=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 15 Aug 2019 19:31:59 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39636 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfHOXb7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 19:31:59 -0400
+Received: by mail-ot1-f67.google.com with SMTP id b1so8035792otp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 16:31:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3W/JXRczT4e7iKML5rUyQ8eYma8iSWGGWO86RntEySo=;
+        b=qce6QxKNzR2pd2EETO5LGjFqsk86/Ezfo+iDb7nCQNmWNdcxvsdiTVZOpwPNjKyZMa
+         k77hDht6Y2u4sSOJlLsfIj4hF8AQXLCY8LXl2pcaRX9QcTzJ/4gpLm1kqrqOWPnTQWaJ
+         0+RyX4ifE+Og4QMl0bTFtEKPpEpNIrJa00i49Q6lR9qPiOCK+FBcCcuWtZM4Utt0VSK8
+         DJmlLDn0TVH3cw8LYMCTxKz3dSjWan3dSqIOQ/1LJAVD+Y1ougcjMwf0KoGaUSMj+jkz
+         Z/p8npRW6NtQxHYpMKXMpllsyHVWiTvC+KV3EiTFeeePrUAWATOeoqnJSVO048/+5AfV
+         i1Ig==
+X-Gm-Message-State: APjAAAXU/89nIqDoj+7+QRI1STj5QbD8fj1JQgckNn1DRFZoLjhyBuxJ
+        uFb++a5W3INwNvhMWYwH8/+Tniu87x4=
+X-Google-Smtp-Source: APXvYqzB8N+UBiSSPwSBm+jRmYm+eygvbW+5kj7V0gYJasRUkxsze253TTWOx9UE4oy+bC0jTs2OkA==
+X-Received: by 2002:a05:6830:15c5:: with SMTP id j5mr5508412otr.296.1565911918358;
+        Thu, 15 Aug 2019 16:31:58 -0700 (PDT)
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com. [209.85.210.53])
+        by smtp.gmail.com with ESMTPSA id o82sm978943oig.27.2019.08.15.16.31.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Aug 2019 16:31:57 -0700 (PDT)
+Received: by mail-ot1-f53.google.com with SMTP id g17so7219497otl.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 16:31:57 -0700 (PDT)
+X-Received: by 2002:a9d:6b84:: with SMTP id b4mr5482166otq.63.1565911917418;
+ Thu, 15 Aug 2019 16:31:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190815223155.21384-1-martin.blumenstingl@googlemail.com>
-References: <20190815223155.21384-1-martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH RFC v1] clk: Fix potential NULL dereference in clk_fetch_parent_index()
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, mturquette@baylibre.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-clk@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Thu, 15 Aug 2019 16:29:50 -0700
-Message-Id: <20190815232951.AA402206C2@mail.kernel.org>
+References: <1564690599-29713-1-git-send-email-roy.pledge@nxp.com>
+In-Reply-To: <1564690599-29713-1-git-send-email-roy.pledge@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Thu, 15 Aug 2019 18:31:46 -0500
+X-Gmail-Original-Message-ID: <CADRPPNQ_3muAr_tVYOThhtPmGXk2gh4qMhhZK402HiHh4fO-Fw@mail.gmail.com>
+Message-ID: <CADRPPNQ_3muAr_tVYOThhtPmGXk2gh4qMhhZK402HiHh4fO-Fw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] soc/fsl/qbman: Enable Kexec for DPAA1 devices
+To:     Roy Pledge <roy.pledge@nxp.com>
+Cc:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Madalin-cristian Bucur <madalin.bucur@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Martin Blumenstingl (2019-08-15 15:31:55)
-> Don't compare the parent clock name with a NULL name in the
-> clk_parent_map. This prevents a kernel crash when passing NULL
-> core->parents[i].name to strcmp().
->=20
-> An example which triggered this is a mux clock with four parents when
-> each of them is referenced in the clock driver using
-> clk_parent_data.fw_name and then calling clk_set_parent(clk, 3rd_parent)
-> on this mux.
-> In this case the first parent is also the HW default so
-> core->parents[i].hw is populated when the clock is registered. Calling
-> clk_set_parent(clk, 3rd_parent) will then go through all parents and
-> skip the first parent because it's hw pointer doesn't match. For the
-> second parent no hw pointer is cached yet and clk_core_get(core, 1)
-> returns a non-matching pointer (which is correct because we are comparing
-> the second with the third parent). Comparing the result of
-> clk_core_get(core, 2) with the requested parent gives a match. However
-> we don't reach this point because right after the clk_core_get(core, 1)
-> mismatch the old code tried to !strcmp(parent->name, NULL) (where the
-> second argument is actually core->parents[i].name, but that was never
-> populated by the clock driver).
->=20
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
-> I have seen the original crash when I was testing an MMC driver which
-> is not upstream yet on v5.3-rc4. I'm not sure whether this fix is
-> "correct" (it fixes the crash for me) or where to point the Fixes tag
-> to, it may be one of:
-> - fc0c209c147f ("clk: Allow parents to be specified without string names")
-> - 1a079560b145 ("clk: Cache core in clk_fetch_parent_index() without name=
-s")
->=20
-> This is meant to be applied on top of v5.3-rc4.
->=20
+On Thu, Aug 1, 2019 at 3:20 PM Roy Pledge <roy.pledge@nxp.com> wrote:
+>
+> Most DPAA1 devices do not support a soft reset which is an issue if
+> Kexec starts a new kernel. This patch series allows Kexec to function
+> by detecting that the QBMan device was previously initialized.
+>
+> The patches fix some issues with device cleanup as well as ensuring
+> that the location of the QBMan private memories has not changed
+> after the execution of the Kexec.
+>
+> Changes since v1:
+>         - Removed a bug fix and sent it separately to ease backporting
+> Changes since v2:
+>         - Expliciitly flush FQD memory from cache on PPC before unmapping
+>
+> Roy Pledge (7):
+>   soc/fsl/qbman: Rework QBMan private memory setup
+>   soc/fsl/qbman: Cleanup buffer pools if BMan was initialized prior to
+>     bootup
+>   soc/fsl/qbman: Cleanup QMan queues if device was already initialized
+>   soc/fsl/qbman: Fix drain_mr_fqni()
+>   soc/fsl/qbman: Disable interrupts during portal recovery
+>   soc/fsl/qbman: Fixup qman_shutdown_fq()
+>   soc/fsl/qbman: Update device tree with reserved memory
 
-Ah ok. I thought that strcmp() would ignore NULL arguments, but
-apparently not. I can apply this to clk-fixes.
+Series applied for next.  Thanks!
 
+>
+>  drivers/soc/fsl/qbman/bman.c        | 17 ++++----
+>  drivers/soc/fsl/qbman/bman_ccsr.c   | 36 +++++++++++++++-
+>  drivers/soc/fsl/qbman/bman_portal.c | 18 +++++++-
+>  drivers/soc/fsl/qbman/bman_priv.h   |  5 +++
+>  drivers/soc/fsl/qbman/dpaa_sys.c    | 63 ++++++++++++++++------------
+>  drivers/soc/fsl/qbman/qman.c        | 83 +++++++++++++++++++++++++++++--------
+>  drivers/soc/fsl/qbman/qman_ccsr.c   | 68 +++++++++++++++++++++++++++---
+>  drivers/soc/fsl/qbman/qman_portal.c | 18 +++++++-
+>  drivers/soc/fsl/qbman/qman_priv.h   |  8 ++++
+>  9 files changed, 255 insertions(+), 61 deletions(-)
+>
+> --
+> 2.7.4
+>
