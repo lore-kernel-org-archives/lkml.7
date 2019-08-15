@@ -2,172 +2,128 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB4AC3A59B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B512C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F05F8206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D87F206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:58:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="EKMIUjSE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732002AbfHOM6M (ORCPT
+        id S1732024AbfHOM6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:58:12 -0400
-Received: from enpas.org ([46.38.239.100]:60076 "EHLO mail.enpas.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730981AbfHOM6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 08:58:11 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        by mail.enpas.org (Postfix) with ESMTPSA id 16FC71006F0;
-        Thu, 15 Aug 2019 12:58:08 +0000 (UTC)
-From:   Max Staudt <max@enpas.org>
-To:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-m68k@vger.kernel.org, linux-kernel@vger.kernel.org,
-        glaubitz@physik.fu-berlin.de, Max Staudt <max@enpas.org>
-Subject: [PATCH v3 3/3] i2c/busses/i2c-icy: Add LTC2990 present on 2019 board revision
-Date:   Thu, 15 Aug 2019 14:58:02 +0200
-Message-Id: <20190815125802.16500-3-max@enpas.org>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190815125802.16500-1-max@enpas.org>
-References: <20190815125802.16500-1-max@enpas.org>
+        Thu, 15 Aug 2019 08:58:37 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:45238 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729818AbfHOM6h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 08:58:37 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AC9BD2AF;
+        Thu, 15 Aug 2019 14:58:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1565873914;
+        bh=mi6MwhXdNTovhLsU8H3i0i1nB7aiZZZgLLkKMJdQkUI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EKMIUjSEjxY+Zh/gFLwrZ9y+EKc+z12mbdR7SQfOiafsOBygmEvLxZ80CR6UIqxzT
+         /b9hHHmYenMjQpe2UTaWgSzi/7N6FndkY24W0zug61pYfvNXN2tWoO/p0+OKnrMWKu
+         LLA5l1jyBlZOYci2NtOaNaInNcM/qdTMjfMSOEZA=
+Date:   Thu, 15 Aug 2019 15:58:31 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC 1/5] media: dt-bindings: Document 'location' property
+Message-ID: <20190815125831.GH13823@pendragon.ideasonboard.com>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-2-jacopo@jmondi.org>
+ <20190815065635.GJ6133@paasikivi.fi.intel.com>
+ <20190815125548.kh2pdxzysafltswc@uno.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190815125548.kh2pdxzysafltswc@uno.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the 2019 a1k.org community re-print of these PCBs sports an
-LTC2990 hwmon chip as an example use case, let this driver autoprobe
-for that as well. If it is present, modprobing ltc2990 is sufficient.
+On Thu, Aug 15, 2019 at 02:55:48PM +0200, Jacopo Mondi wrote:
+> On Thu, Aug 15, 2019 at 09:56:35AM +0300, Sakari Ailus wrote:
+> > On Wed, Aug 14, 2019 at 10:28:11PM +0200, Jacopo Mondi wrote:
+> > > Add the 'location' device property, used to specify the camera device
+> > > mounting position. The property is particularly meaningful for mobile
+> > > devices with a well defined usage orientation.
+> > >
+> > > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/media/video-interfaces.txt | 4 ++++
+> > >  1 file changed, 4 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > > index f884ada0bffc..819077b2649c 100644
+> > > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > > @@ -89,6 +89,10 @@ Optional properties
+> > >    but a number of degrees counter clockwise. Typical values are 0 and 180
+> > >    (upside down).
+> > >
+> > > +- location: The camera device mounting position, relative to the device
+> > > +  usage orientation. Possible values are:
+> > > +  0 - Front camera. The image sensor is mounted on the front side of the device.
+> > > +  1 - Back camera. The image sensor is mounted on the back side of the device.
+> >
+> > Would it make sense to make this a little more generic? Such as s/image
+> > sensor/ device/, for instance?
+> 
+> Laurent seems to be of the opposite opinion, but i think staying as
+> generic as possible might be a good idea. Now I have a linguistic
+> problem though.
+> 
+>  +- location: The device mounting position, relative to the device
+>  +  usage orientation. Possible values are:
+>  +  0 - Front. The device is mounted on the front side of the device.
+>  +  1 - Back. The device is mounted on the back side of the device.
+> 
+> So I need one "device" to indicate the lens/flash/image sensor and one
+> to indicate the device they're installed on :) Any idea?
+> 
+> >
+> > Is this also relevant for flash or lens devices?
+> >
+> > Flash (torch) devices could be present, at least principle, without a
+> > camera. There once was even such a Nokia phone, 1100 unless I'm mistaken.
+> > :-)
+> 
+> Not to mention that lenses are indeed installed in the same package as
+> the camera sensor, but they're described as separate device nodes as
+> flash leds are, so the mounting location might need to be specified in their
+> device node properties too, even if it would be the same as the image
+> sensor one.
 
-The property_entry enables the three additional inputs available on
-this particular board:
+For the lens I really don't think we need it. For the flash, I envision
+it will be useful to know more about its physical location relative to
+the camera sensor, but that will be a displacement, not a front/back
+location as the flash should really be on the same side as the camera
+sensor :-) Note that, technically speaking, it will not be the location
+of the flash controller itself, but of its LED (or other light source).
+A flash controller could possibly control multiple LEDs, for different
+sensors, and possibly on different sides of the devices, so we may need
+to create subnodes for light sources in the flash controller DT node.
 
-  in1 will be the voltage of the 5V rail, divided by 2.
-  in2 will be the voltage of the 12V rail, divided by 4.
-  temp3 will be measured using a PCB loop next the chip.
-
-v3: Merged with initial LTC2990 support on ICY.
-    Moved defaults from platform_data to swnode.
-    Added note to Kconfig.
-
-Signed-off-by: Max Staudt <max@enpas.org>
----
- drivers/i2c/busses/Kconfig   |  3 +++
- drivers/i2c/busses/i2c-icy.c | 56 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 59 insertions(+)
-
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 9e57e1101..a311d07f3 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -1311,6 +1311,9 @@ config I2C_ICY
- 	  This support is also available as a module.  If so, the module
- 	  will be called i2c-icy.
- 
-+	  If you have a 2019 edition board with an LTC2990 sensor at address
-+	  0x4c, loading the module 'ltc2990' is sufficient to enable it.
-+
- config I2C_MLXCPLD
- 	tristate "Mellanox I2C driver"
- 	depends on X86_64
-diff --git a/drivers/i2c/busses/i2c-icy.c b/drivers/i2c/busses/i2c-icy.c
-index edac515da..c43cd170f 100644
---- a/drivers/i2c/busses/i2c-icy.c
-+++ b/drivers/i2c/busses/i2c-icy.c
-@@ -54,6 +54,8 @@ struct icy_i2c {
- 
- 	void __iomem *reg_s0;
- 	void __iomem *reg_s1;
-+	struct fwnode_handle *ltc2990_fwnode;
-+	struct i2c_client *ltc2990_client;
- };
- 
- 
-@@ -100,11 +102,33 @@ static void icy_pcf_waitforpin(void *data)
- /*
-  * Main i2c-icy part
-  */
-+static unsigned short const icy_ltc2990_addresses[] = {0x4c, I2C_CLIENT_END};
-+
-+/*
-+ * Additional sensors exposed once this property is applied:
-+ *
-+ * in1 will be the voltage of the 5V rail, divided by 2.
-+ * in2 will be the voltage of the 12V rail, divided by 4.
-+ * temp3 will be measured using a PCB loop next the chip.
-+ */
-+static const u32 icy_ltc2990_meas_mode[] = {0, 3};
-+
-+static const struct property_entry icy_ltc2990_props[] = {
-+	PROPERTY_ENTRY_U32_ARRAY("lltc,meas-mode", icy_ltc2990_meas_mode),
-+	{ }
-+};
-+
-+
- static int icy_probe(struct zorro_dev *z,
- 			 const struct zorro_device_id *ent)
- {
- 	struct icy_i2c *i2c;
- 	struct i2c_algo_pcf_data *algo_data;
-+	struct fwnode_handle *new_fwnode;
-+	struct i2c_board_info ltc2990_info = {
-+		.type		= "ltc2990",
-+		.addr		= 0x4c,
-+	};
- 
- 
- 	i2c = devm_kzalloc(&z->dev, sizeof(*i2c), GFP_KERNEL);
-@@ -147,6 +171,35 @@ static int icy_probe(struct zorro_dev *z,
- 	dev_info(&z->dev, "ICY I2C controller at %pa, IRQ not implemented\n",
- 		 &z->resource.start);
- 
-+	/*
-+	 * The 2019 a1k.org PCBs have an LTC2990 at 0x4c, so start
-+	 * it automatically once ltc2990 is modprobed.
-+	 *
-+	 * in0 is the voltage of the internal 5V power supply.
-+	 * temp1 is the temperature inside the chip.
-+	 *
-+	 * See property_entry above for in1, in2, temp3.
-+	 */
-+	new_fwnode = fwnode_create_software_node(icy_ltc2990_props, NULL);
-+	if (IS_ERR(new_fwnode))
-+		dev_info(&z->dev, "Failed to create fwnode for LTC2990, error: %ld\n",
-+			 PTR_ERR(new_fwnode));
-+	else {
-+		/*
-+		 * Store the fwnode so we can destroy it on .remove().
-+		 * Only store it on success, as fwnode_remove_software_node()
-+		 * is NULL safe, but not PTR_ERR safe.
-+		 */
-+		i2c->ltc2990_fwnode = new_fwnode;
-+		ltc2990_info.fwnode = new_fwnode;
-+
-+		i2c->ltc2990_client =
-+			i2c_new_probed_device(&i2c->adapter,
-+					      &ltc2990_info,
-+					      icy_ltc2990_addresses,
-+					      NULL);
-+	}
-+
- 	return 0;
- }
- 
-@@ -154,6 +207,9 @@ static void icy_remove(struct zorro_dev *z)
- {
- 	struct icy_i2c *i2c = dev_get_drvdata(&z->dev);
- 
-+	i2c_unregister_device(i2c->ltc2990_client);
-+	fwnode_remove_software_node(i2c->ltc2990_fwnode);
-+
- 	i2c_del_adapter(&i2c->adapter);
- }
- 
 -- 
-2.11.0
+Regards,
 
+Laurent Pinchart
