@@ -2,111 +2,137 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A7CC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042B7C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892052133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565875180;
-	bh=HFXQAFDpp3inO4W+xusMOFdVhwa9Gi6AIGEKoCjQ0mc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2gKXtT8wm345EPyGpOkYkvFRacaCUWXasgqnBg/4MUik+prQT6hfp/OgdlzUdq1r8
-	 qkHVHgIg4PH2lmoAN+11XV0iyLRivVsIuUnbsRPN2yTmvQQrGOrqdB3fMhsfqKZyeK
-	 2bJt0FLNfc5LvYVDdQiZa3CEJbw7fiNFovhIjrh8=
+	by mail.kernel.org (Postfix) with ESMTP id C8CF92083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:20:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XApBsCOl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732231AbfHONTj (ORCPT
+        id S1732241AbfHONUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:19:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732128AbfHONTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:19:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A27B2083B;
-        Thu, 15 Aug 2019 13:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565875178;
-        bh=HFXQAFDpp3inO4W+xusMOFdVhwa9Gi6AIGEKoCjQ0mc=;
+        Thu, 15 Aug 2019 09:20:04 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:45708 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730304AbfHONUE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 09:20:04 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8E7912AF;
+        Thu, 15 Aug 2019 15:20:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1565875202;
+        bh=eDIJZI2UnIojM1PRCFwzGcZMZQDhOZCW8hi2JK1Jnlc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ezessHcgm5nt5CaRNi+dtrhOXaXTOgB63KfLBPU4DGt5ci+tiVH7rrOqjk8e1KuZo
-         /yHXrQIAv8Q096JykPfnWajQot1gcxEPBE7E5Dfyi2PuxC1SHNATsjnvuKbFM1Gt2t
-         hDQDXfJLEl82o9h6bFWqoPSk5O1S8UMnxmtD/T4U=
-Date:   Thu, 15 Aug 2019 15:19:35 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>, x86@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: warning: =?utf-8?B?4oCYbWVtc2V04oCZ?=
- =?utf-8?Q?_offset_=5B197=2C_448=5D_from_the_object_at_=E2=80=98boot=5Fpar?=
- =?utf-8?Q?ams=E2=80=99_is_out_of_the_bounds_of_referenced_subobject_?=
- =?utf-8?B?4oCYZXh0X3JhbWRpc2tfaW1hZ2XigJkgd2l0aCB0eXBlLCDigJh1bnNpZ25l?=
- =?utf-8?B?ZCBpbnTigJk=?= at offset 192 [-Warray-bounds]
-Message-ID: <20190815131935.GA21644@kroah.com>
-References: <7e44d224-ce7e-909d-e91e-9a643b5fcd71@molgen.mpg.de>
- <20190815124306.GA17581@kroah.com>
- <alpine.DEB.2.21.1908151452250.1923@nanos.tec.linutronix.de>
+        b=XApBsCOlCxHaIV20Kt0Y2iPt6JMsbIBf13lrTWxASnf1jiqSnyil0n97NwJLPsJld
+         b+pkOeQU/c/pOuuydS+FGDb2OTYCFcbJxtSOK/aNdZL+p1gB7T/YNVFGR8gHSClSuk
+         idInnjau2tlAXHhDJq4OhN3aKl+f5iY6e4jCO1QQ=
+Date:   Thu, 15 Aug 2019 16:19:59 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Jacopo Mondi <jacopo@jmondi.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 2/5] media: v4l2-ctrl: Document V4L2_CID_LOCATION
+Message-ID: <20190815131959.GQ5011@pendragon.ideasonboard.com>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-3-jacopo@jmondi.org>
+ <20190815070025.GK6133@paasikivi.fi.intel.com>
+ <20190815125938.GI13823@pendragon.ideasonboard.com>
+ <20190815130849.GQ6133@paasikivi.fi.intel.com>
+ <20190815131053.GO5011@pendragon.ideasonboard.com>
+ <20190815131509.GR6133@paasikivi.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <alpine.DEB.2.21.1908151452250.1923@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190815131509.GR6133@paasikivi.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 02:54:32PM +0200, Thomas Gleixner wrote:
-> On Thu, 15 Aug 2019, Greg KH wrote:
-> > On Tue, Aug 13, 2019 at 06:15:51PM +0200, Paul Menzel wrote:
-> > > Dear Linux folks,
-> > > 
-> > > 
-> > > No idea, if you are interested in these reports. Building Linux 5.3-rc4,
-> > > GCC 9.2.0 shows the warning below.
-> > > 
-> > > ```
-> > > In file included from arch/x86/kernel/head64.c:35:
-> > > In function ‘sanitize_boot_params’,
-> > >     inlined from ‘copy_bootdata’ at arch/x86/kernel/head64.c:391:2:
-> > > ./arch/x86/include/asm/bootparam_utils.h:40:3: warning: ‘memset’ offset [197, 448] from the object at ‘boot_params’ is out of the bounds of referenced subobject ‘ext_ramdisk_image’ with type
-> > >  ‘unsigned int’ at offset 192 [-Warray-bounds]
-> > >    40 |   memset(&boot_params->ext_ramdisk_image, 0,
-> > >       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >    41 |          (char *)&boot_params->efi_info -
-> > >       |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >    42 |    (char *)&boot_params->ext_ramdisk_image);
-> > >       |    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > ./arch/x86/include/asm/bootparam_utils.h:43:3: warning: ‘memset’ offset [493, 497] from the object at ‘boot_params’ is out of the bounds of referenced subobject ‘kbd_status’ with type ‘unsig
-> > > ned char’ at offset 491 [-Warray-bounds]
-> > >    43 |   memset(&boot_params->kbd_status, 0,
-> > >       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >    44 |          (char *)&boot_params->hdr -
-> > >       |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >    45 |          (char *)&boot_params->kbd_status);
-> > >       |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > ```
+On Thu, Aug 15, 2019 at 04:15:10PM +0300, Sakari Ailus wrote:
+> On Thu, Aug 15, 2019 at 04:10:53PM +0300, Laurent Pinchart wrote:
+> > On Thu, Aug 15, 2019 at 04:08:49PM +0300, Sakari Ailus wrote:
+> >> On Thu, Aug 15, 2019 at 03:59:38PM +0300, Laurent Pinchart wrote:
+> >>> On Thu, Aug 15, 2019 at 10:00:25AM +0300, Sakari Ailus wrote:
+> >>>> On Wed, Aug 14, 2019 at 10:28:12PM +0200, Jacopo Mondi wrote:
+> >>>>> Add documentation for the V4L2_CID_LOCATION camera control. The newly
+> >>>>> added read-only control reports the camera device mounting position.
+> >>>>> 
+> >>>>> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> >>>>> ---
+> >>>>>  .../media/uapi/v4l/ext-ctrls-camera.rst       | 23 +++++++++++++++++++
+> >>>>>  1 file changed, 23 insertions(+)
+> >>>>> 
+> >>>>> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+> >>>>> index 51c1d5c9eb00..fc0a02eee6d4 100644
+> >>>>> --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+> >>>>> +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+> >>>>> @@ -510,6 +510,29 @@ enum v4l2_scene_mode -
+> >>>>>      value down. A value of zero stops the motion if one is in progress
+> >>>>>      and has no effect otherwise.
+> >>>>> 
+> >>>>> +``V4L2_CID_LOCATION (integer)``
+> >>>>> +    This read-only control describes the camera location by reporting its
+> >>>>> +    mounting position on the device where the camera is installed. This
+> >>>>> +    control is particularly meaningful for devices which have a well defined
+> >>>>> +    orientation, such as phones, laptops and portable devices as the camera
+> >>>>> +    location is expressed as a position relative to the device intended
+> >>>>> +    usage position. In example, a camera installed on the user-facing side
+> >>>> 
+> >>>> s/In/For/
+> >>>> 
+> >>>>> +    of a phone device is said to be installed in the ``V4L2_LOCATION_FRONT``
+> >>>>> +    position.
+> >>>>> +
+> >>>>> +
+> >>>>> +
+> >>>>> +.. flat-table::
+> >>>>> +    :header-rows:  0
+> >>>>> +    :stub-columns: 0
+> >>>>> +
+> >>>>> +    * - ``V4L2_LOCATION_FRONT``
+> >>>>> +      - The camera device is located on the front side of the device.
+> >>>>> +    * - ``V4L2_LOCATION_BACK``
+> >>>>> +      - The camera device is located on the back side of the device.
+> >>>>> +
+> >>>>> +
+> >>>>> +
+> >>>>>  .. [#f1]
+> >>>>>     This control may be changed to a menu control in the future, if more
+> >>>>>     options are required.
+> >>>> 
+> >>>> There's an effective limit of 64 for menus. ACPI has less than ten
+> >>>> different locations for a device, I think 64 will be enough here.
+> >>>> 
+> >>>> So I'd be actually in favour of switching to a menu.
+> >>> 
+> >>> Why ? As you explained yourself, it's a static read-only control, all it
+> >>> needs to report is a single value.
+> >> 
+> >> Yes. That's true. It wasn't meant for this but it's nevertheless a
+> >> convenient API to get that information, both as integer and string.
 > > 
-> > Yeah, it shows up on my builds as well :(
-> > 
-> > Any chance you can make a fix for this?
+> > But why is that needed ? The integer seems enough to me.
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/boot&id=a156cadef2fe445ac423670eace517b39a01ccd0
-> 
-> I guess I need to reprioritize that and mark it for stable....
+> Because it's a qualitative control, not a quantitative one.
 
+And ? :-) The integer values are defined in the V4L2 spec, they map to a
+usage, and a name can easily be derived from that in userspace if
+desired.
 
-Please do, it's the only build warning I currently have for
-'allmodconfig' on x86 for 4.14.y, 4.19.y, and 5.2.y and is annoying :)
+-- 
+Regards,
 
-thanks,
-
-greg k-h
+Laurent Pinchart
