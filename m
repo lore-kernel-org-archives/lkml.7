@@ -2,101 +2,139 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36971C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D72EC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 089BC206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:01:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hCcZByq+"
+	by mail.kernel.org (Postfix) with ESMTP id 3CEC3206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:06:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565849168;
+	bh=t5cM3jBnJQk9VnnLKPuNpYG8ZS+2LWxl5fs8ygmHR+s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=A+l+EXkopWCiYKZRl/CSMNajVOySPvY3aZkcRrimDyqHW+tuEbNrbdwj2QBxKW7ev
+	 xdh+eZ+mhB6jvjsNWBF1/qVX7iJy+pkvCjds+7uJ53hIOz8iZ9sqTvMA12nW+hVVIO
+	 I9MrXYWly9npi0xGQnLs74ISGkWDs5VLnAFz2lRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbfHOGBj (ORCPT
+        id S1730057AbfHOGGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 02:01:39 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36185 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfHOGBj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 02:01:39 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g4so724775plo.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 23:01:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bmSCdnIPB1eNwZ60Q3PEiT3kdrTU05F9OKohp8Lrv6U=;
-        b=hCcZByq+TgABNzIBu34g4/VXnusd7y6Lpex5x9X3JLLg9YwFvEcxQKfqyvtgujFnj+
-         Qv0D1C0prHGL9PlxtUd0KEdb+ztLmtKpBsCIa2SwKAViuHT/UmguvquOEWkfNR+lNAd/
-         XenD4goEDRlVjR1d3W5h6sgMAFCECZsjN9MLKBjoiLGthopOz22VUhsf9DRF2jPyQ145
-         z2RJVnPGhblkHpAi35BT7H6Od8imPwnt0W8yOV46oZ30N/EoBvRB9ZWkHfHYkiZsQ46E
-         /bA6QTImf/4F7WxaUZ3fSsWaxEVup8JNYSHOt7qSJOc++Vy0l6ThfBoMnxjZVryHQt1Z
-         Domg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bmSCdnIPB1eNwZ60Q3PEiT3kdrTU05F9OKohp8Lrv6U=;
-        b=FC2qVAOLC2t0+G3ywRCWuRckg2u4IogYjALJqwj4lntArpvlAwfLt9pOn+phbre+OT
-         vm91ux5H+7ljmObtEY0yLdc/oCvCmeUszMcYmaraurr9mr1cp4/qExODrsy6uGq4GjGW
-         bKH2H77HiqNBq9FoaJNd/vt0Sb/wkfiCPOawfVBYCGX8BXshOeULZxlV2xYVBXoc9UpA
-         jkM3Vft3yELQMirisrx5H+j7n7eset7MBhAZjUOG+tqGKv7d8Q9G9ojDFrLv9DeUuqtj
-         UBtTMaWPf6agxLovGxWrPU1kt0pCHdvbunJVvy7bygWXm30BULV1KWk1Dwl3vB2v6VjT
-         znDQ==
-X-Gm-Message-State: APjAAAVNSNyeGsqvRt1k/67duSu7JO+PYsxhJa9bmEyos5r462k30UE1
-        lnBTYIF9clCoGFSgt6PzPeniZ8/s
-X-Google-Smtp-Source: APXvYqwAGBnQSTTsWVzmoID/FtxQAy2pcPv6Z5k7uAYf/Ea5AMqq1nCrJIFpL4N/Go8xxyzFnUGMSg==
-X-Received: by 2002:a17:902:aa08:: with SMTP id be8mr2964869plb.144.1565848898432;
-        Wed, 14 Aug 2019 23:01:38 -0700 (PDT)
-Received: from localhost.localdomain ([110.225.3.176])
-        by smtp.gmail.com with ESMTPSA id e6sm1860879pfl.37.2019.08.14.23.01.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 23:01:38 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] bus: arm-cci: Add of_node_put() before break
-Date:   Thu, 15 Aug 2019 11:31:27 +0530
-Message-Id: <20190815060127.2400-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Thu, 15 Aug 2019 02:06:07 -0400
+Received: from mga18.intel.com ([134.134.136.126]:40175 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725977AbfHOGGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 02:06:07 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 23:06:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,388,1559545200"; 
+   d="scan'208";a="181785528"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga006.jf.intel.com with ESMTP; 14 Aug 2019 23:06:03 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Vicente Bergas <vicencb@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: kexec on rk3399
+In-Reply-To: <59055782-7fc2-4b16-af8b-a56fb845a43f@gmail.com>
+References: <ebcb52be-2063-4e2c-9a09-fdcacb94f855@gmail.com> <c6993a1e-6fc2-44ab-b59e-152142e2ff4d@gmail.com> <0408cb6c-1b16-eacb-d47e-17f4ff89e2b8@arm.com> <59055782-7fc2-4b16-af8b-a56fb845a43f@gmail.com>
+Date:   Thu, 15 Aug 2019 09:06:02 +0300
+Message-ID: <87pnl7t12t.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each iteration of for_each_child_of_node puts the previous node, but
-in the case of a break from the middle of the loop, there is no put,
-thus causing a memory leak. Add an of_node_put before the break.
-Issue found with Coccinelle.
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/bus/arm-cci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Hi,
 
-diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-index b8184a903583..1f84a5528073 100644
---- a/drivers/bus/arm-cci.c
-+++ b/drivers/bus/arm-cci.c
-@@ -461,8 +461,10 @@ static int cci_probe_ports(struct device_node *np)
+Vicente Bergas <vicencb@gmail.com> writes:
+
+> On Wednesday, August 14, 2019 3:12:26 PM CEST, Robin Murphy wrote:
+>> On 14/08/2019 13:53, Vicente Bergas wrote:
+>>> On Monday, July 22, 2019 4:31:27 PM CEST, Vicente Bergas wrote: ...
+>>
+>> This particular change looks like it's implicitly specific to 
+>> RK3399, which wouldn't be ideal. Presumably if the core dwc3 
+>> driver implemented shutdown correctly (echoing parts of 
+>> dwc3_remove(), I guess) then the glue layers shouldn't need 
+>> anything special anyway.
+>>
+>> Robin.
+>
+> I just checked simple->resets from dwc3-of-simple.c and it is an array
+> with multiple resets whereas dwc->reset from core.c is NULL.
+> So the reset seems specific to the glue layers.
+> Is there another way than resetting the thing that is
+> generic enough to go to core.c and allows kexec?
+
+This is a really odd 'failure'. We do full soft reset during driver
+initialization on dwc3. We shouldn't need to assert reset on shutdown,
+really.
+
+I think the problem is here:
+
+	if (simple->pulse_resets) {
+		ret = reset_control_reset(simple->resets);
+		if (ret)
+			goto err_resetc_put;
+	} else {
+		ret = reset_control_deassert(simple->resets);
+		if (ret)
+			goto err_resetc_put;
+	}
+
+Note that if pulse_resets is set, we will run a reset. But if
+pulse_resets is false and need_reset is true, we deassert the reset.
+
+I think below patch is enough:
+
+diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
+index bdac3e7d7b18..9a2f3e09aa2e 100644
+--- a/drivers/usb/dwc3/dwc3-of-simple.c
++++ b/drivers/usb/dwc3/dwc3-of-simple.c
+@@ -72,7 +72,15 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
+ 		ret = reset_control_reset(simple->resets);
+ 		if (ret)
+ 			goto err_resetc_put;
+-	} else {
++	}
++
++	if (simple->need_reset) {
++		ret = reset_control_assert(simple->resets);
++		if (ret)
++			goto err_resetc_put;
++
++		usleep_range(1000, 2000);
++
+ 		ret = reset_control_deassert(simple->resets);
+ 		if (ret)
+ 			goto err_resetc_put;
+@@ -121,9 +129,6 @@ static int dwc3_of_simple_remove(struct platform_device *pdev)
+ 	clk_bulk_put_all(simple->num_clocks, simple->clks);
+ 	simple->num_clocks = 0;
  
- 		i = nb_ace + nb_ace_lite;
+-	if (!simple->pulse_resets)
+-		reset_control_assert(simple->resets);
+-
+ 	reset_control_put(simple->resets);
  
--		if (i >= nb_cci_ports)
-+		if (i >= nb_cci_ports) {
-+			of_node_put(cp);
- 			break;
-+		}
- 
- 		if (of_property_read_string(cp, "interface-type",
- 					&match_str)) {
+ 	pm_runtime_disable(dev);
+
+Can you test?
+
 -- 
-2.19.1
-
+balbi
