@@ -2,98 +2,92 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C08BC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D9DC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53CEE21743
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2102F218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:36:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jPedfFTQ"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cR17bCeA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731095AbfHOIfr (ORCPT
+        id S1730821AbfHOIgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 04:35:47 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40954 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731076AbfHOIfp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 04:35:45 -0400
-Received: by mail-lf1-f67.google.com with SMTP id b17so1143647lff.7
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 01:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LckeMEL++L98xkE6bRHUomn8itgtRqdrAYiiSW7aPt8=;
-        b=jPedfFTQpgM6N16VFCMmcxfHRcTAvQLEVyl2L+pi2uNbG2bAZTYPJy6zsyYd/zsq75
-         qLGM6kd/VOPA6/+zGy4f2K6XHTk26IBdEHY/QLWxecOs/9lvtdbmOJfZwKIQJ7DlE+sE
-         YPADIXmnziNit+bcqcv1rMbb3OPAfelMCc27OtpaNVFdT2cms0GzvMd1b8R0vzNSkYZj
-         89bhsFLRmjCXBeGnfb0+txiyL5JPTobZE1xPE4SJnCl4HZqvVhB6UcxWPwOK7DObetSQ
-         fffSbk6TjILxq9Q88zUiRn1VeY8FagM25tADUr0X8nG874svkQvTRhpsxvLxr4M5G22L
-         rQ2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LckeMEL++L98xkE6bRHUomn8itgtRqdrAYiiSW7aPt8=;
-        b=YX9gPKQxB9D00cjLgOQnB6McTa7F56Bshop0R3DomHI31IzSKkR4sZtvBPlnc+ejoV
-         8n55QK95Ys2ZBrmk/Kd6xWUUTg7mj1I4g6JOuNgrngJwLj0pxqVP4yltzDzMJhFTOLIg
-         dZc1E4PWaOWAoekeE4JUSYW1zUBPYiAJHH5rxl60SfSU2ufgNvo9kY9TE0yinbG6mhrJ
-         ib5ZHFfzizn0Gzc1YE/PnB2j+f1pHXWlSiE0s5+B2sf3jCEhE/fRgl1GL9yWkRbEJL8p
-         m5dwR0ZqB/18m+QJsivHNVEZMjcCOXqsbVriRQr4LhDWldetDc2pXdKPBgB/m3nlBC4n
-         8Hzg==
-X-Gm-Message-State: APjAAAVGzJwHn746mDpbNoZM3eSjjjEw6y2RKRyWmY2QqxWBnaR3Hg0z
-        oDNkfAoGJWGsvoCgVQkmeZGekDjVI7PLzdhjF/cF+Q==
-X-Google-Smtp-Source: APXvYqwK1EXF1OlxOI1zDtBRCI1LlnDOnp15wcax8wzG7tnNStvRwTaXt1N5txPI2Ni93wI6DJH8/9XBc1qmOdGdFeU=
-X-Received: by 2002:a19:ed11:: with SMTP id y17mr1783154lfy.141.1565858143676;
- Thu, 15 Aug 2019 01:35:43 -0700 (PDT)
+        Thu, 15 Aug 2019 04:36:54 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:38020 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725875AbfHOIgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 04:36:53 -0400
+Received: from zn.tnic (p200300EC2F0B5200DD69E9E370CF27BC.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:5200:dd69:e9e3:70cf:27bc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6FBFF1EC0716;
+        Thu, 15 Aug 2019 10:36:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565858212;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=bir8kfrFAU0YOr+52ulKaVBapWTLDDk20LurJeUAdC8=;
+        b=cR17bCeABBpDdIUzGc7YWd3uwXYEqWuXVxZSIGpZxPyjxaOtJETk/yQyBBZIk5VU14SnmH
+        hQgq/7GUbGaYt7oXzdie9cBhCkUQ/3pb1v8i3yjmrlHRIlFPZkELPExF8QoyGsysYvjba4
+        spjxZTU9DvRF7hi3vacAOGoidznER+c=
+Date:   Thu, 15 Aug 2019 10:37:37 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 03/28] x86/asm: annotate relocate_kernel
+Message-ID: <20190815083737.GD15313@zn.tnic>
+References: <20190808103854.6192-1-jslaby@suse.cz>
+ <20190808103854.6192-4-jslaby@suse.cz>
 MIME-Version: 1.0
-References: <20190815004854.19860-1-masneyb@onstation.org> <20190815004854.19860-9-masneyb@onstation.org>
-In-Reply-To: <20190815004854.19860-9-masneyb@onstation.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 15 Aug 2019 10:35:31 +0200
-Message-ID: <CACRpkdavMPW1gv8jGUJb-48+=9XCmT=_bsMQFEx3Tk06aQNcAA@mail.gmail.com>
-Subject: Re: [PATCH 08/11] drm/msm/hdmi: silence -EPROBE_DEFER warning
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190808103854.6192-4-jslaby@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 2:49 AM Brian Masney <masneyb@onstation.org> wrote:
+On Thu, Aug 08, 2019 at 12:38:29PM +0200, Jiri Slaby wrote:
+> There are functions in relocate_kernel which are not annotated. This
+					^
+					_{32,64}.c
 
-> Silence a warning message due to an -EPROBE_DEFER error to help cleanup
-> the system boot log.
->
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> makes automatic annotations rather hard. So annotate all the functions
+> now.
+> 
+> Note that these are not C-like functions, so we do not use FUNC, but
+> CODE markers. Also they are not aligned, so we use the NOALIGN versions:
+> - SYM_CODE_START_NOALIGN
+> - SYM_CODE_START_LOCAL_NOALIGN
+> - SYM_CODE_END
+> 
+> In return, we get:
+>   0000   108 NOTYPE  GLOBAL DEFAULT    1 relocate_kernel
+>   006c   165 NOTYPE  LOCAL  DEFAULT    1 identity_mapped
+>   0146   127 NOTYPE  LOCAL  DEFAULT    1 swap_pages
+>   0111    53 NOTYPE  LOCAL  DEFAULT    1 virtual_mapped
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+It would be cool if those NOTYPE objects could be marked as OS-specific:
 
-Yours,
-Linus Walleij
+From /usr/include/elf.h:
+
+#define STT_LOOS        10              /* Start of OS-specific */
+
+to denote that they're special but gas doesn't seem to support that type
+out of the box at least.
+
+Oh well...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
