@@ -2,58 +2,109 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23596C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFCFC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C3D2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32BCF2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:46:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733163AbfHOTpX (ORCPT
+        id S1733189AbfHOTqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 15:45:23 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:49240 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729843AbfHOTpW (ORCPT
+        Thu, 15 Aug 2019 15:46:38 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39855 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733171AbfHOTqh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 15:45:22 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 35C7614013D5B;
-        Thu, 15 Aug 2019 12:45:22 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 12:45:21 -0700 (PDT)
-Message-Id: <20190815.124521.638274291598387510.davem@davemloft.net>
-To:     wenwen@cs.uga.edu
-Cc:     christopher.lee@cspi.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: myri10ge: fix memory leaks
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1565764719-6488-1-git-send-email-wenwen@cs.uga.edu>
-References: <1565764719-6488-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 15 Aug 2019 12:45:22 -0700 (PDT)
+        Thu, 15 Aug 2019 15:46:37 -0400
+Received: by mail-qk1-f196.google.com with SMTP id 125so2798256qkl.6;
+        Thu, 15 Aug 2019 12:46:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KdkqCNrsYGZD/efIVrpgf4pItvwMxmRiBzolCMfFZmI=;
+        b=QCa/Cdo4uDI2awDb2aD6tAFyu11TJDCYhTcqQbD8Xo6Symdikzf7+T+rvJtn31iMfg
+         FU1TEjcJum2g9L01GfgAFpeDSjj363lsonsh/bMa1pqmEt2eefHR2V/OVF0JBvBtWYJR
+         1K3OlC5F2z9JKHOHkMoc+6iJLoeM3tyCMt3ABZTHv6uEn2lKDvyxNTp22ZGLbpvnpR+f
+         7VK2/tkDQMNkQ3DTUEeGaocILjz2PqB9Nd+LH73ITfyV5/ESNQ0mhXppbK/xpRv2duIX
+         X4Ua5OqSCikh38vaYWVVOTkaoCDewiou1r2MKg/KKlKltUSWjFhYURD3Os4hApAfy9jt
+         EjZw==
+X-Gm-Message-State: APjAAAW8h6hAksu+q45zOEHNOm9byTP9rNF5LYjLBUFh8riv0v8ItSbF
+        SeQGSFvMJHK5ZI5+c1WpQn7zsZkAah6F/h5q+aE=
+X-Google-Smtp-Source: APXvYqy13T7uVMDYpTqi18IlN7TrofLdgzVCO7AjQuCbroE3LCMOg++BJL4RQskx1N+5yUUInsGdvvlV44WsYbx1mWQ=
+X-Received: by 2002:a05:620a:b:: with SMTP id j11mr5687756qki.352.1565898396389;
+ Thu, 15 Aug 2019 12:46:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190814204259.120942-1-arnd@arndb.de> <20190814204259.120942-2-arnd@arndb.de>
+ <20190814213753.GP6129@dread.disaster.area> <20190815071314.GA6960@infradead.org>
+ <CAK8P3a2Hjfd49XY18cDr04ZpvC5ZBGudzxqpCesbSsDf1ydmSA@mail.gmail.com>
+ <20190815080211.GA17055@infradead.org> <20190815102649.GA10821@infradead.org>
+ <20190815121511.GR6129@dread.disaster.area> <20190815140355.GA11012@infradead.org>
+ <CAK8P3a1iNu7m=gy-NauXVBky+cBk8TPWwfWXO4gSw1mRPJefJA@mail.gmail.com> <20190815192827.GE15186@magnolia>
+In-Reply-To: <20190815192827.GE15186@magnolia>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 15 Aug 2019 21:46:20 +0200
+Message-ID: <CAK8P3a2XCKF2W3ktF+DBeatarA_ALoVuGh=qGaNA+PqX1OSBog@mail.gmail.com>
+Subject: Re: [PATCH v5 01/18] xfs: compat_ioctl: use compat_ptr()
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Brian Foster <bfoster@redhat.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Nick Bowler <nbowler@draconx.ca>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Dave Chinner <dchinner@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
-Date: Wed, 14 Aug 2019 01:38:39 -0500
+On Thu, Aug 15, 2019 at 9:28 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+>
+> On Thu, Aug 15, 2019 at 09:20:32PM +0200, Arnd Bergmann wrote:
+> > On Thu, Aug 15, 2019 at 4:04 PM Christoph Hellwig <hch@infradead.org> wrote:
+> > >
+> > > On Thu, Aug 15, 2019 at 10:15:12PM +1000, Dave Chinner wrote:
+> > > > > http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-ioctl-table
+> > > >
+> > > > Lots to like in that handful of patches. :)
+> > > >
+> > > > It can easily go before or after Arnd's patch, and the merge
+> > > > conflict either way would be minor, so I'm not really fussed either
+> > > > way this gets sorted out...
+> > >
+> > > The other thing we could do is to just pick the two important ones:
+> > >
+> > > http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-ioctl-table-5.3
+> > >
+> > > and throw that into Arnds series, or even 5.3, and then defer the
+> > > table thing until later.
+> >
+> > If we can have your "xfs: fall back to native ioctls for unhandled compat
+> > ones" in 5.3, that would be ideal from my side, then I can just drop the
+> > corresponding patch from my series and have the rest merged for 5.4.
+> >
+> > The compat_ptr addition is independent of my series, I just added it
+> > because I noticed it was missing, so we can merged that through
+> > the xfs tree along with your other changes, either for 5.3 or 5.4.
+>
+> Er... do the two patches in the -5.3 branch actually fix something
+> that's broken?  I sense s390 is missing a pointer sanitization check or
+> something...?
 
-> In myri10ge_probe(), myri10ge_alloc_slices() is invoked to allocate slices
-> related structures. Later on, myri10ge_request_irq() is used to get an irq.
-> However, if this process fails, the allocated slices related structures are
-> not deallocated, leading to memory leaks. To fix this issue, revise the
-> target label of the goto statement to 'abort_with_slices'.
-> 
-> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+s390 is indeed missing the pointer conversion, the other patch
+adds compat ioctl support for FS_IOC_GETFSLABEL and
+FS_IOC_SETFSLABEL, which were missing, and it ensures that
+FITRIM keeps working after I remove it from the list in
+fs/compat_ioctl.c
 
-Applied, thanks.
+       Arnd
