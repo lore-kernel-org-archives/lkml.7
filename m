@@ -2,170 +2,319 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5221C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94077C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 912A22083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5856B205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:21:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="X/azAbIj";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="JS7mDC55"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FqJsEUX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387728AbfHOXUT (ORCPT
+        id S2387738AbfHOXVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 19:20:19 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:7160 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731922AbfHOXUS (ORCPT
+        Thu, 15 Aug 2019 19:21:43 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41073 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731980AbfHOXVn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 19:20:18 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7FNK4M1022921;
-        Thu, 15 Aug 2019 16:20:09 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=HXL8Amq4HIBrgJm+yjAOcskRNrxOUrE00wAmAadIaIg=;
- b=X/azAbIjWLRdFLoG+jGkO+BJll99TYi7LHQuFH5JDF2NO3OdLU5dwoXb3lhSJuHCump3
- X23rvIB4Ur0DwIeybZvlrzE3Fm5gG62EEGdbLJeozupkibfnVBYq8FOOoolS3rExIGi6
- kO84tP5TrTUUSnyK2JQGzafmWkHlKuou/oc= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2udemsrmq7-6
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 15 Aug 2019 16:20:08 -0700
-Received: from ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) by
- ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 15 Aug 2019 16:19:49 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 15 Aug 2019 16:19:49 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dzPU2NreAiNVNAfAjZggew7ezLFr34oEt0AllAihR76Ii47aVIyQ/fKIPXgeErRE5UbEreO50mhY1hvQ8NeVkkNNvqaLxsGt7dIO3BJ9ZL+7MobHAB9x1fI/0GzQ5XdICoqLejT6GnIkALqvETvwNe5g1vunsmcByZ+HUjeTud8m+ohacaAQ8APyH8tb5aCtbxlqDqHIA/bDPj9zWFPCBITXQWxWzYtKx8XzV5FQJHwLst1K4h0UdexBI/17NodaiReqAqem9w9B8woei99C3hYjXRLN5N23fVl2YONNl4LmYQJbz5oTcOZx6MyZcMRW6CZkNyvTo+2L8zU1Azb+Gw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HXL8Amq4HIBrgJm+yjAOcskRNrxOUrE00wAmAadIaIg=;
- b=hcqomFymrKgEDTudPuP5PMrLgxBsjF7T9U47J7E7mR1NhMs5U5k/uXZcW88XMpCHI1Cqm17B3/pN7sYT3JmYC8cVXLVCXQ5sjw7QGx026Zy44N+W7H/gXtw9O9v83UzcVEmkTZGcgaUTzzFsJeqdyUpIdWWXT+BmpyABkRej6x858lGaJ4DwHxP9lXEEGg22UiurONiQmbVAlgYb9WmBRatNrPdtFCkza8K86Q+hujp8yEs5PdPt/uUKEwAT+7XwTADXIGJJByHUqP5DabHbyfrwZP81bhA0fiIZUFNRBqvXgxBYP5pd5pG/ZrLMsRc0qad01M9AhzVKZ+NeybKW2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HXL8Amq4HIBrgJm+yjAOcskRNrxOUrE00wAmAadIaIg=;
- b=JS7mDC559VaBTALJ4bOaOXtlE4NhHNj69Cfx/4OAFs3IE1ScAJuw5WJY5rWodaSPLQpG7a423RUN9pGMzEAeluU9vGLYikorjIppore+9B/43G0IJP1ccHb9E/1eKAUjZIEkzZsvtq070Yxt6Cu4zITzImY01VtBnTeu5zBCypI=
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com (10.175.2.17) by
- MWHPR15MB1856.namprd15.prod.outlook.com (10.174.255.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Thu, 15 Aug 2019 23:19:30 +0000
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::2971:619a:860e:b6cc]) by MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::2971:619a:860e:b6cc%2]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
- 23:19:30 +0000
-From:   Tao Ren <taoren@fb.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-CC:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH net-next v7 3/3] net: phy: broadcom: add 1000Base-X
- support for BCM54616S
-Thread-Topic: [PATCH net-next v7 3/3] net: phy: broadcom: add 1000Base-X
- support for BCM54616S
-Thread-Index: AQHVUJ5qOj7KTUEtsUuopmpFoA8EiKb8Z2AAgAB1/ICAAAEqgA==
-Date:   Thu, 15 Aug 2019 23:19:29 +0000
-Message-ID: <d481e56e-cf6d-ffd2-e6c5-71e0c29ac8b7@fb.com>
-References: <20190811234016.3674056-1-taoren@fb.com>
- <fee3faa1-2de1-b480-983e-07f4587f2f79@fb.com>
- <CA+h21hr-uiCAQTXerg8ScKhnVhT15pM70m_Jw_f=gZrt1DCRkw@mail.gmail.com>
-In-Reply-To: <CA+h21hr-uiCAQTXerg8ScKhnVhT15pM70m_Jw_f=gZrt1DCRkw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR07CA0069.namprd07.prod.outlook.com
- (2603:10b6:a03:60::46) To MWHPR15MB1216.namprd15.prod.outlook.com
- (2603:10b6:320:22::17)
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::3:70f6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2cb6e340-e5a3-4abb-c46c-08d721d705ef
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1856;
-x-ms-traffictypediagnostic: MWHPR15MB1856:
-x-microsoft-antispam-prvs: <MWHPR15MB18566722AD8C0A28480D5C65B2AC0@MWHPR15MB1856.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01304918F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(396003)(136003)(39860400002)(346002)(189003)(199004)(486006)(25786009)(81156014)(6116002)(6486002)(66946007)(446003)(86362001)(81166006)(7416002)(476003)(2616005)(66446008)(64756008)(66556008)(66476007)(53546011)(6506007)(386003)(6436002)(11346002)(99286004)(1411001)(6916009)(52116002)(76176011)(305945005)(5660300002)(7736002)(6246003)(4326008)(102836004)(2906002)(36756003)(229853002)(71190400001)(58126008)(8936002)(6512007)(71200400001)(54906003)(31686004)(14454004)(53936002)(316002)(31696002)(65956001)(186003)(256004)(64126003)(65806001)(65826007)(46003)(478600001)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1856;H:MWHPR15MB1216.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: JpSN2EhXYlp0IZoouEFqhAzwRPrYnjGTQCXy0AH5z0Soz8g3eEU694W6g1BeKj17r1vi5SLc7hichJYuYbFsw6vkeNar5eHnWrO9/ByIc1fNtWghEsg2Dtf8H+x6fF7SGYy+CRTV45soPcVy2vqVzvG/03YedBWuFOEdcfiTXQ1CS3lHL07Bi49NIEAqT9h5wMv3kXrjmUAMQnR26tYNuSXIjsDv1utaPH9S4TvmQ/fIHxYMW8Arfob3lUrK///Pyq8s4VpuUXYLdPcARA1kyvhvX/CY2rHIu3Lr5jBSHv/wYIz+E0cuutzLNfFzAxXps6AD34Y0oYKBKXgLF+fKyEb02VozLx6qp70GXSUUdVGG0I0O09FJfGFbz9shm1QalfK1eLlPPch5SPiQnBU65ue9gXUcQLXcq+qqxbUDqOg=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <19C99019696A7E4DA76E3696B2A9CCB3@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 15 Aug 2019 19:21:43 -0400
+Received: by mail-ot1-f66.google.com with SMTP id o101so7978945ota.8
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 16:21:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dKki/EwYrEwHcUw/EYpE1A8bRtkdaIPBT0A+rYW833k=;
+        b=FqJsEUX9p2wJpt0QFo4kVRltYAd4kE8/zf05Glq1awj72YkDCwC7a2k5uFBU8npGFL
+         QfYnI4GpcsTnPpFAbdygnd05TGAIKRFnqfDyPf1s8A8s3zdt06ymK68sFO94ObOkpukU
+         f77EXc5p++cCSZo5EWrNoeATWln0Aon7ESr2igTXrlIW7h2UxzLx5qRdXCFUd+4L2mqR
+         0/HdgDUqKqKE+TmIdJqJojMsY54IVcR3kezx3rZzTLHkwY9BGRmvU4vruBdo+LjP1GQD
+         hjbEkdLrRtnI/f1w+2MFsO7qmpaMyEaSQV6lNZZ6u9vW6V232fdmmy18YUIlZyySIxwF
+         BXOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dKki/EwYrEwHcUw/EYpE1A8bRtkdaIPBT0A+rYW833k=;
+        b=An4rTJJQATnQYNFaPexVGuc/JLauPg8VpbaKOPNFrFH6ntoOR66s489f03DL7I74on
+         4XTp29MJbg6FoxHkKysEdo4pEQ80m2BFnIWuzE4hktjvm42lxV5NL3hCARMoGqn3c6UN
+         bgGwFiaDn0du0dQgudTA0+jMiNV2pZN9RYr/K00i5p0lmr/2z0QY+v6IQONerXm7otPu
+         +2rmu1eyTqHkpVmLZ95lejdDExYzI5xVC1nHsgFbq77u8nfeIdfW90xmT6ekec+AW63s
+         fRrrzW3+717aOyqaLn6rPzaiIERvQYI6bLeXXsUtkVUD+ObY8/XBdSInB5+X2qQJuIa2
+         eY9g==
+X-Gm-Message-State: APjAAAWd/3idi7P1eGj3eU7qBNif8R+8ihnaFxLJykW1qKk1BPmzWC3h
+        21qNP429AB15RA1v8StNAltUbHn7dndGiIwmvR4VVA==
+X-Google-Smtp-Source: APXvYqxSjZHhbV1aP2RGVVFy2EPRPYaaT1UXVhJW6VhVjBobqiJVhmRI6Ldx53tmxKJWmjGthsUVUJgqdFvYe2CWjjc=
+X-Received: by 2002:a9d:6508:: with SMTP id i8mr5532464otl.355.1565911301709;
+ Thu, 15 Aug 2019 16:21:41 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2cb6e340-e5a3-4abb-c46c-08d721d705ef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 23:19:29.9878
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0gSbmeQYNb+Necv7/A9nDfYdukhmSgkcZi1n7GZUUYzxhqDuT9DQNd021Q1glZmq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1856
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-15_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=653 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908150223
-X-FB-Internal: deliver
+References: <20190808231340.53601-1-almasrymina@google.com> <20190815035352.14952-1-hdanton@sina.com>
+In-Reply-To: <20190815035352.14952-1-hdanton@sina.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Thu, 15 Aug 2019 16:21:30 -0700
+Message-ID: <CAHS8izP5dJsDmLuL14q8aJS_hhd1svq1FPpTNL+qKW8+6mm76g@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/5] hugetlb_cgroup: Add hugetlb_cgroup reservation counter
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>, shuah <shuah@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>, akpm@linux-foundation.org,
+        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOC8xNS8xOSA0OjE1IFBNLCBWbGFkaW1pciBPbHRlYW4gd3JvdGU6DQo+IEhpIFRhbywNCj4g
-DQo+IE9uIEZyaSwgMTYgQXVnIDIwMTkgYXQgMDI6MTMsIFRhbyBSZW4gPHRhb3JlbkBmYi5jb20+
-IHdyb3RlOg0KPj4NCj4+IEhpIEFuZHJldyAvIEZsb3JpYW4gLyBIZWluZXIgLyBWbGFkaW1pciwN
-Cj4+DQo+PiBBbnkgZnVydGhlciBzdWdnZXN0aW9ucyBvbiB0aGUgcGF0Y2ggc2VyaWVzPw0KPj4N
-Cj4+DQo+PiBUaGFua3MsDQo+Pg0KPj4gVGFvDQo+Pg0KPj4gT24gOC8xMS8xOSA0OjQwIFBNLCBU
-YW8gUmVuIHdyb3RlOg0KPj4+IFRoZSBCQ001NDYxNlMgUEhZIGNhbm5vdCB3b3JrIHByb3Blcmx5
-IGluIFJHTUlJLT4xMDAwQmFzZS1YIG1vZGUsIG1haW5seQ0KPj4+IGJlY2F1c2UgZ2VucGh5IGZ1
-bmN0aW9ucyBhcmUgZGVzaWduZWQgZm9yIGNvcHBlciBsaW5rcywgYW5kIDEwMDBCYXNlLVgNCj4+
-PiAoY2xhdXNlIDM3KSBhdXRvIG5lZ290aWF0aW9uIG5lZWRzIHRvIGJlIGhhbmRsZWQgZGlmZmVy
-ZW50bHkuDQo+Pj4NCj4+PiBUaGlzIHBhdGNoIGVuYWJsZXMgMTAwMEJhc2UtWCBzdXBwb3J0IGZv
-ciBCQ001NDYxNlMgYnkgY3VzdG9taXppbmcgMw0KPj4+IGRyaXZlciBjYWxsYmFja3MsIGFuZCBp
-dCdzIHZlcmlmaWVkIHRvIGJlIHdvcmtpbmcgb24gRmFjZWJvb2sgQ01NIEJNQw0KPj4+IHBsYXRm
-b3JtIChSR01JSS0+MTAwMEJhc2UtS1gpOg0KPj4+DQo+Pj4gICAtIHByb2JlOiBwcm9iZSBjYWxs
-YmFjayBkZXRlY3RzIFBIWSdzIG9wZXJhdGlvbiBtb2RlIGJhc2VkIG9uDQo+Pj4gICAgIElOVEVS
-Rl9TRUxbMTowXSBwaW5zIGFuZCAxMDAwWC8xMDBGWCBzZWxlY3Rpb24gYml0IGluIFNlckRFUyAx
-MDAtRlgNCj4+PiAgICAgQ29udHJvbCByZWdpc3Rlci4NCj4+Pg0KPj4+ICAgLSBjb25maWdfYW5l
-ZzogY2FsbHMgZ2VucGh5X2MzN19jb25maWdfYW5lZyB3aGVuIHRoZSBQSFkgaXMgcnVubmluZyBp
-bg0KPj4+ICAgICAxMDAwQmFzZS1YIG1vZGU7IG90aGVyd2lzZSwgZ2VucGh5X2NvbmZpZ19hbmVn
-IHdpbGwgYmUgY2FsbGVkLg0KPj4+DQo+Pj4gICAtIHJlYWRfc3RhdHVzOiBjYWxscyBnZW5waHlf
-YzM3X3JlYWRfc3RhdHVzIHdoZW4gdGhlIFBIWSBpcyBydW5uaW5nIGluDQo+Pj4gICAgIDEwMDBC
-YXNlLVggbW9kZTsgb3RoZXJ3aXNlLCBnZW5waHlfcmVhZF9zdGF0dXMgd2lsbCBiZSBjYWxsZWQu
-DQo+Pj4NCj4+PiBOb3RlOiBCQ001NDYxNlMgUEhZIGNhbiBhbHNvIGJlIGNvbmZpZ3VyZWQgaW4g
-UkdNSUktPjEwMEJhc2UtRlggbW9kZSwgYW5kDQo+Pj4gMTAwQmFzZS1GWCBzdXBwb3J0IGlzIG5v
-dCBhdmFpbGFibGUgYXMgb2Ygbm93Lg0KPj4+DQo+Pj4gU2lnbmVkLW9mZi1ieTogVGFvIFJlbiA8
-dGFvcmVuQGZiLmNvbT4NCj4+PiAtLS0NCj4gDQo+IFRoZSBwYXRjaHNldCBsb29rcyBnb29kIHRv
-IG1lLiBIb3dldmVyIEkgYW0gbm90IGEgbWFpbnRhaW5lci4NCj4gSWYgaXQgaGVscHMsDQo+IA0K
-PiBBY2tlZC1ieTogVmxhZGltaXIgT2x0ZWFuIDxvbHRlYW52QGdtYWlsLmNvbT4NCg0KVGhhbmsg
-eW91IFZsYWRpbWlyIQ0KDQoNCkNoZWVycywNCg0KVGFvDQo=
+On Wed, Aug 14, 2019 at 8:54 PM Hillf Danton <hdanton@sina.com> wrote:
+>
+>
+> On Thu,  8 Aug 2019 16:13:36 -0700 Mina Almasry wrote:
+> >
+> > These counters will track hugetlb reservations rather than hugetlb
+> > memory faulted in. This patch only adds the counter, following patches
+> > add the charging and uncharging of the counter.
+> > ---
+>
+>   !?!
+>
+
+Thanks for reviewing. I'm not sure what you're referring to though.
+What's wrong here?
+
+> >  include/linux/hugetlb.h |  2 +-
+> >  mm/hugetlb_cgroup.c     | 86 +++++++++++++++++++++++++++++++++++++----
+> >  2 files changed, 80 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+> > index edfca42783192..6777b3013345d 100644
+> > --- a/include/linux/hugetlb.h
+> > +++ b/include/linux/hugetlb.h
+> > @@ -340,7 +340,7 @@ struct hstate {
+> >       unsigned int surplus_huge_pages_node[MAX_NUMNODES];
+> >  #ifdef CONFIG_CGROUP_HUGETLB
+> >       /* cgroup control files */
+> > -     struct cftype cgroup_files[5];
+> > +     struct cftype cgroup_files[9];
+>
+> Move that enum in this header file and replace numbers with characters
+> to easy both reading and maintaining.
+> >  #endif
+> >       char name[HSTATE_NAME_LEN];
+> >  };
+> > diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
+> > index 68c2f2f3c05b7..708103663988a 100644
+> > --- a/mm/hugetlb_cgroup.c
+> > +++ b/mm/hugetlb_cgroup.c
+> > @@ -25,6 +25,10 @@ struct hugetlb_cgroup {
+> >        * the counter to account for hugepages from hugetlb.
+> >        */
+> >       struct page_counter hugepage[HUGE_MAX_HSTATE];
+> > +     /*
+> > +      * the counter to account for hugepage reservations from hugetlb.
+> > +      */
+> > +     struct page_counter reserved_hugepage[HUGE_MAX_HSTATE];
+> >  };
+> >
+> >  #define MEMFILE_PRIVATE(x, val)      (((x) << 16) | (val))
+> > @@ -33,6 +37,15 @@ struct hugetlb_cgroup {
+> >
+> >  static struct hugetlb_cgroup *root_h_cgroup __read_mostly;
+> >
+> > +static inline
+> > +struct page_counter *get_counter(struct hugetlb_cgroup *h_cg, int idx,
+> > +                              bool reserved)
+>
+> s/get_/hugetlb_cgroup_get_/ to make it not too generic.
+> > +{
+> > +     if (reserved)
+> > +             return  &h_cg->reserved_hugepage[idx];
+> > +     return &h_cg->hugepage[idx];
+> > +}
+> > +
+> >  static inline
+> >  struct hugetlb_cgroup *hugetlb_cgroup_from_css(struct cgroup_subsys_state *s)
+> >  {
+> > @@ -256,28 +269,42 @@ void hugetlb_cgroup_uncharge_cgroup(int idx, unsigned long nr_pages,
+> >
+> >  enum {
+> >       RES_USAGE,
+> > +     RES_RESERVATION_USAGE,
+> >       RES_LIMIT,
+> > +     RES_RESERVATION_LIMIT,
+> >       RES_MAX_USAGE,
+> > +     RES_RESERVATION_MAX_USAGE,
+> >       RES_FAILCNT,
+> > +     RES_RESERVATION_FAILCNT,
+> >  };
+> >
+> >  static u64 hugetlb_cgroup_read_u64(struct cgroup_subsys_state *css,
+> >                                  struct cftype *cft)
+> >  {
+> >       struct page_counter *counter;
+> > +     struct page_counter *reserved_counter;
+> >       struct hugetlb_cgroup *h_cg = hugetlb_cgroup_from_css(css);
+> >
+> >       counter = &h_cg->hugepage[MEMFILE_IDX(cft->private)];
+> > +     reserved_counter = &h_cg->reserved_hugepage[MEMFILE_IDX(cft->private)];
+> >
+> >       switch (MEMFILE_ATTR(cft->private)) {
+> >       case RES_USAGE:
+> >               return (u64)page_counter_read(counter) * PAGE_SIZE;
+> > +     case RES_RESERVATION_USAGE:
+> > +             return (u64)page_counter_read(reserved_counter) * PAGE_SIZE;
+> >       case RES_LIMIT:
+> >               return (u64)counter->max * PAGE_SIZE;
+> > +     case RES_RESERVATION_LIMIT:
+> > +             return (u64)reserved_counter->max * PAGE_SIZE;
+> >       case RES_MAX_USAGE:
+> >               return (u64)counter->watermark * PAGE_SIZE;
+> > +     case RES_RESERVATION_MAX_USAGE:
+> > +             return (u64)reserved_counter->watermark * PAGE_SIZE;
+> >       case RES_FAILCNT:
+> >               return counter->failcnt;
+> > +     case RES_RESERVATION_FAILCNT:
+> > +             return reserved_counter->failcnt;
+> >       default:
+> >               BUG();
+> >       }
+> > @@ -291,6 +318,7 @@ static ssize_t hugetlb_cgroup_write(struct kernfs_open_file *of,
+> >       int ret, idx;
+> >       unsigned long nr_pages;
+> >       struct hugetlb_cgroup *h_cg = hugetlb_cgroup_from_css(of_css(of));
+> > +     bool reserved = false;
+> >
+> >       if (hugetlb_cgroup_is_root(h_cg)) /* Can't set limit on root */
+> >               return -EINVAL;
+> > @@ -303,10 +331,16 @@ static ssize_t hugetlb_cgroup_write(struct kernfs_open_file *of,
+> >       idx = MEMFILE_IDX(of_cft(of)->private);
+> >       nr_pages = round_down(nr_pages, 1 << huge_page_order(&hstates[idx]));
+> >
+> > +     if (MEMFILE_ATTR(of_cft(of)->private) == RES_RESERVATION_LIMIT) {
+> > +             reserved = true;
+> > +     }
+> > +
+> >       switch (MEMFILE_ATTR(of_cft(of)->private)) {
+> > +     case RES_RESERVATION_LIMIT:
+>                 reserved = true;
+>                 /* fall thru */
+>
+> >       case RES_LIMIT:
+> >               mutex_lock(&hugetlb_limit_mutex);
+> > -             ret = page_counter_set_max(&h_cg->hugepage[idx], nr_pages);
+> > +             ret = page_counter_set_max(get_counter(h_cg, idx, reserved),
+> > +                                        nr_pages);
+> >               mutex_unlock(&hugetlb_limit_mutex);
+> >               break;
+> >       default:
+> > @@ -320,18 +354,26 @@ static ssize_t hugetlb_cgroup_reset(struct kernfs_open_file *of,
+> >                                   char *buf, size_t nbytes, loff_t off)
+> >  {
+> >       int ret = 0;
+> > -     struct page_counter *counter;
+> > +     struct page_counter *counter, *reserved_counter;
+> >       struct hugetlb_cgroup *h_cg = hugetlb_cgroup_from_css(of_css(of));
+> >
+> >       counter = &h_cg->hugepage[MEMFILE_IDX(of_cft(of)->private)];
+> > +     reserved_counter = &h_cg->reserved_hugepage[
+> > +             MEMFILE_IDX(of_cft(of)->private)];
+> >
+> >       switch (MEMFILE_ATTR(of_cft(of)->private)) {
+> >       case RES_MAX_USAGE:
+> >               page_counter_reset_watermark(counter);
+> >               break;
+> > +     case RES_RESERVATION_MAX_USAGE:
+> > +             page_counter_reset_watermark(reserved_counter);
+> > +             break;
+> >       case RES_FAILCNT:
+> >               counter->failcnt = 0;
+> >               break;
+> > +     case RES_RESERVATION_FAILCNT:
+> > +             reserved_counter->failcnt = 0;
+> > +             break;
+> >       default:
+> >               ret = -EINVAL;
+> >               break;
+> > @@ -357,7 +399,7 @@ static void __init __hugetlb_cgroup_file_init(int idx)
+> >       struct hstate *h = &hstates[idx];
+> >
+> >       /* format the size */
+> > -     mem_fmt(buf, 32, huge_page_size(h));
+> > +     mem_fmt(buf, sizeof(buf), huge_page_size(h));
+> >
+> >       /* Add the limit file */
+> >       cft = &h->cgroup_files[0];
+> > @@ -366,28 +408,58 @@ static void __init __hugetlb_cgroup_file_init(int idx)
+> >       cft->read_u64 = hugetlb_cgroup_read_u64;
+> >       cft->write = hugetlb_cgroup_write;
+> >
+> > -     /* Add the usage file */
+> > +     /* Add the reservation limit file */
+> >       cft = &h->cgroup_files[1];
+> > +     snprintf(cft->name, MAX_CFTYPE_NAME, "%s.reservation_limit_in_bytes",
+> > +              buf);
+> > +     cft->private = MEMFILE_PRIVATE(idx, RES_RESERVATION_LIMIT);
+> > +     cft->read_u64 = hugetlb_cgroup_read_u64;
+> > +     cft->write = hugetlb_cgroup_write;
+> > +
+> > +     /* Add the usage file */
+> > +     cft = &h->cgroup_files[2];
+> >       snprintf(cft->name, MAX_CFTYPE_NAME, "%s.usage_in_bytes", buf);
+> >       cft->private = MEMFILE_PRIVATE(idx, RES_USAGE);
+> >       cft->read_u64 = hugetlb_cgroup_read_u64;
+> >
+> > +     /* Add the reservation usage file */
+> > +     cft = &h->cgroup_files[3];
+> > +     snprintf(cft->name, MAX_CFTYPE_NAME, "%s.reservation_usage_in_bytes",
+> > +                     buf);
+> > +     cft->private = MEMFILE_PRIVATE(idx, RES_RESERVATION_USAGE);
+> > +     cft->read_u64 = hugetlb_cgroup_read_u64;
+> > +
+> >       /* Add the MAX usage file */
+> > -     cft = &h->cgroup_files[2];
+> > +     cft = &h->cgroup_files[4];
+> >       snprintf(cft->name, MAX_CFTYPE_NAME, "%s.max_usage_in_bytes", buf);
+> >       cft->private = MEMFILE_PRIVATE(idx, RES_MAX_USAGE);
+> >       cft->write = hugetlb_cgroup_reset;
+> >       cft->read_u64 = hugetlb_cgroup_read_u64;
+> >
+> > +     /* Add the MAX reservation usage file */
+> > +     cft = &h->cgroup_files[5];
+> > +     snprintf(cft->name, MAX_CFTYPE_NAME,
+> > +                     "%s.reservation_max_usage_in_bytes", buf);
+> > +     cft->private = MEMFILE_PRIVATE(idx, RES_RESERVATION_MAX_USAGE);
+> > +     cft->write = hugetlb_cgroup_reset;
+> > +     cft->read_u64 = hugetlb_cgroup_read_u64;
+> > +
+> >       /* Add the failcntfile */
+> > -     cft = &h->cgroup_files[3];
+> > +     cft = &h->cgroup_files[6];
+> >       snprintf(cft->name, MAX_CFTYPE_NAME, "%s.failcnt", buf);
+> >       cft->private  = MEMFILE_PRIVATE(idx, RES_FAILCNT);
+> >       cft->write = hugetlb_cgroup_reset;
+> >       cft->read_u64 = hugetlb_cgroup_read_u64;
+> >
+> > +     /* Add the reservation failcntfile */
+> > +     cft = &h->cgroup_files[7];
+> > +     snprintf(cft->name, MAX_CFTYPE_NAME, "%s.reservation_failcnt", buf);
+> > +     cft->private  = MEMFILE_PRIVATE(idx, RES_FAILCNT);
+> > +     cft->write = hugetlb_cgroup_reset;
+> > +     cft->read_u64 = hugetlb_cgroup_read_u64;
+> > +
+> >       /* NULL terminate the last cft */
+> > -     cft = &h->cgroup_files[4];
+> > +     cft = &h->cgroup_files[8];
+> >       memset(cft, 0, sizeof(*cft));
+>
+> Replace numbers with characters.
+> >
+> >       WARN_ON(cgroup_add_legacy_cftypes(&hugetlb_cgrp_subsys,
+> > --
+> > 2.23.0.rc1.153.gdeed80330f-goog
+>
