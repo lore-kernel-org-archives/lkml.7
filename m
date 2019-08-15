@@ -2,190 +2,96 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569F8C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B8EC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19B412086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C567F2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 23:29:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565911778;
-	bh=z09KQTqOI+IV+jDADbs07zi7F0ekc5wG54z2cyDIZHE=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=FUXgx8yyQ8qq/FeI5oEFFO42D7kNiO4sjOu77lnRf9dJ1AD86QySwd7pf78SVfpEZ
-	 5taTe9khGQcXyhN7mngmWEtNhUMU6Igz3h/zOtbjnWEVESknueCZmVjQ6XMDH4txa6
-	 VnmT/EyMKi+U6ke0DnC0lKTpnVccEjTJYMjnphpE=
+	s=default; t=1565911793;
+	bh=UUdMem/EasFhb4Dfk05FjFveBpohgSiNrTN38IFMTeQ=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=1HwcQc0NtE875b7Gg7EQmrpTI5L8UFkU2wKtp9BDMfB7T4KjxQbt459gpVKxcD/XY
+	 6RAZHhRkjWaT32jImaBOpyU/KBAiLxkGXNCshJToDgjsGIDv6dJqX+7EuYtRQjJiET
+	 oEBOqLBLEiZOMV+biVw/Zk03wDjpZEL1XLO3bnyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbfHOX3g (ORCPT
+        id S1726067AbfHOX3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 19:29:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46948 "EHLO mail.kernel.org"
+        Thu, 15 Aug 2019 19:29:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728579AbfHOX3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 19:29:35 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725440AbfHOX3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 19:29:52 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9C61206C2;
-        Thu, 15 Aug 2019 23:29:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA402206C2;
+        Thu, 15 Aug 2019 23:29:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565911774;
-        bh=z09KQTqOI+IV+jDADbs07zi7F0ekc5wG54z2cyDIZHE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=LrE54f0xQ8mcNy2rlonCs6Orsy20gQT/XvJU42aw4yc8p3JHmwewI4g9A3uf+uXIg
-         Q2mCIE7fOnCe0uCKKYeGsBPjSkuoRRx3Jt/t5SuKQFfaLsaMaa5hF6wJq//vxr0B5l
-         CEC10gNUEzfDJIjkZJMi8MabiqX5XRlEkfK4u4XM=
-Subject: Re: [PATCHv6 35/36] selftests/timens: Add a simple perf test for
- clock_gettime()
-To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org, shuah <shuah@kernel.org>
-References: <20190815163836.2927-1-dima@arista.com>
- <20190815163836.2927-36-dima@arista.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <0992df9a-d3b3-5ca1-e1fd-b5d9d365b32e@kernel.org>
-Date:   Thu, 15 Aug 2019 17:29:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        s=default; t=1565911791;
+        bh=UUdMem/EasFhb4Dfk05FjFveBpohgSiNrTN38IFMTeQ=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=cfJ9mKIJWeIdXMeH4f51/xiWPrnLZ/QFwdEMi7GNTJysZFmqGa5ZBvZnYudct4+Em
+         0GbVgeMDcVG4oOG5fhnvU9VKqaCIkuYNBl/PQMa9aic7snRGH+hVR/5nLjC9bhOPrn
+         cr/yUJhQunmDeASMSZWRRYmrx6ettOs04pSg5jSQ=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190815163836.2927-36-dima@arista.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190815223155.21384-1-martin.blumenstingl@googlemail.com>
+References: <20190815223155.21384-1-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH RFC v1] clk: Fix potential NULL dereference in clk_fetch_parent_index()
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mturquette@baylibre.com,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-clk@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Thu, 15 Aug 2019 16:29:50 -0700
+Message-Id: <20190815232951.AA402206C2@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/15/19 10:38 AM, Dmitry Safonov wrote:
-> From: Andrei Vagin <avagin@gmail.com>
-> 
-> Signed-off-by: Andrei Vagin <avagin@gmail.com>
-> Co-developed-by: Dmitry Safonov <dima@arista.com>
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
+Quoting Martin Blumenstingl (2019-08-15 15:31:55)
+> Don't compare the parent clock name with a NULL name in the
+> clk_parent_map. This prevents a kernel crash when passing NULL
+> core->parents[i].name to strcmp().
+>=20
+> An example which triggered this is a mux clock with four parents when
+> each of them is referenced in the clock driver using
+> clk_parent_data.fw_name and then calling clk_set_parent(clk, 3rd_parent)
+> on this mux.
+> In this case the first parent is also the HW default so
+> core->parents[i].hw is populated when the clock is registered. Calling
+> clk_set_parent(clk, 3rd_parent) will then go through all parents and
+> skip the first parent because it's hw pointer doesn't match. For the
+> second parent no hw pointer is cached yet and clk_core_get(core, 1)
+> returns a non-matching pointer (which is correct because we are comparing
+> the second with the third parent). Comparing the result of
+> clk_core_get(core, 2) with the requested parent gives a match. However
+> we don't reach this point because right after the clk_core_get(core, 1)
+> mismatch the old code tried to !strcmp(parent->name, NULL) (where the
+> second argument is actually core->parents[i].name, but that was never
+> populated by the clock driver).
+>=20
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->   tools/testing/selftests/timens/.gitignore     |   2 +
->   tools/testing/selftests/timens/Makefile       |  10 +-
->   tools/testing/selftests/timens/gettime_perf.c | 101 +++++++++++
->   .../selftests/timens/gettime_perf_cold.c      | 160 ++++++++++++++++++
->   4 files changed, 271 insertions(+), 2 deletions(-)
->   create mode 100644 tools/testing/selftests/timens/gettime_perf.c
->   create mode 100644 tools/testing/selftests/timens/gettime_perf_cold.c
-> 
-> diff --git a/tools/testing/selftests/timens/.gitignore b/tools/testing/selftests/timens/.gitignore
-> index 3b7eda8f35ce..16292e4d08a5 100644
-> --- a/tools/testing/selftests/timens/.gitignore
-> +++ b/tools/testing/selftests/timens/.gitignore
-> @@ -1,4 +1,6 @@
->   clock_nanosleep
-> +gettime_perf
-> +gettime_perf_cold
->   procfs
->   timens
->   timer
-> diff --git a/tools/testing/selftests/timens/Makefile b/tools/testing/selftests/timens/Makefile
-> index ae1ffd24cc43..97e0460eaf48 100644
-> --- a/tools/testing/selftests/timens/Makefile
-> +++ b/tools/testing/selftests/timens/Makefile
-> @@ -1,6 +1,12 @@
-> -TEST_GEN_PROGS := timens timerfd timer clock_nanosleep procfs
-> +TEST_GEN_PROGS := timens timerfd timer clock_nanosleep procfs gettime_perf
-> +
-> +uname_M := $(shell uname -m 2>/dev/null || echo not)
-> +ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/i386/)
-> +ifeq ($(ARCH),x86_64)
-> +TEST_GEN_PROGS += gettime_perf_cold
-> +endif
->   
->   CFLAGS := -Wall -Werror
-> -LDFLAGS := -lrt
-> +LDFLAGS := -lrt -ldl
->   
->   include ../lib.mk
-> diff --git a/tools/testing/selftests/timens/gettime_perf.c b/tools/testing/selftests/timens/gettime_perf.c
-> new file mode 100644
-> index 000000000000..f7d7832c0293
-> --- /dev/null
-> +++ b/tools/testing/selftests/timens/gettime_perf.c
-> @@ -0,0 +1,101 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#define _GNU_SOURCE
-> +#include <sys/types.h>
-> +#include <sys/stat.h>
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +#include <sched.h>
-> +#include <time.h>
-> +#include <stdio.h>
-> +#include <unistd.h>
-> +#include <sys/syscall.h>
-> +#include <dlfcn.h>
-> +
-> +#include "log.h"
-> +#include "timens.h"
-> +
-> +//#define TEST_SYSCALL
-> +
+> I have seen the original crash when I was testing an MMC driver which
+> is not upstream yet on v5.3-rc4. I'm not sure whether this fix is
+> "correct" (it fixes the crash for me) or where to point the Fixes tag
+> to, it may be one of:
+> - fc0c209c147f ("clk: Allow parents to be specified without string names")
+> - 1a079560b145 ("clk: Cache core in clk_fetch_parent_index() without name=
+s")
+>=20
+> This is meant to be applied on top of v5.3-rc4.
+>=20
 
-How is this supposed to be used? When does TEST_SYSCALL
-get defined?
-
-> +typedef int (*vgettime_t)(clockid_t, struct timespec *);
-> +
-> +vgettime_t vdso_clock_gettime;
-> +
-> +static void fill_function_pointers(void)
-> +{
-> +	void *vdso = dlopen("linux-vdso.so.1",
-> +			    RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
-> +	if (!vdso)
-> +		vdso = dlopen("linux-gate.so.1",
-> +			      RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
-> +	if (!vdso) {
-> +		pr_err("[WARN]\tfailed to find vDSO\n");
-> +		return;
-> +	}
-> +
-> +	vdso_clock_gettime = (vgettime_t)dlsym(vdso, "__vdso_clock_gettime");
-> +	if (!vdso_clock_gettime)
-> +		pr_err("Warning: failed to find clock_gettime in vDSO\n");
-> +
-> +}
-> +
-> +static void test(clock_t clockid, char *clockstr, bool in_ns)
-> +{
-> +	struct timespec tp, start;
-> +	long i = 0;
-> +	const int timeout = 3;
-> +
-> +#ifndef TEST_SYSCALL
-> +	vdso_clock_gettime(clockid, &start);
-> +#else
-> +	syscall(__NR_clock_gettime, clockid, &start);
-> +#endif
-
-Hmm. This doesn't look right. Does this test need to be compiled
-with TEST_SYSCALL. Please find a way to do this without ifdef.
-
-thanks,
--- Shuah
+Ah ok. I thought that strcmp() would ignore NULL arguments, but
+apparently not. I can apply this to clk-fixes.
 
