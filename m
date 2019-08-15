@@ -2,122 +2,85 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E94C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D2EC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B5F205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:18:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjAQYIIr"
+	by mail.kernel.org (Postfix) with ESMTP id 77F9C2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731484AbfHORSn (ORCPT
+        id S1731814AbfHORTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:18:43 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36496 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731134AbfHORSn (ORCPT
+        Thu, 15 Aug 2019 13:19:09 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46296 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731134AbfHORTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:18:43 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w2so1649299pfi.3;
-        Thu, 15 Aug 2019 10:18:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O0iU9h/CgsDkbZj91TD8RQDyFQ2IpZ1Yt3QLDe5vqPg=;
-        b=tjAQYIIro/DnauaXI3INnjRJ/TkqSKPI5VSGVznvGeeUcH0xKxwESp9IFecKpept4y
-         +TKAvO8LFDVo2JSUms7f4AHRLykJ3aWjv//YwbFmTCtpmd1PuO44oXTGx27ZPYbp0tCG
-         VHFtbXKcpvCkHkhJ7FmwnWvPHbRKal59zAKDeiIEh51J2Se0/B2fYl1qdhPdYKC+nNtC
-         t+USv/D8HJg3gS+E2b1TsBmCsghRIleh5YAorwhmjPW5URMuroF8cwyorpGyHFwaQPxA
-         9YlgiSCiQOgTwIpD5QzJNmHSKLV1u0SinXcon/R22PEBoOuozKKr1wutxKfgWL+EU/rE
-         i42Q==
+        Thu, 15 Aug 2019 13:19:09 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t24so2741011oij.13
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:19:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O0iU9h/CgsDkbZj91TD8RQDyFQ2IpZ1Yt3QLDe5vqPg=;
-        b=T5Fkv0tpFHdJkCOpmCZ78/6wCSoAsPtmrpQKqGUYjAiTgiN01Q696Opanv6K0kZbjp
-         wiwDijmkmx72DDK4TJTFmSptsyzkuJGTZbyjccob/347YdySBVSnnNTs4lScY7PHeqz+
-         kYX95MfYrkOwF29MuXIpyjpWgYr4IeF1Boj955fW+y+c2J9II2CvcDUGWm2M5JUPUJSc
-         8fzN9ibumj664GhaIFYUtElXzu4BbIw59S+hFL65sm6CEy/Zm6idvthRzamCJ5+526sW
-         afmRgTr3B/6FtryKFVNX6GkI3h7ogW14jjJyLGKPrrbcPM7PumYzA1xlfPWdqA4gZviO
-         fGFw==
-X-Gm-Message-State: APjAAAWpxTQU13exDpQBa62DzSTwEC7roJ+op0+1zI9MxFxszHP/wCL3
-        tkiSbwqyQJvOF+yEke9jX+c=
-X-Google-Smtp-Source: APXvYqy7W7kXMKmt5qV1vz6zH8QBZDpT0zmtLNiJOWrKRdx4CqeHfrqqlOkAd7IoFjwEYuU4TVZlEA==
-X-Received: by 2002:aa7:8f2e:: with SMTP id y14mr6509394pfr.113.1565889522309;
-        Thu, 15 Aug 2019 10:18:42 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.34])
-        by smtp.gmail.com with ESMTPSA id d129sm3343983pfc.168.2019.08.15.10.18.38
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=q57CbEezHwaz+ruo0Zds0qNhqBgg8E8BpKrwrd/odqY=;
+        b=AltNo9BZZj7G+Vyg74jgB7cmxsjytAmmFuBRKnSUiu2I2zlRDUDAJ87i03cRx2Pun7
+         rG1bIqCLtXvKuEzIa8YLmGEWIXYYPn4RMq0VLqr8ncQZLW6qTXu4D2aq2NvPSd8IM1FW
+         mS6y5Zt944ALkQsvv1yn6XXaodrKDPdEWyZ+MXhvyW+l+TvWZCYgsK/h4OvcuJdgxjpe
+         rrcRLjgsqaz6WIfWKl4zCQ+OzJzpC8HU3R+NaJzZ7FzeUZRul2jcQAmRZCiShTD4Ofjb
+         0/GTzXiKawO1ht1R43EEy/DscQ4WPHfftHAT/mxaQypSXz43fQsQqZbvhj9jQYGr3QZr
+         4XQQ==
+X-Gm-Message-State: APjAAAUcpWZlD6IfCoVBKSs+3R37/q4JoCfIIeJVJs4FniTMPAQy8Qaa
+        J5fV9GK3Zr70hPQkO13kKjM=
+X-Google-Smtp-Source: APXvYqzhcy7Iuwhfr0kqvlxMGNPiAIGusoibvIvXEYeU0fjFFc68uuXB3h+Pa0DQkgvBY2qvjT/+Ow==
+X-Received: by 2002:a05:6808:643:: with SMTP id z3mr2130261oih.101.1565889548604;
+        Thu, 15 Aug 2019 10:19:08 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id 12sm1130310otn.23.2019.08.15.10.19.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 10:18:41 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 22:48:35 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     rkrcmar@redhat.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        khalid.aziz@oracle.com
-Subject: Re: [Question-kvm] Can hva_to_pfn_fast be executed in interrupt
- context?
-Message-ID: <20190815171834.GA14342@bharath12345-Inspiron-5559>
-References: <20190813191435.GB10228@bharath12345-Inspiron-5559>
- <54182261-88a4-9970-1c3c-8402e130dcda@redhat.com>
+        Thu, 15 Aug 2019 10:19:07 -0700 (PDT)
+Subject: Re: [PATCH v2] nvme: Add quirk for LiteON CL1 devices running FW
+ 22301111
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Mario Limonciello <mario.limonciello@dell.com>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ryan Hong <Ryan.Hong@Dell.com>, Crag Wang <Crag.Wang@dell.com>,
+        "sjg@google.com" <sjg@google.com>,
+        Charles Hyde <charles.hyde@dellteam.com>,
+        Jared Dominguez <jared.dominguez@dell.com>
+References: <1565813304-16710-1-git-send-email-mario.limonciello@dell.com>
+ <32f20898-b9af-eee0-97de-0a568de54b57@grimberg.me>
+ <20190814201900.GA3511@localhost.localdomain>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <0cafca37-011d-4c19-4462-14687046a153@grimberg.me>
+Date:   Thu, 15 Aug 2019 10:19:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <54182261-88a4-9970-1c3c-8402e130dcda@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190814201900.GA3511@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 10:17:09PM +0200, Paolo Bonzini wrote:
-> On 13/08/19 21:14, Bharath Vedartham wrote:
-> > Hi all,
-> > 
-> > I was looking at the function hva_to_pfn_fast(in virt/kvm/kvm_main) which is 
-> > executed in an atomic context(even in non-atomic context, since
-> > hva_to_pfn_fast is much faster than hva_to_pfn_slow).
-> > 
-> > My question is can this be executed in an interrupt context? 
+
+>> Mario,
+>>
+>> Can you please respin a patch that applies cleanly on nvme-5.4?
 > 
-> No, it cannot for the reason you mention below.
-> 
-> Paolo
-hmm.. Well I expected the answer to be kvm specific. 
-Because I observed a similar use-case for a driver (sgi-gru) where 
-we want to retrive the physical address of a virtual address. This was
-done in atomic and non-atomic context similar to hva_to_pfn_fast and
-hva_to_pfn_slow. __get_user_pages_fast(for atomic case) 
-would not work as the driver could execute in interrupt context.
+> This fixes a regression we introduced in 5.3, so it should go in
+> 5.3-rc. For this to apply cleanly, though, we'll need to resync to Linus'
+> tree to get Rafael's PCIe ASPM check after he sends his linux-pm pull
+> request.
 
-The driver manually walked the page tables to handle this issue.
-
-Since kvm is a widely used piece of code, I asked this question to know
-how kvm handled this issue. 
-
-Thank you for your time.
-
-Thank you
-Bharath
-> > The motivation for this question is that in an interrupt context, we cannot
-> > assume "current" to be the task_struct of the process of interest.
-> > __get_user_pages_fast assume current->mm when walking the process page
-> > tables. 
-> > 
-> > So if this function hva_to_pfn_fast can be executed in an
-> > interrupt context, it would not be safe to retrive the pfn with
-> > __get_user_pages_fast. 
-> > 
-> > Thoughts on this?
-> > 
-> > Thank you
-> > Bharath
-> > 
-> 
+We need to coordinate with Jens, don't think its a good idea if I'll
+just randomly get stuff from linus' tree and send an rc pull request.
