@@ -2,212 +2,116 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C3EC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDF5C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B5820656
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:35:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mELDJQmS"
+	by mail.kernel.org (Postfix) with ESMTP id 3B3802083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:35:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565897731;
+	bh=B8MMak9Vnufqu6eh+pwpUiR1JeKEw/FDX6L9V6oZw0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bFXgIMrq4ETPPGbUjUIep/wpZq+WJuqhzGWfHvwhseAoo6p/pIt1uK9jfQWgpqLDF
+	 hWLJD+voLTDwYbIMvorMLPAPcA1IHDXRocGZrGUhkur1tsf6J4GDCCxd9UrCYOfn6K
+	 rz2EcaU74hp65eMCHTMDPFlVaUVVwbpQ1ntsEhKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732882AbfHOTfT (ORCPT
+        id S1732893AbfHOTfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 15:35:19 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:52226 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729366AbfHOTfS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 15:35:18 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4FAFD2AF;
-        Thu, 15 Aug 2019 21:35:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1565897716;
-        bh=hgOit6ttnomZUv28t6H5r8upAoxSvS9rboVdpEGq0Jk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mELDJQmSP3PP8LuNiOgapqmZDvFUOnBQC8eQrWq20rixpYAYB4qgMHgeIYYkngGSL
-         pRuFvzbEGxX0Nx76MqMGH6GGgYnifYyKBzONuo9G0zb/48dskh2ytsvyq5K2wQ/heQ
-         BKbIROUJRXT5nzuSa5mYmjzy7V5b2EtEV7P1ab8w=
-Date:   Thu, 15 Aug 2019 22:35:11 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Helen Koike <helen.koike@collabora.com>, hans.verkuil@cisco.com,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
-        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
-        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, sakari.ailus@linux.intel.com,
-        kernel@collabora.com, ezequiel@collabora.com,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        zhengsq@rock-chips.com, Jacob Chen <cc@rock-chips.com>,
-        Allon Huang <allon.huang@rock-chips.com>
-Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
-Message-ID: <20190815193511.GB5011@pendragon.ideasonboard.com>
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <20190730184256.30338-6-helen.koike@collabora.com>
- <86e17716-193f-ca49-1104-9c599a667eeb@collabora.com>
- <f229a840-bcf3-50c8-27c6-363c72de1d01@xs4all.nl>
+        Thu, 15 Aug 2019 15:35:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50528 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728547AbfHOTf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 15:35:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8682CABBE;
+        Thu, 15 Aug 2019 19:35:28 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 21:35:26 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
+Message-ID: <20190815193526.GT9477@dhcp22.suse.cz>
+References: <20190815065829.GA7444@phenom.ffwll.local>
+ <20190815122344.GA21596@ziepe.ca>
+ <20190815132127.GI9477@dhcp22.suse.cz>
+ <20190815141219.GF21596@ziepe.ca>
+ <20190815155950.GN9477@dhcp22.suse.cz>
+ <20190815165631.GK21596@ziepe.ca>
+ <20190815174207.GR9477@dhcp22.suse.cz>
+ <20190815182448.GP21596@ziepe.ca>
+ <20190815190525.GS9477@dhcp22.suse.cz>
+ <20190815191810.GR21596@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f229a840-bcf3-50c8-27c6-363c72de1d01@xs4all.nl>
+In-Reply-To: <20190815191810.GR21596@ziepe.ca>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
-
-On Wed, Aug 07, 2019 at 12:39:17PM +0200, Hans Verkuil wrote:
-> On 8/6/19 8:51 PM, Helen Koike wrote:
-> > On 7/30/19 3:42 PM, Helen Koike wrote:
-> >> From: Jacob Chen <jacob2.chen@rock-chips.com>
-> >>
-> >> Add the subdev driver for rockchip isp1.
-> >>
-> >> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
-> >> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
-> >> Signed-off-by: Yichong Zhong <zyc@rock-chips.com>
-> >> Signed-off-by: Jacob Chen <cc@rock-chips.com>
-> >> Signed-off-by: Eddie Cai <eddie.cai.linux@gmail.com>
-> >> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-> >> Signed-off-by: Allon Huang <allon.huang@rock-chips.com>
-> >> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-> >> [fixed unknown entity type / switched to PIXEL_RATE]
-> >> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> >> [update for upstream]
-> >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> >>
-> >> ---
-> >>
-> >> Changes in v8: None
-> >> Changes in v7:
-> >> - fixed warning because of unknown entity type
-> >> - fixed v4l2-compliance errors regarding rkisp1 formats, try formats
-> >> and default values
-> >> - fix typo riksp1/rkisp1
-> >> - redesign: remove mipi/csi subdevice, sensors connect directly to the
-> >> isp subdevice in the media topology now. As a consequence, remove the
-> >> hack in mipidphy_g_mbus_config() where information from the sensor was
-> >> being propagated through the topology.
-> >> - From the old dphy:
-> >>         * cache get_remote_sensor() in s_stream
-> >>         * use V4L2_CID_PIXEL_RATE instead of V4L2_CID_LINK_FREQ
-> >> - Replace stream state with a boolean
-> >> - code styling and checkpatch fixes
-> >> - fix stop_stream (return after calling stop, do not reenable the stream)
-> >> - fix rkisp1_isp_sd_get_selection when V4L2_SUBDEV_FORMAT_TRY is set
-> >> - fix get format in output (isp_sd->out_fmt.mbus_code was being ignored)
-> >> - s/intput/input
-> >> - remove #define sd_to_isp_sd(_sd), add a static inline as it will be
-> >> reused by the capture
-> >>
-> >>  drivers/media/platform/rockchip/isp1/rkisp1.c | 1286 +++++++++++++++++
-> >>  drivers/media/platform/rockchip/isp1/rkisp1.h |  111 ++
-> >>  2 files changed, 1397 insertions(+)
-> >>  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.c
-> >>  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.h
-> >>
-> >> diff --git a/drivers/media/platform/rockchip/isp1/rkisp1.c b/drivers/media/platform/rockchip/isp1/rkisp1.c
-> >> new file mode 100644
-> >> index 000000000000..6d0c0ffb5e03
-> >> --- /dev/null
-> >> +++ b/drivers/media/platform/rockchip/isp1/rkisp1.c
-> >> @@ -0,0 +1,1286 @@
+On Thu 15-08-19 16:18:10, Jason Gunthorpe wrote:
+> On Thu, Aug 15, 2019 at 09:05:25PM +0200, Michal Hocko wrote:
 > 
-> <snip>
+> > This is what you claim and I am saying that fs_reclaim is about a
+> > restricted reclaim context and it is an ugly hack. It has proven to
+> > report false positives. Maybe it can be extended to a generic reclaim.
+> > I haven't tried that. Do not aim to try it.
 > 
-> >> +static int rkisp1_isp_sd_get_fmt(struct v4l2_subdev *sd,
-> >> +				 struct v4l2_subdev_pad_config *cfg,
-> >> +				 struct v4l2_subdev_format *fmt)
-> >> +{
-> >> +	struct rkisp1_isp_subdev *isp_sd = sd_to_isp_sd(sd);
-> >> +	struct v4l2_mbus_framefmt *mf = &fmt->format;
-> >> +
-> >> +	if ((fmt->pad != RKISP1_ISP_PAD_SINK) &&
-> >> +	    (fmt->pad != RKISP1_ISP_PAD_SOURCE_PATH)) {
-> >> +		fmt->format.code = MEDIA_BUS_FMT_FIXED;
-> >> +		/*
-> >> +		 * NOTE: setting a format here doesn't make much sense
-> >> +		 * but v4l2-compliance complains
-> >> +		 */
-> >> +		fmt->format.width = RKISP1_DEFAULT_WIDTH;
-> >> +		fmt->format.height = RKISP1_DEFAULT_HEIGHT;
-> > 
-> > As I had mentioned to you, this is called for the isp pads connected to the
-> > DMA engines for statistics and parameters (meta data).
-> > 
-> > If I remove those, I get the following errors:
-> > 
-> > Sub-Device ioctls (Sink Pad 1):
-> >         test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-> >                 fail: v4l2-test-subdevs.cpp(311): fmt.width == 0 || fmt.width > 65536
-> >                 fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-> >         test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-> >         test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
-> >         test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-> >                 fail: v4l2-test-subdevs.cpp(311): fmt.width == 0 || fmt.width > 65536
-> >                 fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-> >         test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-> >         test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
-> >         test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-> > 
-> > Here is the full log: http://ix.io/1QNt
-> > 
-> > Is this a bug in v4l2-compliance?
+> Okay, great, I think this has been very helpful, at least for me,
+> thanks. I did not know fs_reclaim was so problematic, or the special
+> cases about OOM 'reclaim'. 
+
+I am happy that this is more clear now.
+
+> On this patch, I have no general objection to enforcing drivers to be
+> non-blocking, I'd just like to see it done with the existing lockdep
+> can't sleep detection rather than inventing some new debugging for it.
 > 
-> Yes and no :-)
-> 
-> Currently v4l2-compliance assumes that only video is transferred over a media bus.
-> But that's not the case here, and testing the code field doesn't help v4l2-compliance
-> since MEDIA_BUS_FMT_FIXED is also still used by some older subdev drivers for video.
-> 
-> I think we need a new bus format: MEDIA_BUS_FMT_FIXED_METADATA. Then v4l2-compliance
-> can tell it apart from the regular fixed video bus format.
+> I understand this means the debugging requires lockdep enabled and
+> will not run in production, but I'm of the view that is OK and in line
+> with general kernel practice.
 
-Wouldn't a pad flag that identifies the type of data transmitted by a
-pad be a better, backward-compatible option ? This could be useful for
-audio as well.
+Yes and I do agree with this in general.
 
-> If I do a 'git grep MEDIA_BUS_FMT_FIXED' then I see that it is also in use by vsp1
-> for histogram information, so that should also be converted to use the new FIXED_METADATA
-> format, although that might be too late (there might be userspace complications).
+> The last detail is I'm still unclear what a GFP flags a blockable
+> invalidate_range_start() should use. Is GFP_KERNEL OK?
 
-Yes, probably not a good idea.
+I hope I will not make this muddy again ;)
+invalidate_range_start in the blockable mode can use/depend on any sleepable
+allocation allowed in the context it is called from. So in other words
+it is no different from any other function in the kernel that calls into
+allocator. As the API is missing gfp context then I hope it is not
+called from any restricted contexts (except from the oom which we have
+!blockable for).
 
-> >> +		fmt->format.field = V4L2_FIELD_NONE;
-> >> +		return 0;
-> >> +	}
-> >> +
-> >> +	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
-> >> +		mf = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
-> >> +		fmt->format = *mf;
-> >> +		return 0;
-> >> +	}
-> >> +
-> >> +	if (fmt->pad == RKISP1_ISP_PAD_SINK) {
-> >> +		*mf = isp_sd->in_frm;
-> >> +	} else if (fmt->pad == RKISP1_ISP_PAD_SOURCE_PATH) {
-> >> +		/* format of source pad */
-> >> +		*mf = isp_sd->in_frm;
-> >> +		mf->code = isp_sd->out_fmt.mbus_code;
-> >> +		/* window size of source pad */
-> >> +		mf->width = isp_sd->out_crop.width;
-> >> +		mf->height = isp_sd->out_crop.height;
-> >> +		mf->quantization = isp_sd->quantization;
-> >> +	}
-> >> +	mf->field = V4L2_FIELD_NONE;
-> >> +
-> >> +	return 0;
-> >> +}
+> Lockdep has
+> complained on that in past due to fs_reclaim - how do you know if it
+> is a false positive?
 
+I would have to see the specific lockdep splat.
 -- 
-Regards,
-
-Laurent Pinchart
+Michal Hocko
+SUSE Labs
