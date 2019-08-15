@@ -2,296 +2,146 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44571C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EEEC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B69E208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DEA6208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:22:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DVR3V2eR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731263AbfHOJWa (ORCPT
+        id S1731274AbfHOJW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 05:22:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60966 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730204AbfHOJW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 05:22:29 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AD9573082135;
-        Thu, 15 Aug 2019 09:22:28 +0000 (UTC)
-Received: from [10.72.12.184] (ovpn-12-184.pek2.redhat.com [10.72.12.184])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BC5C35D9DC;
-        Thu, 15 Aug 2019 09:22:15 +0000 (UTC)
-Subject: Re: [PATCH] virtio-net: lower min ring num_free for efficiency
-To:     =?UTF-8?B?5YaJIGppYW5n?= <jiangkidd@hotmail.com>,
-        "mst@redhat.com" <mst@redhat.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kafai@fb.com" <kafai@fb.com>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "yhs@fb.com" <yhs@fb.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "jiangran.jr@alibaba-inc.com" <jiangran.jr@alibaba-inc.com>
-References: <BYAPR14MB3205E4E194942B0A1A91A222A6AD0@BYAPR14MB3205.namprd14.prod.outlook.com>
- <f61d9621-cc33-44a2-f297-43f8af8d759b@redhat.com>
- <BYAPR14MB3205B734E554EACEEE337ADDA6AC0@BYAPR14MB3205.namprd14.prod.outlook.com>
- <38df7fdd-bd6a-cc82-534d-d7cbf3f1933c@redhat.com>
- <BYAPR14MB320512CCA27487548DDAA57FA6AC0@BYAPR14MB3205.namprd14.prod.outlook.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <e1ae87d7-546a-d8fb-8d76-97d44bfa3a13@redhat.com>
-Date:   Thu, 15 Aug 2019 17:22:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 15 Aug 2019 05:22:57 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:45539 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730204AbfHOJW4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 05:22:56 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7F9MPAF2271316
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 15 Aug 2019 02:22:25 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7F9MPAF2271316
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1565860946;
+        bh=Pkc2tGdMqyX7pbz1ZlPE7ujFK/VSlLjX5TLYmTWJ0bs=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=DVR3V2eRdGCxyqAlV0Hj+5ejGOKp1HPoNR/Cbk7XY2Juj5jzB5rh0emQh+4283F8G
+         gKmGcBmGybAURUDvdpVF/n+h6ZrmKVZ7REAZDjTP4bSQ0bZk+PXTKM0uzse2wpBWfn
+         EJNemVrrpi+iZc7rkcMAHdQt6Rh4jlwFg4yW1Uxo/sbxSvbZXpMvPPhvQVfwzhFvxr
+         mBdvVvGk3WXGY36+3IuvdzyNMQ5Z8Poch0VabUXImJiZgch6WT7a9RKcth4R2XYKm9
+         o11PJCQjK5MHKPwe2E8l2iR6Qxfk2w2bdWChJBCl/eb3wDPeJEzQCtvT8zXCXqOGvq
+         jJKCcKeVzW6/g==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7F9MOPJ2271313;
+        Thu, 15 Aug 2019 02:22:24 -0700
+Date:   Thu, 15 Aug 2019 02:22:24 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Leo Yan <tipbot@zytor.com>
+Message-ID: <tip-3e70008a6021fffd2cd1614734603ea970773060@git.kernel.org>
+Cc:     leo.yan@linaro.org, yhs@fb.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@redhat.com, namhyung@kernel.org,
+        alexander.shishkin@linux.intel.com, daniel@iogearbox.net,
+        hpa@zytor.com, kafai@fb.com, songliubraving@fb.com,
+        mingo@kernel.org, acme@redhat.com
+Reply-To: mingo@kernel.org, songliubraving@fb.com, daniel@iogearbox.net,
+          alexander.shishkin@linux.intel.com, yhs@fb.com,
+          leo.yan@linaro.org, acme@redhat.com, kafai@fb.com, hpa@zytor.com,
+          namhyung@kernel.org, tglx@linutronix.de, jolsa@redhat.com,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190809104752.27338-1-leo.yan@linaro.org>
+References: <20190809104752.27338-1-leo.yan@linaro.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf trace: Fix segmentation fault when access
+ syscall info on arm64
+Git-Commit-ID: 3e70008a6021fffd2cd1614734603ea970773060
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <BYAPR14MB320512CCA27487548DDAA57FA6AC0@BYAPR14MB3205.namprd14.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 15 Aug 2019 09:22:28 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit-ID:  3e70008a6021fffd2cd1614734603ea970773060
+Gitweb:     https://git.kernel.org/tip/3e70008a6021fffd2cd1614734603ea970773060
+Author:     Leo Yan <leo.yan@linaro.org>
+AuthorDate: Fri, 9 Aug 2019 18:47:52 +0800
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 12 Aug 2019 16:26:02 -0300
 
-On 2019/8/15 下午4:36, 冉 jiang wrote:
-> On 2019/8/15 11:17, Jason Wang wrote:
->> On 2019/8/15 上午11:11, 冉 jiang wrote:
->>> On 2019/8/15 11:01, Jason Wang wrote:
->>>> On 2019/8/14 上午10:06, ? jiang wrote:
->>>>> This change lowers ring buffer reclaim threshold from 1/2*queue to
->>>>> budget
->>>>> for better performance. According to our test with qemu + dpdk, packet
->>>>> dropping happens when the guest is not able to provide free buffer in
->>>>> avail ring timely with default 1/2*queue. The value in the patch has
->>>>> been
->>>>> tested and does show better performance.
->>>> Please add your tests setup and result here.
->>>>
->>>> Thanks
->>>>
->>>>
->>>>> Signed-off-by: jiangkidd <jiangkidd@hotmail.com>
->>>>> ---
->>>>>     drivers/net/virtio_net.c | 2 +-
->>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
->>>>> index 0d4115c9e20b..bc08be7925eb 100644
->>>>> --- a/drivers/net/virtio_net.c
->>>>> +++ b/drivers/net/virtio_net.c
->>>>> @@ -1331,7 +1331,7 @@ static int virtnet_receive(struct receive_queue
->>>>> *rq, int budget,
->>>>>             }
->>>>>         }
->>>>>     -    if (rq->vq->num_free > virtqueue_get_vring_size(rq->vq) / 2) {
->>>>> +    if (rq->vq->num_free > min((unsigned int)budget,
->>>>> virtqueue_get_vring_size(rq->vq)) / 2) {
->>>>>             if (!try_fill_recv(vi, rq, GFP_ATOMIC))
->>>>>                 schedule_delayed_work(&vi->refill, 0);
->>>>>         }
->>> Sure, here are the details:
->>
->> Thanks for the details, but I meant it's better if you could summarize
->> you test result in the commit log in a compact way.
->>
->> Btw, some comments, see below:
->>
->>
->>>
->>> Test setup & result:
->>>
->>> ----------------------------------------------------
->>>
->>> Below is the snippet from our test result. Test1 was done with default
->>> driver with the value of 1/2 * queue, while test2 is with my patch. We
->>> can see average
->>> drop packets do decrease a lot in test2.
->>>
->>> test1Time    avgDropPackets    test2Time    avgDropPackets pps
->>>
->>> 16:21.0    12.295    56:50.4    0 300k
->>> 17:19.1    15.244    56:50.4    0    300k
->>> 18:17.5    18.789    56:50.4    0    300k
->>> 19:15.1    14.208    56:50.4    0    300k
->>> 20:13.2    20.818    56:50.4    0.267    300k
->>> 21:11.2    12.397    56:50.4    0    300k
->>> 22:09.3    12.599    56:50.4    0    300k
->>> 23:07.3    15.531    57:48.4    0    300k
->>> 24:05.5    13.664    58:46.5    0    300k
->>> 25:03.7    13.158    59:44.5    4.73    300k
->>> 26:01.1    2.486    00:42.6    0    300k
->>> 26:59.1    11.241    01:40.6    0    300k
->>> 27:57.2    20.521    02:38.6    0    300k
->>> 28:55.2    30.094    03:36.7    0    300k
->>> 29:53.3    16.828    04:34.7    0.963    300k
->>> 30:51.3    46.916    05:32.8    0    400k
->>> 31:49.3    56.214    05:32.8    0    400k
->>> 32:47.3    58.69    05:32.8    0    400k
->>> 33:45.3    61.486    05:32.8    0    400k
->>> 34:43.3    72.175    05:32.8    0.598    400k
->>> 35:41.3    56.699    05:32.8    0    400k
->>> 36:39.3    61.071    05:32.8    0    400k
->>> 37:37.3    43.355    06:30.8    0    400k
->>> 38:35.4    44.644    06:30.8    0    400k
->>> 39:33.4    72.336    06:30.8    0    400k
->>> 40:31.4    70.676    06:30.8    0    400k
->>> 41:29.4    108.009    06:30.8    0    400k
->>> 42:27.4    65.216    06:30.8    0    400k
->>
->> Why there're difference in test time? Could you summarize them like:
->>
->> Test setup: e.g testpmd or pktgen to generate packets to guest
->>
->> avg packets drop before: XXX
->>
->> avg packets drop after: YYY(-ZZZ%)
->>
->> Thanks
->>
->>
->>>
->>> Data to prove why the patch helps:
->>>
->>> ----------------------------------------------------
->>>
->>> We did have completed several rounds of test with setting the value to
->>> budget (64 as the default value). It does improve a lot with pps is
->>> below 400pps for a single stream. We are confident that it runs out
->>> of free
->>> buffer in avail ring when packet dropping happens with below systemtap:
->>>
->>> Just a snippet:
->>>
->>> probe module("virtio_ring").function("virtqueue_get_buf")
->>> {
->>>         x = (@cast($_vq, "vring_virtqueue")->vring->used->idx)-
->>> (@cast($_vq, "vring_virtqueue")->last_used_idx) ---> we use this one
->>> to verify if the queue is full, which means guest is not able to take
->>> buffer from the queue timely
->>>
->>>         if (x<0 && (x+65535)<4096)
->>>             x = x+65535
->>>
->>>         if((x==1024) && @cast($_vq, "vring_virtqueue")->vq->callback ==
->>> callback_addr)
->>>             netrxcount[x] <<< gettimeofday_s()
->>> }
->>>
->>>
->>> probe module("virtio_ring").function("virtqueue_add_inbuf")
->>> {
->>>         y = (@cast($vq, "vring_virtqueue")->vring->avail->idx)-
->>> (@cast($vq, "vring_virtqueue")->vring->used->idx) ---> we use this one
->>> to verify if we run out of free buffer in avail ring
->>>         if (y<0 && (y+65535)<4096)
->>>             y = y+65535
->>>
->>>         if(@2=="debugon")
->>>         {
->>>             if(y==0 && @cast($vq, "vring_virtqueue")->vq->callback ==
->>> callback_addr)
->>>             {
->>>                 netrxfreecount[y] <<< gettimeofday_s()
->>>
->>>                 printf("no avail ring left seen, printing most recent 5
->>> num free, vq: %lx, current index: %d\n", $vq, recentfreecount)
->>>                 for(i=recentfreecount; i!=((recentfreecount+4) % 5);
->>> i=((i+1) % 5))
->>>                 {
->>>                     printf("index: %d, num free: %d\n", i,
->>> recentfree[$vq,
->>> i])
->>>                 }
->>>
->>>                 printf("index: %d, num free: %d\n", i, recentfree[$vq,
->>> i])
->>>                 //exit()
->>>             }
->>>         }
->>> }
->>>
->>>
->>> probe
->>> module("virtio_net").statement("virtnet_receive@drivers/net/virtio_net.c:732")
->>>
->>>
->>> {
->>>         recentfreecount++
->>>         recentfreecount = recentfreecount % 5
->>>         recentfree[$rq->vq, recentfreecount] = $rq->vq->num_free --->
->>> record the num_free for the last 5 calls to virtnet_receive, so we can
->>> see if lowering the bar helps.
->>> }
->>>
->>>
->>> Here is the result:
->>>
->>> no avail ring left seen, printing most recent 5 num free, vq:
->>> ffff9c13c1200000, current index: 1
->>> index: 1, num free: 561
->>> index: 2, num free: 305
->>> index: 3, num free: 369
->>> index: 4, num free: 433
->>> index: 0, num free: 497
->>> no avail ring left seen, printing most recent 5 num free, vq:
->>> ffff9c13c1200000, current index: 1
->>> index: 1, num free: 543
->>> index: 2, num free: 463
->>> index: 3, num free: 469
->>> index: 4, num free: 476
->>> index: 0, num free: 479
->>> no avail ring left seen, printing most recent 5 num free, vq:
->>> ffff9c13c1200000, current index: 2
->>> index: 2, num free: 555
->>> index: 3, num free: 414
->>> index: 4, num free: 420
->>> index: 0, num free: 427
->>> index: 1, num free: 491
->>>
->>> We can see in the last 4 calls to virtnet_receive before we run out
->>> of free buffer and start to relaim, num_free is quite high. So if we
->>> can do the reclaim earlier, it will certainly help.
->>>
->>> Jiang
->>
->> Right, but I think there's no need to put those thing in the commit log.
->>
->> Thanks
->>
->>
-> Sure, here is the info:
->
->
-> Test setup: iperf3 to generate packets to guest (total 30mins, pps 400k)
->
-> avg packets drop before: 2842
->
-> avg packets drop after: 360(-87.3%)
->
->
-> Just let me know if it looks good enough. Thx.
->
-> Jiang
+perf trace: Fix segmentation fault when access syscall info on arm64
 
+'perf trace' reports the segmentation fault as below on Arm64:
 
-Looks good, please post a V2 and include the above result in the commit log.
+  # perf trace -e string -e augmented_raw_syscalls.c
+  LLVM: dumping tools/perf/examples/bpf/augmented_raw_syscalls.o
+  perf: Segmentation fault
+  Obtained 12 stack frames.
+  perf(sighandler_dump_stack+0x47) [0xaaaaac96ac87]
+  linux-vdso.so.1(+0x5b7) [0xffffadbeb5b7]
+  /lib/aarch64-linux-gnu/libc.so.6(strlen+0x10) [0xfffface7d5d0]
+  /lib/aarch64-linux-gnu/libc.so.6(_IO_vfprintf+0x1ac7) [0xfffface49f97]
+  /lib/aarch64-linux-gnu/libc.so.6(__vsnprintf_chk+0xc7) [0xffffacedfbe7]
+  perf(scnprintf+0x97) [0xaaaaac9ca3ff]
+  perf(+0x997bb) [0xaaaaac8e37bb]
+  perf(cmd_trace+0x28e7) [0xaaaaac8ec09f]
+  perf(+0xd4a13) [0xaaaaac91ea13]
+  perf(main+0x62f) [0xaaaaac8a147f]
+  /lib/aarch64-linux-gnu/libc.so.6(__libc_start_main+0xe3) [0xfffface22d23]
+  perf(+0x57723) [0xaaaaac8a1723]
+  Segmentation fault
 
-Thanks
+This issue is introduced by commit 30a910d7d3e0 ("perf trace:
+Preallocate the syscall table"), it allocates trace->syscalls.table[]
+array and the element count is 'trace->sctbl->syscalls.nr_entries'; but
+on Arm64, the system call number is not continuously used; e.g. the
+syscall maximum id is 436 but the real entries is only 281.
 
->
+So the table is allocated with 'nr_entries' as the element count, but it
+accesses the table with the syscall id, which might be out of the bound
+of the array and cause the segmentation fault.
+
+This patch allocates trace->syscalls.table[] with the element count is
+'trace->sctbl->syscalls.max_id + 1', this allows any id to access the
+table without out of the bound.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Fixes: 30a910d7d3e0 ("perf trace: Preallocate the syscall table")
+Link: http://lkml.kernel.org/r/20190809104752.27338-1-leo.yan@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 75eb3811e942..d553d06a9aeb 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1492,7 +1492,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+ 	const char *name = syscalltbl__name(trace->sctbl, id);
+ 
+ 	if (trace->syscalls.table == NULL) {
+-		trace->syscalls.table = calloc(trace->sctbl->syscalls.nr_entries, sizeof(*sc));
++		trace->syscalls.table = calloc(trace->sctbl->syscalls.max_id + 1, sizeof(*sc));
+ 		if (trace->syscalls.table == NULL)
+ 			return -ENOMEM;
+ 	}
