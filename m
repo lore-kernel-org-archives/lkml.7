@@ -2,137 +2,116 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEBDC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DA5C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB852084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:09:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="HCgw2LvP"
+	by mail.kernel.org (Postfix) with ESMTP id 610A12084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:10:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbfHOGJf (ORCPT
+        id S1730394AbfHOGKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 02:09:35 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33896 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730354AbfHOGJf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 02:09:35 -0400
-Received: by mail-oi1-f194.google.com with SMTP id l12so670356oil.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 23:09:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=XMIi+LTmaNSNmwfCZY1OMBoSoI8r8SgdSt1UqT4cQ6o=;
-        b=HCgw2LvPLZY6Jje0S9YSU88e7NPnFdEBTiqiAf2lQCWESEXuwYShME2coIXZg6zQny
-         +850/t+eXxXFzHO824NwYL9Z5msm3oMWOyQ3EnavaObzQEC16xK1W9QeNjQ5BfiXYp81
-         UXd/ZdnyGovwesM3haxAQTf/kVfBngrp4fXqhNijkX7IMTIuEfaNDWA+Rkz3Q04Xu2SE
-         nS+fy0nNi3lztEAvayY5NarRcmmlMSq8h2/ZlCYd9ZUkINNvc50hjlfTib8IX4KLzoIp
-         QcYWdiRaHrb9ZevecwEjEaBxg94pnJ24QUorMTprOte6KCUNG1oDa3DyYnnMMmaKFrXj
-         xvTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=XMIi+LTmaNSNmwfCZY1OMBoSoI8r8SgdSt1UqT4cQ6o=;
-        b=o3y4AXCMo35J0sapk14JjzuvWjfi7QnDne/va8Us2KTt76VRbJdAxM4f3bsW428plS
-         fmZ42ajxL97igSjeBC3Q+h6ch2PBEQv15gfhw1KjIX+gi2hDbozbf8tCItQz+g88A31E
-         VXGIJO+y8GdOLLv3gF6uZdUjhJ4Z7cbTV0XBgqXud9PL5ay/+dMyD18SJU/2k3i81CRr
-         rlNnJgn2kb0npPUXgzCts2qiOVhiAcrmYFGMy9nJzZU3avT8qBeg5v5zcjBSOMEwr3fW
-         cTRUDVZ/dAcTMJZd5PKuYS+M60B0tuWi+Xp56Uoz38c0xfJfiAshAHPPy4AQN3ou7127
-         rKbA==
-X-Gm-Message-State: APjAAAWyIhrkKK3cOxAnHDUMYv8WEWnLEVjbQXb5DoQ2iXUHvPgMwbWI
-        uUu8L/veTfgBjsZ3XmxDABspew==
-X-Google-Smtp-Source: APXvYqz5PKkXLgKIlPsZMU2gikFKRrR0ZkkZvQJRxFYRufHlAOCOfTU3LeUn1EsOvdwJgbZ1Xh6gdA==
-X-Received: by 2002:a02:b713:: with SMTP id g19mr3332113jam.77.1565849374267;
-        Wed, 14 Aug 2019 23:09:34 -0700 (PDT)
-Received: from [172.20.10.10] ([24.114.82.65])
-        by smtp.gmail.com with ESMTPSA id p3sm1186690iog.70.2019.08.14.23.09.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 23:09:33 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <1FBF4302-FA3E-49BE-B9AA-F380518AB263@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_8279D554-5136-4116-923A-7ADF706F607E";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH] Ext4 documentation fixes.
-Date:   Thu, 15 Aug 2019 00:09:27 -0600
-In-Reply-To: <CA+UE=SNWDBGuFpS9Y7g5iurJEJX41c+LMwis3ZGotbJ=DSSaJA@mail.gmail.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>, Jonathan Corbet <corbet@lwn.net>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-To:     Ayush Ranjan <ayushr2@illinois.edu>
-References: <CA+UE=SNWDBGuFpS9Y7g5iurJEJX41c+LMwis3ZGotbJ=DSSaJA@mail.gmail.com>
-X-Mailer: Apple Mail (2.3273)
+        Thu, 15 Aug 2019 02:10:24 -0400
+Received: from mga05.intel.com ([192.55.52.43]:38956 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730126AbfHOGKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 02:10:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 23:10:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,388,1559545200"; 
+   d="scan'208";a="260733295"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga001.jf.intel.com with ESMTP; 14 Aug 2019 23:10:20 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Roger Quadros <rogerq@ti.com>, Pawel Laszczak <pawell@cadence.com>
+Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com,
+        nm@ti.com, sureshp@cadence.com, jpawar@cadence.com,
+        kurahul@cadence.com, aniljoy@cadence.com
+Subject: Re: [PATCH v10 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+In-Reply-To: <8eb0194a-ee7d-3880-81a7-482ed6e3f759@ti.com>
+References: <1563733939-21214-1-git-send-email-pawell@cadence.com> <1563733939-21214-6-git-send-email-pawell@cadence.com> <8eb0194a-ee7d-3880-81a7-482ed6e3f759@ti.com>
+Date:   Thu, 15 Aug 2019 09:10:19 +0300
+Message-ID: <87lfvvt0vo.fsf@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Apple-Mail=_8279D554-5136-4116-923A-7ADF706F607E
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+Hi,
 
-On Aug 14, 2019, at 6:47 PM, Ayush Ranjan <ayushr2@illinois.edu> wrote:
-> diff --git a/Documentation/filesystems/ext4/inodes.rst =
-b/Documentation/filesystems/ext4/inodes.rst
-> index 6bd35e506..c468a3171 100644
-> --- a/Documentation/filesystems/ext4/inodes.rst
-> +++ b/Documentation/filesystems/ext4/inodes.rst
-> @@ -470,8 +470,8 @@ inode, which allows struct ext4\_inode to grow for =
-a new kernel without
->  having to upgrade all of the on-disk inodes. Access to fields beyond
->  EXT2\_GOOD\_OLD\_INODE\_SIZE should be verified to be within
->  ``i_extra_isize``. By default, ext4 inode records are 256 bytes, and =
-(as
-> -of October 2013) the inode structure is 156 bytes
-> -(``i_extra_isize =3D 28``). The extra space between the end of the =
-inode
-> +of October 2013) the inode structure is 160 bytes
+Roger Quadros <rogerq@ti.com> writes:
 
-This should be changed to "as of August 2019", or possibly the date on
-which the last field (i_projid) was added, namely "October, 2015".
+> On 21/07/2019 21:32, Pawel Laszczak wrote:
+>> This patch introduce new Cadence USBSS DRD driver to Linux kernel.
+>> 
+>> The Cadence USBSS DRD Controller is a highly configurable IP Core which
+>> can be instantiated as Dual-Role Device (DRD), Peripheral Only and
+>> Host Only (XHCI)configurations.
+>> 
+>> The current driver has been validated with FPGA platform. We have
+>> support for PCIe bus, which is used on FPGA prototyping.
+>> 
+>> The host side of USBSS-DRD controller is compliant with XHCI
+>> specification, so it works with standard XHCI Linux driver.
+>> 
+>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+>> ---
+>>  drivers/usb/Kconfig                |    2 +
+>>  drivers/usb/Makefile               |    2 +
+>>  drivers/usb/cdns3/Kconfig          |   46 +
+>>  drivers/usb/cdns3/Makefile         |   17 +
+>>  drivers/usb/cdns3/cdns3-pci-wrap.c |  203 +++
+>>  drivers/usb/cdns3/core.c           |  554 +++++++
+>>  drivers/usb/cdns3/core.h           |  109 ++
+>>  drivers/usb/cdns3/debug.h          |  171 ++
+>>  drivers/usb/cdns3/debugfs.c        |   87 ++
+>>  drivers/usb/cdns3/drd.c            |  390 +++++
+>>  drivers/usb/cdns3/drd.h            |  166 ++
+>>  drivers/usb/cdns3/ep0.c            |  914 +++++++++++
+>>  drivers/usb/cdns3/gadget-export.h  |   28 +
+>>  drivers/usb/cdns3/gadget.c         | 2338 ++++++++++++++++++++++++++++
+>>  drivers/usb/cdns3/gadget.h         | 1321 ++++++++++++++++
+>>  drivers/usb/cdns3/host-export.h    |   28 +
+>>  drivers/usb/cdns3/host.c           |   71 +
+>>  drivers/usb/cdns3/trace.c          |   11 +
+>>  drivers/usb/cdns3/trace.h          |  493 ++++++
+>>  19 files changed, 6951 insertions(+)
+>>  create mode 100644 drivers/usb/cdns3/Kconfig
+>>  create mode 100644 drivers/usb/cdns3/Makefile
+>>  create mode 100644 drivers/usb/cdns3/cdns3-pci-wrap.c
+>>  create mode 100644 drivers/usb/cdns3/core.c
+>>  create mode 100644 drivers/usb/cdns3/core.h
+>>  create mode 100644 drivers/usb/cdns3/debug.h
+>>  create mode 100644 drivers/usb/cdns3/debugfs.c
+>>  create mode 100644 drivers/usb/cdns3/drd.c
+>>  create mode 100644 drivers/usb/cdns3/drd.h
+>>  create mode 100644 drivers/usb/cdns3/ep0.c
+>>  create mode 100644 drivers/usb/cdns3/gadget-export.h
+>>  create mode 100644 drivers/usb/cdns3/gadget.c
+>>  create mode 100644 drivers/usb/cdns3/gadget.h
+>>  create mode 100644 drivers/usb/cdns3/host-export.h
+>>  create mode 100644 drivers/usb/cdns3/host.c
+>>  create mode 100644 drivers/usb/cdns3/trace.c
+>>  create mode 100644 drivers/usb/cdns3/trace.h
+>> 
+>
+> <snip>
+>
+> It is getting really hard to review this patch as it is so large.
+> I would still suggest to split host/gadget/drd if possible.
+> Felipe, any objections?
 
-Cheers, Andreas
+Maybe you guys can do a few rounds off-list then?
 
-
-
-
-
-
---Apple-Mail=_8279D554-5136-4116-923A-7ADF706F607E
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl1U9xgACgkQcqXauRfM
-H+AigRAAjBT1bQ1441POojCHsdf5ekCI3YdUU3mc+ZlXpLiJEINu/s5yASrE+Sv/
-8ZQ7Y9I6QjuRptKQYe5bmdBULxwBSrH5XOdRSgdaHUQV6Tme1ypYmltYt4sRmbXN
-GHTATVXs0YVoO1WO9RXbf6y1FcdC6yLd3mmqPrY/S9d1HHPDJET780butz8J/JjA
-D0EIVVpa+xoGpqT4coAqSbXmlkhKhtmqxwqfsSiEvGpJpZgNbuCKFwasnKGMIypY
-Fzc6waSFyjZYCzzvd2d+OLybaM7GVrD6Z1NvZ7r1nQ6qqHiZuYxohUllFzrZ45Ti
-Z8nSMViJOz/VHfxIddt3PaE8U6XGHsayAh8FvKAVnco3zr3CUlKG5knP9aDr5nk9
-ZabmwSvcNcYfGS5O02asMQPmoIXPP2pHAVUebp3d+v697oz33dcbR0A3+xwsD4Yt
-C1C4KyPNaEWScrCARWhqJY6O7iHDY4dpAGyZJAUfj0vN6Y93vXnLi1obHgoyg9ZV
-A4UfbFFClvPl3/1TiSumnfh3YgSGUex4fnO04bs+3kVY0ALg6dZi1iSpkqj7zuTG
-sNc9zD4gJkGsoF5Pc1kjpyPit+lzA6JORqOb4n7bMY9kDKZS/hTwl5+EbI9mUphm
-m0k4LNclBsy5wFP/x77LR225ARd5VKqJfcHr20c5ok8NbZnVVIw=
-=fx1V
------END PGP SIGNATURE-----
-
---Apple-Mail=_8279D554-5136-4116-923A-7ADF706F607E--
+-- 
+balbi
