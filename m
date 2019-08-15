@@ -2,128 +2,88 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE67C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA35C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2178721743
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:20:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HERjNASn"
+	by mail.kernel.org (Postfix) with ESMTP id 0EFB521744
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:22:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731422AbfHOUUH (ORCPT
+        id S1731595AbfHOUWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 16:20:07 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42146 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfHOUUH (ORCPT
+        Thu, 15 Aug 2019 16:22:12 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40796 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730986AbfHOUWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 16:20:07 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y1so1474319plp.9;
-        Thu, 15 Aug 2019 13:20:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=o2UWdztwplU/Oa1kfd6r7OmeKvX4UXnDDSltXMGR7mk=;
-        b=HERjNASn6U/yQLL/FwhOJPOUPyzN1YZk4vPSJFbyW3I2tXxR7Izz0NTnh9d9rc/UNZ
-         2MB1ZD9zV/GoEeIL3ps2/ACbf8e3uEgJTAAMmVhSQmp/mU+wRWHDH+V/my0Q+1KsH32X
-         WhaeRgL/r+5MA1QFzBn1lUUmio8SfrpLZRx4IdtG3u4gAC4K7pCMYMkB5dfhq7uZtj/m
-         4SRlxzjLjtLLAAxUdZiA1UbM6x7vSkNGbkjTCX1ne5Y0++3lz1JDr9EmAwoEE1k7ldea
-         df2h/tXbn0DlrG+WVyTmU43wfh30BvekblVRqCP9siUJ6aR2w5SPl6TRDgIW5PSB22aP
-         ZDbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=o2UWdztwplU/Oa1kfd6r7OmeKvX4UXnDDSltXMGR7mk=;
-        b=mlLjZXjw0ePK+i9JdWApGvWazuq8XlnMa83JmuN53uq/m5p9Ls2lJ/SftBEz3C7VLv
-         97hK2AHSLw5AucH73tAh9EZElHdKDSKkMffePiDIVB2TXFwI54Z9cpQDPzIswIUtk7Co
-         xEw34RJNJsmVE9XgeJsApK3Y5/0MZV7OVxvZgJQNm3JcAGcP6hA/OlucNEXBkl71uRen
-         vzvx+O6iPfXHKq+tsNtd+nUt5LOk7oZoqjmgVsEBpZ1baZCMr/8yi9F/51PuhwkT6+un
-         ADijrlZFVn0RJPVwLJs75+byN5K8c0lXYX67utZ5TgHQMOUbLPmcJzwbBVQlQt3Wu5Tf
-         2AuA==
-X-Gm-Message-State: APjAAAVFUb575hMwhSI/ouL8AFdbrGL3UCxDA1V+c+bWYZhyxzAW9SCX
-        ehizZOH591vGDn79Fk5ieCs=
-X-Google-Smtp-Source: APXvYqwIUAUZiQiAkHR6XU40ULaLm+qv2NzyL1/NUZ1aKZzMP4iSpQViJ6vPFmXxL9l5MIrW8owBzg==
-X-Received: by 2002:a17:902:b48c:: with SMTP id y12mr5837510plr.202.1565900406391;
-        Thu, 15 Aug 2019 13:20:06 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 33sm2825038pgy.22.2019.08.15.13.20.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 13:20:05 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 13:20:04 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        torvalds@linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/91] 4.19.67-stable review
-Message-ID: <20190815202004.GA1192@roeck-us.net>
-References: <20190814165748.991235624@linuxfoundation.org>
- <aa683926-3df0-6f60-841a-7ea5a5e3566d@roeck-us.net>
- <CAEUSe78A6Cvt2irKzysfRSHubVxDaEGUVaLf2UF5EHzTeiOVOw@mail.gmail.com>
- <20190815193716.GG30437@kroah.com>
+        Thu, 15 Aug 2019 16:22:12 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hyMG8-0005Yt-FK; Thu, 15 Aug 2019 22:22:08 +0200
+Date:   Thu, 15 Aug 2019 22:22:07 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain
+ asm/intel-family.h
+In-Reply-To: <20190815183055.GA6847@agluck-desk2.amr.corp.intel.com>
+Message-ID: <alpine.DEB.2.21.1908152217070.1908@nanos.tec.linutronix.de>
+References: <20190814234030.30817-1-tony.luck@intel.com> <20190815075822.GC15313@zn.tnic> <20190815172159.GA4935@agluck-desk2.amr.corp.intel.com> <20190815175455.GJ15313@zn.tnic> <20190815183055.GA6847@agluck-desk2.amr.corp.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190815193716.GG30437@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 09:37:16PM +0200, Greg Kroah-Hartman wrote:
-> On Thu, Aug 15, 2019 at 08:58:55AM -0500, Daniel Díaz wrote:
-> > Hello!
-> > 
-> > On Thu, 15 Aug 2019 at 08:29, Guenter Roeck <linux@roeck-us.net> wrote:
-> > >
-> > > On 8/14/19 10:00 AM, Greg Kroah-Hartman wrote:
-> > > > This is the start of the stable review cycle for the 4.19.67 release.
-> > > > There are 91 patches in this series, all will be posted as a response
-> > > > to this one.  If anyone has any issues with these being applied, please
-> > > > let me know.
-> > > >
-> > > > Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
-> > > > Anything received after that time might be too late.
-> > > >
-> > >
-> > > Building x86_64:tools/perf ... failed
-> > > --------------
-> > > Error log:
-> > > Warning: arch/x86/include/asm/cpufeatures.h differs from kernel
-> > > Warning: arch/x86/include/uapi/asm/kvm.h differs from kernel
-> > >    PERF_VERSION = 4.9.189.ge000f87
-> > > util/machine.c: In function ‘machine__create_module’:
-> > > util/machine.c:1088:43: error: ‘size’ undeclared (first use in this function); did you mean ‘die’?
-> > >    if (arch__fix_module_text_start(&start, &size, name) < 0)
-> > >                                             ^~~~
-> > >                                             die
-> > > util/machine.c:1088:43: note: each undeclared identifier is reported only once for each function it appears in
-> > 
-> > We noticed this exact failure but not on 4.19. For us, 4.19's perf builds fine.
-> > 
-> > On 4.9, perf failed with the error you described, as it looks like
-> > it's missing 9ad4652b66f1 ("perf record: Fix wrong size in
-> > perf_record_mmap for last kernel module"), though I have not verified
-> > yet.
-> 
-> I've queued that up now, and will push out the 4.9-rc tree, so let's see
-> if that fixes it or not.
-> 
-I think you may have pushed the 4.19 branch. Sorry for the confusion
-I caused by attributing the problem to the wrong branch.
+On Thu, 15 Aug 2019, Luck, Tony wrote:
+> On Thu, Aug 15, 2019 at 07:54:55PM +0200, Borislav Petkov wrote:
+> @@ -11,6 +11,21 @@
+>   * While adding a new CPUID for a new microarchitecture, add a new
+>   * group to keep logically sorted out in chronological order. Within
+>   * that group keep the CPUID for the variants sorted by model number.
+> + *
+> + * HOWTO Build an INTEL_FAM6_ definition:
+> + * 
+> + * 1. Start with INTEL_FAM6_
+> + * 2. If not Core-family, add a note about it, like "ATOM".  There are only
+> + *    two options for this (Xeon Phi and Atom).  It is exceedingly unlikely
+> + *    that you are adding a cpu which needs a new option here.
+> + * 3. Add the processor microarchitecture, not the platform name
+> + * 4. Add a short differentiator if necessary.  Add an _X to differentiate
+> + *    Server from Client.
 
-Guenter
+We have the following existing _SHORT variants:
+
+_G
+_EP
+_EX
+_CORE
+_ULT
+_GT3E
+_XEON_D
+_MOBILE
+_DESKTOP
+_NNPI
+_MID
+_TABLET
+_PLUS
+
+So we should document the list of valid and usable ones and either fixup
+broken ones or document that they are historic ballast and not to be used
+for new ones. Otherwise you end up with the same discussions again.
+
+Thanks,
+
+	tglx
