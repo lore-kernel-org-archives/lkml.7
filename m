@@ -5,66 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D908C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F32C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 421972084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CD922084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:00:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eghHCqIB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtfoiYD5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733259AbfHOPAU (ORCPT
+        id S1733283AbfHOPA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 11:00:20 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40588 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733212AbfHOPAT (ORCPT
+        Thu, 15 Aug 2019 11:00:26 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35754 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733212AbfHOPAW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 11:00:19 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c3so2480644wrd.7;
-        Thu, 15 Aug 2019 08:00:17 -0700 (PDT)
+        Thu, 15 Aug 2019 11:00:22 -0400
+Received: by mail-wm1-f65.google.com with SMTP id l2so1516773wmg.0;
+        Thu, 15 Aug 2019 08:00:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ClnZ/ifqhx3xp+ECOjK85PdZjR7vJXHB5OxiKa77zTo=;
-        b=eghHCqIBiyryJx5chz0UoBCDd8FFw6vLdIvKAJE0vhxUNx7vdUXVqTAe0NeN3nBiR1
-         pkDc8hLMmUd17zW8wpPItL1rPiXnaZwK0DfIA9pHX/Tb/49f5BWSu1E/K4B45jFS4aNt
-         bRvHHmzSZNhKgHx32zkSGr1E56t+dXC/WL5yJMDSMV9JYfUKzF2taJGz77AsHFrZfiJi
-         v00OInftZeBFxdq7/NO4guccBj19gsitRaD6KOustQGAAKzUcxdPPG+UCsnM82wOQ7xY
-         j0IAUTNpKhNpakH6wjtbR5fYw6/xHNbS3OF3g+0fQPyX4NvyEI0lPBdOHQ9x4EUxIKEB
-         f5gw==
+        bh=yhYg9hn/63+6B9t0MZk6qflb+4wVUlf/t544dzGkgaA=;
+        b=PtfoiYD59tzuZbU3w4AxfNa6ImyVyhMXzzVBxk0FEpIV0WlK4/3Fy8GEcsZBVNVX57
+         XlCsbZriIBoDiBmWt2y/m7M0QF8A6joO1mYsxx2uRsViRo8nmdi1uhrCBE2PP0yRGxqz
+         vR7Q8dJsbzneqNv89cCy9d/6vbmgTQO2dg0gZGmcAFp3zZVgXZn8kcHiLwB2FNifO2w7
+         xARrKHMHY1HrDYq704EpD9JjZ+KnM00Kz+xt02Zd4UYZvMhCu/EbojHyLDmQyIJdmhhX
+         GsK0fbn/tFC4Kej54gDxUECyYXohdYttMMtMBi3uwazxk4/XALZPH98bu2Z4vf800vqn
+         7LaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ClnZ/ifqhx3xp+ECOjK85PdZjR7vJXHB5OxiKa77zTo=;
-        b=rVx4JZbpFGdpuZ/nP7g7fCk29XrdkPOF/KfseHuukzJLuO/fLg9d5t16QCmGAqT8Ku
-         vuo6NzUZbaIU/wOOll3JgAJBQUVIQ+t4jzfItUoINJUNWoaFg8E8HFoJ3Rx/zRkmYUR/
-         2abVrmwItEwLIZCHsqnCrGY1hLvJCSE4TUbgZjch6SqvrnK48d3I1Av8xeL3TIm0URxw
-         NSA7zffXaMvYbw8NZ32WZrQVdzEK8abkp2E2W2SfyMWJ7QoOnAveGBdFcKScDHLkrq0w
-         MAIgia8PUNg1kVyujmN7RJ8fOZmM6la6cwivja18dfM9t8FAG6GCFvuRmiKFYt2wtghp
-         Uxbg==
-X-Gm-Message-State: APjAAAUepMxtS9M4AXvrejBHc2QnhcjVZEYnc0RhHPFAdXnpMh3D4CUP
-        zFZAIroNthhKWorJmF+Nz0U=
-X-Google-Smtp-Source: APXvYqxfU2ylyuJ7Y1A3krXl7GBk8HZ2/6oP0qli4lbicIZFPhImxCvuS/CLFHKsYC7fa681QVg7fA==
-X-Received: by 2002:a5d:4403:: with SMTP id z3mr6098513wrq.29.1565881217136;
-        Thu, 15 Aug 2019 08:00:17 -0700 (PDT)
+        bh=yhYg9hn/63+6B9t0MZk6qflb+4wVUlf/t544dzGkgaA=;
+        b=NIXJ/xWHrlV1qICCQ19R/JImQ/kokmtHoZF9Xy+BEIjYjoePDigUA4lACRN8WiRBs4
+         3aYplrr0Rx/C+VioV/9/HNfdHSAIbKMETcKdkhVnWwnns47GoA3KKB2PJWcqSrU+e18E
+         0m2sg2qDlnBfxV5aXOkEeSy9GITOGbJfVufZ6tyipXX+7xZbmw9UVX6eDnpiFy+dwIBN
+         jjPdS8giusqMi/gOoSjDruictlKiiz/ngItDj3CTGS6z0808LCS07oZ3J3FAkeN0yLlF
+         UqisUU7BL+IXhoBHnDqbdVrif4mBCpkk1LbOZ7+UpLeG4NbxCuJKVtwmsJQsMVc0rV6s
+         V3FA==
+X-Gm-Message-State: APjAAAU/bD99R4S6Nf3cVAyZmd02g971iHLOS4mdhFRwPrAeWa1vpjzL
+        Ey/cQ93l+5fj4kAxWrzZgzKg04X8FEcBOQ==
+X-Google-Smtp-Source: APXvYqyLJ6yceWHs66JcZt6cbgoW6wH/5jnTiFO3GO0ClapT0Cwq473NgraXZg42/+aOcbCdajNqaw==
+X-Received: by 2002:a7b:c954:: with SMTP id i20mr3254460wml.169.1565881221114;
+        Thu, 15 Aug 2019 08:00:21 -0700 (PDT)
 Received: from localhost.localdomain ([94.204.252.234])
-        by smtp.gmail.com with ESMTPSA id e4sm5041054wrh.39.2019.08.15.08.00.15
+        by smtp.gmail.com with ESMTPSA id e4sm5041054wrh.39.2019.08.15.08.00.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 15 Aug 2019 08:00:16 -0700 (PDT)
+        Thu, 15 Aug 2019 08:00:20 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Benjamin Valentin <benpicco@googlemail.com>,
         Sean Young <sean@mess.org>, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org
 Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 5/7] media: rc: add keymap for WeTek Hub remote
-Date:   Thu, 15 Aug 2019 18:59:15 +0400
-Message-Id: <1565881157-14644-6-git-send-email-christianshewitt@gmail.com>
+Subject: [PATCH 7/7] media: rc: add keymap for HardKernel ODROID remote
+Date:   Thu, 15 Aug 2019 18:59:17 +0400
+Message-Id: <1565881157-14644-8-git-send-email-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565881157-14644-1-git-send-email-christianshewitt@gmail.com>
 References: <1565881157-14644-1-git-send-email-christianshewitt@gmail.com>
@@ -73,101 +73,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The WeTek Hub Android STB ships with a simple NEC remote.
+This is a simple NEC remote control device shipped with the HardKernel
+ODROID range of SBC devices.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- drivers/media/rc/keymaps/Makefile       |  1 +
- drivers/media/rc/keymaps/rc-wetek-hub.c | 55 +++++++++++++++++++++++++++++++++
- include/media/rc-map.h                  |  1 +
- 3 files changed, 57 insertions(+)
- create mode 100644 drivers/media/rc/keymaps/rc-wetek-hub.c
+ drivers/media/rc/keymaps/Makefile    |  1 +
+ drivers/media/rc/keymaps/rc-odroid.c | 51 ++++++++++++++++++++++++++++++++++++
+ include/media/rc-map.h               |  1 +
+ 3 files changed, 53 insertions(+)
+ create mode 100644 drivers/media/rc/keymaps/rc-odroid.c
 
 diff --git a/drivers/media/rc/keymaps/Makefile b/drivers/media/rc/keymaps/Makefile
-index 85423cc..6d744ac 100644
+index d316a99..a56fc63 100644
 --- a/drivers/media/rc/keymaps/Makefile
 +++ b/drivers/media/rc/keymaps/Makefile
-@@ -116,6 +116,7 @@ obj-$(CONFIG_RC_MAP) += rc-adstech-dvb-t-pci.o \
- 			rc-videomate-m1f.o \
- 			rc-videomate-s350.o \
- 			rc-videomate-tv-pvr.o \
-+			rc-wetek-hub.o \
- 			rc-winfast.o \
- 			rc-winfast-usbii-deluxe.o \
- 			rc-su3000.o \
-diff --git a/drivers/media/rc/keymaps/rc-wetek-hub.c b/drivers/media/rc/keymaps/rc-wetek-hub.c
+@@ -76,6 +76,7 @@ obj-$(CONFIG_RC_MAP) += rc-adstech-dvb-t-pci.o \
+ 			rc-nec-terratec-cinergy-xs.o \
+ 			rc-norwood.o \
+ 			rc-npgtech.o \
++			rc-odroid.o \
+ 			rc-pctv-sedna.o \
+ 			rc-pinnacle-color.o \
+ 			rc-pinnacle-grey.o \
+diff --git a/drivers/media/rc/keymaps/rc-odroid.c b/drivers/media/rc/keymaps/rc-odroid.c
 new file mode 100644
-index 0000000..8d114ae
+index 0000000..e95aab6
 --- /dev/null
-+++ b/drivers/media/rc/keymaps/rc-wetek-hub.c
++++ b/drivers/media/rc/keymaps/rc-odroid.c
 @@ -0,0 +1,55 @@
 +// SPDX-License-Identifier: GPL-2.0+
-+// Copyright (c) 2018 Christian Hewitt
++//
++// Copyright (C) 2019 Christian Hewitt <christianshewitt@gmail.com>
 +
 +#include <media/rc-map.h>
 +#include <linux/module.h>
 +
-+/*
-+ * This keymap is used with the WeTek Hub STB.
-+ */
++//
++// Keytable for the HardKernel ODROID remote control
++//
 +
-+static struct rc_map_table wetek_hub[] = {
++static struct rc_map_table odroid[] = {
 +
-+	{ 0x77f1, KEY_POWER },
++	{ 0xb2dc, KEY_POWER },
 +
-+	{ 0x77f2, KEY_HOME },
-+	{ 0x77f3, KEY_MUTE }, // mouse
++	{ 0xb288, KEY_MUTE },
++	{ 0xb282, KEY_HOME },
 +
-+	{ 0x77f4, KEY_UP },
-+	{ 0x77f5, KEY_DOWN },
-+	{ 0x77f6, KEY_LEFT },
-+	{ 0x77f7, KEY_RIGHT },
-+	{ 0x77f8, KEY_OK },
++	{ 0xb2ca, KEY_UP },
++	{ 0xb299, KEY_LEFT },
++	{ 0xb2ce, KEY_OK },
++	{ 0xb2c1, KEY_RIGHT },
++	{ 0xb2d2, KEY_DOWN },
 +
-+	{ 0x77f9, KEY_BACK },
-+	{ 0x77fa, KEY_MENU },
++	{ 0xb2c5, KEY_MENU },
++	{ 0xb29a, KEY_BACK },
 +
-+	{ 0x77fb, KEY_VOLUMEUP },
-+	{ 0x77fc, KEY_VOLUMEDOWN },
-+
++	{ 0xb281, KEY_VOLUMEDOWN },
++	{ 0xb280, KEY_VOLUMEUP },
 +};
 +
-+static struct rc_map_list wetek_hub_map = {
++static struct rc_map_list odroid_map = {
 +	.map = {
-+		.scan     = wetek_hub,
-+		.size     = ARRAY_SIZE(wetek_hub),
++		.scan     = odroid,
++		.size     = ARRAY_SIZE(odroid),
 +		.rc_proto = RC_PROTO_NEC,
-+		.name     = RC_MAP_WETEK_HUB,
++		.name     = RC_MAP_ODROID,
 +	}
 +};
 +
-+static int __init init_rc_map_wetek_hub(void)
++static int __init init_rc_map_odroid(void)
 +{
-+	return rc_map_register(&wetek_hub_map);
++	return rc_map_register(&odroid_map);
 +}
 +
-+static void __exit exit_rc_map_wetek_hub(void)
++static void __exit exit_rc_map_odroid(void)
 +{
-+	rc_map_unregister(&wetek_hub_map);
++	rc_map_unregister(&odroid_map);
 +}
 +
-+module_init(init_rc_map_wetek_hub)
-+module_exit(exit_rc_map_wetek_hub)
++module_init(init_rc_map_odroid)
++module_exit(exit_rc_map_odroid)
 +
 +MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Christian Hewitt <christianshewitt@gmail.com>");
++MODULE_AUTHOR("Christian Hewitt <christianshewitt@gmail.com");
 diff --git a/include/media/rc-map.h b/include/media/rc-map.h
-index a7ed5aa..e7fee29 100644
+index 1a357fb..ead4567 100644
 --- a/include/media/rc-map.h
 +++ b/include/media/rc-map.h
-@@ -283,6 +283,7 @@ struct rc_map *rc_map_get(const char *name);
- #define RC_MAP_VIDEOMATE_K100            "rc-videomate-k100"
- #define RC_MAP_VIDEOMATE_S350            "rc-videomate-s350"
- #define RC_MAP_VIDEOMATE_TV_PVR          "rc-videomate-tv-pvr"
-+#define RC_MAP_WETEK_HUB                 "rc-wetek-hub"
- #define RC_MAP_WINFAST                   "rc-winfast"
- #define RC_MAP_WINFAST_USBII_DELUXE      "rc-winfast-usbii-deluxe"
- #define RC_MAP_SU3000                    "rc-su3000"
+@@ -242,6 +242,7 @@ struct rc_map *rc_map_get(const char *name);
+ #define RC_MAP_NEC_TERRATEC_CINERGY_XS   "rc-nec-terratec-cinergy-xs"
+ #define RC_MAP_NORWOOD                   "rc-norwood"
+ #define RC_MAP_NPGTECH                   "rc-npgtech"
++#define RC_MAP_ODROID                    "rc-odroid"
+ #define RC_MAP_PCTV_SEDNA                "rc-pctv-sedna"
+ #define RC_MAP_PINNACLE_COLOR            "rc-pinnacle-color"
+ #define RC_MAP_PINNACLE_GREY             "rc-pinnacle-grey"
 -- 
 2.7.4
 
