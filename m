@@ -2,330 +2,126 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CABC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F214DC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 643D720578
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C3C2086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:53:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PnxGlUUA"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="HYBnUyoV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732896AbfHOUvj (ORCPT
+        id S1732932AbfHOUxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 16:51:39 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:57472 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730540AbfHOUvi (ORCPT
+        Thu, 15 Aug 2019 16:53:34 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39368 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732720AbfHOUxe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 16:51:38 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FKn4OC061339;
-        Thu, 15 Aug 2019 20:51:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=GpC+6R1lz8+JZEuMGasUscMLJA1wE7x7lhh/SRTOENY=;
- b=PnxGlUUALVdrpZbvp7Px7WPwjLC10xeCPai7tl5B/azIyyCBXBfjHb6CnawAmC1qJet5
- nF+iV4kN6deEmhqLGvQ28lumeA+Td3BbUzPYMh+YzMDV0F7eF1um1fFYlGD89a2yrFYm
- duacSYxusqHElhQx18/dv6e+/BUKG3f9ZEXwvOFkSP5VxmYFN0SsFsAwBwQJe6/G7EJm
- Xz1a1lAhMjXH78C4tI7oUnMMXkwdYCpzzLzmbrdLZTlUaj2+aByh1L+JNZtFhQ73EG82
- d//9iNoQa86F9q8fR/v9glNShz+oehJB9qj2uT7UiCaXhtFxX7tl2fzLRJbdVjAIUpiL xw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2u9nvpn7s3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Aug 2019 20:51:18 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FKlw2u057107;
-        Thu, 15 Aug 2019 20:51:17 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2ucgf1f3yd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Aug 2019 20:51:17 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7FKp6bV030722;
-        Thu, 15 Aug 2019 20:51:07 GMT
-Received: from [10.65.149.173] (/10.65.149.173)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 15 Aug 2019 13:51:06 -0700
-Subject: Re: [RFC PATCH 0/2] Add predictive memory reclamation and compaction
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     akpm@linux-foundation.org, vbabka@suse.cz,
-        mgorman@techsingularity.net, dan.j.williams@intel.com,
-        osalvador@suse.de, richard.weiyang@gmail.com, hannes@cmpxchg.org,
-        arunks@codeaurora.org, rppt@linux.vnet.ibm.com, jgg@ziepe.ca,
-        amir73il@gmail.com, alexander.h.duyck@linux.intel.com,
-        linux-mm@kvack.org, linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-References: <20190813014012.30232-1-khalid.aziz@oracle.com>
- <20190813140553.GK17933@dhcp22.suse.cz>
- <3cb0af00-f091-2f3e-d6cc-73a5171e6eda@oracle.com>
- <20190814085831.GS17933@dhcp22.suse.cz>
- <d3895804-7340-a7ae-d611-62913303e9c5@oracle.com>
- <20190815170215.GQ9477@dhcp22.suse.cz>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <2668ad2e-ee52-8c88-22c0-1952243af5a1@oracle.com>
-Date:   Thu, 15 Aug 2019 14:51:04 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 15 Aug 2019 16:53:34 -0400
+Received: by mail-qt1-f196.google.com with SMTP id l9so3818037qtu.6
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 13:53:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JSpVZiPBrGYAUGx+Ea3a4Y0npIYaRGCqHD40eUQBGCU=;
+        b=HYBnUyoVPsBJvVkswIQnogJxrcbVs8FykxsadpD+OBBcZSLXZY31yp6SetRVZSo3gw
+         pXzFGNahpp430zsf6TO5hgqAge4ytAHZkg3cz+qsLurhE/NR2LeM/v5U35AorKka9gOm
+         F0/agF8rX0XtBCdT4/DrAcB6EFxp+zi7TzRss7TkheyzTzqRpE6DOQzim91W1HXcSLOE
+         wbTK2OuQvyTNEOSMn5Q8UkH9VBs/SMEVMpdybq9m9vQdnq1OEvPmmwCNhZn9WugTWoTF
+         SFcCB60AjKm8JKJrM2UOHkhWHNhcfq764HCA8eZz6beZKGzsZJxEXd1W7upwpenkYYWx
+         fjpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JSpVZiPBrGYAUGx+Ea3a4Y0npIYaRGCqHD40eUQBGCU=;
+        b=dzi3VsSsY1fIIpL/s4kcG8NJzjjHm2De/nS83zyiw6Anl99Y3oNdRH5uLituUuBtHL
+         PYEWK3XJ+3yHLWr0F8GfTM9M+OEDqMCPgAM18DmkW5rQTqeiHXdy07DC1hrBcjmYfwnX
+         tnQxh4IuqI2R3idGSGWOl5ULRYDRBRvZKlv/Fsf3cYLHF79QpBNN9PNmOZvVU9coyuyY
+         lejZszbUdCMkeBpeRw70fp1OnbRSvQ6S0u5aSxVUIz52iTNwzAQY8CvQd9EOx/0Zc2w+
+         l5gYz16ko/W+4X4s9YOpNK1pSIQPTutciXnheFx7qQh21yjVQkIcjpVdB496ZZGbjxj8
+         /SbA==
+X-Gm-Message-State: APjAAAW/qvSVlhsTEiyXhudsiAOrU42igj+by1YsUnYFQpqvJXbp+jJw
+        3vROdzPgZdbqnIEltO2IWS9hWw==
+X-Google-Smtp-Source: APXvYqzbXNyNwRv677yBKxMuVBmtR2yPqIKJwxHbRYZPkBY8ioVL+BuHkgNtj5ndJuuFzEJngE7PkQ==
+X-Received: by 2002:a0c:b0ef:: with SMTP id p44mr4599552qvc.27.1565902413583;
+        Thu, 15 Aug 2019 13:53:33 -0700 (PDT)
+Received: from ovpn-122-72.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id x3sm1991828qkl.71.2019.08.15.13.53.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 15 Aug 2019 13:53:33 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     James.Bottomley@HansenPartnership.com, deller@gmx.de,
+        linux@roeck-us.net, kirill.shutemov@linux.intel.com,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] parisc: fix compilation errrors
+Date:   Thu, 15 Aug 2019 16:53:05 -0400
+Message-Id: <20190815205305.1382-1-cai@lca.pw>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-In-Reply-To: <20190815170215.GQ9477@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=775
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908150198
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=829 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908150198
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/15/19 11:02 AM, Michal Hocko wrote:
-> On Thu 15-08-19 10:27:26, Khalid Aziz wrote:
->> On 8/14/19 2:58 AM, Michal Hocko wrote:
->>> On Tue 13-08-19 09:20:51, Khalid Aziz wrote:
->>>> On 8/13/19 8:05 AM, Michal Hocko wrote:
->>>>> On Mon 12-08-19 19:40:10, Khalid Aziz wrote:
->>>>> [...]
->>>>>> Patch 1 adds code to maintain a sliding lookback window of (time, =
-number
->>>>>> of free pages) points which can be updated continuously and adds c=
-ode to
->>>>>> compute best fit line across these points. It also adds code to us=
-e the
->>>>>> best fit lines to determine if kernel must start reclamation or
->>>>>> compaction.
->>>>>>
->>>>>> Patch 2 adds code to collect data points on free pages of various =
-orders
->>>>>> at different points in time, uses code in patch 1 to update slidin=
-g
->>>>>> lookback window with these points and kicks off reclamation or
->>>>>> compaction based upon the results it gets.
->>>>>
->>>>> An important piece of information missing in your description is wh=
-y
->>>>> do we need to keep that logic in the kernel. In other words, we hav=
-e
->>>>> the background reclaim that acts on a wmark range and those are tun=
-able
->>>>> from the userspace. The primary point of this background reclaim is=
- to
->>>>> keep balance and prevent from direct reclaim. Why cannot you implem=
-ent
->>>>> this or any other dynamic trend watching watchdog and tune watermar=
-ks
->>>>> accordingly? Something similar applies to kcompactd although we mig=
-ht be
->>>>> lacking a good interface.
->>>>>
->>>>
->>>> Hi Michal,
->>>>
->>>> That is a very good question. As a matter of fact the initial protot=
-ype
->>>> to assess the feasibility of this approach was written in userspace =
-for
->>>> a very limited application. We wrote the initial prototype to monito=
-r
->>>> fragmentation and used /sys/devices/system/node/node*/compact to tri=
-gger
->>>> compaction. The prototype demonstrated this approach has merits.
->>>>
->>>> The primary reason to implement this logic in the kernel is to make =
-the
->>>> kernel self-tuning.
->>>
->>> What makes this particular self-tuning an universal win? In other wor=
-ds
->>> there are many ways to analyze the memory pressure and feedback it ba=
-ck
->>> that I can think of. It is quite likely that very specific workloads
->>> would have very specific demands there. I have seen cases where are
->>> trivial increase of min_free_kbytes to normally insane value worked
->>> really great for a DB workload because the wasted memory didn't matte=
-r
->>> for example.
->>
->> Hi Michal,
->>
->> The problem is not so much as do we have enough knobs available, rathe=
-r
->> how do we tweak them dynamically to avoid allocation stalls. Knobs lik=
-e
->> watermarks and min_free_kbytes are set once typically and left alone.
->=20
-> Does anything prevent from tuning these knobs more dynamically based on=
+The commit 0cfaee2af3a0 ("include/asm-generic/5level-fixup.h: fix
+variable 'p4d' set but not used") converted a few functions from macros
+to static inline, which causes parisc to complain,
 
-> already exported metrics?
+In file included from ./include/asm-generic/4level-fixup.h:38:0,
+                 from ./arch/parisc/include/asm/pgtable.h:5,
+                 from ./arch/parisc/include/asm/io.h:6,
+                 from ./include/linux/io.h:13,
+                 from sound/core/memory.c:9:
+./include/asm-generic/5level-fixup.h:14:18: error: unknown type name
+'pgd_t'; did you mean 'pid_t'?
+ #define p4d_t    pgd_t
+                  ^
+./include/asm-generic/5level-fixup.h:24:28: note: in expansion of macro
+'p4d_t'
+ static inline int p4d_none(p4d_t p4d)
+                            ^~~~~
 
-Hi Michal,
+It is because "4level-fixup.h" is included before "asm/page.h" where
+"pgd_t" is defined.
 
-The smarts for tuning these knobs can be implemented in userspace and
-more knobs added to allow for what is missing today, but we get back to
-the same issue as before. That does nothing to make kernel self-tuning
-and adds possibly even more knobs to userspace. Something so fundamental
-to kernel memory management as making free pages available when they are
-needed really should be taken care of in the kernel itself. Moving it to
-userspace just means the kernel is hobbled unless one installs and tunes
-a userspace package correctly.
+Fixes: 0cfaee2af3a0 ("include/asm-generic/5level-fixup.h: fix variable 'p4d' set but not used")
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/parisc/include/asm/pgtable.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
->=20
->> Allocation stalls show up even on much smaller scale than large DB or
->> cloud platforms. I have seen it on a desktop class machine running a f=
-ew
->> services in the background. Desktop is running gnome3, I would lock th=
-e
->> screen and come back to unlock it a day or two later. In that time mos=
-t
->> of memory has been consumed by buffer/page cache. Just unlocking the
->> screen can take 30+ seconds while system reclaims pages to be able swa=
-p
->> back in all the processes that were inactive so far.
->=20
-> This sounds like a bug to me.
-
-Quite possibly. I had seen that behavior with 4.17, 4.18 and 4.19
-kernels. I then just moved enough tasks off of my machine to other
-machines to make the problem go away. So I can't say if the problem has
-persisted past 4.19.
-
->=20
->> It is true different workloads will have different requirements and th=
-at
->> is what I am attempting to address here. Instead of tweaking the knobs=
-
->> statically based upon one workload requirements, I am looking at the
->> trend of memory consumption instead. A best fit line showing recent
->> trend can be quite indicative of what the workload is doing in terms o=
-f
->> memory.
->=20
-> Is there anything preventing from following that trend from the
-> userspace and trigger background reclaim earlier to not even get to the=
-
-> direct reclaim though?
-
-It is possible to do that in userspace for compaction. We will need a
-smaller hammer than drop_cache to do the same for reclamation. This
-still makes kernel dependent upon a properly configured userspace
-program for it to do something as fundamental as free page management.
-That does not sound like a good situation. Allocation stalls have been a
-problem for many years (I could find patch from as far back as 2002
-attempting to address allocation stalls). More tuning knobs have been
-temporary solution at best since workloads and storage technology keep
-changing and processors keep getting faster overall.
-
->=20
->> For instance, a cloud server might be running a certain number
->> of instances for a few days and it can end up using any memory not use=
-d
->> up by tasks, for buffer/page cache. Now the sys admin gets a request t=
-o
->> launch another instance and when they try to to do that, system starts=
-
->> to allocate pages and soon runs out of free pages. We are now in direc=
-t
->> reclaim path and it can take significant amount of time to find all fr=
-ee
->> pages the new task needs. If the kernel were watching the memory
->> consumption trend instead, it could see that the trend line shows a
->> complete exhaustion of free pages or 100% fragmentation in near future=
-,
->> irrespective of what the workload is.
->=20
-> I am confused now. How can an unpredictable action (like sys admin
-> starting a new workload) be handled by watching a memory consumption
-> history trend? From the above description I would expect that the syste=
-m
-> would be in a balanced state for few days when a new instance is
-> launched. The only reasonable thing to do then is to trigger the reclai=
-m
-> before the workload is spawned but then what is the actual difference
-> between direct reclaim and an early reclaim?
-
-If kernel watches trend far ahead enough, it can start
-reclaiming/compacting well in advance and keep direct reclamation at bay
-even if there is sudden surge of memory demand. A pathological case of
-userspace suddenly demanding 100's of GB of memory in one request is
-always difficult to tackle. For such cases, triggering
-reclamation/compaction and waiting to launch new process until enough
-free pages are available might be the only solution. A more normal case
-will be a continuous stream of page allocations until a database is
-fully populated or a new server instance is launched. It is like a
-bucket with a hole. We can wait to start filling it until water gets
-very low in it or notice that the hole at the bottom has been unplugged
-and water is draining fast, so we start filling it before water gets too
-low. If we have been observing how fast the bucket fills up with no leak
-and how fast is the current drain, we can start filling in advance
-enough that water never gets too low. That is what I referred to as
-improvements to current patch, i.e. track current reclamation/compaction
-rate in kswapd and kcompactd and use those rates to determine how far in
-advance do we start reclaiming/compacting.
-
->=20
-> [...]
->>> I agree on this point. Is the current set of tunning sufficient? What=
-
->>> would be missing if not?
->>>
->>
->> We have knob available to force compaction immediately. That is helpfu=
-l
->> and in some case, sys admins have resorted to forcing compaction on al=
-l
->> zones before launching a new cloud instance or loading a new database.=
-
->> Some admins have resorted to using /proc/sys/vm/drop_caches to force
->> buffer/page cache pages to be freed up. Either of these solutions caus=
-es
->> system load to go up immediately while kswapd/kcompactd run to free up=
-
->> and compact pages. This is far from ideal. Other knobs available seem =
-to
->> be hard to set correctly especially on servers that run mixed workload=
-s
->> which results in a regular stream of customer complaints coming in abo=
-ut
->> system stalling at most inopportune times.
->=20
-> Then let's talk about what is missing in the existing tuning we already=
-
-> provide. I do agree that compaction needs some love but I am under
-> impression that min_free_kbytes and watermark_*_factor should give a
-> decent abstraction to control the background reclaim. If that is not th=
-e
-> case then I am really interested on examples because I might be easily
-> missing something there.
-
-Just last week an email crossed my mailbox where an order 4 allocation
-failed on a server that has 768 GB memory and had 355,000 free pages of
-order 2 and lower available at the time. That allocation failure brought
-down an important service and was a significant disruption.
-
-These knobs do give some control to userspace but their values depend
-upon workload and it is easy enough to set them wrong. Finding the right
-value is not easy for servers that run mixed workloads. So it is not
-that there are not enough knobs or we can not add more knobs. The
-question is is that the right direction to go or do we make kernel
-self-tuning and give it the capability to deal with these issues without
-requiring sys admins to be able to determine correct values for these
-knobs for every new workload.
-
-Thanks,
-Khalid
+diff --git a/arch/parisc/include/asm/pgtable.h b/arch/parisc/include/asm/pgtable.h
+index a39b079e73f2..6d58c1739b42 100644
+--- a/arch/parisc/include/asm/pgtable.h
++++ b/arch/parisc/include/asm/pgtable.h
+@@ -2,6 +2,7 @@
+ #ifndef _PARISC_PGTABLE_H
+ #define _PARISC_PGTABLE_H
+ 
++#include <asm/page.h>
+ #include <asm-generic/4level-fixup.h>
+ 
+ #include <asm/fixmap.h>
+@@ -98,8 +99,6 @@ static inline void purge_tlb_entries(struct mm_struct *mm, unsigned long addr)
+ 
+ #endif /* !__ASSEMBLY__ */
+ 
+-#include <asm/page.h>
+-
+ #define pte_ERROR(e) \
+ 	printk("%s:%d: bad pte %08lx.\n", __FILE__, __LINE__, pte_val(e))
+ #define pmd_ERROR(e) \
+-- 
+2.20.1 (Apple Git-117)
 
