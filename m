@@ -2,185 +2,84 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EC6C41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9805C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A77042089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B129F2086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:59:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kernelthusiast.com header.i=@kernelthusiast.com header.b="AAz3QXgT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731532AbfHOR5Z (ORCPT
+        id S1731610AbfHOR7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:57:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46325 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730932AbfHOR5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:57:25 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B3C0D3083363;
-        Thu, 15 Aug 2019 17:57:23 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E61018CBB9;
-        Thu, 15 Aug 2019 17:57:21 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 13:57:20 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-Message-ID: <20190815175720.GJ30916@redhat.com>
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
- <20190814202027.18735-3-daniel.vetter@ffwll.ch>
- <20190814235805.GB11200@ziepe.ca>
- <20190815065829.GA7444@phenom.ffwll.local>
- <20190815122344.GA21596@ziepe.ca>
- <20190815132127.GI9477@dhcp22.suse.cz>
- <20190815141219.GF21596@ziepe.ca>
- <20190815155950.GN9477@dhcp22.suse.cz>
- <20190815165631.GK21596@ziepe.ca>
- <20190815174207.GR9477@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190815174207.GR9477@dhcp22.suse.cz>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 15 Aug 2019 17:57:24 +0000 (UTC)
+        Thu, 15 Aug 2019 13:59:09 -0400
+Received: from mailrelay3-1.pub.mailoutpod1-cph3.one.com ([46.30.210.184]:49033
+        "EHLO mailrelay3-1.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731528AbfHOR7I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:59:08 -0400
+X-Greylist: delayed 962 seconds by postgrey-1.27 at vger.kernel.org; Thu, 15 Aug 2019 13:59:07 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelthusiast.com; s=20140924;
+        h=message-id:date:subject:cc:to:from:from;
+        bh=72iD1l8ny9OkbNhpcgiU4FFUBqOtwt+0hcXw2zkqwMo=;
+        b=AAz3QXgTfP4hadrp+tND+8K2ZBP2CVhz65jBVLeJud2Tk2R6EFER3QrBsYS1EWC0JWtfaLYkWXWRN
+         8jXef36aH5yY7pX4xvjD3KfLVc8eT7FmXogM3nw/nHuKAiYUBRDFTIlkwQ+3aDdt1W1P0x6m9RNCx3
+         VhsS0yk2UEcaSVuM=
+X-HalOne-Cookie: 7db38abda4ecec3c90f12d9bc3f0ca9d887f376b
+X-HalOne-ID: 2075a044-bf84-11e9-b5ee-d0431ea8bb03
+Received: from jacob-MS-7A62 (unknown [105.159.19.48])
+        by mailrelay3.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+        id 2075a044-bf84-11e9-b5ee-d0431ea8bb03;
+        Thu, 15 Aug 2019 17:43:02 +0000 (UTC)
+Received: by jacob-MS-7A62 (sSMTP sendmail emulation); Thu, 15 Aug 2019 18:43:01 +0100
+From:   Jacob Huisman <jacobhuisman@kernelthusiast.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jacob Huisman <jacobhuisman@kernelthusiast.com>
+Subject: [PATCH] usb: make comment block in line with coding style
+Date:   Thu, 15 Aug 2019 18:42:10 +0100
+Message-Id: <20190815174210.580-1-jacobhuisman@kernelthusiast.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 07:42:07PM +0200, Michal Hocko wrote:
-> On Thu 15-08-19 13:56:31, Jason Gunthorpe wrote:
-> > On Thu, Aug 15, 2019 at 06:00:41PM +0200, Michal Hocko wrote:
-> > 
-> > > > AFAIK 'GFP_NOWAIT' is characterized by the lack of __GFP_FS and
-> > > > __GFP_DIRECT_RECLAIM..
-> > > >
-> > > > This matches the existing test in __need_fs_reclaim() - so if you are
-> > > > OK with GFP_NOFS, aka __GFP_IO which triggers try_to_compact_pages(),
-> > > > allocations during OOM, then I think fs_reclaim already matches what
-> > > > you described?
-> > > 
-> > > No GFP_NOFS is equally bad. Please read my other email explaining what
-> > > the oom_reaper actually requires. In short no blocking on direct or
-> > > indirect dependecy on memory allocation that might sleep.
-> > 
-> > It is much easier to follow with some hints on code, so the true
-> > requirement is that the OOM repear not block on GFP_FS and GFP_IO
-> > allocations, great, that constraint is now clear.
-> 
-> I still do not get why do you put FS/IO into the picture. This is really
-> about __GFP_DIRECT_RECLAIM.
-> 
-> > 
-> > > If you can express that in the existing lockdep machinery. All
-> > > fine. But then consider deployments where lockdep is no-no because
-> > > of the overhead.
-> > 
-> > This is all for driver debugging. The point of lockdep is to find all
-> > these paths without have to hit them as actual races, using debug
-> > kernels.
-> > 
-> > I don't think we need this kind of debugging on production kernels?
-> 
-> Again, the primary motivation was a simple debugging aid that could be
-> used without worrying about overhead. So lockdep is very often out of
-> the question.
-> 
-> > > > The best we got was drivers tested the VA range and returned success
-> > > > if they had no interest. Which is a big win to be sure, but it looks
-> > > > like getting any more is not really posssible.
-> > > 
-> > > And that is already a great win! Because many notifiers only do care
-> > > about particular mappings. Please note that backing off unconditioanlly
-> > > will simply cause that the oom reaper will have to back off not doing
-> > > any tear down anything.
-> > 
-> > Well, I'm working to propose that we do the VA range test under core
-> > mmu notifier code that cannot block and then we simply remove the idea
-> > of blockable from drivers using this new 'range notifier'. 
-> > 
-> > I think this pretty much solves the concern?
-> 
-> Well, my idea was that a range check and early bail out was a first step
-> and then each specific notifier would be able to do a more specific
-> check. I was not able to do the second step because that requires a deep
-> understanding of the respective subsystem.
-> 
-> Really all I do care about is to reclaim as much memory from the
-> oom_reaper context as possible. And that cannot really be an unbounded
-> process. Quite contrary it should be as swift as possible. From my
-> cursory look some notifiers are able to achieve their task without
-> blocking or depending on memory just fine. So bailing out
-> unconditionally on the range of interest would just put us back.
+Comment block was not in accordance with coding style.
+Fixes two checkpatch warnings:
+WARNING: Block comments use * on subsequent lines
+WARNING: Block comments use a trailing */ on a separate line
 
-Agree, OOM just asking the question: can i unmap that page quickly ?
-so that me (OOM) can swap it out. In many cases the driver need to
-lookup something to see if at the time the memory is just not in use
-and can be reclaim right away. So driver should have a path to
-optimistically update its state to allow quick reclaim.
+Signed-off-by: Jacob Huisman <jacobhuisman@kernelthusiast.com>
+---
+ drivers/usb/usb-skeleton.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/usb/usb-skeleton.c b/drivers/usb/usb-skeleton.c
+index f101347e3ea3..c31d17d05810 100644
+--- a/drivers/usb/usb-skeleton.c
++++ b/drivers/usb/usb-skeleton.c
+@@ -35,9 +35,11 @@ MODULE_DEVICE_TABLE(usb, skel_table);
+ 
+ /* our private defines. if this grows any larger, use your own .h file */
+ #define MAX_TRANSFER		(PAGE_SIZE - 512)
+-/* MAX_TRANSFER is chosen so that the VM is not stressed by
+-   allocations > PAGE_SIZE and the number of packets in a page
+-   is an integer 512 is the largest possible packet on EHCI */
++/*
++ * MAX_TRANSFER is chosen so that the VM is not stressed by
++ * allocations > PAGE_SIZE and the number of packets in a page
++ * is an integer 512 is the largest possible packet on EHCI
++ */
+ #define WRITES_IN_FLIGHT	8
+ /* arbitrarily chosen */
+ 
+-- 
+2.17.1
 
-> > > > However, we could (probably even should) make the drivers fs_reclaim
-> > > > safe.
-> > > > 
-> > > > If that is enough to guarantee progress of OOM, then lets consider
-> > > > something like using current_gfp_context() to force PF_MEMALLOC_NOFS
-> > > > allocation behavior on the driver callback and lockdep to try and keep
-> > > > pushing on the the debugging, and dropping !blocking.
-> > > 
-> > > How are you going to enforce indirect dependency? E.g. a lock that is
-> > > also used in other context which depend on sleepable memory allocation
-> > > to move forward.
-> > 
-> > You mean like this:
-> > 
-> >        CPU0                                 CPU1
-> >                                         mutex_lock()
-> >                                         kmalloc(GFP_KERNEL)
-> 
-> no I mean __GFP_DIRECT_RECLAIM here.
-> 
-> >                                         mutex_unlock()
-> >   fs_reclaim_acquire()
-> >   mutex_lock() <- illegal: lock dep assertion
-> 
-> I cannot really comment on how that is achieveable by lockdep. I managed
-> to forget details about FS/IO reclaim recursion tracking already and I
-> do not have time to learn it again. It was quite a hack. Anyway, let me
-> repeat that the primary motivation was a simple aid. Not something as
-> poverful as lockdep.
-
-I feel that the fs_reclaim_acquire() is just too heavy weight here. I
-do think that Daniel patches improve the debugging situation without
-burdening anything so i am in favor or merging that.
-
-I do not think we should devote too much time into fs_reclaim(), our
-time would be better spend in improving the driver shrinker for instance
-after all OOM is all about trying to free-up memory.
-
-Cheers,
-Jérôme
