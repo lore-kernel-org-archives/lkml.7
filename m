@@ -2,111 +2,152 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78638C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911C4C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560A62133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B172084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731522AbfHOMvG (ORCPT
+        id S1731746AbfHOMvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:51:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37338 "EHLO mx1.redhat.com"
+        Thu, 15 Aug 2019 08:51:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:43702 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730451AbfHOMvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730555AbfHOMvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 15 Aug 2019 08:51:06 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6CEA23001596;
-        Thu, 15 Aug 2019 12:51:05 +0000 (UTC)
-Received: from krava (unknown [10.43.17.33])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 5D1567D3E8;
-        Thu, 15 Aug 2019 12:51:02 +0000 (UTC)
-Date:   Thu, 15 Aug 2019 14:51:01 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, kstewart@linuxfoundation.org,
-        gregkh@linuxfoundation.org, jeremie.galarneau@efficios.com,
-        shawn@git.icu, tstoyanov@vmware.com, tglx@linutronix.de,
-        alexey.budankov@linux.intel.com, adrian.hunter@intel.com,
-        songliubraving@fb.com, ravi.bangoria@linux.ibm.com
-Subject: Re: [PATCH]Perf: Return error code for perf_session__new function on
- failure
-Message-ID: <20190815125101.GE30356@krava>
-References: <20190814092654.7781.81601.stgit@localhost.localdomain>
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B30E8344;
+        Thu, 15 Aug 2019 05:51:05 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AB473F694;
+        Thu, 15 Aug 2019 05:51:05 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 13:51:03 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
+        lorenzo.pieralisi@arm.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, roy.zang@nxp.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 05/10] PCI: layerscape: Modify the way of getting
+ capability with different PEX
+Message-ID: <20190815125103.GH43882@e119886-lin.cambridge.arm.com>
+References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
+ <20190815083716.4715-5-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190814092654.7781.81601.stgit@localhost.localdomain>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 15 Aug 2019 12:51:05 +0000 (UTC)
+In-Reply-To: <20190815083716.4715-5-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 03:02:18PM +0530, Mamatha Inamdar wrote:
-
-SNIP
-
->  #ifdef HAVE_ZSTD_SUPPORT
->  static int perf_session__process_compressed_event(struct perf_session *session,
-> @@ -181,6 +182,7 @@ static int ordered_events__deliver_event(struct ordered_events *oe,
->  struct perf_session *perf_session__new(struct perf_data *data,
->  				       bool repipe, struct perf_tool *tool)
+On Thu, Aug 15, 2019 at 04:37:11PM +0800, Xiaowei Bao wrote:
+> The different PCIe controller in one board may be have different
+> capability of MSI or MSIX, so change the way of getting the MSI
+> capability, make it more flexible.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c | 28 +++++++++++++++++++-------
+>  1 file changed, 21 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index be61d96..9404ca0 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -22,6 +22,7 @@
+>  
+>  struct ls_pcie_ep {
+>  	struct dw_pcie		*pci;
+> +	struct pci_epc_features	*ls_epc;
+>  };
+>  
+>  #define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> @@ -40,25 +41,26 @@ static const struct of_device_id ls_pcie_ep_of_match[] = {
+>  	{ },
+>  };
+>  
+> -static const struct pci_epc_features ls_pcie_epc_features = {
+> -	.linkup_notifier = false,
+> -	.msi_capable = true,
+> -	.msix_capable = false,
+> -};
+> -
+>  static const struct pci_epc_features*
+>  ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
 >  {
-> +	int ret = 0;
-
-hum, should ret be initialized to -ENOMEM instead?
-
-jirka
-
->  	struct perf_session *session = zalloc(sizeof(*session));
->  
->  	if (!session)
-> @@ -195,13 +197,15 @@ struct perf_session *perf_session__new(struct perf_data *data,
->  
->  	perf_env__init(&session->header.env);
->  	if (data) {
-> -		if (perf_data__open(data))
-> +		ret = perf_data__open(data);
-> +		if (ret < 0)
->  			goto out_delete;
->  
->  		session->data = data;
->  
->  		if (perf_data__is_read(data)) {
-> -			if (perf_session__open(session) < 0)
-> +			ret = perf_session__open(session);
-> +			if (ret < 0)
->  				goto out_delete;
->  
->  			/*
-> @@ -216,7 +220,8 @@ struct perf_session *perf_session__new(struct perf_data *data,
->  			perf_evlist__init_trace_event_sample_raw(session->evlist);
->  
->  			/* Open the directory data. */
-> -			if (data->is_dir && perf_data__open_dir(data))
-> +			ret = data->is_dir && perf_data__open_dir(data);
-> +			if (ret)
->  				goto out_delete;
->  		}
->  	} else  {
-> @@ -250,7 +255,7 @@ struct perf_session *perf_session__new(struct perf_data *data,
->   out_delete:
->  	perf_session__delete(session);
->   out:
-> -	return NULL;
-> +	return ERR_PTR(ret);
+> -	return &ls_pcie_epc_features;
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> +
+> +	return pcie->ls_epc;
 >  }
 >  
->  static void perf_session__delete_threads(struct perf_session *session)
+>  static void ls_pcie_ep_init(struct dw_pcie_ep *ep)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+>  	enum pci_barno bar;
+>  
+>  	for (bar = BAR_0; bar <= BAR_5; bar++)
+>  		dw_pcie_ep_reset_bar(pci, bar);
+> +
+> +	pcie->ls_epc->msi_capable = ep->msi_cap ? true : false;
+> +	pcie->ls_epc->msix_capable = ep->msix_cap ? true : false;
+>  }
+>  
+>  static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> @@ -118,6 +120,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct dw_pcie *pci;
+>  	struct ls_pcie_ep *pcie;
+> +	struct pci_epc_features *ls_epc;
+>  	struct resource *dbi_base;
+>  	int ret;
+>  
+> @@ -129,6 +132,10 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  	if (!pci)
+>  		return -ENOMEM;
+>  
+> +	ls_epc = devm_kzalloc(dev, sizeof(*ls_epc), GFP_KERNEL);
+> +	if (!ls_epc)
+> +		return -ENOMEM;
+> +
+>  	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+>  	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+>  	if (IS_ERR(pci->dbi_base))
+> @@ -139,6 +146,13 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  	pci->ops = &ls_pcie_ep_ops;
+>  	pcie->pci = pci;
+>  
+> +	ls_epc->linkup_notifier = false,
+> +	ls_epc->msi_capable = true,
+> +	ls_epc->msix_capable = true,
+
+As [msi,msix]_capable is shortly set from ls_pcie_ep_init - is there any
+reason to set them here (to potentially incorrect values)?
+
+Thanks,
+
+Andrew Murray
+
+> +	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+> +
+> +	pcie->ls_epc = ls_epc;
+> +
+>  	platform_set_drvdata(pdev, pcie);
+>  
+>  	ret = ls_add_pcie_ep(pcie, pdev);
+> -- 
+> 2.9.5
 > 
