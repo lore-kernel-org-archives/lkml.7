@@ -2,88 +2,127 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59186C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6588EC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A7A2171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40479208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbfHOEyg (ORCPT
+        id S1729970AbfHOE4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:54:36 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:44700 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726139AbfHOEye (ORCPT
+        Thu, 15 Aug 2019 00:56:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24564 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726317AbfHOE4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:54:34 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R401e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TZWOIXs_1565844866;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TZWOIXs_1565844866)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 15 Aug 2019 12:54:29 +0800
-Subject: Re: [RESEND PATCH 1/2 -mm] mm: account lazy free pages separately
-To:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>
-Cc:     kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
-        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1565308665-24747-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190809083216.GM18351@dhcp22.suse.cz>
- <1a3c4185-c7ab-8d6f-8191-77dce02025a7@linux.alibaba.com>
- <20190809180238.GS18351@dhcp22.suse.cz>
- <79c90f6b-fcac-02e1-015a-0eaa4eafdf7d@linux.alibaba.com>
- <fb1f4958-5147-2fab-531f-d234806c2f37@linux.alibaba.com>
- <20190812093430.GD5117@dhcp22.suse.cz>
- <297aefa2-ba64-cb91-d2c8-733054db01a3@linux.alibaba.com>
- <9d2e63c4-ebb6-1f14-b8fb-b39f2f67d916@suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <914b2db6-ac82-5cc2-a127-864f7d71911f@linux.alibaba.com>
-Date:   Wed, 14 Aug 2019 21:54:23 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Thu, 15 Aug 2019 00:56:19 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7F4ql7A083046
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 00:56:18 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ucx4y4h5x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 00:56:17 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Thu, 15 Aug 2019 05:56:14 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 15 Aug 2019 05:56:11 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7F4uAvG50528284
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Aug 2019 04:56:10 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91B8D4C040;
+        Thu, 15 Aug 2019 04:56:10 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3F72B4C044;
+        Thu, 15 Aug 2019 04:56:10 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 15 Aug 2019 04:56:10 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 1F234A01BD;
+        Thu, 15 Aug 2019 14:56:07 +1000 (AEST)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org, mpe@ellerman.id.au
+Cc:     stable@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc: Allow flush_(inval_)dcache_range to work across ranges >4GB
+Date:   Thu, 15 Aug 2019 14:55:42 +1000
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <9d2e63c4-ebb6-1f14-b8fb-b39f2f67d916@suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19081504-0020-0000-0000-0000035FED72
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081504-0021-0000-0000-000021B50A83
+Message-Id: <20190815045543.16325-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-15_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=843 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908150051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Alastair D'Silva <alastair@d-silva.org>
 
+Heads Up: This patch cannot be submitted to Linus's tree, as the affected
+assembler functions have already been converted to C.
 
-On 8/14/19 5:55 AM, Vlastimil Babka wrote:
-> On 8/12/19 7:00 PM, Yang Shi wrote:
->>> I can see that memcg rss size was the primary problem David was looking
->>> at. But MemAvailable will not help with that, right? Moreover is
->> Yes, but David actually would like to have memcg MemAvailable (the
->> accounter like the global one), which should be counted like the global
->> one and should account per memcg deferred split THP properly.
->>
->>> accounting the full THP correct? What if subpages are still mapped?
->> "Deferred split" definitely doesn't mean they are free. When memory
->> pressure is hit, they would be split, then the unmapped normal pages
->> would be freed. So, when calculating MemAvailable, they are not
->> accounted 100%, but like "available += lazyfree - min(lazyfree / 2,
->> wmark_low)", just like how page cache is accounted.
->>
->> We could get more accurate account, i.e. checking each sub page's
->> mapcount when accounting, but it may change before shrinker start
->> scanning. So, just use the ballpark estimation to trade off the
->> complexity for accurate accounting.
-> If we know the mapcounts in the moment the deferred split is initiated (I
-> suppose there has to be a iteration over all subpages already?), we could get
-> the exact number to adjust the counter with, and also store the number somewhere
-> (e.g. a unused field in first/second tail page, I think we already do that for
-> something). Then in the shrinker we just read that number to adjust the counter
-> back. Then we can ignore the subpage mapping changes before shrinking happens,
-> they shouldn't change the situation significantly, and importantly we we will be
-> safe from counter imbalance thanks to the stored number.
+When calling flush_(inval_)dcache_range with a size >4GB, we were masking
+off the upper 32 bits, so we would incorrectly flush a range smaller
+than intended.
 
-Thanks, I'm going to look into this approach. Thanks for the suggestion 
-again.
+This patch replaces the 32 bit shifts with 64 bit ones, so that
+the full size is accounted for.
 
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+---
+ arch/powerpc/kernel/misc_64.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
+index 1ad4089dd110..d4d096f80f4b 100644
+--- a/arch/powerpc/kernel/misc_64.S
++++ b/arch/powerpc/kernel/misc_64.S
+@@ -130,7 +130,7 @@ _GLOBAL_TOC(flush_dcache_range)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of dcache block size */
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	beqlr				/* nothing to do? */
+ 	mtctr	r8
+ 0:	dcbst	0,r6
+@@ -148,7 +148,7 @@ _GLOBAL(flush_inval_dcache_range)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)/* Get log-2 of dcache block size */
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	beqlr				/* nothing to do? */
+ 	sync
+ 	isync
+-- 
+2.21.0
 
