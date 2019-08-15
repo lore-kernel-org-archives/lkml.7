@@ -2,104 +2,121 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B907C3A59B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25828C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECDD208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565890314;
-	bh=3iUYKByNYBFk5zG5BT8CONxHJptvPtEgevu/nQr5NxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aGlAMlDMuAYy0hmh8yqIo3ZVEDbE+hcT4kD0cSLR1M0P62meg4oebXv6ZLUIasVgx
-	 IPr9m3VHYoQnG0bUgpYgjzJ5/hfOgmMUIiCevxYs1oJ6kadhake40EcmZVU31MTmRq
-	 vy4puamhhARWBHmlGUjD7q6IAN4oXcw72JAWeO0k=
+	by mail.kernel.org (Postfix) with ESMTP id F423A2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731164AbfHORbx (ORCPT
+        id S1731441AbfHORcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:31:53 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34314 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfHORbw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:31:52 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m10so2528402qkk.1;
-        Thu, 15 Aug 2019 10:31:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=no35aRJk15zFWg1jR8wwX86QzYLoUfFHVUo7VWQ/svc=;
-        b=N47XHCOSmAXueVA0YYaev8/a4K3QvUHId7wqDd1kKuzb9i0XsPGZt3JSFV4fwHmm1o
-         079FfdNxA44u+Lpn9KWO67P5gdQDjS8yLNUwxRyP+az0D6idFOXOvoIL6oT/ByHrYA+e
-         5x2GXXGdhLQUUhHxcna9tpQrgumRatQu40F/xy7UzP2oUcoOJ5ObUyU55Ybx+CjVdZVf
-         ZGK+QWvr7EafhXZLjXcXxcSaDgonosEcUP9Kh6/WmBW5wIhcwJ7Gd5u11eGiOYvLgYRX
-         ruJyUluXJcICik/5Pis1nVgLz6wleggRuqyNbfxBltc6VpOrVEuqmr44g/tLfUNGnReK
-         /wxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=no35aRJk15zFWg1jR8wwX86QzYLoUfFHVUo7VWQ/svc=;
-        b=LAhr5b4LaF3OckGln8l8++cxyNw+taN8eKEypTdvjAW5FfSa62SK0RTiRUC5PIv/Y7
-         c4CKp2gPG8gJC10xiPWskoxsGjKF3mXl6YzO0LFrWTHaDP5uGGtqV1N91u9fvO+PP3gI
-         RwoAVdkphHbfTibxxGI9f94wG4LO0uGyxPIPoZrTw5hX/OtNgjytNYaJSm5bFuRj8tV7
-         s95QZR6bC0hTudDARsBRqwow6n3HAYWXeYLxtIpZxbVtpO7IxFwh55knd17D9bqbGtjY
-         JSZmhj1d3c2EiJcWZqWjSUFS7QcnwwDSN4YwVPz50AkWBNyjobtviZ1+AACRVpgcgaUz
-         vkmA==
-X-Gm-Message-State: APjAAAXyGYUTXOiLbsOEDLp5Rt9JBaz4c1t9taYJMKR1yDGTvivHnowg
-        2H2NJBiP7QNDs2L1NLaKm2A=
-X-Google-Smtp-Source: APXvYqwTF1AugQK16mXeTAc3YHU1jdzIKEshxpTbcRaCWmkGxQukcPJXecgkAY0Igu5HQb1bcCAfWw==
-X-Received: by 2002:a37:aa57:: with SMTP id t84mr5056219qke.34.1565890311488;
-        Thu, 15 Aug 2019 10:31:51 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:25cd])
-        by smtp.gmail.com with ESMTPSA id v24sm1928599qth.33.2019.08.15.10.31.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 10:31:50 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 10:31:48 -0700
-From:   Tejun Heo <tj@kernel.org>
+        Thu, 15 Aug 2019 13:32:39 -0400
+Received: from mga14.intel.com ([192.55.52.115]:17145 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbfHORcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:32:39 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 10:32:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
+   d="scan'208";a="260880031"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga001.jf.intel.com with ESMTP; 15 Aug 2019 10:32:37 -0700
+Date:   Thu, 15 Aug 2019 10:32:37 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
 To:     Jan Kara <jack@suse.cz>
-Cc:     axboe@kernel.dk, hannes@cmpxchg.org, mhocko@kernel.org,
-        vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH 4/4] writeback, memcg: Implement foreign dirty flushing
-Message-ID: <20190815173148.GD588936@devbig004.ftw2.facebook.com>
-References: <20190803140155.181190-1-tj@kernel.org>
- <20190803140155.181190-5-tj@kernel.org>
- <20190815143404.GK14313@quack2.suse.cz>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
+Message-ID: <20190815173237.GA30924@iweiny-DESK2.sc.intel.com>
+References: <20190812234950.GA6455@iweiny-DESK2.sc.intel.com>
+ <38d2ff2f-4a69-e8bd-8f7c-41f1dbd80fae@nvidia.com>
+ <20190813210857.GB12695@iweiny-DESK2.sc.intel.com>
+ <a1044a0d-059c-f347-bd68-38be8478bf20@nvidia.com>
+ <90e5cd11-fb34-6913-351b-a5cc6e24d85d@nvidia.com>
+ <20190814234959.GA463@iweiny-DESK2.sc.intel.com>
+ <2cbdf599-2226-99ae-b4d5-8909a0a1eadf@nvidia.com>
+ <ac834ac6-39bd-6df9-fca4-70b9520b6c34@nvidia.com>
+ <20190815132622.GG14313@quack2.suse.cz>
+ <20190815133510.GA21302@quack2.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190815143404.GK14313@quack2.suse.cz>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190815133510.GA21302@quack2.suse.cz>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Jan.
+On Thu, Aug 15, 2019 at 03:35:10PM +0200, Jan Kara wrote:
+> On Thu 15-08-19 15:26:22, Jan Kara wrote:
+> > On Wed 14-08-19 20:01:07, John Hubbard wrote:
+> > > On 8/14/19 5:02 PM, John Hubbard wrote:
+> > > 
+> > > Hold on, I *was* forgetting something: this was a two part thing, and
+> > > you're conflating the two points, but they need to remain separate and
+> > > distinct. There were:
+> > > 
+> > > 1. FOLL_PIN is necessary because the caller is clearly in the use case that
+> > > requires it--however briefly they might be there. As Jan described it,
+> > > 
+> > > "Anything that gets page reference and then touches page data (e.g.
+> > > direct IO) needs the new kind of tracking so that filesystem knows
+> > > someone is messing with the page data." [1]
+> > 
+> > So when the GUP user uses MMU notifiers to stop writing to pages whenever
+> > they are writeprotected with page_mkclean(), they don't really need page
+> > pin - their access is then fully equivalent to any other mmap userspace
+> > access and filesystem knows how to deal with those. I forgot out this case
+> > when I wrote the above sentence.
+> > 
+> > So to sum up there are three cases:
+> > 1) DIO case - GUP references to pages serving as DIO buffers are needed for
+> >    relatively short time, no special synchronization with page_mkclean() or
+> >    munmap() => needs FOLL_PIN
+> > 2) RDMA case - GUP references to pages serving as DMA buffers needed for a
+> >    long time, no special synchronization with page_mkclean() or munmap()
+> >    => needs FOLL_PIN | FOLL_LONGTERM
+> >    This case has also a special case when the pages are actually DAX. Then
+> >    the caller additionally needs file lease and additional file_pin
+> >    structure is used for tracking this usage.
+> > 3) ODP case - GUP references to pages serving as DMA buffers, MMU notifiers
+> >    used to synchronize with page_mkclean() and munmap() => normal page
+> >    references are fine.
+> 
+> I want to add that I'd like to convert users in cases 1) and 2) from using
+> GUP to using differently named function. Users in case 3) can stay as they
+> are for now although ultimately I'd like to denote such use cases in a
+> special way as well...
+> 
 
-On Thu, Aug 15, 2019 at 04:34:04PM +0200, Jan Kara wrote:
-> I have to say I'm a bit nervous about the completely lockless handling
-> here. I understand that garbage in the cgwb_frn will just result in this
-> mechanism not working and possibly flushing wrong wb's but still it seems a
-> bit fragile. But I don't see any cheap way of synchronizing this so I guess
-> let's try how this will work in practice.
+Ok just to make this clear I threw up my current tree with your patches here:
 
-Yeah, this approach is fundamentally best-effort, so I went for low
-overhead and mostly correct operation.  If something like this doesn't
-cut it (w/ bug fixes and some polishing over time), my gut feeling is
-that we probably should bite the bullet and synchronize cgroup memory
-and inode ownerships rather than pushing further on inherently
-imprecise mitigation mechanisms.
+https://github.com/weiny2/linux-kernel/commits/mmotm-rdmafsdax-b0-v4
 
-Thanks.
+I'm talking about dropping the final patch:
+05fd2d3afa6b rdma/umem_odp: Use vaddr_pin_pages_remote() in ODP
 
--- 
-tejun
+The other 2 can stay.  I split out the *_remote() call.  We don't have a user
+but I'll keep it around for a bit.
+
+This tree is still WIP as I work through all the comments.  So I've not changed
+names or variable types etc...  Just wanted to settle this.
+
+Ira
+
