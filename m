@@ -2,132 +2,96 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA43C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E1DC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC6E2086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565889297;
-	bh=7sre6MIPLWwd1jobG44tQtVEBwrUoAgbLSZMDPj/dY8=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=qEajlUfX98B+6CM9DZAVju7AFpRCDQHJOQ3y1WdpDVgQwjAndrEhcsUwU315l96gP
-	 vU7bLvO7qpCyjNpqsCmUHsoB2YYNDtSm81Sdbh/cldBPp0lgcDyUbLttp8LFGuZfHP
-	 kEBLsYydLei/LuZjZdEOrZjeyzo5ta5xCza57fY0=
+	by mail.kernel.org (Postfix) with ESMTP id 4D1492084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731968AbfHORO4 (ORCPT
+        id S1731990AbfHORPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 15 Aug 2019 13:15:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38572 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731965AbfHORO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 15 Aug 2019 13:14:56 -0400
-Received: from mail-ed1-f100.google.com ([209.85.208.100]:40228 "EHLO
-        mail-ed1-f100.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731796AbfHOROh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:14:37 -0400
-Received: by mail-ed1-f100.google.com with SMTP id h8so2704199edv.7
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=2tOdgRw7bHfBUMRr5A78wZooift8kR44FLxZ2fHFoq4=;
-        b=f+CEoFEFFQLZf2i3OABqsLhhctYgsQFlMIgu30gsZqbDs8VpIFhtUdPpDM5Z52bm0M
-         DcDatQRPqvVdi0XNjlYnCpQsOXi403zAvtV2BTHKBF0uk8aKlWFtrnY4rAYVzYo3YARn
-         YyjvRjcxJMnt7bFXicSJAd8oVRssefKZo5nDjw2i/+2SB+XCZAxBoAgJNZh8OcyoBQEV
-         oOMCFi9wcCxiWP+zlAf6M1jmSqOAAF2ZP912rTgqCr6ACzLQKCFirZkvVCKYn+wo9b+8
-         fTcfDwCMW3HXu1GmuvzOgV5Xxck48Ggi7UqqKRge1h1dbvUTSEUDCQTEIJLFPgVLPnyz
-         ghTQ==
-X-Gm-Message-State: APjAAAVArbf+h5du73stKTox6sy8NB8oiwAF/Vf6EsSioBITZqfNAQbV
-        cZ5O4LYwv3+/2EoGY3fbrw94JiaB+7IWo+meB5MoUYgAkfpy4hXPZx8eFxglFXv2hQ==
-X-Google-Smtp-Source: APXvYqxFD14tT+W/wcwosNR4mJq7LHL6hBkxp8vUHcz2et2BdUwg/HEyBFE8UDSLNuhEWf01rrv+4zglTLjl
-X-Received: by 2002:aa7:dc5a:: with SMTP id g26mr6664165edu.62.1565889275802;
-        Thu, 15 Aug 2019 10:14:35 -0700 (PDT)
-Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id u22sm54883edi.2.2019.08.15.10.14.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 10:14:35 -0700 (PDT)
-X-Relaying-Domain: sirena.org.uk
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hyJKd-00052v-CB; Thu, 15 Aug 2019 17:14:35 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id DD14E2742BD6; Thu, 15 Aug 2019 18:14:34 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     kernel-janitors@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: max8660: remove redundant assignment of variable ret" to the regulator tree
-In-Reply-To: <20190813133114.14931-1-colin.king@canonical.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190815171434.DD14E2742BD6@ypsilon.sirena.org.uk>
-Date:   Thu, 15 Aug 2019 18:14:34 +0100 (BST)
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7306446672;
+        Thu, 15 Aug 2019 17:14:56 +0000 (UTC)
+Received: from localhost (ovpn-116-32.gru2.redhat.com [10.97.116.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 02AB6841E7;
+        Thu, 15 Aug 2019 17:14:55 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 14:14:54 -0300
+From:   Eduardo Habkost <ehabkost@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Subject: Re: [PATCH 2/2] KVM: x86: always expose VIRT_SSBD to guests
+Message-ID: <20190815171454.GV3908@habkost.net>
+References: <1565854883-27019-1-git-send-email-pbonzini@redhat.com>
+ <1565854883-27019-3-git-send-email-pbonzini@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565854883-27019-3-git-send-email-pbonzini@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 15 Aug 2019 17:14:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Thu, Aug 15, 2019 at 09:41:23AM +0200, Paolo Bonzini wrote:
+> Even though it is preferrable to use SPEC_CTRL (represented by
+> X86_FEATURE_AMD_SSBD) instead of VIRT_SPEC, VIRT_SPEC is always
+> supported anyway because otherwise it would be impossible to
+> migrate from old to new CPUs.  Make this apparent in the
+> result of KVM_GET_SUPPORTED_CPUID as well.
+> 
+> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+> Reported-by: Eduardo Habkost <ehabkost@redhat.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 145ec050d45d..5865bc73bbb5 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -747,11 +747,13 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+>  		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
+>  		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
+>  		/*
+> -		 * The preference is to use SPEC CTRL MSR instead of the
+> -		 * VIRT_SPEC MSR.
+> +		 * VIRT_SPEC is only implemented for AMD processors,
+> +		 * but the host could set AMD_SSBD if it wanted even
+> +		 * for Intel processors.
+>  		 */
+> -		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) &&
+> -		    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
+> +		if ((boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
+> +		     boot_cpu_has(X86_FEATURE_AMD_SSBD)) &&
+> +		    boot_cpu_has(X86_FEATURE_SVM))
 
-   regulator: max8660: remove redundant assignment of variable ret
+Would it be desirable to move this code to
+svm_set_supported_cpuid(), or is there a reason for keeping this
+in cpuid.c?
 
-has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+>  			entry->ebx |= F(VIRT_SSBD);
+>  		break;
+>  	}
+> -- 
+> 1.8.3.1
+> 
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 9e127fab67e3ec4451696da0c7872fd291b9372b Mon Sep 17 00:00:00 2001
-From: Colin Ian King <colin.king@canonical.com>
-Date: Tue, 13 Aug 2019 14:31:14 +0100
-Subject: [PATCH] regulator: max8660: remove redundant assignment of variable
- ret
-
-Variable ret is initialized to a value that is never read before
-a return statement and hence can be removed. Remove it.
-
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20190813133114.14931-1-colin.king@canonical.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/max8660.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/regulator/max8660.c b/drivers/regulator/max8660.c
-index 4bca54446287..347043a5a9a7 100644
---- a/drivers/regulator/max8660.c
-+++ b/drivers/regulator/max8660.c
-@@ -485,7 +485,6 @@ static int max8660_probe(struct i2c_client *client,
- 		rdev = devm_regulator_register(&client->dev,
- 						  &max8660_reg[id], &config);
- 		if (IS_ERR(rdev)) {
--			ret = PTR_ERR(rdev);
- 			dev_err(&client->dev, "failed to register %s\n",
- 				max8660_reg[id].name);
- 			return PTR_ERR(rdev);
 -- 
-2.20.1
-
+Eduardo
