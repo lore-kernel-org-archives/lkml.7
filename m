@@ -2,119 +2,154 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B815CC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFCFC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F17E206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81719206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:13:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DLZFnnwu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VcclW5+y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732688AbfHOOMj (ORCPT
+        id S1732838AbfHOON1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:12:39 -0400
-Received: from mail-eopbgr70087.outbound.protection.outlook.com ([40.107.7.87]:44441
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730032AbfHOOMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:12:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZhwmsFkSN0vxkCkGyqI607hih1Jyt8qkHv6Lx3p3TDBJouPNtHE5LV8yXPNz0GpbNf2LdNkmT8LG5P0qHH93hwo9RQa+DpCiDBfkEU1hyLPBRMDiRK6WLc4xxxYymQWUuYMVoUQjHL/jDpV069isQSAghCVZQ+d9hLZ8EseCfGHHzyUgCz21f0oYa2OsRSSuzdQiUzXvQqxEMPcettQ8zrpz3eNuTwtpHahjCKcOaVb4GBlTnPZywPdPUGYDkErxLtoo7vnQI1pmP3NR8IELMOOiKP3AMJG9FPXKiA2/Y1IyMk89l8AaHfEMp+E0gOHUntPY4yt0zUfXR6urezhT2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SP/CUayqcLST3C/mXm3bCN0femHBOR7Q7RcvxuyHWQA=;
- b=dNSFv7qoQcDOtHW2XRizcbPz6HAI7PVajKTSr7ejumvfcrzl2O/LGh+EBT9XjT2ehVzQAZywErTfWwVlz7BGOAvzLZ0ClFujRIPaT+drRfVrpfp8qhBT+OxP6mJA5wnXnWTciA3xYM1gd1vNeqrRcZPn+2zalNiMSHYwQYvvfBQiv4fuSXmY0E1TABWYwX9Rm9u0SYZx2ctIwul4lL9M+LVMvMbNFAr61bpTIs4Cibc8PHMq5MnD27i3NNFyLUFkzsNkBl6zITDR46qJ7n5CW06AVa79PXo88tM3FBIN7cWA2ApOlHORvIbPDEPih6ZnFp3IGPr9076PP3lqU+KHCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SP/CUayqcLST3C/mXm3bCN0femHBOR7Q7RcvxuyHWQA=;
- b=DLZFnnwuODjxoiNL/HdadTqonmhgqQDfXJOGVAO7N++12Bi1KuntpC9dm1SRGfnNjHBDXZOTR6+eFvh4NKnKN163LOu+Ac2MbNL6ILaWsXMafRk2Vq5nQkD7Ydu4esDP58FvQZTBGnl+guO8qD2aGAhrTL4hNQ+GFB0e8OwBYZw=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB4526.eurprd04.prod.outlook.com (20.177.54.218) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.13; Thu, 15 Aug 2019 14:12:32 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::c5e8:90f8:da97:947e]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::c5e8:90f8:da97:947e%3]) with mapi id 15.20.2178.016; Thu, 15 Aug 2019
- 14:12:32 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 1/6] arm64: dts: imx8mn-ddr4-evk: Add i2c1 support
-Thread-Topic: [PATCH 1/6] arm64: dts: imx8mn-ddr4-evk: Add i2c1 support
-Thread-Index: AQHVU1si38e0meSW8UGiSZzBVGty8A==
-Date:   Thu, 15 Aug 2019 14:12:32 +0000
-Message-ID: <VI1PR04MB702358167ACAFDEA83F64D17EEAC0@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <1565866783-19672-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c7916f76-f8aa-44eb-b21d-08d7218a9d6e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4526;
-x-ms-traffictypediagnostic: VI1PR04MB4526:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB452603589CE2C1FC641E96E8EEAC0@VI1PR04MB4526.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:403;
-x-forefront-prvs: 01304918F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(39860400002)(346002)(396003)(189003)(199004)(2906002)(76176011)(9686003)(476003)(8676002)(6116002)(8936002)(81166006)(14454004)(478600001)(44832011)(6246003)(55016002)(86362001)(102836004)(3846002)(7416002)(81156014)(2201001)(25786009)(6436002)(229853002)(74316002)(5660300002)(558084003)(446003)(99286004)(91956017)(4326008)(186003)(66066001)(33656002)(66556008)(52536014)(316002)(256004)(64756008)(66476007)(76116006)(7736002)(66446008)(53936002)(305945005)(2501003)(54906003)(486006)(26005)(53546011)(66946007)(71200400001)(71190400001)(110136005)(7696005)(6506007)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4526;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Uuv5oxjN2qJ2F8TSDPy3dSBhczsEfBrfrz7O4MXAXDL75sz8BDEUp1d/RSuZuUxf/5QrWiCiZPKKYA0H+l+CcZZVGng+XeKQBewcsg6xwMVeTnEOalGPHZ+0F+3EFPUFQ3IzyBbHhsCqRl2avRYkDoM885WZXtVbmPq9MQSk6Q9KTmD8YGlBJ4hvWPalk5mHfAp/GNwzWrFsfZGhZR944GX1oWJF5Df54j71kvztpuwlMr6UTDEul+bHVkdUF+j3Pi+jbsm+833uOGATBuvwip2vellzCR4gmnsqFn70uT6ODH+gEP67QSbcC5Vy4f4A7PEFUdguZKfm6+KLj6pb7gxwSwEu2gZg6DEdR6GZt7/Q3YIKb6lGtOns0LtanMKSK0XBaAz7l9xUqSmwKn8EvjV3nc8UN2W8zkxPncIwPZQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 15 Aug 2019 10:13:27 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36778 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730032AbfHOON1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 10:13:27 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g67so1380369wme.1;
+        Thu, 15 Aug 2019 07:13:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6LsD0cotJQRVH3KXBeeTooaiXDe5fXGu9pm+5lBmGzQ=;
+        b=VcclW5+yueqMZ52VTgBNw8ujSJcLWgKTS4KbcD3vybcbwWwOa5qB0kDuDEXjxQxrl5
+         +7yRIreDuJaWOegEvx0YdK9aj2kBzCb4BV5IEILADL2gzCHsmEIkmYUqcLvLNoUsATFu
+         YpuxHOW4EDSolvdTW6zLqpdLbI1vq+kgjiJUggXm2PZ9lLFPRM7t7BuD0nc7fOn7kWQw
+         cnkvVHcBXV/CHyOphs9aYVNeNtaOdC1h8MwCczn8IYbawAcIdTP1h7bfhTM3on2SN8w+
+         mnXyVSpLQTFZJzC3Vph0eGo7/2ie+sWrMnDggSO/d7ZSCoLJhkGMLy6MenZxPTmTDnO9
+         S6xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6LsD0cotJQRVH3KXBeeTooaiXDe5fXGu9pm+5lBmGzQ=;
+        b=sbUjv8e+QkMWX0Zq1HB9+MMow6Icp7KrbUlEpnVVZFFFwJ8kHtAIXdq6K1NXkYC556
+         1a7qeSrb6TdLuh+JgG1oNf3edGWybmOYonQKaWepmDgHKcvvtoUCZQk6T1TwCLpc+xrh
+         xZf+TSJt9YYMdLr6p5BEEUPHdbqHL8LcgeswpFdU/t1VLAZXqf2KtDnrMDh7uCsLtVcq
+         VMDHEdbNj1if/2fiheuZ+Ao8w7b61LIxk/aSo7xvaVm/xh6VOxrZq3C2z9EygXjkx0T9
+         jiD4mGNvz9JMFcjSOFgyNVuDcZMovDqLPkMSuBKFBOqdckswX1n0UF7jqu067v+Qa8Qt
+         bQcw==
+X-Gm-Message-State: APjAAAXmVN0oqup+IhWRkaUdfoaEvemilSDaISf4jhukhkSNUQgJgJ0N
+        +XmJMn/waSsk1UrcIyGiCWc7PIJhPy2vniX07NQ=
+X-Google-Smtp-Source: APXvYqw/G8PfGoyelv2lVHeAPP6H4szvVVKdwegaYiNslA64Rm9t+ikVIqap/YP3DfhsRLLW6Sxb51653C5R8aR9RGc=
+X-Received: by 2002:a7b:ca54:: with SMTP id m20mr2018910wml.102.1565878404787;
+ Thu, 15 Aug 2019 07:13:24 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7916f76-f8aa-44eb-b21d-08d7218a9d6e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 14:12:32.5474
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NSJOnmTR+DV04tLdy//BWGaUXctWLvkfDCHBx84mOd2JFCGR8h1QWc9x3LEm/XqsgCbpo1EfXnlb2Umde2SjfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4526
+References: <20190814213118.28473-1-kherbst@redhat.com> <20190814213118.28473-2-kherbst@redhat.com>
+ <CAPM=9ty7yEUqKrcixV1tTuWCpyh6UikA3rxX8BF1E3fDb6WLQQ@mail.gmail.com>
+ <5e05532328324d01bc554c573f6298f8@AUSX13MPC101.AMER.DELL.COM> <CACO55tsDA1WpMGtAPqUJpWt0AmPDnv9LuC09g2KB5GXB-VSCew@mail.gmail.com>
+In-Reply-To: <CACO55tsDA1WpMGtAPqUJpWt0AmPDnv9LuC09g2KB5GXB-VSCew@mail.gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 15 Aug 2019 10:13:13 -0400
+Message-ID: <CADnq5_NUox3vvg6Mt3i9erA+AL2MfotpNBZQnWWknn4j+j-F=Q@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
+ enable dGPU direct output"
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     Mario.Limonciello@dell.com,
+        nouveau <nouveau@lists.freedesktop.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>,
+        Alex Hung <alex.hung@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.08.2019 14:18, Anson.Huang@nxp.com wrote:=0A=
-> From: Anson Huang <Anson.Huang@nxp.com>=0A=
-> =0A=
-> Enable i2c1 on i.MX8MN DDR4 EVK board.=0A=
-> =0A=
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>=0A=
-=0A=
-Didn't see a cover letter but all 6 patches look good:=0A=
-=0A=
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
+On Thu, Aug 15, 2019 at 10:04 AM Karol Herbst <kherbst@redhat.com> wrote:
+>
+> On Thu, Aug 15, 2019 at 3:56 PM <Mario.Limonciello@dell.com> wrote:
+> >
+> > > -----Original Message-----
+> > > From: linux-acpi-owner@vger.kernel.org <linux-acpi-owner@vger.kernel.org> On
+> > > Behalf Of Dave Airlie
+> > > Sent: Wednesday, August 14, 2019 5:48 PM
+> > > To: Karol Herbst
+> > > Cc: LKML; Linux ACPI; dri-devel; nouveau; Rafael J . Wysocki; Alex Hung; Ben
+> > > Skeggs; Dave Airlie
+> > > Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
+> > > enable dGPU direct output"
+> > >
+> > > On Thu, 15 Aug 2019 at 07:31, Karol Herbst <kherbst@redhat.com> wrote:
+> > > >
+> > > > This reverts commit 28586a51eea666d5531bcaef2f68e4abbd87242c.
+> > > >
+> > > > The original commit message didn't even make sense. AMD _does_ support it and
+> > > > it works with Nouveau as well.
+> > > >
+> > > > Also what was the issue being solved here? No references to any bugs and not
+> > > > even explaining any issue at all isn't the way we do things.
+> > > >
+> > > > And even if it means a muxed design, then the fix is to make it work inside the
+> > > > driver, not adding some hacky workaround through ACPI tricks.
+> > > >
+> > > > And what out of tree drivers do or do not support we don't care one bit anyway.
+> > > >
+> > >
+> > > I think the reverts should be merged via Rafael's tree as the original
+> > > patches went in via there, and we should get them in asap.
+> > >
+> > > Acked-by: Dave Airlie <airlied@redhat.com>
+> > > Dave.
+> >
+> > There are definitely going to be regressions on machines in the field with the
+> > in tree drivers by reverting this.  I think we should have an answer for all of those
+> > before this revert is accepted.
+> >
+> > Regarding systems with Intel+NVIDIA, we'll have to work with partners to collect
+> > some information on the impact of reverting this.
+> >
+> > When this is used on a system with Intel+AMD the ASL configures AMD GPU to use
+> > "Hybrid Graphics" when on Windows and "Power Express" and "Switchable Graphics"
+> > when on Linux.
+>
+> and what's exactly the difference between those? And what's the actual
+> issue here?
+
+Hybrid Graphics is the new "standard" way of handling these laptops.
+It uses the standard _PR3 APCI method to handle dGPU power.  Support
+for this was added to Linux relatively later compared to when the
+laptops were launched.  "Power Express" used the other AMD specific
+ATPX ACPI method to handle dGPU power.  The driver supports both so
+either method will work.
+
+Alex
+
+>
+> We already have the PRIME offloading in place and if that's not
+> enough, we should work on extending it, not adding some ACPI based
+> workarounds, because that's exactly how that looks like.
+>
+> Also, was this discussed with anybody involved in the drm subsystem?
+>
+> >
+> > I feel we need a knob and/or DMI detection to affect the changes that the ASL
+> > normally performs.
+>
+> Why do we have to do that on a firmware level at all?
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
