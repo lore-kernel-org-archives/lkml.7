@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03488C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70523C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE3E32067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 345142173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729917AbfHOEmw (ORCPT
+        id S1729952AbfHOEm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:42:52 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35350 "EHLO huawei.com"
+        Thu, 15 Aug 2019 00:42:58 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34886 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729826AbfHOEmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:42:50 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2B21C64196D58C2F8BEF;
-        Thu, 15 Aug 2019 12:42:48 +0800 (CST)
+        id S1727814AbfHOEmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:42:55 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0C7A8A2F952BB52165E6;
+        Thu, 15 Aug 2019 12:42:38 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 15 Aug
- 2019 12:42:41 +0800
+ 2019 12:42:29 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         "Alexander Viro" <viro@zeniv.linux.org.uk>
@@ -46,9 +46,9 @@ CC:     LKML <linux-kernel@vger.kernel.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v8 08/24] erofs: add namei functions
-Date:   Thu, 15 Aug 2019 12:41:39 +0800
-Message-ID: <20190815044155.88483-9-gaoxiang25@huawei.com>
+Subject: [PATCH v8 01/24] erofs: add on-disk layout
+Date:   Thu, 15 Aug 2019 12:41:32 +0800
+Message-ID: <20190815044155.88483-2-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190815044155.88483-1-gaoxiang25@huawei.com>
 References: <20190815044155.88483-1-gaoxiang25@huawei.com>
@@ -61,269 +61,352 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds functions that transfer names to inodes.
+This commit adds the on-disk layout header file of erofs.
+On-disk format is compatible with erofs-staging added in 4.19.
+
+In addition, add EROFS_SUPER_MAGIC_V1 to magic.h.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/namei.c | 249 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 249 insertions(+)
- create mode 100644 fs/erofs/namei.c
+ fs/erofs/erofs_fs.h        | 316 +++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/magic.h |   1 +
+ 2 files changed, 317 insertions(+)
+ create mode 100644 fs/erofs/erofs_fs.h
 
-diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
 new file mode 100644
-index 000000000000..98b9e8cebca5
+index 000000000000..230fcba1099d
 --- /dev/null
-+++ b/fs/erofs/namei.c
-@@ -0,0 +1,249 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/fs/erofs/erofs_fs.h
+@@ -0,0 +1,316 @@
++/* SPDX-License-Identifier: GPL-2.0-only OR Apache-2.0 */
 +/*
-+ * linux/fs/erofs/namei.c
++ * linux/fs/erofs/erofs_fs.h
 + *
 + * Copyright (C) 2017-2018 HUAWEI, Inc.
 + *             http://www.huawei.com/
 + * Created by Gao Xiang <gaoxiang25@huawei.com>
 + */
-+#include "internal.h"
++#ifndef __EROFS_FS_H
++#define __EROFS_FS_H
 +
-+#include <trace/events/erofs.h>
++/* Enhanced(Extended) ROM File System */
++#define EROFS_SUPER_OFFSET      1024
 +
-+struct erofs_qstr {
-+	const unsigned char *name;
-+	const unsigned char *end;
++/*
++ * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
++ * incompatible with this kernel version.
++ */
++#define EROFS_REQUIREMENT_LZ4_0PADDING	0x00000001
++#define EROFS_ALL_REQUIREMENTS		0
++
++struct erofs_super_block {
++/*  0 */__le32 magic;           /* in the little endian */
++/*  4 */__le32 checksum;        /* crc32c(super_block) */
++/*  8 */__le32 features;        /* (aka. feature_compat) */
++/* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
++/* 13 */__u8 reserved;
++
++/* 14 */__le16 root_nid;
++/* 16 */__le64 inos;            /* total valid ino # (== f_files - f_favail) */
++
++/* 24 */__le64 build_time;      /* inode v1 time derivation */
++/* 32 */__le32 build_time_nsec;
++/* 36 */__le32 blocks;          /* used for statfs */
++/* 40 */__le32 meta_blkaddr;
++/* 44 */__le32 xattr_blkaddr;
++/* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
++/* 64 */__u8 volume_name[16];   /* volume name */
++/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
++
++/* 84 */__u8 reserved2[44];
++} __packed;                     /* 128 bytes */
++
++/*
++ * erofs inode data mapping:
++ * 0 - inode plain without inline data A:
++ * inode, [xattrs], ... | ... | no-holed data
++ * 1 - inode VLE compression B (legacy):
++ * inode, [xattrs], extents ... | ...
++ * 2 - inode plain with inline data C:
++ * inode, [xattrs], last_inline_data, ... | ... | no-holed data
++ * 3 - inode compression D:
++ * inode, [xattrs], map_header, extents ... | ...
++ * 4~7 - reserved
++ */
++enum {
++	EROFS_INODE_FLAT_PLAIN,
++	EROFS_INODE_FLAT_COMPRESSION_LEGACY,
++	EROFS_INODE_FLAT_INLINE,
++	EROFS_INODE_FLAT_COMPRESSION,
++	EROFS_INODE_LAYOUT_MAX
 +};
 +
-+/* based on the end of qn is accurate and it must have the trailing '\0' */
-+static inline int dirnamecmp(const struct erofs_qstr *qn,
-+			     const struct erofs_qstr *qd,
-+			     unsigned int *matched)
++static inline bool erofs_inode_is_data_compressed(unsigned int datamode)
 +{
-+	unsigned int i = *matched;
++	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
++		return true;
++	return datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY;
++}
 +
++/* bit definitions of inode i_advise */
++#define EROFS_I_VERSION_BITS            1
++#define EROFS_I_DATA_MAPPING_BITS       3
++
++#define EROFS_I_VERSION_BIT             0
++#define EROFS_I_DATA_MAPPING_BIT        1
++
++struct erofs_inode_v1 {
++/*  0 */__le16 i_advise;
++
++/* 1 header + n-1 * 4 bytes inline xattr to keep continuity */
++/*  2 */__le16 i_xattr_icount;
++/*  4 */__le16 i_mode;
++/*  6 */__le16 i_nlink;
++/*  8 */__le32 i_size;
++/* 12 */__le32 i_reserved;
++/* 16 */union {
++		/* file total compressed blocks for data mapping 1 */
++		__le32 compressed_blocks;
++		__le32 raw_blkaddr;
++
++		/* for device files, used to indicate old/new device # */
++		__le32 rdev;
++	} i_u __packed;
++/* 20 */__le32 i_ino;           /* only used for 32-bit stat compatibility */
++/* 24 */__le16 i_uid;
++/* 26 */__le16 i_gid;
++/* 28 */__le32 i_reserved2;
++} __packed;
++
++/* 32 bytes on-disk inode */
++#define EROFS_INODE_LAYOUT_V1   0
++/* 64 bytes on-disk inode */
++#define EROFS_INODE_LAYOUT_V2   1
++
++struct erofs_inode_v2 {
++/*  0 */__le16 i_advise;
++
++/* 1 header + n-1 * 4 bytes inline xattr to keep continuity */
++/*  2 */__le16 i_xattr_icount;
++/*  4 */__le16 i_mode;
++/*  6 */__le16 i_reserved;
++/*  8 */__le64 i_size;
++/* 16 */union {
++		/* file total compressed blocks for data mapping 1 */
++		__le32 compressed_blocks;
++		__le32 raw_blkaddr;
++
++		/* for device files, used to indicate old/new device # */
++		__le32 rdev;
++	} i_u __packed;
++
++	/* only used for 32-bit stat compatibility */
++/* 20 */__le32 i_ino;
++
++/* 24 */__le32 i_uid;
++/* 28 */__le32 i_gid;
++/* 32 */__le64 i_ctime;
++/* 40 */__le32 i_ctime_nsec;
++/* 44 */__le32 i_nlink;
++/* 48 */__u8   i_reserved2[16];
++} __packed;                     /* 64 bytes */
++
++#define EROFS_MAX_SHARED_XATTRS         (128)
++/* h_shared_count between 129 ... 255 are special # */
++#define EROFS_SHARED_XATTR_EXTENT       (255)
++
++/*
++ * inline xattrs (n == i_xattr_icount):
++ * erofs_xattr_ibody_header(1) + (n - 1) * 4 bytes
++ *          12 bytes           /                   \
++ *                            /                     \
++ *                           /-----------------------\
++ *                           |  erofs_xattr_entries+ |
++ *                           +-----------------------+
++ * inline xattrs must starts in erofs_xattr_ibody_header,
++ * for read-only fs, no need to introduce h_refcount
++ */
++struct erofs_xattr_ibody_header {
++	__le32 h_reserved;
++	__u8   h_shared_count;
++	__u8   h_reserved2[7];
++	__le32 h_shared_xattrs[0];      /* shared xattr id array */
++} __packed;
++
++/* Name indexes */
++#define EROFS_XATTR_INDEX_USER              1
++#define EROFS_XATTR_INDEX_POSIX_ACL_ACCESS  2
++#define EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT 3
++#define EROFS_XATTR_INDEX_TRUSTED           4
++#define EROFS_XATTR_INDEX_LUSTRE            5
++#define EROFS_XATTR_INDEX_SECURITY          6
++
++/* xattr entry (for both inline & shared xattrs) */
++struct erofs_xattr_entry {
++	__u8   e_name_len;      /* length of name */
++	__u8   e_name_index;    /* attribute name index */
++	__le16 e_value_size;    /* size of attribute value */
++	/* followed by e_name and e_value */
++	char   e_name[0];       /* attribute name */
++} __packed;
++
++#define ondisk_xattr_ibody_size(count)	({\
++	u32 __count = le16_to_cpu(count); \
++	((__count) == 0) ? 0 : \
++	sizeof(struct erofs_xattr_ibody_header) + \
++		sizeof(__u32) * ((__count) - 1); })
++
++#define EROFS_XATTR_ALIGN(size) round_up(size, sizeof(struct erofs_xattr_entry))
++#define EROFS_XATTR_ENTRY_SIZE(entry) EROFS_XATTR_ALIGN( \
++	sizeof(struct erofs_xattr_entry) + \
++	(entry)->e_name_len + le16_to_cpu((entry)->e_value_size))
++
++/* available compression algorithm types */
++enum {
++	Z_EROFS_COMPRESSION_LZ4,
++	Z_EROFS_COMPRESSION_MAX
++};
++
++/*
++ * bit 0 : COMPACTED_2B indexes (0 - off; 1 - on)
++ *  e.g. for 4k logical cluster size,      4B        if compacted 2B is off;
++ *                                  (4B) + 2B + (4B) if compacted 2B is on.
++ */
++#define Z_EROFS_ADVISE_COMPACTED_2B_BIT         0
++
++#define Z_EROFS_ADVISE_COMPACTED_2B     (1 << Z_EROFS_ADVISE_COMPACTED_2B_BIT)
++
++struct z_erofs_map_header {
++	__le32	h_reserved1;
++	__le16	h_advise;
 +	/*
-+	 * on-disk error, let's only BUG_ON in the debugging mode.
-+	 * otherwise, it will return 1 to just skip the invalid name
-+	 * and go on (in consideration of the lookup performance).
++	 * bit 0-3 : algorithm type of head 1 (logical cluster type 01);
++	 * bit 4-7 : algorithm type of head 2 (logical cluster type 11).
 +	 */
-+	DBG_BUGON(qd->name > qd->end);
-+
-+	/* qd could not have trailing '\0' */
-+	/* However it is absolutely safe if < qd->end */
-+	while (qd->name + i < qd->end && qd->name[i] != '\0') {
-+		if (qn->name[i] != qd->name[i]) {
-+			*matched = i;
-+			return qn->name[i] > qd->name[i] ? 1 : -1;
-+		}
-+		++i;
-+	}
-+	*matched = i;
-+	/* See comments in __d_alloc on the terminating NUL character */
-+	return qn->name[i] == '\0' ? 0 : 1;
-+}
-+
-+#define nameoff_from_disk(off, sz)	(le16_to_cpu(off) & ((sz) - 1))
-+
-+static struct erofs_dirent *find_target_dirent(struct erofs_qstr *name,
-+					       u8 *data,
-+					       unsigned int dirblksize,
-+					       const int ndirents)
-+{
-+	int head, back;
-+	unsigned int startprfx, endprfx;
-+	struct erofs_dirent *const de = (struct erofs_dirent *)data;
-+
-+	/* since the 1st dirent has been evaluated previously */
-+	head = 1;
-+	back = ndirents - 1;
-+	startprfx = endprfx = 0;
-+
-+	while (head <= back) {
-+		const int mid = head + (back - head) / 2;
-+		const int nameoff = nameoff_from_disk(de[mid].nameoff,
-+						      dirblksize);
-+		unsigned int matched = min(startprfx, endprfx);
-+		struct erofs_qstr dname = {
-+			.name = data + nameoff,
-+			.end = unlikely(mid >= ndirents - 1) ?
-+				data + dirblksize :
-+				data + nameoff_from_disk(de[mid + 1].nameoff,
-+							 dirblksize)
-+		};
-+
-+		/* string comparison without already matched prefix */
-+		int ret = dirnamecmp(name, &dname, &matched);
-+
-+		if (unlikely(!ret)) {
-+			return de + mid;
-+		} else if (ret > 0) {
-+			head = mid + 1;
-+			startprfx = matched;
-+		} else {
-+			back = mid - 1;
-+			endprfx = matched;
-+		}
-+	}
-+
-+	return ERR_PTR(-ENOENT);
-+}
-+
-+static struct page *find_target_block_classic(struct inode *dir,
-+					      struct erofs_qstr *name,
-+					      int *_ndirents)
-+{
-+	unsigned int startprfx, endprfx;
-+	int head, back;
-+	struct address_space *const mapping = dir->i_mapping;
-+	struct page *candidate = ERR_PTR(-ENOENT);
-+
-+	startprfx = endprfx = 0;
-+	head = 0;
-+	back = inode_datablocks(dir) - 1;
-+
-+	while (head <= back) {
-+		const int mid = head + (back - head) / 2;
-+		struct page *page = read_mapping_page(mapping, mid, NULL);
-+
-+		if (!IS_ERR(page)) {
-+			struct erofs_dirent *de = kmap_atomic(page);
-+			const int nameoff = nameoff_from_disk(de->nameoff,
-+							      EROFS_BLKSIZ);
-+			const int ndirents = nameoff / sizeof(*de);
-+			int diff;
-+			unsigned int matched;
-+			struct erofs_qstr dname;
-+
-+			if (unlikely(!ndirents)) {
-+				kunmap_atomic(de);
-+				put_page(page);
-+				errln("corrupted dir block %d @ nid %llu",
-+				      mid, EROFS_V(dir)->nid);
-+				DBG_BUGON(1);
-+				page = ERR_PTR(-EFSCORRUPTED);
-+				goto out;
-+			}
-+
-+			matched = min(startprfx, endprfx);
-+
-+			dname.name = (u8 *)de + nameoff;
-+			if (ndirents == 1)
-+				dname.end = (u8 *)de + EROFS_BLKSIZ;
-+			else
-+				dname.end = (u8 *)de +
-+					nameoff_from_disk(de[1].nameoff,
-+							  EROFS_BLKSIZ);
-+
-+			/* string comparison without already matched prefix */
-+			diff = dirnamecmp(name, &dname, &matched);
-+			kunmap_atomic(de);
-+
-+			if (unlikely(!diff)) {
-+				*_ndirents = 0;
-+				goto out;
-+			} else if (diff > 0) {
-+				head = mid + 1;
-+				startprfx = matched;
-+
-+				if (!IS_ERR(candidate))
-+					put_page(candidate);
-+				candidate = page;
-+				*_ndirents = ndirents;
-+			} else {
-+				put_page(page);
-+
-+				back = mid - 1;
-+				endprfx = matched;
-+			}
-+			continue;
-+		}
-+out:		/* free if the candidate is valid */
-+		if (!IS_ERR(candidate))
-+			put_page(candidate);
-+		return page;
-+	}
-+	return candidate;
-+}
-+
-+int erofs_namei(struct inode *dir,
-+		struct qstr *name,
-+		erofs_nid_t *nid, unsigned int *d_type)
-+{
-+	int ndirents;
-+	struct page *page;
-+	void *data;
-+	struct erofs_dirent *de;
-+	struct erofs_qstr qn;
-+
-+	if (unlikely(!dir->i_size))
-+		return -ENOENT;
-+
-+	qn.name = name->name;
-+	qn.end = name->name + name->len;
-+
-+	ndirents = 0;
-+	page = find_target_block_classic(dir, &qn, &ndirents);
-+
-+	if (IS_ERR(page))
-+		return PTR_ERR(page);
-+
-+	data = kmap_atomic(page);
-+	/* the target page has been mapped */
-+	if (ndirents)
-+		de = find_target_dirent(&qn, data, EROFS_BLKSIZ, ndirents);
-+	else
-+		de = (struct erofs_dirent *)data;
-+
-+	if (!IS_ERR(de)) {
-+		*nid = le64_to_cpu(de->nid);
-+		*d_type = de->file_type;
-+	}
-+
-+	kunmap_atomic(data);
-+	put_page(page);
-+
-+	return PTR_ERR_OR_ZERO(de);
-+}
-+
-+/* NOTE: i_mutex is already held by vfs */
-+static struct dentry *erofs_lookup(struct inode *dir,
-+				   struct dentry *dentry,
-+				   unsigned int flags)
-+{
-+	int err;
-+	erofs_nid_t nid;
-+	unsigned int d_type;
-+	struct inode *inode;
-+
-+	DBG_BUGON(!d_really_is_negative(dentry));
-+	/* dentry must be unhashed in lookup, no need to worry about */
-+	DBG_BUGON(!d_unhashed(dentry));
-+
-+	trace_erofs_lookup(dir, dentry, flags);
-+
-+	/* file name exceeds fs limit */
-+	if (unlikely(dentry->d_name.len > EROFS_NAME_LEN))
-+		return ERR_PTR(-ENAMETOOLONG);
-+
-+	/* false uninitialized warnings on gcc 4.8.x */
-+	err = erofs_namei(dir, &dentry->d_name, &nid, &d_type);
-+
-+	if (err == -ENOENT) {
-+		/* negative dentry */
-+		inode = NULL;
-+	} else if (unlikely(err)) {
-+		inode = ERR_PTR(err);
-+	} else {
-+		debugln("%s, %s (nid %llu) found, d_type %u", __func__,
-+			dentry->d_name.name, nid, d_type);
-+		inode = erofs_iget(dir->i_sb, nid, d_type == EROFS_FT_DIR);
-+	}
-+	return d_splice_alias(inode, dentry);
-+}
-+
-+const struct inode_operations erofs_dir_iops = {
-+	.lookup = erofs_lookup,
-+	.getattr = erofs_getattr,
++	__u8	h_algorithmtype;
++	/*
++	 * bit 0-2 : logical cluster bits - 12, e.g. 0 for 4096;
++	 * bit 3-4 : (physical - logical) cluster bits of head 1:
++	 *       For example, if logical clustersize = 4096, 1 for 8192.
++	 * bit 5-7 : (physical - logical) cluster bits of head 2.
++	 */
++	__u8	h_clusterbits;
 +};
 +
++#define Z_EROFS_VLE_LEGACY_HEADER_PADDING       8
++
++/*
++ * Z_EROFS Variable-sized Logical Extent cluster type:
++ *    0 - literal (uncompressed) cluster
++ *    1 - compressed cluster (for the head logical cluster)
++ *    2 - compressed cluster (for the other logical clusters)
++ *
++ * In detail,
++ *    0 - literal (uncompressed) cluster,
++ *        di_advise = 0
++ *        di_clusterofs = the literal data offset of the cluster
++ *        di_blkaddr = the blkaddr of the literal cluster
++ *
++ *    1 - compressed cluster (for the head logical cluster)
++ *        di_advise = 1
++ *        di_clusterofs = the decompressed data offset of the cluster
++ *        di_blkaddr = the blkaddr of the compressed cluster
++ *
++ *    2 - compressed cluster (for the other logical clusters)
++ *        di_advise = 2
++ *        di_clusterofs =
++ *           the decompressed data offset in its own head cluster
++ *        di_u.delta[0] = distance to its corresponding head cluster
++ *        di_u.delta[1] = distance to its corresponding tail cluster
++ *                (di_advise could be 0, 1 or 2)
++ */
++enum {
++	Z_EROFS_VLE_CLUSTER_TYPE_PLAIN,
++	Z_EROFS_VLE_CLUSTER_TYPE_HEAD,
++	Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD,
++	Z_EROFS_VLE_CLUSTER_TYPE_RESERVED,
++	Z_EROFS_VLE_CLUSTER_TYPE_MAX
++};
++
++#define Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS        2
++#define Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT         0
++
++struct z_erofs_vle_decompressed_index {
++	__le16 di_advise;
++	/* where to decompress in the head cluster */
++	__le16 di_clusterofs;
++
++	union {
++		/* for the head cluster */
++		__le32 blkaddr;
++		/*
++		 * for the rest clusters
++		 * eg. for 4k page-sized cluster, maximum 4K*64k = 256M)
++		 * [0] - pointing to the head cluster
++		 * [1] - pointing to the tail cluster
++		 */
++		__le16 delta[2];
++	} di_u __packed;		/* 8 bytes */
++} __packed;
++
++#define Z_EROFS_VLE_LEGACY_INDEX_ALIGN(size) \
++	(round_up(size, sizeof(struct z_erofs_vle_decompressed_index)) + \
++	 sizeof(struct z_erofs_map_header) + Z_EROFS_VLE_LEGACY_HEADER_PADDING)
++
++/* dirent sorts in alphabet order, thus we can do binary search */
++struct erofs_dirent {
++	__le64 nid;     /*  0, node number */
++	__le16 nameoff; /*  8, start offset of file name */
++	__u8 file_type; /* 10, file type */
++	__u8 reserved;  /* 11, reserved */
++} __packed;
++
++/* file types used in inode_info->flags */
++enum {
++	EROFS_FT_UNKNOWN,
++	EROFS_FT_REG_FILE,
++	EROFS_FT_DIR,
++	EROFS_FT_CHRDEV,
++	EROFS_FT_BLKDEV,
++	EROFS_FT_FIFO,
++	EROFS_FT_SOCK,
++	EROFS_FT_SYMLINK,
++	EROFS_FT_MAX
++};
++
++#define EROFS_NAME_LEN      255
++
++/* check the EROFS on-disk layout strictly at compile time */
++static inline void erofs_check_ondisk_layout_definitions(void)
++{
++	BUILD_BUG_ON(sizeof(struct erofs_super_block) != 128);
++	BUILD_BUG_ON(sizeof(struct erofs_inode_v1) != 32);
++	BUILD_BUG_ON(sizeof(struct erofs_inode_v2) != 64);
++	BUILD_BUG_ON(sizeof(struct erofs_xattr_ibody_header) != 12);
++	BUILD_BUG_ON(sizeof(struct erofs_xattr_entry) != 4);
++	BUILD_BUG_ON(sizeof(struct z_erofs_map_header) != 8);
++	BUILD_BUG_ON(sizeof(struct z_erofs_vle_decompressed_index) != 8);
++	BUILD_BUG_ON(sizeof(struct erofs_dirent) != 12);
++
++	BUILD_BUG_ON(BIT(Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS) <
++		     Z_EROFS_VLE_CLUSTER_TYPE_MAX - 1);
++}
++
++#endif
++
+diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
+index 1274c692e59c..903cc2d2750b 100644
+--- a/include/uapi/linux/magic.h
++++ b/include/uapi/linux/magic.h
+@@ -19,6 +19,7 @@
+ #define SQUASHFS_MAGIC		0x73717368
+ #define ECRYPTFS_SUPER_MAGIC	0xf15f
+ #define EFS_SUPER_MAGIC		0x414A53
++#define EROFS_SUPER_MAGIC_V1	0xE0F5E1E2
+ #define EXT2_SUPER_MAGIC	0xEF53
+ #define EXT3_SUPER_MAGIC	0xEF53
+ #define XENFS_SUPER_MAGIC	0xabba1974
 -- 
 2.17.1
 
