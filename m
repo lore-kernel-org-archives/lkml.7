@@ -2,150 +2,149 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EACD8C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116ABC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C10C820644
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF6CC20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:38:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBTtv4/Z"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="XnFf3BH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733028AbfHOOhU (ORCPT
+        id S1732962AbfHOOiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:37:20 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52109 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730084AbfHOOhT (ORCPT
+        Thu, 15 Aug 2019 10:38:01 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43908 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730084AbfHOOiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:37:19 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 207so1469628wma.1;
-        Thu, 15 Aug 2019 07:37:18 -0700 (PDT)
+        Thu, 15 Aug 2019 10:38:01 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m2so1960785qkd.10
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 07:38:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JPQ51ux9FIpcBSeRyi+l+v24f1Z1qLlUHJqhkNZGZbI=;
-        b=IBTtv4/Z5fL7OlNtqvr0o6XLgpRtPHAJZKUU7TuLy8fMgtOMqKEE9Qt0aK5JOTVTBy
-         0bBTv8jzN78r1wq6nfmfl7IIXsbxPPm0E6B8tgwkyjiZyoMK9Zxo5iCSq741dVIGVQzN
-         SvEZoHciKmSHxvxGdNzXOtoIq56U0D/rJKIJUC0Cs/t1K+EUuDbZfx4XzmjRErSQ0Krl
-         4GbkaQxkS0ChXuzKKc+UGC1+DUP+SieNzV46TVJGMQrs9xHotbhbzVnDKgF05q8wTxrA
-         ww54jeQ24Sc1jnP1OCaK3eBLvbIuTc1edo5eRgloz4NQyFHTced8rBciVi9XbOqiwH+z
-         h6Hw==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RNrMF/uU1bNfvkdgF74Cua5rMx69GIS6m4JXv8+fHak=;
+        b=XnFf3BH105JLrwSSPLnlMStnXLEm7eHDNv2oomajK/Ybv809VU4soaSuvYD1TD7VSI
+         MIirezR57bfSFb4WaBjePGwtVqJBvLc8HYIm8CQlxzDgGuFT9drXu/rOQA54w+kVgzaP
+         fvAUCocOeA2I5HJKBeDM2pb5hx2cZfivgf3rrjq6F+c0VVywo+/UDfFIOkt02YIk+X9/
+         2dVQ6wjna9i0ewdzm0w+BzK471JyIW33cus7Md5bUPLhnitYZ5H0wjbovbgDRhxVXZZU
+         pYAtaJjNT0gpe9G55FwQNHSb2Ar2gczUjkeuoQkYNRfnDDTkOQiGfxOzNZ+HLDwMpHQf
+         izfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JPQ51ux9FIpcBSeRyi+l+v24f1Z1qLlUHJqhkNZGZbI=;
-        b=CXIF2/zcsGFe+m/RwyuMHYGrkbrXL9e7knZAPpuhk+kuTuizUA9SWtxOmC28BxK9mt
-         nylvgZpS+6NVVn05lvWw7qplQW7TvrdxaWfO977CjtsKY9rOCmW9dKA4V7AskwAqDkV3
-         qzb7IbdGnVhGKeNCbstHv2sKUwkfMc3yJ3I+ALcMGjlXIYTRFaekLrUE+5oWkS2Pu0il
-         Dan+lrpAhNZKYUZbyzVG9aejthY79j7X2+wDDG0qZ8EQACe0Lq4n5ZN7hk53jKhsxMfA
-         A636y/JmhV9NLlLDVvQpYeHMIvHHZeZ90c/Rd+MTk9j2L5McUsgOwmKTEelPstL7+Vsg
-         pxoQ==
-X-Gm-Message-State: APjAAAXtsdmFAHY+nwEMYkWNyXuYDlIKI+/ptaJ1N4Qjo7LCnq/sY9H+
-        OJ8/AuXPElGoC9VTNIx3LO3X27+fHGTwQDDhFbs=
-X-Google-Smtp-Source: APXvYqzk5hmmCfQL2ZVsJ4ebPcL/pgxAQ1FKmKW3rsIE8Vek+CCGrUwG+yxiTrreuqAg8XloqspNVNWuV8kv5ECT8fQ=
-X-Received: by 2002:a05:600c:352:: with SMTP id u18mr3077889wmd.141.1565879837306;
- Thu, 15 Aug 2019 07:37:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190814213118.28473-1-kherbst@redhat.com> <20190814213118.28473-2-kherbst@redhat.com>
- <CAPM=9ty7yEUqKrcixV1tTuWCpyh6UikA3rxX8BF1E3fDb6WLQQ@mail.gmail.com>
- <5e05532328324d01bc554c573f6298f8@AUSX13MPC101.AMER.DELL.COM>
- <CACO55tsDA1WpMGtAPqUJpWt0AmPDnv9LuC09g2KB5GXB-VSCew@mail.gmail.com>
- <3fc22fe8bcaf4304bb07534b61c4de90@AUSX13MPC101.AMER.DELL.COM> <CACO55tvDfxYMZr0BGv2ROSNEVB4GvXZnBnWBy=RDPOG5hnk7OA@mail.gmail.com>
-In-Reply-To: <CACO55tvDfxYMZr0BGv2ROSNEVB4GvXZnBnWBy=RDPOG5hnk7OA@mail.gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 15 Aug 2019 10:37:05 -0400
-Message-ID: <CADnq5_Nv6tsW0J20td5rQSLq048HtTcw1b4c25jP6ZR6XWZ-eA@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
- enable dGPU direct output"
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Mario.Limonciello@dell.com,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RNrMF/uU1bNfvkdgF74Cua5rMx69GIS6m4JXv8+fHak=;
+        b=CVbEORPhgRTdG8UOejSkTJ186HfbAZs07/XPQKCk3d4/JgXZ7If7I7FGljNaJAb3+L
+         vdJp6crAUlPjCr+7dqLvEC6+xgeMmrjoedxaitZ7ctA8Cu/S/tHL1xUbynluPCDEkziL
+         vF20XyGndXGyyeG54lokGGPL7dRAgtaYeRg+Fbua+nb70p/w+J9maT0m6P1DBML/CBM8
+         IJsDEJqZLyf0tMYlo9kfE6A09tEgw9JyJ3UlqCBXr9kdWA9IrzVzYQ8HpAtfMjnT8qUo
+         yy6wFRoEyNtGv/g2J9omG9qSB5whgArHWbTxBSNpmfPb5sp3ItqKU+DNEc7AaN5P3Xtq
+         txXA==
+X-Gm-Message-State: APjAAAVK8t9brBsTOM8QV9oLoqkaQtNmBTYwrD5g1WDCWkxS+hw5usn0
+        P/6DlC70lru1d4mCY6c3jzK7lQ==
+X-Google-Smtp-Source: APXvYqyrLUurfa+j/pK7k5WY8Y78wjqUesLo+WjaUZ5NQgAZCAzL488QQTrcCxHIE4RpT+716qDyEA==
+X-Received: by 2002:ae9:e8d6:: with SMTP id a205mr4069811qkg.241.1565879880315;
+        Thu, 15 Aug 2019 07:38:00 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id u16sm1430477qkj.107.2019.08.15.07.37.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 15 Aug 2019 07:37:59 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hyGt5-0005At-Fn; Thu, 15 Aug 2019 11:37:59 -0300
+Date:   Thu, 15 Aug 2019 11:37:59 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>,
-        Alex Hung <alex.hung@canonical.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linux MM <linux-mm@kvack.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
+Message-ID: <20190815143759.GG21596@ziepe.ca>
+References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
+ <20190814202027.18735-3-daniel.vetter@ffwll.ch>
+ <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
+ <20190815084429.GE9477@dhcp22.suse.cz>
+ <20190815130415.GD21596@ziepe.ca>
+ <CAKMK7uE9zdmBuvxa788ONYky=46GN=5Up34mKDmsJMkir4x7MQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uE9zdmBuvxa788ONYky=46GN=5Up34mKDmsJMkir4x7MQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:25 AM Karol Herbst <kherbst@redhat.com> wrote:
->
-> On Thu, Aug 15, 2019 at 4:20 PM <Mario.Limonciello@dell.com> wrote:
+On Thu, Aug 15, 2019 at 03:12:11PM +0200, Daniel Vetter wrote:
+> On Thu, Aug 15, 2019 at 3:04 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
 > >
-> > > > There are definitely going to be regressions on machines in the field with the
-> > > > in tree drivers by reverting this.  I think we should have an answer for all of
-> > > those
-> > > > before this revert is accepted.
-> > > >
-> > > > Regarding systems with Intel+NVIDIA, we'll have to work with partners to
-> > > collect
-> > > > some information on the impact of reverting this.
-> > > >
-> > > > When this is used on a system with Intel+AMD the ASL configures AMD GPU to
-> > > use
-> > > > "Hybrid Graphics" when on Windows and "Power Express" and "Switchable
-> > > Graphics"
-> > > > when on Linux.
-> > >
-> > > and what's exactly the difference between those? And what's the actual
-> > > issue here?
+> > On Thu, Aug 15, 2019 at 10:44:29AM +0200, Michal Hocko wrote:
 > >
-> > DP/HDMI is not detected unless plugged in at bootup.  It's due to missing HPD
-> > events.
+> > > As the oom reaper is the primary guarantee of the oom handling forward
+> > > progress it cannot be blocked on anything that might depend on blockable
+> > > memory allocations. These are not really easy to track because they
+> > > might be indirect - e.g. notifier blocks on a lock which other context
+> > > holds while allocating memory or waiting for a flusher that needs memory
+> > > to perform its work.
 > >
->
-> afaik Lyude was working on fixing all that, at least for some drivers.
-> If there is something wrong, we still should fix the drivers, not
-> adding ACPI workarounds.
->
-> Alex: do you know if there are remaining issues regarding that with amdgpu?
-
-There was an issue with hpd events not making it to the audio side
-when things were powered down that was fixed with this patch set:
-https://patchwork.freedesktop.org/patch/316793/
-Those patches depended on a bunch of alsa changes as well which may
-have not been available in the distro used for a particular OEM
-program.
-
->
-> > >
-> > > We already have the PRIME offloading in place and if that's not
-> > > enough, we should work on extending it, not adding some ACPI based
-> > > workarounds, because that's exactly how that looks like.
-> > >
-> > > Also, was this discussed with anybody involved in the drm subsystem?
-> > >
-> > > >
-> > > > I feel we need a knob and/or DMI detection to affect the changes that the ASL
-> > > > normally performs.
-> > >
-> > > Why do we have to do that on a firmware level at all?
+> > But lockdep *does* track all this and fs_reclaim_acquire() was created
+> > to solve exactly this problem.
 > >
-> > Folks from AMD Graphics team recommended this approach.  From their perspective
-> > it's not a workaround.  They view this as a different architecture for AMD graphics driver on
-> > Windows and AMD graphics w/ amdgpu driver.  They have different ASL paths used for
-> > each.
->
-> @alex: is this true?
+> > fs_reclaim is a lock and it flows through all the usual lockdep
+> > schemes like any other lock. Any time the page allocator wants to do
+> > something the would deadlock with reclaim it takes the lock.
+> >
+> > Failure is expressed by a deadlock cycle in the lockdep map, and
+> > lockdep can handle arbitary complexity through layers of locks, work
+> > queues, threads, etc.
+> >
+> > What is missing?
+> 
+> Lockdep doens't seen everything by far. E.g. a wait_event will be
+> caught by the annotations here, but not by lockdep. 
 
-I'm not familiar with this patches in particular, but I know we've
-done things with OEM programs to support Linux on platforms where
-Linux support is lacking for in new features for the target distros.
-E.g., when the first hybrid graphics laptops were coming out, Linux
-didn't support it too well or at all depending on the timing, so the
-bios exposed power express which was working well at the time if the
-OS told ACPI it was Linux.
+Sure, but the wait_event might be OK if its progress isn't contingent
+on fs_reclaim, ie triggered from interrupt, so why ban it?
 
-Alex
+> And since we're talking about mmu notifiers here and gpus/dma engines.
+> We have dma_fence_wait, which can wait for any hw/driver in the system
+> that takes part in shared/zero-copy buffer processing. Which at least
+> on the graphics side is everything. This pulls in enormous amounts of
+> deadlock potential that lockdep simply is blind about and will never
+> see.
+
+It seems very risky to entagle a notifier widely like that.
+
+It looks pretty sure that notifiers are fs_reclaim, so at a minimum
+that wait_event can't be contingent on anything that is doing
+GFP_KERNEL or it will deadlock - and blockable doesn't make that sleep
+safe.
+
+Avoiding an uncertain wait_event under notifiers would seem to be the
+only reasonable design here..
+
+Jason
