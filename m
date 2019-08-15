@@ -2,80 +2,76 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84917C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E454C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 05:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E56208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565845021;
-	bh=ZTUx4s7X4k1wmp8mhUXp+Qc27PtJV9wUfGR2o7Tzn9M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=THDRSqq/LziQDKipJPVqzLw/GDG87z4oxgW2C0DIlQk3e5oqE4s9BeslqgNq9O0qk
-	 +kWihwllsOBoXh/KY0KAlNYKfJLs4qp5x0ujV6Y9Cx26g2J91e/YIiMtGO1hNvHsYq
-	 ExJ9MQQmJ6wWKT9Vbi0ZXR5dKe5cZmkdTlwTG/8U=
+	by mail.kernel.org (Postfix) with ESMTP id F27022133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 05:01:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbfHOE5A (ORCPT
+        id S1729934AbfHOFBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:57:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45444 "EHLO mail.kernel.org"
+        Thu, 15 Aug 2019 01:01:25 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:57034 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725875AbfHOE5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:57:00 -0400
-Received: from localhost (c-73-15-1-175.hsd1.ca.comcast.net [73.15.1.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3D83208C2;
-        Thu, 15 Aug 2019 04:56:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565845019;
-        bh=ZTUx4s7X4k1wmp8mhUXp+Qc27PtJV9wUfGR2o7Tzn9M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rdq7ieIyxzTm+JAekKfXJwFSiMqfZHbvZe4DPunk36hY3ZFaUs7KE2DxheCEski3X
-         QjRRb3Z9nO9LlXo4HYREVOTZq921XQH2yReMlCHRPP6bVMt0UFKgW/GurmV0AEQIAl
-         v3rCr7mo1XlQ28hXJj2XzTvo1qTZOtIbot8IZnDI=
-Date:   Wed, 14 Aug 2019 23:56:59 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v5 3/7] PCI/ATS: Initialize PASID in pci_ats_init()
-Message-ID: <20190815045659.GF253360@google.com>
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <5edb0209f7657e0706d4e5305ea0087873603daf.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        id S1725681AbfHOFBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 01:01:24 -0400
+Received: from gondolin.me.apana.org.au ([192.168.0.6] helo=gondolin.hengli.com.au)
+        by fornost.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hy7se-0004zi-KL; Thu, 15 Aug 2019 15:00:56 +1000
+Received: from herbert by gondolin.hengli.com.au with local (Exim 4.80)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hy7sY-0006Te-Id; Thu, 15 Aug 2019 15:00:50 +1000
+Date:   Thu, 15 Aug 2019 15:00:50 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     atul.gupta@chelsio.com, zhongjiang@huawei.com,
+        ganeshgr@chelsio.com, davem@davemloft.net, tglx@linutronix.de,
+        bigeasy@linutronix.de, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] crypto: chtls - use 'skb_put_zero()' instead of
+ re-implementing it
+Message-ID: <20190815050050.GA24863@gondor.apana.org.au>
+References: <20190807154014.22548-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5edb0209f7657e0706d4e5305ea0087873603daf.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190807154014.22548-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 05:06:00PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Wed, Aug 07, 2019 at 05:40:14PM +0200, Christophe JAILLET wrote:
+> 'skb_put()+memset()' is equivalent to 'skb_put_zero()'
+> Use the latter because it is less verbose and it hides the internals of the
+> sk_buff structure.
 > 
-> Currently, PASID Capability checks are repeated across all PASID API's.
-> Instead, cache the capability check result in pci_pasid_init() and use
-> it in other PASID API's. Also, since PASID is a shared resource between
-> PF/VF, initialize PASID features with default values in pci_pasid_init().
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  drivers/crypto/chelsio/chtls/chtls_main.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> diff --git a/drivers/crypto/chelsio/chtls/chtls_main.c b/drivers/crypto/chelsio/chtls/chtls_main.c
+> index 635bb4b447fb..830b238da77e 100644
+> --- a/drivers/crypto/chelsio/chtls/chtls_main.c
+> +++ b/drivers/crypto/chelsio/chtls/chtls_main.c
+> @@ -218,9 +218,8 @@ static int chtls_get_skb(struct chtls_dev *cdev)
+>  	if (!cdev->askb)
+>  		return -ENOMEM;
+>  
+> -	skb_put(cdev->askb, sizeof(struct tcphdr));
+> +	skb_put_zero(cdev->askb, sizeof(struct tcphdr));
+>  	skb_reset_transport_header(cdev->askb);
+> -	memset(cdev->askb->data, 0, cdev->askb->len);
 
-> + * TODO: Since PASID is a shared resource between PF/VF, don't update
-> + * PASID features in the same API as a per device feature.
-
-This comment is slightly misleading (at least, it misled *me* :))
-because it hints that PASID might be specific to SR-IOV.  But I don't
-think that's true, so if you keep a comment like this, please reword
-it along the lines of "for SR-IOV devices, the PF's PASID is shared
-between the PF and all VFs" so it leaves open the possibility of
-non-SR-IOV devices using PASID as well.
-
-Bjorn
+These two are NOT equivalent.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
