@@ -2,146 +2,103 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED37C32753
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3902AC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 01:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62B542067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07A972133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 01:16:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="MOSR+/JP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tGN1QWR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729156AbfHOA75 (ORCPT
+        id S1729434AbfHOBQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 20:59:57 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.123]:17413 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728597AbfHOA74 (ORCPT
+        Wed, 14 Aug 2019 21:16:00 -0400
+Received: from mail-wm1-f42.google.com ([209.85.128.42]:36164 "EHLO
+        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728597AbfHOBQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 20:59:56 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id BE202A8EE4B
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 19:59:54 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id y47Oh75I62PzOy47Oh8YzD; Wed, 14 Aug 2019 19:59:54 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=/ksHKc+LPtNiB1f21tqgXSfznPw5dbgQMyU9SCoWD8k=; b=MOSR+/JPDNxhX89j7rR1UQDdNP
-        G6oZd8tu2FST6Xsv35QOdIoxXyQCTDk7zwmfZI6E1r1JlAr5OnMyVT7R0zpswX3Jm7g9h2I+t5j2m
-        EImxxzqwamGdy1s+86unPWScRKJFck7x9Uw/n/0it9T32myd3hNY8YZxo3PaB1zu/6IYatrNC0QfB
-        l2lCf+ZnAYfKwrGQnbN4MLN98+dxaOedCvL0d7kBUgAjVYxVt7bMB9KAW2g4CiPBrzMi53DMgJfT+
-        8BS6qKddVuLn3pDJmagcc7vtdtuO0tgci+s4ml7tZp32uh3O1ob1PXCFuk9Acw8iZR6twyDGSm7bC
-        JDChRqYw==;
-Received: from [187.192.11.120] (port=54838 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hy47O-003Ahf-C0; Wed, 14 Aug 2019 19:59:54 -0500
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc:     Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1564971263-21562-1-git-send-email-linux@roeck-us.net>
- <87a7cdpi06.wl-ysato@users.sourceforge.jp>
- <ee8b2e37-643d-9b29-b7de-d83c7739c3a0@roeck-us.net>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH] sh: Drop -Werror from kernel Makefile
-Message-ID: <ea8c7d68-d799-6a7e-9606-e011951bf22e@embeddedor.com>
-Date:   Wed, 14 Aug 2019 19:59:52 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 14 Aug 2019 21:16:00 -0400
+Received: by mail-wm1-f42.google.com with SMTP id g67so1560wme.1;
+        Wed, 14 Aug 2019 18:15:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
+         :references:user-agent:content-transfer-encoding;
+        bh=YGuDiErQQ42Hc0nLZo7ea/SJqM4FxFI42R5TjzsfJsA=;
+        b=tGN1QWR2w94STNXJ5XAm9NQnmk4cgErc0cbTOGHK2TyDKczEPSCJgPdL6RavLSXgr7
+         Qej4aTK7MHDvw5ynyhPqvrEWJVGfTjyARQxigG+3Lu/JtcRq6grSb9hBTsPommEsCWTF
+         eHsNJqO5LC/eslqFmmk7s8rlMiIxvMD9ceXz+2Vep79zwTTOmovB4+GgrJ0R3LqLstib
+         qZCpOQ9kf0rtayH0DfiUwDM3ftdMuL9+kTnTYFp0Z6+rYaHm/wdFejUSZG1ltjxXNUL5
+         r/0AeT7OaPXtVxQ2l3IzEsGMp7Eaq8eLYuOMpeiNTg2EPAdAPI6LEZQaJJG3yEkz4fyW
+         a6Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
+         :in-reply-to:references:user-agent:content-transfer-encoding;
+        bh=YGuDiErQQ42Hc0nLZo7ea/SJqM4FxFI42R5TjzsfJsA=;
+        b=fyFHvtVjorAFo03KA6LcTAB4lvnSoHTQqm82cSDrFkklC/0BlDEamGVdxW4ubKd+zG
+         PpKtTU4pOdzyE61R1QPcVzzENyAG1wLrJB3npQNmoa4385tPmfjVJoznKOJgMHuKR0Ua
+         j5u3zPX9nXRaEMtQQIAwLJo3tSr5OX/ccv7CrJ44hOcgRXWepML8HpLpIIlg+8zFn12J
+         2J5OmV4TE9FxEgglIUTS9p1JhCBpwegZ66SNJbs/YAQGPEWZtvEk5qMqpCs/8hJIccoW
+         r5Qq6H9V3R6b3I7akEkU5KWe40qF88ckXFIR3CkmOqzL3AGk3dj7L5bQe2TYZXFhZmDm
+         Tlcg==
+X-Gm-Message-State: APjAAAVSzB9fPH8/l5D4uiGEIIqTRZQ7DqJtwHLvmqB1O+3Ro2NTjrqS
+        AGX2Pfotvx3NlHsYlh7GOZg=
+X-Google-Smtp-Source: APXvYqxkGTdbx6xWI5leTDK/zEYEp87e9rAKfD3TiMJqqDUHviXKINTfVKjgwwNkolNE103wGSdsHA==
+X-Received: by 2002:a1c:f918:: with SMTP id x24mr451668wmh.132.1565831758550;
+        Wed, 14 Aug 2019 18:15:58 -0700 (PDT)
+Received: from localhost ([92.59.185.54])
+        by smtp.gmail.com with ESMTPSA id z7sm1005714wrh.67.2019.08.14.18.15.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2019 18:15:57 -0700 (PDT)
+From:   Vicente Bergas <vicencb@gmail.com>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Felipe Balbi <balbi@kernel.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: kexec on rk3399
+Date:   Thu, 15 Aug 2019 03:15:55 +0200
 MIME-Version: 1.0
-In-Reply-To: <ee8b2e37-643d-9b29-b7de-d83c7739c3a0@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hy47O-003Ahf-C0
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:54838
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Message-ID: <59055782-7fc2-4b16-af8b-a56fb845a43f@gmail.com>
+In-Reply-To: <0408cb6c-1b16-eacb-d47e-17f4ff89e2b8@arm.com>
+References: <ebcb52be-2063-4e2c-9a09-fdcacb94f855@gmail.com>
+ <c6993a1e-6fc2-44ab-b59e-152142e2ff4d@gmail.com>
+ <0408cb6c-1b16-eacb-d47e-17f4ff89e2b8@arm.com>
+User-Agent: Trojita
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guenter,
+On Wednesday, August 14, 2019 3:12:26 PM CEST, Robin Murphy wrote:
+> On 14/08/2019 13:53, Vicente Bergas wrote:
+>> On Monday, July 22, 2019 4:31:27 PM CEST, Vicente Bergas wrote: ...
+>
+> This particular change looks like it's implicitly specific to=20
+> RK3399, which wouldn't be ideal. Presumably if the core dwc3=20
+> driver implemented shutdown correctly (echoing parts of=20
+> dwc3_remove(), I guess) then the glue layers shouldn't need=20
+> anything special anyway.
+>
+> Robin.
 
-On 8/13/19 8:18 AM, Guenter Roeck wrote:
-> 
-> Please note that _mainline_ builds are currently broken.
-> 
-
-This should be fixed now:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=41de59634046b19cd53a1983594a95135c656997
-
-Thanks
---
-Gustavo
+I just checked simple->resets from dwc3-of-simple.c and it is an array
+with multiple resets whereas dwc->reset from core.c is NULL.
+So the reset seems specific to the glue layers.
+Is there another way than resetting the thing that is
+generic enough to go to core.c and allows kexec?
