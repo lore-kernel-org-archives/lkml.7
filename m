@@ -2,218 +2,181 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9682DC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99896C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E062086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:10:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ChRXyIAY"
+	by mail.kernel.org (Postfix) with ESMTP id 6A25120656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730576AbfHOHKU (ORCPT
+        id S1730590AbfHOHKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 03:10:20 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39611 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730143AbfHOHKT (ORCPT
+        Thu, 15 Aug 2019 03:10:49 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33440 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730404AbfHOHKs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 03:10:19 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g8so1336922edm.6
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 00:10:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=MDJNuF+hut+3YRzITm+axnt/d3tCzk1EPMOdFx9+DEE=;
-        b=ChRXyIAYC7Rv8Y/vZMRO+O0Vlh5DAbIO5arU41q9pJ83DPuxW7q/ClkJgPqFUTZdkI
-         RFRAoqFle60uB8sY67kiMD84/VinSId3gTA/SLZHu2D0j6h0ZI94eO3b9q/2tAqdpX+c
-         FhwIh8fhcacKOZx661IGz8Odmwog/6hD0LIYg=
+        Thu, 15 Aug 2019 03:10:48 -0400
+Received: by mail-qt1-f196.google.com with SMTP id v38so1469004qtb.0;
+        Thu, 15 Aug 2019 00:10:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=MDJNuF+hut+3YRzITm+axnt/d3tCzk1EPMOdFx9+DEE=;
-        b=rmUXIjyIpy8qEaUaxC1jBThM8bRpscrZ9ovaWPziJST2ONi2/yIEXvC2+NT1njc82M
-         dG+o0NuepQLGwKLcd6aap+ehrVv8UYOD9j9gjWJcOhdh6RJZ08gc2xTybQSP2qhV/JEt
-         O9DxMYqNGIQGjiqOJqufnJI+u9fYyeull/RWDsJjBMjAwFgjiyoBpIgCJcmuikQHJMmx
-         nMweZgd/bjjA2MGgIBHqglP5QHAF09UGqVJpJhA448Xr6Cr3mzSakh76ir2zfuqZ5YqV
-         vCfUv860FbBJcZoGjd4An3EHarD0ErUotkcAjirgP/2FZRx/DCykLMo8NplGZaK2OHLR
-         dFUA==
-X-Gm-Message-State: APjAAAXSAkR9lGP5bwDagufop781r+NNR5oX5Ldd2FWodWWpI9gDxLAS
-        4mjJediZKUDSO8a/MsZpjWK8Kg==
-X-Google-Smtp-Source: APXvYqzeqsYGya7a5gyG8JjAs2HpNqhI6YY0zlDjUM0vg0ax5p423oBpWZJFMYcam0b+ez79KuLR5w==
-X-Received: by 2002:a50:c101:: with SMTP id l1mr854278edf.157.1565853017629;
-        Thu, 15 Aug 2019 00:10:17 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id q21sm257841ejo.76.2019.08.15.00.10.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 00:10:16 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 09:10:14 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 4/5] mm, notifier: Add a lockdep map for
- invalidate_range_start
-Message-ID: <20190815071014.GC7444@phenom.ffwll.local>
-Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
- <20190814202027.18735-5-daniel.vetter@ffwll.ch>
- <20190815000959.GD11200@ziepe.ca>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+XZYmbsnbr0sSwIKTeFZGEhcqBxG1btN9f5DRyi29Vc=;
+        b=DfO8MQ8L3aUWOnTlbTG1bpnKD4q2MFa849saZYTebOqTqoUI4bA7jI453gfyE8dCQT
+         m33owpPqbUtBwzyI9wLH0dCaQnQLg0xdIy3U7CI7fXtu/OVleoYHLlP7scCEgUY3fOjF
+         H6BFgaIerNa6IUaWt9qQ9bzAT58kwtH+POhCvfxpGybZLrCxtGz73BH4QT2Kw4sRsZ9b
+         LLnWu42T0rkK9b8ilCdOyC90P3ZD23E03gn8sF80PyfnDtLQOxItTAeLzHxkOyDd7XSf
+         4lghyBWJYZ81mSgao52TbX6y7Wa8W6skagPs3HpKz2pqnAUDJBiH9PYG56wfO4nk0j5K
+         BEJQ==
+X-Gm-Message-State: APjAAAU32kcxfXUNksln0EyFECCWaj/+GHbWrn9vybPkDD9ZxfUrecPN
+        +2vqSy5s+MWMIl47bhXz4t+ckmrTm+Fr19GgjPU=
+X-Google-Smtp-Source: APXvYqzes2xrmqdbClCROX/Q+PfszKVeI1DW0ZX+TIylT9deTu0v9IMyny/8McBlEj0PozeCVXwlC25l9yO+FLH9dOM=
+X-Received: by 2002:ac8:117:: with SMTP id e23mr2752639qtg.18.1565853047353;
+ Thu, 15 Aug 2019 00:10:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190815000959.GD11200@ziepe.ca>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190808212234.2213262-1-arnd@arndb.de> <20190808214347.2865294-1-arnd@arndb.de>
+ <20190808214347.2865294-2-arnd@arndb.de> <20190814211002.GA1952@darkstar.musicnaut.iki.fi>
+In-Reply-To: <20190814211002.GA1952@darkstar.musicnaut.iki.fi>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 15 Aug 2019 09:10:31 +0200
+Message-ID: <CAK8P3a36dztkctUD2jZND9gR7zo2joZu4PPzVozDJCi9gLcmkg@mail.gmail.com>
+Subject: Re: [PATCH 21/22] ARM: omap1: use common clk framework
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 09:09:59PM -0300, Jason Gunthorpe wrote:
-> On Wed, Aug 14, 2019 at 10:20:26PM +0200, Daniel Vetter wrote:
-> > This is a similar idea to the fs_reclaim fake lockdep lock. It's
-> > fairly easy to provoke a specific notifier to be run on a specific
-> > range: Just prep it, and then munmap() it.
-> > 
-> > A bit harder, but still doable, is to provoke the mmu notifiers for
-> > all the various callchains that might lead to them. But both at the
-> > same time is really hard to reliable hit, especially when you want to
-> > exercise paths like direct reclaim or compaction, where it's not
-> > easy to control what exactly will be unmapped.
-> > 
-> > By introducing a lockdep map to tie them all together we allow lockdep
-> > to see a lot more dependencies, without having to actually hit them
-> > in a single challchain while testing.
-> > 
-> > Aside: Since I typed this to test i915 mmu notifiers I've only rolled
-> > this out for the invaliate_range_start callback. If there's
-> > interest, we should probably roll this out to all of them. But my
-> > undestanding of core mm is seriously lacking, and I'm not clear on
-> > whether we need a lockdep map for each callback, or whether some can
-> > be shared.
-> 
-> I was thinking about doing something like this..
-> 
-> IMHO only range_end needs annotation, the other ops are either already
-> non-sleeping or only used by KVM.
+On Wed, Aug 14, 2019 at 11:10 PM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
+>
+> Hi,
+>
+> On Thu, Aug 08, 2019 at 11:43:39PM +0200, Arnd Bergmann wrote:
+> > The omap1 clock driver now uses types and calling conventions
+> > that are compatible with the common clk core.
+> >
+> > Turn on CONFIG_COMMON_CLK and remove all the code that is
+> > now duplicated.
+> >
+> > Note: if this previous steps didn't already break it, this one
+> > most likely will, because the interfaces are very likely to
+> > have different semantics.
+>
+> QEMU SX1 board works up to this patch (the I/O virtual address change
+> included). With this patch, it seems to fail to allocate memory during
+> omap1_init_early() (the log is a bit messy as I extracted it using QEMU
+> memory dumping):
 
-This isnt' about sleeping, this is about locking loops. And the biggest
-risk for that is from driver code, and at least hmm_mirror only has the
-driver code callback on invalidate_range_start. Once thing I discovered
-using this (and it would be really hard to spot, it's deeply neested) is
-that i915 userptr.
+That sounds pretty good, I definitely did not expect this patch
+to work without first dealing with a few bugs, and it it did not break
+earlier, I'm willing to call that success ;-)
 
-Even if i915 userptr would use hmm_mirror (to fix the issue you mention
-below), if we then switch the annotation to invalidate_range_end nothing
-interesting would ever come from this. Well, the only thing it'd catch is
-issues in hmm_mirror, but I think core mm review will catch that before it
-reaches us :-)
+Unfortunately, doing it in qemu does not guarantee that the clocks
+are set up right at this point: if any of the clocks are disabled when
+they should not be, qemu won't care as much as real hardware  would.
 
-> BTW, I have found it strange that i915 only uses
-> invalidate_range_start. Not really sure how it is able to do
-> that. Would love to know the answer :)
+> swapper: page allocation failure: order:0, mode:0x0(), nodemask=(null)
+> CPU: 0 PID: 0 Comm: swapper Not tainted 5.3.0-rc4-sx1-los_80efa++ #1
+> Hardware name: OMAP310 based Siemens SX1
+> [<c000dc44>] (unwind_backtrace) from [<c000cb00>] (show_stack+0x10/0x18)
+> [<c000cb00>] (show_stack) from [<c0172ba8>] (dump_stack+0x18/0x24)
+> [<c0172ba8>] (dump_stack) from [<c00844e8>] (warn_alloc+0x90/0x140)
+> [<c00844e8>] (warn_alloc) from [<c0084dcc>] (__alloc_pages_nodemask+0x7a4/0x9cc)
+> [<c0084dcc>] (__alloc_pages_nodemask) from [<c008df24>] (slob_new_pages.constpro
+> p.2+0x10/0x3c)
+> [<c008df24>] (slob_new_pages.constprop.2) from [<c008e208>] (slob_alloc.constprop.1+0xe4/0x1e8)
+> [<c008e208>] (slob_alloc.constprop.1) from [<c008e344>] (__kmalloc+0x38/0xb0)
+> [<c008e344>] (__kmalloc) from [<c0126514>] (__clk_register+0x20/0x62c)
+> [<c0126514>] (__clk_register) from [<c01f6614>] (omap1_clk_init+0x88/0x220)
+> [<c01f6614>] (omap1_clk_init) from [<c01f5820>] (omap1_init_early+0x20/0x30)
+> [<c01f5820>] (omap1_init_early) from [<c01f09e8>] (start_kernel+0x48/0x408)
+> [<c01f09e8>] (start_kernel) from [<00000000>] (0x0)
+> Clocks: ARM_SYSST: 0x003a DPLL_CTL: 0x2002 ARM_CKCTL: 0x3000
+> Clocking rate (xtal/DPLL1/MPU): 12.0/12.0/0.0 MHz
 
-I suspect it's broken :-/ Our userptr is ... not the best. Part of the
-motivation here.
+Ok, so here the problem is that we call the omap1_clk_init() function from
+setup_arch(), which is before we can even allocate memory with kmalloc.
 
-> > Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> >  include/linux/mmu_notifier.h | 6 ++++++
-> >  mm/mmu_notifier.c            | 7 +++++++
-> >  2 files changed, 13 insertions(+)
-> > 
-> > diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
-> > index b6c004bd9f6a..9dd38c32fc53 100644
-> > +++ b/include/linux/mmu_notifier.h
-> > @@ -42,6 +42,10 @@ enum mmu_notifier_event {
-> >  
-> >  #ifdef CONFIG_MMU_NOTIFIER
-> >  
-> > +#ifdef CONFIG_LOCKDEP
-> > +extern struct lockdep_map __mmu_notifier_invalidate_range_start_map;
-> > +#endif
-> 
-> I wonder what the trade off is having a global map vs a map in each
-> mmu_notifier_mm ?
+Most other machines do it from init_time(), which comes after the initialization
+of the memory allocator.
 
-Less reports, specifically no reports involving multiple different mmu
-notifiers to build the entire chain. But I'm assuming it's possible to
-combine them in one mm (kvm+gpu+infiniband in one process sounds like
-something someone could reasonably do), and it will help to make sure
-everyone follows the same rules.
-> 
-> >  /*
-> >   * The mmu notifier_mm structure is allocated and installed in
-> >   * mm->mmu_notifier_mm inside the mm_take_all_locks() protected
-> > @@ -310,10 +314,12 @@ static inline void mmu_notifier_change_pte(struct mm_struct *mm,
-> >  static inline void
-> >  mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
-> >  {
-> > +	lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
-> >  	if (mm_has_notifiers(range->mm)) {
-> >  		range->flags |= MMU_NOTIFIER_RANGE_BLOCKABLE;
-> >  		__mmu_notifier_invalidate_range_start(range);
-> >  	}
-> > +	lock_map_release(&__mmu_notifier_invalidate_range_start_map);
-> >  }
-> 
-> Also range_end should have this too - it has all the same
-> constraints. I think it can share the map. So 'range_start_map' is
-> probably not the right name.
-> 
-> It may also make some sense to do a dummy acquire/release under the
-> mm_take_all_locks() to forcibly increase map coverage and reduce the
-> scenario complexity required to hit bugs.
-> 
-> And if we do decide on the reclaim thing in my other email then the
-> reclaim dependency can be reliably injected by doing:
-> 
->  fs_reclaim_acquire();
->  lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
->  lock_map_release(&__mmu_notifier_invalidate_range_start_map);
->  fs_reclaim_release();
-> 
-> If I understand lockdep properly..
+Something like this would be needed:
 
-Ime fs_reclaim injects the mmu_notifier map here reliably as soon as
-you've thrown out the first pagecache mmap on any process. That "make sure
-we inject it quickly" is why the lockdep is _outside_ of the
-mm_has_notifiers() check. So no further injection needed imo.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+diff --git a/arch/arm/mach-omap1/io.c b/arch/arm/mach-omap1/io.c
+index b0465a956ea8..17ba8dfd8e19 100644
+--- a/arch/arm/mach-omap1/io.c
++++ b/arch/arm/mach-omap1/io.c
+@@ -125,9 +125,6 @@ void __init omap1_init_early(void)
+        omap_writew(0x0, MPU_PUBLIC_TIPB_CNTL);
+        omap_writew(0x0, MPU_PRIVATE_TIPB_CNTL);
+
+-       /* Must init clocks early to assure that timer interrupt works
+-        */
+-       omap1_clk_init();
+        omap1_mux_init();
+ }
+
+diff --git a/arch/arm/mach-omap1/time.c b/arch/arm/mach-omap1/time.c
+index 7cc1a968230e..4e5ddd1db429 100644
+--- a/arch/arm/mach-omap1/time.c
++++ b/arch/arm/mach-omap1/time.c
+@@ -228,6 +228,8 @@ static inline void omap_mpu_timer_init(void)
+  */
+ void __init omap1_timer_init(void)
+ {
++       omap1_clk_init();
++
+        if (omap_32k_timer_init() != 0)
+                omap_mpu_timer_init();
+ }
+
+but the removed comment up there makes me suspect that it introduces
+a different issue.
+
+> "8<--- cut here ---
+> "Unable to handle kernel NULL pointer dereference at virtual address 00000018
+> "pgd = (ptrval)
+> "[00000018] *pgd=00000000
+> Internal error: Oops: 5 [#1] ARM
+> CPU: 0 PID: 0 Comm: swapper Not tainted 5.3.0-rc4-sx1-los_80efa++ #1
+> Hardware name: OMAP310 based Siemens SX1
+> PC is at clk_hw_get_parent+0x4/0x14
+> LR is at omap1_clk_enable+0xc/0xcc
+> OMAP310 based Siemens SX1
+> [    0.000000]  free:0 free_pcp:0 free_cma:0
+> pc : [<c0126cd0>]    lr : [<c00128d4>]    psr: 600001d3
+> sp : c03aff88  ip : 00000000  fp : 00000000
+> r10: 00000001  r9 : 54029252  r8 : 10000100
+> r7 : c03b1000  r6 : 00002002  r5 : 0000003a  r4 : c03b5444
+> r3 : 00000000  r2 : c03b9818  r1 : ff03ce08  r0 : c03b5444
+> Flags: nZCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment user
+> Control: 0000317f  Table: 10004000  DAC: 00000055
+> Process swapper (pid: 0, stack limit = 0x(ptrval))
+> Stack: (0xc03aff88 to 0xc03b0000)
+> ff80:                   c03b5438 0000003a 00002002 c01f6734 00000000 00000057
+> ffa0: 0000313d c01f5820 00000000 c01f09e8 00000000 00000000 00000000 00000000
+> ffc0: 00000000 00000000 00000000 c0201a38 00000000 c01f0330 00000057 0000313d
+> ffe0: 00000265 10000100 54029252 0000317f 00000000 00000000 00000000 00000000
+> [<c0126cd0>] (clk_hw_get_parent) from [<c00128d4>] (omap1_clk_enable+0xc/0xcc)
+> [<c00128d4>] (omap1_clk_enable) from [<c01f6734>] (omap1_clk_init+0x1a8/0x220)
+> [<c01f6734>] (omap1_clk_init) from [<c01f5820>] (omap1_init_early+0x20/0x30)
+> [<c01f5820>] (omap1_init_early) from [<c01f09e8>] (start_kernel+0x48/0x408)
+> [<c01f09e8>] (start_kernel) from [<00000000>] (0x0)
+
+clk_hw->core is NULL here, presumably as a result of the first issue.
+
+      Arnd
