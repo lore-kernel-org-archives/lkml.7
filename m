@@ -2,169 +2,137 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C29C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9888FC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 277622063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CDD42089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:34:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFJj2RJy"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="EekcWs4F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732665AbfHOSeX (ORCPT
+        id S1732721AbfHOSeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 14:34:23 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38982 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730867AbfHOSeX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 14:34:23 -0400
-Received: by mail-wr1-f68.google.com with SMTP id t16so3062137wra.6;
-        Thu, 15 Aug 2019 11:34:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rlVguU9XpgwsYUA+9hxlWvJwepLXZJiyhWUMhPLxtJU=;
-        b=nFJj2RJysrbujouemgWcvH+rthi9Gn3IReFReTGfCZ7pkcyb8fVOcEZaV3NpXxBRfo
-         3IvIKtwf26fF96Gr0SANwOcGwnKLF7CiOUiYs3kVIQ/2K8iGwHXLlJD1NPqz9mlzPHpi
-         U+t5c2qQsGDELMj0ARpQlNcAAjNTmKFY6BwzGiToVX5+Q2Yh8UpCUQT5ejpcpZg2+bci
-         SRCfOJSvCUTE1iijQRQ8dxFBIb1asehXC5g+ii3NZm77FxjHQp5wAWPmRPV++RUgHc7G
-         mF0WyAtDnAlST0LrJPbec4Jp7Q0PTm4gGUZe0iCGzWkfisDZ0HhfHQ32rV6snu+aFqGh
-         qPbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rlVguU9XpgwsYUA+9hxlWvJwepLXZJiyhWUMhPLxtJU=;
-        b=t1+u4DQFtNMZywjkeHeW62nLwiS1neIl+vd0AoWKZ1zD1pkFL7KPg0xzwAbyHKCm4u
-         5i2o2ydlKTurI/StCBVSojqEF5b7bDUbiDtQ3Zyi2tso8iFTyo/LFC3ACfoQDH3fOuS1
-         Oo7exdMdqT7vjxUIvwC29tdVFt0jUmfTswmhacheARRY3rsCbaukD7M6qCwj950QIXIX
-         7yW/K8x5seOS2cRu1Lf8kSSS/FF4K4eJGNkA2y8O0ChBcrt8ta/lUMtCyNC1ZmKomd8J
-         6QmOys41GhtT83y6hLZiVgqqyz3U0+34THMNc/zLJmvTiDkQZKAL1Qe+1BKvvmMGWbeJ
-         b4Wg==
-X-Gm-Message-State: APjAAAVkWFIg8mlSiz+hYAxGZwZk9Y/fgFVbTtBYC6fC6Oru/5iPcC8x
-        KmUrG7FxxeSiNLV4g9zNkZCWW3sevADlWecm8/8=
-X-Google-Smtp-Source: APXvYqyEYQ3MDWckUx7xMxV4vAgWCFUTxdu/OBl8PZlVVNfOq+IDthemb8Lkhb3bespAR/hO1pGNxfGZ4U16NcUBy8U=
-X-Received: by 2002:a5d:6b11:: with SMTP id v17mr6707303wrw.323.1565894061188;
- Thu, 15 Aug 2019 11:34:21 -0700 (PDT)
+        Thu, 15 Aug 2019 14:34:36 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:42066 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730867AbfHOSeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 14:34:36 -0400
+Received: from zn.tnic (p200300EC2F0B5200B5E4FA5ECC10BE25.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:5200:b5e4:fa5e:cc10:be25])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A10D21EC0959;
+        Thu, 15 Aug 2019 20:34:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565894074;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Oh+hQo4aEGMq33kP804dr6bgBixAm/GTzCD1fU24gME=;
+        b=EekcWs4FQBu/BRFt652W7dYZSaSPFtCNOLjZtSWHwX+gH1ON888OvufulZHcnhgQgDBjt0
+        vh6F23v16kIEe1EwxkHSHDbHalqTxQ5Yb53KhRubSWE7ysVcVV0XhVhsUou9fSfG64a9ly
+        mWTxaekzpGFUyfW8eE91gqMYareDdPU=
+Date:   Thu, 15 Aug 2019 20:35:15 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain
+ asm/intel-family.h
+Message-ID: <20190815183515.GK15313@zn.tnic>
+References: <20190814234030.30817-1-tony.luck@intel.com>
+ <20190815075822.GC15313@zn.tnic>
+ <20190815172159.GA4935@agluck-desk2.amr.corp.intel.com>
+ <20190815175455.GJ15313@zn.tnic>
+ <20190815183055.GA6847@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <20190814213118.28473-1-kherbst@redhat.com> <20190814213118.28473-2-kherbst@redhat.com>
- <CAPM=9ty7yEUqKrcixV1tTuWCpyh6UikA3rxX8BF1E3fDb6WLQQ@mail.gmail.com>
- <5e05532328324d01bc554c573f6298f8@AUSX13MPC101.AMER.DELL.COM>
- <CACO55tsDA1WpMGtAPqUJpWt0AmPDnv9LuC09g2KB5GXB-VSCew@mail.gmail.com>
- <3fc22fe8bcaf4304bb07534b61c4de90@AUSX13MPC101.AMER.DELL.COM>
- <CACO55tvDfxYMZr0BGv2ROSNEVB4GvXZnBnWBy=RDPOG5hnk7OA@mail.gmail.com>
- <CADnq5_Nv6tsW0J20td5rQSLq048HtTcw1b4c25jP6ZR6XWZ-eA@mail.gmail.com>
- <s5ho90qa34m.wl-tiwai@suse.de> <8724585e50004bc8b6f310587555f4a1@AUSX13MPC101.AMER.DELL.COM>
-In-Reply-To: <8724585e50004bc8b6f310587555f4a1@AUSX13MPC101.AMER.DELL.COM>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 15 Aug 2019 14:34:08 -0400
-Message-ID: <CADnq5_NKyK7=C+j+yvxME4u1eN3XEB7n2QnVPEn2QqvwAhquDA@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
- enable dGPU direct output"
-To:     Mario.Limonciello@dell.com
-Cc:     Takashi Iwai <tiwai@suse.de>, Karol Herbst <kherbst@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Alex Hung <alex.hung@canonical.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Dave Airlie <airlied@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190815183055.GA6847@agluck-desk2.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 12:19 PM <Mario.Limonciello@dell.com> wrote:
->
-> > -----Original Message-----
-> > From: Takashi Iwai <tiwai@suse.de>
-> > Sent: Thursday, August 15, 2019 9:57 AM
-> > To: Alex Deucher
-> > Cc: Karol Herbst; Limonciello, Mario; nouveau; Rafael J . Wysocki; LKML; dri-devel;
-> > Linux ACPI Mailing List; Alex Hung; Ben Skeggs; David Airlie
-> > Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
-> > enable dGPU direct output"
-> >
-> >
-> > [EXTERNAL EMAIL]
-> >
-> > On Thu, 15 Aug 2019 16:37:05 +0200,
-> > Alex Deucher wrote:
-> > >
-> > > On Thu, Aug 15, 2019 at 10:25 AM Karol Herbst <kherbst@redhat.com> wrote:
-> > > >
-> > > > On Thu, Aug 15, 2019 at 4:20 PM <Mario.Limonciello@dell.com> wrote:
-> > > > >
-> > > > > > > There are definitely going to be regressions on machines in the field
-> > with the
-> > > > > > > in tree drivers by reverting this.  I think we should have an answer for all
-> > of
-> > > > > > those
-> > > > > > > before this revert is accepted.
-> > > > > > >
-> > > > > > > Regarding systems with Intel+NVIDIA, we'll have to work with partners
-> > to
-> > > > > > collect
-> > > > > > > some information on the impact of reverting this.
-> > > > > > >
-> > > > > > > When this is used on a system with Intel+AMD the ASL configures AMD
-> > GPU to
-> > > > > > use
-> > > > > > > "Hybrid Graphics" when on Windows and "Power Express" and
-> > "Switchable
-> > > > > > Graphics"
-> > > > > > > when on Linux.
-> > > > > >
-> > > > > > and what's exactly the difference between those? And what's the actual
-> > > > > > issue here?
-> > > > >
-> > > > > DP/HDMI is not detected unless plugged in at bootup.  It's due to missing
-> > HPD
-> > > > > events.
-> > > > >
-> > > >
-> > > > afaik Lyude was working on fixing all that, at least for some drivers.
-> > > > If there is something wrong, we still should fix the drivers, not
-> > > > adding ACPI workarounds.
-> > > >
-> > > > Alex: do you know if there are remaining issues regarding that with amdgpu?
-> > >
-> > > There was an issue with hpd events not making it to the audio side
-> > > when things were powered down that was fixed with this patch set:
-> > > https://patchwork.freedesktop.org/patch/316793/
-> > > Those patches depended on a bunch of alsa changes as well which may
-> > > have not been available in the distro used for a particular OEM
-> > > program.
-> >
-> > FYI, the corresponding commit for ALSA part is destined for 5.4
-> > kernel:
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git/commit/?id=ade
-> > 49db337a9d44ac5835cfce1ee873549011b27
-> >
-> > BTW, Nouveau should suffer from the same problem.  The patch to add
-> > the audio component support is found at:
-> >   https://patchwork.freedesktop.org/patch/319131/
-> >
-> >
->
-> It sounds like 5.3rcX won't be a useful check then.
->
-> So am I correct to understand that everything related to the AMD failures
-> described in this thread should be in linux-next at this point?
->
+On Thu, Aug 15, 2019 at 11:30:55AM -0700, Luck, Tony wrote:
+> On Thu, Aug 15, 2019 at 07:54:55PM +0200, Borislav Petkov wrote:
+> > On Thu, Aug 15, 2019 at 10:21:59AM -0700, Luck, Tony wrote:
+> > > Like this?
+> > 
+> > Actually, I was thinking you'd put it above the defines in the file
+> > intel-family.h itself so that *everyone* who wants to add a model, sees
+> > it first and while that explanation below is very nice...
+> 
+> V2 ... ugh ... C doesn't do well with nested comments, so the example
+> has issues.  I chose to use a C++ style comment (as they are not as
+> verboten in Linux as they used to be).
+> 
+> Another option would be to put the instructions inside #if 0 ... #endif
+> but that seems less than ideal.
+> 
+> Any other ideas?
+> 
+> -Tony
+> 
+> From 84624a3410a3ba03c3acb13e54b1292c3ca64b8c Mon Sep 17 00:00:00 2001
+> From: Tony Luck <tony.luck@intel.com>
+> Date: Thu, 15 Aug 2019 11:16:24 -0700
+> Subject: [PATCH] x86/cpu: Explain Intel model naming convention
+> 
+> Dave Hansen spelled out the rules in an e-mail:
+> 
+>  https://lkml.kernel.org/r/91eefbe4-e32b-d762-be4d-672ff915db47@intel.com
+> 
+> Copy those right into the <asm/intel-family.h> file to
+> make it easy for people to find them.
+> 
+> Suggested-by: Borislav Petkov <bp@alien8.de>
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  arch/x86/include/asm/intel-family.h | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+> index 0278aa66ef62..87443df77eee 100644
+> --- a/arch/x86/include/asm/intel-family.h
+> +++ b/arch/x86/include/asm/intel-family.h
+> @@ -11,6 +11,21 @@
+>   * While adding a new CPUID for a new microarchitecture, add a new
+>   * group to keep logically sorted out in chronological order. Within
+>   * that group keep the CPUID for the variants sorted by model number.
+> + *
+> + * HOWTO Build an INTEL_FAM6_ definition:
+> + * 
+> + * 1. Start with INTEL_FAM6_
+> + * 2. If not Core-family, add a note about it, like "ATOM".  There are only
+> + *    two options for this (Xeon Phi and Atom).  It is exceedingly unlikely
+> + *    that you are adding a cpu which needs a new option here.
+> + * 3. Add the processor microarchitecture, not the platform name
+> + * 4. Add a short differentiator if necessary.  Add an _X to differentiate
+> + *    Server from Client.
+> + * 5. Add an optional comment with the platform name(s)
+> + * 
+> + * It should end up looking like this:
+> + * 
+> + * INTEL_FAM6_<ATOM?>_<MICROARCH>_<SHORT...> // Platform Name(s)
+>   */
+>  
+>  #define INTEL_FAM6_CORE_YONAH		0x0E
+> -- 
 
-Assuming you mean the missing audio hotplug events, then yes.
+Thanks, LGTM. Let's wait for the others to bikeshed a little before I
+take it.
 
-Alex
+:-)
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
