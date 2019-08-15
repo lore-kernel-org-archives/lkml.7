@@ -2,165 +2,134 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E886C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726EAC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 485E42171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4518D206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:03:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adrM1hoA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FmOkGWme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732136AbfHONDe (ORCPT
+        id S1732149AbfHONDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:03:34 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35023 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732124AbfHONDd (ORCPT
+        Thu, 15 Aug 2019 09:03:49 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41033 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731939AbfHONDs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:03:33 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w20so2068215edd.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 06:03:32 -0700 (PDT)
+        Thu, 15 Aug 2019 09:03:48 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m24so2145866ljg.8
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 06:03:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=74bH2SmQhgYL4nliW04v1cPwr1ENv4nzrzwlUA340i8=;
-        b=adrM1hoAgeE5lBwya46OKxU3Vrg8NDJO1xKBlXcw7/iVwCSKLlCifcqal/UPbpOR8T
-         wsahA0kHhetrbvGzmqsC9UT78wnHWMqRiiI+nY3Cvb8bjM/+uQIsmcsJND2+DMqVNAUU
-         D4ymwSww8AsDvcmrq1r1F+i8nsLINgotjhN3gNV+UigKKyBDZbY/O14Q6ByV/By17uxF
-         BkXJeAwEHVmenJ2CgqAY+i42cAK/uCXkftuvUc18R5Z5HJJdRoPQdyGK02+40MYGAWuP
-         oXDmK03US2TQcbQvphkmOh7ixS3WHFolnewyk3YXEsJAmBI8GXlAL5iwB/E/qRDVeGdI
-         4Law==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0dWebL9fI0U8v/Hpo+dz8Sut2HpNVnveufAiPqP0BQw=;
+        b=FmOkGWme0a9zngByt8Xx69NGtzkfYQoKULWmL12BZ2cCel3xo9BWxubi9OjatpqIqa
+         aCblyK/wBtn4LHnnByVR4FkegV/JwUl6aY5bnqtdVQLwtSTU6w0E8FXGwiwGtBwQfhyQ
+         1JVGMgzHRIlY4UXyQriDsZFP2cdhFeyc1HbJRyOzuWxjQomyJM1V+qrCyl3BNnkYTAVu
+         ok0fgZ5VuX3x7AI+Ve0xGQg2kqeYy1kg7OVkRp2VOwzeNu5BTeXusBlqXVAPhVZ4k83W
+         anplh+2FtjGKTwwlufYZFFPtJPPN0vuHErIzzrGWR6BJCeQMLPrC6u+PFzzjAuH26anN
+         2vOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=74bH2SmQhgYL4nliW04v1cPwr1ENv4nzrzwlUA340i8=;
-        b=OQUcCHxX2IqvixpTYJC4GD2v6PgPtRmtX0J7oLBfFSfwPGBDSI+IZUbTCnKkk1w8xZ
-         f49T33nIQxEsC1r55jCSOEjvmY/rCLtaTh+adQK6LYHDUo2m0+lGJtdATJtQHepRM0EE
-         Kbr+BUnfqjNGSve7JzQLsh2E+LHpQl8DgZ4Gkx9KH7l2Wiq2hedpNIY8jcgdWfAB9tpi
-         fnTPhAJ4LDh3jQ76BNHKainp8EeYuVGxfxyM8+IVbUpcD+Ozx+WQGrzs9xSzKDVccHPr
-         N1rW4TbHBsMcPOGpYlsZZt25BnAJ/SPpxKIwQFOBoKNVff0UpIgp7wPmZ0SxiABovHwF
-         OMMQ==
-X-Gm-Message-State: APjAAAU7pAapVabIeSv/GtBhfcsFwLLtyHcAcBs7CeD5/iloEwqHhFyo
-        e3SjVa0JMoZmFruHrrqIgcg=
-X-Google-Smtp-Source: APXvYqwKKY9l5f++nu3Klkkl11E291vSmJnAs0+VxRO9Awq0yfCPbKj09OvfDx9CHKBu2G0b5PrYtw==
-X-Received: by 2002:a17:906:6c90:: with SMTP id s16mr4445269ejr.62.1565874211362;
-        Thu, 15 Aug 2019 06:03:31 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id m32sm550763edc.89.2019.08.15.06.03.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 15 Aug 2019 06:03:30 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 13:03:28 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "bp@suse.de" <bp@suse.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "richardw.yang@linux.intel.com" <richardw.yang@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2] kernel/resource.c: invalidate parent when freed
- resource has childs
-Message-ID: <20190815130328.yk4cybuuqnzb7xrx@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <1565278859475.1962@mentor.com>
- <1565358624103.3694@mentor.com>
- <20190809223831.fk4uyrzscr366syr@master>
- <CAHk-=wi_9sdMxurjZ1MbNnxt-pA=dqoyf8Fdn9aYc8xvjjnTBg@mail.gmail.com>
- <1565794104204.54092@mentor.com>
- <20190814162932.alwo7g4664c2dtp3@master>
- <c925c7d1041f478c99863da56c24b8a7@SVR-IES-MBX-03.mgc.mentorg.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0dWebL9fI0U8v/Hpo+dz8Sut2HpNVnveufAiPqP0BQw=;
+        b=P3pV1Qih09RiZbe9AxSk/x7941sNyEcbFcr3r16vDop+/TQZISJ7hjBd5o43qOCd+W
+         Ody+atMb7SGO7j2TBSSHizGLfwWKraANvw2aelFYoYPfeB9BCNsL3jMns4iU9sOq9L6y
+         gKSx2wdgeEiXljA6eS0SsWw49NrCdkdpGOiOlG9B8E6KLvOakR2vwJUyjKzAzsqWp0LB
+         lMP96+jm57Ry5duByAA1Lfo1BjpyFUms/2r0aalGDHz2YNLMk4WRKBU80vUM8KJ6n3nv
+         OZSOgOn5FqHjP9jt13NYvipe3WOZBg7NDlKffq2kTtFSJ5nCQyLtGOzxFbYUsdgt7LK4
+         xWWQ==
+X-Gm-Message-State: APjAAAX+7aDdflwYlt6zUqV0/3BecOj8daSMos5JULEOVemUL48n1PzY
+        IqzAg4XRwOWG1Kji4vLel5lQxf/hhzUuAmc0nCVPXA==
+X-Google-Smtp-Source: APXvYqz1/QQoHBf2h86ZFsG2s6PVvHb8R6MnNm7oO5lIAJpXQ5PL7Zmvi79AuEfoFIn8Z79YsusZkO8EhOrspBcsfmU=
+X-Received: by 2002:a05:651c:104a:: with SMTP id x10mr2522077ljm.238.1565874226938;
+ Thu, 15 Aug 2019 06:03:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c925c7d1041f478c99863da56c24b8a7@SVR-IES-MBX-03.mgc.mentorg.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <1565682784-10234-1-git-send-email-sumit.garg@linaro.org> <1565789078.10490.10.camel@kernel.org>
+In-Reply-To: <1565789078.10490.10.camel@kernel.org>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Thu, 15 Aug 2019 18:33:35 +0530
+Message-ID: <CAFA6WYPU0oREaHROhhRsEXJTijvER8G4riBk4e4=Bd5XgGFqtQ@mail.gmail.com>
+Subject: Re: [RFC/RFT v4 0/5] Add generic trusted keys framework/subsystem
+To:     Mimi Zohar <zohar@kernel.org>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-security-module@vger.kernel.org, dhowells@redhat.com,
+        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
+        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 08:18:06AM +0000, Schmid, Carsten wrote:
->>>When a resource is freed and has children, the childrens are
->> 
->> s/childrens/children/
->>
->oh, missed that. Too many children ... ;-)
-> 
->>>+		__release_child_resources(tmp, warn);
->> 
->> This function will release all the children.
->> 
->> Is this what Linus suggest?
->> 
->> From his code snippet, I just see siblings parent is set to NULL. I may miss
->> some point?
->>
->At the point we are here, there should be no children, and children of
->children at all ...
->So they are all more or less lost in the wild.
->That was why i didn't copy Linus' code 1:1 but reused an already existing
->function doing similar thing.
->It's anyway worth of thinking about this.
+Hi Mimi,
+
+On Wed, 14 Aug 2019 at 18:54, Mimi Zohar <zohar@kernel.org> wrote:
 >
->What i have in mind here (example):
->Parent: iomem map 0x1000..0x1FFF
->  Child1: iomem map 0x1000..0x17FF
->    Child11: iomem map 0x1000..0x13FF
->    Child12: iomem map 0x1400..0x17FF
->  Child2: iomem map 0x1800..0x1FFF
->    Child21: iomem map 0x1800..0x1BFF
->    Child22: iomem map 0x1C00..0x1FFF
+> Hi Sumit,
 >
->When releasing the parent, how can children 11, 12, 21 and 22 still be valid?
->They don't know about their grandfather died ...
->Looking at the __release_child_resources, i exactly found that all children are
->invalidated/released in the way Linus did for the parent's children list.
->Doesn't it make sense to do the same for all?
+> On Tue, 2019-08-13 at 13:22 +0530, Sumit Garg wrote:
+> > This patch-set is an outcome of discussion here [1]. It has evolved very
+> > much since v1 to create, consolidate and generalize trusted keys
+> > subsystem.
+> >
+> > This framework has been tested with trusted keys support provided via TEE
+> > but I wasn't able to test it with a TPM device as I don't possess one. It
+> > would be really helpful if others could test this patch-set using a TPM
+> > device.
 >
->Please comment.
->
->> >+static void check_children(struct resource *parent)
->> >+{
->> >+	if (parent->child) {
->> >+		/* warn and release all children */
->> >+		WARN_ONCE(1, "%s: %s has child %s, release all children\n",
->> >+				__func__, parent->name, parent->child-
->> >name);
->> >+		write_lock(&resource_lock);
->> 
->> In previous version, lock is grasped before parent->child is checked.
->> 
->> Not sure why you change the order?
->> 
->To hold the lock as short as possible.
->But yes, you are right, this could lead to problems if releasing of the
->children is done in a parallel thread on a multicore ...
->I'll change that to cover the whole resource access within the lock.
->Not a big thing ...
+> With the "CONFIG_HEADER_TEST" and "CONFIG_KERNEL_HEADER_TEST" config
+> options enabled, which is required for linux-next, it fails to build.
 >
 
-My gut feeling is this is the problem from mal-functional driver, e.g.
-xhci-hcd. We do our best to protect core kernel from it instead of do the
-cleanup for it.
+TBH, I wasn't aware about this test feature for headers. It looks like
+the header which fails this test is "include/keys/trusted_tpm.h" which
+is basically a rename of "include/keys/trusted.h" plus changes in this
+patch-set.
 
-So my suggestion is to look into why xhci-hcd behave like this and fix that.
+And "include/keys/trusted.h" header is already put under blacklist
+here: "include/Kbuild +68" as it fails to build. So its that rename
+due to which build failure is observed now.
 
->Best regards
->Carsten
+It seems to be an easy fix for this build failure via following changes:
 
--- 
-Wei Yang
-Help you, Help me
+diff --git a/include/keys/trusted_tpm.h b/include/keys/trusted_tpm.h
+index 7b593447920b..ca1bec0ef65d 100644
+--- a/include/keys/trusted_tpm.h
++++ b/include/keys/trusted_tpm.h
+@@ -2,6 +2,9 @@
+ #ifndef __TRUSTED_TPM_H
+ #define __TRUSTED_TPM_H
+
++#include <keys/trusted-type.h>
++#include <linux/tpm_command.h>
++
+ /* implementation specific TPM constants */
+ #define MAX_BUF_SIZE                   1024
+ #define TPM_GETRANDOM_SIZE             14
+
+So I will include above changes in this patch-set and also remove
+"include/keys/trusted.h" header from the blacklist.
+
+-Sumit
+
+> Mimi
