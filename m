@@ -2,92 +2,79 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF9CC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F054AC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7185E2086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C334E20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:13:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bA/mBW0c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbfHOHMb (ORCPT
+        id S1730613AbfHOHNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 03:12:31 -0400
-Received: from sauhun.de ([88.99.104.3]:58504 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730121AbfHOHMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 03:12:31 -0400
-Received: from localhost (p54B33431.dip0.t-ipconnect.de [84.179.52.49])
-        by pokefinder.org (Postfix) with ESMTPSA id 384F32C2704;
-        Thu, 15 Aug 2019 09:12:29 +0200 (CEST)
-Date:   Thu, 15 Aug 2019 09:12:28 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Max Staudt <max@enpas.org>
-Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-m68k@vger.kernel.org,
-        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
-Subject: Re: [PATCH v2 1/4] i2c/busses: Add i2c-icy for I2C on m68k/Amiga
-Message-ID: <20190815071228.GA1054@kunai>
-References: <20190812235237.21797-1-max@enpas.org>
- <20190814194714.GB9756@kunai>
- <f33ef44e-61e8-0392-7f5c-5a0bd7b42fff@enpas.org>
+        Thu, 15 Aug 2019 03:13:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55388 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730150AbfHOHNU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 03:13:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=s7gG3ZpsP4dO4NIGyfUN06iVGjBc+Ro9bg5y7V77wj4=; b=bA/mBW0cQr4A50cImC/3Q+U2S
+        VG37f095zb/3WNwVJ+lWlK1NjVZKkGcMbrYVmF9pDdFawt7e7INbevb5+hup1I/1j9iwVl5IKW7Aq
+        PC/l5VNH+x6tKOmzwr3nM1zRRzbESH8AZ1qEVuntIzcJUFjw5sdvWNT1JWrXpunLoM6JdtSdK/kjm
+        ZKBz4knotnxkL4+42LlVXhCa85Y12sNJzwWXgjGAs82IeSODBIdCj0Vyb73REbDxwMmvBFtC1YgU8
+        06OJWtg22qj/Y2eRG8teJ6xg5Je81X9M0YucDePBgJ3dUbk5Rog6QWVnRfedimU9jA6L8xTuGaLFO
+        Oyb/4RvYA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hy9wg-00038j-LP; Thu, 15 Aug 2019 07:13:14 +0000
+Date:   Thu, 15 Aug 2019 00:13:14 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Nick Bowler <nbowler@draconx.ca>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH v5 01/18] xfs: compat_ioctl: use compat_ptr()
+Message-ID: <20190815071314.GA6960@infradead.org>
+References: <20190814204259.120942-1-arnd@arndb.de>
+ <20190814204259.120942-2-arnd@arndb.de>
+ <20190814213753.GP6129@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f33ef44e-61e8-0392-7f5c-5a0bd7b42fff@enpas.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190814213753.GP6129@dread.disaster.area>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 15, 2019 at 07:37:53AM +1000, Dave Chinner wrote:
+> > @@ -576,7 +576,7 @@ xfs_file_compat_ioctl(
+> >  	case XFS_IOC_SCRUB_METADATA:
+> >  	case XFS_IOC_BULKSTAT:
+> >  	case XFS_IOC_INUMBERS:
+> > -		return xfs_file_ioctl(filp, cmd, p);
+> > +		return xfs_file_ioctl(filp, cmd, (unsigned long)arg);
+> 
+> I don't really like having to sprinkle special casts through the
+> code because of this.
 
---7AUc2qLy4jB3hD7Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> I kept it in because i2c-elektor also exposes it in the same way, and
-> it seems useful.
-
-Yeah, I noticed. I don't know how useful it is in practice (same for the
-getown callback) but I don't have better ideas, so let's just keep this
-to be consistent.
-
-> > Your SPDX header says GPL 2.0 only.
->=20
-> Thanks! I'll change it to "GPL v2", but unfortunately there is no
-> option for "only" in include/linux/module.h.
-
-That's the correct option.
-
-Thanks!
-
-
---7AUc2qLy4jB3hD7Z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1VBdgACgkQFA3kzBSg
-KbZzuxAAhRPA+wt/Pg3SLLAnPHGwfDuJSXks2IBSp1ULDxYl2Bk2oy8ytkWwBzCE
-nEPUpfi4z2rnWTs7HxlG3DDIJb3ZNU4J4ZQPyz/H8MtTOgUHa03uWelac1C3/QWF
-fk4O4G5h1YHBQcYtvfqjjXyJYdLUHFkj89J0LOp6ij2bU233NSK0H1EXR8zeKKtK
-taJeBnY2zpH1z55iLUDWX7pa0hn+qDmutyuhDyh42eor2y0gOBKzAtL0M233K8ct
-KI9BXNlxe8cHecegJbpBzUmfy4UkGLPorlbk2Rk6v5pYw/4BaNh+WYq7bDybb46N
-tlu4Y84TNIwezVOBBBiZs+K+8WkOKOQVl7E//cQ50kSJwCsjRs05N+lhxhWbXI94
-VzYXyDnrgiMGitdHrijAOqz0g9ZfV+kxwr4DaEAciKIeyukkEp8m/+oDj2w4x8AD
-pfBvzQi3KN4gbXgtnwpfmFFSC6WNQFZXFQ/MdsrLeqYBguJRlTIhUXq6g8AVjfMH
-peqioG8ZQ8RX8zLA/+C0kzXTM8Gvl9E1khHEDx9rQFMPo/7Ps5JndnJOB4cFzaFl
-voo8uV+/2xIei44c1IOAevhLmF/Fv0Ep10vScpkbIQcEkrW43ju/8LVUnsxWFT5i
-NGAhtqAjm0NPKxbk1TI6WfDko1a6OqaR/H8CG3G287jynqQjnu8=
-=xppG
------END PGP SIGNATURE-----
-
---7AUc2qLy4jB3hD7Z--
+True.  But the proper fix is to not do the indirection through
+xfs_file_ioctl but instead to call xfs_ioc_scrub_metadata,
+xfs_ioc_bulkstat, etc directly which all take a void __user
+arguments already.
