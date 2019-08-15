@@ -2,122 +2,131 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A3AC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C462C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2431B2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1233D2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:20:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="n+vpNnhl"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="NU6dHIhM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732880AbfHOOTC (ORCPT
+        id S1732904AbfHOOUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:19:02 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45210 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732567AbfHOOTB (ORCPT
+        Thu, 15 Aug 2019 10:20:03 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:48618 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730497AbfHOOUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:19:01 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w26so1381311pfq.12
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 07:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=xHwKm8HU3q3V9jOcCOxz3QIpICO4VC7m+Bg5pvHvR/8=;
-        b=n+vpNnhllYsoCBxgI8bpa+HnIzEk7ROuZfCtOCHEn9nJva0VnoGx9Gtfg5mdOvej3H
-         P3kqrj4y0VHVe1Ym3LDwmtBQAoxCWpMqaucc+4GUkB1xi2ZoFDwtli84tRlUzIO5snpE
-         JnElfwTl8XI85HGkouh22H8Ec+SzjUEvNpx7M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=xHwKm8HU3q3V9jOcCOxz3QIpICO4VC7m+Bg5pvHvR/8=;
-        b=EsjyHrzEEwTtL9YWLQ1qgYpvGVioIs0VVaGuM6uUrfczCLX8QKvw7H9xV1qLEnpE0O
-         1uiCJVnZwR2z8s3loTQx2m3mKjuEuiE7VaGgpMym+KWL5mnYa2QY1OoUMCRsRg/Qk/XT
-         Z1MaGOGHBumGk6BNr+u9oDDPsRn9vxDXgT2Kn93sL01Q0PD2z7ZFSe8HJtkxwRY+nWEA
-         7IXzrc7EBDaJUoRZMOfnAlJKGOrD+rbTGNz251RmWcE2x8OSajk05HZvIxbGDA595TCc
-         Ju7fPMHXZfpWfq74c8sYqFRGrjKKqOm/Qgs13MRluKFUwn6a9tKUd55ChRIRitQ3pnR7
-         HC8A==
-X-Gm-Message-State: APjAAAXUMrkSttXP8pupktkdUyCR5QDmtBz3nTYy+IGvhSB6yfdt+svy
-        Vu+NlAcE/gI3R38RWqisvV2F2Iu09XE=
-X-Google-Smtp-Source: APXvYqyvueiXtP/1RWkJ8cKdfFAsmWmUTpLvlaIhQojpDz/MLXh4GvQ4dy4bBUgvRWSloBq2vKdMLw==
-X-Received: by 2002:a65:6114:: with SMTP id z20mr3717267pgu.141.1565878740431;
-        Thu, 15 Aug 2019 07:19:00 -0700 (PDT)
-Received: from localhost ([172.19.216.18])
-        by smtp.gmail.com with ESMTPSA id e9sm3164834pfh.155.2019.08.15.07.18.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 07:18:59 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 10:18:42 -0400
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>
-Subject: [PATCH v3 -rcu] workqueue: Convert for_each_wq to use built-in list
- check
-Message-ID: <20190815141842.GB20599@google.com>
+        Thu, 15 Aug 2019 10:20:02 -0400
+Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7FEAWsm009313;
+        Thu, 15 Aug 2019 10:20:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=2AbcUHt8nmf+Gvc+/EDnMhyOSV0Nccrd9OCKtoUAeAg=;
+ b=NU6dHIhMltgwktyc1GcAwsUQ6Hvr7lVDFCo/nWvp8jA23S4wrapd0vN+rZNWoEk13x5U
+ d0t2ghK0T75Tf9PY2kjiu4z3KMFKLg54ZJAqlTj/m7+vhYX8AoiV0ewPTO68rVjGJ4rO
+ uxkM3Mkk5CTTYMsfuDYeDsXLnBDZLUnMDynfNpFLgxOKInol+WPl6cZEoyECMlaXZ+9k
+ hv5bEZbw029BPCqJdjvkm4AeMOCRa9vi+SXvl6OtTYKTjouFmA/tUVaZjPmf6HuPFH0z
+ vY7dsuwJp1TIVqJ6z23n15WfBjmmB1SZAp8Iyof1B6/ghXQ8OHFm4ez2jnY1Rk0b6wZn Qg== 
+Received: from mx0b-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0a-00154904.pphosted.com with ESMTP id 2ucytb20ed-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 15 Aug 2019 10:20:01 -0400
+Received: from pps.filterd (m0090350.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7FEDCva047352;
+        Thu, 15 Aug 2019 10:20:01 -0400
+Received: from ausxippc110.us.dell.com (AUSXIPPC110.us.dell.com [143.166.85.200])
+        by mx0b-00154901.pphosted.com with ESMTP id 2ud7t4sean-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Aug 2019 10:20:01 -0400
+X-LoopCount0: from 10.166.132.129
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="844156564"
+From:   <Mario.Limonciello@dell.com>
+To:     <kherbst@redhat.com>
+CC:     <airlied@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <nouveau@lists.freedesktop.org>, <rafael.j.wysocki@intel.com>,
+        <alex.hung@canonical.com>, <bskeggs@redhat.com>,
+        <airlied@redhat.com>
+Subject: RE: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
+ enable dGPU direct output"
+Thread-Topic: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
+ enable dGPU direct output"
+Thread-Index: AQGgd6rdZMP3IawUTGaO286TGix+WwEoseSWASaOw1KnU3bBEIAAWGiA//+vQEA=
+Date:   Thu, 15 Aug 2019 14:19:58 +0000
+Message-ID: <3fc22fe8bcaf4304bb07534b61c4de90@AUSX13MPC101.AMER.DELL.COM>
+References: <20190814213118.28473-1-kherbst@redhat.com>
+ <20190814213118.28473-2-kherbst@redhat.com>
+ <CAPM=9ty7yEUqKrcixV1tTuWCpyh6UikA3rxX8BF1E3fDb6WLQQ@mail.gmail.com>
+ <5e05532328324d01bc554c573f6298f8@AUSX13MPC101.AMER.DELL.COM>
+ <CACO55tsDA1WpMGtAPqUJpWt0AmPDnv9LuC09g2KB5GXB-VSCew@mail.gmail.com>
+In-Reply-To: <CACO55tsDA1WpMGtAPqUJpWt0AmPDnv9LuC09g2KB5GXB-VSCew@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-08-15T14:19:56.7925463Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
+ aiplabel=External Public
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.242.75]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-15_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=944 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908150147
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908150147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-list_for_each_entry_rcu now has support to check for RCU reader sections
-as well as lock. Just use the support in it, instead of explicitly
-checking in the caller.
-
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
-v1->v3: Changed lock_is_held() to lockdep_is_held()
-
- kernel/workqueue.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 601d61150b65..e882477ebf6e 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -364,11 +364,6 @@ static void workqueue_sysfs_unregister(struct workqueue_struct *wq);
- 			 !lockdep_is_held(&wq_pool_mutex),		\
- 			 "RCU or wq_pool_mutex should be held")
- 
--#define assert_rcu_or_wq_mutex(wq)					\
--	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&			\
--			 !lockdep_is_held(&wq->mutex),			\
--			 "RCU or wq->mutex should be held")
--
- #define assert_rcu_or_wq_mutex_or_pool_mutex(wq)			\
- 	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&			\
- 			 !lockdep_is_held(&wq->mutex) &&		\
-@@ -425,9 +420,8 @@ static void workqueue_sysfs_unregister(struct workqueue_struct *wq);
-  * ignored.
-  */
- #define for_each_pwq(pwq, wq)						\
--	list_for_each_entry_rcu((pwq), &(wq)->pwqs, pwqs_node)		\
--		if (({ assert_rcu_or_wq_mutex(wq); false; })) { }	\
--		else
-+	list_for_each_entry_rcu((pwq), &(wq)->pwqs, pwqs_node,		\
-+				 lockdep_is_held(&(wq->mutex)))
- 
- #ifdef CONFIG_DEBUG_OBJECTS_WORK
- 
--- 
-2.23.0.rc1.153.gdeed80330f-goog
-
+PiA+IFRoZXJlIGFyZSBkZWZpbml0ZWx5IGdvaW5nIHRvIGJlIHJlZ3Jlc3Npb25zIG9uIG1hY2hp
+bmVzIGluIHRoZSBmaWVsZCB3aXRoIHRoZQ0KPiA+IGluIHRyZWUgZHJpdmVycyBieSByZXZlcnRp
+bmcgdGhpcy4gIEkgdGhpbmsgd2Ugc2hvdWxkIGhhdmUgYW4gYW5zd2VyIGZvciBhbGwgb2YNCj4g
+dGhvc2UNCj4gPiBiZWZvcmUgdGhpcyByZXZlcnQgaXMgYWNjZXB0ZWQuDQo+ID4NCj4gPiBSZWdh
+cmRpbmcgc3lzdGVtcyB3aXRoIEludGVsK05WSURJQSwgd2UnbGwgaGF2ZSB0byB3b3JrIHdpdGgg
+cGFydG5lcnMgdG8NCj4gY29sbGVjdA0KPiA+IHNvbWUgaW5mb3JtYXRpb24gb24gdGhlIGltcGFj
+dCBvZiByZXZlcnRpbmcgdGhpcy4NCj4gPg0KPiA+IFdoZW4gdGhpcyBpcyB1c2VkIG9uIGEgc3lz
+dGVtIHdpdGggSW50ZWwrQU1EIHRoZSBBU0wgY29uZmlndXJlcyBBTUQgR1BVIHRvDQo+IHVzZQ0K
+PiA+ICJIeWJyaWQgR3JhcGhpY3MiIHdoZW4gb24gV2luZG93cyBhbmQgIlBvd2VyIEV4cHJlc3Mi
+IGFuZCAiU3dpdGNoYWJsZQ0KPiBHcmFwaGljcyINCj4gPiB3aGVuIG9uIExpbnV4Lg0KPiANCj4g
+YW5kIHdoYXQncyBleGFjdGx5IHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gdGhvc2U/IEFuZCB3aGF0
+J3MgdGhlIGFjdHVhbA0KPiBpc3N1ZSBoZXJlPw0KDQpEUC9IRE1JIGlzIG5vdCBkZXRlY3RlZCB1
+bmxlc3MgcGx1Z2dlZCBpbiBhdCBib290dXAuICBJdCdzIGR1ZSB0byBtaXNzaW5nIEhQRA0KZXZl
+bnRzLg0KDQo+IA0KPiBXZSBhbHJlYWR5IGhhdmUgdGhlIFBSSU1FIG9mZmxvYWRpbmcgaW4gcGxh
+Y2UgYW5kIGlmIHRoYXQncyBub3QNCj4gZW5vdWdoLCB3ZSBzaG91bGQgd29yayBvbiBleHRlbmRp
+bmcgaXQsIG5vdCBhZGRpbmcgc29tZSBBQ1BJIGJhc2VkDQo+IHdvcmthcm91bmRzLCBiZWNhdXNl
+IHRoYXQncyBleGFjdGx5IGhvdyB0aGF0IGxvb2tzIGxpa2UuDQo+IA0KPiBBbHNvLCB3YXMgdGhp
+cyBkaXNjdXNzZWQgd2l0aCBhbnlib2R5IGludm9sdmVkIGluIHRoZSBkcm0gc3Vic3lzdGVtPw0K
+PiANCj4gPg0KPiA+IEkgZmVlbCB3ZSBuZWVkIGEga25vYiBhbmQvb3IgRE1JIGRldGVjdGlvbiB0
+byBhZmZlY3QgdGhlIGNoYW5nZXMgdGhhdCB0aGUgQVNMDQo+ID4gbm9ybWFsbHkgcGVyZm9ybXMu
+DQo+IA0KPiBXaHkgZG8gd2UgaGF2ZSB0byBkbyB0aGF0IG9uIGEgZmlybXdhcmUgbGV2ZWwgYXQg
+YWxsPw0KDQpGb2xrcyBmcm9tIEFNRCBHcmFwaGljcyB0ZWFtIHJlY29tbWVuZGVkIHRoaXMgYXBw
+cm9hY2guICBGcm9tIHRoZWlyIHBlcnNwZWN0aXZlDQppdCdzIG5vdCBhIHdvcmthcm91bmQuICBU
+aGV5IHZpZXcgdGhpcyBhcyBhIGRpZmZlcmVudCBhcmNoaXRlY3R1cmUgZm9yIEFNRCBncmFwaGlj
+cyBkcml2ZXIgb24NCldpbmRvd3MgYW5kIEFNRCBncmFwaGljcyB3LyBhbWRncHUgZHJpdmVyLiAg
+VGhleSBoYXZlIGRpZmZlcmVudCBBU0wgcGF0aHMgdXNlZCBmb3INCmVhY2guDQo=
