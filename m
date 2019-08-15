@@ -2,112 +2,148 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E72BC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 822BFC3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24BA8206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:14:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gBYs3AHj"
+	by mail.kernel.org (Postfix) with ESMTP id 623B4206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:15:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732869AbfHOOOr (ORCPT
+        id S1732811AbfHOOP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:14:47 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:46460 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731849AbfHOOOp (ORCPT
+        Thu, 15 Aug 2019 10:15:29 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43934 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732116AbfHOOP2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:14:45 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8EC442AF;
-        Thu, 15 Aug 2019 16:14:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1565878483;
-        bh=CpWruMPwP6AjzSnh7pkBxx25Ie389i+DKRZU7zUWBn4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gBYs3AHjWSM3z/BNO/Qh4DDFXlRIByhKgXhqLdbs9maiJWWP0H6KTlIicnHJcJ5e5
-         gnDCiqT4MDTafxfHq6ddvkKxqikOPrkue9pJ0BnXaGBOssOAREAOjchw3RAOMu8YJG
-         ZlEnUoO1lmQ8SvW4BS1RqJ3gndEFC95FrgUWnnhw=
-Date:   Thu, 15 Aug 2019 17:14:40 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, Eric Anholt <eric@anholt.net>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: Re: [PATCH v2 3/9] drm: Rename drm_bridge_timings to drm_timings
-Message-ID: <20190815141440.GA20322@pendragon.ideasonboard.com>
-References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1565867073-24746-4-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190815131838.GP5011@pendragon.ideasonboard.com>
- <20190815140400.GA7174@kroah.com>
+        Thu, 15 Aug 2019 10:15:28 -0400
+Received: by mail-oi1-f195.google.com with SMTP id y8so2109125oih.10
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 07:15:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b9jb062JktpIPx3XCuJv3YXZ+jyDnT3aSJG503OYARU=;
+        b=fvWsYt7I9pOOEyI+x9zbBXI47cXZKDgk5/geXUnQnHSOTFEvvoekAC/cB+NzIx7UR+
+         K0w27pF2Nsx7jMF3VppWnQ9a7H2p120Y1FQlWZiU5UnPOzP3jg3ZrbrkX4pk58TIEnFa
+         SneFVcXyR9se3H1FqlzTnQmt0c8qZuQpLBLDRxwZNxVrbPgjKCCPdmFpMq2chJekznXG
+         94tWLCIXGQGAnuHUTSLHZGX7Et7UeCOKh9q6zASXxb+Dc3bYDphY2RebxWHUvRtxW6CW
+         yEh036Osbj05xNRp02buWsqQOiSh5QK7aMAO+6wuSi1b11RDZ8j1sKSSkalcFjH2tFEQ
+         ijQA==
+X-Gm-Message-State: APjAAAXr7XST/TiOSpfxgCYbOVY4KGHEHhoAk4YnzpDofqPtR2Lz2MVM
+        JzBlqIP0RhC8N219P00Cd5SSNQBivrcVk458CQ4TFA==
+X-Google-Smtp-Source: APXvYqxpnadQ2kgqSZUiV7ajsvFWIFx/uIZmcJ+cCemlrXrZgp22YXUqzkttXhECALkTzksoff48J80wrn/BFUt2Yt8=
+X-Received: by 2002:a02:69d1:: with SMTP id e200mr5260698jac.138.1565878527612;
+ Thu, 15 Aug 2019 07:15:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190815140400.GA7174@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190814213118.28473-1-kherbst@redhat.com> <20190814213118.28473-2-kherbst@redhat.com>
+ <CAPM=9ty7yEUqKrcixV1tTuWCpyh6UikA3rxX8BF1E3fDb6WLQQ@mail.gmail.com>
+ <5e05532328324d01bc554c573f6298f8@AUSX13MPC101.AMER.DELL.COM>
+ <CACO55tsDA1WpMGtAPqUJpWt0AmPDnv9LuC09g2KB5GXB-VSCew@mail.gmail.com> <CADnq5_NUox3vvg6Mt3i9erA+AL2MfotpNBZQnWWknn4j+j-F=Q@mail.gmail.com>
+In-Reply-To: <CADnq5_NUox3vvg6Mt3i9erA+AL2MfotpNBZQnWWknn4j+j-F=Q@mail.gmail.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Thu, 15 Aug 2019 16:15:16 +0200
+Message-ID: <CACO55tty6TqEo4UBkX5YckLuP-XhHXKVs0ew+Q8__sKMi1BCbA@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
+ enable dGPU direct output"
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Mario.Limonciello@dell.com,
+        nouveau <nouveau@lists.freedesktop.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>,
+        Alex Hung <alex.hung@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Thu, Aug 15, 2019 at 4:13 PM Alex Deucher <alexdeucher@gmail.com> wrote:
+>
+> On Thu, Aug 15, 2019 at 10:04 AM Karol Herbst <kherbst@redhat.com> wrote:
+> >
+> > On Thu, Aug 15, 2019 at 3:56 PM <Mario.Limonciello@dell.com> wrote:
+> > >
+> > > > -----Original Message-----
+> > > > From: linux-acpi-owner@vger.kernel.org <linux-acpi-owner@vger.kernel.org> On
+> > > > Behalf Of Dave Airlie
+> > > > Sent: Wednesday, August 14, 2019 5:48 PM
+> > > > To: Karol Herbst
+> > > > Cc: LKML; Linux ACPI; dri-devel; nouveau; Rafael J . Wysocki; Alex Hung; Ben
+> > > > Skeggs; Dave Airlie
+> > > > Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
+> > > > enable dGPU direct output"
+> > > >
+> > > > On Thu, 15 Aug 2019 at 07:31, Karol Herbst <kherbst@redhat.com> wrote:
+> > > > >
+> > > > > This reverts commit 28586a51eea666d5531bcaef2f68e4abbd87242c.
+> > > > >
+> > > > > The original commit message didn't even make sense. AMD _does_ support it and
+> > > > > it works with Nouveau as well.
+> > > > >
+> > > > > Also what was the issue being solved here? No references to any bugs and not
+> > > > > even explaining any issue at all isn't the way we do things.
+> > > > >
+> > > > > And even if it means a muxed design, then the fix is to make it work inside the
+> > > > > driver, not adding some hacky workaround through ACPI tricks.
+> > > > >
+> > > > > And what out of tree drivers do or do not support we don't care one bit anyway.
+> > > > >
+> > > >
+> > > > I think the reverts should be merged via Rafael's tree as the original
+> > > > patches went in via there, and we should get them in asap.
+> > > >
+> > > > Acked-by: Dave Airlie <airlied@redhat.com>
+> > > > Dave.
+> > >
+> > > There are definitely going to be regressions on machines in the field with the
+> > > in tree drivers by reverting this.  I think we should have an answer for all of those
+> > > before this revert is accepted.
+> > >
+> > > Regarding systems with Intel+NVIDIA, we'll have to work with partners to collect
+> > > some information on the impact of reverting this.
+> > >
+> > > When this is used on a system with Intel+AMD the ASL configures AMD GPU to use
+> > > "Hybrid Graphics" when on Windows and "Power Express" and "Switchable Graphics"
+> > > when on Linux.
+> >
+> > and what's exactly the difference between those? And what's the actual
+> > issue here?
+>
+> Hybrid Graphics is the new "standard" way of handling these laptops.
+> It uses the standard _PR3 APCI method to handle dGPU power.  Support
+> for this was added to Linux relatively later compared to when the
+> laptops were launched.  "Power Express" used the other AMD specific
+> ATPX ACPI method to handle dGPU power.  The driver supports both so
+> either method will work.
+>
+> Alex
+>
 
-On Thu, Aug 15, 2019 at 04:04:00PM +0200, Greg Kroah-Hartman wrote:
-> On Thu, Aug 15, 2019 at 04:18:38PM +0300, Laurent Pinchart wrote:
-> > Hi Fabrizio,
-> > 
-> > (CC'ing Greg as the architect of the SPDX move)
-> 
-> _one of_, not the one that did the most of he work, that would be Thomas :)
-> 
-> > On Thu, Aug 15, 2019 at 12:04:27PM +0100, Fabrizio Castro wrote:
-> > > The information represented by drm_bridge_timings is also
-> > > needed by panels, therefore rename drm_bridge_timings to
-> > > drm_timings.
-> > > 
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > Link: https://www.spinics.net/lists/linux-renesas-soc/msg43271.html
-> > > 
-> > > ---
-> > > v1->v2:
-> > > * new patch
-> > > 
-> > > I have copied the license from include/drm/drm_bridge.h as that's
-> > > where the struct originally came from. What's the right SPDX license
-> > > to use in this case?
-> > 
-> > https://wiki.spdx.org/view/Legal_Team/Decisions/Dealing_with_Public_Domain_within_SPDX_Files
-> > 
-> > Greg, any idea on how we should handle this ?
-> 
-> Ugh, what lunacy.  But drm_bridge.h is NOT under any "public domain"
-> license, so why is that an issue here?  This looks like a "normal" bsd 3
-> clause license to me, right?
+thanks for clarifying. But that still means that we won't need such
+workarounds for AMD users, right? amdgpu handles hybrid graphics just
+fine, right?
 
-You're right, I overread part of the text in drm_bridge.h, it seems to
-indeed be covered by a BSD 3 clause license. Sorry for the noise.
-
-> So I would just use "BSD-3-Clause" as the SPDX license here, if I were
-> doing this patch...
-
--- 
-Regards,
-
-Laurent Pinchart
+> >
+> > We already have the PRIME offloading in place and if that's not
+> > enough, we should work on extending it, not adding some ACPI based
+> > workarounds, because that's exactly how that looks like.
+> >
+> > Also, was this discussed with anybody involved in the drm subsystem?
+> >
+> > >
+> > > I feel we need a knob and/or DMI detection to affect the changes that the ASL
+> > > normally performs.
+> >
+> > Why do we have to do that on a firmware level at all?
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
