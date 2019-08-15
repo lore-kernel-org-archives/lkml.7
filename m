@@ -2,63 +2,77 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1CEC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C01C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46EA206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EADB206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:07:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731628AbfHOMGz (ORCPT
+        id S1731659AbfHOMHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:06:55 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:57220 "EHLO fornost.hmeau.com"
+        Thu, 15 Aug 2019 08:07:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46592 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730497AbfHOMGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 08:06:55 -0400
-Received: from gondolin.me.apana.org.au ([192.168.0.6] helo=gondolin.hengli.com.au)
-        by fornost.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hyEWn-0003LN-1L; Thu, 15 Aug 2019 22:06:49 +1000
-Received: from herbert by gondolin.hengli.com.au with local (Exim 4.80)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hyEWl-0007hX-LO; Thu, 15 Aug 2019 22:06:47 +1000
-Date:   Thu, 15 Aug 2019 22:06:47 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Phani Kiran Hemadri <phemadri@marvell.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] crypto: cavium/nitrox - Allocate asymmetric crypto
- command queues
-Message-ID: <20190815120647.GD29355@gondor.apana.org.au>
-References: <20190808121711.26495-1-phemadri@marvell.com>
+        id S1731629AbfHOMHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 08:07:05 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 73AD42A09B3;
+        Thu, 15 Aug 2019 12:07:05 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 423EE95A42;
+        Thu, 15 Aug 2019 12:07:05 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 1596718005A0;
+        Thu, 15 Aug 2019 12:07:05 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 08:07:04 -0400 (EDT)
+From:   Bob Peterson <rpeterso@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Steve Whitehouse <swhiteho@redhat.com>,
+        Jan Kara <jack@suse.cz>, NeilBrown <neilb@suse.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        cluster-devel@redhat.com
+Message-ID: <1709436723.8673728.1565870824837.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190814204259.120942-4-arnd@arndb.de>
+References: <20190814204259.120942-1-arnd@arndb.de> <20190814204259.120942-4-arnd@arndb.de>
+Subject: Re: [PATCH v5 03/18] gfs2: add compat_ioctl support
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808121711.26495-1-phemadri@marvell.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.3.117.77, 10.4.195.5]
+Thread-Topic: gfs2: add compat_ioctl support
+Thread-Index: 8SO9yFi8yGVJNB4umFOMffc9nMr6lg==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 15 Aug 2019 12:07:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 12:17:37PM +0000, Phani Kiran Hemadri wrote:
-> This patch adds support to allocate CNN55XX device AQMQ command queues
-> required for submitting asymmetric crypto requests.
+----- Original Message -----
+> Out of the four ioctl commands supported on gfs2, only FITRIM
+> works in compat mode.
 > 
-> Signed-off-by: Phani Kiran Hemadri <phemadri@marvell.com>
-> Reviewed-by: Srikanth Jampala <jsrikanth@marvell.com>
+> Add a proper handler based on the ext4 implementation.
+> 
+> Fixes: 6ddc5c3ddf25 ("gfs2: getlabel support")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/crypto/cavium/nitrox/nitrox_dev.h |  4 ++
->  drivers/crypto/cavium/nitrox/nitrox_lib.c | 66 ++++++++++++++++++++++-
->  drivers/crypto/cavium/nitrox/nitrox_req.h | 30 +++++++++++
->  3 files changed, 99 insertions(+), 1 deletion(-)
+>  fs/gfs2/file.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Hi,
+
+Reviewed-by: Bob Peterson <rpeterso@redhat.com>
+
+Regards,
+
+Bob Peterson
