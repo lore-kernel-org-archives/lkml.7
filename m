@@ -2,123 +2,105 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8FCC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73790C32757
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA5EC2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:03:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eVdrCHQm"
+	by mail.kernel.org (Postfix) with ESMTP id 4FB0F21743
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731339AbfHOMDV (ORCPT
+        id S1731512AbfHOMEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:03:21 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:44720 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfHOMDU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 08:03:20 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 09E0F2AF;
-        Thu, 15 Aug 2019 14:03:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1565870598;
-        bh=x6tXLrhBDxMnnhW530edcIgz9qxsaLzKSDv1wQnDanY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eVdrCHQmu9La5DxbcRx/V8Wf3UXbSLxrTF9w9DN+puobrZePFG0I4mbJHc4H/5pfE
-         tDCfkC+xfAdgb/yeE0xZUoqGJG7D7Mex9OMpYiO65ntNAfMsyrm5k4PqWPmtwqI9xk
-         g6BcXZz6M+s4elsH1RyDFvK74XHUSxc4aVUaFKG8=
-Date:   Thu, 15 Aug 2019 15:03:15 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: Re: [PATCH v2 5/9] drm/panel: Add timings field to drm_panel
-Message-ID: <20190815120315.GL5011@pendragon.ideasonboard.com>
-References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1565867073-24746-6-git-send-email-fabrizio.castro@bp.renesas.com>
+        Thu, 15 Aug 2019 08:04:34 -0400
+Received: from sauhun.de ([88.99.104.3]:60830 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731340AbfHOMEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 08:04:33 -0400
+Received: from localhost (p54B33431.dip0.t-ipconnect.de [84.179.52.49])
+        by pokefinder.org (Postfix) with ESMTPSA id C07C22C2704;
+        Thu, 15 Aug 2019 14:04:30 +0200 (CEST)
+Date:   Thu, 15 Aug 2019 14:04:30 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Max <max@enpas.org>
+Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, linux-m68k@vger.kernel.org,
+        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
+Subject: Re: [PATCH v2 1/4] i2c/busses: Add i2c-icy for I2C on m68k/Amiga
+Message-ID: <20190815120430.GB1916@kunai>
+References: <20190812235237.21797-1-max@enpas.org>
+ <20190814194714.GB9756@kunai>
+ <f33ef44e-61e8-0392-7f5c-5a0bd7b42fff@enpas.org>
+ <20190815071228.GA1054@kunai>
+ <276714fb-6b3a-1e99-0744-bfd037305724@enpas.org>
+ <20190815114809.GA1916@kunai>
+ <54185c85-8c26-916e-41b1-af9b55223e7b@enpas.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tjCHc7DPkfUGtrlw"
 Content-Disposition: inline
-In-Reply-To: <1565867073-24746-6-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <54185c85-8c26-916e-41b1-af9b55223e7b@enpas.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrizio,
 
-Thank you for the patch.
+--tjCHc7DPkfUGtrlw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 15, 2019 at 12:04:29PM +0100, Fabrizio Castro wrote:
-> We need to know if the panel supports dual-link, similarly
-> to bridges, therefore add a reference to drm_timings in
-> drm_panel.
 
-Panels may also need to report setup/hold time, so it's not about
-dual-link only. I would make this explicit in the commit message.
+> My suggestion is to not touch i2c-elektor at all for now, and remove
+> the 'clock' parameter from the first iteration of i2c-icy. It can be
+> added back in case someone complains, which I deem unlikely.
 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> 
-> ---
-> v1->v2:
-> * new patch
-> 
->  include/drm/drm_panel.h | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-> index 8c738c0..cd6ff07 100644
-> --- a/include/drm/drm_panel.h
-> +++ b/include/drm/drm_panel.h
-> @@ -26,6 +26,7 @@
->  
->  #include <linux/errno.h>
->  #include <linux/list.h>
-> +#include <drm/drm_timings.h>
+Full ack.
 
-You can just add a forward-declaration of struct drm_timing.
+>   When the PCF8584 is addressed as slave, this register
+>   must be loaded with the 7-bit I 2 C-bus address to which the
+>   PCF8584 is to respond. During initialization, the own
+>   address register S0' must be written to, regardless
+>   whether it is later used.
 
->  
->  struct device_node;
->  struct drm_connector;
-> @@ -81,6 +82,7 @@ struct drm_panel_funcs {
->   * struct drm_panel - DRM panel object
->   * @drm: DRM device owning the panel
->   * @connector: DRM connector that the panel is attached to
-> + * @timings: timing information
->   * @dev: parent device of the panel
->   * @link: link from panel device (supplier) to DRM device (consumer)
->   * @funcs: operations that can be performed on the panel
-> @@ -89,6 +91,7 @@ struct drm_panel_funcs {
->  struct drm_panel {
->  	struct drm_device *drm;
->  	struct drm_connector *connector;
-> +	const struct drm_timings *timings;
->  	struct device *dev;
->  
->  	const struct drm_panel_funcs *funcs;
+I see. It must be written a non-zero value to leave the monitor mode.
+But this really needs no callback, we can hardcode any non-zero value.
+If slave support is (ever) to be implemented, the own address will come
+=66rom the I2C core.
 
--- 
-Regards,
+> Okay, so we don't care. Cool, then it's safe to kick the 'clock'
+> parameter from i2c-icy. All 2019 boards (which should be the vast
+> majority in existence) came with a 12 MHz oscillator AFAIK, so the
+> default should be good.
 
-Laurent Pinchart
+Most drivers don't allow users to change the bus speed, so I think it is
+safe to remove.
+
+
+--tjCHc7DPkfUGtrlw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1VSk4ACgkQFA3kzBSg
+KbaiGBAAodEGPift49JeBi1yJrTTGr4RWOodih6yvhYigloZgzzCOjujdcDFc833
+5dB5EG7SwdqLD+Kwda8tbsCPgfuYXqtdVbJALZWlN7NyLQpA/0zOIPWM8OEZ5g4/
+1WWFZL403EJNRtDNAQ7EMa/gAw7IR5fqxP0CIbyuwmZ5AANyyxzXHJcUl5BY7leY
+qkKveL9sSbRRd2iKUEpu4bZCZXECZMeowqlaUz5Rmvi7bYAIUhe70GZE2jcDWALF
+EckGVh0BqnzWhjUck0AFpSScHQbwwj385JWlVEs2GfCiCppVvNp/FTLuytwgcDI0
+Xv86OeXeh7SyZD4SGwj5wdGd386K3y+Y0ozUeq/bPyal8+mziEAN/trWlBbLG//Z
+MNanwIB9Lp+5RXeLqXh7iDLTEEiLqZv3InaYXZq5PuNNKLePBMA10rDeg0+cruVX
+PWzJUlY2MfQUnqxP+yVCSJcaQ5R2EkUdIcSqIHoXDpaHq6tih5hq64tK+u4Q8pGS
+o9KdzPsNkqCHRypQ2HejoRBs9HzNz3TXYRhGWXPUL4wR6y7qmEC5UCxXZ7Hb2gLh
+aHPr3XFkdXUQr493p9qJiFvtU8opP8I/QhG3FC9yPfbbeKDcAKMclEwxyaHyZALE
+gzZ8CIiLXX6o+ID0pKFF2wXVmseASzZ8X2j3JmBhKaJU+Tff/Io=
+=l/xN
+-----END PGP SIGNATURE-----
+
+--tjCHc7DPkfUGtrlw--
