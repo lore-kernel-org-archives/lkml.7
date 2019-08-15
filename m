@@ -2,168 +2,160 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E718FC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30B8C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C16092089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB5ED2086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:22:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="CKnq2pWf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732672AbfHOTWq (ORCPT
+        id S1732315AbfHOTWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 15:22:46 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40680 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729820AbfHOTWq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 15:22:46 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hyLKN-0004XU-Lb; Thu, 15 Aug 2019 21:22:27 +0200
-Date:   Thu, 15 Aug 2019 21:22:26 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Safonov <dima@arista.com>
-cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv6 28/36] posix-clocks: Add align for timens_offsets
-In-Reply-To: <20190815163836.2927-29-dima@arista.com>
-Message-ID: <alpine.DEB.2.21.1908152010230.1908@nanos.tec.linutronix.de>
-References: <20190815163836.2927-1-dima@arista.com> <20190815163836.2927-29-dima@arista.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 15 Aug 2019 15:22:49 -0400
+Received: from mail-eopbgr150041.outbound.protection.outlook.com ([40.107.15.41]:32257
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729514AbfHOTWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 15:22:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eEMVp3IIsC/6+RlDi6BW1b7S/KaSDST+fT/09/JqlDCNGOOqCuaRu8TJLriY1KPSZvwHnupvuH8LnqmHCApl14yLf/CLayEqjojJfK+d6mIGAn7TWquxbtRFy0E5CGWgrkDNlKFKxr9tY4Dcd1kULiwN/1BW00yPp22B1ecUZLYjn15dG4FI3hCIQe6Maw6s9iToiE3bonZH5fVpKbq2W6OR90tqGaIFCBaRylGEJF/N1wKeZOxiB0uejAeqJpU5vsx5WXP+uVt7hF+uedgRdyujCtf38VbPikU/7pc0C9/c+TdCp1s69/kUiib6KAI9l6TGCAe8wxdWYOyxJC50nA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C+Nsz8JNQsDfD+B9cwVgtusZSzpn1jdQQMMPk9A1PfE=;
+ b=BIlnRDgl0Vusv3dNMyk2Vw9FsM6qqX2p9SLuxjY2W7TbR/SE3Nwrsfgoou6+MroWAuNde4aC7nuYk1PiZS2MUAoPJleut0s6Ez0SO/9mFg1XNZKQzC6LnD5fVRlLvc6Dv47MkcHJotb4cJepsfeZ+ynCJrBgG2gAmCXre0lbSvnYTYFvmbo7Ilyf0JCUUKomFGTRIJqjmv70DHIsHcVU7yeXZDcOTfSEAt2kNxkz4GV0fAnP4G/3eEduP7LbnycyEn7Zn6YFZKa5/T3EwdRzCp++Bw5n+lgzi08tCXGW+7zXj6nejbVosz6zmQoPbyCCAKuMNkvpmCiCr3gxzbnTJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C+Nsz8JNQsDfD+B9cwVgtusZSzpn1jdQQMMPk9A1PfE=;
+ b=CKnq2pWfwkJWkxrvw7vLKijTlbzNmf2PVV+ALVhA736j4aYd+Vfo3z5l2o3NWQ1vFShmzG5p3YeIPT37d27NLHlGpVNhZx/2Dz9ZBxwAaig/vTwLbHV2nPWeuBwMnjToIybbXPE651rU2/0K5t45823U5xIkKXdE1O+9PAEIXgA=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6207.eurprd05.prod.outlook.com (20.178.123.218) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.23; Thu, 15 Aug 2019 19:22:03 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
+ 19:22:02 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Jerome Glisse <jglisse@redhat.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
+Thread-Topic: [PATCH 04/15] mm: remove the pgmap field from struct
+ hmm_vma_walk
+Thread-Index: AQHVTHDc5B4IgstYQk6yBJaVfn8xGqbv9wIAgAARNACAAMySgIAJE76AgABlPQCAAGF5AIAAFowAgAHIzYCAABXxgA==
+Date:   Thu, 15 Aug 2019 19:22:02 +0000
+Message-ID: <20190815192157.GB22970@mellanox.com>
+References: <20190806160554.14046-1-hch@lst.de>
+ <20190806160554.14046-5-hch@lst.de> <20190807174548.GJ1571@mellanox.com>
+ <CAPcyv4hPCuHBLhSJgZZEh0CbuuJNPLFDA3f-79FX5uVOO0yubA@mail.gmail.com>
+ <20190808065933.GA29382@lst.de>
+ <CAPcyv4hMUzw8vyXFRPe2pdwef0npbMm9tx9wiZ9MWkHGhH1V6w@mail.gmail.com>
+ <20190814073854.GA27249@lst.de> <20190814132746.GE13756@mellanox.com>
+ <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com>
+ <20190815180325.GA4920@redhat.com>
+In-Reply-To: <20190815180325.GA4920@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQBPR0101CA0035.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00::48) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e8e868ce-1e09-4fe7-c19f-08d721b5da06
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6207;
+x-ms-traffictypediagnostic: VI1PR05MB6207:
+x-microsoft-antispam-prvs: <VI1PR05MB62073BCAE334CC1F11F8D415CFAC0@VI1PR05MB6207.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 01304918F3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(366004)(346002)(396003)(189003)(199004)(66066001)(25786009)(6246003)(8676002)(14454004)(478600001)(6916009)(7736002)(76176011)(81166006)(102836004)(386003)(186003)(26005)(53546011)(6506007)(71200400001)(256004)(305945005)(52116002)(8936002)(71190400001)(64756008)(66446008)(5660300002)(99286004)(66946007)(446003)(486006)(476003)(2616005)(66476007)(316002)(81156014)(66556008)(54906003)(11346002)(2906002)(33656002)(53936002)(86362001)(1076003)(6116002)(7416002)(4326008)(6512007)(6436002)(6486002)(229853002)(36756003)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6207;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: SvLJ8MxOIqnPXh5qm0c3ngH3VI+0afAR4OX2IzZmLgTZd6sx8zPtyffMvRGo6FEFrYLx7iEcja8FIYDlOwDF+qIyWavv7QWQi9ioqw14T7+ftmpo59w+ZbNxx4WclurmTcCVgQrQ80JUZvSB9KUBj/ka7vKvIhFD4g4hPKbPx2urMgUWafmstjr36Tbw9Y87opcmjdyFTwgN+Kg9pT2YmtJela/1FI/Gy0YWbl43sDgiVR1GJQDs/JKt+W6rnkp5v99+7y4wOq4ujJZ7o75SfnzlgoOd1W5sxL8H22K6fFkNbZaHcQSZmgsGbJuOnnhOra0dmm7uNvN5Vu++DOoLP8HXswJ3R/Sadhh3NtUYM2vyuQaSeZ0nLEbceAhlfM4219VhdBHHZXpbv9JRyBK399dR9z7bgqkdmzWfE36wCao=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <45C50639B74BC0449B53AC8E6F4A6DDB@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8e868ce-1e09-4fe7-c19f-08d721b5da06
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 19:22:02.9196
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2vFTB0+yKuq5On5J5G9lbqd9I2G6xXxCbN/18vAq7tme5oNNCFMxgV8VNc2bYgLIod3sA7R5ZR0XiZlpqMy0Xw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6207
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 15 Aug 2019, Dmitry Safonov wrote:
+On Thu, Aug 15, 2019 at 02:03:25PM -0400, Jerome Glisse wrote:
+> On Wed, Aug 14, 2019 at 07:48:28AM -0700, Dan Williams wrote:
+> > On Wed, Aug 14, 2019 at 6:28 AM Jason Gunthorpe <jgg@mellanox.com> wrot=
+e:
+> > >
+> > > On Wed, Aug 14, 2019 at 09:38:54AM +0200, Christoph Hellwig wrote:
+> > > > On Tue, Aug 13, 2019 at 06:36:33PM -0700, Dan Williams wrote:
+> > > > > Section alignment constraints somewhat save us here. The only exa=
+mple
+> > > > > I can think of a PMD not containing a uniform pgmap association f=
+or
+> > > > > each pte is the case when the pgmap overlaps normal dram, i.e. sh=
+ares
+> > > > > the same 'struct memory_section' for a given span. Otherwise, dis=
+tinct
+> > > > > pgmaps arrange to manage their own exclusive sections (and now
+> > > > > subsections as of v5.3). Otherwise the implementation could not
+> > > > > guarantee different mapping lifetimes.
+> > > > >
+> > > > > That said, this seems to want a better mechanism to determine "pf=
+n is
+> > > > > ZONE_DEVICE".
+> > > >
+> > > > So I guess this patch is fine for now, and once you provide a bette=
+r
+> > > > mechanism we can switch over to it?
+> > >
+> > > What about the version I sent to just get rid of all the strange
+> > > put_dev_pagemaps while scanning? Odds are good we will work with only
+> > > a single pagemap, so it makes some sense to cache it once we find it?
+> >=20
+> > Yes, if the scan is over a single pmd then caching it makes sense.
+>=20
+> Quite frankly an easier an better solution is to remove the pagemap
+> lookup as HMM user abide by mmu notifier it means we will not make
+> use or dereference the struct page so that we are safe from any
+> racing hotunplug of dax memory (as long as device driver using hmm
+> do not have a bug).
 
-> Align offsets so that time namespace will work for ia32 applications on
-> x86_64 host.
-
-That's true for any 64 bit arch which supports 32bit user space and should
-be folded into the patch which introduces the offset store.
-
-> +/*
-> + * Time offsets need align as they're placed on VVAR page,
-> + * which is used by x86_64 and ia32 VDSO code.
-> + * On ia32 offset::tv_sec (u64) has align(4), so re-align offsets
-> + * to the same positions as 64-bit offsets.
-
-This is generic code. Please do not add x86'isms here. The alignement
-problem is more or less the same for any 64bit arch which supports 32bit
-user space. And it's even worse on BE.
-
-> + * On 64-bit big-endian systems VDSO should convert to timespec64
-> + * to timespec ...
-
-What?
-
-> ... because of a padding occurring between the fields.
-
-There is no padding between the fields.
-
-32bit BE (powerpc)
-
-struct timespec64 {
-	time64_t                   tv_sec;               /*     0     8 */
-	long int                   tv_nsec;              /*     8     4 */
-
-tv_nsec is directly after tv_sec
-
-};
-
-64bit LE and BE (x86, powerpc64)
-
-struct timespec64 {
-	time64_t                   tv_sec;               /*     0     8 */
-	long int                   tv_nsec;              /*     8     8 */
-};
-
-The problem for BE is that the 64bit host uses long int to store
-tv_nsec. So the 32bit userspace will always read 0 because it reads byte
-2/3 as seen from the 64 host side.
-
-So using struct timespec64 for the offset is wrong. You really need to open
-code that offset storage if you don't want to end up with weird workarounds
-for BE.
-
-Something like this:
-
-struct timens_offs {
-	  time64_t	tv_sec;
-	  s64		tv_nsec;
-};
-
-Then your offset store becomes:
-
-struct timens_offsets {
-	struct timens_offs	monotonic;
-	struct timens_offs	boottime;
-};
-
-which needs tweaks to your conversion functions:
-
-static inline void timens_add_monotonic(struct timespec64 *ts)
-{
-	struct timens_offsets *ns_offsets = current->nsproxy->time_ns->offsets;
-	struct timens_offs *mo = &ns_offsets->monotonic;
-
-	if (ns_offsets) {
-		set_normalized_timespec64(ts, ts->tv_sec + mo->tv_sec,
-                                	  ts->tv_nsec + mo->tv_nsec);
-	}
-}
-
-And for your to host conversion you need:
-
-	case CLOCK_MONOTONIC:
-		mo = &ns_offsets->monotonic;
-		offset = ktime_set(mo->tv_sec, mo->tv_nsec);
-		break;
-
-Similar changes are needed in the VDSO and the proc interface
-obviously. Then this works for any arch without magic BE fixups. You get
-the idea.
-
-And ideally you change that storage to:
-
-struct timens_offs {
-	  time64_t	tv_sec;
-	  s64		tv_nsec;
-	  ktime_t	nsecs;
-};
-
-and do the conversion once in the proc write. Then your to host conversion
-can use 'nsecs' and spare the multiplication on every invocation.
-
-	case CLOCK_MONOTONIC:
-    		offset = ns_offsets.monotonic.nsecs;
+Yes, I also would prefer to drop the confusing checks entirely -
+Christoph can you resend this patch?
 
 Thanks,
-
-	tglx
+Jason=20
