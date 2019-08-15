@@ -2,118 +2,104 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B369DC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B907C3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BACC2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:28:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="elMBytnS"
+	by mail.kernel.org (Postfix) with ESMTP id 1ECDD208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:31:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565890314;
+	bh=3iUYKByNYBFk5zG5BT8CONxHJptvPtEgevu/nQr5NxM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aGlAMlDMuAYy0hmh8yqIo3ZVEDbE+hcT4kD0cSLR1M0P62meg4oebXv6ZLUIasVgx
+	 IPr9m3VHYoQnG0bUgpYgjzJ5/hfOgmMUIiCevxYs1oJ6kadhake40EcmZVU31MTmRq
+	 vy4puamhhARWBHmlGUjD7q6IAN4oXcw72JAWeO0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730330AbfHOR2m (ORCPT
+        id S1731164AbfHORbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:28:42 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39236 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfHOR2m (ORCPT
+        Thu, 15 Aug 2019 13:31:53 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34314 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfHORbw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:28:42 -0400
-Received: by mail-ot1-f65.google.com with SMTP id b1so7162964otp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:28:41 -0700 (PDT)
+        Thu, 15 Aug 2019 13:31:52 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m10so2528402qkk.1;
+        Thu, 15 Aug 2019 10:31:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L0GqPPZ3ptyjBkt7aBOY+B9eZEmSOFdqgFUkWXmTO1k=;
-        b=elMBytnSkJObtOhpcJ7Xs6NSK2Zels7ZXnuvJKtDo7E/y+sRTtehbpYEgdfEqVVQAe
-         KqeV+Z/+6xSDjCkXSbhKtJON1HD6dEg1WDp7qu0NyKIMHY5WsaUDYZlEZacJsR4pyi8Q
-         pPMcC4GNOtrTkW3MLpbzTNHtf+c/XjrlNS7OteTSuWtNE6x+0XFsOYDqGE+Qy89vO/b5
-         ciRfccITYue+8mjdkhKDrJAbD+tZMNI/plcncKU6yK+YbrNSQdoX/jyJ+qIIAYeUHtSk
-         lBVKTMSqji4XkczEOouA5UsRHjFT2PCvgxarNlqjY80Dk52+BQLUJpFREPWdLB8oxDiO
-         GLxw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=no35aRJk15zFWg1jR8wwX86QzYLoUfFHVUo7VWQ/svc=;
+        b=N47XHCOSmAXueVA0YYaev8/a4K3QvUHId7wqDd1kKuzb9i0XsPGZt3JSFV4fwHmm1o
+         079FfdNxA44u+Lpn9KWO67P5gdQDjS8yLNUwxRyP+az0D6idFOXOvoIL6oT/ByHrYA+e
+         5x2GXXGdhLQUUhHxcna9tpQrgumRatQu40F/xy7UzP2oUcoOJ5ObUyU55Ybx+CjVdZVf
+         ZGK+QWvr7EafhXZLjXcXxcSaDgonosEcUP9Kh6/WmBW5wIhcwJ7Gd5u11eGiOYvLgYRX
+         ruJyUluXJcICik/5Pis1nVgLz6wleggRuqyNbfxBltc6VpOrVEuqmr44g/tLfUNGnReK
+         /wxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L0GqPPZ3ptyjBkt7aBOY+B9eZEmSOFdqgFUkWXmTO1k=;
-        b=X+B0289ohiS3yWLwX6uKar5KhyLWEC6UtFBJxAny+hfZ7PzaOxq4rcVC3x7CQXsfUa
-         4lFwkUuxytvUZD29IAdc+DP7kJGH6/zGzEKbM2pCyeswL+6KmHSiSxgKkFdNVKt0AV6N
-         vBD3hUeBJ7b3POszLZzhLpNWWnIdiPbfQIa9UAoHUB9SZ3FHmRcEZwZON61Pq5KY4ohA
-         B5fX6Yr+hqGLpUik3NjT7JtM6qsLxSS5OMJvtfdvPOJONK0W2E1dZmkFLCjqgF1iTGRL
-         DG9TPmehUnRkdPzRyTThyxbbd337cr72vs27Q4EOVtLI7kaWVuoPRX8C0I3rbzl/gQw4
-         FZ7g==
-X-Gm-Message-State: APjAAAXd4ZZRnjhsGI89zyX2U6JW42P6iNZbQPHWHxyMVuZirrPvjo80
-        j3H1ne651WuCp9znHlSCgRWcQa+sKvg+vpugBOAoMh3n
-X-Google-Smtp-Source: APXvYqyBTBaI9eJbvDjqXYBo8fRWxyThpItUw1gVkcDVt08Xz/Q10OjpEU3cZtbZCeecsS0S9fRvt9+7d9K6qfNXZo0=
-X-Received: by 2002:a05:6830:458:: with SMTP id d24mr4109027otc.126.1565890121099;
- Thu, 15 Aug 2019 10:28:41 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=no35aRJk15zFWg1jR8wwX86QzYLoUfFHVUo7VWQ/svc=;
+        b=LAhr5b4LaF3OckGln8l8++cxyNw+taN8eKEypTdvjAW5FfSa62SK0RTiRUC5PIv/Y7
+         c4CKp2gPG8gJC10xiPWskoxsGjKF3mXl6YzO0LFrWTHaDP5uGGtqV1N91u9fvO+PP3gI
+         RwoAVdkphHbfTibxxGI9f94wG4LO0uGyxPIPoZrTw5hX/OtNgjytNYaJSm5bFuRj8tV7
+         s95QZR6bC0hTudDARsBRqwow6n3HAYWXeYLxtIpZxbVtpO7IxFwh55knd17D9bqbGtjY
+         JSZmhj1d3c2EiJcWZqWjSUFS7QcnwwDSN4YwVPz50AkWBNyjobtviZ1+AACRVpgcgaUz
+         vkmA==
+X-Gm-Message-State: APjAAAXyGYUTXOiLbsOEDLp5Rt9JBaz4c1t9taYJMKR1yDGTvivHnowg
+        2H2NJBiP7QNDs2L1NLaKm2A=
+X-Google-Smtp-Source: APXvYqwTF1AugQK16mXeTAc3YHU1jdzIKEshxpTbcRaCWmkGxQukcPJXecgkAY0Igu5HQb1bcCAfWw==
+X-Received: by 2002:a37:aa57:: with SMTP id t84mr5056219qke.34.1565890311488;
+        Thu, 15 Aug 2019 10:31:51 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:25cd])
+        by smtp.gmail.com with ESMTPSA id v24sm1928599qth.33.2019.08.15.10.31.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 10:31:50 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 10:31:48 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     axboe@kernel.dk, hannes@cmpxchg.org, mhocko@kernel.org,
+        vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH 4/4] writeback, memcg: Implement foreign dirty flushing
+Message-ID: <20190815173148.GD588936@devbig004.ftw2.facebook.com>
+References: <20190803140155.181190-1-tj@kernel.org>
+ <20190803140155.181190-5-tj@kernel.org>
+ <20190815143404.GK14313@quack2.suse.cz>
 MIME-Version: 1.0
-References: <20190731111207.12836-1-pagupta@redhat.com>
-In-Reply-To: <20190731111207.12836-1-pagupta@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 15 Aug 2019 10:28:30 -0700
-Message-ID: <CAPcyv4gLqd43CLDuGYrDdx4xR1_oc3D0hzdETz8uQmV1C2Dp_Q@mail.gmail.com>
-Subject: Re: [PATCH] libnvdimm: change disk name of virtio pmem disk
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815143404.GK14313@quack2.suse.cz>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 4:12 AM Pankaj Gupta <pagupta@redhat.com> wrote:
->
-> This patch adds prefix 'v' in disk name for virtio pmem.
-> This differentiates virtio-pmem disks from the pmem disks.
+Hello, Jan.
 
-I don't think the small matter that this device does not support
-MAP_SYNC warrants a separate naming scheme.  That said I do think we
-need to export this attribute in sysfs, likely at the region level,
-and then display that information in ndctl. This is distinct from the
-btt case where it is operating a different data consistency contract
-than baseline pmem.
->
-> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> ---
->  drivers/nvdimm/namespace_devs.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-> index a16e52251a30..8e5d29266fb0 100644
-> --- a/drivers/nvdimm/namespace_devs.c
-> +++ b/drivers/nvdimm/namespace_devs.c
-> @@ -182,8 +182,12 @@ const char *nvdimm_namespace_disk_name(struct nd_namespace_common *ndns,
->                 char *name)
->  {
->         struct nd_region *nd_region = to_nd_region(ndns->dev.parent);
-> +       const char *prefix = "";
->         const char *suffix = NULL;
->
-> +       if (!is_nvdimm_sync(nd_region))
-> +               prefix = "v";
-> +
->         if (ndns->claim && is_nd_btt(ndns->claim))
->                 suffix = "s";
->
-> @@ -201,7 +205,7 @@ const char *nvdimm_namespace_disk_name(struct nd_namespace_common *ndns,
->                         sprintf(name, "pmem%d.%d%s", nd_region->id, nsidx,
->                                         suffix ? suffix : "");
->                 else
-> -                       sprintf(name, "pmem%d%s", nd_region->id,
-> +                       sprintf(name, "%spmem%d%s", prefix, nd_region->id,
->                                         suffix ? suffix : "");
->         } else if (is_namespace_blk(&ndns->dev)) {
->                 struct nd_namespace_blk *nsblk;
-> --
-> 2.20.1
->
+On Thu, Aug 15, 2019 at 04:34:04PM +0200, Jan Kara wrote:
+> I have to say I'm a bit nervous about the completely lockless handling
+> here. I understand that garbage in the cgwb_frn will just result in this
+> mechanism not working and possibly flushing wrong wb's but still it seems a
+> bit fragile. But I don't see any cheap way of synchronizing this so I guess
+> let's try how this will work in practice.
+
+Yeah, this approach is fundamentally best-effort, so I went for low
+overhead and mostly correct operation.  If something like this doesn't
+cut it (w/ bug fixes and some polishing over time), my gut feeling is
+that we probably should bite the bullet and synchronize cgroup memory
+and inode ownerships rather than pushing further on inherently
+imprecise mitigation mechanisms.
+
+Thanks.
+
+-- 
+tejun
