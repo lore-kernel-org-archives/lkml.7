@@ -2,170 +2,190 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC07C32757
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705ADC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A11922064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E88E2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730329AbfHOIw0 (ORCPT
+        id S1730437AbfHOIxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 04:52:26 -0400
-Received: from www62.your-server.de ([213.133.104.62]:39516 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfHOIwZ (ORCPT
+        Thu, 15 Aug 2019 04:53:10 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40399 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfHOIxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 04:52:25 -0400
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hyBUW-0002oE-KV; Thu, 15 Aug 2019 10:52:16 +0200
-Received: from [178.193.45.231] (helo=pc-63.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hyBUW-0009OD-DW; Thu, 15 Aug 2019 10:52:16 +0200
-Subject: Re: WARNING in is_bpf_text_address
-To:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com>
-Cc:     "ast@kernel.org" <ast@kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "dvyukov@google.com" <dvyukov@google.com>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "johannes.berg@intel.com" <johannes.berg@intel.com>,
-        "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
-        will@kernel.org
-References: <20190811083658.10748-1-hdanton@sina.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <d76d7a63-7854-e92d-30cb-52546d333ffe@iogearbox.net>
-Date:   Thu, 15 Aug 2019 10:52:15 +0200
+        Thu, 15 Aug 2019 04:53:10 -0400
+Received: by mail-ed1-f67.google.com with SMTP id h8so1528031edv.7
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 01:53:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XeKVU1y7K/0+7zxnhgeGuNaVnZh3R481wD54ua/mFUU=;
+        b=dAQQFfOFwEjzqU+Fx0neVp/vAR93Bz1sQ5RlWi+oYdT7TL4vAp9eNQtUKNqHfm1LtY
+         3YLIEVG+Y7/duxN+oYmXGJic5ugQdrfEmukG2GIZtkshT1bQfcAOpZkUDsgUtTGoi3Am
+         JUHyWV1LhncQvF3cKj3jJcYNfIFeIb4w2BWoS7fVJLeFcqHHnFN6ZSwDNpFVwFfl8/+I
+         iZdgWF6vzqDgUaFfKK+etiB7gDIc1lJ1blVx6j7+Jvjy9uYjzKe8lBME00P4KXQ3sMd4
+         eZbgG8xf970I2U1asaXaXkFFSgOgJV/JLE5zTGfOlKUcImZMcz2wpEGIqK4iCiCP/iNy
+         RaSw==
+X-Gm-Message-State: APjAAAUNeKxO3kLkCBsm4D+RbHFcqS73bzY6QoodF2FC5aneN0ppYqJ8
+        g98MabdEslDyQpXVy1ioQt8Mwg==
+X-Google-Smtp-Source: APXvYqx6bJqgyrfjiTg9W4LAwi7QG4CNfgZ1HUY+uG8k1g5OEbD2MTyisBi/sxJX/RdsnxlpZuH/tg==
+X-Received: by 2002:a17:906:8392:: with SMTP id p18mr3408377ejx.17.1565859188250;
+        Thu, 15 Aug 2019 01:53:08 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id s11sm440161edh.60.2019.08.15.01.53.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Aug 2019 01:53:07 -0700 (PDT)
+Subject: for_each_child_of_node semantics are broken (was [PATCH] ata:
+ libahci_platform: Add of_node_put() before loop exit)
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>, axboe@kernel.dk,
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>
+References: <20190815060014.2191-1-nishkadg.linux@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <a469ccae-0b34-8a8f-376c-7cd176fd05bf@redhat.com>
+Date:   Thu, 15 Aug 2019 10:53:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190811083658.10748-1-hdanton@sina.com>
+In-Reply-To: <20190815060014.2191-1-nishkadg.linux@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25542/Thu Aug 15 10:25:56 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/11/19 10:36 AM, Hillf Danton wrote:
-> On Sun, 11 Aug 2019 08:24:09 +0800
->>
->> syzbot has found a reproducer for the following crash on:
->>
->> HEAD commit:    451577f3 Merge tag 'kbuild-fixes-v5.3-3' of git://git.kern..
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=120850a6600000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=2031e7d221391b8a
->> dashboard link: https://syzkaller.appspot.com/bug?extid=bd3bba6ff3fcea7a6ec6
->> compiler:       clang version 9.0.0 (/home/glider/llvm/clang 80fee25776c2fb61e74c1ecb1a523375c2500b69)
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=130ffe4a600000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17137d2c600000
->>
->> The bug was bisected to:
->>
->> commit a0b0fd53e1e67639b303b15939b9c653dbe7a8c4
->> Author: Bart Van Assche <bvanassche@acm.org>
->> Date:   Thu Feb 14 23:00:46 2019 +0000
->>
->>       locking/lockdep: Free lock classes that are no longer in use
+Hi Nishka,
 
-Hey Bart, don't think it's related in any way to your commit. I'll allocate some
-time on working on this issue today, thanks!
+On 15-08-19 08:00, Nishka Dasgupta wrote:
+> Each iteration of for_each_child_of_node puts the previous node, but
+> in the case of a goto from the middle of the loop, there is no put,
+> thus causing a memory leak. Add an of_node_put before three such goto
+> statements.
+> Issue found with Coccinelle.
+> 
+> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
 
->> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=152f6a9da00000
->> final crash:    https://syzkaller.appspot.com/x/report.txt?x=172f6a9da00000
->> console output: https://syzkaller.appspot.com/x/log.txt?x=132f6a9da00000
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com
->> Fixes: a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no longer in use")
->>
->> WARNING: CPU: 0 PID: 9604 at kernel/bpf/core.c:851 bpf_jit_free+0x1a8/0x1f0
->> Kernel panic - not syncing: panic_on_warn set ...
->> CPU: 0 PID: 9604 Comm: kworker/0:5 Not tainted 5.3.0-rc3+ #71
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
->> Google 01/01/2011
->> Workqueue: events bpf_prog_free_deferred
->> Call Trace:
->>    __dump_stack lib/dump_stack.c:77 [inline]
->>    dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
->>    panic+0x25c/0x799 kernel/panic.c:219
->>    __warn+0x22f/0x230 kernel/panic.c:576
->>    report_bug+0x190/0x290 lib/bug.c:186
->> BUG: unable to handle page fault for address: fffffbfff4001000
->> #PF: supervisor read access in kernel mode
->> #PF: error_code(0x0000) - not-present page
->> PGD 21ffee067 P4D 21ffee067 PUD 21ffed067 PMD 936de067 PTE 0
->> Oops: 0000 [#1] PREEMPT SMP KASAN
->> CPU: 0 PID: 9604 Comm: kworker/0:5 Not tainted 5.3.0-rc3+ #71
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
->> Google 01/01/2011
->> Workqueue: events bpf_prog_free_deferred
->> RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:537 [inline]
->> RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
->> RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
->> RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
->> RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
->> RIP: 0010:is_bpf_text_address+0x201/0x3b0 kernel/bpf/core.c:709
->> Code: 85 c4 f5 ff 4d 39 f4 76 10 e8 7b c2 f5 ff 49 83 c7 10 eb 46 0f 1f 44
->> 00 00 4c 89 e0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <0f> b6 04 08 84
->> c0 75 7d 41 8b 1c 24 48 c1 e3 0c 4c 01 e3 48 89 df
->> RSP: 0018:ffff888097eff828 EFLAGS: 00010806
->> RAX: 1ffffffff4001000 RBX: 0000000000000001 RCX: dffffc0000000000
->> RDX: ffff88809f1e0280 RSI: ffffffffff7a5520 RDI: ffffffffa0008000
->> RBP: ffff888097eff860 R08: ffffffff817dc73b R09: 0000000000000001
->> R10: fffffbfff117be6d R11: 0000000000000000 R12: ffffffffa0008000
->> R13: 0000000000000000 R14: ffffffffff7a5520 R15: ffff88809a46b2f8
->> FS:  0000000000000000(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: fffffbfff4001000 CR3: 0000000095d73000 CR4: 00000000001406f0
->> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> Call Trace:
-> [pruned]
+Thank you for your patch.
+
+I do not like doing an of_node_put for something which we did not
+explicitly of_node_get. So I was thinking about maybe replacing the
+goto-s with a break.
+
+But even if we put a break in the for_each_child_of_node loop,
+we still leak the reference. Which IMHO means that the semantics of
+the for_each_child_of_node helper are broken, this certainly violates
+the principle of least surprise which one would expect of a good API.
+
+I see that there are quite a few callers of this function:
+
+[hans@shalem linux]$ ack -l for_each_child_of_node drivers | wc -l
+194
+
+And doing a manual check of these (with the intend to stop after
+a couple) I already find something suspicious in the second file
+ack -l returns:
+
+         for_each_child_of_node(parent, dn) {
+                 pnv_php_detach_device_nodes(dn);
+
+                 of_node_put(dn);
+                 refcount = kref_read(&dn->kobj.kref);
+                 if (refcount != 1)
+                         pr_warn("Invalid refcount %d on <%pOF>\n",
+                                 refcount, dn);
+
+                 of_detach_node(dn);
+         }
+
+note this does an of_node_put itself and then continues iterating,
+now this function looks pretty magical to me, so it might be fine...
+
+4th file inspected, same issue with error returns as the libahci_platform
+code, see drivers/pci/controller/pci-tegra.c: tegra_pcie_parse_dt
+also should that function not do a a get on the node since it stores
+it in rp->np if things do succeed ?
+
+5th file: drivers/char/rtc.c:
+
+         for_each_node_by_name(ebus_dp, "ebus") {
+                 struct device_node *dp;
+                 for_each_child_of_node(ebus_dp, dp) {
+                         if (of_node_name_eq(dp, "rtc")) {
+                                 op = of_find_device_by_node(dp);
+                                 if (op) {
+                                         rtc_port = op->resource[0].start;
+                                         rtc_irq = op->irqs[0];
+                                         goto found;
+                                 }
+                         }
+                 }
+         }
+
+Also a leak AFAICT.
+
+10th file: drivers/phy/phy-core.c:
+
+                 for_each_child_of_node(phy_provider->children, child)
+                         if (child == node)
+                                 return phy_provider;
+
+Another leak...
+
+I'm going to stop now because this just aint funny, but I do believe this
+nicely illustrates how for_each_child_of_node() is ridiculously hard to use
+correct.
+
+Regards,
+
+Hans
+
+
+
+> ---
+>   drivers/ata/libahci_platform.c | 9 +++++++--
+>   1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> Pair bpf_prog_kallsyms_del_all() with bpf_prog_free() to silence
-> WARNING at kernel/bpf/core.c:851, see __bpf_prog_release() in
-> net/core/filter.c for why.
-> 
-> --- a/kernel/bpf/core.c
-> +++ b/kernel/bpf/core.c
-> @@ -1987,6 +1987,7 @@ void bpf_prog_free(struct bpf_prog *fp)
->   {
->   	struct bpf_prog_aux *aux = fp->aux;
+> diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
+> index 9e9583a6bba9..e742780950de 100644
+> --- a/drivers/ata/libahci_platform.c
+> +++ b/drivers/ata/libahci_platform.c
+> @@ -497,6 +497,7 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev,
 >   
-> +	bpf_prog_kallsyms_del_all(fp);
->   	INIT_WORK(&aux->work, bpf_prog_free_deferred);
->   	schedule_work(&aux->work);
->   }
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -1328,7 +1328,6 @@ static void __bpf_prog_put(struct bpf_pr
->   		perf_event_bpf_event(prog, PERF_BPF_EVENT_PROG_UNLOAD, 0);
->   		/* bpf_prog_free_id() must be called first */
->   		bpf_prog_free_id(prog, do_idr_lock);
-> -		bpf_prog_kallsyms_del_all(prog);
->   		btf_put(prog->aux->btf);
->   		kvfree(prog->aux->func_info);
->   		bpf_prog_free_linfo(prog);
-> --
+>   			if (of_property_read_u32(child, "reg", &port)) {
+>   				rc = -EINVAL;
+> +				of_node_put(child);
+>   				goto err_out;
+>   			}
+>   
+> @@ -514,14 +515,18 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev,
+>   			if (port_dev) {
+>   				rc = ahci_platform_get_regulator(hpriv, port,
+>   								&port_dev->dev);
+> -				if (rc == -EPROBE_DEFER)
+> +				if (rc == -EPROBE_DEFER) {
+> +					of_node_put(child);
+>   					goto err_out;
+> +				}
+>   			}
+>   #endif
+>   
+>   			rc = ahci_platform_get_phy(hpriv, port, dev, child);
+> -			if (rc)
+> +			if (rc) {
+> +				of_node_put(child);
+>   				goto err_out;
+> +			}
+>   
+>   			enabled_ports++;
+>   		}
 > 
-
