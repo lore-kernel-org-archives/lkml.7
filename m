@@ -2,128 +2,125 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C99C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54324C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 732042086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:35:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YTthKozN"
+	by mail.kernel.org (Postfix) with ESMTP id 2D3AE2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731366AbfHOWfK (ORCPT
+        id S1731958AbfHOWkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 18:35:10 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33059 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729325AbfHOWfK (ORCPT
+        Thu, 15 Aug 2019 18:40:24 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46534 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbfHOWkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 18:35:10 -0400
-Received: by mail-pf1-f193.google.com with SMTP id g2so2068225pfq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 15:35:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a0bj6abrMr4gCECqmCrBbgDjp+biz3GEYW7dznHQhuE=;
-        b=YTthKozNU0AfAmGeC18iVc7BIN6HgPzw/Mywcvzg084v19wE7vfkfBXXeFOerumZ36
-         0vu4LpID2z5qtebuIEITL8e/ewoSd/9Rln5xJngDRB3ViYMtXHoP7e8HCuWPEbbBc2jt
-         1bLiEDndGuFCLigxaDdAPF24z/adjNfwKV1mudg7ON6L12tuK6l02Kqrtfs80JcudB/g
-         Nuci2mXBy9uh30+RB2OK1HbjQucQzhCdnaBZYYJ5BiQYbQr7iXjJAfPUZKYwbg5/7Lvk
-         KcKGEAuba57IXbU9n1tK/057cfUmSpOqR3pq4NXuSitGgIGkA7lWSrnqjuh11Z9qOo8f
-         IOfw==
+        Thu, 15 Aug 2019 18:40:24 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t24so3404677oij.13;
+        Thu, 15 Aug 2019 15:40:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=a0bj6abrMr4gCECqmCrBbgDjp+biz3GEYW7dznHQhuE=;
-        b=a1O8vShQqcuprVoezcDe4pqVUgV0Pj9qEm+dc4Zw9s9b08XM8oFsEcOz6bCztX0NhP
-         D1iwh7saEmHRW8fqfqfboLtB6JJWsIMv1js7PNaPqlxECfakVT4v4M18KPYSnkI8RKlk
-         3ARrANCo7TAX4siSDmG4JoFQfphMajjAnkuoLhYXAB+O4NP8A2RQJSG/6jDdxO3Nmvkt
-         HxzesiZigE1UyUdbBP7VIZeY+m6hAVLfzJfkFu4w6b/uH5MbpuE+A/6aShIO29cLTU9d
-         SbN2BpGG6pfCy18nDO2Naz40OOWVQlMXBrUWM8u0c92OFUTy+6BrVIeAO8aHHYllIMrF
-         XL0Q==
-X-Gm-Message-State: APjAAAUNPV6Tpwc5HkgxBd/bnXIqqKrn/9fwOU7+2Zx2ytjAKhE7yoD0
-        /BNvm12Wx+Jat75/1c97OxjTagB3IhyF47E0huR0sw==
-X-Google-Smtp-Source: APXvYqzuKDvt26gREh27cHM5QMkm6TaTTPQEqRgLBYLaqlpTH0mOKwI9PVLAnXNbVTf5AyCzTcLT6Bvcak2m+CkrpXg=
-X-Received: by 2002:a63:61cd:: with SMTP id v196mr5282760pgb.263.1565908508797;
- Thu, 15 Aug 2019 15:35:08 -0700 (PDT)
+        bh=5N0BrmR1Tjy4UAxxe/8xM6uCYUxnCI+4Zt+Yt4/wBa0=;
+        b=d0AlVKdcuc8e7USj1p+njHyS5CIXk+ViENs9nRRjJqjKRbGNze1Wlk6uyf0hrSpfEY
+         PfePUGshj2edu0rm5Q35HKCsgMoUpYBpyAzg2q9bUqDHJYPj78N8DmXE0yGUDNk41XxA
+         X02BMykh80mMpWr0aWqRlL/0G2KHo/UFHLJ6sm1rTpy/hTnt0D00upf7idRGrPdpbj4p
+         +3HlzQo9fgIyc2IyKqXU/OlF6oeYRODNq2OoKQdYgnEQZ96d4asYtHimFEHNtpx09UtV
+         OYP+9temn5sv696CCFMs/qKfaS/V/aw4gy1wQpaZWesPaoA3p8kcAPsue3aYpiqobVGp
+         YFrw==
+X-Gm-Message-State: APjAAAV7u7PtzF7xLDoIAKrSrKrgJq8S/LnBv9UMa1wx8s8MFjVkSg5D
+        w/Iph15ghbucuOQnOlxSXgz93c90LZM=
+X-Google-Smtp-Source: APXvYqwYW4D/hTHIhZmRg6kF45XejlNLGsR7+EHYaCi+BY2j30kZLJbhDCf93qyLpBI2Gl4BqjLJvw==
+X-Received: by 2002:aca:f593:: with SMTP id t141mr3194805oih.76.1565908822733;
+        Thu, 15 Aug 2019 15:40:22 -0700 (PDT)
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com. [209.85.167.170])
+        by smtp.gmail.com with ESMTPSA id a22sm1486121otr.3.2019.08.15.15.40.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Aug 2019 15:40:21 -0700 (PDT)
+Received: by mail-oi1-f170.google.com with SMTP id p124so3440362oig.5;
+        Thu, 15 Aug 2019 15:40:21 -0700 (PDT)
+X-Received: by 2002:a54:4191:: with SMTP id 17mr2851640oiy.175.1565908820908;
+ Thu, 15 Aug 2019 15:40:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <e77b0f32a2ce97c872eede52c88b84aa78094ae5.1565836130.git.joe@perches.com>
-In-Reply-To: <e77b0f32a2ce97c872eede52c88b84aa78094ae5.1565836130.git.joe@perches.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 15 Aug 2019 15:34:57 -0700
-Message-ID: <CAKwvOdmuReaFgFK+=aib6rRfAb_GTGubLyJ3sAH-tnkKYHASqQ@mail.gmail.com>
-Subject: Re: [PATCH] afs: Move comments after /* fallthrough */
-To:     Joe Perches <joe@perches.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nathan Huckleberry <nhuck@google.com>,
-        linux-afs@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
+References: <20190814072649.8237-1-yinbo.zhu@nxp.com> <20190814072649.8237-2-yinbo.zhu@nxp.com>
+In-Reply-To: <20190814072649.8237-2-yinbo.zhu@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Thu, 15 Aug 2019 17:40:09 -0500
+X-Gmail-Original-Message-ID: <CADRPPNSW4A0gkbzcPD=y-J_YHSnbAgP7p=RQnS6i0U-Ze=L6qA@mail.gmail.com>
+Message-ID: <CADRPPNSW4A0gkbzcPD=y-J_YHSnbAgP7p=RQnS6i0U-Ze=L6qA@mail.gmail.com>
+Subject: Re: [PATCH v1 2/4] soc: fsl: guts: Add definition for LS1028A
+To:     Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Amit Jain <amit.jain_1@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>,
+        Rajesh Bhagat <rajesh.bhagat@nxp.com>,
+        Ashish Kumar <Ashish.Kumar@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-mmc@vger.kernel.org,
+        Xiaobo Xie <xiaobo.xie@nxp.com>,
+        Jiafei Pan <jiafei.pan@nxp.com>,
+        Alison Wang <alison.wang@nxp.com>,
+        Alex Marginean <alexandru.marginean@nxp.com>,
+        Catalin Horghidan <catalin.horghidan@nxp.com>,
+        Rajat Srivastava <rajat.srivastava@nxp.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 7:36 PM Joe Perches <joe@perches.com> wrote:
+On Wed, Aug 14, 2019 at 2:26 AM Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
 >
-> Make the code a bit easier for a script to appropriately convert
-> case statement blocks with /* fallthrough */ comments to a macro by
-> moving comments describing the next case block to the case statement.
+> Adding compatible string "ls1028a-dcfg" to initialize guts driver
+> for ls1028 and SoC die attribute definition for LS1028A
 >
-> Signed-off-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+
+Applied for next.
+
 > ---
->  fs/afs/cmservice.c | 10 +++-------
->  fs/afs/fsclient.c  | 51 +++++++++++++++++----------------------------------
->  fs/afs/vlclient.c  | 50 +++++++++++++++++++++++++-------------------------
->  fs/afs/yfsclient.c | 51 +++++++++++++++++----------------------------------
-
-So these changes are across just fs/afs, how many patches like this
-would you need across the whole tree to solve this problem?
-
->  4 files changed, 62 insertions(+), 100 deletions(-)
+>  drivers/soc/fsl/guts.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 >
-> diff --git a/fs/afs/cmservice.c b/fs/afs/cmservice.c
-> index b86195e4dc6c..2270fe9325da 100644
-> --- a/fs/afs/cmservice.c
-> +++ b/fs/afs/cmservice.c
-> @@ -282,10 +282,8 @@ static int afs_deliver_cb_callback(struct afs_call *call)
->         case 0:
->                 afs_extract_to_tmp(call);
->                 call->unmarshall++;
-> -
-> -               /* extract the FID array and its count in two steps */
->                 /* fall through */
-> -       case 1:
-> +       case 1:         /* extract the FID array and its count in two steps */
-
-Could these instead be on their own line as the first line within this
-case?  (I don't feel particularly strongly about this).
-
-...
-
-> @@ -220,8 +220,8 @@ static int afs_deliver_vl_get_addrs_u(struct afs_call *call)
->                 count = min(call->count, 4U);
->                 afs_extract_to_buf(call, count * sizeof(__be32));
+> diff --git a/drivers/soc/fsl/guts.c b/drivers/soc/fsl/guts.c
+> index 1ef8068c8dd3..34810f9bb2ee 100644
+> --- a/drivers/soc/fsl/guts.c
+> +++ b/drivers/soc/fsl/guts.c
+> @@ -102,6 +102,11 @@ static const struct fsl_soc_die_attr fsl_soc_die[] = {
+>           .svr          = 0x87360000,
+>           .mask         = 0xff3f0000,
+>         },
+> +       /* Die: LS1028A, SoC: LS1028A */
+> +       { .die          = "LS1028A",
+> +         .svr          = 0x870b0000,
+> +         .mask         = 0xff3f0000,
+> +       },
+>         { },
+>  };
 >
-> -               /* Fall through - and extract entries */
-
-Yikes! Mixing fall through and other comments...yeah that would be
-hard to globally find and replace.
-
-> -       case 2:
-> +               /* Fall through */
-> +       case 2:         /* extract entries */
->                 ret = afs_extract_data(call, call->count > 4);
->                 if (ret < 0)
->                         return ret;
-
-
--- 
-Thanks,
-~Nick Desaulniers
+> @@ -224,6 +229,7 @@ static const struct of_device_id fsl_guts_of_match[] = {
+>         { .compatible = "fsl,ls1012a-dcfg", },
+>         { .compatible = "fsl,ls1046a-dcfg", },
+>         { .compatible = "fsl,lx2160a-dcfg", },
+> +       { .compatible = "fsl,ls1028a-dcfg", },
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(of, fsl_guts_of_match);
+> --
+> 2.17.1
+>
