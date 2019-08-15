@@ -2,125 +2,69 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF304C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0085CC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B260208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:27:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565868460;
-	bh=HPm3p6fszGGA1U2BXg6hlSy+krbGf5wrck8FWkHCYjc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y/7vYiLU75/jlGC9yY/ssq8e3232Mf7In85ShAnzCyaYRhB87b1NMz5cauKPfCE+W
-	 mo4bsK3zhhgJvVRPxp8HAw1FBhSuI4bmdxmxcKYtgOL9baEwprnUeqpJ4nYrKWIO72
-	 g4tWvUKjoqmGcojhBhCqRq6DaLU8wOp8XNN9TTSc=
+	by mail.kernel.org (Postfix) with ESMTP id BEA952064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731239AbfHOL1j (ORCPT
+        id S1731250AbfHOL23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 07:27:39 -0400
-Received: from mail-lf1-f50.google.com ([209.85.167.50]:41800 "EHLO
-        mail-lf1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729909AbfHOL1j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 07:27:39 -0400
-Received: by mail-lf1-f50.google.com with SMTP id 62so1410289lfa.8;
-        Thu, 15 Aug 2019 04:27:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=xUxmXNBF0cpbiVK6x0jPufNmerVF62JVW8riEyG2SSg=;
-        b=i/B4LZkyTHGRnn3GlG2EeIeggZoupuOFCJDYO6AUgaTqob4f7jtknE1vFXgJtHnnez
-         LuTePhPxYpgN12uii5oFJiwsXuYCCrzalUiUNXe1lp7IYwQpxqUd66jfC2jKqW4kAsuh
-         f8iRCoYo/JAMOU0J7R2PN0UUkrlXoyZ+Bl/SV+PhbKIbbJuZdCltGhNE+J9A4s5yCRmJ
-         B7sMHO0ZpuxCUAGuTDn6QNSVxQ6s/CmzUTL4g1UaR2/SIPpmntAbJgQvROZiOmosUAHg
-         j/Ijpt8H4jGJdUVzo+DEeQhIg2xK9ICTvebJwBTXyzUfpb/BWIU7XP93ILWN8VpWzOvg
-         ShOA==
-X-Gm-Message-State: APjAAAUBUg02r/aQ1tJ1HXC9Uj27Abir3Syo2UGaSZLFMs8mPlsbw1R1
-        9iHWGmevmJJIN7SwN5zOXEA=
-X-Google-Smtp-Source: APXvYqyR2tocJ5yjqNECkZryDtNzNxZMWT3PiZpHYCtkdJLEPnxCc3kjEFYscHpgkmsc+8XHcTSOlA==
-X-Received: by 2002:ac2:5ec3:: with SMTP id d3mr2101249lfq.44.1565868456756;
-        Thu, 15 Aug 2019 04:27:36 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id j30sm400135lfk.48.2019.08.15.04.27.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 04:27:36 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92)
-        (envelope-from <johan@kernel.org>)
-        id 1hyDur-00087s-OG; Thu, 15 Aug 2019 13:27:38 +0200
-Date:   Thu, 15 Aug 2019 13:27:37 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Lars Melin <larsm17@gmail.com>,
-        Marcel Partap <mpartap@gmx.net>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Michael Scott <hashcode0f@gmail.com>,
-        NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCHv2] USB: serial: option: Add Motorola modem UARTs
-Message-ID: <20190815112737.GD32300@localhost>
-References: <20190815082602.51765-1-tony@atomide.com>
+        Thu, 15 Aug 2019 07:28:29 -0400
+Received: from mga12.intel.com ([192.55.52.136]:30184 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728128AbfHOL23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 07:28:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 04:28:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
+   d="scan'208";a="194750092"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Aug 2019 04:28:27 -0700
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] software node: Introduce software_node_find_by_name()
+Date:   Thu, 15 Aug 2019 14:28:23 +0300
+Message-Id: <20190815112826.81785-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190815082602.51765-1-tony@atomide.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 01:26:02AM -0700, Tony Lindgren wrote:
-> On Motorola Mapphone devices such as Droid 4 there are five USB ports
-> that do not use the same layout as Gobi 1K/2K/etc devices listed in
-> qcserial.c. So we should use qcaux.c or option.c as noted by
-> Dan Williams <dan.j.williams@intel.com>.
-> 
-> As the Motorola USB serial ports have an interrupt endpoint as shown
-> with lsusb -v, we should use option.c instead of qcaux.c as pointed out
-> by Johan Hovold <johan@kernel.org>.
-> 
-> The ff/ff/ff interfaces seem to always be UARTs on Motorola devices.
-> For the other interfaces, class 0x0a (CDC Data) should not in general
-> be added as they are typically part of a multi-interface function as
-> noted earlier by Bjørn Mork <bjorn@mork.no>.
-> 
-> However, looking at the Motorola mapphone kernel code, the mdm6600 0x0a
-> class is only used for flashing the modem firmware, and there are no
-> other interfaces. So I've added that too with more details below as it
-> works just fine.
-> 
-> The ttyUSB ports on Droid 4 are:
-> 
-> ttyUSB0 DIAG, CQDM-capable
-> ttyUSB1 MUX or NMEA, no response
-> ttyUSB2 MUX or NMEA, no response
-> ttyUSB3 TCMD
-> ttyUSB4 AT-capable
+Hi,
 
-> Tested-by: Pavel Machek <pavel@ucw.cz>
-> Signed-off-by: Tony Lingren <tony@atomide.com>
+This helper makes it much more easier to access "external" nodes.
 
-I fixed up the typo in your name here, which checkpatch caught.
+thanks,
 
-> ---
-> 
-> Changes since v1:
-> - Leave out defines as suggested by Lars
 
-Thanks, Tony. Now applied.
+Heikki Krogerus (3):
+  software node: Add software_node_find_by_name()
+  usb: roles: intel_xhci: Supplying software node for the role mux
+  platform/x86: intel_cht_int33fe: Use new API to gain access to the
+    role switch
 
-Johan
+ drivers/base/swnode.c                         | 35 ++++++++++++
+ drivers/platform/x86/intel_cht_int33fe.c      | 57 ++++---------------
+ .../usb/roles/intel-xhci-usb-role-switch.c    | 13 ++++-
+ include/linux/property.h                      |  4 ++
+ 4 files changed, 61 insertions(+), 48 deletions(-)
+
+-- 
+2.20.1
+
