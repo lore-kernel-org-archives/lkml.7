@@ -2,80 +2,261 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7C2C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0A2C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5A120578
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2372A2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:38:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="XhZ3oKdd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732139AbfHOQis (ORCPT
+        id S1732175AbfHOQiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 15 Aug 2019 12:38:50 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34688 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732097AbfHOQis (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 15 Aug 2019 12:38:48 -0400
-Received: from mga09.intel.com ([134.134.136.24]:22205 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731913AbfHOQiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:38:46 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 09:38:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
-   d="scan'208";a="178512101"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga007.fm.intel.com with ESMTP; 15 Aug 2019 09:38:44 -0700
-Date:   Thu, 15 Aug 2019 09:38:44 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        yu.c.zhang@intel.com, alazar@bitdefender.com,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH RESEND v4 5/9] KVM: VMX: Add init/set/get functions for
- SPP
-Message-ID: <20190815163844.GD27076@linux.intel.com>
-References: <20190814070403.6588-1-weijiang.yang@intel.com>
- <20190814070403.6588-6-weijiang.yang@intel.com>
- <87a7cbapdw.fsf@vitty.brq.redhat.com>
- <20190815134329.GA11449@local-michael-cet-test>
- <CALMp9eTGXDDfVspFwFyEhagg9sdnqZqzSQhDksT0bkKzVNGSqw@mail.gmail.com>
+Received: by mail-wr1-f67.google.com with SMTP id s18so2005512wrn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:38:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JR71XQNkV43uIf0uN76WGebaaEMlV71kOTTKLBN8aA8=;
+        b=XhZ3oKddTlCxuNc6Jr1WvQRSTL3FkouK8gpcoc82oFOgu8y0Y0UKh3GugDkMlsedhb
+         U5uPPz71UF/cW+9crHdxdIKJ+5gevNNClVKC+FW0jiIMPN46kOe4f9QjwEAmdCrzZtMv
+         u/ouTdDBu+GaFDp/IQ2jUY1HdSHrD8Oyh8u6kpHSIlMPbjher3vWbfnDyfZjPWNKhgEa
+         8dyIrk/C6bBFbmKdvd6oHqPj3qH4eOkYBPRsQPMarfKIbb2I+aOF0B5qLH+OfJ2SM4Z9
+         fdw/ASvfUYy8jwVFPJF+gUbbsMz54LRTwGnA2UDxV1yohFAuqtIYbBiiwhLVjVHzUYZ6
+         vGcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JR71XQNkV43uIf0uN76WGebaaEMlV71kOTTKLBN8aA8=;
+        b=nUG3cPnnlNtnVewJWayO8is4eYjiYOCOujbD2efhza3wdzuinPWeuiJRu/FQNi3W9S
+         Bu42vtoeVgZwxSTnJqjHBkF097ZpiL1H9aoH2qeW8SVsnuQ5yDwhuRFHKDV6VoKu6Ddn
+         1GkFHvU//xsmAmzYGHim55yIdCZgVvAA/0UCAo44fbn7L+q3VhOQxJjqfAHxg0/ElHhH
+         IpWzn/BcUyJUw2h1IMuWo3VXKbNLy7bNx4Lk4j5iQSH7dwYSl+b1aknnLn27IFALXhAF
+         bjEGWZSgxJpYBnklAYIWTf0CuRd1oby/5r3xcK9/WF1SaRnGc8xJPwiPCS0Ni2nG6FVW
+         r7xg==
+X-Gm-Message-State: APjAAAV9HUg4O5yL9oG/x7zy53FiEnJDo/5XwzJXWH3gqJVKZdTE2NyD
+        US1CAX6iTjy4IzlmDU+oN54blfCfunA=
+X-Google-Smtp-Source: APXvYqy7Ojd8PH2Gzt73awfMBIbL0lckipytMWLs14oiz1wPP7rL/52o+wplczzyDCluuClcGYCObQ==
+X-Received: by 2002:adf:db49:: with SMTP id f9mr6484824wrj.112.1565887125395;
+        Thu, 15 Aug 2019 09:38:45 -0700 (PDT)
+Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id f7sm5755046wrf.8.2019.08.15.09.38.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 09:38:44 -0700 (PDT)
+From:   Dmitry Safonov <dima@arista.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: [PATCHv6 05/36] alarmtimer: Rename gettime() callback to get_ktime()
+Date:   Thu, 15 Aug 2019 17:38:05 +0100
+Message-Id: <20190815163836.2927-6-dima@arista.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190815163836.2927-1-dima@arista.com>
+References: <20190815163836.2927-1-dima@arista.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eTGXDDfVspFwFyEhagg9sdnqZqzSQhDksT0bkKzVNGSqw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 09:25:41AM -0700, Jim Mattson wrote:
-> On Thu, Aug 15, 2019 at 6:41 AM Yang Weijiang <weijiang.yang@intel.com> wrote:
-> 
-> > Hi, Vitaly,
-> > After looked into the issue and others, I feel to make SPP co-existing
-> > with nested VM is not good, the major reason is, L1 pages protected by
-> > SPP are transparent to L1 VM, if it launches L2 VM, probably the
-> > pages would be allocated to L2 VM, and that will bother to L1 and L2.
-> > Given the feature is new and I don't see nested VM can benefit
-> > from it right now, I would like to make SPP and nested feature mutually
-> > exclusive, i.e., detecting if the other part is active before activate one
-> > feature,what do you think of it?
-> > thanks!
-> 
-> How do you propose making the features mutually exclusive?
+From: Andrei Vagin <avagin@gmail.com>
 
-I haven't looked at the details or the end to end flow, but would it make
-sense to exit to userspace on nested VMLAUNCH/VMRESUME if there are SPP
-mappings?  And have the SPP ioctl() kick vCPUs out of guest.
+The upcoming support for time namespaces requires to have access to:
+  - The time in a tasks time namespace for sys_clock_gettime()
+  - The time in the root name space for common_timer_get()
 
-KVM already exits on SPP violations, so presumably this is something that
-can be punted to userspace.
+struct alarm_base needs to follow the same name convention, so rename
+.gettime() callback into get_ktime() as a preparation for introducing
+get_timespec().
+
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Co-developed-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+---
+ kernel/time/alarmtimer.c | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index 995dd5aa68f0..5af13c859d03 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -36,13 +36,13 @@
+  * struct alarm_base - Alarm timer bases
+  * @lock:		Lock for syncrhonized access to the base
+  * @timerqueue:		Timerqueue head managing the list of events
+- * @gettime:		Function to read the time correlating to the base
++ * @get_ktime:		Function to read the time correlating to the base
+  * @base_clockid:	clockid for the base
+  */
+ static struct alarm_base {
+ 	spinlock_t		lock;
+ 	struct timerqueue_head	timerqueue;
+-	ktime_t			(*gettime)(void);
++	ktime_t			(*get_ktime)(void);
+ 	clockid_t		base_clockid;
+ } alarm_bases[ALARM_NUMTYPE];
+ 
+@@ -207,7 +207,7 @@ static enum hrtimer_restart alarmtimer_fired(struct hrtimer *timer)
+ 	spin_unlock_irqrestore(&base->lock, flags);
+ 
+ 	if (alarm->function)
+-		restart = alarm->function(alarm, base->gettime());
++		restart = alarm->function(alarm, base->get_ktime());
+ 
+ 	spin_lock_irqsave(&base->lock, flags);
+ 	if (restart != ALARMTIMER_NORESTART) {
+@@ -217,7 +217,7 @@ static enum hrtimer_restart alarmtimer_fired(struct hrtimer *timer)
+ 	}
+ 	spin_unlock_irqrestore(&base->lock, flags);
+ 
+-	trace_alarmtimer_fired(alarm, base->gettime());
++	trace_alarmtimer_fired(alarm, base->get_ktime());
+ 	return ret;
+ 
+ }
+@@ -225,7 +225,7 @@ static enum hrtimer_restart alarmtimer_fired(struct hrtimer *timer)
+ ktime_t alarm_expires_remaining(const struct alarm *alarm)
+ {
+ 	struct alarm_base *base = &alarm_bases[alarm->type];
+-	return ktime_sub(alarm->node.expires, base->gettime());
++	return ktime_sub(alarm->node.expires, base->get_ktime());
+ }
+ EXPORT_SYMBOL_GPL(alarm_expires_remaining);
+ 
+@@ -270,7 +270,7 @@ static int alarmtimer_suspend(struct device *dev)
+ 		spin_unlock_irqrestore(&base->lock, flags);
+ 		if (!next)
+ 			continue;
+-		delta = ktime_sub(next->expires, base->gettime());
++		delta = ktime_sub(next->expires, base->get_ktime());
+ 		if (!min || (delta < min)) {
+ 			expires = next->expires;
+ 			min = delta;
+@@ -364,7 +364,7 @@ void alarm_start(struct alarm *alarm, ktime_t start)
+ 	hrtimer_start(&alarm->timer, alarm->node.expires, HRTIMER_MODE_ABS);
+ 	spin_unlock_irqrestore(&base->lock, flags);
+ 
+-	trace_alarmtimer_start(alarm, base->gettime());
++	trace_alarmtimer_start(alarm, base->get_ktime());
+ }
+ EXPORT_SYMBOL_GPL(alarm_start);
+ 
+@@ -377,7 +377,7 @@ void alarm_start_relative(struct alarm *alarm, ktime_t start)
+ {
+ 	struct alarm_base *base = &alarm_bases[alarm->type];
+ 
+-	start = ktime_add_safe(start, base->gettime());
++	start = ktime_add_safe(start, base->get_ktime());
+ 	alarm_start(alarm, start);
+ }
+ EXPORT_SYMBOL_GPL(alarm_start_relative);
+@@ -414,7 +414,7 @@ int alarm_try_to_cancel(struct alarm *alarm)
+ 		alarmtimer_dequeue(base, alarm);
+ 	spin_unlock_irqrestore(&base->lock, flags);
+ 
+-	trace_alarmtimer_cancel(alarm, base->gettime());
++	trace_alarmtimer_cancel(alarm, base->get_ktime());
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(alarm_try_to_cancel);
+@@ -474,7 +474,7 @@ u64 alarm_forward_now(struct alarm *alarm, ktime_t interval)
+ {
+ 	struct alarm_base *base = &alarm_bases[alarm->type];
+ 
+-	return alarm_forward(alarm, base->gettime(), interval);
++	return alarm_forward(alarm, base->get_ktime(), interval);
+ }
+ EXPORT_SYMBOL_GPL(alarm_forward_now);
+ 
+@@ -500,7 +500,7 @@ static void alarmtimer_freezerset(ktime_t absexp, enum alarmtimer_type type)
+ 		return;
+ 	}
+ 
+-	delta = ktime_sub(absexp, base->gettime());
++	delta = ktime_sub(absexp, base->get_ktime());
+ 
+ 	spin_lock_irqsave(&freezer_delta_lock, flags);
+ 	if (!freezer_delta || (delta < freezer_delta)) {
+@@ -619,7 +619,7 @@ static void alarm_timer_arm(struct k_itimer *timr, ktime_t expires,
+ 	struct alarm_base *base = &alarm_bases[alarm->type];
+ 
+ 	if (!absolute)
+-		expires = ktime_add_safe(expires, base->gettime());
++		expires = ktime_add_safe(expires, base->get_ktime());
+ 	if (sigev_none)
+ 		alarm->node.expires = expires;
+ 	else
+@@ -657,7 +657,7 @@ static int alarm_clock_get_timespec(clockid_t which_clock, struct timespec64 *tp
+ 	if (!alarmtimer_get_rtcdev())
+ 		return -EINVAL;
+ 
+-	*tp = ktime_to_timespec64(base->gettime());
++	*tp = ktime_to_timespec64(base->get_ktime());
+ 	return 0;
+ }
+ 
+@@ -734,7 +734,7 @@ static int alarmtimer_do_nsleep(struct alarm *alarm, ktime_t absexp,
+ 		struct timespec64 rmt;
+ 		ktime_t rem;
+ 
+-		rem = ktime_sub(absexp, alarm_bases[type].gettime());
++		rem = ktime_sub(absexp, alarm_bases[type].get_ktime());
+ 
+ 		if (rem <= 0)
+ 			return 0;
+@@ -803,7 +803,7 @@ static int alarm_timer_nsleep(const clockid_t which_clock, int flags,
+ 	exp = timespec64_to_ktime(*tsreq);
+ 	/* Convert (if necessary) to absolute time */
+ 	if (flags != TIMER_ABSTIME) {
+-		ktime_t now = alarm_bases[type].gettime();
++		ktime_t now = alarm_bases[type].get_ktime();
+ 
+ 		exp = ktime_add_safe(now, exp);
+ 	}
+@@ -868,9 +868,9 @@ static int __init alarmtimer_init(void)
+ 
+ 	/* Initialize alarm bases */
+ 	alarm_bases[ALARM_REALTIME].base_clockid = CLOCK_REALTIME;
+-	alarm_bases[ALARM_REALTIME].gettime = &ktime_get_real;
++	alarm_bases[ALARM_REALTIME].get_ktime = &ktime_get_real;
+ 	alarm_bases[ALARM_BOOTTIME].base_clockid = CLOCK_BOOTTIME;
+-	alarm_bases[ALARM_BOOTTIME].gettime = &ktime_get_boottime;
++	alarm_bases[ALARM_BOOTTIME].get_ktime = &ktime_get_boottime;
+ 	for (i = 0; i < ALARM_NUMTYPE; i++) {
+ 		timerqueue_init_head(&alarm_bases[i].timerqueue);
+ 		spin_lock_init(&alarm_bases[i].lock);
+-- 
+2.22.0
+
