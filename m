@@ -2,143 +2,180 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CB6C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449D5C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F35F9206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:01:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="UH1q53gX"
+	by mail.kernel.org (Postfix) with ESMTP id 0BE232086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:02:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565888571;
+	bh=kZ6A03edYmuAghi0lgmWCPl3MsKPVgwJHW10Afgikh0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iixTFiANHGtL4ORaSIx1Ii6QUUJsDcC5S0q3AGHZUrqlnhtnEYw4/JKGAvmDJ4L7O
+	 aIY39AOSMncdU5IHbTMXZDdIWNMZ8y8XKgULXRQ5gM+BOQBYdTKbZkcqjW8URnTKvr
+	 u3ghj+ojgzEvtJpH5hU8TvTTjFUkCTMb/7JbqtwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730962AbfHORBt (ORCPT
+        id S1731018AbfHORCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:01:49 -0400
-Received: from mail-eopbgr750131.outbound.protection.outlook.com ([40.107.75.131]:28414
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        Thu, 15 Aug 2019 13:02:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40352 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729157AbfHORBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:01:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H/Ypsij+LaKYHWY4ZL5QMpruMJoBKRy4DuuWwoPy3W6ybxBb+pKFBBLexkrYD4usEQE7y5ivxdtqraK+BtIzMLvp5g2vusFByEeq0lIdKZp/rvUfOxciMWQIoK1lLZI3RAG2TqF6KbglkB+FrLFqnl43wye27T1jU4Hqd3YgEtR+vlJgIhKZsw2tPRC49OQ9hgIhojISe0O3r5xV2MtCIo/1enqbNTDRTDBDspQX5JPh1TaiEMkxRajdVFF2WlgrvCbpw9QSRLmUR0ZNU9Pn/B3bI0l9nAT3/hQplPNXRRMISPN8GB3gzj40xMmEKPtPMP6idMcgrWDe9+mVw7Sacg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zgcDpRUMjuJAWhzK2bog4nWoAxxCJh2WjK3u6Upsg9s=;
- b=PBA/3RjIXWpQ+vxQnCY6RTyOd5J5FQRWA6mUQteJTGceeat+CKzVfuSj9zqMHdPcbN9rGT4eJctU2PWALMEM/QWUaL8/lETie7v1KfbzLKwchSS405UDheftXcVbLBQ23UiV+OOyUukCq7MrWgaCPUkvOnF2ulngkqa1qSExJQo1dO3DvQq0SVYmaOH3PjXIdTz94etxVobunhyjW+M8Z3e6KhZUQi6GcGeKx/BjLjtx5yGa0dmWCD9eh3iigfXsIzHRbPkUV1o/ZuR5J7Bk/QB9AyEVZhugIZ6IFP2Wi1weDrIJTWeCS8jaW1lRRInOwDo6mWRTEAi8DrbaDSi/uQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zgcDpRUMjuJAWhzK2bog4nWoAxxCJh2WjK3u6Upsg9s=;
- b=UH1q53gXOETtBLTOUZUlUmj/CT8fhtVTmonnuANCw6npAfPmGROKoc6F8YfVxTL9rPNiUARQuctvau7sD46ZRa+ORyz2E7CHog+Mbir12MU+tUWcfY879V0OU+4WtzhRUPPp31unmny4/pOOMwMuX0tdVdpVxzYyvcf9v3+M1/E=
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
- DM6PR21MB1306.namprd21.prod.outlook.com (20.179.52.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.11; Thu, 15 Aug 2019 17:01:45 +0000
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::ddd:8e5b:2930:6726]) by DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::ddd:8e5b:2930:6726%9]) with mapi id 15.20.2178.006; Thu, 15 Aug 2019
- 17:01:45 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6,2/2] PCI: hv: Use bytes 4 and 5 from instance ID as the PCI
- domain numbers
-Thread-Topic: [PATCH v6,2/2] PCI: hv: Use bytes 4 and 5 from instance ID as
- the PCI domain numbers
-Thread-Index: AQHVU4seoLCJ4XnpvECmtlYiCdCsfg==
-Date:   Thu, 15 Aug 2019 17:01:45 +0000
-Message-ID: <1565888460-38694-2-git-send-email-haiyangz@microsoft.com>
-References: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR13CA0008.namprd13.prod.outlook.com
- (2603:10b6:300:16::18) To DM6PR21MB1242.namprd21.prod.outlook.com
- (2603:10b6:5:169::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 10df0480-5fc3-44e9-9e5a-08d721a23fd5
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1306;
-x-ms-traffictypediagnostic: DM6PR21MB1306:|DM6PR21MB1306:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB13061F2327E38A65553A4FB5ACAC0@DM6PR21MB1306.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01304918F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(39860400002)(396003)(376002)(346002)(199004)(189003)(52116002)(6506007)(26005)(2501003)(76176011)(6512007)(110136005)(316002)(66946007)(54906003)(7736002)(305945005)(22452003)(66556008)(4720700003)(6486002)(64756008)(8676002)(102836004)(3846002)(66446008)(99286004)(66476007)(6392003)(7846003)(6436002)(14454004)(6116002)(386003)(2906002)(476003)(2616005)(486006)(446003)(11346002)(36756003)(25786009)(10290500003)(81166006)(478600001)(81156014)(66066001)(256004)(14444005)(50226002)(2201001)(5660300002)(186003)(8936002)(10090500001)(53936002)(71200400001)(71190400001)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1306;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WPhcGPc8764MwueafTvc+/BPlDOJUjWHWnH/tgcWykB+f+rKpis8CB6U7HeLGZpOgDc6QepQ9UiDtTFNeIrurzDds2QyGaucpw7ZT7/biVAfDreBcKTwhNYyCCwSWzyDjabWfnBEtTBhTYy0Uzmqjsndq6+m2tKuPkiTy98SE07BBqn0OrraFFspiH+5OScuNvoa7OGoJUQQ00pirBm8zP5wPj/uufjMEIz8ea8LbFiqIjLn3joC2MWsLGgRvZ6ak3ZyGp0F5d1RlY26lz2oluCglnYwmjWNxICUjVKhe03ojiPnjJHqmD9HHHuQKSHJA4qxRHDVe39KMJv5LDDlvVIs5/z7oSrLRwsE85i3vs8l6Vau1lC/7vWLg9J//iuQUP88MHBgTK9vxuWhtT0ligfv/uUvPs0xWeXVv3zA7Cw=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1729157AbfHORCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:02:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 95638AFF3;
+        Thu, 15 Aug 2019 17:02:47 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 19:02:15 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Khalid Aziz <khalid.aziz@oracle.com>
+Cc:     akpm@linux-foundation.org, vbabka@suse.cz,
+        mgorman@techsingularity.net, dan.j.williams@intel.com,
+        osalvador@suse.de, richard.weiyang@gmail.com, hannes@cmpxchg.org,
+        arunks@codeaurora.org, rppt@linux.vnet.ibm.com, jgg@ziepe.ca,
+        amir73il@gmail.com, alexander.h.duyck@linux.intel.com,
+        linux-mm@kvack.org, linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/2] Add predictive memory reclamation and compaction
+Message-ID: <20190815170215.GQ9477@dhcp22.suse.cz>
+References: <20190813014012.30232-1-khalid.aziz@oracle.com>
+ <20190813140553.GK17933@dhcp22.suse.cz>
+ <3cb0af00-f091-2f3e-d6cc-73a5171e6eda@oracle.com>
+ <20190814085831.GS17933@dhcp22.suse.cz>
+ <d3895804-7340-a7ae-d611-62913303e9c5@oracle.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10df0480-5fc3-44e9-9e5a-08d721a23fd5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 17:01:45.0698
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ySmzuOeHv4FtjLGB/2aSg35cBH/nDIt8auJT7DSIGlD8f0tQbibwWCeDdZYeWBe1qbDzvG8Dua4TJmSCmSuhXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1306
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d3895804-7340-a7ae-d611-62913303e9c5@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As recommended by Azure host team, the bytes 4, 5 have more uniqueness
-(info entropy) than bytes 8, 9. So now we use bytes 4, 5 as the PCI domain
-numbers. On older hosts, bytes 4, 5 can also be used -- no backward
-compatibility issues here. The chance of collision is greatly reduced.
+On Thu 15-08-19 10:27:26, Khalid Aziz wrote:
+> On 8/14/19 2:58 AM, Michal Hocko wrote:
+> > On Tue 13-08-19 09:20:51, Khalid Aziz wrote:
+> >> On 8/13/19 8:05 AM, Michal Hocko wrote:
+> >>> On Mon 12-08-19 19:40:10, Khalid Aziz wrote:
+> >>> [...]
+> >>>> Patch 1 adds code to maintain a sliding lookback window of (time, number
+> >>>> of free pages) points which can be updated continuously and adds code to
+> >>>> compute best fit line across these points. It also adds code to use the
+> >>>> best fit lines to determine if kernel must start reclamation or
+> >>>> compaction.
+> >>>>
+> >>>> Patch 2 adds code to collect data points on free pages of various orders
+> >>>> at different points in time, uses code in patch 1 to update sliding
+> >>>> lookback window with these points and kicks off reclamation or
+> >>>> compaction based upon the results it gets.
+> >>>
+> >>> An important piece of information missing in your description is why
+> >>> do we need to keep that logic in the kernel. In other words, we have
+> >>> the background reclaim that acts on a wmark range and those are tunable
+> >>> from the userspace. The primary point of this background reclaim is to
+> >>> keep balance and prevent from direct reclaim. Why cannot you implement
+> >>> this or any other dynamic trend watching watchdog and tune watermarks
+> >>> accordingly? Something similar applies to kcompactd although we might be
+> >>> lacking a good interface.
+> >>>
+> >>
+> >> Hi Michal,
+> >>
+> >> That is a very good question. As a matter of fact the initial prototype
+> >> to assess the feasibility of this approach was written in userspace for
+> >> a very limited application. We wrote the initial prototype to monitor
+> >> fragmentation and used /sys/devices/system/node/node*/compact to trigger
+> >> compaction. The prototype demonstrated this approach has merits.
+> >>
+> >> The primary reason to implement this logic in the kernel is to make the
+> >> kernel self-tuning.
+> > 
+> > What makes this particular self-tuning an universal win? In other words
+> > there are many ways to analyze the memory pressure and feedback it back
+> > that I can think of. It is quite likely that very specific workloads
+> > would have very specific demands there. I have seen cases where are
+> > trivial increase of min_free_kbytes to normally insane value worked
+> > really great for a DB workload because the wasted memory didn't matter
+> > for example.
+> 
+> Hi Michal,
+> 
+> The problem is not so much as do we have enough knobs available, rather
+> how do we tweak them dynamically to avoid allocation stalls. Knobs like
+> watermarks and min_free_kbytes are set once typically and left alone.
 
-In the rare cases of collision, the driver code detects and finds another
-number that is not in use.
+Does anything prevent from tuning these knobs more dynamically based on
+already exported metrics?
 
-Suggested-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Acked-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/controller/pci-hyperv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Allocation stalls show up even on much smaller scale than large DB or
+> cloud platforms. I have seen it on a desktop class machine running a few
+> services in the background. Desktop is running gnome3, I would lock the
+> screen and come back to unlock it a day or two later. In that time most
+> of memory has been consumed by buffer/page cache. Just unlocking the
+> screen can take 30+ seconds while system reclaims pages to be able swap
+> back in all the processes that were inactive so far.
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
-ci-hyperv.c
-index 31b8fd5..4f3d97e 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -2590,7 +2590,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	 * (2) There will be no overlap between domains (after fixing possible
- 	 * collisions) in the same VM.
- 	 */
--	dom_req =3D hdev->dev_instance.b[8] << 8 | hdev->dev_instance.b[9];
-+	dom_req =3D hdev->dev_instance.b[5] << 8 | hdev->dev_instance.b[4];
- 	dom =3D hv_get_dom_num(dom_req);
-=20
- 	if (dom =3D=3D HVPCI_DOM_INVALID) {
---=20
-1.8.3.1
+This sounds like a bug to me.
 
+> It is true different workloads will have different requirements and that
+> is what I am attempting to address here. Instead of tweaking the knobs
+> statically based upon one workload requirements, I am looking at the
+> trend of memory consumption instead. A best fit line showing recent
+> trend can be quite indicative of what the workload is doing in terms of
+> memory.
+
+Is there anything preventing from following that trend from the
+userspace and trigger background reclaim earlier to not even get to the
+direct reclaim though?
+
+> For instance, a cloud server might be running a certain number
+> of instances for a few days and it can end up using any memory not used
+> up by tasks, for buffer/page cache. Now the sys admin gets a request to
+> launch another instance and when they try to to do that, system starts
+> to allocate pages and soon runs out of free pages. We are now in direct
+> reclaim path and it can take significant amount of time to find all free
+> pages the new task needs. If the kernel were watching the memory
+> consumption trend instead, it could see that the trend line shows a
+> complete exhaustion of free pages or 100% fragmentation in near future,
+> irrespective of what the workload is.
+
+I am confused now. How can an unpredictable action (like sys admin
+starting a new workload) be handled by watching a memory consumption
+history trend? From the above description I would expect that the system
+would be in a balanced state for few days when a new instance is
+launched. The only reasonable thing to do then is to trigger the reclaim
+before the workload is spawned but then what is the actual difference
+between direct reclaim and an early reclaim?
+
+[...]
+> > I agree on this point. Is the current set of tunning sufficient? What
+> > would be missing if not?
+> > 
+> 
+> We have knob available to force compaction immediately. That is helpful
+> and in some case, sys admins have resorted to forcing compaction on all
+> zones before launching a new cloud instance or loading a new database.
+> Some admins have resorted to using /proc/sys/vm/drop_caches to force
+> buffer/page cache pages to be freed up. Either of these solutions causes
+> system load to go up immediately while kswapd/kcompactd run to free up
+> and compact pages. This is far from ideal. Other knobs available seem to
+> be hard to set correctly especially on servers that run mixed workloads
+> which results in a regular stream of customer complaints coming in about
+> system stalling at most inopportune times.
+
+Then let's talk about what is missing in the existing tuning we already
+provide. I do agree that compaction needs some love but I am under
+impression that min_free_kbytes and watermark_*_factor should give a
+decent abstraction to control the background reclaim. If that is not the
+case then I am really interested on examples because I might be easily
+missing something there.
+
+Thanks!
+-- 
+Michal Hocko
+SUSE Labs
