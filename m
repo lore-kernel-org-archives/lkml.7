@@ -2,61 +2,60 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EF8C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1B0C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD418206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64A8208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:39:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="b4qBCjuT"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="MYDLo6I1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732473AbfHOQjM (ORCPT
+        id S1732504AbfHOQjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:39:12 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38051 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732446AbfHOQjK (ORCPT
+        Thu, 15 Aug 2019 12:39:20 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39813 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732484AbfHOQjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:39:10 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g17so2773194wrr.5
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:39:09 -0700 (PDT)
+        Thu, 15 Aug 2019 12:39:17 -0400
+Received: by mail-wm1-f65.google.com with SMTP id i63so1771112wmg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:39:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LDD6ysbcq8/fi6dGyfg9N1McraInCy0n2bZF6snhbRo=;
-        b=b4qBCjuTQdhVT0a0DmGBDt27OIcVE/oifHPx8Xk2ziMixcZTCNurZMkB9t7p6ykFMo
-         cJoRdjNKK3NerjMF6YNTgxQXPO5lwrT6E+zIBjXnxsMGJiRbiwov3m35vt5TCmlwODsS
-         S7WOCJ75wVaTHiAGrQHQpbe475zAQ1bQzlC8/2rE3OLLUzNvVqaJstgGu/lWFOzSJTTL
-         pbhnWdgDVm7rfw9leeSIDakdIFUYdpezD8CPifJ9pSF6ltpAEb6bLC3/UZPwWcQWTP3m
-         nKpowXB9iObJ6wmavFsae0yVN0IJgILdn90r7D9XrpA1w1D1PX9//0GRx1tyP5mLbTYz
-         IjqA==
+        bh=r/9uyT+mnIHOaH/ccTtg/Nxut5gT2ypiz9lprU+hrks=;
+        b=MYDLo6I1xHd/KR1Jq+sZWa0ONwa92tRKpvfI4g25iKa2lvx2eFR7GcGlcJUhrNEkkH
+         fgSqPDxBa7YWh8Wjvi5A2KVO9M1toYcNRqwY9ORUantp3/6NvYW2ivpFAcm5lVCLCYfh
+         Pxy4X68e1Hco+Tuz3TJpDXgxDFY9R9nNvlnWPcror/fXPTALT8M0G4IJgIw5f+V1k1vH
+         HptVNegpIx+XaYA4kJcQwLPiuhmppOsm4p8OSFLPBFb1g8cKPaNtANUKLEalke7azxAu
+         +jYnnJxROTsSpEcy2VgV8e1eIcJrf55SRUTiuo4dVOQRL3YpM1mcSPBDGcbNoiE0r8+c
+         PsBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LDD6ysbcq8/fi6dGyfg9N1McraInCy0n2bZF6snhbRo=;
-        b=ndxDfTgazM6ho+GBID634vJxYoHqh8r89XCK9pldSRkPVz5n4sud9U8ccXCvR+g610
-         5FnYe+P47jqQeMoa8DOiGyBuYuUCE12KO5Ljp+WMWYB5/acAfN2A8L94U+j/qUWcA63m
-         RAkIU1cIDYoAF9WAQgCuBR/YYcqXMfyyajGnFLIpgnqmCqgqupSPOerYZUDq/3jjhlUz
-         aeuOH8mgDkFPxKMZbBFNS006CLv70I62GUUeRYDKXXyXc8pFfhwipJTcxQuVlU6FaoUE
-         swTvy2+jnoyrYWvoOdxUIinXpaEuWD7+gKLQCmdWlhG7FL2cdItUOCYuQxdJ1y12Y08Q
-         ZgDQ==
-X-Gm-Message-State: APjAAAVre/7J/3+wBG6Pr2hen/mznuiNZanmcxrxhLhugmkIinmCIdky
-        0CwBd2uM1r5EfpEMmjbtbYxaAhHniQ0=
-X-Google-Smtp-Source: APXvYqwF6j5VaRNoIPJFWV8Tckhi+PRI/dVzMoI+OPEinPS+a5V1GrKb0SAQztAOJ/JdBaxD6XREkw==
-X-Received: by 2002:adf:e790:: with SMTP id n16mr6224693wrm.120.1565887148204;
-        Thu, 15 Aug 2019 09:39:08 -0700 (PDT)
+        bh=r/9uyT+mnIHOaH/ccTtg/Nxut5gT2ypiz9lprU+hrks=;
+        b=lI6fDwMhqsF/Ge4yU2Ip9zdtKHqfcO3X6Hi7qtknjeS2xU502rqSl8QwJFAb3VLcXG
+         6+5LVCkT/aTEh8VQA89Qdg0akcq9Va81LOBG82XMTUFiH6Mu0b8S0kvsqreTgmLkf3GA
+         m9gXPJEh+3niumqTP9HqKgAavZEC9gfNVl0ZxwVHLhPIiJY3ZHCxxtEKKjymAlAAUUh1
+         TJYoljqRGSXnbq1590o7FkG7cXYhTMsMmfS2mvGk9i90huBVX7Js2wGdLd4/2sQ6sx3z
+         Mol/UcBNLL+Dx9AiFkWoEmWhJvpcyVWdmIk2uA1cXJmq8rJcGlR4zPM1Hjw19RQ9WGCE
+         MFPg==
+X-Gm-Message-State: APjAAAUXfy8qVehYmKN6916M61xb7yyO5MZYG3FV3rcuClfsPE/7A1vS
+        +spuyauMgnNIjpaJc/l9sWjRCbI8grY=
+X-Google-Smtp-Source: APXvYqyaeGx4F4ZKjGtGiS1uS8X/cbv+de31lrxL5NVHQopePXSDhQC7FYVLZjy5ytMpTUbCFIFDzw==
+X-Received: by 2002:a1c:9d53:: with SMTP id g80mr3599678wme.103.1565887154182;
+        Thu, 15 Aug 2019 09:39:14 -0700 (PDT)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id f7sm5755046wrf.8.2019.08.15.09.39.06
+        by smtp.gmail.com with ESMTPSA id f7sm5755046wrf.8.2019.08.15.09.39.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 09:39:07 -0700 (PDT)
+        Thu, 15 Aug 2019 09:39:11 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -76,10 +75,11 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv6 21/36] x86/vdso: Rename vdso_image {.data=>.text}
-Date:   Thu, 15 Aug 2019 17:38:21 +0100
-Message-Id: <20190815163836.2927-22-dima@arista.com>
+        linux-api@vger.kernel.org, x86@kernel.org,
+        Andrei Vagin <avagin@gmail.com>
+Subject: [PATCHv6 24/36] x86/vdso: Switch image on setns()/clone()
+Date:   Thu, 15 Aug 2019 17:38:24 +0100
+Message-Id: <20190815163836.2927-25-dima@arista.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190815163836.2927-1-dima@arista.com>
 References: <20190815163836.2927-1-dima@arista.com>
@@ -90,67 +90,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To avoid any confusion with VVAR.
+As it has been discussed on timens RFC, adding a new conditional branch
+`if (inside_time_ns)` on VDSO for all processes is undesirable.
+It will add a penalty for everybody as branch predictor may mispredict
+the jump. Also there are instruction cache lines wasted on cmp/jmp.
 
-Co-developed-by: Andrei Vagin <avagin@openvz.org>
-Signed-off-by: Andrei Vagin <avagin@openvz.org>
+Those effects of introducing time namespace are very much unwanted
+having in mind how much work have been spent on micro-optimisation
+vdso code.
+
+Addressing those problems, there are two versions of VDSO's .so:
+for host tasks (without any penalty) and for processes inside of time
+namespace with clk_to_ns() that subtracts offsets from host's time.
+
+Whenever a user does setns() or unshare(CLONE_TIMENS) followed
+by clone(), change VDSO image in mm and zap VVAR/VDSO page tables.
+They will be re-faulted with corresponding image and VVAR offsets.
+
+Co-developed-by: Andrei Vagin <avagin@gmail.com>
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/x86/entry/vdso/vdso2c.h | 2 +-
- arch/x86/entry/vdso/vma.c    | 6 +++---
- arch/x86/include/asm/vdso.h  | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/entry/vdso/vma.c   | 23 +++++++++++++++++++++++
+ arch/x86/include/asm/vdso.h |  1 +
+ kernel/time_namespace.c     | 11 +++++++++++
+ 3 files changed, 35 insertions(+)
 
-diff --git a/arch/x86/entry/vdso/vdso2c.h b/arch/x86/entry/vdso/vdso2c.h
-index 80be339ee93e..7556bb70ed8b 100644
---- a/arch/x86/entry/vdso/vdso2c.h
-+++ b/arch/x86/entry/vdso/vdso2c.h
-@@ -158,7 +158,7 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
- 	fprintf(outfile, "\n};\n\n");
- 
- 	fprintf(outfile, "const struct vdso_image %s = {\n", image_name);
--	fprintf(outfile, "\t.data = raw_data,\n");
-+	fprintf(outfile, "\t.text = raw_data,\n");
- 	fprintf(outfile, "\t.size = %lu,\n", mapping_size);
- 	if (alt_sec) {
- 		fprintf(outfile, "\t.alt = %lu,\n",
 diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
-index 3f05418642a8..2dc4f0b5481c 100644
+index 8a8211fd4cfc..91cf5a5c8c9e 100644
 --- a/arch/x86/entry/vdso/vma.c
 +++ b/arch/x86/entry/vdso/vma.c
-@@ -32,8 +32,8 @@ void __init init_vdso_image(const struct vdso_image *image)
- {
- 	BUG_ON(image->size % PAGE_SIZE != 0);
+@@ -25,6 +25,7 @@
+ #include <asm/cpufeature.h>
+ #include <clocksource/hyperv_timer.h>
+ #include <asm/page.h>
++#include <asm/tlb.h>
  
--	apply_alternatives((struct alt_instr *)(image->data + image->alt),
--			   (struct alt_instr *)(image->data + image->alt +
-+	apply_alternatives((struct alt_instr *)(image->text + image->alt),
-+			   (struct alt_instr *)(image->text + image->alt +
- 						image->alt_len));
- }
+ #if defined(CONFIG_X86_64)
+ unsigned int __read_mostly vdso64_enabled = 1;
+@@ -266,6 +267,28 @@ static const struct vm_special_mapping vvar_mapping = {
+ 	.mremap = vvar_mremap,
+ };
  
-@@ -47,7 +47,7 @@ static vm_fault_t vdso_fault(const struct vm_special_mapping *sm,
- 	if (!image || (vmf->pgoff << PAGE_SHIFT) >= image->size)
- 		return VM_FAULT_SIGBUS;
- 
--	vmf->page = virt_to_page(image->data + (vmf->pgoff << PAGE_SHIFT));
-+	vmf->page = virt_to_page(image->text + (vmf->pgoff << PAGE_SHIFT));
- 	get_page(vmf->page);
- 	return 0;
- }
++#ifdef CONFIG_TIME_NS
++int vdso_join_timens(struct task_struct *task)
++{
++	struct mm_struct *mm = task->mm;
++	struct vm_area_struct *vma;
++
++	if (down_write_killable(&mm->mmap_sem))
++		return -EINTR;
++
++	for (vma = mm->mmap; vma; vma = vma->vm_next) {
++		unsigned long size = vma->vm_end - vma->vm_start;
++
++		if (vma_is_special_mapping(vma, &vvar_mapping) ||
++		    vma_is_special_mapping(vma, &vdso_mapping))
++			zap_page_range(vma, vma->vm_start, size);
++	}
++
++	up_write(&mm->mmap_sem);
++	return 0;
++}
++#endif
++
+ /*
+  * Add vdso and vvar mappings to current process.
+  * @image          - blob to map
 diff --git a/arch/x86/include/asm/vdso.h b/arch/x86/include/asm/vdso.h
-index 230474e2ddb5..dffdc12cc7d6 100644
+index 03f468c63a24..ccf89dedd04f 100644
 --- a/arch/x86/include/asm/vdso.h
 +++ b/arch/x86/include/asm/vdso.h
-@@ -11,7 +11,7 @@
- #include <linux/mm_types.h>
+@@ -45,6 +45,7 @@ extern struct vdso_image vdso_image_32;
+ extern void __init init_vdso_image(struct vdso_image *image);
  
- struct vdso_image {
--	void *data;
-+	void *text;
- 	unsigned long size;   /* Always a multiple of PAGE_SIZE */
+ extern int map_vdso_once(const struct vdso_image *image, unsigned long addr);
++extern int vdso_join_timens(struct task_struct *task);
  
- 	unsigned long alt, alt_len;
+ #endif /* __ASSEMBLER__ */
+ 
+diff --git a/kernel/time_namespace.c b/kernel/time_namespace.c
+index ff2c5de7e815..a01c25fe76d5 100644
+--- a/kernel/time_namespace.c
++++ b/kernel/time_namespace.c
+@@ -15,6 +15,7 @@
+ #include <linux/cred.h>
+ #include <linux/err.h>
+ #include <linux/mm.h>
++#include <asm/vdso.h>
+ 
+ ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim,
+ 				struct timens_offsets *ns_offsets)
+@@ -201,6 +202,7 @@ static void timens_put(struct ns_common *ns)
+ static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
+ {
+ 	struct time_namespace *ns = to_time_ns(new);
++	int ret;
+ 
+ 	if (!current_is_single_threaded())
+ 		return -EUSERS;
+@@ -209,6 +211,10 @@ static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
+ 	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 
++	ret = vdso_join_timens(current);
++	if (ret)
++		return ret;
++
+ 	get_time_ns(ns);
+ 	get_time_ns(ns);
+ 	put_time_ns(nsproxy->time_ns);
+@@ -223,10 +229,15 @@ int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk)
+ {
+ 	struct ns_common *nsc = &nsproxy->time_ns_for_children->ns;
+ 	struct time_namespace *ns = to_time_ns(nsc);
++	int ret;
+ 
+ 	if (nsproxy->time_ns == nsproxy->time_ns_for_children)
+ 		return 0;
+ 
++	ret = vdso_join_timens(tsk);
++	if (ret)
++		return ret;
++
+ 	get_time_ns(ns);
+ 	put_time_ns(nsproxy->time_ns);
+ 	nsproxy->time_ns = ns;
 -- 
 2.22.0
 
