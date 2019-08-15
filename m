@@ -2,107 +2,92 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB9EC3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE09AC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E43208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:37:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565897840;
-	bh=8dvvdp0Gy36K9ppzyUBCW8xdCX9c7dGKhzu7YsGsUt4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kQfK7c1dMaWBR4xKf9JUwnX3Hu92ppJeVzMAMqYue6U2UkSkrMEzzzKyWjYQL8PgN
-	 I6A4U7o93R+ip+KpxaGZb/YO3vlMSEqmtAKuBazQ8Am+4AFNdwGW/+989CNbWqO8Ja
-	 j1QY/VwzqL1U0PREkAQrZw1wxQRWANB0xFezRVQg=
+	by mail.kernel.org (Postfix) with ESMTP id 7A8F0206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:37:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="Xwkkm7fo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732656AbfHOThT (ORCPT
+        id S1732781AbfHOThi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 15:37:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33714 "EHLO mail.kernel.org"
+        Thu, 15 Aug 2019 15:37:38 -0400
+Received: from mx1.riseup.net ([198.252.153.129]:34750 "EHLO mx1.riseup.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728283AbfHOThT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 15:37:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F373F206C1;
-        Thu, 15 Aug 2019 19:37:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565897838;
-        bh=8dvvdp0Gy36K9ppzyUBCW8xdCX9c7dGKhzu7YsGsUt4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UVrjHPkP0CDRnalQJA2BQal0yU5qoYu7w/mhsvKchZIPpjEFFPRrrh4rqZQRdQv8V
-         eq35222rGDubTD08xehGAhVjq2e3QL9DClifPZytR7uGy0tBOkQSsk9L4Vj0/EHvHb
-         HwenyvggHagxTTTEpXxPULrNxX6rPUB7VV02jgCo=
-Date:   Thu, 15 Aug 2019 21:37:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        open list <linux-kernel@vger.kernel.org>,
-        torvalds@linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/91] 4.19.67-stable review
-Message-ID: <20190815193716.GG30437@kroah.com>
-References: <20190814165748.991235624@linuxfoundation.org>
- <aa683926-3df0-6f60-841a-7ea5a5e3566d@roeck-us.net>
- <CAEUSe78A6Cvt2irKzysfRSHubVxDaEGUVaLf2UF5EHzTeiOVOw@mail.gmail.com>
+        id S1728283AbfHOThi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 15:37:38 -0400
+Received: from capuchin.riseup.net (capuchin-pn.riseup.net [10.0.1.176])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "*.riseup.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (verified OK))
+        by mx1.riseup.net (Postfix) with ESMTPS id 78EB41B9312;
+        Thu, 15 Aug 2019 12:37:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+        t=1565897857; bh=ix+hs2so30zL6vmT5t1SLjzk0RSE7jwWwW/ibMO7iZ8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:Reply-To:From;
+        b=Xwkkm7fo5P8FEBVd0yjTHeD6Lfy9+phlIFlPVoJC3FA78No2Q7/BGAEwVsYJZd5Pb
+         hS9tXg569yJdZrfLjI2GVGleuzhL8A6MbRjySWUlJ7CWFPXRDw485O6I0qOIyaEhuY
+         gnG2vZJt0K4/5f0vqKHqIMapYKrSn6WtOVtKTJXg=
+X-Riseup-User-ID: C51BCAA73C62FCDD08C039934EB35B621F4A49E71B8A99B773F0C6F3EE5A848A
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+         by capuchin.riseup.net (Postfix) with ESMTPSA id 156471209CC;
+        Thu, 15 Aug 2019 12:37:35 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 22:37:30 +0300
+From:   Kernel User <linux-kernel@riseup.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     mhocko@suse.com, x86@kernel.org
+Subject: Re: /sys/devices/system/cpu/vulnerabilities/ doesn't show all known
+ CPU vulnerabilities
+Message-ID: <20190815223730.0b5c6c13@localhost>
+In-Reply-To: <alpine.DEB.2.21.1908151054090.2241@nanos.tec.linutronix.de>
+References: <20190813232829.3a1962cc@localhost>
+        <20190813212115.GO16770@zn.tnic>
+        <20190814010041.098fe4be@localhost>
+        <20190814070457.GA26456@zn.tnic>
+        <20190814121154.12f488f7@localhost>
+        <alpine.DEB.2.21.1908151054090.2241@nanos.tec.linutronix.de>
+Reply-To: linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEUSe78A6Cvt2irKzysfRSHubVxDaEGUVaLf2UF5EHzTeiOVOw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 08:58:55AM -0500, Daniel Díaz wrote:
-> Hello!
-> 
-> On Thu, 15 Aug 2019 at 08:29, Guenter Roeck <linux@roeck-us.net> wrote:
-> >
-> > On 8/14/19 10:00 AM, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 4.19.67 release.
-> > > There are 91 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > >
-> > > Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
-> > > Anything received after that time might be too late.
-> > >
-> >
-> > Building x86_64:tools/perf ... failed
-> > --------------
-> > Error log:
-> > Warning: arch/x86/include/asm/cpufeatures.h differs from kernel
-> > Warning: arch/x86/include/uapi/asm/kvm.h differs from kernel
-> >    PERF_VERSION = 4.9.189.ge000f87
-> > util/machine.c: In function ‘machine__create_module’:
-> > util/machine.c:1088:43: error: ‘size’ undeclared (first use in this function); did you mean ‘die’?
-> >    if (arch__fix_module_text_start(&start, &size, name) < 0)
-> >                                             ^~~~
-> >                                             die
-> > util/machine.c:1088:43: note: each undeclared identifier is reported only once for each function it appears in
-> 
-> We noticed this exact failure but not on 4.19. For us, 4.19's perf builds fine.
-> 
-> On 4.9, perf failed with the error you described, as it looks like
-> it's missing 9ad4652b66f1 ("perf record: Fix wrong size in
-> perf_record_mmap for last kernel module"), though I have not verified
-> yet.
+On Thu, 15 Aug 2019 11:03:35 +0200 (CEST) Thomas Gleixner wrote:
 
-I've queued that up now, and will push out the 4.9-rc tree, so let's see
-if that fixes it or not.
+> It's used to denote vulnerability classes and their mitigations:
+> 
+>   - Spectre v1
+>   - Spectre v2
+>   - Meltdown
+>   - SSB
+>   - L1TF
+>   - MDS
 
-thanks,
+In the Wikipedia article there are:
 
-greg k-h
++ Bounds Check Bypass (Spectre, Variant 1)
++ Branch Target Injection (Spectre, Variant 2)
++ Rogue Data Cache Load (Meltdown, Variant 3)
+- Rogue System Register Read (Spectre-NG, Variant 3a)
++ Speculative Store Bypass (Spectre-NG, Variant 4)
+- Lazy FP state restore (Spectre-NG)
+- Bounds Check Bypass Store (Spectre-NG)
++ Foreshadow
+- Spoiler
++ Microarchitectural Data Sampling
+
+I have marked with '+' those which I recognize in the list you provided
+and with '-' those which are not.
+
+> We are not tracking subclasses and their individual CVEs.
+
+Why do you say that? In your list only L1TF and MDS are not subclasses,
+i.e. subclasses are in the list. So why not have the others? Also
+Spoiler seems to be a separate class.
