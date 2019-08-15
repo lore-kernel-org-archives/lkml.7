@@ -2,154 +2,73 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7ACC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB826C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C11220644
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF5C2086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:09:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565878171;
+	bh=qI9h9nBCGYM6wxrHHdZIKSZlkvciJpvGgpMj+MRLCSs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ycs9Wfu4gF5H89h99qNvUtYpzwJ+iMPUsBd+N+SMleoCXjoSG4VoiktrOEef/AfME
+	 50zfCfTfBa7iHiTpLhECtv/XZd5eUZUkIEahG4rLB24UP/ZcFWIhn0GEolrfeNxSp3
+	 A5ckA2I4/yPRuQpkt68UMpqgfaK4iw05dgVOvFxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732778AbfHOOFl (ORCPT
+        id S1732711AbfHOOJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:05:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35756 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732211AbfHOOFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:05:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BB740AFE8;
-        Thu, 15 Aug 2019 14:05:36 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 599471E4200; Thu, 15 Aug 2019 16:05:35 +0200 (CEST)
-Date:   Thu, 15 Aug 2019 16:05:35 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH 3/4] writeback, memcg: Implement cgroup_writeback_by_id()
-Message-ID: <20190815140535.GJ14313@quack2.suse.cz>
-References: <20190803140155.181190-1-tj@kernel.org>
- <20190803140155.181190-4-tj@kernel.org>
+        Thu, 15 Aug 2019 10:09:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729918AbfHOOJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 10:09:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0255E206C2;
+        Thu, 15 Aug 2019 14:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565878169;
+        bh=qI9h9nBCGYM6wxrHHdZIKSZlkvciJpvGgpMj+MRLCSs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OalJt220U2hUSNlPq12VGjCDakEekU3+4/YWFOMP0atX2xS6NyFkIvs4Q64MNaZDa
+         ChiObKL5AMXAwJPzL+lDCeJpkGasdkfCm2fAVlE2Z/1Ew9/fi+gQ8d594gtmwMabub
+         ZavpkNoPwTQFrM+Exxh9gTv1vIN+JKFZO8TnPWrk=
+Date:   Thu, 15 Aug 2019 16:09:27 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH v5 10/18] compat_ioctl: move SIOCOUTQ out of
+ compat_ioctl.c
+Message-ID: <20190815140927.GA23267@kroah.com>
+References: <20190814204259.120942-1-arnd@arndb.de>
+ <20190814205521.122180-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190803140155.181190-4-tj@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190814205521.122180-1-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 03-08-19 07:01:54, Tejun Heo wrote:
-> Implement cgroup_writeback_by_id() which initiates cgroup writeback
-> from bdi and memcg IDs.  This will be used by memcg foreign inode
-> flushing.
+On Wed, Aug 14, 2019 at 10:54:45PM +0200, Arnd Bergmann wrote:
+> All users of this call are in socket or tty code, so handling
+> it there means we can avoid the table entry in fs/compat_ioctl.c.
 > 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  fs/fs-writeback.c         | 64 +++++++++++++++++++++++++++++++++++++++
->  include/linux/writeback.h |  4 +++
->  2 files changed, 68 insertions(+)
-> 
-> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-> index 6129debdc938..5c79d7acefdb 100644
-> --- a/fs/fs-writeback.c
-> +++ b/fs/fs-writeback.c
-> @@ -880,6 +880,70 @@ static void bdi_split_work_to_wbs(struct backing_dev_info *bdi,
->  		wb_put(last_wb);
->  }
->  
-> +/**
-> + * cgroup_writeback_by_id - initiate cgroup writeback from bdi and memcg IDs
-> + * @bdi_id: target bdi id
-> + * @memcg_id: target memcg css id
-> + * @nr_pages: number of pages to write
-> + * @reason: reason why some writeback work initiated
-> + * @done: target wb_completion
-> + *
-> + * Initiate flush of the bdi_writeback identified by @bdi_id and @memcg_id
-> + * with the specified parameters.
-> + */
-> +int cgroup_writeback_by_id(u64 bdi_id, int memcg_id, unsigned long nr,
-> +			   enum wb_reason reason, struct wb_completion *done)
-> +{
-> +	struct backing_dev_info *bdi;
-> +	struct cgroup_subsys_state *memcg_css;
-> +	struct bdi_writeback *wb;
-> +	struct wb_writeback_work *work;
-> +	int ret;
-> +
-> +	/* lookup bdi and memcg */
-> +	bdi = bdi_get_by_id(bdi_id);
-> +	if (!bdi)
-> +		return -ENOENT;
-> +
-> +	rcu_read_lock();
-> +	memcg_css = css_from_id(memcg_id, &memory_cgrp_subsys);
-> +	if (memcg_css && !css_tryget(memcg_css))
-> +		memcg_css = NULL;
-> +	rcu_read_unlock();
-> +	if (!memcg_css) {
-> +		ret = -ENOENT;
-> +		goto out_bdi_put;
-> +	}
-> +
-> +	/* and find the associated wb */
-> +	wb = wb_get_create(bdi, memcg_css, GFP_NOWAIT | __GFP_NOWARN);
-> +	if (!wb) {
-> +		ret = -ENOMEM;
-> +		goto out_css_put;
-> +	}
-> +
-> +	/* issue the writeback work */
-> +	work = kzalloc(sizeof(*work), GFP_NOWAIT | __GFP_NOWARN);
-> +	if (work) {
-> +		work->nr_pages = nr;
-> +		work->sync_mode = WB_SYNC_NONE;
-> +		work->reason = reason;
-> +		work->done = done;
-> +		work->auto_free = 1;
-> +		wb_queue_work(wb, work);
-> +		ret = 0;
-> +	} else {
-> +		ret = -ENOMEM;
-> +	}
-> +
-> +	wb_put(wb);
-> +out_css_put:
-> +	css_put(memcg_css);
-> +out_bdi_put:
-> +	bdi_put(bdi);
-> +	return ret;
-> +}
-> +
->  /**
->   * cgroup_writeback_umount - flush inode wb switches for umount
->   *
-> diff --git a/include/linux/writeback.h b/include/linux/writeback.h
-> index 8945aac31392..ad794f2a7d42 100644
-> --- a/include/linux/writeback.h
-> +++ b/include/linux/writeback.h
-> @@ -217,6 +217,10 @@ void wbc_attach_and_unlock_inode(struct writeback_control *wbc,
->  void wbc_detach_inode(struct writeback_control *wbc);
->  void wbc_account_cgroup_owner(struct writeback_control *wbc, struct page *page,
->  			      size_t bytes);
-> +int cgroup_writeback_by_id(u64 bdi_id, int memcg_id, unsigned long nr_pages,
-> +			   enum wb_reason reason, struct wb_completion *done);
-> +int writeback_by_id(int id, unsigned long nr, enum wb_reason reason,
-> +		    struct wb_completion *done);
+>  drivers/tty/tty_io.c | 1 +
+>  fs/compat_ioctl.c    | 2 --
+>  net/socket.c         | 2 ++
+>  3 files changed, 3 insertions(+), 2 deletions(-)a
 
-I guess this writeback_by_id() is stale? I didn't find it anywhere else...
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
