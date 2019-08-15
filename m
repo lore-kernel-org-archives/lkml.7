@@ -2,44 +2,63 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C50DEC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A9BC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1D5320644
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14DDF2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:26:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732385AbfHORY5 (ORCPT
+        id S1729947AbfHOR0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:24:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:47054 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730282AbfHORY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:24:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F4E428;
-        Thu, 15 Aug 2019 10:24:56 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8E643F706;
-        Thu, 15 Aug 2019 10:24:55 -0700 (PDT)
-Subject: Re: [PATCH] sched/rt: silence double clock update warning by using
- rq_lock wrappers
-To:     Phil Auld <pauld@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-References: <20190815145354.27484-1-pauld@redhat.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <f094734a-eeae-02db-dd0b-d7fe7e9d5db8@arm.com>
-Date:   Thu, 15 Aug 2019 18:24:54 +0100
+        Thu, 15 Aug 2019 13:26:47 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37014 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728329AbfHOR0q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:26:46 -0400
+Received: by mail-wr1-f65.google.com with SMTP id z11so2903105wrt.4
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:26:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=y4+EC3K/OraoQekA4qFzE8BLaZwE6owYXq+qixqnFME=;
+        b=UpZLOlyI6rs6qg+pR9X/u0ZzAgfyL3DXctCEkzW5HEHKuEzDPBgMRc6Q8oTGRLeJyp
+         GkglK39Rmu1FX8aHxh05S7CUa7uU0RHFSKozEBky5ZEvTELEaJ5FJHHw5ySivbevXfxc
+         zUHOSIy1yfxSo0uzHxC+YJDBoaDsxc+vz1LQocbUVXdgTQrvlnNFWsRWViVQj6Vl44Ae
+         gOGXw8Ce9Y+9Ad8jIoQTBHpBTd9S735tHk4fFJIlivhbYrHkIUYAJsRGDGetTZzKDZx3
+         c92AHraOt80dV0ugSocOEo/waWCJOGvuD37DGQOa16EJYEybvi82icv0J/16VejXBWXe
+         AKbg==
+X-Gm-Message-State: APjAAAVwl4vwicNjN9XkeaSjtqbvrJNNJXi3LpylUt6gUsws+udu65yT
+        yQFop/Mam9RLDhU0bC5ah+LhvDukEow=
+X-Google-Smtp-Source: APXvYqyYPY95uK6vTb/hFt+RKFB9Pmf6Bnhkb5VvVPjrB+VctenX0bTjjplB0OYB7X8RzuIEBe/oLQ==
+X-Received: by 2002:adf:9e09:: with SMTP id u9mr6614069wre.169.1565890003935;
+        Thu, 15 Aug 2019 10:26:43 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id o14sm3642773wrg.64.2019.08.15.10.26.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Aug 2019 10:26:43 -0700 (PDT)
+Subject: Re: [PATCH 0/3] usb: typec: fusb302: Small changes
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190814132419.39759-1-heikki.krogerus@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <4a97653f-9222-9cbd-1944-e5192775bcb1@redhat.com>
+Date:   Thu, 15 Aug 2019 19:26:42 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190815145354.27484-1-pauld@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190814132419.39759-1-heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,33 +66,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/08/2019 15:53, Phil Auld wrote:
-> With WARN_DOUBLE_CLOCK enabled a false positive warning can occur in rt
-> 
->         [] rq->clock_update_flags & RQCF_UPDATED
->         [] WARNING: CPU: 6 PID: 21426 at kernel/sched/core.c:225 
-> 						update_rq_clock+0x90/0x130
->           [] Call Trace:
->           []  update_rq_clock+0x90/0x130
->           []  sched_rt_period_timer+0x11f/0x340
->           []  __hrtimer_run_queues+0x100/0x280
->           []  hrtimer_interrupt+0x100/0x220
->           []  smp_apic_timer_interrupt+0x6a/0x130
->           []  apic_timer_interrupt+0xf/0x20
-> 
-> sched_rt_period_timer does:
->                 raw_spin_lock(&rq->lock);
->                 update_rq_clock(rq);
-> 
-> which triggers the warning because of not using the rq_lock wrappers.
-> So, use the wrappers.
-> 
-> Signed-off-by: Phil Auld <pauld@redhat.com>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Hi,
 
-Looks sane to me, and no missing _irqsave this time around ;)
+On 14-08-19 15:24, Heikki Krogerus wrote:
+> Hi,
+> 
+> This series removes the deprecated fusb302 specific properties, and
+> stops using struct tcpc_config in the driver.
+> 
+> thanks,
+> 
+> Heikki Krogerus (3):
+>    usb: typec: fusb302: Remove unused properties
+>    dt-bindings: usb: fusb302: Remove deprecated properties
+>    usb: typec: fusb302: Always provide fwnode for the port
 
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+I know this series is already in usb-testing, still I thought
+it would be a good idea to test it on my CHT hw with a fusb302
+TypeC controller. So I've just completed testing this and it
+works as advertised:
+
+So FWIW:
+
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
