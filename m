@@ -2,113 +2,64 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA28C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA0BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E462208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B6620656
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbfHOGnl (ORCPT
+        id S1730449AbfHOGqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 02:43:41 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33776 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfHOGnl (ORCPT
+        Thu, 15 Aug 2019 02:46:30 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:45493 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfHOGqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 02:43:41 -0400
-Received: by mail-qt1-f195.google.com with SMTP id v38so1419531qtb.0;
-        Wed, 14 Aug 2019 23:43:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=moCscXF3FHERLCOXUMQFLafbhkiilN7j/QojfjTcev0=;
-        b=Mpg/nw09+iiBoGaVQHuX/TH+bsh9jMNc3TrlZtAK/A3ldZkMlxFOfcZ7MuF9EHfqsn
-         ybtKSCxvGQaghw1Za4GFMSVIwvTFBeC7fkWExage8MdbEQMaoJBfGWC9xcluMSomJo4a
-         hNFgmq3VIWTu7RDPJD4ZUF6TzjMEZ7PsKR7GeEi1GU0RX7AGOH9Uk3gMlM7J783oHqAn
-         EJruYEn6D6IlQVSoaOmwYwmdeawzq5igRyDbuDfXiC5p0ZbLKFqoep3+5FSdSNBf0YZk
-         2x4S4vmDtrlSA7yZvyXDFazIxWkpPdfwNFiQuZWUVcfSUnQrA7JCmBjMkWy9rvotQpL0
-         /tuA==
-X-Gm-Message-State: APjAAAX2wWCRBrOJ5zvKWTnxOC9Q+xAAABg7xL1yqpEXgcWLjnWo2rfi
-        nU+Bbywk+UKB5B95rAl8Ppl/PG6dRSRY1QTLtNHwXq63wlQ=
-X-Google-Smtp-Source: APXvYqyxkg6GiBut6x07Qhx3vf49GcGn8k9G4seM+8Ayfv3Fo29FzJIUow0/Va2HT9tK164KhkeoqRKDVSGuM24oHVs=
-X-Received: by 2002:ac8:239d:: with SMTP id q29mr2675174qtq.304.1565851419870;
- Wed, 14 Aug 2019 23:43:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190814204259.120942-1-arnd@arndb.de> <20190814204259.120942-2-arnd@arndb.de>
- <20190814213753.GP6129@dread.disaster.area>
-In-Reply-To: <20190814213753.GP6129@dread.disaster.area>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 15 Aug 2019 08:43:24 +0200
-Message-ID: <CAK8P3a0CAAtxXcfYt8NwmNSmF5tWhSSihLBkOtuQ62onjst4sA@mail.gmail.com>
-Subject: Re: [PATCH v5 01/18] xfs: compat_ioctl: use compat_ptr()
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Nick Bowler <nbowler@draconx.ca>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Dave Chinner <dchinner@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 15 Aug 2019 02:46:30 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC580.dip0.t-ipconnect.de [79.239.197.128])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 3E33BCED13;
+        Thu, 15 Aug 2019 08:55:10 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] Bluetooth: 6lowpan: Make variable header_ops constant
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20190815055255.1153-1-nishkadg.linux@gmail.com>
+Date:   Thu, 15 Aug 2019 08:46:27 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <4E787A5C-3B2E-4056-8392-94193C9616C0@holtmann.org>
+References: <20190815055255.1153-1-nishkadg.linux@gmail.com>
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 11:39 PM Dave Chinner <david@fromorbit.com> wrote:
-> >       case XFS_IOC_BULKSTAT:
-> >       case XFS_IOC_INUMBERS:
-> > -             return xfs_file_ioctl(filp, cmd, p);
-> > +             return xfs_file_ioctl(filp, cmd, (unsigned long)arg);
->
-> I don't really like having to sprinkle special casts through the
-> code because of this.
->
-> Perhaps do something like:
->
-> static inline unsigned long compat_ptr_mask(unsigned long p)
-> {
->         return (unsigned long)compat_ptr(p);
-> }
->
-> and then up front you can do:
->
->         void    __user *arg;
->
->         p = compat_ptr_mask(p);
->         arg = (void __user *)p;
->
->
-> and then the rest of the code remains unchanged by now uses p
-> correctly instead of having to change all the code to cast arg back
-> to an unsigned long...
->
+Hi Nishka,
 
-In part 1 of the series, I define this function as a global:
+> Static variable header_ops, of type header_ops, is used only once, when
+> it is assigned to field header_ops of a variable having type net_device.
+> This corresponding field is declared as const in the definition of
+> net_device. Hence make header_ops constant as well to protect it from
+> unnecessary modification.
+> Issue found with Coccinelle.
+> 
+> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> ---
+> net/bluetooth/6lowpan.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 
-long compat_ptr_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-{
-        if (!file->f_op->unlocked_ioctl)
-                return -ENOIOCTLCMD;
+patch has been applied to bluetooth-next tree.
 
-        return file->f_op->unlocked_ioctl(file, cmd, (unsigned
-long)compat_ptr(arg));
-}
+Regards
 
-How about using that to replace the individual casts:
+Marcel
 
--       return xfs_file_ioctl(filp, cmd, (unsigned long)arg);
-+      return compat_ptr_ioctl(filp, cmd, arg);
-
-It adds another indirection, but it avoids all the casts and
-uses existing mechanism.
-
-     Arnd
