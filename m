@@ -2,241 +2,80 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77915C3A59B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7C2C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8052133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:38:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="HbJr4BM+"
+	by mail.kernel.org (Postfix) with ESMTP id 3F5A120578
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:38:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732071AbfHOQip (ORCPT
+        id S1732139AbfHOQis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:38:45 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51080 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731913AbfHOQin (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:38:43 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v15so1791788wml.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:38:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xONtgxOFu1xrUbT6IwdYairnJYyUH1iSMsXkpOYAQlQ=;
-        b=HbJr4BM+041kn+K3gvXA4KUJqzMWAkU8fRQl9clSzT0AQr9wEblmvtDHqCN7u5fDFQ
-         SaMSxzn/KgV9KH/nNg1bORWN66EXqgJJoII8V02kDV19UyqPHPQ9aHRJfLBkzSX9F1ko
-         jZIibEOpYkbTz18EWiWLUZ6BWXXk7bKPaNHSKxSXoqLL15GJeEgkhsxhWWpoA+gET3yX
-         9GfI36QECNCZpLZOamZOowYC7wCXC0oOOCW1AiP/FXlwvikIH6KSZ0kWnYfbNR5557bL
-         OoTGiyYa+tlMmgndKlKwTnmrn5UXiTIZ0xbuThzjwnrOvic8SBvdAz/TxeIGik9C2rJV
-         QljQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xONtgxOFu1xrUbT6IwdYairnJYyUH1iSMsXkpOYAQlQ=;
-        b=OZq1IOMqUBxbXDPSZBbKWD7ZirBtdwuioZMvVliAq+zxv9ZVmCHW/huobca39hH3ED
-         biFSpWUPB2titJ5UjCJUbBrSiaK35IoKb1dN4IjX/GIdDonvbWKC2HQgDOaRo/fGANiT
-         MYJCvdZTh/luqjHKCmJ7noVBtG4Gmh/aXuwpXTjcNZ5c6jCU1T4oIsUiDIw2jryr+x0z
-         ilMHiDGJ6Xa64uTcJXNtRR3kN5iF5gwgUqVkY3tPWWgka8FoOADw3WOooQ2WWlXH+Pfd
-         oZdhksNpIDhpIMo+NVFlYT1qX7itGaDiC446uk2/aggB+l02IU2SID7VlX08fORRFapt
-         q/YA==
-X-Gm-Message-State: APjAAAV9tSkxceCFs4ewK3QfzqxAaAldFHKJMzNvNYff8fsL8nuAi4WS
-        bA+v3Hr2TDAimD3NfPMNEWXJisT7U94=
-X-Google-Smtp-Source: APXvYqy7v38pksCIboirEHgRL0NUyJuIQTraHRC8JFyKFWlKHVrAOUtqPPAamxKjwC2dEAuOAqQ4aw==
-X-Received: by 2002:a1c:790d:: with SMTP id l13mr3457943wme.49.1565887121240;
-        Thu, 15 Aug 2019 09:38:41 -0700 (PDT)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id f7sm5755046wrf.8.2019.08.15.09.38.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 09:38:40 -0700 (PDT)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Dmitry Safonov <dima@arista.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv6 02/36] timens: Add timens_offsets
-Date:   Thu, 15 Aug 2019 17:38:02 +0100
-Message-Id: <20190815163836.2927-3-dima@arista.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190815163836.2927-1-dima@arista.com>
-References: <20190815163836.2927-1-dima@arista.com>
+        Thu, 15 Aug 2019 12:38:48 -0400
+Received: from mga09.intel.com ([134.134.136.24]:22205 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731913AbfHOQiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 12:38:46 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 09:38:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
+   d="scan'208";a="178512101"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga007.fm.intel.com with ESMTP; 15 Aug 2019 09:38:44 -0700
+Date:   Thu, 15 Aug 2019 09:38:44 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        yu.c.zhang@intel.com, alazar@bitdefender.com,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH RESEND v4 5/9] KVM: VMX: Add init/set/get functions for
+ SPP
+Message-ID: <20190815163844.GD27076@linux.intel.com>
+References: <20190814070403.6588-1-weijiang.yang@intel.com>
+ <20190814070403.6588-6-weijiang.yang@intel.com>
+ <87a7cbapdw.fsf@vitty.brq.redhat.com>
+ <20190815134329.GA11449@local-michael-cet-test>
+ <CALMp9eTGXDDfVspFwFyEhagg9sdnqZqzSQhDksT0bkKzVNGSqw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eTGXDDfVspFwFyEhagg9sdnqZqzSQhDksT0bkKzVNGSqw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Vagin <avagin@openvz.org>
+On Thu, Aug 15, 2019 at 09:25:41AM -0700, Jim Mattson wrote:
+> On Thu, Aug 15, 2019 at 6:41 AM Yang Weijiang <weijiang.yang@intel.com> wrote:
+> 
+> > Hi, Vitaly,
+> > After looked into the issue and others, I feel to make SPP co-existing
+> > with nested VM is not good, the major reason is, L1 pages protected by
+> > SPP are transparent to L1 VM, if it launches L2 VM, probably the
+> > pages would be allocated to L2 VM, and that will bother to L1 and L2.
+> > Given the feature is new and I don't see nested VM can benefit
+> > from it right now, I would like to make SPP and nested feature mutually
+> > exclusive, i.e., detecting if the other part is active before activate one
+> > feature,what do you think of it?
+> > thanks!
+> 
+> How do you propose making the features mutually exclusive?
 
-Introduce offsets for time namespace. They will contain an adjustment
-needed to convert clocks to/from host's.
+I haven't looked at the details or the end to end flow, but would it make
+sense to exit to userspace on nested VMLAUNCH/VMRESUME if there are SPP
+mappings?  And have the SPP ioctl() kick vCPUs out of guest.
 
-Allocate one page for each time namespace that will be premapped into
-userspace among vvar pages.
-
-A new namespace is created with the same offsets as the time namespace
-of the current process.
-
-Signed-off-by: Andrei Vagin <avagin@openvz.org>
-Co-developed-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
- MAINTAINERS                    |  1 +
- include/linux/time_namespace.h | 18 ++++++++++++++++++
- include/linux/timens_offsets.h | 10 ++++++++++
- kernel/time_namespace.c        | 16 ++++++++++++++--
- 4 files changed, 43 insertions(+), 2 deletions(-)
- create mode 100644 include/linux/timens_offsets.h
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 97b7737f5aba..527aee1e616f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12899,6 +12899,7 @@ S:	Maintained
- F:	fs/timerfd.c
- F:	include/linux/timer*
- F:	include/linux/time_namespace.h
-+F:	include/linux/timens_offsets.h
- F:	kernel/time_namespace.c
- F:	kernel/time/*timer*
- 
-diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
-index 9507ed7072fe..334c1a1c6607 100644
---- a/include/linux/time_namespace.h
-+++ b/include/linux/time_namespace.h
-@@ -8,6 +8,7 @@
- #include <linux/nsproxy.h>
- #include <linux/ns_common.h>
- #include <linux/err.h>
-+#include <linux/timens_offsets.h>
- 
- struct user_namespace;
- extern struct user_namespace init_user_ns;
-@@ -39,6 +40,21 @@ static inline void put_time_ns(struct time_namespace *ns)
- 	kref_put(&ns->kref, free_time_ns);
- }
- 
-+static inline void timens_add_monotonic(struct timespec64 *ts)
-+{
-+	struct timens_offsets *ns_offsets = current->nsproxy->time_ns->offsets;
-+
-+	if (ns_offsets)
-+		*ts = timespec64_add(*ts, ns_offsets->monotonic);
-+}
-+
-+static inline void timens_add_boottime(struct timespec64 *ts)
-+{
-+	struct timens_offsets *ns_offsets = current->nsproxy->time_ns->offsets;
-+
-+	if (ns_offsets)
-+		*ts = timespec64_add(*ts, ns_offsets->boottime);
-+}
- 
- #else
- static inline struct time_namespace *get_time_ns(struct time_namespace *ns)
-@@ -64,6 +80,8 @@ static inline int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *ts
- 	return 0;
- }
- 
-+static inline void timens_add_monotonic(struct timespec64 *ts) {}
-+static inline void timens_add_boottime(struct timespec64 *ts) {}
- #endif
- 
- #endif /* _LINUX_TIMENS_H */
-diff --git a/include/linux/timens_offsets.h b/include/linux/timens_offsets.h
-new file mode 100644
-index 000000000000..e93aabaa5e45
---- /dev/null
-+++ b/include/linux/timens_offsets.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_TIME_OFFSETS_H
-+#define _LINUX_TIME_OFFSETS_H
-+
-+struct timens_offsets {
-+	struct timespec64 monotonic;
-+	struct timespec64 boottime;
-+};
-+
-+#endif
-diff --git a/kernel/time_namespace.c b/kernel/time_namespace.c
-index 8fd8384b7261..394a9e168e7c 100644
---- a/kernel/time_namespace.c
-+++ b/kernel/time_namespace.c
-@@ -14,6 +14,7 @@
- #include <linux/slab.h>
- #include <linux/cred.h>
- #include <linux/err.h>
-+#include <linux/mm.h>
- 
- static struct ucounts *inc_time_namespaces(struct user_namespace *ns)
- {
-@@ -47,6 +48,7 @@ static struct time_namespace *clone_time_ns(struct user_namespace *user_ns,
- {
- 	struct time_namespace *ns;
- 	struct ucounts *ucounts;
-+	struct page *page;
- 	int err;
- 
- 	err = -ENOSPC;
-@@ -59,15 +61,24 @@ static struct time_namespace *clone_time_ns(struct user_namespace *user_ns,
- 	if (!ns)
- 		goto fail_dec;
- 
-+	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
-+	if (!page)
-+		goto fail_free;
-+	ns->offsets = page_address(page);
-+	if (old_ns->offsets)
-+		memcpy(ns->offsets, old_ns->offsets, sizeof(struct timens_offsets));
-+	BUILD_BUG_ON(sizeof(*ns->offsets) > PAGE_SIZE);
-+
- 	err = ns_alloc_inum(&ns->ns);
- 	if (err)
--		goto fail_free;
-+		goto fail_page;
- 
- 	ns->ucounts = ucounts;
- 	ns->ns.ops = &timens_operations;
- 	ns->user_ns = get_user_ns(user_ns);
- 	return ns;
--
-+fail_page:
-+	free_page((unsigned long)ns->offsets);
- fail_free:
- 	kfree(ns);
- fail_dec:
-@@ -95,6 +106,7 @@ void free_time_ns(struct kref *kref)
- 	struct time_namespace *ns;
- 
- 	ns = container_of(kref, struct time_namespace, kref);
-+	free_page((unsigned long)ns->offsets);
- 	dec_time_namespaces(ns->ucounts);
- 	put_user_ns(ns->user_ns);
- 	ns_free_inum(&ns->ns);
--- 
-2.22.0
-
+KVM already exits on SPP violations, so presumably this is something that
+can be punted to userspace.
