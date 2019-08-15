@@ -2,102 +2,93 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57758C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE2EC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1943B2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:29:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="TZBSwwEe"
+	by mail.kernel.org (Postfix) with ESMTP id 788512083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:30:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731979AbfHOU3Y (ORCPT
+        id S1732168AbfHOUaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 16:29:24 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36238 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbfHOU3X (ORCPT
+        Thu, 15 Aug 2019 16:30:02 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:40724 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731769AbfHOUaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 16:29:23 -0400
-Received: by mail-io1-f65.google.com with SMTP id o9so1807167iom.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 13:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=3zMGQrUE3EUacLldQeVzqh4LwSGfvpMr8mJRvzACSDc=;
-        b=TZBSwwEezcawSVNZH+A75BHDYHt86Jp1ExhFT8vaEmeCOK7nQuGV9QJVPPazwk/Ku6
-         G7uOzEdiWUPRJBvVSImVcHfmRHeEjWKF3+fPNsIjKMjC090ZeES3WGG91W+PlTkpl1Uh
-         BSFxoOQGBx4Z/oJpHzZwV2sTbbXxw438FlpApwHNeYdijWj6kwo87ikWEYNaDOvUTg5q
-         p2ajq2dV+MDAVl57UdoSW23sadBfejXtoomIIw3UFpjl0q7xrdzDiyLZFAH6InH8raNy
-         F5Nnj5CYwT+7toN4+Ot/KPImSYK040afUlaSsBZPUfgqAaKarIaYbJQwhByjQ6fALu8I
-         nPbQ==
+        Thu, 15 Aug 2019 16:30:02 -0400
+Received: by mail-yw1-f67.google.com with SMTP id z64so1114575ywe.7;
+        Thu, 15 Aug 2019 13:30:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=3zMGQrUE3EUacLldQeVzqh4LwSGfvpMr8mJRvzACSDc=;
-        b=tf4EG7fbNUWqJVxZcvsC8VyOObiFsbu1S0hAL8zarA2uPBcgEOmKA+QLngSEp8hkmh
-         hLVa/RmP9VFPZp10p5kaAq/smpulr0Wgi5Xll/QeTJKnHIPGCZvVGULYh59CjfFcaJpH
-         aqhuZk1fnAn0iiiV55yzPh/0GTtPzPlnptA9bIOMYRjHEXCtaS4FX8XFvPKkUYGork41
-         IKyxuqwVLCohSFaKH/vVHDZ+agvLR7p9qudZSmEfmJIDR+5/ZgLpZUupPL20oj0bsGj/
-         BGiI1MEpdAHKtWmSptZvfGGtJDys8XjXk+N4QMWTGmUqd3APAz3wKuuxi+gOyeIlD7z8
-         m0sw==
-X-Gm-Message-State: APjAAAWhYYpNtzz99O1jSoaHRUnDbBAEfZ/BSeCw3KP/y2CF7NruVfva
-        pEJ5RDm1bxy+Fcgy9goOvDzg0w==
-X-Google-Smtp-Source: APXvYqztay6Yb+QIZjMIXgP/NTKKBDSokMhhJhNQBbxSBqLRj/Kts7XEjjIqjt8CsBOxwxaGiowugA==
-X-Received: by 2002:a02:2243:: with SMTP id o64mr4786098jao.100.1565900962576;
-        Thu, 15 Aug 2019 13:29:22 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id e22sm2717551iog.2.2019.08.15.13.29.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 13:29:22 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 13:29:21 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Alistair Francis <Alistair.Francis@wdc.com>,
-        David Abdurachmanov <david.abdurachmanov@gmail.com>
-cc:     Anup Patel <Anup.Patel@wdc.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v5 2/2] RISC-V: Setup initial page tables in two stages
-In-Reply-To: <CAEn-LTpz_iL0Ts5GG9J6oESN76DcjBaNs-Oz-c9CcpbmRiN5Sw@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.9999.1908151327490.18249@viisi.sifive.com>
-References: <20190607060049.29257-1-anup.patel@wdc.com> <20190607060049.29257-3-anup.patel@wdc.com> <alpine.DEB.2.21.9999.1907101703150.3422@viisi.sifive.com> <847fb8c879bbd2c3fd41dc1e428b3217253acebb.camel@wdc.com>
- <CAEn-LTpz_iL0Ts5GG9J6oESN76DcjBaNs-Oz-c9CcpbmRiN5Sw@mail.gmail.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8FtoZWxmjenZ99s1TgzzSkPwKWAhL+iPgH0tAhfsHxE=;
+        b=VyQp5e/BtP4p0yqJjVL59nIssRaXIAKtJurk0Hjv+5MY5VgLivPZKB/VgRaY5L4pwv
+         UoiyvbF4CCzq/QBErdMKYGrW8bYTat5H1H98/8tYK/hmB2aWdBAMr2V2qSeeL1vS1H6v
+         V2oCTdbrgSPQwkO3nTbz4XQkQlYOH+967j61XkvQo5RKhUE3dTmk58uikAkWoSoHOUm7
+         IXmIAHjl66lrzCtBI5gQ2dq9QKRCWZXRN02RUqBoMrp45gxKt/9HornSoz1jRMxff0BR
+         nIqbSEkNCXxUbL7Of2vFbBCvlU9ErOs/rM+t8pvnqF8hvVjQv6zD7j/kRTfC+MLQoQPu
+         3h5Q==
+X-Gm-Message-State: APjAAAXs38ucfhzcWhVan6EiTTA53H4UkNHsP9cNrzHWfjxGKcN845c1
+        oTry5EAH/L2YSAFnanVSO1c=
+X-Google-Smtp-Source: APXvYqysP1FoTTm2159KLqqsIVAM8UEi8LXAtwl5JsTLy/boOc7RRlwPpaAzS1GzOLdjjPBfc3DzJg==
+X-Received: by 2002:a81:ae55:: with SMTP id g21mr4533904ywk.222.1565901001047;
+        Thu, 15 Aug 2019 13:30:01 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id u14sm836257ywg.67.2019.08.15.13.29.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 15 Aug 2019 13:29:59 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
+        linux-wimax@intel.com (supporter:INTEL WIRELESS WIMAX CONNECTION 2400),
+        "David S. Miller" <davem@davemloft.net>,
+        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] wimax/i2400m: fix a memory leak bug
+Date:   Thu, 15 Aug 2019 15:29:51 -0500
+Message-Id: <1565900991-3573-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 15 Aug 2019, David Abdurachmanov wrote:
+In i2400m_barker_db_init(), 'options_orig' is allocated through kstrdup()
+to hold the original command line options. Then, the options are parsed.
+However, if an error occurs during the parsing process, 'options_orig' is
+not deallocated, leading to a memory leak bug. To fix this issue, free
+'options_orig' before returning the error.
 
-> Yes, I do see those in Fedora/RISCV build farm every morning, but with
-> riscv64 and 5.2.0-rc7 kernel.
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/net/wimax/i2400m/fw.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-[...]
+diff --git a/drivers/net/wimax/i2400m/fw.c b/drivers/net/wimax/i2400m/fw.c
+index e9fc168..489cba9 100644
+--- a/drivers/net/wimax/i2400m/fw.c
++++ b/drivers/net/wimax/i2400m/fw.c
+@@ -351,13 +351,15 @@ int i2400m_barker_db_init(const char *_options)
+ 			}
+ 			result = i2400m_barker_db_add(barker);
+ 			if (result < 0)
+-				goto error_add;
++				goto error_parse_add;
+ 		}
+ 		kfree(options_orig);
+ 	}
+ 	return 0;
+ 
++error_parse_add:
+ error_parse:
++	kfree(options_orig);
+ error_add:
+ 	kfree(i2400m_barker_db);
+ 	return result;
+-- 
+2.7.4
 
-> fedora-riscv-4 login: [178876.406122] Unable to handle kernel paging
-> request at virtual address 0000000000012a28
-> fedora-riscv-7 login: [17983.074847] Unable to handle kernel paging
-> request at virtual address 0fffffdff5e14700
-
-Alistair, you're seeing panics immediately after the userspace transition, 
-right?  100% of the time?
-
-If so, this is probably a different bug.  Most likely the TLB flushing 
-issue.
-
-
-- Paul
