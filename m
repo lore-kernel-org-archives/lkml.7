@@ -2,92 +2,77 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B871C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5B3C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41895206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:18:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iR/dU784"
+	by mail.kernel.org (Postfix) with ESMTP id 001022084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:18:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565882329;
+	bh=emtmpN8koXyGRnpKRd+goYJhZ3VVizKGLhWaG2eElpw=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=KoNuw2ht6jzaW2jgKz09AZBz6PslEQp1B7VOV7L0IkYzQIj8vq91kn5329Mlhl3Ka
+	 bWaS/+pNr0v9kuj3KTURnON8UTD2IDzpu2OtnuRmMdeiNNdnmZVBGaN+4iA0wbP24s
+	 klsdansfVnOKytdazQmRsetblL1aQvRGB22ZxPQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbfHOPSY (ORCPT
+        id S1728517AbfHOPSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 11:18:24 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46103 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfHOPSY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 11:18:24 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c2so1172341plz.13;
-        Thu, 15 Aug 2019 08:18:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hwzni+YLLzwfO50LJ7pNOpyf0xcqKnba++DdzfG/gxc=;
-        b=iR/dU784s7WPmYofmn/vB2FYuedVW70BIo36PcNoWEcWIp1ENs8uCmsNHwovhonUXd
-         L6mroPaGSHYns+kV2WWesbuM1yKTE1/8/5Rs3q0eoNTn02GpFWxXYt1Vcm4TkdVOr6P3
-         t1wsj9BBiPen6+nCGFxhzge5jcm5JIXdU/uXKztRNgGYevfqpBwlKglgAPrptws5jbbu
-         SrFvtDwRWck7r15UIKYNusQGHzASvDOUVc/rCGqe8ebNXm0zqQtMc+CflC0xagVW1398
-         dFy83W+JSumAoDejiOMmY7Z0Z9HmbKepPDI/m41DPeKOpH2ot17I8QUfWuIKJ1EY07Ck
-         GkHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hwzni+YLLzwfO50LJ7pNOpyf0xcqKnba++DdzfG/gxc=;
-        b=lRrLolxq1pvNBUf/ur1FhvQ90TbNcDWFDZI1c+dZINoZPJuBmUy7QCRrJNMsa7cj2I
-         Bh/Zx/Ks1LIuUGUX220hIgeHGJ4mtZHt25KU0I1weThFocmTdrRhbRjWeIqb3NxWPG9C
-         jjU/i35D0BtmA1RP/q30jTQ1xcDWVNU4vmqClXluXa4+iAvsBBaKcDGZHmnAvV4ZN30m
-         V1m2VWeLERZ+vRifQBI4+wQqx+1JyLqolWnb2fy7myKomoyTJlXqVfS2sQXDgDsHbCaJ
-         WFS4o1P/XVXkngkc14DpJExNsPYWasvWEjYqPMdWE/YkCCXSSCfRETO6C3RkkNDmKSi8
-         zovg==
-X-Gm-Message-State: APjAAAXdVifv+VdtXHFWjWY7chPbeKqidbmzC3HxTx8Jw4tLk50qfRcB
-        yPppqwDPWS1yOilaPalukes=
-X-Google-Smtp-Source: APXvYqy2OBBkygqB4tJxPdjmf4PZiwcO+mItfAhU0ShNgsb6dziSuyI444APrOYBDZ8wL4EYd312YQ==
-X-Received: by 2002:a17:902:1105:: with SMTP id d5mr4867018pla.197.1565882303436;
-        Thu, 15 Aug 2019 08:18:23 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 64sm3176222pfe.128.2019.08.15.08.18.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 08:18:22 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 08:18:22 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.2 000/144] 5.2.9-stable review
-Message-ID: <20190815151822.GC23562@roeck-us.net>
-References: <20190814165759.466811854@linuxfoundation.org>
+        Thu, 15 Aug 2019 11:18:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726080AbfHOPSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 11:18:47 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA999206C1;
+        Thu, 15 Aug 2019 15:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565882327;
+        bh=emtmpN8koXyGRnpKRd+goYJhZ3VVizKGLhWaG2eElpw=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=CgTdZg7C4TKnbBcwJyBIKQohYSn3rP7ceSj4iWdoGWybsqCHWcLT6u2zkbpHNS+mY
+         ni5KaAhohoeBCsJtfd6ldxVNfg9im9mNK9+B88A95VgPPp4NupMoQ4oVVL5gef2+Kl
+         eV/3sQ1uQdH+8uoIYqY05sSrG8Hn7BAY9r5DYpqo=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814165759.466811854@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190815080146.4tkudfzus7uryoe6@flea>
+References: <20190815041037.3470-1-sboyd@kernel.org> <20190815080146.4tkudfzus7uryoe6@flea>
+Subject: Re: [PATCH] clk: sunxi: Don't call clk_hw_get_name() on a hw that isn't registered
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Chen-Yu Tsai <wens@csie.org>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+User-Agent: alot/0.8.1
+Date:   Thu, 15 Aug 2019 08:18:46 -0700
+Message-Id: <20190815151846.DA999206C1@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 06:59:16PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.9 release.
-> There are 144 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
-> Anything received after that time might be too late.
-> 
+Quoting Maxime Ripard (2019-08-15 01:01:46)
+> On Wed, Aug 14, 2019 at 09:10:37PM -0700, Stephen Boyd wrote:
+> > The implementation of clk_hw_get_name() relies on the clk_core
+> > associated with the clk_hw pointer existing. If of_clk_hw_register()
+> > fails, there isn't a clk_core created yet, so calling clk_hw_get_name()
+> > here fails. Extract the name first so we can print it later.
+> >
+> > Fixes: 1d80c14248d6 ("clk: sunxi-ng: Add common infrastructure")
+> > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> > Cc: Chen-Yu Tsai <wens@csie.org>
+> > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+>=20
+> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>=20
+> Do you want to apply it yourself, or should I merge this and send you
+> a PR later?
+>=20
 
-Build results:
-	total: 159 pass: 159 fail: 0
-Qemu test results:
-	total: 390 pass: 390 fail: 0
-
-Guenter
+I can apply it myself. Thanks! Now to figure out the real problem...
