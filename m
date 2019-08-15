@@ -2,89 +2,110 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37F0C3A59B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE22C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7282086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:04:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t+CAzhjH"
+	by mail.kernel.org (Postfix) with ESMTP id 518BE20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:04:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565877846;
+	bh=MIPucA8nlaeUB0gX1iRzjKyYa/bVxtRZHYmUpn/icYU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OsCr6csqQlV26NpV5Xoc41ddkWNrIhKynpw9czbkGt3CG57zaM57M0Lw398qpDG7w
+	 oNdX7U6IMAGFVmrlWpu2XzePhcVIa/TUk6GZxOJXX6avtmyeZWLGd2S70VkW9SnA8x
+	 dY6ABR3vRGmNq4eHdWEPkNjq3Xg8jY8/l74MrbUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732713AbfHOOED (ORCPT
+        id S1732724AbfHOOEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 15 Aug 2019 10:04:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48112 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732705AbfHOOED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 15 Aug 2019 10:04:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44516 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731963AbfHOOED (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:04:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FgGZiYXjX5p6iXeIo9sIPhrcGThmyFQ9KdVBSYt6xy4=; b=t+CAzhjHmlbWiEABajJnEJ9Xw
-        ewduxXdizGkzLNO2QGuZ4NEejL81zqQflcITrJFxxCx/CEqDqEjX8xq9LSVcd87H78Sgv+SCjE/wA
-        hGgYGs/ivclk3xfyTHAa9wDyqehoV3pxfX2XLnJqDHqbP11y+jxNqZdlAVxuMluoVXzbPvJLDq3yu
-        QqENAoxcIgBrZWQSGsqW4uy/z7/NNwp60s6VsBBSKmwYc1XG8Q5qbxqFkINYoGaCA7fzFeTDZrAFp
-        mgd2ZwQv7VsHPlxBSN8j0hp2ffLRA6ZU+WQnV1OVuTvqZ6uPf8xK6rSuF5Mv/aP7H36iZGO7Jlee5
-        9dUqfe5tA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hyGM7-0002vt-TH; Thu, 15 Aug 2019 14:03:55 +0000
-Date:   Thu, 15 Aug 2019 07:03:55 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Nick Bowler <nbowler@draconx.ca>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH v5 01/18] xfs: compat_ioctl: use compat_ptr()
-Message-ID: <20190815140355.GA11012@infradead.org>
-References: <20190814204259.120942-1-arnd@arndb.de>
- <20190814204259.120942-2-arnd@arndb.de>
- <20190814213753.GP6129@dread.disaster.area>
- <20190815071314.GA6960@infradead.org>
- <CAK8P3a2Hjfd49XY18cDr04ZpvC5ZBGudzxqpCesbSsDf1ydmSA@mail.gmail.com>
- <20190815080211.GA17055@infradead.org>
- <20190815102649.GA10821@infradead.org>
- <20190815121511.GR6129@dread.disaster.area>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D31720644;
+        Thu, 15 Aug 2019 14:04:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565877843;
+        bh=MIPucA8nlaeUB0gX1iRzjKyYa/bVxtRZHYmUpn/icYU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KBJbzT98lJdPARaPU38GixwII164snNT2WYHBu4XVIXpmEdEfq+P1WZZvxzWZs193
+         OvmX0xjRRBV2zIUPLjWQAZAvQqnwEUmE9oJpcIY91mnI4Cl4IXk5UO2ugysErxjjLX
+         vKaSjOA2qaWKLfb+Ed0yLok/T2iukEID/1Bntyb4=
+Date:   Thu, 15 Aug 2019 16:04:00 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, Eric Anholt <eric@anholt.net>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v2 3/9] drm: Rename drm_bridge_timings to drm_timings
+Message-ID: <20190815140400.GA7174@kroah.com>
+References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1565867073-24746-4-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190815131838.GP5011@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190815121511.GR6129@dread.disaster.area>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190815131838.GP5011@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:15:12PM +1000, Dave Chinner wrote:
-> > http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-ioctl-table
+On Thu, Aug 15, 2019 at 04:18:38PM +0300, Laurent Pinchart wrote:
+> Hi Fabrizio,
 > 
-> Lots to like in that handful of patches. :)
+> (CC'ing Greg as the architect of the SPDX move)
+
+_one of_, not the one that did the most of he work, that would be Thomas :)
+
+> On Thu, Aug 15, 2019 at 12:04:27PM +0100, Fabrizio Castro wrote:
+> > The information represented by drm_bridge_timings is also
+> > needed by panels, therefore rename drm_bridge_timings to
+> > drm_timings.
+> > 
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Link: https://www.spinics.net/lists/linux-renesas-soc/msg43271.html
+> > 
+> > ---
+> > v1->v2:
+> > * new patch
+> > 
+> > I have copied the license from include/drm/drm_bridge.h as that's
+> > where the struct originally came from. What's the right SPDX license
+> > to use in this case?
 > 
-> It can easily go before or after Arnd's patch, and the merge
-> conflict either way would be minor, so I'm not really fussed either
-> way this gets sorted out...
+> https://wiki.spdx.org/view/Legal_Team/Decisions/Dealing_with_Public_Domain_within_SPDX_Files
+> 
+> Greg, any idea on how we should handle this ?
 
-The other thing we could do is to just pick the two important ones:
+Ugh, what lunacy.  But drm_bridge.h is NOT under any "public domain"
+license, so why is that an issue here?  This looks like a "normal" bsd 3
+clause license to me, right?
 
-http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-ioctl-table-5.3
+So I would just use "BSD-3-Clause" as the SPDX license here, if I were
+doing this patch...
 
-and throw that into Arnds series, or even 5.3, and then defer the
-table thing until later.
+thanks,
+
+greg k-h
