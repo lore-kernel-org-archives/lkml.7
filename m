@@ -2,77 +2,58 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96803C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C091C3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66C6B206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:04:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="HDOdOuua"
+	by mail.kernel.org (Postfix) with ESMTP id EB7B52133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565889027;
+	bh=mu8LD5qZnhRCtDTT0NY1oQ6FPPJv/PceMZl2lhZPTpk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1M4q59Elki/PRXOBO9YfSVWM1r8VHAg3W7GWYso/7uvFCfBidE6jZDWskSURJlivh
+	 z8atpZrJSMShVJLIjyucuureSLwm5SNVtI3Bb9csr1thAEl6NVguis6jLZdn9wRDGY
+	 7wPO7jC5+9tJSBKfYSJNeYz6sjEJCMuhOTGDbhX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731258AbfHOREh (ORCPT
+        id S1731296AbfHORK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:04:37 -0400
-Received: from sonic301-22.consmr.mail.ir2.yahoo.com ([77.238.176.99]:41320
-        "EHLO sonic301-22.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726098AbfHOREg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:04:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1565888674; bh=B1CDKmFfj6aDeTiNOiZadWEgT+fWeNQZxcrgAnVsmOs=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=HDOdOuuayJtJ4At+QPaPyvRwQCfBsUapF49QasrPrPcoc252mv8LHcNr7nXZZpsa4R/w0rw4WA4xIStpwqmQ40wDlNFvzHHNZpw/8DEMsR2eGPp215VYPIAXK5Z8mmaQI43ltmJzM3xplwtyYqILGlUUpBiM2wAy0OtqGuPUNGehJCt4l2PzMxkrzGRlkYXb5oyoM2RnGH1ZrYlW3LBYizvW/hsaVNw+Mc6BEHtoQhex/oFj+i1DsDvGpxV3NfqFWwKHn7RAiEUl+sB45lz6xMp7Oht9uQNNmVeqauMY0wBuFuUMwdbMS0Ypkwwpnh6nFwe7XPVO6VMktbruGsb0rA==
-X-YMail-OSG: UCM0UGEVM1k.ECZKTxS2OqaNxzGHhhZ.pF6bQgH1V5pop2SUDTzFWfBv_5CJXjN
- lmzvdcgsctqscHstS.D3ySu2diMWMVLd1NlS_.QLBfWHJgiZJNUUORUdNzd_1JBEHhl23GXEI9Cr
- SkA.ME94KDhq3JYnKqfxE3lBqx1qsUoxTDPcsaK7CSV9uXRuC_rVeJWQGHFrLSxBUMlfKTCwLK1Q
- SRwutEVv7UDXOJfgMG4dfSMV8ocaxYvcBM__Q2ClXC6IYJVrJ4YY.flrgyQVVBvoCL7eNBwLxq..
- E_cKvKeO5.MMCvhwZl.6UTiEJwVPemSOCL9d9MpkZyzrjgsHgpLwmbmm4TZE9yC7ZV5IgDV.cfqj
- 6yNGkLoZdle_xiEedxjALL37oIp1kh0B0AnA.rfKPdq.uwJVIgTQW3DfVqlf6iKhB6uy5RFkNXRD
- IlR3ZLEMzYftGCwgQzomL.99B5RdayKOfbP7ZfTyQFsQfXaxma1dQwsDzs1eJW7MlH6NvdnIH6v0
- bl_66yAONv0NOGPRWVKJ2AUkGWWM5HBJDnqQZDhfj2vYWjXijuZiUOYh218tDbWkiNOWjMiXRv5w
- Nco0gD6FUD9TZNJowGp.fNnHLIWQcSoJvyGArd42Ffch7Cx6LrmtIkLSBB96xZiAkDsIdZSQCSc6
- dkew2LYcnzCsBKEhae3KwsT1sQGkuPPJHLa0xazi.g4qhenO1N9UemS55UuwOF0X0QuNam0ArZVe
- B33q0v8eDbA3TkRAhrspGG0NCt8Bw54BjY6.zQd4f7PTFB76.fPLd7UUF5LElwll.bgQ7L6fQplJ
- OkBMAzSujJwqSD6EqYHLE0a5NAsbBhO9VISE_me1hH17bSBl7PczHs72rzmHz7y4Ct6M2jZQpSB6
- tHWM.i.sGQksU1s5UcKLX3g9nFurGU02ehnJtJH_DkBr5b75yV8_Kwlosn0Z.4gGb_AUmPY7CvEN
- MUT_Hs1lwsxl9CamXd_8IYJNCuCjCl439CIsZhETFo1_kc3Ym_ysi0jzwtdzhSf3nvYG65HHjczN
- 02AhHEXoNChDFLMmb35Zbz597Zwjb_yN.f8l32.wP_8j2dFd61e9qAPZ9feIO1mnYh8jMP9.8gtC
- Iuhc0t6IPpsXPvLhXu6mLkFuALJhX9VT7QJomXTsg2k0BTOmxpOPmc4KbWEtgl.qKtaeqJBXu.Lh
- U2PQwdOgTlMhmhp4bmv2LeLI40LC8k3GvxgXsEOLJJHFKc4uiqRbwrVnkKviQ..NTaE3gXl6T8yc
- dtaTogao_6wD2HNBCXC2GNMHbgcUmop8L_06agRcMtFBrCsI-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.ir2.yahoo.com with HTTP; Thu, 15 Aug 2019 17:04:34 +0000
-Received: by smtp432.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID ed96a2e86c060211f0b97b71e44301c9;
-          Thu, 15 Aug 2019 17:04:32 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 01:04:14 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
+        Thu, 15 Aug 2019 13:10:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729084AbfHORKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:10:25 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB2FF2084D;
+        Thu, 15 Aug 2019 17:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565889024;
+        bh=mu8LD5qZnhRCtDTT0NY1oQ6FPPJv/PceMZl2lhZPTpk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cMC9A5dLSFqTd+vHnTaus8/oNnEY0p1mAMS4VR0BtBD9UhXeTTKBi3gpcIrngm5MQ
+         TANMY7g4/HVlxdRUmWL6ul3OFDYlkHWzlRacDNsHX/+Li1yvohxPh45b6PFWOiutZV
+         tMv6xZGlWIAilOWI2HXUB3tZKUsqOSOfB3svvNpY=
+Date:   Thu, 15 Aug 2019 10:10:24 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel@driverdev.osuosl.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Richard Weinberger <richard@nod.at>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH v8 00/24] erofs: promote erofs from staging v8
-Message-ID: <20190815170409.GB4958@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190815044155.88483-1-gaoxiang25@huawei.com>
- <20190815090603.GD4938@kroah.com>
- <CAHk-=wjKz7JLd=mj0w2LUiWC2_VOeNWhTTrw1j-i-KyEHH5g5w@mail.gmail.com>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
+        rpeterso@redhat.com, cluster-devel@redhat.com
+Subject: [GIT PULL] iomap: small fixes for 5.3-rc5
+Message-ID: <20190815171024.GC15186@magnolia>
+References: <20190719162221.GF7093@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjKz7JLd=mj0w2LUiWC2_VOeNWhTTrw1j-i-KyEHH5g5w@mail.gmail.com>
+In-Reply-To: <20190719162221.GF7093@magnolia>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -81,31 +62,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Linus,
 
-On Thu, Aug 15, 2019 at 09:18:12AM -0700, Linus Torvalds wrote:
-> On Thu, Aug 15, 2019 at 2:06 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > I know everyone is busy, but given the length this has been in staging,
-> > and the constant good progress toward cleaning it all up that has been
-> > happening, I want to get this moved out of staging soon.
-> 
-> Since it doesn't touch anything outside of its own filesystem, I have
-> no real objections. We've never had huge problems with odd
-> filesystems.
-> 
-> I read through the patches to look for syntactic stuff (ie very much
-> *not* looking at actual code working or not), and had only one
-> comment. It's not critical, but it would be nice to do as part of (or
-> before) the "get it out of staging".
+Here's a single update to the MAINTAINERS entry for iomap.
+I test-merged it with this morning's master and didn't see any
+conflicts.  Please let me know if you encounter any funniness.
 
-Thanks for your kind reply!
+--D
 
-OK, I will submit a patch later to address your comment and
-a pending formal moving patch with a suggestion by Stephen earlier
-for Greg as well.
+The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
 
-Thanks,
-Gao Xiang
+  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
 
-> 
->                  Linus
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.3-fixes-1
+
+for you to fetch changes up to 9a67b72552f8d019948453e56ca7db8c7e5a94ba:
+
+  MAINTAINERS: iomap: Remove fs/iomap.c record (2019-08-13 08:15:07 -0700)
+
+----------------------------------------------------------------
+Changes since last update:
+- Update MAINTAINERS now that we've removed fs/iomap.c.
+
+----------------------------------------------------------------
+Denis Efremov (1):
+      MAINTAINERS: iomap: Remove fs/iomap.c record
+
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
