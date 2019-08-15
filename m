@@ -2,79 +2,83 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF889C32753
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 01:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC139C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 01:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE6BA2084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 01:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB392084F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 01:27:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbfHOB0C (ORCPT
+        id S1728972AbfHOB1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 21:26:02 -0400
-Received: from mail-ot1-f70.google.com ([209.85.210.70]:52454 "EHLO
-        mail-ot1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbfHOB0B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 21:26:01 -0400
-Received: by mail-ot1-f70.google.com with SMTP id 88so740079otc.19
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 18:26:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=ttLtpKYMG7TZIiRY6rerl+aSlij3EK8LczMw+lIahls=;
-        b=pzZ7qr3+2Wba/0N0GhHHhBKdIDbieqbsgN38+dNzHzSNpXeGWm2FE3J2xTaSgMqm5K
-         lu8ZZTPPgozFP4wtcWI2tgy/6EDMoPpNJAqnTJ30NowjPdIeUii0ag9vgnkr95/XDrDA
-         TOTLNgdN0zQKK375uvA5ik+NrY98G71xfq2G6RxWVNz8Ti79jkC2KUnsgYRGMoNZ4jvK
-         c28y7HjHwT3Cn2vC8FRkTyjNlrmeQ7G7iXLjPQuWTvLM1HsHqVer+0cSDeD6qpESQVvB
-         BLusaf32oUVbIZpC0XBqd5rd6aXoRG3dbuX3XgXsVPx4MnfXi4zV6aJi7dNaVjCrMSpN
-         g5Rw==
-X-Gm-Message-State: APjAAAXc30dJwNmoQzEhBKbKLkiL/jylDnXSBMTiKt6Msd2KbIiQwBpD
-        gZXIK7nG0iKhoXAUocoAV1WTFWbmfyBA8KtxbH6LT0vQn6Oa
-X-Google-Smtp-Source: APXvYqytQ/ELGP5+AJ2kRvyfVtkrEdnSzCYc+HmAHVK4EP5we3PzXTOJnMwkWDWnNNMXNALxzIO9aa+V7C7O9SGIfcOtTSnNTuWC
+        Wed, 14 Aug 2019 21:27:20 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57076 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727822AbfHOB1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 14 Aug 2019 21:27:20 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8239D636284E109C16C6;
+        Thu, 15 Aug 2019 09:27:18 +0800 (CST)
+Received: from [127.0.0.1] (10.184.194.169) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 15 Aug 2019
+ 09:27:14 +0800
+Subject: Re: [PATCH] nbd: add a missed nbd_config_put() in nbd_xmit_timeout()
+To:     <josef@toxicpanda.com>, <axboe@kernel.dk>,
+        <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1565613086-13776-1-git-send-email-sunke32@huawei.com>
+From:   "sunke (E)" <sunke32@huawei.com>
+Message-ID: <05b3cd4a-d2c1-5ad7-7a39-64bac470032a@huawei.com>
+Date:   Thu, 15 Aug 2019 09:27:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:dd18:: with SMTP id f24mr2888565ioc.97.1565832361042;
- Wed, 14 Aug 2019 18:26:01 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 18:26:01 -0700
-In-Reply-To: <000000000000b851cb058f7e637f@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a86cf005901dc156@google.com>
-Subject: Re: WARNING in cgroup_rstat_updated
-From:   syzbot <syzbot+370e4739fa489334a4ef@syzkaller.appspotmail.com>
-To:     ast@kernel.org, daniel@iogearbox.net, hdanton@sina.com,
-        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <1565613086-13776-1-git-send-email-sunke32@huawei.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.194.169]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+ping
 
-commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
-Author: John Fastabend <john.fastabend@gmail.com>
-Date:   Sat Jun 30 13:17:47 2018 +0000
+ÔÚ 2019/8/12 20:31, Sun Ke Ð´µÀ:
+> When try to get the lock failed, before return, execute the
+> nbd_config_put() to decrease the nbd->config_refs.
+> 
+> If the nbd->config_refs is added but not decreased. Then will not
+> execute nbd_clear_sock() in nbd_config_put(). bd->task_setup will
+> not be cleared away. Finally, print"Device being setup by another
+> task" in nbd_add_sock() and nbd device can not be reused.
+> 
+> Fixes: 8f3ea35929a0 ("nbd: handle unexpected replies better")
+> Signed-off-by: Sun Ke <sunke32@huawei.com>
+> ---
+>   drivers/block/nbd.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index e21d2de..a69a90a 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
+> @@ -357,8 +357,10 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
+>   	}
+>   	config = nbd->config;
+>   
+> -	if (!mutex_trylock(&cmd->lock))
+> +	if (!mutex_trylock(&cmd->lock)) {
+> +		nbd_config_put(nbd);
+>   		return BLK_EH_RESET_TIMER;
+> +	}
+>   
+>   	if (config->num_connections > 1) {
+>   		dev_err_ratelimited(nbd_to_dev(nbd),
+> 
 
-     bpf: sockhash fix omitted bucket lock in sock_close
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=143286e2600000
-start commit:   31cc088a Merge tag 'drm-next-2019-07-19' of git://anongit...
-git tree:       net-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=163286e2600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=123286e2600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4dba67bf8b8c9ad7
-dashboard link: https://syzkaller.appspot.com/bug?extid=370e4739fa489334a4ef
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16dd57dc600000
-
-Reported-by: syzbot+370e4739fa489334a4ef@syzkaller.appspotmail.com
-Fixes: e9db4ef6bf4c ("bpf: sockhash fix omitted bucket lock in sock_close")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
