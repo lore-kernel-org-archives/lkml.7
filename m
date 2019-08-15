@@ -2,92 +2,89 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC8CC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 21:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967D1C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 21:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB0C2086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 21:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5952E2133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 21:04:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565903067;
+	bh=NNekQusaEPP5YPk53Rxg5OC3GdiRn8lGF9xopo7eZIg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kKsEx6KWKHBub0gt+2bJrHbrwNVh9AR7LYEKi3rIV3hYSVQegsHj5BCQ8gfckQ9at
+	 txC3+QD805E2zZ+2zc5DwhbalqKWBIictRR2dGDnWhgKmCQ0NfbQA79dlu/bpZ+BhY
+	 oxP+P/baVomt/fF+XX7h4hhg5MoQZDhZv/pjumeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731649AbfHOVER (ORCPT
+        id S1733118AbfHOVEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 17:04:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40858 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfHOVER (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 17:04:17 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hyMup-000685-8z; Thu, 15 Aug 2019 23:04:11 +0200
-Date:   Thu, 15 Aug 2019 23:04:10 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andrew Cooper <andrew.cooper3@citrix.com>
-cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Chen Yu <yu.c.chen@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD family
- 15h/16h
-In-Reply-To: <a24a2c7d-cfab-a049-37e8-7260a9063a7c@citrix.com>
-Message-ID: <alpine.DEB.2.21.1908152301300.1908@nanos.tec.linutronix.de>
-References: <776cb5c2d33e7fd0d2893904724c0e52b394f24a.1565817448.git.thomas.lendacky@amd.com> <a24a2c7d-cfab-a049-37e8-7260a9063a7c@citrix.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 15 Aug 2019 17:04:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733090AbfHOVEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 17:04:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A27A22063F;
+        Thu, 15 Aug 2019 21:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565903063;
+        bh=NNekQusaEPP5YPk53Rxg5OC3GdiRn8lGF9xopo7eZIg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ciLYl7u9ipJ7DsIf3xV/9jK89JpQEv5tzAAn7FX0GZMJqyiO7gk+CKuKuRXQSUlWX
+         nt5bP2O6S+xImvSCQPStYL8Rjg0FPSNfKlYaGG5Je3RXTnkrbW2le5HKg74l8QVq09
+         WwoqMjObF3zUfpviodqHoGLcuY8JQZj9wdA9vMV0=
+Date:   Thu, 15 Aug 2019 23:04:20 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        security@kernel.org, linux-doc@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: [PATCH] Documentation/admin-guide: Embargoed hardware security
+ issues
+Message-ID: <20190815210420.GA12041@kroah.com>
+References: <20190725130113.GA12932@kroah.com>
+ <nycvar.YFH.7.76.1908040214090.5899@cbobk.fhfr.pm>
+ <20190805151244.GA28296@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1612320073-1565903051=:1908"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190805151244.GA28296@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1612320073-1565903051=:1908
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-On Thu, 15 Aug 2019, Andrew Cooper wrote:
-
-> On 14/08/2019 22:17, Lendacky, Thomas wrote:
-> > +static void init_hide_rdrand(struct cpuinfo_x86 *c)
-> > +{
-> > +	/*
-> > +	 * The nordrand option can clear X86_FEATURE_RDRAND, so check for
-> > +	 * RDRAND support using the CPUID function directly.
-> > +	 */
-> > +	if (!(cpuid_ecx(1) & BIT(30)) || rdrand_force)
-> > +		return;
-> > +
-> > +	msr_clear_bit(MSR_AMD64_CPUID_FN_00000001, 62);
-> > +	clear_cpu_cap(c, X86_FEATURE_RDRAND);
-> > +	pr_info_once("hiding RDRAND via CPUID\n");
+On Mon, Aug 05, 2019 at 05:12:44PM +0200, Greg Kroah-Hartman wrote:
+> On Sun, Aug 04, 2019 at 02:17:00AM +0200, Jiri Kosina wrote:
+> > On Thu, 25 Jul 2019, Greg Kroah-Hartman wrote:
+> > 
+> > > To address the requirements of embargoed hardware issues, like Meltdown,
+> > > Spectre, L1TF, etc. it is necessary to define and document a process for
+> > > handling embargoed hardware security issues.
+> > 
+> > I don't know what exactly went wrong, but there is a much more up-to-date 
+> > version of that document (especially when it comes to vendor contacts), 
+> > which I sent around on Thu, 2 May 2019 20:23:48 +0200 (CEST) already. 
+> > Please find it below.
 > 
-> If you're virtualised, the write to MSR_AMD64_CPUID_FN_1 almost
-> certainly won't take effect, which means userspace will still be able to
-> see the bit.
+> Ah, sorry, don't know what happened here, we had too many different
+> versions floating around.
 > 
-> Best to leave everything untouched if you can't actually clear the bit. 
-> All you can do is trust that your hypervisor knows what it is doing.
+> I'll take your version, make the edits recommended and send out a new
+> one in a few days, thanks!
 
-Well, we can read the CPUID entry again after writing that MSR bit. If it
-still says RDRAND is available then we know that the hypervisor did not
-allow the write and print something to that effect.
+Looks like your version only had the difference being the list of
+ambassadors and a bunch of people who reviewed the document.  No
+text changes in the document itself, which was good to see we all agreed
+on the correct wording  :)
 
-Thanks,
+thanks,
 
-	tglx
---8323329-1612320073-1565903051=:1908--
+greg k-h
