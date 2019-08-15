@@ -2,102 +2,344 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE4FC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19619C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD6DA2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F42208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:18:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kuFpq7Ii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732208AbfHONRV convert rfc822-to-8bit (ORCPT
+        id S1732210AbfHONSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:17:21 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:4217 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731747AbfHONRV (ORCPT
+        Thu, 15 Aug 2019 09:18:45 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:45670 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731306AbfHONSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:17:21 -0400
-IronPort-SDR: CZqAmgBqt90rwvWsRi5vb1fTTKYZGxvJ8oRExRKJmAhQ5naPKaZRbd3x2eRSL8ttmHc9JNHtWf
- cMeQrgsoDf1/NfvWXi4sJYwoAUJFAtafVEyG06KKfrj6xa2B/6YJrhgMffLzO0DAZfOeC4QsKZ
- 0N4dDOjx9lcDlyFNP2Nb5/k8AtQOve2z93CvUJzBpuMmNZgPZZU5f7tduxfoZEsrrC4qS0ykW/
- snBWW7ge4GdPY+vGRBDfBFHkyt1ZgycdoWEZ8+huNq949KuAhVaPPwY6fz9XsOeD9VsLu8yg8B
- oNI=
-X-IronPort-AV: E=Sophos;i="5.64,389,1559548800"; 
-   d="scan'208";a="40459753"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa2.mentor.iphmx.com with ESMTP; 15 Aug 2019 05:17:07 -0800
-IronPort-SDR: SpxPcx9utDYLec0NRy33av/mbpCMPViEgzxb2qwobB+PebuBH/m1zx6KKp/ZKyjsHqT7Z1DNMi
- fpTU6iUVS3viYdAGY/2fbxzVRQnnfp60Wbl2Up/BHwV5c3HpF361gDMv9YJ6JJdypjliG6O/Sq
- uWjLV7NKvapZ8aiO0GFyqzC1KJx7RPLGrqC1OSoMQzv6wh/QnWNWZxna3Kb7NRKSvLVmAFnIMs
- 4F9xPfYCrx8JSnjT9eyBRie9IyRBkW9c8zXJHPeV/fH6Ts57T2xWCxRAg3lPHmnaFWYeFxDh3Z
- HpI=
-From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-To:     Wei Yang <richard.weiyang@gmail.com>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "bp@suse.de" <bp@suse.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "richardw.yang@linux.intel.com" <richardw.yang@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: AW: [PATCH v2] kernel/resource.c: invalidate parent when freed
- resource has childs
-Thread-Topic: [PATCH v2] kernel/resource.c: invalidate parent when freed
- resource has childs
-Thread-Index: AQHVUq5kcb5Ex7JpNUSktSjVjdFue6b6xMYAgAEUHnCAAESkAIAAERsQ
-Date:   Thu, 15 Aug 2019 13:17:01 +0000
-Message-ID: <ff78412f81494678bb7685dc2604002e@SVR-IES-MBX-03.mgc.mentorg.com>
-References: <1565278859475.1962@mentor.com> <1565358624103.3694@mentor.com>
- <20190809223831.fk4uyrzscr366syr@master>
- <CAHk-=wi_9sdMxurjZ1MbNnxt-pA=dqoyf8Fdn9aYc8xvjjnTBg@mail.gmail.com>
- <1565794104204.54092@mentor.com> <20190814162932.alwo7g4664c2dtp3@master>
- <c925c7d1041f478c99863da56c24b8a7@SVR-IES-MBX-03.mgc.mentorg.com>
- <20190815130328.yk4cybuuqnzb7xrx@master>
-In-Reply-To: <20190815130328.yk4cybuuqnzb7xrx@master>
-Accept-Language: de-DE, en-IE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [137.202.0.90]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 15 Aug 2019 09:18:45 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 359172AF;
+        Thu, 15 Aug 2019 15:18:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1565875121;
+        bh=7QbJ4Du/XnlBN1gYFnN5imwadM72F3m3mwA3dcBOKEU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kuFpq7IijfpLmgWtufJF+7RYZ9k1X/R4ZECkPbri1bp7Z39wiO7OPtdHgkNOX8OWD
+         NxOfCRQ37iexNAV37FSIXtLaCJBf00PI+DPNeNCMe4zRupmVeZy6OfdQQ9k2TOCB2M
+         qITK9bZ1tBQqRmNjYmBndbZyL8DBdJCMV7It9Ags=
+Date:   Thu, 15 Aug 2019 16:18:38 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, Eric Anholt <eric@anholt.net>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 3/9] drm: Rename drm_bridge_timings to drm_timings
+Message-ID: <20190815131838.GP5011@pendragon.ideasonboard.com>
+References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1565867073-24746-4-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1565867073-24746-4-git-send-email-fabrizio.castro@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> My gut feeling is this is the problem from mal-functional driver, e.g.
-> xhci-hcd. We do our best to protect core kernel from it instead of do the
-> cleanup for it.
-Agree.
-My intention wasn't to fix mal-functional driver, but to give it a hint
-that it's doing something wrong.
-(In the xhci-hcd case the patch indirectly avoids the later use-after-free in driver,
- a nice side effect here)
+Hi Fabrizio,
 
-I think the same what Linus meant with
-> I'm less interested in the xhci-hcd case - which I certainly *hope* is
-> fixed already? - than in "if this happens somewhere else".
-What about giving only a WARN_ONCE?
-Wouldn't hurt but notice developers and ease bug hunting.
-Would be fine for me too.
-Finally, i also could put the patch in a private branch named "useful_patches" ;-)
-but then the community won't benefit.
+(CC'ing Greg as the architect of the SPDX move)
 
+On Thu, Aug 15, 2019 at 12:04:27PM +0100, Fabrizio Castro wrote:
+> The information represented by drm_bridge_timings is also
+> needed by panels, therefore rename drm_bridge_timings to
+> drm_timings.
 > 
-> So my suggestion is to look into why xhci-hcd behave like this and fix that.
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Link: https://www.spinics.net/lists/linux-renesas-soc/msg43271.html
 > 
-xhci-hcd fix proposal @ Hans de Goede already.
+> ---
+> v1->v2:
+> * new patch
+> 
+> I have copied the license from include/drm/drm_bridge.h as that's
+> where the struct originally came from. What's the right SPDX license
+> to use in this case?
 
-Best regards
-Carsten
+https://wiki.spdx.org/view/Legal_Team/Decisions/Dealing_with_Public_Domain_within_SPDX_Files
+
+Greg, any idea on how we should handle this ?
+
+>  drivers/gpu/drm/bridge/dumb-vga-dac.c |  6 ++--
+>  drivers/gpu/drm/bridge/sii902x.c      |  2 +-
+>  drivers/gpu/drm/bridge/thc63lvd1024.c |  2 +-
+>  drivers/gpu/drm/bridge/ti-tfp410.c    |  6 ++--
+>  drivers/gpu/drm/pl111/pl111_display.c |  2 +-
+>  include/drm/drm_bridge.h              | 40 ++---------------------
+>  include/drm/drm_timings.h             | 60 +++++++++++++++++++++++++++++++++++
+>  7 files changed, 71 insertions(+), 47 deletions(-)
+>  create mode 100644 include/drm/drm_timings.h
+> 
+> diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c b/drivers/gpu/drm/bridge/dumb-vga-dac.c
+> index d32885b..bb1d928 100644
+> --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
+> +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
+> @@ -228,7 +228,7 @@ static int dumb_vga_remove(struct platform_device *pdev)
+>   * NOTE: the ADV7123EP seems to have other timings and need a new timings
+>   * set if used.
+>   */
+> -static const struct drm_bridge_timings default_dac_timings = {
+> +static const struct drm_timings default_dac_timings = {
+>  	/* Timing specifications, datasheet page 7 */
+>  	.input_bus_flags = DRM_BUS_FLAG_PIXDATA_SAMPLE_POSEDGE,
+>  	.setup_time_ps = 500,
+> @@ -239,7 +239,7 @@ static const struct drm_bridge_timings default_dac_timings = {
+>   * Information taken from the THS8134, THS8134A, THS8134B datasheet named
+>   * "SLVS205D", dated May 1990, revised March 2000.
+>   */
+> -static const struct drm_bridge_timings ti_ths8134_dac_timings = {
+> +static const struct drm_timings ti_ths8134_dac_timings = {
+>  	/* From timing diagram, datasheet page 9 */
+>  	.input_bus_flags = DRM_BUS_FLAG_PIXDATA_SAMPLE_POSEDGE,
+>  	/* From datasheet, page 12 */
+> @@ -252,7 +252,7 @@ static const struct drm_bridge_timings ti_ths8134_dac_timings = {
+>   * Information taken from the THS8135 datasheet named "SLAS343B", dated
+>   * May 2001, revised April 2013.
+>   */
+> -static const struct drm_bridge_timings ti_ths8135_dac_timings = {
+> +static const struct drm_timings ti_ths8135_dac_timings = {
+>  	/* From timing diagram, datasheet page 14 */
+>  	.input_bus_flags = DRM_BUS_FLAG_PIXDATA_SAMPLE_POSEDGE,
+>  	/* From datasheet, page 16 */
+> diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
+> index dd7aa46..0c63065 100644
+> --- a/drivers/gpu/drm/bridge/sii902x.c
+> +++ b/drivers/gpu/drm/bridge/sii902x.c
+> @@ -914,7 +914,7 @@ static int sii902x_i2c_bypass_deselect(struct i2c_mux_core *mux, u32 chan_id)
+>  	return 0;
+>  }
+>  
+> -static const struct drm_bridge_timings default_sii902x_timings = {
+> +static const struct drm_timings default_sii902x_timings = {
+>  	.input_bus_flags = DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE
+>  		 | DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE
+>  		 | DRM_BUS_FLAG_DE_HIGH,
+> diff --git a/drivers/gpu/drm/bridge/thc63lvd1024.c b/drivers/gpu/drm/bridge/thc63lvd1024.c
+> index 3d74129b..9047a9e 100644
+> --- a/drivers/gpu/drm/bridge/thc63lvd1024.c
+> +++ b/drivers/gpu/drm/bridge/thc63lvd1024.c
+> @@ -34,7 +34,7 @@ struct thc63_dev {
+>  	struct drm_bridge bridge;
+>  	struct drm_bridge *next;
+>  
+> -	struct drm_bridge_timings timings;
+> +	struct drm_timings timings;
+>  };
+>  
+>  static inline struct thc63_dev *to_thc63(struct drm_bridge *bridge)
+> diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/bridge/ti-tfp410.c
+> index dbf35c7..c086b06c 100644
+> --- a/drivers/gpu/drm/bridge/ti-tfp410.c
+> +++ b/drivers/gpu/drm/bridge/ti-tfp410.c
+> @@ -32,7 +32,7 @@ struct tfp410 {
+>  	struct delayed_work	hpd_work;
+>  	struct gpio_desc	*powerdown;
+>  
+> -	struct drm_bridge_timings timings;
+> +	struct drm_timings timings;
+>  
+>  	struct device *dev;
+>  };
+> @@ -190,7 +190,7 @@ static irqreturn_t tfp410_hpd_irq_thread(int irq, void *arg)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> -static const struct drm_bridge_timings tfp410_default_timings = {
+> +static const struct drm_timings tfp410_default_timings = {
+>  	.input_bus_flags = DRM_BUS_FLAG_PIXDATA_SAMPLE_POSEDGE
+>  			 | DRM_BUS_FLAG_DE_HIGH,
+>  	.setup_time_ps = 1200,
+> @@ -199,7 +199,7 @@ static const struct drm_bridge_timings tfp410_default_timings = {
+>  
+>  static int tfp410_parse_timings(struct tfp410 *dvi, bool i2c)
+>  {
+> -	struct drm_bridge_timings *timings = &dvi->timings;
+> +	struct drm_timings *timings = &dvi->timings;
+>  	struct device_node *ep;
+>  	u32 pclk_sample = 0;
+>  	u32 bus_width = 24;
+> diff --git a/drivers/gpu/drm/pl111/pl111_display.c b/drivers/gpu/drm/pl111/pl111_display.c
+> index 15d2755..c82b21f 100644
+> --- a/drivers/gpu/drm/pl111/pl111_display.c
+> +++ b/drivers/gpu/drm/pl111/pl111_display.c
+> @@ -188,7 +188,7 @@ static void pl111_display_enable(struct drm_simple_display_pipe *pipe,
+>  	}
+>  
+>  	if (bridge) {
+> -		const struct drm_bridge_timings *btimings = bridge->timings;
+> +		const struct drm_timings *btimings = bridge->timings;
+>  
+>  		/*
+>  		 * Here is when things get really fun. Sometimes the bridge
+> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> index 7616f65..8270a38 100644
+> --- a/include/drm/drm_bridge.h
+> +++ b/include/drm/drm_bridge.h
+> @@ -27,9 +27,9 @@
+>  #include <linux/ctype.h>
+>  #include <drm/drm_mode_object.h>
+>  #include <drm/drm_modes.h>
+> +#include <drm/drm_timings.h>
+>  
+>  struct drm_bridge;
+> -struct drm_bridge_timings;
+>  struct drm_panel;
+>  
+>  /**
+> @@ -337,42 +337,6 @@ struct drm_bridge_funcs {
+>  };
+>  
+>  /**
+> - * struct drm_bridge_timings - timing information for the bridge
+> - */
+> -struct drm_bridge_timings {
+> -	/**
+> -	 * @input_bus_flags:
+> -	 *
+> -	 * Tells what additional settings for the pixel data on the bus
+> -	 * this bridge requires (like pixel signal polarity). See also
+> -	 * &drm_display_info->bus_flags.
+> -	 */
+> -	u32 input_bus_flags;
+> -	/**
+> -	 * @setup_time_ps:
+> -	 *
+> -	 * Defines the time in picoseconds the input data lines must be
+> -	 * stable before the clock edge.
+> -	 */
+> -	u32 setup_time_ps;
+> -	/**
+> -	 * @hold_time_ps:
+> -	 *
+> -	 * Defines the time in picoseconds taken for the bridge to sample the
+> -	 * input signal after the clock edge.
+> -	 */
+> -	u32 hold_time_ps;
+> -	/**
+> -	 * @dual_link:
+> -	 *
+> -	 * True if the bus operates in dual-link mode. The exact meaning is
+> -	 * dependent on the bus type. For LVDS buses, this indicates that even-
+> -	 * and odd-numbered pixels are received on separate links.
+> -	 */
+> -	bool dual_link;
+> -};
+> -
+> -/**
+>   * struct drm_bridge - central DRM bridge control structure
+>   */
+>  struct drm_bridge {
+> @@ -393,7 +357,7 @@ struct drm_bridge {
+>  	 *
+>  	 * the timing specification for the bridge, if any (may be NULL)
+>  	 */
+> -	const struct drm_bridge_timings *timings;
+> +	const struct drm_timings *timings;
+>  	/** @funcs: control functions */
+>  	const struct drm_bridge_funcs *funcs;
+>  	/** @driver_private: pointer to the bridge driver's internal context */
+> diff --git a/include/drm/drm_timings.h b/include/drm/drm_timings.h
+> new file mode 100644
+> index 0000000..4af8814
+> --- /dev/null
+> +++ b/include/drm/drm_timings.h
+> @@ -0,0 +1,60 @@
+> +/*
+> + * Permission to use, copy, modify, distribute, and sell this software and its
+> + * documentation for any purpose is hereby granted without fee, provided that
+> + * the above copyright notice appear in all copies and that both that copyright
+> + * notice and this permission notice appear in supporting documentation, and
+> + * that the name of the copyright holders not be used in advertising or
+> + * publicity pertaining to distribution of the software without specific,
+> + * written prior permission.  The copyright holders make no representations
+> + * about the suitability of this software for any purpose.  It is provided "as
+> + * is" without express or implied warranty.
+> + *
+> + * THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+> + * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
+> + * EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+> + * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+> + * DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+> + * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+> + * OF THIS SOFTWARE.
+> + */
+> +
+> +#ifndef __DRM_TIMINGS_H__
+> +#define __DRM_TIMINGS_H__
+> +
+> +/**
+> + * struct drm_timings - timing information
+
+This dangerously relates to video timings. I would name the structure
+drm_bus_timings, or drm_bus_params (or something similar) as it contains
+more than timings.
+
+> + */
+> +struct drm_timings {
+> +	/**
+> +	 * @input_bus_flags:
+> +	 *
+> +	 * Tells what additional settings for the pixel data on the bus
+> +	 * are required (like pixel signal polarity). See also
+> +	 * &drm_display_info->bus_flags.
+> +	 */
+> +	u32 input_bus_flags;
+> +	/**
+> +	 * @setup_time_ps:
+> +	 *
+> +	 * Defines the time in picoseconds the input data lines must be
+> +	 * stable before the clock edge.
+> +	 */
+> +	u32 setup_time_ps;
+> +	/**
+> +	 * @hold_time_ps:
+> +	 *
+> +	 * Defines the time in picoseconds taken for the bridge to sample the
+> +	 * input signal after the clock edge.
+> +	 */
+> +	u32 hold_time_ps;
+> +	/**
+> +	 * @dual_link:
+> +	 *
+> +	 * True if the bus operates in dual-link mode. The exact meaning is
+> +	 * dependent on the bus type. For LVDS buses, this indicates that even-
+> +	 * and odd-numbered pixels are received on separate links.
+> +	 */
+> +	bool dual_link;
+> +};
+> +
+> +#endif /* __DRM_TIMINGS_H__ */
+
+-- 
+Regards,
+
+Laurent Pinchart
