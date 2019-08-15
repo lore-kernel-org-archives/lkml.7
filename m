@@ -2,86 +2,117 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9539DC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2E7C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693822171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B702171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:47:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Xs91eNvC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732499AbfHOUqp (ORCPT
+        id S1732532AbfHOUrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 16:46:45 -0400
-Received: from ajax.cs.uga.edu ([128.192.4.6]:59002 "EHLO ajax.cs.uga.edu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728728AbfHOUqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 16:46:45 -0400
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-        (authenticated bits=0)
-        by ajax.cs.uga.edu (8.14.4/8.14.4) with ESMTP id x7FKkgUs078312
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 15 Aug 2019 16:46:43 -0400
-Received: by mail-lj1-f179.google.com with SMTP id h15so3370707ljg.10;
-        Thu, 15 Aug 2019 13:46:43 -0700 (PDT)
-X-Gm-Message-State: APjAAAUCnQv/R7mFKHJd8x/tlQ8aT8UhBa5dI4IlDJNLJUOzz2K+s3Sa
-        NhaH/+Uj0VJG2YEaES23MNVpa16QJkXbpf1yv94=
-X-Google-Smtp-Source: APXvYqz2r7ehE+Kq/uplBHFF/vWrICt2j6gnOl6mxPjSNU6q7kEsP42YzMCcN2+OCFbVGnDfm0trfcsj+mKW3zAb3mg=
-X-Received: by 2002:a2e:89da:: with SMTP id c26mr3093675ljk.214.1565902002043;
- Thu, 15 Aug 2019 13:46:42 -0700 (PDT)
+        Thu, 15 Aug 2019 16:47:25 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35732 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728728AbfHOUrZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 16:47:25 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g17so6874194otl.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 13:47:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iGCSUcgObYGVRCAzYsit2AWDPyDTFFk4jtMiYAkxFvg=;
+        b=Xs91eNvCSOxAfiys1ppgNPaq0ALSevQ/T2i3xlUF6I+d0oNYGWm/kcLiWw3+Xl4qnf
+         JmRKMGDSydou9/I7nXt437o0JX4dmiF7jPGXc+pjZbnEFC2zEZTdc2kHWzkAn3V1gSAl
+         Hu9FCTmyAtKxs8tWdI2G6Y/dh0Bvh+WzLoLzAyJ2QnYpWxC6zKV9cpe1sVsIEPWKNT7E
+         iVYV5R/+pyflylvOahsY4t5XbCQibs6REFPZ0SdxGqNvL9GniE7dpOmgRXMxzo5dWcEd
+         ZEmrJY5OG1t7TpFlJrOJdClXDU4QGKNZ3i/T4vOTVaMLxf8C2MQbB2F1vE0fQMBNsoGm
+         GEng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iGCSUcgObYGVRCAzYsit2AWDPyDTFFk4jtMiYAkxFvg=;
+        b=Bn9V7h6YWdxt0NhFpDPRJoHU2EP1zXJuYONhC3Q9/9ZE1nfEZJiXj3MtRvpS7G35po
+         Y6Qvo+M7rrUcLTteHk1hlhkaNgywM375uMVo8YjdztS2XtubDXALNPfUWf46C1oXk2RM
+         naKzLwUtLKEW4fSUsjskyY7fDzjcm0m2IukVen5cI1uh38LhdwoyuHHyzgreIliKR/eR
+         Ovz0xccwPxhUfKQhuPYHC5cdVvWfYWYhqc2vPHQ6CzSS8I8hBTOm85RipNP2bnFd+Ldj
+         vmIFxtWdRBRbwiOIGpX/Flaj17n4DQL2+LdN5QoDvZPuceiwXEKjz+A98OYTvPfeaX4l
+         LGFg==
+X-Gm-Message-State: APjAAAX4BQMfP8LIgLWM2x3+hoxXmJZJts4+KgVjGXDHEzsc8i+xO4br
+        ImnPCUpqy6N7HKhQmWfJJmubx7V+vxVCD0KvoPhwjg==
+X-Google-Smtp-Source: APXvYqxd1d1qB7OEUrQO74IOC/HKBdhosqv4dkigmxMbJWq9zPu2Tf40r+CLgutNYrcVuSBFfg5oXWWZglhJSMHeq3k=
+X-Received: by 2002:a05:6830:458:: with SMTP id d24mr4706447otc.126.1565902044326;
+ Thu, 15 Aug 2019 13:47:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <1565746427-5366-1-git-send-email-wenwen@cs.uga.edu>
- <20190815.123430.831231953098536795.davem@davemloft.net> <CAAa=b7ft-crBJm+H9U7Bn2dcgfjQsE8o53p2ryBWK3seQoF3Cg@mail.gmail.com>
- <20190815.134230.1028411309377288636.davem@davemloft.net>
-In-Reply-To: <20190815.134230.1028411309377288636.davem@davemloft.net>
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-Date:   Thu, 15 Aug 2019 16:46:05 -0400
-X-Gmail-Original-Message-ID: <CAAa=b7duRXsiVBfzbvHhoU000gGh53Mme3ZKCO5SoiTdgRaXtg@mail.gmail.com>
-Message-ID: <CAAa=b7duRXsiVBfzbvHhoU000gGh53Mme3ZKCO5SoiTdgRaXtg@mail.gmail.com>
-Subject: Re: [PATCH] net: pch_gbe: Fix memory leaks
-To:     David Miller <davem@davemloft.net>
-Cc:     Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Wenwen Wang <wenwen@cs.uga.edu>
+References: <20190808065933.GA29382@lst.de> <CAPcyv4hMUzw8vyXFRPe2pdwef0npbMm9tx9wiZ9MWkHGhH1V6w@mail.gmail.com>
+ <20190814073854.GA27249@lst.de> <20190814132746.GE13756@mellanox.com>
+ <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com>
+ <20190815180325.GA4920@redhat.com> <CAPcyv4g4hzcEA=TPYVTiqpbtOoS30ahogRUttCvQAvXQbQjfnw@mail.gmail.com>
+ <20190815194339.GC9253@redhat.com> <CAPcyv4jid8_=-8hBpn_Qm=c4S8BapL9B9RGT7e9uu303yH=Yqw@mail.gmail.com>
+ <20190815203306.GB25517@redhat.com> <20190815204128.GI22970@mellanox.com>
+In-Reply-To: <20190815204128.GI22970@mellanox.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 15 Aug 2019 13:47:12 -0700
+Message-ID: <CAPcyv4j_Mxbw+T+yXTMdkrMoS_uxg+TXXgTM_EPBJ8XfXKxytA@mail.gmail.com>
+Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Jerome Glisse <jglisse@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 4:42 PM David Miller <davem@davemloft.net> wrote:
+On Thu, Aug 15, 2019 at 1:41 PM Jason Gunthorpe <jgg@mellanox.com> wrote:
 >
-> From: Wenwen Wang <wenwen@cs.uga.edu>
-> Date: Thu, 15 Aug 2019 16:03:39 -0400
+> On Thu, Aug 15, 2019 at 04:33:06PM -0400, Jerome Glisse wrote:
 >
-> > On Thu, Aug 15, 2019 at 3:34 PM David Miller <davem@davemloft.net> wrote:
-> >>
-> >> From: Wenwen Wang <wenwen@cs.uga.edu>
-> >> Date: Tue, 13 Aug 2019 20:33:45 -0500
-> >>
-> >> > In pch_gbe_set_ringparam(), if netif_running() returns false, 'tx_old' and
-> >> > 'rx_old' are not deallocated, leading to memory leaks. To fix this issue,
-> >> > move the free statements after the if branch.
-> >> >
-> >> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-> >>
-> >> Why would they be "deallocated"?  They are still assigned to
-> >> adapter->tx_ring and adapter->rx_ring.
-> >
-> > 'adapter->tx_ring' and 'adapter->rx_ring' has been covered by newly
-> > allocated 'txdr' and 'rxdr' respectively before this if statement.
+> > So nor HMM nor driver should dereference the struct page (i do not
+> > think any iommu driver would either),
 >
-> That only happens inside of the if() statement, that's why rx_old and
-> tx_old are only freed in that code path.
+> Er, they do technically deref the struct page:
+>
+> nouveau_dmem_convert_pfn(struct nouveau_drm *drm,
+>                          struct hmm_range *range)
+>                 struct page *page;
+>                 page = hmm_pfn_to_page(range, range->pfns[i]);
+>                 if (!nouveau_dmem_page(drm, page)) {
+>
+>
+> nouveau_dmem_page(struct nouveau_drm *drm, struct page *page)
+> {
+>         return is_device_private_page(page) && drm->dmem == page_to_dmem(page)
+>
+>
+> Which does touch 'page->pgmap'
+>
+> Is this OK without having a get_dev_pagemap() ?
+>
+> Noting that the collision-retry scheme doesn't protect anything here
+> as we can have a concurrent invalidation while doing the above deref.
 
-That happens not only inside of the if statement, but also before the
-if statement, just after 'txdr' and 'rxdr' are allocated.
+As long take_driver_page_table_lock() in Jerome's flow can replace
+percpu_ref_tryget_live() on the pagemap reference. It seems
+nouveau_dmem_convert_pfn() happens after:
 
-Wenwen
+                        mutex_lock(&svmm->mutex);
+                        if (!nouveau_range_done(&range)) {
+
+...so I would expect that to be functionally equivalent to validating
+the reference count.
