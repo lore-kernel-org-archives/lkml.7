@@ -2,107 +2,137 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76A5C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65F9C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73EAD20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F1D20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:32:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFcWA2fw"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="a+0Mzgg6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbfHOP2P (ORCPT
+        id S1729911AbfHOPcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 11:28:15 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33117 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729514AbfHOP2P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 11:28:15 -0400
-Received: by mail-wr1-f67.google.com with SMTP id u16so2599019wrr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 08:28:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7ySHx2gCdOcjIme2TB9gfS7z1s8Aq8Y5cCzx0Vx45zg=;
-        b=nFcWA2fwfrW59buy2JNIcCI/eoxVG1XgciG7VLDMD0uY3EsxHmT9sceBoJ1LYNNBcy
-         MOfRDhwMJlOsKfHlXui5iquI9x3/r5XUAoAG0D7/t4XmEI2UKU6CHtr1l6OuVzEoI5uP
-         UQQ8g7L6TVPfC9u/ubnEjQxTqWyICOciuAmrc0bQYmwEPs3A7cBGOc4nXYUozibOo0cC
-         rdXx9aeHFaOtlq6wbPuvHkDSIFV6EaWmjxUyUE0W0QtWkfFHQPsqSFfAc5fbzD5X1mw4
-         vzl8B9arUiwphJaJMfAJZ6Og007HiiHK2nN86UTO8ObdkrwvAcGrNAsegt9qB9n/E4Lk
-         H++Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7ySHx2gCdOcjIme2TB9gfS7z1s8Aq8Y5cCzx0Vx45zg=;
-        b=RI30/pgGtmZI6BmzJHB9/IxYIu+Jeegk9r76j/VQva6Gt+JCLG6eNPVgBhM58+w3B+
-         SRhQp+GxCoEt2NHlwdPUjcpnsl3Ug8fvdnqdAz2NWSGEga5tjZ/evZABV7kb+49FE9Lk
-         87/MVCosqWlO6BLPuO1D4iCrgJDesr8yiCKFL22h9aN5nEfWtH+XeQLDLQUn5z2Zbr/Z
-         XT/ulNH2Dnf+nluNY8+pHV87qUPQTm7/TIu0L+u3a/hEuyQItHpGrIR4oloY17flWFtf
-         9b8x8ZceECNVFtprRgftLhynEz7qsSxvlMiqesybn2/waYrBrYh6Hsxwi16AnDw1fSuY
-         F16A==
-X-Gm-Message-State: APjAAAWjAqMQHOBvuj8UUalVA33eLCq6rIlmw4V0S7x34ahvvDDpCCrJ
-        FGfDl2NDzqn5nvDqTH5HE/XoGhtM3th1ZJzfiNeFBoQY
-X-Google-Smtp-Source: APXvYqzz6gyHm3vlGI40gdc7o+65StfdjcAW+O4APBp6oMbqSt+4D9jEeAhIx4kDVgAKXYikjXd4w9FwweE+ISkml+E=
-X-Received: by 2002:a5d:6b11:: with SMTP id v17mr5926083wrw.323.1565882892937;
- Thu, 15 Aug 2019 08:28:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190815051117.24003-1-kai.heng.feng@canonical.com>
- <BN6PR12MB180950AE744B37AAFADC2FEAF7AC0@BN6PR12MB1809.namprd12.prod.outlook.com>
- <8D8229FF-933A-43CF-AE05-52E969E3B942@canonical.com>
-In-Reply-To: <8D8229FF-933A-43CF-AE05-52E969E3B942@canonical.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 15 Aug 2019 11:28:01 -0400
-Message-ID: <CADnq5_MqvH-jUdDUOeBM6zgwYKiv21Wuejw4sR5TwY7bJss_ow@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu: Apply flags after amdgpu_device_ip_init()
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "anthony.wong@canonical.com" <anthony.wong@canonical.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Thu, 15 Aug 2019 11:32:31 -0400
+Received: from mail-eopbgr20044.outbound.protection.outlook.com ([40.107.2.44]:11366
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729736AbfHOPca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 11:32:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OUUgdS8FlX/B/Pup/rvqxvLlMBI2TeI5jHTszpp+uDB6G5RNTyq21kSGVb57w0lWr1G/ly7A8NQn3G9NuVd9eyj0PPW91/dJidube+/WlhQKn4ftStVYEsi86zjjD6OWhUD7cU3SBmVCmEDHsUz4YkCu1P4nY6R19LRdRewkCqkPOlrXeseE45/Er+a4FJUmDZPTQpP3oo5JknCEfRlkb8ag4rlIHTALdIR1R+lE79SPraq0gqyziXZXXuYcQkgBiBG6NB1JmVeedYFw1zUMMfNHFt3qO/86JjrzG0PwJIjgLGSonoWfDm4RdnO8BjXcU5iLPNFR8PDeXlULHLduHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qDuuMbftz1X1zRQHW8/QaEwdrBAGYrjg+GUTaek3Pgw=;
+ b=XL8X+aZ0ZSdIdxLfbY/VWzOdNaOrmB5QmLcHa7dq0wUV56EcvgXHY4YtqkLpSt5JiFALJe6h+mKR7j3dEMfBpfSknF7KqB0PL+1MnRzu5xJe6FtA0DUCVdAGFdLcuNRpZzukIqNZVp/JGzKCxDK+geOmJC74oJGI0bCUXt3QXXYYLIz6kmHbaWftYIVgmunjvIh75NWUVjh7m7iEuLbHYSL/m0pNIOU2+M2G/afqYPzdERXb8Tu3uBIglqZQ2cHrvW8lfMroMHVttNIuWplygsEKKEHToTtwAjtNeH0TUBD3exXzeABQSLk2x5la54b3E+5mAmMdhU+5DUg9Otq7Rw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qDuuMbftz1X1zRQHW8/QaEwdrBAGYrjg+GUTaek3Pgw=;
+ b=a+0Mzgg6nD2LaV8Lbem0K0Q6Bq/E2VsvbcdOTpBk3s7TgadxZPkXFGTaVLVCArgc/6g+vXZrnGBfQt9054Zu/2QTcWjkLwNaICtwe0cp/iPnACkQ1/vwKNnKey74UyeoxNkctFmb6c62kWVtZ2K3vlZGA0cbQbZWF3Flq5PhemU=
+Received: from AM6PR0402MB3798.eurprd04.prod.outlook.com (52.133.29.29) by
+ AM6PR0402MB3624.eurprd04.prod.outlook.com (52.133.18.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.18; Thu, 15 Aug 2019 15:32:27 +0000
+Received: from AM6PR0402MB3798.eurprd04.prod.outlook.com
+ ([fe80::9de1:26ec:59e5:32fc]) by AM6PR0402MB3798.eurprd04.prod.outlook.com
+ ([fe80::9de1:26ec:59e5:32fc%5]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
+ 15:32:27 +0000
+From:   Christian Herber <christian.herber@nxp.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Huang, Ray" <Ray.Huang@amd.com>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+        Christian Herber <christian.herber@nxp.com>
+Subject: [PATCH net-next 0/1] Add BASE-T1 PHY support
+Thread-Topic: [PATCH net-next 0/1] Add BASE-T1 PHY support
+Thread-Index: AQHVU36kB16+P8dNcke+XhJhYYGD7g==
+Date:   Thu, 15 Aug 2019 15:32:27 +0000
+Message-ID: <20190815153209.21529-1-christian.herber@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-clientproxiedby: AM0PR0102CA0030.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:14::43) To AM6PR0402MB3798.eurprd04.prod.outlook.com
+ (2603:10a6:209:1a::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=christian.herber@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [217.111.68.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 116d2be0-c80e-4615-111a-08d72195c745
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR0402MB3624;
+x-ms-traffictypediagnostic: AM6PR0402MB3624:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR0402MB3624267286879D07E247938986AC0@AM6PR0402MB3624.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01304918F3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(396003)(136003)(39860400002)(376002)(199004)(189003)(8676002)(5640700003)(36756003)(2616005)(476003)(8936002)(50226002)(14454004)(54906003)(316002)(7736002)(5660300002)(2351001)(66066001)(478600001)(3846002)(6116002)(2906002)(81166006)(81156014)(71190400001)(71200400001)(1730700003)(2501003)(6512007)(1076003)(6486002)(44832011)(66556008)(64756008)(66446008)(66476007)(66946007)(53936002)(256004)(486006)(305945005)(6916009)(52116002)(6436002)(86362001)(55236004)(25786009)(6506007)(386003)(26005)(102836004)(99286004)(186003)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3624;H:AM6PR0402MB3798.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nBnNlVu6frfDOC5MnziWX7f7MmXAI0n5Nrp6pX2gxSkxKxvndW46pDc3fcE0N45FXrXn3gcPE4NtXPp1jyn1QlvW7oMyFp2cD94gqWFPN1zbkaNJLVVU+qHIuoLcQNta0Nv/DSfcAWSJt6w61XTVG/lFF9NCiHPbR9yUxagNGfkKo0Jv81Dl6mWYsNRn1VjqVAtQY6WADoo/yQT8j1Am7xf15aNbGMNh1grbxye2s3uNwYvsIiq+c+Jn8aDn3/nU+phL0x0BVxHqXCxvUBMqkeoei+txvdr8YdmWczr4/7BqATQN2gSZL8re1sK38/lDGxqIFtt2t4UsqezTRniUpvWKFPiIgHV0tCzWhqHHG/nNyuw120X/TydZ+wPjI1Dlefs+0620NtIV8xmsLklCQgJuvehFkFcnl5cyBpXP9qA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <49EE277D8854E045988BD790B4FD4B3C@eurprd04.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 116d2be0-c80e-4615-111a-08d72195c745
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 15:32:27.4160
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: E+IUpS+rNMizkWdLz4fJn/LsIUsyZIwgHIbFNwYYxe9ZGKwcSpRFUDuzhHpiKN2/OJLCE85OmGFD1CL90w0+Zx083xcTdl5wjpmOvzuGxXg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3624
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:59 AM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> at 21:33, Deucher, Alexander <Alexander.Deucher@amd.com> wrote:
->
-> > Thanks for finding this!  I think the attached patch should fix the iss=
-ue
-> > and it's much less invasive.
->
-> Yes it also fix the issue, please add by tested-by:
-> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->
+This patch adds basic support for BASE-T1 PHYs in the framework.
+BASE-T1 PHYs main area of application are automotive and industrial.
+BASE-T1 is standardized in IEEE 802.3, namely
+- IEEE 802.3bw: 100BASE-T1
+- IEEE 802.3bp 1000BASE-T1
+- IEEE 802.3cg: 10BASE-T1L and 10BASE-T1S
 
-Thanks!
+There are no products which contain BASE-T1 and consumer type PHYs like
+1000BASE-T. However, devices exist which combine 100BASE-T1 and 1000BASE-T1
+PHYs with auto-negotiation.
 
-> I took this more or less future proof approach because I think this won=
-=E2=80=99t
-> be the last chip that needs firmware information, which isn=E2=80=99t ava=
-ilable in
-> early init, to decides its flags.
->
-> Yes it=E2=80=99s intrusive to carve out all flags from early init callbac=
-ks, but I
-> don=E2=80=99t think it=E2=80=99s that ugly.
+The intention of this patch is to make use of the existing Clause 45 functi=
+ons.
+BASE-T1 adds some additional registers e.g. for aneg control, which follow =
+a
+similiar register layout as the existing devices. The bits which are used i=
+n
+BASE-T1 specific registers are the same as in basic registers, thus the
+existing functions can be resued, with get_aneg_ctrl() selecting the correc=
+t
+register address.
 
-Not a bad approach, but I'd prefer to keep the power and clock gating
-flags in the asic specifc code rather than in the common code.
+The current version of ethtool has been prepared for 100/1000BASE-T1 and wo=
+rks
+with this patch. 10BASE-T1 needs to be added to ethtool.
 
-Alex
+Christian Herber (1):
+  Added BASE-T1 PHY support to PHY Subsystem
+
+ drivers/net/phy/phy-c45.c    | 113 +++++++++++++++++++++++++++++++----
+ drivers/net/phy/phy-core.c   |   4 +-
+ include/uapi/linux/ethtool.h |   2 +
+ include/uapi/linux/mdio.h    |  21 +++++++
+ 4 files changed, 129 insertions(+), 11 deletions(-)
+
+--=20
+2.17.1
+
