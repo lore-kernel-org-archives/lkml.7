@@ -2,83 +2,108 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C1EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E367BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F149A205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B99AE205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:41:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nc/4kx8G"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ng42SaxJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730423AbfHOHl3 (ORCPT
+        id S1730519AbfHOHlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 03:41:29 -0400
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:39980 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbfHOHl2 (ORCPT
+        Thu, 15 Aug 2019 03:41:32 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52091 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbfHOHla (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 03:41:28 -0400
-Received: by mail-wr1-f42.google.com with SMTP id c3so1407241wrd.7;
-        Thu, 15 Aug 2019 00:41:27 -0700 (PDT)
+        Thu, 15 Aug 2019 03:41:30 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so512886wma.1;
+        Thu, 15 Aug 2019 00:41:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:subject:date:message-id;
-        bh=deyMEqecYGNInZ+LD+Hev5MlWowJ15LiWFlPKdOndVc=;
-        b=nc/4kx8GcIj4RcSzp4CrYfL3aUTnKKpo34S7R/746nRrVxIib6FK8cejN1DnBQHLZw
-         1IlXEIAYf8oFshrh9WvuK524yI8IhFwWrKOJyUtWitDY/s3mMA0fDF9zYEsuRDd95Pqm
-         JXj1dN8HaYyiLH+mCl4iYtHZxF0UzQXFr12sK6ANhAyN57AQqSfma81802SyShSQQGZs
-         R4gHAEw5U2NkCyhCgeaOaRuBT8MosyebjfgpXUuUC+wa5qsrUSZbRhJ7M7zhRcmcIGqn
-         sF3n32BJoY7DfTtmaushjS/a7Blq7xaT7zfnHA19wrXv4RqUPCPdf9qjRgy4I9Fi9thQ
-         cGhw==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=203QBNRDsU40BweVYIq1zq8GgAZoiZ5+xgte91iuHBU=;
+        b=Ng42SaxJFviZnyyCgxsk/FOSqiD/Sn01vMiC8x4tb1/goIwVrzJkro47ZoVAApjXQO
+         cVg872uh763mngEDr0oshvojOsSdrCoPecllBRuOtSeqVV6G2nR2o8BBEd2wHbzNuL+D
+         igeB8whp1VKXxh1tQ3w2LAd+3gGLCOApgDSnf/bcC94HTnKF6roG+rD0pRgHlc1/2Wb3
+         eRweOeF5Iz3SZOLXcFJu6Biia6d9fE/JmLMUmSkciSMEqO/Xt02DVRr9wzn6rdMSUj/C
+         bNJKur64jHGFLLN44PZfuuGhwqtqrqWHo3low/lETBm7ydfrWVVbEsqRlL6Vk161l9RJ
+         2mfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:subject:date:message-id;
-        bh=deyMEqecYGNInZ+LD+Hev5MlWowJ15LiWFlPKdOndVc=;
-        b=LiWu+/e+xKQ6Ic4+umWA2sBFMxbXBe34tAsVgcmRzAFkTFG4CVU3cc22rWgoSl5Ssf
-         OQoq0agOHpUpMLUKaLszXWmY+MMY+gtzZodEH0wofHQHra71bmxj3GvWLgt1+BUBiobj
-         jxZam6xXI4cyI2UzHxytKiz5TcNXfu3JJ1T29wrPQagJEu5q+G8vYQkDw5oxMUoM5wUY
-         hWiqzdFJI1dNbOnLUKG8FwVHNjym1CLLVQmwCpx/QAcOmxmLnAAIwimw+9ht/pext07w
-         P5Emk/KaflAd0LahWqiT0cB6ahPd7+DHwElUsGLeLK8masvbP/oIHkVvA4uuLAs58y/9
-         QnVA==
-X-Gm-Message-State: APjAAAVvelzr6lTrqwthulHbhINpHj2TF6NfQil9ndM+oDy1u+Nuq5ud
-        L4Tf87CdGud+5tBjdaHkH7I2fkvA
-X-Google-Smtp-Source: APXvYqydTfEE5kXYx4YCC9miWIWJNo3l/PtV861USHpsj1NvABtbFGwjVEGG57Mj0uH5rv04EtD1Ng==
-X-Received: by 2002:adf:fc51:: with SMTP id e17mr3862284wrs.348.1565854886490;
-        Thu, 15 Aug 2019 00:41:26 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references;
+        bh=203QBNRDsU40BweVYIq1zq8GgAZoiZ5+xgte91iuHBU=;
+        b=fbx4PN9DLrryG+uHzCd59oiMSWvCB24edz4/kw+XaonHjpd/2B3M/3JhEjZ/y+qWwR
+         BaO/x5YnylCOSAVoKEgzGgtp+1uSFYvwUaQesx3J4qCr/5qpLTvsBXkQBBq62ILyjqnU
+         qRXjpOGNTytcXAmQZOwnHfK/RPphCb68hTNLASgNha8K9mcmEsbek9kKXg8Hndgl/RE5
+         XTi0rCztoCcuGx+y9mgFOoJM19iHtzqOgcfgli106rrRiCjRlf+qFujY7bK4AQUYU12W
+         OU+hP3SPaUwaWTLBA4w9rPcvrTWg44AseGlRfVnho1r0JFxLctGRE31uC5QLQH37izxq
+         Ug9A==
+X-Gm-Message-State: APjAAAXWB+xuJ0LzBq7CWswlMmgv6QDNKZ2eWTx6yxj9h3qJwue8qVQN
+        lO/36gRlrdVFaCbZvaT6oVwmqAil
+X-Google-Smtp-Source: APXvYqyBizrggMLtsrNCSp7vAMF2maezD72y4g4CI0QEtyKDHYeZ6fTHFIabzDLHeTwvA098jnLIZA==
+X-Received: by 2002:a1c:6385:: with SMTP id x127mr1374763wmb.140.1565854888194;
+        Thu, 15 Aug 2019 00:41:28 -0700 (PDT)
 Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id m23sm809796wml.41.2019.08.15.00.41.25
+        by smtp.gmail.com with ESMTPSA id m23sm809796wml.41.2019.08.15.00.41.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 00:41:25 -0700 (PDT)
+        Thu, 15 Aug 2019 00:41:27 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH 0/2] KVM: x86: fixes for AMD speculation bug CPUID leaf
-Date:   Thu, 15 Aug 2019 09:41:21 +0200
-Message-Id: <1565854883-27019-1-git-send-email-pbonzini@redhat.com>
+Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Subject: [PATCH 2/2] KVM: x86: always expose VIRT_SSBD to guests
+Date:   Thu, 15 Aug 2019 09:41:23 +0200
+Message-Id: <1565854883-27019-3-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1565854883-27019-1-git-send-email-pbonzini@redhat.com>
+References: <1565854883-27019-1-git-send-email-pbonzini@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch 1 fixes the reporting of bugs and mitigations via the
-0x8000_0008 CPUID leaf on Intel processors.
+Even though it is preferrable to use SPEC_CTRL (represented by
+X86_FEATURE_AMD_SSBD) instead of VIRT_SPEC, VIRT_SPEC is always
+supported anyway because otherwise it would be impossible to
+migrate from old to new CPUs.  Make this apparent in the
+result of KVM_GET_SUPPORTED_CPUID as well.
 
-Patch 2 fixes the reporting of VIRT_SPEC availability on
-AMD processors.
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Reported-by: Eduardo Habkost <ehabkost@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/cpuid.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Paolo
-
-Paolo Bonzini (2):
-  KVM: x86: fix reporting of AMD speculation bug CPUID leaf
-  KVM: x86: always expose VIRT_SSBD to guests
-
- arch/x86/kvm/cpuid.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
-
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 145ec050d45d..5865bc73bbb5 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -747,11 +747,13 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
+ 		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
+ 		/*
+-		 * The preference is to use SPEC CTRL MSR instead of the
+-		 * VIRT_SPEC MSR.
++		 * VIRT_SPEC is only implemented for AMD processors,
++		 * but the host could set AMD_SSBD if it wanted even
++		 * for Intel processors.
+ 		 */
+-		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) &&
+-		    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
++		if ((boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
++		     boot_cpu_has(X86_FEATURE_AMD_SSBD)) &&
++		    boot_cpu_has(X86_FEATURE_SVM))
+ 			entry->ebx |= F(VIRT_SSBD);
+ 		break;
+ 	}
 -- 
 1.8.3.1
 
