@@ -2,116 +2,71 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A638C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B002C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D4752084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565901746;
-	bh=hhC4rC6xCUmWnx1og4XNg/kus15+Bgh/12mXOCRGfGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w7I/ukKkytGzRmoM+o9zSNMP3D6iYpmmiZplViNLcJL32OYYE/5gM1L8Qr6uRqt7h
-	 YhPCmvSA7MFfT9Jgo1OR4zcKwTywkG6+t+fWlK0vyd3S1aeHuN23RKre6uPeh5nBHb
-	 bqnvnYa8+8sDr/kiaJh3b/mgOAQJ8DMLRsP5F2D0=
+	by mail.kernel.org (Postfix) with ESMTP id 7268E2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 20:42:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732394AbfHOUmZ (ORCPT
+        id S1732451AbfHOUme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 16:42:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728898AbfHOUmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 16:42:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 324D22083B;
-        Thu, 15 Aug 2019 20:42:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565901743;
-        bh=hhC4rC6xCUmWnx1og4XNg/kus15+Bgh/12mXOCRGfGg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Sadzo9zxEY/CgW6rsSNRtzb0kkw5VgC8VS5HQh22WLllJbue/j36be1WWSmf0O9qZ
-         KWyPJbFX8yD+SHg8jF++dc3hLn1lLukp0+739BMYBxl/7bPKobBQ0fYD9+II3RJB1k
-         CzhsSL7A+C+f7Edu2dafQsIFyU/6kt+dHFKv2SJ0=
-Date:   Thu, 15 Aug 2019 22:42:21 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        torvalds@linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/91] 4.19.67-stable review
-Message-ID: <20190815204221.GA6782@kroah.com>
-References: <20190814165748.991235624@linuxfoundation.org>
- <aa683926-3df0-6f60-841a-7ea5a5e3566d@roeck-us.net>
- <CAEUSe78A6Cvt2irKzysfRSHubVxDaEGUVaLf2UF5EHzTeiOVOw@mail.gmail.com>
- <20190815193716.GG30437@kroah.com>
- <20190815202004.GA1192@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190815202004.GA1192@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Thu, 15 Aug 2019 16:42:34 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:49960 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728898AbfHOUme (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 16:42:34 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id DA67C1401C513;
+        Thu, 15 Aug 2019 13:42:32 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 13:42:30 -0700 (PDT)
+Message-Id: <20190815.134230.1028411309377288636.davem@davemloft.net>
+To:     wenwen@cs.uga.edu
+Cc:     rfontana@redhat.com, allison@lohutok.net, alexios.zavras@intel.com,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: pch_gbe: Fix memory leaks
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <CAAa=b7ft-crBJm+H9U7Bn2dcgfjQsE8o53p2ryBWK3seQoF3Cg@mail.gmail.com>
+References: <1565746427-5366-1-git-send-email-wenwen@cs.uga.edu>
+        <20190815.123430.831231953098536795.davem@davemloft.net>
+        <CAAa=b7ft-crBJm+H9U7Bn2dcgfjQsE8o53p2ryBWK3seQoF3Cg@mail.gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 15 Aug 2019 13:42:33 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 01:20:04PM -0700, Guenter Roeck wrote:
-> On Thu, Aug 15, 2019 at 09:37:16PM +0200, Greg Kroah-Hartman wrote:
-> > On Thu, Aug 15, 2019 at 08:58:55AM -0500, Daniel Díaz wrote:
-> > > Hello!
-> > > 
-> > > On Thu, 15 Aug 2019 at 08:29, Guenter Roeck <linux@roeck-us.net> wrote:
-> > > >
-> > > > On 8/14/19 10:00 AM, Greg Kroah-Hartman wrote:
-> > > > > This is the start of the stable review cycle for the 4.19.67 release.
-> > > > > There are 91 patches in this series, all will be posted as a response
-> > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > let me know.
-> > > > >
-> > > > > Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
-> > > > > Anything received after that time might be too late.
-> > > > >
-> > > >
-> > > > Building x86_64:tools/perf ... failed
-> > > > --------------
-> > > > Error log:
-> > > > Warning: arch/x86/include/asm/cpufeatures.h differs from kernel
-> > > > Warning: arch/x86/include/uapi/asm/kvm.h differs from kernel
-> > > >    PERF_VERSION = 4.9.189.ge000f87
-> > > > util/machine.c: In function ‘machine__create_module’:
-> > > > util/machine.c:1088:43: error: ‘size’ undeclared (first use in this function); did you mean ‘die’?
-> > > >    if (arch__fix_module_text_start(&start, &size, name) < 0)
-> > > >                                             ^~~~
-> > > >                                             die
-> > > > util/machine.c:1088:43: note: each undeclared identifier is reported only once for each function it appears in
-> > > 
-> > > We noticed this exact failure but not on 4.19. For us, 4.19's perf builds fine.
-> > > 
-> > > On 4.9, perf failed with the error you described, as it looks like
-> > > it's missing 9ad4652b66f1 ("perf record: Fix wrong size in
-> > > perf_record_mmap for last kernel module"), though I have not verified
-> > > yet.
-> > 
-> > I've queued that up now, and will push out the 4.9-rc tree, so let's see
-> > if that fixes it or not.
-> > 
-> I think you may have pushed the 4.19 branch. Sorry for the confusion
-> I caused by attributing the problem to the wrong branch.
+From: Wenwen Wang <wenwen@cs.uga.edu>
+Date: Thu, 15 Aug 2019 16:03:39 -0400
 
-Ah, I did, good catch.  I've pushed the 4.9 one now.  At least I applied
-the patch to the correct branch :)
+> On Thu, Aug 15, 2019 at 3:34 PM David Miller <davem@davemloft.net> wrote:
+>>
+>> From: Wenwen Wang <wenwen@cs.uga.edu>
+>> Date: Tue, 13 Aug 2019 20:33:45 -0500
+>>
+>> > In pch_gbe_set_ringparam(), if netif_running() returns false, 'tx_old' and
+>> > 'rx_old' are not deallocated, leading to memory leaks. To fix this issue,
+>> > move the free statements after the if branch.
+>> >
+>> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+>>
+>> Why would they be "deallocated"?  They are still assigned to
+>> adapter->tx_ring and adapter->rx_ring.
+> 
+> 'adapter->tx_ring' and 'adapter->rx_ring' has been covered by newly
+> allocated 'txdr' and 'rxdr' respectively before this if statement.
 
-thanks,
-
-greg k-h
+That only happens inside of the if() statement, that's why rx_old and
+tx_old are only freed in that code path.
