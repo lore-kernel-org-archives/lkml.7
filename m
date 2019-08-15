@@ -2,81 +2,76 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF678C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A05C3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4AD1206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23304206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565885306;
+	bh=vSk1b8p8CN/xt3ceJ3QVyQ27kuR0ZWUAKF9gUzpXsiw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zTnMC81g5gIiZs9RZGzzDZUd4CC9Sl09MCkxNoBmNM6+vn+eLnCgEGBU0k6ixc3OE
+	 Wbpv3U8DOurV8hioZ6qllmOY5qu64/jkS7ETSo9FLKQ6hNlQ7N0raDkw2X8DO7FDN/
+	 x4S8mchqBxYkZqrZcOYxBATWvblh54/nxqNAwWuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730612AbfHOQHH (ORCPT
+        id S1729464AbfHOQIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:07:07 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:59356 "EHLO ale.deltatee.com"
+        Thu, 15 Aug 2019 12:08:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbfHOQHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:07:07 -0400
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hyIHB-0001BN-TF; Thu, 15 Aug 2019 10:06:58 -0600
-To:     Max Gurtovoy <maxg@mellanox.com>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190801234514.7941-1-logang@deltatee.com>
- <20190801234514.7941-9-logang@deltatee.com>
- <05a74e81-1dbd-725f-1369-5ca5c5918db1@mellanox.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <a6b9db95-a7f0-d1f6-1fa2-8dc13a6aa29e@deltatee.com>
-Date:   Thu, 15 Aug 2019 10:06:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726545AbfHOQIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 12:08:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 630C920644;
+        Thu, 15 Aug 2019 16:08:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565885303;
+        bh=vSk1b8p8CN/xt3ceJ3QVyQ27kuR0ZWUAKF9gUzpXsiw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hsFdBaTdcEF2qtOfvApSmCWRes1LPq20CTI+NlZ/pZf/ynfOCCTkcytYIKNWpZiOO
+         eUjB2UVxOLQQl2KTLu0aMfZspS+YNLVpO1aTwyzENv6xJgM/7POMrWLCHjeuGOO/BI
+         kqb+3XaXuwxet8apsIWwMttAbFO8/kJ9YjpRd1Bk=
+Date:   Thu, 15 Aug 2019 18:08:21 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        bodong@mellanox.com, ddutile@redhat.com
+Subject: Re: [PATCH v3 0/4] PCI: Clean up pci-sysfs.c
+Message-ID: <20190815160821.GA12911@kroah.com>
+References: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+ <20190815153352.86143-1-skunberg.kelsey@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <05a74e81-1dbd-725f-1369-5ca5c5918db1@mellanox.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, hch@lst.de, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, maxg@mellanox.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v7 08/14] nvmet-core: allow one host per passthru-ctrl
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815153352.86143-1-skunberg.kelsey@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-08-15 6:36 a.m., Max Gurtovoy wrote:
+On Thu, Aug 15, 2019 at 09:33:49AM -0600, Kelsey Skunberg wrote:
+> This series is designed to clean up device attributes and permissions in
+> pci-sysfs.c. Then move the sysfs SR-IOV functions from pci-sysfs.c to
+> iov.c for better organization.
 > 
-> On 8/2/2019 2:45 AM, Logan Gunthorpe wrote:
->> This patch rejects any new connection to the passthru-ctrl if this
->> controller is already connected to a different host. At the time of
->> allocating the controller we check if the subsys associated with
->> the passthru ctrl is already connected to a host and reject it
->> if the hostnqn differs.
+> Patch 1: Define device attributes with DEVICE_ATTR* instead of __ATTR*.
 > 
-> This is a big limitation.
+> Patch 2: Change permissions from symbolic to the preferred octal.
 > 
-> Are we plan to enable many front-end ctrl's to connect to the single
-> back-end ctrl in the future ?
+> Patch 3: Change DEVICE_ATTR() with 0220 permissions to DEVICE_ATTR_WO().
+> 
+> Patch 4: Move sysfs SR-IOV functions to iov.c to keep the feature's code
+> together.
 
-Honestly, I don't know that it's really necessary, but the limitation
-was requested by Sagi the first time this patch-set was submitted[1]
-citing unspecified user troubles. If there's consensus to remove the
-restriction I certainly can.
-
-Logan
-
-[1] http://lists.infradead.org/pipermail/linux-nvme/2018-April/016588.html
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
