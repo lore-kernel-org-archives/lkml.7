@@ -2,97 +2,125 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0FFC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCE2C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4146820578
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:22:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="HZpXjn+w"
+	by mail.kernel.org (Postfix) with ESMTP id 289C920578
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732238AbfHORWO (ORCPT
+        id S1732240AbfHORW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:22:14 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35510 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731530AbfHORWN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:22:13 -0400
-Received: by mail-qt1-f194.google.com with SMTP id u34so3150145qte.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:22:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OQP1eUr9wWUBvltOQ9Z8Ub62tAaopiVDYE144Am9PUo=;
-        b=HZpXjn+wNo0sYnP8fO/9yi9VvMIl2O1vBqS8Gie0c3FRn6sQcTfP9It56G6JplB5nu
-         6VownGa1B8OF7b8irbXNCSR+PzKi7JmcuM4CQfuPlRxhfFejaHkab6ZOdE3AoI32m0ym
-         9kJ/FcPddnqe494h+5mJIqpN8bMFl29a2XjmzcKwArH2JCGXbQ9IqvTODG3SBiXDo6OK
-         yCF3is3A5wQj8iInyzHqtNlF6mJXcwZY3WY1cZAnr4RFS8A7douZtCnwhELnMFfM1jlj
-         QwAOY9+OGQNin1iSiarC/jXnwc6Mrf+qPsKiJHOkejdQmAIyz9D1rE115khKlpbX0f0O
-         kg7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OQP1eUr9wWUBvltOQ9Z8Ub62tAaopiVDYE144Am9PUo=;
-        b=glyyxno/qr/rJL4Cx3P7d1tnbqdm0bu/cftYg2LDn/O20bnQrIAqdG9XTpmCL1d+uY
-         G4z1zhhaZI4ioUGc8AlePxMKBieNecTC5Q9PO4BpP/Ge8YrYEN7Omk2OkGQsK8MsiOVD
-         T8QTIYIKI8c4cSXxQxfMd9MBk0uOlrcKecGuTq9WQSICcAxKpqFKG/1AOvsJ94aBy1H2
-         RlN/bhKnTXIj9Cef1OdqoPv5GBoec0sJGyjDIha5Bnc1K4WT5dkMhuRPbVWHM7ERgmZQ
-         mBqDd5LubPno/c1Vmig43Fmwbj+N0eyI4TC5EtIfRr/sM28xXtSMZGC+Qfr02FcEInzE
-         pcFg==
-X-Gm-Message-State: APjAAAUdbLylRGgAjlbRyWV78L9ZkHSDPbHiw+4jm3Y9Dm5Et6tUKe0h
-        smK6BhjpkKGitf2tEAvJAM/0z6/k6j7JJQ==
-X-Google-Smtp-Source: APXvYqytVj4F93Lz8NG25cUqyDAsrQnJhJ3dX1TYfOQ21CEln44s8gEqzzxOvwnd/uQdneR7JttTRQ==
-X-Received: by 2002:a02:5105:: with SMTP id s5mr6163824jaa.42.1565889730912;
-        Thu, 15 Aug 2019 10:22:10 -0700 (PDT)
-Received: from [192.168.1.50] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id f9sm4511731ioc.47.2019.08.15.10.22.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 10:22:10 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: fix manual setup of iov_iter for fixed buffers
-To:     Aleix Roca Nonell <aleix.rocanonell@bsc.es>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Thu, 15 Aug 2019 13:22:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35180 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731059AbfHORWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 13:22:25 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6EBA730832E1;
+        Thu, 15 Aug 2019 17:22:25 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 643C55C219;
+        Thu, 15 Aug 2019 17:22:24 +0000 (UTC)
+Date:   Thu, 15 Aug 2019 13:22:22 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Jan Kara <jack@suse.cz>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
         linux-kernel@vger.kernel.org
-References: <20190815120322.GA19630@rocks>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ab327769-f18d-61d4-1c71-fb7ad60bb53d@kernel.dk>
-Date:   Thu, 15 Aug 2019 11:22:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: Re: [PATCH 2/3] mm/migrate: see hole as invalid source page
+Message-ID: <20190815172222.GD30916@redhat.com>
+References: <1565078411-27082-1-git-send-email-kernelfans@gmail.com>
+ <1565078411-27082-2-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190815120322.GA19630@rocks>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1565078411-27082-2-git-send-email-kernelfans@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 15 Aug 2019 17:22:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/15/19 6:03 AM, Aleix Roca Nonell wrote:
-> Commit bd11b3a391e3 ("io_uring: don't use iov_iter_advance() for fixed
-> buffers") introduced an optimization to avoid using the slow
-> iov_iter_advance by manually populating the iov_iter iterator in some
-> cases.
+On Tue, Aug 06, 2019 at 04:00:10PM +0800, Pingfan Liu wrote:
+> MIGRATE_PFN_MIGRATE marks a valid pfn, further more, suitable to migrate.
+> As for hole, there is no valid pfn, not to mention migration.
 > 
-> However, the computation of the iterator count field was erroneous: The
-> first bvec was always accounted for an extent of page size even if the
-> bvec length was smaller.
+> Before this patch, hole has already relied on the following code to be
+> filtered out. Hence it is more reasonable to see hole as invalid source
+> page.
+> migrate_vma_prepare()
+> {
+> 		struct page *page = migrate_pfn_to_page(migrate->src[i]);
 > 
-> In consequence, some I/O operations on fixed buffers were unable to
-> operate on the full extent of the buffer, consistently skipping some
-> bytes at the end of it.
+> 		if (!page || (migrate->src[i] & MIGRATE_PFN_MIGRATE))
+> 		     \_ this condition
+> }
 
-Applied, thanks.
+NAK you break the API, MIGRATE_PFN_MIGRATE is use for 2 things,
+first it allow the collection code to mark entry that can be
+migrated, then it use by driver to allow driver to skip migration
+for some entry (for whatever reason the driver might have), we
+still need to keep the entry and not clear it so that we can
+cleanup thing (ie remove migration pte entry).
 
--- 
-Jens Axboe
-
+> 
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> Cc: Andrea Arcangeli <aarcange@redhat.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> To: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  mm/migrate.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index c2ec614..832483f 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -2136,10 +2136,9 @@ static int migrate_vma_collect_hole(unsigned long start,
+>  	unsigned long addr;
+>  
+>  	for (addr = start & PAGE_MASK; addr < end; addr += PAGE_SIZE) {
+> -		migrate->src[migrate->npages] = MIGRATE_PFN_MIGRATE;
+> +		migrate->src[migrate->npages] = 0;
+>  		migrate->dst[migrate->npages] = 0;
+>  		migrate->npages++;
+> -		migrate->cpages++;
+>  	}
+>  
+>  	return 0;
+> @@ -2228,8 +2227,7 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
+>  		pfn = pte_pfn(pte);
+>  
+>  		if (pte_none(pte)) {
+> -			mpfn = MIGRATE_PFN_MIGRATE;
+> -			migrate->cpages++;
+> +			mpfn = 0;
+>  			goto next;
+>  		}
+>  
+> -- 
+> 2.7.5
+> 
