@@ -6,34 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B0DC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D122C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F9421783
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D48821783
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 11:05:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731573AbfHOLFM (ORCPT
+        id S1731583AbfHOLFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 07:05:12 -0400
+        Thu, 15 Aug 2019 07:05:17 -0400
 Received: from relmlor1.renesas.com ([210.160.252.171]:24976 "EHLO
         relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727814AbfHOLFL (ORCPT
+        by vger.kernel.org with ESMTP id S1727814AbfHOLFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 07:05:11 -0400
+        Thu, 15 Aug 2019 07:05:16 -0400
 X-IronPort-AV: E=Sophos;i="5.64,388,1559487600"; 
-   d="scan'208";a="24088303"
+   d="scan'208";a="24088309"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 15 Aug 2019 20:05:09 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 15 Aug 2019 20:05:15 +0900
 Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id B1BF1417763E;
-        Thu, 15 Aug 2019 20:05:04 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id F1625417763E;
+        Thu, 15 Aug 2019 20:05:09 +0900 (JST)
 From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Sean Paul <sean@poorly.run>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>
 Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Simon Horman <horms@verge.net.au>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -42,9 +45,9 @@ Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
         linux-renesas-soc@vger.kernel.org,
         Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
         Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 4/9] drm/timings: Add link flags
-Date:   Thu, 15 Aug 2019 12:04:28 +0100
-Message-Id: <1565867073-24746-5-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v2 5/9] drm/panel: Add timings field to drm_panel
+Date:   Thu, 15 Aug 2019 12:04:29 +0100
+Message-Id: <1565867073-24746-6-git-send-email-fabrizio.castro@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
@@ -53,8 +56,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need more information to describe dual-LVDS links, therefore
-introduce link_flags.
+We need to know if the panel supports dual-link, similarly
+to bridges, therefore add a reference to drm_timings in
+drm_panel.
 
 Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
@@ -62,58 +66,37 @@ Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 v1->v2:
 * new patch
 
- include/drm/drm_timings.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ include/drm/drm_panel.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/drm/drm_timings.h b/include/drm/drm_timings.h
-index 4af8814..58fbf1b 100644
---- a/include/drm/drm_timings.h
-+++ b/include/drm/drm_timings.h
-@@ -1,4 +1,6 @@
- /*
-+ * Copyright (C) 2019 Renesas Electronics Corporation
-+ *
-  * Permission to use, copy, modify, distribute, and sell this software and its
-  * documentation for any purpose is hereby granted without fee, provided that
-  * the above copyright notice appear in all copies and that both that copyright
-@@ -21,6 +23,24 @@
- #ifndef __DRM_TIMINGS_H__
- #define __DRM_TIMINGS_H__
+diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
+index 8c738c0..cd6ff07 100644
+--- a/include/drm/drm_panel.h
++++ b/include/drm/drm_panel.h
+@@ -26,6 +26,7 @@
  
-+#include <linux/bits.h>
-+
-+/**
-+ * enum drm_link_flags - link_flags for &drm_timings
-+ *
-+ * This enum defines the details of the link.
-+ *
-+ * @DRM_LINK_DUAL_LVDS_ODD_EVEN:	Dual-LVDS link, with odd pixels (1,3,5,
-+ *					etc.) coming through the first port, and
-+ *					even pixels (0,2,4,etc.) coming through
-+ *					the second port. If not specified for a
-+ *					dual-LVDS panel, it is assumed that even
-+ *					pixels are coming through the first port
-+ */
-+enum drm_link_flags {
-+	DRM_LINK_DUAL_LVDS_ODD_EVEN = BIT(0),
-+};
-+
- /**
-  * struct drm_timings - timing information
-  */
-@@ -55,6 +75,12 @@ struct drm_timings {
- 	 * and odd-numbered pixels are received on separate links.
- 	 */
- 	bool dual_link;
-+	/**
-+	 * @link_flags
-+	 *
-+	 * Provides detailed information about the link.
-+	 */
-+	enum drm_link_flags link_flags;
- };
+ #include <linux/errno.h>
+ #include <linux/list.h>
++#include <drm/drm_timings.h>
  
- #endif /* __DRM_TIMINGS_H__ */
+ struct device_node;
+ struct drm_connector;
+@@ -81,6 +82,7 @@ struct drm_panel_funcs {
+  * struct drm_panel - DRM panel object
+  * @drm: DRM device owning the panel
+  * @connector: DRM connector that the panel is attached to
++ * @timings: timing information
+  * @dev: parent device of the panel
+  * @link: link from panel device (supplier) to DRM device (consumer)
+  * @funcs: operations that can be performed on the panel
+@@ -89,6 +91,7 @@ struct drm_panel_funcs {
+ struct drm_panel {
+ 	struct drm_device *drm;
+ 	struct drm_connector *connector;
++	const struct drm_timings *timings;
+ 	struct device *dev;
+ 
+ 	const struct drm_panel_funcs *funcs;
 -- 
 2.7.4
 
