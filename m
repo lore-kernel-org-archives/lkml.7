@@ -2,107 +2,61 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E72C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A9FC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA81F208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7658C208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 10:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731112AbfHOKkK (ORCPT
+        id S1731122AbfHOKmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 06:40:10 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:55624 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbfHOKkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 06:40:09 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 57AF22002B0;
-        Thu, 15 Aug 2019 12:40:07 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4AF3B2000B8;
-        Thu, 15 Aug 2019 12:40:02 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C0B90402EC;
-        Thu, 15 Aug 2019 18:39:55 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH v3] arm64: dts: ls1088a: fix gpio node
-Date:   Thu, 15 Aug 2019 18:30:16 +0800
-Message-Id: <20190815103016.23125-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 15 Aug 2019 06:42:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51988 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726027AbfHOKmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 06:42:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1EE1DADCB;
+        Thu, 15 Aug 2019 10:42:03 +0000 (UTC)
+Message-ID: <1565865720.5780.3.camel@suse.com>
+Subject: Re: [PATCH] net: usbnet: fix a memory leak bug
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:USB NETWORKING DRIVERS" <linux-usb@vger.kernel.org>,
+        "open list:USB USBNET DRIVER FRAMEWORK" <netdev@vger.kernel.org>
+Date:   Thu, 15 Aug 2019 12:42:00 +0200
+In-Reply-To: <1565804493-7758-1-git-send-email-wenwen@cs.uga.edu>
+References: <1565804493-7758-1-git-send-email-wenwen@cs.uga.edu>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+Am Mittwoch, den 14.08.2019, 12:41 -0500 schrieb Wenwen Wang:
+> In usbnet_start_xmit(), 'urb->sg' is allocated through kmalloc_array() by
+> invoking build_dma_sg(). Later on, if 'CONFIG_PM' is defined and the if
+> branch is taken, the execution will go to the label 'deferred'. However,
+> 'urb->sg' is not deallocated on this execution path, leading to a memory
+> leak bug.
 
-Update the nodes to include little-endian
-property to be consistent with the hardware
-and add ls1088a gpio specify compatible.
+Just to make this clear:
 
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
-Changes in v3:
-	- delete the attribute of little-endian.
-Changes in v2:
-	- update the subject.
-	
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+NACK
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index dfbead4..ff669c8 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -269,7 +269,7 @@
- 		};
- 
- 		gpio0: gpio@2300000 {
--			compatible = "fsl,qoriq-gpio";
-+			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
- 			reg = <0x0 0x2300000 0x0 0x10000>;
- 			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
- 			little-endian;
-@@ -280,7 +280,7 @@
- 		};
- 
- 		gpio1: gpio@2310000 {
--			compatible = "fsl,qoriq-gpio";
-+			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
- 			reg = <0x0 0x2310000 0x0 0x10000>;
- 			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
- 			little-endian;
-@@ -291,7 +291,7 @@
- 		};
- 
- 		gpio2: gpio@2320000 {
--			compatible = "fsl,qoriq-gpio";
-+			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
- 			reg = <0x0 0x2320000 0x0 0x10000>;
- 			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
- 			little-endian;
-@@ -302,7 +302,7 @@
- 		};
- 
- 		gpio3: gpio@2330000 {
--			compatible = "fsl,qoriq-gpio";
-+			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
- 			reg = <0x0 0x2330000 0x0 0x10000>;
- 			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
- 			little-endian;
--- 
-2.9.5
+For the reason Jack explained. Deferral is not a failure.
+
+	Regards
+		Oliver
 
