@@ -2,124 +2,112 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF364C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F380BC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 908F82086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:06:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565906782;
-	bh=JRVBU2lBRgwV3098fyFCphIm9jw8AlXvgcZJOCDaySw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KtyAjYtOBM58cArxpuVLPyCUkbw3/dMfUX4CaDxAlsM2mhFotlKrw3BjrMoLCjmOD
-	 UqTBaNFN0jdNdI2vUPH61DRvVnsr8NM7CFZK9vSoEvnKuhbFPJIiHAZ78rBJzwC5qD
-	 qygqxrodJxZPYIrUY6ULmR0guiyK9eme16DXSzRk=
+	by mail.kernel.org (Postfix) with ESMTP id C35AD2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:06:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e1BFTcjW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732875AbfHOWGV (ORCPT
+        id S1733275AbfHOWGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 15 Aug 2019 18:06:22 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49750 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731599AbfHOWGV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 15 Aug 2019 18:06:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731709AbfHOWGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 18:06:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C08AB2084D;
-        Thu, 15 Aug 2019 22:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565906780;
-        bh=JRVBU2lBRgwV3098fyFCphIm9jw8AlXvgcZJOCDaySw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WRFhSz7rboh0PyCNEGSUGrjtBQe6rmL3TEZpkQXBlnXiscba2F5wlIJI9LA87uRVo
-         xCJ+srrdn4AyhfK2B2hX2owi2A9TN4R6z3xZWye9OoH+eLKXKG6/e7HS0VbrTF4JLQ
-         N+8goAx9PP0Tc2tvGu5aVmmga/0qDl1nVMyBdoKE=
-Date:   Fri, 16 Aug 2019 00:06:18 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        torvalds@linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/91] 4.19.67-stable review
-Message-ID: <20190815220618.GA22860@kroah.com>
-References: <20190814165748.991235624@linuxfoundation.org>
- <aa683926-3df0-6f60-841a-7ea5a5e3566d@roeck-us.net>
- <CAEUSe78A6Cvt2irKzysfRSHubVxDaEGUVaLf2UF5EHzTeiOVOw@mail.gmail.com>
- <20190815193716.GG30437@kroah.com>
- <20190815202004.GA1192@roeck-us.net>
- <20190815204221.GA6782@kroah.com>
- <20190815213205.GA11036@roeck-us.net>
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FM3VCk094140;
+        Thu, 15 Aug 2019 22:06:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=grnXFtqO9q0UoP/PmJExNPh9Y4n2KrY3SsAsTHF9hdY=;
+ b=e1BFTcjW9s3nrydozJKI6md2XYVyun65H0oO0jDGJrvyNC7dJG93jcOF5lsXaq03r+x2
+ hMR0Hs/dseuIkeC6dvOXAZLQTZniyywRZlONE5XdCevEvxomHiQd+Zby3ZNlEurH+WRc
+ vfV2R7UspJsT4pqLRUi/apDu0buDq0AvDg9t4P3q5RcqHxqQ+i9GWs2hzQkL9k/Dkxyp
+ j9jAcLon9xmdLwn9WFOq+UUQXvExqtJ/k67SJEQn/vmj7RgxP+1tKyeH+XX2doR6JYsd
+ XFAsTVuypgtYfqWh5eOkaSwgW3edCaXHOKhoOJhltU6UCWxU4//8S1Fv07J7RDnH0GVB UQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2u9pjqw851-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Aug 2019 22:06:11 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FM3WSk195485;
+        Thu, 15 Aug 2019 22:06:10 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2ucs88drwa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Aug 2019 22:06:10 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7FM68TO019521;
+        Thu, 15 Aug 2019 22:06:08 GMT
+Received: from [10.211.55.26] (/10.211.55.26)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 15 Aug 2019 15:06:08 -0700
+Subject: Re: linux-next: Signed-off-by missing for commits in the net-next
+ tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>, Chris Mason <clm@fb.com>,
+        andy@groveronline.com
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Grover <andy.grover@oracle.com>,
+        Chris Mason <chris.mason@oracle.com>
+References: <20190816075312.64959223@canb.auug.org.au>
+From:   Gerd Rausch <gerd.rausch@oracle.com>
+Message-ID: <8fd20efa-8e3d-eca2-8adf-897428a2f9ad@oracle.com>
+Date:   Thu, 15 Aug 2019 15:06:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190815213205.GA11036@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190816075312.64959223@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908150207
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908150208
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 02:32:05PM -0700, Guenter Roeck wrote:
-> On Thu, Aug 15, 2019 at 10:42:21PM +0200, Greg Kroah-Hartman wrote:
-> > On Thu, Aug 15, 2019 at 01:20:04PM -0700, Guenter Roeck wrote:
-> > > On Thu, Aug 15, 2019 at 09:37:16PM +0200, Greg Kroah-Hartman wrote:
-> > > > On Thu, Aug 15, 2019 at 08:58:55AM -0500, Daniel Díaz wrote:
-> > > > > Hello!
-> > > > > 
-> > > > > On Thu, 15 Aug 2019 at 08:29, Guenter Roeck <linux@roeck-us.net> wrote:
-> > > > > >
-> > > > > > On 8/14/19 10:00 AM, Greg Kroah-Hartman wrote:
-> > > > > > > This is the start of the stable review cycle for the 4.19.67 release.
-> > > > > > > There are 91 patches in this series, all will be posted as a response
-> > > > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > > > let me know.
-> > > > > > >
-> > > > > > > Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
-> > > > > > > Anything received after that time might be too late.
-> > > > > > >
-> > > > > >
-> > > > > > Building x86_64:tools/perf ... failed
-> > > > > > --------------
-> > > > > > Error log:
-> > > > > > Warning: arch/x86/include/asm/cpufeatures.h differs from kernel
-> > > > > > Warning: arch/x86/include/uapi/asm/kvm.h differs from kernel
-> > > > > >    PERF_VERSION = 4.9.189.ge000f87
-> > > > > > util/machine.c: In function ‘machine__create_module’:
-> > > > > > util/machine.c:1088:43: error: ‘size’ undeclared (first use in this function); did you mean ‘die’?
-> > > > > >    if (arch__fix_module_text_start(&start, &size, name) < 0)
-> > > > > >                                             ^~~~
-> > > > > >                                             die
-> > > > > > util/machine.c:1088:43: note: each undeclared identifier is reported only once for each function it appears in
-> > > > > 
-> > > > > We noticed this exact failure but not on 4.19. For us, 4.19's perf builds fine.
-> > > > > 
-> > > > > On 4.9, perf failed with the error you described, as it looks like
-> > > > > it's missing 9ad4652b66f1 ("perf record: Fix wrong size in
-> > > > > perf_record_mmap for last kernel module"), though I have not verified
-> > > > > yet.
-> > > > 
-> > > > I've queued that up now, and will push out the 4.9-rc tree, so let's see
-> > > > if that fixes it or not.
-> > > > 
-> > > I think you may have pushed the 4.19 branch. Sorry for the confusion
-> > > I caused by attributing the problem to the wrong branch.
-> > 
-> > Ah, I did, good catch.  I've pushed the 4.9 one now.  At least I applied
-> > the patch to the correct branch :)
-> > 
+Hi,
+
+Just added the e-mail addresses I found using a simple "google search",
+in order to reach out to the original authors of these commits:
+Chris Mason and Andy Grover.
+
+I'm hoping they still remember their work from 7-8 years ago.
+
+Thanks,
+
+  Gerd
+
+On 15/08/2019 14.53, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Confirmed fixed with v4.9.189-42-g9a2a343109e5.
-
-Great, thanks for testing and letting me know.
-
-greg k-h
+> Commits
+> 
+>   11740ef44829 ("rds: check for excessive looping in rds_send_xmit")
+>   65dedd7fe1f2 ("RDS: limit the number of times we loop in rds_send_xmit")
+> 
+> are missing a Signed-off-by from their authors.
+> 
