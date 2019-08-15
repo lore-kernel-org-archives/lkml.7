@@ -2,102 +2,131 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B632CC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84123C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6ED2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55B002084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 13:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hqgm8+Kb"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="RUm+7Lht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732256AbfHON3n (ORCPT
+        id S1732271AbfHONa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 09:29:43 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38941 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729918AbfHON3n (ORCPT
+        Thu, 15 Aug 2019 09:30:58 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:45926 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730304AbfHONa5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 09:29:43 -0400
-Received: by mail-pl1-f195.google.com with SMTP id z3so1084021pln.6;
-        Thu, 15 Aug 2019 06:29:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=n6xoY9oGmqvarrfQtZv0gq7sMsQniSFkWh+TJOqFkAU=;
-        b=Hqgm8+Kb04MyxWrGXkRWRw3wyEXUqcz1eTXDhGZy5b19rFbuR6hV6z4Z/txlIOQQ57
-         QQUE6W1fN1YuxhUt08BPUvg7/HgnLTDWbvLJJw3BCfvdSlXvBtdqMvfEBdi+vtM2oJjJ
-         YgYfy26B1zH50OBb96UnUZ2J80qjeNeo21q3C5nNjpf2IuY+aILTTwryCJqJdZ54YGCG
-         DvrZLhNYhvFUQIXnIJfHrjckuLZUswJnrIZE+0pgl3b8VoROq4ZrzRSuUHrdY+Zs3qE3
-         4kSTuunQfO0TaZIt5LM0h79bxHnE9gPZ2iQZYbhofaTe+L7MRrlWZm7oG0m3kO+DSrQ5
-         vjVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=n6xoY9oGmqvarrfQtZv0gq7sMsQniSFkWh+TJOqFkAU=;
-        b=rYcDyNx+m1KuAApeiLF0Kjoq0Gz8vh78TFrFWhNvPB4cKPhxyL5FWRIKLD3PFa9wGQ
-         tzAtur5cMsTGZInPXy/G7ZcW12weeNpRgC9bzuzC8n99uiaD4LMHMO9NUTHpsys2/Fav
-         5bqmRDNTn00l2dJ89pF+7t1def17EFEe+h7XMMAvpZnoj9lxzcWkNqd1ACoN0NyTJDPO
-         THA+yntN4PuwOe85X1Jco6D81AHuxFcuVP5xaQTLwBLdiecBji5zchhkJlXQHtU3xh4S
-         8fqGtPMwy24ISnfENx4LjkuuPxm9EYRFFDoEp5VkryCigO/ChaIkG0cUl/6CKCgveOOX
-         tYpQ==
-X-Gm-Message-State: APjAAAVXoM+CZjE/h1vA87TBFgn7sRgA8zIrBkZFWyFBYYqtYkEjJ24H
-        9tCR1BDwlCAiQvndC5WSQCahq7RK
-X-Google-Smtp-Source: APXvYqzIplY35y3Se1HTUS2ybmIQXvy4mBtj7vxUm4R/7bqjBVL+BH1PAizW72ovulmcP0ehhaL6Dg==
-X-Received: by 2002:a17:902:8a87:: with SMTP id p7mr4346149plo.124.1565875782488;
-        Thu, 15 Aug 2019 06:29:42 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r23sm3164020pfg.10.2019.08.15.06.29.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 06:29:40 -0700 (PDT)
-Subject: Re: [PATCH 4.19 00/91] 4.19.67-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190814165748.991235624@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <aa683926-3df0-6f60-841a-7ea5a5e3566d@roeck-us.net>
-Date:   Thu, 15 Aug 2019 06:29:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 15 Aug 2019 09:30:57 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 098F92AF;
+        Thu, 15 Aug 2019 15:30:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1565875855;
+        bh=oEGS/F9TsobJYhQR4dkRtTsgMLOO7VkPub64ct7EeRk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RUm+7Lhtsj+xA8IzGITIPGzI7HFNL822Vn8HFMW7I2T1V6Qc5Xl6v/zy3GzftG+Br
+         qCjEYmiCfeUK6WEKpaQNtx+52/EUAoSPHngiKB7afFhHF/bwhW5qTZvxdvbIM+UBRA
+         IJx81qsyDluQ1Resw+3axW8H7RNs6bTQ/BpYGfsc=
+Date:   Thu, 15 Aug 2019 16:30:51 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
+        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com
+Subject: Re: [PATCH v8 01/14] media: videodev2.h, v4l2-ioctl: add rkisp1 meta
+ buffer format
+Message-ID: <20190815133051.GT5011@pendragon.ideasonboard.com>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-2-helen.koike@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20190814165748.991235624@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190730184256.30338-2-helen.koike@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/19 10:00 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.67 release.
-> There are 91 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
-> Anything received after that time might be too late.
-> 
+Hi Helen,
 
-Building x86_64:tools/perf ... failed
---------------
-Error log:
-Warning: arch/x86/include/asm/cpufeatures.h differs from kernel
-Warning: arch/x86/include/uapi/asm/kvm.h differs from kernel
-   PERF_VERSION = 4.9.189.ge000f87
-util/machine.c: In function ‘machine__create_module’:
-util/machine.c:1088:43: error: ‘size’ undeclared (first use in this function); did you mean ‘die’?
-   if (arch__fix_module_text_start(&start, &size, name) < 0)
-                                            ^~~~
-                                            die
-util/machine.c:1088:43: note: each undeclared identifier is reported only once for each function it appears in
+Thank you for the patch.
+
+On Tue, Jul 30, 2019 at 03:42:43PM -0300, Helen Koike wrote:
+> From: Shunqian Zheng <zhengsq@rock-chips.com>
+> 
+> Add the Rockchip ISP1 specific processing parameter format
+> V4L2_META_FMT_RK_ISP1_PARAMS and metadata format
+> V4L2_META_FMT_RK_ISP1_STAT_3A for 3A.
+
+I don't like V4L2_META_FMT_RK_ISP1_PARAMS much, as the parameters are
+not passed to the hardware through a buffer, but instead written to
+registers by the kernel driver. This is an area where V4L2 controls are
+traditionally used. I do however understand that it's easier for driver
+authors to pass a large set of controls this way when they have to be
+applied atomically, but it's clearly a hack in my opinion. I won't
+oppose to it though, as I know there's no way we can support this kind
+of feature in V4L2 at the moment without an extensive amount of work, so
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
+> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> [update for upstream]
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> 
+> ---
+> 
+> Changes in v8: None
+> Changes in v7:
+> - s/IPU3/RK_ISP1
+> 
+>  drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
+>  include/uapi/linux/videodev2.h       | 4 ++++
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> index bb5b4926538a..2df20801a299 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -1330,6 +1330,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+>  	case V4L2_META_FMT_VSP1_HGT:	descr = "R-Car VSP1 2-D Histogram"; break;
+>  	case V4L2_META_FMT_UVC:		descr = "UVC Payload Header Metadata"; break;
+>  	case V4L2_META_FMT_D4XX:	descr = "Intel D4xx UVC Metadata"; break;
+> +	case V4L2_META_FMT_RK_ISP1_PARAMS:	descr = "Rockchip ISP1 3A params"; break;
+> +	case V4L2_META_FMT_RK_ISP1_STAT_3A:	descr = "Rockchip ISP1 3A statistics"; break;
+>  
+>  	default:
+>  		/* Compressed formats */
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 2427bc4d8eba..ae1e375a10d7 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -756,6 +756,10 @@ struct v4l2_pix_format {
+>  #define V4L2_META_FMT_UVC         v4l2_fourcc('U', 'V', 'C', 'H') /* UVC Payload Header metadata */
+>  #define V4L2_META_FMT_D4XX        v4l2_fourcc('D', '4', 'X', 'X') /* D4XX Payload Header metadata */
+>  
+> +/* Vendor specific - used for RK_ISP1 camera sub-system */
+> +#define V4L2_META_FMT_RK_ISP1_PARAMS	v4l2_fourcc('R', 'K', '1', 'P') /* Rockchip ISP1 params */
+> +#define V4L2_META_FMT_RK_ISP1_STAT_3A	v4l2_fourcc('R', 'K', '1', 'S') /* Rockchip ISP1 3A statistics */
+> +
+>  /* priv field value to indicates that subsequent fields are valid. */
+>  #define V4L2_PIX_FMT_PRIV_MAGIC		0xfeedcafe
+>  
+
+-- 
+Regards,
+
+Laurent Pinchart
