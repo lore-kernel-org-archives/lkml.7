@@ -2,94 +2,72 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E556C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F64CC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA7620644
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4AC2086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 22:12:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GlWiNQ+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731052AbfHOWMH (ORCPT
+        id S1731451AbfHOWMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 18:12:07 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34998 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbfHOWMH (ORCPT
+        Thu, 15 Aug 2019 18:12:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:32982 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbfHOWMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 18:12:07 -0400
-Received: by mail-wr1-f68.google.com with SMTP id k2so3567130wrq.2;
-        Thu, 15 Aug 2019 15:12:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2VSiIUxKNFkiB9+c2R7u/EHBxMEOJ5mWiAVsv2Kr2Ss=;
-        b=rTGOAv3m5luaq1ehyRbEBi86OwaDKnQJHxNxdriJPiKL8f+I/Xpy3GV8kwLthHOs7d
-         BZgsnEkETL4p4sJMg2JziTz9+d8Z9Yku2PzB5233Gs63D192b7JFEVH/lIrUIk98HTRg
-         fmDywUwWIDm035RYzUAESEyyeO+SnDiUWR2XPeP990bYnUvlqGzY7qtN0oTzeLDWXstP
-         Gn8bdvX/bCxFlP5NNT0gtLQimum0Se7r2xp2paWVcWw8YzjtrSsaijE1ZWpRO+gFii/a
-         TppOIF3UGEZphCq1HU9y7UFImyf7LNbUhNgmYvJz6igD78B6zhY3UI6rU/vm24GGhbYa
-         nf6A==
-X-Gm-Message-State: APjAAAUT+Bv7yGfJe03E35bFLtJTRu4WYH51PN1z+7KTJ3RddioCvsNJ
-        dT/xzRgaxGN6E/ya8nd/BlTONcTW
-X-Google-Smtp-Source: APXvYqzGC77fYDK9g8cZlzwrtM9BXuO3SFsvZ/94xoIb+aLGXYv3+AJ8L4V7boO03nAosNmMzRnbrw==
-X-Received: by 2002:adf:fe08:: with SMTP id n8mr7111830wrr.60.1565907125380;
-        Thu, 15 Aug 2019 15:12:05 -0700 (PDT)
-Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id h97sm10652662wrh.74.2019.08.15.15.12.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 15:12:04 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
-        linux-kernel@vger.kernel.org, Denis Kenzior <denkenz@gmail.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org
-Subject: [RESEND PATCH] MAINTAINERS: keys: Update path to trusted.h
-Date:   Fri, 16 Aug 2019 01:12:00 +0300
-Message-Id: <20190815221200.3465-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190815215712.tho3fdfk43rs45ej@linux.intel.com>
-References: <20190815215712.tho3fdfk43rs45ej@linux.intel.com>
+        Thu, 15 Aug 2019 18:12:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CS1ls6fq54lREgwpnKLgVGit1qnhnnyNRdGhQ3qigkg=; b=GlWiNQ+LLSaNEkZ0BtXZ+duZ7
+        +wAVJ8xYVOA2PT3bcgaKgpvarmXa3aaKlXWhLa17eINI2gLof1x1+CDNfGVXJ8aBbYVxwZDggtDDg
+        hFGXiEnjjev2s03n/ij0hZ94oF6WKYjXcHj3xdIsxga4iiSKqQW91gvhVwvL9E4a5KBiBGpRYBKgG
+        QO6h69iijBSguBdWVGTFDyRLioWNjiQzKewAsDRnrh1ZW2VMIa6J3Trfs1C10z4KlxlJODYiztaZt
+        grtia0YECRIdf2kYntNWkXqlNOFH1pg0v4uHfWxy8hDmTYJDGWy4iI3Y64gDPY52PzRvBLc+egKra
+        6z7/JCLqA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hyNz3-0006jw-Cr; Thu, 15 Aug 2019 22:12:37 +0000
+Subject: Re: [PATCH] Documentation/admin-guide: Embargoed hardware security
+ issues
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-kernel@vger.kernel.org, security@kernel.org,
+        linux-doc@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Kosina <jkosina@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+References: <20190725130113.GA12932@kroah.com>
+ <20190725151302.16a3e0e3@lwn.net> <20190815212019.GB12041@kroah.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e3ae0d66-b9eb-97ba-647a-57f3e2eb4af2@infradead.org>
+Date:   Thu, 15 Aug 2019 15:12:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190815212019.GB12041@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update MAINTAINERS record to reflect that trusted.h
-was moved to a different directory in commit 22447981fc05
-("KEYS: Move trusted.h to include/keys [ver #2]").
+On 8/15/19 2:20 PM, Greg Kroah-Hartman wrote:
+>>> +The hardware security team will provide a per incident specific encrypted
+>> s/per incident specific/incident-specific/
+> Fixed.  And changed /a/ to /an/
 
-Cc: Denis Kenzior <denkenz@gmail.com>
-Cc: James Bottomley <jejb@linux.ibm.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Mimi Zohar <zohar@linux.ibm.com>
-Cc: linux-integrity@vger.kernel.org
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+eh?  still should be /a per incident/
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cfb344ba2914..168e5121578e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8916,7 +8916,7 @@ S:	Supported
- F:	Documentation/security/keys/trusted-encrypted.rst
- F:	include/keys/trusted-type.h
- F:	security/keys/trusted.c
--F:	security/keys/trusted.h
-+F:	include/keys/trusted.h
- 
- KEYS/KEYRINGS:
- M:	David Howells <dhowells@redhat.com>
 -- 
-2.21.0
-
+~Randy
