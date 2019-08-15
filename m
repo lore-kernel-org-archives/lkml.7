@@ -2,140 +2,97 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BC8C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58E4C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3332086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A3AB20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:33:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i7Yfe8lk";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RzWtWebS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Prv6gJ49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730179AbfHOPdJ (ORCPT
+        id S1730266AbfHOPdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 11:33:09 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:35206 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730049AbfHOPdJ (ORCPT
+        Thu, 15 Aug 2019 11:33:14 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35991 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730049AbfHOPdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 11:33:09 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1198660736; Thu, 15 Aug 2019 15:33:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565883188;
-        bh=uo5H+y/d8CeAGVlGgEqg/owuTjfwykTO28LcSJ+xr/4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i7Yfe8lkksQXtPilSJpmG+DZTo3/5PsbbvskTeYAjHXEL4LcUMrAsZABl47mqB+cZ
-         Uk/Wo6tJWK6WoPNxaHtykreYkd7TpL/7J5jsxvqAx1fHj+PAt0cIXmR5bkkR0Fls4j
-         /ApoqDqtGDwO07uhw/kj/j9okcX2Dpkx68NQ6HIU=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 09845602DB;
-        Thu, 15 Aug 2019 15:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565883186;
-        bh=uo5H+y/d8CeAGVlGgEqg/owuTjfwykTO28LcSJ+xr/4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RzWtWebSM6sga9d+OFbdNomQXt2erULsaPlh8pnTHBZtZyGoEFu/YQWnwWPs72tQk
-         qOKjG9KEdXR6TLhBuDZEmtumeRgnsWuqmbxssYDp3D8XHF0kWV1JwF/qKTDVRqvmsX
-         pE5VXpZ0oG+3PfHMM6LMzK8I5mAQKLk7o64a0K2M=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 09845602DB
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Thu, 15 Aug 2019 09:33:04 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
-        jean-philippe.brucker@arm.com, linux-arm-msm@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Zhen Lei <thunder.leizhen@huawei.com>, robin.murphy@arm.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [Freedreno] [PATCH v3 0/2] iommu/arm-smmu: Split pagetable
- support
-Message-ID: <20190815153304.GD28465@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: freedreno@lists.freedesktop.org,
-        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
-        jean-philippe.brucker@arm.com, linux-arm-msm@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Zhen Lei <thunder.leizhen@huawei.com>, robin.murphy@arm.com,
-        linux-arm-kernel@lists.infradead.org
-References: <1565216500-28506-1-git-send-email-jcrouse@codeaurora.org>
+        Thu, 15 Aug 2019 11:33:14 -0400
+Received: by mail-ed1-f68.google.com with SMTP id p28so2455313edi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 08:33:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o3UNVvRcqgknRSbay7FUCJDbPbxBrvPJzPpgYbJ5C2I=;
+        b=Prv6gJ49GcEBNbk0/Clw83UxMI9ce4oqQdlks9MrqN+WhicI+zhIDx3+DDoCJ35m/B
+         K+q/KeUJLtWkumLEJxbQz8K+gqTatV+Riw/mLh2ZUzYYuBv8NRGNzVdMRgmMdimhiDFb
+         yGoZr9lQtNJreo6tXcJO2em4iw5bILHe2IM1U5TUOElZiqxa5ilQ9hSxmc4hDGsD4gAh
+         qCzf4IlbcsSrPXvgtVfi57wm8o+MaKG94oN/TfisMac7+pOsym5cw+k/DE/r/I9xaIzv
+         azrTFF/IA7bkyp86T5QI4DJDBUI/ya1BKaPxtq9bcmgsA65E3v/thjM5DvfshpxaG5zC
+         agKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o3UNVvRcqgknRSbay7FUCJDbPbxBrvPJzPpgYbJ5C2I=;
+        b=MjLF1p+NhkmrEM2hd1og/WYhcPA9u1T/r8L48O5ZkrYPX2hxu3HcD3TPDEZgx+DQGF
+         3wQcN4DFARrc670nyM7NohDNmXq9YRQnkP4uIH7bBuvgqWzuk1b9D8FArxvxmYWRyWCJ
+         1p2fCH9DKSCyooFtm9D3w0kGsNCGALjprgqtz7RBozXnlfE33zJnglAul0J0j8LnGCFd
+         /q2X2Pnqdmi/tW+koP8kJoViYlmsCKrHW7ty/yyqX63QTmFSxFqzUevw+zzaAK5/qNse
+         ov5Q5BszSSlzXC1efyrPUBpzzNukMakLWXtc02br9rAmST4TLP/yh03/mMzLOnXHyj0Y
+         OtTw==
+X-Gm-Message-State: APjAAAU1E+U+Op+hqEll5ikHI24JKRyDlZVQsU90AV+xdqWC+OVLOm4s
+        JySMKxdGpty4Xw1Zwyi2MQvJdSV8wgKhkGPN1Yg=
+X-Google-Smtp-Source: APXvYqyWNy6gsBFapmcJCjWhlOPlHn5R2djc4E/fTnSHykY18ryNLl3VxmiH0SxKCjmoBxEETYwBFsdELNQyfNKItac=
+X-Received: by 2002:a05:6402:1344:: with SMTP id y4mr6022183edw.124.1565883192450;
+ Thu, 15 Aug 2019 08:33:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565216500-28506-1-git-send-email-jcrouse@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190809071034.17279-1-hslester96@gmail.com> <20190814104941.qt66ozcau5fdswcs@pathway.suse.cz>
+ <20190815075033.GA26479@tigerII.localdomain> <20190815135221.qcgerido7aahmpgn@pathway.suse.cz>
+In-Reply-To: <20190815135221.qcgerido7aahmpgn@pathway.suse.cz>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Thu, 15 Aug 2019 23:33:01 +0800
+Message-ID: <CANhBUQ3Gco8kR7xiMknFv3ryyfnfeiJO1R-rHzNWBux8b8=LSw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/8] printk: Replace strncmp with str_has_prefix
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 04:21:38PM -0600, Jordan Crouse wrote:
-> (Sigh, resend. I freaked out my SMTP server)
-> 
-> This is part of an ongoing evolution for enabling split pagetable support for
-> arm-smmu. Previous versions can be found [1].
-> 
-> In the discussion for v2 Robin pointed out that this is a very Adreno specific
-> use case and that is exactly true. Not only do we want to configure and use a
-> pagetable in the TTBR1 space, we also want to configure the TTBR0 region but
-> not allocate a pagetable for it or touch it until the GPU hardware does so. As
-> much as I want it to be a generic concept it really isn't.
-> 
-> This revision leans into that idea. Most of the same io-pgtable code is there
-> but now it is wrapped as an Adreno GPU specific format that is selected by the
-> compatible string in the arm-smmu device.
-> 
-> Additionally, per Robin's suggestion we are skipping creating a TTBR0 pagetable
-> to save on wasted memory.
-> 
-> This isn't as clean as I would like it to be but I think that this is a better
-> direction than trying to pretend that the generic format would work.
-> 
-> I'm tempting fate by posting this and then taking some time off, but I wanted
-> to try to kick off a conversation or at least get some flames so I can try to
-> refine this again next week. Please take a look and give some advice on the
-> direction.
+On Thu, Aug 15, 2019 at 9:52 PM Petr Mladek <pmladek@suse.com> wrote:
+>
+> On Thu 2019-08-15 16:50:33, Sergey Senozhatsky wrote:
+> > On (08/14/19 12:49), Petr Mladek wrote:
+> > > On Fri 2019-08-09 15:10:34, Chuhong Yuan wrote:
+> > > > strncmp(str, const, len) is error-prone because len
+> > > > is easy to have typo.
+> > > > The example is the hard-coded len has counting error
+> > > > or sizeof(const) forgets - 1.
+> > > > So we prefer using newly introduced str_has_prefix()
+> > > > to substitute such strncmp to make code better.
+> > > >
+> > > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > >
+> > > Reviewed-by: Petr Mladek <pmladek@suse.com>
+> >
+> > Reviewed-by:  Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+>
+> Chuong Yuan, should I take this patch via printk.git? Or will
+> the entire series go via some other tree, please?
+>
 
-Will, Robin -
+I think that it goes via printk.git is okay, thanks!
 
-Modulo the impl changes from Robin, do you think that using a dedicated
-pagetable format is the right approach for supporting split pagetables for the
-Adreno GPU?
-
-If so, then is adding the changes to io-pgtable-arm.c possible for 5.4 and then
-add the implementation specific code on top of Robin's stack later or do you
-feel they should come as part of a package deal?
-
-Jordan
-
-> Jordan Crouse (2):
->   iommu/io-pgtable-arm: Add support for ARM_ADRENO_GPU_LPAE io-pgtable
->     format
->   iommu/arm-smmu: Add support for Adreno GPU pagetable formats
-> 
->  drivers/iommu/arm-smmu.c       |   8 +-
->  drivers/iommu/io-pgtable-arm.c | 214 ++++++++++++++++++++++++++++++++++++++---
->  drivers/iommu/io-pgtable.c     |   1 +
->  include/linux/io-pgtable.h     |   2 +
->  4 files changed, 209 insertions(+), 16 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> Best Regards,
+> Petr
