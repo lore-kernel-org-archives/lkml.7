@@ -4,72 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F246AC31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62961C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBA212063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44252206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731048AbfHOJNK (ORCPT
+        id S1731064AbfHOJO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 05:13:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4694 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730073AbfHOJNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 05:13:09 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 347898C823010DF1A482;
-        Thu, 15 Aug 2019 17:13:06 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 15 Aug 2019
- 17:12:56 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <bardliao@realtek.com>, <oder_chiou@realtek.com>
-CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] ASoC: rt1011: remove unused variable 'dac_vol_tlv' and 'adc_vol_tlv'
-Date:   Thu, 15 Aug 2019 17:06:02 +0800
-Message-ID: <20190815090602.9000-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 15 Aug 2019 05:14:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37184 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730500AbfHOJO6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 05:14:58 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hyBqQ-0000tX-SG; Thu, 15 Aug 2019 09:14:54 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Hannes Reinecke <hare@suse.de>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: fcoe: remove redundant call to skb_transport_header
+Date:   Thu, 15 Aug 2019 10:14:54 +0100
+Message-Id: <20190815091454.13430-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sound/soc/codecs/rt1011.c:981:35: warning:
- dac_vol_tlv defined but not used [-Wunused-const-variable=]
-sound/soc/codecs/rt1011.c:982:35: warning:
- adc_vol_tlv defined but not used [-Wunused-const-variable=]
+From: Colin Ian King <colin.king@canonical.com>
 
-They are never used, so can be removed.
+Pointer fh is being assigned a return value from the call to
+skb_transport_header however this value is never read and fh
+is being re-assigned immediately afterwards with a new value.
+Since there are side-effects from calling skb_transport_header
+the call is redundant and can be removed.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- sound/soc/codecs/rt1011.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/scsi/fcoe/fcoe.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/sound/soc/codecs/rt1011.c b/sound/soc/codecs/rt1011.c
-index 638abca..fa34565 100644
---- a/sound/soc/codecs/rt1011.c
-+++ b/sound/soc/codecs/rt1011.c
-@@ -978,9 +978,6 @@ static bool rt1011_readable_register(struct device *dev, unsigned int reg)
- 	}
- }
+diff --git a/drivers/scsi/fcoe/fcoe.c b/drivers/scsi/fcoe/fcoe.c
+index 587d4bbb7d22..6fd61555120a 100644
+--- a/drivers/scsi/fcoe/fcoe.c
++++ b/drivers/scsi/fcoe/fcoe.c
+@@ -1617,7 +1617,6 @@ static inline int fcoe_filter_frames(struct fc_lport *lport,
+ 	else
+ 		fr_flags(fp) |= FCPHF_CRC_UNCHECKED;
  
--static const DECLARE_TLV_DB_SCALE(dac_vol_tlv, -9435, 37, 0);
--static const DECLARE_TLV_DB_SCALE(adc_vol_tlv, -1739, 37, 0);
--
- static const char * const rt1011_din_source_select[] = {
- 	"Left",
- 	"Right",
+-	fh = (struct fc_frame_header *) skb_transport_header(skb);
+ 	fh = fc_frame_header_get(fp);
+ 	if (fh->fh_r_ctl == FC_RCTL_DD_SOL_DATA && fh->fh_type == FC_TYPE_FCP)
+ 		return 0;
 -- 
-2.7.4
-
+2.20.1
 
