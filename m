@@ -2,99 +2,154 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4E1C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECFDC3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F38D2086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C38CE2086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:24:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WeI4HrKL"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="UwFqsKZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732934AbfHOSYp (ORCPT
+        id S1732945AbfHOSYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 14:24:45 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42739 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729121AbfHOSYo (ORCPT
+        Thu, 15 Aug 2019 14:24:51 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42906 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729121AbfHOSYu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 14:24:44 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y1so1360478plp.9;
-        Thu, 15 Aug 2019 11:24:44 -0700 (PDT)
+        Thu, 15 Aug 2019 14:24:50 -0400
+Received: by mail-qk1-f195.google.com with SMTP id 201so2578280qkm.9
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 11:24:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=kKRdEB+5fpumZ2i4totbBIrGnA1HMKrFPQUwJDf1R7E=;
-        b=WeI4HrKLBUSUz/Q+zYSFd4FS5FV1yVYzqwzMUTA+RmPNqz/4Pc9vVTRAJaPh69mmj7
-         KI6ea+asiBWKGlfqWO9Q+wWyg2L2zOQ7W886SuL8OkxrIe+hfaLhzz6AXS2DtzvlTnL5
-         SSwa41BGot1ICBlHAYt1THN539uLz8iNMeTt/LJyK0xMWv9A3lRYuYCT5zQgAWQQGE6x
-         gyJlU4E/UpwSULSOwL0MuzLSxTLoIKMbhz/ccVm6F9tpyANbQwN/JuqOJCLNkMMmn8VO
-         8eNTeUgqTT5Y/2T5MP7P/XfZz7ss2Np+GvrCBLcBS2UyO2aJZDeOs+1XWZluh03i9gje
-         pVvQ==
+        bh=G4JHudwK1l0Pa0YXZDZdUoarWmEaiz0kaB3NPKkUFrY=;
+        b=UwFqsKZiJqRFsggeYnYEJQ5ti/D+4zJ6BdWzCQ9+5ZVyFzNT0pZp3Z47GysMlVkWVa
+         s6il5o0C2XSsvu08linHUpE1UuKtws+6kl5bvb6N8JTjKYNm+ZFsMF/aS7KIuwXwY5PL
+         ifLaV1KikbFHjyWGyYq9j2pnPvRA3ulCCU5LBrDPRPTf00Ev8+G4r7ZG1fWssXt+dt8m
+         fSIEjUyPUUjE4Cyc7v3Mk2yhOmcAHNWHAjyBbiBB5PDt75HzpgPI6NlB4kYJlFCHPv45
+         rERv+1byueCget/MOMNWxs6jcSzjmerqYaJGXU5V9yIGrPZkmI1GoIgdy70yvzXm/v2/
+         F53g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kKRdEB+5fpumZ2i4totbBIrGnA1HMKrFPQUwJDf1R7E=;
-        b=DNhsIaKuLFcw8n7xh6OTbUA3iQFX8gux19ojfWEJCLKa49w4BQRA2g1OXbaHWzQFn1
-         PsIOAAQgTjmBHO2Aexkrf9EPew9aWvtU3Ly2TDJh7Fr5DEblIy8PGy9YI9FOlutP2srn
-         Z7ke/aZeeDxbiasaYleJDMGLMVuO610xn2tBv6SKZU61TPOXNhBnsgOuI1JwK4+Vy4iC
-         uRat0xxkLyq+X1bu3je9wFCGx2yKYdpMMcJgMa51Y4ea0wz5C9cAFgy9EDEK7S9uKddn
-         wnrTI06D+jpBwVsTFj1xD6n11YPWNNRVTaQ9LR6auQ0/j6W3YRreufn3AMO/vA7EiyMx
-         Z8UQ==
-X-Gm-Message-State: APjAAAUY4zvBqCmu1yIosWz3dZhX+5wCc9vGjVbNqPuNTGoJ8Guwy+IU
-        5ySscUttsB5oz4r7qhpmAaZwbyin
-X-Google-Smtp-Source: APXvYqzEQim9Yaq0DhDAq1ZPUsMDpbx6zkmbniZVWyDgPM5yHwTVjyLHrZ+myhIoOoeOVHksoCd1sg==
-X-Received: by 2002:a17:902:f301:: with SMTP id gb1mr5338158plb.249.1565893483975;
-        Thu, 15 Aug 2019 11:24:43 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q24sm1801884pjp.14.2019.08.15.11.24.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 11:24:43 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 11:24:42 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-watchdog@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Rick Ramstetter <rick@anteaterllc.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 20/22] watchdog: ziirave_wdt: Fix DOWNLOAD_START
- payload
-Message-ID: <20190815182442.GP14388@roeck-us.net>
-References: <20190812200906.31344-1-andrew.smirnov@gmail.com>
- <20190812200906.31344-21-andrew.smirnov@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G4JHudwK1l0Pa0YXZDZdUoarWmEaiz0kaB3NPKkUFrY=;
+        b=FpsWwcFiYS0sgsMOmsWfH7CNu7hentqRzN2KzFK3RVSFhUDQ7LX8sS1wyC11b6SfFV
+         KKrrSGZ2b58tcqypZqvYMZuEutmjwbyVJ+quHiSEqiVfMXVEzQlEnrU7HjXuxOqAf6F2
+         CeQ1mFUkpBH22/UnMkV38+VXlhs9UHYGJv0y+yMlxnLZFNLVYKpZV7fiCXo4Od8Y1RaU
+         EjNWR30Voh1CI5C2aHCrR7vivC3W2Vc8j2QO6dA+A1Hi4ZzXYeEORZ4UTHVzxiSliO6f
+         p1PwZF6WPSn/bzHD8Jz0ILRWW/C1Wz/QgoTWmVeD6B4mxCKwNGzbpFpVGgIPhQU8p1ed
+         TSIw==
+X-Gm-Message-State: APjAAAUIed3fS5ptylUapLaF+9r5MK1lHPseNAhpDwqcyusbzEBvEzWY
+        OXZdbpeFSN7LvCPbd7xZViXKsw==
+X-Google-Smtp-Source: APXvYqznGQA2Mb3OUz3S4NsNelaEmfdP1JHskBC7RLkLXGfv6FD94/o+7zgymYT+l5Mz5o8/J+Om7Q==
+X-Received: by 2002:a37:ef1a:: with SMTP id j26mr5561517qkk.474.1565893489768;
+        Thu, 15 Aug 2019 11:24:49 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id g3sm1745991qke.105.2019.08.15.11.24.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 15 Aug 2019 11:24:48 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hyKQa-0007R9-AO; Thu, 15 Aug 2019 15:24:48 -0300
+Date:   Thu, 15 Aug 2019 15:24:48 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
+Message-ID: <20190815182448.GP21596@ziepe.ca>
+References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
+ <20190814202027.18735-3-daniel.vetter@ffwll.ch>
+ <20190814235805.GB11200@ziepe.ca>
+ <20190815065829.GA7444@phenom.ffwll.local>
+ <20190815122344.GA21596@ziepe.ca>
+ <20190815132127.GI9477@dhcp22.suse.cz>
+ <20190815141219.GF21596@ziepe.ca>
+ <20190815155950.GN9477@dhcp22.suse.cz>
+ <20190815165631.GK21596@ziepe.ca>
+ <20190815174207.GR9477@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190812200906.31344-21-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190815174207.GR9477@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 01:09:04PM -0700, Andrey Smirnov wrote:
-> Bootloader firmware expects the following traffic for DOWNLOAD_END:
+On Thu, Aug 15, 2019 at 07:42:07PM +0200, Michal Hocko wrote:
+> On Thu 15-08-19 13:56:31, Jason Gunthorpe wrote:
+> > On Thu, Aug 15, 2019 at 06:00:41PM +0200, Michal Hocko wrote:
+> > 
+> > > > AFAIK 'GFP_NOWAIT' is characterized by the lack of __GFP_FS and
+> > > > __GFP_DIRECT_RECLAIM..
+> > > >
+> > > > This matches the existing test in __need_fs_reclaim() - so if you are
+> > > > OK with GFP_NOFS, aka __GFP_IO which triggers try_to_compact_pages(),
+> > > > allocations during OOM, then I think fs_reclaim already matches what
+> > > > you described?
+> > > 
+> > > No GFP_NOFS is equally bad. Please read my other email explaining what
+> > > the oom_reaper actually requires. In short no blocking on direct or
+> > > indirect dependecy on memory allocation that might sleep.
+> > 
+> > It is much easier to follow with some hints on code, so the true
+> > requirement is that the OOM repear not block on GFP_FS and GFP_IO
+> > allocations, great, that constraint is now clear.
 > 
-> S Addr Wr [A] 0x10 [A] P
-> 
-> using ziirave_firm_write_byte() will result in
-> 
-> S Addr Wr [A] 0x10 [A] 0x01 [A] 0x01 [A] P
-> 
-> which happens to work because firmware will ignore any extra bytes
-> sent. Fix this by converting the code to use i2c_smbus_write_byte()
-> instead.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Rick Ramstetter <rick@anteaterllc.com>
-> Cc: linux-watchdog@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+> I still do not get why do you put FS/IO into the picture. This is really
+> about __GFP_DIRECT_RECLAIM.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Like I said this is complicated, translating "no blocking on direct or
+indirect dependecy on memory allocation that might sleep" into GFP
+flags is hard for us outside the mm community.
+
+So the contraint here is no __GFP_DIRECT_RECLAIM?
+
+I bring up FS/IO because that is what Tejun mentioned when I asked him
+about reclaim restrictions, and is what fs_reclaim_acquire() is
+already sensitive too. It is pretty confusing if we have places using
+the word 'reclaim' with different restrictions. :(
+
+> >        CPU0                                 CPU1
+> >                                         mutex_lock()
+> >                                         kmalloc(GFP_KERNEL)
+> 
+> no I mean __GFP_DIRECT_RECLAIM here.
+> 
+> >                                         mutex_unlock()
+> >   fs_reclaim_acquire()
+> >   mutex_lock() <- illegal: lock dep assertion
+> 
+> I cannot really comment on how that is achieveable by lockdep.
+
+??? I am trying to explain this is already done and working today. The
+above example will already fault with lockdep enabled.
+
+This is existing debugging we can use and improve upon rather that
+invent new debugging.
+
+Jason
