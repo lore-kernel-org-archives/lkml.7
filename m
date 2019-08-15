@@ -2,157 +2,156 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D091C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0BCC3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2482063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C0A42084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:41:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hnGKfGQe"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CxfUWl6Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbfHORl2 (ORCPT
+        id S1732538AbfHORls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:41:28 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39786 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbfHORl1 (ORCPT
+        Thu, 15 Aug 2019 13:41:48 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:8074 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfHORlr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:41:27 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u17so1595833pgi.6;
-        Thu, 15 Aug 2019 10:41:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ItZidBUf697ScM1HdSkE4tHlaXM51upzkEib4CqA/pY=;
-        b=hnGKfGQe01l3dSshgshM4c/cZvihrL5Rh4HV5BO3ByLpi8+P2VUEyFKzjbo6j8jZOO
-         5i9jEfAeoqMqID44E7uDRarzUw/OyOI1YcPC5WJAuFtRWYsSoLyN1psGijTSUG/dXbTE
-         JO44Qo8Xv8vrA/HNtYEIyuS1X9mRjTtiLrQRKrbM+psCqnG6j/NYKOIYWHJ43s+OdB69
-         cfWXpi0sFStjTTAOAxdkjNEsfPfUK1JXZ0YesXFQzwM65d9rwftySgsaNaoId6porTrx
-         1hZo6lZZXibKHZTxd1PSIQK5z2EKpkr1OJxuIYFp95vKs4ZRSYFGdjgDHz/ab38R1D9t
-         c3UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ItZidBUf697ScM1HdSkE4tHlaXM51upzkEib4CqA/pY=;
-        b=WujqhhXRWp9yTnWM39Wy9ysxGnIZyOohxvy7lOLTPSJhoM/KUp/qvJxhoaLRnuQGGc
-         nBPfsad/vlfYYpgoeUYzn4tZY+6X9Vd6ducL1szRqQnljBY0MxEixBmm12KZOV9vPwyV
-         YP3Nw+bH6eM0azFfdHFA1XugvSvCNJkoqSd2Kjs/uDadRqGcj9SJ547R6ClPJC4g42dV
-         8xYUDWmEV2FPIhPZnPi3UH4b8ToVt86KW8USaPiSumS7NDuGJgurQcaEig4LZtlCAYia
-         hkb7bZUqDEFmjzxISM+8l8PcfNaqqUv2n5quYlIpQAKmBlVsGXMH4e/M+j4Qo1/+gDSm
-         oBVw==
-X-Gm-Message-State: APjAAAXFwFuy7ci+WyMyi4Uaz9lWl9M0Rk2tgAsUTZ/og7g/G3Jv20Ri
-        wbH07xhxkFv0qiTDfrevaVo=
-X-Google-Smtp-Source: APXvYqz4+9crOMkf9DxJf0OwlOMNnnUVYR1SUToP0xKojERpDXMDfeCIPRu8mKC6Iu/TDiCaCfUc5w==
-X-Received: by 2002:a17:90a:d151:: with SMTP id t17mr3312753pjw.60.1565890887150;
-        Thu, 15 Aug 2019 10:41:27 -0700 (PDT)
-Received: from e6f2834286fb.pdc.gateworks.com (68-189-91-139.static.snlo.ca.charter.com. [68.189.91.139])
-        by smtp.gmail.com with ESMTPSA id s24sm2756670pgm.3.2019.08.15.10.41.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 10:41:26 -0700 (PDT)
-From:   Matthew Michilot <matthew.michilot@gmail.com>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthew Michilot <matthew.michilot@gmail.com>
-Subject: [PATCH v2] USB: serial: ftdi_sio: add support for FT232H CBUS gpios
-Date:   Thu, 15 Aug 2019 17:40:54 +0000
-Message-Id: <20190815174054.20240-1-matthew.michilot@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190808222348.4428-1-matthew.michilot@gmail.com>
-References: <20190808222348.4428-1-matthew.michilot@gmail.com>
+        Thu, 15 Aug 2019 13:41:47 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d55995d0000>; Thu, 15 Aug 2019 10:41:49 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 15 Aug 2019 10:41:46 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 15 Aug 2019 10:41:46 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 15 Aug
+ 2019 17:41:46 +0000
+Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
+To:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
+References: <20190812234950.GA6455@iweiny-DESK2.sc.intel.com>
+ <38d2ff2f-4a69-e8bd-8f7c-41f1dbd80fae@nvidia.com>
+ <20190813210857.GB12695@iweiny-DESK2.sc.intel.com>
+ <a1044a0d-059c-f347-bd68-38be8478bf20@nvidia.com>
+ <90e5cd11-fb34-6913-351b-a5cc6e24d85d@nvidia.com>
+ <20190814234959.GA463@iweiny-DESK2.sc.intel.com>
+ <2cbdf599-2226-99ae-b4d5-8909a0a1eadf@nvidia.com>
+ <ac834ac6-39bd-6df9-fca4-70b9520b6c34@nvidia.com>
+ <20190815132622.GG14313@quack2.suse.cz>
+ <20190815133510.GA21302@quack2.suse.cz>
+ <20190815173237.GA30924@iweiny-DESK2.sc.intel.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <b378a363-f523-518d-9864-e2f8e5bd0c34@nvidia.com>
+Date:   Thu, 15 Aug 2019 10:41:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190815173237.GA30924@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565890909; bh=6t4FiV8ZlmFrwJ34d+212gbUZqAzntteDNGGoJ3INfA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=CxfUWl6Z2INpC2m03w2UoKnOg6ZKQH2HA5ushGjZOEU13Vw43HHrxeE87osanVaxN
+         qdAm9uSPd9ZNfskJXQ/ghxfxM4pQu3bBkLIp4/SSrrEdcwZksbNBtY7eA7QobvU7L2
+         ANDRiX60f+5+4TNxDEr8d4VIXjvhrNIb7lt2mFC/yIFgInLWA4QawJ9PsfSRW9K2g6
+         +xX5DS1rirJwLRwYyT5/KnvT5SuPHdpVrbGSz2kVfwOaglAwvMnAnBX4Q6VyEwWsUF
+         d5/yJ0G9ddLg2NEON0m8ZOoy3z1D849Fdf7OGd8/Hu+PRlOr6ERUr8qcjMgWa5N8QW
+         +gXT8Jb48xO2Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable support for cbus gpios on FT232H. The cbus configuration is
-stored in one word in the EEPROM at byte-offset 0x1a with the mux
-config for ACBUS5, ACBUS6, ACBUS8 and ACBUS9 (only pins that can be
-configured as I/O mode).
+On 8/15/19 10:32 AM, Ira Weiny wrote:
+> On Thu, Aug 15, 2019 at 03:35:10PM +0200, Jan Kara wrote:
+>> On Thu 15-08-19 15:26:22, Jan Kara wrote:
+>>> On Wed 14-08-19 20:01:07, John Hubbard wrote:
+>>>> On 8/14/19 5:02 PM, John Hubbard wrote:
+>>>>
+>>>> Hold on, I *was* forgetting something: this was a two part thing, and
+>>>> you're conflating the two points, but they need to remain separate and
+>>>> distinct. There were:
+>>>>
+>>>> 1. FOLL_PIN is necessary because the caller is clearly in the use case that
+>>>> requires it--however briefly they might be there. As Jan described it,
+>>>>
+>>>> "Anything that gets page reference and then touches page data (e.g.
+>>>> direct IO) needs the new kind of tracking so that filesystem knows
+>>>> someone is messing with the page data." [1]
+>>>
+>>> So when the GUP user uses MMU notifiers to stop writing to pages whenever
+>>> they are writeprotected with page_mkclean(), they don't really need page
+>>> pin - their access is then fully equivalent to any other mmap userspace
+>>> access and filesystem knows how to deal with those. I forgot out this case
+>>> when I wrote the above sentence.
+>>>
+>>> So to sum up there are three cases:
+>>> 1) DIO case - GUP references to pages serving as DIO buffers are needed for
+>>>    relatively short time, no special synchronization with page_mkclean() or
+>>>    munmap() => needs FOLL_PIN
+>>> 2) RDMA case - GUP references to pages serving as DMA buffers needed for a
+>>>    long time, no special synchronization with page_mkclean() or munmap()
+>>>    => needs FOLL_PIN | FOLL_LONGTERM
+>>>    This case has also a special case when the pages are actually DAX. Then
+>>>    the caller additionally needs file lease and additional file_pin
+>>>    structure is used for tracking this usage.
+>>> 3) ODP case - GUP references to pages serving as DMA buffers, MMU notifiers
+>>>    used to synchronize with page_mkclean() and munmap() => normal page
+>>>    references are fine.
+>>
 
-Tested using FT232H by configuring one ACBUS pin at a time.
+Thanks Jan, once again, for clarifying all of this!
 
-Signed-off-by: Matthew Michilot <matthew.michilot@gmail.com>
-Reviewed-by: Tim Harvey <tharvey@gateworks.com>
----
-V2:
-- made hex notation all lowercase for consistency
-- allocated 4 bytes instead of 2 bytes for buffer
-- improved documentation on FT232H CBUS memory mapping
-- fixed CBUS pins being incorrectly mapped to the wrong gpios
-- sorted case labels alphabetically
----
- drivers/usb/serial/ftdi_sio.c | 43 +++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+>> I want to add that I'd like to convert users in cases 1) and 2) from using
+>> GUP to using differently named function. Users in case 3) can stay as they
+>> are for now although ultimately I'd like to denote such use cases in a
+>> special way as well...
+>>
+> 
+> Ok just to make this clear I threw up my current tree with your patches here:
+> 
+> https://github.com/weiny2/linux-kernel/commits/mmotm-rdmafsdax-b0-v4
+> 
+> I'm talking about dropping the final patch:
+> 05fd2d3afa6b rdma/umem_odp: Use vaddr_pin_pages_remote() in ODP
+> 
+> The other 2 can stay.  I split out the *_remote() call.  We don't have a user
+> but I'll keep it around for a bit.
+> 
+> This tree is still WIP as I work through all the comments.  So I've not changed
+> names or variable types etc...  Just wanted to settle this.
+> 
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index 4b3a049561f3..01e4ecccd079 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -2023,6 +2023,46 @@ static int ftdi_read_eeprom(struct usb_serial *serial, void *dst, u16 addr,
- 	return 0;
- }
- 
-+static int ftdi_gpio_init_ft232h(struct usb_serial_port *port)
-+{
-+	struct ftdi_private *priv = usb_get_serial_port_data(port);
-+	u8 *buf;
-+	u16 cbus_config;
-+	int ret;
-+	int i;
-+
-+	buf = kmalloc(4, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	ret = ftdi_read_eeprom(port->serial, buf, 0x1a, 4);
-+	if (ret < 0)
-+		goto out_free;
-+
-+	/*
-+	 * FT232H CBUS Memory Map
-+	 *
-+	 * 0x1a: X- (upper nibble -> AC5)
-+	 * 0x1b: -X (lower nibble -> AC6)
-+	 * 0x1c: XX (upper nibble -> AC9 | lower nibble -> AC8)
-+	 */
-+	cbus_config = buf[2] << 8 | (buf[1] & 0xf) << 4 | (buf[0] & 0xf0) >> 4;
-+
-+	priv->gc.ngpio = 4;
-+	priv->gpio_altfunc = 0xff;
-+
-+	for (i = 0; i < priv->gc.ngpio; ++i) {
-+		if ((cbus_config & 0xf) == FTDI_FTX_CBUS_MUX_GPIO)
-+			priv->gpio_altfunc &= ~BIT(i);
-+		cbus_config >>= 4;
-+	}
-+
-+out_free:
-+	kfree(buf);
-+
-+	return ret;
-+}
-+
- static int ftdi_gpio_init_ft232r(struct usb_serial_port *port)
- {
- 	struct ftdi_private *priv = usb_get_serial_port_data(port);
-@@ -2098,6 +2138,9 @@ static int ftdi_gpio_init(struct usb_serial_port *port)
- 	int result;
- 
- 	switch (priv->chip_type) {
-+	case FT232H:
-+		result = ftdi_gpio_init_ft232h(port);
-+		break;
- 	case FT232RL:
- 		result = ftdi_gpio_init_ft232r(port);
- 		break;
+Right. And now that ODP is not a user, I'll take a quick look through my other
+call site conversions and see if I can find an easy one, to include here as
+the first user of vaddr_pin_pages_remote(). I'll send it your way if that
+works out.
+
+
+thanks,
 -- 
-2.17.1
-
+John Hubbard
+NVIDIA
