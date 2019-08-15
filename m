@@ -2,132 +2,84 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8117C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E57EC32759
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88FD3206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58446206C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 07:57:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="W9esGaau"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730627AbfHOH5M (ORCPT
+        id S1730685AbfHOH5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 03:57:12 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39870 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbfHOH5M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 03:57:12 -0400
-Received: by mail-qt1-f196.google.com with SMTP id l9so1507220qtu.6;
-        Thu, 15 Aug 2019 00:57:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=og1blWTjQbHD8z+Aa6GJsSM0EvDf+W5fF8nT8B5d5bg=;
-        b=CGvye5CU7blgQva+6GTdYRDGWKAygsJVKVOPKGyXYhjPvsEkJncwtCzCAGHgFZNZqI
-         seZpwaZT/GmvP75b+V9BUuz7suFpvoozamD4Focu6os8ICZKfsodyP4KIDor+piykMAY
-         W4VzDkADsoWtvwprZ15853+SEpzfNKS6zhURj3Wzt6X+nx/OvKAJFdeQ8Od3ammWxiaV
-         cURkXC4STeXXv5Jhs54MwUBwrivm2X8waGYN2x/lIk9095kFa96+jffYEfkUQkgBozC5
-         4a9555TowHsSgma5kHtQgEAQBCKrzfSHLFQzi6qxzrqek42Rn5aiq4bVDVxpULKKGMjP
-         ANBA==
-X-Gm-Message-State: APjAAAVW4YasHezuoaI8DdgjSDAGKc+1C5IFdpI/OzKQWMJJmo/Q7DPk
-        f/mDpkZutWY9gLVWYp+ruP8dLu52mS2y6LF6z2s=
-X-Google-Smtp-Source: APXvYqwd8Z0CEHj5l9dzXypLlvuaYz5uk3nK3xCoedz6ioYtSMQQriLYP3kyev1HsvcasLudoxA0iEzxmBatKCCLNxk=
-X-Received: by 2002:ac8:239d:: with SMTP id q29mr2844105qtq.304.1565855830956;
- Thu, 15 Aug 2019 00:57:10 -0700 (PDT)
+        Thu, 15 Aug 2019 03:57:38 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60386 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730382AbfHOH5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 03:57:38 -0400
+Received: from zn.tnic (p200300EC2F0B5200DD69E9E370CF27BC.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:5200:dd69:e9e3:70cf:27bc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1897E1EC067D;
+        Thu, 15 Aug 2019 09:57:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565855857;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=uw3MuAP15iFyITo377LGBMxCUt0Up0dvOinOJIGTV2A=;
+        b=W9esGaaupYIdGPouuR90QaBfSgBnDfREQw6TDL6x045YHxclYzfsbxIC+SdU+VaY58/TW2
+        04vwvyTA+P/AtaS/obMo/1thFLCIcjCo02SBanEVuEP/v7rrBmZS8Lo9cReSMxVQ8nlUQR
+        PzuY9GuVwWpP0i0Azq1Nelq1iqEjWMg=
+Date:   Thu, 15 Aug 2019 09:58:22 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain
+ asm/intel-family.h
+Message-ID: <20190815075822.GC15313@zn.tnic>
+References: <20190814234030.30817-1-tony.luck@intel.com>
 MIME-Version: 1.0
-References: <20190814204259.120942-1-arnd@arndb.de> <20190814204259.120942-2-arnd@arndb.de>
- <20190814213753.GP6129@dread.disaster.area> <20190815071314.GA6960@infradead.org>
-In-Reply-To: <20190815071314.GA6960@infradead.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 15 Aug 2019 09:56:54 +0200
-Message-ID: <CAK8P3a2Hjfd49XY18cDr04ZpvC5ZBGudzxqpCesbSsDf1ydmSA@mail.gmail.com>
-Subject: Re: [PATCH v5 01/18] xfs: compat_ioctl: use compat_ptr()
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Nick Bowler <nbowler@draconx.ca>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Dave Chinner <dchinner@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190814234030.30817-1-tony.luck@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 9:13 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Thu, Aug 15, 2019 at 07:37:53AM +1000, Dave Chinner wrote:
-> > > @@ -576,7 +576,7 @@ xfs_file_compat_ioctl(
-> > >     case XFS_IOC_SCRUB_METADATA:
-> > >     case XFS_IOC_BULKSTAT:
-> > >     case XFS_IOC_INUMBERS:
-> > > -           return xfs_file_ioctl(filp, cmd, p);
-> > > +           return xfs_file_ioctl(filp, cmd, (unsigned long)arg);
-> >
-> > I don't really like having to sprinkle special casts through the
-> > code because of this.
->
-> True.  But the proper fix is to not do the indirection through
-> xfs_file_ioctl but instead to call xfs_ioc_scrub_metadata,
-> xfs_ioc_bulkstat, etc directly which all take a void __user
-> arguments already.
+On Wed, Aug 14, 2019 at 04:40:30PM -0700, Tony Luck wrote:
+> There are a few different subsystems in the kernel that depend on
+> model specific behaviour (perf, EDAC, power, ...). Easier for just
+> one person to have the task to get new model numbers included instead
+> of having these groups trip over each other to do it.
+> 
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  MAINTAINERS | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-I'm not sure that's better: This would end up duplicating all
-of xfs_file_ioctl(), which is already a fairly long function, compared
-to the current way of having a large set of commands all handled
-with a single line.
+Applied, thanks.
 
-From looking at other subsystems, what I find to work best is to
-move the compat handler into the same file as the native code
-and then structure the files so that shared handlers get
-put into one place, something like
+As a first order of business, pls sum up the naming scheme convention
+you guys are going to adhere to so that it is clear to everybody:
 
-/* these are the ones that have the same ABI for 32-bit and 64-bit tasks */
-static int xfs_compatible_file_ioctl(struct file *filp, unsigned cmd,
-void __user *p)
-{
-      int ret = -ENOIOCTLCMD;
+https://lkml.kernel.org/r/91eefbe4-e32b-d762-be4d-672ff915db47@intel.com
 
-       switch (cmd) {
-       case XFS_IOC_DIOINFO:
-            ...
-        case ...
-     }
+in a patch form. :)
 
-     return ret;
-}
+Thx.
 
-long
-xfs_file_compat_ioctl(
-        struct file             *filp,
-        unsigned                cmd,
-        unsigned long           p)
-{
-       ret = xfs_compatible_file_ioctl(filp, cmd, compat_ptr(p));
-       if (ret != -ENOIOCTLCMD)
-              return ret;
+-- 
+Regards/Gruss,
+    Boris.
 
-      /* all incompatible ones below */
-      switch (cmd) {
-         ...
-      }
-}
-Having them in one place makes it more obvious to readers how the
-native and compat handlers fit together, and makes it easier to keep
-the two in sync.
-
-That would of course be a much larger change to how it's done today,
-and it's way out of scope of what I want to achieve in my (already
-too long) series.
-
-     Arnd
+Good mailing practices for 400: avoid top-posting and trim the reply.
