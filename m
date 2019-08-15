@@ -2,100 +2,77 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CE9C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FEBC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DACA5206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:21:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="W68dUmDb"
+	by mail.kernel.org (Postfix) with ESMTP id BC05E2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565871740;
+	bh=fNj1YCczBv1MQeZBa3RGTiPm9rVd91SUuKH32NTZyHw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=G26kEIEy30rmFP7h0UtTqsQqsYAKbHdPkgVaYzWpfJvtBDV8tsARzi7jJghX1rjiz
+	 X37fW+Mp8cldNynq6NUf5VKuMVd0zLP19+2ghcdng0HVPZLTVvxn++l3jr4o8d0Dd7
+	 4T9ejInErlwFXcx6CER0ljmYoADdk2dzkTKbeN84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730939AbfHOMVi (ORCPT
+        id S1731216AbfHOMWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:21:38 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:42504 "EHLO mail.skyhub.de"
+        Thu, 15 Aug 2019 08:22:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729649AbfHOMVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 08:21:38 -0400
-Received: from zn.tnic (p200300EC2F0B52007D93C58FB2CAB236.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:5200:7d93:c58f:b2ca:b236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730490AbfHOMWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 08:22:19 -0400
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4E9CB1EC0959;
-        Thu, 15 Aug 2019 14:21:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565871697;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=sSqvyUYtkx7/uZDnZ8n7rcur6vuPwhqq0uRXZCz9+qw=;
-        b=W68dUmDbR7fJiGHQQGnj6fj4bwKWSiLxvTqJARyFPJdiw6vqINoskwOWPvjZLSRTnZGnDs
-        8+vaG3mWp/LbpyItG+reLta34MRA4btIOZhcftJ+E7HckEpWjy1ZAxrlnWOXEtW7kmV22l
-        DgwQSV+PnPMlc1GJ6KPg8c8U4T4aV/Q=
-Date:   Thu, 15 Aug 2019 14:22:22 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, andriy.shevchenko@intel.com, alan@linux.intel.com,
-        ricardo.neri-calderon@linux.intel.com, rafael.j.wysocki@intel.com,
-        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
-Subject: Re: [PATCH 2/3] x86: cpu: Add new Intel Atom CPU type
-Message-ID: <20190815122222.GE15313@zn.tnic>
-References: <cover.1565856842.git.rahul.tanwar@linux.intel.com>
- <16de4480ae1216d5949d4d36787811dae35d2eff.1565856842.git.rahul.tanwar@linux.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BBB7208C2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 12:22:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565871738;
+        bh=fNj1YCczBv1MQeZBa3RGTiPm9rVd91SUuKH32NTZyHw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Gyb44c7lrHsEimFznCppDSYvNcEvmp0o76lOGa8B6jWWtl5IyOUBbITRcHY9Gsmt7
+         KW39vFOeskO7y2jQ0Cn9KiJnjAN8cCPcREmy+/HLuZDwGt8A7PuSsFHCTDDkp8l9eu
+         hNOStskumfOFHiN/UefRK+BTkUTViSW9EU53ncH4=
+Received: by mail-qk1-f178.google.com with SMTP id r21so1683470qke.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 05:22:18 -0700 (PDT)
+X-Gm-Message-State: APjAAAXkzSBaF8mULnhI/I6yHm9CGbG31d0zvxYnHyv8eCOjiOiTmJkJ
+        fze4lhvwcQnFshE150EPcFMXouI7SeJ350MLRtE=
+X-Google-Smtp-Source: APXvYqx+ZTsWD5+7FN1Kt49TeG7yB3dmND1aFh26ISuMcKGMZFcOn47k+HdrA45W2ocvBzTsaLLdjgrZI5r47y1RlIM=
+X-Received: by 2002:ae9:f404:: with SMTP id y4mr3735253qkl.112.1565871737783;
+ Thu, 15 Aug 2019 05:22:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <16de4480ae1216d5949d4d36787811dae35d2eff.1565856842.git.rahul.tanwar@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190731161744.3612-1-tiwai@suse.de>
+In-Reply-To: <20190731161744.3612-1-tiwai@suse.de>
+From:   Josh Boyer <jwboyer@kernel.org>
+Date:   Thu, 15 Aug 2019 08:22:06 -0400
+X-Gmail-Original-Message-ID: <CA+5PVA51LCABdPp=J3_8wx=c_zaTjsg6pUXYofCixO_TkpJOeQ@mail.gmail.com>
+Message-ID: <CA+5PVA51LCABdPp=J3_8wx=c_zaTjsg6pUXYofCixO_TkpJOeQ@mail.gmail.com>
+Subject: Re: [PATCH linux-firmware] Install only listed firmware files
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Linux Firmware <linux-firmware@kernel.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 05:46:46PM +0800, Rahul Tanwar wrote:
-> This patch adds a new variant of Intel Atom Airmont CPU model used in a
-> network processor SoC named Lightning Mountain.
-> 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  arch/x86/include/asm/intel-family.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-> index 0278aa66ef62..cbbb8250370f 100644
-> --- a/arch/x86/include/asm/intel-family.h
-> +++ b/arch/x86/include/asm/intel-family.h
-> @@ -73,6 +73,7 @@
->  
->  #define INTEL_FAM6_ATOM_AIRMONT		0x4C /* Cherry Trail, Braswell */
->  #define INTEL_FAM6_ATOM_AIRMONT_MID	0x5A /* Moorefield */
-> +#define INTEL_FAM6_ATOM_AIRMONT_NP	0x75 /* Lightning Mountain */
->  
->  #define INTEL_FAM6_ATOM_GOLDMONT	0x5C /* Apollo Lake */
->  #define INTEL_FAM6_ATOM_GOLDMONT_X	0x5F /* Denverton */
-> -- 
+On Wed, Jul 31, 2019 at 12:17 PM Takashi Iwai <tiwai@suse.de> wrote:
+>
+> The current make-install procedure leaves lots of garbage files that
+> aren't really firmware files in /lib/firmware.
+>
+> Instead of copy-all-and-prune approach, copy only the listed files and
+> links in WHENCE by make-install for assuring only the proper firmware
+> files.
+>
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
 
-Also, in addition to what Thomas said, due to the fact that all the
-different groups within Intel are sending patches with model names,
-please synchronize that model naming and patch sending with Tony from
-now on:
+Thanks!  Applied and pushed out.
 
-https://git.kernel.org/tip/5ed1c835ed8b522ce25071cc2d56a9a09bd5b59e
-
-He'll document the naming scheme and pay attention to what goes where so
-make sure you CC him, talk to him or have him in the loop, in general.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+josh
