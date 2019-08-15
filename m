@@ -2,110 +2,95 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AF0C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5B6C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3D021855
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C8D206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 09:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731390AbfHOJrP (ORCPT
+        id S1730786AbfHOJtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 05:47:15 -0400
-Received: from mga18.intel.com ([134.134.136.126]:58050 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbfHOJrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 05:47:13 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 02:47:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,388,1559545200"; 
-   d="scan'208";a="260773947"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga001.jf.intel.com with ESMTP; 15 Aug 2019 02:47:09 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org
-Cc:     andriy.shevchenko@intel.com, alan@linux.intel.com,
-        ricardo.neri-calderon@linux.intel.com, rafael.j.wysocki@intel.com,
-        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH 3/3] x86: arch: Add arch support for new Intel Atom CPU
-Date:   Thu, 15 Aug 2019 17:46:47 +0800
-Message-Id: <27efba07aac2eb9b9ed719cfa2154326d515faa4.1565856842.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1565856842.git.rahul.tanwar@linux.intel.com>
-References: <cover.1565856842.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1565856842.git.rahul.tanwar@linux.intel.com>
-References: <cover.1565856842.git.rahul.tanwar@linux.intel.com>
+        Thu, 15 Aug 2019 05:49:24 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38796 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728464AbfHOJtY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 05:49:24 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 667D880C11; Thu, 15 Aug 2019 11:49:09 +0200 (CEST)
+Date:   Thu, 15 Aug 2019 11:49:22 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Lars Melin <larsm17@gmail.com>,
+        Marcel Partap <mpartap@gmx.net>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Michael Scott <hashcode0f@gmail.com>,
+        NeKit <nekit1000@gmail.com>, Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCHv2] USB: serial: option: Add Motorola modem UARTs
+Message-ID: <20190815094922.GB11427@amd>
+References: <20190815082602.51765-1-tony@atomide.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="rS8CxjVDS/+yyDmU"
+Content-Disposition: inline
+In-Reply-To: <20190815082602.51765-1-tony@atomide.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds basic arch support for a new variant of Intel Atom CPU
-model used in a network processor SoC named Lightning Mountain.
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- arch/x86/kernel/cpu/common.c | 1 +
- arch/x86/kernel/cpu/intel.c  | 1 +
- arch/x86/kernel/tsc_msr.c    | 5 +++++
- 3 files changed, 7 insertions(+)
+--rS8CxjVDS/+yyDmU
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 5cc2d51cc25e..c6b4a578b280 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1059,6 +1059,7 @@ static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
- 	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
- 
- 	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_AIRMONT_NP,		NO_L1TF | NO_SWAPGS),
- 
- 	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF | NO_SWAPGS),
- 	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF | NO_SWAPGS),
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 0419fba1ea56..e989a8429390 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -268,6 +268,7 @@ static void early_init_intel(struct cpuinfo_x86 *c)
- 		case INTEL_FAM6_ATOM_SALTWELL_MID:	/* Penwell */
- 		case INTEL_FAM6_ATOM_SALTWELL_TABLET:	/* Cloverview */
- 		case INTEL_FAM6_ATOM_SILVERMONT_MID:	/* Merrifield */
-+		case INTEL_FAM6_ATOM_AIRMONT_NP:	/* Lightning Mountain */
- 			set_cpu_cap(c, X86_FEATURE_NONSTOP_TSC_S3);
- 			break;
- 		default:
-diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
-index 067858fe4db8..e0cbe4f2af49 100644
---- a/arch/x86/kernel/tsc_msr.c
-+++ b/arch/x86/kernel/tsc_msr.c
-@@ -58,6 +58,10 @@ static const struct freq_desc freq_desc_ann = {
- 	1, { 83300, 100000, 133300, 100000, 0, 0, 0, 0 }
- };
- 
-+static const struct freq_desc freq_desc_lgm = {
-+	1, { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 }
-+};
-+
- static const struct x86_cpu_id tsc_msr_cpu_ids[] = {
- 	INTEL_CPU_FAM6(ATOM_SALTWELL_MID,	freq_desc_pnw),
- 	INTEL_CPU_FAM6(ATOM_SALTWELL_TABLET,	freq_desc_clv),
-@@ -65,6 +69,7 @@ static const struct x86_cpu_id tsc_msr_cpu_ids[] = {
- 	INTEL_CPU_FAM6(ATOM_SILVERMONT_MID,	freq_desc_tng),
- 	INTEL_CPU_FAM6(ATOM_AIRMONT,		freq_desc_cht),
- 	INTEL_CPU_FAM6(ATOM_AIRMONT_MID,	freq_desc_ann),
-+	INTEL_CPU_FAM6(ATOM_AIRMONT_NP,		freq_desc_lgm),
- 	{}
- };
- 
--- 
-2.11.0
+On Thu 2019-08-15 01:26:02, Tony Lindgren wrote:
+> On Motorola Mapphone devices such as Droid 4 there are five USB ports
+> that do not use the same layout as Gobi 1K/2K/etc devices listed in
+> qcserial.c. So we should use qcaux.c or option.c as noted by
+> Dan Williams <dan.j.williams@intel.com>.
+>=20
+> As the Motorola USB serial ports have an interrupt endpoint as shown
+> with lsusb -v, we should use option.c instead of qcaux.c as pointed out
+> by Johan Hovold <johan@kernel.org>.
+>=20
+> The ff/ff/ff interfaces seem to always be UARTs on Motorola devices.
+> For the other interfaces, class 0x0a (CDC Data) should not in general
+> be added as they are typically part of a multi-interface function as
+> noted earlier by Bj=F8rn Mork <bjorn@mork.no>.
 
+Acked-by: Pavel Machek <pavel@ucw.cz>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Tested-by: Pavel Machek <pavel@ucw.cz>
+> Signed-off-by: Tony Lingren <tony@atomide.com>
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--rS8CxjVDS/+yyDmU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1VKqIACgkQMOfwapXb+vJ+YwCeOiINkTCJCV7hE+8e3sPOiUW8
+Y5QAoIYZz3Ln70nhSt3ikoVxqRegCq93
+=k4Po
+-----END PGP SIGNATURE-----
+
+--rS8CxjVDS/+yyDmU--
