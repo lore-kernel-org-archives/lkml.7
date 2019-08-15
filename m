@@ -2,150 +2,113 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D961C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA28C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC7762086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E462208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:43:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730426AbfHOGaM (ORCPT
+        id S1730432AbfHOGnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 02:30:12 -0400
-Received: from ozlabs.org ([203.11.71.1]:37797 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729796AbfHOGaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 02:30:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 468Glh3XBXz9sN1;
-        Thu, 15 Aug 2019 16:30:08 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Ryan Grimm <grimm@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 11/16] powerpc/pseries/svm: Export guest SVM status to user space via sysfs
-In-Reply-To: <87r25qgeb5.fsf@morokweng.localdomain>
-References: <20190806052237.12525-1-bauerman@linux.ibm.com> <20190806052237.12525-12-bauerman@linux.ibm.com> <8736i6sfhn.fsf@concordia.ellerman.id.au> <87r25qgeb5.fsf@morokweng.localdomain>
-Date:   Thu, 15 Aug 2019 16:30:07 +1000
-Message-ID: <87sgq36ivk.fsf@concordia.ellerman.id.au>
+        Thu, 15 Aug 2019 02:43:41 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33776 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfHOGnl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 02:43:41 -0400
+Received: by mail-qt1-f195.google.com with SMTP id v38so1419531qtb.0;
+        Wed, 14 Aug 2019 23:43:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=moCscXF3FHERLCOXUMQFLafbhkiilN7j/QojfjTcev0=;
+        b=Mpg/nw09+iiBoGaVQHuX/TH+bsh9jMNc3TrlZtAK/A3ldZkMlxFOfcZ7MuF9EHfqsn
+         ybtKSCxvGQaghw1Za4GFMSVIwvTFBeC7fkWExage8MdbEQMaoJBfGWC9xcluMSomJo4a
+         hNFgmq3VIWTu7RDPJD4ZUF6TzjMEZ7PsKR7GeEi1GU0RX7AGOH9Uk3gMlM7J783oHqAn
+         EJruYEn6D6IlQVSoaOmwYwmdeawzq5igRyDbuDfXiC5p0ZbLKFqoep3+5FSdSNBf0YZk
+         2x4S4vmDtrlSA7yZvyXDFazIxWkpPdfwNFiQuZWUVcfSUnQrA7JCmBjMkWy9rvotQpL0
+         /tuA==
+X-Gm-Message-State: APjAAAX2wWCRBrOJ5zvKWTnxOC9Q+xAAABg7xL1yqpEXgcWLjnWo2rfi
+        nU+Bbywk+UKB5B95rAl8Ppl/PG6dRSRY1QTLtNHwXq63wlQ=
+X-Google-Smtp-Source: APXvYqyxkg6GiBut6x07Qhx3vf49GcGn8k9G4seM+8Ayfv3Fo29FzJIUow0/Va2HT9tK164KhkeoqRKDVSGuM24oHVs=
+X-Received: by 2002:ac8:239d:: with SMTP id q29mr2675174qtq.304.1565851419870;
+ Wed, 14 Aug 2019 23:43:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190814204259.120942-1-arnd@arndb.de> <20190814204259.120942-2-arnd@arndb.de>
+ <20190814213753.GP6129@dread.disaster.area>
+In-Reply-To: <20190814213753.GP6129@dread.disaster.area>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 15 Aug 2019 08:43:24 +0200
+Message-ID: <CAK8P3a0CAAtxXcfYt8NwmNSmF5tWhSSihLBkOtuQ62onjst4sA@mail.gmail.com>
+Subject: Re: [PATCH v5 01/18] xfs: compat_ioctl: use compat_ptr()
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Brian Foster <bfoster@redhat.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Nick Bowler <nbowler@draconx.ca>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Dave Chinner <dchinner@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
-> Michael Ellerman <mpe@ellerman.id.au> writes:
->> Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
->>> From: Ryan Grimm <grimm@linux.vnet.ibm.com>
->>> User space might want to know it's running in a secure VM.  It can't do
->>> a mfmsr because mfmsr is a privileged instruction.
->>>
->>> The solution here is to create a cpu attribute:
->>>
->>> /sys/devices/system/cpu/svm
->>>
->>> which will read 0 or 1 based on the S bit of the guest's CPU 0.
->>
->> Why CPU 0?
->>
->> If we have different CPUs running with different MSR_S then something
->> has gone badly wrong, no?
+On Wed, Aug 14, 2019 at 11:39 PM Dave Chinner <david@fromorbit.com> wrote:
+> >       case XFS_IOC_BULKSTAT:
+> >       case XFS_IOC_INUMBERS:
+> > -             return xfs_file_ioctl(filp, cmd, p);
+> > +             return xfs_file_ioctl(filp, cmd, (unsigned long)arg);
 >
-> Yes, that would be very bad.
+> I don't really like having to sprinkle special casts through the
+> code because of this.
 >
->> So can't we just read the MSR on whatever CPU the sysfs code happens to
->> run on.
+> Perhaps do something like:
 >
-> Good point. I made the change in the patch below.
+> static inline unsigned long compat_ptr_mask(unsigned long p)
+> {
+>         return (unsigned long)compat_ptr(p);
+> }
+>
+> and then up front you can do:
+>
+>         void    __user *arg;
+>
+>         p = compat_ptr_mask(p);
+>         arg = (void __user *)p;
+>
+>
+> and then the rest of the code remains unchanged by now uses p
+> correctly instead of having to change all the code to cast arg back
+> to an unsigned long...
+>
 
-The patch looks good. Although, it raises the question of whether it
-should be an attribute of the CPU at all.
+In part 1 of the series, I define this function as a global:
 
-I guess there's not obviously anywhere better for it.
+long compat_ptr_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+{
+        if (!file->f_op->unlocked_ioctl)
+                return -ENOIOCTLCMD;
 
-Still you should document the attribute in Documentation/ABI/testing/sysfs-devices-system-cpu
+        return file->f_op->unlocked_ioctl(file, cmd, (unsigned
+long)compat_ptr(arg));
+}
 
-cheers
+How about using that to replace the individual casts:
 
-> From 2d951305e118bf286f8e83cbf396448085186357 Mon Sep 17 00:00:00 2001
-> From: Ryan Grimm <grimm@linux.vnet.ibm.com>
-> Date: Tue, 15 Jan 2019 11:56:29 -0600
-> Subject: [PATCH] powerpc/pseries/svm: Export guest SVM status to user space
->  via sysfs
->
-> User space might want to know it's running in a secure VM.  It can't do
-> a mfmsr because mfmsr is a privileged instruction.
->
-> The solution here is to create a cpu attribute:
->
-> /sys/devices/system/cpu/svm
->
-> which will read 0 or 1 based on the S bit of the current CPU.
->
-> Signed-off-by: Ryan Grimm <grimm@linux.vnet.ibm.com>
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> ---
->  arch/powerpc/kernel/sysfs.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->
-> diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
-> index e2147d7c9e72..80a676da11cb 100644
-> --- a/arch/powerpc/kernel/sysfs.c
-> +++ b/arch/powerpc/kernel/sysfs.c
-> @@ -19,6 +19,7 @@
->  #include <asm/smp.h>
->  #include <asm/pmc.h>
->  #include <asm/firmware.h>
-> +#include <asm/svm.h>
->  
->  #include "cacheinfo.h"
->  #include "setup.h"
-> @@ -715,6 +716,23 @@ static struct device_attribute pa6t_attrs[] = {
->  #endif /* HAS_PPC_PMC_PA6T */
->  #endif /* HAS_PPC_PMC_CLASSIC */
->  
-> +#ifdef CONFIG_PPC_SVM
-> +static ssize_t show_svm(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	return sprintf(buf, "%u\n", is_secure_guest());
-> +}
-> +static DEVICE_ATTR(svm, 0444, show_svm, NULL);
-> +
-> +static void create_svm_file(void)
-> +{
-> +	device_create_file(cpu_subsys.dev_root, &dev_attr_svm);
-> +}
-> +#else
-> +static void create_svm_file(void)
-> +{
-> +}
-> +#endif /* CONFIG_PPC_SVM */
-> +
->  static int register_cpu_online(unsigned int cpu)
->  {
->  	struct cpu *c = &per_cpu(cpu_devices, cpu);
-> @@ -1058,6 +1076,8 @@ static int __init topology_init(void)
->  	sysfs_create_dscr_default();
->  #endif /* CONFIG_PPC64 */
->  
-> +	create_svm_file();
-> +
->  	return 0;
->  }
->  subsys_initcall(topology_init);
+-       return xfs_file_ioctl(filp, cmd, (unsigned long)arg);
++      return compat_ptr_ioctl(filp, cmd, arg);
+
+It adds another indirection, but it avoids all the casts and
+uses existing mechanism.
+
+     Arnd
