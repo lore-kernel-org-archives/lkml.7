@@ -2,252 +2,166 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C61C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B425DC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11223206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759A5206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:40:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q6dQWxOE"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="dPBPLVqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbfHOPhP (ORCPT
+        id S1730714AbfHOPkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 11:37:15 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42576 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730457AbfHOPhO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 11:37:14 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j7so6780576ota.9;
-        Thu, 15 Aug 2019 08:37:13 -0700 (PDT)
+        Thu, 15 Aug 2019 11:40:13 -0400
+Received: from mail-eopbgr1400108.outbound.protection.outlook.com ([40.107.140.108]:62648
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726008AbfHOPkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 11:40:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mcwNnjyuhgCPjkecuFpa964JUR6OgjcBPoOWIaM+5kDkF9CHNHsB7QT/RSVrGnnTcoAZSBGuW+/rbTwkI7W29m4MRtxPQZIdVlCbwvWD+fIpYuWGvrJd6jTltDQjwawwAuDuCGV8TwxrpbvxjZfrH55H0BQIX0qsb7N5xkdIira7WpUVfOO9r1owX0UPRigjwXSs/odONHcBQ5xXj3uRfWAg+zQU/R0sZ1HxrHst+tREYXkHZP8BopEWnfOnyL5tz7Jqe3mt/PzOdO/niLPZwvS1U1r/Kism+Eb6Sdozt3h+I6jt5ttLbd4u50nTuL98VJLmivJkGnJGkj1fUt0M6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4IkRrFLO/mQrao3GPVzqG1zhbDxsXu4LrqbJ5GcTT+8=;
+ b=LO0/MP5wE6zvIPiaKhh4PjGI8nzY8tJPkOBxH58AzO3ZJ/eRLlYMMeRgRDSeKqMQ3wzxlyPotK96f4U/26NSIjsPE7ji9ko97bRm4jgE7yuJbw8I/efyUNf8Y6qrYp/qL4H2LoWi9FG5F4qhhOiyw9zQhGasLfLMf5v5UOO7I3zOxuXWKIsvqLS8pQ+Qt3I2/69bUeZMlHa8oHt22SRBtwm0eUkN4YlHBWLHUGPi6jGcT6CkYKHVg2DUM9+PiWEaG5IfkRlFWpUNz0wqaxjRL7BqkpLPCw3/0lfwC5wgumapHYoIF9QucdJWEjdiI5W+GsGHfWiQ75ee7xIHMJtZgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=paJogaN2g7AgODh9piCj/36tY2xkyxkFF55qGn68PeQ=;
-        b=q6dQWxOE5D2qxkT8ULjQfFafTOXH74FE3EyuA4jhZHhMS1f7vRBG+hM2CjcCwk05Qh
-         rAv+QME/Qj50ER7xYCUaUNSJba2y+cfvRPVyUehx22ANlHg0toRk80oUkjE3VZ1K8acC
-         sCMhcSnUCwqQ3/CeuTgSnokiJqNF6eDNjdoamIhglgajqnGpeJ3nBc9xeSYPU8P3oyar
-         rGy5F+qxRmK1ID+EH+zg5HE3FHFSLJe0oppIedlmdi17EYheXsnSiPVLYYawXdZwLwGc
-         O1TLsji/SbsPAliO8yMelmgpeT3csbixw41+1h1BQHMyQ8/OKTu8tCvsn3uQzb/ekUWY
-         6h4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=paJogaN2g7AgODh9piCj/36tY2xkyxkFF55qGn68PeQ=;
-        b=oMB0H3E2PsP+xKjRP1s/WHJG6EIxLLpTMOkm/XwutvH73Zidzu7sWEl6Djuf1HyhIF
-         MDEmSBFs81MHonkIM1PqjrsrCQRCOJCYjFVXEOIqQtElHMzs7+treAQOC4uPL0R5nnuj
-         6CTTiaePTemfWfzKUZMPVmbam7QcAEB5t1ZA5I3G1aZDNtMZ+qjxiDFM7LShaiacYdG6
-         exf2GmBp7SdVg+bnvFDrTbnpZTnUETEPYdRRerh9uWZLtktHtQw6tVlhs9g8YSXdmryp
-         5ee8NmH74mFZGHae8ys8L1iS8kk1UQILe7q8YZb99fnVyG+r1qJoLNxa4fFUfpZ6qVdY
-         pfSA==
-X-Gm-Message-State: APjAAAXRgORDPOJlL6i0vXOLywBOqSyFO0+wQCguSydMknYKUUSePNSM
-        7Qf+j9sLElAgHZ+oNM38wy0=
-X-Google-Smtp-Source: APXvYqxESYSEpXSfVcLhgtuZ5w+iJwJ9dwTJob+NN1meynL+nTTmip6H+sm8t2vP3u/tcOpfyExo8g==
-X-Received: by 2002:a6b:3784:: with SMTP id e126mr3758450ioa.8.1565883432600;
-        Thu, 15 Aug 2019 08:37:12 -0700 (PDT)
-Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id c18sm1491856iod.19.2019.08.15.08.37.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 08:37:11 -0700 (PDT)
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        bodong@mellanox.com, ddutile@redhat.com,
-        gregkh@linuxfoundation.org, skunberg.kelsey@gmail.com
-Subject: [PATCH v3 1/4] PCI: sysfs: Define device attributes with DEVICE_ATTR*
-Date:   Thu, 15 Aug 2019 09:33:50 -0600
-Message-Id: <20190815153352.86143-2-skunberg.kelsey@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
-References: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4IkRrFLO/mQrao3GPVzqG1zhbDxsXu4LrqbJ5GcTT+8=;
+ b=dPBPLVqUgcwFErLCuqdU+2T2xNxBdu6jYClfpYq/chWBOa9vZCoEqLpV+Pj3G+btpQFtANYfU9QyrrLmfvzVdjFeXDq304mnSnGwb1SQuMdN3Nk6eqp+wGmc2rL33k0vZYc11VcH+FApWIv2qZzxrlLlgQN7EG2/QS7LKnhSJ54=
+Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com (52.133.168.140) by
+ TYXPR01MB1470.jpnprd01.prod.outlook.com (52.133.165.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.18; Thu, 15 Aug 2019 15:40:09 +0000
+Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com
+ ([fe80::8432:480c:12c2:d239]) by TYXPR01MB1775.jpnprd01.prod.outlook.com
+ ([fe80::8432:480c:12c2:d239%7]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
+ 15:40:09 +0000
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: RE: [PATCH v2 4/9] drm/timings: Add link flags
+Thread-Topic: [PATCH v2 4/9] drm/timings: Add link flags
+Thread-Index: AQHVU1lOWobC8dS6C0q1OP//wkHPVqb8G0sAgAA9KNA=
+Date:   Thu, 15 Aug 2019 15:40:09 +0000
+Message-ID: <TYXPR01MB1775593360A56D72CAFE5AD4C0AC0@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1565867073-24746-5-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190815120014.GK5011@pendragon.ideasonboard.com>
+In-Reply-To: <20190815120014.GK5011@pendragon.ideasonboard.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2c674b38-2fd4-4890-b4b8-08d72196dab6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:TYXPR01MB1470;
+x-ms-traffictypediagnostic: TYXPR01MB1470:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYXPR01MB147071B4B4BBE938B5ABE181C0AC0@TYXPR01MB1470.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01304918F3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(39860400002)(346002)(136003)(376002)(199004)(189003)(5660300002)(33656002)(14454004)(86362001)(102836004)(316002)(8676002)(99286004)(966005)(8936002)(26005)(76176011)(6916009)(4326008)(9686003)(54906003)(53546011)(6506007)(7416002)(6306002)(55016002)(81156014)(81166006)(486006)(11346002)(74316002)(66066001)(14444005)(53936002)(305945005)(25786009)(476003)(2906002)(446003)(6116002)(76116006)(66556008)(186003)(71200400001)(256004)(7736002)(478600001)(44832011)(7696005)(66476007)(66446008)(64756008)(6436002)(229853002)(6246003)(66946007)(3846002)(52536014)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:TYXPR01MB1470;H:TYXPR01MB1775.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6DcM6J0HfWVNjX/5E/ddfMleT98NwAOePUlAB0XljXOvVagAotw50HwxhlBXblX9/2cmoD6D8s9zgnKctg0ZSpsswiwCj9vVoENxzjB8TorJBGvrug7Gr+Gq18ItKwdvcCYn8pH5Kjq6fi2kw/GvJd7KHxZ4QxYxJYrzfG7K4a3tIqDryyx3SQHugTjBljAMFaKQtCikx/NRVosDjcA/Cvf0jo3Wj7rnY6IfVtbpTfWD0/8DlSMiEG/cftrH8/KKZJMyOw7rx3ievnpwCykhHVvIDGbDf22KxjsV7kpow14xTzaGdpsJTrxLqFxZ8CzCZ1WJieC1wNRP0aOndlQgHZ9uAFIFl85bouNlsaun8jVFoxxGoDxv+eW4XTj2tjS/odw99bbWXLtB70OFJFxaob5OffPegGepZMn5NGawyng=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c674b38-2fd4-4890-b4b8-08d72196dab6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 15:40:09.2815
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hnTp/+rbzQ+S/+ENqNFXQea9FQ15VyWZYtNNAI/Ne8rhfXAdnChGBVuI6DjyB5dYOAgEAjsvjTChneLzxCRSfOB+JL2bwdbrRakw63ybkHQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1470
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Defining device attributes should be done through the helper
-DEVICE_ATTR_RO(), DEVICE_ATTR_WO(), or similar. Change all instances using
-__ATTR* to now use its equivalent DEVICE_ATTR*.
-
-Example of old:
-
-static struct device_attribute dev_name_##_attr=__ATTR_RO(_name);
-
-Example of new:
-
-static DEVICE_ATTR_RO(_name);
-
-Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
----
- drivers/pci/pci-sysfs.c | 59 +++++++++++++++++++----------------------
- 1 file changed, 27 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 965c72104150..8af7944fdccb 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -464,9 +464,7 @@ static ssize_t dev_rescan_store(struct device *dev,
- 	}
- 	return count;
- }
--static struct device_attribute dev_rescan_attr = __ATTR(rescan,
--							(S_IWUSR|S_IWGRP),
--							NULL, dev_rescan_store);
-+static DEVICE_ATTR(rescan, (S_IWUSR | S_IWGRP), NULL, dev_rescan_store);
- 
- static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- 			    const char *buf, size_t count)
-@@ -480,9 +478,8 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- 		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
- 	return count;
- }
--static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
--							(S_IWUSR|S_IWGRP),
--							NULL, remove_store);
-+static DEVICE_ATTR_IGNORE_LOCKDEP(remove, (S_IWUSR | S_IWGRP), NULL,
-+				  remove_store);
- 
- static ssize_t dev_bus_rescan_store(struct device *dev,
- 				    struct device_attribute *attr,
-@@ -504,7 +501,7 @@ static ssize_t dev_bus_rescan_store(struct device *dev,
- 	}
- 	return count;
- }
--static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
-+static DEVICE_ATTR(bus_rescan, (S_IWUSR | S_IWGRP), NULL, dev_bus_rescan_store);
- 
- #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
- static ssize_t d3cold_allowed_store(struct device *dev,
-@@ -687,16 +684,14 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
- 	return count;
- }
- 
--static struct device_attribute sriov_totalvfs_attr = __ATTR_RO(sriov_totalvfs);
--static struct device_attribute sriov_numvfs_attr =
--		__ATTR(sriov_numvfs, (S_IRUGO|S_IWUSR|S_IWGRP),
--		       sriov_numvfs_show, sriov_numvfs_store);
--static struct device_attribute sriov_offset_attr = __ATTR_RO(sriov_offset);
--static struct device_attribute sriov_stride_attr = __ATTR_RO(sriov_stride);
--static struct device_attribute sriov_vf_device_attr = __ATTR_RO(sriov_vf_device);
--static struct device_attribute sriov_drivers_autoprobe_attr =
--		__ATTR(sriov_drivers_autoprobe, (S_IRUGO|S_IWUSR|S_IWGRP),
--		       sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
-+static DEVICE_ATTR_RO(sriov_totalvfs);
-+static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
-+				  sriov_numvfs_show, sriov_numvfs_store);
-+static DEVICE_ATTR_RO(sriov_offset);
-+static DEVICE_ATTR_RO(sriov_stride);
-+static DEVICE_ATTR_RO(sriov_vf_device);
-+static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
-+		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
- #endif /* CONFIG_PCI_IOV */
- 
- static ssize_t driver_override_store(struct device *dev,
-@@ -792,7 +787,7 @@ static struct attribute *pcie_dev_attrs[] = {
- };
- 
- static struct attribute *pcibus_attrs[] = {
--	&dev_attr_rescan.attr,
-+	&dev_attr_bus_rescan.attr,
- 	&dev_attr_cpuaffinity.attr,
- 	&dev_attr_cpulistaffinity.attr,
- 	NULL,
-@@ -820,7 +815,7 @@ static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
- 		!!(pdev->resource[PCI_ROM_RESOURCE].flags &
- 		   IORESOURCE_ROM_SHADOW));
- }
--static struct device_attribute vga_attr = __ATTR_RO(boot_vga);
-+static DEVICE_ATTR_RO(boot_vga);
- 
- static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
- 			       struct bin_attribute *bin_attr, char *buf,
-@@ -1458,7 +1453,7 @@ static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
- 	return count;
- }
- 
--static struct device_attribute reset_attr = __ATTR(reset, 0200, NULL, reset_store);
-+static DEVICE_ATTR(reset, 0200, NULL, reset_store);
- 
- static int pci_create_capabilities_sysfs(struct pci_dev *dev)
- {
-@@ -1468,7 +1463,7 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
- 	pcie_aspm_create_sysfs_dev_files(dev);
- 
- 	if (dev->reset_fn) {
--		retval = device_create_file(&dev->dev, &reset_attr);
-+		retval = device_create_file(&dev->dev, &dev_attr_reset);
- 		if (retval)
- 			goto error;
- 	}
-@@ -1553,7 +1548,7 @@ static void pci_remove_capabilities_sysfs(struct pci_dev *dev)
- 	pcie_vpd_remove_sysfs_dev_files(dev);
- 	pcie_aspm_remove_sysfs_dev_files(dev);
- 	if (dev->reset_fn) {
--		device_remove_file(&dev->dev, &reset_attr);
-+		device_remove_file(&dev->dev, &dev_attr_reset);
- 		dev->reset_fn = 0;
- 	}
- }
-@@ -1606,7 +1601,7 @@ static int __init pci_sysfs_init(void)
- late_initcall(pci_sysfs_init);
- 
- static struct attribute *pci_dev_dev_attrs[] = {
--	&vga_attr.attr,
-+	&dev_attr_boot_vga.attr,
- 	NULL,
- };
- 
-@@ -1616,7 +1611,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
- 	struct device *dev = kobj_to_dev(kobj);
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 
--	if (a == &vga_attr.attr)
-+	if (a == &dev_attr_boot_vga.attr)
- 		if ((pdev->class >> 8) != PCI_CLASS_DISPLAY_VGA)
- 			return 0;
- 
-@@ -1624,8 +1619,8 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
- }
- 
- static struct attribute *pci_dev_hp_attrs[] = {
--	&dev_remove_attr.attr,
--	&dev_rescan_attr.attr,
-+	&dev_attr_remove.attr,
-+	&dev_attr_rescan.attr,
- 	NULL,
- };
- 
-@@ -1699,12 +1694,12 @@ static const struct attribute_group pci_dev_hp_attr_group = {
- 
- #ifdef CONFIG_PCI_IOV
- static struct attribute *sriov_dev_attrs[] = {
--	&sriov_totalvfs_attr.attr,
--	&sriov_numvfs_attr.attr,
--	&sriov_offset_attr.attr,
--	&sriov_stride_attr.attr,
--	&sriov_vf_device_attr.attr,
--	&sriov_drivers_autoprobe_attr.attr,
-+	&dev_attr_sriov_totalvfs.attr,
-+	&dev_attr_sriov_numvfs.attr,
-+	&dev_attr_sriov_offset.attr,
-+	&dev_attr_sriov_stride.attr,
-+	&dev_attr_sriov_vf_device.attr,
-+	&dev_attr_sriov_drivers_autoprobe.attr,
- 	NULL,
- };
- 
--- 
-2.20.1
-
+SGkgTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB0aGUgZmVlZGJhY2shDQoNCkkgdGhpbmsgd2Ug
+bmVlZCB0byBjb21lIGEgY29uY2x1c2lvbiBvbiBoZXJlOg0KaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
+bmVsLm9yZy9wYXRjaC8xMTA5NTU0Ny8NCg0KYmVmb3JlIHRha2luZyB0aGUgY29tbWVudHMgb24g
+dGhpcyBwYXRjaCBhbnkgZnVydGhlci4NCg0KVGhhbmtzLA0KRmFiDQoNCj4gRnJvbTogTGF1cmVu
+dCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPg0KPiBTZW50OiAx
+NSBBdWd1c3QgMjAxOSAxMzowMA0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDQvOV0gZHJtL3Rp
+bWluZ3M6IEFkZCBsaW5rIGZsYWdzDQo+IA0KPiBIaSBGYWJyaXppbywNCj4gDQo+IFRoYW5rIHlv
+dSBmb3IgdGhlIHBhdGNoLg0KPiANCj4gT24gVGh1LCBBdWcgMTUsIDIwMTkgYXQgMTI6MDQ6MjhQ
+TSArMDEwMCwgRmFicml6aW8gQ2FzdHJvIHdyb3RlOg0KPiA+IFdlIG5lZWQgbW9yZSBpbmZvcm1h
+dGlvbiB0byBkZXNjcmliZSBkdWFsLUxWRFMgbGlua3MsIHRoZXJlZm9yZQ0KPiA+IGludHJvZHVj
+ZSBsaW5rX2ZsYWdzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxm
+YWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+ID4NCj4gPiAtLS0NCj4gPiB2MS0+djI6
+DQo+ID4gKiBuZXcgcGF0Y2gNCj4gPg0KPiA+ICBpbmNsdWRlL2RybS9kcm1fdGltaW5ncy5oIHwg
+MjYgKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI2IGlu
+c2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2RybS9kcm1fdGltaW5n
+cy5oIGIvaW5jbHVkZS9kcm0vZHJtX3RpbWluZ3MuaA0KPiA+IGluZGV4IDRhZjg4MTQuLjU4ZmJm
+MWIgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9kcm0vZHJtX3RpbWluZ3MuaA0KPiA+ICsrKyBi
+L2luY2x1ZGUvZHJtL2RybV90aW1pbmdzLmgNCj4gPiBAQCAtMSw0ICsxLDYgQEANCj4gPiAgLyoN
+Cj4gPiArICogQ29weXJpZ2h0IChDKSAyMDE5IFJlbmVzYXMgRWxlY3Ryb25pY3MgQ29ycG9yYXRp
+b24NCj4gPiArICoNCj4gPiAgICogUGVybWlzc2lvbiB0byB1c2UsIGNvcHksIG1vZGlmeSwgZGlz
+dHJpYnV0ZSwgYW5kIHNlbGwgdGhpcyBzb2Z0d2FyZSBhbmQgaXRzDQo+ID4gICAqIGRvY3VtZW50
+YXRpb24gZm9yIGFueSBwdXJwb3NlIGlzIGhlcmVieSBncmFudGVkIHdpdGhvdXQgZmVlLCBwcm92
+aWRlZCB0aGF0DQo+ID4gICAqIHRoZSBhYm92ZSBjb3B5cmlnaHQgbm90aWNlIGFwcGVhciBpbiBh
+bGwgY29waWVzIGFuZCB0aGF0IGJvdGggdGhhdCBjb3B5cmlnaHQNCj4gPiBAQCAtMjEsNiArMjMs
+MjQgQEANCj4gPiAgI2lmbmRlZiBfX0RSTV9USU1JTkdTX0hfXw0KPiA+ICAjZGVmaW5lIF9fRFJN
+X1RJTUlOR1NfSF9fDQo+ID4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2JpdHMuaD4NCj4gPiArDQo+
+ID4gKy8qKg0KPiA+ICsgKiBlbnVtIGRybV9saW5rX2ZsYWdzIC0gbGlua19mbGFncyBmb3IgJmRy
+bV90aW1pbmdzDQo+ID4gKyAqDQo+ID4gKyAqIFRoaXMgZW51bSBkZWZpbmVzIHRoZSBkZXRhaWxz
+IG9mIHRoZSBsaW5rLg0KPiA+ICsgKg0KPiA+ICsgKiBARFJNX0xJTktfRFVBTF9MVkRTX09ERF9F
+VkVOOglEdWFsLUxWRFMgbGluaywgd2l0aCBvZGQgcGl4ZWxzICgxLDMsNSwNCj4gPiArICoJCQkJ
+CWV0Yy4pIGNvbWluZyB0aHJvdWdoIHRoZSBmaXJzdCBwb3J0LCBhbmQNCj4gPiArICoJCQkJCWV2
+ZW4gcGl4ZWxzICgwLDIsNCxldGMuKSBjb21pbmcgdGhyb3VnaA0KPiA+ICsgKgkJCQkJdGhlIHNl
+Y29uZCBwb3J0LiBJZiBub3Qgc3BlY2lmaWVkIGZvciBhDQo+ID4gKyAqCQkJCQlkdWFsLUxWRFMg
+cGFuZWwsIGl0IGlzIGFzc3VtZWQgdGhhdCBldmVuDQo+ID4gKyAqCQkJCQlwaXhlbHMgYXJlIGNv
+bWluZyB0aHJvdWdoIHRoZSBmaXJzdCBwb3J0DQo+ID4gKyAqLw0KPiA+ICtlbnVtIGRybV9saW5r
+X2ZsYWdzIHsNCj4gDQo+IFRoZSB0ZXh0IHdpbGwgYmUgZWFzaWVyIHRvIHJlYWQgaWYgeW91IGlu
+bGluZSBpdCBoZXJlLg0KPiANCj4gCS8qKg0KPiAJICogQERSTV9MSU5LX0RVQUxfTFZEU19PRERf
+RVZFTjogRHVhbC1MVkRTIGxpbmssIHdpdGggb2RkIHBpeGVscyAoMSwzLDUsDQo+IAkgKiBldGMu
+KSBjb21pbmcgdGhyb3VnaCB0aGUgZmlyc3QgcG9ydCwgYW5kICBldmVuIHBpeGVscyAoMCwyLDQs
+ZXRjLikNCj4gCSAuLi4NCj4gDQo+ID4gKwlEUk1fTElOS19EVUFMX0xWRFNfT0REX0VWRU4gPSBC
+SVQoMCksDQo+IA0KPiBJIHdvdWxkIHJlbW92ZSB0aGUgZHVhbF9saW5rIGZpZWxkIGFuZCBhZGQg
+YSBEUk1fTElOS19EVUFMX0xWRFMgKG9yDQo+IGFsdGVybmF0aXZlbHkgdHdvIGZsYWdzLCBkdWFs
+IGx2ZHMgb2RkLWV2ZW4gYW5kIGR1YWwgbHZkcyBldmVuLW9kZCkuDQo+IA0KPiA+ICt9Ow0KPiA+
+ICsNCj4gPiAgLyoqDQo+ID4gICAqIHN0cnVjdCBkcm1fdGltaW5ncyAtIHRpbWluZyBpbmZvcm1h
+dGlvbg0KPiA+ICAgKi8NCj4gPiBAQCAtNTUsNiArNzUsMTIgQEAgc3RydWN0IGRybV90aW1pbmdz
+IHsNCj4gPiAgCSAqIGFuZCBvZGQtbnVtYmVyZWQgcGl4ZWxzIGFyZSByZWNlaXZlZCBvbiBzZXBh
+cmF0ZSBsaW5rcy4NCj4gPiAgCSAqLw0KPiA+ICAJYm9vbCBkdWFsX2xpbms7DQo+ID4gKwkvKioN
+Cj4gPiArCSAqIEBsaW5rX2ZsYWdzDQo+ID4gKwkgKg0KPiA+ICsJICogUHJvdmlkZXMgZGV0YWls
+ZWQgaW5mb3JtYXRpb24gYWJvdXQgdGhlIGxpbmsuDQo+IA0KPiBJIHRoaW5rIHRoaXMgY2FsbHMg
+Zm9yIGEgYml0IG1vcmUgaW5mb3JtYXRpb24gdGhhbiAiZGV0YWlsZWQNCj4gaW5mb3JtYXRpb24i
+LiBXaGF0IGluZm9ybWF0aW9uIGRvIHlvdSB3YW50IHRvIHN0b3JlIGluIHRoaXMgZmllbGQgPw0K
+PiANCj4gPiArCSAqLw0KPiA+ICsJZW51bSBkcm1fbGlua19mbGFncyBsaW5rX2ZsYWdzOw0KPiA+
+ICB9Ow0KPiA+DQo+ID4gICNlbmRpZiAvKiBfX0RSTV9USU1JTkdTX0hfXyAqLw0KPiA+IC0tDQo+
+ID4gMi43LjQNCj4gPg0KPiANCj4gLS0NCj4gUmVnYXJkcywNCj4gDQo+IExhdXJlbnQgUGluY2hh
+cnQNCg==
