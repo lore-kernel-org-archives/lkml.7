@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D346C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568A1C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBE2208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D8222086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:40:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="VK98QHJQ"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="J4KpZPS7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732386AbfHOQkD (ORCPT
+        id S1731001AbfHOQkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:40:03 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37979 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732147AbfHOQjV (ORCPT
+        Thu, 15 Aug 2019 12:40:09 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38063 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732506AbfHOQjT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:39:21 -0400
-Received: by mail-wm1-f66.google.com with SMTP id m125so1774895wmm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:39:20 -0700 (PDT)
+        Thu, 15 Aug 2019 12:39:19 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g17so2773514wrr.5
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:39:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GnwJnGDWcqQEa8ukjqPOjGYwDlsA8+VgoLza7ivYpuU=;
-        b=VK98QHJQp58r4MG/VMQ2/X8C4g7K+jd1wWgAJGc04+4RuRF1VZprsHSpUZoJo+2Huw
-         N+xWJ1IF009s65KxEfQ4AjWRseLaM5xD2wgRTA+tMKRbA64bOWbGt2GhPXhXwNfrCzAq
-         1wsBBCDUn7k4bZs2JhPRh4/N3iEwnFfzR7bb7WNtLA1TT0OPUywTx19QzZxQPU1SFBMs
-         wlaZPPDHhQxsSxea9BklM3Iq78CSFKVlqprUPlPG29tktqAv/OF7oD47/7/vbN0HNO4h
-         azIQk+5Bpo3zU8U5veQadHFoU5vlyENj/pPKKQt6NiMf6YSd/NVGs8udSaANPvt6mM1s
-         x0dA==
+        bh=uJkPu9y+gmExeCUpCA066mqgvfW2S/OqiamBX4Wlaac=;
+        b=J4KpZPS7wXz88Nni6ZpvxnXX+K2uvbYds1TcLpaXL/Z5uwIBXN9Ddc2tqoExyKQriq
+         PBnjY59uAnaLurHOas1TkBVD5whYXEK7z70a6i247qXRE2ZmKXcmu3tbIO/qJwCyMCGN
+         pl5AUYGdrWLH4lpzdGUA664DWH9bwRj5ahw75ilzSbAEdMvoqCajxBi6UrEIildjsaDX
+         QBHSEaUhLlWhojYHjvrvxWw1EJaL8HC4aLWkqE9jxz1jPvYCHbwzwA5xjq6X0/ZhEJ1p
+         fQa8sJRo+F9elMn+jv5nu9BPstAlDQxFi08QAAv9n64DpKpDzTzSCUF5y0xlrw9GQ+8/
+         G5gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GnwJnGDWcqQEa8ukjqPOjGYwDlsA8+VgoLza7ivYpuU=;
-        b=F9Tw5RRMzQk5sEt+zSGLmIBOvQ8KfzWjXIgaDCxeQjwgH140xawx/jJCh/QXt4eKEW
-         If4M2EJ4Jzwbl2UhzbHT0T1xLNiZceZ7ia5Ya5KCILQLB2h9GDCG8LfFQ/rd8lzoQLYY
-         PDIeCNb5cDPVbTV07pXew/I4d9q8ezPGXHxHpi5lLGDMC9igi/Rx6qcuekhgTtyYRRMW
-         IgULMbu5j+eO3aQpO1WRMl6UaULcay8gpwt7jS1po9gDASnCmVpUTNE6I50XTqTfmLPA
-         CRI+KSSQpAu6mVu3mfPNuCTUR+x0+F+JcigHhbRJO6riwj/cs5yuCgnCC0xiXfgQwiAC
-         CAzQ==
-X-Gm-Message-State: APjAAAWKOYdHAS4JhcTFEd/L+2ovUA4Te0jFwUOKLWKr4AcEc/Bzu+YG
-        /QfQry+3s1DVVJkrzVSIraMyaabXwL4=
-X-Google-Smtp-Source: APXvYqzaWfUHfcgN30w8w/Hh8uPgfDlDg7IOhqbO0A5S0rFHYCc4oL9zwrvsgNDVlFZHev9iucu1gg==
-X-Received: by 2002:a05:600c:28c:: with SMTP id 12mr3503235wmk.157.1565887159619;
-        Thu, 15 Aug 2019 09:39:19 -0700 (PDT)
+        bh=uJkPu9y+gmExeCUpCA066mqgvfW2S/OqiamBX4Wlaac=;
+        b=cmpWL/Pzq1zCwEa1AOea+OqHXwt0cVus4R0V+x7z+9GFqynQUVpX6Vkti6G6SO1sG2
+         JLA57Z5rpIN2kwzpkXBCPOo+p2p1Dd7V/nU4wQDs5o3m26XcslH8DtNXJT8Jw6AfRqoR
+         N1DKLnovIaVUxIzjNE8hGKsRCpxv8H7sVFj9IiV8mVSu3fiGZqATuCwKT0r1AjDn6nRs
+         tKT2qoM/5wbZXRRmDb7f0XCMjjL/NkVkDSTSr/8XcqOWUCGnb1M3v/IXsTng0j0ZBpW/
+         GfQNQc4wcbRa2TzKc/Yzl5/DWm0+0CtTmpUcDkOrFFLyikJlearLrKqZmstalRQnLk5A
+         wxUw==
+X-Gm-Message-State: APjAAAX9642lfabrgsWwY4P1vCilgy2F51fhR4nxTw3r+5mo7WnJQ2Kh
+        ENZ8JNQP8c4pUSMew4iTwRM03O4UF7I=
+X-Google-Smtp-Source: APXvYqzG58GHqWhQt3O95EMpBPl+rbS/dCB4xX33X5WCtgl71eUCMz5eZqiwPYk9hteRQJy1ao79eQ==
+X-Received: by 2002:adf:db49:: with SMTP id f9mr6487168wrj.112.1565887156941;
+        Thu, 15 Aug 2019 09:39:16 -0700 (PDT)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id f7sm5755046wrf.8.2019.08.15.09.39.18
+        by smtp.gmail.com with ESMTPSA id f7sm5755046wrf.8.2019.08.15.09.39.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2019 09:39:19 -0700 (PDT)
+        Thu, 15 Aug 2019 09:39:16 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -75,10 +75,11 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv6 28/36] posix-clocks: Add align for timens_offsets
-Date:   Thu, 15 Aug 2019 17:38:28 +0100
-Message-Id: <20190815163836.2927-29-dima@arista.com>
+        linux-api@vger.kernel.org, x86@kernel.org,
+        Andrei Vagin <avagin@gmail.com>
+Subject: [PATCHv6 26/36] x86/vdso2c: Process jump tables
+Date:   Thu, 15 Aug 2019 17:38:26 +0100
+Message-Id: <20190815163836.2927-27-dima@arista.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190815163836.2927-1-dima@arista.com>
 References: <20190815163836.2927-1-dima@arista.com>
@@ -89,40 +90,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Align offsets so that time namespace will work for ia32 applications on
-x86_64 host.
+As it has been discussed on timens RFC, adding a new conditional branch
+`if (inside_time_ns)` on VDSO for all processes is undesirable.
 
-Co-developed-by: Andrei Vagin <avagin@openvz.org>
-Signed-off-by: Andrei Vagin <avagin@openvz.org>
+Addressing those problems, there are two versions of VDSO's .so:
+for host tasks (without any penalty) and for processes inside time
+namespace with clk_to_ns() that subtracts offsets from host's time.
+
+The timens code in vdso looks like this:
+
+      if (timens_static_branch()) {
+              clk_to_ns(clk, ts);
+      }
+
+Static branch mechanism adds a __jump_table section into vdso.
+Vdso's linker script drops all unwanted sections in compile time.
+
+Preserve __jump_table section and add it into (struct vdso_image),
+as it's needed for enabling (patching) static branches that are
+present on vdso.
+
+Co-developed-by: Andrei Vagin <avagin@gmail.com>
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- include/linux/timens_offsets.h | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ arch/x86/entry/vdso/vdso-layout.lds.S | 1 +
+ arch/x86/entry/vdso/vdso2c.h          | 9 ++++++++-
+ arch/x86/include/asm/vdso.h           | 1 +
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/timens_offsets.h b/include/linux/timens_offsets.h
-index e93aabaa5e45..05da1b0563ce 100644
---- a/include/linux/timens_offsets.h
-+++ b/include/linux/timens_offsets.h
-@@ -2,9 +2,17 @@
- #ifndef _LINUX_TIME_OFFSETS_H
- #define _LINUX_TIME_OFFSETS_H
+diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
+index ba216527e59f..69dbe4821aa5 100644
+--- a/arch/x86/entry/vdso/vdso-layout.lds.S
++++ b/arch/x86/entry/vdso/vdso-layout.lds.S
+@@ -45,6 +45,7 @@ SECTIONS
+ 	.gnu.version	: { *(.gnu.version) }
+ 	.gnu.version_d	: { *(.gnu.version_d) }
+ 	.gnu.version_r	: { *(.gnu.version_r) }
++	__jump_table	: { *(__jump_table) }	:text
  
-+/*
-+ * Time offsets need align as they're placed on VVAR page,
-+ * which is used by x86_64 and ia32 VDSO code.
-+ * On ia32 offset::tv_sec (u64) has align(4), so re-align offsets
-+ * to the same positions as 64-bit offsets.
-+ * On 64-bit big-endian systems VDSO should convert to timespec64
-+ * to timespec because of a padding occurring between the fields.
-+ */
- struct timens_offsets {
--	struct timespec64 monotonic;
--	struct timespec64 boottime;
-+	struct timespec64 monotonic __aligned(8);
-+	struct timespec64 boottime __aligned(8);
- };
+ 	.dynamic	: { *(.dynamic) }		:text	:dynamic
  
- #endif
+diff --git a/arch/x86/entry/vdso/vdso2c.h b/arch/x86/entry/vdso/vdso2c.h
+index 885b988aea19..318b278ca396 100644
+--- a/arch/x86/entry/vdso/vdso2c.h
++++ b/arch/x86/entry/vdso/vdso2c.h
+@@ -14,7 +14,7 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 	unsigned long mapping_size;
+ 	ELF(Ehdr) *hdr = (ELF(Ehdr) *)raw_addr;
+ 	unsigned int i, syms_nr;
+-	unsigned long j;
++	unsigned long j, jump_table_addr = -1UL, jump_table_size = -1UL;
+ 	ELF(Shdr) *symtab_hdr = NULL, *strtab_hdr, *secstrings_hdr,
+ 		*alt_sec = NULL;
+ 	ELF(Dyn) *dyn = 0, *dyn_end = 0;
+@@ -78,6 +78,10 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 		if (!strcmp(secstrings + GET_LE(&sh->sh_name),
+ 			    ".altinstructions"))
+ 			alt_sec = sh;
++		if (!strcmp(secstrings + GET_LE(&sh->sh_name), "__jump_table")) {
++			jump_table_addr = GET_LE(&sh->sh_offset);
++			jump_table_size = GET_LE(&sh->sh_size);
++		}
+ 	}
+ 
+ 	if (!symtab_hdr)
+@@ -166,6 +170,9 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 		fprintf(outfile, "\t.alt_len = %lu,\n",
+ 			(unsigned long)GET_LE(&alt_sec->sh_size));
+ 	}
++	fprintf(outfile, "\t.jump_table = %luUL,\n", jump_table_addr);
++	fprintf(outfile, "\t.jump_table_len = %luUL,\n", jump_table_size);
++
+ 	for (i = 0; i < NSYMS; i++) {
+ 		if (required_syms[i].export && syms[i])
+ 			fprintf(outfile, "\t.sym_%s = %" PRIi64 ",\n",
+diff --git a/arch/x86/include/asm/vdso.h b/arch/x86/include/asm/vdso.h
+index ccf89dedd04f..5e83bd3cda22 100644
+--- a/arch/x86/include/asm/vdso.h
++++ b/arch/x86/include/asm/vdso.h
+@@ -16,6 +16,7 @@ struct vdso_image {
+ 	unsigned long size;   /* Always a multiple of PAGE_SIZE */
+ 
+ 	unsigned long alt, alt_len;
++	unsigned long jump_table, jump_table_len;
+ 
+ 	long sym_vvar_start;  /* Negative offset to the vvar area */
+ 
 -- 
 2.22.0
 
