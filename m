@@ -2,143 +2,175 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B09C32753
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D8EC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EB7D208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB1D5208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 00:08:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="uTNUm8o8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OKJCAs9Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbfHOAH3 (ORCPT
+        id S1728565AbfHOAIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 14 Aug 2019 20:07:29 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40550 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfHOAH3 (ORCPT
+        Wed, 14 Aug 2019 20:08:20 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34010 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbfHOAIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 14 Aug 2019 20:07:29 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w16so348181pfn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 17:07:28 -0700 (PDT)
+        Wed, 14 Aug 2019 20:08:19 -0400
+Received: by mail-ot1-f65.google.com with SMTP id c7so2347104otp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 17:08:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fossix-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=6AkzvLAhb44ySDSJof1CTP/r441hp6IrMh57XhAQ5QU=;
-        b=uTNUm8o8XrLZ9gJdyQUCzqYZPOXtQBONmBrOtlIg3G96m8gQeXFVHZ/GbdoZUgU0ex
-         dPZgtSMZQ1l84qTJw9wpkmg8RXPiCpCn7WsvaBZU8FmMktORf6NYE/vEjjhmm3nTvEle
-         JRfKL0vnPtnqxle8w60zC2OT7flRUEsenZdtRTvZjm9vbSvJmBjKpEfZSmYEdeTKYlKG
-         WD5ac56SN1E3n/MJPeLK7XjbjXUDIWmdMnT2nauS6H5TSj4AxxXURYF96Qfis5HSbZjS
-         qK+9oQAi7RC+rVzxnmvR6Oxl+uPcIohFR6H7V+nhF6CBJYg1lNrtmSY9BsVCpKj9EYOC
-         evaQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uGI92pBT4wjU7CSUDxKnDPZXXoJ9HToSaovQyHjBUqw=;
+        b=OKJCAs9QM3AQySC5VmY3lRiFA5MWMAETr0ugV15cv4Aprd1TPNnyqWUFW/SPkg3XAb
+         dG4SQnLnLNpeNVv6OF8pNrI+Ii/HuXLS1SnSi0j/YJHHrskBUP+DLQGZiU4IXcS9EuAZ
+         uODfEMLKiHgJekyiQYhN4lNqH24O0XFze7YEI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=6AkzvLAhb44ySDSJof1CTP/r441hp6IrMh57XhAQ5QU=;
-        b=O3MpesX0tInthiInw4k3YHCcH4hcXNSKuZubsOGdqTIQpefgQiIYlcrYlEQhjLCYuj
-         iWfQu9xer9/U5OhYp/ZMMqvd6Kfjr254u74X5+vWGGnAecn42q76qdAdumV2h259tgMD
-         e6/zgar28Rht1v6D9Qv0JSzdtxaJYZ9Rm6y3DgXyrrisLJvcvvA7/juxwZouKD+U+Lw4
-         qwX2wsw7OjiHI+ETVMcDYEeHYXntlX+94CalCcsosieNbaY4cn/pcsJAFIgpPaO70r9F
-         mOHnykrcUeffsT456J4NTPZyhve89v68iUEsC8+rf7iE29vu7OF9s2WxcO+mgY8bwEjH
-         AhkQ==
-X-Gm-Message-State: APjAAAVCzFDsTByFkRZSszLxTSNZc1dgPyMoH8Z5aspSx9X01avuIUbr
-        EhHR38eabrOXGCE+7cRaJ7X58ZsG7yN6mw==
-X-Google-Smtp-Source: APXvYqwAf9uoH1s9sLDcRT8qkxaQoZiC+RAh4A0ZNB5kuA3yUd9Ew79QgOBoM1AP9p33GX0KgR8q+g==
-X-Received: by 2002:a62:1688:: with SMTP id 130mr2607323pfw.187.1565827648302;
-        Wed, 14 Aug 2019 17:07:28 -0700 (PDT)
-Received: from localhost ([49.205.218.176])
-        by smtp.gmail.com with ESMTPSA id n185sm762325pga.16.2019.08.14.17.07.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 14 Aug 2019 17:07:27 -0700 (PDT)
-From:   Santosh Sivaraj <santosh@fossix.org>
-To:     Balbir Singh <bsingharora@gmail.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        christophe leroy <christophe.leroy@c-s.fr>
-Subject: Re: [PATCH v9 7/7] powerpc: add machine check safe copy_to_user
-In-Reply-To: <74d12529-d068-0210-e229-5cea68bcf9da@gmail.com>
-References: <20190812092236.16648-1-santosh@fossix.org> <20190812092236.16648-8-santosh@fossix.org> <74d12529-d068-0210-e229-5cea68bcf9da@gmail.com>
-Date:   Thu, 15 Aug 2019 05:37:24 +0530
-Message-ID: <874l2jqojn.fsf@santosiv.in.ibm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uGI92pBT4wjU7CSUDxKnDPZXXoJ9HToSaovQyHjBUqw=;
+        b=Ox5HySW0AmQLV7C6U7A/8Vi4K2HSRiq1FsWW3iK6YpzgIyfsc5d11fyM6Sd1MA1kpz
+         RAStOramRkktyua+CsM1L9s/f6iSdE33oXXNp2KPwDjZeWPhbq7XQ3cr9fGtrZPyVsx5
+         xuGk+PlHo5pskS4D8FvAvs4cQ8stCVzeukzMjmxoC9WdWrbolvAIE6YL0bWVlm5ORTuV
+         restA+wbBAXXNAlIE9W2yCq2SXWODncXu2UNfKQ7NlabsVcPL2U61aWzY+3urSukP2Ix
+         PaKyNouqSgC2IoWjrglGlDRxFaYGMZal8qlUl/IYFiFPAgKMkilS4VEEdTVmNtUAl445
+         V8ng==
+X-Gm-Message-State: APjAAAV6IinTUUmhprJ0Zcrvaha5qoAv+epn5u2Yr/siEu8Qi4z7CbpD
+        qSa5CNd6d/AzqKvs7hjKftxjV1wwT18=
+X-Google-Smtp-Source: APXvYqx27zpTj5J6KefGrjPMrz7hKviYS9WkTrVL4ZM47jLXXxHYP74ymxuOPtTax21Cg3DcQCFpMg==
+X-Received: by 2002:a9d:da1:: with SMTP id 30mr1266657ots.299.1565827697556;
+        Wed, 14 Aug 2019 17:08:17 -0700 (PDT)
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com. [209.85.210.43])
+        by smtp.gmail.com with ESMTPSA id w21sm438792oti.52.2019.08.14.17.08.16
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Aug 2019 17:08:16 -0700 (PDT)
+Received: by mail-ot1-f43.google.com with SMTP id g17so1465444otl.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 17:08:16 -0700 (PDT)
+X-Received: by 2002:a9d:70c6:: with SMTP id w6mr236433otj.349.1565827695529;
+ Wed, 14 Aug 2019 17:08:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CAHX4x86QCrkrnPEfrup8k96wyqg=QR_vgetYLqP1AEa02fx1vw@mail.gmail.com>
+ <20190813060249.GD6670@kroah.com> <CAHX4x87DbJ4cKuwVO3OS=UzwtwSucFCV073W8bYHOPHW8NiA=A@mail.gmail.com>
+ <20190814212012.GB22618@kroah.com>
+In-Reply-To: <20190814212012.GB22618@kroah.com>
+From:   Nick Crews <ncrews@chromium.org>
+Date:   Wed, 14 Aug 2019 18:08:03 -0600
+X-Gmail-Original-Message-ID: <CAHX4x84YM0PcoQw17FxMz=6=NPq2+HUUw2GWZarAKzZxr+ax=A@mail.gmail.com>
+Message-ID: <CAHX4x84YM0PcoQw17FxMz=6=NPq2+HUUw2GWZarAKzZxr+ax=A@mail.gmail.com>
+Subject: Re: Policy to keep USB ports powered in low-power states
+To:     Duncan Laurie <dlaurie@google.com>
+Cc:     linux-usb@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Daniel Kurtz <djkurtz@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Balbir,
+Adding Duncan Laurie who I think has some more intimate knowledge
+of how this is implemented in HW. Duncan, could you correct or elaborate
+on my answers below as you see fit? Also, sorry if I make some beginner
+mistakes here, I'm just getting familiar with the USB subsystem, and thanks for
+your patience.
 
-Balbir Singh <bsingharora@gmail.com> writes:
-
-> On 12/8/19 7:22 pm, Santosh Sivaraj wrote:
->> Use  memcpy_mcsafe() implementation to define copy_to_user_mcsafe()
->> 
->> Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
->> ---
->>  arch/powerpc/Kconfig               |  1 +
->>  arch/powerpc/include/asm/uaccess.h | 14 ++++++++++++++
->>  2 files changed, 15 insertions(+)
->> 
->> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
->> index 77f6ebf97113..4316e36095a2 100644
->> --- a/arch/powerpc/Kconfig
->> +++ b/arch/powerpc/Kconfig
->> @@ -137,6 +137,7 @@ config PPC
->>  	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !RELOCATABLE && !HIBERNATION)
->>  	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
->>  	select ARCH_HAS_UACCESS_FLUSHCACHE	if PPC64
->> +	select ARCH_HAS_UACCESS_MCSAFE		if PPC64
->>  	select ARCH_HAS_UBSAN_SANITIZE_ALL
->>  	select ARCH_HAVE_NMI_SAFE_CMPXCHG
->>  	select ARCH_KEEP_MEMBLOCK
->> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
->> index 8b03eb44e876..15002b51ff18 100644
->> --- a/arch/powerpc/include/asm/uaccess.h
->> +++ b/arch/powerpc/include/asm/uaccess.h
->> @@ -387,6 +387,20 @@ static inline unsigned long raw_copy_to_user(void __user *to,
->>  	return ret;
->>  }
->>  
->> +static __always_inline unsigned long __must_check
->> +copy_to_user_mcsafe(void __user *to, const void *from, unsigned long n)
->> +{
->> +	if (likely(check_copy_size(from, n, true))) {
->> +		if (access_ok(to, n)) {
->> +			allow_write_to_user(to, n);
->> +			n = memcpy_mcsafe((void *)to, from, n);
->> +			prevent_write_to_user(to, n);
->> +		}
->> +	}
->> +
->> +	return n;
+On Wed, Aug 14, 2019 at 3:20 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Do we always return n independent of the check_copy_size return value and
-> access_ok return values?
+> On Wed, Aug 14, 2019 at 02:12:07PM -0600, Nick Crews wrote:
+> > Thanks for the fast response!
+> >
+> > On Tue, Aug 13, 2019 at 12:02 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Mon, Aug 12, 2019 at 06:08:43PM -0600, Nick Crews wrote:
+> > > > Hi Greg!
+> > >
+> > > Hi!
+> > >
+> > > First off, please fix your email client to not send html so that vger
+> > > does not reject your messages :)
+> >
+> > Thanks, should be good now.
+> >
+> > >
+> > > > I am working on a Chrome OS device that supports a policy called "USB Power
+> > > > Share," which allows users to turn the laptop into a charge pack for their
+> > > > phone. When the policy is enabled, power will be supplied to the USB ports
+> > > > even when the system is in low power states such as S3 and S5. When
+> > > > disabled, then no power will be supplied in S3 and S5. I wrote a driver
+> > > > <https://lore.kernel.org/patchwork/patch/1062995/> for this already as part
+> > > > of drivers/platform/chrome/, but Enric Balletbo i Serra, the maintainer,
+> > > > had the reasonable suggestion of trying to move this into the USB subsystem.
+> > >
+> > > Correct suggestion.
+> > >
+> > > > Has anything like this been done before? Do you have any preliminary
+> > > > thoughts on this before I start writing code? A few things that I haven't
+> > > > figured out yet:
+> > > > - How to make this feature only available on certain devices. Using device
+> > > > tree? Kconfig? Making a separate driver just for this device that plugs
+> > > > into the USB core?
+> > > > - The feature is only supported on some USB ports, so we need a way of
+> > > > filtering on a per-port basis.
+> > >
+> > > Look at the drivers/usb/typec/ code, I think that should do everything
+> > > you need here as this is a typec standard functionality, right?
+> >
+> > Unfortunately this is for USB 2.0 ports, so it's not type-C.
+> > Is the type-C code still worth looking at?
+>
+> If this is for USB 2, does it use the "non-standard" hub commands to
+> turn on and off power?  If so, why not just use the usbreset userspace
+> program for that?
 
-Yes we always return the remaining bytes not copied even if check_copy_size
-or access_ok fails.
-
-Santosh
+It does not use the standard hub commands. The USB ports are controlled
+by an Embedded Controller (EC), so to control this policy we send a command
+to the EC. Since the command to send to the EC is very specific, this would need
+to go into a "hub driver" unique for these Wilco devices. We would make it so
+that the normal hub registration is intercepted by something that sees this is a
+Wilco device, and instead register the hub as a "wilco-hub", which has its own
+special "power_share" sysfs attribute, but still is treated as a normal USB hub
+otherwise?
 
 >
-> Balbir Singh.
+> And how are you turning a USB 2 port into a power source?  That feels
+> really odd given the spec.  Is this part of the standard somewhere or
+> just a firmware/hardware hack that you are adding to a device?
+
+The EC twiddles something in the port' HW so that the port turns into a
+DCP (Dedicated Charging Port) and only supplies power, not data. So I
+think yes, this is a bit of a hack that does not conform to the spec.
+
 >
->> +}
->> +
->>  extern unsigned long __clear_user(void __user *addr, unsigned long size);
->>  
->>  static inline unsigned long clear_user(void __user *addr, unsigned long size)
->> 
+> Is there some port information in the firmware that describes this
+> functionality?  If so, can you expose it through sysfs to the port that
+> way?
+
+[I'm not sure I'm answering your question, but] I believe that we could
+make the BIOS firmware describe the USB ports' capabilities, and the
+kernel's behavior would be gated upon what the firmware reports. I see
+that struct usb_port already contains a "quirks" field, should we add a
+POWER_SHARE quirk to include/linux/usb/quirks.h? I would guess that
+should that should be reserved for quirks shared between many USB
+devices/hubs?
+
+Thanks,
+Nick
+
+>
+> thanks,
+>
+> greg k-h
