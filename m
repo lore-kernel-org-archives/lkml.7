@@ -2,194 +2,274 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F133AC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C09C3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBF82206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:56:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BxFVHZYK"
+	by mail.kernel.org (Postfix) with ESMTP id 8E0E92171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565899044;
+	bh=OKFle1TupWpD0iPaz3P7lkgUVCa5+3JBOGWHuMLQmjw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PnXJQw9GPRxoAX3hXWqMvdCkG0nOAQ19+vasvzRxq4jHYq6STFymPcvIXJE9db0hL
+	 e+M39CkqSeIt9DqnivabeGWjDLPuCxw4/gDho3apSL5Bj2itFRM2AdrOVLZtoW9Jb/
+	 r9adaA99hZPbhuR2qyyezdY0eRGdAGnkUa1wZlwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732275AbfHOT43 (ORCPT
+        id S1732284AbfHOT5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 15:56:29 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40847 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731366AbfHOT42 (ORCPT
+        Thu, 15 Aug 2019 15:57:23 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34698 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728956AbfHOT5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 15:56:28 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c3so3250145wrd.7;
-        Thu, 15 Aug 2019 12:56:25 -0700 (PDT)
+        Thu, 15 Aug 2019 15:57:23 -0400
+Received: by mail-qt1-f194.google.com with SMTP id q4so3673873qtp.1;
+        Thu, 15 Aug 2019 12:57:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=g9gYXoDI8x/e6fYrmXGn/1ayuYBgMKowuhsSXyNfgGk=;
-        b=BxFVHZYKa5FJrzI4dPgxhphpWrPJX2/swt830QW256gBUwXxM+yJC5IcwYLsVK7nDX
-         YJfjPvRIeaA5/1BBNJXoqsgHTewr/PGetGNR+nY8LcUb106z3sVc1BGnzwC66iGgyvBi
-         +mZLEhnELdlHg5W9w2aWb5ElMS7FgSEkhszGxlzux9iKt0MowKuNOJLEMUsF+38EitOx
-         aWGA01aulScsS+DFbHrtKj7iyTuIPYhoHtdzLh8PvOBthQUYT/SsM7uXPDDj4Q1D9eSV
-         8Sy3e80DmLJG96aLV8uckZ39ffojhwRHHccpX8EVLTaFDo7W+D2mPyxmub0qfUW0foGm
-         Ocvg==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/LFxVzI9MepcAl4Lnqm6SEvMCLIi+u2ZqmJKlF6ic0o=;
+        b=jjTNHUJ+CSG6+ZUiOmqZD7r0T3PUVCgfjcmbNMfGfPR8DHnctfki8PyRgCaQiyB90S
+         UWKnZoGdq8+gWKBRhfYYqTZFxccfzAN8droy/uuQAn/QQj/WXaMpDNOoUqAixilN6XWZ
+         Sk53sgnFEFB4AG7XxGGusOOxgwx2THclF1wyqs+7Qb2gzDgFcnq4EhL3ld/Ls5TSy4Q5
+         LIUIN5BhMM68p6SVE3RIkRWEwox+dN2CEbkaavpnNzDMj+eCiq2B1UGpU7K14QSpw51w
+         1SO27McqrcnIjLscZNURHZZeQ+IdchCWOkYO6u9avMv8pnjE+yYMDugbMHQaNhDFI9JN
+         y/EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=g9gYXoDI8x/e6fYrmXGn/1ayuYBgMKowuhsSXyNfgGk=;
-        b=WY0uWMNmoDVdt4uHTPD+laP/aIjuylqU5Ax1x0NP7ay7htP9BMKUcRFlnanla1JHsw
-         DAUqBfuB9FnNbhasprLYVcJunzW30ZWiZfcAWnKeTKTEAaysLNHt+PXuPHUqVHkU2ly8
-         +vxUyJaKQIASIX6Mdt51JqULA3TlEnzcO2vdWLocDiDgxibcW/xon4ixq/xaGCZwJWLH
-         sXZS2k+s7KN9HD3k6S+y6dt447bo8eA9KyRfwAFCIN8/9vvCDbDrdQVkhqEiZO3ciGf7
-         Vc6qMZY/PVZBDTWDsM5psQWHQEl8J9f1BowefIkUWdM7ZjcEu7ZdkVGL0yo/INWi8wO/
-         mD4Q==
-X-Gm-Message-State: APjAAAUSWkWan8Fjk9aOrIoc9gGePmQotfJxP2zAyLVuDTOcFccgOovP
-        yRZSY4HaSZqritDT9jRGsY8=
-X-Google-Smtp-Source: APXvYqxCRww3HZkI3tRakEQwmbHT9qSGZgIG7df34SLn3B0yW2ltqN9deIrgqnjQ87uU/8wJDAOtvQ==
-X-Received: by 2002:adf:ffc2:: with SMTP id x2mr3219310wrs.338.1565898984599;
-        Thu, 15 Aug 2019 12:56:24 -0700 (PDT)
-Received: from [172.30.88.191] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
-        by smtp.gmail.com with ESMTPSA id h2sm1762739wmb.28.2019.08.15.12.56.17
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/LFxVzI9MepcAl4Lnqm6SEvMCLIi+u2ZqmJKlF6ic0o=;
+        b=Xk18+Gw0nyCbCzE8omgSUbQ9XQ7cFzO5CeFyB6g+LUCoXlzyMiPgzIwcNTEryoXA2+
+         LVfxCSC+1Pd6sc2LVs6Umu3kJ7OQuH+5yNyS0gUj47Xqaef/or1vsrPIs998eg1fb+71
+         7aIic4DpgNvlNlopHeZ4UnvgAca8RVMadveXp7CHyk45uWXwEJFdIEhg2YuzxQxk9t0w
+         m5JcE/9hOOrr69clf7MxhmU83DQWSI7MqT+2JVhu85DNDu2kii3Z5ouKWE3i7uoJzMCV
+         iIdRivtIaTdm75nQvB0UlZo09yFYKR0gOoBKMxlGAv25yvDoJlbQnF2vwscUN7+HFNhu
+         ehAw==
+X-Gm-Message-State: APjAAAVed38oAX/HKB519ZZKYA1oosx8Kd5JRtv/YEObtVfqlfFToJVV
+        HEX+1lrPGpazaG7DEvrc8wE=
+X-Google-Smtp-Source: APXvYqwvGoz95kfeW/o6YJ39eK/95vaFIXp94ZgS9UtlL7U+AC31LouqDrLwGVqyFtoh8BCsILyYSA==
+X-Received: by 2002:ac8:289b:: with SMTP id i27mr5552503qti.67.1565899041355;
+        Thu, 15 Aug 2019 12:57:21 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:25cd])
+        by smtp.gmail.com with ESMTPSA id h1sm2042852qkh.101.2019.08.15.12.57.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 12:56:23 -0700 (PDT)
-Subject: Re: [PATCH 04/22] media: Move v4l2_fwnode_parse_link from v4l2 to
- driver base
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Len Brown <lenb@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "moderated list:ARM/ZYNQ ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Enrico Weigelt <info@metux.net>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>
-References: <20190805233505.21167-1-slongerbeam@gmail.com>
- <20190805233505.21167-5-slongerbeam@gmail.com>
- <CAHp75VcOh8bOf_s6t0ehwGtcYn64QFGj303SVvpHrztEOhTRgg@mail.gmail.com>
- <4750b347-b421-6569-600f-0ced8406460e@gmail.com>
- <20190814103054.GI13294@shell.armlinux.org.uk>
- <e0a19469-af9d-d9de-499f-4ffbf04542b3@gmail.com>
- <20190814220437.GJ13294@shell.armlinux.org.uk>
- <1842bf8f-4f97-6294-41db-74f9f8e2befd@gmail.com>
- <20190814231509.GK13294@shell.armlinux.org.uk>
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-Message-ID: <9b9ca684-9309-cadd-2e58-9ae73162a807@gmail.com>
-Date:   Thu, 15 Aug 2019 12:56:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 15 Aug 2019 12:57:20 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 12:57:19 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com
+Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, guro@fb.com, akpm@linux-foundation.org
+Subject: [PATCH 1/5] writeback: Generalize and expose wb_completion
+Message-ID: <20190815195719.GB2263813@devbig004.ftw2.facebook.com>
+References: <20190815195619.GA2263813@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190814231509.GK13294@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815195619.GA2263813@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+wb_completion is used to track writeback completions.  We want to use
+it from memcg side for foreign inode flushes.  This patch updates it
+to remember the target waitq instead of assuming bdi->wb_waitq and
+expose it outside of fs-writeback.c.
 
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Jan Kara <jack@suse.cz>
+---
+ fs/fs-writeback.c                |   47 +++++++++++----------------------------
+ include/linux/backing-dev-defs.h |   20 ++++++++++++++++
+ include/linux/backing-dev.h      |    2 +
+ 3 files changed, 36 insertions(+), 33 deletions(-)
 
-On 8/14/19 4:15 PM, Russell King - ARM Linux admin wrote:
-> On Wed, Aug 14, 2019 at 04:00:30PM -0700, Steve Longerbeam wrote:
->>
->> On 8/14/19 3:04 PM, Russell King - ARM Linux admin wrote:
->>> On Wed, Aug 14, 2019 at 12:04:41PM -0700, Steve Longerbeam wrote:
->>>> On 8/14/19 3:30 AM, Russell King - ARM Linux admin wrote:
->>>>> On Tue, Aug 06, 2019 at 09:53:41AM -0700, Steve Longerbeam wrote:
->>>>>> The full patchset doesn't seem to be up yet, but see [1] for the cover
->>>>>> letter.
->>>>> Was the entire series copied to the mailing lists, or just selected
->>>>> patches?  I only saw 4, 9, 11 and 13-22 via lakml.
->>>> The whole series was posted to the linux-media ML, see [1]. At the time,
->>>> none of the linux-media ML archives had the whole series.
->>>>
->>>>> In the absence of the other patches, will this solve imx-media binding
->>>>> the internal subdevs of sensor devices to the CSI2 interface?
->>>> "internal subdevs of sensor devices" ?? That doesn't make any sense.
->>> Sorry, but it makes complete sense when you consider that sensor
->>> devices may have more than one subdev, but there should be only one
->>> that is the "output" to whatever the camera is attached to.  The
->>> other subdevs are internal to the sensor.
->> Ah, thanks for the clarification. Yes, by "internal subdevs" I understand
->> what you mean now. The adv748x and smiapp are examples.
->>
->>> subdevs are not purely the remit of SoC drivers.
->> So there is no binding of internal subdevs to the receiver CSI-2. The
->> receiver CSI-2 subdev will create media links to the subdev that has an
->> externally exposed fwnode endpoint that connects with the CSI-2 sink pad.
-> Maybe - with 5.2, I get:
->
-> - entity 15: imx6-mipi-csi2 (5 pads, 6 links)
->               type V4L2 subdev subtype Unknown flags 0
->               device node name /dev/v4l-subdev2
->          pad0: Sink
-> ...
->                  <- "imx219 0-0010":0 []
->                  <- "imx219 pixel 0-0010":0 []
->
-> Adding some debug in gives:
->
-> [   11.963362] imx-media: imx_media_create_of_links() for imx6-mipi-csi2
-> [   11.963396] imx-media: create_of_link(): /soc/aips-bus@2000000/iomuxc-gpr@20e0000/ipu1_csi0_mux
-> [   11.963422] imx-media: create_of_link(): /soc/ipu@2400000
-> [   11.963450] imx-media: create_of_link(): /soc/ipu@2800000
-> [   11.963478] imx-media: create_of_link(): /soc/aips-bus@2000000/iomuxc-gpr@20e0000/ipu2_csi1_mux
-> [   11.963489] imx-media: imx6-mipi-csi2:4 -> ipu2_csi1_mux:0
-> [   11.963522] imx-media: create_of_link(): /soc/aips-bus@2100000/i2c@21a0000/camera@10
-> [   11.963533] imx-media: imx219 0-0010:0 -> imx6-mipi-csi2:0
-> [   11.963549] imx-media: imx_media_create_of_links() for imx219 pixel 0-0010
-> [   11.963577] imx-media: create_of_link(): /soc/aips-bus@2100000/mipi@21dc000
-> [   11.963587] imx-media: imx219 pixel 0-0010:0 -> imx6-mipi-csi2:0
-> [   11.963602] imx-media: imx_media_create_of_links() for imx219 0-0010
->
-> Note that it's not created by imx6-mipi-csi2, but by imx-media delving
-> around in the imx219 subdevs.
->
->  From what I can see, smiapp does the same thing that I do in imx219 -
-> sets the subdev->dev member to point at the struct device, which then
-> means that v4l2_device_register_subdev() will associate the same fwnode
-> with both "imx219 pixel 0-0010" and "imx219 0-0010".
-
-Ok, understood.
-
-I realize imx_media_create_of_link() is a bit intrusive, and that's one 
-of the things I'm trying to get rid of in this patchset. Unfortunately 
-it's there for a reason which is described in patch 0021. But to explain 
-here, the imx6-mipi-csi2 receiver outputs its four virtual channels on 
-four separate source pads, and those connect to four different 
-subdevices (video mux's and CSI's), and the problem is that only the 
-first subdev that adds imx6-mipi-csi2 to its notifier asd list will get 
-a notifier bind() callback (where links can be created to 
-imx6-mipi-csi2) -- the other subdevs don't contain it in their asd lists 
-so they never create the links to imx6-mipi-csi2. So until the 
-requirement in v4l2-async that no notifiers can contain the same asd in 
-its list is relaxed, this function will have to remain, but I can make 
-it less intrusive (only create the missing links from imx6-mipi-csi2). 
-I'm not able to find a cleaner workaround at the moment.
-
-Steve
-
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -36,10 +36,6 @@
+  */
+ #define MIN_WRITEBACK_PAGES	(4096UL >> (PAGE_SHIFT - 10))
+ 
+-struct wb_completion {
+-	atomic_t		cnt;
+-};
+-
+ /*
+  * Passed into wb_writeback(), essentially a subset of writeback_control
+  */
+@@ -61,19 +57,6 @@ struct wb_writeback_work {
+ };
+ 
+ /*
+- * If one wants to wait for one or more wb_writeback_works, each work's
+- * ->done should be set to a wb_completion defined using the following
+- * macro.  Once all work items are issued with wb_queue_work(), the caller
+- * can wait for the completion of all using wb_wait_for_completion().  Work
+- * items which are waited upon aren't freed automatically on completion.
+- */
+-#define DEFINE_WB_COMPLETION_ONSTACK(cmpl)				\
+-	struct wb_completion cmpl = {					\
+-		.cnt		= ATOMIC_INIT(1),			\
+-	}
+-
+-
+-/*
+  * If an inode is constantly having its pages dirtied, but then the
+  * updates stop dirtytime_expire_interval seconds in the past, it's
+  * possible for the worst case time between when an inode has its
+@@ -182,7 +165,7 @@ static void finish_writeback_work(struct
+ 	if (work->auto_free)
+ 		kfree(work);
+ 	if (done && atomic_dec_and_test(&done->cnt))
+-		wake_up_all(&wb->bdi->wb_waitq);
++		wake_up_all(done->waitq);
+ }
+ 
+ static void wb_queue_work(struct bdi_writeback *wb,
+@@ -206,20 +189,18 @@ static void wb_queue_work(struct bdi_wri
+ 
+ /**
+  * wb_wait_for_completion - wait for completion of bdi_writeback_works
+- * @bdi: bdi work items were issued to
+  * @done: target wb_completion
+  *
+  * Wait for one or more work items issued to @bdi with their ->done field
+- * set to @done, which should have been defined with
+- * DEFINE_WB_COMPLETION_ONSTACK().  This function returns after all such
+- * work items are completed.  Work items which are waited upon aren't freed
++ * set to @done, which should have been initialized with
++ * DEFINE_WB_COMPLETION().  This function returns after all such work items
++ * are completed.  Work items which are waited upon aren't freed
+  * automatically on completion.
+  */
+-static void wb_wait_for_completion(struct backing_dev_info *bdi,
+-				   struct wb_completion *done)
++void wb_wait_for_completion(struct wb_completion *done)
+ {
+ 	atomic_dec(&done->cnt);		/* put down the initial count */
+-	wait_event(bdi->wb_waitq, !atomic_read(&done->cnt));
++	wait_event(*done->waitq, !atomic_read(&done->cnt));
+ }
+ 
+ #ifdef CONFIG_CGROUP_WRITEBACK
+@@ -854,7 +835,7 @@ static void bdi_split_work_to_wbs(struct
+ restart:
+ 	rcu_read_lock();
+ 	list_for_each_entry_continue_rcu(wb, &bdi->wb_list, bdi_node) {
+-		DEFINE_WB_COMPLETION_ONSTACK(fallback_work_done);
++		DEFINE_WB_COMPLETION(fallback_work_done, bdi);
+ 		struct wb_writeback_work fallback_work;
+ 		struct wb_writeback_work *work;
+ 		long nr_pages;
+@@ -901,7 +882,7 @@ restart:
+ 		last_wb = wb;
+ 
+ 		rcu_read_unlock();
+-		wb_wait_for_completion(bdi, &fallback_work_done);
++		wb_wait_for_completion(&fallback_work_done);
+ 		goto restart;
+ 	}
+ 	rcu_read_unlock();
+@@ -2373,7 +2354,8 @@ static void wait_sb_inodes(struct super_
+ static void __writeback_inodes_sb_nr(struct super_block *sb, unsigned long nr,
+ 				     enum wb_reason reason, bool skip_if_busy)
+ {
+-	DEFINE_WB_COMPLETION_ONSTACK(done);
++	struct backing_dev_info *bdi = sb->s_bdi;
++	DEFINE_WB_COMPLETION(done, bdi);
+ 	struct wb_writeback_work work = {
+ 		.sb			= sb,
+ 		.sync_mode		= WB_SYNC_NONE,
+@@ -2382,14 +2364,13 @@ static void __writeback_inodes_sb_nr(str
+ 		.nr_pages		= nr,
+ 		.reason			= reason,
+ 	};
+-	struct backing_dev_info *bdi = sb->s_bdi;
+ 
+ 	if (!bdi_has_dirty_io(bdi) || bdi == &noop_backing_dev_info)
+ 		return;
+ 	WARN_ON(!rwsem_is_locked(&sb->s_umount));
+ 
+ 	bdi_split_work_to_wbs(sb->s_bdi, &work, skip_if_busy);
+-	wb_wait_for_completion(bdi, &done);
++	wb_wait_for_completion(&done);
+ }
+ 
+ /**
+@@ -2451,7 +2432,8 @@ EXPORT_SYMBOL(try_to_writeback_inodes_sb
+  */
+ void sync_inodes_sb(struct super_block *sb)
+ {
+-	DEFINE_WB_COMPLETION_ONSTACK(done);
++	struct backing_dev_info *bdi = sb->s_bdi;
++	DEFINE_WB_COMPLETION(done, bdi);
+ 	struct wb_writeback_work work = {
+ 		.sb		= sb,
+ 		.sync_mode	= WB_SYNC_ALL,
+@@ -2461,7 +2443,6 @@ void sync_inodes_sb(struct super_block *
+ 		.reason		= WB_REASON_SYNC,
+ 		.for_sync	= 1,
+ 	};
+-	struct backing_dev_info *bdi = sb->s_bdi;
+ 
+ 	/*
+ 	 * Can't skip on !bdi_has_dirty() because we should wait for !dirty
+@@ -2475,7 +2456,7 @@ void sync_inodes_sb(struct super_block *
+ 	/* protect against inode wb switch, see inode_switch_wbs_work_fn() */
+ 	bdi_down_write_wb_switch_rwsem(bdi);
+ 	bdi_split_work_to_wbs(bdi, &work, false);
+-	wb_wait_for_completion(bdi, &done);
++	wb_wait_for_completion(&done);
+ 	bdi_up_write_wb_switch_rwsem(bdi);
+ 
+ 	wait_sb_inodes(sb);
+--- a/include/linux/backing-dev-defs.h
++++ b/include/linux/backing-dev-defs.h
+@@ -67,6 +67,26 @@ enum wb_reason {
+ 	WB_REASON_MAX,
+ };
+ 
++struct wb_completion {
++	atomic_t		cnt;
++	wait_queue_head_t	*waitq;
++};
++
++#define __WB_COMPLETION_INIT(_waitq)	\
++	(struct wb_completion){ .cnt = ATOMIC_INIT(1), .waitq = (_waitq) }
++
++/*
++ * If one wants to wait for one or more wb_writeback_works, each work's
++ * ->done should be set to a wb_completion defined using the following
++ * macro.  Once all work items are issued with wb_queue_work(), the caller
++ * can wait for the completion of all using wb_wait_for_completion().  Work
++ * items which are waited upon aren't freed automatically on completion.
++ */
++#define WB_COMPLETION_INIT(bdi)		__WB_COMPLETION_INIT(&(bdi)->wb_waitq)
++
++#define DEFINE_WB_COMPLETION(cmpl, bdi)	\
++	struct wb_completion cmpl = WB_COMPLETION_INIT(bdi)
++
+ /*
+  * For cgroup writeback, multiple wb's may map to the same blkcg.  Those
+  * wb's can operate mostly independently but should share the congested
+--- a/include/linux/backing-dev.h
++++ b/include/linux/backing-dev.h
+@@ -44,6 +44,8 @@ void wb_start_background_writeback(struc
+ void wb_workfn(struct work_struct *work);
+ void wb_wakeup_delayed(struct bdi_writeback *wb);
+ 
++void wb_wait_for_completion(struct wb_completion *done);
++
+ extern spinlock_t bdi_lock;
+ extern struct list_head bdi_list;
+ 
