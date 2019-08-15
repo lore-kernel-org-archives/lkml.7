@@ -2,79 +2,56 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D61C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B454C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A328A206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:37:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565897873;
-	bh=v0ACJuoWQU5RAFwW7Y92jbObD6HXuwQ6z3LCH1a7Fgw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sqXi1Kfh5LiAAiyERcSe6n08b2qAEEYXRQs/gE/onO6vIf+NQw/PTqNgEIIP9XGJt
-	 PKTJV6aTLu/jZgj+vSJHJfuy5AfL0Da7uHcjV/JpiBomvbbkFPg7/odfdnQcx5YLn0
-	 ZLCxofLL+QS9dmRTpQoVUU9y8HXeSSeToOGB1/Oo=
+	by mail.kernel.org (Postfix) with ESMTP id 2A191206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 19:37:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732903AbfHOThw (ORCPT
+        id S1732936AbfHOTh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 15:37:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbfHOThw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 15:37:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E78572083B;
-        Thu, 15 Aug 2019 19:37:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565897871;
-        bh=v0ACJuoWQU5RAFwW7Y92jbObD6HXuwQ6z3LCH1a7Fgw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p0V73gtRmvyOg4wUkTqphFCsFcz8qg2rADtLApk/0zW3eSuu7V+TcAqODOO8CyGAo
-         6mLD/K3thofCzmJ/KU5jip0BV3UKPDMNJ0Luj9bR5QGmn6mfzU3XKWHVzK9j5KS58F
-         i/WSHHy2QSHRQoK9eg6dTUVdxC9MAGK0ms2y665s=
-Date:   Thu, 15 Aug 2019 21:37:49 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.2 000/144] 5.2.9-stable review
-Message-ID: <20190815193749.GH30437@kroah.com>
-References: <20190814165759.466811854@linuxfoundation.org>
- <20190815151822.GC23562@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815151822.GC23562@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Thu, 15 Aug 2019 15:37:56 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:49114 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732777AbfHOThy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 15:37:54 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C449B1400EC46;
+        Thu, 15 Aug 2019 12:37:53 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 12:37:53 -0700 (PDT)
+Message-Id: <20190815.123753.513875593712522152.davem@davemloft.net>
+To:     wenwen@cs.uga.edu
+Cc:     dchickles@marvell.com, sburla@marvell.com, fmanlunas@marvell.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] liquidio: add cleanup in octeon_setup_iq()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1565759689-5941-1-git-send-email-wenwen@cs.uga.edu>
+References: <1565759689-5941-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 15 Aug 2019 12:37:54 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 08:18:22AM -0700, Guenter Roeck wrote:
-> On Wed, Aug 14, 2019 at 06:59:16PM +0200, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.2.9 release.
-> > There are 144 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Fri 16 Aug 2019 04:55:34 PM UTC.
-> > Anything received after that time might be too late.
-> > 
+From: Wenwen Wang <wenwen@cs.uga.edu>
+Date: Wed, 14 Aug 2019 00:14:49 -0500
+
+> If oct->fn_list.enable_io_queues() fails, no cleanup is executed, leading
+> to memory/resource leaks. To fix this issue, invoke
+> octeon_delete_instr_queue() before returning from the function.
 > 
-> Build results:
-> 	total: 159 pass: 159 fail: 0
-> Qemu test results:
-> 	total: 390 pass: 390 fail: 0
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 
-Thanks for testing all of these and letting me know.
-
-greg k-h
+Applied.
