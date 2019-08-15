@@ -2,72 +2,108 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D903AC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541DDC32759
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72482086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 263522086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:04:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ksEa7QIw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nF7md9dw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730828AbfHOICO (ORCPT
+        id S1730832AbfHOIEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 04:02:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50504 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730382AbfHOICN (ORCPT
+        Thu, 15 Aug 2019 04:04:50 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40346 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730759AbfHOIEt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 04:02:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ca0c/ga9DNX+rlsTaxyta8rUBUAbPMo0Z+97s27rKAM=; b=ksEa7QIwxlpai27I2Yxz76Mhw
-        GDFEnYMyChGzscJO6IirJLLVAlwG6q46p4giK0PxKq7ARDrEh4q+P3YijfQfpJP58xBGO777BjMPO
-        0mt/DKKsiCe9V9wZOb6utxDchTRLs3xU7bM+YZ58a11rsFXVXPvLQB2Ge1+02Pmtc4aQmiPxrXYRl
-        mUsZwqCY+LgHo26VrORNa/DyVzEujetvk/kpVzkpCbZXFFXBC1yrmzpnvf17ItV8ftPOTGS2jVYmb
-        4LQJdG56fyNpB0+xHEu7JbB1YymfNAgqqdniN/D1q925PcFZZKbN84nfMqAkwDuj+TLYoG3bhQOod
-        wk9KmnUpw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hyAi3-0004UA-2H; Thu, 15 Aug 2019 08:02:11 +0000
-Date:   Thu, 15 Aug 2019 01:02:11 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Nick Bowler <nbowler@draconx.ca>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH v5 01/18] xfs: compat_ioctl: use compat_ptr()
-Message-ID: <20190815080211.GA17055@infradead.org>
-References: <20190814204259.120942-1-arnd@arndb.de>
- <20190814204259.120942-2-arnd@arndb.de>
- <20190814213753.GP6129@dread.disaster.area>
- <20190815071314.GA6960@infradead.org>
- <CAK8P3a2Hjfd49XY18cDr04ZpvC5ZBGudzxqpCesbSsDf1ydmSA@mail.gmail.com>
+        Thu, 15 Aug 2019 04:04:49 -0400
+Received: by mail-lj1-f195.google.com with SMTP id e27so1493598ljb.7;
+        Thu, 15 Aug 2019 01:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DJdrgW8rQ9WDcBu7AceZ+PV2QceTUz0gTPn5TA0WI9E=;
+        b=nF7md9dw4GnWjU1GDdIcSg+Ev+UWsObP17rQ7yn81e86CzV947thJivLITYypAMqw1
+         IuAKwWGIsw8l2tTdEvOxgg3HrLGqXCbJnclNTP7kSshR3aVBPbAoxiWOygpclDFGZvc3
+         gnN0ah2GdzKzD1DrGlLz+WKhJhrQbwU0rUlf1azkOvne9+4XxW7iI8Q3WLxB/1y2Ae3X
+         Tme8BRqrZ/Htc2g6qbClJ5TuA7WVW2AjMrmrKxLvi6E4BmVD3gjk6mk8JCsYnE8+J6If
+         +sBg4OcbSCtwulCmzw8/aemHnxTftyxO6FcJHHY0aJrtK0sP5pDJrLnXppr8GI1qiITs
+         hTRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DJdrgW8rQ9WDcBu7AceZ+PV2QceTUz0gTPn5TA0WI9E=;
+        b=tDvB5nCE+YtJi2F+tf/kHJPaodJiXnSjc8lkWghkvEllXKZlO3c82Q+3D496Sc+Xz8
+         6AsjlkWJCgbOOMH4zdEe4pLeacVBoYbZeOZvUYnupY4Ne8/U7byq+YTGyEs/Ur+tk4+a
+         4EAa6PwynOni0O/aSdmIRq+N4p+VtGusACQj2OfzNsJ3VekjbrYBqeQEQ92eApDLeoK+
+         zp8lPpQojTJbXyxTe3borIvguQYxKWyWjZAErF2uef79+qMNJRkPEa0clUMZrslVIcVz
+         Ywe1uSBfjBdFTZCaNeB+PASRGyJ2za5YWAZSud+A9c/opFVXyTp4/Ot2S97sYhz7s9AB
+         Nbfw==
+X-Gm-Message-State: APjAAAXhg/a9vpTpmrDE2aRSSdDz+KhWfiNSFRTDxhIwGNUlLnTGQiyF
+        +xn2rii3jDcdl6wCw1UAUwctyisG9tjMvsLJvZE=
+X-Google-Smtp-Source: APXvYqy1ZljxbUP5caEvDk4rZnn5hEEgafcYGZI0m0VguZPcJP2an8DpQbJhrkCkTa06JADshNdI6/v/+J+y751B5as=
+X-Received: by 2002:a2e:9ad1:: with SMTP id p17mr2059138ljj.34.1565856287550;
+ Thu, 15 Aug 2019 01:04:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2Hjfd49XY18cDr04ZpvC5ZBGudzxqpCesbSsDf1ydmSA@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <1565842753-14245-1-git-send-email-u0084500@gmail.com> <20190815071402.GA25906@kroah.com>
+In-Reply-To: <20190815071402.GA25906@kroah.com>
+From:   =?UTF-8?B?5ZWf5Y6f6buD?= <u0084500@gmail.com>
+Date:   Thu, 15 Aug 2019 16:04:35 +0800
+Message-ID: <CADiBU3__gnBfab2DDPGudBjOiAW2xmGCYF-c2fLx9PyqQzA84w@mail.gmail.com>
+Subject: Re: [PATCH] From: cy_huang <cy_huang@richtek.com> Subject: usb: add
+ more vendor defined ops in tcpci
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        cy_huang <cy_huang@richtek.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gene_chen@richtek.com,
+        shufan_lee@richtek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In many ways I'd actually much rather have a table driven approach.
-Let me try something..
+Greg KH <gregkh@linuxfoundation.org> =E6=96=BC 2019=E5=B9=B48=E6=9C=8815=E6=
+=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=883:14=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Thu, Aug 15, 2019 at 12:19:13PM +0800, cy_huang wrote:
+> > diff --git a/drivers/usb/typec/tcpm/tcpci.h b/drivers/usb/typec/tcpm/tc=
+pci.h
+> > index 303ebde..a6754fb 100644
+> > --- a/drivers/usb/typec/tcpm/tcpci.h
+> > +++ b/drivers/usb/typec/tcpm/tcpci.h
+> > @@ -130,6 +130,11 @@ struct tcpci_data {
+> >                        bool enable);
+> >       int (*start_drp_toggling)(struct tcpci *tcpci, struct tcpci_data =
+*data,
+> >                                 enum typec_cc_status cc);
+> > +     int (*set_vbus)(struct tcpci *tcpci,
+> > +                     struct tcpci_data *data, bool source, bool sink);
+> > +     int (*get_current_limit)(struct tcpci *tcpci, struct tcpci_data *=
+data);
+> > +     int (*set_current_limit)(struct tcpci *tcpci,
+> > +                              struct tcpci_data *data, u32 max_ma, u32=
+ mv);
+> >  };
+>
+> You are adding callbacks here with no users of them, which isn't
+> allowed.  Please also submit the code that uses these callbacks at the
+> same time so we can review it all together.
+>
+> thanks,
+>
+> greg k-h
+
+Yes, I'm adding the callback for the sub-pmic (CHG/TCPC)
+
+I'll push the mfd driver first. for the tcpc, it's just a sub device.
