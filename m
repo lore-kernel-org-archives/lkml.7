@@ -2,155 +2,219 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C611DC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE4FC3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B6D20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:43:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="JYRuFfn7"
+	by mail.kernel.org (Postfix) with ESMTP id 6AF1021743
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733105AbfHOOnu (ORCPT
+        id S1733129AbfHOOq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:43:50 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42327 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729838AbfHOOnu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:43:50 -0400
-Received: by mail-oi1-f194.google.com with SMTP id o6so2244515oic.9
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 07:43:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EcYg2sxDc/ZPh1T6muHTeyf6D7+2ZcuVsE1FpQg6dIU=;
-        b=JYRuFfn7Urv5lm2qIS15ol2FS8DwFIVG8OmWWYMrXmD0Y8R7ysGKlNMvt3KB9qcDzN
-         a6Kx7zNWcIphDglLEOAwkTDGtkZEST11XQuWmWBPoVjWS+zZWiun6XIXVgDPHSeyw+S6
-         Mixv9rxX3YTPc7/9YynJMiIFHb7t7+ZPgoLpg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EcYg2sxDc/ZPh1T6muHTeyf6D7+2ZcuVsE1FpQg6dIU=;
-        b=lU67FpiIDrIIGnIf1Q90e+e1pQuN6uugx5MZNzR8MQ79YwuCLt9/zEU8qO1R0N9fsK
-         AHDVsfA4i/yK1D4TEdyvM/GyL6wQLSTId97jQlp8ExC7PxjRgGgYyqBDkmXElufQ95XE
-         ObTgGo5H+acORuiHDhx6vG79EWLs+2XxKUZduosP37I/9k6wIwLxjCHAvwlAuhTsE4Wv
-         f2UhdGlh49Vdh5jF+D8eob40j8+uo+ZzDu0P+/gRJGr1ouHTIM+TFcwgvvvS8DytVEi6
-         DVIKU2tepduoPKCj4B2jCTMMTBy9mSNR0O6lyVhkAknW/pkFdDm4rUPIHLNgE1ZlbFWL
-         ViNg==
-X-Gm-Message-State: APjAAAU9vyKYjqptNp2Ox0yGIRxm+UUpvoJeU8lS0jHT5RtWDWyBp/MQ
-        RO1Avc5DmVM8gS/tzIeRfOqxhHKQcV6ciBtJbpRI/A==
-X-Google-Smtp-Source: APXvYqySm/Ahp86UOdMXb+iRgyDRu4sKHNQjbABa4M9MuTxMEzBGIBaeNRuX3C9mf0zipUFJG00ZJ30GOlZewnICp5Q=
-X-Received: by 2002:a54:4f89:: with SMTP id g9mr1910952oiy.110.1565880229376;
- Thu, 15 Aug 2019 07:43:49 -0700 (PDT)
+        Thu, 15 Aug 2019 10:46:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56200 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726008AbfHOOq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 10:46:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0005CABB1;
+        Thu, 15 Aug 2019 14:46:23 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id AC6771E4200; Thu, 15 Aug 2019 16:46:23 +0200 (CEST)
+Date:   Thu, 15 Aug 2019 16:46:23 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH 2/4] bdi: Add bdi->id
+Message-ID: <20190815144623.GM14313@quack2.suse.cz>
+References: <20190803140155.181190-1-tj@kernel.org>
+ <20190803140155.181190-3-tj@kernel.org>
 MIME-Version: 1.0
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
- <20190814202027.18735-3-daniel.vetter@ffwll.ch> <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
- <20190815084429.GE9477@dhcp22.suse.cz> <20190815130415.GD21596@ziepe.ca>
- <CAKMK7uE9zdmBuvxa788ONYky=46GN=5Up34mKDmsJMkir4x7MQ@mail.gmail.com> <20190815143759.GG21596@ziepe.ca>
-In-Reply-To: <20190815143759.GG21596@ziepe.ca>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Thu, 15 Aug 2019 16:43:38 +0200
-Message-ID: <CAKMK7uEJQ6mPQaOWbT_6M+55T-dCVbsOxFnMC6KzLAMQNa-RGg@mail.gmail.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190803140155.181190-3-tj@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 4:38 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Thu, Aug 15, 2019 at 03:12:11PM +0200, Daniel Vetter wrote:
-> > On Thu, Aug 15, 2019 at 3:04 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > >
-> > > On Thu, Aug 15, 2019 at 10:44:29AM +0200, Michal Hocko wrote:
-> > >
-> > > > As the oom reaper is the primary guarantee of the oom handling forward
-> > > > progress it cannot be blocked on anything that might depend on blockable
-> > > > memory allocations. These are not really easy to track because they
-> > > > might be indirect - e.g. notifier blocks on a lock which other context
-> > > > holds while allocating memory or waiting for a flusher that needs memory
-> > > > to perform its work.
-> > >
-> > > But lockdep *does* track all this and fs_reclaim_acquire() was created
-> > > to solve exactly this problem.
-> > >
-> > > fs_reclaim is a lock and it flows through all the usual lockdep
-> > > schemes like any other lock. Any time the page allocator wants to do
-> > > something the would deadlock with reclaim it takes the lock.
-> > >
-> > > Failure is expressed by a deadlock cycle in the lockdep map, and
-> > > lockdep can handle arbitary complexity through layers of locks, work
-> > > queues, threads, etc.
-> > >
-> > > What is missing?
-> >
-> > Lockdep doens't seen everything by far. E.g. a wait_event will be
-> > caught by the annotations here, but not by lockdep.
->
-> Sure, but the wait_event might be OK if its progress isn't contingent
-> on fs_reclaim, ie triggered from interrupt, so why ban it?
+On Sat 03-08-19 07:01:53, Tejun Heo wrote:
+> There currently is no way to universally identify and lookup a bdi
+> without holding a reference and pointer to it.  This patch adds an
+> non-recycling bdi->id and implements bdi_get_by_id() which looks up
+> bdis by their ids.  This will be used by memcg foreign inode flushing.
+> 
+> I left bdi_list alone for simplicity and because while rb_tree does
+> support rcu assignment it doesn't seem to guarantee lossless walk when
+> walk is racing aginst tree rebalance operations.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
 
-For normal notifiers sure (but lockdep won't help you proof that at
-all). For oom_reaper apparently not, but that's really Michal's thing,
-I have not much idea about that.
+The patch looks good to me. You can add:
 
-> > And since we're talking about mmu notifiers here and gpus/dma engines.
-> > We have dma_fence_wait, which can wait for any hw/driver in the system
-> > that takes part in shared/zero-copy buffer processing. Which at least
-> > on the graphics side is everything. This pulls in enormous amounts of
-> > deadlock potential that lockdep simply is blind about and will never
-> > see.
->
-> It seems very risky to entagle a notifier widely like that.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-That's why I've looked into all possible ways to annotate them with
-debug infrastructure.
+Although I would note that here you take effort not to recycle bdi->id so
+that you don't flush wrong devices while in patch 4 you take pretty lax
+approach to feeding garbage into the writeback system. So these two don't
+quite match to me...
 
-> It looks pretty sure that notifiers are fs_reclaim, so at a minimum
-> that wait_event can't be contingent on anything that is doing
-> GFP_KERNEL or it will deadlock - and blockable doesn't make that sleep
-> safe.
->
-> Avoiding an uncertain wait_event under notifiers would seem to be the
-> only reasonable design here..
+								Honza
 
-You have to wait for the gpu to finnish current processing in
-invalidate_range_start. Otherwise there's no point to any of this
-really. So the wait_event/dma_fence_wait are unavoidable really.
-
-That's also why I'm throwing in the lockdep annotation on top, and why
-it would be really nice if we somehow can get the cross-release work
-landed. But it looks like all the people who could make it happen are
-busy with smeltdown :-/
--Daniel
+> ---
+>  include/linux/backing-dev-defs.h |  2 +
+>  include/linux/backing-dev.h      |  1 +
+>  mm/backing-dev.c                 | 65 +++++++++++++++++++++++++++++++-
+>  3 files changed, 66 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
+> index 8fb740178d5d..1075f2552cfc 100644
+> --- a/include/linux/backing-dev-defs.h
+> +++ b/include/linux/backing-dev-defs.h
+> @@ -185,6 +185,8 @@ struct bdi_writeback {
+>  };
+>  
+>  struct backing_dev_info {
+> +	u64 id;
+> +	struct rb_node rb_node; /* keyed by ->id */
+>  	struct list_head bdi_list;
+>  	unsigned long ra_pages;	/* max readahead in PAGE_SIZE units */
+>  	unsigned long io_pages;	/* max allowed IO size */
+> diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
+> index 02650b1253a2..84cdcfbc763f 100644
+> --- a/include/linux/backing-dev.h
+> +++ b/include/linux/backing-dev.h
+> @@ -24,6 +24,7 @@ static inline struct backing_dev_info *bdi_get(struct backing_dev_info *bdi)
+>  	return bdi;
+>  }
+>  
+> +struct backing_dev_info *bdi_get_by_id(u64 id);
+>  void bdi_put(struct backing_dev_info *bdi);
+>  
+>  __printf(2, 3)
+> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+> index e8e89158adec..4a8816e0b8d4 100644
+> --- a/mm/backing-dev.c
+> +++ b/mm/backing-dev.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  
+>  #include <linux/wait.h>
+> +#include <linux/rbtree.h>
+>  #include <linux/backing-dev.h>
+>  #include <linux/kthread.h>
+>  #include <linux/freezer.h>
+> @@ -22,10 +23,12 @@ EXPORT_SYMBOL_GPL(noop_backing_dev_info);
+>  static struct class *bdi_class;
+>  
+>  /*
+> - * bdi_lock protects updates to bdi_list. bdi_list has RCU reader side
+> - * locking.
+> + * bdi_lock protects bdi_tree and updates to bdi_list. bdi_list has RCU
+> + * reader side locking.
+>   */
+>  DEFINE_SPINLOCK(bdi_lock);
+> +static u64 bdi_id_cursor;
+> +static struct rb_root bdi_tree = RB_ROOT;
+>  LIST_HEAD(bdi_list);
+>  
+>  /* bdi_wq serves all asynchronous writeback tasks */
+> @@ -859,9 +862,58 @@ struct backing_dev_info *bdi_alloc_node(gfp_t gfp_mask, int node_id)
+>  }
+>  EXPORT_SYMBOL(bdi_alloc_node);
+>  
+> +struct rb_node **bdi_lookup_rb_node(u64 id, struct rb_node **parentp)
+> +{
+> +	struct rb_node **p = &bdi_tree.rb_node;
+> +	struct rb_node *parent = NULL;
+> +	struct backing_dev_info *bdi;
+> +
+> +	lockdep_assert_held(&bdi_lock);
+> +
+> +	while (*p) {
+> +		parent = *p;
+> +		bdi = rb_entry(parent, struct backing_dev_info, rb_node);
+> +
+> +		if (bdi->id > id)
+> +			p = &(*p)->rb_left;
+> +		else if (bdi->id < id)
+> +			p = &(*p)->rb_right;
+> +		else
+> +			break;
+> +	}
+> +
+> +	if (parentp)
+> +		*parentp = parent;
+> +	return p;
+> +}
+> +
+> +/**
+> + * bdi_get_by_id - lookup and get bdi from its id
+> + * @id: bdi id to lookup
+> + *
+> + * Find bdi matching @id and get it.  Returns NULL if the matching bdi
+> + * doesn't exist or is already unregistered.
+> + */
+> +struct backing_dev_info *bdi_get_by_id(u64 id)
+> +{
+> +	struct backing_dev_info *bdi = NULL;
+> +	struct rb_node **p;
+> +
+> +	spin_lock_irq(&bdi_lock);
+> +	p = bdi_lookup_rb_node(id, NULL);
+> +	if (*p) {
+> +		bdi = rb_entry(*p, struct backing_dev_info, rb_node);
+> +		bdi_get(bdi);
+> +	}
+> +	spin_unlock_irq(&bdi_lock);
+> +
+> +	return bdi;
+> +}
+> +
+>  int bdi_register_va(struct backing_dev_info *bdi, const char *fmt, va_list args)
+>  {
+>  	struct device *dev;
+> +	struct rb_node *parent, **p;
+>  
+>  	if (bdi->dev)	/* The driver needs to use separate queues per device */
+>  		return 0;
+> @@ -877,7 +929,15 @@ int bdi_register_va(struct backing_dev_info *bdi, const char *fmt, va_list args)
+>  	set_bit(WB_registered, &bdi->wb.state);
+>  
+>  	spin_lock_bh(&bdi_lock);
+> +
+> +	bdi->id = ++bdi_id_cursor;
+> +
+> +	p = bdi_lookup_rb_node(bdi->id, &parent);
+> +	rb_link_node(&bdi->rb_node, parent, p);
+> +	rb_insert_color(&bdi->rb_node, &bdi_tree);
+> +
+>  	list_add_tail_rcu(&bdi->bdi_list, &bdi_list);
+> +
+>  	spin_unlock_bh(&bdi_lock);
+>  
+>  	trace_writeback_bdi_register(bdi);
+> @@ -918,6 +978,7 @@ EXPORT_SYMBOL(bdi_register_owner);
+>  static void bdi_remove_from_list(struct backing_dev_info *bdi)
+>  {
+>  	spin_lock_bh(&bdi_lock);
+> +	rb_erase(&bdi->rb_node, &bdi_tree);
+>  	list_del_rcu(&bdi->bdi_list);
+>  	spin_unlock_bh(&bdi_lock);
+>  
+> -- 
+> 2.17.1
+> 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
