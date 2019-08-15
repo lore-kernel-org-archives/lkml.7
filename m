@@ -2,336 +2,122 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE77C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB45C31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845072064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6058C21721
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 08:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730577AbfHOIzA (ORCPT
+        id S1730604AbfHOIzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 04:55:00 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33157 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730143AbfHOIzA (ORCPT
+        Thu, 15 Aug 2019 04:55:36 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33541 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbfHOIzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 04:55:00 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hyBX3-0001Lc-9t; Thu, 15 Aug 2019 10:54:53 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hyBX2-000227-Kc; Thu, 15 Aug 2019 10:54:52 +0200
-Date:   Thu, 15 Aug 2019 10:54:52 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
-Subject: Re: [PATCH v3 2/2] pwm: sprd: Add Spreadtrum PWM support
-Message-ID: <20190815085452.2cipewq3l3krnwzv@pengutronix.de>
-References: <65a34dd943b0260bfe45ec76dcf414a67e5d8343.1565785291.git.baolin.wang@linaro.org>
- <446eb284a096a1fd8998765669b1c9a2f78d7d22.1565785291.git.baolin.wang@linaro.org>
- <20190814150304.x44lalde3cwp67ge@pengutronix.de>
- <CAMz4kuLiS=cGTA=uEi9ABOVAOb1M0Pcd2a_xU5VsdLo1DGd0Hg@mail.gmail.com>
- <20190815061540.763ue2ogkvuyhzcu@pengutronix.de>
- <CAMz4kuL_74V3M-8Zo99GnLaYbmgfQXO-h0Yz5qeXLQQ0ZR3TkA@mail.gmail.com>
+        Thu, 15 Aug 2019 04:55:35 -0400
+Received: by mail-ed1-f66.google.com with SMTP id s15so1565784edx.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 01:55:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=w12IhXmASUdChiniQIcmTiLoQtyHTC3MdMv6IJNT4MA=;
+        b=pV6bKEozof2vIMr94NRMuAiHHKUzBwUSmgTKLJUXLQHst/2bDbs3IcMBeQuS979DBX
+         ZKE2VKGncjTxLVdhHfWNNG9YL/FO9MSnMfYRRNqmBS1uawusmsQYg13ACrSqs0tSyE0+
+         Cf97i09K2TwcBEA2l6Q4QdxaQNhq0UDyDeBmUCp6PiMKnnzw9QiL5+PvK2KvnhOMiwHd
+         5UfoViDqRuaumAa5/bGou09uTuIq4/PDOyuCaIoYGuARVMP/W+QgYj/JeLC05jEUyPKQ
+         lKcdZYGndgmFW/mWVzTaxxvl6YFNJdsWgkGZY/64kpyDS4SuHKmTAzKImsGzE7D4L8XV
+         Ammw==
+X-Gm-Message-State: APjAAAWD9y7CbenPsxlmulPzwPUM0csPBjHjA73OmPGYmMHBoU6xBvLl
+        PtuGMzVhtC8BQN9VX/rFHVkFCy5zvlY=
+X-Google-Smtp-Source: APXvYqzl3yjd2kRjc5l321gkj1B2VEL0uJrhSqt1nABxYa2F5oWs1PuPlbN+GvxvMFZAAkkS4RBhxA==
+X-Received: by 2002:a17:906:7c4d:: with SMTP id g13mr2153637ejp.188.1565859334032;
+        Thu, 15 Aug 2019 01:55:34 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id fk15sm294773ejb.42.2019.08.15.01.55.33
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Aug 2019 01:55:33 -0700 (PDT)
+Subject: Re: [PATCH] ata: libahci_platform: Add of_node_put() before loop exit
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>, axboe@kernel.dk,
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190815060014.2191-1-nishkadg.linux@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <159af6e4-90cb-bf10-8186-18f95f6a6f80@redhat.com>
+Date:   Thu, 15 Aug 2019 10:55:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMz4kuL_74V3M-8Zo99GnLaYbmgfQXO-h0Yz5qeXLQQ0ZR3TkA@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190815060014.2191-1-nishkadg.linux@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Baolin,
+Hi,
 
-On Thu, Aug 15, 2019 at 04:16:32PM +0800, Baolin Wang wrote:
-> On Thu, 15 Aug 2019 at 14:15, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Thu, Aug 15, 2019 at 11:34:27AM +0800, Baolin Wang wrote:
-> > > On Wed, 14 Aug 2019 at 23:03, Uwe Kleine-König
-> > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > On Wed, Aug 14, 2019 at 08:46:11PM +0800, Baolin Wang wrote:
-> > > > > +     /*
-> > > > > +      * The hardware provides a counter that is feed by the source clock.
-> > > > > +      * The period length is (PRESCALE + 1) * MOD counter steps.
-> > > > > +      * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
-> > > > > +      * Thus the period_ns and duty_ns calculation formula should be:
-> > > > > +      * period_ns = NSEC_PER_SEC * (prescale + 1) * mod / clk_rate
-> > > > > +      * duty_ns = NSEC_PER_SEC * (prescale + 1) * duty / clk_rate
-> > > > > +      */
-> > > > > +     val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE);
-> > > > > +     prescale = val & SPRD_PWM_PRESCALE_MSK;
-> > > > > +     tmp = (prescale + 1) * NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
-> > > > > +     state->period = DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
-> > > > > +
-> > > > > +     val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY);
-> > > > > +     duty = val & SPRD_PWM_DUTY_MSK;
-> > > > > +     tmp = (prescale + 1) * NSEC_PER_SEC * duty;
-> > > > > +     state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
-> > > > > +
-> > > > > +     /* Disable PWM clocks if the PWM channel is not in enable state. */
-> > > > > +     if (!state->enabled)
-> > > > > +             clk_bulk_disable_unprepare(SPRD_PWM_CHN_CLKS_NUM, chn->clks);
-> > > > > +}
-> > > > > +
-> > > > > +static int sprd_pwm_config(struct sprd_pwm_chip *spc, struct pwm_device *pwm,
-> > > > > +                        int duty_ns, int period_ns)
-> > > > > +{
-> > > > > +     struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
-> > > > > +     u32 prescale, duty;
-> > > > > +     u64 tmp;
-> > > > > +
-> > > > > +     /*
-> > > > > +      * The hardware provides a counter that is feed by the source clock.
-> > > > > +      * The period length is (PRESCALE + 1) * MOD counter steps.
-> > > > > +      * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
-> > > > > +      *
-> > > > > +      * To keep the maths simple we're always using MOD = SPRD_PWM_MOD_MAX.
-> > > >
-> > > > Did you spend some thoughts about how wrong your period can get because
-> > > > of that "lazyness"?
-> > > >
-> > > > Let's assume a clk rate of 100/3 MHz. Then the available period lengths
-> > > > are:
-> > > >
-> > > >         PRESCALE =  0  ->  period =   7.65 µs
-> > > >         PRESCALE =  1  ->  period =  15.30 µs
-> > > >         ...
-> > > >         PRESCALE = 17  ->  period = 137.70 µs
-> > > >         PRESCALE = 18  ->  period = 145.35 µs
-> > > >
-> > > > So the error can be up to (nearly) 7.65 µs (or in general
-> > >
-> > > Yes, but for our use case (pwm backlight), the precision can meet our
-> > > requirement. Moreover, we usually do not change the period, just
-> > > adjust the duty to change the back light.
-> >
-> > Is this a license requirement for you SoC to only drive a backlight with
-> > the PWM? The idea of having a PWM driver on your platform is that it can
-> > also be used to control a step motor or a laser.
+On 15-08-19 08:00, Nishka Dasgupta wrote:
+> Each iteration of for_each_child_of_node puts the previous node, but
+> in the case of a goto from the middle of the loop, there is no put,
+> thus causing a memory leak. Add an of_node_put before three such goto
+> statements.
+> Issue found with Coccinelle.
 > 
-> Not a license requirement. Until now we have not got any higher
-> precision requirements, and we've run this driver for many years in
-> our downstream kernel.
+> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
 
-I understood that you're not ambitious to do something better than "it
-worked for years".
+I really believe the for_each_child_of_node semantics are broken, see my
+other reply. But that is no reason not to fix this, so this is:
 
-> > > > PRESCALE = 18 and MOD = 254 you get a period of 144.78 µs and so the
-> > > > error is only 0.56 µs which is a factor of 13 better.
-> > > >
-> > > > Hmm.
-> > > >
-> > > > > +      * The value for PRESCALE is selected such that the resulting period
-> > > > > +      * gets the maximal length not bigger than the requested one with the
-> > > > > +      * given settings (MOD = SPRD_PWM_MOD_MAX and input clock).
-> > > > > +      */
-> > > > > +     duty = duty_ns * SPRD_PWM_MOD_MAX / period_ns;
-> > > >
-> > > > I wonder if you loose some precision here as you use period_ns but might
-> > > > actually implement a shorter period.
-> > > >
-> > > > Quick example, again consider clk_rate = 100 / 3 MHz,
-> > > > period_ns = 145340, duty_ns = 72670. Then you end up with
-> > > >
-> > > >         PRESCALE = 17
-> > > >         MOD = 255
-> > > >         DUTY = 127
-> > >
-> > > Incorrect, we will get PRESCALE = 18,  MOD = 255, DUTY = 127.
-> > >
-> > > > That corresponds to period_ns = 137700, duty_ns = 68580. With DUTY = 134
-> > > > you get 72360 ns which is still smaller than the requested 72670 ns.
-> > >
-> > > Incorrect, with DUTY = 134 (PRESCALE = 18  ->  period = 145.35 µs),
-> > > duty_ns = 76380ns
-> >
-> > Yes, as above. When using rounding-closest your error is not in [0, 7.65
-> > µs] but in [-3.825 µs, 3.825 µs]. Doesn't make it better.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+> ---
+>   drivers/ata/libahci_platform.c | 9 +++++++--
+>   1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> Actually our use case really dose not care about this error.
-
-I assume that Thierry will apply your patch anyhow. But be prepared that
-you get a patch from me then to improve precision. It would be a waste
-of resources not to do that after doing all the necessary math already.
-
-> > > > (But then again it is not obvious which of the two is the "better"
-> > > > approximation because Thierry doesn't seem to see the necessity to
-> > > > discuss or define a policy here.)
-> > >
-> > > Like I said, this is the simple calculation formula which can meet our
-> > > requirement (we limit our DUTY value can only be 0 - 254).
-> > > duty = duty_ns * SPRD_PWM_MOD_MAX / period_ns;
-> >
-> > simple is often good but sometimes different from correct. And even with
+> diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
+> index 9e9583a6bba9..e742780950de 100644
+> --- a/drivers/ata/libahci_platform.c
+> +++ b/drivers/ata/libahci_platform.c
+> @@ -497,6 +497,7 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev,
+>   
+>   			if (of_property_read_u32(child, "reg", &port)) {
+>   				rc = -EINVAL;
+> +				of_node_put(child);
+>   				goto err_out;
+>   			}
+>   
+> @@ -514,14 +515,18 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev,
+>   			if (port_dev) {
+>   				rc = ahci_platform_get_regulator(hpriv, port,
+>   								&port_dev->dev);
+> -				if (rc == -EPROBE_DEFER)
+> +				if (rc == -EPROBE_DEFER) {
+> +					of_node_put(child);
+>   					goto err_out;
+> +				}
+>   			}
+>   #endif
+>   
+>   			rc = ahci_platform_get_phy(hpriv, port, dev, child);
+> -			if (rc)
+> +			if (rc) {
+> +				of_node_put(child);
+>   				goto err_out;
+> +			}
+>   
+>   			enabled_ports++;
+>   		}
 > 
-> I do not think this is incorrect.
-
-Well, "correct" is probably not the right term. The problem is that my
-efforts to improve the PWM framework are not going forward. And so the
-suggestions I made here are not normative (yet) and undocumented.
-
-> > rounding closest instead of rounding down you're giving away precision
-> > here and the size of the error interval is the same, it is just centered
-> > around 0 instead of only positive. If I hadn't spend so much time with
-> > pwm reviews this week I'd try to come up with an example.
-> 
-> I am very appreciated for your comments.
-> 
-> > > > (And to pick up the thoughts about not using SPRD_PWM_MOD_MAX
-> > > > unconditionally, you could also use
-> > > >
-> > > >         PRESCALE = 18
-> > > >         MOD = 254
-> > > >         DUTY = 127
-> > > >
-> > > > yielding period_ns = 144780 and duty_ns = 72390. Summary:
-> > > >
-> > > >         Request:                 72670 / 145340
-> > > >         your result:             68580 / 137700
-> > > >         also possible:           72390 / 144780
-> > > >
-> > > > Judge yourself.)
-> > > >
-> > > > > +     tmp = (u64)chn->clk_rate * period_ns;
-> > > > > +     do_div(tmp, NSEC_PER_SEC);
-> > > > > +     prescale = DIV_ROUND_CLOSEST_ULL(tmp, SPRD_PWM_MOD_MAX) - 1;
-> > > >
-> > > > Now that you use DIV_ROUND_CLOSEST_ULL the comment is wrong because you
-> > > > might provide a period bigger than the requested one. Also you divide
-> > >
-> > > Again, that's the precision can meet our requirement.
-> >
-> > If you go back to rounding down, use the matching rounding up in
-> > .get_state and adapt your comment describing you're sticking to MOD=255
-> > to say explicitly that you're loosing precision I can live with that. I
-> > even did the math for .get_state in my previous mail for you.
-> >
-> > The idea of the requirement to round down is that I want to introduce
-> > this as policy for the PWM framework to get some uniform behaviour from
-> 
-> Have you made a consensus about this? Documented it?
-
-I tried. Check the pwm patchwork, there are uncommented patches that
-first try to document the current status quo. When these are "in" I
-intend to discuss the improvements I have in mind. But don't expect this
-to be quickly done as even the (AFAICT) noncontroversial documentation
-patches[1] fail to get applied.
-
-> > all lowlevel drivers. If you do this now I won't bother you later when
-> > the requirement is implemented in your driver. And the comment helps
-> > someone who evaluates your SoC to judge if there is still work to do if
-> > they have higher requirements for the PWM.
-> 
-> So what you asked is something like below, right?
-> diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
-> index 96f8aa0..1d3db94 100644
-> --- a/drivers/pwm/pwm-sprd.c
-> +++ b/drivers/pwm/pwm-sprd.c
-> @@ -103,12 +103,12 @@ static void sprd_pwm_get_state(struct pwm_chip
-> *chip, struct pwm_device *pwm,
->         val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE);
->         prescale = val & SPRD_PWM_PRESCALE_MSK;
->         tmp = (prescale + 1) * NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
-> -       state->period = DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
-> +       state->period = DIV_ROUND_UP_ULL(tmp, chn->clk_rate);
-> 
->         val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY);
->         duty = val & SPRD_PWM_DUTY_MSK;
->         tmp = (prescale + 1) * NSEC_PER_SEC * duty;
-> -       state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
-> +       state->duty_cycle = DIV_ROUND_UP_ULL(tmp, chn->clk_rate);
-> 
->         /* Disable PWM clocks if the PWM channel is not in enable state. */
->         if (!state->enabled)
-> @@ -135,8 +135,8 @@ static int sprd_pwm_config(struct sprd_pwm_chip
-> *spc, struct pwm_device *pwm,
->         duty = duty_ns * SPRD_PWM_MOD_MAX / period_ns;
-> 
->         tmp = (u64)chn->clk_rate * period_ns;
-> -       do_div(tmp, NSEC_PER_SEC);
-> -       prescale = DIV_ROUND_CLOSEST_ULL(tmp, SPRD_PWM_MOD_MAX) - 1;
-> +       div = 1000000000ULL * SPRD_PWM_MOD_MAX;
-> +       prescale = div64_u64(tmp, div) - 1;
->         if (prescale > SPRD_PWM_PRESCALE_MSK)
->                 prescale = SPRD_PWM_PRESCALE_MSK;
-
-This goes in the right direction for sure.
-
-Without taking paper and pencil I wouldn't be surprised if the
-calculation of duty_cycle in .get_state didn't match the calculation of
-DUTY in .apply yet though.
-
-> But our MOD is constant, it did not help to improve the precision.
-> Instead, like you said, when period_ns = 145340, we will set PRESCALE
-> = 17, so in .get_state(), user will get period_ns = 137700 (error
-> is145340 -  137700).
-> 
-> But if we use DIV_ROUND_CLOSEST, in .get_state(), user will get
-> period_ns = 145350 (error is 145350 -  145340).
-
-In this case DIV_ROUND_CLOSEST seems to get nearer to the requested
-value than when rounding down. But this example was constructed to show
-your original algorithm to be bad, and just because you modify your
-algorithm to perform better on that constructed example doesn't imply
-the new one is better. Moreover you implement a bigger period than
-requested which is something I intend to forbid in the future.
-
-And note that with PWMs there is no "objective" metric that can tell you
-which of two implementable outputs better match a given request. It
-depends on the use case, so the best we can do is to tell our users our
-metric and with that in mind they can create a request that then fits
-their needs.
-
-> > > > twice instead of once before. (I don't know what architecture your SoC
-> > > > uses, but compared to a multiplication a division is usually expensive.)
-> > > > Also the math is more complicated now as you have a round-down div and a
-> > > > round-closest div.
-> > > >
-> > > > My preference for how to fix that is to restore the behaviour of v2 that
-> > > > matches the comment and adapt .get_state() instead.
-> > >
-> > > Using DIV_ROUND_CLOSEST_ULL can get a same prescale which matches with
-> > > .get_state().
-> >
-> > I don't get you here. Do you say that with DIV_ROUND_CLOSEST_ULL you get
-> > the same result but DIV_ROUND_CLOSEST_ULL matches .get_state while
-> > rounding down doesn't? I cannot follow.
-> 
-> Yes, that's what I mean.
-
-But that is logically broken. If both approaches yield the same
-results it cannot be true that exactly one of them matches the inverse
-of .get_state.
-
-I'm still confused.
-
-Best regards
-Uwe
-
-[1] https://patchwork.ozlabs.org/patch/1021566/
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
