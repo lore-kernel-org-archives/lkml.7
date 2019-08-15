@@ -2,192 +2,187 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611D3C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54752C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7522171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:12:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="XeuqQCC7"
+	by mail.kernel.org (Postfix) with ESMTP id 29F82208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732801AbfHOOMW (ORCPT
+        id S1732813AbfHOOM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:12:22 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:41724 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730032AbfHOOMV (ORCPT
+        Thu, 15 Aug 2019 10:12:26 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:47759 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730032AbfHOOMZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:12:21 -0400
-Received: by mail-qk1-f196.google.com with SMTP id g17so1894820qkk.8
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 07:12:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x9tHuYoDj493ySsdiocBgo6BvbYr3tE408m35OPfD4Q=;
-        b=XeuqQCC74y0Tv1RcnQ+QEVxSfwBYVcbFQBv+jHQag9nVoOXYoudI2lsh2oUCEAr39H
-         sOBQIHpCJGpf7SZDnsCbABopShyqJF2q2pi6SScyiS2HfIeCvK099//uePU5aMlLfWT6
-         9rT/cI5D9uxh84+vzkj7b39A9JCbigiI8u5l63sz2xgiIZS4oQhkLKvvXrLyOi/jHouS
-         FHbctFaUe8dq9V6Xp87qmVqN+IWfrjgvVxMfluoX3mjYCvUeczlqt9UvXBmeMyoUR00/
-         t5fYmPRvwnODhoTvJWr3AELdv5sIvrNPS63oJojBRQ8h+bdOj03joAvRyD4cBFwQn3n0
-         vq0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x9tHuYoDj493ySsdiocBgo6BvbYr3tE408m35OPfD4Q=;
-        b=VWba8fDXQcxVdbP00b5nCFbuYHIqle87Txr/9SN+SOrIap18nwUSwzeOLBzcBwB+vm
-         r2UIiZEbwjxDP3BGBhI9gvOO2P2t8Fi0cJ0ra3dpkCeVvFnb8uXsebDyB8eyzITrXSCO
-         lGSPgmoJSxR671r7uER3cL7stM0PrZkYJNXw6TD24XPGiaI4CCorU/dTWix8ccwb4/9N
-         o1pY0PVLuMlx8JKEFs0PqpMpZcZRW1p5CbrdUyCV3QWXdU+BToLwef7oxV7SE8Y5cp9X
-         mRHDCOSPQQiDunZIaTdYAC8GziZcgaUKwW954MH8CKk9Bpj2dXgNpAlq07Mp7OwRhSab
-         w/7g==
-X-Gm-Message-State: APjAAAUcZt2U3x1TGNrun2Dxy5ZchSgnZgYb9yM/AmukwyBTJWJ8rTpO
-        /J15UY5SB4iV/25UeSaURqTAEQ==
-X-Google-Smtp-Source: APXvYqz16XhS3FDKKD5LBLAsMVIBRO6xvZ5cmQP2Rz9DeNPuZ4bmBJXLkXIkrLSg+KeUbMTyo0lWcg==
-X-Received: by 2002:ae9:f812:: with SMTP id x18mr4132770qkh.290.1565878340460;
-        Thu, 15 Aug 2019 07:12:20 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id o201sm1475995qka.14.2019.08.15.07.12.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 15 Aug 2019 07:12:20 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hyGUF-0004xm-IP; Thu, 15 Aug 2019 11:12:19 -0300
-Date:   Thu, 15 Aug 2019 11:12:19 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-Message-ID: <20190815141219.GF21596@ziepe.ca>
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
- <20190814202027.18735-3-daniel.vetter@ffwll.ch>
- <20190814235805.GB11200@ziepe.ca>
- <20190815065829.GA7444@phenom.ffwll.local>
- <20190815122344.GA21596@ziepe.ca>
- <20190815132127.GI9477@dhcp22.suse.cz>
+        Thu, 15 Aug 2019 10:12:25 -0400
+Received: from [IPv6:2001:420:44c1:2579:f038:4b04:f67a:276f] ([IPv6:2001:420:44c1:2579:f038:4b04:f67a:276f])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id yGUGhwEcsDqPeyGUJhYSGh; Thu, 15 Aug 2019 16:12:23 +0200
+Subject: Re: [RFC 3/5] media: v4l2-ctrls: Add support for V4L2_CID_LOCATION
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-4-jacopo@jmondi.org>
+ <20190814225353.GE5015@pendragon.ideasonboard.com>
+ <20190815130245.usat55oqffe4abvi@uno.localdomain>
+ <f16bc961-1410-a38b-9973-eddb7293b4b2@xs4all.nl>
+ <20190815135004.7o57rff4ce5sb5bb@uno.localdomain>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <fc368043-5240-1214-9cce-1c989b04aaa3@xs4all.nl>
+Date:   Thu, 15 Aug 2019 16:12:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815132127.GI9477@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190815135004.7o57rff4ce5sb5bb@uno.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBm7SE98EffSew+2c3tauV5oPpbf1RcHdbcYCWWaT2ZwtsAafOOhTDZ93Zq09UC8jKM1gcE+he+pkKu3/FHGwgYHfkXYUx635TDoUEyhYj3a1mNRN5l0
+ CpzXXMWm0doF1GzTVOIuxPA/QTf8vGeg9kuKltkXo7FtmvgeyfOOZQv2q0yFgJO8fy+OuZ3Sw17d7QLcifOmIrGScNs7XlAc7nIUjI70pb8wm5SvnIkgaBAL
+ Gsz6zO46cTtjzo9b+Nha8/bK1nohkGluLLSsYoxM7QjLqg9syXhYQDoSo6/AJm44ZDux7KVDuT+1FC1BzXnUzCEr1y9mqqBJj1RDdWKeLE2xrMGm4DbklEWQ
+ olOqn9eJFz9ebYgUQVpJjJX6PKAh8Hma+DSG2Q5aKL+jh7wVbGrekjI59YlXeGBQ2YsfdT3WD3O2hCdRHf2Kjf+J5QrzrICIshI44Hrf3RNDAetNXNX72cCm
+ czd3Mog6ZWy+7esK
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 03:21:27PM +0200, Michal Hocko wrote:
-> On Thu 15-08-19 09:23:44, Jason Gunthorpe wrote:
-> > On Thu, Aug 15, 2019 at 08:58:29AM +0200, Daniel Vetter wrote:
-> > > On Wed, Aug 14, 2019 at 08:58:05PM -0300, Jason Gunthorpe wrote:
-> > > > On Wed, Aug 14, 2019 at 10:20:24PM +0200, Daniel Vetter wrote:
-> > > > > In some special cases we must not block, but there's not a
-> > > > > spinlock, preempt-off, irqs-off or similar critical section already
-> > > > > that arms the might_sleep() debug checks. Add a non_block_start/end()
-> > > > > pair to annotate these.
-> > > > > 
-> > > > > This will be used in the oom paths of mmu-notifiers, where blocking is
-> > > > > not allowed to make sure there's forward progress. Quoting Michal:
-> > > > > 
-> > > > > "The notifier is called from quite a restricted context - oom_reaper -
-> > > > > which shouldn't depend on any locks or sleepable conditionals. The code
-> > > > > should be swift as well but we mostly do care about it to make a forward
-> > > > > progress. Checking for sleepable context is the best thing we could come
-> > > > > up with that would describe these demands at least partially."
-> > > > 
-> > > > But this describes fs_reclaim_acquire() - is there some reason we are
-> > > > conflating fs_reclaim with non-sleeping?
-> > > 
-> > > No idea why you tie this into fs_reclaim. We can definitly sleep in there,
-> > > and for e.g. kswapd (which also wraps everything in fs_reclaim) we're
-> > > event supposed to I thought. To make sure we can get at the last bit of
-> > > memory by flushing all the queues and waiting for everything to be cleaned
-> > > out.
-> > 
-> > AFAIK the point of fs_reclaim is to prevent "indirect dependency upon
-> > the page allocator" ie a justification that was given this !blockable
-> > stuff.
-> > 
-> > For instance:
-> > 
-> >   fs_reclaim_acquire()
-> >   kmalloc(GFP_KERNEL) <- lock dep assertion
-> > 
-> > And further, Michal's concern about indirectness through locks is also
-> > handled by lockdep:
-> > 
-> >        CPU0                                 CPU1
-> >                                         mutex_lock()
-> >                                         kmalloc(GFP_KERNEL)
-> >                                         mutex_unlock()
-> >   fs_reclaim_acquire()
-> >   mutex_lock() <- lock dep assertion
-> > 
-> > In other words, to prevent recursion into the page allocator you use
-> > fs_reclaim_acquire(), and lockdep verfies it in its usual robust way.
+On 8/15/19 3:50 PM, Jacopo Mondi wrote:
+> Hi Hans,
 > 
-> fs_reclaim_acquire is about FS/IO recursions IIUC. We are talking about
-> any !GFP_NOWAIT allocation context here and any {in}direct dependency on
-> it. 
+> On Thu, Aug 15, 2019 at 03:41:53PM +0200, Hans Verkuil wrote:
+>> On 8/15/19 3:02 PM, Jacopo Mondi wrote:
+>>> Hi Laurent,
+>>>
+>>> On Thu, Aug 15, 2019 at 01:53:53AM +0300, Laurent Pinchart wrote:
+>>>> Hi Jacopo,
+>>>>
+>>>> Thank you for the patch.
+>>>>
+>>>> On Wed, Aug 14, 2019 at 10:28:13PM +0200, Jacopo Mondi wrote:
+>>>>> Add support for the newly defined V4L2_CID_LOCATION read-only control
+>>>>> used to report the camera device mounting position.
+>>>>>
+>>>>> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+>>>>> ---
+>>>>>  drivers/media/v4l2-core/v4l2-ctrls.c | 7 +++++++
+>>>>>  include/uapi/linux/v4l2-controls.h   | 4 ++++
+>>>>>  2 files changed, 11 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+>>>>> index 7d3a33258748..8ab0857df59a 100644
+>>>>> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+>>>>> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+>>>>> @@ -943,6 +943,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>>>>>  	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
+>>>>>  	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
+>>>>>  	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
+>>>>> +	case V4L2_CID_LOCATION:			return "Location";
+>>>>
+>>>> Depending on what we decide to name the control (see review of 2/5), you
+>>>> should adjust the description accordingly.
+>>>>
+>>>>>
+>>>>>  	/* FM Radio Modulator controls */
+>>>>>  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+>>>>> @@ -1300,6 +1301,12 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>>>>>  		break;
+>>>>>  	case V4L2_CID_MPEG_VIDEO_FWHT_PARAMS:
+>>>>>  		*type = V4L2_CTRL_TYPE_FWHT_PARAMS;
+>>>>> +	case V4L2_CID_LOCATION:
+>>>>> +		*type = V4L2_CTRL_TYPE_INTEGER;
+>>>>> +		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
+>>>>> +		*min = V4L2_LOCATION_FRONT;
+>>>>> +		*max = V4L2_LOCATION_BACK;
+>>>>
+>>>> I don't think the control should have a min and a max different than the
+>>>> current value, as it's a fully static control. I'd drop those two lines
+>>>> here, and drivers will have to set value = min = max = V4L2_LOCATION_xxx
+>>>> when creating the control. That why you should be able to collapse this
+>>>> with V4L2_CID_MIN_BUFFERS_FOR_OUTPUT.
+>>>>
+>>>
+>>> Ah, I thought min/max should report the actual control values limits.
+>>> Anyway, if we move this to be an integer menu control with an helper
+>>> to parse the DT property and register the control on behalf of
+>>> drivers, this will change.
+>>>
+>>>>> +		*step = 1;
+>>>>>  		break;
+>>>>>  	default:
+>>>>>  		*type = V4L2_CTRL_TYPE_INTEGER;
+>>>>> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+>>>>> index 37807f23231e..5c4c7b245921 100644
+>>>>> --- a/include/uapi/linux/v4l2-controls.h
+>>>>> +++ b/include/uapi/linux/v4l2-controls.h
+>>>>> @@ -889,6 +889,10 @@ enum v4l2_auto_focus_range {
+>>>>>  #define V4L2_CID_PAN_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+32)
+>>>>>  #define V4L2_CID_TILT_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+33)
+>>>>>
+>>>>> +#define V4L2_CID_LOCATION			(V4L2_CID_CAMERA_CLASS_BASE+34)
+>>>>> +#define V4L2_LOCATION_FRONT			(0 << 0)
+>>>>> +#define V4L2_LOCATION_BACK			(1 << 0)
+>>>>
+>>>> Why not just 0 and 1 ?
+>>>
+>>> Or why not BIT(). I saw that the (1 << x) style is the mostly used one in
+>>> this header file when defining macros like this one so I went for
+>>> consistency with the existing code.
+>>
+>> Definitely not right. This is an enumeration, so just number from 0, 1, 2, ...
+>>
+>> Nothing to do with bits/bitmasks.
+> 
+> Aren't these enumerations too?
+> 
+> #define V4L2_CID_3A_LOCK			(V4L2_CID_CAMERA_CLASS_BASE+27)
+> #define V4L2_LOCK_EXPOSURE			(1 << 0)
+> #define V4L2_LOCK_WHITE_BALANCE			(1 << 1)
+> #define V4L2_LOCK_FOCUS				(1 << 2)
+> 
+> #define V4L2_CID_AUTO_FOCUS_START		(V4L2_CID_CAMERA_CLASS_BASE+28)
+> #define V4L2_CID_AUTO_FOCUS_STOP		(V4L2_CID_CAMERA_CLASS_BASE+29)
+> #define V4L2_CID_AUTO_FOCUS_STATUS		(V4L2_CID_CAMERA_CLASS_BASE+30)
+> #define V4L2_AUTO_FOCUS_STATUS_IDLE		(0 << 0)
+> #define V4L2_AUTO_FOCUS_STATUS_BUSY		(1 << 0)
+> #define V4L2_AUTO_FOCUS_STATUS_REACHED		(1 << 1)
+> #define V4L2_AUTO_FOCUS_STATUS_FAILED		(1 << 2)
 
-AFAIK 'GFP_NOWAIT' is characterized by the lack of __GFP_FS and
-__GFP_DIRECT_RECLAIM..
+No, these are bitmasks for bitmask controls. So one or more
+status/lock bits can be 1.
 
-This matches the existing test in __need_fs_reclaim() - so if you are
-OK with GFP_NOFS, aka __GFP_IO which triggers try_to_compact_pages(),
-allocations during OOM, then I think fs_reclaim already matches what
-you described?
+Regards,
 
-> Whether fs_reclaim_acquire can be reused for that I do not know
-> because I am not familiar with the lockdep machinery enough
+	Hans
 
-Well, if fs_reclaim is not already testing the flags you want, then we
-could add another lockdep map that does. The basic principle is the
-same, if you want to detect and prevent recursion into the allocator
-under certain GFP flags then then AFAIK lockdep is the best tool we
-have.
+> 
+> Anyway, I'm happy to change them to plain numbers.
+> 
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>>
+>>>>
+>>>>> +
+>>>>>  /* FM Modulator class control IDs */
+>>>>>
+>>>>>  #define V4L2_CID_FM_TX_CLASS_BASE		(V4L2_CTRL_CLASS_FM_TX | 0x900)
+>>>>
+>>>> --
+>>>> Regards,
+>>>>
+>>>> Laurent Pinchart
+>>
 
-> No, non-blocking is a very coarse approximation of what we really need.
-> But it should give us even a stronger condition. Essentially any sleep
-> other than a preemption shouldn't be allowed in that context.
-
-But it is a nonsense API to give the driver invalidate_range_start,
-the blocking alternative to the non-blocking invalidate_range and then
-demand it to be non-blocking.
-
-Inspecting the code, no drivers are actually able to progress their
-side in non-blocking mode.
-
-The best we got was drivers tested the VA range and returned success
-if they had no interest. Which is a big win to be sure, but it looks
-like getting any more is not really posssible.
-
-However, we could (probably even should) make the drivers fs_reclaim
-safe.
-
-If that is enough to guarantee progress of OOM, then lets consider
-something like using current_gfp_context() to force PF_MEMALLOC_NOFS
-allocation behavior on the driver callback and lockdep to try and keep
-pushing on the the debugging, and dropping !blocking.
-
-Jason
