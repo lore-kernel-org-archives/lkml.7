@@ -2,105 +2,81 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73790C32757
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E525C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB0F21743
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB632173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 12:04:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731512AbfHOMEe (ORCPT
+        id S1731575AbfHOMEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 08:04:34 -0400
-Received: from sauhun.de ([88.99.104.3]:60830 "EHLO pokefinder.org"
+        Thu, 15 Aug 2019 08:04:40 -0400
+Received: from esa01.kjsl.com ([198.137.202.87]:11415 "EHLO esa01.kjsl.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731340AbfHOMEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731520AbfHOMEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 08:04:35 -0400
+Received: from unknown (HELO people.danlj.org) ([IPv6:2607:7c80:54:5:7609:68e3:940d:b47c])
+  by esa01.kjsl.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 12:04:34 +0000
+Received: from people.danlj.org (localhost [127.0.0.1])
+        by people.danlj.org (8.14.7/8.14.7) with ESMTP id x7FC4X59020504
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
         Thu, 15 Aug 2019 08:04:33 -0400
-Received: from localhost (p54B33431.dip0.t-ipconnect.de [84.179.52.49])
-        by pokefinder.org (Postfix) with ESMTPSA id C07C22C2704;
-        Thu, 15 Aug 2019 14:04:30 +0200 (CEST)
-Date:   Thu, 15 Aug 2019 14:04:30 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Max <max@enpas.org>
-Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-m68k@vger.kernel.org,
-        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
-Subject: Re: [PATCH v2 1/4] i2c/busses: Add i2c-icy for I2C on m68k/Amiga
-Message-ID: <20190815120430.GB1916@kunai>
-References: <20190812235237.21797-1-max@enpas.org>
- <20190814194714.GB9756@kunai>
- <f33ef44e-61e8-0392-7f5c-5a0bd7b42fff@enpas.org>
- <20190815071228.GA1054@kunai>
- <276714fb-6b3a-1e99-0744-bfd037305724@enpas.org>
- <20190815114809.GA1916@kunai>
- <54185c85-8c26-916e-41b1-af9b55223e7b@enpas.org>
+Received: (from johnsonm@localhost)
+        by people.danlj.org (8.14.7/8.15.2/Submit) id x7FC4X5Z020503;
+        Thu, 15 Aug 2019 08:04:33 -0400
+Date:   Thu, 15 Aug 2019 08:04:32 -0400
+From:   "Michael K. Johnson" <johnsonm@danlj.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     ulf.hansson@linaro.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Subject: Re: [PATCH v3 1/3] mmc: sdhci: Add PLL Enable support to internal
+ clock setup
+Message-ID: <20190815120432.GA20438@people.danlj.org>
+References: <20190726020746.GB12042@people.danlj.org>
+ <acc74e9e-ca41-a5dd-780a-615745d70101@intel.com>
+ <20190812225611.GA30758@people.danlj.org>
+ <d6432410-6431-efdb-4e28-a601493e4916@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tjCHc7DPkfUGtrlw"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <54185c85-8c26-916e-41b1-af9b55223e7b@enpas.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <d6432410-6431-efdb-4e28-a601493e4916@intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 15, 2019 at 02:27:44PM +0300, Adrian Hunter wrote:
+> On 13/08/19 1:56 AM, Michael K. Johnson wrote:
+> > The GL9750 and GL9755 chipsets, and possibly others, require PLL Enable
+> > setup as part of the internal clock setup as described in 3.2.1 Internal
+> > Clock Setup Sequence of SD Host Controller Simplified Specification
+> > Version 4.20.  This changes the timeouts to the new specification of
+> > 150ms for each step and is documented as safe for "prior versions which
+> > do not support PLL Enable."
+> > 
+> > Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+> > Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
+> 
+> Did you mean for this patch to be "From:" Ben Chuang because otherwise
+> "Co-developed-by" the author is redundant.
 
---tjCHc7DPkfUGtrlw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ben wrote the code and is the primary author. I helped with some
+changes to bring it closer to normal style, so I have definitely
+been a secondary co-developer. Ben's corporate email server adds a
+generic confidentiality notice outside his control, and we were
+informed that with that header on the email the patches could not
+be accepted.  We developed it in a git repository, so that I have
+not been "tainted" by the automatic confidentiality notice, and
+at Ben's request I have posted the work. To credit me as primary
+author would be fundamentally incorrect.
 
-
-> My suggestion is to not touch i2c-elektor at all for now, and remove
-> the 'clock' parameter from the first iteration of i2c-icy. It can be
-> added back in case someone complains, which I deem unlikely.
-
-Full ack.
-
->   When the PCF8584 is addressed as slave, this register
->   must be loaded with the 7-bit I 2 C-bus address to which the
->   PCF8584 is to respond. During initialization, the own
->   address register S0' must be written to, regardless
->   whether it is later used.
-
-I see. It must be written a non-zero value to leave the monitor mode.
-But this really needs no callback, we can hardcode any non-zero value.
-If slave support is (ever) to be implemented, the own address will come
-=66rom the I2C core.
-
-> Okay, so we don't care. Cool, then it's safe to kick the 'clock'
-> parameter from i2c-icy. All 2019 boards (which should be the vast
-> majority in existence) came with a 12 MHz oscillator AFAIK, so the
-> default should be good.
-
-Most drivers don't allow users to change the bus speed, so I think it is
-safe to remove.
-
-
---tjCHc7DPkfUGtrlw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1VSk4ACgkQFA3kzBSg
-KbaiGBAAodEGPift49JeBi1yJrTTGr4RWOodih6yvhYigloZgzzCOjujdcDFc833
-5dB5EG7SwdqLD+Kwda8tbsCPgfuYXqtdVbJALZWlN7NyLQpA/0zOIPWM8OEZ5g4/
-1WWFZL403EJNRtDNAQ7EMa/gAw7IR5fqxP0CIbyuwmZ5AANyyxzXHJcUl5BY7leY
-qkKveL9sSbRRd2iKUEpu4bZCZXECZMeowqlaUz5Rmvi7bYAIUhe70GZE2jcDWALF
-EckGVh0BqnzWhjUck0AFpSScHQbwwj385JWlVEs2GfCiCppVvNp/FTLuytwgcDI0
-Xv86OeXeh7SyZD4SGwj5wdGd386K3y+Y0ozUeq/bPyal8+mziEAN/trWlBbLG//Z
-MNanwIB9Lp+5RXeLqXh7iDLTEEiLqZv3InaYXZq5PuNNKLePBMA10rDeg0+cruVX
-PWzJUlY2MfQUnqxP+yVCSJcaQ5R2EkUdIcSqIHoXDpaHq6tih5hq64tK+u4Q8pGS
-o9KdzPsNkqCHRypQ2HejoRBs9HzNz3TXYRhGWXPUL4wR6y7qmEC5UCxXZ7Hb2gLh
-aHPr3XFkdXUQr493p9qJiFvtU8opP8I/QhG3FC9yPfbbeKDcAKMclEwxyaHyZALE
-gzZ8CIiLXX6o+ID0pKFF2wXVmseASzZ8X2j3JmBhKaJU+Tff/Io=
-=l/xN
------END PGP SIGNATURE-----
-
---tjCHc7DPkfUGtrlw--
+Are you saying that this work cannot be accepted until Ben chooses
+an alternative email provider besides his corporate email in order
+to avoid the spurious confidentiality notice, such that he is the
+sender of the email?
