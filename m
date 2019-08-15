@@ -2,141 +2,92 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA56C41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0437C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5CFF2133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:10:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lI3y7R44"
+	by mail.kernel.org (Postfix) with ESMTP id B3C64206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732455AbfHOPKa (ORCPT
+        id S1732515AbfHOPMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 11:10:30 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37907 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfHOPKa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 11:10:30 -0400
-Received: by mail-qk1-f195.google.com with SMTP id u190so2090646qkh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 08:10:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xzO7Mshohtsh0MjNCwtfvdaSBmY8e4joFkYT0O9y2JI=;
-        b=lI3y7R44OI9cE4EW3AD4mdCTJlQwdhtFMnFulkuEqvQdz88hWBkf/Luz9A97zWh1WM
-         6VlnHYIeU9yHzN5gLW2s6pZtC53ZcoK+QYnLyrm71HqORWm7eDtaZclaBxKxBqoBfR6a
-         wQh2bKmRFu8C01tUVSEPeeZYrB6Zf+XdIvZRedLH4G7bY1xFFrYAoyZPI6cM+2j3i+UD
-         ekO1QrzYXDSKJKdF9J3udmvIveoENdrM4omYutvyVHhrkIapI79MBHNcmw35rsWFNK76
-         65B13pG5zrwaNbu2GbqZZmb2GB6hh98QSz3unRjRNSzvxzUILwBIuF3oriB53wVaSEzR
-         S8UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xzO7Mshohtsh0MjNCwtfvdaSBmY8e4joFkYT0O9y2JI=;
-        b=KjhJoniRUc48ma+61TygWzaiAupIvcQWFkTGEXbM+7AD5+3cPuoMmrAbeWEIHXanHC
-         lsKp12bs6+oaUZ0XD26ZhtumheugfdEPRcNsqakp/JGDdfoEXMN2sxC3PdnV27PYdUs/
-         E5YOH2A1+Did15QKdjQpEZ8VYibTT0uTIasPDLEPYSN3OjR/dTOlva9cNeGgj49MjwO6
-         m2dUvzd4hveKwPXyRHT2Akvxi9kDuIsBdX8ZMgal2HnKXLVDOMq9TATWDeltqp/tO/KQ
-         ipX2MerSUJH0tBAt9cb1q9eJdQvsV6wIHTYuvhkwGruu6O0kSnwAVEWt3a3TOS1CraPC
-         Bakg==
-X-Gm-Message-State: APjAAAWk6H/8Y8PxRQ8ZfvjpH4xgM9BmG5qHhpZ8mvzv2u6NggZw3idH
-        jWj0i1AVooLtCjc0jFOyEYFp3A==
-X-Google-Smtp-Source: APXvYqwzfXMAsx+TimK2Wq4Er/PrNLigk2R/e9axAwMI+6uwPMqruXjP4qCNTiLEsTwOHrOMXcfSYA==
-X-Received: by 2002:a37:aa88:: with SMTP id t130mr4635639qke.12.1565881829208;
-        Thu, 15 Aug 2019 08:10:29 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id i62sm1568446qke.52.2019.08.15.08.10.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 15 Aug 2019 08:10:28 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hyHOW-0005WZ-AT; Thu, 15 Aug 2019 12:10:28 -0300
-Date:   Thu, 15 Aug 2019 12:10:28 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-Message-ID: <20190815151028.GJ21596@ziepe.ca>
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
- <20190814202027.18735-3-daniel.vetter@ffwll.ch>
- <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
- <20190815084429.GE9477@dhcp22.suse.cz>
- <20190815130415.GD21596@ziepe.ca>
- <CAKMK7uE9zdmBuvxa788ONYky=46GN=5Up34mKDmsJMkir4x7MQ@mail.gmail.com>
- <20190815143759.GG21596@ziepe.ca>
- <CAKMK7uEJQ6mPQaOWbT_6M+55T-dCVbsOxFnMC6KzLAMQNa-RGg@mail.gmail.com>
+        Thu, 15 Aug 2019 11:12:31 -0400
+Received: from mga04.intel.com ([192.55.52.120]:25322 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732464AbfHOPMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 11:12:30 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 08:12:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
+   d="scan'208";a="171139099"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by orsmga008.jf.intel.com with ESMTP; 15 Aug 2019 08:12:29 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alex Willamson <alex.williamson@redhat.com>
+Subject: [PATCH] KVM: x86/MMU: Zap all when removing memslot if VM has assigned device
+Date:   Thu, 15 Aug 2019 08:12:28 -0700
+Message-Id: <20190815151228.32242-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <1565855169-29491-1-git-send-email-pbonzini@redhat.com>
+References: <1565855169-29491-1-git-send-email-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uEJQ6mPQaOWbT_6M+55T-dCVbsOxFnMC6KzLAMQNa-RGg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 04:43:38PM +0200, Daniel Vetter wrote:
+Alex Williamson reported regressions with device assignment when KVM
+changed its memslot removal logic to zap only the SPTEs for the memslot
+being removed.  The source of the bug is unknown at this time, and root
+causing the issue will likely be a slow process.  In the short term, fix
+the regression by zapping all SPTEs when removing a memslot from a VM
+with assigned device(s).
 
-> You have to wait for the gpu to finnish current processing in
-> invalidate_range_start. Otherwise there's no point to any of this
-> really. So the wait_event/dma_fence_wait are unavoidable really.
+Fixes: 4e103134b862 ("KVM: x86/mmu: Zap only the relevant pages when removing a memslot", 2019-02-05)
+Reported-by: Alex Willamson <alex.williamson@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
 
-I don't envy your task :|
+An alternative idea to a full revert.  I assume this would be easy to
+backport, and also easy to revert or quirk depending on where the bug
+is hiding.
 
-But, what you describe sure sounds like a 'registration cache' model,
-not the 'shadow pte' model of coherency.
+ arch/x86/kvm/mmu.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-The key difference is that a regirstationcache is allowed to become
-incoherent with the VMA's because it holds page pins. It is a
-programming bug in userspace to change VA mappings via mmap/munmap/etc
-while the device is working on that VA, but it does not harm system
-integrity because of the page pin.
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index 8f72526e2f68..358b93882ac6 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -5659,6 +5659,17 @@ static void kvm_mmu_invalidate_zap_pages_in_memslot(struct kvm *kvm,
+ 	bool flush;
+ 	gfn_t gfn;
+ 
++	/*
++	 * Zapping only the removed memslot introduced regressions for VMs with
++	 * assigned devices.  It is unknown what piece of code is buggy.  Until
++	 * the source of the bug is identified, zap everything if the VM has an
++	 * assigned device.
++	 */
++	if (kvm_arch_has_assigned_device(kvm)) {
++		kvm_mmu_zap_all(kvm);
++		return;
++	}
++
+ 	spin_lock(&kvm->mmu_lock);
+ 
+ 	if (list_empty(&kvm->arch.active_mmu_pages))
+-- 
+2.22.0
 
-The cache ensures that each initiated operation sees a DMA setup that
-matches the current VA map when the operation is initiated and allows
-expensive device DMA setups to be re-used.
-
-A 'shadow pte' model (ie hmm) *really* needs device support to
-directly block DMA access - ie trigger 'device page fault'. ie the
-invalidate_start should inform the device to enter a fault mode and
-that is it.  If the device can't do that, then the driver probably
-shouldn't persue this level of coherency. The driver would quickly get
-into the messy locking problems like dma_fence_wait from a notifier.
-
-It is important to identify what model you are going for as defining a
-'registration cache' coherence expectation allows the driver to skip
-blocking in invalidate_range_start. All it does is invalidate the
-cache so that future operations pick up the new VA mapping.
-
-Intel's HFI RDMA driver uses this model extensively, and I think it is
-well proven, within some limitations of course.
-
-At least, 'registration cache' is the only use model I know of where
-it is acceptable to skip invalidate_range_end.
-
-Jason
