@@ -2,96 +2,118 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F32C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E8EC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 977962063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565893787;
-	bh=G182K25ZD/+nRPG0H/3mbFd2sDdp8JeRqxj7kTvZjkY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JKukrmSAIjHfDqWBJ5o5b6TYvTbCNfsig9ScWcDXrWIJ+8yHumqDKeK3KAY0hwO5w
-	 hwSXBTl0PNglQn6qcFJNlR+3lUVdLnmqjyczbmhGZqrV/rZeosFW6AqQ8me5HPibK6
-	 KYBoOlfLNUorik+qA5Zo5f9EvaWYwgjXTQoWtWnk=
+	by mail.kernel.org (Postfix) with ESMTP id 5F9312063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 18:30:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732001AbfHOS3q (ORCPT
+        id S1732153AbfHOSa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 14:29:46 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39562 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728828AbfHOS3q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 14:29:46 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t16so3051127wra.6;
-        Thu, 15 Aug 2019 11:29:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G+ti5MoYAXo5Gey/THUpmV9/n/MyYAX4cVlRNM3ewyk=;
-        b=kenpdG4zz+zDKowXgcmj7UlWEl408gEFB2M50TpE/sSbfSmUZqxDRMEC9M3mzW4c1b
-         yhC3B+U3rqwfd8xhx/TexIe0Hfv1H8KKzTydU0Bg4UJtk3IRnSputNkKrBF0dH/YIh58
-         LdvhJdLdOZ2N4xKgwdWxuMEgmkBdLPKPHnPxqL3lgu7uFaDbnoeaPMowo6/NZNbCmKhD
-         48lJfG7oaF3UDeqjr0LvFP299t2fAyocWazXuNakUGYRAt+LUQowsTbPXO6JbvUrrlK9
-         +5kqU4Lkta6k3vPgEECYJrrl9+/5+h7j69ogkGx63gawb0bM6ENYxufrHjcE98oTn3BU
-         aKbA==
-X-Gm-Message-State: APjAAAVGNfVPrRd8D6wV23+8kJNoUlM33F+YicIXaoeDbgOchmNd2Nsi
-        HzkoM8NXfqDdzmzhAWXngu4=
-X-Google-Smtp-Source: APXvYqzcm8U/A1Qgplcw2RiLILIE0EgMkCH1v2MhQN4StF7iqTRUm9rJjXSeZuEZ0RWP8wo36QOmyw==
-X-Received: by 2002:adf:fd8b:: with SMTP id d11mr6497885wrr.300.1565893783407;
-        Thu, 15 Aug 2019 11:29:43 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.124])
-        by smtp.googlemail.com with ESMTPSA id h97sm9341511wrh.74.2019.08.15.11.29.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 15 Aug 2019 11:29:42 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 20:29:40 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
-        kgene@kernel.org, pankaj.dubey@samsung.com,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com
-Subject: Re: [PATCH v3 5/9] ARM64: EXYNOS: enable exynos_chipid for
- ARCH_EXYNOS
-Message-ID: <20190815182940.GF14360@kozik-lap>
-References: <20190813150827.31972-1-s.nawrocki@samsung.com>
- <CGME20190813150856eucas1p1a8957cfe50e3b421ccbc3084404de43b@eucas1p1.samsung.com>
- <20190813150827.31972-6-s.nawrocki@samsung.com>
+        Thu, 15 Aug 2019 14:30:56 -0400
+Received: from mga09.intel.com ([134.134.136.24]:34636 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730405AbfHOSa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 14:30:56 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 11:30:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,389,1559545200"; 
+   d="scan'208";a="178539743"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by fmsmga007.fm.intel.com with ESMTP; 15 Aug 2019 11:30:55 -0700
+Date:   Thu, 15 Aug 2019 11:30:55 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain
+ asm/intel-family.h
+Message-ID: <20190815183055.GA6847@agluck-desk2.amr.corp.intel.com>
+References: <20190814234030.30817-1-tony.luck@intel.com>
+ <20190815075822.GC15313@zn.tnic>
+ <20190815172159.GA4935@agluck-desk2.amr.corp.intel.com>
+ <20190815175455.GJ15313@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813150827.31972-6-s.nawrocki@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190815175455.GJ15313@zn.tnic>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 05:08:23PM +0200, Sylwester Nawrocki wrote:
-> From: Pankaj Dubey <pankaj.dubey@samsung.com>
+On Thu, Aug 15, 2019 at 07:54:55PM +0200, Borislav Petkov wrote:
+> On Thu, Aug 15, 2019 at 10:21:59AM -0700, Luck, Tony wrote:
+> > Like this?
 > 
-> This patch enables exynos_chipid driver for ARCH_EXYNOS
-> based SoC.
-> 
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
-> Changes since v1 (RFC):
->  - none
-> ---
->  arch/arm64/Kconfig.platforms | 1 +
+> Actually, I was thinking you'd put it above the defines in the file
+> intel-family.h itself so that *everyone* who wants to add a model, sees
+> it first and while that explanation below is very nice...
 
-Thanks, applied.
+V2 ... ugh ... C doesn't do well with nested comments, so the example
+has issues.  I chose to use a C++ style comment (as they are not as
+verboten in Linux as they used to be).
 
-Best regards,
-Krzysztof
+Another option would be to put the instructions inside #if 0 ... #endif
+but that seems less than ideal.
+
+Any other ideas?
+
+-Tony
+
+From 84624a3410a3ba03c3acb13e54b1292c3ca64b8c Mon Sep 17 00:00:00 2001
+From: Tony Luck <tony.luck@intel.com>
+Date: Thu, 15 Aug 2019 11:16:24 -0700
+Subject: [PATCH] x86/cpu: Explain Intel model naming convention
+
+Dave Hansen spelled out the rules in an e-mail:
+
+ https://lkml.kernel.org/r/91eefbe4-e32b-d762-be4d-672ff915db47@intel.com
+
+Copy those right into the <asm/intel-family.h> file to
+make it easy for people to find them.
+
+Suggested-by: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+ arch/x86/include/asm/intel-family.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 0278aa66ef62..87443df77eee 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -11,6 +11,21 @@
+  * While adding a new CPUID for a new microarchitecture, add a new
+  * group to keep logically sorted out in chronological order. Within
+  * that group keep the CPUID for the variants sorted by model number.
++ *
++ * HOWTO Build an INTEL_FAM6_ definition:
++ * 
++ * 1. Start with INTEL_FAM6_
++ * 2. If not Core-family, add a note about it, like "ATOM".  There are only
++ *    two options for this (Xeon Phi and Atom).  It is exceedingly unlikely
++ *    that you are adding a cpu which needs a new option here.
++ * 3. Add the processor microarchitecture, not the platform name
++ * 4. Add a short differentiator if necessary.  Add an _X to differentiate
++ *    Server from Client.
++ * 5. Add an optional comment with the platform name(s)
++ * 
++ * It should end up looking like this:
++ * 
++ * INTEL_FAM6_<ATOM?>_<MICROARCH>_<SHORT...> // Platform Name(s)
+  */
+ 
+ #define INTEL_FAM6_CORE_YONAH		0x0E
+-- 
+2.20.1
 
