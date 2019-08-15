@@ -2,137 +2,229 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF91BC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28757C3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819F42054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E24A62054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 16:25:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="DOotlbxS"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Ws63aQAn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731676AbfHOQZk (ORCPT
+        id S1731523AbfHOQZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 12:25:40 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36336 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731565AbfHOQZ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 12:25:28 -0400
-Received: by mail-oi1-f193.google.com with SMTP id c15so2661722oic.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 09:25:27 -0700 (PDT)
+        Thu, 15 Aug 2019 12:25:26 -0400
+Received: from mail-eopbgr810074.outbound.protection.outlook.com ([40.107.81.74]:53952
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730559AbfHOQZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 12:25:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SI1YwvgztjxTUxeP+WIiytCXeB2EzfRZfai0JK6VAJIph9ZTT9+A8x2cOgwMJZ5VW6lDowTypL2Ez52/Xoo/J1Jtdocnv/UBD9wsZP6tyBuCtAxNZZcdLi1pvY4WjOFUqilJ0unp6Erz+IifZczszD2WEWRmG2K6rnBzfZ3VYNUG0SQyMYvCDiCLBpcfdj8JdDGU8eiSOLDupe6FFS8z0EnUbvCE4oFa6eOY9jvNghJrz1HAEFDjAMRqmtswQZcdtavAdzhuYAy9zkwM8OMavyTJioboM8Y/eC9NbO8wojO7UVaEcK0RczGzI7cjP888l1wgF8pYLQAEIf1utkEw8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xgquWQD1h23IOCFAcUF/vVUR070Fxtg3fOCGdptoR08=;
+ b=oTYn70opB/6YKI3zpm7eAcSzGBNfX0u5EJ2heNQf+U3yBi39BVwK0DqIeoQmD3xCgQp6Cp8mdDDXKUpYBGI2FlmJiLsxtbNWameUnKL4atenAQjuV5DQuU085Z9VA1drO5Q4saE0JuS7fBybjdlS7XsJYSRJYQKh8NG1G8pA116ARdjrAPQ5YJtxmWGG5TWb4qj/1fR2MVyHpMkGSn9okpPy4ErSPF2hknU5zJpWnuOExHM0dJWP2H3SqulTg0bteFx+85N9dq403/RF/bNyVPssyTjkbMAvUOmRaCT2MvJJGtKkaRRmTvXEeWEBMXr/hL1CFUOLPHdgN7BPJSvVMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wAN07Aej6p7Hd2hVE0xjo/DUiYqDdqV1ia2cD28NFxQ=;
-        b=DOotlbxSe+oEc7h+VfeydF2jzAD8OEvRpE+Mg/T7l9NuSqDLgxqy80Rm7yaUhdlUsq
-         XgZgOuBZPynYHO4pUyg0M+oxFE8PtShe6V/b9aN3W9gEmBvrEDd3jLri92IEvOnBd8yU
-         d6tqu6UAtAcEGMC2AAWjeIO4ADYzS2PbO0fdY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wAN07Aej6p7Hd2hVE0xjo/DUiYqDdqV1ia2cD28NFxQ=;
-        b=FduP1MwkOK55cQBwKU9/H6zCKcDdpDGvjyZVeLLluzHxLrDAQ7Qut8C9Iw33CgQrFh
-         GyslbxsyaDqprC4LtRuFn1QuM9s9Wlx06qsqqHerlweWKkMfwttPYr7PG4nIeO3TyMT5
-         7Cg8j6BHoPJRkbEI+pUuMsGa2AJIk30BVjGn1r9WTUzrxnYRuSmWcOGirvtSLjWsglGt
-         YTDaCJdwI4BdXOwBuymcGJFF77walM8UXSGIGt8zonBMkCWMJ6hf79eJV5ChzXs+tcZN
-         S/3i/Ye9OKEP1PAKcobAoOg5ug8nQ2Jml878DENpoN88kNYoNYk4XUfuWv6PuLgHqGRf
-         51HA==
-X-Gm-Message-State: APjAAAUmu6fra06p9lLJgXuXBI23p436XRDUMvBVKgWMngkCbZcC3bXo
-        HB0sHEaeP4eUnJIHVLRTQMRUFvaGlUUdcnA36c98pw==
-X-Google-Smtp-Source: APXvYqx5YhSWqsE1qNwb3e6Mk3OQ7+I0+E8yd7D6yMtzpx5rSV3pk3wPcLHj+cK8qGuWQRqpgPomSdRixh5Xeblp1Ps=
-X-Received: by 2002:a54:4f89:: with SMTP id g9mr2267959oiy.110.1565886327298;
- Thu, 15 Aug 2019 09:25:27 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xgquWQD1h23IOCFAcUF/vVUR070Fxtg3fOCGdptoR08=;
+ b=Ws63aQAn2gi9RTh0xtwifEp5Udl2R9K1hDU0Y3zE9tu56E8fCW+A036ezahIVZtD7wzLXu94QtzU3BmSBpAa7hAgwl75Ls5y1ClLDYNnxVpxD2L1AODe4+2FGmJSXrsNDgphtAvJ3YLSAa7QwWR/18z8OoCFu9r9fLZnGGCtLZA=
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
+ DM6PR12MB3897.namprd12.prod.outlook.com (10.255.174.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.16; Thu, 15 Aug 2019 16:25:11 +0000
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::e95a:d3ee:e6a0:2825]) by DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::e95a:d3ee:e6a0:2825%7]) with mapi id 15.20.2157.022; Thu, 15 Aug 2019
+ 16:25:11 +0000
+From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "graf@amazon.com" <graf@amazon.com>,
+        "jschoenh@amazon.de" <jschoenh@amazon.de>,
+        "karahmed@amazon.de" <karahmed@amazon.de>,
+        "rimasluk@amazon.com" <rimasluk@amazon.com>,
+        "Grimm, Jon" <Jon.Grimm@amd.com>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+Subject: [PATCH v2 07/15] kvm: x86: svm: Add support to activate/deactivate
+ posted interrupts
+Thread-Topic: [PATCH v2 07/15] kvm: x86: svm: Add support to
+ activate/deactivate posted interrupts
+Thread-Index: AQHVU4YCq8MA7E6GfEyia46qTzdwWA==
+Date:   Thu, 15 Aug 2019 16:25:11 +0000
+Message-ID: <1565886293-115836-8-git-send-email-suravee.suthikulpanit@amd.com>
+References: <1565886293-115836-1-git-send-email-suravee.suthikulpanit@amd.com>
+In-Reply-To: <1565886293-115836-1-git-send-email-suravee.suthikulpanit@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.78.1]
+x-clientproxiedby: SN6PR04CA0084.namprd04.prod.outlook.com
+ (2603:10b6:805:f2::25) To DM6PR12MB2844.namprd12.prod.outlook.com
+ (2603:10b6:5:45::32)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 967724da-82f3-4994-355f-08d7219d2531
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3897;
+x-ms-traffictypediagnostic: DM6PR12MB3897:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB389730BD9679C7198207450AF3AC0@DM6PR12MB3897.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 01304918F3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(396003)(346002)(136003)(376002)(199004)(189003)(478600001)(8936002)(66476007)(3846002)(6436002)(53936002)(50226002)(316002)(66556008)(36756003)(66946007)(6116002)(64756008)(102836004)(66446008)(76176011)(386003)(6506007)(6512007)(2616005)(186003)(66066001)(81166006)(486006)(25786009)(81156014)(26005)(99286004)(14444005)(2501003)(8676002)(476003)(7736002)(256004)(14454004)(5660300002)(52116002)(4720700003)(71200400001)(71190400001)(2906002)(110136005)(446003)(54906003)(4326008)(305945005)(86362001)(11346002)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3897;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: LSrGPH2vrXg6pgYnbPxxQp3IhPlWIfznewFrZwBWyDIscw9qsQ61IKyQMmzJ2pAAD4en5eIGVFpYdApWdASw8oiRg20W+J/JyZHemINsxlI/OpdValoXBOJWSIa6h8kQwLmuhrcEg6W9nfMo7/16NvECRJgo6C0CYzeVAH0SGd9962unnfcuSsKDLvJmJbybpf96JbwPok8VYOat28audcopxPsOPeVgXImYcGOcKpEe6Vdq8ZZXHnnMYP78m8k3Tyxm7lOAtFvLNneR6uDgIP2Uj6+W3mr8EPmJvcAbqZnfTZ+5386kedf7vb3rcMWQV9Wq+7xmrfa/nPoD0KmtOi/IgleNSbFlALkGHQwjiu30u7nqByMPFMhI2lX6iwLWlW1tqjqnlt0gmzR/VLxfldOVYnrPybgve+b76kYSdms=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190814202027.18735-1-daniel.vetter@ffwll.ch>
- <20190814202027.18735-3-daniel.vetter@ffwll.ch> <20190814134558.fe659b1a9a169c0150c3e57c@linux-foundation.org>
- <20190815084429.GE9477@dhcp22.suse.cz> <20190815130415.GD21596@ziepe.ca>
- <CAKMK7uE9zdmBuvxa788ONYky=46GN=5Up34mKDmsJMkir4x7MQ@mail.gmail.com>
- <20190815143759.GG21596@ziepe.ca> <CAKMK7uEJQ6mPQaOWbT_6M+55T-dCVbsOxFnMC6KzLAMQNa-RGg@mail.gmail.com>
- <20190815151028.GJ21596@ziepe.ca>
-In-Reply-To: <20190815151028.GJ21596@ziepe.ca>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Thu, 15 Aug 2019 18:25:16 +0200
-Message-ID: <CAKMK7uG33FFCGJrDV4-FHT2FWi+Z5SnQ7hoyBQd4hignzm1C-A@mail.gmail.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 967724da-82f3-4994-355f-08d7219d2531
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 16:25:11.5937
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Q9b+YKTndgz28RxMG+4P8wq7BB4p7g0OQUG/Woa5edcS/NUIe4GJXkMpdHSBWpY+RckBDD48EA1T6wXvZoNn6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3897
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 5:10 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Thu, Aug 15, 2019 at 04:43:38PM +0200, Daniel Vetter wrote:
->
-> > You have to wait for the gpu to finnish current processing in
-> > invalidate_range_start. Otherwise there's no point to any of this
-> > really. So the wait_event/dma_fence_wait are unavoidable really.
->
-> I don't envy your task :|
->
-> But, what you describe sure sounds like a 'registration cache' model,
-> not the 'shadow pte' model of coherency.
->
-> The key difference is that a regirstationcache is allowed to become
-> incoherent with the VMA's because it holds page pins. It is a
-> programming bug in userspace to change VA mappings via mmap/munmap/etc
-> while the device is working on that VA, but it does not harm system
-> integrity because of the page pin.
->
-> The cache ensures that each initiated operation sees a DMA setup that
-> matches the current VA map when the operation is initiated and allows
-> expensive device DMA setups to be re-used.
->
-> A 'shadow pte' model (ie hmm) *really* needs device support to
-> directly block DMA access - ie trigger 'device page fault'. ie the
-> invalidate_start should inform the device to enter a fault mode and
-> that is it.  If the device can't do that, then the driver probably
-> shouldn't persue this level of coherency. The driver would quickly get
-> into the messy locking problems like dma_fence_wait from a notifier.
->
-> It is important to identify what model you are going for as defining a
-> 'registration cache' coherence expectation allows the driver to skip
-> blocking in invalidate_range_start. All it does is invalidate the
-> cache so that future operations pick up the new VA mapping.
->
-> Intel's HFI RDMA driver uses this model extensively, and I think it is
-> well proven, within some limitations of course.
->
-> At least, 'registration cache' is the only use model I know of where
-> it is acceptable to skip invalidate_range_end.
+Introduce interface for activate/deactivate posted interrupts, and
+implement SVM hooks to toggle AMD IOMMU guest virtual APIC mode.
 
-I'm not really well versed in the details of our userptr, but both
-amdgpu and i915 wait for the gpu to complete from
-invalidate_range_start. Jerome has at least looked a lot at the amdgpu
-one, so maybe he can explain what exactly it is we're doing ...
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+---
+ arch/x86/include/asm/kvm_host.h |  4 ++++
+ arch/x86/kvm/svm.c              | 44 +++++++++++++++++++++++++++++++++++++=
+++++
+ arch/x86/kvm/x86.c              |  6 ++++++
+ 3 files changed, 54 insertions(+)
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_hos=
+t.h
+index dfb7c3d..0d8544b 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1183,6 +1183,10 @@ struct kvm_x86_ops {
+=20
+ 	int (*update_pi_irte)(struct kvm *kvm, unsigned int host_irq,
+ 			      uint32_t guest_irq, bool set);
++
++	int (*activate_pi_irte)(struct kvm_vcpu *vcpu);
++	int (*deactivate_pi_irte)(struct kvm_vcpu *vcpu);
++
+ 	void (*apicv_post_state_restore)(struct kvm_vcpu *vcpu);
+=20
+ 	int (*set_hv_timer)(struct kvm_vcpu *vcpu, u64 guest_deadline_tsc,
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 6851bce..b674cd0 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5374,6 +5374,48 @@ static int svm_update_pi_irte(struct kvm *kvm, unsig=
+ned int host_irq,
+ 	return ret;
+ }
+=20
++static int svm_set_pi_irte_mode(struct kvm_vcpu *vcpu, bool activate)
++{
++	int ret =3D 0;
++	unsigned long flags;
++	struct amd_svm_iommu_ir *ir;
++	struct vcpu_svm *svm =3D to_svm(vcpu);
++
++	if (!kvm_arch_has_assigned_device(vcpu->kvm))
++		return 0;
++
++	/*
++	 * Here, we go through the per-vcpu ir_list to update all existing
++	 * interrupt remapping table entry targeting this vcpu.
++	 */
++	spin_lock_irqsave(&svm->ir_list_lock, flags);
++
++	if (list_empty(&svm->ir_list))
++		goto out;
++
++	list_for_each_entry(ir, &svm->ir_list, node) {
++		if (activate)
++			ret =3D amd_iommu_activate_guest_mode(ir->data);
++		else
++			ret =3D amd_iommu_deactivate_guest_mode(ir->data);
++		if (ret)
++			break;
++	}
++out:
++	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
++	return ret;
++}
++
++static int svm_activate_pi_irte(struct kvm_vcpu *vcpu)
++{
++	return svm_set_pi_irte_mode(vcpu, true);
++}
++
++static int svm_deactivate_pi_irte(struct kvm_vcpu *vcpu)
++{
++	return svm_set_pi_irte_mode(vcpu, false);
++}
++
+ static int svm_nmi_allowed(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_svm *svm =3D to_svm(vcpu);
+@@ -7269,6 +7311,8 @@ static bool svm_need_emulation_on_page_fault(struct k=
+vm_vcpu *vcpu)
+ 	.pmu_ops =3D &amd_pmu_ops,
+ 	.deliver_posted_interrupt =3D svm_deliver_avic_intr,
+ 	.update_pi_irte =3D svm_update_pi_irte,
++	.activate_pi_irte =3D svm_activate_pi_irte,
++	.deactivate_pi_irte =3D svm_deactivate_pi_irte,
+ 	.setup_mce =3D svm_setup_mce,
+=20
+ 	.smi_allowed =3D svm_smi_allowed,
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 40a20bf..5ab1643 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7177,6 +7177,9 @@ void kvm_vcpu_activate_apicv(struct kvm_vcpu *vcpu)
+ 	kvm_apic_update_apicv(vcpu);
+=20
+ 	kvm_x86_ops->refresh_apicv_exec_ctrl(vcpu);
++
++	if (kvm_x86_ops->activate_pi_irte)
++		kvm_x86_ops->activate_pi_irte(vcpu);
+ }
+ EXPORT_SYMBOL_GPL(kvm_vcpu_activate_apicv);
+=20
+@@ -7192,6 +7195,9 @@ void kvm_vcpu_deactivate_apicv(struct kvm_vcpu *vcpu)
+ 	vcpu->arch.apicv_active =3D false;
+ 	kvm_apic_update_apicv(vcpu);
+=20
++	if (kvm_x86_ops->deactivate_pi_irte)
++		kvm_x86_ops->deactivate_pi_irte(vcpu);
++
+ 	kvm_x86_ops->refresh_apicv_exec_ctrl(vcpu);
+ }
+ EXPORT_SYMBOL_GPL(kvm_vcpu_deactivate_apicv);
+--=20
+1.8.3.1
+
