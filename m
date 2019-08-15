@@ -2,97 +2,109 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C58E4C3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A99C3A59B
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3AB20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B86920644
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 15:34:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Prv6gJ49"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ixw2ad5r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730266AbfHOPdO (ORCPT
+        id S1730307AbfHOPeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 11:33:14 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35991 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730049AbfHOPdO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 11:33:14 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p28so2455313edi.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 08:33:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o3UNVvRcqgknRSbay7FUCJDbPbxBrvPJzPpgYbJ5C2I=;
-        b=Prv6gJ49GcEBNbk0/Clw83UxMI9ce4oqQdlks9MrqN+WhicI+zhIDx3+DDoCJ35m/B
-         K+q/KeUJLtWkumLEJxbQz8K+gqTatV+Riw/mLh2ZUzYYuBv8NRGNzVdMRgmMdimhiDFb
-         yGoZr9lQtNJreo6tXcJO2em4iw5bILHe2IM1U5TUOElZiqxa5ilQ9hSxmc4hDGsD4gAh
-         qCzf4IlbcsSrPXvgtVfi57wm8o+MaKG94oN/TfisMac7+pOsym5cw+k/DE/r/I9xaIzv
-         azrTFF/IA7bkyp86T5QI4DJDBUI/ya1BKaPxtq9bcmgsA65E3v/thjM5DvfshpxaG5zC
-         agKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o3UNVvRcqgknRSbay7FUCJDbPbxBrvPJzPpgYbJ5C2I=;
-        b=MjLF1p+NhkmrEM2hd1og/WYhcPA9u1T/r8L48O5ZkrYPX2hxu3HcD3TPDEZgx+DQGF
-         3wQcN4DFARrc670nyM7NohDNmXq9YRQnkP4uIH7bBuvgqWzuk1b9D8FArxvxmYWRyWCJ
-         1p2fCH9DKSCyooFtm9D3w0kGsNCGALjprgqtz7RBozXnlfE33zJnglAul0J0j8LnGCFd
-         /q2X2Pnqdmi/tW+koP8kJoViYlmsCKrHW7ty/yyqX63QTmFSxFqzUevw+zzaAK5/qNse
-         ov5Q5BszSSlzXC1efyrPUBpzzNukMakLWXtc02br9rAmST4TLP/yh03/mMzLOnXHyj0Y
-         OtTw==
-X-Gm-Message-State: APjAAAU1E+U+Op+hqEll5ikHI24JKRyDlZVQsU90AV+xdqWC+OVLOm4s
-        JySMKxdGpty4Xw1Zwyi2MQvJdSV8wgKhkGPN1Yg=
-X-Google-Smtp-Source: APXvYqyWNy6gsBFapmcJCjWhlOPlHn5R2djc4E/fTnSHykY18ryNLl3VxmiH0SxKCjmoBxEETYwBFsdELNQyfNKItac=
-X-Received: by 2002:a05:6402:1344:: with SMTP id y4mr6022183edw.124.1565883192450;
- Thu, 15 Aug 2019 08:33:12 -0700 (PDT)
+        Thu, 15 Aug 2019 11:34:06 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:43036 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728728AbfHOPeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 11:34:06 -0400
+Received: from zn.tnic (p200300EC2F0B52001DDC45CCE62FC494.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:5200:1ddc:45cc:e62f:c494])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7627B1EC074B;
+        Thu, 15 Aug 2019 17:34:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565883244;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=6ea0+0I7fYBanPI40B3Ad6TnGdmO71uK0qGfHM+0Bo4=;
+        b=ixw2ad5rraIJ95A28jqAg/FczeVEcYhxQFEzLrDlcL+fFOZ9Gc1GDa6MUF2M8s0AdfC+Bz
+        S77CYzbLrz7CLJC3Tv9lWuQRXOz97162qtRh/TmVGCmoYewt7C5uv5G64Zsn2XNbg6BB/R
+        IDkIkwuGBgKSfBHUmJCbTXH/Ll8qt5s=
+Date:   Thu, 15 Aug 2019 17:34:47 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Chen Yu <yu.c.chen@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD family 15h/16h
+Message-ID: <20190815153447.GH15313@zn.tnic>
+References: <776cb5c2d33e7fd0d2893904724c0e52b394f24a.1565817448.git.thomas.lendacky@amd.com>
+ <20190815071940.GB15313@zn.tnic>
+ <768aa720-1db1-81ca-4d0d-adf31f4d134b@amd.com>
 MIME-Version: 1.0
-References: <20190809071034.17279-1-hslester96@gmail.com> <20190814104941.qt66ozcau5fdswcs@pathway.suse.cz>
- <20190815075033.GA26479@tigerII.localdomain> <20190815135221.qcgerido7aahmpgn@pathway.suse.cz>
-In-Reply-To: <20190815135221.qcgerido7aahmpgn@pathway.suse.cz>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Thu, 15 Aug 2019 23:33:01 +0800
-Message-ID: <CANhBUQ3Gco8kR7xiMknFv3ryyfnfeiJO1R-rHzNWBux8b8=LSw@mail.gmail.com>
-Subject: Re: [PATCH v4 4/8] printk: Replace strncmp with str_has_prefix
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <768aa720-1db1-81ca-4d0d-adf31f4d134b@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 9:52 PM Petr Mladek <pmladek@suse.com> wrote:
->
-> On Thu 2019-08-15 16:50:33, Sergey Senozhatsky wrote:
-> > On (08/14/19 12:49), Petr Mladek wrote:
-> > > On Fri 2019-08-09 15:10:34, Chuhong Yuan wrote:
-> > > > strncmp(str, const, len) is error-prone because len
-> > > > is easy to have typo.
-> > > > The example is the hard-coded len has counting error
-> > > > or sizeof(const) forgets - 1.
-> > > > So we prefer using newly introduced str_has_prefix()
-> > > > to substitute such strncmp to make code better.
-> > > >
-> > > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > >
-> > > Reviewed-by: Petr Mladek <pmladek@suse.com>
-> >
-> > Reviewed-by:  Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
->
-> Chuong Yuan, should I take this patch via printk.git? Or will
-> the entire series go via some other tree, please?
->
+On Thu, Aug 15, 2019 at 01:47:24PM +0000, Lendacky, Thomas wrote:
+> Sure, I can do that. Do we want to tie this into the nordrand option and
+> add rdrand=off or keep that separate?
 
-I think that it goes via printk.git is okay, thanks!
+Yeah, I was looking at that this morning and I'd say keep 'em separate
+because if you have to tie, you need to export functions and then
+there's
 
-> Best Regards,
-> Petr
+	setup_clear_cpu_cap(X86_FEATURE_RDSEED);
+
+in the nordrand callback but then F15h and F16h don't have RDSEED and
+people would wonder, why clear RDSEED on AMD, blabla... so keeping them
+separate saves us all that.
+
+> I think this is a clearer indication that the action has taken place.
+
+Yeah, but what does that bring us? You wanna know this now, while
+testing. Once that whole effort is done, it is a useless printing of
+info which you have in cpuinfo already.
+
+> Not sure what you mean. We can't use the DMI stuff for this. So now, with
+> the x86 family checks, if anyone adds some DMI stuff or x86 family stuff
+> in the future that matches both the DMI and x86 family checks, this will
+> be called more than once and so you need to copy any previous settings and
+> add the new ones.
+
+I had a suspicion that it was something like that. Ok, this is not a
+big structure currently so I guess it is fine but if it keeps growing,
+it would need a proper redesign like making it a list and callbacks
+doing list_add_tail() for MSRs which get added. It would avoid that
+kmalloc and copying which is silly. Please put a comment ontop why we're
+copying.
+
+> Except that X86_FEATURE_RDRAND isn't set anymore. I could create a new
+> software feature that is set when the CPUID bit is cleared if that's
+> preferred.
+
+Nah, let's leave it like you had it.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
