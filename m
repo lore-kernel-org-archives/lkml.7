@@ -2,109 +2,81 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2B2C3A59C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAC5C3A59C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85971206C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:11:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ZXn1m1FH"
+	by mail.kernel.org (Postfix) with ESMTP id 8B1742086C
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 14:11:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565878278;
+	bh=MK9pYDd/pRkYq15ySrVY/G8VYSCibcH28hj42sQPutU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=pQd4jP9kEW6igg8qkaO7UPdZV6adclAWSSx6lFsrO39IpWmBQd+oEoIlsHoaQLUH9
+	 b8R58r+MbtH646W5G7NUj3K53a7M7jb6NqBTLK56P0V27WuTRo2hFQjRL1EnsVmgQE
+	 BhRpKvGMRUWsNC5PNsCKkx3IrpUQSXgU/t91+Txc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732783AbfHOOLN (ORCPT
+        id S1732798AbfHOOLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 10:11:13 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35869 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729918AbfHOOLN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 10:11:13 -0400
-Received: by mail-oi1-f195.google.com with SMTP id c15so2117518oic.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 07:11:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JoGosoNZCrkvvmYn2s5nj1f5F7hDnA1u4nMizuQrZrY=;
-        b=ZXn1m1FH5gKNEJpDzbYEQ/TeOQBFIvpbkI0YuusZkSaNu++nHT1eLRd2C0K7SmEAgt
-         jcz2rhXJ7QOxzzGjCvG5GHfReRUVq1aSjj24gtd7eoYRZGB5E3+Qbmxj6k0AyKDjw0TD
-         z1yiA/d8MOlh5J7FDAOEg7RTXNhViOukHDi9w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JoGosoNZCrkvvmYn2s5nj1f5F7hDnA1u4nMizuQrZrY=;
-        b=oOprwKaON6jQE5v2/YONsM7G6xGHnTcCUET+LY4wl/jtCPmYfuAIenhJYM9Ik8tSrw
-         8SjFgNz3PxVGcWCHR+jlE9fFzHT6afJVWlJd/1WU2xihjEWbVE7RE+uu6WatM1jeeLP1
-         6cc8UCL3UVWiTln4Y3tkzCr5X8whiL8x9IZSDXvM/q7MF2nUHjuPSSbn7OzbwlNOp4O6
-         rHzT3JwvUe2JOvoGQhTZSoL8xii/q93XquyM85WQzdVH6L8jE78Ue16KVZx71FkP6Yf5
-         48JKouFzneVcM8gn6GhCDaSlAse6MYJwzZzxh8WJkuM3be1azrk/4gQ4cy2JtvmzGhbP
-         muJg==
-X-Gm-Message-State: APjAAAXeDoG7g29y+HVWp94TGAqsXr6taGQkmCjHIcMLEFm0oEotxQXV
-        1uIQeuroPVh/U6IiURbVUqMQ+GcNDO/kvhi+fOeDBA==
-X-Google-Smtp-Source: APXvYqxHHuZUJHutmpU1PxQt0uV2+Ykat106aSv9mv+sZohSCF2iaIS7JJIHSD9E9jn0yYbTdunJelrlspa8xiz2IJo=
-X-Received: by 2002:aca:1a0b:: with SMTP id a11mr1746505oia.128.1565878272617;
- Thu, 15 Aug 2019 07:11:12 -0700 (PDT)
+        Thu, 15 Aug 2019 10:11:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732784AbfHOOLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 10:11:17 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D5C9206C2;
+        Thu, 15 Aug 2019 14:11:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565878276;
+        bh=MK9pYDd/pRkYq15ySrVY/G8VYSCibcH28hj42sQPutU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fh7wLHe55Sx3SEiOAYQq+MSIm3VGalOMrHqD3ygCTAbH4q/zL0T56AuRKRALpbgNS
+         q3e5qT3Ea8YMS6i7l1+8NivtOIPInIEc4reypEwATXJgIpDbyUsqEKGPuZIKfpO/D3
+         YNoxxDWFDE9fgpaVrDbXnbAaUm+JHJYBq8MbZesI=
+Subject: Re: [PATCH v5 0/2] usbip: Implement SG support
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Suwan Kim <suwan.kim027@gmail.com>, valentina.manea.m@gmail.com,
+        stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190808155435.10050-1-suwan.kim027@gmail.com>
+ <20190814131951.GA1437@infradead.org> <20190815132356.GB27208@kroah.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <0cf92881-53c7-09d4-18ac-593034a1a56c@kernel.org>
+Date:   Thu, 15 Aug 2019 08:10:49 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190814213118.28473-1-kherbst@redhat.com> <20190814213118.28473-2-kherbst@redhat.com>
- <CAPM=9ty7yEUqKrcixV1tTuWCpyh6UikA3rxX8BF1E3fDb6WLQQ@mail.gmail.com>
-In-Reply-To: <CAPM=9ty7yEUqKrcixV1tTuWCpyh6UikA3rxX8BF1E3fDb6WLQQ@mail.gmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Thu, 15 Aug 2019 16:11:00 +0200
-Message-ID: <CAKMK7uG1cugQvYLpEivDGg7+D0tUp5B9Jo7hWQCsmbXe3TC3nQ@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
- enable dGPU direct output"
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Alex Hung <alex.hung@canonical.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Dave Airlie <airlied@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190815132356.GB27208@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 12:47 AM Dave Airlie <airlied@gmail.com> wrote:
->
-> On Thu, 15 Aug 2019 at 07:31, Karol Herbst <kherbst@redhat.com> wrote:
-> >
-> > This reverts commit 28586a51eea666d5531bcaef2f68e4abbd87242c.
-> >
-> > The original commit message didn't even make sense. AMD _does_ support it and
-> > it works with Nouveau as well.
-> >
-> > Also what was the issue being solved here? No references to any bugs and not
-> > even explaining any issue at all isn't the way we do things.
-> >
-> > And even if it means a muxed design, then the fix is to make it work inside the
-> > driver, not adding some hacky workaround through ACPI tricks.
-> >
-> > And what out of tree drivers do or do not support we don't care one bit anyway.
-> >
->
-> I think the reverts should be merged via Rafael's tree as the original
-> patches went in via there, and we should get them in asap.
+On 8/15/19 7:23 AM, Greg KH wrote:
+> On Wed, Aug 14, 2019 at 06:19:51AM -0700, Christoph Hellwig wrote:
+>> FYI, I think my
+>>
+>>     "usb: add a HCD_DMA flag instead of guestimating DMA capabilities"
+>>
+>> is the proper core fix for what your patch 1 works around, as the USB
+>> core should not assume DMA capabilities based on the presence of a DMA
+>> mask.
+> 
+> I agree.  Let's wait for Christoph's series to be applied before taking
+> this one.
+> 
 
-+1
+Great. Thanks you both looking at these. Makes sense.
 
-> Acked-by: Dave Airlie <airlied@redhat.com>
+thanks,
+-- Shuah
 
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-Also fully agreeing with Karol's reply further down, if this doesn't
-work we need to improve the drivers, not pile stuff on top in some
-ACPI hacks.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
