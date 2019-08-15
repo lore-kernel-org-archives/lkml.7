@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D1DC3A589
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B3DC3A589
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BFCD205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422572084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 17:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565889314;
-	bh=nvsLVUFtAMRzEu1y2Z1m0T+QQ5UYAC9iqJQox9tALAY=;
+	s=default; t=1565889316;
+	bh=EiVcocz0Gwntc4j3w+DKCxpn9+p6sHgLTY/F3JiXdWA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=FHaPZxWejNqk+6pg5sk7pRqS/UykRa9dYHK97aGLNk1JgDAl/r/9BLXfROqOscsi7
-	 zp9zGV95rM9B3QOiQzU+u08vWH6peUpxNxiYIKcNVjWvvtGz2442u7bxClu6Gi3+4/
-	 X5dqDTjf8bWeUIGArLNmx/vxYVHyonydkoedAK0k=
+	b=pjuWl63EBqNoge4f8hpW1KLnFL1YhfvDhRkfW+HvwB6Kqh3KR9rsA5HMB09OXBa/w
+	 Kmp8JoeCGeYEiLX17mYVVjpddQ/m1MYCZxYk5QQWqFMhcyDRBYMBJinC71ScWim1O5
+	 4+lnOpGnkWW2v7kbyjg1d4oBlKDoIv9Vki/aEHuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732047AbfHORPN (ORCPT
+        id S1732031AbfHORPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 13:15:13 -0400
-Received: from mail-wm1-f100.google.com ([209.85.128.100]:38404 "EHLO
-        mail-wm1-f100.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731646AbfHOROa (ORCPT
+        Thu, 15 Aug 2019 13:15:12 -0400
+Received: from mail-wm1-f98.google.com ([209.85.128.98]:35485 "EHLO
+        mail-wm1-f98.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731637AbfHOROa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 15 Aug 2019 13:14:30 -0400
-Received: by mail-wm1-f100.google.com with SMTP id m125so1859719wmm.3
+Received: by mail-wm1-f98.google.com with SMTP id l2so1867527wmg.0
         for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 10:14:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=CnBCQCl8HgGtRAslD3BhGDm2lZeAd4b8wc+xobzHTtE=;
-        b=fAtSj4gtUsw/zzHOeGeURkspKwTZdaAbjfN+qSryoOWqsXpe4Nw4PO/2LVpnPljL38
-         UPc2EsMnAMl0PC1UVZHzaVTC+ch8AQl/obUVUhNJ76HL12R9nwzWNqN12CMqiZeDE7TO
-         ugsRd7mV8EBvR1Xf46LPRpaLKLLe4/OCCoppCCkZKeEK8OBdwVToPTdIdoiLaZCqdaKp
-         qhdfLoHO0xWzfOWHHIlb2bH/ae4f34m+DwZwyvrk71elnMkhv5pcNWKrJz1kIM/Yu6wI
-         l9aS7TuSAXQ3wnwxnxgkabVEy3Ac+RwLlYFJ5Y3e17m3Gmxua+rDhUR4mNkSsCGQ3cZy
-         DNdw==
-X-Gm-Message-State: APjAAAWpan29/51Xv8iJtOduwfBu6OESdLMgxgTtbGt+dCTo+yrShmNy
-        CaDaoewD0UhW+4+u2adwfFd2EwnumkWEcyxEMvW8lzevWUUbPNUNKi+49/piJ3bZfg==
-X-Google-Smtp-Source: APXvYqzF9p1m8pQLSYHcZd54ZXHssvs7mOElBrJ3n7sLNitdfagAUctF4SZiOcG91ZIiZMiKr3Spp9T/hSsU
-X-Received: by 2002:a1c:a1c1:: with SMTP id k184mr3836224wme.81.1565889268788;
+        bh=qK+K3lvg5j7KBSfj3mqp/CfZUMLY6IjIIgyqWda7qdY=;
+        b=jrptLSSGaEhsZnemGxbQsiutDVJEabMLnUvAlPyQGJ1J2DRRSxl3aed33cLWjtrSnU
+         BNpPXVllF4JO1NUGW6ibpxzSeRJfWFQKzo4l9YL8KpWt/MPylUaJyS6+7u8SpZcxT/sa
+         VTZoiWPQY9oBAVWJnfR2AH4Pe+JcUl1KAUhIQwr7SK2nKlZPAPUQALzGiGjK7l5r0+iA
+         e49bHtgp8/5tqjPnky06s/v0+XljlPblYh8OPAro9kc0d3NqCkUkcCvqhuntQW80ltvl
+         wNPKg5Cu5634CuuJx6TwPIs6+eUGSaHYCiSQdArtqxuSTnk9+feRvgQ3kIC+p9xPj81f
+         G02A==
+X-Gm-Message-State: APjAAAUdRFnxw7eOG/wl35qnIPWhpaydoLNdVKnLGiAD/NesoHukKwnI
+        LWbvEcG5BdswM/9upUyHDgB1lz+gfs/Coj3ZJ5DjNnC3z0gqqZfQYgh60YsqptmbRA==
+X-Google-Smtp-Source: APXvYqzwc/xYr8huKOghn9vmtQMt/8YLWEaKPN+5vpK0OgbJx4iilw7n+VrgNxOG+/p65MKqhugGqHofkiLa
+X-Received: by 2002:a7b:c198:: with SMTP id y24mr3681836wmi.131.1565889268536;
         Thu, 15 Aug 2019 10:14:28 -0700 (PDT)
 Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id v11sm7554wmh.27.2019.08.15.10.14.28
+        by smtp-relay.gmail.com with ESMTPS id r12sm59823wrw.27.2019.08.15.10.14.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 15 Aug 2019 10:14:28 -0700 (PDT)
 X-Relaying-Domain: sirena.org.uk
@@ -54,26 +54,21 @@ Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1hyJKW-00052e-HJ; Thu, 15 Aug 2019 17:14:28 +0000
+        id 1hyJKW-00052a-AD; Thu, 15 Aug 2019 17:14:28 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 16A862742B9E; Thu, 15 Aug 2019 18:14:28 +0100 (BST)
+        id D1B542742BD6; Thu, 15 Aug 2019 18:14:27 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     alsa-devel@alsa-project.org, cain.cai@rock-chips.com,
-        dgreid@chromium.org, dianders@chromium.org,
-        eddie.cai@rock-chips.com, enric.balletbo@collabora.com,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jaroslav Kysela <perex@perex.cz>, jeffy.chen@rock-chips.com,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        tzungbi@chromium.org, zhengxing@rock-chips.com
-Subject: Applied "ASoC: rockchip: rockchip_max98090: Set period size to 240" to the asoc tree
-In-Reply-To: <20190813074430.191791-1-cychiang@chromium.org>
+To:     Masanari Iida <standby24x7@gmail.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>, peter.ujfalusi@ti.com,
+        tiwai@suse.com
+Subject: Applied "ASoC: ti: Fix typos in ti/Kconfig" to the asoc tree
+In-Reply-To: <20190813034235.30673-1-standby24x7@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190815171428.16A862742B9E@ypsilon.sirena.org.uk>
-Date:   Thu, 15 Aug 2019 18:14:28 +0100 (BST)
+Message-Id: <20190815171427.D1B542742BD6@ypsilon.sirena.org.uk>
+Date:   Thu, 15 Aug 2019 18:14:27 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -81,11 +76,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: rockchip: rockchip_max98090: Set period size to 240
+   ASoC: ti: Fix typos in ti/Kconfig
 
 has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -106,55 +101,43 @@ to this mail.
 Thanks,
 Mark
 
-From 7188f656cdf762d4ea8ce16b6aaf4c6b06e119ec Mon Sep 17 00:00:00 2001
-From: Cheng-Yi Chiang <cychiang@chromium.org>
-Date: Tue, 13 Aug 2019 15:44:30 +0800
-Subject: [PATCH] ASoC: rockchip: rockchip_max98090: Set period size to 240
+From ae3a5901dde2ab136ec0cebda2fccc48e810d2ec Mon Sep 17 00:00:00 2001
+From: Masanari Iida <standby24x7@gmail.com>
+Date: Tue, 13 Aug 2019 12:42:35 +0900
+Subject: [PATCH] ASoC: ti: Fix typos in ti/Kconfig
 
-From stress testing of arecord, we found that period size
-greater than ~900 will bring pl330 to DYING state and
-can not recover within 100 iterations.
-The result is that arecord will stuck and get I/O error,
-and issue can not be recovered until reboot.
+This patch fixes some spelling typo in Kconfig.
 
-This issue does not happen when period size is small.
-Set constraint of period size to 240 to prevent such issue.
-With the constraint, there will be no issue after 2000 iterations.
-
-We can revert this patch once the root cause is found
-in rockchip's pl330 implementation.
-
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-Link: https://lore.kernel.org/r/20190813074430.191791-1-cychiang@chromium.org
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20190813034235.30673-1-standby24x7@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/rockchip/rockchip_max98090.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ sound/soc/ti/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
-index 782e534d4c0d..d54f672d38d8 100644
---- a/sound/soc/rockchip/rockchip_max98090.c
-+++ b/sound/soc/rockchip/rockchip_max98090.c
-@@ -138,8 +138,19 @@ static int rk_aif1_hw_params(struct snd_pcm_substream *substream,
- 	return ret;
- }
+diff --git a/sound/soc/ti/Kconfig b/sound/soc/ti/Kconfig
+index 2197f3e1eaed..87a9b9dd4e98 100644
+--- a/sound/soc/ti/Kconfig
++++ b/sound/soc/ti/Kconfig
+@@ -12,7 +12,7 @@ config SND_SOC_TI_SDMA_PCM
  
-+static int rk_aif1_startup(struct snd_pcm_substream *substream)
-+{
-+	/*
-+	 * Set period size to 240 because pl330 has issue
-+	 * dealing with larger period in stress testing.
-+	 */
-+	return snd_pcm_hw_constraint_minmax(substream->runtime,
-+			SNDRV_PCM_HW_PARAM_PERIOD_SIZE, 240, 240);
-+}
-+
- static const struct snd_soc_ops rk_aif1_ops = {
- 	.hw_params = rk_aif1_hw_params,
-+	.startup = rk_aif1_startup,
- };
+ comment "Texas Instruments DAI support for:"
+ config SND_SOC_DAVINCI_ASP
+-	tristate "daVinci Audio Serial Port (ASP) or McBSP suport"
++	tristate "daVinci Audio Serial Port (ASP) or McBSP support"
+ 	depends on ARCH_DAVINCI || COMPILE_TEST
+ 	select SND_SOC_TI_EDMA_PCM
+ 	help
+@@ -33,7 +33,7 @@ config SND_SOC_DAVINCI_MCASP
+ 	  - Keystone devices
  
- SND_SOC_DAILINK_DEFS(hifi,
+ config SND_SOC_DAVINCI_VCIF
+-	tristate "daVinci Voice Interface (VCIF) suport"
++	tristate "daVinci Voice Interface (VCIF) support"
+ 	depends on ARCH_DAVINCI || COMPILE_TEST
+ 	select SND_SOC_TI_EDMA_PCM
+ 	help
 -- 
 2.20.1
 
