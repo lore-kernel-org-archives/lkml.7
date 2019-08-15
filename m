@@ -2,103 +2,95 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA04C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04DCC31E40
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A215E2086C
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:57:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j1AnsEeP"
+	by mail.kernel.org (Postfix) with ESMTP id 8B8FA2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 06:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730504AbfHOG5E (ORCPT
+        id S1730508AbfHOG5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 02:57:04 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46220 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbfHOG5E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 02:57:04 -0400
-Received: by mail-lf1-f68.google.com with SMTP id n19so973737lfe.13
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 23:57:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=hgJrNRBNHtDq7sAYiX+DZ8YnHpU34hU1rQmq3ot6dZw=;
-        b=j1AnsEePN/KW0HMmaePlAW+4s11k/qV+uDHpT6ndW/2EcKgcI+1xAwgnAGE+sGMsi0
-         PYS0ALOF7iV7uqeiZjb3x1be7nTY9RBZ97TC7N5123EIoK0ckxfYcXV5vKd4B47jzDHq
-         ra0el1qXOaVWgxtWxtAVJLH5T7cUjpbgvaecqcP/oRpdMAmDDKu0kK+8faTx47F7E50d
-         ZL2gybENJ+Zi037ynuCYC4g6uo/QNwDg4+8fByK31BEc+Uux0pO0NHrezjRDjvob8zvS
-         s5r1mhvB0xQgT/Aww9Q60RZHy98c4UxiXYrFuRG5k2KUE+u8e3V/4pBtBjU9LsMbOZor
-         SIuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=hgJrNRBNHtDq7sAYiX+DZ8YnHpU34hU1rQmq3ot6dZw=;
-        b=jHMS55azlHiKjh3ItjNKg7lIzUzDt/ABr9EKuRN5u7oZcy7DxBI0Pw4PAmobB2a+TH
-         IayMoZzN6aJ6i8HzyMoRQ0ftTSjHZ9Frn1v9AlUkO2KM17WYor3DObKQog+tI/ci7got
-         T80ZD4SzjirZ9SU79rkagLsAarnWFTKjyYcTX3KlFjvGorgRz+OVY9CyoBzDjm1W/6dU
-         8j97IkEy0QQow+aRJ0I0DwF6seO584z2iYhnPKMNbEPgQuZnv8GZIPyId3eJuWi7XhJP
-         GCvqDN4neypOy5Rl2ix9SxOZJHj0KFVGEa8MCrutrM7a//c+yGrA1axQTMxIK6XXpGrd
-         Dpdg==
-X-Gm-Message-State: APjAAAVjfbcBCx0bV4UUqlgJqE7Orit5y/ZDrwcxtK2C8Fq1O7U/t1Hd
-        zSDIoK0nt3qS5LogorERDvbcyQ==
-X-Google-Smtp-Source: APXvYqzfCzhF11z2F4XsMUzO2mumPQq0sKbZSqSSnFlIg89QB+a7wZox9HdKZUoyffMFbn6H6j1c3A==
-X-Received: by 2002:ac2:44ce:: with SMTP id d14mr1626809lfm.143.1565852222061;
-        Wed, 14 Aug 2019 23:57:02 -0700 (PDT)
-Received: from jax (h-84-105.A175.priv.bahnhof.se. [79.136.84.105])
-        by smtp.gmail.com with ESMTPSA id i17sm303452lfp.94.2019.08.14.23.57.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 23:57:01 -0700 (PDT)
-Date:   Thu, 15 Aug 2019 08:56:59 +0200
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-To:     arm-soc <arm@kernel.org>, soc@kernel.org
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: [GIT PULL] tee subsys for v5.4
-Message-ID: <20190815065659.GA13498@jax>
+        Thu, 15 Aug 2019 02:57:44 -0400
+Received: from mga05.intel.com ([192.55.52.43]:42097 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729838AbfHOG5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 02:57:44 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 23:57:43 -0700
+X-IronPort-AV: E=Sophos;i="5.64,388,1559545200"; 
+   d="scan'208";a="201126314"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 23:57:42 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 7EAB32069D; Thu, 15 Aug 2019 09:56:35 +0300 (EEST)
+Date:   Thu, 15 Aug 2019 09:56:35 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC 1/5] media: dt-bindings: Document 'location' property
+Message-ID: <20190815065635.GJ6133@paasikivi.fi.intel.com>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-2-jacopo@jmondi.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190814202815.32491-2-jacopo@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello arm-soc maintainers,
+Hi Jacopo,
 
-Please pull this OP-TEE driver patch. It adds a call to might_sleep()
-during RPC in the OP-TEE driver in order to be more friendly with
-CONFIG_PREEMPT_VOLUNTARY.
+On Wed, Aug 14, 2019 at 10:28:11PM +0200, Jacopo Mondi wrote:
+> Add the 'location' device property, used to specify the camera device
+> mounting position. The property is particularly meaningful for mobile
+> devices with a well defined usage orientation.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> ---
+>  Documentation/devicetree/bindings/media/video-interfaces.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> index f884ada0bffc..819077b2649c 100644
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> @@ -89,6 +89,10 @@ Optional properties
+>    but a number of degrees counter clockwise. Typical values are 0 and 180
+>    (upside down).
+> 
+> +- location: The camera device mounting position, relative to the device
+> +  usage orientation. Possible values are:
+> +  0 - Front camera. The image sensor is mounted on the front side of the device.
+> +  1 - Back camera. The image sensor is mounted on the back side of the device.
 
-Thanks,
-Jens
+Would it make sense to make this a little more generic? Such as s/image
+sensor/ device/, for instance?
 
-The following changes since commit 0ecfebd2b52404ae0c54a878c872bb93363ada36:
+Is this also relevant for flash or lens devices?
 
-  Linux 5.2 (2019-07-07 15:41:56 -0700)
+Flash (torch) devices could be present, at least principle, without a
+camera. There once was even such a Nokia phone, 1100 unless I'm mistaken.
+:-)
 
-are available in the Git repository at:
+-- 
+Regards,
 
-  git://git.linaro.org/people/jens.wiklander/linux-tee.git tags/tee-optee-for-5.4
-
-for you to fetch changes up to 9f02b8f61f29f4518581770d57bfffe99b1ea599:
-
-  tee: optee: add might_sleep for RPC requests (2019-07-08 22:38:56 +0200)
-
-----------------------------------------------------------------
-Add might_sleep() in OP-TEE RPC requests
-
-----------------------------------------------------------------
-Rouven Czerwinski (1):
-      tee: optee: add might_sleep for RPC requests
-
- drivers/tee/optee/call.c | 1 +
- 1 file changed, 1 insertion(+)
+Sakari Ailus
+sakari.ailus@linux.intel.com
