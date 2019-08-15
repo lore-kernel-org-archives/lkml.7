@@ -2,122 +2,444 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49401C31E40
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5EDC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173222054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:36:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jc3nvB5Z"
+	by mail.kernel.org (Postfix) with ESMTP id 96D982171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:42:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfHOEgN (ORCPT
+        id S1728539AbfHOEmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:36:13 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34870 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfHOEgM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:36:12 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g17so2560191otl.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Aug 2019 21:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/gkJ9/4CSZ9hO3Aj7FMNUqCua5NIMc7cNOEioWbqpfI=;
-        b=jc3nvB5ZcIMMeb6t6pAdfEPR/JjjJNIg96nvPsRhj4dIOm7MGut0NoL1JUoIPGZHWz
-         bYhyQ3L9iEEOlzZiI4mdJl7HjUJfwvarE8hUaWtM5YeVFOOAy7qRQVxgvYNRUEkGCrJS
-         ZV6RNLwR9AhVNkq36qN3CyOSMBX0C/6lSrenUS97WZTP8xlH1PxNvBinkZXw7qVqUlf4
-         Xzx+roJWChURtCs2yeBDJrVKDlzMavbmR1tOFMzhWNc1BG5wOGSDEqGayFvT5sZuhaf3
-         AxDfRh0PJ9SvV3PENcOdcuPouLsEeWM5iRHvvOsIPCVbMz8eQxHIHcxzTtCcTFFvVRk+
-         Z2hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/gkJ9/4CSZ9hO3Aj7FMNUqCua5NIMc7cNOEioWbqpfI=;
-        b=slLWHHLIMiQFoWsXBfFNOdCVJM3wdhjrJYjIu0eff+z86OTtRX8B7wVSAPLQ+n1UIW
-         2WDCHs3OFvCmqE2kHe+f4OHYTtnsCcC+fCy4yGxJA1eu0bUhO3aFHu1obQ2i1sPIe0OA
-         WOxrFrQNo7apmpb62BRXlNT2vTtTZ8J4H5vDCxubL/yUShPY2uIebfWM1YzTci0TE19/
-         Hixr5hdLOXVxcqiMrrGv/ZwNNX+qshkXM1KCh+/js84cNjRsfbDTskE98F2pfS9jB5br
-         /jJFWpQjWKqXQeKR+NuxSNy7FtbXpspgnRucmxNe41CZX/acfjsbHHU6u/IiNd+DAX77
-         SKkw==
-X-Gm-Message-State: APjAAAUZWiZ9L5y2+yCCmDdp6LDbijgkYyugFaarfiNnJ/LY5QrweJIo
-        n7ulX3MBo7iOEN0EUz5uMvE=
-X-Google-Smtp-Source: APXvYqx6ut8hlUWZSU2LFZIuV11ddpYwSGIcPG/5VDT7er30Sm7CgTv9xqhl75MNKGUVrcRRZZQZ3A==
-X-Received: by 2002:a5d:9d43:: with SMTP id k3mr3259887iok.111.1565843771651;
-        Wed, 14 Aug 2019 21:36:11 -0700 (PDT)
-Received: from peng.science.purdue.edu (cos-128-210-107-27.science.purdue.edu. [128.210.107.27])
-        by smtp.googlemail.com with ESMTPSA id x11sm3643219ioh.87.2019.08.14.21.36.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 21:36:11 -0700 (PDT)
-From:   Hui Peng <benquike@gmail.com>
-To:     security@kernel.org
-Cc:     Hui Peng <benquike@gmail.com>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wenwen Wang <wang6495@umn.edu>,
-        Allison Randal <allison@lohutok.net>,
-        YueHaibing <yuehaibing@huawei.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Fix a stack buffer overflow bug check_input_term
-Date:   Thu, 15 Aug 2019 00:35:49 -0400
-Message-Id: <20190815043554.16623-1-benquike@gmail.com>
-X-Mailer: git-send-email 2.22.1
+        Thu, 15 Aug 2019 00:42:43 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34884 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725440AbfHOEmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:42:43 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1BAAE4BE6ECA50AFED55;
+        Thu, 15 Aug 2019 12:42:38 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 15 Aug
+ 2019 12:42:31 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        "Alexander Viro" <viro@zeniv.linux.org.uk>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Jaegeuk Kim" <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Richard Weinberger <richard@nod.at>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v8 02/24] erofs: add erofs in-memory stuffs
+Date:   Thu, 15 Aug 2019 12:41:33 +0800
+Message-ID: <20190815044155.88483-3-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190815044155.88483-1-gaoxiang25@huawei.com>
+References: <20190815044155.88483-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-`check_input_term` recursively calls itself with input
-from device side (e.g., uac_input_terminal_descriptor.bCSourceID)
-as argument (id). In `check_input_term`, if `check_input_term`
-is called with the same `id` argument as the caller, it triggers
-endless recursive call, resulting kernel space stack overflow.
+ - erofs_sb_info:
+   contains erofs-specific in-memory information.
 
-This patch fixes the bug by adding a bitmap to `struct mixer_build`
-to keep track of the checked ids by `check_input_term` and stop
-the execution if some id has been checked (similar to how
-parse_audio_unit handles unitid argument).
+ - erofs_vnode:
+   contains vfs_inode and other fs-specific information.
+   same as super block, the only one in-memory definition exists.
 
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Signed-off-by: Hui Peng <benquike@gmail.com>
+ - erofs_map_blocks
+   Logical to physical block mapping, used by erofs_map_blocks().
+
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- sound/usb/mixer.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/erofs/internal.h | 357 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 357 insertions(+)
+ create mode 100644 fs/erofs/internal.h
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index ea487378be17..1f6c8213df82 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -68,6 +68,7 @@ struct mixer_build {
- 	unsigned char *buffer;
- 	unsigned int buflen;
- 	DECLARE_BITMAP(unitbitmap, MAX_ID_ELEMS);
-+	DECLARE_BITMAP(termbitmap, MAX_ID_ELEMS);
- 	struct usb_audio_term oterm;
- 	const struct usbmix_name_map *map;
- 	const struct usbmix_selector_map *selector_map;
-@@ -782,6 +783,8 @@ static int check_input_term(struct mixer_build *state, int id,
- 	int err;
- 	void *p1;
- 
-+	if (test_and_set_bit(id, state->termbitmap))
-+		return 0;
- 	memset(term, 0, sizeof(*term));
- 	while ((p1 = find_audio_control_unit(state, id)) != NULL) {
- 		unsigned char *hdr = p1;
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+new file mode 100644
+index 000000000000..5b946eabc239
+--- /dev/null
++++ b/fs/erofs/internal.h
+@@ -0,0 +1,357 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * linux/fs/erofs/internal.h
++ *
++ * Copyright (C) 2017-2018 HUAWEI, Inc.
++ *             http://www.huawei.com/
++ * Created by Gao Xiang <gaoxiang25@huawei.com>
++ */
++#ifndef __EROFS_INTERNAL_H
++#define __EROFS_INTERNAL_H
++
++#include <linux/fs.h>
++#include <linux/dcache.h>
++#include <linux/mm.h>
++#include <linux/pagemap.h>
++#include <linux/bio.h>
++#include <linux/buffer_head.h>
++#include <linux/magic.h>
++#include <linux/slab.h>
++#include <linux/vmalloc.h>
++#include "erofs_fs.h"
++
++/* redefine pr_fmt "erofs: " */
++#undef pr_fmt
++#define pr_fmt(fmt) "erofs: " fmt
++
++#define errln(x, ...)   pr_err(x "\n", ##__VA_ARGS__)
++#define infoln(x, ...)  pr_info(x "\n", ##__VA_ARGS__)
++#ifdef CONFIG_EROFS_FS_DEBUG
++#define debugln(x, ...) pr_debug(x "\n", ##__VA_ARGS__)
++#define DBG_BUGON               BUG_ON
++#else
++#define debugln(x, ...)         ((void)0)
++#define DBG_BUGON(x)            ((void)(x))
++#endif	/* !CONFIG_EROFS_FS_DEBUG */
++
++enum {
++	FAULT_KMALLOC,
++	FAULT_READ_IO,
++	FAULT_MAX,
++};
++
++#ifdef CONFIG_EROFS_FAULT_INJECTION
++extern const char *erofs_fault_name[FAULT_MAX];
++#define IS_FAULT_SET(fi, type) ((fi)->inject_type & (1 << (type)))
++
++struct erofs_fault_info {
++	atomic_t inject_ops;
++	unsigned int inject_rate;
++	unsigned int inject_type;
++};
++#endif	/* CONFIG_EROFS_FAULT_INJECTION */
++
++/* EROFS_SUPER_MAGIC_V1 to represent the whole file system */
++#define EROFS_SUPER_MAGIC   EROFS_SUPER_MAGIC_V1
++
++typedef u64 erofs_nid_t;
++typedef u64 erofs_off_t;
++/* data type for filesystem-wide blocks number */
++typedef u32 erofs_blk_t;
++
++struct erofs_sb_info {
++	u32 blocks;
++	u32 meta_blkaddr;
++
++	/* inode slot unit size in bit shift */
++	unsigned char islotbits;
++
++	u32 build_time_nsec;
++	u64 build_time;
++
++	/* what we really care is nid, rather than ino.. */
++	erofs_nid_t root_nid;
++	/* used for statfs, f_files - f_favail */
++	u64 inos;
++
++	u8 uuid[16];                    /* 128-bit uuid for volume */
++	u8 volume_name[16];             /* volume name */
++	u32 requirements;
++
++	unsigned int mount_opt;
++
++#ifdef CONFIG_EROFS_FAULT_INJECTION
++	struct erofs_fault_info fault_info;	/* For fault injection */
++#endif
++};
++
++#ifdef CONFIG_EROFS_FAULT_INJECTION
++#define erofs_show_injection_info(type)					\
++	infoln("inject %s in %s of %pS", erofs_fault_name[type],        \
++		__func__, __builtin_return_address(0))
++
++static inline bool time_to_inject(struct erofs_sb_info *sbi, int type)
++{
++	struct erofs_fault_info *ffi = &sbi->fault_info;
++
++	if (!ffi->inject_rate)
++		return false;
++
++	if (!IS_FAULT_SET(ffi, type))
++		return false;
++
++	atomic_inc(&ffi->inject_ops);
++	if (atomic_read(&ffi->inject_ops) >= ffi->inject_rate) {
++		atomic_set(&ffi->inject_ops, 0);
++		return true;
++	}
++	return false;
++}
++#else
++static inline bool time_to_inject(struct erofs_sb_info *sbi, int type)
++{
++	return false;
++}
++
++static inline void erofs_show_injection_info(int type)
++{
++}
++#endif	/* !CONFIG_EROFS_FAULT_INJECTION */
++
++static inline void *erofs_kmalloc(struct erofs_sb_info *sbi,
++					size_t size, gfp_t flags)
++{
++	if (time_to_inject(sbi, FAULT_KMALLOC)) {
++		erofs_show_injection_info(FAULT_KMALLOC);
++		return NULL;
++	}
++	return kmalloc(size, flags);
++}
++
++#define EROFS_SB(sb) ((struct erofs_sb_info *)(sb)->s_fs_info)
++#define EROFS_I_SB(inode) ((struct erofs_sb_info *)(inode)->i_sb->s_fs_info)
++
++/* Mount flags set via mount options or defaults */
++#define EROFS_MOUNT_FAULT_INJECTION	0x00000040
++
++#define clear_opt(sbi, option)	((sbi)->mount_opt &= ~EROFS_MOUNT_##option)
++#define set_opt(sbi, option)	((sbi)->mount_opt |= EROFS_MOUNT_##option)
++#define test_opt(sbi, option)	((sbi)->mount_opt & EROFS_MOUNT_##option)
++
++/* we strictly follow PAGE_SIZE and no buffer head yet */
++#define LOG_BLOCK_SIZE		PAGE_SHIFT
++
++#undef LOG_SECTORS_PER_BLOCK
++#define LOG_SECTORS_PER_BLOCK	(PAGE_SHIFT - 9)
++
++#undef SECTORS_PER_BLOCK
++#define SECTORS_PER_BLOCK	(1 << SECTORS_PER_BLOCK)
++
++#define EROFS_BLKSIZ		(1 << LOG_BLOCK_SIZE)
++
++#if (EROFS_BLKSIZ % 4096 || !EROFS_BLKSIZ)
++#error erofs cannot be used in this platform
++#endif
++
++#define EROFS_IO_MAX_RETRIES_NOFAIL     5
++
++#define ROOT_NID(sb)		((sb)->root_nid)
++
++#define erofs_blknr(addr)       ((addr) / EROFS_BLKSIZ)
++#define erofs_blkoff(addr)      ((addr) % EROFS_BLKSIZ)
++#define blknr_to_addr(nr)       ((erofs_off_t)(nr) * EROFS_BLKSIZ)
++
++static inline erofs_off_t iloc(struct erofs_sb_info *sbi, erofs_nid_t nid)
++{
++	return blknr_to_addr(sbi->meta_blkaddr) + (nid << sbi->islotbits);
++}
++
++struct erofs_vnode {
++	erofs_nid_t nid;
++
++	unsigned char datamode;
++	unsigned char inode_isize;
++	unsigned short xattr_isize;
++
++	erofs_blk_t raw_blkaddr;
++	/* the corresponding vfs inode */
++	struct inode vfs_inode;
++};
++
++#define EROFS_V(ptr)	\
++	container_of(ptr, struct erofs_vnode, vfs_inode)
++
++#define __inode_advise(x, bit, bits) \
++	(((x) >> (bit)) & ((1 << (bits)) - 1))
++
++#define __inode_version(advise)	\
++	__inode_advise(advise, EROFS_I_VERSION_BIT,	\
++		EROFS_I_VERSION_BITS)
++
++#define __inode_data_mapping(advise)	\
++	__inode_advise(advise, EROFS_I_DATA_MAPPING_BIT,\
++		EROFS_I_DATA_MAPPING_BITS)
++
++static inline unsigned long inode_datablocks(struct inode *inode)
++{
++	/* since i_size cannot be changed */
++	return DIV_ROUND_UP(inode->i_size, EROFS_BLKSIZ);
++}
++
++static inline bool is_inode_layout_compression(struct inode *inode)
++{
++	return erofs_inode_is_data_compressed(EROFS_V(inode)->datamode);
++}
++
++static inline bool is_inode_flat_inline(struct inode *inode)
++{
++	return EROFS_V(inode)->datamode == EROFS_INODE_FLAT_INLINE;
++}
++
++extern const struct super_operations erofs_sops;
++
++extern const struct address_space_operations erofs_raw_access_aops;
++
++/*
++ * Logical to physical block mapping, used by erofs_map_blocks()
++ *
++ * Different with other file systems, it is used for 2 access modes:
++ *
++ * 1) RAW access mode:
++ *
++ * Users pass a valid (m_lblk, m_lofs -- usually 0) pair,
++ * and get the valid m_pblk, m_pofs and the longest m_len(in bytes).
++ *
++ * Note that m_lblk in the RAW access mode refers to the number of
++ * the compressed ondisk block rather than the uncompressed
++ * in-memory block for the compressed file.
++ *
++ * m_pofs equals to m_lofs except for the inline data page.
++ *
++ * 2) Normal access mode:
++ *
++ * If the inode is not compressed, it has no difference with
++ * the RAW access mode. However, if the inode is compressed,
++ * users should pass a valid (m_lblk, m_lofs) pair, and get
++ * the needed m_pblk, m_pofs, m_len to get the compressed data
++ * and the updated m_lblk, m_lofs which indicates the start
++ * of the corresponding uncompressed data in the file.
++ */
++enum {
++	BH_Zipped = BH_PrivateStart,
++	BH_FullMapped,
++};
++
++/* Has a disk mapping */
++#define EROFS_MAP_MAPPED	(1 << BH_Mapped)
++/* Located in metadata (could be copied from bd_inode) */
++#define EROFS_MAP_META		(1 << BH_Meta)
++
++struct erofs_map_blocks {
++	erofs_off_t m_pa, m_la;
++	u64 m_plen, m_llen;
++
++	unsigned int m_flags;
++
++	struct page *mpage;
++};
++
++/* Flags used by erofs_map_blocks() */
++#define EROFS_GET_BLOCKS_RAW    0x0001
++
++/* data.c */
++static inline struct bio *erofs_grab_bio(struct super_block *sb,
++					 erofs_blk_t blkaddr,
++					 unsigned int nr_pages,
++					 void *bi_private, bio_end_io_t endio,
++					 bool nofail)
++{
++	const gfp_t gfp = GFP_NOIO;
++	struct bio *bio;
++
++	do {
++		if (nr_pages == 1) {
++			bio = bio_alloc(gfp | (nofail ? __GFP_NOFAIL : 0), 1);
++			if (unlikely(!bio)) {
++				DBG_BUGON(nofail);
++				return ERR_PTR(-ENOMEM);
++			}
++			break;
++		}
++		bio = bio_alloc(gfp, nr_pages);
++		nr_pages /= 2;
++	} while (unlikely(!bio));
++
++	bio->bi_end_io = endio;
++	bio_set_dev(bio, sb->s_bdev);
++	bio->bi_iter.bi_sector = (sector_t)blkaddr << LOG_SECTORS_PER_BLOCK;
++	bio->bi_private = bi_private;
++	return bio;
++}
++
++static inline void __submit_bio(struct bio *bio, unsigned int op,
++				unsigned int op_flags)
++{
++	bio_set_op_attrs(bio, op, op_flags);
++	submit_bio(bio);
++}
++
++struct page *__erofs_get_meta_page(struct super_block *sb, erofs_blk_t blkaddr,
++				   bool prio, bool nofail);
++
++static inline struct page *erofs_get_meta_page(struct super_block *sb,
++	erofs_blk_t blkaddr, bool prio)
++{
++	return __erofs_get_meta_page(sb, blkaddr, prio, false);
++}
++
++int erofs_map_blocks(struct inode *, struct erofs_map_blocks *, int);
++
++static inline struct page *erofs_get_inline_page(struct inode *inode,
++						 erofs_blk_t blkaddr)
++{
++	return erofs_get_meta_page(inode->i_sb, blkaddr,
++				   S_ISDIR(inode->i_mode));
++}
++
++/* inode.c */
++static inline unsigned long erofs_inode_hash(erofs_nid_t nid)
++{
++#if BITS_PER_LONG == 32
++	return (nid >> 32) ^ (nid & 0xffffffff);
++#else
++	return nid;
++#endif
++}
++
++extern const struct inode_operations erofs_generic_iops;
++extern const struct inode_operations erofs_symlink_iops;
++extern const struct inode_operations erofs_fast_symlink_iops;
++
++static inline void set_inode_fast_symlink(struct inode *inode)
++{
++	inode->i_op = &erofs_fast_symlink_iops;
++}
++
++static inline bool is_inode_fast_symlink(struct inode *inode)
++{
++	return inode->i_op == &erofs_fast_symlink_iops;
++}
++
++struct inode *erofs_iget(struct super_block *sb, erofs_nid_t nid, bool dir);
++int erofs_getattr(const struct path *path, struct kstat *stat,
++		  u32 request_mask, unsigned int query_flags);
++
++/* namei.c */
++extern const struct inode_operations erofs_dir_iops;
++
++int erofs_namei(struct inode *dir, struct qstr *name,
++		erofs_nid_t *nid, unsigned int *d_type);
++
++/* dir.c */
++extern const struct file_operations erofs_dir_fops;
++
++#define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
++
++#endif	/* __EROFS_INTERNAL_H */
++
 -- 
-2.22.1
+2.17.1
 
