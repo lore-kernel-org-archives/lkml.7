@@ -2,130 +2,88 @@ Return-Path: <SRS0=gp+X=WL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCB6C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5C8C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86B2D2171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:47:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565844420;
-	bh=muop4VkBdxXgt9YydJe41sbU02zM6lsB0q3Ukq8Qzlo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mugNPSTAcgviMNZlumx1jzOYNBlc1MCZtULa/D4cbnlxKl+pDpLvr6pXWlZPbjAb1
-	 B788MXXcOS/MoUueCArO7qH80mC/pBoTvOwgk6NNmZ0T8PIg5erm3tsG/h8OGE6Y2K
-	 +m/YRjazkwCKyZvvABgeamd9VHcdBv4AQpqarTMw=
+	by mail.kernel.org (Postfix) with ESMTP id 2BA662171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 15 Aug 2019 04:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfHOEq7 (ORCPT
+        id S1727750AbfHOErG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 00:46:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42928 "EHLO mail.kernel.org"
+        Thu, 15 Aug 2019 00:47:06 -0400
+Received: from mga01.intel.com ([192.55.52.88]:5118 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbfHOEq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 00:46:59 -0400
-Received: from localhost (c-73-15-1-175.hsd1.ca.comcast.net [73.15.1.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47D0C2067D;
-        Thu, 15 Aug 2019 04:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565844418;
-        bh=muop4VkBdxXgt9YydJe41sbU02zM6lsB0q3Ukq8Qzlo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rLALrF6sJM9KWumiFIrNK6YROHN3WR8rxKA9KpDG5QJkSTWC4Tj/S72almajpspG0
-         wCeJFkKS1H9qO/fh3qLi2PMzepCreYJErXpaxP6Iyl96NxumjW8d3bfordtIR4orZh
-         HHEJOFZ0s0ejvXtVGeK6Q4jzU4lY/la4HWo+0H9E=
-Date:   Wed, 14 Aug 2019 23:46:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v5 2/7] PCI/ATS: Initialize PRI in pci_ats_init()
-Message-ID: <20190815044657.GD253360@google.com>
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <3dd8c36177ac52d9a87655badb000d11785a5a4a.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        id S1725911AbfHOErF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 00:47:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 21:47:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,387,1559545200"; 
+   d="scan'208";a="171009770"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga008.jf.intel.com with ESMTP; 14 Aug 2019 21:47:01 -0700
+Cc:     baolu.lu@linux.intel.com, corbet@lwn.net, tony.luck@intel.com,
+        fenghua.yu@intel.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Thomas.Lendacky@amd.com, Suravee.Suthikulpanit@amd.com,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 03/10] iommu/vt-d: Request passthrough mode from IOMMU
+ core
+To:     Joerg Roedel <joro@8bytes.org>
+References: <20190814133841.7095-1-joro@8bytes.org>
+ <20190814133841.7095-4-joro@8bytes.org>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <77ee40c6-392c-5094-c945-a63dc370188d@linux.intel.com>
+Date:   Thu, 15 Aug 2019 12:46:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3dd8c36177ac52d9a87655badb000d11785a5a4a.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190814133841.7095-4-joro@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 05:05:59PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Hi Joerg,
+
+On 8/14/19 9:38 PM, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> Currently, PRI Capability checks are repeated across all PRI API's.
-> Instead, cache the capability check result in pci_pri_init() and use it
-> in other PRI API's. Also, since PRI is a shared resource between PF/VF,
-> initialize default values for common PRI features in pci_pri_init().
+> Get rid of the iommu_pass_through variable and request
+> passthrough mode via the new iommu core function.
 > 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+
+Looks good to me.
+
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+
 > ---
->  drivers/pci/ats.c       | 80 ++++++++++++++++++++++++++++-------------
->  include/linux/pci-ats.h |  5 +++
->  include/linux/pci.h     |  1 +
->  3 files changed, 61 insertions(+), 25 deletions(-)
+>   drivers/iommu/intel-iommu.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index cdd936d10f68..280be911f190 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-
-> @@ -28,6 +28,8 @@ void pci_ats_init(struct pci_dev *dev)
->  		return;
->  
->  	dev->ats_cap = pos;
-> +
-> +	pci_pri_init(dev);
->  }
->  
->  /**
-> @@ -170,36 +172,72 @@ int pci_ats_page_aligned(struct pci_dev *pdev)
->  EXPORT_SYMBOL_GPL(pci_ats_page_aligned);
->  
->  #ifdef CONFIG_PCI_PRI
-> +
-> +void pci_pri_init(struct pci_dev *pdev)
-> +{
-> ...
-> +}
-
-> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> index 1a0bdaee2f32..33653d4ca94f 100644
-> --- a/include/linux/pci-ats.h
-> +++ b/include/linux/pci-ats.h
-> @@ -6,6 +6,7 @@
->  
->  #ifdef CONFIG_PCI_PRI
->  
-> +void pci_pri_init(struct pci_dev *pdev);
-
-pci_pri_init() is implemented and called in drivers/pci/ats.c.  Unless
-there's a need to call this from outside ats.c, it should be static
-and should not be declared here.
-
-If you can make it static, please also reorder the code so you don't
-need a forward declaration in ats.c.
-
->  int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
->  void pci_disable_pri(struct pci_dev *pdev);
->  void pci_restore_pri_state(struct pci_dev *pdev);
-> @@ -13,6 +14,10 @@ int pci_reset_pri(struct pci_dev *pdev);
->  
->  #else /* CONFIG_PCI_PRI */
->  
-> +static inline void pci_pri_init(struct pci_dev *pdev)
-> +{
-> +}
-> +
->  static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
->  {
->  	return -ENODEV;
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index bdaed2da8a55..234bc2b55c59 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -3267,7 +3267,7 @@ static int __init init_dmars(void)
+>   		iommu->flush.flush_iotlb(iommu, 0, 0, 0, DMA_TLB_GLOBAL_FLUSH);
+>   	}
+>   
+> -	if (iommu_pass_through)
+> +	if (iommu_default_passthrough())
+>   		iommu_identity_mapping |= IDENTMAP_ALL;
+>   
+>   #ifdef CONFIG_INTEL_IOMMU_BROKEN_GFX_WA
+> 
