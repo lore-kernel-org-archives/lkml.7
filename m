@@ -2,184 +2,81 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB153C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBCAC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C542077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:55:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fe9iSDkO"
+	by mail.kernel.org (Postfix) with ESMTP id 615242077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:56:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbfHPQzc (ORCPT
+        id S1727466AbfHPQ4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:55:32 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41864 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfHPQzb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:55:31 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m24so5875467ljg.8;
-        Fri, 16 Aug 2019 09:55:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lnA2Hi587HpAY+vMzCUnzpDdgs4QOMI2ZHnlLxFisIQ=;
-        b=Fe9iSDkOND1l9HNmW3AcpL5XfQvaS1SSBUH8WFJkOtQSru3ptC2Y1hZwPwlB3WyN5q
-         TIiOzkBjlWFdCLTSLCh1J3EbeFYKJuy/re1+TNxGWDYL7V8UO6zFelU5YeLrVFYCztlB
-         uVBtewWZ+sEKJU2HwjuDtbtCuScBStAvfjrhkALrofDHtQUDVQgEHKcy7a3OFWnCuKVW
-         nA6ba2c4+Jvo/5AFnfHF+JIYnpn9O+MDYEvJQBsfFa6n7klwSxRlv4ybzcf1IfkRJFj6
-         7Ui0Aiba5WmJW/PtFAM5KW8KnamhG8gEyAEhdBAvkBr89onaAgkNIY/Jpb4TaH1NP/6u
-         nlUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lnA2Hi587HpAY+vMzCUnzpDdgs4QOMI2ZHnlLxFisIQ=;
-        b=eDnIpLYUoB9gB0P8NqttJLSSeVC8ixE9qAIj8TAAgTMMLXhMErVTT1zfA0bn7VtoFW
-         uRXWXA258c1+7HMgKVZDc9mH7+iMGZyWgwhf18aIGIS38GzQjkhBeAAXZzzhSJ9MKHQ7
-         38ubJKtQMH8T7fmg0iqwisBDZxJZ7e0LkNm/7bqCUGYxAnhUL81Q1vZU0gP6Ya4b9fXN
-         03aTG68bbx3AKhBfPh5JI06hwHiEjkWqXsIFtHmugKC+elpEJkVHlRlURtgYqsdzpik/
-         vzuTHjl+hy6G2287Lr/a9fnAPu5YIwI0pU8+kC9yE3VB7ZAnF7oMnuMf+L9YkR8rP2qY
-         0tJA==
-X-Gm-Message-State: APjAAAW7ydHfvH/bvLFrwiDuHMVz93h5pwwqeIbzSOVaKSsbYFXBt3np
-        Bvmj+3yrEVvzTvm8fdumzOLtnJMl5hfkFPyODOM=
-X-Google-Smtp-Source: APXvYqxqb91sqNNqy9y8LRzbK57oLvfm80ZM2mSWzTt8pG7wpCRcJo5ot6kCpM5qJWj5RqSc4WYW9McBQzNck99q7Iw=
-X-Received: by 2002:a2e:a0c6:: with SMTP id f6mr6204011ljm.102.1565974529247;
- Fri, 16 Aug 2019 09:55:29 -0700 (PDT)
+        Fri, 16 Aug 2019 12:56:17 -0400
+Received: from mga11.intel.com ([192.55.52.93]:35899 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbfHPQ4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 12:56:17 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 09:56:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,393,1559545200"; 
+   d="scan'208";a="376760471"
+Received: from ppiatekx-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.39.24])
+  by fmsmga005.fm.intel.com with ESMTP; 16 Aug 2019 09:56:10 -0700
+Date:   Fri, 16 Aug 2019 19:56:08 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com
+Subject: Re: [PATCH v21 24/28] selftests/x86: Add a selftest for SGX
+Message-ID: <20190816165608.j6slxb2hpamokvts@linux.intel.com>
+References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
+ <20190713170804.2340-25-jarkko.sakkinen@linux.intel.com>
+ <e7b51875-c190-bab6-28ec-0eaa6caf2955@intel.com>
 MIME-Version: 1.0
-References: <20190816083246.169312-1-arul.jeniston@gmail.com>
- <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com> <alpine.DEB.2.21.1908161224220.1873@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1908161224220.1873@nanos.tec.linutronix.de>
-From:   Arul Jeniston <arul.jeniston@gmail.com>
-Date:   Fri, 16 Aug 2019 22:25:17 +0530
-Message-ID: <CACAVd4h05P2tWb7Eh1+3_0Cm7MkDNAt+SJVoBT4gErBfsBmsAQ@mail.gmail.com>
-Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read function.
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arul_mc@dell.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e7b51875-c190-bab6-28ec-0eaa6caf2955@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi tglx,
+On Wed, Jul 17, 2019 at 03:37:03PM -0700, Xing, Cedric wrote:
+> > +$(TEST_CUSTOM_PROGS): $(OUTPUT)/main.o $(OUTPUT)/sgx_call.o \
+> > +		      $(OUTPUT)/encl_piggy.o
+> > +	$(CC) $(HOST_CFLAGS) -o $@ $^
+> > +
+> > +$(OUTPUT)/main.o: main.c
+> > +	$(CC) $(HOST_CFLAGS) -c $< -o $@
+> 
+> .o files don't have to be generated/kept. And to be consistent with other
+> selftests, please don't generate/keep them.
 
-Thank you for your comments.
-Please find my commend in-lined
+AFAIK there is no rule that .o files can't be generated when it makes
+sense.
 
-On Fri, Aug 16, 2019 at 4:15 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Arul,
->
-> On Fri, 16 Aug 2019, Arul Jeniston wrote:
->
-> > Subject: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read function.
->
-> The prefix is not 'FS: timerfd:'
->
-> 1) The usual prefix for fs/* is: 'fs:' but...
->
-> 2) git log fs/timerfd.c gives you a pretty good hint for the proper
->    prefix. Look at the commits which actually do functional changes to that
->    file, not at those which do (sub)system wide cleanups/adjustments.
->
-> Also 'timerfd_read function' can be written as 'timerfd_read()' which
-> spares the redundant function and clearly marks it as function via the
-> brackets.
->
-> > 'hrtimer_forward_now()' returns zero due to bigger backward time drift.
-> > This causes timerfd_read to return 0. As per man page, read on timerfd
-> >  is not expected to return 0.
-> > This problem is well explained in https://lkml.org/lkml/2019/7/31/442
->
-> 1) The explanation needs to be in the changelog itself. Links can point to
->    discussions, bug-reports which have supplementary information.
->
-> 2) Please do not use lkml.org links.
->
-> Again: Please read and follow Documentation/process/submitting-patches.rst
->
-> > . This patch fixes this problem.
-> > Signed-off-by: Arul Jeniston <arul.jeniston@gmail.com>
->
-> Missing empty line before Signed-off-by. Please use git-log to see how
-> changelogs are properly formatted.
->
-> Also: 'This patch fixes this problem' is not helpful at all. Again see the
-> document I already pointed you to.
->
+In your other comment you correctly pointed out that "-I$(OUTPUT)" was
+missing when compiling encl_piggy.S. However, it is required neither
+main.c nor sgx_call.c, and thus should not be used there.
 
-Agreed. Would incorporate all the above comments.
+The consequences are:
 
-> > ---
-> >  fs/timerfd.c | 12 ++++++++++--
-> >  1 file changed, 10 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/fs/timerfd.c b/fs/timerfd.c
-> > index 6a6fc8aa1de7..f5094e070e9a 100644
-> > --- a/fs/timerfd.c
-> > +++ b/fs/timerfd.c
-> > @@ -284,8 +284,16 @@ static ssize_t timerfd_read(struct file *file,
-> > char __user *buf, size_t count,
-> >                                         &ctx->t.alarm, ctx->tintv) - 1;
-> >                                 alarm_restart(&ctx->t.alarm);
-> >                         } else {
-> > -                               ticks += hrtimer_forward_now(&ctx->t.tmr,
-> > -                                                            ctx->tintv) - 1;
-> > +                               u64 nooftimeo = hrtimer_forward_now(&ctx->t.tmr,
-> > +                                                                ctx->tintv);
->
-> nooftimeo is pretty non-intuitive. The function documentation of
-> hrtimer_forward_now() says:
->
->       Returns the number of overruns.
->
-> So the obvious variable name is overruns, right?
->
+1. The enclave can and should be compiled like you suggest here.
+2. The enclave hosting program must be compiled as it has been.
 
-Agreed. Would change the variable name to overruns.
-
-> > +                               /*
-> > +                                * ticks shouldn't become zero at this point.
-> > +                                * Ignore if hrtimer_forward_now returns 0
-> > +                                * due to larger backward time drift.
->
-> Again. This explanation does not make any sense at all.
->
-> Time does not go backwards, except if it is CLOCK_REALTIME which can be set
-> backwards via clock_settime() or settimeofday().
->
-> > +                                */
-> > +                               if (likely(nooftimeo)) {
-> > +                                       ticks += nooftimeo - 1;
-> > +                               }
->
-> Again: Pointless brackets.
->
-> If you disagree with my review comment, then tell me in a reply. If not,
-> then fix it. If you decide to ignore my comments, then don't wonder if I
-> ignore your patches.
->
-
-We use CLOCK_REALTIME while creating timer_fd.
-Can read() on timerfd return 0 when the clock is set to CLOCK_REALTIME?
-
-We have Intel rangely 4 cpu system running debian stretch linux
-kernel. The current clock source is set to tsc. During our testing, we
-observed the time drifts backward occasionally. Through kernel
-instrumentation, we observed, sometimes clocksource_delta() finds the
-current time lesser than last time. and returns 0 delta.
-This causes  the following code flow to return 0
- ktime_get()-->timekeeping_get_ns()-->timekeeping_get_delta()-->clocksource_delta()
-
-> Thanks,
->
->         tglx
+/Jarkko
