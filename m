@@ -2,88 +2,89 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2C2C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F1BC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C26C2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF1F206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfHPIdo (ORCPT
+        id S1727097AbfHPIeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:33:44 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:3778 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbfHPIdn (ORCPT
+        Fri, 16 Aug 2019 04:34:08 -0400
+Received: from emh01.mail.saunalahti.fi ([62.142.5.107]:49476 "EHLO
+        emh01.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfHPIeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:33:43 -0400
-IronPort-SDR: mBs+ofqbYU6e0xEC1QIDRZRLRvdUhZm03Y5rHbxwei19aPJ+7l8qJ9p4KhpBRQBLyDRZ7Kd5eF
- uJA9J0vLDVudvQxT7+AqgTpP7qwVxYjm+UCmUXjFU80mwKaZjBEYLhWw6+DH2hCB/xjdkpYcFE
- ZFFacrlmNNg0CgGG745QZZqoT4Gmh+6NcC7wi9lbWrdRYCvLotVadNUB/Z79wH6TEEEnOaakKV
- tBPYpX856MFrUyEY85hcePc5NqXEG4pnIedG9JHVbA2GoWvnU00NcRG0+9iTdqXcPh/NDUkSeq
- qCY=
-X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
-   d="scan'208";a="40507151"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa3.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:33:42 -0800
-IronPort-SDR: 0VHBXFJQ0R4sTn6o/+9gYQ9yPlFv9kQ2omx22O/Q/F7LlAA1ClneB7PRc7VFEPudUI/gApy9Rx
- rIkidyzuYv4AQG0hp6b7PJVc6/Jd7ivG+5752cr/BQ0EhVlujqXvqn5z0LNy9JFPwEm2PXc/i5
- alQjnuK3Qh+x3VfvafvO8YCKfBLQiiuFGK+14GB6l/Dvp5xINVa/frLL6x+34DlH5pecJLHkq5
- /jXf5EwPeBfFei/TJLXfpUwAKXBG8ZJJ9ISobeVpvxuDNnDXWwr/myiTk5QI+b2f6l2+tcJqgm
- OUY=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v1 24/63] Input: atmel_mxt_ts - check firmware format before entering bootloader
-Date:   Fri, 16 Aug 2019 17:32:59 +0900
-Message-ID: <20190816083338.18685-5-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190816083338.18685-1-jiada_wang@mentor.com>
-References: <20190816083338.18685-1-jiada_wang@mentor.com>
+        Fri, 16 Aug 2019 04:34:08 -0400
+Received: from darkstar.musicnaut.iki.fi (85-76-65-201-nat.elisa-mobile.fi [85.76.65.201])
+        by emh01.mail.saunalahti.fi (Postfix) with ESMTP id 4776820418;
+        Fri, 16 Aug 2019 11:34:04 +0300 (EEST)
+Date:   Fri, 16 Aug 2019 11:34:03 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 14/22] ARM: omap1: use pci_ioremap_io() for omap_cf
+Message-ID: <20190816083403.GB1952@darkstar.musicnaut.iki.fi>
+References: <20190808212234.2213262-1-arnd@arndb.de>
+ <20190808212234.2213262-15-arnd@arndb.de>
+ <20190813103605.GL52127@atomide.com>
+ <CAK8P3a0E+QUn9wcP5Obv-FitWyXCFwcp+oPConeO2p-NV1rqsw@mail.gmail.com>
+ <20190813181158.GA26798@darkstar.musicnaut.iki.fi>
+ <CAK8P3a0LjKrc+7c5Ht9OL7LfYyLnG9=y7u+w24ujA1xAid_yCQ@mail.gmail.com>
+ <20190814074918.GA52127@atomide.com>
+ <CAK8P3a3k_HOGqzMGjtc+7NSaK0Bsa_vxxRFLzY8aP6ev4wa9iA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3k_HOGqzMGjtc+7NSaK0Bsa_vxxRFLzY8aP6ev4wa9iA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+Hi,
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit d691d3ee6c6de84b38464a423207b3e23cb9dc3a)
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Wed, Aug 14, 2019 at 12:36:40PM +0200, Arnd Bergmann wrote:
+> On Wed, Aug 14, 2019 at 9:49 AM Tony Lindgren <tony@atomide.com> wrote:
+> > * Arnd Bergmann <arnd@arndb.de> [190813 19:34]:
+> > > -#define OMAP1_IO_OFFSET                0x01000000      /* Virtual IO
+> > > = 0xfefb0000 */
+> > > +#define OMAP1_IO_OFFSET                0x00fb0000      /* Virtual IO
+> > > = 0xff000000 */
+> > >  #define OMAP1_IO_ADDRESS(pa)   IOMEM((pa) - OMAP1_IO_OFFSET)
+> >
+> > Oh OK yeah sounds like that's the issue.
+> >
+> > > There may be additional locations that hardcode the virtual address.
+> >
+> > Those should be in mach-omap1/io.c, and I recall innovator had some
+> > hardcoded fpga address that should also be checked.
+> 
+> I see four boards with hardcoded I/O addresses, but they are all below
+> the PCI I/O virtual address range, and are not affected by that change.
+> 
+> For the innovator FPGA access, this was ok, it uses the correct address
+> in the OMAP1_IO_OFFSET range.
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index ca882231ab41..a7805df83af2 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -3347,12 +3347,12 @@ static int mxt_load_fw(struct device *dev)
- 		return ret;
- 	}
- 
--	ret = mxt_enter_bootloader(data);
-+	/* Check for incorrect enc file */
-+	ret = mxt_check_firmware_format(dev, f.fw);
- 	if (ret)
- 		goto release_firmware;
- 
--	/* Check for incorrect enc file */
--	ret = mxt_check_firmware_format(dev, f.fw);
-+	ret = mxt_enter_bootloader(data);
- 	if (ret)
- 		goto release_firmware;
- 
--- 
-2.19.2
+I tried testing this on OSK board. If I boot with earlyprintk disabled,
+it boots OK and everything works (also CF card) with your playground
+commit 5723b6686943.
 
+However with earlyprintk it seems to hang as soon as kernel tries to print
+something. So something goes wrong with early DEBUG_LL mapping code when
+CONFIG_DEBUG_UART_VIRT=0xff000000 is used?
+
+A.
