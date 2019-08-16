@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F54C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB41C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305202077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C37B22077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:50:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="5EVivdH1"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DJNkMm1c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbfHPUuF (ORCPT
+        id S1727660AbfHPUut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 16:50:05 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50885 "EHLO
+        Fri, 16 Aug 2019 16:50:49 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56179 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfHPUuF (ORCPT
+        with ESMTP id S1727589AbfHPUut (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 16:50:05 -0400
+        Fri, 16 Aug 2019 16:50:49 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GKnvBK2958901
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GKofFA2958997
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 16 Aug 2019 13:49:57 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GKnvBK2958901
+        Fri, 16 Aug 2019 13:50:41 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GKofFA2958997
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565988597;
-        bh=YVELSXVdFXEpDCXIROX12BRXFS3DA40uo7JL2ukPZjI=;
+        s=2019071901; t=1565988642;
+        bh=xci7dRlXmGX4WpR6UyNIbIZzjAfQfEyUKts1osbF8rA=;
         h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=5EVivdH1YUe+lQ5H8IsCWPMTGUd2u2UxqDRhF6s1NYNJMGlflE1Jq7l0MriAuR5xB
-         MrLUfpVkRG18PW90czE5FQpQLZYtRjh8lYBzUDdJ2gkkj64UjgTgIAjMB3TlGT7W2M
-         gC9Q/uIcANKB68CzXnfqeF6tX7fquA5HuJf3MEdpPBK824v3ETtI80GTCSTF4QQYLk
-         DMuHNWhjUh84Bw+W7ScXHHm4HvyNi82l2yutJ7dhul8xGHI8zWbDC8Vs3Z3FU9A+yg
-         WNPRngkQpooUEsIIe47tkofEBWdip4uWEyh5LXWuXTx+oy9vpnC47ly2JhADQOo2vu
-         0iNiXRZSj9wOg==
+        b=DJNkMm1cO0o2w7iRijSqV1iqA+kBmyZQqFcsWGaOYdTE3HS+VaRsNjfJY7q+4cgim
+         zvelEvej0QmLtmCiLVSyrwEGYEMk0NN+Qv8TkSfIVILOwXWdvvT4LRJ5AbL9ElYm3x
+         vrNLGLV/CIlZVr87Zibnc6+Vrt36FaSSbfCWyZL/yCua6u9dSu7Di3BDs1C+LDjRYq
+         FVuebHgr2NFJ4SAP1ZJofO9/BZNVchC+N0TwWqHFCdcksW5L5NVImNZXKhDXy5B+WK
+         hY1muKCOmjLYNdFCEomn4hBxst1p0vaLtPtsuwneiYU9MWX3YD/KpSrOSeKEVKtNQ/
+         Fn3593DXj7kDA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GKnuKm2958898;
-        Fri, 16 Aug 2019 13:49:56 -0700
-Date:   Fri, 16 Aug 2019 13:49:56 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GKofHC2958994;
+        Fri, 16 Aug 2019 13:50:41 -0700
+Date:   Fri, 16 Aug 2019 13:50:41 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-f1oo0ufdhrkx6nhy2lj1ierm@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, namhyung@kernel.org, acme@redhat.com,
-        hpa@zytor.com, jolsa@kernel.org, fweimer@redhat.com,
-        adrian.hunter@intel.com, mingo@kernel.org, tglx@linutronix.de,
-        wcohen@redhat.com
-Reply-To: wcohen@redhat.com, tglx@linutronix.de, mingo@kernel.org,
-          adrian.hunter@intel.com, fweimer@redhat.com, jolsa@kernel.org,
-          hpa@zytor.com, acme@redhat.com, namhyung@kernel.org,
-          linux-kernel@vger.kernel.org
+Message-ID: <tip-0omwwoywj1v63gu8cz0tr0cy@git.kernel.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        adrian.hunter@intel.com, jolsa@kernel.org, hpa@zytor.com,
+        wcohen@redhat.com, acme@redhat.com, namhyung@kernel.org,
+        mingo@kernel.org, fweimer@redhat.com
+Reply-To: fweimer@redhat.com, mingo@kernel.org, adrian.hunter@intel.com,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          acme@redhat.com, namhyung@kernel.org, wcohen@redhat.com,
+          hpa@zytor.com, jolsa@kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf script: Allow specifying event to switch on
- processing of other events
-Git-Commit-ID: f90a24171a8179a29e5e1532fd5bb94e59b5380e
+Subject: [tip:perf/core] perf script: Allow showing the --switch-on event
+Git-Commit-ID: 6469eb6dffeb44edfa3d4ca496b044b4a9c643b9
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,177 +69,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  f90a24171a8179a29e5e1532fd5bb94e59b5380e
-Gitweb:     https://git.kernel.org/tip/f90a24171a8179a29e5e1532fd5bb94e59b5380e
+Commit-ID:  6469eb6dffeb44edfa3d4ca496b044b4a9c643b9
+Gitweb:     https://git.kernel.org/tip/6469eb6dffeb44edfa3d4ca496b044b4a9c643b9
 Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Wed, 14 Aug 2019 16:20:13 -0300
+AuthorDate: Wed, 14 Aug 2019 16:40:58 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Thu, 15 Aug 2019 12:23:58 -0300
+CommitDate: Thu, 15 Aug 2019 12:24:08 -0300
 
-perf script: Allow specifying event to switch on processing of other events
+perf script: Allow showing the --switch-on event
 
-Sometime we want to only consider events after something happens, so
-allow discarding events till such events is found, e.g.:
+One may want to see the --switch-on event as well, allow for that, using
+the previous cset example:
 
-Record all scheduler tracepoints and the sys_enter_nanosleep syscall
-event for the 'sleep 1' workload:
-
-  # perf record -e sched:*,syscalls:sys_enter_nanosleep sleep 1
-  [ perf record: Woken up 31 times to write data ]
-  [ perf record: Captured and wrote 0.032 MB perf.data (10 samples) ]
+  # perf script --switch-on syscalls:sys_enter_nanosleep --show-on-off
+        sleep 13638 [001] 108237.582286: syscalls:sys_enter_nanosleep: rqtp: 0x7fff1948ac40, rmtp: 0x00000000
+        sleep 13638 [001] 108237.582289:     sched:sched_stat_runtime: comm=sleep pid=13638 runtime=578104 [ns] vruntime=202889459556 [ns]
+        sleep 13638 [001] 108237.582291:           sched:sched_switch: sleep:13638 [120] S ==> swapper/1:0 [120]
+      swapper     0 [001] 108238.582428:           sched:sched_waking: comm=sleep pid=13638 prio=120 target_cpu=001
+      swapper     0 [001] 108238.582458:           sched:sched_wakeup: sleep:13638 [120] success=1 CPU:001
+        sleep 13638 [001] 108238.582698:     sched:sched_stat_runtime: comm=sleep pid=13638 runtime=173915 [ns] vruntime=202889633471 [ns]
+        sleep 13638 [001] 108238.582782:     sched:sched_process_exit: comm=sleep pid=13638 prio=120
   #
-
-So we have these events in the generated perf data file:
-
-  # perf evlist
-  sched:sched_kthread_stop
-  sched:sched_kthread_stop_ret
-  sched:sched_waking
-  sched:sched_wakeup
-  sched:sched_wakeup_new
-  sched:sched_switch
-  sched:sched_migrate_task
-  sched:sched_process_free
-  sched:sched_process_exit
-  sched:sched_wait_task
-  sched:sched_process_wait
-  sched:sched_process_fork
-  sched:sched_process_exec
-  sched:sched_stat_wait
-  sched:sched_stat_sleep
-  sched:sched_stat_iowait
-  sched:sched_stat_blocked
-  sched:sched_stat_runtime
-  sched:sched_pi_setprio
-  sched:sched_move_numa
-  sched:sched_stick_numa
-  sched:sched_swap_numa
-  sched:sched_wake_idle_without_ipi
-  syscalls:sys_enter_nanosleep
-  # Tip: use 'perf evlist --trace-fields' to show fields for tracepoint events
-  #
-
-Then show all of the events that actually took place in this 'perf record' session:
-
-  # perf script
-          :13637 13637 [002] 108237.581529:            sched:sched_waking: comm=perf pid=13638 prio=120 target_cpu=001
-          :13637 13637 [002] 108237.581537:            sched:sched_wakeup: perf:13638 [120] success=1 CPU:001
-           sleep 13638 [001] 108237.581992:      sched:sched_process_exec: filename=/usr/bin/sleep pid=13638 old_pid=13638
-           sleep 13638 [001] 108237.582286:  syscalls:sys_enter_nanosleep: rqtp: 0x7fff1948ac40, rmtp: 0x00000000
-           sleep 13638 [001] 108237.582289:      sched:sched_stat_runtime: comm=sleep pid=13638 runtime=578104 [ns] vruntime=202889459556 [ns]
-           sleep 13638 [001] 108237.582291:            sched:sched_switch: sleep:13638 [120] S ==> swapper/1:0 [120]
-         swapper     0 [001] 108238.582428:            sched:sched_waking: comm=sleep pid=13638 prio=120 target_cpu=001
-         swapper     0 [001] 108238.582458:            sched:sched_wakeup: sleep:13638 [120] success=1 CPU:001
-           sleep 13638 [001] 108238.582698:      sched:sched_stat_runtime: comm=sleep pid=13638 runtime=173915 [ns] vruntime=202889633471 [ns]
-           sleep 13638 [001] 108238.582782:      sched:sched_process_exit: comm=sleep pid=13638 prio=120
-  #
-
-Now lets see only the ones that took place after a certain "marker":
-
   # perf script --switch-on syscalls:sys_enter_nanosleep
-           sleep 13638 [001] 108237.582289:      sched:sched_stat_runtime: comm=sleep pid=13638 runtime=578104 [ns] vruntime=202889459556 [ns]
-           sleep 13638 [001] 108237.582291:            sched:sched_switch: sleep:13638 [120] S ==> swapper/1:0 [120]
-         swapper     0 [001] 108238.582428:            sched:sched_waking: comm=sleep pid=13638 prio=120 target_cpu=001
-         swapper     0 [001] 108238.582458:            sched:sched_wakeup: sleep:13638 [120] success=1 CPU:001
-           sleep 13638 [001] 108238.582698:      sched:sched_stat_runtime: comm=sleep pid=13638 runtime=173915 [ns] vruntime=202889633471 [ns]
-           sleep 13638 [001] 108238.582782:      sched:sched_process_exit: comm=sleep pid=13638 prio=120
+        sleep 13638 [001] 108237.582289:     sched:sched_stat_runtime: comm=sleep pid=13638 runtime=578104 [ns] vruntime=202889459556 [ns]
+        sleep 13638 [001] 108237.582291:           sched:sched_switch: sleep:13638 [120] S ==> swapper/1:0 [120]
+      swapper     0 [001] 108238.582428:           sched:sched_waking: comm=sleep pid=13638 prio=120 target_cpu=001
+      swapper     0 [001] 108238.582458:           sched:sched_wakeup: sleep:13638 [120] success=1 CPU:001
+        sleep 13638 [001] 108238.582698:     sched:sched_stat_runtime: comm=sleep pid=13638 runtime=173915 [ns] vruntime=202889633471 [ns]
+        sleep 13638 [001] 108238.582782:     sched:sched_process_exit: comm=sleep pid=13638 prio=120
   #
 
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Florian Weimer <fweimer@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: William Cohen <wcohen@redhat.com>
-Link: https://lkml.kernel.org/n/tip-f1oo0ufdhrkx6nhy2lj1ierm@git.kernel.org
+Cc: Florian Weimer <fweimer@redhat.com>
+Link: https://lkml.kernel.org/n/tip-0omwwoywj1v63gu8cz0tr0cy@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-script.txt |  3 +++
- tools/perf/builtin-script.c              | 26 ++++++++++++++++++++++++++
- 2 files changed, 29 insertions(+)
+ tools/perf/Documentation/perf-script.txt | 3 +++
+ tools/perf/builtin-script.c              | 6 ++++++
+ 2 files changed, 9 insertions(+)
 
 diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index caaab28f8400..9936819aae1c 100644
+index 9936819aae1c..24eea68ee829 100644
 --- a/tools/perf/Documentation/perf-script.txt
 +++ b/tools/perf/Documentation/perf-script.txt
-@@ -417,6 +417,9 @@ include::itrace.txt[]
- 	For itrace only show specified functions and their callees for
- 	itrace. Multiple functions can be separated by comma.
+@@ -420,6 +420,9 @@ include::itrace.txt[]
+ --switch-on EVENT_NAME::
+ 	Only consider events after this event is found.
  
-+--switch-on EVENT_NAME::
-+	Only consider events after this event is found.
++--show-on-off-events::
++	Show the --switch-on event too.
 +
  SEE ALSO
  --------
  linkperf:perf-record[1], linkperf:perf-script-perl[1],
 diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 31a529ec139f..d0bc7ccaf7bf 100644
+index d0bc7ccaf7bf..fa0cc8b0eccc 100644
 --- a/tools/perf/builtin-script.c
 +++ b/tools/perf/builtin-script.c
-@@ -1616,6 +1616,11 @@ static int perf_sample__fprintf_synth(struct perf_sample *sample,
- 	return 0;
- }
+@@ -1619,6 +1619,7 @@ static int perf_sample__fprintf_synth(struct perf_sample *sample,
+ struct evswitch {
+ 	struct evsel *on;
+ 	bool	     discarding;
++	bool	     show_on_off_events;
+ };
  
-+struct evswitch {
-+	struct evsel *on;
-+	bool	     discarding;
-+};
-+
  struct perf_script {
- 	struct perf_tool	tool;
- 	struct perf_session	*session;
-@@ -1628,6 +1633,7 @@ struct perf_script {
- 	bool			show_bpf_events;
- 	bool			allocated;
- 	bool			per_event_dump;
-+	struct evswitch		evswitch;
- 	struct perf_cpu_map	*cpus;
- 	struct perf_thread_map *threads;
- 	int			name_width;
-@@ -1805,6 +1811,13 @@ static void process_event(struct perf_script *script,
- 	if (!show_event(sample, evsel, thread, al))
- 		return;
+@@ -1816,6 +1817,9 @@ static void process_event(struct perf_script *script,
+ 			return;
  
-+	if (script->evswitch.on && script->evswitch.discarding) {
-+		if (script->evswitch.on != evsel)
+ 		script->evswitch.discarding = false;
++
++		if (!script->evswitch.show_on_off_events)
 +			return;
-+
-+		script->evswitch.discarding = false;
-+	}
-+
- 	++es->samples;
+ 	}
  
- 	perf_sample__fprintf_start(sample, thread, evsel,
-@@ -3395,6 +3408,7 @@ int cmd_script(int argc, const char **argv)
- 	struct utsname uts;
- 	char *script_path = NULL;
- 	const char **__argv;
-+	const char *event_switch_on = NULL;
- 	int i, j, err = 0;
- 	struct perf_script script = {
- 		.tool = {
-@@ -3538,6 +3552,8 @@ int cmd_script(int argc, const char **argv)
- 		   "file", "file saving guest os /proc/kallsyms"),
- 	OPT_STRING(0, "guestmodules", &symbol_conf.default_guest_modules,
+ 	++es->samples;
+@@ -3554,6 +3558,8 @@ int cmd_script(int argc, const char **argv)
  		   "file", "file saving guest os /proc/modules"),
-+	OPT_STRING(0, "switch-on", &event_switch_on,
-+		   "event", "Consider events from the first ocurrence of this event"),
+ 	OPT_STRING(0, "switch-on", &event_switch_on,
+ 		   "event", "Consider events from the first ocurrence of this event"),
++	OPT_BOOLEAN(0, "show-on-off-events", &script.evswitch.show_on_off_events,
++		    "Show the on/off switch events, used with --switch-on"),
  	OPT_END()
  	};
  	const char * const script_subcommands[] = { "record", "report", NULL };
-@@ -3862,6 +3878,16 @@ int cmd_script(int argc, const char **argv)
- 						  script.range_num);
- 	}
- 
-+	if (event_switch_on) {
-+		script.evswitch.on = perf_evlist__find_evsel_by_str(session->evlist, event_switch_on);
-+		if (script.evswitch.on == NULL) {
-+			fprintf(stderr, "switch-on event not found (%s)\n", event_switch_on);
-+			err = -ENOENT;
-+			goto out_delete;
-+		}
-+		script.evswitch.discarding = true;
-+	}
-+
- 	err = __cmd_script(&script);
- 
- 	flush_scripting();
