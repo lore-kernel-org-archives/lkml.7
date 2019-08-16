@@ -2,145 +2,184 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B00C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB153C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4193021726
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C542077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:55:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="LA5Y5Kjp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fe9iSDkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfHPQy6 (ORCPT
+        id S1727452AbfHPQzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:54:58 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40518 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfHPQy5 (ORCPT
+        Fri, 16 Aug 2019 12:55:32 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41864 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfHPQzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:54:57 -0400
-Received: by mail-qt1-f193.google.com with SMTP id e8so6772127qtp.7
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 09:54:57 -0700 (PDT)
+        Fri, 16 Aug 2019 12:55:31 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m24so5875467ljg.8;
+        Fri, 16 Aug 2019 09:55:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QVJMIAUNTcfruK5R8LRJMxtWPGPQI7Ry9GEDvODlN1s=;
-        b=LA5Y5Kjpj+D3o1u9JwoTLIjvYl0rV0tZs9iEM17KKWIaqJu/ZgkkQSR4NyhNUDlRqH
-         FjmblR9wtS87K1VeqFzXFQsiypgT9FKdVQKn9t0k6GgL7ZaWTn+75LYisquhf2MDrKP9
-         D1076HoCBt9rn1J2iGrU4/d2vqtGTBo0qMc6MmFnT/dxxMPTYtbdtXAoMBBIaQPArPnm
-         8q9QeFOc8zJy4t+M9Tm4RZsZwy0eLpF51wJyDXxF9h5NpFTRTHZHoo2uEP20LmlydZZw
-         wsRccukrRvnx42UcxrjqGJJ70J68Nv5+rYWjBEpWmNdc11451J1vravRwY6UsghcO+fY
-         Ra0w==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lnA2Hi587HpAY+vMzCUnzpDdgs4QOMI2ZHnlLxFisIQ=;
+        b=Fe9iSDkOND1l9HNmW3AcpL5XfQvaS1SSBUH8WFJkOtQSru3ptC2Y1hZwPwlB3WyN5q
+         TIiOzkBjlWFdCLTSLCh1J3EbeFYKJuy/re1+TNxGWDYL7V8UO6zFelU5YeLrVFYCztlB
+         uVBtewWZ+sEKJU2HwjuDtbtCuScBStAvfjrhkALrofDHtQUDVQgEHKcy7a3OFWnCuKVW
+         nA6ba2c4+Jvo/5AFnfHF+JIYnpn9O+MDYEvJQBsfFa6n7klwSxRlv4ybzcf1IfkRJFj6
+         7Ui0Aiba5WmJW/PtFAM5KW8KnamhG8gEyAEhdBAvkBr89onaAgkNIY/Jpb4TaH1NP/6u
+         nlUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QVJMIAUNTcfruK5R8LRJMxtWPGPQI7Ry9GEDvODlN1s=;
-        b=DlryCc/1VVd+rRtg/VM2EqdgeIioxOpO0VCmgMXV5hyMUB5x5btk2mCfLbIcUjA9hZ
-         QB9NqojzyOB2F5M2/38jrxUS+rQ3hhzQZgVTgmkGWFZ/f0ztTJ2V5cJYbwGBe857IQM1
-         sY+4mZ6Kln/eRAlLvf765b7xUdKGCSkA85ZmfYILEnuPlRcqNxs8nt1VxtRtjvv20Dct
-         Gb14/FoKVnZ1LdG9N/LowUb1741BrJAIiTbyJ+yJnlb4n6tgGb8feoM11CqKONt94I+7
-         IhM0N7/OwgtiZx46+opHCcX/ix/6XRBzah9LhG3iAJk5dgxSOcG1cvMw4dEj7E7Lt5L8
-         5DKg==
-X-Gm-Message-State: APjAAAW+mDQFReE6Szt+RGgiQoc7zjsmSdsEFkHgVCbXIjZgoxhduRPq
-        Hj+kem66NRwDgy8vALIzIAYtBQ==
-X-Google-Smtp-Source: APXvYqzJNDVhKHutNxdNtyYoqetLe4kBGy2raMs/xBZz5bY8799Ba9b9YZFIevc1Y93TXGetBoIvow==
-X-Received: by 2002:a0c:c93b:: with SMTP id r56mr2557476qvj.139.1565974496715;
-        Fri, 16 Aug 2019 09:54:56 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id g28sm3802062qte.46.2019.08.16.09.54.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 16 Aug 2019 09:54:56 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hyfV9-0008Ub-Us; Fri, 16 Aug 2019 13:54:55 -0300
-Date:   Fri, 16 Aug 2019 13:54:55 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Michal Hocko <mhocko@kernel.org>, Feng Tang <feng.tang@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Jann Horn <jannh@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux MM <linux-mm@kvack.org>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Rientjes <rientjes@google.com>,
-        Wei Wang <wvw@google.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Subject: Re: [Intel-gfx] [PATCH 2/5] kernel.h: Add non_block_start/end()
-Message-ID: <20190816165455.GG5398@ziepe.ca>
-References: <20190815193526.GT9477@dhcp22.suse.cz>
- <CAKMK7uH42EgdxL18yce-7yay=x=Gb21nBs3nY7RA92Nsd-HCNA@mail.gmail.com>
- <20190815202721.GV21596@ziepe.ca>
- <CAKMK7uER0u1TqeJBXarKakphnyZTHOmedOfXXqLGVDE2mE-mAQ@mail.gmail.com>
- <20190816010036.GA9915@ziepe.ca>
- <CAKMK7uH0oa10LoCiEbj1NqAfWitbdOa-jQm9hM=iNL-=8gH9nw@mail.gmail.com>
- <20190816121243.GB5398@ziepe.ca>
- <CAKMK7uHk03OD+N-anPf-ADPzvQJ_NbQXFh5WsVUo-Ewv9vcOAw@mail.gmail.com>
- <20190816143819.GE5398@ziepe.ca>
- <CAKMK7uGzOO4nZPbZzmaDjjBGZiV2HjgdbT45q9Rd5wTO14VH2w@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lnA2Hi587HpAY+vMzCUnzpDdgs4QOMI2ZHnlLxFisIQ=;
+        b=eDnIpLYUoB9gB0P8NqttJLSSeVC8ixE9qAIj8TAAgTMMLXhMErVTT1zfA0bn7VtoFW
+         uRXWXA258c1+7HMgKVZDc9mH7+iMGZyWgwhf18aIGIS38GzQjkhBeAAXZzzhSJ9MKHQ7
+         38ubJKtQMH8T7fmg0iqwisBDZxJZ7e0LkNm/7bqCUGYxAnhUL81Q1vZU0gP6Ya4b9fXN
+         03aTG68bbx3AKhBfPh5JI06hwHiEjkWqXsIFtHmugKC+elpEJkVHlRlURtgYqsdzpik/
+         vzuTHjl+hy6G2287Lr/a9fnAPu5YIwI0pU8+kC9yE3VB7ZAnF7oMnuMf+L9YkR8rP2qY
+         0tJA==
+X-Gm-Message-State: APjAAAW7ydHfvH/bvLFrwiDuHMVz93h5pwwqeIbzSOVaKSsbYFXBt3np
+        Bvmj+3yrEVvzTvm8fdumzOLtnJMl5hfkFPyODOM=
+X-Google-Smtp-Source: APXvYqxqb91sqNNqy9y8LRzbK57oLvfm80ZM2mSWzTt8pG7wpCRcJo5ot6kCpM5qJWj5RqSc4WYW9McBQzNck99q7Iw=
+X-Received: by 2002:a2e:a0c6:: with SMTP id f6mr6204011ljm.102.1565974529247;
+ Fri, 16 Aug 2019 09:55:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uGzOO4nZPbZzmaDjjBGZiV2HjgdbT45q9Rd5wTO14VH2w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190816083246.169312-1-arul.jeniston@gmail.com>
+ <CACAVd4iXVH2U41msVKhT4GBGgE=2V2oXnOXkQUQKSSh72HMMmw@mail.gmail.com> <alpine.DEB.2.21.1908161224220.1873@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1908161224220.1873@nanos.tec.linutronix.de>
+From:   Arul Jeniston <arul.jeniston@gmail.com>
+Date:   Fri, 16 Aug 2019 22:25:17 +0530
+Message-ID: <CACAVd4h05P2tWb7Eh1+3_0Cm7MkDNAt+SJVoBT4gErBfsBmsAQ@mail.gmail.com>
+Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read function.
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, arul_mc@dell.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 06:36:52PM +0200, Daniel Vetter wrote:
-> On Fri, Aug 16, 2019 at 4:38 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >
-> > On Fri, Aug 16, 2019 at 04:11:34PM +0200, Daniel Vetter wrote:
-> > > Also, aside from this patch (which is prep for the next) and some
-> > > simple reordering conflicts they're all independent. So if there's no
-> > > way to paint this bikeshed here (technicolor perhaps?) then I'd like
-> > > to get at least the others considered.
-> >
-> > Sure, I think for conflict avoidance reasons I'm probably taking
-> > mmu_notifier stuff via hmm.git, so:
-> >
-> > - Andrew had a minor remark on #1, I am ambivalent and would take it
-> >   as-is. Your decision if you want to respin.
-> 
-> I like mine better, see also the reply from Ralph Campbell.
+Hi tglx,
 
-Sure
+Thank you for your comments.
+Please find my commend in-lined
 
-> > - #2/#3 is this issue, I would stand by the preempt_disable/etc path
-> >   Our situation matches yours, debug tests run lockdep/etc.
+On Fri, Aug 16, 2019 at 4:15 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> Since Michal requested the current flavour I think we need spin a bit
-> more on these here. I guess I'll just rebase them to the end so
-> they're not holding up the others.
-> 
-> > - #4 I like a lot, except the map should enclose range_end too,
-> >   this can be done after the mm_has_notifiers inside the
-> >   __mmu_notifier function
-> 
-> To make sure I get this right: The same lockdep context, but also
-> wrapped around invalidate_range_end? 
+> Arul,
+>
+> On Fri, 16 Aug 2019, Arul Jeniston wrote:
+>
+> > Subject: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read function.
+>
+> The prefix is not 'FS: timerfd:'
+>
+> 1) The usual prefix for fs/* is: 'fs:' but...
+>
+> 2) git log fs/timerfd.c gives you a pretty good hint for the proper
+>    prefix. Look at the commits which actually do functional changes to that
+>    file, not at those which do (sub)system wide cleanups/adjustments.
+>
+> Also 'timerfd_read function' can be written as 'timerfd_read()' which
+> spares the redundant function and clearly marks it as function via the
+> brackets.
+>
+> > 'hrtimer_forward_now()' returns zero due to bigger backward time drift.
+> > This causes timerfd_read to return 0. As per man page, read on timerfd
+> >  is not expected to return 0.
+> > This problem is well explained in https://lkml.org/lkml/2019/7/31/442
+>
+> 1) The explanation needs to be in the changelog itself. Links can point to
+>    discussions, bug-reports which have supplementary information.
+>
+> 2) Please do not use lkml.org links.
+>
+> Again: Please read and follow Documentation/process/submitting-patches.rst
+>
+> > . This patch fixes this problem.
+> > Signed-off-by: Arul Jeniston <arul.jeniston@gmail.com>
+>
+> Missing empty line before Signed-off-by. Please use git-log to see how
+> changelogs are properly formatted.
+>
+> Also: 'This patch fixes this problem' is not helpful at all. Again see the
+> document I already pointed you to.
+>
 
-Yes, the locking context of _range_start and _range_end should be
-identical, last time I checked callers this was the case.
+Agreed. Would incorporate all the above comments.
 
-So, just add it to __mmu_notifier_invalidate_range_end() outside the
-SRCU as there is no reason to burden debug kernel callers twice when
-mmu notifiers are not enabled
+> > ---
+> >  fs/timerfd.c | 12 ++++++++++--
+> >  1 file changed, 10 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/fs/timerfd.c b/fs/timerfd.c
+> > index 6a6fc8aa1de7..f5094e070e9a 100644
+> > --- a/fs/timerfd.c
+> > +++ b/fs/timerfd.c
+> > @@ -284,8 +284,16 @@ static ssize_t timerfd_read(struct file *file,
+> > char __user *buf, size_t count,
+> >                                         &ctx->t.alarm, ctx->tintv) - 1;
+> >                                 alarm_restart(&ctx->t.alarm);
+> >                         } else {
+> > -                               ticks += hrtimer_forward_now(&ctx->t.tmr,
+> > -                                                            ctx->tintv) - 1;
+> > +                               u64 nooftimeo = hrtimer_forward_now(&ctx->t.tmr,
+> > +                                                                ctx->tintv);
+>
+> nooftimeo is pretty non-intuitive. The function documentation of
+> hrtimer_forward_now() says:
+>
+>       Returns the number of overruns.
+>
+> So the obvious variable name is overruns, right?
+>
 
-Jason
+Agreed. Would change the variable name to overruns.
+
+> > +                               /*
+> > +                                * ticks shouldn't become zero at this point.
+> > +                                * Ignore if hrtimer_forward_now returns 0
+> > +                                * due to larger backward time drift.
+>
+> Again. This explanation does not make any sense at all.
+>
+> Time does not go backwards, except if it is CLOCK_REALTIME which can be set
+> backwards via clock_settime() or settimeofday().
+>
+> > +                                */
+> > +                               if (likely(nooftimeo)) {
+> > +                                       ticks += nooftimeo - 1;
+> > +                               }
+>
+> Again: Pointless brackets.
+>
+> If you disagree with my review comment, then tell me in a reply. If not,
+> then fix it. If you decide to ignore my comments, then don't wonder if I
+> ignore your patches.
+>
+
+We use CLOCK_REALTIME while creating timer_fd.
+Can read() on timerfd return 0 when the clock is set to CLOCK_REALTIME?
+
+We have Intel rangely 4 cpu system running debian stretch linux
+kernel. The current clock source is set to tsc. During our testing, we
+observed the time drifts backward occasionally. Through kernel
+instrumentation, we observed, sometimes clocksource_delta() finds the
+current time lesser than last time. and returns 0 delta.
+This causes  the following code flow to return 0
+ ktime_get()-->timekeeping_get_ns()-->timekeeping_get_delta()-->clocksource_delta()
+
+> Thanks,
+>
+>         tglx
