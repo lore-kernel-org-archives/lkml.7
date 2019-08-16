@@ -2,171 +2,499 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A244AC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FB4C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA4F2086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71EBF2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:12:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="HXDV63xI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjk+2pCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfHPQMX (ORCPT
+        id S1727562AbfHPQMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:12:23 -0400
-Received: from smtp11.infineon.com ([217.10.52.105]:12579 "EHLO
-        smtp11.infineon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727431AbfHPQMX (ORCPT
+        Fri, 16 Aug 2019 12:12:31 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36896 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbfHPQMb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:12:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1565971942; x=1597507942;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=bgES1UYn0OuA320DgkfnUC8CamR/cYkzaiUabM53suw=;
-  b=HXDV63xIo1KPL25cPQXcnNIZviPtza327YogRP9xGwBl1NkWSFcnQABe
-   VmeqjvIStyk5/wKgfsehgqVv2xWdW7e3ztq/9ue47UYmqMEhbs1UtjvD+
-   8FeXZPKKllEtEgwXQDKI7EL6NlgPcK+FtSRTP4B8wrVSW8Z/TGA49eHh7
-   c=;
-IronPort-SDR: 8YlII0WjOxYtD4qCKYv394YhifjoK5oMFvGsKVFSc0QP5WqoZIwxYrIX/yf7mAbmHDbna5x/SC
- KcmRUZf++ZtQgqFiH2OEToP2vCTL98eZbc5IqO2v7yqs3My1Cd+sJ1a2NLSIBf/a0q/SPw22yc
- 2bl2Q5FTvf9yTqBVunhFF8ExXUK2qv8xv2zeJi+GywWP2UKakc2X4ifrqb+M+kHrtKZLLskOYp
- +3JFLD3G1QeUpp8AgT27IXwDqas/zvd/PjDn4K3O7alaH0rOqLRTewosgjZlJ8AFaaq2NSGGvv
- t2E=
-X-SBRS: None
-X-IronPort-AV: E=McAfee;i="6000,8403,9351"; a="130794383"
-X-IronPort-AV: E=Sophos;i="5.64,393,1559512800"; 
-   d="scan'208";a="130794383"
-Received: from unknown (HELO mucxv003.muc.infineon.com) ([172.23.11.20])
-  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 18:12:21 +0200
-Received: from MUCSE708.infineon.com (MUCSE708.infineon.com [172.23.7.82])
-        by mucxv003.muc.infineon.com (Postfix) with ESMTPS;
-        Fri, 16 Aug 2019 18:12:20 +0200 (CEST)
-Received: from [10.154.32.23] (172.23.8.247) by MUCSE708.infineon.com
- (172.23.7.82) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.1713.5; Fri, 16
- Aug 2019 18:12:20 +0200
-Subject: Re: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
-To:     Oshri Alkobi <oshrialkoby85@gmail.com>
-CC:     <Eyal.Cohen@nuvoton.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        <tmaimon77@gmail.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <peterhuewe@gmx.de>, <jgg@ziepe.ca>,
-        <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
-        <oshri.alkoby@nuvoton.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
-        <gcwilson@us.ibm.com>, <kgoldman@us.ibm.com>,
-        <nayna@linux.vnet.ibm.com>, <Dan.Morav@nuvoton.com>,
-        <oren.tanami@nuvoton.com>, <amir.mizinski@nuvoton.com>
-References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
- <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
- <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com>
- <CAM9mBwJC2QD5-gV1eJUDzC2Fnnugr-oCZCoaH2sT_7ktFDkS-Q@mail.gmail.com>
- <45603af2fc8374a90ef9e81a67083395cc9c7190.camel@linux.intel.com>
- <6e7ff1b958d84f6e8e585fd3273ef295@NTILML02.nuvoton.com>
- <CAP6Zq1hPo9dG71YFyr7z9rjmi-DvoUZJOme4+2uqsfO+7nH+HQ@mail.gmail.com>
- <20190715094541.zjqxainggjuvjxd2@linux.intel.com>
- <9c8e216dbc4f43dbaa1701dc166b05e0@NTILML02.nuvoton.com>
- <548d3727-4a8f-38d4-2193-8a09cbae1e64@infineon.com>
- <CAM9mBwL=5+pGTYUKbSdw5F6soR=tW-cqfbEQ9_NmCQTO=fSVZQ@mail.gmail.com>
-From:   Alexander Steffen <Alexander.Steffen@infineon.com>
-Message-ID: <528c9364-f4f4-d7c1-5e58-6ba6b8e90a6c@infineon.com>
-Date:   Fri, 16 Aug 2019 18:12:19 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 16 Aug 2019 12:12:31 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d1so2577616pgp.4;
+        Fri, 16 Aug 2019 09:12:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=kBicOEOE2/fEe4jf87oMJAd7NWf4XjwHxbhw9VwliWc=;
+        b=tjk+2pCvybEBu7NaYkMaUvI5vxl7oKHRIHe5KRUbk8OLW9t6Jqhk5cuIbr/jiNd9Cw
+         DbS9c5J301oDmy2v6hWRH3wsLkQ506zMuJujpSH7IKg953FSDWWn0GEhDuGA1JBIGPux
+         sV97+E4ndIy6etcFQ0uX1R1aY7khC/PEl1mhNCC6QF/kEPsBMcD4HuNgq42YTwA8GfEJ
+         sE31MEwv2B0xtsunx9vf96x8i257Y8q5ACBx0+3zPlKfhaitUglPLsEfdOXdMVZlglOR
+         YZTxnQnWcNUrP3XAD7UMV0xsczhM11kwJRYXrKt0oAUN1xOmKJ7l04XYS7/jCjQO67oa
+         7TwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=kBicOEOE2/fEe4jf87oMJAd7NWf4XjwHxbhw9VwliWc=;
+        b=mjFSqRVurijSkJq32p/XshFY68a8tKSWioLKTy9xq0kswdmVHikSU13xEXOMTPcpEC
+         g4ZxMEERexpBqE8c25iXfpNb9O4F54rvqi90cw71Shz1yLxG03IwoOS+D8qo8RZQGye9
+         a6QN5uOpXxwhwAR1tiveYiwlTD6/2agVYQVm9AVYLh45DgWpULIv7A0dIKhqus63k/pP
+         AfILsOLWUa8Fg4MJL1oWJhMFTfM4AeTkM32JZnLl/TncBUPAhft2dhW4S4K0V1RX9bg/
+         JV1VORj7+1MUxGiL8wQUSRpXy3gqgdmvsJU4HQ6Kqa6GrFfl6zdNN45Tzsh7ZaNoZhgf
+         2EdA==
+X-Gm-Message-State: APjAAAXSS9vJPcq3dhy3AZOOULWfo4auXNQ6fp0Sv2Br1G+ZXPA5b3D7
+        Hd0L+9eR8w4tcVMKwrxBh+0=
+X-Google-Smtp-Source: APXvYqxoSexf1Uv7JZwa1Y5OAurXfQiVQbNDpZzVGiEVO8BJVp8nTHvNJznv6XMX8KddUjYMi+C8KQ==
+X-Received: by 2002:a63:4c5c:: with SMTP id m28mr8894045pgl.333.1565971949933;
+        Fri, 16 Aug 2019 09:12:29 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g2sm1547022pfm.32.2019.08.16.09.12.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 16 Aug 2019 09:12:28 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 09:12:27 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Vijay Khemka <vijaykhemka@fb.com>
+Cc:     John Wang <wangzqbj@inspur.com>,
+        "jdelvare@suse.com" <jdelvare@suse.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+        "duanzhijia01@inspur.com" <duanzhijia01@inspur.com>,
+        "mine260309@gmail.com" <mine260309@gmail.com>,
+        "joel@jms.id.au" <joel@jms.id.au>
+Subject: Re: [PATCH v5 2/2] hwmon: pmbus: Add Inspur Power System power
+ supply driver
+Message-ID: <20190816161226.GA5396@roeck-us.net>
+References: <20190816101944.3586-1-wangzqbj@inspur.com>
+ <45938741-A766-405A-86E8-5C946B395F27@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <CAM9mBwL=5+pGTYUKbSdw5F6soR=tW-cqfbEQ9_NmCQTO=fSVZQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.23.8.247]
-X-ClientProxiedBy: MUCSE713.infineon.com (172.23.7.71) To
- MUCSE708.infineon.com (172.23.7.82)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <45938741-A766-405A-86E8-5C946B395F27@fb.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.08.2019 19:03, Oshri Alkobi wrote:
-> On Thu, Jul 18, 2019 at 8:10 PM Alexander Steffen
-> <Alexander.Steffen@infineon.com> wrote:
->>
->> On 18.07.2019 14:51, Eyal.Cohen@nuvoton.com wrote:
->>> Hi Jarkko and Alexander,
->>>
->>> We have made an additional code review on the TPM TIS core driver, it looks quite good and we can connect our new I2C driver to this layer.
->>
->> Great :) In the meantime, I've done some experiments creating an I2C
->> driver based on tpm_tis_core, see
->> https://patchwork.kernel.org/patch/11049363/ Please have a look at that
->> and provide your feedback (and/or use it as a basis for further
->> implementations).
->>
+On Fri, Aug 16, 2019 at 04:01:05PM +0000, Vijay Khemka wrote:
 > 
-> Sorry for the late response.
 > 
-> Thanks Alexander, indeed it looks much simpler.
-> I've checked it with Nuvoton's TPM - basic TPM commands work
-
-Nice :)
-
-> I only
-> had to remove the first msg from the read/write I2C transmitting
-> (from/to TPM_LOC_SEL), the TPM couldn't handle two register writes in
-> a sequence.
-> Actually it is more efficient to set TPM_LOC_SEL only before locality
-> check/request/relinquish - it is sticky.
-
-There is one problem though: Do we assume that only the kernel driver 
-will communicate with the TPM or might there be something else that also 
-talks to the TPM?
-
-If it is only the kernel driver, we could probably skip setting 
-TPM_LOC_SEL at all, since it defaults to 0 and the driver will never use 
-anything else. If something else does its own I2C communication with the 
-TPM, it might write different values to TPM_LOC_SEL at any time, causing 
-the kernel driver to use a different locality than intended. This was 
-the reason I always set TPM_LOC_SEL within the same transaction.
-
-> I still didn't manage to work with interrupts, will debug it.
-
-Interrupt support might be broken in general at the moment, see this 
-thread: https://www.spinics.net/lists/linux-integrity/msg08663.html
-
-> We weren't aware to the implementation of Christophe/ST which looks
-> good and can be complement to yours.
-> If no one is currently working on that, we can prepare a new patch
-> that is based on both.
-> Please let us know.
-
-I won't have the time to do anything, at least for the next two weeks, 
-so feel free to pick it up.
-
->>> However, there are several differences between the SPI interface and the I2C interface that will require changes to the TIS core.
->>> At a minimum we thought of:
->>> 1. Handling TPM Localities in I2C is different
->>
->> It turned out not to be that different in the end, see the code
->> mentioned above and my comment here:
->> https://patchwork.kernel.org/cover/11049365/
->>
->>> 2. Handling I2C CRC - relevant only to I2C bus hence not supported today by TIS core
->>
->> That is completely optional, so there is no need to implement it in the
->> beginning. Also, do you expect a huge benefit from that functionality?
->> Are bit flips that much more likely on I2C compared to SPI, which has no
->> CRC at all, but still works fine?
->>
+> ﻿On 8/16/19, 3:20 AM, "openbmc on behalf of John Wang" <openbmc-bounces+vijaykhemka=fb.com@lists.ozlabs.org on behalf of wangzqbj@inspur.com> wrote:
 > 
-> I2C is noisy bus with potentially more devices with larger variety
-> than SPI. I2C may have more than one master and may have collisions
-> and/or arbitration.
+>     Add the driver to monitor Inspur Power System power supplies
+>     with hwmon over pmbus.
+>     
+>     This driver adds sysfs attributes for additional power supply data,
+>     including vendor, model, part_number, serial number,
+>     firmware revision, hardware revision, and psu mode(active/standby).
+>     
+>     Signed-off-by: John Wang <wangzqbj@inspur.com>
+>     ---
+>     v5:
+>         - Align sysfs attrs description in inspur-ipsps1.rst
+>           (Use tab instead of space to sperate names and values)
+>     v4:
+>         - Remove the additional tabs in the Makefile
+>         - Rebased on 5.3-rc4, not 5.2
+>     v3:
+>         - Sort kconfig/makefile entries alphabetically
+>         - Remove unnecessary initialization
+>         - Use ATTRIBUTE_GROUPS instead of expanding directly
+>         - Use memscan to avoid reimplementation
+>     v2:
+>         - Fix typos in commit message
+>         - Invert Christmas tree
+>         - Configure device with sysfs attrs, not debugfs entries
+>         - Fix errno in fw_version_read, ENODATA to EPROTO
+>         - Change the print format of fw-version
+>         - Use sysfs_streq instead of strcmp("xxx" "\n", "xxx")
+>         - Document sysfs attributes
+>     ---
+>      Documentation/hwmon/inspur-ipsps1.rst |  79 +++++++++
+>      drivers/hwmon/pmbus/Kconfig           |   9 +
+>      drivers/hwmon/pmbus/Makefile          |   1 +
+>      drivers/hwmon/pmbus/inspur-ipsps.c    | 226 ++++++++++++++++++++++++++
+>      4 files changed, 315 insertions(+)
+>      create mode 100644 Documentation/hwmon/inspur-ipsps1.rst
+>      create mode 100644 drivers/hwmon/pmbus/inspur-ipsps.c
+>     
+>     diff --git a/Documentation/hwmon/inspur-ipsps1.rst b/Documentation/hwmon/inspur-ipsps1.rst
+>     new file mode 100644
+>     index 000000000000..2b871ae3448f
+>     --- /dev/null
+>     +++ b/Documentation/hwmon/inspur-ipsps1.rst
+>     @@ -0,0 +1,79 @@
+>     +Kernel driver inspur-ipsps1
+>     +=======================
+>     +
+>     +Supported chips:
+>     +
+>     +  * Inspur Power System power supply unit
+>     +
+>     +Author: John Wang <wangzqbj@inspur.com>
+>     +
+>     +Description
+>     +-----------
+>     +
+>     +This driver supports Inspur Power System power supplies. This driver
+>     +is a client to the core PMBus driver.
+>     +
+>     +Usage Notes
+>     +-----------
+>     +
+>     +This driver does not auto-detect devices. You will have to instantiate the
+>     +devices explicitly. Please see Documentation/i2c/instantiating-devices for
+>     +details.
+>     +
+>     +Sysfs entries
+>     +-------------
+>     +
+>     +The following attributes are supported:
+>     +
+>     +======================= ======================================================
+>     +curr1_input		Measured input current
+>     +curr1_label		"iin"
+>     +curr1_max		Maximum current
+>     +curr1_max_alarm		Current high alarm
+>     +curr2_input		Measured output current in mA.
+>     +curr2_label		"iout1"
+>     +curr2_crit		Critical maximum current
+>     +curr2_crit_alarm	Current critical high alarm
+>     +curr2_max		Maximum current
+>     +curr2_max_alarm		Current high alarm
+>     +
+>     +fan1_alarm		Fan 1 warning.
+>     +fan1_fault		Fan 1 fault.
+>     +fan1_input		Fan 1 speed in RPM.
+>     +
+>     +in1_alarm		Input voltage under-voltage alarm.
+>     +in1_input		Measured input voltage in mV.
+>     +in1_label		"vin"
+>     +in2_input		Measured output voltage in mV.
+>     +in2_label		"vout1"
+>     +in2_lcrit		Critical minimum output voltage
+>     +in2_lcrit_alarm		Output voltage critical low alarm
+>     +in2_max			Maximum output voltage
+>     +in2_max_alarm		Output voltage high alarm
+>     +in2_min			Minimum output voltage
+>     +in2_min_alarm		Output voltage low alarm
+>     +
+>     +power1_alarm		Input fault or alarm.
+>     +power1_input		Measured input power in uW.
+>     +power1_label		"pin"
+>     +power1_max		Input power limit
+>     +power2_max_alarm	Output power high alarm
+>     +power2_max		Output power limit
+>     +power2_input		Measured output power in uW.
+>     +power2_label		"pout"
+>     +
+>     +temp[1-3]_input		Measured temperature
+>     +temp[1-2]_max		Maximum temperature
+>     +temp[1-3]_max_alarm	Temperature high alarm
+>     +
+>     +vendor			Manufacturer name
+>     +model			Product model
+>     +part_number		Product part number
+>     +serial_number		Product serial number
+>     +fw_version		Firmware version
+>     +hw_version		Hardware version
+>     +mode			Work mode. Can be set to active or
+>     +			standby, when set to standby, PSU will
+>     +			automatically switch between standby
+>     +			and redundancy mode.
+> I don't think it is aligned yet. Please use space only instead of tabs.
+> 
 
-If multi-master usage is a concern, there are probably a lot more places 
-in the driver that need to be adapted to deal with concurrent 
-access/data corruption. For now, I'd assume a single master, similar to SPI.
+First, it is aligned. It just appears unaligned in the patch because
+'+' at the beginning of the lins shifts the output. We want the result
+to be aligned, not the patch file.
 
-Alexander
+Second, let's use tabs like every other hwmon documentation file. I don't
+see the point of using spaces just to make the patch file appear aligned.
+
+Unless there is serious feedback, I am going to apply this patch to
+hwmon-next.
+
+Guenter
+
+>     +======================= ======================================================
+>     diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+>     index b6588483fae1..d62d69bb7e49 100644
+>     --- a/drivers/hwmon/pmbus/Kconfig
+>     +++ b/drivers/hwmon/pmbus/Kconfig
+>     @@ -46,6 +46,15 @@ config SENSORS_IBM_CFFPS
+>      	  This driver can also be built as a module. If so, the module will
+>      	  be called ibm-cffps.
+>      
+>     +config SENSORS_INSPUR_IPSPS
+>     +	tristate "INSPUR Power System Power Supply"
+>     +	help
+>     +	  If you say yes here you get hardware monitoring support for the INSPUR
+>     +	  Power System power supply.
+>     +
+>     +	  This driver can also be built as a module. If so, the module will
+>     +	  be called inspur-ipsps.
+>     +
+>      config SENSORS_IR35221
+>      	tristate "Infineon IR35221"
+>      	help
+>     diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+>     index c950ea9a5d00..03bacfcfd660 100644
+>     --- a/drivers/hwmon/pmbus/Makefile
+>     +++ b/drivers/hwmon/pmbus/Makefile
+>     @@ -7,6 +7,7 @@ obj-$(CONFIG_PMBUS)		+= pmbus_core.o
+>      obj-$(CONFIG_SENSORS_PMBUS)	+= pmbus.o
+>      obj-$(CONFIG_SENSORS_ADM1275)	+= adm1275.o
+>      obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
+>     +obj-$(CONFIG_SENSORS_INSPUR_IPSPS) += inspur-ipsps.o
+>      obj-$(CONFIG_SENSORS_IR35221)	+= ir35221.o
+>      obj-$(CONFIG_SENSORS_IR38064)	+= ir38064.o
+>      obj-$(CONFIG_SENSORS_IRPS5401)	+= irps5401.o
+>     diff --git a/drivers/hwmon/pmbus/inspur-ipsps.c b/drivers/hwmon/pmbus/inspur-ipsps.c
+>     new file mode 100644
+>     index 000000000000..fa981b881a60
+>     --- /dev/null
+>     +++ b/drivers/hwmon/pmbus/inspur-ipsps.c
+>     @@ -0,0 +1,226 @@
+>     +// SPDX-License-Identifier: GPL-2.0-or-later
+>     +/*
+>     + * Copyright 2019 Inspur Corp.
+>     + */
+>     +
+>     +#include <linux/debugfs.h>
+>     +#include <linux/device.h>
+>     +#include <linux/fs.h>
+>     +#include <linux/i2c.h>
+>     +#include <linux/module.h>
+>     +#include <linux/pmbus.h>
+>     +#include <linux/hwmon-sysfs.h>
+>     +
+>     +#include "pmbus.h"
+>     +
+>     +#define IPSPS_REG_VENDOR_ID	0x99
+>     +#define IPSPS_REG_MODEL		0x9A
+>     +#define IPSPS_REG_FW_VERSION	0x9B
+>     +#define IPSPS_REG_PN		0x9C
+>     +#define IPSPS_REG_SN		0x9E
+>     +#define IPSPS_REG_HW_VERSION	0xB0
+>     +#define IPSPS_REG_MODE		0xFC
+>     +
+>     +#define MODE_ACTIVE		0x55
+>     +#define MODE_STANDBY		0x0E
+>     +#define MODE_REDUNDANCY		0x00
+>     +
+>     +#define MODE_ACTIVE_STRING		"active"
+>     +#define MODE_STANDBY_STRING		"standby"
+>     +#define MODE_REDUNDANCY_STRING		"redundancy"
+>     +
+>     +enum ipsps_index {
+>     +	vendor,
+>     +	model,
+>     +	fw_version,
+>     +	part_number,
+>     +	serial_number,
+>     +	hw_version,
+>     +	mode,
+>     +	num_regs,
+>     +};
+>     +
+>     +static const u8 ipsps_regs[num_regs] = {
+>     +	[vendor] = IPSPS_REG_VENDOR_ID,
+>     +	[model] = IPSPS_REG_MODEL,
+>     +	[fw_version] = IPSPS_REG_FW_VERSION,
+>     +	[part_number] = IPSPS_REG_PN,
+>     +	[serial_number] = IPSPS_REG_SN,
+>     +	[hw_version] = IPSPS_REG_HW_VERSION,
+>     +	[mode] = IPSPS_REG_MODE,
+>     +};
+>     +
+>     +static ssize_t ipsps_string_show(struct device *dev,
+>     +				 struct device_attribute *devattr,
+>     +				 char *buf)
+>     +{
+>     +	u8 reg;
+>     +	int rc;
+>     +	char *p;
+>     +	char data[I2C_SMBUS_BLOCK_MAX + 1];
+>     +	struct i2c_client *client = to_i2c_client(dev->parent);
+>     +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
+>     +
+>     +	reg = ipsps_regs[attr->index];
+>     +	rc = i2c_smbus_read_block_data(client, reg, data);
+>     +	if (rc < 0)
+>     +		return rc;
+>     +
+>     +	/* filled with printable characters, ending with # */
+>     +	p = memscan(data, '#', rc);
+>     +	*p = '\0';
+>     +
+>     +	return snprintf(buf, PAGE_SIZE, "%s\n", data);
+>     +}
+>     +
+>     +static ssize_t ipsps_fw_version_show(struct device *dev,
+>     +				     struct device_attribute *devattr,
+>     +				     char *buf)
+>     +{
+>     +	u8 reg;
+>     +	int rc;
+>     +	u8 data[I2C_SMBUS_BLOCK_MAX] = { 0 };
+>     +	struct i2c_client *client = to_i2c_client(dev->parent);
+>     +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
+>     +
+>     +	reg = ipsps_regs[attr->index];
+>     +	rc = i2c_smbus_read_block_data(client, reg, data);
+>     +	if (rc < 0)
+>     +		return rc;
+>     +
+>     +	if (rc != 6)
+>     +		return -EPROTO;
+>     +
+>     +	return snprintf(buf, PAGE_SIZE, "%u.%02u%u-%u.%02u\n",
+>     +			data[1], data[2]/* < 100 */, data[3]/*< 10*/,
+>     +			data[4], data[5]/* < 100 */);
+>     +}
+>     +
+>     +static ssize_t ipsps_mode_show(struct device *dev,
+>     +			       struct device_attribute *devattr, char *buf)
+>     +{
+>     +	u8 reg;
+>     +	int rc;
+>     +	struct i2c_client *client = to_i2c_client(dev->parent);
+>     +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
+>     +
+>     +	reg = ipsps_regs[attr->index];
+>     +	rc = i2c_smbus_read_byte_data(client, reg);
+>     +	if (rc < 0)
+>     +		return rc;
+>     +
+>     +	switch (rc) {
+>     +	case MODE_ACTIVE:
+>     +		return snprintf(buf, PAGE_SIZE, "[%s] %s %s\n",
+>     +				MODE_ACTIVE_STRING,
+>     +				MODE_STANDBY_STRING, MODE_REDUNDANCY_STRING);
+>     +	case MODE_STANDBY:
+>     +		return snprintf(buf, PAGE_SIZE, "%s [%s] %s\n",
+>     +				MODE_ACTIVE_STRING,
+>     +				MODE_STANDBY_STRING, MODE_REDUNDANCY_STRING);
+>     +	case MODE_REDUNDANCY:
+>     +		return snprintf(buf, PAGE_SIZE, "%s %s [%s]\n",
+>     +				MODE_ACTIVE_STRING,
+>     +				MODE_STANDBY_STRING, MODE_REDUNDANCY_STRING);
+>     +	default:
+>     +		return snprintf(buf, PAGE_SIZE, "unspecified\n");
+>     +	}
+>     +}
+>     +
+>     +static ssize_t ipsps_mode_store(struct device *dev,
+>     +				struct device_attribute *devattr,
+>     +				const char *buf, size_t count)
+>     +{
+>     +	u8 reg;
+>     +	int rc;
+>     +	struct i2c_client *client = to_i2c_client(dev->parent);
+>     +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
+>     +
+>     +	reg = ipsps_regs[attr->index];
+>     +	if (sysfs_streq(MODE_STANDBY_STRING, buf)) {
+>     +		rc = i2c_smbus_write_byte_data(client, reg,
+>     +					       MODE_STANDBY);
+>     +		if (rc < 0)
+>     +			return rc;
+>     +		return count;
+>     +	} else if (sysfs_streq(MODE_ACTIVE_STRING, buf)) {
+>     +		rc = i2c_smbus_write_byte_data(client, reg,
+>     +					       MODE_ACTIVE);
+>     +		if (rc < 0)
+>     +			return rc;
+>     +		return count;
+>     +	}
+>     +
+>     +	return -EINVAL;
+>     +}
+>     +
+>     +static SENSOR_DEVICE_ATTR_RO(vendor, ipsps_string, vendor);
+>     +static SENSOR_DEVICE_ATTR_RO(model, ipsps_string, model);
+>     +static SENSOR_DEVICE_ATTR_RO(part_number, ipsps_string, part_number);
+>     +static SENSOR_DEVICE_ATTR_RO(serial_number, ipsps_string, serial_number);
+>     +static SENSOR_DEVICE_ATTR_RO(hw_version, ipsps_string, hw_version);
+>     +static SENSOR_DEVICE_ATTR_RO(fw_version, ipsps_fw_version, fw_version);
+>     +static SENSOR_DEVICE_ATTR_RW(mode, ipsps_mode, mode);
+>     +
+>     +static struct attribute *ipsps_attrs[] = {
+>     +	&sensor_dev_attr_vendor.dev_attr.attr,
+>     +	&sensor_dev_attr_model.dev_attr.attr,
+>     +	&sensor_dev_attr_part_number.dev_attr.attr,
+>     +	&sensor_dev_attr_serial_number.dev_attr.attr,
+>     +	&sensor_dev_attr_hw_version.dev_attr.attr,
+>     +	&sensor_dev_attr_fw_version.dev_attr.attr,
+>     +	&sensor_dev_attr_mode.dev_attr.attr,
+>     +	NULL,
+>     +};
+>     +
+>     +ATTRIBUTE_GROUPS(ipsps);
+>     +
+>     +static struct pmbus_driver_info ipsps_info = {
+>     +	.pages = 1,
+>     +	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
+>     +		PMBUS_HAVE_IIN | PMBUS_HAVE_POUT | PMBUS_HAVE_PIN |
+>     +		PMBUS_HAVE_FAN12 | PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 |
+>     +		PMBUS_HAVE_TEMP3 | PMBUS_HAVE_STATUS_VOUT |
+>     +		PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_STATUS_INPUT |
+>     +		PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_STATUS_FAN12,
+>     +	.groups = ipsps_groups,
+>     +};
+>     +
+>     +static struct pmbus_platform_data ipsps_pdata = {
+>     +	.flags = PMBUS_SKIP_STATUS_CHECK,
+>     +};
+>     +
+>     +static int ipsps_probe(struct i2c_client *client,
+>     +		       const struct i2c_device_id *id)
+>     +{
+>     +	client->dev.platform_data = &ipsps_pdata;
+>     +	return pmbus_do_probe(client, id, &ipsps_info);
+>     +}
+>     +
+>     +static const struct i2c_device_id ipsps_id[] = {
+>     +	{ "inspur_ipsps1", 0 },
+>     +	{}
+>     +};
+>     +MODULE_DEVICE_TABLE(i2c, ipsps_id);
+>     +
+>     +static const struct of_device_id ipsps_of_match[] = {
+>     +	{ .compatible = "inspur,ipsps1" },
+>     +	{}
+>     +};
+>     +MODULE_DEVICE_TABLE(of, ipsps_of_match);
+>     +
+>     +static struct i2c_driver ipsps_driver = {
+>     +	.driver = {
+>     +		.name = "inspur-ipsps",
+>     +		.of_match_table = ipsps_of_match,
+>     +	},
+>     +	.probe = ipsps_probe,
+>     +	.remove = pmbus_do_remove,
+>     +	.id_table = ipsps_id,
+>     +};
+>     +
+>     +module_i2c_driver(ipsps_driver);
+>     +
+>     +MODULE_AUTHOR("John Wang");
+>     +MODULE_DESCRIPTION("PMBus driver for Inspur Power System power supplies");
+>     +MODULE_LICENSE("GPL");
+>     -- 
+>     2.17.1
+>     
+>     
+> 
