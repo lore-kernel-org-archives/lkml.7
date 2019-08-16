@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18972C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372A7C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D40A22171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0130A2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="X9owe4xI"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="qUtctX/4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727760AbfHPUzQ (ORCPT
+        id S1727703AbfHPUz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 16:55:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:36389 "EHLO
+        Fri, 16 Aug 2019 16:55:59 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43967 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfHPUzQ (ORCPT
+        with ESMTP id S1727589AbfHPUz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 16:55:16 -0400
+        Fri, 16 Aug 2019 16:55:59 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GKt8Q12959913
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GKtqNC2959986
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 16 Aug 2019 13:55:09 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GKt8Q12959913
+        Fri, 16 Aug 2019 13:55:52 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GKtqNC2959986
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565988909;
-        bh=LfYD5zaS3ODktyjaaDE2Nl3p3Xk1EhtrZebiMKbtUYc=;
+        s=2019071901; t=1565988953;
+        bh=4sEqVcEsymt42gK9JBnVxDODfzRKFQClWToB8diSlGU=;
         h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=X9owe4xIEkBs2r6OQEfG29FrLJ+v7Yhk/VlO1VTY+rYSfK/oZhjvRRgHDYPgG9Y+q
-         sdScgqeoQO3YTu0/xXRWVF9GgPyW0LAQdedDV0WtyiqIRdeEcCIxEJu3T01PRLvWCu
-         VloduyL2/27IcvLljlV5GZV1u19RQehTLh0+a7p/P72/h+BZy1y2kp0j7IGDNrKUpB
-         uKNZhHQiBSh9dwn/FJ1LQZwxCjgPVUobFqxOLr4n3kT99OlftWz4XtnLFPWsEYzcGU
-         XteqQCTlF3Oc7t3c/IDpTqlceP6+9aqk+2VHdwKTitnSSEDzGKJPrwPKwNo2DpMZ/6
-         VIwAs1O4v0HoQ==
+        b=qUtctX/4jSQyXH16x3vBbD0zI9RBOl1/bRy0+Rr29qiDRc0cRnSgvRR+EnbBy+N3P
+         xZSEbyMvdUANXjBFEo+lt0oOXFKADIuBDmmMauwe+4IFRqn2D0Zyi3WEnAylWC2atI
+         ZdXsiMu9/IMdFn9lP1WfHUFa6OHvo9sd4Hx1BeaC0D9A6PE26F4LBxC8BEO3dx3sKt
+         q5V2grz7w1YF/PDwsys4pBQ0hHwCt9Zj/8+3VybuETDQ3GpS+d8/JmBVNTvanDX4g8
+         7V/mBsC1wmwnK8UsunKgO6mLGfyHKwmss6e4euN2lQ9yD4imn8dIQUiTLgCw9LqcLW
+         GqK6NN3VV5EkA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GKt8Ot2959910;
-        Fri, 16 Aug 2019 13:55:08 -0700
-Date:   Fri, 16 Aug 2019 13:55:08 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GKtqYT2959983;
+        Fri, 16 Aug 2019 13:55:52 -0700
+Date:   Fri, 16 Aug 2019 13:55:52 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-snreb1wmwyjei3eefwotxp1l@git.kernel.org>
-Cc:     hpa@zytor.com, wcohen@redhat.com, adrian.hunter@intel.com,
-        linux-kernel@vger.kernel.org, jolsa@kernel.org, mingo@kernel.org,
-        tglx@linutronix.de, namhyung@kernel.org, acme@redhat.com,
-        fweimer@redhat.com
-Reply-To: wcohen@redhat.com, hpa@zytor.com, jolsa@kernel.org,
-          linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
-          fweimer@redhat.com, namhyung@kernel.org, acme@redhat.com,
-          tglx@linutronix.de, mingo@kernel.org
+Message-ID: <tip-1kvrdi7weuz3hxycwvarcu6v@git.kernel.org>
+Cc:     namhyung@kernel.org, mingo@kernel.org, jolsa@kernel.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        fweimer@redhat.com, hpa@zytor.com, wcohen@redhat.com,
+        adrian.hunter@intel.com, acme@redhat.com
+Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          fweimer@redhat.com, wcohen@redhat.com, hpa@zytor.com,
+          acme@redhat.com, adrian.hunter@intel.com, namhyung@kernel.org,
+          jolsa@kernel.org, mingo@kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf evswitch: Introduce init() method to set the
- on/off evsels from the command line
-Git-Commit-ID: 124e02be72fdff05ab5d7f004a3c0d4061569380
+Subject: [tip:perf/core] perf evswitch: Move enoent error message printing
+ to separate function
+Git-Commit-ID: c9a4269930dada68971a4a97f3abf079af8cde4e
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,122 +70,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  124e02be72fdff05ab5d7f004a3c0d4061569380
-Gitweb:     https://git.kernel.org/tip/124e02be72fdff05ab5d7f004a3c0d4061569380
+Commit-ID:  c9a4269930dada68971a4a97f3abf079af8cde4e
+Gitweb:     https://git.kernel.org/tip/c9a4269930dada68971a4a97f3abf079af8cde4e
 Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Thu, 15 Aug 2019 11:31:29 -0300
+AuthorDate: Thu, 15 Aug 2019 11:35:56 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Thu, 15 Aug 2019 12:25:55 -0300
+CommitDate: Thu, 15 Aug 2019 12:26:04 -0300
 
-perf evswitch: Introduce init() method to set the on/off evsels from the command line
+perf evswitch: Move enoent error message printing to separate function
 
-Another step in having all the boilerplate in just one place to then use
-in the other tools.
+Allows adding hints there, will be done in followup patch.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Florian Weimer <fweimer@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: William Cohen <wcohen@redhat.com>
-Link: https://lkml.kernel.org/n/tip-snreb1wmwyjei3eefwotxp1l@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-1kvrdi7weuz3hxycwvarcu6v@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 21 +++------------------
- tools/perf/util/evswitch.c  | 23 +++++++++++++++++++++++
- tools/perf/util/evswitch.h  |  4 ++++
- 3 files changed, 30 insertions(+), 18 deletions(-)
+ tools/perf/util/evswitch.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 2a5b8af80e6b..1764efd16cd4 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3868,24 +3868,9 @@ int cmd_script(int argc, const char **argv)
- 						  script.range_num);
- 	}
- 
--	if (script.evswitch.on_name) {
--		script.evswitch.on = perf_evlist__find_evsel_by_str(session->evlist, script.evswitch.on_name);
--		if (script.evswitch.on == NULL) {
--			fprintf(stderr, "switch-on event not found (%s)\n", script.evswitch.on_name);
--			err = -ENOENT;
--			goto out_delete;
--		}
--		script.evswitch.discarding = true;
--	}
--
--	if (script.evswitch.off_name) {
--		script.evswitch.off = perf_evlist__find_evsel_by_str(session->evlist, script.evswitch.off_name);
--		if (script.evswitch.off == NULL) {
--			fprintf(stderr, "switch-off event not found (%s)\n", script.evswitch.off_name);
--			err = -ENOENT;
--			goto out_delete;
--		}
--	}
-+	err = evswitch__init(&script.evswitch, session->evlist, stderr);
-+	if (err)
-+		goto out_delete;
- 
- 	err = __cmd_script(&script);
- 
 diff --git a/tools/perf/util/evswitch.c b/tools/perf/util/evswitch.c
-index c87f988d81c8..b57b5f0816f5 100644
+index b57b5f0816f5..71daed615a2c 100644
 --- a/tools/perf/util/evswitch.c
 +++ b/tools/perf/util/evswitch.c
-@@ -2,6 +2,7 @@
- // Copyright (C) 2019, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
- 
- #include "evswitch.h"
-+#include "evlist.h"
- 
- bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel)
- {
-@@ -29,3 +30,25 @@ bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel)
- 
+@@ -31,12 +31,17 @@ bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel)
  	return false;
  }
-+
-+int evswitch__init(struct evswitch *evswitch, struct evlist *evlist, FILE *fp)
+ 
++static int evswitch__fprintf_enoent(FILE *fp, const char *evtype, const char *evname)
 +{
-+	if (evswitch->on_name) {
-+		evswitch->on = perf_evlist__find_evsel_by_str(evlist, evswitch->on_name);
-+		if (evswitch->on == NULL) {
-+			fprintf(fp, "switch-on event not found (%s)\n", evswitch->on_name);
-+			return -ENOENT;
-+		}
-+		evswitch->discarding = true;
-+	}
-+
-+	if (evswitch->off_name) {
-+		evswitch->off = perf_evlist__find_evsel_by_str(evlist, evswitch->off_name);
-+		if (evswitch->off == NULL) {
-+			fprintf(fp, "switch-off event not found (%s)\n", evswitch->off_name);
-+			return -ENOENT;
-+		}
-+	}
-+
-+	return 0;
++	return fprintf(fp, "ERROR: switch-%s event not found (%s)\n", evtype, evname);
 +}
-diff --git a/tools/perf/util/evswitch.h b/tools/perf/util/evswitch.h
-index 94220d1bb479..fd30460b6218 100644
---- a/tools/perf/util/evswitch.h
-+++ b/tools/perf/util/evswitch.h
-@@ -4,8 +4,10 @@
- #define __PERF_EVSWITCH_H 1
- 
- #include <stdbool.h>
-+#include <stdio.h>
- 
- struct evsel;
-+struct evlist;
- 
- struct evswitch {
- 	struct evsel *on, *off;
-@@ -14,6 +16,8 @@ struct evswitch {
- 	bool	     show_on_off_events;
- };
- 
-+int evswitch__init(struct evswitch *evswitch, struct evlist *evlist, FILE *fp);
 +
- bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel);
- 
- #define OPTS_EVSWITCH(evswitch)								  \
+ int evswitch__init(struct evswitch *evswitch, struct evlist *evlist, FILE *fp)
+ {
+ 	if (evswitch->on_name) {
+ 		evswitch->on = perf_evlist__find_evsel_by_str(evlist, evswitch->on_name);
+ 		if (evswitch->on == NULL) {
+-			fprintf(fp, "switch-on event not found (%s)\n", evswitch->on_name);
++			evswitch__fprintf_enoent(fp, "on", evswitch->on_name);
+ 			return -ENOENT;
+ 		}
+ 		evswitch->discarding = true;
+@@ -45,7 +50,7 @@ int evswitch__init(struct evswitch *evswitch, struct evlist *evlist, FILE *fp)
+ 	if (evswitch->off_name) {
+ 		evswitch->off = perf_evlist__find_evsel_by_str(evlist, evswitch->off_name);
+ 		if (evswitch->off == NULL) {
+-			fprintf(fp, "switch-off event not found (%s)\n", evswitch->off_name);
++			evswitch__fprintf_enoent(fp, "off", evswitch->off_name);
+ 			return -ENOENT;
+ 		}
+ 	}
