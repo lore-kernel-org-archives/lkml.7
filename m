@@ -2,87 +2,83 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30ED8C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402F2C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E9421655
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:03:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565939029;
-	bh=harVtDZ3Mjw5P1AQ7Ik6ukdvdVe+6Ge5VYwU38+ajZs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M5vK+C60dUlaIXPCktGFQYPhoXdOvkZKrp4DXYg22HdP5vtE4kOLvwi4yp+RNAdeC
-	 mfkQkOif+D/IU6Iw+CEObC6EmArvq0AlJB0mG5FMMhP7BAr3pmD94UsDGTJtTOPfiX
-	 YTyKcov7GJH4QVqdZ77v3npAilDY2PtMM5Iv6Qq8=
+	by mail.kernel.org (Postfix) with ESMTP id 177EA206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:03:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lHz/ftXA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfHPHDr (ORCPT
+        id S1727021AbfHPHDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:03:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbfHPHDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:03:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A679206C1;
-        Fri, 16 Aug 2019 07:03:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565939026;
-        bh=harVtDZ3Mjw5P1AQ7Ik6ukdvdVe+6Ge5VYwU38+ajZs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qsO94+A0bPL9zhDaWF3g9RCQFGvKtfFMVXDQK1TM9It4agcJIYZsnoGuBJqFDtc6v
-         VRTpeHGWGg/PIR8H4OU2gS2T69sWzzHU4+zxgB80kb03Jm/gU8JxdGXa2L0r+6Ss1j
-         ckeaXF8OL9nMl6/L5DCR7frYhxnngfZBfGcV0/uQ=
-Date:   Fri, 16 Aug 2019 09:03:43 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Zhao Yakui <yakui.zhao@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, devel@driverdev.osuosl.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 00/15] acrn: add the ACRN driver module
-Message-ID: <20190816070343.GA1368@kroah.com>
-References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
- <20190816063925.GB18980@zn.tnic>
+        Fri, 16 Aug 2019 03:03:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60984 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfHPHDx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 03:03:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RiKMgeFFBMknWAE5Nu1DMr6YvjPNtVHyNTev2PNm+yw=; b=lHz/ftXALZz1au8/ITd1rigxY
+        Wb1Fol8/WiW9eKEENJu5jAcC9TpHvsBPzscJAhfuSSqIb+t68bGQShJohuQ7ITj/7qJaX3FpuG1y8
+        2UtWm++Xs6WVNYVof/Wn/mQW+bnnjqowpiDExca6WxuYbWdiwWeVyXuQaTzUuucsY/cPxPD+dhhm/
+        M3qtRkv5Q7XOTlq1CRvPP/BCNuri+TEnaGI2q/9fbWcXYIj3jPymWLw9pa/ER+vYUG9I2owBEwcdk
+        75nP00P8Xa56jwJXjOdoz4//Ih9HKLn3stGTWuHkGQG5OWsgIP6TMPX4xB290rsqYeLwJB4Y+vWN2
+        v1MMS/2Og==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hyWH6-0003f7-95; Fri, 16 Aug 2019 07:03:48 +0000
+Date:   Fri, 16 Aug 2019 00:03:48 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     guoren@kernel.org
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-csky@vger.kernel.org,
+        zhang_jian5@dahuatech.com, Guo Ren <ren_guo@c-sky.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH] csky: Fixup ioremap function losing
+Message-ID: <20190816070348.GA13766@infradead.org>
+References: <1565868537-17753-1-git-send-email-guoren@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190816063925.GB18980@zn.tnic>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1565868537-17753-1-git-send-email-guoren@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 08:39:25AM +0200, Borislav Petkov wrote:
-> On Fri, Aug 16, 2019 at 10:25:41AM +0800, Zhao Yakui wrote:
-> > The first three patches are the changes under x86/acrn, which adds the
-> > required APIs for the driver and reports the X2APIC caps. 
-> > The remaining patches add the ACRN driver module, which accepts the ioctl
-> > from user-space and then communicate with the low-level ACRN hypervisor
-> > by using hypercall.
+On Thu, Aug 15, 2019 at 07:28:57PM +0800, guoren@kernel.org wrote:
+> From: Guo Ren <ren_guo@c-sky.com>
 > 
-> I have a problem with that: you're adding interfaces to arch/x86/ and
-> its users go into staging. Why? Why not directly put the driver where
-> it belongs, clean it up properly and submit it like everything else is
-> submitted?
+> Implement the following apis to meet usage in different scenarios.
 > 
-> I don't want to have stuff in arch/x86/ which is used solely by code in
-> staging and the latter is lingering there indefinitely because no one is
-> cleaning it up...
+>  - ioremap          (NonCache + StrongOrder)
+>  - ioremap_nocache  (NonCache + StrongOrder)
+>  - ioremap_wc       (NonCache + WeakOrder  )
+>  - ioremap_cache    (   Cache + WeakOrder  )
+> 
+> Also change flag VM_ALLOC to VM_IOREMAP in get_vm_area_caller.
 
-I agree, stuff in drivers/staging/ must be self-contained, with no
-changes outside of the code's subdirectory needed in order for it to
-work.  That way it is trivial for us to delete it when it never gets
-cleaned up :)
+Looks generally fine, but two comments:
 
-You never say _why_ this should go into drivers/staging/, nor do you
-have a TODO file like all other staging code that explains exactly what
-needs to be done to get it out of there.
+ - do you have a need for ioremap_cache?  We are generally try to
+   phase it out in favour of memremap, and it is generally only used
+   by arch specific code.
+ - I have a big series pending to clean up the mess with our
+   ioremap_* functions, including adding a generic implementation
+   that csky should be able to use.  Unless this patch is urgent it
+   might make sense to rebase it on top.  Here is my current tree, I
+   plan to post it soon:
 
-thanks,
-
-greg k-h
+	http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/generic-ioremap
