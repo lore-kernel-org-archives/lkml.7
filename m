@@ -2,111 +2,114 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FEAC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A47AC41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30B46205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E56D82064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:17:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565957790;
-	bh=H2YA5fOV1OZSgNy3CwfMFr+n4sVluyZSIMiBaoWhzq0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OHX/6xxfHAQLetmySJhDvaGq74reM8glRu5jPmIm21MbELTLHydBSog9kPX6nQ7Ul
-	 Z3MFiBzZqQlJdHlnWQxU4QolikrsOwz5w4R7GOLuNbge26ckYgzg4BnybbyTo9qNPB
-	 OHnDldEN9Pn25SbFh4u46r+cq6V5mx6YwVmQ3NXk=
+	s=default; t=1565957857;
+	bh=p30UOZ19eVYet8+i39bBRxoGlJ8P/Tx6etF+/KBzOj4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ezcmOHLaVM07hnZVpILxNwga+gReX3J5THMsbJghlCybxnNOaZ35G2bF9dP7PLp7q
+	 9ZiSiPU9wNjzeZ5hpm+o63FFhJnUPqqXbs5XuESrh09tM5SD1UBsd8apN3MMhyEoU8
+	 PL3odYfu0POlBRlHACkC+AMKv8HGcYQkAybMkPP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfHPMQ2 (ORCPT
+        id S1727241AbfHPMRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:16:28 -0400
-Received: from mail-wr1-f100.google.com ([209.85.221.100]:46273 "EHLO
-        mail-wr1-f100.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbfHPMQ2 (ORCPT
+        Fri, 16 Aug 2019 08:17:36 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36584 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbfHPMRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:16:28 -0400
-Received: by mail-wr1-f100.google.com with SMTP id z1so1330834wru.13
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 05:16:27 -0700 (PDT)
+        Fri, 16 Aug 2019 08:17:35 -0400
+Received: by mail-ot1-f65.google.com with SMTP id k18so9460219otr.3;
+        Fri, 16 Aug 2019 05:17:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dn2KIuS3Wg8ZAV1Rn4EmhRNXAghPOAWFXahs2NO+P7I=;
-        b=twBiUJFwARS1vh3rXRDh+wz5JHZyFZpscq2TH4QvjamejRik8b+zrYsDUIKEIi7XXs
-         4cvt3Hu+eFHs4Z+Ky5Z/klGUCYNOB7qwz5zOPC3viNZcAPpJHAkkR4GH22GJK2j7YceJ
-         Wq21JLzgjnxnqTUloHKpgM2GDjTcvAmzyOWWWtf5ymfKHMpLoZvnPf0l3sC6DFrQt+zK
-         ojElIgVdKQsgBTxt/MK7WoCakSotSmGGxtaZ7OcQtwDOLmDg+elMEd/92xJlpTsvzUhE
-         z0mmT1nfxgOF38hZNoxyHw0kMG922l92TfkyoiymZFk7TXxGTEuzNtuk/vPnNDlZrn+S
-         rrOQ==
-X-Gm-Message-State: APjAAAUsbC0+7CzybhsqVLCihnYAAO5ufYo1CZgiMl0IyrDhPrawCOZR
-        xWDKratXDUD13fa1cqN42k1P/bJlJyQrkVfPadk9EEJmQpWvGdEHrhbNUDF3AYrpxw==
-X-Google-Smtp-Source: APXvYqxzvi1VoIOoRXJFajCnQ/dE3fzFo5N+5Qat7cLvuByHbL41fsf69MyjqXOpnK7z54RKl4/zDq8J3tpC
-X-Received: by 2002:adf:f287:: with SMTP id k7mr10732366wro.183.1565957786460;
-        Fri, 16 Aug 2019 05:16:26 -0700 (PDT)
-Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id k67sm34897wma.53.2019.08.16.05.16.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 05:16:26 -0700 (PDT)
-X-Relaying-Domain: sirena.org.uk
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hyb9d-0003MM-Ul; Fri, 16 Aug 2019 12:16:26 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 2556927430D6; Fri, 16 Aug 2019 13:16:25 +0100 (BST)
-Date:   Fri, 16 Aug 2019 13:16:25 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, alsa-devel@alsa-project.org,
-        linux-imx@nxp.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ASoC: imx-audmux: Add driver suspend and resume to
- support MEGA Fast
-Message-ID: <20190816121625.GC4039@sirena.co.uk>
-References: <1565931794-7218-1-git-send-email-shengjiu.wang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c+E0MTqNRBEe9xkatPaAb5b/atYG4V6Eq0t4fHhQ7l4=;
+        b=dDQgkJ3q2WSLbfBMIj1lyRVP/chzsLN2s4Kskym3ZXmVihRqJtsSNPfWrRxNmOITLm
+         wqGUjOx3gt/LonlJByap5JWV1kHyEzoTmKK6ZVH8smY5rg/g0m2fe59oNtGshmcdTzcB
+         XWXKWNKeeb+5zMkTBWs8YCZdUMr02xgjWoG162Sk7vXnnY0258oN9p19YTfGfWVlEn2Q
+         DiS1+4YoquCWzFehjfgGdmnPkGQFAITxLCEHn07EDNAqXeEjdpnwD1n1vNy5DB6IqpIQ
+         cXUp2J46NBdVRC7hMozcjilADGFV9xP4QGgo8RU+HggeYUhXK0O5UdntJvJR30eRss/6
+         Q28A==
+X-Gm-Message-State: APjAAAU6HZQ+Hoo//yFqQyYlGAhgUMElee5e1Oy3U+aB2Yafe29DdN3p
+        aRICfd3qg+jvB0sgAVOHC0rR6oWjeU54JYuMp1Q=
+X-Google-Smtp-Source: APXvYqym7NDB50zYH7Yf+KESWoi1XYETeRiF8Jl2l+B2HiC/WoKKQwMz5cIVLInotMH/464Z+6+J5+xRniM1FVCYjSY=
+X-Received: by 2002:a9d:674c:: with SMTP id w12mr4137556otm.118.1565957854693;
+ Fri, 16 Aug 2019 05:17:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Bu8it7iiRSEf40bY"
-Content-Disposition: inline
-In-Reply-To: <1565931794-7218-1-git-send-email-shengjiu.wang@nxp.com>
-X-Cookie: My life is a patio of fun!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1565731976.8572.16.camel@lca.pw> <5d53b238.1c69fb81.d3cd3.cd53@mx.google.com>
+ <20190814084014.GB52127@atomide.com> <CANA+-vDeSAYUNfTQzQPT2N_CUgvYr6i_LP_BdHT_zX+FPt8NHg@mail.gmail.com>
+In-Reply-To: <CANA+-vDeSAYUNfTQzQPT2N_CUgvYr6i_LP_BdHT_zX+FPt8NHg@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 16 Aug 2019 14:17:23 +0200
+Message-ID: <CAJZ5v0hY8=0j=heXuAS-5cBafDSE8ZakLDW4NGCjAbxUAt3j4Q@mail.gmail.com>
+Subject: Re: "PM / wakeup: Show wakeup sources stats in sysfs" causes boot warnings
+To:     Tri Vo <trong@android.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Stephen Boyd <swboyd@chromium.org>, Qian Cai <cai@lca.pw>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 14, 2019 at 8:37 PM Tri Vo <trong@android.com> wrote:
+>
+> On Wed, Aug 14, 2019 at 1:40 AM Tony Lindgren <tony@atomide.com> wrote:
+> >
+> > * Stephen Boyd <swboyd@chromium.org> [691231 23:00]:
+> > > I also notice that device_set_wakeup_capable() has a check to see if the
+> > > device is registered yet and it skips creating sysfs entries for the
+> > > device if it isn't created in sysfs yet. Why? Just so it can be called
+> > > before the device is created? I guess the same logic is handled by
+> > > dpm_sysfs_add() if the device is registered after calling
+> > > device_set_wakeup_*().
+> >
+> > Hmm just guessing.. It's maybe because drivers can enable and disable
+> > the wakeup capability at any point for example like driver/net drivers
+> > do based on WOL etc?
+> >
+> > > There's two approaches I see:
+> > >
+> > >       1) Do a similar check for device_set_wakeup_enable() and skip
+> > >       adding the wakeup class until dpm_sysfs_add().
+> > >
+> > >       2) Find each case where this happens and only call wakeup APIs
+> > >       on the device after the device is added.
+> > >
+> > > I guess it's better to let devices have wakeup modified on them before
+> > > they're registered with the device core?
+> >
+> > I think we should at least initially handle case #1 above as multiple
+> > places otherwise seem to break. Then maybe we could add a warning to
+> > help fix all the #2 cases if needed?
+>
+> Makes sense. For case#1, we could also just register the wakeup source
+> without specifying the parent device if the latter hasn't been
+> registered yet. Userspace won't be able to associate a wakeup source
+> to the parent device. But I think it's a reasonable fix, assuming we
+> want to fix devices not being added before calling wakeup APIs #2.
 
---Bu8it7iiRSEf40bY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Well, OK
 
-On Fri, Aug 16, 2019 at 01:03:14AM -0400, Shengjiu Wang wrote:
+I'm going to drop the entire series from linux-next at this point and
+let's start over.
 
-> +	for (i = 0; i < reg_max; i++)
-> +		regcache[i] = readl(audmux_base + i * 4);
-
-If only there were some framework which provided a register cache!  :P
-
---Bu8it7iiRSEf40bY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1WnpgACgkQJNaLcl1U
-h9AuxQf/SUokJSA9quJeah9hsT6jJhQKPr9uQwbuhnIcx6+bhKouXbtrmPWZsHF8
-zLUHwY1cvcQm2qitQxsYCZm1a65PWSIAX9P4s+GUfNVz9p2dL0q3TYDH8mDJBjWv
-CK1KDEfko6PsY4AHrSa13aNy7IImcOn2J5+/CUOonmPlKPS7CezGbfACaQMG5Zdf
-Ln4T/JnCQ6IZzFeJMwzD/RzXiwXOLc7SZ5mIADxbP+4rL9ByOG1BJy/rXIV9YbJe
-IQqO5Zu7uen0NjPDOQP/Uy8RF4HItglOTrO8Cjr/95gQ4QJKxLzQyq5NzEGJu1h8
-BgQWgH1vDAKWp04BZb2jzQtLMtmwiA==
-=hQwi
------END PGP SIGNATURE-----
-
---Bu8it7iiRSEf40bY--
+Also note that all of this is not an issue until we start to add
+children under the device passed to device_set_wakeup_enable() and
+friends so maybe that is not a good idea after all?
