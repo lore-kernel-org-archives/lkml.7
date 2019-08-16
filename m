@@ -2,163 +2,89 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE428C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D968C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D99206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3FF206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 21:48:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HQJ3its2"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="mrS+amgv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfHPVqW (ORCPT
+        id S1727753AbfHPVsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 17:46:22 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44330 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727724AbfHPVqW (ORCPT
+        Fri, 16 Aug 2019 17:48:25 -0400
+Received: from mail-ot1-f54.google.com ([209.85.210.54]:44365 "EHLO
+        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727654AbfHPVsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 17:46:22 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c81so3752330pfc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 14:46:21 -0700 (PDT)
+        Fri, 16 Aug 2019 17:48:24 -0400
+Received: by mail-ot1-f54.google.com with SMTP id w4so10836671ote.11
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 14:48:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=gmTcK20VFhzJpyAdUQqTgMwvx7152jQ/nCZquZvlO1o=;
-        b=HQJ3its2EmWWKhCPXHYf1fOoQVe8SOjbDSSmHwnVxdCo+kQhFYinW7HtHvK3WzjIF/
-         k5CD4X+mMyNN8SthDXt614QIGAUR0jKy485gdloJZT1+s/qUgr1Rw4fvDQA2qFGXjOYR
-         PtyaZV9ab4vrwR3o3MkcSCDPodLfRhHj1T2ts=
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LyElFB/DQKr6Gizru8u06ztJ06NwMdbnhXlNaM4nxfY=;
+        b=mrS+amgv8MUZtXXjJgioy8ife407MwfpV3HzSJJM97stHaySnNcwdMkTrTmdO42TYK
+         mUXUzfAuYL56dOpVKrZt05dICfv+fI8pIKUkLoB5gQS7fIMA6VnmaZtqpu9yzur2D52u
+         LBrXk8ygWWjZ4FpncAY6ObVGddD32Crqr5bzzOhGaPJ93LP4y7Z4pFxkMRd6W/qhzGfa
+         PVa4MQVGxMg4/5XN3/SAYycOiedKl5K2505hnWWZdBfrl4KYNov4c0Gpp35IRPTqtVMZ
+         vK/09rXwd8ggXEKI8s7m22aN7Zk8QYG7+wbSQ7oyz0uPAgtAeOWiv4nUyaMJzO4hBrPb
+         czfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=gmTcK20VFhzJpyAdUQqTgMwvx7152jQ/nCZquZvlO1o=;
-        b=tH8+rCdkXEx57AcDaDiU+H04P7A9R/Hqpbw4/4aTJ+GyqlvXDn3ViTpZTFbErrvtNM
-         ZQkBGbnd4p8eE7G3ylSOIR7hYit07sD5LMnaFOaJUh5mLhMqUkSeunpMBhwauYRssvGm
-         t9p6ns8NlgXlvzfVx7RrUKou6LeZlnxn/ybTiQJyo7VNUnIjcA58jHZg8JIOBqxtcZqk
-         BbbY8nIG9vFe0PXMLyLwmI+RaDDXDGwX+cxELENFirlo5lgdwMO3UaUJ7rGapjQThNkB
-         a26AKVmJnKokXsFl2OlftKUDSfet8rllMxrRgLZ3ro3NOHcMJC1/lIVJ7kHXuQ4ZGSFc
-         EcmQ==
-X-Gm-Message-State: APjAAAVxWBHL7au87paa7b4TgRcJMQSbYNtz1ksG35/+3K3ddT7TIOxn
-        rxw5Fk136FBYjsF0RoZQbsr4DQ==
-X-Google-Smtp-Source: APXvYqxC6w3p8TV+4amz1vlQWiAeDhF3PHlfUQeUspUO6UzVAEuOj5UgY2ux36waJExqyv5uWobG7A==
-X-Received: by 2002:a63:eb51:: with SMTP id b17mr9230742pgk.384.1565991981451;
-        Fri, 16 Aug 2019 14:46:21 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id e24sm6220844pgk.21.2019.08.16.14.46.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 14:46:20 -0700 (PDT)
-Message-ID: <5d57242c.1c69fb81.bba86.14f6@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LyElFB/DQKr6Gizru8u06ztJ06NwMdbnhXlNaM4nxfY=;
+        b=kdX2ROguGA20otASIzDU329leOcsbjgl79ExDJy0RhLWfMdv7sa0vshFOu4L5EjICQ
+         US7kNaIkfRhAVhCUdyPSF4Er4jgxlMUg4SIrC3M4uFHgaaoZsALJxHXZvWL+GDpmPWSC
+         JmJ6OkCMtujY2uawT/8yFUEq9Utc4Uzc5xKpEUoOj65sBLppvrCHypDrJoE3HPsDf203
+         FA0zluX6RMpY+UtdONX+po0UBzVGBh/DfLuwe/1PMhJl2uPaVrZbXbtkMYrXkHVy6N19
+         LDv2899zYCkBzbqVtV0Zjs5X4j7hQ8SSrBRmBsj5ttQAjlAdt77q0PDxUdIlReEt/Fel
+         FPTg==
+X-Gm-Message-State: APjAAAWry3gxHALd0bMxS4dmMaBsiQaqbXWp6RlDS1MD3GkfddijKE4B
+        GiQQAlzXN0OpcuLkUTLKcr+u35CR97EG1f+DCe3JNg==
+X-Google-Smtp-Source: APXvYqyDpwbVXFlvMymCKEQxblapyLZJ2uTf8kCcMCHUlKmdPHMPy2wDX6J/Yo2/rZ+OzbU3y2tiV4thup6lKoyweVk=
+X-Received: by 2002:a05:6830:1e05:: with SMTP id s5mr8439514otr.247.1565992103975;
+ Fri, 16 Aug 2019 14:48:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CANA+-vB2_pYhYq5cmpyhiwJR3TuO+-2iBPehSXSjun-HN2wb5A@mail.gmail.com>
-References: <20190816145602.231163-1-swboyd@chromium.org> <CANA+-vB2_pYhYq5cmpyhiwJR3TuO+-2iBPehSXSjun-HN2wb5A@mail.gmail.com>
-Subject: Re: [PATCH] PM / wakeup: Register wakeup class kobj after device is added
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>, Qian Cai <cai@lca.pw>
-To:     Tri Vo <trong@android.com>
-User-Agent: alot/0.8.1
-Date:   Fri, 16 Aug 2019 14:46:19 -0700
+References: <1565991345.8572.28.camel@lca.pw>
+In-Reply-To: <1565991345.8572.28.camel@lca.pw>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 16 Aug 2019 14:48:11 -0700
+Message-ID: <CAPcyv4i9VFLSrU75U0gQH6K2sz8AZttqvYidPdDcS7sU2SFaCA@mail.gmail.com>
+Subject: Re: devm_memremap_pages() triggers a kasan_add_zero_shadow() warning
+To:     Qian Cai <cai@lca.pw>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Tri Vo (2019-08-16 14:27:35)
-> On Fri, Aug 16, 2019 at 7:56 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
-> > index 1b9c281cbe41..27ee00f50bd7 100644
-> > --- a/drivers/base/power/sysfs.c
-> > +++ b/drivers/base/power/sysfs.c
-> > @@ -5,6 +5,7 @@
-> >  #include <linux/export.h>
-> >  #include <linux/pm_qos.h>
-> >  #include <linux/pm_runtime.h>
-> > +#include <linux/pm_wakeup.h>
-> >  #include <linux/atomic.h>
-> >  #include <linux/jiffies.h>
-> >  #include "power.h"
-> > @@ -661,14 +662,21 @@ int dpm_sysfs_add(struct device *dev)
-> >                 if (rc)
-> >                         goto err_runtime;
-> >         }
-> > +       if (dev->power.wakeup) {
->=20
-> This conditional checks for the situation when wakeup source
-> registration have been previously attempted, but failed at
-> wakeup_source_sysfs_add(). My concern is that it's not easy to
-> understand what this check does without knowing exactly what
-> device_wakeup_enable() does to dev->power.wakeup before we reach this
-> point.
+On Fri, Aug 16, 2019 at 2:36 PM Qian Cai <cai@lca.pw> wrote:
+>
+> Every so often recently, booting Intel CPU server on linux-next triggers this
+> warning. Trying to figure out if  the commit 7cc7867fb061
+> ("mm/devm_memremap_pages: enable sub-section remap") is the culprit here.
+>
+> # ./scripts/faddr2line vmlinux devm_memremap_pages+0x894/0xc70
+> devm_memremap_pages+0x894/0xc70:
+> devm_memremap_pages at mm/memremap.c:307
 
-Oh, actually this is wrong. It should be a check for
-dev->power.wakeup->dev being non-NULL. That's the variable that's set by
-wakeup_source_sysfs_add() upon success. So I should make it:
+Previously the forced section alignment in devm_memremap_pages() would
+cause the implementation to never violate the KASAN_SHADOW_SCALE_SIZE
+(12K on x86) constraint.
 
-	if (dev->power.wakeup && !dev->power.wakeup->dev)
+Can you provide a dump of /proc/iomem? I'm curious what resource is
+triggering such a small alignment granularity.
 
-And there's the problem that CONFIG_PM_SLEEP could be unset. Let me fix
-it up with a new inline function like device_has_wakeup_dev().
-
->=20
-> > +               rc =3D wakeup_source_sysfs_add(dev, dev->power.wakeup);
-> > +               if (rc)
-> > +                       goto err_wakeup;
-> > +       }
-> >         if (dev->power.set_latency_tolerance) {
-> >                 rc =3D sysfs_merge_group(&dev->kobj,
-> >                                        &pm_qos_latency_tolerance_attr_g=
-roup);
-> >                 if (rc)
-> > -                       goto err_wakeup;
-> > +                       goto err_wakeup_source;
-> >         }
-> >         return 0;
-> >
-> > + err_wakeup_source:
-> > +       wakeup_source_sysfs_remove(dev->power.wakeup);
-> >   err_wakeup:
-> >         sysfs_unmerge_group(&dev->kobj, &pm_wakeup_attr_group);
-> >   err_runtime:
-> > diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-> > index f7925820b5ca..5817b51d2b15 100644
-> > --- a/drivers/base/power/wakeup.c
-> > +++ b/drivers/base/power/wakeup.c
-> > @@ -220,10 +220,12 @@ struct wakeup_source *wakeup_source_register(stru=
-ct device *dev,
-> >
-> >         ws =3D wakeup_source_create(name);
-> >         if (ws) {
-> > -               ret =3D wakeup_source_sysfs_add(dev, ws);
-> > -               if (ret) {
-> > -                       wakeup_source_free(ws);
-> > -                       return NULL;
-> > +               if (!dev || device_is_registered(dev)) {
->=20
-> Is there a possible race condition here? If dev->power.wakeup check in
-> dpm_sysfs_add() is done at the same time as device_is_registered(dev)
-> check here, then wakeup_source_sysfs_add() won't ever be called?
-
-The same race exists for device_set_wakeup_capable() so I didn't bother
-to try to avoid it. I suppose wakeup_source_sysfs_add() could run
-completely, allocate the device and set the name, etc., but not call
-device_add() and then we can set ws->dev and call device_add() under a
-mutex so that we keep a very small window where the wakeup class is
-published to sysfs. Or just throw a big mutex around the whole wakeup
-class creation path so that there isn't a chance of a race. But really,
-is anyone going to call device_set_wakeup_*() on a device that is also
-being added to the system? Seems unlikely.
-
->=20
-> > +                       ret =3D wakeup_source_sysfs_add(dev, ws);
-> > +                       if (ret) {
-> > +                               wakeup_source_free(ws);
+Is it truly only linux-next or does latest mainline have this issue as well?
