@@ -2,120 +2,107 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E36F1C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0B3C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F7820644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:45:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="O0xVAwPt"
+	by mail.kernel.org (Postfix) with ESMTP id 5C5732133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfHPGph (ORCPT
+        id S1726921AbfHPGqK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:45:37 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:53152 "EHLO mail.skyhub.de"
+        Fri, 16 Aug 2019 02:46:10 -0400
+Received: from ajax.cs.uga.edu ([128.192.4.6]:37036 "EHLO ajax.cs.uga.edu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbfHPGph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:45:37 -0400
-Received: from zn.tnic (p200300EC2F0A920041519BC41B2ACCA3.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9200:4151:9bc4:1b2a:cca3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 307A51EC074B;
-        Fri, 16 Aug 2019 08:45:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565937936;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=yoiKixPe5qr94uGkb8tkzi///jkObvb6JYyEAla0DjE=;
-        b=O0xVAwPtn9ffg8o8RxBw/t0wIiKzBpv0igzPdnKXaTs45O9vreIMwSE55EnGOaf+yarp3L
-        QGGogq9l8ts/nBcSxLmTD9SVcRzeUalJD5wbIYV59q46WUtckjT1/d/OspA9P4unNe0+YH
-        TP1mce8yB+bIkNWK3rUHxtuN5jW3WpY=
-Date:   Fri, 16 Aug 2019 08:46:25 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain
- asm/intel-family.h
-Message-ID: <20190816064625.GD18980@zn.tnic>
-References: <20190814234030.30817-1-tony.luck@intel.com>
- <20190815075822.GC15313@zn.tnic>
- <20190815172159.GA4935@agluck-desk2.amr.corp.intel.com>
- <20190815175455.GJ15313@zn.tnic>
- <20190815183055.GA6847@agluck-desk2.amr.corp.intel.com>
- <alpine.DEB.2.21.1908152217070.1908@nanos.tec.linutronix.de>
- <20190815224704.GA10025@agluck-desk2.amr.corp.intel.com>
+        id S1725945AbfHPGqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 02:46:09 -0400
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+        (authenticated bits=0)
+        by ajax.cs.uga.edu (8.14.4/8.14.4) with ESMTP id x7G6k6pN009281
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 16 Aug 2019 02:46:08 -0400
+Received: by mail-lj1-f176.google.com with SMTP id z17so4399867ljz.0;
+        Thu, 15 Aug 2019 23:46:07 -0700 (PDT)
+X-Gm-Message-State: APjAAAXU+xsv5iWCf0J6nXJxyWFJqG9P2pMuefQplCDajAN3QI5JxbMj
+        KirCYl7CcIVicVOaC2DpuCInZAvQ7wU1MF4tojg=
+X-Google-Smtp-Source: APXvYqwVudRRgcmnjQiJ+5E7lLs9w4XgPnuG0DOW6TnvkX82j7Yeh0LM/NVK+iIi6fGbne/N8pYFf6O27SBOoihgRbA=
+X-Received: by 2002:a2e:7c12:: with SMTP id x18mr4759455ljc.100.1565937966576;
+ Thu, 15 Aug 2019 23:46:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190815224704.GA10025@agluck-desk2.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1565936603-7046-1-git-send-email-wenwen@cs.uga.edu> <f6ddbed6-581c-cf0b-515a-52f9fb4f4fa2@ti.com>
+In-Reply-To: <f6ddbed6-581c-cf0b-515a-52f9fb4f4fa2@ti.com>
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+Date:   Fri, 16 Aug 2019 02:45:29 -0400
+X-Gmail-Original-Message-ID: <CAAa=b7duUGPPKDKTn8yeX=8yVB99ftw_u6N_4j0K5DKj0vtxYQ@mail.gmail.com>
+Message-ID: <CAAa=b7duUGPPKDKTn8yeX=8yVB99ftw_u6N_4j0K5DKj0vtxYQ@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: ti: Fix a memory leak bug
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Wenwen Wang <wenwen@cs.uga.edu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 03:47:05PM -0700, Luck, Tony wrote:
-> On Thu, Aug 15, 2019 at 10:22:07PM +0200, Thomas Gleixner wrote:
-> > On Thu, 15 Aug 2019, Luck, Tony wrote:
-> > > On Thu, Aug 15, 2019 at 07:54:55PM +0200, Borislav Petkov wrote:
-> > So we should document the list of valid and usable ones and either fixup
-> > broken ones or document that they are historic ballast and not to be used
-> > for new ones. Otherwise you end up with the same discussions again.
-> 
-> This version is a lot more specific (but still allows future
-> flexibility). I see a world of bike-shedding if I try to come
-> up with a naming scheme to fix previous questionable naming
-> choices ... I'm not going to open that can of worms.
-> 
-> -Tony
-> 
-> From 093bf8cd02f4c7a3fa256c2cf7302014190e2840 Mon Sep 17 00:00:00 2001
-> From: Tony Luck <tony.luck@intel.com>
-> Date: Thu, 15 Aug 2019 11:16:24 -0700
-> Subject: [PATCH] x86/cpu: Explain Intel model naming convention
-> 
-> Dave Hansen spelled out the rules in an e-mail:
-> 
->  https://lkml.kernel.org/r/91eefbe4-e32b-d762-be4d-672ff915db47@intel.com
-> 
-> Copy those right into the <asm/intel-family.h> file to
-> make it easy for people to find them.
-> 
-> Suggested-by: Borislav Petkov <bp@alien8.de>
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
->  arch/x86/include/asm/intel-family.h | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-> index 0278aa66ef62..fe7c205233f1 100644
-> --- a/arch/x86/include/asm/intel-family.h
-> +++ b/arch/x86/include/asm/intel-family.h
-> @@ -11,6 +11,21 @@
->   * While adding a new CPUID for a new microarchitecture, add a new
->   * group to keep logically sorted out in chronological order. Within
->   * that group keep the CPUID for the variants sorted by model number.
-> + *
-> + * The defined symbol names have the following form:
-> + *	INTEL_FAM6{OPTFAMILY}_{MICROARCH}{OPTDIFF}
+On Fri, Aug 16, 2019 at 2:42 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>
+>
+>
+> On 16/08/2019 9.23, Wenwen Wang wrote:
+> > In ti_dra7_xbar_probe(), 'rsv_events' is allocated through kcalloc(). Then
+> > of_property_read_u32_array() is invoked to search for the property.
+> > However, if this process fails, 'rsv_events' is not deallocated, leading to
+> > a memory leak bug. To fix this issue, free 'rsv_events' before returning
+> > the error.
+>
+> Can you change the subject to:
+> "dmaengine: ti: dma-crossbar: Fix a memory leak bug" ?
 
-I think you want to have the underscores in the template:
+No problem. I will rework the patch. Thanks for your suggestion!
 
-	INTEL_FAM6_{OPTFAMILY}_{MICROARCH}_{OPTDIFF}
+Wenwen
 
-but no need to resend if this is the only issue - I'll fix it up when
-applying.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+>
+> Otherwise: Thank you, and
+> Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>
+> >
+> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> > ---
+> >  drivers/dma/ti/dma-crossbar.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
+> > index ad2f0a4..f255056 100644
+> > --- a/drivers/dma/ti/dma-crossbar.c
+> > +++ b/drivers/dma/ti/dma-crossbar.c
+> > @@ -391,8 +391,10 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
+> >
+> >               ret = of_property_read_u32_array(node, pname, (u32 *)rsv_events,
+> >                                                nelm * 2);
+> > -             if (ret)
+> > +             if (ret) {
+> > +                     kfree(rsv_events);
+> >                       return ret;
+> > +             }
+> >
+> >               for (i = 0; i < nelm; i++) {
+> >                       ti_dra7_xbar_reserve(rsv_events[i][0], rsv_events[i][1],
+> >
+>
+> - Péter
+>
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
