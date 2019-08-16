@@ -2,32 +2,32 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B732EC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC827C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 944CA206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B78C32133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfHPITI (ORCPT
+        id S1726917AbfHPITQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:19:08 -0400
-Received: from mga17.intel.com ([192.55.52.151]:16899 "EHLO mga17.intel.com"
+        Fri, 16 Aug 2019 04:19:16 -0400
+Received: from mga11.intel.com ([192.55.52.93]:1567 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726575AbfHPITI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:19:08 -0400
+        id S1726575AbfHPITQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 04:19:16 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 01:19:07 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 01:19:15 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
-   d="scan'208";a="352483421"
+   d="scan'208";a="179617797"
 Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga005.jf.intel.com with ESMTP; 16 Aug 2019 01:19:03 -0700
+  by orsmga003.jf.intel.com with ESMTP; 16 Aug 2019 01:19:11 -0700
 From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
 To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
         tony.luck@intel.com, x86@kernel.org
@@ -36,36 +36,44 @@ Cc:     andriy.shevchenko@intel.com, alan@linux.intel.com,
         linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
         cheol.yong.kim@intel.com, rahul.tanwar@intel.com,
         Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v2 0/3] x86/cpu: Add new Airmont CPU model
-Date:   Fri, 16 Aug 2019 16:18:56 +0800
-Message-Id: <cover.1565940653.git.rahul.tanwar@linux.intel.com>
+Subject: [PATCH v2 1/3] x86/cpu: Use constant definitions for CPU type
+Date:   Fri, 16 Aug 2019 16:18:57 +0800
+Message-Id: <f7a0e142faa953a53d5f81f78055e1b3c793b134.1565940653.git.rahul.tanwar@linux.intel.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <cover.1565940653.git.rahul.tanwar@linux.intel.com>
+References: <cover.1565940653.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <cover.1565940653.git.rahul.tanwar@linux.intel.com>
+References: <cover.1565940653.git.rahul.tanwar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A forthcoming product uses a new variant of Atom Airmont CPU model.
-This series adds support for this new CPU model.
+Replace direct values usage with constant definitions when access CPU models.
 
-Patches are baselined upon Linux 5.3-rc4 at below Git tree:
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
+Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+---
+ arch/x86/kernel/cpu/intel.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-v2:
-* Address review concerns about incorrect patch prefixes & redundant comments.
-* Improve summary in cover letter and commit messages.
-
-Rahul Tanwar (3):
-  x86/cpu: Use constant definitions for CPU type
-  x86/cpu: Add new Intel Atom CPU model name
-  x86/cpu: Update init data for new Atom CPU model
-
- arch/x86/include/asm/intel-family.h | 1 +
- arch/x86/kernel/cpu/common.c        | 1 +
- arch/x86/kernel/cpu/intel.c         | 7 ++++---
- arch/x86/kernel/tsc_msr.c           | 5 +++++
- 4 files changed, 11 insertions(+), 3 deletions(-)
-
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 8d6d92ebeb54..66de4b84c369 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -265,9 +265,9 @@ static void early_init_intel(struct cpuinfo_x86 *c)
+ 	/* Penwell and Cloverview have the TSC which doesn't sleep on S3 */
+ 	if (c->x86 == 6) {
+ 		switch (c->x86_model) {
+-		case 0x27:	/* Penwell */
+-		case 0x35:	/* Cloverview */
+-		case 0x4a:	/* Merrifield */
++		case INTEL_FAM6_ATOM_SALTWELL_MID:
++		case INTEL_FAM6_ATOM_SALTWELL_TABLET:
++		case INTEL_FAM6_ATOM_SILVERMONT_MID:
+ 			set_cpu_cap(c, X86_FEATURE_NONSTOP_TSC_S3);
+ 			break;
+ 		default:
 -- 
 2.11.0
 
