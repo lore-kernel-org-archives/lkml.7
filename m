@@ -7,60 +7,56 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE30EC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F54C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7DD2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 305202077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:50:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="fapYZJ71"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="5EVivdH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfHPUtu (ORCPT
+        id S1727716AbfHPUuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 16:49:50 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52651 "EHLO
+        Fri, 16 Aug 2019 16:50:05 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:50885 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfHPUtt (ORCPT
+        with ESMTP id S1727589AbfHPUuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 16:49:49 -0400
+        Fri, 16 Aug 2019 16:50:05 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GKnBfE2958821
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7GKnvBK2958901
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 16 Aug 2019 13:49:11 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GKnBfE2958821
+        Fri, 16 Aug 2019 13:49:57 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7GKnvBK2958901
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565988552;
-        bh=10mtcsY2ffK8RmrhVVBqvEUtO1NzktdPA6RjgeVbM0Q=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=fapYZJ71E3AOJrYEJDRdRZ/sFnubAHz/zIggy+OcjqXIRUQH3ma3IMpz1N4RBetAS
-         jAMw9VVjeNEsyHyzBg6wNop/paGaa4OyHpXQB6E43K41+m+yTxT4K6OWFcB6UKgVGW
-         d5owq38ICnscW7XFyypOY9mj0KuG3yE/Q2iGpAnciN0R7kDHhVrhXEW7E8gcW/ETlx
-         fMCWjDlMSwnXa/jTYZaMc8sPXfd4xDPzrjOVGWi7rwC/ADJRp7R/wdrN83v6YnZbq5
-         BjH8X/aswb1RI607DK4LIw0qW+9J7LJP/I5Zzmrhcvqi6adMRGe1zRifyiP8aYePsX
-         Iwed2OqESDwCw==
+        s=2019071901; t=1565988597;
+        bh=YVELSXVdFXEpDCXIROX12BRXFS3DA40uo7JL2ukPZjI=;
+        h=Date:From:Cc:Reply-To:To:Subject:From;
+        b=5EVivdH1YUe+lQ5H8IsCWPMTGUd2u2UxqDRhF6s1NYNJMGlflE1Jq7l0MriAuR5xB
+         MrLUfpVkRG18PW90czE5FQpQLZYtRjh8lYBzUDdJ2gkkj64UjgTgIAjMB3TlGT7W2M
+         gC9Q/uIcANKB68CzXnfqeF6tX7fquA5HuJf3MEdpPBK824v3ETtI80GTCSTF4QQYLk
+         DMuHNWhjUh84Bw+W7ScXHHm4HvyNi82l2yutJ7dhul8xGHI8zWbDC8Vs3Z3FU9A+yg
+         WNPRngkQpooUEsIIe47tkofEBWdip4uWEyh5LXWuXTx+oy9vpnC47ly2JhADQOo2vu
+         0iNiXRZSj9wOg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GKnBZp2958816;
-        Fri, 16 Aug 2019 13:49:11 -0700
-Date:   Fri, 16 Aug 2019 13:49:11 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7GKnuKm2958898;
+        Fri, 16 Aug 2019 13:49:56 -0700
+Date:   Fri, 16 Aug 2019 13:49:56 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Haiyan Song <tipbot@zytor.com>
-Message-ID: <tip-11e54d35e6d5c3533b706753224ef38ea235684b@git.kernel.org>
-Cc:     mingo@kernel.org, acme@redhat.com, haiyanx.song@intel.com,
-        ak@linux.intel.com, tglx@linutronix.de, peterz@infradead.org,
-        yao.jin@intel.com, jolsa@kernel.org, kan.liang@linux.intel.com,
-        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-        hpa@zytor.com
-Reply-To: linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-          hpa@zytor.com, jolsa@kernel.org, kan.liang@linux.intel.com,
-          yao.jin@intel.com, peterz@infradead.org, tglx@linutronix.de,
-          haiyanx.song@intel.com, ak@linux.intel.com, acme@redhat.com,
-          mingo@kernel.org
-In-Reply-To: <20190815035942.30602-1-haiyanx.song@intel.com>
-References: <20190815035942.30602-1-haiyanx.song@intel.com>
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-f1oo0ufdhrkx6nhy2lj1ierm@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, namhyung@kernel.org, acme@redhat.com,
+        hpa@zytor.com, jolsa@kernel.org, fweimer@redhat.com,
+        adrian.hunter@intel.com, mingo@kernel.org, tglx@linutronix.de,
+        wcohen@redhat.com
+Reply-To: wcohen@redhat.com, tglx@linutronix.de, mingo@kernel.org,
+          adrian.hunter@intel.com, fweimer@redhat.com, jolsa@kernel.org,
+          hpa@zytor.com, acme@redhat.com, namhyung@kernel.org,
+          linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf vendor events intel: Add Tremontx event file
- v1.02
-Git-Commit-ID: 11e54d35e6d5c3533b706753224ef38ea235684b
+Subject: [tip:perf/core] perf script: Allow specifying event to switch on
+ processing of other events
+Git-Commit-ID: f90a24171a8179a29e5e1532fd5bb94e59b5380e
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,1007 +70,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  11e54d35e6d5c3533b706753224ef38ea235684b
-Gitweb:     https://git.kernel.org/tip/11e54d35e6d5c3533b706753224ef38ea235684b
-Author:     Haiyan Song <haiyanx.song@intel.com>
-AuthorDate: Thu, 15 Aug 2019 11:59:42 +0800
+Commit-ID:  f90a24171a8179a29e5e1532fd5bb94e59b5380e
+Gitweb:     https://git.kernel.org/tip/f90a24171a8179a29e5e1532fd5bb94e59b5380e
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Wed, 14 Aug 2019 16:20:13 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Thu, 15 Aug 2019 12:04:04 -0300
+CommitDate: Thu, 15 Aug 2019 12:23:58 -0300
 
-perf vendor events intel: Add Tremontx event file v1.02
+perf script: Allow specifying event to switch on processing of other events
 
-Add a Intel event file for perf.
+Sometime we want to only consider events after something happens, so
+allow discarding events till such events is found, e.g.:
 
-Signed-off-by: Haiyan Song <haiyanx.song@intel.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
+Record all scheduler tracepoints and the sys_enter_nanosleep syscall
+event for the 'sleep 1' workload:
+
+  # perf record -e sched:*,syscalls:sys_enter_nanosleep sleep 1
+  [ perf record: Woken up 31 times to write data ]
+  [ perf record: Captured and wrote 0.032 MB perf.data (10 samples) ]
+  #
+
+So we have these events in the generated perf data file:
+
+  # perf evlist
+  sched:sched_kthread_stop
+  sched:sched_kthread_stop_ret
+  sched:sched_waking
+  sched:sched_wakeup
+  sched:sched_wakeup_new
+  sched:sched_switch
+  sched:sched_migrate_task
+  sched:sched_process_free
+  sched:sched_process_exit
+  sched:sched_wait_task
+  sched:sched_process_wait
+  sched:sched_process_fork
+  sched:sched_process_exec
+  sched:sched_stat_wait
+  sched:sched_stat_sleep
+  sched:sched_stat_iowait
+  sched:sched_stat_blocked
+  sched:sched_stat_runtime
+  sched:sched_pi_setprio
+  sched:sched_move_numa
+  sched:sched_stick_numa
+  sched:sched_swap_numa
+  sched:sched_wake_idle_without_ipi
+  syscalls:sys_enter_nanosleep
+  # Tip: use 'perf evlist --trace-fields' to show fields for tracepoint events
+  #
+
+Then show all of the events that actually took place in this 'perf record' session:
+
+  # perf script
+          :13637 13637 [002] 108237.581529:            sched:sched_waking: comm=perf pid=13638 prio=120 target_cpu=001
+          :13637 13637 [002] 108237.581537:            sched:sched_wakeup: perf:13638 [120] success=1 CPU:001
+           sleep 13638 [001] 108237.581992:      sched:sched_process_exec: filename=/usr/bin/sleep pid=13638 old_pid=13638
+           sleep 13638 [001] 108237.582286:  syscalls:sys_enter_nanosleep: rqtp: 0x7fff1948ac40, rmtp: 0x00000000
+           sleep 13638 [001] 108237.582289:      sched:sched_stat_runtime: comm=sleep pid=13638 runtime=578104 [ns] vruntime=202889459556 [ns]
+           sleep 13638 [001] 108237.582291:            sched:sched_switch: sleep:13638 [120] S ==> swapper/1:0 [120]
+         swapper     0 [001] 108238.582428:            sched:sched_waking: comm=sleep pid=13638 prio=120 target_cpu=001
+         swapper     0 [001] 108238.582458:            sched:sched_wakeup: sleep:13638 [120] success=1 CPU:001
+           sleep 13638 [001] 108238.582698:      sched:sched_stat_runtime: comm=sleep pid=13638 runtime=173915 [ns] vruntime=202889633471 [ns]
+           sleep 13638 [001] 108238.582782:      sched:sched_process_exit: comm=sleep pid=13638 prio=120
+  #
+
+Now lets see only the ones that took place after a certain "marker":
+
+  # perf script --switch-on syscalls:sys_enter_nanosleep
+           sleep 13638 [001] 108237.582289:      sched:sched_stat_runtime: comm=sleep pid=13638 runtime=578104 [ns] vruntime=202889459556 [ns]
+           sleep 13638 [001] 108237.582291:            sched:sched_switch: sleep:13638 [120] S ==> swapper/1:0 [120]
+         swapper     0 [001] 108238.582428:            sched:sched_waking: comm=sleep pid=13638 prio=120 target_cpu=001
+         swapper     0 [001] 108238.582458:            sched:sched_wakeup: sleep:13638 [120] success=1 CPU:001
+           sleep 13638 [001] 108238.582698:      sched:sched_stat_runtime: comm=sleep pid=13638 runtime=173915 [ns] vruntime=202889633471 [ns]
+           sleep 13638 [001] 108238.582782:      sched:sched_process_exit: comm=sleep pid=13638 prio=120
+  #
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Florian Weimer <fweimer@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190815035942.30602-1-haiyanx.song@intel.com
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: William Cohen <wcohen@redhat.com>
+Link: https://lkml.kernel.org/n/tip-f1oo0ufdhrkx6nhy2lj1ierm@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/x86/mapfile.csv         |   1 +
- tools/perf/pmu-events/arch/x86/tremontx/cache.json | 111 ++++++
- .../pmu-events/arch/x86/tremontx/frontend.json     |  26 ++
- .../perf/pmu-events/arch/x86/tremontx/memory.json  |  26 ++
- tools/perf/pmu-events/arch/x86/tremontx/other.json |  26 ++
- .../pmu-events/arch/x86/tremontx/pipeline.json     | 111 ++++++
- .../arch/x86/tremontx/uncore-memory.json           |  73 ++++
- .../pmu-events/arch/x86/tremontx/uncore-other.json | 431 +++++++++++++++++++++
- .../pmu-events/arch/x86/tremontx/uncore-power.json |  11 +
- .../arch/x86/tremontx/virtual-memory.json          |  86 ++++
- 10 files changed, 902 insertions(+)
+ tools/perf/Documentation/perf-script.txt |  3 +++
+ tools/perf/builtin-script.c              | 26 ++++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index b90e5fec2f32..745ced083844 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -35,4 +35,5 @@ GenuineIntel-6-55-[01234],v1,skylakex,core
- GenuineIntel-6-55-[56789ABCDEF],v1,cascadelakex,core
- GenuineIntel-6-7D,v1,icelake,core
- GenuineIntel-6-7E,v1,icelake,core
-+GenuineIntel-6-86,v1,tremontx,core
- AuthenticAMD-23-[[:xdigit:]]+,v1,amdfam17h,core
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/cache.json b/tools/perf/pmu-events/arch/x86/tremontx/cache.json
-new file mode 100644
-index 000000000000..f88040171b4d
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/tremontx/cache.json
-@@ -0,0 +1,111 @@
-+[
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts cacheable memory requests that miss in the the Last Level Cache.  Requests include Demand Loads, Reads for Ownership(RFO), Instruction fetches and L1 HW prefetches. If the platform has an L3 cache, last level cache is the L3, otherwise it is the L2.",
-+        "EventCode": "0x2e",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x41",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "LONGEST_LAT_CACHE.MISS",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Counts memory requests originating from the core that miss in the last level cache. If the platform has an L3 cache, last level cache is the L3, otherwise it is the L2."
-+    },
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts cacheable memory requests that access the Last Level Cache.  Requests include Demand Loads, Reads for Ownership(RFO), Instruction fetches and L1 HW prefetches. If the platform has an L3 cache, last level cache is the L3, otherwise it is the L2.",
-+        "EventCode": "0x2e",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x4f",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "LONGEST_LAT_CACHE.REFERENCE",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Counts memory requests originating from the core that reference a cache line in the last level cache. If the platform has an L3 cache, last level cache is the L3, otherwise it is the L2."
-+    },
-+    {
-+        "PEBS": "1",
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts the number of load uops retired. This event is Precise Event capable",
-+        "EventCode": "0xd0",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x81",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "MEM_UOPS_RETIRED.ALL_LOADS",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Counts the number of load uops retired.",
-+        "Data_LA": "1"
-+    },
-+    {
-+        "PEBS": "1",
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts the number of store uops retired. This event is Precise Event capable",
-+        "EventCode": "0xd0",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x82",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "MEM_UOPS_RETIRED.ALL_STORES",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Counts the number of store uops retired.",
-+        "Data_LA": "1"
-+    },
-+    {
-+        "PEBS": "1",
-+        "CollectPEBSRecord": "2",
-+        "EventCode": "0xd1",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "MEM_LOAD_UOPS_RETIRED.L1_HIT",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Counts the number of load uops retired that hit the level 1 data cache",
-+        "Data_LA": "1"
-+    },
-+    {
-+        "PEBS": "1",
-+        "CollectPEBSRecord": "2",
-+        "EventCode": "0xd1",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x2",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "MEM_LOAD_UOPS_RETIRED.L2_HIT",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Counts the number of load uops retired that hit in the level 2 cache",
-+        "Data_LA": "1"
-+    },
-+    {
-+        "PEBS": "1",
-+        "CollectPEBSRecord": "2",
-+        "EventCode": "0xd1",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x4",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "MEM_LOAD_UOPS_RETIRED.L3_HIT",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Counts the number of load uops retired that miss in the level 3 cache"
-+    },
-+    {
-+        "PEBS": "1",
-+        "CollectPEBSRecord": "2",
-+        "EventCode": "0xd1",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x8",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "MEM_LOAD_UOPS_RETIRED.L1_MISS",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Counts the number of load uops retired that miss in the level 1 data cache",
-+        "Data_LA": "1"
-+    },
-+    {
-+        "PEBS": "1",
-+        "CollectPEBSRecord": "2",
-+        "EventCode": "0xd1",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x10",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "MEM_LOAD_UOPS_RETIRED.L2_MISS",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Counts the number of load uops retired that miss in the level 2 cache",
-+        "Data_LA": "1"
-+    }
-+]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/frontend.json b/tools/perf/pmu-events/arch/x86/tremontx/frontend.json
-new file mode 100644
-index 000000000000..73b0a1ed5756
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/tremontx/frontend.json
-@@ -0,0 +1,26 @@
-+[
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts requests to the Instruction Cache (ICache)  for one or more bytes in an ICache Line and that cache line is not in the ICache (miss).  The event strives to count on a cache line basis, so that multiple accesses which miss in a single cache line count as one ICACHE.MISS.  Specifically, the event counts when straight line code crosses the cache line boundary, or when a branch target is to a new line, and that cache line is not in the ICache.",
-+        "EventCode": "0x80",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x2",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "ICACHE.MISSES",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Counts requests to the Instruction Cache (ICache) for one or more bytes in a cache line and they do not hit in the ICache (miss)."
-+    },
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts requests to the Instruction Cache (ICache) for one or more bytes in an ICache Line.  The event strives to count on a cache line basis, so that multiple fetches to a single cache line count as one ICACHE.ACCESS.  Specifically, the event counts when accesses from straight line code crosses the cache line boundary, or when a branch target is to a new line.",
-+        "EventCode": "0x80",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x3",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "ICACHE.ACCESSES",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Counts requests to the Instruction Cache (ICache) for one or more bytes cache Line."
-+    }
-+]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/memory.json b/tools/perf/pmu-events/arch/x86/tremontx/memory.json
-new file mode 100644
-index 000000000000..65469e84f35b
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/tremontx/memory.json
-@@ -0,0 +1,26 @@
-+[
-+    {
-+        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "EventCode": "0XB7",
-+        "MSRValue": "0x000000003F04000001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads that was not supplied by the L3 cache.",
-+        "Offcore": "1"
-+    },
-+    {
-+        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "EventCode": "0XB7",
-+        "MSRValue": "0x000000003F04000002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OCR.DEMAND_RFO.L3_MISS",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand reads for ownership (RFO) requests and software based prefetches for exclusive ownership (PREFETCHW) that was not supplied by the L3 cache.",
-+        "Offcore": "1"
-+    }
-+]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/other.json b/tools/perf/pmu-events/arch/x86/tremontx/other.json
-new file mode 100644
-index 000000000000..85bf3c8f3914
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/tremontx/other.json
-@@ -0,0 +1,26 @@
-+[
-+    {
-+        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "EventCode": "0XB7",
-+        "MSRValue": "0x000000000000010001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads that have any response type.",
-+        "Offcore": "1"
-+    },
-+    {
-+        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "EventCode": "0XB7",
-+        "MSRValue": "0x000000000000010002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand reads for ownership (RFO) requests and software based prefetches for exclusive ownership (PREFETCHW) that have any response type.",
-+        "Offcore": "1"
-+    }
-+]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/pipeline.json b/tools/perf/pmu-events/arch/x86/tremontx/pipeline.json
-new file mode 100644
-index 000000000000..05a8f6a7d9c0
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/tremontx/pipeline.json
-@@ -0,0 +1,111 @@
-+[
-+    {
-+        "PEBS": "1",
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts the number of instructions that retire. For instructions that consist of multiple uops, this event counts the retirement of the last uop of the instruction. The counter continues counting during hardware interrupts, traps, and inside interrupt handlers.  This event uses fixed counter 0.",
-+        "Counter": "32",
-+        "UMask": "0x1",
-+        "PEBScounters": "32",
-+        "EventName": "INST_RETIRED.ANY",
-+        "SampleAfterValue": "2000003",
-+        "BriefDescription": "Counts the number of instructions retired. (Fixed event)"
-+    },
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts the number of core cycles while the core is not in a halt state.  The core enters the halt state when it is running the HLT instruction. The core frequency may change from time to time. For this reason this event may have a changing ratio with regards to time.  This event uses fixed counter 1.",
-+        "Counter": "33",
-+        "UMask": "0x2",
-+        "PEBScounters": "33",
-+        "EventName": "CPU_CLK_UNHALTED.CORE",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "2000003",
-+        "BriefDescription": "Counts the number of unhalted core clock cycles. (Fixed event)"
-+    },
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts the number of reference cycles that the core is not in a halt state. The core enters the halt state when it is running the HLT instruction.  The core frequency may change from time.  This event is not affected by core frequency changes and at a fixed frequency.  This event uses fixed counter 2.",
-+        "Counter": "34",
-+        "UMask": "0x3",
-+        "PEBScounters": "34",
-+        "EventName": "CPU_CLK_UNHALTED.REF_TSC",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "2000003",
-+        "BriefDescription": "Counts the number of unhalted reference clock cycles at TSC frequency. (Fixed event)"
-+    },
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts the number of core cycles while the core is not in a halt state.  The core enters the halt state when it is running the HLT instruction. The core frequency may change from time to time. For this reason this event may have a changing ratio with regards to time.  This event uses a programmable general purpose performance counter.",
-+        "EventCode": "0x3c",
-+        "Counter": "0,1,2,3",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "CPU_CLK_UNHALTED.CORE_P",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "2000003",
-+        "BriefDescription": "Counts the number of unhalted core clock cycles."
-+    },
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts reference cycles (at TSC frequency) when core is not halted.  This event uses a programmable general purpose perfmon counter.",
-+        "EventCode": "0x3c",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "CPU_CLK_UNHALTED.REF",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "2000003",
-+        "BriefDescription": "Counts the number of unhalted reference clock cycles at TSC frequency."
-+    },
-+    {
-+        "PEBS": "1",
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts the number of instructions that retire execution. For instructions that consist of multiple uops, this event counts the retirement of the last uop of the instruction. The event continues counting during hardware interrupts, traps, and inside interrupt handlers.  This is an architectural performance event.  This event uses a Programmable general purpose perfmon counter. *This event is Precise Event capable:  The EventingRIP field in the PEBS record is precise to the address of the instruction which caused the event.",
-+        "EventCode": "0xc0",
-+        "Counter": "0,1,2,3",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "INST_RETIRED.ANY_P",
-+        "SampleAfterValue": "2000003",
-+        "BriefDescription": "Counts the number of instructions retired."
-+    },
-+    {
-+        "CollectPEBSRecord": "2",
-+        "EventCode": "0xc3",
-+        "Counter": "0,1,2,3",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "MACHINE_CLEARS.ANY",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "20003",
-+        "BriefDescription": "Counts all machine clears due to, but not limited to memory ordering, memory disambiguation, SMC, page faults and FP assist."
-+    },
-+    {
-+        "PEBS": "1",
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts branch instructions retired for all branch types. This event is Precise Event capable. This is an architectural event.",
-+        "EventCode": "0xc4",
-+        "Counter": "0,1,2,3",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Counts the number of branch instructions retired for all branch types."
-+    },
-+    {
-+        "PEBS": "1",
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts mispredicted branch instructions retired for all branch types. This event is Precise Event capable. This is an architectural event.",
-+        "EventCode": "0xc5",
-+        "Counter": "0,1,2,3",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Counts the number of mispredicted branch instructions retired."
-+    },
-+    {
-+        "CollectPEBSRecord": "2",
-+        "EventCode": "0xcd",
-+        "Counter": "0,1,2,3",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "CYCLES_DIV_BUSY.ANY",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "2000003",
-+        "BriefDescription": "Counts cycles the floating point divider or integer divider or both are busy.  Does not imply a stall waiting for either divider."
-+    }
-+]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/uncore-memory.json b/tools/perf/pmu-events/arch/x86/tremontx/uncore-memory.json
-new file mode 100644
-index 000000000000..15376f2cf052
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/tremontx/uncore-memory.json
-@@ -0,0 +1,73 @@
-+[
-+    {
-+        "BriefDescription": "read requests to memory controller. Derived from unc_m_cas_count.rd",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x04",
-+        "EventName": "LLC_MISSES.MEM_READ",
-+        "PerPkg": "1",
-+        "ScaleUnit": "64Bytes",
-+        "UMask": "0x0f",
-+        "Unit": "iMC"
-+    },
-+    {
-+        "BriefDescription": "write requests to memory controller. Derived from unc_m_cas_count.wr",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x04",
-+        "EventName": "LLC_MISSES.MEM_WRITE",
-+        "PerPkg": "1",
-+        "ScaleUnit": "64Bytes",
-+        "UMask": "0x30",
-+        "Unit": "iMC"
-+    },
-+    {
-+        "BriefDescription": "Memory controller clock ticks",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventName": "UNC_M_CLOCKTICKS",
-+        "PerPkg": "1",
-+        "Unit": "iMC"
-+    },
-+    {
-+        "BriefDescription": "Pre-charge for reads",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x02",
-+        "EventName": "UNC_M_PRE_COUNT.RD",
-+        "PerPkg": "1",
-+        "UMask": "0x04",
-+        "Unit": "iMC"
-+    },
-+    {
-+        "BriefDescription": "Pre-charge for writes",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x02",
-+        "EventName": "UNC_M_PRE_COUNT.WR",
-+        "PerPkg": "1",
-+        "UMask": "0x08",
-+        "Unit": "iMC"
-+    },
-+    {
-+        "BriefDescription": "Precharge due to read on page miss, write on page miss or PGT",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x02",
-+        "EventName": "UNC_M_PRE_COUNT.ALL",
-+        "PerPkg": "1",
-+        "UMask": "0x1c",
-+        "Unit": "iMC"
-+    },
-+    {
-+        "BriefDescription": "DRAM Precharge commands. : Precharge due to page table",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x02",
-+        "EventName": "UNC_M_PRE_COUNT.PGT",
-+        "PerPkg": "1",
-+        "PublicDescription": "DRAM Precharge commands. : Precharge due to page table : Counts the number of DRAM Precharge commands sent on this channel.",
-+        "UMask": "0x10",
-+        "Unit": "iMC"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/uncore-other.json b/tools/perf/pmu-events/arch/x86/tremontx/uncore-other.json
-new file mode 100644
-index 000000000000..6deff1fe89e3
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/tremontx/uncore-other.json
-@@ -0,0 +1,431 @@
-+[
-+    {
-+        "BriefDescription": "Uncore cache clock ticks",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventName": "UNC_CHA_CLOCKTICKS",
-+        "PerPkg": "1",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "LLC misses - Uncacheable reads (from cpu) . Derived from unc_cha_tor_inserts.ia_miss",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x35",
-+        "EventName": "LLC_MISSES.UNCACHEABLE",
-+        "Filter": "config1=0x40e33",
-+        "PerPkg": "1",
-+        "UMask": "0xC001FE01",
-+        "UMaskExt": "0xC001FE",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "MMIO reads. Derived from unc_cha_tor_inserts.ia_miss",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x35",
-+        "EventName": "LLC_MISSES.MMIO_READ",
-+        "Filter": "config1=0x40040e33",
-+        "PerPkg": "1",
-+        "UMask": "0xC001FE01",
-+        "UMaskExt": "0xC001FE",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "MMIO writes. Derived from unc_cha_tor_inserts.ia_miss",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x35",
-+        "EventName": "LLC_MISSES.MMIO_WRITE",
-+        "Filter": "config1=0x40041e33",
-+        "PerPkg": "1",
-+        "UMask": "0xC001FE01",
-+        "UMaskExt": "0xC001FE",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "Streaming stores (full cache line). Derived from unc_cha_tor_inserts.ia_miss",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x35",
-+        "EventName": "LLC_REFERENCES.STREAMING_FULL",
-+        "Filter": "config1=0x41833",
-+        "PerPkg": "1",
-+        "ScaleUnit": "64Bytes",
-+        "UMask": "0xC001FE01",
-+        "UMaskExt": "0xC001FE",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "Streaming stores (partial cache line). Derived from unc_cha_tor_inserts.ia_miss",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x35",
-+        "EventName": "LLC_REFERENCES.STREAMING_PARTIAL",
-+        "Filter": "config1=0x41a33",
-+        "PerPkg": "1",
-+        "ScaleUnit": "64Bytes",
-+        "UMask": "0xC001FE01",
-+        "UMaskExt": "0xC001FE",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "PCI Express bandwidth reading at IIO. Derived from unc_iio_data_req_of_cpu.mem_read.part0",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "LLC_MISSES.PCIE_READ",
-+        "FCMask": "0x07",
-+        "Filter": "ch_mask=0x1f",
-+        "MetricExpr": "UNC_IIO_DATA_REQ_OF_CPU.MEM_READ.PART0 +UNC_IIO_DATA_REQ_OF_CPU.MEM_READ.PART1 +UNC_IIO_DATA_REQ_OF_CPU.MEM_READ.PART2 +UNC_IIO_DATA_REQ_OF_CPU.MEM_READ.PART3",
-+        "MetricName": "LLC_MISSES.PCIE_READ",
-+        "PerPkg": "1",
-+        "PortMask": "0x01",
-+        "ScaleUnit": "4Bytes",
-+        "UMask": "0x04",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "PCI Express bandwidth writing at IIO. Derived from unc_iio_data_req_of_cpu.mem_write.part0",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "LLC_MISSES.PCIE_WRITE",
-+        "FCMask": "0x07",
-+        "Filter": "ch_mask=0x1f",
-+        "MetricExpr": "UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART0 +UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART1 +UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART2 +UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART3",
-+        "MetricName": "LLC_MISSES.PCIE_WRITE",
-+        "PerPkg": "1",
-+        "PortMask": "0x01",
-+        "ScaleUnit": "4Bytes",
-+        "UMask": "0x01",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "PCI Express bandwidth writing at IIO, part 1",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART1",
-+        "FCMask": "0x07",
-+        "PerPkg": "1",
-+        "PortMask": "0x02",
-+        "ScaleUnit": "4Bytes",
-+        "UMask": "0x01",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "PCI Express bandwidth writing at IIO, part 2",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART2",
-+        "FCMask": "0x07",
-+        "PerPkg": "1",
-+        "PortMask": "0x04",
-+        "ScaleUnit": "4Bytes",
-+        "UMask": "0x01",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "PCI Express bandwidth writing at IIO, part 3",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART3",
-+        "FCMask": "0x07",
-+        "PerPkg": "1",
-+        "PortMask": "0x08",
-+        "ScaleUnit": "4Bytes",
-+        "UMask": "0x01",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "PCI Express bandwidth reading at IIO, part 1",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_IIO_DATA_REQ_OF_CPU.MEM_READ.PART1",
-+        "FCMask": "0x07",
-+        "PerPkg": "1",
-+        "PortMask": "0x02",
-+        "ScaleUnit": "4Bytes",
-+        "UMask": "0x04",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "PCI Express bandwidth reading at IIO, part 2",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_IIO_DATA_REQ_OF_CPU.MEM_READ.PART2",
-+        "FCMask": "0x07",
-+        "PerPkg": "1",
-+        "PortMask": "0x04",
-+        "ScaleUnit": "4Bytes",
-+        "UMask": "0x04",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "PCI Express bandwidth reading at IIO, part 3",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_IIO_DATA_REQ_OF_CPU.MEM_READ.PART3",
-+        "FCMask": "0x07",
-+        "PerPkg": "1",
-+        "PortMask": "0x08",
-+        "ScaleUnit": "4Bytes",
-+        "UMask": "0x04",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "TOR Inserts; CRd misses from local IA",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_CRD",
-+        "PerPkg": "1",
-+        "PublicDescription": "TOR Inserts; Code read from local IA that misses in the snoop filter",
-+        "UMask": "0xC80FFE01",
-+        "UMaskExt": "0xC80FFE",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Inserts; CRd Pref misses from local IA",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_CRD_PREF",
-+        "PerPkg": "1",
-+        "PublicDescription": "TOR Inserts; Code read prefetch from local IA that misses in the snoop filter",
-+        "UMask": "0xC88FFE01",
-+        "UMaskExt": "0xC88FFE",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Inserts; DRd Opt misses from local IA",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_DRD_OPT",
-+        "PerPkg": "1",
-+        "PublicDescription": "TOR Inserts; Data read opt from local IA that misses in the snoop filter",
-+        "UMask": "0xC827FE01",
-+        "UMaskExt": "0xC827FE",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Inserts; DRd Opt Pref misses from local IA",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_DRD_OPT_PREF",
-+        "PerPkg": "1",
-+        "PublicDescription": "TOR Inserts; Data read opt prefetch from local IA that misses in the snoop filter",
-+        "UMask": "0xC8A7FE01",
-+        "UMaskExt": "0xC8A7FE",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Inserts; RFO misses from local IA",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_RFO",
-+        "PerPkg": "1",
-+        "PublicDescription": "TOR Inserts; Read for ownership from local IA that misses in the snoop filter",
-+        "UMask": "0xC807FE01",
-+        "UMaskExt": "0xC807FE",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Inserts; RFO pref misses from local IA",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_RFO_PREF",
-+        "PerPkg": "1",
-+        "PublicDescription": "TOR Inserts; Read for ownership prefetch from local IA that misses in the snoop filter",
-+        "UMask": "0xC887FE01",
-+        "UMaskExt": "0xC887FE",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Inserts; WCiL misses from local IA",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_WCIL",
-+        "PerPkg": "1",
-+        "PublicDescription": "TOR Inserts; Data read from local IA that misses in the snoop filter",
-+        "UMask": "0xC86FFE01",
-+        "UMaskExt": "0xC86FFE",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Inserts; WCiLF misses from local IA",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_WCILF",
-+        "PerPkg": "1",
-+        "PublicDescription": "TOR Inserts; Data read from local IA that misses in the snoop filter",
-+        "UMask": "0xC867FE01",
-+        "UMaskExt": "0xC867FE",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "Clockticks of the integrated IO (IIO) traffic controller",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x01",
-+        "EventName": "UNC_IIO_CLOCKTICKS",
-+        "PerPkg": "1",
-+        "PublicDescription": "Clockticks of the integrated IO (IIO) traffic controller",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "Data requested of the CPU : Card reading from DRAM",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_IIO_DATA_REQ_OF_CPU.MEM_READ.PART4",
-+        "FCMask": "0x07",
-+        "PerPkg": "1",
-+        "PortMask": "0x10",
-+        "PublicDescription": "Data requested of the CPU : Card reading from DRAM : Number of DWs (4 bytes) the card requests of the main die.    Includes all requests initiated by the Card, including reads and writes. : x16 card plugged in to stack, Or x8 card plugged in to Lane 0/1, Or x4 card is plugged in to slot 0",
-+        "UMask": "0x04",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "Data requested of the CPU : Card reading from DRAM",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_IIO_DATA_REQ_OF_CPU.MEM_READ.PART5",
-+        "FCMask": "0x07",
-+        "PerPkg": "1",
-+        "PortMask": "0x20",
-+        "PublicDescription": "Data requested of the CPU : Card reading from DRAM : Number of DWs (4 bytes) the card requests of the main die.    Includes all requests initiated by the Card, including reads and writes. : x4 card is plugged in to slot 1",
-+        "UMask": "0x04",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "Data requested of the CPU : Card reading from DRAM",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_IIO_DATA_REQ_OF_CPU.MEM_READ.PART6",
-+        "FCMask": "0x07",
-+        "PerPkg": "1",
-+        "PortMask": "0x40",
-+        "PublicDescription": "Data requested of the CPU : Card reading from DRAM : Number of DWs (4 bytes) the card requests of the main die.    Includes all requests initiated by the Card, including reads and writes. : x8 card plugged in to Lane 2/3, Or x4 card is plugged in to slot 1",
-+        "UMask": "0x04",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "Data requested of the CPU : Card reading from DRAM",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_IIO_DATA_REQ_OF_CPU.MEM_READ.PART7",
-+        "FCMask": "0x07",
-+        "PerPkg": "1",
-+        "PortMask": "0x80",
-+        "PublicDescription": "Data requested of the CPU : Card reading from DRAM : Number of DWs (4 bytes) the card requests of the main die.    Includes all requests initiated by the Card, including reads and writes. : x4 card is plugged in to slot 3",
-+        "UMask": "0x04",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "Data requested of the CPU : Card writing to DRAM",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART4",
-+        "FCMask": "0x07",
-+        "PerPkg": "1",
-+        "PortMask": "0x10",
-+        "PublicDescription": "Data requested of the CPU : Card writing to DRAM : Number of DWs (4 bytes) the card requests of the main die.    Includes all requests initiated by the Card, including reads and writes. : x16 card plugged in to stack, Or x8 card plugged in to Lane 0/1, Or x4 card is plugged in to slot 0",
-+        "UMask": "0x01",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "Data requested of the CPU : Card writing to DRAM",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART5",
-+        "FCMask": "0x07",
-+        "PerPkg": "1",
-+        "PortMask": "0x20",
-+        "PublicDescription": "Data requested of the CPU : Card writing to DRAM : Number of DWs (4 bytes) the card requests of the main die.    Includes all requests initiated by the Card, including reads and writes. : x4 card is plugged in to slot 1",
-+        "UMask": "0x01",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "Data requested of the CPU : Card writing to DRAM",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART6",
-+        "FCMask": "0x07",
-+        "PerPkg": "1",
-+        "PortMask": "0x40",
-+        "PublicDescription": "Data requested of the CPU : Card writing to DRAM : Number of DWs (4 bytes) the card requests of the main die.    Includes all requests initiated by the Card, including reads and writes. : x8 card plugged in to Lane 2/3, Or x4 card is plugged in to slot 1",
-+        "UMask": "0x01",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "Data requested of the CPU : Card writing to DRAM",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART7",
-+        "FCMask": "0x07",
-+        "PerPkg": "1",
-+        "PortMask": "0x80",
-+        "PublicDescription": "Data requested of the CPU : Card writing to DRAM : Number of DWs (4 bytes) the card requests of the main die.    Includes all requests initiated by the Card, including reads and writes. : x4 card is plugged in to slot 3",
-+        "UMask": "0x01",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": "Clockticks of the IO coherency tracker (IRP)",
-+        "Counter": "0,1",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x01",
-+        "EventName": "UNC_I_CLOCKTICKS",
-+        "PerPkg": "1",
-+        "PublicDescription": "Clockticks of the IO coherency tracker (IRP)",
-+        "Unit": "IRP"
-+    },
-+    {
-+        "BriefDescription": "Clockticks of the mesh to memory (M2M)",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventName": "UNC_M2M_CLOCKTICKS",
-+        "PerPkg": "1",
-+        "PublicDescription": "Clockticks of the mesh to memory (M2M)",
-+        "Unit": "M2M"
-+    },
-+    {
-+        "BriefDescription": "Clockticks of the mesh to PCI (M2P)",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0x01",
-+        "EventName": "UNC_M2P_CLOCKTICKS",
-+        "PerPkg": "1",
-+        "PublicDescription": "Clockticks of the mesh to PCI (M2P)",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Clockticks in the UBOX using a dedicated 48-bit Fixed Counter",
-+        "Counter": "FIXED",
-+        "CounterType": "PGMABLE",
-+        "EventCode": "0xff",
-+        "EventName": "UNC_U_CLOCKTICKS",
-+        "PerPkg": "1",
-+        "PublicDescription": "Clockticks in the UBOX using a dedicated 48-bit Fixed Counter",
-+        "Unit": "UBOX"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/uncore-power.json b/tools/perf/pmu-events/arch/x86/tremontx/uncore-power.json
-new file mode 100644
-index 000000000000..ea62c092b43f
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/tremontx/uncore-power.json
-@@ -0,0 +1,11 @@
-+[
-+    {
-+        "BriefDescription": "Clockticks of the power control unit (PCU)",
-+        "Counter": "0,1,2,3",
-+        "CounterType": "PGMABLE",
-+        "EventName": "UNC_P_CLOCKTICKS",
-+        "PerPkg": "1",
-+        "PublicDescription": "Clockticks of the power control unit (PCU)",
-+        "Unit": "PCU"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/virtual-memory.json b/tools/perf/pmu-events/arch/x86/tremontx/virtual-memory.json
-new file mode 100644
-index 000000000000..93e407a0f645
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/tremontx/virtual-memory.json
-@@ -0,0 +1,86 @@
-+[
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts page walks completed due to demand data loads (including SW prefetches) whose address translations missed in all TLB levels and were mapped to 4K pages.  The page walks can end with or without a page fault.",
-+        "EventCode": "0x08",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x2",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED_4K",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Page walk completed due to a demand load to a 4K page."
-+    },
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts page walks completed due to demand data loads (including SW prefetches) whose address translations missed in all TLB levels and were mapped to 2M or 4M pages.  The page walks can end with or without a page fault.",
-+        "EventCode": "0x08",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x4",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED_2M_4M",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Page walk completed due to a demand load to a 2M or 4M page."
-+    },
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts page walks completed due to demand data stores whose address translations missed in the TLB and were mapped to 4K pages.  The page walks can end with or without a page fault.",
-+        "EventCode": "0x49",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x2",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED_4K",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "2000003",
-+        "BriefDescription": "Page walk completed due to a demand data store to a 4K page."
-+    },
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts page walks completed due to demand data stores whose address translations missed in the TLB and were mapped to 2M or 4M pages.  The page walks can end with or without a page fault.",
-+        "EventCode": "0x49",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x4",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED_2M_4M",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "2000003",
-+        "BriefDescription": "Page walk completed due to a demand data store to a 2M or 4M page."
-+    },
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts the number of times the machine was unable to find a translation in the Instruction Translation Lookaside Buffer (ITLB) and new translation was filled into the ITLB.  The event is speculative in nature, but will not count translations (page walks) that are begun and not finished, or translations that are finished but not filled into the ITLB.",
-+        "EventCode": "0x81",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x4",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "ITLB.FILLS",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "200003",
-+        "BriefDescription": "Counts the number of times there was an ITLB miss and a new translation was filled into the ITLB."
-+    },
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts page walks completed due to instruction fetches whose address translations missed in the TLB and were mapped to 4K pages.  The page walks can end with or without a page fault.",
-+        "EventCode": "0x85",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x2",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "ITLB_MISSES.WALK_COMPLETED_4K",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "2000003",
-+        "BriefDescription": "Page walk completed due to an instruction fetch in a 4K page."
-+    },
-+    {
-+        "CollectPEBSRecord": "2",
-+        "PublicDescription": "Counts page walks completed due to instruction fetches whose address translations missed in the TLB and were mapped to 2M or 4M pages.  The page walks can end with or without a page fault.",
-+        "EventCode": "0x85",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x4",
-+        "PEBScounters": "0,1,2,3",
-+        "EventName": "ITLB_MISSES.WALK_COMPLETED_2M_4M",
-+        "PDIR_COUNTER": "na",
-+        "SampleAfterValue": "2000003",
-+        "BriefDescription": "Page walk completed due to an instruction fetch in a 2M or 4M page."
-+    }
-+]
-\ No newline at end of file
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index caaab28f8400..9936819aae1c 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -417,6 +417,9 @@ include::itrace.txt[]
+ 	For itrace only show specified functions and their callees for
+ 	itrace. Multiple functions can be separated by comma.
+ 
++--switch-on EVENT_NAME::
++	Only consider events after this event is found.
++
+ SEE ALSO
+ --------
+ linkperf:perf-record[1], linkperf:perf-script-perl[1],
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 31a529ec139f..d0bc7ccaf7bf 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1616,6 +1616,11 @@ static int perf_sample__fprintf_synth(struct perf_sample *sample,
+ 	return 0;
+ }
+ 
++struct evswitch {
++	struct evsel *on;
++	bool	     discarding;
++};
++
+ struct perf_script {
+ 	struct perf_tool	tool;
+ 	struct perf_session	*session;
+@@ -1628,6 +1633,7 @@ struct perf_script {
+ 	bool			show_bpf_events;
+ 	bool			allocated;
+ 	bool			per_event_dump;
++	struct evswitch		evswitch;
+ 	struct perf_cpu_map	*cpus;
+ 	struct perf_thread_map *threads;
+ 	int			name_width;
+@@ -1805,6 +1811,13 @@ static void process_event(struct perf_script *script,
+ 	if (!show_event(sample, evsel, thread, al))
+ 		return;
+ 
++	if (script->evswitch.on && script->evswitch.discarding) {
++		if (script->evswitch.on != evsel)
++			return;
++
++		script->evswitch.discarding = false;
++	}
++
+ 	++es->samples;
+ 
+ 	perf_sample__fprintf_start(sample, thread, evsel,
+@@ -3395,6 +3408,7 @@ int cmd_script(int argc, const char **argv)
+ 	struct utsname uts;
+ 	char *script_path = NULL;
+ 	const char **__argv;
++	const char *event_switch_on = NULL;
+ 	int i, j, err = 0;
+ 	struct perf_script script = {
+ 		.tool = {
+@@ -3538,6 +3552,8 @@ int cmd_script(int argc, const char **argv)
+ 		   "file", "file saving guest os /proc/kallsyms"),
+ 	OPT_STRING(0, "guestmodules", &symbol_conf.default_guest_modules,
+ 		   "file", "file saving guest os /proc/modules"),
++	OPT_STRING(0, "switch-on", &event_switch_on,
++		   "event", "Consider events from the first ocurrence of this event"),
+ 	OPT_END()
+ 	};
+ 	const char * const script_subcommands[] = { "record", "report", NULL };
+@@ -3862,6 +3878,16 @@ int cmd_script(int argc, const char **argv)
+ 						  script.range_num);
+ 	}
+ 
++	if (event_switch_on) {
++		script.evswitch.on = perf_evlist__find_evsel_by_str(session->evlist, event_switch_on);
++		if (script.evswitch.on == NULL) {
++			fprintf(stderr, "switch-on event not found (%s)\n", event_switch_on);
++			err = -ENOENT;
++			goto out_delete;
++		}
++		script.evswitch.discarding = true;
++	}
++
+ 	err = __cmd_script(&script);
+ 
+ 	flush_scripting();
