@@ -2,152 +2,90 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56750C41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72866C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D81E21655
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:10:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565943035;
-	bh=KAxS1L8t10quuJK4tWQZ+Kj4vDYjzup4MqrYRsCgtdU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fGnj/zAFDqEVzmk4HW5C/wbtWPc7C3Jn2ESa6frwYzqoaHqR+o0p+eOV6Xy95nj2v
-	 2gnhVD1CK14BTXczD8wxXKjk2bspgpP2y0bl5v3eGktdGZ8RdT5wgdS4xpynaCt9xu
-	 ejuONct0fEOyvIGxRbeWoQ7fQI2TiuZWHHE+M61A=
+	by mail.kernel.org (Postfix) with ESMTP id 53B76206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfHPIKe (ORCPT
+        id S1726980AbfHPIKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:10:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37612 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726166AbfHPIKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 16 Aug 2019 04:10:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 41A16AD20;
-        Fri, 16 Aug 2019 08:10:31 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 10:10:29 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-Message-ID: <20190816081029.GA27790@dhcp22.suse.cz>
-References: <20190815132127.GI9477@dhcp22.suse.cz>
- <20190815141219.GF21596@ziepe.ca>
- <20190815155950.GN9477@dhcp22.suse.cz>
- <20190815165631.GK21596@ziepe.ca>
- <20190815174207.GR9477@dhcp22.suse.cz>
- <20190815182448.GP21596@ziepe.ca>
- <20190815190525.GS9477@dhcp22.suse.cz>
- <20190815191810.GR21596@ziepe.ca>
- <20190815193526.GT9477@dhcp22.suse.cz>
- <20190815201323.GU21596@ziepe.ca>
+Received: from rtits2.realtek.com ([211.75.126.72]:40964 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726682AbfHPIKd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 04:10:33 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7G8AUWP019905, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7G8AUWP019905
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 16 Aug 2019 16:10:30 +0800
+Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
+ RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Fri, 16 Aug
+ 2019 16:10:29 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     nic_swsd <nic_swsd@realtek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net-next] r8152: divide the tx and rx bottom functions
+Thread-Topic: [PATCH net-next] r8152: divide the tx and rx bottom functions
+Thread-Index: AQHVUnqNDBLFc1N41kCW+rl5DeKpGqb8z8EAgACQjVA=
+Date:   Fri, 16 Aug 2019 08:10:28 +0000
+Message-ID: <0835B3720019904CB8F7AA43166CEEB2F18D470D@RTITMBSVM03.realtek.com.tw>
+References: <1394712342-15778-301-Taiwan-albertk@realtek.com>
+ <9749764d-7815-b673-0fc4-22475601efec@gmail.com>
+In-Reply-To: <9749764d-7815-b673-0fc4-22475601efec@gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.177.214]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815201323.GU21596@ziepe.ca>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 15-08-19 17:13:23, Jason Gunthorpe wrote:
-> On Thu, Aug 15, 2019 at 09:35:26PM +0200, Michal Hocko wrote:
-> 
-> > > The last detail is I'm still unclear what a GFP flags a blockable
-> > > invalidate_range_start() should use. Is GFP_KERNEL OK?
-> > 
-> > I hope I will not make this muddy again ;)
-> > invalidate_range_start in the blockable mode can use/depend on any sleepable
-> > allocation allowed in the context it is called from. 
-> 
-> 'in the context is is called from' is the magic phrase, as
-> invalidate_range_start is called while holding several different mm
-> related locks. I know at least write mmap_sem and i_mmap_rwsem
-> (write?)
-> 
-> Can GFP_KERNEL be called while holding those locks?
-
-i_mmap_rwsem would be problematic because it is taken during the
-reclaim.
-
-> This is the question of indirect dependency on reclaim via locks you
-> raised earlier.
-> 
-> > So in other words it is no different from any other function in the
-> > kernel that calls into allocator. As the API is missing gfp context
-> > then I hope it is not called from any restricted contexts (except
-> > from the oom which we have !blockable for).
-> 
-> Yes, the callers are exactly my concern.
->  
-> > > Lockdep has
-> > > complained on that in past due to fs_reclaim - how do you know if it
-> > > is a false positive?
-> > 
-> > I would have to see the specific lockdep splat.
-> 
-> See below. I found it when trying to understand why the registration
-> of the mmu notififer was so oddly coded.
-> 
-> The situation was:
-> 
->   down_write(&mm->mmap_sem);
->   mm_take_all_locks(mm);
->   kmalloc(GFP_KERNEL);  <--- lockdep warning
-
-Ugh. mm_take_all_locks :/
-
-> I understood Daniel said he saw this directly on a recent kernel when
-> working with his lockdep patch?
-> 
-> Checking myself, on todays kernel I see a call chain:
-> 
-> shrink_all_memory
->   fs_reclaim_acquire(sc.gfp_mask);
->   [..]
->   do_try_to_free_pages
->    shrink_zones
->     shrink_node
->      shrink_node_memcg
->       shrink_list
->        shrink_active_list
->         page_referenced
->          rmap_walk
->           rmap_walk_file
->            i_mmap_lock_read
->             down_read(i_mmap_rwsem)
-> 
-> So it is possible that the down_read() above will block on
-> i_mmap_rwsem being held in the caller of invalidate_range_start which
-> is doing kmalloc(GPF_KERNEL).
-> 
-> Is this OK? The lockdep annotation says no..
-
-It's not as per the above code patch which is easily possible because
-mm_take_all_locks will lock all file vmas.
-
--- 
-Michal Hocko
-SUSE Labs
+RXJpYyBEdW1hemV0IFttYWlsdG86ZXJpYy5kdW1hemV0QGdtYWlsLmNvbV0NCj4gU2VudDogRnJp
+ZGF5LCBBdWd1c3QgMTYsIDIwMTkgMjo0MCBQTQ0KWy4uLl0NCj4gdGFza2xldCBhbmQgTkFQSSBh
+cmUgc2NoZWR1bGVkIG9uIHRoZSBzYW1lIGNvcmUgKHRoZSBjdXJyZW50DQo+IGNwdSBjYWxsaW5n
+IG5hcGlfc2NoZWR1bGUoKSBvciB0YXNrbGV0X3NjaGVkdWxlKCkpDQo+IA0KPiBJIHdvdWxkIHJh
+dGhlciBub3QgYWRkIHRoaXMgZHViaW91cyB0YXNrbGV0LCBhbmQgaW5zdGVhZCB0cnkgdG8gdW5k
+ZXJzdGFuZA0KPiB3aGF0IGlzIHdyb25nIGluIHRoaXMgZHJpdmVyIDspDQo+IA0KPiBUaGUgdmFy
+aW91cyBuYXBpX3NjaGVkdWxlKCkgY2FsbHMgYXJlIHN1c3BlY3QgSU1PLg0KDQpUaGUgb3JpZ2lu
+YWwgbWV0aG9kIGFzIGZvbGxvd2luZy4NCg0Kc3RhdGljIGludCByODE1Ml9wb2xsKHN0cnVjdCBu
+YXBpX3N0cnVjdCAqbmFwaSwgaW50IGJ1ZGdldCkNCnsNCglzdHJ1Y3QgcjgxNTIgKnRwID0gY29u
+dGFpbmVyX29mKG5hcGksIHN0cnVjdCByODE1MiwgbmFwaSk7DQoJaW50IHdvcmtfZG9uZTsNCg0K
+CXdvcmtfZG9uZSA9IHJ4X2JvdHRvbSh0cCwgYnVkZ2V0KTsgPC0tIFJYDQoJYm90dG9tX2hhbGYo
+dHApOyA8LS0gVHggKHR4X2JvdHRvbSkNCglbLi4uXQ0KDQpUaGUgcnhfYm90dG9tIGFuZCB0eF9i
+b3R0b20gd291bGQgb25seSBiZSBjYWxsZWQgaW4gcjgxNTJfcG9sbC4NClRoYXQgaXMsIHR4X2Jv
+dHRvbSB3b3VsZG4ndCBiZSBydW4gdW5sZXNzIHJ4X2JvdHRvbSBpcyBmaW5pc2hlZC4NCkFuZCwg
+cnhfYm90dG9tIHdvdWxkIGJlIGNhbGxlZCBpZiB0eF9ib3R0b20gaXMgcnVubmluZy4NCg0KSWYg
+dGhlIHRyYWZmaWMgaXMgYnVzeS4gcnhfYm90dG9tIG9yIHR4X2JvdHRvbSBtYXkgdGFrZSBhIGxv
+dA0Kb2YgdGltZSB0byBkZWFsIHdpdGggdGhlIHBhY2tldHMuIEFuZCB0aGUgb25lIHdvdWxkIGlu
+Y3JlYXNlDQp0aGUgbGF0ZW5jeSB0aW1lIGZvciB0aGUgb3RoZXIgb25lLg0KDQpUaGVyZWZvcmUs
+IHdoZW4gSSBzZXBhcmF0ZSB0aGUgdHhfYm90dG9tIGFuZCByeF9ib3R0b20gdG8NCmRpZmZlcmVu
+dCB0YXNrbGV0IGFuZCBuYXBpLCB0aGUgY2FsbGJhY2sgZnVuY3Rpb25zIG9mIHR4IGFuZA0Kcngg
+bWF5IHNjaGVkdWxlIHRoZSB0YXNrbGV0IGFuZCBuYXBpIHRvIGRpZmZlcmVudCBjcHUuIFRoZW4s
+DQp0aGUgcnhfYm90dG9tIGFuZCB0eF9ib3R0b20gbWF5IGJlIHJ1biBhdCB0aGUgc2FtZSB0aW1l
+Lg0KDQpUYWtlIG91ciBhcm0gcGxhdGZvcm0gZm9yIGV4YW1wbGUuIFRoZXJlIGFyZSBmaXZlIGNw
+dXMgdG8NCmhhbmRsZSB0aGUgaW50ZXJydXB0IG9mIFVTQiBob3N0IGNvbnRyb2xsZXIuIFdoZW4g
+dGhlIHJ4IGlzDQpjb21wbGV0ZWQsIGNwdSAjMSBtYXkgaGFuZGxlIHRoZSBpbnRlcnJ1cHQgYW5k
+IG5hcGkgd291bGQNCmJlIHNjaGVkdWxlZC4gV2hlbiB0aGUgdHggaXMgZmluaXNoZWQsIGNwdSAj
+MiBtYXkgaGFuZGxlDQp0aGUgaW50ZXJydXB0IGFuZCB0aGUgdGFza2xldCBpcyBzY2hlZHVsZWQu
+IFRoZW4sIG5hcGkgaXMNCnJ1biBvbiBjcHUgIzEsIGFuZCB0YXNrbGV0IGlzIHJ1biBvbiBjcHUg
+IzIuDQoNCj4gQWxzbyBydGw4MTUyX3N0YXJ0X3htaXQoKSB1c2VzIHNrYl9xdWV1ZV90YWlsKCZ0
+cC0+dHhfcXVldWUsIHNrYik7DQo+IA0KPiBCdXQgSSBzZWUgbm90aGluZyByZWFsbHkga2lja2lu
+ZyB0aGUgdHJhbnNtaXQgaWYgdHhfZnJlZSBpcyBlbXB0eSA/DQoNClR4IGNhbGxiYWNrIGZ1bmN0
+aW9uICJ3cml0ZV9idWxrX2NhbGxiYWNrIiB3b3VsZCBkZWFsIHdpdGggaXQuDQpUaGUgY2FsbGJh
+Y2sgZnVuY3Rpb24gd291bGQgY2hlY2sgaWYgdGhlcmUgYXJlIHBhY2tldHMgd2FpdGluZw0KdG8g
+YmUgc2VudC4NCg0KDQpCZXN0IFJlZ2FyZHMsDQpIYXllcw0KDQoNCg==
