@@ -2,122 +2,318 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08034C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EAAC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF5DA20644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:26:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565958390;
-	bh=i+VMQCZ94T+eQZMSzDz4e4UZI7BtQfdlDUmSMrA9pXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=km3q0H56uQz3av2QfltwQ0c8vEftYZUjqhGNAppyCaXcPZgbVAd1GVjXQeP3V8CZj
-	 X3VedUwfrWKktwyu6AMiIskgtD0XYhJs32l6zwAdp8KBKcNawKxGvUafW2l+IwVPJN
-	 rySWiyszYd9q6yERwA/aYMgkChm3Q9L/UwtKuo50=
+	by mail.kernel.org (Postfix) with ESMTP id 96FC420644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfHPM03 (ORCPT
+        id S1727278AbfHPM1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:26:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44094 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727022AbfHPM03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:26:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0F587AF55;
-        Fri, 16 Aug 2019 12:26:28 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 14:26:25 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
-Message-ID: <20190816122625.GA10499@dhcp22.suse.cz>
-References: <20190815155950.GN9477@dhcp22.suse.cz>
- <20190815165631.GK21596@ziepe.ca>
- <20190815174207.GR9477@dhcp22.suse.cz>
- <20190815182448.GP21596@ziepe.ca>
- <20190815190525.GS9477@dhcp22.suse.cz>
- <20190815191810.GR21596@ziepe.ca>
- <20190815193526.GT9477@dhcp22.suse.cz>
- <20190815201323.GU21596@ziepe.ca>
- <20190816081029.GA27790@dhcp22.suse.cz>
- <20190816121906.GC5398@ziepe.ca>
+        Fri, 16 Aug 2019 08:27:36 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40329 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727150AbfHPM1f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 08:27:35 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v19so3936010wmj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 05:27:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=i8GTKczDao+f0rWi7nMc/7vSnceCGi95sUaqyHpV3eo=;
+        b=mSQF2XUhAe9YmcWBhKwIWfnk8eW1X9aCj1rxe5VMrizVznPKP3O1z+gLotg57wSJQy
+         2ShhSfYSXMJHZeRV3978F93BKRHB0jB9EK8mcZCc1AegHAzbnOhxl4WwFcrcPedxkNnL
+         ROlKCzw7oO7eMW8BBmLuHUb2Gtj4XTAybZpz2RkcileeoqtOBhPvvZvJOM8nHeeZ2Rv+
+         S+lPLugAkH/lbmjzzuRvBknc9VVVtLfa6uqG+42p+NJPLxA51cCYmLjB6iqgskDHLdAY
+         ISB7H4fOIaQ08PleG1qV7uadClPGmdCzNMevcWWVa9uKOS9RT1pNkVYq/7bcedrs4MjK
+         Lu3Q==
+X-Gm-Message-State: APjAAAXd7C35ALofl9l/YRoyLmID/sfApMaCOEl8gDQv/DLHFF9d78/Y
+        orjPZVKPOsID8S/nhX2Tnx+kUzx6s8A=
+X-Google-Smtp-Source: APXvYqz5POVD8d0hDu3+HT/ogWFdIQxctT6BfNfWDcMulU0XWKLX3/LVv51Y/SwlMMtXIWFDIGGCzw==
+X-Received: by 2002:a05:600c:24d0:: with SMTP id 16mr6960658wmu.83.1565958452915;
+        Fri, 16 Aug 2019 05:27:32 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id l3sm8609082wrb.41.2019.08.16.05.27.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 05:27:32 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        "sashal\@kernel.org" <sashal@kernel.org>,
+        "davem\@davemloft.net" <davem@davemloft.net>,
+        "saeedm\@mellanox.com" <saeedm@mellanox.com>,
+        "leon\@kernel.org" <leon@kernel.org>,
+        "eranbe\@mellanox.com" <eranbe@mellanox.com>,
+        "lorenzo.pieralisi\@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
+Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next, 2/6] PCI: hv: Add a Hyper-V PCI mini driver for software backchannel interface
+In-Reply-To: <1565809632-39138-3-git-send-email-haiyangz@microsoft.com>
+References: <1565809632-39138-1-git-send-email-haiyangz@microsoft.com> <1565809632-39138-3-git-send-email-haiyangz@microsoft.com>
+Date:   Fri, 16 Aug 2019 14:27:31 +0200
+Message-ID: <878srt8fd8.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816121906.GC5398@ziepe.ca>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 16-08-19 09:19:06, Jason Gunthorpe wrote:
-> On Fri, Aug 16, 2019 at 10:10:29AM +0200, Michal Hocko wrote:
-> > On Thu 15-08-19 17:13:23, Jason Gunthorpe wrote:
-> > > On Thu, Aug 15, 2019 at 09:35:26PM +0200, Michal Hocko wrote:
-> > > 
-> > > > > The last detail is I'm still unclear what a GFP flags a blockable
-> > > > > invalidate_range_start() should use. Is GFP_KERNEL OK?
-> > > > 
-> > > > I hope I will not make this muddy again ;)
-> > > > invalidate_range_start in the blockable mode can use/depend on any sleepable
-> > > > allocation allowed in the context it is called from. 
-> > > 
-> > > 'in the context is is called from' is the magic phrase, as
-> > > invalidate_range_start is called while holding several different mm
-> > > related locks. I know at least write mmap_sem and i_mmap_rwsem
-> > > (write?)
-> > > 
-> > > Can GFP_KERNEL be called while holding those locks?
-> > 
-> > i_mmap_rwsem would be problematic because it is taken during the
-> > reclaim.
-> 
-> Okay.. So the fs_reclaim debugging does catch errors.
+Haiyang Zhang <haiyangz@microsoft.com> writes:
 
-I do not think fs_reclaim is the udnerlying mechanism to catch this
-deadlock. It is a simple AA deadlock. You take i_mmap_rwsem and then
-go down the allocation path, direct reclaim and take the lock again.
-Nothing really surprising. fs_reclaim is really to catch GFP_NOFS
-context calling into a less restricted (e.g. GFP_KERNEL allocation
-context).
+> This mini driver is a helper driver allows other drivers to
+> have a common interface with the Hyper-V PCI frontend driver.
+>
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+> ---
+>  MAINTAINERS                              |  1 +
+>  drivers/pci/Kconfig                      |  1 +
+>  drivers/pci/controller/Kconfig           |  7 ++++
+>  drivers/pci/controller/Makefile          |  1 +
+>  drivers/pci/controller/pci-hyperv-mini.c | 70 ++++++++++++++++++++++++++++++++
+>  drivers/pci/controller/pci-hyperv.c      | 12 ++++--
+>  include/linux/hyperv.h                   | 30 ++++++++++----
+>  7 files changed, 111 insertions(+), 11 deletions(-)
+>  create mode 100644 drivers/pci/controller/pci-hyperv-mini.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e352550..c4962b9 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7453,6 +7453,7 @@ F:	drivers/hid/hid-hyperv.c
+>  F:	drivers/hv/
+>  F:	drivers/input/serio/hyperv-keyboard.c
+>  F:	drivers/pci/controller/pci-hyperv.c
+> +F:	drivers/pci/controller/pci-hyperv-mini.c
+>  F:	drivers/net/hyperv/
+>  F:	drivers/scsi/storvsc_drv.c
+>  F:	drivers/uio/uio_hv_generic.c
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 2ab9240..bb852f5 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -182,6 +182,7 @@ config PCI_LABEL
+>  config PCI_HYPERV
+>          tristate "Hyper-V PCI Frontend"
+>          depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
+> +	select PCI_HYPERV_MINI
+>          help
+>            The PCI device frontend driver allows the kernel to import arbitrary
+>            PCI devices from a PCI backend to support PCI driver domains.
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index fe9f9f1..8e31cba 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -281,5 +281,12 @@ config VMD
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called vmd.
+>  
+> +config PCI_HYPERV_MINI
+> +	tristate "Hyper-V PCI Mini"
+> +	depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
+> +	help
+> +	  The Hyper-V PCI Mini is a helper driver allows other drivers to
+> +	  have a common interface with the Hyper-V PCI frontend driver.
+> +
 
-> Do you have any
-> reference for what a false positive looks like? 
+Out of pure curiosity, why not just export this interface from
+PCI_HYPERV directly? Why do we need this stub?
 
-I believe I have given some examples when introducing __GFP_NOLOCKDEP.
- 
-> I would like to inject it into the notifier path as this is very
-> difficult for driver authors to discover and know about, but I'm
-> worried about your false positive remark.
-> 
-> I think I understand we can use only GFP_ATOMIC in the notifiers, but
-> we need a strategy to handle OOM to guarentee forward progress.
+>  source "drivers/pci/controller/dwc/Kconfig"
+>  endmenu
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> index d56a507..77e0132 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -4,6 +4,7 @@ obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
+>  obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
+>  obj-$(CONFIG_PCI_FTPCI100) += pci-ftpci100.o
+>  obj-$(CONFIG_PCI_HYPERV) += pci-hyperv.o
+> +obj-$(CONFIG_PCI_HYPERV_MINI) += pci-hyperv-mini.o
+>  obj-$(CONFIG_PCI_MVEBU) += pci-mvebu.o
+>  obj-$(CONFIG_PCI_AARDVARK) += pci-aardvark.o
+>  obj-$(CONFIG_PCI_TEGRA) += pci-tegra.o
+> diff --git a/drivers/pci/controller/pci-hyperv-mini.c b/drivers/pci/controller/pci-hyperv-mini.c
+> new file mode 100644
+> index 0000000..9b6cd1c
+> --- /dev/null
+> +++ b/drivers/pci/controller/pci-hyperv-mini.c
+> @@ -0,0 +1,70 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) Microsoft Corporation.
+> + *
+> + * Author:
+> + *   Haiyang Zhang <haiyangz@microsoft.com>
+> + *
+> + * This mini driver is a helper driver allows other drivers to
+> + * have a common interface with the Hyper-V PCI frontend driver.
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/hyperv.h>
+> +
+> +struct hyperv_pci_block_ops hvpci_block_ops;
+> +EXPORT_SYMBOL(hvpci_block_ops);
+> +
+> +int hyperv_read_cfg_blk(struct pci_dev *dev, void *buf, unsigned int buf_len,
+> +			unsigned int block_id, unsigned int *bytes_returned)
+> +{
+> +	if (!hvpci_block_ops.read_block)
+> +		return -EOPNOTSUPP;
+> +
+> +	return hvpci_block_ops.read_block(dev, buf, buf_len, block_id,
+> +					  bytes_returned);
+> +}
+> +EXPORT_SYMBOL(hyperv_read_cfg_blk);
+> +
+> +int hyperv_write_cfg_blk(struct pci_dev *dev, void *buf, unsigned int len,
+> +			 unsigned int block_id)
+> +{
+> +	if (!hvpci_block_ops.write_block)
+> +		return -EOPNOTSUPP;
+> +
+> +	return hvpci_block_ops.write_block(dev, buf, len, block_id);
+> +}
+> +EXPORT_SYMBOL(hyperv_write_cfg_blk);
+> +
+> +int hyperv_reg_block_invalidate(struct pci_dev *dev, void *context,
+> +				void (*block_invalidate)(void *context,
+> +							 u64 block_mask))
+> +{
+> +	if (!hvpci_block_ops.reg_blk_invalidate)
+> +		return -EOPNOTSUPP;
+> +
+> +	return hvpci_block_ops.reg_blk_invalidate(dev, context,
+> +						  block_invalidate);
+> +}
+> +EXPORT_SYMBOL(hyperv_reg_block_invalidate);
+> +
+> +static void __exit exit_hv_pci_mini(void)
+> +{
+> +	pr_info("unloaded\n");
+> +}
+> +
+> +static int __init init_hv_pci_mini(void)
+> +{
+> +	pr_info("loaded\n");
+> +
+> +	return 0;
+> +}
+> +
+> +module_init(init_hv_pci_mini);
+> +module_exit(exit_hv_pci_mini);
+> +
+> +MODULE_DESCRIPTION("Hyper-V PCI Mini");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 57adeca..9c93ac2 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -983,7 +983,6 @@ int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+>  	*bytes_returned = comp_pkt.bytes_returned;
+>  	return 0;
+>  }
+> -EXPORT_SYMBOL(hv_read_config_block);
+>  
+>  /**
+>   * hv_pci_write_config_compl() - Invoked when a response packet for a write
+> @@ -1070,7 +1069,6 @@ int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+>  
+>  	return 0;
+>  }
+> -EXPORT_SYMBOL(hv_write_config_block);
+>  
+>  /**
+>   * hv_register_block_invalidate() - Invoked when a config block invalidation
+> @@ -1101,7 +1099,6 @@ int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
+>  	return 0;
+>  
+>  }
+> -EXPORT_SYMBOL(hv_register_block_invalidate);
+>  
+>  /* Interrupt management hooks */
+>  static void hv_int_desc_free(struct hv_pci_dev *hpdev,
+> @@ -3045,10 +3042,19 @@ static int hv_pci_remove(struct hv_device *hdev)
+>  static void __exit exit_hv_pci_drv(void)
+>  {
+>  	vmbus_driver_unregister(&hv_pci_drv);
+> +
+> +	hvpci_block_ops.read_block = NULL;
+> +	hvpci_block_ops.write_block = NULL;
+> +	hvpci_block_ops.reg_blk_invalidate = NULL;
+>  }
+>  
+>  static int __init init_hv_pci_drv(void)
+>  {
+> +	/* Initialize PCI block r/w interface */
+> +	hvpci_block_ops.read_block = hv_read_config_block;
+> +	hvpci_block_ops.write_block = hv_write_config_block;
+> +	hvpci_block_ops.reg_blk_invalidate = hv_register_block_invalidate;
+> +
+>  	return vmbus_driver_register(&hv_pci_drv);
+>  }
+>  
+> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> index 9d37f8c..2afe6fd 100644
+> --- a/include/linux/hyperv.h
+> +++ b/include/linux/hyperv.h
+> @@ -1579,18 +1579,32 @@ struct vmpacket_descriptor *
+>  	    pkt = hv_pkt_iter_next(channel, pkt))
+>  
+>  /*
+> - * Functions for passing data between SR-IOV PF and VF drivers.  The VF driver
+> + * Interface for passing data between SR-IOV PF and VF drivers. The VF driver
+>   * sends requests to read and write blocks. Each block must be 128 bytes or
+>   * smaller. Optionally, the VF driver can register a callback function which
+>   * will be invoked when the host says that one or more of the first 64 block
+>   * IDs is "invalid" which means that the VF driver should reread them.
+>   */
+>  #define HV_CONFIG_BLOCK_SIZE_MAX 128
+> -int hv_read_config_block(struct pci_dev *dev, void *buf, unsigned int buf_len,
+> -			 unsigned int block_id, unsigned int *bytes_returned);
+> -int hv_write_config_block(struct pci_dev *dev, void *buf, unsigned int len,
+> -			  unsigned int block_id);
+> -int hv_register_block_invalidate(struct pci_dev *dev, void *context,
+> -				 void (*block_invalidate)(void *context,
+> -							  u64 block_mask));
+> +
+> +int hyperv_read_cfg_blk(struct pci_dev *dev, void *buf, unsigned int buf_len,
+> +			unsigned int block_id, unsigned int *bytes_returned);
+> +int hyperv_write_cfg_blk(struct pci_dev *dev, void *buf, unsigned int len,
+> +			 unsigned int block_id);
+> +int hyperv_reg_block_invalidate(struct pci_dev *dev, void *context,
+> +				void (*block_invalidate)(void *context,
+> +							 u64 block_mask));
+> +
+> +struct hyperv_pci_block_ops {
+> +	int (*read_block)(struct pci_dev *dev, void *buf, unsigned int buf_len,
+> +			  unsigned int block_id, unsigned int *bytes_returned);
+> +	int (*write_block)(struct pci_dev *dev, void *buf, unsigned int len,
+> +			   unsigned int block_id);
+> +	int (*reg_blk_invalidate)(struct pci_dev *dev, void *context,
+> +				  void (*block_invalidate)(void *context,
+> +							   u64 block_mask));
+> +};
+> +
+> +extern struct hyperv_pci_block_ops hvpci_block_ops;
+> +
+>  #endif /* _HYPERV_H */
 
-Your example is from the notifier registration IIUC. Can you
-pre-allocate before taking locks? Could you point me to some examples
-when the allocation is necessary in the range notifier callback?
 -- 
-Michal Hocko
-SUSE Labs
+Vitaly
