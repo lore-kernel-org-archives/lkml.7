@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEE6C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DE0C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 984FC21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC95320665
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565973011;
-	bh=XHjlZmKTF9nNMGhgjea6r5OALoj3MwKvj+3B+20nqFI=;
+	s=default; t=1565973015;
+	bh=C+15RRON7v0kZNLZM4cWgiba2GqK7EyGHEkGjYx5UfA=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=A0KHC7GqgD3h6XRKf6YO73Dd2iJwDJoYLB+ojwJPx4LBFOwduJmvAkgTVGZSEzoTd
-	 o7q/h6/ExbQ/J1zK4rA2idKxq+dHljzFKFkgf/YgqPFo6fK9dGzJdsog/40zDmIo4/
-	 4YWkS+omLs7MTwKACeHJOyYg9lFHc9n6HDRRmQbU=
+	b=PbDQQaKC5vnj8Lam/ptrv85HjRLWeHrWhPUU4nwhv80zQT/Uw2F6tCMj4tLkRqTZv
+	 dH0tXowaASXKc18YRVyWiv7ZO1Jewq6O7Dqre2CvtkSkLfnkg2HXC6AKEK4J8XzNNm
+	 xiV+HoEWlZ3uRm+9Veh1hQMVCEjmR3vupMqaR23g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfHPQaK (ORCPT
+        id S1727535AbfHPQaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:30:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51096 "EHLO mail.kernel.org"
+        Fri, 16 Aug 2019 12:30:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727457AbfHPQaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:30:08 -0400
-Subject: Re: [GIT PULL] Power management fixes for v5.3-rc5
+        id S1727391AbfHPQaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 12:30:07 -0400
+Subject: Re: [GIT PULL]: dmaengine fixes for v5.3-rc5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1565973007;
-        bh=XHjlZmKTF9nNMGhgjea6r5OALoj3MwKvj+3B+20nqFI=;
+        bh=C+15RRON7v0kZNLZM4cWgiba2GqK7EyGHEkGjYx5UfA=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=RT3tspNBfxudhjqy1BRPh2T1OxocwyBShKCEBeEj/NKaMJ+HxS6S+MHIE/Hy0Iv0k
-         IPemShark9xJhwpYnFuXj7ALffjBlfb9nbKtolb3lF/3d+qq6nXbeH1B0XKoP+5gNs
-         gE7hYjZGskOAQzbktfsqYg0WoU5j2nhUczA59np4=
+        b=PjlYNJax/L7UGcDSkucKo0TTavXoe2/VUOj8GwiQMtCON/4sHzYxrX2PPxMstVWL1
+         14ZBeIIFJEUlMsI122qDsJb6cim0+rvpy5/EHDQlFWxOJ45xB4iB3SPIxW/V6wyMqF
+         ODpc3cQp/ao10YyELyKFsVqvazEZMtyHURFY/BAY=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0j4ezEuK1dk0J3wwjSuudzjhKWTXzJL=EkE1QG39HKRiw@mail.gmail.com>
-References: <CAJZ5v0j4ezEuK1dk0J3wwjSuudzjhKWTXzJL=EkE1QG39HKRiw@mail.gmail.com>
+In-Reply-To: <20190816094627.GB12733@vkoul-mobl.Dlink>
+References: <20190816094627.GB12733@vkoul-mobl.Dlink>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0j4ezEuK1dk0J3wwjSuudzjhKWTXzJL=EkE1QG39HKRiw@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.3-rc5
-X-PR-Tracked-Commit-Id: a3ee2477c45f73184a64d9c6cf97855a52732dc6
+X-PR-Tracked-Message-Id: <20190816094627.GB12733@vkoul-mobl.Dlink>
+X-PR-Tracked-Remote: git://git.infradead.org/users/vkoul/slave-dma.git
+ tags/dmaengine-fix-5.3-rc5
+X-PR-Tracked-Commit-Id: d555c34338cae844b207564c482e5a3fb089d25e
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2d63ba3e41db3ceb0d23924ed2879b910276e24c
-Message-Id: <156597300748.15122.2547327554860184999.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 9da5bb24bb368567a43ac2df0e108e43d80f3564
+Message-Id: <156597300729.15122.18141782735058596853.pr-tracker-bot@kernel.org>
 Date:   Fri, 16 Aug 2019 16:30:07 +0000
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 16 Aug 2019 15:11:27 +0200:
+The pull request you sent on Fri, 16 Aug 2019 15:16:28 +0530:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.3-rc5
+> git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.3-rc5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2d63ba3e41db3ceb0d23924ed2879b910276e24c
+https://git.kernel.org/torvalds/c/9da5bb24bb368567a43ac2df0e108e43d80f3564
 
 Thank you!
 
