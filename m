@@ -2,163 +2,140 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A5FC3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE39AC3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C221621874
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7A0206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfHPCdZ (ORCPT
+        id S1726806AbfHPCdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 22:33:25 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:37697 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726702AbfHPCdV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 22:33:21 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R361e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0TZayJcx_1565922789;
-Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TZayJcx_1565922789)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 16 Aug 2019 10:33:15 +0800
-Date:   Fri, 16 Aug 2019 10:33:09 +0800
-From:   Aaron Lu <aaron.lu@linux.alibaba.com>
-To:     Dario Faggioli <dfaggioli@suse.com>
-Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <20190816023309.GA78614@aaronlu>
-References: <20190619183302.GA6775@sinkpad>
- <20190718100714.GA469@aaronlu>
- <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
- <20190725143003.GA992@aaronlu>
- <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
- <20190802153715.GA18075@sinkpad>
- <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
- <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
- <bd1f79c0a9aed2dfae3bb9f5df24fcf5528e3864.camel@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bd1f79c0a9aed2dfae3bb9f5df24fcf5528e3864.camel@suse.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Thu, 15 Aug 2019 22:33:33 -0400
+Received: from mga09.intel.com ([134.134.136.24]:24751 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726757AbfHPCdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 22:33:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 19:33:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
+   d="scan'208";a="194894553"
+Received: from genxtest-ykzhao.sh.intel.com ([10.239.143.71])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Aug 2019 19:33:22 -0700
+From:   Zhao Yakui <yakui.zhao@intel.com>
+To:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Cc:     Zhao Yakui <yakui.zhao@intel.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>
+Subject: [RFC PATCH 15/15] drivers/acrn: add the support of offline SOS cpu
+Date:   Fri, 16 Aug 2019 10:25:56 +0800
+Message-Id: <1565922356-4488-16-git-send-email-yakui.zhao@intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
+References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 06:09:28PM +0200, Dario Faggioli wrote:
-> On Wed, 2019-08-07 at 10:10 -0700, Tim Chen wrote:
-> > On 8/7/19 1:58 AM, Dario Faggioli wrote:
-> > 
-> > > Since I see that, in this thread, there are various patches being
-> > > proposed and discussed... should I rerun my benchmarks with them
-> > > applied? If yes, which ones? And is there, by any chance, one (or
-> > > maybe
-> > > more than one) updated git branch(es)?
-> > > 
-> > Hi Dario,
-> > 
-> Hi Tim!
-> 
-> > Having an extra set of eyes are certainly welcomed.
-> > I'll give my 2 cents on the issues with v3.
-> > 
-> Ok, and thanks a lot for this.
-> 
-> > 1) Unfairness between the sibling threads
-> > -----------------------------------------
-> > One sibling thread could be suppressing and force idling
-> > the sibling thread over proportionally.  Resulting in
-> > the force idled CPU not getting run and stall tasks on
-> > suppressed CPU.
-> > 
-> > 
-> > [...]
-> >
-> > 2) Not rescheduling forced idled CPU
-> > ------------------------------------
-> > The forced idled CPU does not get a chance to re-schedule
-> > itself, and will stall for a long time even though it
-> > has eligible tasks to run.
-> > 
-> > [...]
-> > 
-> > 3) Load balancing between CPU cores
-> > -----------------------------------
-> > Say if one CPU core's sibling threads get forced idled
-> > a lot as it has mostly incompatible tasks between the siblings,
-> > moving the incompatible load to other cores and pulling
-> > compatible load to the core could help CPU utilization.
-> > 
-> > So just considering the load of a task is not enough during
-> > load balancing, task compatibility also needs to be considered.
-> > Peter has put in mechanisms to balance compatible tasks between
-> > CPU thread siblings, but not across cores.
-> > 
-> > [...]
-> >
-> Ok. Yes, as said, I've been trying to follow the thread, but thanks a
-> lot again for this summary.
-> 
-> As said, I'm about to have numbers for the repo/branch I mentioned.
-> 
-> I was considering whether to also re-run the benchmarking campaign with
-> some of the patches that floated around within this thread. Now, thanks
-> to your summary, I have an even clearer picture about which patch does
-> what, and that is indeed very useful.
-> 
-> I'll see about putting something together. I'm thinking of picking:
-> 
-> https://lore.kernel.org/lkml/b7a83fcb-5c34-9794-5688-55c52697fd84@linux.intel.com/
-> https://lore.kernel.org/lkml/20190725143344.GD992@aaronlu/
-> 
-> And maybe even (part of):
-> https://lore.kernel.org/lkml/20190810141556.GA73644@aaronlu/#t
-> 
-> If anyone has ideas or suggestions about whether or not this choice
-> makes sense, feel free to share. :-)
+The ACRN-hypervisor works in partition mode. In such case the guest OS
+and domain0 kernel will run in the different CPUs.  In course of booting
+domain0 kernel, it can use all the available CPUs,which can accelerate
+the booting. But after the booting is finished, it needs to offline the
+other CPUs so that they can be allocated to the guest OS.
 
-Makes sense to me.
-patch3 in the last link is slightly better than the one in the 2nd link,
-so just use that instead.
+add sysfs with attr "offline_cpu", use
+	echo cpu_id > /sys/class/acrn/acrn_hsm/offline_cpu
+to do the hypercall offline/destroy according vcpu.
+before doing it, It will offline cpu by using the below cmd:
+	echo 0 > /sys/devices/system/cpu/cpuX/online
 
-Thanks,
-Aaron
+Currently this is mainly used in user-space device model before
+booting other ACRN guest.
 
-> Also, I only have another week before leaving, so let's see what I
-> manage to actually run, and then share here, by then.
-> 
-> Thanks and Regards
-> -- 
-> Dario Faggioli, Ph.D
-> http://about.me/dario.faggioli
-> Virtualization Software Engineer
-> SUSE Labs, SUSE https://www.suse.com/
-> -------------------------------------------------------------------
-> <<This happens because _I_ choose it to happen!>> (Raistlin Majere)
-> 
+Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
+Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
+Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
+---
+ drivers/staging/acrn/acrn_dev.c | 45 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
+diff --git a/drivers/staging/acrn/acrn_dev.c b/drivers/staging/acrn/acrn_dev.c
+index 0602125..6868003 100644
+--- a/drivers/staging/acrn/acrn_dev.c
++++ b/drivers/staging/acrn/acrn_dev.c
+@@ -588,6 +588,41 @@ static const struct file_operations fops = {
+ #define SUPPORT_HV_API_VERSION_MAJOR	1
+ #define SUPPORT_HV_API_VERSION_MINOR	0
+ 
++static ssize_t
++offline_cpu_store(struct device *dev,
++			struct device_attribute *attr,
++			const char *buf, size_t count)
++{
++#ifdef CONFIG_X86
++	u64 cpu, lapicid;
++
++	if (kstrtoull(buf, 0, &cpu) < 0)
++		return -EINVAL;
++
++	if (cpu_possible(cpu)) {
++		lapicid = cpu_data(cpu).apicid;
++		pr_info("acrn: try to offline cpu %lld with lapicid %lld\n",
++				cpu, lapicid);
++		if (hcall_sos_offline_cpu(lapicid) < 0) {
++			pr_err("acrn: failed to offline cpu from Hypervisor!\n");
++			return -EINVAL;
++		}
++	}
++#endif
++	return count;
++}
++
++static DEVICE_ATTR(offline_cpu, 00200, NULL, offline_cpu_store);
++
++static struct attribute *acrn_attrs[] = {
++	&dev_attr_offline_cpu.attr,
++	NULL
++};
++
++static struct attribute_group acrn_attr_group = {
++	.attrs = acrn_attrs,
++};
++
+ static int __init acrn_init(void)
+ {
+ 	unsigned long flag;
+@@ -647,6 +682,15 @@ static int __init acrn_init(void)
+ 		return PTR_ERR(acrn_device);
+ 	}
+ 
++	if (sysfs_create_group(&acrn_device->kobj, &acrn_attr_group)) {
++		pr_warn("acrn: sysfs create failed\n");
++		device_destroy(acrn_class, MKDEV(major, 0));
++		class_unregister(acrn_class);
++		class_destroy(acrn_class);
++		unregister_chrdev(major, DEVICE_NAME);
++		return -EINVAL;
++	}
++
+ 	tasklet_init(&acrn_io_req_tasklet, io_req_tasklet, 0);
+ 	local_irq_save(flag);
+ 	acrn_setup_intr_irq(acrn_intr_handler);
+@@ -664,6 +708,7 @@ static void __exit acrn_exit(void)
+ 
+ 	tasklet_kill(&acrn_io_req_tasklet);
+ 	acrn_remove_intr_irq();
++	sysfs_remove_group(&acrn_device->kobj, &acrn_attr_group);
+ 	device_destroy(acrn_class, MKDEV(major, 0));
+ 	class_unregister(acrn_class);
+ 	class_destroy(acrn_class);
+-- 
+2.7.4
 
