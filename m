@@ -2,120 +2,96 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9023C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FF8C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCFF421721
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:28:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Ixj/SoRJ"
+	by mail.kernel.org (Postfix) with ESMTP id 4DD0F2086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:29:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565976540;
+	bh=RZqpkIs7/ptyy0GiRGmHT1P1VJZS6AOQSoOoA422d3Q=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=eeT7keOaqY8z/PePwYEx3M4Muo6lsr34HseBLkqEGziUmIY1jC3k80nmE84SYLv+M
+	 wW8sVd62c/jbiOBN/LUHBKVB790qlkTtko3vusvy70jAQKHo9tYNEIC1rckOqs+fu0
+	 cFmJbxk2N1uToOfFZgCZE4Hb9z+3Igd81eZqMEvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbfHPR2s (ORCPT
+        id S1727545AbfHPR27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 13:28:48 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34589 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbfHPR2s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 13:28:48 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m10so5404847qkk.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 10:28:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=F45QDEu01tuosMxeBXshNdQV0qdzUW+A54VgIcKeIPQ=;
-        b=Ixj/SoRJ+JjSkgtbnuAlNvEeswSUCwNKuaFLHbk074FCSMAJ0pzN8tT5ReRltjL3Gf
-         RXaC7Ipl87f6oMqTWoY3dK/rv/Ebn3jzmPoC+B9dSW991uhIw2U1xamLQQ3fvpz00edL
-         a1Qocl++KZdMEzFneehLs3O2p4g22HJREvBTuudS9ss8+VoG+YpK0ZFVhPwXCQgOxb6j
-         l6IQtFd6edwrjdoeNrOu2K5jjVrdqOXCbrbFGIwZVckM7s7BYM9XDbDzPSyLrnPtV7PI
-         DEyvAFgALyQTa6Ip+Z3b1PmCilg+vCouLsoy7GiMDwRlevDCUcK2g+VvO1oDcMgFgFEI
-         aK0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=F45QDEu01tuosMxeBXshNdQV0qdzUW+A54VgIcKeIPQ=;
-        b=HGNgvfh8sgmljeMNaQQivhG8gGxsAj45N4PTmLagN5GQd6bq+w0+A1ny+ApJSVRCaY
-         dwGN/6GVjfXX44N68Tp4EE1ewD+wVlhxi0XwW2UOpOYs6vk4st3GWDlNGVmNo1PfPMqB
-         1qwUJTamz1duedQ0KFWlls9Xd2rmUs0yfgE1Ur8bWoIZYYbSh+9h7385p9O5r4B/+m5O
-         4EvyHk1wfwj0sdtvLJJGAK8iuyM68YT/Pl+iXQqnmpMuUk6Dcg2zvRz3z9+oexbWJzTS
-         2XYNl5HeFVOZJQaAr0t7CvF14vVkVqjs1FtCIRZ0uRj6syTT6gIz8/9N/JrD4iBsBjrT
-         S/Qg==
-X-Gm-Message-State: APjAAAWqA/pkGhDNyvHNjAhO8F2rdnc58cgeHaoSIoWM3SkejH8HOKVi
-        +U75NtpE4DtF1LCOZz6RbHkkHA==
-X-Google-Smtp-Source: APXvYqz4MWjmBxvJTbbDEud8Nxfi8cYWfH0bH7syzSPmrbjXevX053Df4aHxdDIIl0mAsdz2AlYJ2Q==
-X-Received: by 2002:a05:620a:143b:: with SMTP id k27mr9740698qkj.426.1565976527486;
-        Fri, 16 Aug 2019 10:28:47 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id t26sm3867534qtc.95.2019.08.16.10.28.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 16 Aug 2019 10:28:47 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hyg1u-0000vn-Jo; Fri, 16 Aug 2019 14:28:46 -0300
-Date:   Fri, 16 Aug 2019 14:28:46 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jerome Glisse <jglisse@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
-Message-ID: <20190816172846.GJ5398@ziepe.ca>
-References: <CAPcyv4g4hzcEA=TPYVTiqpbtOoS30ahogRUttCvQAvXQbQjfnw@mail.gmail.com>
- <20190815194339.GC9253@redhat.com>
- <CAPcyv4jid8_=-8hBpn_Qm=c4S8BapL9B9RGT7e9uu303yH=Yqw@mail.gmail.com>
- <20190815203306.GB25517@redhat.com>
- <20190815204128.GI22970@mellanox.com>
- <CAPcyv4j_Mxbw+T+yXTMdkrMoS_uxg+TXXgTM_EPBJ8XfXKxytA@mail.gmail.com>
- <20190816004053.GB9929@mellanox.com>
- <CAPcyv4gMPVmY59aQAT64jQf9qXrACKOuV=DfVs4sNySCXJhkdA@mail.gmail.com>
- <20190816122414.GC5412@mellanox.com>
- <CAPcyv4jgHF05gdRoOFZORqeOBE9Z7PhagsSD+LVnjH2dc3mrFg@mail.gmail.com>
+        Fri, 16 Aug 2019 13:28:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727067AbfHPR27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 13:28:59 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8F442086C;
+        Fri, 16 Aug 2019 17:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565976537;
+        bh=RZqpkIs7/ptyy0GiRGmHT1P1VJZS6AOQSoOoA422d3Q=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=YYa9oqIwha79tDSl3rBd2CR5ZHcJPtExeJ9KOt+XDN6XipKZoJv1/qupsIZHWBbkw
+         RnczA81PXrKCeUvMUGkbplGxMk5ewGozYho3wsUEtcN9z/HtEJD0TRUBzWbW8GGYyV
+         fbthAqN82QXLv/bVV9RdnaWClPt3ZUpIq1CKm/PY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jgHF05gdRoOFZORqeOBE9Z7PhagsSD+LVnjH2dc3mrFg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190813214147.34394-1-sboyd@kernel.org>
+References: <20190813214147.34394-1-sboyd@kernel.org>
+Subject: Re: [PATCH v2] clk: Fix falling back to legacy parent string matching
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Taniya Das <tdas@codeaurora.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Chen-Yu Tsai <wens@csie.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Fri, 16 Aug 2019 10:28:56 -0700
+Message-Id: <20190816172857.C8F442086C@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 10:21:41AM -0700, Dan Williams wrote:
+Quoting Stephen Boyd (2019-08-13 14:41:47)
+> Calls to clk_core_get() will return ERR_PTR(-EINVAL) if we've started
+> migrating a clk driver to use the DT based style of specifying parents
+> but we haven't made any DT updates yet. This happens when we pass a
+> non-NULL value as the 'name' argument of of_parse_clkspec(). That
+> function returns -EINVAL in such a situation, instead of -ENOENT like we
+> expected. The return value comes back up to clk_core_fill_parent_index()
+> which proceeds to skip calling clk_core_lookup() because the error
+> pointer isn't equal to -ENOENT, it's -EINVAL.
+>=20
+> Furthermore, we blindly overwrite the error pointer returned by
+> clk_core_get() with NULL when there isn't a legacy .name member
+> specified in the parent map. This isn't too bad right now because we
+> don't really care to differentiate NULL from an error, but in the future
+> we should only try to do a legacy lookup if we know we might find
+> something. This way DT lookups that fail don't try to lookup based on
+> strings when there isn't any string to match, hiding the error from DT
+> parsing.
+>=20
+> Fix both these problems so that clk provider drivers can use the new
+> style of parent mapping without having to also update their DT at the
+> same time. This patch is based on an earlier patch from Taniya Das which
+> checked for -EINVAL in addition to -ENOENT return values from
+> clk_core_get().
+>=20
+> Fixes: 601b6e93304a ("clk: Allow parents to be specified via clkspec inde=
+x")
+> Cc: Taniya Das <tdas@codeaurora.org>
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Reported-by: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> ---
 
-> > We can do a get_dev_pagemap inside the page_walk and touch the pgmap,
-> > or we can do the 'device mutex && retry' pattern and touch the pgmap
-> > in the driver, under that lock.
-> >
-> > However in all cases the current get_dev_pagemap()'s in the page walk
-> > are not necessary, and we can delete them.
-> 
-> Yes, as long as 'struct page' instances resulting from that lookup are
-> not passed outside of that lock.
+Applied to clk-fixes
 
-Indeed.
-
-Also, I was reflecting over lunch that the hmm_range_fault should only
-return DEVICE_PRIVATE pages for the caller's device (see other thread
-with HCH), and in this case, the caller should also be responsible to
-ensure that the driver is not calling hmm_range_fault at the same time
-it is deleting it's own DEVICE_PRIVATE mapping - ie by fencing its
-page fault handler.
-
-This does not apply to PCI_P2PDMA, but, lets see how that looks when
-we get there.
-
-So the whole thing seems pretty safe.
-
-Jason
