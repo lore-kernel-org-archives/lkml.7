@@ -2,123 +2,85 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D365C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF65DC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E23F92064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D2D2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565929556;
+	bh=/MYMccNm5AOcDF4fcw2T3SZ4z2RQifqv523alxazfQg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LxOlTvgRGQFQj/2ikaoBD8SoYj2mz2YRG4S7osD8yrvFujN6qvOSqQZiGlui9dMyL
+	 jQwwkp5sKUDSAMZRC7BGrG03XJY+lnLox1f4bfTPUv0fV6Kxw72zXf+pFZbi+Lxd5Z
+	 UHwg9GWbtvavt1JrrZIxS7oPusUaOCjkD2O5VOWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfHPEWQ (ORCPT
+        id S1726371AbfHPEZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 00:22:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43168 "EHLO mx1.redhat.com"
+        Fri, 16 Aug 2019 00:25:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbfHPEWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 00:22:15 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725878AbfHPEZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 00:25:55 -0400
+Received: from localhost (unknown [106.51.111.160])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 160B085537;
-        Fri, 16 Aug 2019 04:22:15 +0000 (UTC)
-Received: from [10.3.117.107] (ovpn-117-107.phx2.redhat.com [10.3.117.107])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E7E6084256;
-        Fri, 16 Aug 2019 04:22:13 +0000 (UTC)
-Subject: Re: [PATCH v3 0/4] PCI: Clean up pci-sysfs.c
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        bodong@mellanox.com, gregkh@linuxfoundation.org
-References: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
- <20190815153352.86143-1-skunberg.kelsey@gmail.com>
-From:   Don Dutile <ddutile@redhat.com>
-Message-ID: <d993838c-310c-60bd-b788-ab669bf08566@redhat.com>
-Date:   Fri, 16 Aug 2019 00:22:13 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        by mail.kernel.org (Postfix) with ESMTPSA id C88682064A;
+        Fri, 16 Aug 2019 04:25:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565929554;
+        bh=/MYMccNm5AOcDF4fcw2T3SZ4z2RQifqv523alxazfQg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bgdHzz5cVViScm6CVd/sGvDJDZN9V9Yxrp4xBeM/K4D2NXS+avIzggzH7E/R2OSRt
+         gLFeIkk0mD+fQDIs9iiXMW6/tKYTEwedspAQT4r1nPbIjgX2Q+0wLDB39jelaf2fXu
+         EWoWlWA3zFtLGpKDIbYCz7pLctSLJtU0C+duU8Hs=
+Date:   Fri, 16 Aug 2019 09:54:40 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] clk: qcom: clk-rpmh: Add support for SM8150
+Message-ID: <20190816042440.GY12733@vkoul-mobl.Dlink>
+References: <20190814122958.4981-1-vkoul@kernel.org>
+ <20190814122958.4981-2-vkoul@kernel.org>
+ <20190814171946.E9E8D20665@mail.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190815153352.86143-1-skunberg.kelsey@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 16 Aug 2019 04:22:15 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814171946.E9E8D20665@mail.kernel.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/15/2019 11:33 AM, Kelsey Skunberg wrote:
-> This series is designed to clean up device attributes and permissions in
-> pci-sysfs.c. Then move the sysfs SR-IOV functions from pci-sysfs.c to
-> iov.c for better organization.
+On 14-08-19, 10:19, Stephen Boyd wrote:
+> Quoting Vinod Koul (2019-08-14 05:29:58)
+> > Add support for rpmh clocks found in SM8150
+> > 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
 > 
-> Patch 1: Define device attributes with DEVICE_ATTR* instead of __ATTR*.
-> 
-> Patch 2: Change permissions from symbolic to the preferred octal.
-> 
-> Patch 3: Change DEVICE_ATTR() with 0220 permissions to DEVICE_ATTR_WO().
-> 
-> Patch 4: Move sysfs SR-IOV functions to iov.c to keep the feature's code
-> together.
-> 
-> 
-> Patch 1, 2, and 4 will report unusual permissions '0664' used from the
-> following:
-> 
->    static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show,
->                       sriov_numvfs_store);
-> 
->    static DEVICE_ATTR(sriov_drivers_autoprobe, 0664,
->                       sriov_drivers_autoprobe_show,
->                       sriov_drivers_autoprobe_store);
-> 
-> This series preserves the existing permissions set in:
-> 
-> 
->    commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
->                          VF driver binding")
-> 
->    commit 1789382a72a5 ("PCI: SRIOV control and status via sysfs")
-> 
-> Either adding a comment verifying permissions are okay or changing the
-> permissions is to be completed with a new patch.
-> 
-> Changes since v1:
->          Add patch 1 and 2 to fix the way device attributes are defined
->          and change permissions from symbolic to octal. Patch 4 which moves
->          sysfs SR-IOV functions to iov.c will then apply cleaner.
-> 
-> Changes since v2:
-> 
->          Patch 1: Commit log updated. Example shows DEVICE_ATTR_RO()
->          example instead of DEVICE_ATTR(). DEVICE_ATTR() should be avoided
->          unless the files have unusual permissions. Changed to reflect a
->          more encouraged usage.  Also updated regex to be accurate.
-> 
->          Patch 3: [NEW] Add patch to change DEVICE_ATTR() with 0220
->          permissions to DEVICE_ATTR_WO().
-> 
->          Updated series log to reflect new patch and unusual permissions
->          information.
-> 
-> 
-> Kelsey Skunberg (4):
->    PCI: sysfs: Define device attributes with DEVICE_ATTR*
->    PCI: sysfs: Change permissions from symbolic to octal
->    PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()
->    PCI/IOV: Move sysfs SR-IOV functions to iov.c
-> 
->   drivers/pci/iov.c       | 168 ++++++++++++++++++++++++++++++
->   drivers/pci/pci-sysfs.c | 223 ++++------------------------------------
->   drivers/pci/pci.h       |   2 +-
->   3 files changed, 191 insertions(+), 202 deletions(-)
-> 
-Thanks for the cleanup.
+> Patch looks OK, but can you convert this driver to use the new parent
+> style and then update the binding to handle it? We can fix the other
+> platforms and dts files that use this driver in parallel, but sm8150
+> will be forward looking.
 
-Reviewed-by: Donald Dutile <ddutile@redhat.com>
+Yes but that would also impact sdm845 as it uses this driver, so I
+wanted to get this one done so that we have support for rpm clock and
+then do the conversion.
 
+Would that be okay with you to get this in and then I convert this?
+
+Thanks
+-- 
+~Vinod
