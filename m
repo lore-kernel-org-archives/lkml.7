@@ -2,101 +2,124 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B7DC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B717FC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7B0206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C73206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 10:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfHPKpT (ORCPT
+        id S1727184AbfHPKpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 06:45:19 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5656 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727093AbfHPKpS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 06:45:18 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7GAfSJi007328
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 06:45:17 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uds5ykywy-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 06:45:17 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sebott@linux.ibm.com>;
-        Fri, 16 Aug 2019 11:45:14 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 16 Aug 2019 11:45:11 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7GAjAUG38404308
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 16 Aug 2019 10:45:10 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2043A405E;
-        Fri, 16 Aug 2019 10:45:10 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 62662A404D;
-        Fri, 16 Aug 2019 10:45:10 +0000 (GMT)
-Received: from dyn-9-152-212-30.boeblingen.de.ibm.com (unknown [9.152.212.30])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 16 Aug 2019 10:45:10 +0000 (GMT)
-Date:   Fri, 16 Aug 2019 12:45:09 +0200 (CEST)
-From:   Sebastian Ott <sebott@linux.ibm.com>
-X-X-Sender: sebott@schleppi
-To:     Denis Efremov <efremov@linux.com>
-cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org,
+        Fri, 16 Aug 2019 06:45:23 -0400
+Received: from mga09.intel.com ([134.134.136.24]:44447 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727154AbfHPKpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 06:45:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 03:45:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
+   d="scan'208";a="194970281"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Aug 2019 03:45:19 -0700
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Darren Hart <dvhart@infradead.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/10] s390/pci: Loop using PCI_STD_NUM_BARS
-In-Reply-To: <20190816092437.31846-3-efremov@linux.com>
-References: <20190816092437.31846-1-efremov@linux.com> <20190816092437.31846-3-efremov@linux.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
-Organization: =?ISO-8859-15?Q?=22IBM_Deutschland_Research_&_Development_GmbH?=
- =?ISO-8859-15?Q?_=2F_Vorsitzende_des_Aufsichtsrats=3A_Matthias?=
- =?ISO-8859-15?Q?_Hartmann_Gesch=E4ftsf=FChrung=3A_Dirk_Wittkopp?=
- =?ISO-8859-15?Q?_Sitz_der_Gesellschaft=3A_B=F6blingen_=2F_Reg?=
- =?ISO-8859-15?Q?istergericht=3A_Amtsgericht_Stuttgart=2C_HRB_2432?=
- =?ISO-8859-15?Q?94=22?=
+Subject: [PATCH v2 2/3] usb: roles: intel_xhci: Supplying software node for the role mux
+Date:   Fri, 16 Aug 2019 13:45:14 +0300
+Message-Id: <20190816104515.63613-3-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20190816104515.63613-1-heikki.krogerus@linux.intel.com>
+References: <20190816104515.63613-1-heikki.krogerus@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-TM-AS-GCONF: 00
-x-cbid: 19081610-0012-0000-0000-0000033F5BAB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081610-0013-0000-0000-00002179752A
-Message-Id: <alpine.LFD.2.21.1908161244060.1860@schleppi>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-16_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=465 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908160111
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 16 Aug 2019, Denis Efremov wrote:
-> Refactor loops to use 'i < PCI_STD_NUM_BARS' instead of
-> 'i <= PCI_STD_RESOURCE_END'.
-> 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  arch/s390/include/asm/pci.h     |  5 +----
->  arch/s390/include/asm/pci_clp.h |  6 +++---
->  arch/s390/pci/pci.c             | 16 ++++++++--------
->  arch/s390/pci/pci_clp.c         |  6 +++---
->  4 files changed, 15 insertions(+), 18 deletions(-)
-> 
+The primary purpose for this node will be to allow linking
+the users of the switch to it. The users will be for example
+USB Type-C connectors. By supplying a reference to this
+node in the software nodes representing the USB Type-C
+controllers or connectors, the drivers for those devices can
+access the switch.
 
-Acked-by: Sebastian Ott <sebott@linux.ibm.com>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ .../usb/roles/intel-xhci-usb-role-switch.c    | 23 ++++++++++++++-----
+ 1 file changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/usb/roles/intel-xhci-usb-role-switch.c b/drivers/usb/roles/intel-xhci-usb-role-switch.c
+index 277de96181f9..2b1fe2700915 100644
+--- a/drivers/usb/roles/intel-xhci-usb-role-switch.c
++++ b/drivers/usb/roles/intel-xhci-usb-role-switch.c
+@@ -39,6 +39,10 @@ struct intel_xhci_usb_data {
+ 	void __iomem *base;
+ };
+ 
++static const struct software_node intel_xhci_usb_node = {
++	"intel-xhci-usb-sw",
++};
++
+ static int intel_xhci_usb_set_role(struct device *dev, enum usb_role role)
+ {
+ 	struct intel_xhci_usb_data *data = dev_get_drvdata(dev);
+@@ -122,17 +126,13 @@ static enum usb_role intel_xhci_usb_get_role(struct device *dev)
+ 	return role;
+ }
+ 
+-static const struct usb_role_switch_desc sw_desc = {
+-	.set = intel_xhci_usb_set_role,
+-	.get = intel_xhci_usb_get_role,
+-	.allow_userspace_control = true,
+-};
+-
+ static int intel_xhci_usb_probe(struct platform_device *pdev)
+ {
++	struct usb_role_switch_desc sw_desc = { };
+ 	struct device *dev = &pdev->dev;
+ 	struct intel_xhci_usb_data *data;
+ 	struct resource *res;
++	int ret;
+ 
+ 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+@@ -147,6 +147,15 @@ static int intel_xhci_usb_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, data);
+ 
++	ret = software_node_register(&intel_xhci_usb_node);
++	if (ret)
++		return ret;
++
++	sw_desc.set = intel_xhci_usb_set_role,
++	sw_desc.get = intel_xhci_usb_get_role,
++	sw_desc.allow_userspace_control = true,
++	sw_desc.fwnode = software_node_fwnode(&intel_xhci_usb_node);
++
+ 	data->role_sw = usb_role_switch_register(dev, &sw_desc);
+ 	if (IS_ERR(data->role_sw))
+ 		return PTR_ERR(data->role_sw);
+@@ -164,6 +173,8 @@ static int intel_xhci_usb_remove(struct platform_device *pdev)
+ 	pm_runtime_disable(&pdev->dev);
+ 
+ 	usb_role_switch_unregister(data->role_sw);
++	fwnode_handle_put(software_node_fwnode(&intel_xhci_usb_node));
++
+ 	return 0;
+ }
+ 
+-- 
+2.23.0.rc1
 
