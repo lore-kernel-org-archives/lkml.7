@@ -2,243 +2,55 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B46C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591FCC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACBE2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:16:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="iyGheMYs"
+	by mail.kernel.org (Postfix) with ESMTP id 357332064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:18:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfHPLQD (ORCPT
+        id S1727148AbfHPLSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 07:16:03 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:58829 "EHLO pegase1.c-s.fr"
+        Fri, 16 Aug 2019 07:18:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:55196 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbfHPLQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 07:16:02 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4691333mTlz9tyXs;
-        Fri, 16 Aug 2019 13:15:59 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=iyGheMYs; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Ll52ruOpJIhH; Fri, 16 Aug 2019 13:15:59 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4691332WGcz9tyXr;
-        Fri, 16 Aug 2019 13:15:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1565954159; bh=AZa/Vbvz2vvSVzzKeKFOlBKQpBBPn8tg+lwWM3PrWDc=;
-        h=From:Subject:To:Cc:Date:From;
-        b=iyGheMYsJGzG/1XCaE5L9KFLNeNn8MMnG5pDhiaMiUrKrHaRafvaCnhBGvBEOk3/h
-         FV2uv5wOH5ODcEgqywBVQxlG+fDBZNULNMrlbm6Eoao5jGAUvt+IONp52E5r31qm8i
-         6dTfluEIu4RWdZi24lCbXOkS3z9KABK1NTpKHODQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BDC338B776;
-        Fri, 16 Aug 2019 13:16:00 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id UoPRWb9ooZBL; Fri, 16 Aug 2019 13:16:00 +0200 (CEST)
-Received: from pc17473vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 97C768B754;
-        Fri, 16 Aug 2019 13:16:00 +0200 (CEST)
-Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 987C5698B9; Fri, 16 Aug 2019 11:16:00 +0000 (UTC)
-Message-Id: <b2fd7fdecdcf1d0fb836b8742f0422d3d02a1180.1565954131.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2] powerpc/32: Add VDSO version of getcpu
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 16 Aug 2019 11:16:00 +0000 (UTC)
+        id S1727021AbfHPLSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 07:18:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A59EB28;
+        Fri, 16 Aug 2019 04:18:54 -0700 (PDT)
+Received: from localhost.localdomain (unknown [10.169.40.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D86093F706;
+        Fri, 16 Aug 2019 04:18:52 -0700 (PDT)
+From:   Jia He <justin.he@arm.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org, Jia He <justin.he@arm.com>
+Subject: [PATCH 0/2] Fix and support dax kmem on arm64
+Date:   Fri, 16 Aug 2019 19:18:42 +0800
+Message-Id: <20190816111844.87442-1-justin.he@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 18ad51dd342a ("powerpc: Add VDSO version of getcpu") added
-getcpu() for PPC64 only, by making use of a user readable general
-purpose SPR.
+This patch set is to fix some dax kmem driver issues and then it can 
+support to use pmem as normal RAM in arm64 qemu guest.
 
-PPC32 doesn't have any such SPR, a full system call can still be
-avoided by implementing a fast system call which reads the CPU id
-in the task struct and returns immediately without going back in
-virtual mode.
+Jia He (2):
+  drivers/dax/kmem: use default numa_mem_id if target_node is invalid
+  drivers/dax/kmem: give a warning if CONFIG_DEV_DAX_PMEM_COMPAT is
+    enabled
 
-Before the patch, vdsotest reported:
-getcpu: syscall: 1572 nsec/call
-getcpu:    libc: 1787 nsec/call
-getcpu:    vdso: not tested
+ drivers/dax/kmem.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-Now, vdsotest reports:
-getcpu: syscall: 1582 nsec/call
-getcpu:    libc: 667 nsec/call
-getcpu:    vdso: 368 nsec/call
-
-For non SMP, just return CPU id 0 from the VDSO directly.
-
-PPC32 doesn't support CONFIG_NUMA so NUMA node is always 0.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
----
-v2: fixed build error in getcpu.S
----
- arch/powerpc/include/asm/vdso.h         |  2 ++
- arch/powerpc/kernel/head_32.h           | 13 +++++++++++++
- arch/powerpc/kernel/head_booke.h        | 11 +++++++++++
- arch/powerpc/kernel/vdso32/Makefile     |  4 +---
- arch/powerpc/kernel/vdso32/getcpu.S     |  7 +++++++
- arch/powerpc/kernel/vdso32/vdso32.lds.S |  2 --
- 6 files changed, 34 insertions(+), 5 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/vdso.h b/arch/powerpc/include/asm/vdso.h
-index b5e1f8f8a05c..adb54782df5f 100644
---- a/arch/powerpc/include/asm/vdso.h
-+++ b/arch/powerpc/include/asm/vdso.h
-@@ -16,6 +16,8 @@
- /* Define if 64 bits VDSO has procedure descriptors */
- #undef VDS64_HAS_DESCRIPTORS
- 
-+#define NR_MAGIC_FAST_VDSO_SYSCALL	0x789a
-+
- #ifndef __ASSEMBLY__
- 
- /* Offsets relative to thread->vdso_base */
-diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
-index 4a692553651f..a2e38b59785a 100644
---- a/arch/powerpc/kernel/head_32.h
-+++ b/arch/powerpc/kernel/head_32.h
-@@ -3,6 +3,8 @@
- #define __HEAD_32_H__
- 
- #include <asm/ptrace.h>	/* for STACK_FRAME_REGS_MARKER */
-+#include <asm/vdso.h>
-+#include <asm/asm-offsets.h>
- 
- /*
-  * MSR_KERNEL is > 0x8000 on 4xx/Book-E since it include MSR_CE.
-@@ -74,7 +76,13 @@
- .endm
- 
- .macro SYSCALL_ENTRY trapno
-+#ifdef CONFIG_SMP
-+	cmplwi	cr0, r0, NR_MAGIC_FAST_VDSO_SYSCALL
-+#endif
- 	mfspr	r12,SPRN_SPRG_THREAD
-+#ifdef CONFIG_SMP
-+	beq-	1f
-+#endif
- 	mfcr	r10
- 	lwz	r11,TASK_STACK-THREAD(r12)
- 	mflr	r9
-@@ -152,6 +160,11 @@
- 	mtspr	SPRN_SRR0,r11
- 	SYNC
- 	RFI				/* jump to handler, enable MMU */
-+#ifdef CONFIG_SMP
-+1:
-+	lwz	r5, TASK_CPU - THREAD(r12)
-+	RFI
-+#endif
- .endm
- 
- /*
-diff --git a/arch/powerpc/kernel/head_booke.h b/arch/powerpc/kernel/head_booke.h
-index 2ae635df9026..c534e87cac84 100644
---- a/arch/powerpc/kernel/head_booke.h
-+++ b/arch/powerpc/kernel/head_booke.h
-@@ -3,6 +3,8 @@
- #define __HEAD_BOOKE_H__
- 
- #include <asm/ptrace.h>	/* for STACK_FRAME_REGS_MARKER */
-+#include <asm/vdso.h>
-+#include <asm/asm-offsets.h>
- #include <asm/kvm_asm.h>
- #include <asm/kvm_booke_hv_asm.h>
- 
-@@ -104,6 +106,10 @@ FTR_SECTION_ELSE
- #ifdef CONFIG_KVM_BOOKE_HV
- ALT_FTR_SECTION_END_IFSET(CPU_FTR_EMB_HV)
- #endif
-+#ifdef CONFIG_SMP
-+	cmplwi	cr0, r0, NR_MAGIC_FAST_VDSO_SYSCALL
-+	beq-	1f
-+#endif
- 	BOOKE_CLEAR_BTB(r11)
- 	lwz	r11, TASK_STACK - THREAD(r10)
- 	rlwinm	r12,r12,0,4,2	/* Clear SO bit in CR */
-@@ -176,6 +182,11 @@ ALT_FTR_SECTION_END_IFSET(CPU_FTR_EMB_HV)
- 	mtspr	SPRN_SRR0,r11
- 	SYNC
- 	RFI				/* jump to handler, enable MMU */
-+#ifdef CONFIG_SMP
-+1:
-+	lwz	r5, TASK_CPU - THREAD(r10)
-+	RFI
-+#endif
- .endm
- 
- /* To handle the additional exception priority levels on 40x and Book-E
-diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
-index 06f54d947057..e147bbdc12cd 100644
---- a/arch/powerpc/kernel/vdso32/Makefile
-+++ b/arch/powerpc/kernel/vdso32/Makefile
-@@ -2,9 +2,7 @@
- 
- # List of files in the vdso, has to be asm only for now
- 
--obj-vdso32-$(CONFIG_PPC64) = getcpu.o
--obj-vdso32 = sigtramp.o gettimeofday.o datapage.o cacheflush.o note.o \
--		$(obj-vdso32-y)
-+obj-vdso32 = sigtramp.o gettimeofday.o datapage.o cacheflush.o note.o getcpu.o
- 
- # Build rules
- 
-diff --git a/arch/powerpc/kernel/vdso32/getcpu.S b/arch/powerpc/kernel/vdso32/getcpu.S
-index 63e914539e1a..bde226ad904d 100644
---- a/arch/powerpc/kernel/vdso32/getcpu.S
-+++ b/arch/powerpc/kernel/vdso32/getcpu.S
-@@ -17,7 +17,14 @@
-  */
- V_FUNCTION_BEGIN(__kernel_getcpu)
-   .cfi_startproc
-+#if defined(CONFIG_PPC64)
- 	mfspr	r5,SPRN_SPRG_VDSO_READ
-+#elif defined(CONFIG_SMP)
-+	li	r0, NR_MAGIC_FAST_VDSO_SYSCALL
-+	sc	/* returns cpuid in r5, clobbers cr0 and r10-r13 */
-+#else
-+	li	r5, 0
-+#endif
- 	cmpwi	cr0,r3,0
- 	cmpwi	cr1,r4,0
- 	clrlwi  r6,r5,16
-diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-index 099a6db14e67..663880671e20 100644
---- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
-+++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-@@ -152,9 +152,7 @@ VERSION
- 		__kernel_sync_dicache_p5;
- 		__kernel_sigtramp32;
- 		__kernel_sigtramp_rt32;
--#ifdef CONFIG_PPC64
- 		__kernel_getcpu;
--#endif
- 		__kernel_time;
- 
- 	local: *;
 -- 
-2.13.3
+2.17.1
 
