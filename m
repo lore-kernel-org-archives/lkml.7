@@ -2,129 +2,159 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EF8C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A53BC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B44F2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:52:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="lvt/3NcS"
+	by mail.kernel.org (Postfix) with ESMTP id ECBC92077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfHPHwX (ORCPT
+        id S1726864AbfHPHyf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:52:23 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:57860 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726575AbfHPHwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:52:23 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 468wX40Bpwz9tyXd;
-        Fri, 16 Aug 2019 09:52:20 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=lvt/3NcS; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id xABwuLbzj_RA; Fri, 16 Aug 2019 09:52:19 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 468wX34sM3z9tyXb;
-        Fri, 16 Aug 2019 09:52:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1565941939; bh=NVZpQ45mQXEYG6C2v7/MpBMTIZomncVuSbE8wIXGvu4=;
-        h=From:Subject:To:Cc:Date:From;
-        b=lvt/3NcSJHrHfZ7jQKH+gkHhVhelh1T8NlQai+6/Rj7Gdf7KiFlWkuUgrUA/g47FJ
-         O9W80bZamG82xGYj/lG80tupKGtP1+5KQzFAvspDMDjDJ41YCvU/w1a/X0rcIvKCna
-         2JEKlxMu6yTnZ2rMV5nZdcy/M0PfNd/2AJ8Yf1pI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C79498B776;
-        Fri, 16 Aug 2019 09:52:20 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id k_440nLP-DAb; Fri, 16 Aug 2019 09:52:20 +0200 (CEST)
-Received: from pc17473vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AD1EE8B754;
-        Fri, 16 Aug 2019 09:52:20 +0200 (CEST)
-Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 993A86B6CD; Fri, 16 Aug 2019 07:52:20 +0000 (UTC)
-Message-Id: <c6cea38f90480268d439ca44a645647e260fff09.1565941808.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/32: Add warning on misaligned copy_page() or
- clear_page()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 16 Aug 2019 07:52:20 +0000 (UTC)
+        Fri, 16 Aug 2019 03:54:35 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:40218 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfHPHye (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 03:54:34 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7G7sNNx016892, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7G7sNNx016892
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 16 Aug 2019 15:54:24 +0800
+Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
+ RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Fri, 16 Aug
+ 2019 15:54:23 +0800
+From:   Tony Chuang <yhchuang@realtek.com>
+To:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@endlessm.com" <linux@endlessm.com>
+Subject: RE: [PATCH] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
+Thread-Topic: [PATCH] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
+Thread-Index: AQHVU/x2Dr02g4Mib0ipy5Mk0nEf5ab9Zdpg
+Date:   Fri, 16 Aug 2019 07:54:22 +0000
+Message-ID: <F7CD281DE3E379468C6D07993EA72F84D18929BF@RTITMBSVM04.realtek.com.tw>
+References: <20190816063109.4699-1-jian-hong@endlessm.com>
+In-Reply-To: <20190816063109.4699-1-jian-hong@endlessm.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.68.183]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-copy_page() and clear_page() expect page aligned destination, and
-use dcbz instruction to clear entire cache lines based on the
-assumption that the destination is cache aligned.
+> From: Jian-Hong Pan [mailto:jian-hong@endlessm.com]
+> 
+> There is a mass of jobs between spin lock and unlock in the hardware
+> IRQ which will occupy much time originally. To make system work more
+> efficiently, this patch moves the jobs to the soft IRQ (bottom half) to
+> reduce the time in hardware IRQ.
+> 
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> ---
+>  drivers/net/wireless/realtek/rtw88/pci.c | 36 +++++++++++++++++++-----
+>  1 file changed, 29 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
+> b/drivers/net/wireless/realtek/rtw88/pci.c
+> index 00ef229552d5..355606b167c6 100644
+> --- a/drivers/net/wireless/realtek/rtw88/pci.c
+> +++ b/drivers/net/wireless/realtek/rtw88/pci.c
+> @@ -866,12 +866,29 @@ static irqreturn_t rtw_pci_interrupt_handler(int irq,
+> void *dev)
+>  {
+>  	struct rtw_dev *rtwdev = dev;
+>  	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
+> -	u32 irq_status[4];
+> +	unsigned long flags;
+> 
+> -	spin_lock(&rtwpci->irq_lock);
+> +	spin_lock_irqsave(&rtwpci->irq_lock, flags);
+>  	if (!rtwpci->irq_enabled)
+>  		goto out;
+> 
+> +	/* disable RTW PCI interrupt to avoid more interrupts before the end of
+> +	 * thread function
+> +	 */
+> +	rtw_pci_disable_interrupt(rtwdev, rtwpci);
+> +out:
+> +	spin_unlock_irqrestore(&rtwpci->irq_lock, flags);
+> +
+> +	return IRQ_WAKE_THREAD;
+> +}
+> +
+> +static irqreturn_t rtw_pci_interrupt_threadfn(int irq, void *dev)
+> +{
+> +	struct rtw_dev *rtwdev = dev;
+> +	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
+> +	unsigned long flags;
+> +	u32 irq_status[4];
+> +
+>  	rtw_pci_irq_recognized(rtwdev, rtwpci, irq_status);
+> 
+>  	if (irq_status[0] & IMR_MGNTDOK)
+> @@ -891,8 +908,11 @@ static irqreturn_t rtw_pci_interrupt_handler(int irq,
+> void *dev)
+>  	if (irq_status[0] & IMR_ROK)
+>  		rtw_pci_rx_isr(rtwdev, rtwpci, RTW_RX_QUEUE_MPDU);
+> 
+> -out:
+> -	spin_unlock(&rtwpci->irq_lock);
+> +	/* all of the jobs for this interrupt have been done */
+> +	spin_lock_irqsave(&rtwpci->irq_lock, flags);
 
-As shown during analysis of a bug in BTRFS filesystem, a misaligned
-copy_page() can create bugs that are difficult to locate (see Link).
+Shouldn't we protect the ISRs above?
 
-Add an explicit WARNING when copy_page() or clear_page() are called
-with misaligned destination.
+This patch could actually reduce the time of IRQ.
+But I think I need to further test it with PCI MSI interrupt.
+https://patchwork.kernel.org/patch/11081539/
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Erhard F. <erhard_f@mailbox.org>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=204371
----
- arch/powerpc/include/asm/page_32.h | 4 ++++
- arch/powerpc/kernel/misc_32.S      | 5 +++++
- 2 files changed, 9 insertions(+)
+Maybe we could drop the "rtw_pci_[enable/disable]_interrupt" when MSI
+Is enabled with this patch.
 
-diff --git a/arch/powerpc/include/asm/page_32.h b/arch/powerpc/include/asm/page_32.h
-index 683dfbc67ca8..d64dfe3ac712 100644
---- a/arch/powerpc/include/asm/page_32.h
-+++ b/arch/powerpc/include/asm/page_32.h
-@@ -40,6 +40,8 @@ typedef unsigned long long pte_basic_t;
- typedef unsigned long pte_basic_t;
- #endif
- 
-+#include <asm/bug.h>
-+
- /*
-  * Clear page using the dcbz instruction, which doesn't cause any
-  * memory traffic (except to write out any cache lines which get
-@@ -49,6 +51,8 @@ static inline void clear_page(void *addr)
- {
- 	unsigned int i;
- 
-+	WARN_ON((unsigned long)addr & (L1_CACHE_BYTES - 1));
-+
- 	for (i = 0; i < PAGE_SIZE / L1_CACHE_BYTES; i++, addr += L1_CACHE_BYTES)
- 		dcbz(addr);
- }
-diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
-index fe4bd321730e..02d90e1ebf65 100644
---- a/arch/powerpc/kernel/misc_32.S
-+++ b/arch/powerpc/kernel/misc_32.S
-@@ -452,7 +452,12 @@ END_FTR_SECTION_IFSET(CPU_FTR_COHERENT_ICACHE)
- 	stwu	r9,16(r3)
- 
- _GLOBAL(copy_page)
-+	rlwinm	r5, r3, 0, L1_CACHE_BYTES - 1
- 	addi	r3,r3,-4
-+
-+0:	twnei	r5, 0	/* WARN if r3 is not cache aligned */
-+	EMIT_BUG_ENTRY 0b,__FILE__,__LINE__, BUGFLAG_WARNING
-+
- 	addi	r4,r4,-4
- 
- 	li	r5,4
--- 
-2.13.3
+> +	if (rtw_flag_check(rtwdev, RTW_FLAG_RUNNING))
+> +		rtw_pci_enable_interrupt(rtwdev, rtwpci);
+> +	spin_unlock_irqrestore(&rtwpci->irq_lock, flags);
+> 
+>  	return IRQ_HANDLED;
+>  }
+> @@ -1152,8 +1172,10 @@ static int rtw_pci_probe(struct pci_dev *pdev,
+>  		goto err_destroy_pci;
+>  	}
+> 
+> -	ret = request_irq(pdev->irq, &rtw_pci_interrupt_handler,
+> -			  IRQF_SHARED, KBUILD_MODNAME, rtwdev);
+> +	ret = devm_request_threaded_irq(rtwdev->dev, pdev->irq,
+> +					rtw_pci_interrupt_handler,
+> +					rtw_pci_interrupt_threadfn,
+> +					IRQF_SHARED, KBUILD_MODNAME, rtwdev);
+>  	if (ret) {
+>  		ieee80211_unregister_hw(hw);
+>  		goto err_destroy_pci;
+> @@ -1192,7 +1214,7 @@ static void rtw_pci_remove(struct pci_dev *pdev)
+>  	rtw_pci_disable_interrupt(rtwdev, rtwpci);
+>  	rtw_pci_destroy(rtwdev, pdev);
+>  	rtw_pci_declaim(rtwdev, pdev);
+> -	free_irq(rtwpci->pdev->irq, rtwdev);
+> +	devm_free_irq(rtwdev->dev, rtwpci->pdev->irq, rtwdev);
+>  	rtw_core_deinit(rtwdev);
+>  	ieee80211_free_hw(hw);
+>  }
+> --
+> 2.20.1
 
+Yan-Hsuan
