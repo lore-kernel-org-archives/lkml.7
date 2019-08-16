@@ -2,257 +2,213 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8873C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63D1C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1C4206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A980206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:48:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NxRLm8Mg"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="KgIHaIpX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfHPOsv (ORCPT
+        id S1727490AbfHPOsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 10:48:51 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:43963 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727362AbfHPOsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 10:48:50 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4695mb1H04z9v05t;
-        Fri, 16 Aug 2019 16:48:47 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=NxRLm8Mg; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id nstH652I8JiG; Fri, 16 Aug 2019 16:48:47 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4695mb07L4z9v05s;
-        Fri, 16 Aug 2019 16:48:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1565966927; bh=hpWgRSJjpWSuZNORQXd2qzqujrFlTrU3omHeRmI/oNk=;
-        h=From:Subject:To:Cc:Date:From;
-        b=NxRLm8MgDFxBwG26J8ANg5Go1vOk3zU4Ou7OyIFcYpmZQeJkWgT9MJhGbr4CwGI7g
-         ttuw2BZt8TKkgo2TJcOXDO+3lk/kpq6MZH/Y/OhNtZtlO1rqhuDWwXHSX0hH+ZdTo3
-         l57qawcfMo7LptnWU8aNgaiw5cjSbaYPLk9kKJBs=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id ADBD48B78A;
-        Fri, 16 Aug 2019 16:48:48 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 7KHQN8PadwAx; Fri, 16 Aug 2019 16:48:48 +0200 (CEST)
-Received: from pc17473vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 81D268B754;
-        Fri, 16 Aug 2019 16:48:48 +0200 (CEST)
-Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 547156B6CC; Fri, 16 Aug 2019 14:48:48 +0000 (UTC)
-Message-Id: <65f1ed51b9cff219b9380c81d88353570cafdfd3.1565966871.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/vdso32: inline __get_datapage()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 16 Aug 2019 14:48:48 +0000 (UTC)
+        Fri, 16 Aug 2019 10:48:54 -0400
+Received: from mail-eopbgr730099.outbound.protection.outlook.com ([40.107.73.99]:13536
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727371AbfHPOsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 10:48:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E07gdw6I2l08cbgRvTnyjHr4JIU+VXSaHKA2KUYnYW+73OiNHzWI0cmAZo+64ruaBY3AwHp3+retQXbskVeQhih08UtFxod10j4OiHLtf6siXXBe+pTA6hWVT+HeS1YM0lDzE7jpzHhd3X012tSSooGsmOsDgPs06rPfGDo8CgzXYP0wCH22vg56BpWDjQdJd8ZKJyGVnkuVYYkN8rmRKNnc4IL3RyZbIw2x0k6aWjipB7pFqjNf/FnP9XKcsV+RjO0etixL9Fkpr6UmXPxHoh8KkZOvSCqcyYv7/F47geFD+RMrC9I6ilVS6ymx6eqc9/Vy/tFsw0QspIpe4k5qVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PY+tg+KOkgEb0DjfbyMaw5efnvppS83nBvwHLIRZBHk=;
+ b=FfVYedURHwUfeTWT1144IHLVkpCQXCTGK80IoPQ+xRh9nsnMM1Jff2fMVWpBJPTAvrb4to7S3DXR0IyPDU862Kgqs8YU0aCmSb0ETgsss9p2GCV6PNAsLP0i4xYqeXd5ZypauaC2VfDeVU3OOEFZHLWAjCIf4KaEOHmrJYfMAtIRKIYgahxf6FcoDjF6ozmVqBZ/Ju/rQACfQrV9rSbVwiYq/rvoe2wthZ228M4RJnVDsRrmcuJ6eZrruqsQOLvw2fYy7ZrqvUvZkkWQJg53QMAZJNi3S7cR2HEbmjRwOgZNHVrl/LBT4C7rM+UByNEjer2Tyz9liwIjSFF6vLghDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PY+tg+KOkgEb0DjfbyMaw5efnvppS83nBvwHLIRZBHk=;
+ b=KgIHaIpX5KvqBcILgsPmsTMd38Rdr9puGKOR8PMU5C7irbdW2D/cEVn1fJiUIO0gVIJzWg5irCmST5SFVGUWQsN4nsoqdTE7lnJbBG8U2VaESJaT5Nv/y4N4HXYEXxiNKzk8oErqpN28D/kLbYSCMG0zmFlPbG2j7z1kVu3kU78=
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
+ DM6PR21MB1292.namprd21.prod.outlook.com (20.179.52.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.5; Fri, 16 Aug 2019 14:48:48 +0000
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::28a1:fa7:2ff:108b]) by DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::28a1:fa7:2ff:108b%5]) with mapi id 15.20.2199.007; Fri, 16 Aug 2019
+ 14:48:48 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "eranbe@mellanox.com" <eranbe@mellanox.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net-next, 2/6] PCI: hv: Add a Hyper-V PCI mini driver for
+ software backchannel interface
+Thread-Topic: [PATCH net-next, 2/6] PCI: hv: Add a Hyper-V PCI mini driver for
+ software backchannel interface
+Thread-Index: AQHVUtO4i0f5rhE14EmISE1mYwr8y6b9tkuAgAAliYA=
+Date:   Fri, 16 Aug 2019 14:48:48 +0000
+Message-ID: <DM6PR21MB13375FA0BA0220A91EF448E1CAAF0@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <1565809632-39138-1-git-send-email-haiyangz@microsoft.com>
+ <1565809632-39138-3-git-send-email-haiyangz@microsoft.com>
+ <878srt8fd8.fsf@vitty.brq.redhat.com>
+In-Reply-To: <878srt8fd8.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-16T14:48:47.0931313Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=31ce1e32-5d60-43d7-ad92-451c2d4f5574;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 871fb072-934e-429e-c29d-08d72258d8be
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1292;
+x-ms-traffictypediagnostic: DM6PR21MB1292:|DM6PR21MB1292:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM6PR21MB1292755D3E03992BAC7BDCFACAAF0@DM6PR21MB1292.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0131D22242
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(136003)(376002)(346002)(366004)(13464003)(199004)(189003)(71200400001)(102836004)(55016002)(6246003)(54906003)(305945005)(478600001)(8676002)(81156014)(7696005)(25786009)(8990500004)(229853002)(7416002)(99286004)(14454004)(76176011)(81166006)(256004)(9686003)(4326008)(3846002)(2201001)(110136005)(2906002)(7736002)(6436002)(6116002)(74316002)(53936002)(33656002)(66946007)(316002)(2501003)(22452003)(71190400001)(86362001)(10290500003)(5660300002)(486006)(76116006)(446003)(64756008)(66556008)(11346002)(6506007)(26005)(66446008)(8936002)(10090500001)(66066001)(52536014)(186003)(53546011)(476003)(66476007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1292;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IIthBiS3KUpVZ7bZUBDHxE8s0f06PIOGJ8padxBJvqJEPBLtAPqKMoBI2uK1BG1sfRXK/4yhkPLZH+i6GRrsyJ7SsD3G9IWnptl7CRKbSgb8oWrK355cK4RCUM3gmyTK8XKBnd6yYcC+c8hDvKfbKkH9XWGmJ/6KmrOYUcz/4DyAwOtsMCaYFvVgQbNVdrkxNPvvE4jpNJbxxBZ18e7Eb7O3B3xZWe3i3s1NXlYJ6i7ULRibfgs4LFDg62TR2kNXJI3Gfogzi0GBRxm3s4E9wsNs8V8ZDZmiqyiFyd9dVrtl8TKx0UNLi6iCGVa0rqDZNHAtYj+zr+lKO/lFwHa5WtiY8lVOqGl6jaSxBfWa3UnTNwaIXfzQLUXHMa3Jlv4V0aO2QTshfa82xUdqnNCQzLLwSEFJnEsWrrqxe5GcVeo=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 871fb072-934e-429e-c29d-08d72258d8be
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 14:48:48.3438
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IvG1via0dNRD1krqyNGlWtNi87UMTsNNUyx3yYuLIoSQ7DuIC+oFY1PSChKbWHS+5JseSq3Dq+mSx1ID4DsJ/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1292
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__get_datapage() is only a few instructions to retrieve the
-address of the page where the kernel stores data to the VDSO.
 
-By inlining this function into its users, a bl/blr pair and
-a mflr/mtlr pair is avoided, plus a few reg moves.
 
-The improvement is noticeable (about 55 nsec/call on an 8xx)
+> -----Original Message-----
+> From: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Sent: Friday, August 16, 2019 8:28 AM
+> To: Haiyang Zhang <haiyangz@microsoft.com>; sashal@kernel.org;
+> davem@davemloft.net; saeedm@mellanox.com; leon@kernel.org;
+> eranbe@mellanox.com; lorenzo.pieralisi@arm.com; bhelgaas@google.com;
+> linux-pci@vger.kernel.org; linux-hyperv@vger.kernel.org;
+> netdev@vger.kernel.org
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>; KY Srinivasan
+> <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH net-next, 2/6] PCI: hv: Add a Hyper-V PCI mini driver=
+ for
+> software backchannel interface
+>=20
+> Haiyang Zhang <haiyangz@microsoft.com> writes:
+>=20
+> > This mini driver is a helper driver allows other drivers to have a
+> > common interface with the Hyper-V PCI frontend driver.
+> >
+> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> > Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+> > ---
+> >  MAINTAINERS                              |  1 +
+> >  drivers/pci/Kconfig                      |  1 +
+> >  drivers/pci/controller/Kconfig           |  7 ++++
+> >  drivers/pci/controller/Makefile          |  1 +
+> >  drivers/pci/controller/pci-hyperv-mini.c | 70
+> ++++++++++++++++++++++++++++++++
+> >  drivers/pci/controller/pci-hyperv.c      | 12 ++++--
+> >  include/linux/hyperv.h                   | 30 ++++++++++----
+> >  7 files changed, 111 insertions(+), 11 deletions(-)  create mode
+> > 100644 drivers/pci/controller/pci-hyperv-mini.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS index e352550..c4962b9 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -7453,6 +7453,7 @@ F:	drivers/hid/hid-hyperv.c
+> >  F:	drivers/hv/
+> >  F:	drivers/input/serio/hyperv-keyboard.c
+> >  F:	drivers/pci/controller/pci-hyperv.c
+> > +F:	drivers/pci/controller/pci-hyperv-mini.c
+> >  F:	drivers/net/hyperv/
+> >  F:	drivers/scsi/storvsc_drv.c
+> >  F:	drivers/uio/uio_hv_generic.c
+> > diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig index
+> > 2ab9240..bb852f5 100644
+> > --- a/drivers/pci/Kconfig
+> > +++ b/drivers/pci/Kconfig
+> > @@ -182,6 +182,7 @@ config PCI_LABEL
+> >  config PCI_HYPERV
+> >          tristate "Hyper-V PCI Frontend"
+> >          depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN
+> &&
+> > X86_64
+> > +	select PCI_HYPERV_MINI
+> >          help
+> >            The PCI device frontend driver allows the kernel to import a=
+rbitrary
+> >            PCI devices from a PCI backend to support PCI driver domains=
+.
+> > diff --git a/drivers/pci/controller/Kconfig
+> > b/drivers/pci/controller/Kconfig index fe9f9f1..8e31cba 100644
+> > --- a/drivers/pci/controller/Kconfig
+> > +++ b/drivers/pci/controller/Kconfig
+> > @@ -281,5 +281,12 @@ config VMD
+> >  	  To compile this driver as a module, choose M here: the
+> >  	  module will be called vmd.
+> >
+> > +config PCI_HYPERV_MINI
+> > +	tristate "Hyper-V PCI Mini"
+> > +	depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN
+> && X86_64
+> > +	help
+> > +	  The Hyper-V PCI Mini is a helper driver allows other drivers to
+> > +	  have a common interface with the Hyper-V PCI frontend driver.
+> > +
+>=20
+> Out of pure curiosity, why not just export this interface from PCI_HYPERV
+> directly? Why do we need this stub?
 
-vdsotest before the patch:
-gettimeofday:    vdso: 731 nsec/call
-clock-gettime-realtime-coarse:    vdso: 668 nsec/call
-clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
+The pci_hyperv can only be loaded on VMs on Hyper-V and Azure. Other=20
+drivers like MLX5e will have symbolic dependency of pci_hyperv if they=20
+use functions exported by pci_hyperv. This dependency will cause other=20
+drivers fail to load on other platforms, like VMs on KVM. So we created=20
+this mini driver, which can be loaded on any platforms to provide the=20
+symbolic dependency.
 
-vdsotest after the patch:
-gettimeofday:    vdso: 677 nsec/call
-clock-gettime-realtime-coarse:    vdso: 613 nsec/call
-clock-gettime-monotonic-coarse:    vdso: 690 nsec/call
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/kernel/vdso32/cacheflush.S   | 10 +++++-----
- arch/powerpc/kernel/vdso32/datapage.S     | 29 ++++-------------------------
- arch/powerpc/kernel/vdso32/datapage.h     | 12 ++++++++++++
- arch/powerpc/kernel/vdso32/gettimeofday.S | 11 +++++------
- 4 files changed, 26 insertions(+), 36 deletions(-)
- create mode 100644 arch/powerpc/kernel/vdso32/datapage.h
-
-diff --git a/arch/powerpc/kernel/vdso32/cacheflush.S b/arch/powerpc/kernel/vdso32/cacheflush.S
-index 7f882e7b9f43..e9453837e4ee 100644
---- a/arch/powerpc/kernel/vdso32/cacheflush.S
-+++ b/arch/powerpc/kernel/vdso32/cacheflush.S
-@@ -10,6 +10,8 @@
- #include <asm/vdso.h>
- #include <asm/asm-offsets.h>
- 
-+#include "datapage.h"
-+
- 	.text
- 
- /*
-@@ -24,14 +26,12 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
-   .cfi_startproc
- 	mflr	r12
-   .cfi_register lr,r12
--	mr	r11,r3
--	bl	__get_datapage@local
-+	get_datapage	r10, r0
- 	mtlr	r12
--	mr	r10,r3
- 
- 	lwz	r7,CFG_DCACHE_BLOCKSZ(r10)
- 	addi	r5,r7,-1
--	andc	r6,r11,r5		/* round low to line bdy */
-+	andc	r6,r3,r5		/* round low to line bdy */
- 	subf	r8,r6,r4		/* compute length */
- 	add	r8,r8,r5		/* ensure we get enough */
- 	lwz	r9,CFG_DCACHE_LOGBLOCKSZ(r10)
-@@ -48,7 +48,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
- 
- 	lwz	r7,CFG_ICACHE_BLOCKSZ(r10)
- 	addi	r5,r7,-1
--	andc	r6,r11,r5		/* round low to line bdy */
-+	andc	r6,r3,r5		/* round low to line bdy */
- 	subf	r8,r6,r4		/* compute length */
- 	add	r8,r8,r5
- 	lwz	r9,CFG_ICACHE_LOGBLOCKSZ(r10)
-diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
-index 6984125b9fc0..d480d2d4a3fe 100644
---- a/arch/powerpc/kernel/vdso32/datapage.S
-+++ b/arch/powerpc/kernel/vdso32/datapage.S
-@@ -11,34 +11,13 @@
- #include <asm/unistd.h>
- #include <asm/vdso.h>
- 
-+#include "datapage.h"
-+
- 	.text
- 	.global	__kernel_datapage_offset;
- __kernel_datapage_offset:
- 	.long	0
- 
--V_FUNCTION_BEGIN(__get_datapage)
--  .cfi_startproc
--	/* We don't want that exposed or overridable as we want other objects
--	 * to be able to bl directly to here
--	 */
--	.protected __get_datapage
--	.hidden __get_datapage
--
--	mflr	r0
--  .cfi_register lr,r0
--
--	bcl	20,31,data_page_branch
--data_page_branch:
--	mflr	r3
--	mtlr	r0
--	addi	r3, r3, __kernel_datapage_offset-data_page_branch
--	lwz	r0,0(r3)
--  .cfi_restore lr
--	add	r3,r0,r3
--	blr
--  .cfi_endproc
--V_FUNCTION_END(__get_datapage)
--
- /*
-  * void *__kernel_get_syscall_map(unsigned int *syscall_count) ;
-  *
-@@ -53,7 +32,7 @@ V_FUNCTION_BEGIN(__kernel_get_syscall_map)
- 	mflr	r12
-   .cfi_register lr,r12
- 	mr	r4,r3
--	bl	__get_datapage@local
-+	get_datapage	r3, r0
- 	mtlr	r12
- 	addi	r3,r3,CFG_SYSCALL_MAP32
- 	cmpli	cr0,r4,0
-@@ -74,7 +53,7 @@ V_FUNCTION_BEGIN(__kernel_get_tbfreq)
-   .cfi_startproc
- 	mflr	r12
-   .cfi_register lr,r12
--	bl	__get_datapage@local
-+	get_datapage	r3, r0
- 	lwz	r4,(CFG_TB_TICKS_PER_SEC + 4)(r3)
- 	lwz	r3,CFG_TB_TICKS_PER_SEC(r3)
- 	mtlr	r12
-diff --git a/arch/powerpc/kernel/vdso32/datapage.h b/arch/powerpc/kernel/vdso32/datapage.h
-new file mode 100644
-index 000000000000..ad96256be090
---- /dev/null
-+++ b/arch/powerpc/kernel/vdso32/datapage.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+
-+.macro get_datapage ptr, tmp
-+	bcl	20,31,888f
-+888:
-+	mflr	\ptr
-+	addi	\ptr, \ptr, __kernel_datapage_offset - 888b
-+	lwz	\tmp, 0(\ptr)
-+	add	\ptr, \tmp, \ptr
-+.endm
-+
-+
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index e10098cde89c..91a58f01dcd5 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -12,6 +12,8 @@
- #include <asm/asm-offsets.h>
- #include <asm/unistd.h>
- 
-+#include "datapage.h"
-+
- /* Offset for the low 32-bit part of a field of long type */
- #ifdef CONFIG_PPC64
- #define LOPART	4
-@@ -35,8 +37,7 @@ V_FUNCTION_BEGIN(__kernel_gettimeofday)
- 
- 	mr	r10,r3			/* r10 saves tv */
- 	mr	r11,r4			/* r11 saves tz */
--	bl	__get_datapage@local	/* get data page */
--	mr	r9, r3			/* datapage ptr in r9 */
-+	get_datapage	r9, r0
- 	cmplwi	r10,0			/* check if tv is NULL */
- 	beq	3f
- 	lis	r7,1000000@ha		/* load up USEC_PER_SEC */
-@@ -82,8 +83,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	mflr	r12			/* r12 saves lr */
-   .cfi_register lr,r12
- 	mr	r11,r4			/* r11 saves tp */
--	bl	__get_datapage@local	/* get data page */
--	mr	r9,r3			/* datapage ptr in r9 */
-+	get_datapage	r9, r0
- 	lis	r7,NSEC_PER_SEC@h	/* want nanoseconds */
- 	ori	r7,r7,NSEC_PER_SEC@l
- 	beq	cr5,70f
-@@ -235,8 +235,7 @@ V_FUNCTION_BEGIN(__kernel_time)
-   .cfi_register lr,r12
- 
- 	mr	r11,r3			/* r11 holds t */
--	bl	__get_datapage@local
--	mr	r9, r3			/* datapage ptr in r9 */
-+	get_datapage	r9, r0
- 
- 	lwz	r3,STAMP_XTIME+TSPEC_TV_SEC(r9)
- 
--- 
-2.13.3
-
+Thanks,
+- Haiyang
