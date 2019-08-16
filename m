@@ -2,132 +2,94 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60887C3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07621C3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AECB2086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C85A62086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 00:46:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="jodWbgNs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h/NT9uWk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbfHPAnM (ORCPT
+        id S1726554AbfHPAqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 20:43:12 -0400
-Received: from mail-eopbgr130040.outbound.protection.outlook.com ([40.107.13.40]:33095
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725440AbfHPAnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 20:43:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i4ZnDIFqVa32ZRCo6FyOtKqmtHJdpZ+wio23ioQgokDEsYjQlskS4R/GXtZHb2IyRBhsBP6lNpnPijUyonXdRlKvg/JwGKEw9SZ038V+J/xQc2DCy67THP2CDxlYkT7cTyHbD8f+Ohyiyid4W68AvSarYsYsX6r1yfZuy4OdfOqy6GvEri2duAkx4wTpjkAFVWf0qD79dtEUIQp1SNM2ZVHUkcys4KHkybAGj0wYyuKj2TmTnjMcNOc03IOIKdgyEIuJY+K7KgxTmje943hXouiUAjHcGB9wcKtb+D1kVTdVb1QNpeqw8mpZAbkOLyY5GCgNK2NxtaUTYiNJCgFrUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f+fFWNtn3fh9ETaY63oLhYA/T5giLbLqJ/XZiEiqCu4=;
- b=Slklgyq5I3kJrEM3DSFiAlfv5zOCxysUVzBSDldV5MONflIjHo5nzvTRE2UjxqxrU7sJQO1w+RmCoIJKeV/WbCdJgnlCdLMjEJrB4XALHolHYt5hCOUgchRRJq8HaRCe7BfeHpdjZlNQpK3l8Y2d40J7nv2C1CUoYU0xnL8C9BTovwPnI1YR7wflCirPK0yujKI/qk9OKc55S20o8GuJJ54YQ6gHi66W5zF0tGRWjXfENsVgJmlPgEw8OM+s/riOunbHTG7RDkFaEP5lC22E5HiVFLdFzzMk1VAjAen94UBWrJkQTC+zIhaeRUP0GTif/1iLgnnqEwbbHYZboSKN3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f+fFWNtn3fh9ETaY63oLhYA/T5giLbLqJ/XZiEiqCu4=;
- b=jodWbgNsx2PUvjFc8wwpCsTnz5ILZzWpt1yigSDEzqvkhytQBu7a4AxixAhEGzmP6srsWpGQnIDGNPZPNqX8cbZ+KUqkYG0pdZlbMkEpMNhNtdiPOsHJBigxtN2SGR5ftHCnq0w2lxQ99kMccr34vtTmwbDR0SinqD9zQ4eMQtE=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.20; Fri, 16 Aug 2019 00:43:08 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2178.016; Fri, 16 Aug 2019
- 00:43:08 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Jerome Glisse <jglisse@redhat.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct hmm_vma_walk
-Thread-Topic: [PATCH 04/15] mm: remove the pgmap field from struct
- hmm_vma_walk
-Thread-Index: AQHVTHDc5B4IgstYQk6yBJaVfn8xGqbv9wIAgAARNACAAMySgIAJE76AgABlPQCAAGF5AIAAFowAgAHIzYCAABojAIAAAd6AgAAIBgCAAAXLAIAAAlcAgAAC0YCAAECugA==
-Date:   Fri, 16 Aug 2019 00:43:07 +0000
-Message-ID: <20190816004303.GC9929@mellanox.com>
-References: <20190814073854.GA27249@lst.de>
- <20190814132746.GE13756@mellanox.com>
- <CAPcyv4g8usp8prJ+1bMtyV1xuedp5FKErBp-N8+KzR=rJ-v0QQ@mail.gmail.com>
- <20190815180325.GA4920@redhat.com>
- <CAPcyv4g4hzcEA=TPYVTiqpbtOoS30ahogRUttCvQAvXQbQjfnw@mail.gmail.com>
- <20190815194339.GC9253@redhat.com>
- <CAPcyv4jid8_=-8hBpn_Qm=c4S8BapL9B9RGT7e9uu303yH=Yqw@mail.gmail.com>
- <20190815203306.GB25517@redhat.com> <20190815204128.GI22970@mellanox.com>
- <20190815205132.GC25517@redhat.com>
-In-Reply-To: <20190815205132.GC25517@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTXPR0101CA0040.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:1::17) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 106bd7bf-d98c-4516-588d-08d721e2b4f4
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB3279;
-x-ms-traffictypediagnostic: VI1PR05MB3279:
-x-microsoft-antispam-prvs: <VI1PR05MB32795D2B9DE58CE56782B8F6CFAF0@VI1PR05MB3279.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0131D22242
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(39850400004)(366004)(396003)(189003)(199004)(66446008)(486006)(99286004)(2616005)(53936002)(25786009)(186003)(446003)(14444005)(4326008)(26005)(66066001)(8936002)(8676002)(81166006)(476003)(2906002)(102836004)(64756008)(66556008)(3846002)(478600001)(14454004)(11346002)(229853002)(81156014)(66476007)(76176011)(6506007)(6116002)(66946007)(6246003)(386003)(52116002)(5660300002)(36756003)(4744005)(305945005)(256004)(7416002)(54906003)(316002)(6486002)(71200400001)(6512007)(33656002)(71190400001)(1076003)(7736002)(6916009)(86362001)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3279;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: OvC8VzM8dF3CLVqHkn4dBVstZo8TtpmSrOkswOKvfj9a0WLRThrnxNl5Qkacpo6l1I5Ka1cTfAhuy9xVyJc+PzcX5cmv2b0+NHwpPXob/TpLXaU5DJPmwHaBsj2RIY6fKoKtjo7Fo5EudnY0EdMKAZSczA8GGOPzbUOpQFnTm2HdxKOo/VG57rxw1wwdAZ1hpeTqh2guOGXVrDypYG9gxjU0dxDgXSuyj7aeSDtnBSh38edJQJo9R90PiFDEQijCoJv1CAS1tuSLRobZtKPym+FryB6azqE1CUJEzd6ZhldRE53XhDcKSvN2cVSxia76qCNUVSqAsPPHTBaRC3tWgl4ey4x0RurXJydfnumXHc94tl/6SIHvq7vP6fMNh7l6+TmRvnxMTE5kBQW2tbWd8r+NBpXNlxmdgl0sTP6/QUQ=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1B3BBB0F1C80154FA9AB9F1D5250931A@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 15 Aug 2019 20:46:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60336 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfHPAqU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 20:46:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=leeks6l507TTKsLSIQvDvRhjoaoA9WV8r0sEzS/2aAg=; b=h/NT9uWkweUdxK0rmqzgbxnbU
+        q5EDmkSUR33BsIwj2jNW1RP1m6mRruRzoAxzZk1aFflJyYG9rYfvKiR6zwr+fzuDqlBcqW4Kbg1dF
+        UUMpXpkIaolP++L5N7dU7VRpTzohxCTT6L/wl9Ngnnb2qRFoNJ/5Zi9bdB5sJk/WvAMR4L810h9q1
+        okiHrwK+Q1SjmADeuBAp1kGTRIgQX7RumGPiio+ehgkyyH3a6hp4W6uaai38ae92+30yR3YU4VX1b
+        g8IPtFAaW8SHH+osZCcdGd5ODsQoUlrCThHES1dM2s+WgmbFkhmUeOt2ViLr1YhS3aY7a1iGsT299
+        Q0eAbEutw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hyQNi-0004xQ-V8; Fri, 16 Aug 2019 00:46:15 +0000
+Subject: Re: [PATCHv6 16/36] fd/proc: Respect boottime inside time namespace
+ for /proc/uptime
+To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+References: <20190815163836.2927-1-dima@arista.com>
+ <20190815163836.2927-17-dima@arista.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <4db5d721-ae09-028e-64b6-4af371000acc@infradead.org>
+Date:   Thu, 15 Aug 2019 17:46:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 106bd7bf-d98c-4516-588d-08d721e2b4f4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 00:43:07.9721
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DfwHXrCGyHOLLgzXg9/lhVI/zaC66jQfTzcfrsc6nG+hSL7Zg3SzXg2gAuSKlVASRuWkjY4cclT+21T2JpzUEQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3279
+In-Reply-To: <20190815163836.2927-17-dima@arista.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 04:51:33PM -0400, Jerome Glisse wrote:
+On 8/15/19 9:38 AM, Dmitry Safonov wrote:
+> Co-developed-by: Andrei Vagin <avagin@openvz.org>
+> Signed-off-by: Andrei Vagin <avagin@openvz.org>
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
+> ---
+>  fs/proc/uptime.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/fs/proc/uptime.c b/fs/proc/uptime.c
+> index a4c2791ab70b..5a1b228964fb 100644
+> --- a/fs/proc/uptime.c
+> +++ b/fs/proc/uptime.c
 
-> struct page. In this case any way we can update the
-> nouveau_dmem_page() to check that page page->pgmap =3D=3D the
-> expected pgmap.
+Please fix $Subject (s/fd/fs/)
 
-I was also wondering if that is a problem.. just blindly doing a
-container_of on the page->pgmap does seem like it assumes that only
-this driver is using DEVICE_PRIVATE.
-
-It seems like something missing in hmm_range_fault, it should be told
-what DEVICE_PRIVATE is acceptable to trigger HMM_PFN_DEVICE_PRIVATE
-and fault all others?
-
-Jason=20
+thanks.
+-- 
+~Randy
