@@ -2,159 +2,252 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A53BC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0533EC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECBC92077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3204205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfHPHyf convert rfc822-to-8bit (ORCPT
+        id S1726809AbfHPIBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:54:35 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:40218 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfHPHye (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:54:34 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7G7sNNx016892, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7G7sNNx016892
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 16 Aug 2019 15:54:24 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Fri, 16 Aug
- 2019 15:54:23 +0800
-From:   Tony Chuang <yhchuang@realtek.com>
-To:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux@endlessm.com" <linux@endlessm.com>
-Subject: RE: [PATCH] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
-Thread-Topic: [PATCH] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
-Thread-Index: AQHVU/x2Dr02g4Mib0ipy5Mk0nEf5ab9Zdpg
-Date:   Fri, 16 Aug 2019 07:54:22 +0000
-Message-ID: <F7CD281DE3E379468C6D07993EA72F84D18929BF@RTITMBSVM04.realtek.com.tw>
-References: <20190816063109.4699-1-jian-hong@endlessm.com>
-In-Reply-To: <20190816063109.4699-1-jian-hong@endlessm.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
+        Fri, 16 Aug 2019 04:01:30 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3533 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726596AbfHPIBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 04:01:30 -0400
+Received: from dggemi402-hub.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 1827E54B1D16E317E9A1;
+        Fri, 16 Aug 2019 16:00:51 +0800 (CST)
+Received: from DGGEMI524-MBX.china.huawei.com ([169.254.7.6]) by
+ dggemi402-hub.china.huawei.com ([10.3.17.135]) with mapi id 14.03.0439.000;
+ Fri, 16 Aug 2019 16:00:43 +0800
+From:   chengzhihao <chengzhihao1@huawei.com>
+To:     Richard Weinberger <richard.weinberger@gmail.com>
+CC:     Richard Weinberger <richard@nod.at>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIHViaWZzOiB1Ymlmc190bmNfc3RhcnRfY29tbWl0?=
+ =?utf-8?B?OiBGaXggT09CIGluIGxheW91dF9pbl9nYXBz?=
+Thread-Topic: [PATCH] ubifs: ubifs_tnc_start_commit: Fix OOB in
+ layout_in_gaps
+Thread-Index: AQHVPsBTBWetoNcJ1UaytZ+21M4VxabhWCiAgAETrKCAFtDaAIAAv90QgAOWMZA=
+Date:   Fri, 16 Aug 2019 08:00:42 +0000
+Message-ID: <0B80F9D4116B2F4484E7279D5A66984F7C0325@dggemi524-mbx.china.huawei.com>
+References: <1563602720-113903-1-git-send-email-chengzhihao1@huawei.com>
+ <CAFLxGvxEAGtQDFm4G3orY+M9yuthDA4j0+u=HbE9DKuo7H8WCg@mail.gmail.com>
+ <0B80F9D4116B2F4484E7279D5A66984F7A7472@dggemi524-mbx.china.huawei.com>
+ <CAFLxGvz__aw+BnfmGS3XXGqT6n6q-9miLPoVcL9KuvaZ2QbVUQ@mail.gmail.com> 
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: yes
 X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.68.183]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+x-originating-ip: [10.177.224.82]
+Content-Type: multipart/mixed;
+        boundary="_002_0B80F9D4116B2F4484E7279D5A66984F7C0325dggemi524mbxchina_"
 MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jian-Hong Pan [mailto:jian-hong@endlessm.com]
-> 
-> There is a mass of jobs between spin lock and unlock in the hardware
-> IRQ which will occupy much time originally. To make system work more
-> efficiently, this patch moves the jobs to the soft IRQ (bottom half) to
-> reduce the time in hardware IRQ.
-> 
-> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> ---
->  drivers/net/wireless/realtek/rtw88/pci.c | 36 +++++++++++++++++++-----
->  1 file changed, 29 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
-> b/drivers/net/wireless/realtek/rtw88/pci.c
-> index 00ef229552d5..355606b167c6 100644
-> --- a/drivers/net/wireless/realtek/rtw88/pci.c
-> +++ b/drivers/net/wireless/realtek/rtw88/pci.c
-> @@ -866,12 +866,29 @@ static irqreturn_t rtw_pci_interrupt_handler(int irq,
-> void *dev)
->  {
->  	struct rtw_dev *rtwdev = dev;
->  	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
-> -	u32 irq_status[4];
-> +	unsigned long flags;
-> 
-> -	spin_lock(&rtwpci->irq_lock);
-> +	spin_lock_irqsave(&rtwpci->irq_lock, flags);
->  	if (!rtwpci->irq_enabled)
->  		goto out;
-> 
-> +	/* disable RTW PCI interrupt to avoid more interrupts before the end of
-> +	 * thread function
-> +	 */
-> +	rtw_pci_disable_interrupt(rtwdev, rtwpci);
-> +out:
-> +	spin_unlock_irqrestore(&rtwpci->irq_lock, flags);
-> +
-> +	return IRQ_WAKE_THREAD;
-> +}
-> +
-> +static irqreturn_t rtw_pci_interrupt_threadfn(int irq, void *dev)
-> +{
-> +	struct rtw_dev *rtwdev = dev;
-> +	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
-> +	unsigned long flags;
-> +	u32 irq_status[4];
-> +
->  	rtw_pci_irq_recognized(rtwdev, rtwpci, irq_status);
-> 
->  	if (irq_status[0] & IMR_MGNTDOK)
-> @@ -891,8 +908,11 @@ static irqreturn_t rtw_pci_interrupt_handler(int irq,
-> void *dev)
->  	if (irq_status[0] & IMR_ROK)
->  		rtw_pci_rx_isr(rtwdev, rtwpci, RTW_RX_QUEUE_MPDU);
-> 
-> -out:
-> -	spin_unlock(&rtwpci->irq_lock);
-> +	/* all of the jobs for this interrupt have been done */
-> +	spin_lock_irqsave(&rtwpci->irq_lock, flags);
+--_002_0B80F9D4116B2F4484E7279D5A66984F7C0325dggemi524mbxchina_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Shouldn't we protect the ISRs above?
+PiAgdWJpZnNfYXNzZXJ0KGMsIHAgPCBjLT5nYXBfbGVicyArIGMtPmxzdC5pZHhfbGVicyk7DQoN
+CkkndmUgZG9uZSA1MCBwcm9ibGVtIHJlcHJvZHVjZXMgb24gZGlmZmVyZW50IGZsYXNoIGRldmlj
+ZXMgYW5kIG1hZGUgc3VyZSB0aGF0IHRoZSBhc3NlcnRpb24gd2FzIG5vdCB0cmlnZ2VyZWQuIFNl
+ZSByZWNvcmQudHh0IGZvciBkZXRhaWxzLg0KDQotLS0tLemCruS7tuWOn+S7ti0tLS0tDQrlj5Hk
+u7bkuro6IGNoZW5nemhpaGFvIA0K5Y+R6YCB5pe26Ze0OiAyMDE55bm0OOaciDE05pelIDk6MjAN
+CuaUtuS7tuS6ujogJ1JpY2hhcmQgV2VpbmJlcmdlcicgPHJpY2hhcmQud2VpbmJlcmdlckBnbWFp
+bC5jb20+DQrmioTpgIE6IFJpY2hhcmQgV2VpbmJlcmdlciA8cmljaGFyZEBub2QuYXQ+OyBTYXNj
+aGEgSGF1ZXIgPHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU+OyBBcnRlbSBCaXR5dXRza2l5IDxkZWRl
+a2luZDFAZ21haWwuY29tPjsgemhhbmd5aSAoRikgPHlpLnpoYW5nQGh1YXdlaS5jb20+OyBsaW51
+eC1tdGRAbGlzdHMuaW5mcmFkZWFkLm9yZzsgTEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZz4NCuS4u+mimDog562U5aSNOiBbUEFUQ0hdIHViaWZzOiB1Ymlmc190bmNfc3RhcnRfY29t
+bWl0OiBGaXggT09CIGluIGxheW91dF9pbl9nYXBzDQoNClN1cmUsIEknbGwgZG8gbW9yZSB0ZXN0
+cyBvbiBkaWZmZXJlbnQgbWFjaGluZXMgdG8gY2hlY2sgdGhlIGFzc2VydGlvbi4gSSdtIHRyeWlu
+ZyB0byB1bmRlcnN0YW5kIHdoZW4gdGhpcyBhc3NlcnRpb24gd2lsbCBiZSB0cmlnZ2VyZWQuIEFs
+dGhvdWdoIEkgaGF2ZW4ndCBmb3VuZCB0aGlzIGFzc2VydGlvbiBiZSB0cmlnZ2VyZWQgc28gZmFy
+IGluIHNldmVyYWwgdGVzdHMgb24geDg2XzY0KHFlbXUpLg0KDQotLS0tLemCruS7tuWOn+S7ti0t
+LS0tDQrlj5Hku7bkuro6IFJpY2hhcmQgV2VpbmJlcmdlciBbbWFpbHRvOnJpY2hhcmQud2VpbmJl
+cmdlckBnbWFpbC5jb21dIA0K5Y+R6YCB5pe26Ze0OiAyMDE55bm0OOaciDE05pelIDU6NDQNCuaU
+tuS7tuS6ujogY2hlbmd6aGloYW8gPGNoZW5nemhpaGFvMUBodWF3ZWkuY29tPg0K5oqE6YCBOiBS
+aWNoYXJkIFdlaW5iZXJnZXIgPHJpY2hhcmRAbm9kLmF0PjsgU2FzY2hhIEhhdWVyIDxzLmhhdWVy
+QHBlbmd1dHJvbml4LmRlPjsgQXJ0ZW0gQml0eXV0c2tpeSA8ZGVkZWtpbmQxQGdtYWlsLmNvbT47
+IHpoYW5neWkgKEYpIDx5aS56aGFuZ0BodWF3ZWkuY29tPjsgbGludXgtbXRkQGxpc3RzLmluZnJh
+ZGVhZC5vcmc7IExLTUwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQrkuLvpopg6IFJl
+OiBbUEFUQ0hdIHViaWZzOiB1Ymlmc190bmNfc3RhcnRfY29tbWl0OiBGaXggT09CIGluIGxheW91
+dF9pbl9nYXBzDQoNCk9uIFR1ZSwgSnVsIDMwLCAyMDE5IGF0IDM6MjEgQU0gY2hlbmd6aGloYW8g
+PGNoZW5nemhpaGFvMUBodWF3ZWkuY29tPiB3cm90ZToNCj4NCj4gT0ssIHRoYXQncyBmaW5lLCBh
+bmQgSSB3aWxsIGNvbnRpbnVlIHRvIHVuZGVyc3RhbmQgbW9yZSBpbXBsZW1lbnRhdGlvbiBjb2Rl
+IHJlbGF0ZWQgdG8gdGhpcyBwYXJ0Lg0KDQpJIHRoaW5rIHdlIGNhbiBnbyB3aXRoIHRoZSByZWFs
+bG9jKCkgYXBwcm9hY2ggZm9yIG5vdy4NCkNhbiB5b3UgcGxlYXNlIGNoZWNrIHdoZXRoZXIgdGhl
+IGFzc2VydCgpIHRyaWdnZXJzPw0KDQotLSANClRoYW5rcywNCi8vcmljaGFyZA0K
 
-This patch could actually reduce the time of IRQ.
-But I think I need to further test it with PCI MSI interrupt.
-https://patchwork.kernel.org/patch/11081539/
+--_002_0B80F9D4116B2F4484E7279D5A66984F7C0325dggemi524mbxchina_
+Content-Type: text/plain; name="record.txt"
+Content-Description: record.txt
+Content-Disposition: attachment; filename="record.txt"; size=8397;
+	creation-date="Fri, 16 Aug 2019 06:13:09 GMT";
+	modification-date="Fri, 16 Aug 2019 07:55:24 GMT"
+Content-Transfer-Encoding: base64
 
-Maybe we could drop the "rtw_pci_[enable/disable]_interrupt" when MSI
-Is enabled with this patch.
+Tm8JCQkJCQkJCQkJCQlMb2cJCQkJCQkJCQkJCQkJCQkJCQkJQ29uZmlnDQoxCQljLT5sc3QuaWR4
+X2xlYnNbb3JpZ2luXSA9IDQsIGMtPmxzdC5pZHhfbGVic1tjdXJyXSA9IDExLCBwIC0gYy0+Z2Fw
+X2xlYnMgPSA4ID09PT0JCW10ZHJhbTogMTZNaUIsIFBFQiBzaXplIDE2S2lCLCBmYXN0bWFwIGVu
+YWJsZWQsIHZvbHVtZSBzaXplIDExTWlCDQoyCQljLT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDQs
+IGMtPmxzdC5pZHhfbGVic1tjdXJyXSA9IDEyLCBwIC0gYy0+Z2FwX2xlYnMgPSA5ID09PT0JCW10
+ZHJhbTogMTZNaUIsIFBFQiBzaXplIDE2S2lCLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBzaXpl
+IDExTWlCDQozCQljLT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDQsIGMtPmxzdC5pZHhfbGVic1tj
+dXJyXSA9IDEyLCBwIC0gYy0+Z2FwX2xlYnMgPSA5ID09PT0JCW5hbmRzaW06IDE2TWlCLCBQRUIg
+c2l6ZSAxNktpQiwgcGFnZSBzaXplIDUxMktpQiwgVklEIG9mZnNldCAwLCBmYXN0bWFwIGVuYWJs
+ZWQsIHZvbHVtZSBzaXplIDExTWlCDQo0CQljLT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDQsIGMt
+PmxzdC5pZHhfbGVic1tjdXJyXSA9IDExLCBwIC0gYy0+Z2FwX2xlYnMgPSA4ID09PT0JCW10ZHJh
+bTogMTZNaUIsIFBFQiBzaXplIDE2S2lCLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBzaXplIDEx
+TWlCDQo1CQljLT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDUsIGMtPmxzdC5pZHhfbGVic1tjdXJy
+XSA9IDEyLCBwIC0gYy0+Z2FwX2xlYnMgPSA4ID09PT0JCW10ZHJhbTogMTZNaUIsIFBFQiBzaXpl
+IDE2S2lCLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBzaXplIDExTWlCDQo2CQljLT5sc3QuaWR4
+X2xlYnNbb3JpZ2luXSA9IDUsIGMtPmxzdC5pZHhfbGVic1tjdXJyXSA9IDEyLCBwIC0gYy0+Z2Fw
+X2xlYnMgPSA4ID09PT0JCW5hbmRzaW06IDE2TWlCLCBQRUIgc2l6ZSAxNktpQiwgcGFnZSBzaXpl
+IDUxMktpQiwgVklEIG9mZnNldCAwLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBzaXplIDExTWlC
+DQo3CQljLT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDQsIGMtPmxzdC5pZHhfbGVic1tjdXJyXSA9
+IDExLCBwIC0gYy0+Z2FwX2xlYnMgPSA4ID09PT0JCW10ZHJhbTogMTZNaUIsIFBFQiBzaXplIDE2
+S2lCLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBzaXplIDExTWlCDQo4CQljLT5sc3QuaWR4X2xl
+YnNbb3JpZ2luXSA9IDUsIGMtPmxzdC5pZHhfbGVic1tjdXJyXSA9IDEyLCBwIC0gYy0+Z2FwX2xl
+YnMgPSA4ID09PT0JCW5hbmRzaW06IDE2TWlCLCBQRUIgc2l6ZSAxNktpQiwgcGFnZSBzaXplIDUx
+MktpQiwgVklEIG9mZnNldCAwLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBzaXplIDExTWlCDQo5
+CQljLT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDQsIGMtPmxzdC5pZHhfbGVic1tjdXJyXSA9IDEx
+LCBwIC0gYy0+Z2FwX2xlYnMgPSA4ID09PT0JCW10ZHJhbTogMTZNaUIsIFBFQiBzaXplIDE2S2lC
+LCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBzaXplIDExTWlCDQoxMAkJYy0+bHN0LmlkeF9sZWJz
+W29yaWdpbl0gPSA0LCBjLT5sc3QuaWR4X2xlYnNbY3Vycl0gPSAxMSwgcCAtIGMtPmdhcF9sZWJz
+ID0gOCA9PT09CQltdGRyYW06IDE2TWlCLCBQRUIgc2l6ZSAxNktpQiwgZmFzdG1hcCBlbmFibGVk
+LCB2b2x1bWUgc2l6ZSAxMU1pQg0KMTEJCWMtPmxzdC5pZHhfbGVic1tvcmlnaW5dID0gNCwgYy0+
+bHN0LmlkeF9sZWJzW2N1cnJdID0gMTIsIHAgLSBjLT5nYXBfbGVicyA9IDggPT09PQkJbXRkcmFt
+OiAxNk1pQiwgUEVCIHNpemUgMTZLaUIsIGZhc3RtYXAgZW5hYmxlZCwgdm9sdW1lIHNpemUgMTFN
+aUINCjEyCQljLT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDMsIGMtPmxzdC5pZHhfbGVic1tjdXJy
+XSA9IDEyLCBwIC0gYy0+Z2FwX2xlYnMgPSAxMCA9PT09CQluYW5kc2ltOiAxNk1pQiwgUEVCIHNp
+emUgMTZLaUIsIHBhZ2Ugc2l6ZSA1MTJLaUIsIFZJRCBvZmZzZXQgMCwgZmFzdG1hcCBlbmFibGVk
+LCB2b2x1bWUgc2l6ZSAxMU1pQg0KMTMJCWMtPmxzdC5pZHhfbGVic1tvcmlnaW5dID0gNCwgYy0+
+bHN0LmlkeF9sZWJzW2N1cnJdID0gMTEsIHAgLSBjLT5nYXBfbGVicyA9IDggPT09PQkJbXRkcmFt
+OiAxNk1pQiwgUEVCIHNpemUgMTZLaUIsIGZhc3RtYXAgZW5hYmxlZCwgdm9sdW1lIHNpemUgMTFN
+aUINCjE0CQljLT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDUsIGMtPmxzdC5pZHhfbGVic1tjdXJy
+XSA9IDEyLCBwIC0gYy0+Z2FwX2xlYnMgPSA4ID09PT0JCW10ZHJhbTogMTZNaUIsIFBFQiBzaXpl
+IDE2S2lCLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBzaXplIDExTWlCDQoxNQkJYy0+bHN0Lmlk
+eF9sZWJzW29yaWdpbl0gPSA0LCBjLT5sc3QuaWR4X2xlYnNbY3Vycl0gPSAxMSwgcCAtIGMtPmdh
+cF9sZWJzID0gOCA9PT09CQltdGRyYW06IDE2TWlCLCBQRUIgc2l6ZSAxNktpQiwgZmFzdG1hcCBl
+bmFibGVkLCB2b2x1bWUgc2l6ZSAxMU1pQg0KMTYJCWMtPmxzdC5pZHhfbGVic1tvcmlnaW5dID0g
+NSwgYy0+bHN0LmlkeF9sZWJzW2N1cnJdID0gMTIsIHAgLSBjLT5nYXBfbGVicyA9IDggPT09PQkJ
+bXRkcmFtOiAxNk1pQiwgUEVCIHNpemUgMTZLaUIsIGZhc3RtYXAgZW5hYmxlZCwgdm9sdW1lIHNp
+emUgMTFNaUINCjE3CQljLT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDQsIGMtPmxzdC5pZHhfbGVi
+c1tjdXJyXSA9IDExLCBwIC0gYy0+Z2FwX2xlYnMgPSA4ID09PT0JCW10ZHJhbTogMTZNaUIsIFBF
+QiBzaXplIDE2S2lCLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBzaXplIDExTWlCDQoxOAkJYy0+
+bHN0LmlkeF9sZWJzW29yaWdpbl0gPSA2LCBjLT5sc3QuaWR4X2xlYnNbY3Vycl0gPSAxMywgcCAt
+IGMtPmdhcF9sZWJzID0gOCA9PT09CQluYW5kc2ltOiAxNk1pQiwgUEVCIHNpemUgMTZLaUIsIHBh
+Z2Ugc2l6ZSA1MTJLaUIsIFZJRCBvZmZzZXQgMCwgZmFzdG1hcCBlbmFibGVkLCB2b2x1bWUgc2l6
+ZSAxMU1pQg0KMTkJCWMtPmxzdC5pZHhfbGVic1tvcmlnaW5dID0gNSwgYy0+bHN0LmlkeF9sZWJz
+W2N1cnJdID0gMTIsIHAgLSBjLT5nYXBfbGVicyA9IDggPT09PQkJbXRkcmFtOiAxNk1pQiwgUEVC
+IHNpemUgMTZLaUIsIGZhc3RtYXAgZW5hYmxlZCwgdm9sdW1lIHNpemUgMTFNaUINCjIwCQljLT5s
+c3QuaWR4X2xlYnNbb3JpZ2luXSA9IDQsIGMtPmxzdC5pZHhfbGVic1tjdXJyXSA9IDEyLCBwIC0g
+Yy0+Z2FwX2xlYnMgPSA5ID09PT0JCW5hbmRzaW06IDE2TWlCLCBQRUIgc2l6ZSAxNktpQiwgcGFn
+ZSBzaXplIDUxMktpQiwgVklEIG9mZnNldCAwLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBzaXpl
+IDExTWlCDQoyMQkJYy0+bHN0LmlkeF9sZWJzW29yaWdpbl0gPSA0LCBjLT5sc3QuaWR4X2xlYnNb
+Y3Vycl0gPSAxMSwgcCAtIGMtPmdhcF9sZWJzID0gOCA9PT09CQltdGRyYW06IDE2TWlCLCBQRUIg
+c2l6ZSAxNktpQiwgZmFzdG1hcCBlbmFibGVkLCB2b2x1bWUgc2l6ZSAxMU1pQg0KMjIJCWMtPmxz
+dC5pZHhfbGVic1tvcmlnaW5dID0gNSwgYy0+bHN0LmlkeF9sZWJzW2N1cnJdID0gMTIsIHAgLSBj
+LT5nYXBfbGVicyA9IDggPT09PQkJbmFuZHNpbTogMTZNaUIsIFBFQiBzaXplIDE2S2lCLCBwYWdl
+IHNpemUgNTEyS2lCLCBWSUQgb2Zmc2V0IDAsIGZhc3RtYXAgZW5hYmxlZCwgdm9sdW1lIHNpemUg
+MTFNaUINCjIzCQljLT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDQsIGMtPmxzdC5pZHhfbGVic1tj
+dXJyXSA9IDExLCBwIC0gYy0+Z2FwX2xlYnMgPSA4ID09PT0JCW10ZHJhbTogMTZNaUIsIFBFQiBz
+aXplIDE2S2lCLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBzaXplIDExTWlCDQoyNAkJYy0+bHN0
+LmlkeF9sZWJzW29yaWdpbl0gPSA0LCBjLT5sc3QuaWR4X2xlYnNbY3Vycl0gPSAxMSwgcCAtIGMt
+PmdhcF9sZWJzID0gOCA9PT09CQltdGRyYW06IDE2TWlCLCBQRUIgc2l6ZSAxNktpQiwgZmFzdG1h
+cCBlbmFibGVkLCB2b2x1bWUgc2l6ZSAxMU1pQg0KMjUJCWMtPmxzdC5pZHhfbGVic1tvcmlnaW5d
+ID0gNCwgYy0+bHN0LmlkeF9sZWJzW2N1cnJdID0gMTEsIHAgLSBjLT5nYXBfbGVicyA9IDggPT09
+PQkJbmFuZHNpbTogMTZNaUIsIFBFQiBzaXplIDE2S2lCLCBwYWdlIHNpemUgNTEyS2lCLCBWSUQg
+b2Zmc2V0IDAsIGZhc3RtYXAgZW5hYmxlZCwgdm9sdW1lIHNpemUgMTFNaUINCjI2CQljLT5sc3Qu
+aWR4X2xlYnNbb3JpZ2luXSA9IDQsIGMtPmxzdC5pZHhfbGVic1tjdXJyXSA9IDExLCBwIC0gYy0+
+Z2FwX2xlYnMgPSA4ID09PT0JCW10ZHJhbTogMTZNaUIsIFBFQiBzaXplIDE2S2lCLCBmYXN0bWFw
+IGVuYWJsZWQsIHZvbHVtZSBzaXplIDExTWlCDQoyNwkJYy0+bHN0LmlkeF9sZWJzW29yaWdpbl0g
+PSA0LCBjLT5sc3QuaWR4X2xlYnNbY3Vycl0gPSAxMSwgcCAtIGMtPmdhcF9sZWJzID0gOCA9PT09
+CQltdGRyYW06IDE2TWlCLCBQRUIgc2l6ZSAxNktpQiwgZmFzdG1hcCBlbmFibGVkLCB2b2x1bWUg
+c2l6ZSAxMU1pQg0KMjgJCWMtPmxzdC5pZHhfbGVic1tvcmlnaW5dID0gNCwgYy0+bHN0LmlkeF9s
+ZWJzW2N1cnJdID0gMTEsIHAgLSBjLT5nYXBfbGVicyA9IDggPT09PQkJbXRkcmFtOiAxNk1pQiwg
+UEVCIHNpemUgMTZLaUIsIGZhc3RtYXAgZW5hYmxlZCwgdm9sdW1lIHNpemUgMTFNaUINCjI5CQlj
+LT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDQsIGMtPmxzdC5pZHhfbGVic1tjdXJyXSA9IDExLCBw
+IC0gYy0+Z2FwX2xlYnMgPSA4ID09PT0JCW5hbmRzaW06IDE2TWlCLCBQRUIgc2l6ZSAxNktpQiwg
+cGFnZSBzaXplIDUxMktpQiwgVklEIG9mZnNldCAwLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBz
+aXplIDExTWlCDQozMAkJYy0+bHN0LmlkeF9sZWJzW29yaWdpbl0gPSA0LCBjLT5sc3QuaWR4X2xl
+YnNbY3Vycl0gPSAxMSwgcCAtIGMtPmdhcF9sZWJzID0gOCA9PT09CQltdGRyYW06IDE2TWlCLCBQ
+RUIgc2l6ZSAxNktpQiwgZmFzdG1hcCBlbmFibGVkLCB2b2x1bWUgc2l6ZSAxMU1pQg0KMzEJCWMt
+PmxzdC5pZHhfbGVic1tvcmlnaW5dID0gNiwgYy0+bHN0LmlkeF9sZWJzW2N1cnJdID0gMTMsIHAg
+LSBjLT5nYXBfbGVicyA9IDggPT09PQkJbmFuZHNpbTogMTZNaUIsIFBFQiBzaXplIDE2S2lCLCBw
+YWdlIHNpemUgNTEyS2lCLCBWSUQgb2Zmc2V0IDAsIGZhc3RtYXAgZW5hYmxlZCwgdm9sdW1lIHNp
+emUgMTFNaUINCjMyCQljLT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDUsIGMtPmxzdC5pZHhfbGVi
+c1tjdXJyXSA9IDEyLCBwIC0gYy0+Z2FwX2xlYnMgPSA4ID09PT0JCW10ZHJhbTogMTZNaUIsIFBF
+QiBzaXplIDE2S2lCLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBzaXplIDExTWlCDQozMwkJYy0+
+bHN0LmlkeF9sZWJzW29yaWdpbl0gPSA0LCBjLT5sc3QuaWR4X2xlYnNbY3Vycl0gPSAxMiwgcCAt
+IGMtPmdhcF9sZWJzID0gOSA9PT09CQltdGRyYW06IDE2TWlCLCBQRUIgc2l6ZSAxNktpQiwgZmFz
+dG1hcCBlbmFibGVkLCB2b2x1bWUgc2l6ZSAxMU1pQg0KMzQJCWMtPmxzdC5pZHhfbGVic1tvcmln
+aW5dID0gNSwgYy0+bHN0LmlkeF9sZWJzW2N1cnJdID0gMTIsIHAgLSBjLT5nYXBfbGVicyA9IDgg
+PT09PQkJbXRkcmFtOiAxNk1pQiwgUEVCIHNpemUgMTZLaUIsIGZhc3RtYXAgZW5hYmxlZCwgdm9s
+dW1lIHNpemUgMTFNaUINCjM1CQljLT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDE1LCBjLT5sc3Qu
+aWR4X2xlYnNbY3Vycl0gPSAxOSwgcCAtIGMtPmdhcF9sZWJzID0gMTYgPT09PQkJbXRkcmFtOiAz
+Mk1pQiwgUEVCIHNpemUgMTZLaUIsIGZhc3RtYXAgZW5hYmxlZCwgdm9sdW1lIHNpemUgMjJNaUIN
+CjM2CQljLT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDQsIGMtPmxzdC5pZHhfbGVic1tjdXJyXSA9
+IDExLCBwIC0gYy0+Z2FwX2xlYnMgPSA4ID09PT0JCW5hbmRzaW06IDE2TWlCLCBQRUIgc2l6ZSAx
+NktpQiwgcGFnZSBzaXplIDUxMktpQiwgVklEIG9mZnNldCAwLCBmYXN0bWFwIGVuYWJsZWQsIHZv
+bHVtZSBzaXplIDExTWlCDQozNwkJYy0+bHN0LmlkeF9sZWJzW29yaWdpbl0gPSA0LCBjLT5sc3Qu
+aWR4X2xlYnNbY3Vycl0gPSAxMiwgcCAtIGMtPmdhcF9sZWJzID0gOSA9PT09CQluYW5kc2ltOiAx
+Nk1pQiwgUEVCIHNpemUgMTZLaUIsIHBhZ2Ugc2l6ZSA1MTJLaUIsIFZJRCBvZmZzZXQgMCwgZmFz
+dG1hcCBlbmFibGVkLCB2b2x1bWUgc2l6ZSAxMU1pQg0KMzgJCWMtPmxzdC5pZHhfbGVic1tvcmln
+aW5dID0gNSwgYy0+bHN0LmlkeF9sZWJzW2N1cnJdID0gMTIsIHAgLSBjLT5nYXBfbGVicyA9IDgg
+PT09PQkJbmFuZHNpbTogMTZNaUIsIFBFQiBzaXplIDE2S2lCLCBwYWdlIHNpemUgNTEyS2lCLCBW
+SUQgb2Zmc2V0IDAsIGZhc3RtYXAgZW5hYmxlZCwgdm9sdW1lIHNpemUgMTFNaUINCjM5CQljLT5s
+c3QuaWR4X2xlYnNbb3JpZ2luXSA9IDUsIGMtPmxzdC5pZHhfbGVic1tjdXJyXSA9IDEyLCBwIC0g
+Yy0+Z2FwX2xlYnMgPSA4ID09PT0gCQltdGRyYW06IDE2TWlCLCBQRUIgc2l6ZSAxNktpQiwgZmFz
+dG1hcCBlbmFibGVkLCB2b2x1bWUgc2l6ZSAxMU1pQg0KNDAJCWMtPmxzdC5pZHhfbGVic1tvcmln
+aW5dID0gNCwgYy0+bHN0LmlkeF9sZWJzW2N1cnJdID0gMTEsIHAgLSBjLT5nYXBfbGVicyA9IDgg
+PT09PQkJbXRkcmFtOiAxNk1pQiwgUEVCIHNpemUgMTZLaUIsIGZhc3RtYXAgZW5hYmxlZCwgdm9s
+dW1lIHNpemUgMTFNaUINCjQxCQljLT5sc3QuaWR4X2xlYnNbb3JpZ2luXSA9IDQsIGMtPmxzdC5p
+ZHhfbGVic1tjdXJyXSA9IDExLCBwIC0gYy0+Z2FwX2xlYnMgPSA4ID09PT0JCW10ZHJhbTogMTZN
+aUIsIFBFQiBzaXplIDE2S2lCLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBzaXplIDExTWlCDQo0
+MgkJYy0+bHN0LmlkeF9sZWJzW29yaWdpbl0gPSA1LCBjLT5sc3QuaWR4X2xlYnNbY3Vycl0gPSAx
+MiwgcCAtIGMtPmdhcF9sZWJzID0gOCA9PT09CQluYW5kc2ltOiAxNk1pQiwgUEVCIHNpemUgMTZL
+aUIsIHBhZ2Ugc2l6ZSA1MTJLaUIsIFZJRCBvZmZzZXQgMCwgZmFzdG1hcCBlbmFibGVkLCB2b2x1
+bWUgc2l6ZSAxMU1pQg0KNDMJCWMtPmxzdC5pZHhfbGVic1tvcmlnaW5dID0gNCwgYy0+bHN0Lmlk
+eF9sZWJzW2N1cnJdID0gMTEsIHAgLSBjLT5nYXBfbGVicyA9IDggPT09PQkJbmFuZHNpbTogMTZN
+aUIsIFBFQiBzaXplIDE2S2lCLCBwYWdlIHNpemUgNTEyS2lCLCBWSUQgb2Zmc2V0IDAsIGZhc3Rt
+YXAgZW5hYmxlZCwgdm9sdW1lIHNpemUgMTFNaUINCjQ0CQljLT5sc3QuaWR4X2xlYnNbb3JpZ2lu
+XSA9IDQsIGMtPmxzdC5pZHhfbGVic1tjdXJyXSA9IDExLCBwIC0gYy0+Z2FwX2xlYnMgPSA4ID09
+PT0JCW10ZHJhbTogMTZNaUIsIFBFQiBzaXplIDE2S2lCLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVt
+ZSBzaXplIDExTWlCDQo0NQkJYy0+bHN0LmlkeF9sZWJzW29yaWdpbl0gPSA0LCBjLT5sc3QuaWR4
+X2xlYnNbY3Vycl0gPSAxMSwgcCAtIGMtPmdhcF9sZWJzID0gOCA9PT09CQluYW5kc2ltOiAxNk1p
+QiwgUEVCIHNpemUgMTZLaUIsIHBhZ2Ugc2l6ZSA1MTJLaUIsIFZJRCBvZmZzZXQgMCwgZmFzdG1h
+cCBlbmFibGVkLCB2b2x1bWUgc2l6ZSAxMU1pQg0KNDYJCWMtPmxzdC5pZHhfbGVic1tvcmlnaW5d
+ID0gNCwgYy0+bHN0LmlkeF9sZWJzW2N1cnJdID0gMTEsIHAgLSBjLT5nYXBfbGVicyA9IDggPT09
+PQkJbmFuZHNpbTogMTZNaUIsIFBFQiBzaXplIDE2S2lCLCBwYWdlIHNpemUgNTEyS2lCLCBWSUQg
+b2Zmc2V0IDAsIGZhc3RtYXAgZW5hYmxlZCwgdm9sdW1lIHNpemUgMTFNaUINCjQ3CQljLT5sc3Qu
+aWR4X2xlYnNbb3JpZ2luXSA9IDUsIGMtPmxzdC5pZHhfbGVic1tjdXJyXSA9IDEyLCBwIC0gYy0+
+Z2FwX2xlYnMgPSA4ID09PT0JCW5hbmRzaW06IDE2TWlCLCBQRUIgc2l6ZSAxNktpQiwgcGFnZSBz
+aXplIDUxMktpQiwgVklEIG9mZnNldCAwLCBmYXN0bWFwIGVuYWJsZWQsIHZvbHVtZSBzaXplIDEx
+TWlCDQo0OAkJYy0+bHN0LmlkeF9sZWJzW29yaWdpbl0gPSA1LCBjLT5sc3QuaWR4X2xlYnNbY3Vy
+cl0gPSAxMiwgcCAtIGMtPmdhcF9sZWJzID0gOCA9PT09CQluYW5kc2ltOiAxNk1pQiwgUEVCIHNp
+emUgMTZLaUIsIHBhZ2Ugc2l6ZSA1MTJLaUIsIFZJRCBvZmZzZXQgMCwgZmFzdG1hcCBlbmFibGVk
+LCB2b2x1bWUgc2l6ZSAxMU1pQg0KNDkJCWMtPmxzdC5pZHhfbGVic1tvcmlnaW5dID0gNSwgYy0+
+bHN0LmlkeF9sZWJzW2N1cnJdID0gMTIsIHAgLSBjLT5nYXBfbGVicyA9IDggPT09PQkJbmFuZHNp
+bTogMTZNaUIsIFBFQiBzaXplIDE2S2lCLCBwYWdlIHNpemUgNTEyS2lCLCBWSUQgb2Zmc2V0IDAs
+IGZhc3RtYXAgZW5hYmxlZCwgdm9sdW1lIHNpemUgMTFNaUINCjUwCQljLT5sc3QuaWR4X2xlYnNb
+b3JpZ2luXSA9IDQsIGMtPmxzdC5pZHhfbGVic1tjdXJyXSA9IDExLCBwIC0gYy0+Z2FwX2xlYnMg
+PSA4ID09PT0JCW10ZHJhbTogMTZNaUIsIFBFQiBzaXplIDE2S2lCLCBmYXN0bWFwIGVuYWJsZWQs
+IHZvbHVtZSBzaXplIDExTWlC
 
-> +	if (rtw_flag_check(rtwdev, RTW_FLAG_RUNNING))
-> +		rtw_pci_enable_interrupt(rtwdev, rtwpci);
-> +	spin_unlock_irqrestore(&rtwpci->irq_lock, flags);
-> 
->  	return IRQ_HANDLED;
->  }
-> @@ -1152,8 +1172,10 @@ static int rtw_pci_probe(struct pci_dev *pdev,
->  		goto err_destroy_pci;
->  	}
-> 
-> -	ret = request_irq(pdev->irq, &rtw_pci_interrupt_handler,
-> -			  IRQF_SHARED, KBUILD_MODNAME, rtwdev);
-> +	ret = devm_request_threaded_irq(rtwdev->dev, pdev->irq,
-> +					rtw_pci_interrupt_handler,
-> +					rtw_pci_interrupt_threadfn,
-> +					IRQF_SHARED, KBUILD_MODNAME, rtwdev);
->  	if (ret) {
->  		ieee80211_unregister_hw(hw);
->  		goto err_destroy_pci;
-> @@ -1192,7 +1214,7 @@ static void rtw_pci_remove(struct pci_dev *pdev)
->  	rtw_pci_disable_interrupt(rtwdev, rtwpci);
->  	rtw_pci_destroy(rtwdev, pdev);
->  	rtw_pci_declaim(rtwdev, pdev);
-> -	free_irq(rtwpci->pdev->irq, rtwdev);
-> +	devm_free_irq(rtwdev->dev, rtwpci->pdev->irq, rtwdev);
->  	rtw_core_deinit(rtwdev);
->  	ieee80211_free_hw(hw);
->  }
-> --
-> 2.20.1
-
-Yan-Hsuan
+--_002_0B80F9D4116B2F4484E7279D5A66984F7C0325dggemi524mbxchina_--
