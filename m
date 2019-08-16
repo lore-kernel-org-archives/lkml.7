@@ -2,170 +2,123 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BCEC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D365C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDEE8206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:22:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U1cPBKH2"
+	by mail.kernel.org (Postfix) with ESMTP id E23F92064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 04:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbfHPEWK (ORCPT
+        id S1726604AbfHPEWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 00:22:10 -0400
-Received: from mail-lj1-f174.google.com ([209.85.208.174]:34538 "EHLO
-        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfHPEWK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 00:22:10 -0400
-Received: by mail-lj1-f174.google.com with SMTP id x18so4148875ljh.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Aug 2019 21:22:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=idW84Lt4wQrZ+T6IktWRZghuJXQuOYw1V00dQ6+sPDY=;
-        b=U1cPBKH2eroajZ/Rc9Gv7dAvg+LwRrqHqwMod0qeBi+X1I95MN8gDPAmhzC+Op3UY/
-         2C+ZPAVee2tDe9IOPPjPDGRu3A9YfXLq0SL5iDh7CH/+axxLDk4oPCliPZr12s5a/L3I
-         PTEy8hXSut8dXgwi2hIU3sHJRLxCSteqBVrGWnc0iDC9RAS8UF4J0x2xssZqnWfNmHOW
-         KyWXgkFJzorxMwhO0k/Ahm8cPHXcraiAr+u4FnePdyVPXPzjZMvusWL9J2WYcvrPPymR
-         aPmx9YuC4gKBgW7y4ZQPL0FwblWvY+3L5ZrPF6TwfFaBTAMzlhL7IQhNk3S+CwgQb6Az
-         MnTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=idW84Lt4wQrZ+T6IktWRZghuJXQuOYw1V00dQ6+sPDY=;
-        b=l9qD9DKUQ7DBXgLutHObv1lDxDvDOSRIswrOwGiW/jzVXccjT9cNTh5igUTwWiW9ha
-         aAE6TxepMkEDnWzdD5IJ4JbvN7cIkuNOLGWi0KlT/RsonnLpQH4nhL1OE5c4Jx3VnEZb
-         IaBqs1ABIxTsBuNr5d2UliQdNfhYACELeMUtPVbFZk/5JfMK/bIdOHBPGBY/ZBgz7T9j
-         UBqDEqXKL5qxJNur84LgbCpXhXN2AAqFvzn1tZsz96G+l8/DyubuDjHpEIc+xOw4eWtb
-         BPREu2CVNMX0blUjQnh2WF+he7Z6zbiTJQqQ5btHKZZ4eJ5TedYYh5B+n0mDgDOYI+kh
-         i7yQ==
-X-Gm-Message-State: APjAAAU77BbzeTL/EwusqYe4OrIqvh03sDOK9qOt0gvK10sGL6qjlm62
-        +AHQUSCBkzKtlxNq/d/shYIzpgFDPdp4jkCIXzk=
-X-Google-Smtp-Source: APXvYqyDqwbU6cnzYDXq7vqgdm22zPpOJCbB9e2lxfaUyzwy+oREAXrRGsDmd97RB7vxX79EZ6D80xLc8XWlTirrSoE=
-X-Received: by 2002:a2e:6342:: with SMTP id x63mr4308964ljb.95.1565929327525;
- Thu, 15 Aug 2019 21:22:07 -0700 (PDT)
+        Fri, 16 Aug 2019 00:22:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43168 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725962AbfHPEWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 00:22:15 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 160B085537;
+        Fri, 16 Aug 2019 04:22:15 +0000 (UTC)
+Received: from [10.3.117.107] (ovpn-117-107.phx2.redhat.com [10.3.117.107])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E7E6084256;
+        Fri, 16 Aug 2019 04:22:13 +0000 (UTC)
+Subject: Re: [PATCH v3 0/4] PCI: Clean up pci-sysfs.c
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        bodong@mellanox.com, gregkh@linuxfoundation.org
+References: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+ <20190815153352.86143-1-skunberg.kelsey@gmail.com>
+From:   Don Dutile <ddutile@redhat.com>
+Message-ID: <d993838c-310c-60bd-b788-ab669bf08566@redhat.com>
+Date:   Fri, 16 Aug 2019 00:22:13 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Fri, 16 Aug 2019 14:21:56 +1000
-Message-ID: <CAPM=9tx2Kkbyor2-EnK31VE1eARbq6zCyNgqj39tyLqd8uUWKA@mail.gmail.com>
-Subject: [git pull] drm fixes for 5.3-rc5
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190815153352.86143-1-skunberg.kelsey@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 16 Aug 2019 04:22:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 08/15/2019 11:33 AM, Kelsey Skunberg wrote:
+> This series is designed to clean up device attributes and permissions in
+> pci-sysfs.c. Then move the sysfs SR-IOV functions from pci-sysfs.c to
+> iov.c for better organization.
+> 
+> Patch 1: Define device attributes with DEVICE_ATTR* instead of __ATTR*.
+> 
+> Patch 2: Change permissions from symbolic to the preferred octal.
+> 
+> Patch 3: Change DEVICE_ATTR() with 0220 permissions to DEVICE_ATTR_WO().
+> 
+> Patch 4: Move sysfs SR-IOV functions to iov.c to keep the feature's code
+> together.
+> 
+> 
+> Patch 1, 2, and 4 will report unusual permissions '0664' used from the
+> following:
+> 
+>    static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show,
+>                       sriov_numvfs_store);
+> 
+>    static DEVICE_ATTR(sriov_drivers_autoprobe, 0664,
+>                       sriov_drivers_autoprobe_show,
+>                       sriov_drivers_autoprobe_store);
+> 
+> This series preserves the existing permissions set in:
+> 
+> 
+>    commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
+>                          VF driver binding")
+> 
+>    commit 1789382a72a5 ("PCI: SRIOV control and status via sysfs")
+> 
+> Either adding a comment verifying permissions are okay or changing the
+> permissions is to be completed with a new patch.
+> 
+> Changes since v1:
+>          Add patch 1 and 2 to fix the way device attributes are defined
+>          and change permissions from symbolic to octal. Patch 4 which moves
+>          sysfs SR-IOV functions to iov.c will then apply cleaner.
+> 
+> Changes since v2:
+> 
+>          Patch 1: Commit log updated. Example shows DEVICE_ATTR_RO()
+>          example instead of DEVICE_ATTR(). DEVICE_ATTR() should be avoided
+>          unless the files have unusual permissions. Changed to reflect a
+>          more encouraged usage.  Also updated regex to be accurate.
+> 
+>          Patch 3: [NEW] Add patch to change DEVICE_ATTR() with 0220
+>          permissions to DEVICE_ATTR_WO().
+> 
+>          Updated series log to reflect new patch and unusual permissions
+>          information.
+> 
+> 
+> Kelsey Skunberg (4):
+>    PCI: sysfs: Define device attributes with DEVICE_ATTR*
+>    PCI: sysfs: Change permissions from symbolic to octal
+>    PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()
+>    PCI/IOV: Move sysfs SR-IOV functions to iov.c
+> 
+>   drivers/pci/iov.c       | 168 ++++++++++++++++++++++++++++++
+>   drivers/pci/pci-sysfs.c | 223 ++++------------------------------------
+>   drivers/pci/pci.h       |   2 +-
+>   3 files changed, 191 insertions(+), 202 deletions(-)
+> 
+Thanks for the cleanup.
 
-Nothing too crazy this week, one amdgpu fix to use vmalloc for a
-struct that grew in size, and another MST fix for nouveau, and some
-other misc fixes.
+Reviewed-by: Donald Dutile <ddutile@redhat.com>
 
-Regards,
-Dave.
-
-drm-fixes-2019-08-16:
-drm fixes for 5.3-rc5
-
-i915:
-- single GVT use after free fix
-
-scheduler:
-- entity destruction race fix
-
-amdgpu:
-- struct allocation fix
-- gfx9 soft recovery fix
-
-nouveau:
-- followup MST fix
-
-ast:
-- vga register race fix.
-The following changes since commit d45331b00ddb179e291766617259261c112db872=
-:
-
-  Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
-
-are available in the Git repository at:
-
-  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-08-16
-
-for you to fetch changes up to a85abd5d45adba75535b7fc6d9f78329a693b7a9:
-
-  Merge tag 'drm-intel-fixes-2019-08-15' of
-git://anongit.freedesktop.org/drm/drm-intel into drm-fixes (2019-08-16
-12:41:52 +1000)
-
-----------------------------------------------------------------
-drm fixes for 5.3-rc5
-
-i915:
-- single GVT use after free fix
-
-scheduler:
-- entity destruction race fix
-
-amdgpu:
-- struct allocation fix
-- gfx9 soft recovery fix
-
-nouveau:
-- followup MST fix
-
-ast:
-- vga register race fix.
-
-----------------------------------------------------------------
-Alex Deucher (1):
-      drm/amd/display: use kvmalloc for dc_state (v2)
-
-Christian K=C3=B6nig (1):
-      drm/scheduler: use job count instead of peek
-
-Dan Carpenter (1):
-      drm/i915: Use after free in error path in intel_vgpu_create_workload(=
-)
-
-Dave Airlie (2):
-      Merge tag 'drm-fixes-5.3-2019-08-14' of
-git://people.freedesktop.org/~agd5f/linux into drm-fixes
-      Merge tag 'drm-intel-fixes-2019-08-15' of
-git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
-
-Jani Nikula (1):
-      Merge tag 'gvt-fixes-2019-08-13' of
-https://github.com/intel/gvt-linux into drm-intel-fixes
-
-Lyude Paul (1):
-      drm/nouveau: Only recalculate PBN/VCPI on mode/connector changes
-
-Pierre-Eric Pelloux-Prayer (1):
-      drm/amdgpu: fix gfx9 soft recovery
-
-Y.C. Chen (1):
-      drm/ast: Fixed reboot test may cause system hanged
-
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c    |  2 +-
- drivers/gpu/drm/amd/display/dc/core/dc.c | 11 ++++++-----
- drivers/gpu/drm/ast/ast_main.c           |  5 ++++-
- drivers/gpu/drm/ast/ast_mode.c           |  2 +-
- drivers/gpu/drm/ast/ast_post.c           |  2 +-
- drivers/gpu/drm/i915/gvt/scheduler.c     |  4 ++--
- drivers/gpu/drm/nouveau/dispnv50/disp.c  | 22 +++++++++++++---------
- drivers/gpu/drm/scheduler/sched_entity.c |  4 ++--
- 8 files changed, 30 insertions(+), 22 deletions(-)
