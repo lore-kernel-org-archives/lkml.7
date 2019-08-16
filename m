@@ -6,119 +6,88 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1E0C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 531AAC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA6B42077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F3462077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfHPJFR (ORCPT
+        id S1726981AbfHPJFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 05:05:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55904 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726822AbfHPJFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:05:17 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C86BB81DE0;
-        Fri, 16 Aug 2019 09:05:16 +0000 (UTC)
-Received: from krava (unknown [10.43.17.33])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 0F6405C1B2;
-        Fri, 16 Aug 2019 09:05:14 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 11:05:14 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Kyle Meyer <meyerk@hpe.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Kyle Meyer <kyle.meyer@hpe.com>
-Subject: Re: [PATCH v2 1/6] perf: Refactor svg_build_topology_map
-Message-ID: <20190816090514.GB20709@krava>
-References: <20190814203824.204765-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
+        Fri, 16 Aug 2019 05:05:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41759 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbfHPJFl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 05:05:41 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hyYAz-0005kn-OB; Fri, 16 Aug 2019 11:05:37 +0200
+Date:   Fri, 16 Aug 2019 11:05:36 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     ARUL JENISTON MC <arul.jeniston@gmail.com>
+cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, arul_mc@dell.com
+Subject: Re: [PATCH] FS: timerfd: [Trimmed unreadable long subject line ]
+In-Reply-To: <20190816083246.169312-1-arul.jeniston@gmail.com>
+Message-ID: <alpine.DEB.2.21.1908161055310.1908@nanos.tec.linutronix.de>
+References: <20190816083246.169312-1-arul.jeniston@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190814203824.204765-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 16 Aug 2019 09:05:16 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 03:38:24PM -0500, Kyle Meyer wrote:
+Arul,
 
-SNIP
+On Fri, 16 Aug 2019, arul.jeniston@gmail.com wrote:
 
-> diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
-> index ae6a534a7a80..1beeb7291361 100644
-> --- a/tools/perf/util/svghelper.c
-> +++ b/tools/perf/util/svghelper.c
-> @@ -751,38 +751,37 @@ static int str_to_bitmap(char *s, cpumask_t *b)
->  	return ret;
->  }
->  
-> -int svg_build_topology_map(char *sib_core, int sib_core_nr,
-> -			   char *sib_thr, int sib_thr_nr)
-> +int svg_build_topology_map(struct perf_env *env)
->  {
->  	int i;
->  	struct topology t;
->  
-> -	t.sib_core_nr = sib_core_nr;
-> -	t.sib_thr_nr = sib_thr_nr;
-> -	t.sib_core = calloc(sib_core_nr, sizeof(cpumask_t));
-> -	t.sib_thr = calloc(sib_thr_nr, sizeof(cpumask_t));
-> +	t.sib_core_nr = env->nr_sibling_cores;
-> +	t.sib_thr_nr = env->nr_sibling_threads;
-> +	t.sib_core = calloc(env->nr_sibling_cores, sizeof(cpumask_t));
-> +	t.sib_thr = calloc(env->nr_sibling_threads, sizeof(cpumask_t));
->  
->  	if (!t.sib_core || !t.sib_thr) {
->  		fprintf(stderr, "topology: no memory\n");
->  		goto exit;
->  	}
->  
-> -	for (i = 0; i < sib_core_nr; i++) {
-> -		if (str_to_bitmap(sib_core, &t.sib_core[i])) {
-> +	for (i = 0; i < env->nr_sibling_cores; i++) {
-> +		if (str_to_bitmap(env->sibling_cores, &t.sib_core[i])) {
->  			fprintf(stderr, "topology: can't parse siblings map\n");
->  			goto exit;
->  		}
->  
-> -		sib_core += strlen(sib_core) + 1;
-> +		env->sibling_cores += strlen(env->sibling_cores) + 1;
+Please write the subject as a short precise sentence which fits into 70
+characters and put the long explanation into the body, i.e. here.
 
-so this will actualy change env->sibling_cores in the header,
-I guess thats not a problem for timechart, but might cause some
-confusion in future.. could you just use local pointer for that?
+See Documentation/process/submitting-patches.rst
 
-other than that the patchset looks good
+> From: ARUL JENISTON MC <arul.jeniston@gmail.com>
 
-thanks,
-jirka
+This lacks a Signed-off-by
 
->  	}
->  
-> -	for (i = 0; i < sib_thr_nr; i++) {
-> -		if (str_to_bitmap(sib_thr, &t.sib_thr[i])) {
-> +	for (i = 0; i < env->nr_sibling_threads; i++) {
-> +		if (str_to_bitmap(env->sibling_threads, &t.sib_thr[i])) {
->  			fprintf(stderr, "topology: can't parse siblings map\n");
->  			goto exit;
->  		}
->  
-> -		sib_thr += strlen(sib_thr) + 1;
-> +		env->sibling_threads += strlen(env->sibling_threads) + 1;
->  	}
->  
+> ---
+>  fs/timerfd.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/timerfd.c b/fs/timerfd.c
+> index 6a6fc8aa1de7..f5094e070e9a 100644
+> --- a/fs/timerfd.c
+> +++ b/fs/timerfd.c
+> @@ -284,8 +284,16 @@ static ssize_t timerfd_read(struct file *file, char __user *buf, size_t count,
+>  					&ctx->t.alarm, ctx->tintv) - 1;
+>  				alarm_restart(&ctx->t.alarm);
+>  			} else {
+> -				ticks += hrtimer_forward_now(&ctx->t.tmr,
+> -							     ctx->tintv) - 1;
+> +				u64 nooftimeo = hrtimer_forward_now(&ctx->t.tmr,
+> +								 ctx->tintv);
+> +				/*
+> +				 * ticks shouldn't become zero at this point.
+> +				 * Ignore if hrtimer_forward_now returns 0
+> +				 * due to larger backward time drift.
+> +				 */
 
-SNIP
+What? Backward time drift? Can you please explain how this would happen?
+
+> +				if (likely(nooftimeo)) {
+> +					ticks += nooftimeo - 1;
+> +				}
+
+Pointless brackets.
+
+Thanks,
+
+	tglx
