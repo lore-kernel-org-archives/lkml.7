@@ -2,253 +2,151 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A6BC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EEFC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB742086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6640B2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:38:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="1ZBnc38S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfHPJin (ORCPT
+        id S1727090AbfHPJit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 05:38:43 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37669 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfHPJim (ORCPT
+        Fri, 16 Aug 2019 05:38:49 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46942 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbfHPJir (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:38:42 -0400
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1hyYgv-0008Nu-4x; Fri, 16 Aug 2019 11:38:37 +0200
-Received: from [IPv6:2001:67c:670:202:595f:209f:a34b:fbc1] (unknown [IPv6:2001:67c:670:202:595f:209f:a34b:fbc1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id C1F0B4466F4;
-        Fri, 16 Aug 2019 09:38:33 +0000 (UTC)
-To:     Dan Murphy <dmurphy@ti.com>, wg@grandegger.com, davem@davemloft.net
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190509161109.10499-1-dmurphy@ti.com>
- <20190509161109.10499-3-dmurphy@ti.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Subject: Re: [PATCH v12 3/5] dt-bindings: can: tcan4x5x: Add DT bindings for
- TCAN4x5X driver
-Message-ID: <bdf06ead-a2e8-09a9-8cdd-49b54ec9da72@pengutronix.de>
-Date:   Fri, 16 Aug 2019 11:38:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 16 Aug 2019 05:38:47 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q139so2839509pfc.13
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 02:38:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4wvZCB2AqwQT6L1Xk5NrMqLDc2Y/wNMj0vd4lQmqKBE=;
+        b=1ZBnc38S0YKhbRHhv5aqARfq3jBTbDRbpVAZZzyvteiEsJmaOz0au9gq/gpQUkjr8E
+         cS+vvsnt8b86RkiV5oCOCpuLX5qseEoIFNatrErqU4esHomRvTJC9+jmhRjO6lj9zn8f
+         Q4uFDr/jXkalQYySHdX2zE612k93JjpsNYJJWsTYK54IbFDWdG02oSu93TZBhzufyTGi
+         70QPcBoeseKnYV5n4600jIyfdmuX2ELWAdIlaoe72e01UYuefONms5EmaJECGrzRNZDi
+         Kk8iebNsCuVgwj+UENRqMuVbUdbBTwUpYbP/5h3ymXCzwKTwV+F02faI2/n3Z7N4jbdp
+         3IMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4wvZCB2AqwQT6L1Xk5NrMqLDc2Y/wNMj0vd4lQmqKBE=;
+        b=LQHft2My0J5+YWEFaSZI/x5qinLxLoPUA1e3DIqzpD4q3KuXxkRJyajLJhNPgjaU1R
+         0gejiPE+0TaTjuPAnKuECV1vkuVs+ldQtEQifgKaQO4JXWXGaHAjLS2qnngGy17zQq70
+         CW7/eVkWJ+vzbXjtVff/tHWjYNp94POew++V/0/pxDwbgy5VuE9eQ32C6ATBIfRSRsgX
+         AvEBf2xJ7R/U0bJ8ktZLL50Qtlyx5c19dAM5iv61TBXVwSW3aGxdvcWhw8yf4DUYwhz+
+         BedLG/OEtaRlqfxcHyDbdOo5+W1IKWFCf0Cnm3YZeLcG9qinHM9GJ/541HX5M3WlDRJ6
+         pRHA==
+X-Gm-Message-State: APjAAAUeUKiCD6/AZDU7S/ZLd7iXyl10Tq7sAEmHyWC38Qf3BclgwkcK
+        YeZ86TitaliqVaEWi0xI6IbxwQ==
+X-Google-Smtp-Source: APXvYqyfRXZANkuoN4sJBk9Vh/hrwQ5aLVTN7zB0Q/x/yFrR8ZhQoQnTRAXnyfRGiw6deL6bPBXueA==
+X-Received: by 2002:a63:f907:: with SMTP id h7mr698218pgi.418.1565948326028;
+        Fri, 16 Aug 2019 02:38:46 -0700 (PDT)
+Received: from localhost.localdomain (59-127-47-126.HINET-IP.hinet.net. [59.127.47.126])
+        by smtp.gmail.com with ESMTPSA id fa14sm3851924pjb.12.2019.08.16.02.38.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 16 Aug 2019 02:38:45 -0700 (PDT)
+From:   Chris Chiu <chiu@endlessm.com>
+To:     mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@endlessm.com
+Subject: [PATCH] pinctrl: intel: remap the pin number to gpio offset for irq enabled pin
+Date:   Fri, 16 Aug 2019 17:38:38 +0800
+Message-Id: <20190816093838.81461-1-chiu@endlessm.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-In-Reply-To: <20190509161109.10499-3-dmurphy@ti.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="aBUzk5kBxcksCMQiGzZKo8fIFHJb9btJx"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---aBUzk5kBxcksCMQiGzZKo8fIFHJb9btJx
-Content-Type: multipart/mixed; boundary="q6QniM5YBwprqSKHFOCHjmzVW0QcEIZcF";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Dan Murphy <dmurphy@ti.com>, wg@grandegger.com, davem@davemloft.net
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <bdf06ead-a2e8-09a9-8cdd-49b54ec9da72@pengutronix.de>
-Subject: Re: [PATCH v12 3/5] dt-bindings: can: tcan4x5x: Add DT bindings for
- TCAN4x5X driver
-References: <20190509161109.10499-1-dmurphy@ti.com>
- <20190509161109.10499-3-dmurphy@ti.com>
-In-Reply-To: <20190509161109.10499-3-dmurphy@ti.com>
+On Asus X571GT, GPIO 297 is configured as an interrupt and serves
+for the touchpad. The touchpad will report input events much less
+than expected after S3 suspend/resume, which results in extremely
+slow cursor movement. However, the number of interrupts observed
+from /proc/interrupts increases much more than expected even no
+touching touchpad.
 
---q6QniM5YBwprqSKHFOCHjmzVW0QcEIZcF
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
+This is due to the value of PADCFG0 of PIN 225 for the interrupt
+has been changed from 0x80800102 to 0x80100102. The GPIROUTIOXAPIC
+is toggled on which results in the spurious interrupts. The PADCFG0
+of PIN 225 is expected to be saved during suspend, but the 297 is
+saved instead because the gpiochip_line_is_irq() expect the GPIO
+offset but what's really passed to it is PIN number. In this case,
+the /sys/kernel/debug/pinctrl/INT3450:00/gpio-ranges shows
 
-On 5/9/19 6:11 PM, Dan Murphy wrote:
-> DT binding documentation for TI TCAN4x5x driver.
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->=20
-> v12 - No changes - https://lore.kernel.org/patchwork/patch/1052300/
->=20
-> v11 - No changes - https://lore.kernel.org/patchwork/patch/1051178/
-> v10 - No changes - https://lore.kernel.org/patchwork/patch/1050488/
-> v9 - No Changes - https://lore.kernel.org/patchwork/patch/1050118/
-> v8 - No Changes - https://lore.kernel.org/patchwork/patch/1047981/
-> v7 - Made device state optional - https://lore.kernel.org/patchwork/pat=
-ch/1047218/
-> v6 - No changes - https://lore.kernel.org/patchwork/patch/1042445/
->=20
->  .../devicetree/bindings/net/can/tcan4x5x.txt  | 37 +++++++++++++++++++=
+288: INT3450:00 GPIOS [436 - 459] PINS [216 - 239]
 
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/can/tcan4x5x.=
-txt
->=20
-> diff --git a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt b/D=
-ocumentation/devicetree/bindings/net/can/tcan4x5x.txt
-> new file mode 100644
-> index 000000000000..c388f7d9feb1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
-> @@ -0,0 +1,37 @@
-> +Texas Instruments TCAN4x5x CAN Controller
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +This file provides device node information for the TCAN4x5x interface =
-contains.
-> +
-> +Required properties:
-> +	- compatible: "ti,tcan4x5x"
-> +	- reg: 0
-> +	- #address-cells: 1
-> +	- #size-cells: 0
-> +	- spi-max-frequency: Maximum frequency of the SPI bus the chip can
-> +			     operate at should be less than or equal to 18 MHz.
-> +	- data-ready-gpios: Interrupt GPIO for data and error reporting.
-> +	- device-wake-gpios: Wake up GPIO to wake up the TCAN device.
-> +
-> +See Documentation/devicetree/bindings/net/can/m_can.txt for additional=
+So gpiochip_line_is_irq() returns true for GPIO offset 297, the
+suspend routine spuriously saves the content for PIN 297 which
+we expect to save for PIN 225.
 
-> +required property details.
-> +
-> +Optional properties:
-> +	- reset-gpios: Hardwired output GPIO. If not defined then software
-> +		       reset.
-> +	- device-state-gpios: Input GPIO that indicates if the device is in
-> +			      a sleep state or if the device is active.
-> +
-> +Example:
-> +tcan4x5x: tcan4x5x@0 {
-> +		compatible =3D "ti,tcan4x5x";
-> +		reg =3D <0>;
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		spi-max-frequency =3D <10000000>;
-> +		bosch,mram-cfg =3D <0x0 0 0 32 0 0 1 1>;
-> +		data-ready-gpios =3D <&gpio1 14 GPIO_ACTIVE_LOW>;
+This commit maps the PIN number to GPIO offset first in the
+intel_pinctrl_should_save() to make sure the values for the
+specific PINs can be correctly saved and then restored.
 
-Can you convert this into a proper interrupt property? E.g.:
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
 
->                 interrupt-parent =3D <&gpio4>;
->                 interrupts =3D <13 0x2>;
+---
+ drivers/pinctrl/intel/pinctrl-intel.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-See:
-https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/b=
-indings/net/can/microchip,mcp251x.txt#L21
-https://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can-next.git/tr=
-ee/drivers/net/can/spi/mcp251x.c?h=3Dmcp251x#n945
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index a18d6eefe672..8d6a843bbc7e 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -796,6 +796,29 @@ static int intel_gpio_to_pin(struct intel_pinctrl *pctrl, unsigned int offset,
+ 	return -EINVAL;
+ }
+ 
++/**
++ * intel_pin_to_gpio() - Translate from pin number to GPIO offset
++ * @pctrl: Pinctrl structure
++ * @pin: pin number
++ *
++ * Translate the pin number of pinctrl to GPIO offset
++ */
++static int intel_pin_to_gpio(struct intel_pinctrl *pctrl, int pin)
++{
++	const struct intel_community *community;
++	const struct intel_padgroup *padgrp;
++
++	community = intel_get_community(pctrl, pin);
++	if (!community)
++		return -EINVAL;
++
++	padgrp = intel_community_get_padgroup(community, pin);
++	if (!padgrp)
++		return -EINVAL;
++
++	return pin - padgrp->base + padgrp->gpio_base;
++}
++
+ static int intel_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ {
+ 	struct intel_pinctrl *pctrl = gpiochip_get_data(chip);
+@@ -1443,7 +1466,8 @@ static bool intel_pinctrl_should_save(struct intel_pinctrl *pctrl, unsigned int
+ 	 * them alone.
+ 	 */
+ 	if (pd->mux_owner || pd->gpio_owner ||
+-	    gpiochip_line_is_irq(&pctrl->chip, pin))
++	    gpiochip_line_is_irq(&pctrl->chip,
++				 intel_pin_to_gpio(pctrl, pin)))
+ 		return true;
+ 
+ 	return false;
+-- 
+2.22.1
 
-> +		device-state-gpios =3D <&gpio3 21 GPIO_ACTIVE_HIGH>;
-> +		device-wake-gpios =3D <&gpio1 15 GPIO_ACTIVE_HIGH>;
-> +		reset-gpios =3D <&gpio1 27 GPIO_ACTIVE_LOW>;
-> +};
-
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---q6QniM5YBwprqSKHFOCHjmzVW0QcEIZcF--
-
---aBUzk5kBxcksCMQiGzZKo8fIFHJb9btJx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl1WeZYACgkQWsYho5Hk
-nSBTlwf/UKOIilK+QTWjdNPICt6931qej73qUpCyoXPrpGem3p9JQ75TWAnwtpoH
-JrzeqtaAkV2BuGWkF22JtdALqQWlLXniKBBr8jvYK7oVBP51eFm1Yu70ta5lztOo
-Pr8SsTNW0/ey/4b8hygkpmQnuQIlOYWo1v+YK4IccEz9EbkyOVrg2aj/dvGzaVga
-TMWmmKtpAjB8Cy0Rn1Ygf/zxs8AvCKFhMRnz2jabe/dxUAsxw3lKiW3fiJ8I6OMv
-6Ra0kKf9nlZibQ70TUu/LX6X4rAf7U+SZ/IWAk1LoOtiySC6hn0r4pn9Oxvary2i
-AVXO0fgo63K2OiIFDldCsTiyluylJA==
-=0DaQ
------END PGP SIGNATURE-----
-
---aBUzk5kBxcksCMQiGzZKo8fIFHJb9btJx--
