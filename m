@@ -2,95 +2,159 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD10CC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7654C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DBE421721
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85332171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:07:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="oaP05HQi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfHPRFI (ORCPT
+        id S1727127AbfHPRHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 13:05:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbfHPRFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 13:05:06 -0400
-Received: from oasis.local.home (rrcs-76-79-140-27.west.biz.rr.com [76.79.140.27])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E1E42077C;
-        Fri, 16 Aug 2019 17:05:05 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 13:04:40 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-kernel@vger.kernel.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
-Message-ID: <20190816130440.07cc0a30@oasis.local.home>
-In-Reply-To: <28afb801-6b76-f86b-9e1b-09488fb7c8ce@arm.com>
-References: <00000000000076ecf3059030d3f1@google.com>
-        <20190816142643.13758-1-mathieu.desnoyers@efficios.com>
-        <20190816122539.34fada7b@oasis.local.home>
-        <28afb801-6b76-f86b-9e1b-09488fb7c8ce@arm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 16 Aug 2019 13:07:19 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46273 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726469AbfHPRHT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 13:07:19 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q139so3395794pfc.13
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 10:07:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LpUuiFdJ32bsLuaVeOaUL0Sj18GW8SOj2J5Gd+ou2Cw=;
+        b=oaP05HQi1/o/sS5vyxx+usc0U+bhRSL/a0YiS/kKGOh0mjRXmh0AwvW10N5DkvNgBg
+         E/1Z2bYOSj2WVy+3EMKNmnqor/mF4ltvwR0TMhCOZWrYDHws4CSU3Hsj9cYmKx6qk8ww
+         Ux5GaggXWtGv1olsSkZGo5zrZWsa2FeMDJ0Vk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LpUuiFdJ32bsLuaVeOaUL0Sj18GW8SOj2J5Gd+ou2Cw=;
+        b=AV/pmstojmN/SzEcYWUGiz/QFVxSl6kcRczzKXQLPEc4pdjDWskychku6vopB6Y7w7
+         Y78Q1UcMlSABh3TgtHiv7/IzdgWRzLTdNGzrDsvjMN1TEfZpWHON06Jny+RKuiiWe65W
+         a35e8sQ+FcfR5Q48mFZBTg0QEs/5o1aLjlCIIxV9fgF+D3TtucdZrI+Ub6RpnquoZKgI
+         yVBVigq5J/AW0aLqlJRFwatHddGmZsZRaAAQUKBMVszn6orgS7LwsbKSr6K/EijRnPb7
+         Ay7raB6ABj2d4UXsG3J1TS1ti99sRdsxswEaX7yaOgKDS1gjGm7XeTl4noNTSSW0wTI0
+         L/ww==
+X-Gm-Message-State: APjAAAUdihgfT1TBMlHHhXD0yGDu5/DjOl8Ax/48DQ9yCTJsR00opHM8
+        LXC2VzTTf3BujST/JBBYmc6yPg==
+X-Google-Smtp-Source: APXvYqxVrg/FHaQvo7mLZvQMUh944RBZY/Sl56B9/+Ut1+dVPizUCesG/xf6x2ApBTRXSvXuam0GFA==
+X-Received: by 2002:aa7:9293:: with SMTP id j19mr12164537pfa.90.1565975238300;
+        Fri, 16 Aug 2019 10:07:18 -0700 (PDT)
+Received: from localhost ([172.19.216.18])
+        by smtp.gmail.com with ESMTPSA id w9sm6699237pfn.19.2019.08.16.10.07.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 10:07:17 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 13:07:00 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        frederic@kernel.org
+Subject: Re: [PATCH -rcu dev 3/3] RFC: rcu/tree: Read dynticks_nmi_nesting in
+ advance
+Message-ID: <20190816170700.GC10481@google.com>
+References: <20190816025311.241257-1-joel@joelfernandes.org>
+ <20190816025311.241257-3-joel@joelfernandes.org>
+ <20190816162404.GB10481@google.com>
+ <20190816165242.GS28441@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816165242.GS28441@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 16 Aug 2019 17:48:59 +0100
-Valentin Schneider <valentin.schneider@arm.com> wrote:
-
-> On 16/08/2019 17:25, Steven Rostedt wrote:
-> >> Also, write and read to/from those variables should be done with
-> >> WRITE_ONCE() and READ_ONCE(), given that those are read within tracing
-> >> probes without holding the sched_register_mutex.
-> >>  
+On Fri, Aug 16, 2019 at 09:52:42AM -0700, Paul E. McKenney wrote:
+> On Fri, Aug 16, 2019 at 12:24:04PM -0400, Joel Fernandes wrote:
+> > On Thu, Aug 15, 2019 at 10:53:11PM -0400, Joel Fernandes (Google) wrote:
+> > > I really cannot explain this patch, but without it, the "else if" block
+> > > just doesn't execute thus causing the tick's dep mask to not be set and
+> > > causes the tick to be turned off.
+> > > 
+> > > I tried various _ONCE() macros but the only thing that works is this
+> > > patch.
+> > > 
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > ---
+> > >  kernel/rcu/tree.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index 856d3c9f1955..ac6bcf7614d7 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -802,6 +802,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+> > >  {
+> > >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> > >  	long incby = 2;
+> > > +	int dnn = rdp->dynticks_nmi_nesting;
 > > 
-> > I understand the READ_ONCE() but is the WRITE_ONCE() truly necessary?
-> > It's done while holding the mutex. It's not that critical of a path,
-> > and makes the code look ugly.
-> >   
+> > I believe the accidental sign extension / conversion from long to int was
+> > giving me an illusion since things started working well. Changing the 'int
+> > dnn' to 'long dnn' gives similar behavior as without this patch! At least I
+> > know now. Please feel free to ignore this particular RFC patch while I debug
+> > this more (over the weekend or early next week). The first 2 patches are
+> > good, just ignore this one.
 > 
-> I seem to recall something like locking primitives don't protect you from
-> store tearing / invented stores, so if you can have concurrent readers
-> using READ_ONCE(), there should be a WRITE_ONCE() on the writer side, even
-> if it's done in a critical section.
+> Ah, good point on the type!  So you were ending up with zero due to the
+> low-order 32 bits of DYNTICK_IRQ_NONIDLE being zero, correct?  If so,
+> the "!rdp->dynticks_nmi_nesting" instead needs to be something like
+> "rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE", which sounds like
+> it is actually worse then the earlier comparison against the constant 2.
+> 
+> Sounds like I should revert the -rcu commit 805a16eaefc3 ("rcu: Force
+> nohz_full tick on upon irq enter instead of exit").
 
-But for this, it really doesn't matter. The READ_ONCE() is for going
-from 0->1 or 1->0 any other change is the same as 1.
+I think just using doing " == DYNTICK_IRQ_NONIDLE" as you mentioned should
+make it work. I'll test that soon, thanks!
 
-When we enable trace events, we start recording the tasks comms such
-that we can possibly map them to the pids. When we disable trace
-events, we stop recording the comms so that we don't overwrite the
-cache when not needed. Note, if more than the max cache of tasks are
-recorded during a session, we are likely to miss comms anyway.
+I would prefer not to revert that commit, and just make the above change.
+Just because I feel this is safer. Since the tick is turned off in the IRQ
+exit path, I am a bit worried about timing (does the tick turn off before RCU
+sees the IRQ exit, or after it?). Either way, doing it on IRQ entry makes the
+question irrelevant and immune to future changes in the timing.
 
-Thinking about this more, the READ_ONCE() and WRTIE_ONCE() are not even
-needed, because this is just a best effort anyway.
+Would you think the check for the nesting variable is more expensive to do on
+IRQ entry than exit? If so, we could discuss doing it in the exit path,
+otherwise we could doing on entry with just the above change in the equality
+condition.
 
-The only real fix was to move the check into the mutex protect area,
-because that can cause a real bug if there was a race.
+thanks,
 
- {
--	bool sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
-+	bool sched_register;
-+
- 	mutex_lock(&sched_register_mutex);
-+	sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
+ - Joel
 
-Thus, I'd like to see a v2 of this patch without the READ_ONCE() or
-WRITE_ONCE() added.
-
--- Steve
+> 
+> 								Thanx, Paul
+> 
+> > thanks,
+> > 
+> >  - Joel
+> > 
+> > 
+> > >  
+> > >  	/* Complain about underflow. */
+> > >  	WARN_ON_ONCE(rdp->dynticks_nmi_nesting < 0);
+> > > @@ -826,7 +827,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+> > >  
+> > >  		incby = 1;
+> > >  	} else if (tick_nohz_full_cpu(rdp->cpu) &&
+> > > -		   !rdp->dynticks_nmi_nesting &&
+> > > +		   !dnn &&
+> > >  		   rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
+> > >  		rdp->rcu_forced_tick = true;
+> > >  		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+> > > -- 
+> > > 2.23.0.rc1.153.gdeed80330f-goog
+> > > 
+> > 
