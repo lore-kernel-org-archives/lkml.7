@@ -2,118 +2,195 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFD3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C342C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E23FF2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F7302133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:52:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="fBcmFbwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfHPPwY (ORCPT
+        id S1727514AbfHPPwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 11:52:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55014 "EHLO mx1.redhat.com"
+        Fri, 16 Aug 2019 11:52:55 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:23089 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727351AbfHPPwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 11:52:24 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 222B486663;
-        Fri, 16 Aug 2019 15:52:24 +0000 (UTC)
-Received: from redhat.com (ovpn-123-168.rdu2.redhat.com [10.10.123.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6BF4583E86;
-        Fri, 16 Aug 2019 15:52:22 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 11:52:20 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
-Message-ID: <20190816155220.GC3149@redhat.com>
-References: <20190813210857.GB12695@iweiny-DESK2.sc.intel.com>
- <a1044a0d-059c-f347-bd68-38be8478bf20@nvidia.com>
- <90e5cd11-fb34-6913-351b-a5cc6e24d85d@nvidia.com>
- <20190814234959.GA463@iweiny-DESK2.sc.intel.com>
- <2cbdf599-2226-99ae-b4d5-8909a0a1eadf@nvidia.com>
- <ac834ac6-39bd-6df9-fca4-70b9520b6c34@nvidia.com>
- <20190815132622.GG14313@quack2.suse.cz>
- <20190815133510.GA21302@quack2.suse.cz>
- <0d6797d8-1e04-1ebe-80a7-3d6895fe71b0@suse.cz>
- <20190816154404.GF3041@quack2.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190816154404.GF3041@quack2.suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 16 Aug 2019 15:52:24 +0000 (UTC)
+        id S1727351AbfHPPwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 11:52:55 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4697BW0hrqz9txKQ;
+        Fri, 16 Aug 2019 17:52:51 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=fBcmFbwY; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id FYR3124NhMyd; Fri, 16 Aug 2019 17:52:51 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4697BV6hbsz9txKK;
+        Fri, 16 Aug 2019 17:52:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1565970770; bh=TwIdZYiHS1CL7yhls5hGrr/rHMBYJ2MBfmVz6lKl8SU=;
+        h=From:Subject:To:Cc:Date:From;
+        b=fBcmFbwYBkTexLUj/PFgcTJbWlTXdFIhMf5OARQCWusdewXDZMwFUYmGWjnxs+dYq
+         pDkqO8Qgcnn/k/gH8z43SOtD7PAycxSq63sHcC44dVojkEARNFgjDa8bjcAomKaDyN
+         iDhz+cuQYbRA0T5ccUrMR0vNU5EMGSfjsfuakbDM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B241A8B78F;
+        Fri, 16 Aug 2019 17:52:52 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id aED1l8-rZepO; Fri, 16 Aug 2019 17:52:52 +0200 (CEST)
+Received: from pc17473vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 885E98B754;
+        Fri, 16 Aug 2019 17:52:52 +0200 (CEST)
+Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 539FD6B6C3; Fri, 16 Aug 2019 15:52:52 +0000 (UTC)
+Message-Id: <de7a813c71c4823797bb351bea8be15acae83be2.1565970465.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [RFC PATCH] powerpc: Convert ____flush_dcache_icache_phys() to C
+To:     Alastair D'Silva <alastair@d-silva.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 16 Aug 2019 15:52:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 05:44:04PM +0200, Jan Kara wrote:
-> On Fri 16-08-19 10:47:21, Vlastimil Babka wrote:
-> > On 8/15/19 3:35 PM, Jan Kara wrote:
-> > >> 
-> > >> So when the GUP user uses MMU notifiers to stop writing to pages whenever
-> > >> they are writeprotected with page_mkclean(), they don't really need page
-> > >> pin - their access is then fully equivalent to any other mmap userspace
-> > >> access and filesystem knows how to deal with those. I forgot out this case
-> > >> when I wrote the above sentence.
-> > >> 
-> > >> So to sum up there are three cases:
-> > >> 1) DIO case - GUP references to pages serving as DIO buffers are needed for
-> > >>    relatively short time, no special synchronization with page_mkclean() or
-> > >>    munmap() => needs FOLL_PIN
-> > >> 2) RDMA case - GUP references to pages serving as DMA buffers needed for a
-> > >>    long time, no special synchronization with page_mkclean() or munmap()
-> > >>    => needs FOLL_PIN | FOLL_LONGTERM
-> > >>    This case has also a special case when the pages are actually DAX. Then
-> > >>    the caller additionally needs file lease and additional file_pin
-> > >>    structure is used for tracking this usage.
-> > >> 3) ODP case - GUP references to pages serving as DMA buffers, MMU notifiers
-> > >>    used to synchronize with page_mkclean() and munmap() => normal page
-> > >>    references are fine.
-> > 
-> > IMHO the munlock lesson told us about another one, that's in the end equivalent
-> > to 3)
-> > 
-> > 4) pinning for struct page manipulation only => normal page references
-> > are fine
-> 
-> Right, it's good to have this for clarity.
-> 
-> > > I want to add that I'd like to convert users in cases 1) and 2) from using
-> > > GUP to using differently named function. Users in case 3) can stay as they
-> > > are for now although ultimately I'd like to denote such use cases in a
-> > > special way as well...
-> > 
-> > So after 1/2/3 is renamed/specially denoted, only 4) keeps the current
-> > interface?
-> 
-> Well, munlock() code doesn't even use GUP, just follow_page(). I'd wait to
-> see what's left after handling cases 1), 2), and 3) to decide about the
-> interface for the remainder.
-> 
+Resulting code (8xx with 16 bytes per cacheline and 16k pages)
 
-For 3 we do not need to take a reference at all :) So just forget about 3
-it does not exist. For 3 the reference is the reference the CPU page table
-has on the page and that's it. GUP is no longer involve in ODP or anything
-like that.
+0000016c <__flush_dcache_icache_phys>:
+ 16c:	54 63 00 22 	rlwinm  r3,r3,0,0,17
+ 170:	7d 20 00 a6 	mfmsr   r9
+ 174:	39 40 04 00 	li      r10,1024
+ 178:	55 28 07 34 	rlwinm  r8,r9,0,28,26
+ 17c:	7c 67 1b 78 	mr      r7,r3
+ 180:	7d 49 03 a6 	mtctr   r10
+ 184:	7d 00 01 24 	mtmsr   r8
+ 188:	4c 00 01 2c 	isync
+ 18c:	7c 00 18 6c 	dcbst   0,r3
+ 190:	38 63 00 10 	addi    r3,r3,16
+ 194:	42 00 ff f8 	bdnz    18c <__flush_dcache_icache_phys+0x20>
+ 198:	7c 00 04 ac 	hwsync
+ 19c:	7d 49 03 a6 	mtctr   r10
+ 1a0:	7c 00 3f ac 	icbi    0,r7
+ 1a4:	38 e7 00 10 	addi    r7,r7,16
+ 1a8:	42 00 ff f8 	bdnz    1a0 <__flush_dcache_icache_phys+0x34>
+ 1ac:	7c 00 04 ac 	hwsync
+ 1b0:	7d 20 01 24 	mtmsr   r9
+ 1b4:	4c 00 01 2c 	isync
+ 1b8:	4e 80 00 20 	blr
 
-Cheers,
-Jérôme
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ This patch is on top of Alastair's series "powerpc: convert cache asm to C"
+ Patch 3 of that series should touch __flush_dcache_icache_phys and this
+ patch could come just after patch 3.
+
+ arch/powerpc/include/asm/cacheflush.h |  8 +++++
+ arch/powerpc/mm/mem.c                 | 55 ++++++++++++++++++++++++++++-------
+ 2 files changed, 53 insertions(+), 10 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
+index 1826bf2cc137..bf4f2dc4eb76 100644
+--- a/arch/powerpc/include/asm/cacheflush.h
++++ b/arch/powerpc/include/asm/cacheflush.h
+@@ -47,6 +47,14 @@ void flush_icache_user_range(struct vm_area_struct *vma,
+ 				    struct page *page, unsigned long addr,
+ 				    int len);
+ void flush_dcache_icache_page(struct page *page);
++#if defined(CONFIG_PPC32) && !defined(CONFIG_BOOKE)
++void __flush_dcache_icache_phys(unsigned long physaddr);
++#else
++static inline void __flush_dcache_icache_phys(unsigned long physaddr)
++{
++	BUG();
++}
++#endif
+ 
+ /**
+  * flush_dcache_range(): Write any modified data cache blocks out to memory and invalidate them.
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index 43be99de7c9a..43009f9227c4 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -402,6 +402,50 @@ void flush_dcache_page(struct page *page)
+ }
+ EXPORT_SYMBOL(flush_dcache_page);
+ 
++#if defined(CONFIG_PPC32) && !defined(CONFIG_BOOKE)
++void __flush_dcache_icache_phys(unsigned long physaddr)
++{
++	unsigned long bytes = l1_dcache_bytes();
++	unsigned long nb = PAGE_SIZE / bytes;
++	unsigned long addr = physaddr & PAGE_MASK;
++	unsigned long msr, msr0;
++	unsigned long loop1 = addr, loop2 = addr;
++
++	if (cpu_has_feature(CPU_FTR_COHERENT_ICACHE)) {
++		/* For a snooping icache, we still need a dummy icbi to purge all the
++		 * prefetched instructions from the ifetch buffers. We also need a sync
++		 * before the icbi to order the the actual stores to memory that might
++		 * have modified instructions with the icbi.
++		 */
++		mb(); /* sync */
++		icbi((void *)addr);
++		mb(); /* sync */
++		isync();
++		return;
++	}
++	msr0 = mfmsr();
++	msr = msr0 & ~MSR_DR;
++	asm volatile(
++	    "	mtctr %2;"
++	    "	mtmsr %3;"
++	    "	isync;"
++	    "0:	dcbst	0, %0;"
++	    "	addi	%0, %0, %4;"
++	    "	bdnz	0b;"
++	    "	sync;"
++	    "	mtctr %2;"
++	    "1:	icbi	0, %1;"
++	    "	addi	%1, %1, %4;"
++	    "	bdnz	1b;"
++	    "	sync;"
++	    "	mtmsr %5;"
++	    "	isync;"
++	    : "+r" (loop1), "+r" (loop2)
++	    : "r" (nb), "r" (msr), "i" (bytes), "r" (msr0)
++	    : "ctr", "memory");
++}
++#endif
++
+ void flush_dcache_icache_page(struct page *page)
+ {
+ #ifdef CONFIG_HUGETLB_PAGE
+@@ -419,16 +463,7 @@ void flush_dcache_icache_page(struct page *page)
+ 		__flush_dcache_icache(start);
+ 		kunmap_atomic(start);
+ 	} else {
+-		unsigned long msr = mfmsr();
+-
+-		/* Clear the DR bit so that we operate on physical
+-		 * rather than virtual addresses
+-		 */
+-		mtmsr(msr & ~(MSR_DR));
+-
+-		__flush_dcache_icache((void *)physaddr);
+-
+-		mtmsr(msr);
++		__flush_dcache_icache_phys(page_to_pfn(page) << PAGE_SHIFT);
+ 	}
+ #endif
+ }
+-- 
+2.13.3
+
