@@ -2,104 +2,106 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC87FC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88146C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8938D2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526232171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565976975;
+	bh=sNq0ZIrjqyjv9St1Tf5KuLvW39QxNdAcBWHz6ktST40=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=Gqj3tMtX7RHnrtJjWT24J9oAAx/lLgFyC0AshnaENW5hNEOE7zcc6P8HQGHxKom4V
+	 gzNJI/JvqbqDFg+sNQBs6tTevZ3DeWKiBSE0dH+bSBl9/QS+ovHOPWY1R6xi0RWxOy
+	 bZpcatznqLopVg1ouqws+oD75yRVRyWFtM0vGvxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbfHPRgF (ORCPT
+        id S1727643AbfHPRgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 13:36:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:59492 "EHLO foss.arm.com"
+        Fri, 16 Aug 2019 13:36:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbfHPRgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 13:36:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FB0928;
-        Fri, 16 Aug 2019 10:36:04 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BA173F694;
-        Fri, 16 Aug 2019 10:36:02 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 18:36:00 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        Shawn Anastasio <shawn@anastas.io>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] arm64: document the choice of page attributes for
- pgprot_dmacoherent
-Message-ID: <20190816173559.GB7417@lakrids.cambridge.arm.com>
-References: <20190816070754.15653-1-hch@lst.de>
- <20190816070754.15653-7-hch@lst.de>
- <20190816173118.4rbbzuogfamfa554@willie-the-truck>
+        id S1726900AbfHPRgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 13:36:14 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 491082086C;
+        Fri, 16 Aug 2019 17:36:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565976973;
+        bh=sNq0ZIrjqyjv9St1Tf5KuLvW39QxNdAcBWHz6ktST40=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=m4OaQKNgfU6xahKExwpvjNk54djLgfZJfU9mMXq7vKSbqzdUDrtmQBNr2fxG5DpS1
+         pHZA/rgHUEcugY+gWqf/s+DCZRA+ZVjBGLNPsIkzQF7gEkgue7+A7y0cZLmqjAjPCC
+         dYNLd2aZ48t5CTprKS6l2JR7nLAl0vtl3Y3uF87M=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816173118.4rbbzuogfamfa554@willie-the-truck>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190816135523.73520-1-yuehaibing@huawei.com>
+References: <20190816135523.73520-1-yuehaibing@huawei.com>
+Subject: Re: [PATCH -next] clk: st: clkgen-pll: remove unused variable 'st_pll3200c32_407_a0'
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        YueHaibing <yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>, allison@lohutok.net,
+        gregkh@linuxfoundation.org, mturquette@baylibre.com,
+        Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+User-Agent: alot/0.8.1
+Date:   Fri, 16 Aug 2019 10:36:12 -0700
+Message-Id: <20190816173613.491082086C@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 06:31:18PM +0100, Will Deacon wrote:
-> Hi Christoph,
-> 
-> Thanks for spinning this into a patch.
-> 
-> On Fri, Aug 16, 2019 at 09:07:54AM +0200, Christoph Hellwig wrote:
-> > Based on an email from Will Deacon.
-> > 
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  arch/arm64/include/asm/pgtable.h | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> > index 6700371227d1..6ff221d9a631 100644
-> > --- a/arch/arm64/include/asm/pgtable.h
-> > +++ b/arch/arm64/include/asm/pgtable.h
-> > @@ -435,6 +435,14 @@ static inline pmd_t pmd_mkdevmap(pmd_t pmd)
-> >  	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_NORMAL_NC) | PTE_PXN | PTE_UXN)
-> >  #define pgprot_device(prot) \
-> >  	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_PXN | PTE_UXN)
-> > +/*
-> > + * DMA allocations for non-coherent devices use what the Arm architecture calls
-> > + * "Normal non-cacheable" memory, which permits speculation, unaligned accesses
-> > + * and merging of writes.  This is different from "Strongly Ordered" memory
-> > + * which is intended for MMIO and thus forbids speculation, preserves access
-> > + * size, requires strict alignment and also forces write responses to come from
-> > + * the endpoint.
-> > + */
-> 
-> Mind if I tweak the second sentence to be:
-> 
->   This is different from "Device-nGnR[nE]" memory which is intended for MMIO
->   and thus forbids speculation, preserves access size, requires strict
->   alignment and can also force write responses to come from the endpoint.
-> 
-> ? It's a small change, but it better fits with the arm64 terminology
-> ("strongly ordered" is no longer used in the architecture).
-> 
-> If you're happy with that, I can make the change and queue this patch
-> for 5.4.
+Quoting YueHaibing (2019-08-16 06:55:23)
+> drivers/clk/st/clkgen-pll.c:64:37: warning:
+>  st_pll3200c32_407_a0 defined but not used [-Wunused-const-variable=3D]
+>=20
+> It is never used, so can be removed.
+>=20
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
 
-FWIW, with that wording:
+Adding Gabriel, please ack/review.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
+>  drivers/clk/st/clkgen-pll.c | 13 -------------
+>  1 file changed, 13 deletions(-)
+>=20
+> diff --git a/drivers/clk/st/clkgen-pll.c b/drivers/clk/st/clkgen-pll.c
+> index d8a688b..c3952f2 100644
+> --- a/drivers/clk/st/clkgen-pll.c
+> +++ b/drivers/clk/st/clkgen-pll.c
+> @@ -61,19 +61,6 @@ static const struct clk_ops stm_pll3200c32_ops;
+>  static const struct clk_ops stm_pll3200c32_a9_ops;
+>  static const struct clk_ops stm_pll4600c28_ops;
+> =20
+> -static const struct clkgen_pll_data st_pll3200c32_407_a0 =3D {
+> -       /* 407 A0 */
+> -       .pdn_status     =3D CLKGEN_FIELD(0x2a0,   0x1,                   =
+ 8),
+> -       .pdn_ctrl       =3D CLKGEN_FIELD(0x2a0,   0x1,                   =
+ 8),
+> -       .locked_status  =3D CLKGEN_FIELD(0x2a0,   0x1,                   =
+ 24),
+> -       .ndiv           =3D CLKGEN_FIELD(0x2a4,   C32_NDIV_MASK,         =
+ 16),
+> -       .idf            =3D CLKGEN_FIELD(0x2a4,   C32_IDF_MASK,          =
+ 0x0),
+> -       .num_odfs =3D 1,
+> -       .odf            =3D { CLKGEN_FIELD(0x2b4, C32_ODF_MASK,          =
+ 0) },
+> -       .odf_gate       =3D { CLKGEN_FIELD(0x2b4, 0x1,                   =
+ 6) },
+> -       .ops            =3D &stm_pll3200c32_ops,
+> -};
+> -
+>  static const struct clkgen_pll_data st_pll3200c32_cx_0 =3D {
+>         /* 407 C0 PLL0 */
+>         .pdn_status     =3D CLKGEN_FIELD(0x2a0,   0x1,                   =
+ 8),
