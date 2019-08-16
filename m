@@ -2,132 +2,193 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663BBC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E8AC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40CA92077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:23:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565979783;
-	bh=Os7RmwFmk/bvYTsc+erxUvNygEZaIVYpIKLZnm5tJQ8=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=M2qgU8PL1otGk3HhCRToifSAE80h/lwLHREn/3X+BaXZLI+XXe3faEiNWbkijcASj
-	 2doICvfMhC00EgGofAx9QpH1phDKeOa8ZY7ux+htFxd1hDF/Ujdqhk/d+VS6qMUejo
-	 zCu9QWpSwfRkY5KPCLsEpksdw9Mk/RNuxyxE0+tw=
+	by mail.kernel.org (Postfix) with ESMTP id 74D532077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:24:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6PHkLO5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfHPSXB (ORCPT
+        id S1727613AbfHPSYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 14:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727500AbfHPSXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 14:23:00 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 538532077C;
-        Fri, 16 Aug 2019 18:22:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565979779;
-        bh=Os7RmwFmk/bvYTsc+erxUvNygEZaIVYpIKLZnm5tJQ8=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Adjba4SejZEIRO+Ov9Lzdodd3sqIArS0Iry4f3BQyWM2DQroF9Z+U11Pbs1d/Aru1
-         qPxAzwjzPc5OUdkL2N6Mn5Fz4HTfMF0fh0d/R0QFfLjrWELMYOfgbsCcOieyJkPtIs
-         IaRzYp/utbr1y9t+DUUcp8A1vEpDgVyuhnbdWEg0=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 16 Aug 2019 14:24:19 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33302 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbfHPSYT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 14:24:19 -0400
+Received: by mail-qt1-f195.google.com with SMTP id v38so7127908qtb.0;
+        Fri, 16 Aug 2019 11:24:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=CVCgjz4ZRTGlXDNPoWQ4eybdK42uJ02OuOk+1ZD+7TM=;
+        b=T6PHkLO5n/E64dtYj050nsoUzdL5ForjJcQNx0LC5AKSTRiSKzZCK7q7U15mSMeMBS
+         S24cnroTEQJN41mBi7ShBqIYBGWAshuziprWSO+qX3tTTub5M8UWJbpMdA9124+rgeOJ
+         kGLxTV2fULFjWCtTDvresTdgk1sStWksADdN5oXJiQv+PPbxMWHURl62fxBWDq20GefF
+         zB6ChsM+r5EG7N7F/zbprhRqZt51ZHCI4qZJeu7acXAZuuyW2ncztrPK7qyqzSc8cnDp
+         2LH2LxLHF0/tDnJ1Wr9q8mPkJ0FKA83n5RREja0LZkpvJwFf5vOXXsQKuVmuyDtCCXGG
+         gvkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=CVCgjz4ZRTGlXDNPoWQ4eybdK42uJ02OuOk+1ZD+7TM=;
+        b=Tu4BEFX9UeBpo3mC0lDYXVYmNRA/+cg2vYaTWNKPGjHJuPPBCUwdRCCf6YSxCgW+5w
+         KByDPjyKYr2JRhsKhS5eYGET2K9GxC9DeM8togWEBe2UU53tD3z1h8jCHALtb6xYFz89
+         wd6cNwwMXUOVsKiFy38B/xQvCjJz12dpW+nBhuXeLN8vt/YB7+xsC33tuPhNFZ7zdCI1
+         Rp6nSj/T6j+YKQwpqp2/jqfpE6nw3oohMBXRY71W3dj3ZMwkJvJgkRP6mj7wOr2G8yTC
+         AFIdWTNU4IWSbSgG0J3qu7QwITt+d98t8oZE+a+hvT4/yjNtUcINug9N60tnlY7cUHpi
+         zb/w==
+X-Gm-Message-State: APjAAAVV8TFicbCrHDoE35yer3J09jDxUhh9gfv2yonO1hi7ztbI9seN
+        7wqWhB6NO46o4nhz6DYjSNsSBTYoHE/TGwRYx9A=
+X-Google-Smtp-Source: APXvYqwVoKfHivX5vQN7nv4Z0pu4iK0FOL6nOfKp0VkTogxZoitdDqyVTHQj3P+31K45vOG2NIWgVtYcwBMySP3Q5oo=
+X-Received: by 2002:ac8:4896:: with SMTP id i22mr9880951qtq.13.1565979492912;
+ Fri, 16 Aug 2019 11:18:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190807223111.230846-4-saravanak@google.com>
-References: <20190807223111.230846-1-saravanak@google.com> <20190807223111.230846-4-saravanak@google.com>
-Subject: Re: [PATCH v5 3/3] OPP: Add helper function for bandwidth OPP tables
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        kernel-team@android.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Viresh Kumar <vireshk@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Fri, 16 Aug 2019 11:22:58 -0700
-Message-Id: <20190816182259.538532077C@mail.kernel.org>
+From:   Nathan Royce <nroycea+kernel@gmail.com>
+Date:   Fri, 16 Aug 2019 13:18:01 -0500
+Message-ID: <CALaQ_hruPmgnE5yh_MJLLZ_7sPNEnzX8H-WfR=fBvcfEzfG9Fg@mail.gmail.com>
+Subject: Kernel 5.2.8 - au0828 - Tuner Is Busy
+To:     sean@mess.org, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Shuah Khan <shuah@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Brad Love <brad@nextdimension.cc>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Saravana Kannan (2019-08-07 15:31:11)
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 3b7ffd0234e9..22dcf22f908f 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -127,6 +127,29 @@ unsigned long dev_pm_opp_get_freq(struct dev_pm_opp =
-*opp)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_get_freq);
-> =20
-> +/**
-> + * dev_pm_opp_get_bw() - Gets the bandwidth corresponding to an availabl=
-e opp
-> + * @opp:       opp for which frequency has to be returned for
+Right up front, I must say I do NOT have a Hauppauge tuner. I think
+it's like maybe Mygica/Geniatech:
+Bus 002 Device 004: ID 05e1:0400 Syntek Semiconductor Co., Ltd
 
-s/frequency/bandwidth/ ?
+Whenever I update my kernel, I edit the
+./drivers/media/usb/au0828/au0828-cards.c file adding an entry for my
+0x400 device.
+I've been doing it for years and it's been working fine... until now...
 
-> + * @avg_bw:    Pointer where the corresponding average bandwidth is stor=
-ed.
-> + *             Can be NULL.
-> + *
-> + * Return: Peak bandwidth in kBps corresponding to the opp, else
-> + * return 0
-> + */
-> +unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, unsigned long *a=
-vg_bw)
-> +{
-> +       if (IS_ERR_OR_NULL(opp) || !opp->available) {
-> +               pr_err("%s: Invalid parameters\n", __func__);
-> +               return 0;
-> +       }
-> +
-> +       if (avg_bw)
-> +               *avg_bw =3D opp->avg_bw;
-> +
-> +       return opp->rate;
+*****
+Aug 16 12:07:20 computerName kernel: usb 2-2.3: Tuner is busy. Error -19
+<...18 more repeated entries...>
+Aug 16 12:07:20 computerName kernel: usb 2-2.3: Tuner is busy. Error -19
+Aug 16 12:07:10 computerName tvheadend[3276]: main: Log started
+*****
+"w_scan" behaves the same way.
 
-It deserves a comment if it stays named 'rate'. At a glance it looks
-like a bug.
+*****
+$ modprobe au0828
+Aug 16 12:52:52 computerName kernel: videodev: Linux video capture
+interface: v2.00
+Aug 16 12:52:52 computerName kernel: au0828: au0828_init() Debugging is enabled
+Aug 16 12:52:52 computerName kernel: au0828: au0828 driver loaded
+Aug 16 12:52:52 computerName kernel: au0828: au0828_usb_probe() vendor
+id 0x5e1 device id 0x400 ifnum:0
+Aug 16 12:52:52 computerName kernel: au0828: au0828_gpio_setup()
+Aug 16 12:52:52 computerName kernel: au0828: au0828_i2c_register()
+Aug 16 12:52:52 computerName kernel: au0828: i2c bus registered
+Aug 16 12:52:52 computerName kernel: au0828: au0828_card_setup()
+Aug 16 12:52:52 computerName kernel: tveeprom: Encountered bad packet
+header [20]. Corrupt or not a Hauppauge eeprom.
+Aug 16 12:52:52 computerName kernel: au0828: hauppauge_eeprom:
+warning: unknown hauppauge model #0
+Aug 16 12:52:52 computerName kernel: au0828: hauppauge_eeprom:
+hauppauge eeprom: model=0
+Aug 16 12:52:52 computerName kernel: au0828: au0828_analog_register
+called for intf#0!
+Aug 16 12:52:52 computerName kernel: au0828: au0828_dvb_register()
+Aug 16 12:52:52 computerName kernel: au8522 7-0047: creating new instance
+Aug 16 12:52:52 computerName kernel: tda18271 7-0060: creating new instance
+Aug 16 12:52:52 computerName kernel: tda18271: TDA18271HD/C2 detected @ 7-0060
+Aug 16 12:52:53 computerName kernel: au0828: dvb_register()
+Aug 16 12:52:53 computerName kernel: dvbdev: DVB: registering new
+adapter (au0828)
+Aug 16 12:52:53 computerName kernel: usb 2-2.3: DVB: registering
+adapter 0 frontend 0 (Auvitek AU8522 QAM/8VSB Frontend)...
+Aug 16 12:52:53 computerName kernel: dvbdev: dvb_create_media_entity:
+media entity 'Auvitek AU8522 QAM/8VSB Frontend' registered.
+Aug 16 12:52:53 computerName kernel: dvbdev: dvb_create_media_entity:
+media entity 'dvb-demux' registered.
+Aug 16 12:52:53 computerName kernel: au0828: Registered device AU0828
+[Hauppauge Woodbury]
+Aug 16 12:52:53 computerName kernel: usbcore: registered new interface
+driver au0828
+*****
+The "eeprom" thing has never been an issue with regard to my tuner
+working. It still worked in spite of it.
 
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_opp_get_bw);
-> +
->  /**
->   * dev_pm_opp_get_level() - Gets the level corresponding to an available=
- opp
->   * @opp:       opp for which level value has to be returned for
-> @@ -299,6 +322,34 @@ unsigned long dev_pm_opp_get_suspend_opp_freq(struct=
- device *dev)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_freq);
-> =20
-> +/**
-> + * dev_pm_opp_get_suspend_opp_bw() - Get peak bandwidth of suspend opp i=
-n kBps
-> + * @dev:       device for which we do this operation
-> + * @avg_bw:    Pointer where the corresponding average bandwidth is stor=
-ed.
-> + *             Can be NULL.
-> + *
-> + * Return: This function returns the peak bandwidth of the OPP marked as
-> + * suspend_opp if one is available, else returns 0;
+It's odd because:
+*****
+$ lsmod | grep au0828
+au0828                 86016  0
+tveeprom               28672  1 au0828
+dvb_core              176128  1 au0828
+v4l2_common            20480  1 au0828
+videobuf2_vmalloc      20480  2 dvb_core,au0828
+videobuf2_v4l2         28672  1 au0828
+videobuf2_common       61440  3 videobuf2_v4l2,dvb_core,au0828
+videodev              253952  4
+v4l2_common,videobuf2_v4l2,videobuf2_common,au0828
+rc_core                61440  1 au0828
+media                  61440  6
+videodev,snd_usb_audio,videobuf2_v4l2,dvb_core,videobuf2_common,au0828
 
-Why a semicolon instead a full stop?
+$ ls -la /dev/dvb/adapter0/
+total 0
+drwxr-xr-x  2 root root     120 Aug 16 12:01 .
+drwxr-xr-x  3 root root      60 Aug 16 12:01 ..
+crw-rw----+ 1 root video 212, 4 Aug 16 12:01 demux0
+crw-rw----+ 1 root video 212, 5 Aug 16 12:01 dvr0
+crw-rw----+ 1 root video 212, 3 Aug 16 12:01 frontend0
+crw-rw----+ 1 root video 212, 7 Aug 16 12:01 net0
+*****
 
+The previous kernel version I was on that worked was 5.1.15.
+I just reverted back to the previous version and it's working again.
+I don't know what broke and where, between the versions.
+
+I saw https://lkml.org/lkml/2019/1/21/1020 but this is back in January
+so I don't know if something was more recently applied to au0828 that
+makes use of the API.
+"lsof" didn't show anything related to "/dev/dvb" being used.
+
+Oh neat! Someone posted a neat git feature which I tried and I get:
+*****
+$ git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset
+%s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+v5.1.15..v5.2.8 drivers/media/usb/au0828/
+* be50f19fee84 - media: au0828: fix null dereference in error path (12 days ago)
+* c942fddf8793 - treewide: Replace GPLv2 boilerplate/reference with
+SPDX - rule 157 (3 months ago)
+* 16216333235a - treewide: Replace GPLv2 boilerplate/reference with
+SPDX - rule 1 (3 months ago)
+* ec8f24b7faaf - treewide: Add SPDX license identifier -
+Makefile/Kconfig (3 months ago)
+* 14340de506c9 - media: prefix header search paths with $(srctree)/ (3
+months ago)
+* f604f0f5afb8 - media: au0828: stop video streaming only when last
+user stops (4 months ago)
+* 898bc40bfcc2 - media: au0828: Fix NULL pointer dereference in
+au0828_analog_stream_enable() (4 months ago)
+* 383b0e5b6ebb - media: au0828: fix enable and disable source audio
+and video inconsistencies (4 months ago)
+* 812658d88d26 - media: change au0828 to use Media Device Allocator
+API (4 months ago)
+* b60a5b8dcf49 - media: Kconfig files: use the right help coding style
+(5 months ago)
+* f712e5358d43 - media: au0828: minor fix to a misleading comment in
+_close() (5 months ago)
+*****
+Note the 812658d88d26 commit.
+So if I did the git command correctly, then it WAS added between these versions.
+Any thoughts on if it is broken or if I can hack in a fix to force it
+to ignore it being thought as being busy?
