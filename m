@@ -2,174 +2,240 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74866C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 23:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BBDC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 23:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4362821721
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 23:02:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFwbdSh0"
+	by mail.kernel.org (Postfix) with ESMTP id B4526206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 23:20:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbfHPXCG (ORCPT
+        id S1727808AbfHPXUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 19:02:06 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36327 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727742AbfHPXCG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 19:02:06 -0400
-Received: by mail-io1-f67.google.com with SMTP id o9so9403324iom.3;
-        Fri, 16 Aug 2019 16:02:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y0yqYIEO53tK8G4+aud67uiqL1xftbMRHfD3bIvLa7g=;
-        b=OFwbdSh0xrkjmLl1+7hAAP8lTJU7BYVaOt+Jus+OJsZ0mmlvFW/RrW67IsRAsoILPU
-         sCZ0GzLcolZHz5fbO7aO3GU49H+0yfqEw+PvLYLlN/D08fF2Hb8LC3hWvSs78ksFD55M
-         qFWezE7Ln5ML8IEpBSFgfbAyqsxgn81zNSmPVMxjfEUl4S/dYzaQCo7Wmngg14Ajm/S/
-         P/8CsQOvqquIkNHIqZ70L389ci981FuxawY90RS5ohzl1NTMz4HKDRapHINRN9glGXqp
-         C3hvz3eVOAdW4hES/1/NEGHzLUSma+v9Qxfdp4pJ4hzfXzqgKCiIxSKpzNC19gsDr0JC
-         /k/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y0yqYIEO53tK8G4+aud67uiqL1xftbMRHfD3bIvLa7g=;
-        b=FrD8iANM0JCLeFM/PvU1xBbBZSSXQRpeUghPwI9w/op+3pespgo4jpRbunTZSOWyQu
-         uy+bjJ8CW7E3x3Q9zHScm9rEBTR3NXK/IcjKNYxgQYmYr29jMrqtLyYXSn6x/+E2EQ6o
-         /Ly1CFIY4n/fUkp3HZnRLXK1xWm88fYj2qDiVyvsTDZ18T0XcLt4jdtwlLICFjC/C6Qs
-         iydo3laxdnbh15mh1v1fq1XeEWNzas5jVI/3v2rBHKyYZpC9clARNX/xGjpPlIFcx8mm
-         Y0UJPZ1YCxZ6BIjh5GnJxW5hClOUvGyEhV/RIU2UywrhEQO5NSPeljsmbxTNl5FVZ/w3
-         bHqg==
-X-Gm-Message-State: APjAAAWSnxSzAhniixx0rNzxMvrMuyIl+bUbm9Hm+4Ql2VJUdbtqNBnY
-        njnhEBsb3hO299j8MSc7M2a8T+Wl4u7Fpujmgaw=
-X-Google-Smtp-Source: APXvYqz316FLC55ySq2we+sFp0rLROpZDtnmhJZPeFHaw0w663BCId+xo14l9ynYgNuE/85h/meabCiilVzeqpm8fIU=
-X-Received: by 2002:a6b:e511:: with SMTP id y17mr14147354ioc.228.1565996525051;
- Fri, 16 Aug 2019 16:02:05 -0700 (PDT)
+        Fri, 16 Aug 2019 19:20:08 -0400
+Received: from mga14.intel.com ([192.55.52.115]:4094 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727757AbfHPXUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 19:20:08 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 16:20:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,395,1559545200"; 
+   d="scan'208";a="201680827"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Aug 2019 16:20:07 -0700
+Date:   Fri, 16 Aug 2019 16:20:07 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Michal Hocko <mhocko@suse.com>, Theodore Ts'o <tytso@mit.edu>,
+        linux-nvdimm@lists.01.org, linux-rdma@vger.kernel.org,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-ext4@vger.kernel.org
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;
+ -)
+Message-ID: <20190816232006.GA11384@iweiny-DESK2.sc.intel.com>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190814101714.GA26273@quack2.suse.cz>
+ <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
+ <20190815130558.GF14313@quack2.suse.cz>
+ <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-References: <CAKpie0TSo-8gmDm9_Zw4Sd+kjVVEomp8yA9Vu8qY2U2AcrQc=w@mail.gmail.com>
- <8A069D96-C65F-43F5-8F54-20019CFB1A8D@goldelico.com> <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org>
- <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com> <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
- <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com> <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
- <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com> <20190814094755.GC52127@atomide.com>
- <6A6394A6-9D50-4E43-A8E4-716888897AD6@goldelico.com> <20190814131607.GD52127@atomide.com>
-In-Reply-To: <20190814131607.GD52127@atomide.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 16 Aug 2019 18:01:53 -0500
-Message-ID: <CAHCN7xJ2kcr7dOFvxTB_PX_62sX_QV5EyeMPHMaPbZ9fXts9pg@mail.gmail.com>
-Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
- OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        =?UTF-8?Q?Filip_Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        kernel@pyra-handheld.com,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 8:16 AM Tony Lindgren <tony@atomide.com> wrote:
->
-> * H. Nikolaus Schaller <hns@goldelico.com> [190814 10:34]:
-> >
-> > > Am 14.08.2019 um 11:47 schrieb Tony Lindgren <tony@atomide.com>:
-> > >
-> > > * H. Nikolaus Schaller <hns@goldelico.com> [190814 08:57]:
-> > >> I also have pushed good news to
-> > >>
-> > >>    https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/tree/letux-pvr
-> > >>
-> > >> Thanks to the help from the Pyra community, I was able to get a (binary) reference
-> > >> implementation using DRM that works on Pyra/OMAP5. At least the gles1test1.
-> > >>
-> > >> With that reference setup I was able to fix my Makefiles for the staging/pvr implementation.
-> > >>
-> > >> I have tested that it works with v4.19.66 and v5.3-rc4 (LPAE build of the LetuxOS kernel tree)
-> > >> on the Pyra.
-> > >>
-> > >> In which areas does this tree go beyond the TI SDK/IMG DDK 1.14?
-> > >>
-> > >> * includes internal API fixes for kernels up to v5.3
-> > >> * lives in drivers/staging/pvr/1.14.3699939 - so that we can ask for inclusion in linux-next
-> > >> * has Kconfig and Makefiles for in-kernel configuration (no separate build system)
-> > >> * builds separate kernel modules for omap3430, omap3630, am335x, omap4, omap5, dra7 etc.
-> > >>  pvrsrvkm
-> > >>  e.g. pvrsrvkm_omap_omap5_sgx544_116
-> > >> * the correct kernel module is automatically probed by matching .compatible in device tree
-> > >>  so that the code is multi-platform friendly
-> > >> * includes SoC integration for OMAP3/4/5 and has some preliminary bindings documentation
-> > >> * code base should also support JZ4780/CI20 and some Intel Atom processors (CedarView, Poulsbo)
-> > >> * has got a ToDo to describe what should be done during staging phase
-> > >>
-> > >>    https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/blob/letux/latest-pvr/drivers/staging/pvr/TODO
-> > >>
-> > >> My plans for the next steps are:
-> > >>
-> > >> * do more testing (e.g. X11, kmscube)
-> > >> * check if and/or how it can run on am335x (BeagleBone) or OMAP3 (e.g. GTA04, OpenPandora)
-> > >> * try a JZ480/CI20 build (unfortuantely I have no HDMI there with mainline kernels and I am
-> > >>  missing the user-space libraries for MIPS).
+On Fri, Aug 16, 2019 at 12:05:28PM -0700, 'Ira Weiny' wrote:
+> On Thu, Aug 15, 2019 at 03:05:58PM +0200, Jan Kara wrote:
+> > On Wed 14-08-19 11:08:49, Ira Weiny wrote:
+> > > On Wed, Aug 14, 2019 at 12:17:14PM +0200, Jan Kara wrote:
+> > > > Hello!
+> > > > 
+> > > > On Fri 09-08-19 15:58:14, ira.weiny@intel.com wrote:
+> > > > > Pre-requisites
+> > > > > ==============
+> > > > > 	Based on mmotm tree.
+> > > > > 
+> > > > > Based on the feedback from LSFmm, the LWN article, the RFC series since
+> > > > > then, and a ton of scenarios I've worked in my mind and/or tested...[1]
+> > > > > 
+> > > > > Solution summary
+> > > > > ================
+> > > > > 
+> > > > > The real issue is that there is no use case for a user to have RDMA pinn'ed
+> > > > > memory which is then truncated.  So really any solution we present which:
+> > > > > 
+> > > > > A) Prevents file system corruption or data leaks
+> > > > > ...and...
+> > > > > B) Informs the user that they did something wrong
+> > > > > 
+> > > > > Should be an acceptable solution.
+> > > > > 
+> > > > > Because this is slightly new behavior.  And because this is going to be
+> > > > > specific to DAX (because of the lack of a page cache) we have made the user
+> > > > > "opt in" to this behavior.
+> > > > > 
+> > > > > The following patches implement the following solution.
+> > > > > 
+> > > > > 0) Registrations to Device DAX char devs are not affected
+> > > > > 
+> > > > > 1) The user has to opt in to allowing page pins on a file with an exclusive
+> > > > >    layout lease.  Both exclusive and layout lease flags are user visible now.
+> > > > > 
+> > > > > 2) page pins will fail if the lease is not active when the file back page is
+> > > > >    encountered.
+> > > > > 
+> > > > > 3) Any truncate or hole punch operation on a pinned DAX page will fail.
+> > > > 
+> > > > So I didn't fully grok the patch set yet but by "pinned DAX page" do you
+> > > > mean a page which has corresponding file_pin covering it? Or do you mean a
+> > > > page which has pincount increased? If the first then I'd rephrase this to
+> > > > be less ambiguous, if the second then I think it is wrong. 
+> > > 
+> > > I mean the second.  but by "fail" I mean hang.  Right now the "normal" page
+> > > pincount processing will hang the truncate.  Given the discussion with John H
+> > > we can make this a bit better if we use something like FOLL_PIN and the page
+> > > count bias to indicate this type of pin.  Then I could fail the truncate
+> > > outright.  but that is not done yet.
+> > > 
+> > > so... I used the word "fail" to be a bit more vague as the final implementation
+> > > may return ETXTBUSY or hang as noted.
+> > 
+> > Ah, OK. Hanging is fine in principle but with longterm pins, your work
+> > makes sure they actually fail with ETXTBUSY, doesn't it? The thing is that
+> > e.g. DIO will use page pins as well for its buffers and we must wait there
+> > until the pin is released. So please just clarify your 'fail' here a bit
+> > :).
+> 
+> It will fail with ETXTBSY.  I've fixed a bug...  See below.
+> 
+> > 
+> > > > > 4) The user has the option of holding the lease or releasing it.  If they
+> > > > >    release it no other pin calls will work on the file.
+> > > > 
+> > > > Last time we spoke the plan was that the lease is kept while the pages are
+> > > > pinned (and an attempt to release the lease would block until the pages are
+> > > > unpinned). That also makes it clear that the *lease* is what is making
+> > > > truncate and hole punch fail with ETXTBUSY and the file_pin structure is
+> > > > just an implementation detail how the existence is efficiently tracked (and
+> > > > what keeps the backing file for the pages open so that the lease does not
+> > > > get auto-destroyed). Why did you change this?
+> > > 
+> > > closing the file _and_ unmaping it will cause the lease to be released
+> > > regardless of if we allow this or not.
+> > > 
+> > > As we discussed preventing the close seemed intractable.
+> > 
+> > Yes, preventing the application from closing the file is difficult. But
+> > from a quick look at your patches it seemed to me that you actually hold a
+> > backing file reference from the file_pin structure thus even though the
+> > application closes its file descriptor, the struct file (and thus the
+> > lease) lives further until the file_pin gets released. And that should last
+> > as long as the pages are pinned. Am I missing something?
+> > 
+> > > I thought about failing the munmap but that seemed wrong as well.  But more
+> > > importantly AFAIK RDMA can pass its memory pins to other processes via FD
+> > > passing...  This means that one could pin this memory, pass it to another
+> > > process and exit.  The file lease on the pin'ed file is lost.
+> > 
+> > Not if file_pin grabs struct file reference as I mentioned above...
+> >  
+> > > The file lease is just a key to get the memory pin.  Once unlocked the procfs
+> > > tracking keeps track of where that pin goes and which processes need to be
+> > > killed to get rid of it.
+> > 
+> > I think having file lease being just a key to get the pin is conceptually
+> > wrong. The lease is what expresses: "I'm accessing these blocks directly,
+> > don't touch them without coordinating with me." So it would be only natural
+> > if we maintained the lease while we are accessing blocks instead of
+> > transferring this protection responsibility to another structure - namely
+> > file_pin - and letting the lease go.
+> 
+> We do transfer that protection to the file_pin but we don't have to "let the
+> lease" go.  We just keep the lease with the file_pin as you said.  See below...
+> 
+> > But maybe I miss some technical reason
+> > why maintaining file lease is difficult. If that's the case, I'd like to hear
+> > what...
+> 
+> Ok, I've thought a bit about what you said and indeed it should work that way.
+> The reason I had to think a bit is that I was not sure why I thought we needed
+> to hang...  Turns out there were a couple of reasons...  1 not so good and 1 ok
+> but still not good enough to allow this...
+> 
+> 1) I had a bug in the XFS code which should have failed rather than hanging...
+>    So this was not a good reason...  And I was able to find/fix it...  Thanks!
+> 
+> 2) Second reason is that I thought I did not have a good way to tell if the
+>    lease was actually in use.  What I mean is that letting the lease go should
+>    be ok IFF we don't have any pins...  I was thinking that without John's code
+>    we don't have a way to know if there are any pins...  But that is wrong...
+>    All we have to do is check
+> 
+> 	!list_empty(file->file_pins)
 
+Oops...  I got my "struct files" mixed up...  The RDMA struct file has the
+file_pins hanging off it...  This will not work.
 
+I'll have to try something else to prevent this.  However, I don't want to walk
+all the pages of the inode.
 
-> > >
-> > > That sounds good to me, just one comment. Before getting these into
-> > > staging, I'd like to have omap variants use proper interconnect
-> > > target module in devicetree like we already have in omap4.dtsi
-> > > as target-module@56000000. This should simplify things further
-> > > as the module child device driver(s) can just enable things with
-> > > runtime PM and we can leave out all the legacy hwmod platform data
-> > > that sounds like you're still carrying.
-> >
-> > Yes, there is still a lot of SoC-glue included:
-> >
-> >       https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux/omap-pvr-soc-glue
-> >
-> > It would indeed be a good move to simplify and reduce the glue code
-> > and make it more maintainable / stable / identical on different platforms.
->
-> OK yeah all that should just disappear :)
->
-> > > I have patches here to add similar interconnect target modules for
-> > > at least omap34xx, omap36xx, omap5, and am335x that I'll try to post
-> > > later on today to play with. For am335x, things still depend on the
-> > > recentely posted prm rstctrl patches. I'm not sure if I already
-> > > did a dts patch for dra7 yet, need to check.
-> >
-> > I assume it is not yet in linux-next... So something for v5.5 or later.
->
-> Well I just posted some sgx interconnect target module patches. We might
-> still have them in v5.4 assuming people manage to review and test them.
+Also I'm concerned about just failing if they happen to be pinned.  They need
+to be LONGTERM pinned...  Otherwise we might have a transient failure of an
+unlock based on some internal kernel transient pin...  :-/
 
-Nikolaus,
+Ira
 
-I tested Tony's change and I can confirm that I can read the value
-when enabled.  Should I apply his patches to your branch before I
-test, or is it go too to go as-is? I've got an AM3517, OMAP35 and a
-DM3730.  I am not sure if the AM3517 is even on the radar, but it has
-an sgx530 as well.
-
-adam
-
->
-> Regards,
->
-> Tony
+> 
+> So now with this detail I think you are right, we should be able to hold the
+> lease through the struct file even if the process no longer has any
+> "references" to it (ie closes and munmaps the file).
+> 
+> I'm going to add a patch to fail releasing the lease and remove this (item 4)
+> as part of the overall solution.
+> 
+> >  
+> > > > > 5) Closing the file is ok.
+> > > > > 
+> > > > > 6) Unmapping the file is ok
+> > > > > 
+> > > > > 7) Pins against the files are tracked back to an owning file or an owning mm
+> > > > >    depending on the internal subsystem needs.  With RDMA there is an owning
+> > > > >    file which is related to the pined file.
+> > > > > 
+> > > > > 8) Only RDMA is currently supported
+> > > > 
+> > > > If you currently only need "owning file" variant in your patch set, then
+> > > > I'd just implement that and leave "owning mm" variant for later if it
+> > > > proves to be necessary. The things are complex enough as is...
+> > > 
+> > > I can do that...  I was trying to get io_uring working as well with the
+> > > owning_mm but I should save that for later.
+> > 
+> > Ah, OK. Yes, I guess io_uring can be next step.
+> 
+> FWIW I have split the mm_struct stuff out.  I can keep it as a follow on series
+> for other users later.  At this point I have to solve the issue Jason brought
+> up WRT the RDMA file reference counting.
+> 
+> Thanks!
+> Ira
+> 
+> _______________________________________________
+> Linux-nvdimm mailing list
+> Linux-nvdimm@lists.01.org
+> https://lists.01.org/mailman/listinfo/linux-nvdimm
