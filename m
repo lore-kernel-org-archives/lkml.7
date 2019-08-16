@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24531C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9FAC3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3D4521743
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B542171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1565986691;
-	bh=EFHhySAKhOufzUanLX7gBckG/407kAq6XJLODX2eRpI=;
+	bh=86SwnyhEyh6xUarBNZpi/fUM1mFsr93oMH1u1lCRujk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n294yPr7vbysqD1JG6tBXeWspU+giiEUPtth4BWld7CZ8GI7pye4EB2vKer5AoHpt
-	 p+BpUf79iLxI1REX4aIolBIgHgCDl2qGVd9bVPtZ7g7q7Zkduc1Q3BdwiG5BkH+Til
-	 sohrXmG85GPuWE81BC6CK/MtJ/hTBLbcniITFogI=
+	b=eb6/KJ9nh7bcKFtxzJtOVOQ/ajdiYLLXFPbcET0lJ+aoVFJeemdIRPgiAtLpKOY7k
+	 0NvSStHXZb+zI1yV2E4KSilSeEsAR6Lr98UjUU1Q9aBsAqN5rZqPB5i1noKKEOIp/e
+	 n4ynOdBgeKeXXx4rY89VVeoG0P2NSZ6epjSMBhaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbfHPUSJ (ORCPT
+        id S1727875AbfHPUSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 16:18:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58254 "EHLO mail.kernel.org"
+        Fri, 16 Aug 2019 16:18:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727705AbfHPURZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 16:17:25 -0400
+        id S1727604AbfHPUSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 16:18:05 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.182.221.173])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7EF82133F;
-        Fri, 16 Aug 2019 20:17:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 383F42171F;
+        Fri, 16 Aug 2019 20:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565986643;
-        bh=EFHhySAKhOufzUanLX7gBckG/407kAq6XJLODX2eRpI=;
+        s=default; t=1565986684;
+        bh=86SwnyhEyh6xUarBNZpi/fUM1mFsr93oMH1u1lCRujk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r0y7HtmRInVICxhqcBHPfQgGotjau0j/sXVDVzUQ676AWnrZWcZCiGC1ejgD+K5KJ
-         k+1SMlGqeazttoNi0X8BZtzA3ExCOP6tjrjGWZhyOE6pFZh0YeAO6eVGn0auAyLnE3
-         jpemYyqb+qrhoSXp2n8mEPPITGVRGjhHM+KYR5Y8=
+        b=pP1oRBzTNvboTaOX3WNk552HXPcJHASLxWR4LcbIMfskcVXYncuhDnB/j8bw0PxIv
+         h5Z8X7fqoPfCAeUpkpy51NkYnAVV2TZe9AIUadiTiLWNq6Nol6jySsi6B9Y3mbVoU2
+         S7rG8c3/jnFm44yLLA9eQP+/zkSJzBSHKWNmNwiY=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Florian Weimer <fweimer@redhat.com>,
         William Cohen <wcohen@redhat.com>
-Subject: [PATCH 04/17] perf script: Allow specifying event to switch off processing of other events
-Date:   Fri, 16 Aug 2019 17:16:40 -0300
-Message-Id: <20190816201653.19332-5-acme@kernel.org>
+Subject: [PATCH 13/17] perf top: Add --switch-on/--switch-off events
+Date:   Fri, 16 Aug 2019 17:16:49 -0300
+Message-Id: <20190816201653.19332-14-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190816201653.19332-1-acme@kernel.org>
 References: <20190816201653.19332-1-acme@kernel.org>
@@ -64,154 +64,152 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Counterpart of --switch-on:
+Just like 'perf trace' and 'perf script', should be useful for instance
+to only consider samples after the initialization phase of some
+workload.
 
-  # perf record -e sched:*,syscalls:sys_*_nanosleep sleep 1
-  [ perf record: Woken up 36 times to write data ]
-  [ perf record: Captured and wrote 0.032 MB perf.data (10 samples) ]
-  #
-  # perf script
-      :20918 20918 [002] 109866.143696:            sched:sched_waking: comm=perf pid=20919 prio=120 target_cpu=001
-      :20918 20918 [002] 109866.143702:            sched:sched_wakeup: perf:20919 [120] success=1 CPU:001
-       sleep 20919 [001] 109866.144081:      sched:sched_process_exec: filename=/usr/bin/sleep pid=20919 old_pid=20919
-       sleep 20919 [001] 109866.144408:  syscalls:sys_enter_nanosleep: rqtp: 0x7ffc2384fef0, rmtp: 0x00000000
-       sleep 20919 [001] 109866.144411:      sched:sched_stat_runtime: comm=sleep pid=20919 runtime=521249 [ns] vruntime=202919398131 [n>
-       sleep 20919 [001] 109866.144412:            sched:sched_switch: sleep:20919 [120] S ==> swapper/1:0 [120]
-     swapper     0 [001] 109867.144568:            sched:sched_waking: comm=sleep pid=20919 prio=120 target_cpu=001
-     swapper     0 [001] 109867.144586:            sched:sched_wakeup: sleep:20919 [120] success=1 CPU:001
-       sleep 20919 [001] 109867.144614:   syscalls:sys_exit_nanosleep: 0x0
-       sleep 20919 [001] 109867.144753:      sched:sched_process_exit: comm=sleep pid=20919 prio=120
-  #
-  # perf script --switch-off syscalls:sys_exit_nanosleep
-      :20918 20918 [002] 109866.143696:            sched:sched_waking: comm=perf pid=20919 prio=120 target_cpu=001
-      :20918 20918 [002] 109866.143702:            sched:sched_wakeup: perf:20919 [120] success=1 CPU:001
-       sleep 20919 [001] 109866.144081:      sched:sched_process_exec: filename=/usr/bin/sleep pid=20919 old_pid=20919
-       sleep 20919 [001] 109866.144408:  syscalls:sys_enter_nanosleep: rqtp: 0x7ffc2384fef0, rmtp: 0x00000000
-       sleep 20919 [001] 109866.144411:      sched:sched_stat_runtime: comm=sleep pid=20919 runtime=521249 [ns] vruntime=202919398131 [n>
-       sleep 20919 [001] 109866.144412:            sched:sched_switch: sleep:20919 [120] S ==> swapper/1:0 [120]
-     swapper     0 [001] 109867.144568:            sched:sched_waking: comm=sleep pid=20919 prio=120 target_cpu=001
-     swapper     0 [001] 109867.144586:            sched:sched_wakeup: sleep:20919 [120] success=1 CPU:001
-       sleep 20919 [001] 109867.144753:      sched:sched_process_exit: comm=sleep pid=20919 prio=120
-  #
-  # perf script --switch-on syscalls:sys_enter_nanosleep --switch-off syscalls:sys_exit_nanosleep
-       sleep 20919 [001] 109866.144411:      sched:sched_stat_runtime: comm=sleep pid=20919 runtime=521249 [ns] vruntime=202919398131 [n>
-       sleep 20919 [001] 109866.144412:            sched:sched_switch: sleep:20919 [120] S ==> swapper/1:0 [120]
-     swapper     0 [001] 109867.144568:            sched:sched_waking: comm=sleep pid=20919 prio=120 target_cpu=001
-     swapper     0 [001] 109867.144586:            sched:sched_wakeup: sleep:20919 [120] success=1 CPU:001
-  #
-  # perf script --switch-on syscalls:sys_enter_nanosleep --switch-off syscalls:sys_exit_nanosleep --show-on-off
-       sleep 20919 [001] 109866.144408:  syscalls:sys_enter_nanosleep: rqtp: 0x7ffc2384fef0, rmtp: 0x00000000
-       sleep 20919 [001] 109866.144411:      sched:sched_stat_runtime: comm=sleep pid=20919 runtime=521249 [ns] vruntime=202919398131 [n>
-       sleep 20919 [001] 109866.144412:            sched:sched_switch: sleep:20919 [120] S ==> swapper/1:0 [120]
-     swapper     0 [001] 109867.144568:            sched:sched_waking: comm=sleep pid=20919 prio=120 target_cpu=001
-     swapper     0 [001] 109867.144586:            sched:sched_wakeup: sleep:20919 [120] success=1 CPU:001
-       sleep 20919 [001] 109867.144614:   syscalls:sys_exit_nanosleep: 0x0
-  #
+The man page has some examples and considerations about its current
+interface, that still doesn't handle the on/off events in a special way,
+behaving just like when multiple events are specified, i.e.:
 
-Now think about using this together with 'perf probe' to create custom on/off
-events in your app :-)
+- In non-group mode (when the event list is not enclosed in {}) show a
+  a menu to allow choosing which event the user wants to see in the
+  histograms browser
+
+- In group mode, be it using {} or asking for --group, show one column
+  per event.
+
+Try for instance:
+
+  # perf top -e '{cycles,instructions,probe:icmp_rcv}' --switch-on=probe:icmp_rcv
+
+Replace probe:icmp_rcv, that I put in place using:
+
+  # perf probe icmp_rcv:59
+
+To hit when broadcast packets arrive, with a probe installed after an
+initialization phase is over or after some other point of interest, some
+garbage collection, etc, and also use --switch-off, for instance, on a
+probe installed after said garbage collection is over.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Florian Weimer <fweimer@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: William Cohen <wcohen@redhat.com>
-Link: https://lkml.kernel.org/n/tip-li3j01c4tmj9kw6ydsl8swej@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-c7q7qjeqtyvc9mkeipxza6ne@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-script.txt |  5 +++-
- tools/perf/builtin-script.c              | 31 +++++++++++++++++++++---
- 2 files changed, 32 insertions(+), 4 deletions(-)
+ tools/perf/Documentation/perf-top.txt | 38 +++++++++++++++++++++++++++
+ tools/perf/builtin-top.c              | 10 ++++++-
+ tools/perf/util/top.h                 |  2 ++
+ 3 files changed, 49 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 24eea68ee829..2599b057e47b 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -420,8 +420,11 @@ include::itrace.txt[]
- --switch-on EVENT_NAME::
- 	Only consider events after this event is found.
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index cfea87c6f38e..5596129a71cf 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -266,6 +266,44 @@ Default is to monitor all CPUS.
+ 	Record events of type PERF_RECORD_NAMESPACES and display it with the
+ 	'cgroup_id' sort key.
  
++--switch-on EVENT_NAME::
++	Only consider events after this event is found.
++
++	E.g.:
++
++           Find out where broadcast packets are handled
++
++		perf probe -L icmp_rcv
++
++	   Insert a probe there:
++
++		perf probe icmp_rcv:59
++
++	   Start perf top and ask it to only consider the cycles events when a
++           broadcast packet arrives This will show a menu with two entries and
++           will start counting when a broadcast packet arrives:
++
++		perf top -e cycles,probe:icmp_rcv --switch-on=probe:icmp_rcv
++
++	   Alternatively one can ask for --group and then two overhead columns
++           will appear, the first for cycles and the second for the switch-on event.
++
++		perf top --group -e cycles,probe:icmp_rcv --switch-on=probe:icmp_rcv
++
++	This may be interesting to measure a workload only after some initialization
++	phase is over, i.e. insert a perf probe at that point and use the above
++	examples replacing probe:icmp_rcv with the just-after-init probe.
++
 +--switch-off EVENT_NAME::
 +	Stop considering events after this event is found.
 +
- --show-on-off-events::
--	Show the --switch-on event too.
-+	Show the --switch-on/off events too.
- 
- SEE ALSO
- --------
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index fa0cc8b0eccc..b6eed0f7e835 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1617,7 +1617,8 @@ static int perf_sample__fprintf_synth(struct perf_sample *sample,
- }
- 
- struct evswitch {
--	struct evsel *on;
-+	struct evsel *on,
-+		     *off;
- 	bool	     discarding;
- 	bool	     show_on_off_events;
- };
-@@ -1820,8 +1821,20 @@ static void process_event(struct perf_script *script,
- 
- 		if (!script->evswitch.show_on_off_events)
- 			return;
++--show-on-off-events::
++	Show the --switch-on/off events too. This has no effect in 'perf top' now
++	but probably we'll make the default not to show the switch-on/off events
++        on the --group mode and if there is only one event besides the off/on ones,
++	go straight to the histogram browser, just like 'perf top' with no events
++	explicitely specified does.
 +
-+		goto print_it;
- 	}
  
-+	if (script->evswitch.off && !script->evswitch.discarding) {
-+		if (script->evswitch.off != evsel)
-+			goto print_it;
-+
-+		script->evswitch.discarding = true;
-+
-+		if (!script->evswitch.show_on_off_events)
-+			return;
+ INTERACTIVE PROMPTING KEYS
+ --------------------------
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 78e7efc597a6..5970723cd55a 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1148,8 +1148,11 @@ static int deliver_event(struct ordered_events *qe,
+ 	evsel = perf_evlist__id2evsel(session->evlist, sample.id);
+ 	assert(evsel != NULL);
+ 
+-	if (event->header.type == PERF_RECORD_SAMPLE)
++	if (event->header.type == PERF_RECORD_SAMPLE) {
++		if (evswitch__discard(&top->evswitch, evsel))
++			return 0;
+ 		++top->samples;
 +	}
-+print_it:
- 	++es->samples;
  
- 	perf_sample__fprintf_start(sample, thread, evsel,
-@@ -3412,7 +3425,8 @@ int cmd_script(int argc, const char **argv)
- 	struct utsname uts;
- 	char *script_path = NULL;
- 	const char **__argv;
--	const char *event_switch_on = NULL;
-+	const char *event_switch_on  = NULL,
-+		   *event_switch_off = NULL;
- 	int i, j, err = 0;
- 	struct perf_script script = {
- 		.tool = {
-@@ -3557,7 +3571,9 @@ int cmd_script(int argc, const char **argv)
- 	OPT_STRING(0, "guestmodules", &symbol_conf.default_guest_modules,
- 		   "file", "file saving guest os /proc/modules"),
- 	OPT_STRING(0, "switch-on", &event_switch_on,
--		   "event", "Consider events from the first ocurrence of this event"),
-+		   "event", "Consider events after the ocurrence of this event"),
-+	OPT_STRING(0, "switch-off", &event_switch_off,
-+		   "event", "Stop considering events after the ocurrence of this event"),
- 	OPT_BOOLEAN(0, "show-on-off-events", &script.evswitch.show_on_off_events,
- 		    "Show the on/off switch events, used with --switch-on"),
+ 	switch (sample.cpumode) {
+ 	case PERF_RECORD_MISC_USER:
+@@ -1534,6 +1537,7 @@ int cmd_top(int argc, const char **argv)
+ 			"number of thread to run event synthesize"),
+ 	OPT_BOOLEAN(0, "namespaces", &opts->record_namespaces,
+ 		    "Record namespaces events"),
++	OPTS_EVSWITCH(&top.evswitch),
  	OPT_END()
-@@ -3894,6 +3910,15 @@ int cmd_script(int argc, const char **argv)
- 		script.evswitch.discarding = true;
+ 	};
+ 	struct evlist *sb_evlist = NULL;
+@@ -1567,6 +1571,10 @@ int cmd_top(int argc, const char **argv)
+ 		goto out_delete_evlist;
  	}
  
-+	if (event_switch_off) {
-+		script.evswitch.off = perf_evlist__find_evsel_by_str(session->evlist, event_switch_off);
-+		if (script.evswitch.off == NULL) {
-+			fprintf(stderr, "switch-off event not found (%s)\n", event_switch_off);
-+			err = -ENOENT;
-+			goto out_delete;
-+		}
-+	}
++	status = evswitch__init(&top.evswitch, top.evlist, stderr);
++	if (status)
++		goto out_delete_evlist;
 +
- 	err = __cmd_script(&script);
+ 	if (symbol_conf.report_hierarchy) {
+ 		/* disable incompatible options */
+ 		symbol_conf.event_group = false;
+diff --git a/tools/perf/util/top.h b/tools/perf/util/top.h
+index 2023e0bf6165..dc4bb6e52a83 100644
+--- a/tools/perf/util/top.h
++++ b/tools/perf/util/top.h
+@@ -3,6 +3,7 @@
+ #define __PERF_TOP_H 1
  
- 	flush_scripting();
+ #include "tool.h"
++#include "evswitch.h"
+ #include "annotate.h"
+ #include <linux/types.h>
+ #include <stddef.h>
+@@ -18,6 +19,7 @@ struct perf_top {
+ 	struct evlist *evlist;
+ 	struct record_opts record_opts;
+ 	struct annotation_options annotation_opts;
++	struct evswitch	   evswitch;
+ 	/*
+ 	 * Symbols will be added here in perf_event__process_sample and will
+ 	 * get out after decayed.
 -- 
 2.21.0
 
