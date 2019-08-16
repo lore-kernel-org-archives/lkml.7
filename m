@@ -2,107 +2,119 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC015C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C96C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE7C2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:24:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DRYCBg1p"
+	by mail.kernel.org (Postfix) with ESMTP id D67552064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfHPJYB (ORCPT
+        id S1727099AbfHPJY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 05:24:01 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:49130 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726864AbfHPJYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:24:01 -0400
-Received: from zn.tnic (p200300EC2F0A920014AE47D987991812.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9200:14ae:47d9:8799:1812])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A73951EC067D;
-        Fri, 16 Aug 2019 11:23:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565947439;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=cygAj/2KeoXPUrfXfBK12mcmYpE6aLde83uSyzIMb0w=;
-        b=DRYCBg1pOzz4Hg5+hYpeC8vfN1VRSyA41igLJ3kSFnBCEYKX/udaByrO777XrleI6b//ep
-        XLKNWs/PXwQBq/XEDxy4/OGtHeIXJYgCtGJKhfdlu2rEgJWSsd89y/fWxQZGLNBtSVYuMW
-        SiuDPpWaB7BuIlAZdHhYEEeX0aMRRIc=
-Date:   Fri, 16 Aug 2019 11:24:49 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 10/24] EDAC, mc: Remove per layer counters
-Message-ID: <20190816092449.GK18980@zn.tnic>
-References: <20190624150758.6695-1-rrichter@marvell.com>
- <20190624150758.6695-11-rrichter@marvell.com>
+        Fri, 16 Aug 2019 05:24:57 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41642 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726879AbfHPJY5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 05:24:57 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j16so890377wrr.8;
+        Fri, 16 Aug 2019 02:24:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/VxpV6HL/eaLGj7FsELgy9XZqdi/XB/wlgbntskeVnQ=;
+        b=IbAKXSF5R1mr1Ot5O0SVLwAG2d11xlP91LdIq3kT56OXCfcZQpdGKIylwQP3f1bF5V
+         cj+htenCqB1qBD1rvN+lyZF9nXCUCaeeJ0rSyIw3uuCrFgH7rGaf1+QIgKbEuGRdOjzh
+         criNKo5Du8irVDnbTXz7vicG14NNNWilRuwW0LUjrPCMYxazCc+DczVaDj5GXf3r3Miu
+         q5Hf+xL4WVFY9W+0XERsk+zkFtddPw2URZewd5zzvDjPcOdYRCqdjVfl4K1Zw9Op4zpR
+         0zwzM3zhWiRRFZ+i2PxOn4fn2725rRu/cwlHN0nttr8XcJiQT4Xn1pfhzkRJyFCVYVRK
+         yhWg==
+X-Gm-Message-State: APjAAAVtDI8tsSHPbZTPV4bguM28TsQVTUXOL7oqYePXixGMBsnPLfdz
+        qUdpugQy7H7Kp+Jc0NjAzU0=
+X-Google-Smtp-Source: APXvYqyy6pgFa+BB7KaySmOfpgsDcaufflSKyMcUlSVwwJjnZb2uc2ckVujWGkNfhMrvbZguRjo1Mw==
+X-Received: by 2002:adf:eac3:: with SMTP id o3mr8886853wrn.264.1565947494195;
+        Fri, 16 Aug 2019 02:24:54 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id q20sm16521138wrc.79.2019.08.16.02.24.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 16 Aug 2019 02:24:53 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>, kvm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, netdev@vger.kernel.org,
+        x86@kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH v2 00/10] Add definition for the number of standard PCI BARs
+Date:   Fri, 16 Aug 2019 12:24:27 +0300
+Message-Id: <20190816092437.31846-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190624150758.6695-11-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 03:09:15PM +0000, Robert Richter wrote:
-> Looking at how mci->{ue,ce}_per_layer[EDAC_MAX_LAYERS] is used, it
-> turns out that only the leaves in the memory hierarchy are consumed
-> (in sysfs), but not the intermediate layers, e.g.:
-> 
->  count = dimm->mci->ce_per_layer[dimm->mci->n_layers-1][dimm->idx];
-> 
-> So let's get rid of the unused counters that just add complexity.
-> 
-> Error counter values are directly stored in struct dimm_info now.
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> ---
->  drivers/edac/edac_mc.c       | 98 ++++++++++++------------------------
->  drivers/edac/edac_mc_sysfs.c | 20 +++-----
->  drivers/edac/ghes_edac.c     |  5 +-
->  include/linux/edac.h         |  7 ++-
->  4 files changed, 44 insertions(+), 86 deletions(-)
-> 
-> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-> index f2acdab34eb7..bce39b2e10c9 100644
-> --- a/drivers/edac/edac_mc.c
-> +++ b/drivers/edac/edac_mc.c
-> @@ -313,10 +313,9 @@ struct mem_ctl_info *edac_mc_alloc(unsigned mc_num,
->  	struct csrow_info *csr;
->  	struct rank_info *chan;
->  	struct dimm_info *dimm;
-> -	u32 *ce_per_layer[EDAC_MAX_LAYERS], *ue_per_layer[EDAC_MAX_LAYERS];
->  	unsigned pos[EDAC_MAX_LAYERS];
-> -	unsigned size, tot_dimms = 1, count = 1;
-> -	unsigned tot_csrows = 1, tot_channels = 1, tot_errcount = 0;
-> +	unsigned size, tot_dimms = 1;
-> +	unsigned tot_csrows = 1, tot_channels = 1;
+Code that iterates over all standard PCI BARs typically uses
+PCI_STD_RESOURCE_END, but this is error-prone because it requires
+"i <= PCI_STD_RESOURCE_END" rather than something like
+"i < PCI_STD_NUM_BARS". We could add such a definition and use it the same
+way PCI_SRIOV_NUM_BARS is used. There is already the definition
+PCI_BAR_COUNT for s390 only. Thus, this patchset introduces it globally.
 
-Pls fix those while touching this:
+Changes in v2:
+  - Reverse checks in pci_iomap_range,pci_iomap_wc_range.
+  - Refactor loops in vfio_pci to keep PCI_STD_RESOURCES.
+  - Add 2 new patches to replace the magic constant with new define.
+  - Split net patch in v1 to separate stmmac and dwc-xlgmac patches.
 
-WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-#48: FILE: drivers/edac/edac_mc.c:317:
-+       unsigned size, tot_dimms = 1;
+Denis Efremov (10):
+  PCI: Add define for the number of standard PCI BARs
+  s390/pci: Loop using PCI_STD_NUM_BARS
+  x86/PCI: Loop using PCI_STD_NUM_BARS
+  stmmac: pci: Loop using PCI_STD_NUM_BARS
+  net: dwc-xlgmac: Loop using PCI_STD_NUM_BARS
+  rapidio/tsi721: Loop using PCI_STD_NUM_BARS
+  efifb: Loop using PCI_STD_NUM_BARS
+  vfio_pci: Loop using PCI_STD_NUM_BARS
+  PCI: hv: Use PCI_STD_NUM_BARS
+  PCI: Use PCI_STD_NUM_BARS
 
-WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-#49: FILE: drivers/edac/edac_mc.c:318:
-+       unsigned tot_csrows = 1, tot_channels = 1;
+ arch/s390/include/asm/pci.h                      |  5 +----
+ arch/s390/include/asm/pci_clp.h                  |  6 +++---
+ arch/s390/pci/pci.c                              | 16 ++++++++--------
+ arch/s390/pci/pci_clp.c                          |  6 +++---
+ arch/x86/pci/common.c                            |  2 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c |  4 ++--
+ drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c   |  2 +-
+ drivers/pci/controller/pci-hyperv.c              | 10 +++++-----
+ drivers/pci/pci.c                                | 11 ++++++-----
+ drivers/pci/quirks.c                             |  4 ++--
+ drivers/rapidio/devices/tsi721.c                 |  2 +-
+ drivers/vfio/pci/vfio_pci.c                      | 11 +++++++----
+ drivers/vfio/pci/vfio_pci_config.c               | 10 ++++++----
+ drivers/vfio/pci/vfio_pci_private.h              |  4 ++--
+ drivers/video/fbdev/efifb.c                      |  2 +-
+ include/linux/pci.h                              |  2 +-
+ include/uapi/linux/pci_regs.h                    |  1 +
+ 17 files changed, 51 insertions(+), 47 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.21.0
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
