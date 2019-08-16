@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AD4C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355B3C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C85206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C402064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 09:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727246AbfHPJ00 (ORCPT
+        id S1727256AbfHPJ02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 05:26:26 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36017 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727141AbfHPJ0Y (ORCPT
+        Fri, 16 Aug 2019 05:26:28 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43212 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfHPJ00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:26:24 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g67so3515522wme.1;
-        Fri, 16 Aug 2019 02:26:22 -0700 (PDT)
+        Fri, 16 Aug 2019 05:26:26 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y8so890134wrn.10;
+        Fri, 16 Aug 2019 02:26:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VCBC1nHkile48mY94V95RJMwkkBLR3LBIagBpciu5yg=;
-        b=WEUufkhsfmFdyCCPtGxHwjQbtuNVK1POWA9rFO5ONgaVRpSAuiDG6DBYb5ctpUis9A
-         WneOxogDdo2UXlmVJ7/3inwF8RSyhWA3Cp0FmZeuS4N+Br7Y9RUet5a17ih4OztKfKW4
-         2+kvW6c23NvOKH4t2U/3MqSsgyTmVz73dxqoHaMjUAA7hxogmkWDfZ6+M3KWtvABku1a
-         j/JYnqXCmGZv55+uBu5Ci2fQCdbxP032y/LEEQujBdvLfDugqOrGvg8BBYbfAdHVFy5w
-         o9yXoCepgZT2jtUYIiWHp6zH9JQAudvBKppuquAROQVs4UucTxCjbrS37wAGPfhvtniQ
-         Yr9Q==
-X-Gm-Message-State: APjAAAX1N1bzv+/1aPdUHXUjJYLLvf8Vq1Cltfxdkgbp/FiZYAw/HPF2
-        V+cR1AVAEoRKoWelEhtdxDA=
-X-Google-Smtp-Source: APXvYqw28sA05m0NJBVJdOHWxcsf+e6ETT/4+J9XklzzECtokBSPpk/j2HBhAcXCsE6EfVpjW0JZKQ==
-X-Received: by 2002:a1c:630b:: with SMTP id x11mr6225403wmb.135.1565947581534;
-        Fri, 16 Aug 2019 02:26:21 -0700 (PDT)
+        bh=fQFIDh4S3BKcxzlORjnStXsZ6DfUzI3N/hnvhmTuLs8=;
+        b=CWw/YvrlegXOrjLsqedl6yU38/BWBbnuB0l9bleEwM1I1GMZ27VAvuUvuaORJNaMNH
+         L+/qa+p7a8UcL3HAWlQXFP4qFEdp0RFdHcXYErBlEZKGoMWWakTVDQKNRiXl4x5atchO
+         9lX+L/aQfJG9U8Q3cpePfF4czq2kKgQWmzLye9Gn7UVBZW0Vihdn2Y3GPHM+gcNWXjM9
+         9wY0Ctayb1o1qP+a4w2onl580ixnlkl/g6f3bCSkfSi3MqxJ/rwXrvEj7CUIkr4t5XVb
+         uOodklnuj6PrfDZurJYc6hM8oTt2/mRYf5P7RuKjvXcLzjZzKZcj9YLJqk7MohhpKBOl
+         N6sA==
+X-Gm-Message-State: APjAAAVmCHVBVAWplkvJKFq2deKdr4hAa9KjjpKGMnGy+77SuK0y8UMb
+        WHmh73Ysy/AEYB1L1ivfHP16ziDIoJs=
+X-Google-Smtp-Source: APXvYqwG11k4igHgrryrjPHyfeT7XXX08qys061YfZoc8Z1PSbAFAnEUv3PxRdRufCgDzgfe8AsPIg==
+X-Received: by 2002:adf:f5c5:: with SMTP id k5mr10271991wrp.42.1565947584701;
+        Fri, 16 Aug 2019 02:26:24 -0700 (PDT)
 Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id q20sm16521138wrc.79.2019.08.16.02.26.20
+        by smtp.googlemail.com with ESMTPSA id q20sm16521138wrc.79.2019.08.16.02.26.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 16 Aug 2019 02:26:21 -0700 (PDT)
+        Fri, 16 Aug 2019 02:26:24 -0700 (PDT)
 From:   Denis Efremov <efremov@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Denis Efremov <efremov@linux.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/10] vfio_pci: Loop using PCI_STD_NUM_BARS
-Date:   Fri, 16 Aug 2019 12:24:35 +0300
-Message-Id: <20190816092437.31846-9-efremov@linux.com>
+Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>
+Subject: [PATCH v2 10/10] PCI: Use PCI_STD_NUM_BARS
+Date:   Fri, 16 Aug 2019 12:24:37 +0300
+Message-Id: <20190816092437.31846-11-efremov@linux.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190816092437.31846-1-efremov@linux.com>
 References: <20190816092437.31846-1-efremov@linux.com>
@@ -62,91 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactor loops to use 'i < PCI_STD_NUM_BARS' instead of
-'i <= PCI_STD_RESOURCE_END'.
+Replace the magic constant with define PCI_STD_NUM_BARS.
 
 Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- drivers/vfio/pci/vfio_pci.c         | 11 +++++++----
- drivers/vfio/pci/vfio_pci_config.c  | 10 ++++++----
- drivers/vfio/pci/vfio_pci_private.h |  4 ++--
- 3 files changed, 15 insertions(+), 10 deletions(-)
+ drivers/pci/pci.c    | 11 ++++++-----
+ drivers/pci/quirks.c |  2 +-
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 703948c9fbe1..cb7d220d3246 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -110,13 +110,15 @@ static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
- static void vfio_pci_probe_mmaps(struct vfio_pci_device *vdev)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 1b27b5af3d55..a9005c9eee6c 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3768,7 +3768,7 @@ void pci_release_selected_regions(struct pci_dev *pdev, int bars)
  {
- 	struct resource *res;
--	int bar;
-+	int i;
- 	struct vfio_pci_dummy_resource *dummy_res;
+ 	int i;
  
- 	INIT_LIST_HEAD(&vdev->dummy_resources_list);
+-	for (i = 0; i < 6; i++)
++	for (i = 0; i < PCI_STD_NUM_BARS; i++)
+ 		if (bars & (1 << i))
+ 			pci_release_region(pdev, i);
+ }
+@@ -3779,7 +3779,7 @@ static int __pci_request_selected_regions(struct pci_dev *pdev, int bars,
+ {
+ 	int i;
  
--	for (bar = PCI_STD_RESOURCES; bar <= PCI_STD_RESOURCE_END; bar++) {
--		res = vdev->pdev->resource + bar;
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-+		int bar = i + PCI_STD_RESOURCES;
-+
-+		res = &vdev->pdev->resource[bar];
+-	for (i = 0; i < 6; i++)
++	for (i = 0; i < PCI_STD_NUM_BARS; i++)
+ 		if (bars & (1 << i))
+ 			if (__pci_request_region(pdev, i, res_name, excl))
+ 				goto err_out;
+@@ -3827,7 +3827,7 @@ EXPORT_SYMBOL(pci_request_selected_regions_exclusive);
  
- 		if (!IS_ENABLED(CONFIG_VFIO_PCI_MMAP))
- 			goto no_mmap;
-@@ -399,7 +401,8 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+ void pci_release_regions(struct pci_dev *pdev)
+ {
+-	pci_release_selected_regions(pdev, (1 << 6) - 1);
++	pci_release_selected_regions(pdev, (1 << PCI_STD_NUM_BARS) - 1);
+ }
+ EXPORT_SYMBOL(pci_release_regions);
  
- 	vfio_config_free(vdev);
+@@ -3846,7 +3846,8 @@ EXPORT_SYMBOL(pci_release_regions);
+  */
+ int pci_request_regions(struct pci_dev *pdev, const char *res_name)
+ {
+-	return pci_request_selected_regions(pdev, ((1 << 6) - 1), res_name);
++	return pci_request_selected_regions(pdev,
++			((1 << PCI_STD_NUM_BARS) - 1), res_name);
+ }
+ EXPORT_SYMBOL(pci_request_regions);
  
--	for (bar = PCI_STD_RESOURCES; bar <= PCI_STD_RESOURCE_END; bar++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-+		bar = i + PCI_STD_RESOURCES;
- 		if (!vdev->barmap[bar])
- 			continue;
- 		pci_iounmap(pdev, vdev->barmap[bar]);
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index f0891bd8444c..df8772395219 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -455,16 +455,18 @@ static void vfio_bar_fixup(struct vfio_pci_device *vdev)
+@@ -3868,7 +3869,7 @@ EXPORT_SYMBOL(pci_request_regions);
+ int pci_request_regions_exclusive(struct pci_dev *pdev, const char *res_name)
+ {
+ 	return pci_request_selected_regions_exclusive(pdev,
+-					((1 << 6) - 1), res_name);
++				((1 << PCI_STD_NUM_BARS) - 1), res_name);
+ }
+ EXPORT_SYMBOL(pci_request_regions_exclusive);
  
- 	bar = (__le32 *)&vdev->vconfig[PCI_BASE_ADDRESS_0];
- 
--	for (i = PCI_STD_RESOURCES; i <= PCI_STD_RESOURCE_END; i++, bar++) {
--		if (!pci_resource_start(pdev, i)) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++, bar++) {
-+		int ibar = i + PCI_STD_RESOURCES;
-+
-+		if (!pci_resource_start(pdev, ibar)) {
- 			*bar = 0; /* Unmapped by host = unimplemented to user */
- 			continue;
- 		}
- 
--		mask = ~(pci_resource_len(pdev, i) - 1);
-+		mask = ~(pci_resource_len(pdev, ibar) - 1);
- 
- 		*bar &= cpu_to_le32((u32)mask);
--		*bar |= vfio_generate_bar_flags(pdev, i);
-+		*bar |= vfio_generate_bar_flags(pdev, ibar);
- 
- 		if (*bar & cpu_to_le32(PCI_BASE_ADDRESS_MEM_TYPE_64)) {
- 			bar++;
-diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-index ee6ee91718a4..8a2c7607d513 100644
---- a/drivers/vfio/pci/vfio_pci_private.h
-+++ b/drivers/vfio/pci/vfio_pci_private.h
-@@ -86,8 +86,8 @@ struct vfio_pci_reflck {
- 
- struct vfio_pci_device {
- 	struct pci_dev		*pdev;
--	void __iomem		*barmap[PCI_STD_RESOURCE_END + 1];
--	bool			bar_mmap_supported[PCI_STD_RESOURCE_END + 1];
-+	void __iomem		*barmap[PCI_STD_NUM_BARS];
-+	bool			bar_mmap_supported[PCI_STD_NUM_BARS];
- 	u8			*pci_config_map;
- 	u8			*vconfig;
- 	struct perm_bits	*msi_perm;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 02bdf3a0231e..51caa61e6112 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -1810,7 +1810,7 @@ static void quirk_alder_ioapic(struct pci_dev *pdev)
+ 	 * The next five BARs all seem to be rubbish, so just clean
+ 	 * them out.
+ 	 */
+-	for (i = 1; i < 6; i++)
++	for (i = 1; i < PCI_STD_NUM_BARS; i++)
+ 		memset(&pdev->resource[i], 0, sizeof(pdev->resource[i]));
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_EESSC,	quirk_alder_ioapic);
 -- 
 2.21.0
 
