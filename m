@@ -7,20 +7,20 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E01EC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3F8C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00CC52133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 920DF21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:54:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q/BjrqiW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n3fHfmab"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfHPGyt (ORCPT
+        id S1727028AbfHPGyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:54:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60680 "EHLO
+        Fri, 16 Aug 2019 02:54:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60688 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfHPGys (ORCPT
+        with ESMTP id S1727004AbfHPGys (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 16 Aug 2019 02:54:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -29,24 +29,24 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=b+a4pr26YNInd7/QhhzGzYpG1NEGvVch+LojSapMZZc=; b=q/BjrqiWxleujKZgKtvVwFD29i
-        R1mYmGsd81RuGdIsBX2zKNbj6gTbsMekpGNZO1BfZY1yUTlE4y+R82pgKreWjAdZ3TPCN0qBPGpoz
-        Tfmt3anDfnQQARogPDVC7yBNqwsk2KI2E6ryzuthV8Uriij1gwSy78oFMuRXMYNlF7GsE+Q5ukray
-        IHZ7+1jsYG5AzIQHb2CC9qNjXfK14t4IHXUtVAF4KQueFuZChZjNoT86j3hyi5fntsJ9Nzoa7Xitb
-        UNjeECi/IsqsIsdD7R4uqxzS5cwwXK50ol0ncpX7KdBddMgGniAH6y1yxQlNfkx7YU0T+dCfMDrMc
-        qZKHsfBg==;
+        bh=qQpdkoFgBNKt05/BTaCVo55DV3oVIJ72YaRKec/bRIA=; b=n3fHfmabOdIqLDx0EgREHzIU4N
+        vuwec044XQulEeYedbLIwYzeglhe2XxTuHNPpqpIcM0LvUx+JLvlBU1uEkLrf9kTjaFPOAl79B01J
+        EmvPDsCvsQFxNgNyTtqDe9NMx9hYr2v34TsUxQgCqDOYvz2lNHwb7FeGo/ayNU0YxMg3y/7wJSSB4
+        /PO7oDwLg6lE6qqbuCUAqgECkcVZKZQNTeEfhfqaI55/N0WjxagTxCSIMD8QDGccSrwbyaPm0NMgL
+        oRDfVtEJHjIRo5715GkJoKvdAkhmPAtEqYNcEXhvg/LckgAJaCwNSnuRqRlqA3N6pyYkmiWLvG/iI
+        dP7Wd/fg==;
 Received: from [2001:4bb8:18c:28b5:44f9:d544:957f:32cb] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hyW8I-0008HF-Su; Fri, 16 Aug 2019 06:54:43 +0000
+        id 1hyW8L-0008HQ-Rt; Fri, 16 Aug 2019 06:54:46 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Dan Williams <dan.j.williams@intel.com>,
         Jason Gunthorpe <jgg@mellanox.com>
 Cc:     Bharata B Rao <bharata@linux.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
-Subject: [PATCH 1/4] resource: add a not device managed request_free_mem_region variant
-Date:   Fri, 16 Aug 2019 08:54:31 +0200
-Message-Id: <20190816065434.2129-2-hch@lst.de>
+Subject: [PATCH 2/4] memremap: remove the dev field in struct dev_pagemap
+Date:   Fri, 16 Aug 2019 08:54:32 +0200
+Message-Id: <20190816065434.2129-3-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190816065434.2129-1-hch@lst.de>
 References: <20190816065434.2129-1-hch@lst.de>
@@ -58,100 +58,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just add a simple macro that passes a NULL dev argument to
-dev_request_free_mem_region, and call request_mem_region in the
-function for that particular case.
+The dev field in struct dev_pagemap is only used to print dev_name in
+two places, which are at best nice to have.  Just remove the field
+and thus the name in those two messages.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/linux/ioport.h |  2 ++
- kernel/resource.c      | 45 +++++++++++++++++++++++++++++-------------
- 2 files changed, 33 insertions(+), 14 deletions(-)
+ include/linux/memremap.h | 1 -
+ mm/memremap.c            | 6 +-----
+ mm/page_alloc.c          | 2 +-
+ 3 files changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 5b6a7121c9f0..7bddddfc76d6 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -297,6 +297,8 @@ static inline bool resource_overlaps(struct resource *r1, struct resource *r2)
- 
- struct resource *devm_request_free_mem_region(struct device *dev,
- 		struct resource *base, unsigned long size);
-+struct resource *request_free_mem_region(struct resource *base,
-+		unsigned long size, const char *name);
- 
- #endif /* __ASSEMBLY__ */
- #endif	/* _LINUX_IOPORT_H */
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 7ea4306503c5..74877e9d90ca 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -1644,19 +1644,8 @@ void resource_list_free(struct list_head *head)
- EXPORT_SYMBOL(resource_list_free);
- 
- #ifdef CONFIG_DEVICE_PRIVATE
--/**
-- * devm_request_free_mem_region - find free region for device private memory
-- *
-- * @dev: device struct to bind the resource to
-- * @size: size in bytes of the device memory to add
-- * @base: resource tree to look in
-- *
-- * This function tries to find an empty range of physical address big enough to
-- * contain the new resource, so that it can later be hotplugged as ZONE_DEVICE
-- * memory, which in turn allocates struct pages.
-- */
--struct resource *devm_request_free_mem_region(struct device *dev,
--		struct resource *base, unsigned long size)
-+static struct resource *__request_free_mem_region(struct device *dev,
-+		struct resource *base, unsigned long size, const char *name)
+diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+index f8a5b2a19945..8f0013e18e14 100644
+--- a/include/linux/memremap.h
++++ b/include/linux/memremap.h
+@@ -109,7 +109,6 @@ struct dev_pagemap {
+ 	struct percpu_ref *ref;
+ 	struct percpu_ref internal_ref;
+ 	struct completion done;
+-	struct device *dev;
+ 	enum memory_type type;
+ 	unsigned int flags;
+ 	u64 pci_p2pdma_bus_offset;
+diff --git a/mm/memremap.c b/mm/memremap.c
+index 86432650f829..416b4129acbb 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -102,7 +102,6 @@ static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
+ static void devm_memremap_pages_release(void *data)
  {
- 	resource_size_t end, addr;
- 	struct resource *res;
-@@ -1670,7 +1659,10 @@ struct resource *devm_request_free_mem_region(struct device *dev,
- 				REGION_DISJOINT)
- 			continue;
+ 	struct dev_pagemap *pgmap = data;
+-	struct device *dev = pgmap->dev;
+ 	struct resource *res = &pgmap->res;
+ 	unsigned long pfn;
+ 	int nid;
+@@ -129,8 +128,7 @@ static void devm_memremap_pages_release(void *data)
  
--		res = devm_request_mem_region(dev, addr, size, dev_name(dev));
-+		if (dev)
-+			res = devm_request_mem_region(dev, addr, size, name);
-+		else
-+			res = request_mem_region(addr, size, name);
- 		if (!res)
- 			return ERR_PTR(-ENOMEM);
- 		res->desc = IORES_DESC_DEVICE_PRIVATE_MEMORY;
-@@ -1679,7 +1671,32 @@ struct resource *devm_request_free_mem_region(struct device *dev,
- 
- 	return ERR_PTR(-ERANGE);
+ 	untrack_pfn(NULL, PHYS_PFN(res->start), resource_size(res));
+ 	pgmap_array_delete(res);
+-	dev_WARN_ONCE(dev, pgmap->altmap.alloc,
+-		      "%s: failed to free all reserved pages\n", __func__);
++	WARN_ONCE(pgmap->altmap.alloc, "failed to free all reserved pages\n");
  }
-+
-+/**
-+ * devm_request_free_mem_region - find free region for device private memory
-+ *
-+ * @dev: device struct to bind the resource to
-+ * @size: size in bytes of the device memory to add
-+ * @base: resource tree to look in
-+ *
-+ * This function tries to find an empty range of physical address big enough to
-+ * contain the new resource, so that it can later be hotplugged as ZONE_DEVICE
-+ * memory, which in turn allocates struct pages.
-+ */
-+struct resource *devm_request_free_mem_region(struct device *dev,
-+		struct resource *base, unsigned long size)
-+{
-+	return __request_free_mem_region(dev, base, size, dev_name(dev));
-+}
- EXPORT_SYMBOL_GPL(devm_request_free_mem_region);
-+
-+struct resource *request_free_mem_region(struct resource *base,
-+		unsigned long size, const char *name)
-+{
-+	return __request_free_mem_region(NULL, base, size, name);
-+}
-+EXPORT_SYMBOL_GPL(request_free_mem_region);
-+
- #endif /* CONFIG_DEVICE_PRIVATE */
  
- static int __init strict_iomem(char *str)
+ static void dev_pagemap_percpu_release(struct percpu_ref *ref)
+@@ -251,8 +249,6 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+ 		goto err_array;
+ 	}
+ 
+-	pgmap->dev = dev;
+-
+ 	error = xa_err(xa_store_range(&pgmap_array, PHYS_PFN(res->start),
+ 				PHYS_PFN(res->end), pgmap, GFP_KERNEL));
+ 	if (error)
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 272c6de1bf4e..b39baa2b1faf 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5982,7 +5982,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
+ 		}
+ 	}
+ 
+-	pr_info("%s initialised, %lu pages in %ums\n", dev_name(pgmap->dev),
++	pr_info("%s initialised %lu pages in %ums\n", __func__,
+ 		size, jiffies_to_msecs(jiffies - start));
+ }
+ 
 -- 
 2.20.1
 
