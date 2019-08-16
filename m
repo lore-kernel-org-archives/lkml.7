@@ -2,95 +2,122 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1661DC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1795C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB302206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 950C72184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:11:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iS6KgC1s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfHPOHJ (ORCPT
+        id S1727356AbfHPOLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 10:07:09 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50388 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727286AbfHPOHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 10:07:09 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 53D6156311E576FF5A5F;
-        Fri, 16 Aug 2019 22:06:09 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 16 Aug 2019
- 22:06:00 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <pkshih@realtek.com>, <kvalo@codeaurora.org>, <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] rtlwifi: remove unused variables 'RTL8712_SDIO_EFUSE_TABLE' and 'MAX_PGPKT_SIZE'
-Date:   Fri, 16 Aug 2019 22:05:13 +0800
-Message-ID: <20190816140513.72572-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 16 Aug 2019 10:11:03 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:36324 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727205AbfHPOLD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 10:11:03 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7GE90p3040745;
+        Fri, 16 Aug 2019 14:10:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=rrAIgZ4P0ppcqVMyqyiR1dhc7wUibmp5okZHvHPQgT8=;
+ b=iS6KgC1swYeXsIXOvTz7W7s/tmTZChGDvn98Lr12Uq4seG88kEN+hpXPqJknTF8t1NG2
+ 8T0BAeHdszNIiBpI76034nG6htOhrcZy+H+yzxihlp8qPz/fDTvlOAszlyn5TBuCBLow
+ 6innOXMU6rVm8QiohQ4QkTaJYtA3811nBciImzQIw2UePzmQAjQ1J+sIZiWFTKL49qKl
+ qsyYElIdYSG+gMJ+CaO4mumqzYkurjDKmFy3VqgoSdvrxsJyx2h3h6zIJL5tzAUfcMA0
+ CgHI0eNdXWnnvPXLruSZihA0xLI4V3k9vrtto4M01zLo5OnYjDH+xThkctWeHuWFyN63 xw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2u9nbu0r2x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Aug 2019 14:10:43 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7GE9N1l176962;
+        Fri, 16 Aug 2019 14:10:43 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2udgqg5wsn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Aug 2019 14:10:43 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7GEAdcG017410;
+        Fri, 16 Aug 2019 14:10:40 GMT
+Received: from [10.159.153.160] (/10.159.153.160)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 16 Aug 2019 07:10:39 -0700
+Subject: Re: linux-next: Signed-off-by missing for commits in the net-next
+ tree
+To:     Andy Grover <andy@groveronline.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>, Chris Mason <clm@fb.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Grover <andy.grover@oracle.com>,
+        Chris Mason <chris.mason@oracle.com>
+References: <20190816075312.64959223@canb.auug.org.au>
+ <8fd20efa-8e3d-eca2-8adf-897428a2f9ad@oracle.com>
+ <e85146f3-93a0-b23f-6a6e-11e42815946d@groveronline.com>
+From:   Gerd Rausch <gerd.rausch@oracle.com>
+Message-ID: <15078f1f-a036-2a54-1a07-9197f81bd58f@oracle.com>
+Date:   Fri, 16 Aug 2019 07:10:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+In-Reply-To: <e85146f3-93a0-b23f-6a6e-11e42815946d@groveronline.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908160148
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908160148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/net/wireless/realtek/rtlwifi/efuse.c:16:31:
- warning: RTL8712_SDIO_EFUSE_TABLE defined but not used [-Wunused-const-variable=]
-drivers/net/wireless/realtek/rtlwifi/efuse.c:9:17:
- warning: MAX_PGPKT_SIZE defined but not used [-Wunused-const-variable=]
+Hi,
 
-They are never used, so can be removed.
+On 16/08/2019 02.15, Andy Grover wrote:
+> On 8/16/19 3:06 PM, Gerd Rausch wrote:
+>> Hi,
+>>
+>> Just added the e-mail addresses I found using a simple "google search",
+>> in order to reach out to the original authors of these commits:
+>> Chris Mason and Andy Grover.
+>>
+>> I'm hoping they still remember their work from 7-8 years ago.
+> 
+> Yes looks like what I was working on. What did you need from me? It's
+> too late to amend the commitlogs...
+> 
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/wireless/realtek/rtlwifi/efuse.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+I'll let Stephen or David respond to what (if any) action is necessary.
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/efuse.c b/drivers/net/wireless/realtek/rtlwifi/efuse.c
-index ea4fc53..2646672 100644
---- a/drivers/net/wireless/realtek/rtlwifi/efuse.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/efuse.c
-@@ -6,29 +6,12 @@
- #include "pci.h"
- #include <linux/export.h>
- 
--static const u8 MAX_PGPKT_SIZE = 9;
- static const u8 PGPKT_DATA_SIZE = 8;
- static const int EFUSE_MAX_SIZE = 512;
- 
- #define START_ADDRESS		0x1000
- #define REG_MCUFWDL		0x0080
- 
--static const struct efuse_map RTL8712_SDIO_EFUSE_TABLE[] = {
--	{0, 0, 0, 2},
--	{0, 1, 0, 2},
--	{0, 2, 0, 2},
--	{1, 0, 0, 1},
--	{1, 0, 1, 1},
--	{1, 1, 0, 1},
--	{1, 1, 1, 3},
--	{1, 3, 0, 17},
--	{3, 3, 1, 48},
--	{10, 0, 0, 6},
--	{10, 3, 0, 1},
--	{10, 3, 1, 1},
--	{11, 0, 0, 28}
--};
--
- static const struct rtl_efuse_ops efuse_ops = {
- 	.efuse_onebyte_read = efuse_one_byte_read,
- 	.efuse_logical_map_read = efuse_shadow_read,
--- 
-2.7.4
+The missing Signed-off-by was pointed out to me by Stephen yesterday.
+
+Hence I tried to locate you guys to pull you into the loop in order to
+not leave his concern unanswered.
+
+Thanks,
+
+  Gerd
+
+
 
 
