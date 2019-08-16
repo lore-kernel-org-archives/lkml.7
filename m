@@ -6,41 +6,41 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBBBC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B14C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD342133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462992133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfHPIiJ (ORCPT
+        id S1727272AbfHPIiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:38:09 -0400
+        Fri, 16 Aug 2019 04:38:16 -0400
 Received: from esa2.mentor.iphmx.com ([68.232.141.98]:1938 "EHLO
         esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727218AbfHPIiA (ORCPT
+        with ESMTP id S1727201AbfHPIh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:38:00 -0400
-IronPort-SDR: M3MQztdRVGWppd8ygDAahsKAFAFih4TPtaWWK40v+WeNGgD0aP/RUcdih6aPDJHx1O5Imcqh+h
- BwICWShFNFZDB85RZBx+mKqvc6tyyK+GWCyMGFn7hbVug0wGv/jmlGxCRVBHtTqN7XVNzWPKgA
- Zkf1xm7Rq0KCSElsz/y9zE1ucy/7iDKhUFYmThPKVO2ji4ego2CoV9tNssKZ7680B173zCrrL0
- USLKoGf6zkp8X8VB1ojcxXgwOVxHkbBhVUs+MYQG2cMtxsZMfBR07tVMbZtTfqQ7sRTNZk07m+
- TkQ=
+        Fri, 16 Aug 2019 04:37:56 -0400
+IronPort-SDR: GBTdZV0vDjaVHK/T1ivaSYRI2YkjjZDBE8ddHK7+46SFHNrI+v7IQHAzN4UODIi2eI0aDmAZBK
+ rii0maDJ970WgiD7xYbpOgQ9mQWGw0fgjvmm9fDRJGeRthxpoR2J3poW5nrPSymKf9ulGiBnoY
+ cg736ZxBs0tEfre98XxYSl9E81wYpWzrjIiSDx7sauW+/7yP/pONsllgsAkyy2cwIdNWr8TlNr
+ a6xidlHNJ35BBea/wstpvauXXb4A9HonXumtwRuuKpQqH0D1I6lU8hPkdhtIVQCeiatnahD7Q8
+ 4Lk=
 X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
-   d="scan'208";a="40484297"
+   d="scan'208";a="40484294"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa2.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:34:56 -0800
-IronPort-SDR: uCF7Yg3QSrXgLajR6deui0IqBhkjAGMYhsA+0S/AbLohf1meWrWZe1wX3lBAkR3Av13j8GqPLD
- jRU9KyNJFg9z4ciopZwOrbt04ULyDAeOzWmjhUIs9Sv9T4z0xLYtfHfvPJmS/wigkl0vuX9oWt
- dfV6+Y6yIZhPXTKkeO0k7OZIHOcvRMPxDRECTH6aTpqjMuykbiQuCV4khILQhjNUq1fELNmTMn
- Exjpa6ngeBzAvJ+kQYGELs1l2+DcV7j/GW+VheO3XLrwJr4hsYaoNipNk/jydrF1bXH/iBMd/O
- eoA=
+  by esa2.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:34:52 -0800
+IronPort-SDR: AMNkO82KQJcHXkj8uainweV+4M1MLG6kpGJ3+Cr/9ttOBg9cHBfythoF0xJ8Atg14JycN802L5
+ i9mPzGRO4WuCPOGH1Nv094KZ7AyiJ9olIqYLJIOEen25+ZRrM7DspHI7++7MSnDR+bEDDPCf7w
+ RYT7N2+M8bixbrgiP0KN0NmgEPm4D+KE+E2EfvuLUJU9dt3hzZR34mjrurLJ05HquxgGZLsOXI
+ jEhLtawU3Rs0oUlyuHzSTIlAZaxb8S/xyMyM2kw3ZanpYbJ1ic3Jxgyrn+tQrB1yTmb1KRJt+R
+ Ftc=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v1 34/63] Input: atmel_mxt_ts - Change call-points of mxt_free_* functions
-Date:   Fri, 16 Aug 2019 17:34:22 +0900
-Message-ID: <20190816083451.18947-5-jiada_wang@mentor.com>
+Subject: [PATCH v1 33/63] Input: atmel_mxt_ts - eliminate data->raw_info_block
+Date:   Fri, 16 Aug 2019 17:34:21 +0900
+Message-ID: <20190816083451.18947-4-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20190816083451.18947-1-jiada_wang@mentor.com>
 References: <20190816083451.18947-1-jiada_wang@mentor.com>
@@ -54,88 +54,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kautuk Consul <kautuk_consul@mentor.com>
+Dynamically allocated in mxt_read_info_block() buffer buf is assigned
+both to data->info and data->raw_info_block, having both data->info
+and data->raw_info_block is redundant and confusing.
 
-Revamping the code to call mxt_free_object_table and mxt_free_input_device
-functions only in the following scenarios and code paths:
-1) The error path of the mxt_probe() entry point
-2) The mxt_remove de-init path entry point
-3) All paths which definitely expect to populate the object table
-   like:
-   - the mxt_update_fw_store path which first calls
-     mxt_load_fw and then resorts to calling mxt_initialize itself.
-   - the mxt_read_info_block function which attempts to fill in the
-     object table itself as the main non-error part of the logic.
-4) All paths in the code expected to definitely allocate and register
-   the input device such as:
-   - the mxt_update_fw_store path which first calls
-     mxt_load_fw and then resorts to calling mxt_initialize itself.
-   - the mxt_update_cfg_store function which will call
-     mxt_configure_objects.
+This patch eliminates data->raw_info_block.
 
-Signed-off-by: Kautuk Consul <kautuk_consul@mentor.com>
-Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 248d4b239bf6..aa913d2a0e3b 100644
+index e185d10c2cac..248d4b239bf6 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -3328,21 +3328,21 @@ static int mxt_configure_objects(struct mxt_data *data,
- 	error = mxt_init_t7_power_cfg(data);
- 	if (error) {
- 		dev_err(dev, "Failed to initialize power cfg\n");
--		goto err_free_object_table;
-+		return error;
+@@ -323,7 +323,6 @@ struct mxt_data {
+ 	char phys[64];		/* device physical location */
+ 	struct mxt_object *object_table;
+ 	struct mxt_info *info;
+-	void *raw_info_block;
+ 	unsigned int irq;
+ 	unsigned int max_x;
+ 	unsigned int max_y;
+@@ -2060,9 +2059,8 @@ static void mxt_free_object_table(struct mxt_data *data)
+ 	v4l2_device_unregister(&data->dbg.v4l2);
+ #endif
+ 	data->object_table = NULL;
++	kfree(data->info);
+ 	data->info = NULL;
+-	kfree(data->raw_info_block);
+-	data->raw_info_block = NULL;
+ 	kfree(data->msg_buf);
+ 	data->msg_buf = NULL;
+ 	data->T5_address = 0;
+@@ -2231,7 +2229,7 @@ static int mxt_read_info_block(struct mxt_data *data)
+ 	u8 *crc_ptr;
+ 
+ 	/* If info block already allocated, free it */
+-	if (data->raw_info_block)
++	if (data->info)
+ 		mxt_free_object_table(data);
+ 
+ 	/* Read 7-byte ID information block starting at address 0 */
+@@ -2282,7 +2280,6 @@ static int mxt_read_info_block(struct mxt_data *data)
+ 		goto err_free_mem;
  	}
  
- 	if (cfg) {
- 		error = mxt_update_cfg(data, cfg);
- 		if (error) {
- 			dev_warn(dev, "Error %d updating config\n", error);
--			goto err_free_object_table;
-+			return error;
- 		}
- 	}
+-	data->raw_info_block = id_buf;
+ 	data->info = (struct mxt_info *)id_buf;
  
- 	if (data->multitouch) {
- 		error = mxt_initialize_input_device(data);
- 		if (error)
--			goto err_free_object_table;
-+			return error;
- 	} else {
- 		dev_warn(dev, "No touch object detected\n");
- 	}
-@@ -3350,10 +3350,6 @@ static int mxt_configure_objects(struct mxt_data *data,
- 	mxt_debug_init(data);
- 
- 	return 0;
--
--err_free_object_table:
--	mxt_free_object_table(data);
--	return error;
- }
- 
- /* Configuration crc check sum is returned as hex xxxxxx */
-@@ -4142,11 +4138,13 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 
- 	error = mxt_initialize(data);
- 	if (error)
--		goto err_sysfs_remove_group;
-+		goto err_free_object;
- 
- 	return 0;
- 
--err_sysfs_remove_group:
-+err_free_object:
-+	mxt_free_input_device(data);
-+	mxt_free_object_table(data);
- 	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
- 	return error;
- }
+ 	dev_info(&client->dev,
 -- 
 2.19.2
 
