@@ -2,67 +2,105 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DC6C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E698C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 19:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 608F2206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 504A42171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 19:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727633AbfHPS63 (ORCPT
+        id S1727572AbfHPTBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 14:58:29 -0400
-Received: from mga03.intel.com ([134.134.136.65]:47555 "EHLO mga03.intel.com"
+        Fri, 16 Aug 2019 15:01:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45226 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727466AbfHPS63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 14:58:29 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 11:58:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,394,1559545200"; 
-   d="scan'208";a="179753626"
-Received: from dpalikow-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.34.140])
-  by orsmga003.jf.intel.com with ESMTP; 16 Aug 2019 11:58:25 -0700
-Date:   Fri, 16 Aug 2019 21:58:23 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     joe@perches.com, linux-kernel@vger.kernel.org,
-        Denis Kenzior <denkenz@gmail.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org
-Subject: Re: [RESEND PATCH] MAINTAINERS: keys: Update path to trusted.h
-Message-ID: <20190816185823.kjuxqfegpsywulkn@linux.intel.com>
-References: <20190815215712.tho3fdfk43rs45ej@linux.intel.com>
- <20190815221200.3465-1-efremov@linux.com>
+        id S1727067AbfHPTBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 15:01:22 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4F8DF30821A1;
+        Fri, 16 Aug 2019 19:01:22 +0000 (UTC)
+Received: from [10.10.123.64] (ovpn-123-64.rdu2.redhat.com [10.10.123.64])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 81D625C1D6;
+        Fri, 16 Aug 2019 19:01:21 +0000 (UTC)
+Subject: Re: [PATCH v4 06/10] modpost: Add modinfo flag to livepatch modules
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+References: <20190509143859.9050-1-joe.lawrence@redhat.com>
+ <20190509143859.9050-7-joe.lawrence@redhat.com>
+ <CAK7LNAQuS-YcXecfJ21BGzc0CimzWxQcYST5-1xRgnCQGtcL4A@mail.gmail.com>
+ <20190812155626.GA19845@redhat.com>
+ <CAK7LNATRLTBqA9c=b+Y38T-zWc9o5JMq18r9auA=enPC=p10pA@mail.gmail.com>
+ <alpine.LSU.2.21.1908161016430.2020@pobox.suse.cz>
+ <6c7e4d19-b993-1c14-d6cf-6aa1ee891361@redhat.com>
+Message-ID: <163ad1fb-ccbf-0a3e-d795-2bb748a0e88f@redhat.com>
+Date:   Fri, 16 Aug 2019 15:01:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815221200.3465-1-efremov@linux.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+In-Reply-To: <6c7e4d19-b993-1c14-d6cf-6aa1ee891361@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 16 Aug 2019 19:01:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 01:12:00AM +0300, Denis Efremov wrote:
-> Update MAINTAINERS record to reflect that trusted.h
-> was moved to a different directory in commit 22447981fc05
-> ("KEYS: Move trusted.h to include/keys [ver #2]").
+On 8/16/19 8:43 AM, Joe Lawrence wrote:
+> On 8/16/19 4:19 AM, Miroslav Benes wrote:
+>> Hi,
+>>
+>>> I cleaned up the build system, and pushed it based on my
+>>> kbuild tree.
+>>>
+>>> Please see:
+>>>
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+>>> klp-cleanup
+>>
+>> This indeed looks much simpler and cleaner (as far as I can judge with my
+>> limited kbuild knowledge). We just need to remove MODULE_INFO(livepatch,
+>> "Y") from lib/livepatch/test_klp_convert_mod_a.c to make it compile and
+>> work (test_klp_convert_mod_a is not a livepatch module, it is just a dummy
+>> module which is then livepatched by lib/livepatch/test_klp_convert1.c).
+>>
 > 
-> Cc: Denis Kenzior <denkenz@gmail.com>
-> Cc: James Bottomley <jejb@linux.ibm.com>
-> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Cc: Mimi Zohar <zohar@linux.ibm.com>
-> Cc: linux-integrity@vger.kernel.org
-> Signed-off-by: Denis Efremov <efremov@linux.com>
+> Yeah, Masahiro this is great, thanks for reworking this!
+> 
+> I did tweak one module like Miroslav mentioned and I think a few of the
+> newly generated files need to be cleaned up as part of "make clean", but
+> all said, this is a nice improvement.
+> 
 
-Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Well actually, now I see this comment in the top-level Makefile:
 
-/Jarkko
+# Cleaning is done on three levels. 
+
+# make clean     Delete most generated files 
+
+#                Leave enough to build external modules 
+
+# make mrproper  Delete the current configuration, and all generated 
+files
+# make distclean Remove editor backup files, patch leftover files and 
+the like
+
+I didn't realize that we're supposed to be able to still build external 
+modules after "make clean".  If that's the case, then one might want to 
+build an external klp-module after doing that.
+
+With that in mind, shouldn't Symbols.list to persist until mrproper? 
+And I think modules-livepatch could go away during clean, what do you think?
+
+-- Joe
