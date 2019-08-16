@@ -2,128 +2,57 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94226C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8C5C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF2520644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7A520644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfHPMcS (ORCPT
+        id S1727304AbfHPMdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:32:18 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48010 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbfHPMcR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:32:17 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id BFCDE28D1AD
-Message-ID: <4708223638fb8aa6214a58cb9a05c525625020cf.camel@collabora.com>
-Subject: Re: [PATCH v6 07/11] media: cedrus: Specify H264 startcode and
- decoding mode
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
-Date:   Fri, 16 Aug 2019 09:32:07 -0300
-In-Reply-To: <a7dab464-5be0-ff9d-7547-735a83e87e14@xs4all.nl>
-References: <20190814195931.6587-1-ezequiel@collabora.com>
-         <20190814195931.6587-8-ezequiel@collabora.com>
-         <a7dab464-5be0-ff9d-7547-735a83e87e14@xs4all.nl>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 16 Aug 2019 08:33:03 -0400
+Received: from verein.lst.de ([213.95.11.211]:55163 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727215AbfHPMdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 08:33:03 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 87FE068B05; Fri, 16 Aug 2019 14:32:58 +0200 (CEST)
+Date:   Fri, 16 Aug 2019 14:32:58 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas@shipmail.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Steven Price <steven.price@arm.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Minchan Kim <minchan@kernel.org>
+Subject: Re: cleanup the walk_page_range interface
+Message-ID: <20190816123258.GA22140@lst.de>
+References: <20190808154240.9384-1-hch@lst.de> <CAHk-=wh3jZnD3zaYJpW276WL=N0Vgo4KGW8M2pcFymHthwf0Vg@mail.gmail.com> <20190816062751.GA16169@infradead.org> <20190816115735.GB5412@mellanox.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816115735.GB5412@mellanox.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-16 at 09:38 +0200, Hans Verkuil wrote:
-> On 8/14/19 9:59 PM, Ezequiel Garcia wrote:
-> > The cedrus VPU is slice-based and expects V4L2_PIX_FMT_H264_SLICE
-> > buffers to contain H264 slices with no start code.
-> > 
-> > Expose this to userspace with the newly added menu control.
-> > 
-> > These two controls are specified as mandatory for applications,
-> > but we mark them as non-required on the driver side for
-> > backwards compatibility.
-> > 
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> > Changes in v6:
-> > * Adjust to control renames.
-> > Changes in v5:
-> > * Clarify commit log.
-> > Changes in v4:
-> > * New patch.
-> > ---
-> >  drivers/staging/media/sunxi/cedrus/cedrus.c | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> > 
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
-> > index 7bdc413bf727..69a836aa11ef 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-> > @@ -77,6 +77,26 @@ static const struct cedrus_control cedrus_controls[] = {
-> >  		.codec		= CEDRUS_CODEC_H264,
-> >  		.required	= true,
-> >  	},
-> > +	{
-> > +		.cfg = {
-> > +			.id	= V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE,
-> > +			.max	= V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
-> > +			.def	= V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
-> > +			.menu_skip_mask = BIT(V4L2_MPEG_VIDEO_H264_DECODE_MODE_FRAME_BASED),
+On Fri, Aug 16, 2019 at 11:57:40AM +0000, Jason Gunthorpe wrote:
+> Are there conflicts with trees other than hmm?
 > 
-> You don't need this: DECODE_MODE_FRAME_BASED > DECODE_MODE_SLICE_BASED (the max
-> value). So no need to set the skip_mask since it is out of range.
-> 
-> > +		},
-> > +		.codec		= CEDRUS_CODEC_H264,
-> > +		.required	= false,
-> > +	},
-> > +	{
-> > +		.cfg = {
-> > +			.id	= V4L2_CID_MPEG_VIDEO_H264_START_CODE,
-> > +			.max	= V4L2_MPEG_VIDEO_H264_START_CODE_NONE,
-> > +			.def	= V4L2_MPEG_VIDEO_H264_START_CODE_NONE,
-> > +			.menu_skip_mask = BIT(V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B),
-> 
-> Ditto.
-> 
+> We can put it on a topic branch and merge to hmm to resolve. If hmm
+> has problems then send the topic on its own?
 
-I see.
-
-I'll fix this.
-
-> Regards,
-> 
-> 	Hans
-> 
-> > +		},
-> > +		.codec		= CEDRUS_CODEC_H264,
-> > +		.required	= false,
-> > +	},
-> >  };
-> >  
-> >  #define CEDRUS_CONTROLS_COUNT	ARRAY_SIZE(cedrus_controls)
-> > 
-
-
+I see two new walk_page_range user in linux-next related to MADV_COLD
+support (which probably really should use walk_range_vma), and then
+there is the series from Steven, which hasn't been merged yet.
