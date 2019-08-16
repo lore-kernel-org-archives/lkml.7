@@ -2,240 +2,99 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A58C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CEBC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D952064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:08:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="nisw2a0M"
+	by mail.kernel.org (Postfix) with ESMTP id B16022064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 11:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfHPLIb (ORCPT
+        id S1727119AbfHPLNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 07:08:31 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:55368 "EHLO pegase1.c-s.fr"
+        Fri, 16 Aug 2019 07:13:49 -0400
+Received: from mga01.intel.com ([192.55.52.88]:53004 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbfHPLIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 07:08:31 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4690tN0ztGz9tyXc;
-        Fri, 16 Aug 2019 13:08:28 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=nisw2a0M; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id rOQecgCZoVsr; Fri, 16 Aug 2019 13:08:28 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4690tM6lT4z9tyXZ;
-        Fri, 16 Aug 2019 13:08:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1565953707; bh=M8TmnMgqiEUqa00ZLjLvTtb8lkDUJUd6Le/yWsuZAfU=;
-        h=From:Subject:To:Cc:Date:From;
-        b=nisw2a0Mhsj2nAIsiZBffv8AFVHIwjCoef9b16Xx44Hh+yb13qLlghRyksqYp1LpE
-         UObL+qtnxS717f0fMDlqpJw02dPm2hGbHXWL6YYJcbtJn6zlpOiK0Wz7X0NHaJSObW
-         XEg1+WvKQIjqY2Xhp7xj0leif14ryivaSIBJ6dkE=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 54D158B776;
-        Fri, 16 Aug 2019 13:08:29 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 5fiyqpe0E5h4; Fri, 16 Aug 2019 13:08:29 +0200 (CEST)
-Received: from pc17473vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2E5AA8B754;
-        Fri, 16 Aug 2019 13:08:29 +0200 (CEST)
-Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 071D9698B9; Fri, 16 Aug 2019 11:08:28 +0000 (UTC)
-Message-Id: <740c6923c313ff0c0c2394480d5691465919b52f.1565953624.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/32: Add VDSO version of getcpu
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 16 Aug 2019 11:08:28 +0000 (UTC)
+        id S1727007AbfHPLNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 07:13:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 04:13:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,393,1559545200"; 
+   d="scan'208";a="188785382"
+Received: from mprabhug-mobl1.amr.corp.intel.com (HELO [10.252.132.82]) ([10.252.132.82])
+  by orsmga002.jf.intel.com with ESMTP; 16 Aug 2019 04:13:47 -0700
+Subject: Re: [alsa-devel] [PATCH v2 0/3] soundwire: debugfs support for 5.4
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, slawomir.blauciak@intel.com
+References: <20190812235942.7120-1-pierre-louis.bossart@linux.intel.com>
+ <20190816094308.GA12733@vkoul-mobl.Dlink>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <9f4789b2-66bd-4b17-2b13-934348a18691@linux.intel.com>
+Date:   Fri, 16 Aug 2019 06:13:46 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190816094308.GA12733@vkoul-mobl.Dlink>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 18ad51dd342a ("powerpc: Add VDSO version of getcpu") added
-getcpu() for PPC64 only, by making use of a user readable general
-purpose SPR.
 
-PPC32 doesn't have any such SPR, a full system call can still be
-avoided by implementing a fast system call which reads the CPU id
-in the task struct and returns immediately without going back in
-virtual mode.
 
-Before the patch, vdsotest reported:
-getcpu: syscall: 1572 nsec/call
-getcpu:    libc: 1787 nsec/call
-getcpu:    vdso: not tested
+On 8/16/19 4:43 AM, Vinod Koul wrote:
+> On 12-08-19, 18:59, Pierre-Louis Bossart wrote:
+>> This patchset enables debugfs support and corrects all the feedback
+>> provided on an earlier RFC ('soundwire: updates for 5.4')
+>>
+>> There is one remaining hard-coded value in intel.c that will need to
+>> be fixed in a follow-up patchset not specific to debugfs: we need to
+>> remove hard-coded Intel-specific configurations from cadence_master.c
+>> (PDI offsets, etc).
+>>
+>> Changes since v1 (Feedback from GKH)
+>> Handle debugfs in a more self-contained way (no dentry as return or parameter)
+>> Used CONFIG_DEBUG_FS in structures and code to make it easier to
+>> remove if need be.
+>> No functional change for register dumps.
+>>
+>> Changes since RFC (Feedback from GKH, Vinod, Guennadi, Cezary, Sanyog):
+>> removed error checks
+>> used DEFINE_SHOW_ATTRIBUTE and seq_file
+>> fixed copyright dates
+>> fixed SPDX license info to use GPL2.0 only
+>> fixed Makefile to include debugfs only if CONFIG_DEBUG_FS is selected
+>> used static inlines for fallback compilation
+>> removed intermediate variables
+>> removed hard-coded constants in loops (used registers offsets and
+>> hardware capabilities)
+>> squashed patch 3
+> 
+> These looks good but failed to apply. Please rebase on soundwire-next
+> and resend
 
-Now, vdsotest reports:
-getcpu: syscall: 1582 nsec/call
-getcpu:    libc: 667 nsec/call
-getcpu:    vdso: 368 nsec/call
+Could you do us a favor and make sure your soundwire/fixes branch is 
+actually merged in soundwire/next? in this case the Makefile is changed 
+in soundwire/fixes and not in next.
+If you use git am --3way things work fine and the conflict is resolved.
 
-For non SMP, just return CPU id 0 from the VDSO directly.
-
-PPC32 doesn't support CONFIG_NUMA so NUMA node is always 0.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/include/asm/vdso.h         |  2 ++
- arch/powerpc/kernel/head_32.h           | 13 +++++++++++++
- arch/powerpc/kernel/head_booke.h        | 11 +++++++++++
- arch/powerpc/kernel/vdso32/Makefile     |  4 +---
- arch/powerpc/kernel/vdso32/getcpu.S     |  7 +++++++
- arch/powerpc/kernel/vdso32/vdso32.lds.S |  2 --
- 6 files changed, 34 insertions(+), 5 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/vdso.h b/arch/powerpc/include/asm/vdso.h
-index b5e1f8f8a05c..adb54782df5f 100644
---- a/arch/powerpc/include/asm/vdso.h
-+++ b/arch/powerpc/include/asm/vdso.h
-@@ -16,6 +16,8 @@
- /* Define if 64 bits VDSO has procedure descriptors */
- #undef VDS64_HAS_DESCRIPTORS
- 
-+#define NR_MAGIC_FAST_VDSO_SYSCALL	0x789a
-+
- #ifndef __ASSEMBLY__
- 
- /* Offsets relative to thread->vdso_base */
-diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
-index 4a692553651f..a2e38b59785a 100644
---- a/arch/powerpc/kernel/head_32.h
-+++ b/arch/powerpc/kernel/head_32.h
-@@ -3,6 +3,8 @@
- #define __HEAD_32_H__
- 
- #include <asm/ptrace.h>	/* for STACK_FRAME_REGS_MARKER */
-+#include <asm/vdso.h>
-+#include <asm/asm-offsets.h>
- 
- /*
-  * MSR_KERNEL is > 0x8000 on 4xx/Book-E since it include MSR_CE.
-@@ -74,7 +76,13 @@
- .endm
- 
- .macro SYSCALL_ENTRY trapno
-+#ifdef CONFIG_SMP
-+	cmplwi	cr0, r0, NR_MAGIC_FAST_VDSO_SYSCALL
-+#endif
- 	mfspr	r12,SPRN_SPRG_THREAD
-+#ifdef CONFIG_SMP
-+	beq-	1f
-+#endif
- 	mfcr	r10
- 	lwz	r11,TASK_STACK-THREAD(r12)
- 	mflr	r9
-@@ -152,6 +160,11 @@
- 	mtspr	SPRN_SRR0,r11
- 	SYNC
- 	RFI				/* jump to handler, enable MMU */
-+#ifdef CONFIG_SMP
-+1:
-+	lwz	r5, TASK_CPU - THREAD(r12)
-+	RFI
-+#endif
- .endm
- 
- /*
-diff --git a/arch/powerpc/kernel/head_booke.h b/arch/powerpc/kernel/head_booke.h
-index 2ae635df9026..c534e87cac84 100644
---- a/arch/powerpc/kernel/head_booke.h
-+++ b/arch/powerpc/kernel/head_booke.h
-@@ -3,6 +3,8 @@
- #define __HEAD_BOOKE_H__
- 
- #include <asm/ptrace.h>	/* for STACK_FRAME_REGS_MARKER */
-+#include <asm/vdso.h>
-+#include <asm/asm-offsets.h>
- #include <asm/kvm_asm.h>
- #include <asm/kvm_booke_hv_asm.h>
- 
-@@ -104,6 +106,10 @@ FTR_SECTION_ELSE
- #ifdef CONFIG_KVM_BOOKE_HV
- ALT_FTR_SECTION_END_IFSET(CPU_FTR_EMB_HV)
- #endif
-+#ifdef CONFIG_SMP
-+	cmplwi	cr0, r0, NR_MAGIC_FAST_VDSO_SYSCALL
-+	beq-	1f
-+#endif
- 	BOOKE_CLEAR_BTB(r11)
- 	lwz	r11, TASK_STACK - THREAD(r10)
- 	rlwinm	r12,r12,0,4,2	/* Clear SO bit in CR */
-@@ -176,6 +182,11 @@ ALT_FTR_SECTION_END_IFSET(CPU_FTR_EMB_HV)
- 	mtspr	SPRN_SRR0,r11
- 	SYNC
- 	RFI				/* jump to handler, enable MMU */
-+#ifdef CONFIG_SMP
-+1:
-+	lwz	r5, TASK_CPU - THREAD(r10)
-+	RFI
-+#endif
- .endm
- 
- /* To handle the additional exception priority levels on 40x and Book-E
-diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
-index 06f54d947057..e147bbdc12cd 100644
---- a/arch/powerpc/kernel/vdso32/Makefile
-+++ b/arch/powerpc/kernel/vdso32/Makefile
-@@ -2,9 +2,7 @@
- 
- # List of files in the vdso, has to be asm only for now
- 
--obj-vdso32-$(CONFIG_PPC64) = getcpu.o
--obj-vdso32 = sigtramp.o gettimeofday.o datapage.o cacheflush.o note.o \
--		$(obj-vdso32-y)
-+obj-vdso32 = sigtramp.o gettimeofday.o datapage.o cacheflush.o note.o getcpu.o
- 
- # Build rules
- 
-diff --git a/arch/powerpc/kernel/vdso32/getcpu.S b/arch/powerpc/kernel/vdso32/getcpu.S
-index 63e914539e1a..bd67a0c25c86 100644
---- a/arch/powerpc/kernel/vdso32/getcpu.S
-+++ b/arch/powerpc/kernel/vdso32/getcpu.S
-@@ -17,7 +17,14 @@
-  */
- V_FUNCTION_BEGIN(__kernel_getcpu)
-   .cfi_startproc
-+#if defined(CONFIG_PPC64)
- 	mfspr	r5,SPRN_SPRG_VDSO_READ
-+#elif defined (CONFIG_SMP)*/
-+	li	r0, NR_MAGIC_FAST_VDSO_SYSCALL
-+	sc	/* returns cpuid in r5, clobbers cr0 and r10-r13 */
-+#else
-+	li	r5, 0
-+#endif
- 	cmpwi	cr0,r3,0
- 	cmpwi	cr1,r4,0
- 	clrlwi  r6,r5,16
-diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-index 099a6db14e67..663880671e20 100644
---- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
-+++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-@@ -152,9 +152,7 @@ VERSION
- 		__kernel_sync_dicache_p5;
- 		__kernel_sigtramp32;
- 		__kernel_sigtramp_rt32;
--#ifdef CONFIG_PPC64
- 		__kernel_getcpu;
--#endif
- 		__kernel_time;
- 
- 	local: *;
--- 
-2.13.3
-
+Applying: soundwire: add debugfs support
+Using index info to reconstruct a base tree...
+M	drivers/soundwire/Makefile
+M	include/linux/soundwire/sdw.h
+Falling back to patching base and 3-way merge...
+Auto-merging include/linux/soundwire/sdw.h
+Auto-merging drivers/soundwire/Makefile
+Applying: soundwire: cadence_master: add debugfs register dump
+Applying: soundwire: intel: add debugfs register dump
