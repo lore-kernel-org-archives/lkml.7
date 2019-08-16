@@ -2,114 +2,135 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A47AC41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2662FC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E56D82064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565957857;
-	bh=p30UOZ19eVYet8+i39bBRxoGlJ8P/Tx6etF+/KBzOj4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ezcmOHLaVM07hnZVpILxNwga+gReX3J5THMsbJghlCybxnNOaZ35G2bF9dP7PLp7q
-	 9ZiSiPU9wNjzeZ5hpm+o63FFhJnUPqqXbs5XuESrh09tM5SD1UBsd8apN3MMhyEoU8
-	 PL3odYfu0POlBRlHACkC+AMKv8HGcYQkAybMkPP4=
+	by mail.kernel.org (Postfix) with ESMTP id ED6A02171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:19:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jlEJuZ04"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfHPMRg (ORCPT
+        id S1727251AbfHPMTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:17:36 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36584 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbfHPMRf (ORCPT
+        Fri, 16 Aug 2019 08:19:08 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46153 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727127AbfHPMTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:17:35 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k18so9460219otr.3;
-        Fri, 16 Aug 2019 05:17:35 -0700 (PDT)
+        Fri, 16 Aug 2019 08:19:08 -0400
+Received: by mail-qt1-f194.google.com with SMTP id j15so5783448qtl.13
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 05:19:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bEaXAj2iniWEaSuyn0fH/kEDTRkIl1c5/RWuNELkR8k=;
+        b=jlEJuZ04r4FfQRnSsDTdZ15gGG887mO3OlgLiS5KOdM/EzBvDtD+FVvFpCf4P/D/DI
+         frDzy0JvoZ4ASbRUxBfxq+VBafmy6i1RohHZRDHW1JuD0RUOantYkeDrGj6nJAu3OzhD
+         f+/Ek9pkIMkSwoxSy/qgajjsD1TfTK+u5nMYCCwMirwVEjP7Crpcx0vKg0u+issupd6f
+         ytBhCE03xW7wOtyBD2RlHnjr3wEofPwarGLZUapHD3sOp9Ep2hSxfXwe0fbAsFdoQ95J
+         cIJ4g27qSF4DkzKx3Ql2/UzoVwZ9pTqSajKxBQ+YphcyHXFp5lofa0olwQDzdNLT9q32
+         IwOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c+E0MTqNRBEe9xkatPaAb5b/atYG4V6Eq0t4fHhQ7l4=;
-        b=dDQgkJ3q2WSLbfBMIj1lyRVP/chzsLN2s4Kskym3ZXmVihRqJtsSNPfWrRxNmOITLm
-         wqGUjOx3gt/LonlJByap5JWV1kHyEzoTmKK6ZVH8smY5rg/g0m2fe59oNtGshmcdTzcB
-         XWXKWNKeeb+5zMkTBWs8YCZdUMr02xgjWoG162Sk7vXnnY0258oN9p19YTfGfWVlEn2Q
-         DiS1+4YoquCWzFehjfgGdmnPkGQFAITxLCEHn07EDNAqXeEjdpnwD1n1vNy5DB6IqpIQ
-         cXUp2J46NBdVRC7hMozcjilADGFV9xP4QGgo8RU+HggeYUhXK0O5UdntJvJR30eRss/6
-         Q28A==
-X-Gm-Message-State: APjAAAU6HZQ+Hoo//yFqQyYlGAhgUMElee5e1Oy3U+aB2Yafe29DdN3p
-        aRICfd3qg+jvB0sgAVOHC0rR6oWjeU54JYuMp1Q=
-X-Google-Smtp-Source: APXvYqym7NDB50zYH7Yf+KESWoi1XYETeRiF8Jl2l+B2HiC/WoKKQwMz5cIVLInotMH/464Z+6+J5+xRniM1FVCYjSY=
-X-Received: by 2002:a9d:674c:: with SMTP id w12mr4137556otm.118.1565957854693;
- Fri, 16 Aug 2019 05:17:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <1565731976.8572.16.camel@lca.pw> <5d53b238.1c69fb81.d3cd3.cd53@mx.google.com>
- <20190814084014.GB52127@atomide.com> <CANA+-vDeSAYUNfTQzQPT2N_CUgvYr6i_LP_BdHT_zX+FPt8NHg@mail.gmail.com>
-In-Reply-To: <CANA+-vDeSAYUNfTQzQPT2N_CUgvYr6i_LP_BdHT_zX+FPt8NHg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 16 Aug 2019 14:17:23 +0200
-Message-ID: <CAJZ5v0hY8=0j=heXuAS-5cBafDSE8ZakLDW4NGCjAbxUAt3j4Q@mail.gmail.com>
-Subject: Re: "PM / wakeup: Show wakeup sources stats in sysfs" causes boot warnings
-To:     Tri Vo <trong@android.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Stephen Boyd <swboyd@chromium.org>, Qian Cai <cai@lca.pw>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bEaXAj2iniWEaSuyn0fH/kEDTRkIl1c5/RWuNELkR8k=;
+        b=kHr2e5hzINQqCHMg3a0Pwg/DCZ39B0iHWfpBytvbP5yvaosuEeaYzVoiZo/otnllfQ
+         amgyEnYuuqYh9m13r73xPIUHLg0Ruf3D03Hvo6jNgG0DTH7JdZJjb7nYrhM28FYQiyUW
+         7Mzuci8hjd/l69/kNiuJxs4j9EX9Liid6hRu2RgWy+ttBzdowPr44xoS2vPUyStGkC4O
+         xhKNAkHHxrJaXCdWVdfNDtVf56ijvElGxgGlMYSDZ1eraANN863LIM0CxK97IjOLedrZ
+         gqx7WEQmGYfpqIZ/uu2/VHlfmh7wfweP3wp0EoYxX7GeWU2BTPaR6oAnXEXi5D+7ntiF
+         3fZA==
+X-Gm-Message-State: APjAAAVX17ap9kiWnP31pzMLoz5ECsZS7SKgXg93NXA2QcazSjy45ufO
+        9QpktpaHpbiHPBWrzWpr2t8wjg==
+X-Google-Smtp-Source: APXvYqwJ0xLOCEoe5le7pO6VtEfZW/wyQ9tx0UXL7Cr/GZtD4aFsgQFkuJBiYfOrdvN1joh+5J6bkg==
+X-Received: by 2002:ac8:5503:: with SMTP id j3mr8391055qtq.355.1565957947384;
+        Fri, 16 Aug 2019 05:19:07 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id f27sm2963616qkl.25.2019.08.16.05.19.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 16 Aug 2019 05:19:06 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hybCE-0001q2-67; Fri, 16 Aug 2019 09:19:06 -0300
+Date:   Fri, 16 Aug 2019 09:19:06 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 2/5] kernel.h: Add non_block_start/end()
+Message-ID: <20190816121906.GC5398@ziepe.ca>
+References: <20190815141219.GF21596@ziepe.ca>
+ <20190815155950.GN9477@dhcp22.suse.cz>
+ <20190815165631.GK21596@ziepe.ca>
+ <20190815174207.GR9477@dhcp22.suse.cz>
+ <20190815182448.GP21596@ziepe.ca>
+ <20190815190525.GS9477@dhcp22.suse.cz>
+ <20190815191810.GR21596@ziepe.ca>
+ <20190815193526.GT9477@dhcp22.suse.cz>
+ <20190815201323.GU21596@ziepe.ca>
+ <20190816081029.GA27790@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816081029.GA27790@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 8:37 PM Tri Vo <trong@android.com> wrote:
->
-> On Wed, Aug 14, 2019 at 1:40 AM Tony Lindgren <tony@atomide.com> wrote:
-> >
-> > * Stephen Boyd <swboyd@chromium.org> [691231 23:00]:
-> > > I also notice that device_set_wakeup_capable() has a check to see if the
-> > > device is registered yet and it skips creating sysfs entries for the
-> > > device if it isn't created in sysfs yet. Why? Just so it can be called
-> > > before the device is created? I guess the same logic is handled by
-> > > dpm_sysfs_add() if the device is registered after calling
-> > > device_set_wakeup_*().
-> >
-> > Hmm just guessing.. It's maybe because drivers can enable and disable
-> > the wakeup capability at any point for example like driver/net drivers
-> > do based on WOL etc?
-> >
-> > > There's two approaches I see:
-> > >
-> > >       1) Do a similar check for device_set_wakeup_enable() and skip
-> > >       adding the wakeup class until dpm_sysfs_add().
-> > >
-> > >       2) Find each case where this happens and only call wakeup APIs
-> > >       on the device after the device is added.
-> > >
-> > > I guess it's better to let devices have wakeup modified on them before
-> > > they're registered with the device core?
-> >
-> > I think we should at least initially handle case #1 above as multiple
-> > places otherwise seem to break. Then maybe we could add a warning to
-> > help fix all the #2 cases if needed?
->
-> Makes sense. For case#1, we could also just register the wakeup source
-> without specifying the parent device if the latter hasn't been
-> registered yet. Userspace won't be able to associate a wakeup source
-> to the parent device. But I think it's a reasonable fix, assuming we
-> want to fix devices not being added before calling wakeup APIs #2.
+On Fri, Aug 16, 2019 at 10:10:29AM +0200, Michal Hocko wrote:
+> On Thu 15-08-19 17:13:23, Jason Gunthorpe wrote:
+> > On Thu, Aug 15, 2019 at 09:35:26PM +0200, Michal Hocko wrote:
+> > 
+> > > > The last detail is I'm still unclear what a GFP flags a blockable
+> > > > invalidate_range_start() should use. Is GFP_KERNEL OK?
+> > > 
+> > > I hope I will not make this muddy again ;)
+> > > invalidate_range_start in the blockable mode can use/depend on any sleepable
+> > > allocation allowed in the context it is called from. 
+> > 
+> > 'in the context is is called from' is the magic phrase, as
+> > invalidate_range_start is called while holding several different mm
+> > related locks. I know at least write mmap_sem and i_mmap_rwsem
+> > (write?)
+> > 
+> > Can GFP_KERNEL be called while holding those locks?
+> 
+> i_mmap_rwsem would be problematic because it is taken during the
+> reclaim.
 
-Well, OK
+Okay.. So the fs_reclaim debugging does catch errors. Do you have any
+reference for what a false positive looks like? 
 
-I'm going to drop the entire series from linux-next at this point and
-let's start over.
+I would like to inject it into the notifier path as this is very
+difficult for driver authors to discover and know about, but I'm
+worried about your false positive remark.
 
-Also note that all of this is not an issue until we start to add
-children under the device passed to device_set_wakeup_enable() and
-friends so maybe that is not a good idea after all?
+I think I understand we can use only GFP_ATOMIC in the notifiers, but
+we need a strategy to handle OOM to guarentee forward progress.
+
+This is just more bugs to fix :(
+
+Jason
