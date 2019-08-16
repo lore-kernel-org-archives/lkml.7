@@ -2,166 +2,120 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B408DC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E36F1C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABB62133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F7820644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:45:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="O0xVAwPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfHPGpO (ORCPT
+        id S1726992AbfHPGph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:45:14 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51097 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfHPGpN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:45:13 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hyVz3-0007BQ-Lk; Fri, 16 Aug 2019 08:45:09 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hyVz2-0005zZ-9y; Fri, 16 Aug 2019 08:45:08 +0200
-Date:   Fri, 16 Aug 2019 08:45:08 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de, Orson Zhai <orsonzhai@gmail.com>
-Subject: Re: [PATCH v3 2/2] pwm: sprd: Add Spreadtrum PWM support
-Message-ID: <20190816064508.5tyimuqcjcr2hbkp@pengutronix.de>
-References: <20190814150304.x44lalde3cwp67ge@pengutronix.de>
- <CAMz4kuLiS=cGTA=uEi9ABOVAOb1M0Pcd2a_xU5VsdLo1DGd0Hg@mail.gmail.com>
- <20190815061540.763ue2ogkvuyhzcu@pengutronix.de>
- <CAMz4kuL_74V3M-8Zo99GnLaYbmgfQXO-h0Yz5qeXLQQ0ZR3TkA@mail.gmail.com>
- <20190815085452.2cipewq3l3krnwzv@pengutronix.de>
- <CAMz4kuJs7pCXWyWd_WMK24JeLOzdVC8zPacRTp91nyTYDDdk5g@mail.gmail.com>
- <20190815101147.azbbjcvafwjx67wc@pengutronix.de>
- <CAMz4ku+AAGC6TgxOA5EZGFeqpsq_Q8=S+DkDk9Rm_G=yAshJ0w@mail.gmail.com>
- <20190815122518.hzy57s635ubohywh@pengutronix.de>
- <CAMz4kuJBbTrR9+7XfDhRtmJovFJnne_RPGrdOYe09mdRDrDrig@mail.gmail.com>
+        Fri, 16 Aug 2019 02:45:37 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:53152 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbfHPGph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 02:45:37 -0400
+Received: from zn.tnic (p200300EC2F0A920041519BC41B2ACCA3.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9200:4151:9bc4:1b2a:cca3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 307A51EC074B;
+        Fri, 16 Aug 2019 08:45:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565937936;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=yoiKixPe5qr94uGkb8tkzi///jkObvb6JYyEAla0DjE=;
+        b=O0xVAwPtn9ffg8o8RxBw/t0wIiKzBpv0igzPdnKXaTs45O9vreIMwSE55EnGOaf+yarp3L
+        QGGogq9l8ts/nBcSxLmTD9SVcRzeUalJD5wbIYV59q46WUtckjT1/d/OspA9P4unNe0+YH
+        TP1mce8yB+bIkNWK3rUHxtuN5jW3WpY=
+Date:   Fri, 16 Aug 2019 08:46:25 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain
+ asm/intel-family.h
+Message-ID: <20190816064625.GD18980@zn.tnic>
+References: <20190814234030.30817-1-tony.luck@intel.com>
+ <20190815075822.GC15313@zn.tnic>
+ <20190815172159.GA4935@agluck-desk2.amr.corp.intel.com>
+ <20190815175455.GJ15313@zn.tnic>
+ <20190815183055.GA6847@agluck-desk2.amr.corp.intel.com>
+ <alpine.DEB.2.21.1908152217070.1908@nanos.tec.linutronix.de>
+ <20190815224704.GA10025@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMz4kuJBbTrR9+7XfDhRtmJovFJnne_RPGrdOYe09mdRDrDrig@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190815224704.GA10025@agluck-desk2.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Baolin,
-
-On Fri, Aug 16, 2019 at 10:44:41AM +0800, Baolin Wang wrote:
-> On Thu, 15 Aug 2019 at 20:25, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> >
-> > On Thu, Aug 15, 2019 at 07:05:53PM +0800, Baolin Wang wrote:
-> > > On Thu, 15 Aug 2019 at 18:11, Uwe Kleine-König
-> > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > >
-> > > > Hello,
-> > > >
-> > > > On Thu, Aug 15, 2019 at 05:34:02PM +0800, Baolin Wang wrote:
-> > > > > On Thu, 15 Aug 2019 at 16:54, Uwe Kleine-König
-> > > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > > On Thu, Aug 15, 2019 at 04:16:32PM +0800, Baolin Wang wrote:
-> > > > > > > On Thu, 15 Aug 2019 at 14:15, Uwe Kleine-König
-> > > > > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > > > > On Thu, Aug 15, 2019 at 11:34:27AM +0800, Baolin Wang wrote:
-> > > > > > > > > On Wed, 14 Aug 2019 at 23:03, Uwe Kleine-König
-> > > > > > > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > > > > > > On Wed, Aug 14, 2019 at 08:46:11PM +0800, Baolin Wang wrote:
-> > > > > > > > > > > +      * To keep the maths simple we're always using MOD = SPRD_PWM_MOD_MAX.
-> > > > > > > > > >
-> > > > > > > > > > Did you spend some thoughts about how wrong your period can get because
-> > > > > > > > > > of that "lazyness"?
-> > > > > > > > > >
-> > > > > > > > > > Let's assume a clk rate of 100/3 MHz. Then the available period lengths
-> > > > > > > > > > are:
-> > > > > > > > > >
-> > > > > > > > > >         PRESCALE =  0  ->  period =   7.65 µs
-> > > > > > > > > >         PRESCALE =  1  ->  period =  15.30 µs
-> > > > > > > > > >         ...
-> > > > > > > > > >         PRESCALE = 17  ->  period = 137.70 µs
-> > > > > > > > > >         PRESCALE = 18  ->  period = 145.35 µs
-> > > > > > > > > >
-> > > > > > > > > > So the error can be up to (nearly) 7.65 µs (or in general
-> > > > > > > > >
-> > > > > > > > > Yes, but for our use case (pwm backlight), the precision can meet our
-> > > > > > > > > requirement. Moreover, we usually do not change the period, just
-> > > > > > > > > adjust the duty to change the back light.
-> > > > > > > >
-> > > > > > > > Is this a license requirement for you SoC to only drive a backlight with
-> > > > > > > > the PWM? The idea of having a PWM driver on your platform is that it can
-> > > > > > > > also be used to control a step motor or a laser.
-> > > > > > >
-> > > > > > > Not a license requirement. Until now we have not got any higher
-> > > > > > > precision requirements, and we've run this driver for many years in
-> > > > > > > our downstream kernel.
-> > > > > >
-> > > > > > I understood that you're not ambitious to do something better than "it
-> > > > > > worked for years".
-> > > > >
-> > > > > How do you know that?
-> > > >
-> > > > I showed you how you could match the requested PWM output better and
-> > > > you refused telling it worked for years and the added precision isn't
-> > > > necessary for a backlight.
-> > >
-> > > Please I said the reason, it is not that I do not want a better
-> > > precision. The problem is we do not know how much precision to be
-> > > asked by users if no use case
-> >
-> > I don't understand the problem here. If you are asked for period =
-> > 145340 ns and configure the hardware to yield 137700 ns in reply to that
-> > but you could provide 144780 ns I don't understand why you need a use
-> > case as 144780 ns is objectively better than 137700 ns. A better match
+On Thu, Aug 15, 2019 at 03:47:05PM -0700, Luck, Tony wrote:
+> On Thu, Aug 15, 2019 at 10:22:07PM +0200, Thomas Gleixner wrote:
+> > On Thu, 15 Aug 2019, Luck, Tony wrote:
+> > > On Thu, Aug 15, 2019 at 07:54:55PM +0200, Borislav Petkov wrote:
+> > So we should document the list of valid and usable ones and either fixup
+> > broken ones or document that they are historic ballast and not to be used
+> > for new ones. Otherwise you end up with the same discussions again.
 > 
-> You are wrong, we will provide 145350 ns with
-> DIV_ROUND_CLOSEST_ULL()., which is better than your 144780.
+> This version is a lot more specific (but still allows future
+> flexibility). I see a world of bike-shedding if I try to come
+> up with a naming scheme to fix previous questionable naming
+> choices ... I'm not going to open that can of worms.
+> 
+> -Tony
+> 
+> From 093bf8cd02f4c7a3fa256c2cf7302014190e2840 Mon Sep 17 00:00:00 2001
+> From: Tony Luck <tony.luck@intel.com>
+> Date: Thu, 15 Aug 2019 11:16:24 -0700
+> Subject: [PATCH] x86/cpu: Explain Intel model naming convention
+> 
+> Dave Hansen spelled out the rules in an e-mail:
+> 
+>  https://lkml.kernel.org/r/91eefbe4-e32b-d762-be4d-672ff915db47@intel.com
+> 
+> Copy those right into the <asm/intel-family.h> file to
+> make it easy for people to find them.
+> 
+> Suggested-by: Borislav Petkov <bp@alien8.de>
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  arch/x86/include/asm/intel-family.h | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+> index 0278aa66ef62..fe7c205233f1 100644
+> --- a/arch/x86/include/asm/intel-family.h
+> +++ b/arch/x86/include/asm/intel-family.h
+> @@ -11,6 +11,21 @@
+>   * While adding a new CPUID for a new microarchitecture, add a new
+>   * group to keep logically sorted out in chronological order. Within
+>   * that group keep the CPUID for the variants sorted by model number.
+> + *
+> + * The defined symbol names have the following form:
+> + *	INTEL_FAM6{OPTFAMILY}_{MICROARCH}{OPTDIFF}
 
-There are two problems with your statement:
+I think you want to have the underscores in the template:
 
- - You're ignoring the fact that I base my argumentation on not using
-   DIV_ROUND_CLOSEST_ULL because it has downsides I pointed out to you.
-   If my suggested algorithm targeted a closest match (and not
-   closest-but-not-bigger) it would pick 145350 ns, too. (I didn't check
-   if something in the interval [145331, 145349] could be achieved. If
-   there is, this should of course be preferred.)
-   I obviously would have to pick a different example request to show
-   that "targeting nearest with MOD always 255" is for some requests
-   worse (probably by a similar factor) than "targeting nearest".
-   It's not surprising that your apple is a better apple than my orange.
+	INTEL_FAM6_{OPTFAMILY}_{MICROARCH}_{OPTDIFF}
 
- - It's not objective that when 145340 ns was requested 145350 ns is
-   better than 144780 ns. Some approximations are obviously better than
-   others, but these two are not comparable in a way that all PWM
-   consumers agree.
-
-I'm not perfect and I do mistakes of course. But I'm still convinced
-that my argumentation here is right.
-
-Best regards
-Uwe
+but no need to resend if this is the only issue - I'll fix it up when
+applying.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
