@@ -2,147 +2,181 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F08CCC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C41EC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C419F2086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD612133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iLtynzXp"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="N9Q1lszF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfHPOTi (ORCPT
+        id S1727360AbfHPO05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 10:19:38 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46161 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727217AbfHPOTh (ORCPT
+        Fri, 16 Aug 2019 10:26:57 -0400
+Received: from mail.efficios.com ([167.114.142.138]:41450 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfHPO04 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 10:19:37 -0400
-Received: by mail-pg1-f196.google.com with SMTP id m3so2425593pgv.13
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 07:19:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=tBN0L54QMtDYld2dZHBXnZOaHPOrCsY9yGKAHJ7HtJ0=;
-        b=iLtynzXp2unH1FB4V6Qf4QmIe20CFCYKaGvYyJveb4LxrCW63jAtA3i9KRJeoxmJJJ
-         NK6IDGqtsnMNG1Kp/P8KjwSrredRdP9H3MvonGVmiFS3VouEsfA8pc2ebyf38oWLOigf
-         gl3KBPJUfHK7xBL4pKE9E3qXAPNOFMF1nrZzY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=tBN0L54QMtDYld2dZHBXnZOaHPOrCsY9yGKAHJ7HtJ0=;
-        b=Coz38mhjB/prDu9Dlb/ag9/QfCeVwSqjmlfH5rcD+myzKYyMqdkDLUL2u7Xj6I6sRF
-         7pc6hiy03WFixGQlp/WZyQ7fSaOtOe+ZiAXsI02nhEdDIi5av6ufrvXbQgCN5KsuLUi7
-         dcXyuLpCPlMgrVPdBvyYjFvgXj4cpxlLXriFMZB/sdOsi95CZ3iP2dhll3YtoyZA0S6G
-         xZrAQEsuXqtiRVwv35klYFNuLpopXkRfI070T7LqaLF4PA2xZiHo1spQcjCRjMC0xQYa
-         yRUlaTV2lhoxtCDKvFtw6plIJanAgs8oOEL/677pUGgtKRuJOCI0vEoA/zlr9aA2K880
-         R3qQ==
-X-Gm-Message-State: APjAAAUIMNaXh4D68XBWTlGBmQg8mw6l/XuScP3HKYJ5GMRYyWxfBxJv
-        EPwunNHaBaAolGizqxVvT326nw==
-X-Google-Smtp-Source: APXvYqwwzm10fJ3ctwq/5tUrgeLy9Mcr/LM5jM1mglSPuSxrCJ+a04sKYfNc0DSOUi94rf+krvKZlg==
-X-Received: by 2002:a62:198d:: with SMTP id 135mr10915627pfz.169.1565965176712;
-        Fri, 16 Aug 2019 07:19:36 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id p1sm6067967pff.44.2019.08.16.07.19.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 07:19:35 -0700 (PDT)
-Message-ID: <5d56bb77.1c69fb81.58e9d.1f86@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAJZ5v0hY8=0j=heXuAS-5cBafDSE8ZakLDW4NGCjAbxUAt3j4Q@mail.gmail.com>
-References: <1565731976.8572.16.camel@lca.pw> <5d53b238.1c69fb81.d3cd3.cd53@mx.google.com> <20190814084014.GB52127@atomide.com> <CANA+-vDeSAYUNfTQzQPT2N_CUgvYr6i_LP_BdHT_zX+FPt8NHg@mail.gmail.com> <CAJZ5v0hY8=0j=heXuAS-5cBafDSE8ZakLDW4NGCjAbxUAt3j4Q@mail.gmail.com>
-Subject: Re: "PM / wakeup: Show wakeup sources stats in sysfs" causes boot warnings
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Tony Lindgren <tony@atomide.com>, Qian Cai <cai@lca.pw>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Fri, 16 Aug 2019 10:26:56 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 0C0642C5488;
+        Fri, 16 Aug 2019 10:26:55 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id 0fhhrkBioaPA; Fri, 16 Aug 2019 10:26:54 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 5805E2C5482;
+        Fri, 16 Aug 2019 10:26:54 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 5805E2C5482
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1565965614;
+        bh=iv5HRQ6OkRkJ/Hf3iplLYJ2enbTgUjEJAUMw9DOMKqg=;
+        h=From:To:Date:Message-Id;
+        b=N9Q1lszF8gNgCfJsN5NGp9bLpt4EAjKRzV/XSAP4wdF/w/sgF3FG847G2rjd7QXJh
+         EHQVly0mSzgJWbBuGhux+9edn9wBi+79gUN+MyrCg+wyQCfKd1VML36E0lnq92FLXz
+         v2LswUY5Sc7cYQSQtOoVd51J7DofrnVDcL/pnqOEnBLiIhRLDMuZiEP/8USr3QiOs1
+         CMxoZ+QmDVvbElXYulyBSNKtKjzX9/v9+9OWE1J2Xmg3JML+i0OW6IW3mGyhnOBoPY
+         tPl4WxXGg51avYa8ArWzQfCJ58il6kOW6tqfuy1CHya+O5J7jXoJkOUlLSdW2CbaRb
+         EIAR5H/YsiAxA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 03ZSjcovp2hx; Fri, 16 Aug 2019 10:26:54 -0400 (EDT)
+Received: from thinkos.internal.efficios.com (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id 0C6212C5478;
+        Fri, 16 Aug 2019 10:26:54 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>, Tri Vo <trong@android.com>
-User-Agent: alot/0.8.1
-Date:   Fri, 16 Aug 2019 07:19:35 -0700
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
+Date:   Fri, 16 Aug 2019 10:26:43 -0400
+Message-Id: <20190816142643.13758-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <00000000000076ecf3059030d3f1@google.com>
+References: <00000000000076ecf3059030d3f1@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rafael J. Wysocki (2019-08-16 05:17:23)
-> On Wed, Aug 14, 2019 at 8:37 PM Tri Vo <trong@android.com> wrote:
-> >
-> > On Wed, Aug 14, 2019 at 1:40 AM Tony Lindgren <tony@atomide.com> wrote:
-> > >
-> > > * Stephen Boyd <swboyd@chromium.org> [691231 23:00]:
-> > > > I also notice that device_set_wakeup_capable() has a check to see i=
-f the
-> > > > device is registered yet and it skips creating sysfs entries for the
-> > > > device if it isn't created in sysfs yet. Why? Just so it can be cal=
-led
-> > > > before the device is created? I guess the same logic is handled by
-> > > > dpm_sysfs_add() if the device is registered after calling
-> > > > device_set_wakeup_*().
-> > >
-> > > Hmm just guessing.. It's maybe because drivers can enable and disable
-> > > the wakeup capability at any point for example like driver/net drivers
-> > > do based on WOL etc?
-> > >
-> > > > There's two approaches I see:
-> > > >
-> > > >       1) Do a similar check for device_set_wakeup_enable() and skip
-> > > >       adding the wakeup class until dpm_sysfs_add().
-> > > >
-> > > >       2) Find each case where this happens and only call wakeup APIs
-> > > >       on the device after the device is added.
-> > > >
-> > > > I guess it's better to let devices have wakeup modified on them bef=
-ore
-> > > > they're registered with the device core?
-> > >
-> > > I think we should at least initially handle case #1 above as multiple
-> > > places otherwise seem to break. Then maybe we could add a warning to
-> > > help fix all the #2 cases if needed?
-> >
-> > Makes sense. For case#1, we could also just register the wakeup source
-> > without specifying the parent device if the latter hasn't been
-> > registered yet. Userspace won't be able to associate a wakeup source
-> > to the parent device. But I think it's a reasonable fix, assuming we
-> > want to fix devices not being added before calling wakeup APIs #2.
->=20
-> Well, OK
->=20
-> I'm going to drop the entire series from linux-next at this point and
-> let's start over.
+Reading the sched_cmdline_ref and sched_tgid_ref initial state within
+tracing_start_sched_switch without holding the sched_register_mutex is
+racy against concurrent updates, which can lead to tracepoint probes
+being registered more than once (and thus trigger warnings within
+tracepoint.c).
 
-I was going to send the first patch I floated as a more formal patch to
-be applied to the PM tree. I was waiting to see if the semantics of
-device_set_wakeup_*() could be clarified because I don't understand if
-they're allowed to be called before device_add().
+Also, write and read to/from those variables should be done with
+WRITE_ONCE() and READ_ONCE(), given that those are read within tracing
+probes without holding the sched_register_mutex.
 
->=20
-> Also note that all of this is not an issue until we start to add
-> children under the device passed to device_set_wakeup_enable() and
-> friends so maybe that is not a good idea after all?
+[ Compile-tested only. I suspect it might fix the following syzbot
+  report:
 
-My primary goal is to know what wakeup is associated with a device. If
-we delay creation of the sysfs node to the time that device_add() is
-called then it will allow device_set_wakeup_enable() to be called before
-the device is published to userspace. Is anything wrong with that? This
-seems to be the intention of the API based on the way
-device_set_wakeup_capable() is written. Furthermore, if we make this
-change then we don't need to fix various drivers to reorder calls to
-device_set_wakeup_enable() and device_add(), so it looks like the right
-approach.
+  syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com ]
 
-I'll send the patch over the list now and let you decide. I'll also send
-a patch for serio to have it operate on the device in a less racy way,
-but not necessarily after the device_add() is called.
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+CC: Joel Fernandes (Google) <joel@joelfernandes.org>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: Steven Rostedt (VMware) <rostedt@goodmis.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Paul E. McKenney <paulmck@linux.ibm.com>
+---
+ kernel/trace/trace_sched_switch.c | 32 ++++++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
+
+diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
+index e288168661e1..902e8bf59aeb 100644
+--- a/kernel/trace/trace_sched_switch.c
++++ b/kernel/trace/trace_sched_switch.c
+@@ -26,8 +26,8 @@ probe_sched_switch(void *ignore, bool preempt,
+ {
+ 	int flags;
+ 
+-	flags = (RECORD_TGID * !!sched_tgid_ref) +
+-		(RECORD_CMDLINE * !!sched_cmdline_ref);
++	flags = (RECORD_TGID * !!READ_ONCE(sched_tgid_ref)) +
++		(RECORD_CMDLINE * !!READ_ONCE(sched_cmdline_ref));
+ 
+ 	if (!flags)
+ 		return;
+@@ -39,8 +39,8 @@ probe_sched_wakeup(void *ignore, struct task_struct *wakee)
+ {
+ 	int flags;
+ 
+-	flags = (RECORD_TGID * !!sched_tgid_ref) +
+-		(RECORD_CMDLINE * !!sched_cmdline_ref);
++	flags = (RECORD_TGID * !!READ_ONCE(sched_tgid_ref)) +
++		(RECORD_CMDLINE * !!READ_ONCE(sched_cmdline_ref));
+ 
+ 	if (!flags)
+ 		return;
+@@ -89,21 +89,28 @@ static void tracing_sched_unregister(void)
+ 
+ static void tracing_start_sched_switch(int ops)
+ {
+-	bool sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
++	bool sched_register;
++
+ 	mutex_lock(&sched_register_mutex);
++	sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
+ 
+ 	switch (ops) {
+ 	case RECORD_CMDLINE:
+-		sched_cmdline_ref++;
++		WRITE_ONCE(sched_cmdline_ref, sched_cmdline_ref + 1);
+ 		break;
+ 
+ 	case RECORD_TGID:
+-		sched_tgid_ref++;
++		WRITE_ONCE(sched_tgid_ref, sched_tgid_ref + 1);
+ 		break;
++
++	default:
++		WARN_ONCE(1, "Unsupported tracing op: %d", ops);
++		goto end;
+ 	}
+ 
+-	if (sched_register && (sched_cmdline_ref || sched_tgid_ref))
++	if (sched_register)
+ 		tracing_sched_register();
++end:
+ 	mutex_unlock(&sched_register_mutex);
+ }
+ 
+@@ -113,16 +120,21 @@ static void tracing_stop_sched_switch(int ops)
+ 
+ 	switch (ops) {
+ 	case RECORD_CMDLINE:
+-		sched_cmdline_ref--;
++		WRITE_ONCE(sched_cmdline_ref, sched_cmdline_ref - 1);
+ 		break;
+ 
+ 	case RECORD_TGID:
+-		sched_tgid_ref--;
++		WRITE_ONCE(sched_tgid_ref, sched_tgid_ref - 1);
+ 		break;
++
++	default:
++		WARN_ONCE(1, "Unsupported tracing op: %d", ops);
++		goto end;
+ 	}
+ 
+ 	if (!sched_cmdline_ref && !sched_tgid_ref)
+ 		tracing_sched_unregister();
++end:
+ 	mutex_unlock(&sched_register_mutex);
+ }
+ 
+-- 
+2.11.0
 
