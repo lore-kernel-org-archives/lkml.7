@@ -2,83 +2,128 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABBDC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94226C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6618020644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CF2520644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:32:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfHPMcC (ORCPT
+        id S1727291AbfHPMcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:32:02 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:37896 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727178AbfHPMcB (ORCPT
+        Fri, 16 Aug 2019 08:32:18 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48010 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbfHPMcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:32:01 -0400
-Received: by mail-io1-f70.google.com with SMTP id h4so3121995iol.5
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 05:32:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=wryiOfAG/Vz/DIYvCN28nq1K6mp/nU+skMXU68jljsg=;
-        b=V7h4jB+4Ttlrbf/Jbt93xDP7b0TeeH4uuvGue3KlY421XU5IB+AwYSV+UImlLlZ1LC
-         /eymj2bT/6id2IYXHDaXv1qC5g+jBKrcue6sqkAI97TECsxrMc4DICPjSzCfsb7k+YUL
-         He8ElNHmE6f2Q/VWgEaQ8ntK0ec8iysDXeGX58QvuLTr3Td0b2G2tOTOJkW3UiB66vOy
-         WROfq5HaKLKVFKfQEJ8jtsiywzFkVQouyVll4zXQoaLHZeeX8ScN6NfzoLEmHZkJxqIv
-         c5V+Sk8PO61J+epdwLbA9Ei4pnD5ncIT8lchNZ1XKrFKzgMkFkZvL0W5E/0rbXVcfQx6
-         wJ8w==
-X-Gm-Message-State: APjAAAWMDwPYWcDNRwoJOUkICtcT1Qfg7Fvz4m+upnG80jB0kG9YCMCd
-        WIWXMvAHCYQDrEiRx/HtyCHbrDyixIGjSU9xH2IIVBTIzp5+
-X-Google-Smtp-Source: APXvYqwVJZ1Ky9uvJUxacOGklcVPT1U9nm8gtTHrxo5JaCS/yJtbc56F1jQsb9fE/hCBKAGguMun8qINwfLvsNNf8Go2W64uQ/Eb
+        Fri, 16 Aug 2019 08:32:17 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id BFCDE28D1AD
+Message-ID: <4708223638fb8aa6214a58cb9a05c525625020cf.camel@collabora.com>
+Subject: Re: [PATCH v6 07/11] media: cedrus: Specify H264 startcode and
+ decoding mode
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Date:   Fri, 16 Aug 2019 09:32:07 -0300
+In-Reply-To: <a7dab464-5be0-ff9d-7547-735a83e87e14@xs4all.nl>
+References: <20190814195931.6587-1-ezequiel@collabora.com>
+         <20190814195931.6587-8-ezequiel@collabora.com>
+         <a7dab464-5be0-ff9d-7547-735a83e87e14@xs4all.nl>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-X-Received: by 2002:a02:a703:: with SMTP id k3mr10331137jam.12.1565958720687;
- Fri, 16 Aug 2019 05:32:00 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 05:32:00 -0700
-In-Reply-To: <000000000000ab6f84056c786b93@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000479a1705903b2dc9@google.com>
-Subject: Re: WARNING in tracepoint_probe_register_prio (3)
-From:   syzbot <syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com>
-To:     antoine.tenart@bootlin.com, ard.biesheuvel@linaro.org,
-        baruch@tkos.co.il, bigeasy@linutronix.de, davem@davemloft.net,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        jeyu@kernel.org, linux-kernel@vger.kernel.org,
-        mathieu.desnoyers@efficios.com, maxime.chevallier@bootlin.com,
-        mingo@kernel.org, netdev@vger.kernel.org, paulmck@linux.ibm.com,
-        paulmck@linux.vnet.ibm.com, rmk+kernel@armlinux.org.uk,
-        rostedt@goodmis.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Fri, 2019-08-16 at 09:38 +0200, Hans Verkuil wrote:
+> On 8/14/19 9:59 PM, Ezequiel Garcia wrote:
+> > The cedrus VPU is slice-based and expects V4L2_PIX_FMT_H264_SLICE
+> > buffers to contain H264 slices with no start code.
+> > 
+> > Expose this to userspace with the newly added menu control.
+> > 
+> > These two controls are specified as mandatory for applications,
+> > but we mark them as non-required on the driver side for
+> > backwards compatibility.
+> > 
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> > Changes in v6:
+> > * Adjust to control renames.
+> > Changes in v5:
+> > * Clarify commit log.
+> > Changes in v4:
+> > * New patch.
+> > ---
+> >  drivers/staging/media/sunxi/cedrus/cedrus.c | 20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > index 7bdc413bf727..69a836aa11ef 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > @@ -77,6 +77,26 @@ static const struct cedrus_control cedrus_controls[] = {
+> >  		.codec		= CEDRUS_CODEC_H264,
+> >  		.required	= true,
+> >  	},
+> > +	{
+> > +		.cfg = {
+> > +			.id	= V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE,
+> > +			.max	= V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
+> > +			.def	= V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
+> > +			.menu_skip_mask = BIT(V4L2_MPEG_VIDEO_H264_DECODE_MODE_FRAME_BASED),
+> 
+> You don't need this: DECODE_MODE_FRAME_BASED > DECODE_MODE_SLICE_BASED (the max
+> value). So no need to set the skip_mask since it is out of range.
+> 
+> > +		},
+> > +		.codec		= CEDRUS_CODEC_H264,
+> > +		.required	= false,
+> > +	},
+> > +	{
+> > +		.cfg = {
+> > +			.id	= V4L2_CID_MPEG_VIDEO_H264_START_CODE,
+> > +			.max	= V4L2_MPEG_VIDEO_H264_START_CODE_NONE,
+> > +			.def	= V4L2_MPEG_VIDEO_H264_START_CODE_NONE,
+> > +			.menu_skip_mask = BIT(V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B),
+> 
+> Ditto.
+> 
 
-commit ecb9f80db23a7ab09b46b298b404e41dd7aff6e6
-Author: Thomas Gleixner <tglx@linutronix.de>
-Date:   Tue Aug 13 08:00:25 2019 +0000
+I see.
 
-     net/mvpp2: Replace tasklet with softirq hrtimer
+I'll fix this.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13ffb9ee600000
-start commit:   ecb9f80d net/mvpp2: Replace tasklet with softirq hrtimer
-git tree:       net-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=100079ee600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17ffb9ee600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d4cf1ffb87d590d7
-dashboard link: https://syzkaller.appspot.com/bug?extid=774fddf07b7ab29a1e55
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11b02a22600000
+> Regards,
+> 
+> 	Hans
+> 
+> > +		},
+> > +		.codec		= CEDRUS_CODEC_H264,
+> > +		.required	= false,
+> > +	},
+> >  };
+> >  
+> >  #define CEDRUS_CONTROLS_COUNT	ARRAY_SIZE(cedrus_controls)
+> > 
 
-Reported-by: syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com
-Fixes: ecb9f80db23a ("net/mvpp2: Replace tasklet with softirq hrtimer")
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
