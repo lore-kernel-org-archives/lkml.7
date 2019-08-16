@@ -2,112 +2,194 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC83C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D462C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92D352064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B595B21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 12:22:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="QTkZSQVc"
+	dkim=pass (1024-bit key) header.d=kernelthusiast.com header.i=@kernelthusiast.com header.b="pdF/yaEL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfHPMVB (ORCPT
+        id S1727235AbfHPMWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 08:21:01 -0400
-Received: from aibo.runbox.com ([91.220.196.211]:48154 "EHLO aibo.runbox.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbfHPMVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:21:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
-         s=rbselector1; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-        References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date;
-        bh=BSu8IvWvvbvmrGb/CgKULzr7aYTiI6QZczZ8env2h1U=; b=QTkZSQVcELXjXkSq0+dXq4vNKe
-        Z9vQKAfK2tbEDiTWhDalupw7jgMTtZmSyU9iybb4gDQwyMmo3k241qjQRMhE/YHSa+X9bA/VMko6u
-        v1iq/lNAoo46FpYHfgsIEdMJNotE1UrKoL6t/cNKX/bg8GiR+ewcS368/HTNVaizneAQbOqiG4yrW
-        bliM1f5ue0C2u1RsiULBfmv8DxqLqrWNV9tEeKMAgRXqrCWTNyBTBxgX++33laohz3HriBgu4PeIF
-        9t8pO8P2Z0xMzUo/q7Hb0xECtxJIjTFhgvEzbMJaHvcyBoVOsdiidPZBabCLzF2K9bNCTWFtVzngS
-        Si5UYQkw==;
-Received: from [10.9.9.203] (helo=mailfront21.runbox)
-        by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-        (envelope-from <m.v.b@runbox.com>)
-        id 1hybE0-0003Sd-R7; Fri, 16 Aug 2019 14:20:56 +0200
-Received: by mailfront21.runbox with esmtpsa  [Authenticated alias (536975)]  (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        id 1hybDn-0002aC-4s; Fri, 16 Aug 2019 14:20:43 +0200
-Date:   Fri, 16 Aug 2019 08:20:36 -0400
-From:   "M. Vefa Bicakci" <m.v.b@runbox.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: Do not ioremap RAM
-Message-ID: <20190816082036.7b60c9f5@runbox.com>
-In-Reply-To: <CAHp75Vc1BP9UXBWW1tv7T8v8vgqxZWngD+tN9=ZKkgc1imUVxQ@mail.gmail.com>
-References: <20190816014140.10687-1-m.v.b@runbox.com>
- <CAHp75Vc1BP9UXBWW1tv7T8v8vgqxZWngD+tN9=ZKkgc1imUVxQ@mail.gmail.com>
+        Fri, 16 Aug 2019 08:22:16 -0400
+Received: from mailrelay1-1.pub.mailoutpod1-cph3.one.com ([46.30.210.182]:45452
+        "EHLO mailrelay1-1.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727134AbfHPMWQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 08:22:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelthusiast.com; s=20140924;
+        h=content-transfer-encoding:content-type:mime-version:message-id:subject:cc:to:
+         from:date:from;
+        bh=MqBGoGP8EsqeK+2XNYeOygT9JY6T6r/XKPLtK4b7IDw=;
+        b=pdF/yaELulMPNiOqXU+6GUe8hz+dLF5ldHPSbfnZKJ8dF947WPeaNWQ7yn/CtWUN2VgwKzyH9kkHy
+         wyz/2rJqa06FSwQ3nA98++MhUarE6TvfdkTv1rHEW/fws86vAlgwKzH2tULMp6NgQ+qeyhu2lDfT/f
+         M7bxfD8b1ybKOdt8=
+X-HalOne-Cookie: a2f75e830723c1a88d249f86aeee50bff8e4b055
+X-HalOne-ID: 787ae46b-c020-11e9-aee3-d0431ea8a283
+Received: from localhost (unknown [105.159.18.151])
+        by mailrelay1.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+        id 787ae46b-c020-11e9-aee3-d0431ea8a283;
+        Fri, 16 Aug 2019 12:22:10 +0000 (UTC)
+Date:   Fri, 16 Aug 2019 13:22:09 +0100
+From:   Jacob Huisman <jacobhuisman@kernelthusiast.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: process: fix broken link
+Message-ID: <20190816122209.5bz4rlln5cahn7ki@jacob-MS-7A62>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 16 Aug 2019 12:21:58 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+http://linux.yyz.us/patch-format.html seems to be down since
+approximately September 2018. There is a working archive copy on
+arhive.org. Replaced the links in documenation + translations.
 
-> On Fri, Aug 16, 2019 at 4:42 AM M. Vefa Bicakci <m.v.b@runbox.com> wrote:
-> >
-> > On a Xen-based PVH virtual machine with more than 4 GiB of RAM,
-> > intel_pmc_core fails initialization with the following warning message
-> > from the kernel, indicating that the driver is attempting to ioremap
-> > RAM:
-> >
-> >   ------------[ cut here ]------------
-> >   ioremap on RAM at 0x00000000fe000000 - 0x00000000fe001fff  
-> 
-> > This issue appears to manifest itself because of the following fallback
-> > mechanism in the driver:
-> >
-> >         if (lpit_read_residency_count_address(&slp_s0_addr))
-> >                 pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
-> >
-> > The validity of address PMC_BASE_ADDR_DEFAULT (i.e., 0xFE000000) is not
-> > verified by the driver, which is what this patch introduces. With this
-> > patch, if address PMC_BASE_ADDR_DEFAULT is in RAM, then the driver will
-> > not attempt to ioremap the aforementioned address.  
-> 
-> Thank you for the patch.
+Signed-off-by: Jacob Huisman <jacobhuisman@kernelthusiast.com>
+---
+ Documentation/process/howto.rst                                 | 2 +-
+ Documentation/process/submitting-patches.rst                    | 2 +-
+ Documentation/translations/it_IT/process/howto.rst              | 2 +-
+ Documentation/translations/it_IT/process/submitting-patches.rst | 2 +-
+ Documentation/translations/ja_JP/SubmittingPatches              | 2 +-
+ Documentation/translations/ja_JP/howto.rst                      | 2 +-
+ Documentation/translations/ko_KR/howto.rst                      | 2 +-
+ Documentation/translations/zh_CN/process/howto.rst              | 2 +-
+ Documentation/translations/zh_CN/process/submitting-patches.rst | 2 +-
+ 9 files changed, 9 insertions(+), 9 deletions(-)
 
-Hello Andy,
+diff --git a/Documentation/process/howto.rst b/Documentation/process/howto.rst
+index 6ab75c11d2c3..b6f5a379ad6c 100644
+--- a/Documentation/process/howto.rst
++++ b/Documentation/process/howto.rst
+@@ -123,7 +123,7 @@ required reading:
+ 		https://www.ozlabs.org/~akpm/stuff/tpp.txt
+ 
+ 	"Linux kernel patch submission format"
+-		http://linux.yyz.us/patch-format.html
++		https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html
+ 
+   :ref:`Documentation/process/stable-api-nonsense.rst <stable_api_nonsense>`
+     This file describes the rationale behind the conscious decision to
+diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
+index 9c4299293c72..fb56297f70dc 100644
+--- a/Documentation/process/submitting-patches.rst
++++ b/Documentation/process/submitting-patches.rst
+@@ -844,7 +844,7 @@ Andrew Morton, "The perfect patch" (tpp).
+   <http://www.ozlabs.org/~akpm/stuff/tpp.txt>
+ 
+ Jeff Garzik, "Linux kernel patch submission format".
+-  <http://linux.yyz.us/patch-format.html>
++  <https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html>
+ 
+ Greg Kroah-Hartman, "How to piss off a kernel subsystem maintainer".
+   <http://www.kroah.com/log/linux/maintainer.html>
+diff --git a/Documentation/translations/it_IT/process/howto.rst b/Documentation/translations/it_IT/process/howto.rst
+index 44e6077730e8..1db5a1082389 100644
+--- a/Documentation/translations/it_IT/process/howto.rst
++++ b/Documentation/translations/it_IT/process/howto.rst
+@@ -129,7 +129,7 @@ Di seguito una lista di file che sono presenti nei sorgente del kernel e che
+ 		https://www.ozlabs.org/~akpm/stuff/tpp.txt
+ 
+ 	"Linux kernel patch submission format"
+-		http://linux.yyz.us/patch-format.html
++		https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html
+ 
+   :ref:`Documentation/translations/it_IT/process/stable-api-nonsense.rst <it_stable_api_nonsense>`
+ 
+diff --git a/Documentation/translations/it_IT/process/submitting-patches.rst b/Documentation/translations/it_IT/process/submitting-patches.rst
+index 7d7ea92c5c5a..cba1f8cb61ed 100644
+--- a/Documentation/translations/it_IT/process/submitting-patches.rst
++++ b/Documentation/translations/it_IT/process/submitting-patches.rst
+@@ -868,7 +868,7 @@ Andrew Morton, "La patch perfetta" (tpp).
+   <http://www.ozlabs.org/~akpm/stuff/tpp.txt>
+ 
+ Jeff Garzik, "Formato per la sottomissione di patch per il kernel Linux"
+-  <http://linux.yyz.us/patch-format.html>
++  <https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html>
+ 
+ Greg Kroah-Hartman, "Come scocciare un manutentore di un sottosistema"
+   <http://www.kroah.com/log/linux/maintainer.html>
+diff --git a/Documentation/translations/ja_JP/SubmittingPatches b/Documentation/translations/ja_JP/SubmittingPatches
+index ad979c3c06a6..dd0c3280ba5a 100644
+--- a/Documentation/translations/ja_JP/SubmittingPatches
++++ b/Documentation/translations/ja_JP/SubmittingPatches
+@@ -693,7 +693,7 @@ Andrew Morton, "The perfect patch" (tpp).
+   <http://www.ozlabs.org/~akpm/stuff/tpp.txt>
+ 
+ Jeff Garzik, "Linux kernel patch submission format".
+-  <http://linux.yyz.us/patch-format.html>
++  <https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html>
+ 
+ Greg Kroah-Hartman, "How to piss off a kernel subsystem maintainer".
+   <http://www.kroah.com/log/2005/03/31/>
+diff --git a/Documentation/translations/ja_JP/howto.rst b/Documentation/translations/ja_JP/howto.rst
+index 2621b770a745..73ebdab4ced7 100644
+--- a/Documentation/translations/ja_JP/howto.rst
++++ b/Documentation/translations/ja_JP/howto.rst
+@@ -139,7 +139,7 @@ linux-api@vger.kernel.org に送ることを勧めます。
+        "The Perfect Patch"
+ 		http://www.ozlabs.org/~akpm/stuff/tpp.txt
+        "Linux kernel patch submission format"
+-		http://linux.yyz.us/patch-format.html
++		https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html
+ 
+   :ref:`Documentation/process/stable-api-nonsense.rst <stable_api_nonsense>`
+     このファイルはカーネルの中に不変の API を持たないことにした意識的
+diff --git a/Documentation/translations/ko_KR/howto.rst b/Documentation/translations/ko_KR/howto.rst
+index bcd63731b80a..b3f51b19de7c 100644
+--- a/Documentation/translations/ko_KR/howto.rst
++++ b/Documentation/translations/ko_KR/howto.rst
+@@ -135,7 +135,7 @@ mtk.manpages@gmail.com의 메인테이너에게 보낼 것을 권장한다.
+         https://www.ozlabs.org/~akpm/stuff/tpp.txt
+ 
+     "Linux kernel patch submission format"
+-        http://linux.yyz.us/patch-format.html
++        https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html
+ 
+    :ref:`Documentation/process/stable-api-nonsense.rst <stable_api_nonsense>`
+     이 문서는 의도적으로 커널이 불변하는 API를 갖지 않도록 결정한
+diff --git a/Documentation/translations/zh_CN/process/howto.rst b/Documentation/translations/zh_CN/process/howto.rst
+index b244a7190eb6..a8e6ab818983 100644
+--- a/Documentation/translations/zh_CN/process/howto.rst
++++ b/Documentation/translations/zh_CN/process/howto.rst
+@@ -113,7 +113,7 @@ Linux内核代码中包含有大量的文档。这些文档对于学习如何与
+ 
+     "Linux kernel patch submission format"
+ 
+-        http://linux.yyz.us/patch-format.html
++        https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html
+ 
+   :ref:`Documentation/translations/zh_CN/process/stable-api-nonsense.rst <cn_stable_api_nonsense>`
+     论证内核为什么特意不包括稳定的内核内部API，也就是说不包括像这样的特
+diff --git a/Documentation/translations/zh_CN/process/submitting-patches.rst b/Documentation/translations/zh_CN/process/submitting-patches.rst
+index 437c23b367bb..1bb4271ab420 100644
+--- a/Documentation/translations/zh_CN/process/submitting-patches.rst
++++ b/Documentation/translations/zh_CN/process/submitting-patches.rst
+@@ -652,7 +652,7 @@ Andrew Morton, "The perfect patch" (tpp).
+   <http://www.ozlabs.org/~akpm/stuff/tpp.txt>
+ 
+ Jeff Garzik, "Linux kernel patch submission format".
+-  <http://linux.yyz.us/patch-format.html>
++  <https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html>
+ 
+ Greg Kroah-Hartman, "How to piss off a kernel subsystem maintainer".
+   <http://www.kroah.com/log/linux/maintainer.html>
+-- 
+2.17.1
 
-Thank you for reviewing the patch!
-
-> Is there anything preventing us to use memremap() in such case?
-
-I re-read the documentation for memremap a few times along with taking
-a look at its code, but I think I am missing an important piece of
-information. As I understand it, depending on its flags, memremap would
-allow a section of RAM to be mapped for the PMC driver.
-
-The intention with this patch is to prevent the driver from being
-instantiated when the default/fallback memory address is in RAM, as
-this issue occurs with a non-administrative virtual machine (domU in
-Xen terminology) that does not simulate or pass-through a corresponding
-PMC device.
-
-I think that I have misunderstood your review comment though, so I
-would apppreciate it if you could elaborate.
-
-Thanks again for reviewing the patch,
-
-Vefa
-
-(Please note that my next reply may be delayed by about 10 hours.)
