@@ -2,83 +2,129 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC49C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6D6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1999921655
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:37:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TDdHOpDq"
+	by mail.kernel.org (Postfix) with ESMTP id 3F5AF21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfHPHhW (ORCPT
+        id S1726841AbfHPHi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:37:22 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:60696 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfHPHhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:37:22 -0400
-Received: from zn.tnic (p200300EC2F0A920041519BC41B2ACCA3.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9200:4151:9bc4:1b2a:cca3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CC67A1EC0A0E;
-        Fri, 16 Aug 2019 09:37:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565941040;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=dkrYGBF1MgaVSBgQs7Dok4K4lGMWFQJbNvS7kMiPMUQ=;
-        b=TDdHOpDqqEiUb6KC944Fq/ZkXjVEuW0/0hyfde1MGaeEK/ttVzNECIWI2bUcI2aO1prKeg
-        orqEHrELWrai91txhwR7vQnowGHAT+GwohjnQzja+QWz9EiUdN9+fZwptFqsFk9LyuNy4Y
-        XrR404mjUJ/jXxAsMJUf+j10QEb6fHc=
-Date:   Fri, 16 Aug 2019 09:38:10 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Tony Luck <tony.luck@intel.com>, tglx@linutronix.de,
-        mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
-        andriy.shevchenko@intel.com, alan@linux.intel.com,
-        ricardo.neri-calderon@linux.intel.com, rafael.j.wysocki@intel.com,
-        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
-Subject: Re: [PATCH 2/3] x86: cpu: Add new Intel Atom CPU type
-Message-ID: <20190816073810.GI18980@zn.tnic>
-References: <cover.1565856842.git.rahul.tanwar@linux.intel.com>
- <16de4480ae1216d5949d4d36787811dae35d2eff.1565856842.git.rahul.tanwar@linux.intel.com>
- <20190815122222.GE15313@zn.tnic>
- <68ad47a7-ac6f-0a1b-0892-850bb95c002b@linux.intel.com>
- <20190816064318.GC18980@zn.tnic>
- <d6452a93-16a7-451e-3abb-0bc65e89b0aa@linux.intel.com>
+        Fri, 16 Aug 2019 03:38:27 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:37617 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725829AbfHPHi1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 03:38:27 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id yWoWh0oGSzaKOyWoZhlDmM; Fri, 16 Aug 2019 09:38:24 +0200
+Subject: Re: [PATCH v6 07/11] media: cedrus: Specify H264 startcode and
+ decoding mode
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+References: <20190814195931.6587-1-ezequiel@collabora.com>
+ <20190814195931.6587-8-ezequiel@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <a7dab464-5be0-ff9d-7547-735a83e87e14@xs4all.nl>
+Date:   Fri, 16 Aug 2019 09:38:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190814195931.6587-8-ezequiel@collabora.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <d6452a93-16a7-451e-3abb-0bc65e89b0aa@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJSvcLnjP+g63vpsjfpfVM+XMWprF9PTKdzv1Ti/D/eurB2I6cyWrBsc2LNpV9VytsmtO9ZG3cs012z/LDDUzI9FyDwb5z6Q0DeXWYrcPV1D7cDTWugg
+ IkbeQgOVeJMIGGW6zg91Hr7WqJfP1jVcsxeGcg3vWPaOE2IY/RZhgQrmSfLLuZD7DbaCO+w9hRwPzdJTalZZla7qgGBUhZHoMpnjbrDgrj0LfliodDyNL4bh
+ 8UGvMx9BCQzOvZtBj4h76kMZkGOrq/p0sPNxbwlSrj8YUPaViTEAXQegPzHpk0L4eyY+3qPrhzZqCOGOtTIYMWA0BQPhnbijGKpHMyanZrJDIDZkozuytMDr
+ qJxqP+dAHT/h3rW9Rh8tgICrfVejzmn8Pnncr446sHtjYxeutcQaMBF9fq0b/24jWc/MFpcwkbzQGSYGdHhxdaOmEpz1cb4C3zg1sY1cqh6uMD+A6IXDLar/
+ huD9QGzNMEmYYYAQGqEQ+Eh/dHnXXZcEX/tW4JsXhbmgXSB22M79daQcmlE7VqX9V6Mz8f7FJaYTH39llcApaPWWWCPsDEN3PLQGtRIoU2i9VQ8dTAoIihyD
+ 4E8zTCq4oNMvQlFPFnHFHz/tG6AVmGe/TUaEMvSIzGveZeUWxeCjWR/QqlvG5YFYhZ4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 03:25:51PM +0800, Tanwar, Rahul wrote:
+On 8/14/19 9:59 PM, Ezequiel Garcia wrote:
+> The cedrus VPU is slice-based and expects V4L2_PIX_FMT_H264_SLICE
+> buffers to contain H264 slices with no start code.
 > 
-> On 16/8/2019 2:43 PM, Borislav Petkov wrote:
-> > Now to another question: you see how I put my reply to the previous mail
-> > *below* the quoted text. Why is yours ontop? Why not put it after mine
-> > since you're replying to it, like it is usually done on the mailing
-> > lists and thus not confuse the reading order?
-> > 
-> > All I'm trying to say is, please do not top-post.
+> Expose this to userspace with the newly added menu control.
 > 
-> So sorry for missing out on this point. Will always keep in mind from now
-> on.
+> These two controls are specified as mandatory for applications,
+> but we mark them as non-required on the driver side for
+> backwards compatibility.
+> 
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+> Changes in v6:
+> * Adjust to control renames.
+> Changes in v5:
+> * Clarify commit log.
+> Changes in v4:
+> * New patch.
+> ---
+>  drivers/staging/media/sunxi/cedrus/cedrus.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> index 7bdc413bf727..69a836aa11ef 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> @@ -77,6 +77,26 @@ static const struct cedrus_control cedrus_controls[] = {
+>  		.codec		= CEDRUS_CODEC_H264,
+>  		.required	= true,
+>  	},
+> +	{
+> +		.cfg = {
+> +			.id	= V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE,
+> +			.max	= V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
+> +			.def	= V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
+> +			.menu_skip_mask = BIT(V4L2_MPEG_VIDEO_H264_DECODE_MODE_FRAME_BASED),
 
-Thanks!
+You don't need this: DECODE_MODE_FRAME_BASED > DECODE_MODE_SLICE_BASED (the max
+value). So no need to set the skip_mask since it is out of range.
 
--- 
-Regards/Gruss,
-    Boris.
+> +		},
+> +		.codec		= CEDRUS_CODEC_H264,
+> +		.required	= false,
+> +	},
+> +	{
+> +		.cfg = {
+> +			.id	= V4L2_CID_MPEG_VIDEO_H264_START_CODE,
+> +			.max	= V4L2_MPEG_VIDEO_H264_START_CODE_NONE,
+> +			.def	= V4L2_MPEG_VIDEO_H264_START_CODE_NONE,
+> +			.menu_skip_mask = BIT(V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B),
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Ditto.
+
+Regards,
+
+	Hans
+
+> +		},
+> +		.codec		= CEDRUS_CODEC_H264,
+> +		.required	= false,
+> +	},
+>  };
+>  
+>  #define CEDRUS_CONTROLS_COUNT	ARRAY_SIZE(cedrus_controls)
+> 
+
