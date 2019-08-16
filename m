@@ -4,40 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD59C3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64CCC3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2839E206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C439E206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 02:36:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfHPCgE (ORCPT
+        id S1726778AbfHPCgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 15 Aug 2019 22:36:04 -0400
+        Thu, 15 Aug 2019 22:36:14 -0400
 Received: from mga07.intel.com ([134.134.136.100]:39512 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726414AbfHPCgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 15 Aug 2019 22:36:02 -0400
+        id S1726656AbfHPCgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 15 Aug 2019 22:36:03 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 19:35:48 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Aug 2019 19:35:54 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
-   d="scan'208";a="194894840"
+   d="scan'208";a="194894858"
 Received: from gvt.bj.intel.com ([10.238.158.180])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Aug 2019 19:35:47 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 15 Aug 2019 19:35:52 -0700
 From:   Tina Zhang <tina.zhang@intel.com>
 To:     intel-gvt-dev@lists.freedesktop.org
-Cc:     Tina Zhang <tina.zhang@intel.com>, kraxel@redhat.com,
+Cc:     Kechen Lu <kechen.lu@intel.com>, kraxel@redhat.com,
         alex.williamson@redhat.com, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, hang.yuan@intel.com,
-        zhiyuan.lv@intel.com
-Subject: [PATCH v5 2/6] vfio: Introduce vGPU display irq type
-Date:   Fri, 16 Aug 2019 10:35:24 +0800
-Message-Id: <20190816023528.30210-3-tina.zhang@intel.com>
+        zhiyuan.lv@intel.com, Tina Zhang <tina.zhang@intel.com>
+Subject: [PATCH v5 5/6] drm/i915/gvt: Deliver async primary plane page flip events at vblank
+Date:   Fri, 16 Aug 2019 10:35:27 +0800
+Message-Id: <20190816023528.30210-6-tina.zhang@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190816023528.30210-1-tina.zhang@intel.com>
 References: <20190816023528.30210-1-tina.zhang@intel.com>
@@ -46,53 +45,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce vGPU specific irq type VFIO_IRQ_TYPE_GFX, and
-VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ as the subtype for vGPU display.
+From: Kechen Lu <kechen.lu@intel.com>
 
-Introduce vfio_irq_info_cap_display_plane_events capability to notify
-user space with the vGPU's plane update events
+Only sync primary plane page flip events are checked and delivered
+as the display refresh events before, this patch tries to deliver async
+primary page flip events bounded by vblanks.
 
-v2:
-- Add VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ description. (Alex & Kechen)
-- Introduce vfio_irq_info_cap_display_plane_events. (Gerd & Alex)
+To deliver correct async page flip, the new async flip bitmap is
+introduced and in vblank emulation handler to check bitset.
 
+Signed-off-by: Kechen Lu <kechen.lu@intel.com>
 Signed-off-by: Tina Zhang <tina.zhang@intel.com>
 ---
- include/uapi/linux/vfio.h | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/gpu/drm/i915/gvt/cmd_parser.c |  6 ++++--
+ drivers/gpu/drm/i915/gvt/display.c    | 10 ++++++++++
+ drivers/gpu/drm/i915/gvt/gvt.h        |  2 ++
+ drivers/gpu/drm/i915/gvt/handlers.c   |  5 +++--
+ 4 files changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index d83c9f136a5b..21ac69f0e1a9 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -465,6 +465,27 @@ struct vfio_irq_info_cap_type {
- 	__u32 subtype;  /* type specific */
+diff --git a/drivers/gpu/drm/i915/gvt/cmd_parser.c b/drivers/gpu/drm/i915/gvt/cmd_parser.c
+index ab002cfd3cab..51c3a1b10a54 100644
+--- a/drivers/gpu/drm/i915/gvt/cmd_parser.c
++++ b/drivers/gpu/drm/i915/gvt/cmd_parser.c
+@@ -1330,9 +1330,11 @@ static int gen8_update_plane_mmio_from_mi_display_flip(
+ 	if (info->plane == PLANE_PRIMARY)
+ 		vgpu_vreg_t(vgpu, PIPE_FLIPCOUNT_G4X(info->pipe))++;
+ 
+-	if (info->async_flip)
++	if (info->async_flip) {
+ 		intel_vgpu_trigger_virtual_event(vgpu, info->event);
+-	else
++		set_bit(info->plane,
++			vgpu->display.async_flip_event[info->pipe]);
++	} else
+ 		set_bit(info->event, vgpu->irq.flip_done_event[info->pipe]);
+ 
+ 	return 0;
+diff --git a/drivers/gpu/drm/i915/gvt/display.c b/drivers/gpu/drm/i915/gvt/display.c
+index 616285e4a014..35436e845227 100644
+--- a/drivers/gpu/drm/i915/gvt/display.c
++++ b/drivers/gpu/drm/i915/gvt/display.c
+@@ -420,6 +420,16 @@ static void emulate_vblank_on_pipe(struct intel_vgpu *vgpu, int pipe)
+ 		intel_vgpu_trigger_virtual_event(vgpu, event);
+ 	}
+ 
++	for_each_set_bit(event, vgpu->display.async_flip_event[pipe],
++			I915_MAX_PLANES) {
++		clear_bit(event, vgpu->display.async_flip_event[pipe]);
++		if (!pipe_is_enabled(vgpu, pipe))
++			continue;
++
++		if (event == PLANE_PRIMARY)
++			eventfd_signal_val |= DISPLAY_PRI_REFRESH_EVENT_VAL;
++	}
++
+ 	if (eventfd_signal_val)
+ 		no_pageflip_count = 0;
+ 	else if (!eventfd_signal_val && no_pageflip_count > PAGEFLIP_DELAY_THR)
+diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gvt.h
+index 6c8ed030c30b..90e35e436666 100644
+--- a/drivers/gpu/drm/i915/gvt/gvt.h
++++ b/drivers/gpu/drm/i915/gvt/gvt.h
+@@ -128,6 +128,8 @@ struct intel_vgpu_display {
+ 	struct intel_vgpu_i2c_edid i2c_edid;
+ 	struct intel_vgpu_port ports[I915_MAX_PORTS];
+ 	struct intel_vgpu_sbi sbi;
++	DECLARE_BITMAP(async_flip_event[I915_MAX_PIPES],
++		       I915_MAX_PLANES);
  };
  
-+#define VFIO_IRQ_TYPE_GFX				(1)
-+/*
-+ * vGPU vendor sub-type
-+ * vGPU device display related interrupts e.g. vblank/pageflip
-+ */
-+#define VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ		(1)
-+
-+/*
-+ * Display capability of using one eventfd to notify user space with the
-+ * vGPU's plane update events.
-+ * cur_event_val: eventfd value stands for cursor plane change event.
-+ * pri_event_val: eventfd value stands for primary plane change event.
-+ */
-+#define VFIO_IRQ_INFO_CAP_DISPLAY	4
-+
-+struct vfio_irq_info_cap_display_plane_events {
-+	struct vfio_info_cap_header header;
-+	__u64 cur_event_val;
-+	__u64 pri_event_val;
-+};
-+
- /**
-  * VFIO_DEVICE_SET_IRQS - _IOW(VFIO_TYPE, VFIO_BASE + 10, struct vfio_irq_set)
-  *
+ struct vgpu_sched_ctl {
+diff --git a/drivers/gpu/drm/i915/gvt/handlers.c b/drivers/gpu/drm/i915/gvt/handlers.c
+index 18f01eeb2510..92ff037996a2 100644
+--- a/drivers/gpu/drm/i915/gvt/handlers.c
++++ b/drivers/gpu/drm/i915/gvt/handlers.c
+@@ -758,9 +758,10 @@ static int pri_surf_mmio_write(struct intel_vgpu *vgpu, unsigned int offset,
+ 
+ 	vgpu_vreg_t(vgpu, PIPE_FLIPCOUNT_G4X(pipe))++;
+ 
+-	if (vgpu_vreg_t(vgpu, DSPCNTR(pipe)) & PLANE_CTL_ASYNC_FLIP)
++	if (vgpu_vreg_t(vgpu, DSPCNTR(pipe)) & PLANE_CTL_ASYNC_FLIP) {
+ 		intel_vgpu_trigger_virtual_event(vgpu, event);
+-	else
++		set_bit(PLANE_PRIMARY, vgpu->display.async_flip_event[pipe]);
++	} else
+ 		set_bit(event, vgpu->irq.flip_done_event[pipe]);
+ 
+ 	return 0;
 -- 
 2.17.1
 
