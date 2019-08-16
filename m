@@ -2,99 +2,154 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9020C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC36C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF1C92133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565943701;
-	bh=45xE287d0eM04My2txp6SH/3Wubo253uv59ZVJNr3VE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZTys5qL89TOKSkIZ4RD1xVdZdEZUwqLxhKyOYsomD9AiUWSpkVYVj1lb+pm1lUJWo
-	 qZ4z+QAvspoSE7Pz9js72oSq9JbZUr151T3+Y8y8kAcIz+EB2KbP6H7blLJ16s/KYj
-	 QkxR32OBwOThHWydDdJkT2di5XlGU7yH09+KIVmg=
+	by mail.kernel.org (Postfix) with ESMTP id EE62E20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:23:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kde.org header.i=@kde.org header.b="kr98yFWL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbfHPIVk (ORCPT
+        id S1726864AbfHPIXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:21:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58656 "EHLO mail.kernel.org"
+        Fri, 16 Aug 2019 04:23:17 -0400
+Received: from letterbox.kde.org ([46.43.1.242]:36654 "EHLO letterbox.kde.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbfHPIVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:21:40 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEA64206C2;
-        Fri, 16 Aug 2019 08:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565943699;
-        bh=45xE287d0eM04My2txp6SH/3Wubo253uv59ZVJNr3VE=;
+        id S1726482AbfHPIXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 04:23:16 -0400
+Received: from archbox.localdomain (unknown [203.187.238.17])
+        (Authenticated sender: bshah)
+        by letterbox.kde.org (Postfix) with ESMTPSA id B6752288870;
+        Fri, 16 Aug 2019 09:23:13 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kde.org; s=users;
+        t=1565943794; bh=R+mo2BGavCwf8Mztq2UzfRe5LGcuCVb+205qaTnZVtI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NbVyzIfb5MQEr6j7Y68FkNmVHLmnWhZAp/RXXMr37iQb7uEdjcJvTGpAm3OWaxMn7
-         KoZ3FgZA1MSqEEQUvlKLIfdxnG694Hk9b/RtcaQLEazfJWAb/lFHzrw0i10uDKqAm5
-         Oqz/4mXpbrFX8rP3Lo6HqdOoJTJbjvoDqsxD3s+g=
-Date:   Fri, 16 Aug 2019 09:21:31 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     syzbot <syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, dvyukov@google.com,
-        hawk@kernel.org, hdanton@sina.com, jakub.kicinski@netronome.com,
-        johannes.berg@intel.com, johannes@sipsolutions.net,
-        john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, longman@redhat.com, mingo@kernel.org,
-        netdev@vger.kernel.org, paulmck@linux.vnet.ibm.com,
-        peterz@infradead.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, tj@kernel.org,
-        torvalds@linux-foundation.org, will.deacon@arm.com,
-        xdp-newbies@vger.kernel.org, yhs@fb.com
-Subject: Re: WARNING in is_bpf_text_address
-Message-ID: <20190816082130.2shhirk53qofn6bj@willie-the-truck>
-References: <00000000000000ac4f058bd50039@google.com>
- <000000000000e56cb0058fcc6c28@google.com>
- <20190815075142.vuza32plqtiuhixx@willie-the-truck>
- <456d0da6-3e16-d3fc-ecf6-7abb410bf689@acm.org>
+        b=kr98yFWLu1zfwT7VtWyOw/fahFFRPdXW+MlNuqGfbct+aMHVojSxkWWHfh3DF2HiU
+         g94g6LL8JSox9npC0r6JkcyJTVd2XZTHyAdswwXfYEJucEFRpZdWK0TRz/mnMAhalH
+         BLFZCkfgIINs6VdaIeYsettvt1ZPkRlpo0TLF8MlDchMDswqf4nHC92bmpj2g1chao
+         q2lc3VjQhjiFAKLqzW+OMUD/3P29ossSwxjJvEos1S5dv/wdCvUT/0WAAr57UMt26i
+         Ki5vyKJ8tIc+vPDGypIkbdwCYJTuo8F6KQ4m6CgzfP8r8XsjwiZFkSoAbvKcz/BbL4
+         eafiysNJHUpBQ==
+Date:   Fri, 16 Aug 2019 13:53:11 +0530
+From:   Bhushan Shah <bshah@kde.org>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Bhushan Shah <bshah@kde.org>, Icenowy Zheng <icenowy@aosc.io>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, Wolfram Sang <wsa@the-dreams.de>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/3] arm64: allwinner: h6: add I2C nodes
+Message-ID: <20190816082311.GB18236@pyxis>
+References: <20190811090503.32396-1-bshah@kde.org>
+ <20190816064710.18280-1-bshah@kde.org>
+ <20190816064710.18280-3-bshah@kde.org>
+ <20190816075031.zw4bjunn4hfoaq3e@flea>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Pd0ReVV5GZGQvF3a"
 Content-Disposition: inline
-In-Reply-To: <456d0da6-3e16-d3fc-ecf6-7abb410bf689@acm.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190816075031.zw4bjunn4hfoaq3e@flea>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 06:39:56PM -0700, Bart Van Assche wrote:
-> On 8/15/19 12:51 AM, Will Deacon wrote:
-> > On Sat, Aug 10, 2019 at 05:24:06PM -0700, syzbot wrote:
-> > > The bug was bisected to:
-> > > 
-> > > commit a0b0fd53e1e67639b303b15939b9c653dbe7a8c4
-> > > Author: Bart Van Assche <bvanassche@acm.org>
-> > > Date:   Thu Feb 14 23:00:46 2019 +0000
-> > > 
-> > >      locking/lockdep: Free lock classes that are no longer in use
-> > > 
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=152f6a9da00000
-> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=172f6a9da00000
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=132f6a9da00000
-> > 
-> > I know you don't think much to these reports, but please could you have a
-> > look (even if it's just to declare it a false positive)?
-> 
-> Had you already noticed the following message?
-> 
-> https://lore.kernel.org/bpf/d76d7a63-7854-e92d-30cb-52546d333ffe@iogearbox.net/
-> 
-> From that message: "Hey Bart, don't think it's related in any way to your
-> commit. I'll allocate some time on working on this issue today, thanks!"
 
-Apologies, but I hadn't received that when I sent my initial email. Anyway,
-just wanted to make sure somebody was looking into it!
+--Pd0ReVV5GZGQvF3a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Will
+On Fri, Aug 16, 2019 at 09:50:31AM +0200, Maxime Ripard wrote:
+> On Fri, Aug 16, 2019 at 12:17:09PM +0530, Bhushan Shah wrote:
+> > Add device-tree nodes for i2c0 to i2c2, and also add relevant pinctrl
+> > nodes.
+> >
+> > Suggested-by: Icenowy Zheng <icenowy@aosc.io>
+> > Signed-off-by: Bhushan Shah <bshah@kde.org>
+> > ---
+> > Changes in v2:
+> >   - Add the SoC specific compatible string instead of re-using a31 one.
+> >
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 56 +++++++++++++++++++-
+> >  1 file changed, 55 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
+boot/dts/allwinner/sun50i-h6.dtsi
+> > index bcecca17d61d..a1a329926540 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > @@ -329,6 +329,21 @@
+> >  				function =3D "hdmi";
+> >  			};
+> >
+> > +			i2c0_pins: i2c0-pins {
+> > +				pins =3D "PD25", "PD26";
+> > +				function =3D "i2c0";
+> > +			};
+> > +
+> > +			i2c1_pins: i2c1-pins {
+> > +				pins =3D "PH5", "PH6";
+> > +				function =3D "i2c1";
+> > +			};
+> > +
+> > +			i2c2_pins: i2c2-pins {
+> > +				pins =3D "PD23", "PD24";
+> > +				function =3D "i2c2";
+> > +			};
+> > +
+> >  			mmc0_pins: mmc0-pins {
+> >  				pins =3D "PF0", "PF1", "PF2", "PF3",
+> >  				       "PF4", "PF5";
+> > @@ -464,6 +479,45 @@
+> >  			status =3D "disabled";
+> >  		};
+> >
+> > +		i2c0: i2c@5002000 {
+> > +			compatible =3D "allwinner,sun50i-h6-i2c";
+>=20
+> This isn't going to work if you don't patch the driver to add the
+> compatible. And this isn't what you described in the binding patch.
+
+oops, I will correct this in next patch series. Sorry.
+
+>=20
+> Maxime
+>=20
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
+
+
+--=20
+Bhushan Shah
+http://blog.bshah.in
+IRC Nick : bshah on Freenode
+GPG key fingerprint : 0AAC 775B B643 7A8D 9AF7 A3AC FE07 8411 7FBC E11D
+
+--Pd0ReVV5GZGQvF3a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEs8s2ZVJUC+Bu6a2XEZaMRJKMrvwFAl1WZ+4ACgkQEZaMRJKM
+rvxqAQgAjTTOPqp4IbGW4/nDm8BBmNiePwfg57R8R49Uy4uEW2aWag5VAObJy66F
+cWkU8CtYUYXWPvnke18zDyH+EqqgJgraUnNyU1Slj3e6kylEvREKRsM4W9u8m4ti
+r88PZiTtWmPLmAYOrzIUVckEwDau21Apeqjf1+Tqq2Q3xCGx2vRPBsm59972SGVY
+yT8k1SWABM5m42rko8rQh+XZ9u0niBliD1u4+KY8zQ9Uu/g8T/t7JcCu+ysy8U+W
+esnMrLdwMChMpjDzAX1vdkAexCAo5E6/NeDbcQWJqxjqCDX5oy/vIXlydKl1Sczx
+DrysSQzkyw8rbwv9OGMC+YtpVHjAYA==
+=gJ/S
+-----END PGP SIGNATURE-----
+
+--Pd0ReVV5GZGQvF3a--
