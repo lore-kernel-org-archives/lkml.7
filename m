@@ -2,119 +2,158 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5553CC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 19:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817A5C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 19:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D53B2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 19:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506732171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 19:50:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="XG/Cp0fe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbfHPTsG (ORCPT
+        id S1727629AbfHPTuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 15:48:06 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33891 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfHPTsF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 15:48:05 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hyiCa-0000qu-4D; Fri, 16 Aug 2019 21:47:56 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hyiCY-0006aL-DA; Fri, 16 Aug 2019 21:47:54 +0200
-Date:   Fri, 16 Aug 2019 21:47:54 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
- sysfs
-Message-ID: <20190816194754.ldzjqy2yjonfvaat@pengutronix.de>
-References: <20190709190007.91260-1-mka@chromium.org>
- <20190709190007.91260-3-mka@chromium.org>
- <20190816165148.7keg45fmlndr22fl@pengutronix.de>
- <20190816175157.GT250418@google.com>
+        Fri, 16 Aug 2019 15:50:20 -0400
+Received: from mail-eopbgr770125.outbound.protection.outlook.com ([40.107.77.125]:52228
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726527AbfHPTuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 15:50:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G1mrgfPN8o45FnWENs6ZohNG24LGKWSKhqnmlu/dBoWtqYmeaxTR0y/j6ztEa7ZkFtwM5ddkh7o3v5ffl3QVtECMdCoPHNO0C6ute2cgYolUAIz7bs3Ra8zX8kih/CV25QgeBKsmNkpYUbysWzSyYsc7m/lwYMSu2yCA5bqzjlL1bI/DgMTi+InPmlU0HN7Ki2N7aFPROrYk+Uokv/95cityY+dpAcC8z+V/ISd1PkenoMbcVx0v46rGFURTDc2ANyqO08n/m0h5hCe3DQpbc5Ef2p3e4JmX4941hp3Qo7sJOFyoAzghrsQzG+fvmnLjKqz661zsqz8Whn+ic1alwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=58kkHVL5V4CvxRA55qNjAaYGeC1v9AXbqb5e6cYC+/g=;
+ b=cB8OhtEwwMUTvA0ect9cnco2A/14PGwU1kh1PIEa5LbK9yfT6CHPRz26Hid1UJ7g6frNzMVsx/J4wRyHwMPKQawAYwK4yoWvnLQUeJXt/2vvEmFF71Kjf4lRT/wMEjx4q4WJ6Ow79uqXnVEerCgn8VCAoRVzYD5Vu2EY0wK+iKX85D3YY6gY37hsxXuiJGt3C0dcqvtCPoAXfxqVE8Cl6gCLHFPgziZM0hxe3HvFTcvMjHbW5KXy1DOpSHd8Ayam2/4MAYFtXIL1O2AV429hKfPViGSKu6pQybFAB1Ethm0/9/4YWI6+yqhKQt5IufSbye4rM8heOzUKyaDT8Ta2Cg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=58kkHVL5V4CvxRA55qNjAaYGeC1v9AXbqb5e6cYC+/g=;
+ b=XG/Cp0fezyen0G9uQkOozuTC8303NOz8c7Mso0yvkfH6vQATagq4eJKkTJVct+LovyZSbhzziAiFk9jAfxEVlZ6meta4YhNiJ6oOMu9hDVGii5bG7XuVlk8Vf16p/yVl+r6tMcoFyX+LrqSjFL+EP+nz582Kj/5AJuJNfaOUEHk=
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
+ DM6PR21MB1417.namprd21.prod.outlook.com (20.180.21.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.2; Fri, 16 Aug 2019 19:50:14 +0000
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::28a1:fa7:2ff:108b]) by DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::28a1:fa7:2ff:108b%5]) with mapi id 15.20.2199.007; Fri, 16 Aug 2019
+ 19:50:13 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "eranbe@mellanox.com" <eranbe@mellanox.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH net-next, 2/6] PCI: hv: Add a Hyper-V PCI mini driver for
+ software backchannel interface
+Thread-Topic: [PATCH net-next, 2/6] PCI: hv: Add a Hyper-V PCI mini driver for
+ software backchannel interface
+Thread-Index: AQHVUtO4i0f5rhE14EmISE1mYwr8y6b9tkuAgAAliYCAABphgIAAO6cw
+Date:   Fri, 16 Aug 2019 19:50:13 +0000
+Message-ID: <DM6PR21MB1337F60380AA39A65FB83225CAAF0@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <1565809632-39138-1-git-send-email-haiyangz@microsoft.com>
+ <1565809632-39138-3-git-send-email-haiyangz@microsoft.com>
+ <878srt8fd8.fsf@vitty.brq.redhat.com>
+ <DM6PR21MB13375FA0BA0220A91EF448E1CAAF0@DM6PR21MB1337.namprd21.prod.outlook.com>
+ <871rxl84ry.fsf@vitty.brq.redhat.com>
+In-Reply-To: <871rxl84ry.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-16T19:50:12.3000511Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=209d26bc-6f1d-42b0-a79e-e7ec32f2d7c5;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b6f933bb-f89d-4a2b-76f1-08d72282f46f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1417;
+x-ms-traffictypediagnostic: DM6PR21MB1417:|DM6PR21MB1417:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM6PR21MB1417DF72F9A6640CA19B2528CAAF0@DM6PR21MB1417.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0131D22242
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(39860400002)(396003)(346002)(136003)(13464003)(189003)(199004)(2906002)(4326008)(7696005)(478600001)(6246003)(8936002)(76116006)(53546011)(3846002)(53936002)(6436002)(9686003)(81166006)(10290500003)(81156014)(186003)(52536014)(8990500004)(71200400001)(54906003)(316002)(6916009)(66066001)(25786009)(6116002)(55016002)(66476007)(7416002)(102836004)(71190400001)(99286004)(11346002)(8676002)(76176011)(66446008)(22452003)(64756008)(14454004)(486006)(229853002)(7736002)(33656002)(10090500001)(74316002)(66556008)(446003)(5660300002)(86362001)(66946007)(476003)(6506007)(26005)(256004)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1417;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: o/+5iKdXPHGLN1nTujdKKs06bN2r9ndTS6L5JLZeKal1sQbIP+kYW7b+0QFIhG+Ea6P0Rppz6rOuqqQafVoLd3Yi9SW7aBXU1sM+i0XHJeefOYJReg0ZDu1QxIQVqEzv98t4C+WkmM7IitpCwGzFDEGVwCZ17UgRVGBEDpI4UWNN5T9ZfwrxDuPZYwevGVtqbeNBus5g1msiHOc0ExYzmEgekqO0e7oTXif++7hBagne0vbUK1Mf8g5PZMn3BCBFaskAm7BhbNtQhhbJwRo/2pHj7o4xMIlTk4f6LtEGMzxQTIiw9X3Rp3faquhs0DaflEzSGn0kRB2NZTH6VT/BdjX3jvVn5c5twRV9tRBO/vHA1nlSZ1HjjHM98EWUQSy57uvlVXO60TD1roNNgvMGscV+5w3E3ranWLG0McmBVUI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190816175157.GT250418@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6f933bb-f89d-4a2b-76f1-08d72282f46f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 19:50:13.7157
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VxDOOaVAVF9VY142Je+vczZbiU6u3Ug1eZe+6z67Ks5p2Ncjo9ObNoupeWnvSl3nyc5UiHN1TxqsnnjuKBTDjA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1417
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 10:51:57AM -0700, Matthias Kaehlcke wrote:
-> Hi Uwe,
-> 
-> On Fri, Aug 16, 2019 at 06:51:48PM +0200, Uwe Kleine-König wrote:
-> > On Tue, Jul 09, 2019 at 12:00:05PM -0700, Matthias Kaehlcke wrote:
-> > > Backlight brightness curves can have different shapes. The two main
-> > > types are linear and non-linear curves. The human eye doesn't
-> > > perceive linearly increasing/decreasing brightness as linear (see
-> > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
-> > > linearly to human eye"), hence many backlights use non-linear (often
-> > > logarithmic) brightness curves. The type of curve currently is opaque
-> > > to userspace, so userspace often uses more or less reliable heuristics
-> > > (like the number of brightness levels) to decide whether to treat a
-> > > backlight device as linear or non-linear.
-> > > 
-> > > Export the type of the brightness curve via the new sysfs attribute
-> > > 'scale'. The value of the attribute can be 'linear', 'non-linear' or
-> > > 'unknown'. For devices that don't provide information about the scale
-> > > of their brightness curve the value of the 'scale' attribute is 'unknown'.
-> > > 
-> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > 
-> > I wonder what kind of problem you are solving here. Can you describe
-> > that in a few words?
-> 
-> The human eye perceives brightness in a logarithmic manner. For
-> backlights with a linear brightness curve brightness controls like
-> sliders need to use a mapping to achieve a behavior that is perceived
-> as linear-ish (more details: http://www.pathwaylighting.com/products/downloads/brochure/technical_materials_1466797044_Linear+vs+Logarithmic+Dimming+White+Paper.pdf)
-> 
-> As of now userspace doesn't have information about the type of the
-> brightness curve, and often uses heuristics to make a guess, which may
-> be right most of the time, but not always. The new attribute eliminates
-> the need to guess.
 
-This is about backlights right? So the kernel provides to userspace an
-interval [0, x] for some x and depending on the physics of the the
-backlight configuring x/2 (probably?) either means 50% measured light or
-50% perceived light, right?
 
-I wonder if it would be possible instead of giving different backlight
-implementations the freedom to use either linear or logarithmic (or
-quadratic?) scaling and tell userspace which of the options were picked
-require the drivers to provide a (say) linear scaling and then userspace
-wouldn't need to care about the exact physics.
+> -----Original Message-----
+> From: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Sent: Friday, August 16, 2019 12:16 PM
+> To: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: KY Srinivasan <kys@microsoft.com>; Stephen Hemminger
+> <sthemmin@microsoft.com>; linux-kernel@vger.kernel.org;
+> sashal@kernel.org; davem@davemloft.net; saeedm@mellanox.com;
+> leon@kernel.org; eranbe@mellanox.com; lorenzo.pieralisi@arm.com;
+> bhelgaas@google.com; linux-pci@vger.kernel.org; linux-
+> hyperv@vger.kernel.org; netdev@vger.kernel.org
+> Subject: RE: [PATCH net-next, 2/6] PCI: hv: Add a Hyper-V PCI mini driver=
+ for
+> software backchannel interface
+>=20
+> Haiyang Zhang <haiyangz@microsoft.com> writes:
+>=20
+> >
+> > The pci_hyperv can only be loaded on VMs on Hyper-V and Azure. Other
+> > drivers like MLX5e will have symbolic dependency of pci_hyperv if they
+> > use functions exported by pci_hyperv. This dependency will cause other
+> > drivers fail to load on other platforms, like VMs on KVM. So we
+> > created this mini driver, which can be loaded on any platforms to
+> > provide the symbolic dependency.
+>=20
+> (/me wondering is there a nicer way around this, by using __weak or
+> something like that...)
+>=20
+> In case this stub is the best solution I'd suggest to rename it to someth=
+ing like
+> PCI_HYPERV_INTERFACE to make it clear it is not a separate driver (_MINI
+> makes me think so).
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Thanks! I will consider those options.
