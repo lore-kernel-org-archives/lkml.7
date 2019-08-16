@@ -2,112 +2,112 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 971ECC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473ACC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F54A2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:33:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Prdco6OY"
+	by mail.kernel.org (Postfix) with ESMTP id 275722077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfHPSdh (ORCPT
+        id S1727573AbfHPSdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 14:33:37 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44769 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfHPSdg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 14:33:36 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c81so3509629pfc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 11:33:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=1+ao2IBwUTG544LcgLQFxtptIi4HS1pjgmRhYbngM2w=;
-        b=Prdco6OYMZxzOli44Sj7mjMEKbDerzpJ6ALO0/xuB/kuNWvjc7JA3dLqsa72S4xF5O
-         rcLre3L/hA//mtWgW4kWL92XZx4mGcIxo67zNRepDBGyoVrecz2tcCxRBBI/nCZ5gKCb
-         ipfz1BhUy6JZmbc5eOEZALr8DP9Ty0hq4BhUk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=1+ao2IBwUTG544LcgLQFxtptIi4HS1pjgmRhYbngM2w=;
-        b=Ulcm7M72C0XyCvzr8pWUT6xzNkMfg6E+qIsIuvRUMD/X2Bv6YwNfQdv3QhCCzJHpp7
-         nRDPLkPgkSjtK1ZZfi9xQLVb6OWXP8QayqGh1RKxvvpRORlVdvaL3LnIkaK3TUc/5Oj+
-         E5iEGj9+t7Kny2ZVmQsb+VsH7DIc05KpjjnqtjExVtBaHwCl1BW4qghqhkJucV37hNIG
-         fh2dFWNc+EFG02k1pOTRtdUdUKmHijTYy6v5hQu1z2wncu3FX4bE9cl7S5EBaowr00r3
-         W4Pj2SMZYqqqsX0UmWcr2dW3R/QfyyBzTJNHBWa5qhFDC/3+t4Nmz17pqyXFenkCffBJ
-         pAJQ==
-X-Gm-Message-State: APjAAAWBleRNDKutAV14Smayw0USlSApkjmkgimtMxif4wjqopHSg2ua
-        B2+oRqRBPoGNCunpWgAEj85nrAVcV9srDdIxf3M0mDZBFP4f2SHM8APZosCOKhDaEO3u7rlQQa9
-        gAtZ5SZBTa96gO4+O5V1Gj7iCFUiO0vBwH9Nb0bpXBSZw+xQ/W3pCpcjqoRVaZmwXznJCy+HlyB
-        ffNCo=
-X-Google-Smtp-Source: APXvYqwg+faC+jvNrSMwHumh7wKDELq4+16i7m0qeAubzIgvhRFJqOQN8XmRXrWTBh2V6AuSQxo/FQ==
-X-Received: by 2002:a05:6a00:8e:: with SMTP id c14mr11752890pfj.241.1565980415871;
-        Fri, 16 Aug 2019 11:33:35 -0700 (PDT)
-Received: from [10.69.45.46] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id fa14sm4949344pjb.12.2019.08.16.11.33.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 16 Aug 2019 11:33:35 -0700 (PDT)
-Subject: Re: [PATCH] scsi: lpfc: fix "NULL check before some freeing functions
- is not needed"
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190721114229.GA6886@hari-Inspiron-1545>
-From:   James Smart <james.smart@broadcom.com>
-Message-ID: <585302f8-0c91-4c25-94f0-09aa1525142a@broadcom.com>
-Date:   Fri, 16 Aug 2019 11:33:33 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 16 Aug 2019 14:33:41 -0400
+Received: from mga07.intel.com ([134.134.136.100]:4860 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727381AbfHPSdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 14:33:40 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 11:33:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,394,1559545200"; 
+   d="scan'208";a="261183726"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga001.jf.intel.com with ESMTP; 16 Aug 2019 11:33:38 -0700
+Date:   Fri, 16 Aug 2019 11:33:38 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
+Message-ID: <20190816183337.GA371@iweiny-DESK2.sc.intel.com>
+References: <90e5cd11-fb34-6913-351b-a5cc6e24d85d@nvidia.com>
+ <20190814234959.GA463@iweiny-DESK2.sc.intel.com>
+ <2cbdf599-2226-99ae-b4d5-8909a0a1eadf@nvidia.com>
+ <ac834ac6-39bd-6df9-fca4-70b9520b6c34@nvidia.com>
+ <20190815132622.GG14313@quack2.suse.cz>
+ <20190815133510.GA21302@quack2.suse.cz>
+ <20190815173237.GA30924@iweiny-DESK2.sc.intel.com>
+ <b378a363-f523-518d-9864-e2f8e5bd0c34@nvidia.com>
+ <58b75fa9-1272-b683-cb9f-722cc316bf8f@nvidia.com>
+ <20190816154108.GE3041@quack2.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190721114229.GA6886@hari-Inspiron-1545>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816154108.GE3041@quack2.suse.cz>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 16, 2019 at 05:41:08PM +0200, Jan Kara wrote:
+> On Thu 15-08-19 19:14:08, John Hubbard wrote:
+> > On 8/15/19 10:41 AM, John Hubbard wrote:
+> > > On 8/15/19 10:32 AM, Ira Weiny wrote:
+> > >> On Thu, Aug 15, 2019 at 03:35:10PM +0200, Jan Kara wrote:
+> > >>> On Thu 15-08-19 15:26:22, Jan Kara wrote:
+> > >>>> On Wed 14-08-19 20:01:07, John Hubbard wrote:
+> > >>>>> On 8/14/19 5:02 PM, John Hubbard wrote:
+> > ...
+> > >> Ok just to make this clear I threw up my current tree with your patches here:
+> > >>
+> > >> https://github.com/weiny2/linux-kernel/commits/mmotm-rdmafsdax-b0-v4
+> > >>
+> > >> I'm talking about dropping the final patch:
+> > >> 05fd2d3afa6b rdma/umem_odp: Use vaddr_pin_pages_remote() in ODP
+> > >>
+> > >> The other 2 can stay.  I split out the *_remote() call.  We don't have a user
+> > >> but I'll keep it around for a bit.
+> > >>
+> > >> This tree is still WIP as I work through all the comments.  So I've not changed
+> > >> names or variable types etc...  Just wanted to settle this.
+> > >>
+> > > 
+> > > Right. And now that ODP is not a user, I'll take a quick look through my other
+> > > call site conversions and see if I can find an easy one, to include here as
+> > > the first user of vaddr_pin_pages_remote(). I'll send it your way if that
+> > > works out.
+> > > 
+> > 
+> > OK, there was only process_vm_access.c, plus (sort of) Bharath's sgi-gru
+> > patch, maybe eventually [1].  But looking at process_vm_access.c, I think 
+> > it is one of the patches that is no longer applicable, and I can just
+> > drop it entirely...I'd welcome a second opinion on that...
+> 
+> I don't think you can drop the patch. process_vm_rw_pages() clearly touches
+> page contents and does not synchronize with page_mkclean(). So it is case
+> 1) and needs FOLL_PIN semantics.
 
+John could you send a formal patch using vaddr_pin* and I'll add it to the
+tree?
 
-On 7/21/2019 4:42 AM, Hariprasad Kelam wrote:
-> As dma_pool_destroy and mempool_destroy functions has NULL check. We may
-> not need NULL check before calling them.
->
-> Fix below warnings reported by coccicheck
-> ./drivers/scsi/lpfc/lpfc_mem.c:252:2-18: WARNING: NULL check before some
-> freeing functions is not needed.
-> ./drivers/scsi/lpfc/lpfc_mem.c:255:2-18: WARNING: NULL check before some
-> freeing functions is not needed.
-> ./drivers/scsi/lpfc/lpfc_mem.c:258:2-18: WARNING: NULL check before some
-> freeing functions is not needed.
-> ./drivers/scsi/lpfc/lpfc_mem.c:261:2-18: WARNING: NULL check before some
-> freeing functions is not needed.
-> ./drivers/scsi/lpfc/lpfc_mem.c:265:2-18: WARNING: NULL check before some
-> freeing functions is not needed.
-> ./drivers/scsi/lpfc/lpfc_mem.c:269:2-17: WARNING: NULL check before some
-> freeing functions is not needed.
->
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> ---
->   drivers/scsi/lpfc/lpfc_mem.c | 21 +++++++++------------
->   1 file changed, 9 insertions(+), 12 deletions(-)
->
+Ira
 
-Thanks
-
-Reviewed-by: James Smart <james.smart@broadcom.com>
-
--- james
-
+> 
+> 								Honza
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
+> 
