@@ -2,151 +2,171 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34365C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FD7C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 019EF206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CEFE206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:20:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="yHhjG65Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="USUPb5Jo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfHPGRR (ORCPT
+        id S1726690AbfHPGUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:17:17 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:50946 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726690AbfHPGRQ (ORCPT
+        Fri, 16 Aug 2019 02:20:36 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45286 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbfHPGUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:17:16 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7G62agO029430;
-        Fri, 16 Aug 2019 02:16:31 -0400
-Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2058.outbound.protection.outlook.com [104.47.38.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ud8vh9we6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 16 Aug 2019 02:16:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BtTcCA/Lc9IVtaM0s1oZPYgZYWzh5NOS6dRQsFE8Fjns3VTqRkdvW8y0tWdHGG1uX+218livSCaICiDr1UtfFezQU9cEohKJvp9x0L1roJU02MXazKu+TPrsXVy+XPAkhMokVQ7yi54G1WujItT0iSoDtyZMyCq8PbLQDasy1fcSS+dy1A5n5VXIKdrHkCKaXpctO85blykGtxCNV34ywUziHMQDr+DyxIjRkBhYgvCr/Bugt7EjQxedJqYJjFZU5lOdf0razyVxAm9o4Dg6kAe6+NYDFeoycg4rv6wi8B/kTsloUtx/U5vuo2VAYlJipsvy53vDvFnIEC6Iu7DEgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k7nFq1yuNviaGuBAh8K9RJE10/Pxl+uqz5VtovTa48M=;
- b=d3ZlSydyuUcPTSIScgKMr0z8PJbUCOtSGhEfN8302nKQX0V1+j/sPGRiHMGB9DgFwlAa1hlt0ALLvl5tFFu9k5K9BnSj7k348a7aeX6BX+hR5QyZMedhXphqv0jyA1UEbAX/l8IqNuVn5L/ftV30EHqauM8ZfzeBsWZxeAeihxRrRJX0AX0toWMNkWqoFU2MLWBFZaa6ArSQKYgdbZ0sPp+P+yubyabi1crLJTc9n2W+8oomg30UMLtptVWsl+CdxpL3ofV0tmKniIktRs88ItV6Uo2Gl5z1VuZw5W0NgicYGPeNM6IcR3ajHu/e8bLwJNpnp0KkMldC8kdiHBxJMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
+        Fri, 16 Aug 2019 02:20:36 -0400
+Received: by mail-pl1-f194.google.com with SMTP id y8so2022311plr.12;
+        Thu, 15 Aug 2019 23:20:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k7nFq1yuNviaGuBAh8K9RJE10/Pxl+uqz5VtovTa48M=;
- b=yHhjG65ZH5tg53gBGtXj3sm8Y1iEd+w+LcG6XJo6rjPg9giu4RdePNcQQNmM8hrqbXu1yfSQw+aQ1ma6zOIrtvYwwti0bEAO6gfK8wwU9ru3bykppJaTgT8TupecxnJfP+VdwWfwhWFPLwdDxfH8FCHDA0f3RanLqu5XoawquNU=
-Received: from BN6PR03CA0061.namprd03.prod.outlook.com (2603:10b6:404:4c::23)
- by DM5PR03MB2587.namprd03.prod.outlook.com (2603:10b6:3:3e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.15; Fri, 16 Aug
- 2019 06:16:28 +0000
-Received: from BL2NAM02FT062.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::205) by BN6PR03CA0061.outlook.office365.com
- (2603:10b6:404:4c::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2178.16 via Frontend
- Transport; Fri, 16 Aug 2019 06:16:28 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- BL2NAM02FT062.mail.protection.outlook.com (10.152.77.57) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2178.16
- via Frontend Transport; Fri, 16 Aug 2019 06:16:28 +0000
-Received: from NWD2HUBCAS9.ad.analog.com (nwd2hubcas9.ad.analog.com [10.64.69.109])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x7G6GR2Y016154
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Thu, 15 Aug 2019 23:16:27 -0700
-Received: from NWD2MBX7.ad.analog.com ([fe80::190e:f9c1:9a22:9663]) by
- NWD2HUBCAS9.ad.analog.com ([fe80::44a2:871b:49ab:ea47%12]) with mapi id
- 14.03.0415.000; Fri, 16 Aug 2019 02:16:27 -0400
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "colin.king@canonical.com" <colin.king@canonical.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: dac: ad5380: fix incorrect assignment to val
-Thread-Topic: [PATCH] iio: dac: ad5380: fix incorrect assignment to val
-Thread-Index: AQHVU2DVcUTbIyeCc0SBNqWjcq+zu6b9kIuA
-Date:   Fri, 16 Aug 2019 06:16:26 +0000
-Message-ID: <876a4d5190828619f75365863cc6bf2cfea4ffea.camel@analog.com>
-References: <20190815115846.21800-1-colin.king@canonical.com>
-In-Reply-To: <20190815115846.21800-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.48.65.113]
-x-adiroutedonprem: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <833613ECA080C2478097736B0521250A@analog.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b6wpx1jZV11EfJBX2ao9RqO5NgPM+k8gE3yf97Juvvo=;
+        b=USUPb5Jopdm/rkGvdhG9iz8y0GbSUYKT0fZvhRdItvYCPkJ2Tvk+peyP2QViYMx0Ae
+         QV+XODUU6/tTCt6rAW1ndzPqd+fNAOJj1YR1pWNwI8V42OfitR7Eh81i0VT3PN4ybanD
+         qB4NtnNaDZEWjPvM8t2Rpyj4sbDkyl1attQTJftJLrzoVn6lca8R3jK9C6W3EdwRorCS
+         Gg6KWp9l5tAue9JQUDrZbREOYCnnctbAU37N8EwRUgLIFehl4wzkjnT8D34dTGTZYOef
+         5r3oDFH11Par0e8BTHu8sBm0WU/BgmLgecjja3MyyJpOuN8gWiH9sjdBFtRqn8M6q1Qk
+         bnfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b6wpx1jZV11EfJBX2ao9RqO5NgPM+k8gE3yf97Juvvo=;
+        b=uX0pzNQjWONOyhrwtWLSai6f2fvUemPLrG3sTHIXXY7Oz4MkGh1rG1KeLTcNzJHzDu
+         3t7oPd7iOwNSWQ3xcJQit8UDzcKj2MjDuuXLDIWCk5g7RHSwHQAACC6xnrtJzxm6L4R6
+         2Fcg+CxGDVdeqNVb1ysrj8hrs86cyYeLch0fcZABa7lIDgjciY03kStxJCCEy881RVWf
+         63W4c++Q20IiF++p+TnGz7BV1EZUF24I8M8Qpor8sh+lU4CcWtGWriNkVdZmsDNFrN6P
+         pk5pNIBgfDgSvksViLnOaA1RU7Zs2Rd+R0FHn6Q3BnrXb05BBU8CaDM7lYAbfcK87tQt
+         0juw==
+X-Gm-Message-State: APjAAAXTNEbu0K/PsutuXzz+iHjIPcoG6TVzFQ9vD77qjYbNqvOGI4YU
+        /Tu0tZvepmyLCJeAW8A93Rm1/yMQvBhq9g==
+X-Google-Smtp-Source: APXvYqwbVkUU6fNLZecwKHqqLM+ALbX/jeVJm7GYtxm6JjAIrxGPms6JTzDPRbhcyDEtmP1Rz3Dzng==
+X-Received: by 2002:a17:902:be01:: with SMTP id r1mr7382945pls.229.1565936435295;
+        Thu, 15 Aug 2019 23:20:35 -0700 (PDT)
+Received: from gmail.com (c-73-140-212-29.hsd1.wa.comcast.net. [73.140.212.29])
+        by smtp.gmail.com with ESMTPSA id q13sm5047936pfl.124.2019.08.15.23.20.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2019 23:20:34 -0700 (PDT)
+Date:   Thu, 15 Aug 2019 23:20:32 -0700
+From:   Andrei Vagin <avagin@gmail.com>
+To:     shuah <shuah@kernel.org>
+Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv6 30/36] selftest/timens: Add Time Namespace test for
+ supported clocks
+Message-ID: <20190816062032.GB14312@gmail.com>
+References: <20190815163836.2927-1-dima@arista.com>
+ <20190815163836.2927-31-dima@arista.com>
+ <02add700-b626-a1b4-09e1-1e4d5cd242f2@kernel.org>
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(136003)(39860400002)(2980300002)(189003)(199004)(36756003)(229853002)(6246003)(14454004)(2501003)(3846002)(4326008)(186003)(336012)(8676002)(478600001)(6116002)(8936002)(7736002)(305945005)(7636002)(436003)(2201001)(86362001)(26005)(102836004)(476003)(7696005)(356004)(23676004)(110136005)(76176011)(426003)(106002)(246002)(118296001)(126002)(70206006)(11346002)(47776003)(2616005)(14444005)(446003)(5660300002)(2486003)(50466002)(70586007)(486006)(2906002)(54906003)(316002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR03MB2587;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9c4babc2-4314-4418-f885-08d72211464e
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328)(7193020);SRVR:DM5PR03MB2587;
-X-MS-TrafficTypeDiagnostic: DM5PR03MB2587:
-X-Microsoft-Antispam-PRVS: <DM5PR03MB2587142E38E7BFBB0F2CE90EF9AF0@DM5PR03MB2587.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0131D22242
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: jSCLMuc/+wZO/p0EgK4ViwjIwA3mw1NYY2vypapzMMTzDJMm25rK/6dxNPyRD+4PrCr+3C7qacMnJmuYueAO4s5WjXFdGA/xSyJGt1AC+LnZcVYsikKpMRZBvEtG8WsRNP2b8M/voM7YJcAsSU9WOqeQ+bSmb/tTgLRUfHGqREb2F6O+MUEkvMbwoC/TTpoHGW4XMLZMDoXQPb/Al0IweLyWlgpA+Zpl9/U/eWbkDu82d3B28paiYzccfeXL0PKSs3aiK/PJagSoxmN0c8uLvrUctEAr+JcwIRia4ZzOih2P1s8H4IZGcNv4ArBk1oxIJdVfqv8jwxPrdoZDgixRS2Jrvqtb/b+Er7eCxcOuzTr1F7jSstYssMJkJ6WHSBolAJ7B6iEcJnHlxtrVkgYvKg+FbWfhh3Hh2PUYLG3653k=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2019 06:16:28.4412
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c4babc2-4314-4418-f885-08d72211464e
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR03MB2587
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-16_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908160066
+Content-Type: text/plain; charset=koi8-r
+Content-Disposition: inline
+In-Reply-To: <02add700-b626-a1b4-09e1-1e4d5cd242f2@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA4LTE1IGF0IDEyOjU4ICswMTAwLCBDb2xpbiBLaW5nIHdyb3RlOg0KPiBb
-RXh0ZXJuYWxdDQo+IA0KDQpSZXZpZXdlZC1ieTogQWxleGFuZHJ1IEFyZGVsZWFuIDxhbGV4YW5k
-cnUuYXJkZWxlYW5AYW5hbG9nLmNvbT4NCg0KPiBGcm9tOiBDb2xpbiBJYW4gS2luZyA8Y29saW4u
-a2luZ0BjYW5vbmljYWwuY29tPg0KPiANCj4gQ3VycmVudGx5IHRoZSBwb2ludGVyIHZhbCBpcyBi
-ZWluZyBpbmNvcnJlY3RseSBpbmNyZW1lbnRlZA0KPiBpbnN0ZWFkIG9mIHRoZSB2YWx1ZSBwb2lu
-dGVkIHRvIGJ5IHZhbC4gRml4IHRoaXMgYnkgYWRkaW5nDQo+IGluIHRoZSBtaXNzaW5nICogaW5k
-aXJlY3Rpb24gb3BlcmF0b3IuDQo+IA0KPiBBZGRyZXNzZXMtQ292ZXJpdHk6ICgiVW51c2VkIHZh
-bHVlIikNCj4gRml4ZXM6IGMwM2YyYzUzNjgxOCAoInN0YWdpbmc6aWlvOmRhYzogQWRkIEFENTM4
-MCBkcml2ZXIiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0Bj
-YW5vbmljYWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvaWlvL2RhYy9hZDUzODAuYyB8IDIgKy0N
-Cj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvaWlvL2RhYy9hZDUzODAuYyBiL2RyaXZlcnMvaWlvL2RhYy9h
-ZDUzODAuYw0KPiBpbmRleCA0MzM1MjE0ODAwZDIuLjJlYmUwODMyNjA0OCAxMDA2NDQNCj4gLS0t
-IGEvZHJpdmVycy9paW8vZGFjL2FkNTM4MC5jDQo+ICsrKyBiL2RyaXZlcnMvaWlvL2RhYy9hZDUz
-ODAuYw0KPiBAQCAtMjIwLDcgKzIyMCw3IEBAIHN0YXRpYyBpbnQgYWQ1MzgwX3JlYWRfcmF3KHN0
-cnVjdCBpaW9fZGV2ICppbmRpb19kZXYsDQo+ICAJCWlmIChyZXQpDQo+ICAJCQlyZXR1cm4gcmV0
-Ow0KPiAgCQkqdmFsID4+PSBjaGFuLT5zY2FuX3R5cGUuc2hpZnQ7DQo+IC0JCXZhbCAtPSAoMSA8
-PCBjaGFuLT5zY2FuX3R5cGUucmVhbGJpdHMpIC8gMjsNCj4gKwkJKnZhbCAtPSAoMSA8PCBjaGFu
-LT5zY2FuX3R5cGUucmVhbGJpdHMpIC8gMjsNCj4gIAkJcmV0dXJuIElJT19WQUxfSU5UOw0KPiAg
-CWNhc2UgSUlPX0NIQU5fSU5GT19TQ0FMRToNCj4gIAkJKnZhbCA9IDIgKiBzdC0+dnJlZjsNCg==
+On Thu, Aug 15, 2019 at 05:18:21PM -0600, shuah wrote:
+> Hi Dmitry,
+> 
+> Thanks for the patch.
+> 
+> On 8/15/19 10:38 AM, Dmitry Safonov wrote:
+> > A test to check that all supported clocks work on host and inside
+> > a new time namespace. Use both ways to get time: through VDSO and
+> > by entering the kernel with implicit syscall.
+> > 
+> > Introduce a new timens directory in selftests framework for
+> > the next timens tests.
+> > 
+> > Co-developed-by: Andrei Vagin <avagin@openvz.org>
+> > Signed-off-by: Andrei Vagin <avagin@openvz.org>
+> > Signed-off-by: Dmitry Safonov <dima@arista.com>
+> > ---
+> >   tools/testing/selftests/Makefile          |   1 +
+> >   tools/testing/selftests/timens/.gitignore |   1 +
+> >   tools/testing/selftests/timens/Makefile   |   5 +
+> >   tools/testing/selftests/timens/config     |   1 +
+> >   tools/testing/selftests/timens/log.h      |  26 +++
+> >   tools/testing/selftests/timens/timens.c   | 185 ++++++++++++++++++++++
+> >   tools/testing/selftests/timens/timens.h   |  63 ++++++++
+> >   7 files changed, 282 insertions(+)
+> >   create mode 100644 tools/testing/selftests/timens/.gitignore
+> >   create mode 100644 tools/testing/selftests/timens/Makefile
+> >   create mode 100644 tools/testing/selftests/timens/config
+> >   create mode 100644 tools/testing/selftests/timens/log.h
+> >   create mode 100644 tools/testing/selftests/timens/timens.c
+> >   create mode 100644 tools/testing/selftests/timens/timens.h
+> > 
+> > diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+> > index 25b43a8c2b15..6fc63b84a857 100644
+> > --- a/tools/testing/selftests/Makefile
+> > +++ b/tools/testing/selftests/Makefile
+> > @@ -47,6 +47,7 @@ TARGETS += splice
+> >   TARGETS += static_keys
+> >   TARGETS += sync
+> >   TARGETS += sysctl
+> > +TARGETS += timens
+> 
+> How long does this test run for?
+
+On my laptop, it needs 30 miliseconds.
+
+> Does this test need to be run
+> as root? If yes, please add a root check and skip the test.
+
+Yes, it needs to be as root. We will add this check. Thanks.
+
+> 
+> What does the test output looks like for skip and pass/fail cases?
+
+[avagin@laptop timens]$ ./timens 
+not ok 1 # SKIP Time namespaces are not supported
+
+[root@fc24 timens]# ./timens 
+1..10
+ok 1 Passed for CLOCK_BOOTTIME (syscall)
+ok 2 Passed for CLOCK_BOOTTIME (vdso)
+ok 3 Passed for CLOCK_BOOTTIME_ALARM (syscall)
+ok 4 Passed for CLOCK_BOOTTIME_ALARM (vdso)
+ok 5 Passed for CLOCK_MONOTONIC (syscall)
+ok 6 Passed for CLOCK_MONOTONIC (vdso)
+ok 7 Passed for CLOCK_MONOTONIC_COARSE (syscall)
+ok 8 Passed for CLOCK_MONOTONIC_COARSE (vdso)
+ok 9 Passed for CLOCK_MONOTONIC_RAW (syscall)
+ok 10 Passed for CLOCK_MONOTONIC_RAW (vdso)
+# Pass 10 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
+
+Thanks,
+Andrei
+
+> 
+> thanks,
+> -- Shuah
