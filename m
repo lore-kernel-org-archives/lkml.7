@@ -2,121 +2,64 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69B5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85693C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD1320644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C93C2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 06:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EWN6gF4y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y1tPwsGX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfHPGlC (ORCPT
+        id S1726947AbfHPGlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 02:41:02 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54037 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbfHPGlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 02:41:02 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 468txk5tSjz9sDB;
-        Fri, 16 Aug 2019 16:40:58 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565937659;
-        bh=tfX0NwFr0UP46mZuZ1ODyt0clSY8LNIqReqiTQRwlq8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=EWN6gF4ybXBku0bB4wD+/B6yObwdrCGRTuCXknSAkRU9VJSIF0Mt+42HglZ2FF7Os
-         hFWGq7VaOkAblbzONFGkGBXgE+sWn97FAno1OOEPCi9Sj4MaNcfRxny0ayIaVAj/BE
-         od14wcCtmHoFuyQ1t5nE05fRtBW10i18C8gMvHCriXjkskSyi/CdXVgXr+YPk0/9cU
-         E1r2PREV7LZENwMfxLbubb1MgqHtW+bkd4+A7SfK9VJl/EFAKNq/KWKq3CSI8nGkjd
-         M6OGmRnivSH6731McsC68xopAu/DsCH/9qjwxP+aX44YwLzXCSUsZ6P7wmiYIAUouR
-         2rj9mxF5tCQeg==
-Date:   Fri, 16 Aug 2019 16:40:57 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Vasquez <andrewv@marvell.com>,
-        Bill Kuzeja <William.Kuzeja@stratus.com>
-Subject: linux-next: manual merge of the scsi tree with the scsi-fixes tree
-Message-ID: <20190816164057.62a5428e@canb.auug.org.au>
+        Fri, 16 Aug 2019 02:41:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49566 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbfHPGlX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 02:41:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/3AMdneQMHbJ6jzTXFd3V+Aivs0XGBJ9bktDdp3GzLQ=; b=Y1tPwsGXD3zLqx6AOMMUC3Ugj
+        xvuB4D2C6bk0bsDZUc2vCFCGWjhFXIVzYgysQXCcQRB+uikJ0X/l2H1E1y5QD8FXqA88WZOUhmp8R
+        U6kV5i27Z4lDw2/Sm9wfTyEATaiZTF3TiyVuQZ3IxRvey7pa7QuyHbhRCJsjIMC02NAylFSATtg/P
+        Liz4EatPY+I/G/jvRno3m2IaEvVXSFDadd4wOM63qLJOvYGraOJEbkkulmEVq6vQ2YLLFGss0Rjnp
+        8oi7Fbs95eCMQPUOgvBZ4KT9i8SXNpRGURLuo5Csu6hmKkNjXlqBU0/I8zcD2FkEjXhudVjYt8BSL
+        oAd7Pn+9A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hyVvN-0003KH-5j; Fri, 16 Aug 2019 06:41:21 +0000
+Date:   Thu, 15 Aug 2019 23:41:21 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     hch@infradead.org, akpm@linux-foundation.org, tytso@mit.edu,
+        viro@zeniv.linux.org.uk, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 2/2] vfs: don't allow writes to swap files
+Message-ID: <20190816064121.GB2024@infradead.org>
+References: <156588514105.111054.13645634739408399209.stgit@magnolia>
+ <156588515613.111054.13578448017133006248.stgit@magnolia>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+b=tVCV70kbm=2sVWpR9z_x";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156588515613.111054.13578448017133006248.stgit@magnolia>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+b=tVCV70kbm=2sVWpR9z_x
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The new checks look fine to me, but where does the inode_drain_writes()
+function come from, I can't find that in my tree anywhere.
 
-Hi all,
-
-Today's linux-next merge of the scsi tree got a conflict in:
-
-  drivers/scsi/qla2xxx/qla_os.c
-
-between commit:
-
-  26fa656e9a0c ("scsi: qla2xxx: Fix gnl.l memory leak on adapter init failu=
-re")
-
-from the scsi-fixes tree and commit:
-
-  26a77799195f ("scsi: qla2xxx: Correct error handling during initializatio=
-n failures")
-
-from the scsi tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/scsi/qla2xxx/qla_os.c
-index 98e60a34afd9,7d73b6a7cf41..000000000000
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@@ -4824,8 -4802,7 +4810,8 @@@ struct scsi_qla_host *qla2x00_create_ho
-  		    "Alloc failed for scan database.\n");
-  		dma_free_coherent(&ha->pdev->dev, vha->gnl.size,
-  		    vha->gnl.l, vha->gnl.ldma);
- +		vha->gnl.l =3D NULL;
-- 		scsi_remove_host(vha->host);
-+ 		scsi_host_put(vha->host);
-  		return NULL;
-  	}
-  	INIT_DELAYED_WORK(&vha->scan.scan_work, qla_scan_work_fn);
-
---Sig_/+b=tVCV70kbm=2sVWpR9z_x
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1WT/kACgkQAVBC80lX
-0GyXZgf+J/dpW6ZdfU/hkkxLLIT/SW7MshgBWGmC1HN2EWDFds8y7AwS1KdEJAk+
-5+J/F4V3TxFdI4qKzVHGP/ICeHrUDBDAlF5eDgxezLv8IUGKCM4l79FkfZrTV7B/
-Jmdn7RTYRIKZHaCo6ieT1aakanifWpjFnrlIQic7YLKn1ax6eXHQCV75LNiERAC7
-N+tFiDwpFf4DFCs4A+ijrJxBlXAsWHKttRD8gfYiizoaL9jFxSqU8oBZFucTUW+b
-wxUZBV2dLticaBaF4YGqVP4Sq+Sjfcg7tJ22eYWYClHXsvIkQg2XxteqJi7XZinx
-LkGGhZQMJUN5Ifh80a11CrQ4NuSCYw==
-=4wPF
------END PGP SIGNATURE-----
-
---Sig_/+b=tVCV70kbm=2sVWpR9z_x--
+Also what does inode_drain_writes do about existing shared writable
+mapping?  Do we even care about that corner case?
