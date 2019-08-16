@@ -2,67 +2,103 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D4AC3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AC8C41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AACB9206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:00:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565978408;
-	bh=dW5YFHRW8xSZ9ngplk7KwCK0vlp2/MMykcr/x8hk9xE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=jlBSGryJ/Jh9DLxCtZtP95rT1qXph+WKrBPkboGgIPupJhwIIYQG2vks7bVNYEdNe
-	 CQMjwiR4O1uNcLqM5LM0R0UssUFhLA+7eCHSjjvfAUxFU+dtS2I8wve6ew12NiPZgr
-	 bLOibzvLgoPghGFMcyY4CxsXObAatDiTrJKg1/ck=
+	by mail.kernel.org (Postfix) with ESMTP id 7FD7320665
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 18:00:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOyQ3WS/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfHPSAH (ORCPT
+        id S1727585AbfHPSAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 14:00:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbfHPSAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 14:00:07 -0400
-Subject: Re: [GIT PULL] arm64 fixes for 5.3-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565978406;
-        bh=dW5YFHRW8xSZ9ngplk7KwCK0vlp2/MMykcr/x8hk9xE=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=pEKhVKy6rw7zfO0pMPjmx0UgKYMqaxYg/IblUm5ytPMQ8DRpJfsaneDUiV60CT/yq
-         tV6TmrGbcGitjI7Wg292TtnXvrtzfQ8Uw3VaGE4U6lbwpRyKu8PVFzIASROboUeMqw
-         cH/00iqsKK6OwTMw0EmfIO0SOVKMTuq9r6aXhcws=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190816172411.GA36979@arrakis.emea.arm.com>
-References: <20190816172411.GA36979@arrakis.emea.arm.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190816172411.GA36979@arrakis.emea.arm.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
-X-PR-Tracked-Commit-Id: b6143d10d23ebb4a77af311e8b8b7f019d0163e6
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b7e7c85dc7b0ea5ff821756c331489e3b151eed1
-Message-Id: <156597840617.938.7117793658442703288.pr-tracker-bot@kernel.org>
-Date:   Fri, 16 Aug 2019 18:00:06 +0000
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+        Fri, 16 Aug 2019 14:00:42 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41303 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfHPSAm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 14:00:42 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x15so3300103pgg.8;
+        Fri, 16 Aug 2019 11:00:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=wATUQ5AhTqVsNORBNhI3H9hrgxCh4ZvalSiVwIYDNT0=;
+        b=WOyQ3WS/UO5ayKgN7fhfS2CGPYMqEaBxODLrYtdL5AZTCzK//pmkhLJjk22WwH2EgH
+         gQ1lP/Gx8XdKY5FYQzXzHFU8AiQbLcIHi6gQf2p9/kaHkJCKGjuWVzhzLgt+KQLvBPOs
+         omInQTPSACaKEaoX36Wby+FrsUAd9a3z9Ia6aRuIdNpn4/CFhV/KJvtdQURuqYlGtf1b
+         +Jlg4iGbyePWwUg0yElh+c8T5cAI5LWhSWEiT0p1YGts5ltHEnbgEAEdvdCeSgV7MGsn
+         ehboJZbJ7egDKE56CG8e2UZ3gYx32ye3qu0T9cu2yfKDd2Gsqp2WCrq4wNp5UYuxiRwp
+         gJqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wATUQ5AhTqVsNORBNhI3H9hrgxCh4ZvalSiVwIYDNT0=;
+        b=ZQeU6mK6pN63NM3gmgWSrvkrb4y/PrVlLYc9fJak6DyA+FSV+/x9siB2Mytj23wJvX
+         Dz34CVYPo8TNCvMJlgtdDTQOINl5dH9W4PUc7yToJ5QPxpskD4feybgECZRt0tdl5x9h
+         EPEM756VDrt37Xul7+2cCzn/pyFGBekRGQ4JL0gGhexuNunJA8ekwG6e45ZpN/8WuUv4
+         MOxM396J8wnN/LxLmrvN5NgIa92GNFwv0xe8f0L8uZ9DcFAbYdyD9epW9qcg+tWWxPmA
+         WxUVD9b4gLqrKIGcbv5nvfY+XfIs2hHWIQ+F7Ad7Z0b7KoFRKo/D2yW8Wh57S8muw/Wo
+         KW0Q==
+X-Gm-Message-State: APjAAAVnrktObuDyVwPq92KgndhUy2obbopUaQ4mnQpbzFt8YFxzqmJq
+        VYs3wC+8Q+m+YiL7YueOeEs=
+X-Google-Smtp-Source: APXvYqzg9EbcnjeIhLdeH5kFtiTthmbzOmZ7YYmw/QcVioc8vm7RaE1mqcqla5aXgXAhOFrNJ8Mu/w==
+X-Received: by 2002:aa7:9638:: with SMTP id r24mr11489219pfg.68.1565978441649;
+        Fri, 16 Aug 2019 11:00:41 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.34])
+        by smtp.gmail.com with ESMTPSA id 185sm11019906pff.54.2019.08.16.11.00.40
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 16 Aug 2019 11:00:41 -0700 (PDT)
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     sumit.semwal@linaro.org
+Cc:     linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        Bharath Vedartham <linux.bhar@gmail.com>
+Subject: [PATCH] dma-buf: Fix memory leak in dma_buf_set_name
+Date:   Fri, 16 Aug 2019 23:30:22 +0530
+Message-Id: <1565978422-9661-1-git-send-email-linux.bhar@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 16 Aug 2019 18:24:13 +0100:
+This patch fixes a memory leak bug reported by syzbot. Link to the
+bug is given at [1].
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+A local variable name is used to hold the copied user buffer string
+using strndup_user. strndup_user allocates memory using
+kmalloc_track_caller in memdup_user. This kmalloc allocation needs to be
+followed by a kfree.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b7e7c85dc7b0ea5ff821756c331489e3b151eed1
+This patch has been tested by a compile test.
 
-Thank you!
+[1] https://syzkaller.appspot.com/bug?id=ce692a3aa13e00e335e090be7846c6eb60ddff7a
 
+Reported-by: syzbot+b2098bc44728a4efb3e9@syzkaller.appspotmail.com
+Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+---
+ drivers/dma-buf/dma-buf.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index f45bfb2..9798f6d 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -342,6 +342,7 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+ 	}
+ 	kfree(dmabuf->name);
+ 	dmabuf->name = name;
++	kfree(name);
+ 
+ out_unlock:
+ 	mutex_unlock(&dmabuf->lock);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.7.4
+
