@@ -2,86 +2,103 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B6BC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F86C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 083D12173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9299420644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:21:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2BgCYLk1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bdoe+EPy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfHPNT5 (ORCPT
+        id S1727302AbfHPNVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 09:19:57 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:37476 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726742AbfHPNT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 09:19:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=H1gBj1kW5szAndmHTcMrgfLyKfd6e1h5nu6uGkk0ceA=; b=2BgCYLk1+pnghjH6m1WkYd2x5e
-        vLrhtmpNXL7uZhdDGlzP0N3sNv8Hxd3GjAukJWrE0eZc3SHmeKGTYp+kXFMp/1J1G++ye5794gZuo
-        HIcR/FeJqPlURZ8A0do7Y/aJXl/dghXi/TrDZdmY/RysLG5SboMN95cvKaFms46M0NzY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hyc92-00008Z-S4; Fri, 16 Aug 2019 15:19:52 +0200
-Date:   Fri, 16 Aug 2019 15:19:52 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
-        hkallweit1@gmail.com
-Subject: Re: [PATCH v5 10/13] net: phy: adin: implement PHY subsystem
- software reset
-Message-ID: <20190816131952.GA307@lunn.ch>
-References: <20190816131011.23264-1-alexandru.ardelean@analog.com>
- <20190816131011.23264-11-alexandru.ardelean@analog.com>
+        Fri, 16 Aug 2019 09:21:16 -0400
+Received: from mail-pl1-f172.google.com ([209.85.214.172]:35704 "EHLO
+        mail-pl1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727087AbfHPNVQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 09:21:16 -0400
+Received: by mail-pl1-f172.google.com with SMTP id gn20so2459970plb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 06:21:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dm2N+LnWuHtZbkuSIck0zIcrvDsNHqwjs1kno32i+NQ=;
+        b=Bdoe+EPyJIVt0t4vtNlH3KtR97Uv+lIglmMvP9oVETaOhMb+OsBJBYdKEl2FqG4npb
+         FKKbloJWQQBhLJ2altHF5EOizbJD3qSmt9okzqqKsWIRYBdLEkGtHFs731ihxLty3TUC
+         kgkjyN94T3r46VAC0bHTLz26wdM+WhZbYjLXu02lqXIpfyQhRTerQwuAXbuTqsDBdLWE
+         kvXX2rTNUp0qb4+8nmSkJzJzCJZ4bt3wSyu48WnFkf/FIsDIjvn4FA8eb6ZNa9/Jhq3C
+         aC6fMBrfgQKu9fiGJZ4ESItwoOimDspMMwM5F7upsNxUdKmOmfd8C+9gfuH28qCDi0Vb
+         9HpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dm2N+LnWuHtZbkuSIck0zIcrvDsNHqwjs1kno32i+NQ=;
+        b=TTWHFxhKjb3kGRfLdEs672u5ZSmYi+x2jwKRfVQMti6fklnOegvIM66q5Nmf/hHEIv
+         BlASukublOuLoPbwnuw+Ovj3LNqxDHvhWwbZo+bTdjcEagFZRtCF0FIzJcg6JWw+Zvw7
+         VRkhoe6m4ZtDyvHSqVD5IdRsuc2omPTNNas7wqpiMEO7IprkEbrMJIf0b/k9ttB1/Otn
+         BwwOO3PJ91/u5msX8O0VSHKL2s5ehVseFTXvob94GvVqoNsHwZC2Bo1LfIMiR2qjx5tE
+         BGRYoRYebOEs3syyONpITRu9jjDhss0F/Zi/VrXIPonuKP1ABUqx4wHIMwTmcxBX2kTC
+         xpJA==
+X-Gm-Message-State: APjAAAVs4fwOK7fM3en6R2eCZHivQ6FJ/ZIWnux/LByA0VzoR/Qjtrct
+        0oWwH5kimfuu+8grFuEKig==
+X-Google-Smtp-Source: APXvYqydGyP1mgEtu3qW6HKoHuLtWSwwvIrW5xwjx4KYVdKuvGs6ug/t1qFEg81KA7jnC2oBLt7JpQ==
+X-Received: by 2002:a17:902:4401:: with SMTP id k1mr9272692pld.193.1565961675287;
+        Fri, 16 Aug 2019 06:21:15 -0700 (PDT)
+Received: from mypc ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id d12sm6107656pfn.11.2019.08.16.06.21.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 06:21:12 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 21:21:02 +0800
+From:   Pingfan Liu <kernelfans@gmail.com>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Jan Kara <jack@suse.cz>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2] mm/migrate: clean up useless code in
+ migrate_vma_collect_pmd()
+Message-ID: <20190816132102.GA10848@mypc>
+References: <20190807052858.GA9749@mypc>
+ <1565167272-21453-1-git-send-email-kernelfans@gmail.com>
+ <20190815171918.GC30916@redhat.com>
+ <d0a8ab6e-1122-a101-6139-9d7dadb9e999@nvidia.com>
+ <20190815194021.GB9253@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190816131011.23264-11-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190815194021.GB9253@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 04:10:08PM +0300, Alexandru Ardelean wrote:
-> The ADIN PHYs supports 4 types of reset:
-> 1. The standard PHY reset via BMCR_RESET bit in MII_BMCR reg
-> 2. Reset via GPIO
-> 3. Reset via reg GeSftRst (0xff0c) & reload previous pin configs
-> 4. Reset via reg GeSftRst (0xff0c) & request new pin configs
+On Thu, Aug 15, 2019 at 03:40:21PM -0400, Jerome Glisse wrote:
+> On Thu, Aug 15, 2019 at 12:23:44PM -0700, Ralph Campbell wrote:
+> [...]
+> > 
+> > I don't understand. The only use of "pfn" I see is in the "else"
+> > clause above where it is set just before using it.
 > 
-> Resets 2, 3 & 4 are almost identical, with the exception that the crystal
-> oscillator is available during reset for 2.
-> 
-> This change implements subsystem software reset via the GeSftRst and
-> reloading the previous pin configuration (so reset number 3).
-> This will also reset the PHY core regs (similar to reset 1).
-> 
-> Since writing bit 1 to reg GeSftRst is self-clearing, the only thing that
-> can be done, is to write to that register, wait a specific amount of time
-> (10 milliseconds should be enough) and try to read back and check if there
-> are no errors on read. A busy-wait-read won't work well, and may sometimes
-> work or not work.
-> 
-> In case phylib is configured to also do a reset via GPIO, the ADIN PHY may
-> be reset twice when the PHY device registers, but that isn't a problem,
-> since it's being done on boot (or PHY device register).
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Ok i managed to confuse myself with mpfn and probably with old
+> version of the code. Sorry for reading too quickly. Can we move
+> unsigned long pfn; into the else { branch so that there is no
+> more confusion to its scope.
+Looks better, I will update v3.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+Thanks,
+	Pingfan
