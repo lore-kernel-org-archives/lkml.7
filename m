@@ -2,95 +2,67 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F3AC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0468BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 015DD20644
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:23:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cYrzgGco"
+	by mail.kernel.org (Postfix) with ESMTP id D91ED20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfHPHXj (ORCPT
+        id S1726710AbfHPHZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:23:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46960 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfHPHXi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:23:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=V5Zw49kQPZrMPdAV7XGYxZ4KnGSn0pXrZQuwIbjovPc=; b=cYrzgGcooFyvmagoHDTahcizcr
-        ulAhAjBwfwJ77g7fjQVCrejwUPdW3+451tmr4XYxlVX8GxKY6cn3W8XzSqaVepJUUvLLtSTSTGMS2
-        D6pUyCdbRYLrAnYboEv/JXnpSBpVixFIvWgyIfF5md8ZZXHK3JZ1uZkdsSR/CUj+a7OAuiX/QKZ4f
-        IxilPeoBwYRLMyeTi9CQjAPYTO5lWlcHXkdKE5px7Tm0Z5Uv09MdQjAqWuzskLMQWZVz71rZHpeY5
-        mK5d/REaLrxG8p8FjuCzLwlM5I1DLEWp0Hs1N6GdEsdYKhkTSq8vu8t5mK7Hc4pyUMSFWtRpfVilP
-        iCSS6GWw==;
-Received: from 089144199030.atnat0008.highway.a1.net ([89.144.199.30] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hyWa8-0003qQ-O9; Fri, 16 Aug 2019 07:23:29 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org
-Cc:     Guan Xuetao <gxt@pku.edu.cn>, Shawn Anastasio <shawn@anastas.io>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] arm64: document the choice of page attributes for pgprot_dmacoherent
-Date:   Fri, 16 Aug 2019 09:07:54 +0200
-Message-Id: <20190816070754.15653-7-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190816070754.15653-1-hch@lst.de>
-References: <20190816070754.15653-1-hch@lst.de>
+        Fri, 16 Aug 2019 03:25:52 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34278 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726575AbfHPHZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 03:25:51 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 88D86B213B1AD625CCD0;
+        Fri, 16 Aug 2019 15:25:46 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 16 Aug
+ 2019 15:25:36 +0800
+Subject: Re: [PATCH] staging: erofs: use common file type conversion
+To:     Gao Xiang <gaoxiang25@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, <linux-fsdevel@vger.kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        <weidu.du@huawei.com>, Fang Wei <fangwei1@huawei.com>
+References: <20190816071142.8633-1-gaoxiang25@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <bb4b3b82-18d4-fbd5-47ab-be13de148c39@huawei.com>
+Date:   Fri, 16 Aug 2019 15:25:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190816071142.8633-1-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on an email from Will Deacon.
+On 2019/8/16 15:11, Gao Xiang wrote:
+> Deduplicate the EROFS file type conversion implementation and
+> remove EROFS_FT_* definitions since it's the same as defined
+> by POSIX, let's follow ext2 as Linus pointed out [1]
+> commit e10892189428 ("ext2: use common file type conversion").
+> 
+> [1] https://lore.kernel.org/r/CAHk-=wiUs+b=iVKM3mVooXgVk7cmmC67KTmnAuL0cd_cMMVAKw@mail.gmail.com/
+> 
+> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/arm64/include/asm/pgtable.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 6700371227d1..6ff221d9a631 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -435,6 +435,14 @@ static inline pmd_t pmd_mkdevmap(pmd_t pmd)
- 	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_NORMAL_NC) | PTE_PXN | PTE_UXN)
- #define pgprot_device(prot) \
- 	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_PXN | PTE_UXN)
-+/*
-+ * DMA allocations for non-coherent devices use what the Arm architecture calls
-+ * "Normal non-cacheable" memory, which permits speculation, unaligned accesses
-+ * and merging of writes.  This is different from "Strongly Ordered" memory
-+ * which is intended for MMIO and thus forbids speculation, preserves access
-+ * size, requires strict alignment and also forces write responses to come from
-+ * the endpoint.
-+ */
- #define pgprot_dmacoherent(prot) \
- 	__pgprot_modify(prot, PTE_ATTRINDX_MASK, \
- 			PTE_ATTRINDX(MT_NORMAL_NC) | PTE_PXN | PTE_UXN)
--- 
-2.20.1
-
+Thanks,
