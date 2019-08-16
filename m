@@ -2,109 +2,129 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 565E5C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EF8C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A9B12077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B44F2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 07:52:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="lvt/3NcS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfHPHwR (ORCPT
+        id S1726879AbfHPHwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 03:52:17 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:60601 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbfHPHwQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 03:52:16 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 61A9610000A;
-        Fri, 16 Aug 2019 07:52:12 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 09:52:11 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Bhushan Shah <bshah@kde.org>
-Cc:     Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, Wolfram Sang <wsa@the-dreams.de>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/3] arm64: allwinner: h6: add i2c0 node in PineH64
-Message-ID: <20190816075211.xaq54q2cdniwjpp3@flea>
-References: <20190811090503.32396-1-bshah@kde.org>
- <20190816064710.18280-1-bshah@kde.org>
- <20190816064710.18280-4-bshah@kde.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ft24qo4b5lbfpatv"
-Content-Disposition: inline
-In-Reply-To: <20190816064710.18280-4-bshah@kde.org>
-User-Agent: NeoMutt/20180716
+        Fri, 16 Aug 2019 03:52:23 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:57860 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726575AbfHPHwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 03:52:23 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 468wX40Bpwz9tyXd;
+        Fri, 16 Aug 2019 09:52:20 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=lvt/3NcS; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id xABwuLbzj_RA; Fri, 16 Aug 2019 09:52:19 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 468wX34sM3z9tyXb;
+        Fri, 16 Aug 2019 09:52:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1565941939; bh=NVZpQ45mQXEYG6C2v7/MpBMTIZomncVuSbE8wIXGvu4=;
+        h=From:Subject:To:Cc:Date:From;
+        b=lvt/3NcSJHrHfZ7jQKH+gkHhVhelh1T8NlQai+6/Rj7Gdf7KiFlWkuUgrUA/g47FJ
+         O9W80bZamG82xGYj/lG80tupKGtP1+5KQzFAvspDMDjDJ41YCvU/w1a/X0rcIvKCna
+         2JEKlxMu6yTnZ2rMV5nZdcy/M0PfNd/2AJ8Yf1pI=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C79498B776;
+        Fri, 16 Aug 2019 09:52:20 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id k_440nLP-DAb; Fri, 16 Aug 2019 09:52:20 +0200 (CEST)
+Received: from pc17473vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AD1EE8B754;
+        Fri, 16 Aug 2019 09:52:20 +0200 (CEST)
+Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 993A86B6CD; Fri, 16 Aug 2019 07:52:20 +0000 (UTC)
+Message-Id: <c6cea38f90480268d439ca44a645647e260fff09.1565941808.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/32: Add warning on misaligned copy_page() or
+ clear_page()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 16 Aug 2019 07:52:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+copy_page() and clear_page() expect page aligned destination, and
+use dcbz instruction to clear entire cache lines based on the
+assumption that the destination is cache aligned.
 
---ft24qo4b5lbfpatv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+As shown during analysis of a bug in BTRFS filesystem, a misaligned
+copy_page() can create bugs that are difficult to locate (see Link).
 
-65;5603;1c
-On Fri, Aug 16, 2019 at 12:17:10PM +0530, Bhushan Shah wrote:
-> i2c0 bus is exposed by PI-2 BUS in the PineH64, model B.
->
-> Signed-off-by: Bhushan Shah <bshah@kde.org>
-> ---
-> Changes in v2:
->   - Don't enable the i2c0 node in PineH64 by default
->
->  arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> index 684d1daa3081..97d9b7c63fb3 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> @@ -160,6 +160,15 @@
->  	vcc-pg-supply = <&reg_aldo1>;
->  };
->
-> +/* This i2c interface is exposed on PI-2 BUS, Pin 3 (I2C_SDA) and 5 (I2C_SCL) */
-> +&i2c0 {
-> +	status = "disabled";
-> +};
+Add an explicit WARNING when copy_page() or clear_page() are called
+with misaligned destination.
 
-This property is set to disabled in the DTSI already
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Erhard F. <erhard_f@mailbox.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=204371
+---
+ arch/powerpc/include/asm/page_32.h | 4 ++++
+ arch/powerpc/kernel/misc_32.S      | 5 +++++
+ 2 files changed, 9 insertions(+)
 
-> +&i2c0_pins {
-> +	bias-pull-up;
-> +};
-> +
+diff --git a/arch/powerpc/include/asm/page_32.h b/arch/powerpc/include/asm/page_32.h
+index 683dfbc67ca8..d64dfe3ac712 100644
+--- a/arch/powerpc/include/asm/page_32.h
++++ b/arch/powerpc/include/asm/page_32.h
+@@ -40,6 +40,8 @@ typedef unsigned long long pte_basic_t;
+ typedef unsigned long pte_basic_t;
+ #endif
+ 
++#include <asm/bug.h>
++
+ /*
+  * Clear page using the dcbz instruction, which doesn't cause any
+  * memory traffic (except to write out any cache lines which get
+@@ -49,6 +51,8 @@ static inline void clear_page(void *addr)
+ {
+ 	unsigned int i;
+ 
++	WARN_ON((unsigned long)addr & (L1_CACHE_BYTES - 1));
++
+ 	for (i = 0; i < PAGE_SIZE / L1_CACHE_BYTES; i++, addr += L1_CACHE_BYTES)
+ 		dcbz(addr);
+ }
+diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
+index fe4bd321730e..02d90e1ebf65 100644
+--- a/arch/powerpc/kernel/misc_32.S
++++ b/arch/powerpc/kernel/misc_32.S
+@@ -452,7 +452,12 @@ END_FTR_SECTION_IFSET(CPU_FTR_COHERENT_ICACHE)
+ 	stwu	r9,16(r3)
+ 
+ _GLOBAL(copy_page)
++	rlwinm	r5, r3, 0, L1_CACHE_BYTES - 1
+ 	addi	r3,r3,-4
++
++0:	twnei	r5, 0	/* WARN if r3 is not cache aligned */
++	EMIT_BUG_ENTRY 0b,__FILE__,__LINE__, BUGFLAG_WARNING
++
+ 	addi	r4,r4,-4
+ 
+ 	li	r5,4
+-- 
+2.13.3
 
-And this should be in the same overlay than the one that sets status
-to okay.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ft24qo4b5lbfpatv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVZgqwAKCRDj7w1vZxhR
-xRnpAQCA1Dnh07ZLw+W8kJWaeBmCKi6OoeBA81ASauE2EwWjfAEApDyrf66lZnxn
-8aFeeQ7tNBJFyO0BUDMs+ClRbnuPawQ=
-=EKXH
------END PGP SIGNATURE-----
-
---ft24qo4b5lbfpatv--
