@@ -2,153 +2,233 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2644FC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4F5C3A59E
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B4A2086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0236921721
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 15:00:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qG4Zlr5V"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RfKZ6skh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfHPO5Z (ORCPT
+        id S1727405AbfHPPA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 10:57:25 -0400
-Received: from mail-eopbgr80084.outbound.protection.outlook.com ([40.107.8.84]:1604
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726032AbfHPO5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 10:57:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZvNHNckUAx8gQgLt/hlNtsQhrcKLojwg71vI9JqMu6S+3+0Lrlxtz9I7JJQX0w4z4cB+8X42gQPJRZzNis9KVspn9G/r8KgpdQ5LiYgUtPaSLSheSqrzdQ3y5vAWOtAq43XbIRV3RExw/afLjX53ssbQkb70d5abKxsRszlTJQgn8fgye8RS5UDcmth5mVn71fJQAE1dSjTTV76dyhnI8LX2n4xR4DtNHUjwOHHITRE6/qwosigRIBOrFxn8cl8WfInxhYTO4Lcs83HsTVhYCujdNeZK7YhLMR5IQrLF6bpgDA82shvZCHS3SE9nBHQdsJS/u54ATs0XHHn+A5lB0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TRnwzMf9BlWEo+bcFEsO2EvzdgFefsU1L79qg1vIn2k=;
- b=NMKyIV49BI4dfdFaoyW0OfJl/Qo+qC5a/KEMQMAFhfEOEYW5OiEQ/UL7TS1DwsjgAmmKOdkT8NVr2Qx4tHMhc3uOCsj7DFIWY9cHQpzCYt7xRXk0sZUPXff0hyw3ZcL7UWWkUqNSmBWy+kSQuRjYjQNWAfjvbrrhdBvpK33AgLNxQDZa0IArOM0Soe5yHIXQfYnJv/XcMdNIeQAU/XTV0lhrhOvAsBUCaFtsBIPlJSA1eiZ8Ot1omFIMqvs2h5ucujLKT2zloW9wTuSaf+XfCHOK7ZTvIWs8Q1VKGmFk76EtRGqHLdpCP3/ZbLClVat3LkcaEWOOTFhU745M32WjAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TRnwzMf9BlWEo+bcFEsO2EvzdgFefsU1L79qg1vIn2k=;
- b=qG4Zlr5Vnvdc2B45AAKXFx/dbMkp+kSfRfizEecIxhTJs8Zurf8EMq7effEarJlN4HlFAk9Eqn6Ka9ROlDBMEcA5ddRkKNdzMiFw5YBAjW3Gc2hLX9pEXD4ynlyy/XtgAFI7Cu912dA/ZfJpNWeMZaF+JrpMEShZQo18CfJnIPs=
-Received: from VE1PR04MB6463.eurprd04.prod.outlook.com (20.179.233.20) by
- VE1PR04MB6589.eurprd04.prod.outlook.com (20.179.234.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.18; Fri, 16 Aug 2019 14:56:41 +0000
-Received: from VE1PR04MB6463.eurprd04.prod.outlook.com
- ([fe80::8fc:e04c:fbb6:4f1f]) by VE1PR04MB6463.eurprd04.prod.outlook.com
- ([fe80::8fc:e04c:fbb6:4f1f%7]) with mapi id 15.20.2157.022; Fri, 16 Aug 2019
- 14:56:41 +0000
-From:   Roy Pledge <roy.pledge@nxp.com>
-To:     Leo Li <leoyang.li@nxp.com>, Ioana Ciornei <ioana.ciornei@nxp.com>
-CC:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] soc: fsl: FSL_MC_DPIO selects directly FSL_GUTS
-Thread-Topic: [PATCH 3/3] soc: fsl: FSL_MC_DPIO selects directly FSL_GUTS
-Thread-Index: AQHVMa+L6jLIgK/rPECnX4ICjDsk6Q==
-Date:   Fri, 16 Aug 2019 14:56:41 +0000
-Message-ID: <VE1PR04MB64636237CB3B1B2A93E0507786AF0@VE1PR04MB6463.eurprd04.prod.outlook.com>
-References: <1562165800-30721-1-git-send-email-ioana.ciornei@nxp.com>
- <1562165800-30721-4-git-send-email-ioana.ciornei@nxp.com>
- <CADRPPNT9LGdMWuBcBnvWXhD8Q-qbTNOzbYp1dRrt0NXb2DBgDw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=roy.pledge@nxp.com; 
-x-originating-ip: [72.142.119.78]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: df5c9a7d-ea99-4ac6-e9c0-08d72259f2bf
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6589;
-x-ms-traffictypediagnostic: VE1PR04MB6589:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6589E25BF22B3CF5C4D1609986AF0@VE1PR04MB6589.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0131D22242
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(376002)(39860400002)(136003)(199004)(189003)(66476007)(52536014)(66066001)(486006)(5660300002)(446003)(81166006)(91956017)(478600001)(186003)(44832011)(229853002)(71200400001)(26005)(316002)(476003)(6636002)(6436002)(71190400001)(66556008)(305945005)(76116006)(81156014)(6506007)(74316002)(66946007)(7696005)(33656002)(76176011)(8936002)(14454004)(8676002)(102836004)(64756008)(54906003)(86362001)(2906002)(4326008)(25786009)(3846002)(110136005)(14444005)(6116002)(7736002)(9686003)(66446008)(53936002)(6246003)(256004)(55016002)(99286004)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6589;H:VE1PR04MB6463.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: I4EkBKSkaLj6paXk9JlXAEHL5Mt/AG3WDte2V4EFgwIaUK7fvQ3jROkFqo10YHQ15j8XRZr1/eOBvGG7gFoiKS9nk0IdiDH0bI0fiN7kfeILFPMMxGvvW1zcTnjdnU9WO/l6fFXZPQwuAKbxlwL2PAGJcJwBHFnMaUlQH9XHiRbAumZOaZ577TLBKzTwbLL3VcpIs9+ypmUOMc5xRA5M9Qnm32a/HMhz3j8Fb2nU39X3/TkjXeDeqdCiIo2at89Itc1lc5jYA8PU6FFiWpKqtv48/8WELVRQc4cih/RgBjH2ueX6bYqw0mm506hH6HizcVECplhkGpV0i1fRcgqVHVU+QoBQkneDbJtkrfCPRR7ZM12ZZzZBDLs6R0M55di6jLGumpWZA+5IEogxTq9U1ZjHa+CtXYSPAkYT6be73iM=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 16 Aug 2019 11:00:27 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53907 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbfHPPA1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 11:00:27 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 10so4293591wmp.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 08:00:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eEktMynsAcH66TtPZndp2mGx6pMeqCeqO+5iafrtukI=;
+        b=RfKZ6skhAB1ZgZ6x27FSohEQSQS9goYWUB+/+tsJACDJHruX0U88Pk9tF/TIV5pjdb
+         UWESEOqzC46IYRLHA9LYVj7YzgO4W9sf4SGYxol6GxrVMK6I4u9QOIlvmgS0JTPPWbqm
+         WEU1Oa2z/dl+K9xwnGuKoit7j3davtBi+q5RTzpOne5jKcCXRdOoKQvnrSbHKuYT1Cnc
+         audeblUb7qROlVl8rH4+7IH5h5mg2jmWHM8cUcTP3kuLeS4XPwv+wPGZ3KaohtCVfpzY
+         EpirUD1e9NDADqOMmiGa9eP1JV44IZaJ+qF7SU1mpx7XJLSANPchhDLqUBktCOtH4Naf
+         KtcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=eEktMynsAcH66TtPZndp2mGx6pMeqCeqO+5iafrtukI=;
+        b=DeQ04pHZko9w9/IOgASuLKfukQAkMvJ78T5Xt7njnnrBDxQQbardzDQJieHgm6aJiI
+         1DmyJ7SGK8rurPzLojDzsHqQ3bgHSFmR9hlH+uuUX6KJGSxaeRryMOWKYcfhwt70W4Xx
+         ePX61IL3cGkn/Dc+SNDKHbIFVMgEw/HYb2O+89PgBHnWSXhSq6VcGbZkSgTLQegkQFnS
+         BWxnGoq5mZ614zpk1snYCMY+pHPtI3WWhwCkptlnYiSNS4qRYwrifzZntAuv9qPm7Cf8
+         Q5CM+ht5TOeam5JFrI5+/4C/yTrzu/H6wmradXY23W44p99E9ypUvfCzDmrfk26aPaBe
+         gDLg==
+X-Gm-Message-State: APjAAAX1mkfwqdn6/3hgiBjBcKOFokux5qfmXOy3mWH5joFJi2uNzrtt
+        IKHiUlCvvARw1S0Rs45zIMayPg==
+X-Google-Smtp-Source: APXvYqw9JAzsdIazEnafgTHIxtSU/hEPo+MT5eK5Fu0cwHUxHNxWMumIdjl1WXANg+kI5NVRNzqbQA==
+X-Received: by 2002:a1c:238e:: with SMTP id j136mr7792008wmj.144.1565967624558;
+        Fri, 16 Aug 2019 08:00:24 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:d4e8:1742:2f00:abef? ([2a01:e34:ed2f:f020:d4e8:1742:2f00:abef])
+        by smtp.googlemail.com with ESMTPSA id r16sm12475740wrc.81.2019.08.16.08.00.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 16 Aug 2019 08:00:23 -0700 (PDT)
+Subject: Re: [PATCH V2 1/2] clocksource/Hyper-v: Allocate Hyper-V tsc page
+ statically
+To:     lantianyu1986@gmail.com, luto@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, arnd@arndb.de, michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-arch@vger.kernel.org
+References: <20190814123216.32245-1-Tianyu.Lan@microsoft.com>
+ <20190814123216.32245-2-Tianyu.Lan@microsoft.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <78625f69-550d-212c-d3a0-89356ba98d2a@linaro.org>
+Date:   Fri, 16 Aug 2019 17:00:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df5c9a7d-ea99-4ac6-e9c0-08d72259f2bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 14:56:41.4242
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GXdrbc/1eludVsrG4vs1BmmvA4ORnTE1M5T9bmZ4/YPU9a3zkoDqMyLn85XbF5NwZtUR41XfDvfSbSZJkBdUsg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6589
+In-Reply-To: <20190814123216.32245-2-Tianyu.Lan@microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/15/2019 7:09 PM, Li Yang wrote:=0A=
-> On Wed, Jul 3, 2019 at 9:58 AM Ioana Ciornei <ioana.ciornei@nxp.com> wrot=
-e:=0A=
->> Make FSL_MC_DPIO select directly FSL_GUTS. Without this change we could=
-=0A=
->> be in a situation where both FSL_MC_DPIO and SOC_BUS are enabled but=0A=
->> FSL_GUTS is not.=0A=
->>=0A=
->> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>=0A=
->> ---=0A=
->>  drivers/soc/fsl/Kconfig | 2 +-=0A=
->>  1 file changed, 1 insertion(+), 1 deletion(-)=0A=
->>=0A=
->> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig=0A=
->> index b6804c04e96f..7e62c1d0aee7 100644=0A=
->> --- a/drivers/soc/fsl/Kconfig=0A=
->> +++ b/drivers/soc/fsl/Kconfig=0A=
->> @@ -22,7 +22,7 @@ config FSL_GUTS=0A=
->>  config FSL_MC_DPIO=0A=
->>          tristate "QorIQ DPAA2 DPIO driver"=0A=
->>          depends on FSL_MC_BUS=0A=
->> -        select SOC_BUS=0A=
->> +        select FSL_GUTS=0A=
-> NACK.  Although DPIO only exists on SoCs with the GUTS block for now.=0A=
-> There is no direct dependency between the two IPs.  I don't think we=0A=
-There isn't a hardware dependency but the DPIO driver does call=0A=
-soc_device_match().  If FSL_GUTS isn't present we can't distinguish=0A=
-which SoC is being used and the driver isn't able to setup the correct=0A=
-stashing destinations.  Is there another mechanism we should be using to=0A=
-get this information?=0A=
-> should add this dependency to make FSL_GUTS not configurable.  Here is=0A=
-> some explaination from kernel documentation:=0A=
->=0A=
->         select should be used with care. select will force=0A=
->         a symbol to a value without visiting the dependencies.=0A=
->         By abusing select you are able to select a symbol FOO even=0A=
->         if FOO depends on BAR that is not set.=0A=
->         In general use select only for non-visible symbols=0A=
->         (no prompts anywhere) and for symbols with no dependencies.=0A=
->         That will limit the usefulness but on the other hand avoid=0A=
->         the illegal configurations all over.=0A=
->=0A=
-> We probably shouldn't let it select SOC_BUS either from the beginning,=0A=
-> as the basic feature of DPIO should still work without defining=0A=
-> SOC_BUS.=0A=
->=0A=
-> Regards,=0A=
-> Leo=0A=
->=0A=
->>          help=0A=
->>           Driver for the DPAA2 DPIO object.  A DPIO provides queue and=
-=0A=
->>           buffer management facilities for software to interact with=0A=
->> --=0A=
->> 1.9.1=0A=
->>=0A=
-=0A=
+On 14/08/2019 14:32, lantianyu1986@gmail.com wrote:
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> 
+> Prepare to add Hyper-V sched clock callback and move Hyper-V
+> Reference TSC initialization much earlier in the boot process.  Earlier
+> initialization is needed so that it happens while the timestamp value
+> is still 0 and no discontinuity in the timestamp will occur when
+> pv_ops.time.sched_clock calculates its offset.  The earlier
+> initialization requires that the Hyper-V TSC page be allocated
+> statically instead of with vmalloc(), so fixup the references
+> to the TSC page and the method of getting its physical address.
+> 
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+> ---
+>     Change since v1:
+>            - Update commit log
+>            - Remove and operation of tsc page's va with PAGE_MASK
+> 
+>  arch/x86/entry/vdso/vma.c          |  2 +-
+>  drivers/clocksource/hyperv_timer.c | 12 ++++--------
+>  2 files changed, 5 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+> index 349a61d8bf34..f5937742b290 100644
+> --- a/arch/x86/entry/vdso/vma.c
+> +++ b/arch/x86/entry/vdso/vma.c
+> @@ -122,7 +122,7 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+>  
+>  		if (tsc_pg && vclock_was_used(VCLOCK_HVCLOCK))
+>  			return vmf_insert_pfn(vma, vmf->address,
+> -					vmalloc_to_pfn(tsc_pg));
+> +					virt_to_phys(tsc_pg) >> PAGE_SHIFT);
+>  	}
+>  
+>  	return VM_FAULT_SIGBUS;
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> index ba2c79e6a0ee..432aa331df04 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -214,17 +214,17 @@ EXPORT_SYMBOL_GPL(hyperv_cs);
+>  
+>  #ifdef CONFIG_HYPERV_TSCPAGE
+>  
+> -static struct ms_hyperv_tsc_page *tsc_pg;
+> +static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
+>  
+>  struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
+>  {
+> -	return tsc_pg;
+> +	return &tsc_pg;
+>  }
+>  EXPORT_SYMBOL_GPL(hv_get_tsc_page);
+>  
+>  static u64 notrace read_hv_sched_clock_tsc(void)
+>  {
+> -	u64 current_tick = hv_read_tsc_page(tsc_pg);
+> +	u64 current_tick = hv_read_tsc_page(&tsc_pg);
+>  
+>  	if (current_tick == U64_MAX)
+>  		hv_get_time_ref_count(current_tick);
+> @@ -280,12 +280,8 @@ static bool __init hv_init_tsc_clocksource(void)
+>  	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
+>  		return false;
+>  
+> -	tsc_pg = vmalloc(PAGE_SIZE);
+> -	if (!tsc_pg)
+> -		return false;
+> -
+>  	hyperv_cs = &hyperv_cs_tsc;
+> -	phys_addr = page_to_phys(vmalloc_to_page(tsc_pg));
+> +	phys_addr = virt_to_phys(&tsc_pg);
+>  
+>  	/*
+>  	 * The Hyper-V TLFS specifies to preserve the value of reserved
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
