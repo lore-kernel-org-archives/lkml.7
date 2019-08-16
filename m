@@ -2,78 +2,101 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F369DC3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DC7C3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC9E72171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462822086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:24:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+ej47Pl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfHPRYR (ORCPT
+        id S1727555AbfHPRY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 13:24:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:59374 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726822AbfHPRYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 13:24:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30E2D28;
-        Fri, 16 Aug 2019 10:24:16 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EE173F694;
-        Fri, 16 Aug 2019 10:24:15 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 18:24:13 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     will@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] arm64 fixes for 5.3-rc5
-Message-ID: <20190816172411.GA36979@arrakis.emea.arm.com>
+        Fri, 16 Aug 2019 13:24:26 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39381 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727500AbfHPRYZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 13:24:25 -0400
+Received: by mail-pf1-f193.google.com with SMTP id f17so3439498pfn.6;
+        Fri, 16 Aug 2019 10:24:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ngcVh8zrx60LXZVea+w+3KhZZLQW588vJoNhzWNNbZw=;
+        b=S+ej47PlpzF4EQnmwkvkdAXiKugoKO2KNHDdctm3C3gk52iC1zdCU1nNSZcS8bPajh
+         SsTR6g6S/a1zPxSArdj5fhnsgMEPeFABm4IDIYzbQ/6n2waKBhWnoboDVJJjajxXHxEU
+         EFuN9lqZDDLrq4I0yom7RKSJLuf2M97TC8nKtTbLpjJl9VOhSA/TXsVO3FKS1JAMrhA/
+         +KfWUjyDXriIJHanMlMR118SSzT+hx7YfP66nqB2ekW0G11TvbccViYi2JPyw9dv2u5j
+         5oqe0ft6f8T7S0l8dc5WiiroGzxiUG1dyuEa91iaeHMtMHsFk5VVmPpDR6NCdQ/roCHk
+         CgPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ngcVh8zrx60LXZVea+w+3KhZZLQW588vJoNhzWNNbZw=;
+        b=PfU9Lyby4KKsGBIyxd/w/1/Kv7s0rdGHQvlam5ddkCoCceAKqBBlYhv6hiPu999W3k
+         0t+klNxHS80Cfjtkbt6XnxFi1NP+AM5HsRVVTZFG0zwgI5E7TATTNKCwL31BVJN2aaP+
+         XSmcrASq+YEVZZmvC7WdAxGZZRu2LHpYvECTNCYUhTrVCtfecvr7cWdxHX6yGJt1KfiL
+         kZpt4XvA6uD93iLJ7LZX0vFmEgVUFm+IlQRvIy9KpoVjthvSilSvdC7UzwYH3D14OFwg
+         hC0vVQP3G45Z8SKKm2yp92A1BsEOeq29tUxDp9NonfZduQsjlpNQ+5qXolgGT5skrwQP
+         rYDQ==
+X-Gm-Message-State: APjAAAVfZzL4IRQ7t8p5YOYSr+3Cq0FMW3cZgsm1craV5m6H7GZ0uXjm
+        DlKfs4sc8ECA3hxCx7C/AV8=
+X-Google-Smtp-Source: APXvYqxmYjtZ8qZoW3pqorhENAO8Qi81BWqAQcRZvy1daRWpzTEbmLh/QknsvGfUTXJ7YBi56sIwyw==
+X-Received: by 2002:a17:90a:bc4b:: with SMTP id t11mr8448790pjv.87.1565976264912;
+        Fri, 16 Aug 2019 10:24:24 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id o11sm7454547pfh.114.2019.08.16.10.24.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 10:24:24 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 10:24:22 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Jiada Wang <jiada_wang@mentor.com>
+Cc:     nick@shmanahar.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, george_davis@mentor.com
+Subject: Re: [PATCH v1 36/63] Input: atmel_mxt_ts - configure and use gpios
+ as real gpios
+Message-ID: <20190816172422.GH121898@dtor-ws>
+References: <20190816083525.19071-1-jiada_wang@mentor.com>
+ <20190816083525.19071-2-jiada_wang@mentor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190816083525.19071-2-jiada_wang@mentor.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Aug 16, 2019 at 05:34:58PM +0900, Jiada Wang wrote:
+> From: Kautuk Consul <kautuk_consul@mentor.com>
+> 
+> The upstream Atmel mXT driver implementation seems to handle the
+> T19 GPIO/PWM object as a key pad. Keys can be defined in the
+> device tree ("linux,gpio-keymap") and will be transported as key
+> events to the Linux input device if GPIO state changes.
+> 
+> With our hardware, the GPIO pins of the touch controller are
+> connected to a PWM/backlight controller and used as supervision
+> inputs. We like to read the status of the pins by a script or an
+> application in the sysfs.
+> 
+> Adding newer sysfs entries which shall be placed in the input
+> class directory eg:
+> /sys/class/input/input<n>/backlight_error1
 
-Please pull the arm64 fixes below. Thanks.
+No, if you want to export GPIO lines for external use create a gpiochip
+instance and register it with GPIO subsystem. No ad-hoc sysfs please.
 
-The following changes since commit 30e235389faadb9e3d918887b1f126155d7d761d:
-
-  arm64: mm: add missing PTE_SPECIAL in pte_mkdevmap on arm64 (2019-08-08 18:38:20 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
-
-for you to fetch changes up to b6143d10d23ebb4a77af311e8b8b7f019d0163e6:
-
-  arm64: ftrace: Ensure module ftrace trampoline is coherent with I-side (2019-08-16 17:40:03 +0100)
-
-----------------------------------------------------------------
-arm64 fixes:
-
-- Don't taint the kernel if CPUs have different sets of page sizes
-  supported (other than the one in use).
-
-- Issue I-cache maintenance for module ftrace trampoline.
-
-----------------------------------------------------------------
-Will Deacon (2):
-      arm64: cpufeature: Don't treat granule sizes as strict
-      arm64: ftrace: Ensure module ftrace trampoline is coherent with I-side
-
- arch/arm64/kernel/cpufeature.c | 14 +++++++++++---
- arch/arm64/kernel/ftrace.c     | 22 +++++++++++++---------
- 2 files changed, 24 insertions(+), 12 deletions(-)
+Thanks.
 
 -- 
-Catalin
+Dmitry
