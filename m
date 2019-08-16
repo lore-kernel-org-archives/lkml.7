@@ -2,274 +2,109 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4088C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6156BC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C26D2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31F2B2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 13:12:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h/LcWQjZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfHPNMB (ORCPT
+        id S1727385AbfHPNMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 09:12:01 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48314 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727610AbfHPNL6 (ORCPT
+        Fri, 16 Aug 2019 09:12:18 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:45156 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbfHPNMQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 09:11:58 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id C125228D1D4
-Message-ID: <c806b90e6fba5cd454df54d70da6f99c05526f46.camel@collabora.com>
-Subject: Re: [PATCH v6 09/11] media: hantro: Add core bits to support H264
- decoding
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
-        Hertz Wong <hertz.wong@rock-chips.com>
-Date:   Fri, 16 Aug 2019 10:11:46 -0300
-In-Reply-To: <b103be14-a89c-2ff2-670c-eb80a2afd618@xs4all.nl>
-References: <20190814195931.6587-1-ezequiel@collabora.com>
-         <20190814195931.6587-10-ezequiel@collabora.com>
-         <b103be14-a89c-2ff2-670c-eb80a2afd618@xs4all.nl>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 16 Aug 2019 09:12:16 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7GD8h3Z182173;
+        Fri, 16 Aug 2019 13:12:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=XdgM3xcc9SUA+Zw1b6KHtdB/PkVRuj7m9FujaQZMHLk=;
+ b=h/LcWQjZAg1u+DtntPx8biaWEAzOuirQmxwHm559QIQb7PHXu+LUSzQBoVqDEgG8RY7M
+ 3aParRz3aJT6+3bE60DuNWvxyL51J3AamTVzGh7KJIXPHzmHxiA5wmkZBqbLhA7RNECV
+ OKs90CCj/d3b1/yHme38RpG/hLIrUXa9k02DeY3i2ULyCfN5NGn3rtopqG+FaYSuwloN
+ RG8Bu3FEt7D0nkqU1UcKBGIuKberCUZeb0qLYPAjHQuJrNHpRgFx6tR7pxKPYMSGHlAg
+ aPVH7UtqpLgEi4oMklT0BDJY2QtDXQd89SYxj2b17gZrePhzWawEwJ4qSN/IFO+tlyUv 2Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2u9nbu0e3k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Aug 2019 13:12:12 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7GD8el7019089;
+        Fri, 16 Aug 2019 13:12:12 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2udgqg46ha-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Aug 2019 13:12:12 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7GDCBtl027537;
+        Fri, 16 Aug 2019 13:12:11 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 16 Aug 2019 06:12:10 -0700
+Date:   Fri, 16 Aug 2019 16:12:03 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Zhao Yakui <yakui.zhao@intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org,
+        Mingqiang Chi <mingqiang.chi@intel.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>
+Subject: Re: [RFC PATCH 10/15] drivers/acrn: add interrupt injection support
+Message-ID: <20190816131203.GB3632@kadam>
+References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
+ <1565922356-4488-11-git-send-email-yakui.zhao@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565922356-4488-11-git-send-email-yakui.zhao@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908160136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908160136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-16 at 09:41 +0200, Hans Verkuil wrote:
-> On 8/14/19 9:59 PM, Ezequiel Garcia wrote:
-> > From: Hertz Wong <hertz.wong@rock-chips.com>
-> > 
-> > Add helpers and patch hantro_{drv,v4l2}.c to prepare addition of H264
-> > decoding support.
-> > 
-> > Signed-off-by: Hertz Wong <hertz.wong@rock-chips.com>
-> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > ---
-> > Changes in v6:
-> > * Fixed duplicated CABAC table memcpy.
-> > * Adjust to renamed controls.
-> > Changes in v5:
-> > * None.
-> > Changes in v4:
-> > * Rework extra_size0, exposing the size via TRY_FMT/S_FMT
-> >   to allow buffer importation, as suggested by Tomasz.
-> > * Drop max slice limit.
-> > * Use a ternary operator instead of substracting POCs,
-> >   to avoid an overflow as pointed out by Rasmus.
-> > * Specify annex B slice start code.
-> > * Add missing extra_size0 to sizeimage
-> > * Swap the first 2 entries of list B1 when B0 and B1 match (mandated by
-> >   the spec)
-> > * Move the update_dpb() call before the prepare_table() one to make the
-> >   POCs stored in the private table match the content of the new DPB
-> > ---
-> >  drivers/staging/media/hantro/Makefile      |   1 +
-> >  drivers/staging/media/hantro/hantro.h      |   9 +-
-> >  drivers/staging/media/hantro/hantro_drv.c  |  42 ++
-> >  drivers/staging/media/hantro/hantro_h264.c | 641 +++++++++++++++++++++
-> >  drivers/staging/media/hantro/hantro_hw.h   |  55 ++
-> >  drivers/staging/media/hantro/hantro_v4l2.c |  10 +
-> >  6 files changed, 757 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/staging/media/hantro/hantro_h264.c
-> > 
-> > diff --git a/drivers/staging/media/hantro/Makefile b/drivers/staging/media/hantro/Makefile
-> > index f5ec597d9e08..0f0d3afb1cca 100644
-> > --- a/drivers/staging/media/hantro/Makefile
-> > +++ b/drivers/staging/media/hantro/Makefile
-> > @@ -10,6 +10,7 @@ hantro-vpu-y += \
-> >  		rk3399_vpu_hw_mpeg2_dec.o \
-> >  		rk3399_vpu_hw_vp8_dec.o \
-> >  		hantro_jpeg.o \
-> > +		hantro_h264.o \
-> >  		hantro_mpeg2.o \
-> >  		hantro_vp8.o
-> >  
-> > diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
-> > index c4c86c32ea2d..f670bbde4159 100644
-> > --- a/drivers/staging/media/hantro/hantro.h
-> > +++ b/drivers/staging/media/hantro/hantro.h
-> > @@ -30,6 +30,10 @@
-> >  #define VP8_MB_WIDTH(w)			DIV_ROUND_UP(w, VP8_MB_DIM)
-> >  #define VP8_MB_HEIGHT(h)		DIV_ROUND_UP(h, VP8_MB_DIM)
-> >  
-> > +#define H264_MB_DIM			16
-> > +#define H264_MB_WIDTH(w)		DIV_ROUND_UP(w, H264_MB_DIM)
-> > +#define H264_MB_HEIGHT(h)		DIV_ROUND_UP(h, H264_MB_DIM)
-> > +
-> >  #define MPEG2_MB_DIM			16
-> >  #define MPEG2_MB_WIDTH(w)		DIV_ROUND_UP(w, MPEG2_MB_DIM)
-> >  #define MPEG2_MB_HEIGHT(h)		DIV_ROUND_UP(h, MPEG2_MB_DIM)
-> > @@ -43,9 +47,9 @@ struct hantro_codec_ops;
-> >  
-> >  #define HANTRO_JPEG_ENCODER	BIT(0)
-> >  #define HANTRO_ENCODERS		0x0000ffff
-> > -
-> >  #define HANTRO_MPEG2_DECODER	BIT(16)
-> >  #define HANTRO_VP8_DECODER	BIT(17)
-> > +#define HANTRO_H264_DECODER	BIT(18)
-> >  #define HANTRO_DECODERS		0xffff0000
-> >  
-> >  /**
-> > @@ -102,12 +106,14 @@ struct hantro_variant {
-> >   * enum hantro_codec_mode - codec operating mode.
-> >   * @HANTRO_MODE_NONE:  No operating mode. Used for RAW video formats.
-> >   * @HANTRO_MODE_JPEG_ENC: JPEG encoder.
-> > + * @HANTRO_MODE_H264_DEC: H264 decoder.
-> >   * @HANTRO_MODE_MPEG2_DEC: MPEG-2 decoder.
-> >   * @HANTRO_MODE_VP8_DEC: VP8 decoder.
-> >   */
-> >  enum hantro_codec_mode {
-> >  	HANTRO_MODE_NONE = -1,
-> >  	HANTRO_MODE_JPEG_ENC,
-> > +	HANTRO_MODE_H264_DEC,
-> >  	HANTRO_MODE_MPEG2_DEC,
-> >  	HANTRO_MODE_VP8_DEC,
-> >  };
-> > @@ -246,6 +252,7 @@ struct hantro_ctx {
-> >  
-> >  	/* Specific for particular codec modes. */
-> >  	union {
-> > +		struct hantro_h264_dec_hw_ctx h264_dec;
-> >  		struct hantro_jpeg_enc_hw_ctx jpeg_enc;
-> >  		struct hantro_mpeg2_dec_hw_ctx mpeg2_dec;
-> >  		struct hantro_vp8_dec_hw_ctx vp8_dec;
-> > diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-> > index 6e2351e46750..f4cea216c926 100644
-> > --- a/drivers/staging/media/hantro/hantro_drv.c
-> > +++ b/drivers/staging/media/hantro/hantro_drv.c
-> > @@ -314,6 +314,48 @@ static const struct hantro_ctrl controls[] = {
-> >  		.cfg = {
-> >  			.id = V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER,
-> >  		},
-> > +	}, {
-> > +		.codec = HANTRO_H264_DECODER,
-> > +		.cfg = {
-> > +			.id = V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS,
-> > +		},
-> > +	}, {
-> > +		.codec = HANTRO_H264_DECODER,
-> > +		.cfg = {
-> > +			.id = V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS,
-> > +		},
-> > +	}, {
-> > +		.codec = HANTRO_H264_DECODER,
-> > +		.cfg = {
-> > +			.id = V4L2_CID_MPEG_VIDEO_H264_SPS,
-> > +		},
-> > +	}, {
-> > +		.codec = HANTRO_H264_DECODER,
-> > +		.cfg = {
-> > +			.id = V4L2_CID_MPEG_VIDEO_H264_PPS,
-> > +		},
-> > +	}, {
-> > +		.codec = HANTRO_H264_DECODER,
-> > +		.cfg = {
-> > +			.id = V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX,
-> > +		},
-> > +	}, {
-> > +		.codec = HANTRO_H264_DECODER,
-> > +		.cfg = {
-> > +			.id = V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE,
-> > +			.max = V4L2_MPEG_VIDEO_H264_DECODE_MODE_FRAME_BASED,
-> > +			.def = V4L2_MPEG_VIDEO_H264_DECODE_MODE_FRAME_BASED,
-> > +			.menu_skip_mask = BIT(V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED),
-> > +		},
-> > +	}, {
-> > +		.codec = HANTRO_H264_DECODER,
-> > +		.cfg = {
-> > +			.id = V4L2_CID_MPEG_VIDEO_H264_START_CODE,
-> > +			.max = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
-> > +			.def = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
-> > +			.menu_skip_mask = BIT(V4L2_MPEG_VIDEO_H264_START_CODE_NONE),
-> > +		},
-> > +	}, {
-> >  	},
-> >  };
-> >  
-> > diff --git a/drivers/staging/media/hantro/hantro_h264.c b/drivers/staging/media/hantro/hantro_h264.c
-> > new file mode 100644
-> > index 000000000000..05e210a2cdbe
-> > --- /dev/null
-> > +++ b/drivers/staging/media/hantro/hantro_h264.c
-> > @@ -0,0 +1,641 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Rockchip RK3288 VPU codec driver
-> > + *
-> > + * Copyright (c) 2014 Rockchip Electronics Co., Ltd.
-> > + *	Hertz Wong <hertz.wong@rock-chips.com>
-> > + *	Herman Chen <herman.chen@rock-chips.com>
-> > + *
-> > + * Copyright (C) 2014 Google, Inc.
-> > + *	Tomasz Figa <tfiga@chromium.org>
-> > + */
-> > +
-> > +#include <linux/types.h>
-> > +#include <linux/sort.h>
-> > +#include <media/v4l2-mem2mem.h>
-> > +
-> > +#include "hantro.h"
-> > +#include "hantro_hw.h"
-> > +
-> > +/* Size with u32 units. */
-> > +#define CABAC_INIT_BUFFER_SIZE		(460 * 2)
-> > +#define POC_BUFFER_SIZE			34
-> > +#define SCALING_LIST_SIZE		(6 * 16 + 6 * 64)
-> > +
-> > +#define POC_CMP(p0, p1) ((p0) < (p1) ? -1 : 1)
-> > +
-> > +/* Data structure describing auxiliary buffer format. */
-> > +struct hantro_h264_dec_priv_tbl {
-> > +	u32 cabac_table[CABAC_INIT_BUFFER_SIZE];
-> > +	u32 poc[POC_BUFFER_SIZE];
-> > +	u8 scaling_list[SCALING_LIST_SIZE];
-> > +};
-> > +
-> > +/* Constant CABAC table. */
-> 
-> Can you add a comment explaining where this table comes from?
-> 
+On Fri, Aug 16, 2019 at 10:25:51AM +0800, Zhao Yakui wrote:
+> +	case IC_VM_INTR_MONITOR: {
+> +		struct page *page;
+> +
+> +		ret = get_user_pages_fast(ioctl_param, 1, 1, &page);
+> +		if (unlikely(ret != 1) || !page) {
+                                       ^^^^^^^^
+Not required.
 
-I don't think this CABAC default table comes from the H264 spec,
-in the Hantro G1 SDK you can find this same blob as "cabac_init_values".
+> +			pr_err("acrn-dev: failed to pin intr hdr buffer!\n");
+> +			return -ENOMEM;
+> +		}
+> +
+> +		ret = hcall_vm_intr_monitor(vm->vmid, page_to_phys(page));
+> +		if (ret < 0) {
+> +			pr_err("acrn-dev: monitor intr data err=%ld\n", ret);
+> +			return -EFAULT;
+> +		}
+> +		break;
+> +	}
+> +
 
-As the comment says the CABAC table is constant, it may be
-possible to allow applications to pass it. However, this default
-value works for all use-cases, so there hasn't been a need for this.
-
-Sorry, but that's all I know about this.
-
-> > +static const u32 h264_cabac_table[] = {
-> > +	0x14f10236, 0x034a14f1, 0x0236034a, 0xe47fe968, 0xfa35ff36, 0x07330000,
-> > +	0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-> > +	0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-> > +	0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-> > +	0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-> > +	0x0029003f, 0x003f003f, 0xf7530456, 0x0061f948, 0x0d29033e, 0x000b0137,
-> 
-> Regards,
-> 
-> 	Hans
-
-
+regards,
+dan carpenter
