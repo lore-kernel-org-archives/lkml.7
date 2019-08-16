@@ -2,56 +2,57 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94781C3A59D
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDFFC3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 579B92171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62EB82171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 20:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565986694;
-	bh=gAPZtLrr4KErP1KKu6A5qndFhp+avPjSjhHqMq8Mnb4=;
+	s=default; t=1565986699;
+	bh=X+v0IzboznOsWtVeOljDjZZS7BTG2W3JVT6DCyi3Z5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P3mxg7jQwflfXvi2NnnjFlH5o/O36CFodpOrUaYGJIdJJRDhnX0vMrpmh1N0sd/LE
-	 Bk/OdYRR1jmw2KsHcT831fQ4Dw67W++hOhQU1O40N25nTjKZBdg5TWM6ghAybGxEWC
-	 vWXFHq9EMbqFb9jzJ9IZT9+vY8l6mzaDUkMWzsWM=
+	b=PuIJ1QxZILJTy6xzQUFf/WfS/R2XGhEm7/oXflSaoXN28UuddmT9KKn/X0gABhBMK
+	 rGMzqCH3MBYIPdbC+T5kYHUBvE975gXe1quB7iiclo/0Vs7g1opiao3ieyfmE5g+Dt
+	 PTcrmZd52075XjeWhZ8MawTWwrJwv3zgX/6K33cs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfHPUSN (ORCPT
+        id S1727921AbfHPUSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 16:18:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58996 "EHLO mail.kernel.org"
+        Fri, 16 Aug 2019 16:18:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727885AbfHPUSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 16:18:10 -0400
+        id S1727885AbfHPUSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 16:18:14 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.182.221.173])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 283F72133F;
-        Fri, 16 Aug 2019 20:18:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 729E721721;
+        Fri, 16 Aug 2019 20:18:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565986688;
-        bh=gAPZtLrr4KErP1KKu6A5qndFhp+avPjSjhHqMq8Mnb4=;
+        s=default; t=1565986693;
+        bh=X+v0IzboznOsWtVeOljDjZZS7BTG2W3JVT6DCyi3Z5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nmUIMBlbAczNINw1ekhwxBC+4XElEv/YcmYoySJU+36d8snugyHYAhUQs+NOUA6Eq
-         sWpYlstvlddBkRY3Ln++acI53qd9I2bYpomOyp0dKiRsCGi5isdKAcPHVnVFYE3yBE
-         6sSvguHJ9Mx9/l1pJebaIksPqQjIFdeSSSVt8wpU=
+        b=2tUCRzd+E4+0bBwuPUuWBO3UX1E13X4t8+cCv2eYg2IprWjo7beWWJA0ff9qKxQZL
+         //WrPBYeFH9ETPLiM3ALeMIOP2zjIpWe3bWFwZGoZjlDRW4dwk70ejwL2npkSxOsSH
+         xfXBdeOTM58RTeCIwXEGfMRrHQbs/kre09fSasTU=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        William Cohen <wcohen@redhat.com>
-Subject: [PATCH 14/17] perf report: Add --switch-on/--switch-off events
-Date:   Fri, 16 Aug 2019 17:16:50 -0300
-Message-Id: <20190816201653.19332-15-acme@kernel.org>
+        John Keeping <john@metanate.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 15/17] perf map: Use zalloc for map_groups
+Date:   Fri, 16 Aug 2019 17:16:51 -0300
+Message-Id: <20190816201653.19332-16-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190816201653.19332-1-acme@kernel.org>
 References: <20190816201653.19332-1-acme@kernel.org>
@@ -62,233 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: John Keeping <john@metanate.com>
 
-Since 'perf top' shares the histogram browser with 'perf report', then
-the same explanation in the previous cset applies.
+In the next commit we will add new fields to map_groups and we need
+these to be null if no value is assigned.  The simplest way to achieve
+this is to request zeroed memory from the allocator.
 
-An additional example uses a pair of SDT events available for systemtap:
-
-  # perf probe --exec=/usr/bin/stap '%*:*'
-  Added new events:
-    sdt_stap:benchmark__thread__start (on %* in /usr/bin/stap)
-    sdt_stap:benchmark   (on %* in /usr/bin/stap)
-    sdt_stap:benchmark__thread__end (on %* in /usr/bin/stap)
-    sdt_stap:pass6__start (on %* in /usr/bin/stap)
-    sdt_stap:pass6__end  (on %* in /usr/bin/stap)
-    sdt_stap:pass5__start (on %* in /usr/bin/stap)
-    sdt_stap:pass5__end  (on %* in /usr/bin/stap)
-    sdt_stap:pass0__start (on %* in /usr/bin/stap)
-    sdt_stap:pass0__end  (on %* in /usr/bin/stap)
-    sdt_stap:pass1a__start (on %* in /usr/bin/stap)
-    sdt_stap:pass1b__start (on %* in /usr/bin/stap)
-    sdt_stap:pass1__end  (on %* in /usr/bin/stap)
-    sdt_stap:pass2__start (on %* in /usr/bin/stap)
-    sdt_stap:pass2__end  (on %* in /usr/bin/stap)
-    sdt_stap:pass3__start (on %* in /usr/bin/stap)
-    sdt_stap:pass3__end  (on %* in /usr/bin/stap)
-    sdt_stap:pass4__start (on %* in /usr/bin/stap)
-    sdt_stap:pass4__end  (on %* in /usr/bin/stap)
-    sdt_stap:benchmark__start (on %* in /usr/bin/stap)
-    sdt_stap:benchmark__end (on %* in /usr/bin/stap)
-    sdt_stap:cache__get  (on %* in /usr/bin/stap)
-    sdt_stap:cache__clean (on %* in /usr/bin/stap)
-    sdt_stap:cache__add__module (on %* in /usr/bin/stap)
-    sdt_stap:cache__add__source (on %* in /usr/bin/stap)
-    sdt_stap:stap_system__complete (on %* in /usr/bin/stap)
-    sdt_stap:stap_system__start (on %* in /usr/bin/stap)
-    sdt_stap:stap_system__spawn (on %* in /usr/bin/stap)
-    sdt_stap:stap_system__fork (on %* in /usr/bin/stap)
-    sdt_stap:intern_string (on %* in /usr/bin/stap)
-    sdt_stap:client__start (on %* in /usr/bin/stap)
-    sdt_stap:client__end (on %* in /usr/bin/stap)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e sdt_stap:client__end -aR sleep 1
-
-  #
-
-From these we're use the two below to run systemtap's test suite:
-
-  # perf record -e sdt_stap:pass2__*,cycles:P make installcheck > /dev/null
-  ^C[ perf record: Woken up 8 times to write data ]
-  [ perf record: Captured and wrote 2.691 MB perf.data (39638 samples) ]
-  Terminated
-  # perf script | grep sdt_stap
-              stap 28979 [000] 19424.302660: sdt_stap:pass2__start: (561b9a537de3) arg1=140730364262544
-              stap 28979 [000] 19424.333083:   sdt_stap:pass2__end: (561b9a53a9e1) arg1=140730364262544
-              stap 29045 [006] 19424.933460: sdt_stap:pass2__start: (563edddcede3) arg1=140722674883152
-              stap 29045 [006] 19424.963794:   sdt_stap:pass2__end: (563edddd19e1) arg1=140722674883152
-  # perf script | grep cycles |  wc -l
-  39634
-  #
-
-Looking at the whole perf.data file:
-
-  [root@quaco testsuite]# perf report | grep cycles:P -A25
-  # Samples: 39K of event 'cycles:P'
-  # Event count (approx.): 34044267368
-  #
-  # Overhead  Command  Shared Object         Symbol
-  # ........  .......  ....................  ................................
-  #
-       3.50%  cc1      cc1                   [.] ht_lookup_with_hash
-       3.04%  cc1      cc1                   [.] _cpp_lex_token
-       2.11%  cc1      cc1                   [.] ggc_internal_alloc
-       1.83%  cc1      cc1                   [.] cpp_get_token_with_location
-       1.68%  cc1      libc-2.29.so          [.] _int_malloc
-       1.41%  cc1      cc1                   [.] linemap_position_for_column
-       1.25%  cc1      cc1                   [.] ggc_internal_cleared_alloc
-       1.20%  cc1      cc1                   [.] c_lex_with_flags
-       1.18%  cc1      cc1                   [.] get_combined_adhoc_loc
-       1.05%  cc1      libc-2.29.so          [.] malloc
-       1.01%  cc1      libc-2.29.so          [.] _int_free
-       0.96%  stap     stap                  [.] std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Identity, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, stringtable_hash, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, true, true> >::_M_insert<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__detail::_AllocNode<std::allocator<std::__detail::_Hash_node<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, true> > > >
-       0.78%  stap     stap                  [.] lexer::scan
-       0.74%  cc1      cc1                   [.] _cpp_lex_direct
-       0.70%  cc1      cc1                   [.] pop_scope
-       0.70%  cc1      cc1                   [.] c_parser_declspecs
-       0.69%  stap     libc-2.29.so          [.] _int_malloc
-       0.68%  cc1      cc1                   [.] htab_find_slot
-       0.68%  cc1      [kernel.vmlinux]      [k] prepare_exit_to_usermode
-       0.64%  cc1      [kernel.vmlinux]      [k] clear_page_erms
-  [root@quaco testsuite]#
-
-And now only what happens in slices demarcated by those start/end SDT
-events:
-
-  [root@quaco testsuite]# perf report --switch-on=sdt_stap:pass2__start --switch-off=sdt_stap:pass2__end | grep cycles:P -A100
-  # Samples: 240  of event 'cycles:P'
-  # Event count (approx.): 206491934
-  #
-  # Overhead  Command  Shared Object        Symbol
-  # ........  .......  ...................  ................................................
-  #
-      38.99%  stap     stap                 [.] systemtap_session::register_library_aliases
-      19.47%  stap     stap                 [.] match_key::operator<
-      15.01%  stap     libc-2.29.so         [.] __memcmp_avx2_movbe
-       5.19%  stap     libc-2.29.so         [.] _int_malloc
-       2.50%  stap     libstdc++.so.6.0.26  [.] std::_Rb_tree_insert_and_rebalance
-       2.30%  stap     stap                 [.] match_node::build_no_more
-       2.07%  stap     libc-2.29.so         [.] malloc
-       1.66%  stap     stap                 [.] std::_Rb_tree<match_key, std::pair<match_key const, match_node*>, std::_Select1st<std::pair<match_key const, match_node*> >, std::less<match_key>, std::allocator<std::pair<match_key const, match_node*> > >::find
-       1.66%  stap     stap                 [.] match_node::bind
-       1.58%  stap     [kernel.vmlinux]     [k] prepare_exit_to_usermode
-       1.17%  stap     [kernel.vmlinux]     [k] native_irq_return_iret
-       0.87%  stap     stap                 [.] 0x0000000000032ec4
-       0.77%  stap     libstdc++.so.6.0.26  [.] std::_Rb_tree_increment
-       0.47%  stap     stap                 [.] std::vector<derived_probe_builder*, std::allocator<derived_probe_builder*> >::_M_realloc_insert<derived_probe_builder* const&>
-       0.47%  stap     [kernel.vmlinux]     [k] get_page_from_freelist
-       0.47%  stap     [kernel.vmlinux]     [k] swapgs_restore_regs_and_return_to_usermode
-       0.47%  stap     [kernel.vmlinux]     [k] do_user_addr_fault
-       0.46%  stap     [kernel.vmlinux]     [k] __pagevec_lru_add_fn
-       0.46%  stap     stap                 [.] std::_Rb_tree<match_key, std::pair<match_key const, match_node*>, std::_Select1st<std::pair<match_key const, match_node*> >, std::less<match_key>, std::allocator<std::pair<match_key const, match_node*> > >::_M_emplace_unique<std::pair<match_key, match_node*> >
-       0.42%  stap     libstdc++.so.6.0.26  [.] 0x00000000000c18fa
-       0.40%  stap     [kernel.vmlinux]     [k] interrupt_entry
-       0.40%  stap     [kernel.vmlinux]     [k] update_load_avg
-       0.40%  stap     [kernel.vmlinux]     [k] __intel_pmu_disable_all
-       0.40%  stap     [kernel.vmlinux]     [k] clear_page_erms
-       0.39%  stap     [kernel.vmlinux]     [k] __mod_node_page_state
-       0.39%  stap     [kernel.vmlinux]     [k] error_entry
-       0.39%  stap     [kernel.vmlinux]     [k] sync_regs
-       0.38%  stap     [kernel.vmlinux]     [k] __handle_mm_fault
-       0.38%  stap     stap                 [.] derive_probes
-
-  #
-  # (Tip: System-wide collection from all CPUs: perf record -a)
-  #
-  [root@quaco testsuite]#
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: John Keeping <john@metanate.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: William Cohen <wcohen@redhat.com>
-Link: https://lkml.kernel.org/n/tip-408hvumcnyn93a0auihnawew@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: john keeping <john@metanate.com>
+Link: http://lkml.kernel.org/r/20190815100146.28842-1-john@metanate.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-report.txt | 17 +++++++++++++++++
- tools/perf/builtin-report.c              | 10 ++++++++++
- 2 files changed, 27 insertions(+)
+ tools/perf/util/map.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 987261d158d4..7315f155803f 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -438,6 +438,23 @@ OPTIONS
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 668410b1d426..44b556812e4b 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -636,7 +636,7 @@ bool map_groups__empty(struct map_groups *mg)
  
- 	  perf report --time 0%-10%,30%-40%
+ struct map_groups *map_groups__new(struct machine *machine)
+ {
+-	struct map_groups *mg = malloc(sizeof(*mg));
++	struct map_groups *mg = zalloc(sizeof(*mg));
  
-+--switch-on EVENT_NAME::
-+	Only consider events after this event is found.
-+
-+	This may be interesting to measure a workload only after some initialization
-+	phase is over, i.e. insert a perf probe at that point and then using this
-+	option with that probe.
-+
-+--switch-off EVENT_NAME::
-+	Stop considering events after this event is found.
-+
-+--show-on-off-events::
-+	Show the --switch-on/off events too. This has no effect in 'perf report' now
-+	but probably we'll make the default not to show the switch-on/off events
-+        on the --group mode and if there is only one event besides the off/on ones,
-+	go straight to the histogram browser, just like 'perf report' with no events
-+	explicitely specified does.
-+
- --itrace::
- 	Options for decoding instruction tracing data. The options are:
- 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index d4288dcce156..5e003d02821e 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -25,6 +25,7 @@
- #include "util/debug.h"
- #include "util/evlist.h"
- #include "util/evsel.h"
-+#include "util/evswitch.h"
- #include "util/header.h"
- #include "util/session.h"
- #include "util/tool.h"
-@@ -60,6 +61,7 @@
- struct report {
- 	struct perf_tool	tool;
- 	struct perf_session	*session;
-+	struct evswitch		evswitch;
- 	bool			use_tui, use_gtk, use_stdio;
- 	bool			show_full_info;
- 	bool			show_threads;
-@@ -243,6 +245,9 @@ static int process_sample_event(struct perf_tool *tool,
- 		return 0;
- 	}
- 
-+	if (evswitch__discard(&rep->evswitch, evsel))
-+		return 0;
-+
- 	if (machine__resolve(machine, &al, sample) < 0) {
- 		pr_debug("problem processing %d event, skipping it.\n",
- 			 event->header.type);
-@@ -1189,6 +1194,7 @@ int cmd_report(int argc, const char **argv)
- 	OPT_CALLBACK(0, "time-quantum", &symbol_conf.time_quantum, "time (ms|us|ns|s)",
- 		     "Set time quantum for time sort key (default 100ms)",
- 		     parse_time_quantum),
-+	OPTS_EVSWITCH(&report.evswitch),
- 	OPT_END()
- 	};
- 	struct perf_data data = {
-@@ -1257,6 +1263,10 @@ int cmd_report(int argc, const char **argv)
- 	if (session == NULL)
- 		return -1;
- 
-+	ret = evswitch__init(&report.evswitch, session->evlist, stderr);
-+	if (ret)
-+		return ret;
-+
- 	if (zstd_init(&(session->zstd_data), 0) < 0)
- 		pr_warning("Decompression initialization failed. Reported data may be incomplete.\n");
- 
+ 	if (mg != NULL)
+ 		map_groups__init(mg, machine);
 -- 
 2.21.0
 
