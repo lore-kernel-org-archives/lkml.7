@@ -2,123 +2,84 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF77C3A59E
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 602EEC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77FB220578
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3838321655
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 08:39:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfHPIjB (ORCPT
+        id S1727510AbfHPIjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 04:39:01 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:42050 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbfHPIi6 (ORCPT
+        Fri, 16 Aug 2019 04:39:11 -0400
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:1982 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727042AbfHPIjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:38:58 -0400
-IronPort-SDR: bJDvfmK7W7Dp+vt0VfiWyVQXmgS8F8OdYDNtdPjnZj2LxSmO/JqwLC/cQVO56puVrLYwpUFkk7
- viM3zGRy+rZ3XkyWoPU4Ibd3TtUmGt2vXNwcX9JNhvX3eVyjqtci0iS/d4xZaFXG7G4Itycv18
- dNFEqPYNA2MzgO/Fo3bKEd11P/8MEljoSjBrUiwY7U+15gVDopkLgHLluotoSny3sNk/bljQ9T
- 4oJ3k9g3iXjAsCupPYDJqYpgb+O0ZbYADSJPt5FxXpsC7jVmURtFror1dzARuZlqBJghX6xfds
- H6Q=
+        Fri, 16 Aug 2019 04:39:04 -0400
+IronPort-SDR: /WgcQufq0UnD4IkzvHbzwsgL0ldP0dSORU93PeD1tsHU2SA1wrP+GjPe6hzGiUm+cEn3bqYIiq
+ cvM4sXeKtTlF7RTc8qOwpkbS8F7liw4MFi+LS0jxoEB18y6rPJn0aR7kn2rvA1clVqHIgdYUYc
+ kXXncZDPZ9UAShnE7y5mfcmwL7tAqm8CbcCuazpq07QVsXJumP//LfvUzgssSk6gUqjkP59yWc
+ B5kCQkk9IP8vMNIs/S/2oonMrB9Rj1TabJnkbQR7MgqvkgsZPChkSd/YGa+Wk+nd0dp0H4EW/9
+ mVQ=
 X-IronPort-AV: E=Sophos;i="5.64,391,1559548800"; 
-   d="scan'208";a="40507258"
+   d="scan'208";a="40484327"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa3.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:38:57 -0800
-IronPort-SDR: KIiv3wif9mW1SXUBGBWoBPp61yd7mEa405/fvPDmOxkZ5GxtLnLkM20fv4h8ySFE3cBdAvZsNs
- ttdHh9UkByB16wbztMjQhq1H0qxuimzajaBKrnouFej4c1UgAoSwIaRhAx6pOBTwhejUw3KBsw
- wN5oJLz+mEdfq7okVVFGDDArsMAmBidF9+T+IaY47vOUsCO0pwgC+bh6C4eougQkCqGi8VyQTC
- ywoSVUxzQ0Ztne0MuQ5h5VM+45+REcNndSjKQAXjUms/QlRn3qtppZoDthWZFtenMVItKfFoFv
- Dbg=
+  by esa2.mentor.iphmx.com with ESMTP; 16 Aug 2019 00:36:02 -0800
+IronPort-SDR: hS5dIKkLQR0nnEiyMntKgyyRj9f4vJ9xOQw/VT9czNqRZmsmAT6q5m3LadHoLcHqQJg75FvjuO
+ nzO6Mk0KxFQBacgS1wrMvW8Xsx36cVjEr0oIy6/UWxkkM1qQVamMILwWluozXhLl/ImfYzmjdU
+ tqIGWkukIzSCb+AKvtt9We9xNqov9aMG3LRXdnNHiLw6j2oNH14vQrRDw3+jE8OkkhElKPjqyC
+ EXCbTmLuuizl8cLHE2VYcUkXRgGzPoRXWXBgj/ADQJAbJuam5e2MlG9PtuUo6FdSQLbTP91XCC
+ cbg=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v1 61/63] input: atmel_mxt_ts: Add NULL check for sysfs attribute debug_msg_attr
-Date:   Fri, 16 Aug 2019 17:39:00 +0900
-Message-ID: <20190816083902.19659-2-jiada_wang@mentor.com>
+Subject: [PATCH v1 44/63] Input: atmel_mxt_ts: return error from mxt_process_messages_until_invalid()
+Date:   Fri, 16 Aug 2019 17:35:39 +0900
+Message-ID: <20190816083558.19189-5-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190816083902.19659-1-jiada_wang@mentor.com>
-References: <20190816083902.19659-1-jiada_wang@mentor.com>
+In-Reply-To: <20190816083558.19189-1-jiada_wang@mentor.com>
+References: <20190816083558.19189-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: SVR-ORW-MBX-09.mgc.mentorg.com (147.34.90.209) To
+X-ClientProxiedBy: SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) To
  svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
+From: Dean Jenkins <Dean_Jenkins@mentor.com>
 
-In some scenarios mxt_debug_msg_remove() can be called from
-mxt_remove() even before the data->debug_msg_attr is updated.
-So a NULL check is required for data->debug_msg_attr before
-accessing it.
-There is also an additional change in mxt_debug_msg_init() to update
-data->debug_msg_attr only when sysfs_create_bin_file is successful.
+mxt_process_messages_until_invalid() failed to propagate the error
+code from mxt_read_and_process_messages() so return the error code.
 
-Consider the following scenario: Atmel MXT driver module is being loaded
-hence mxt_probe() is called, then mxt_probe() calls mxt_initialize() and
-in mxt_initialize() function if the Atmel MXT is in bootloader mode there
-is a possibility that it can return before calling mxt_debug_msg_init(),
-with a value of 0 meaning no error.
-In this case data->debug_msg_attr is now at the initialized state only,
-which is NULL as allocation of data pointer was done with devm_kzalloc()
-call in mxt_probe function. Completion of initialisation will be deferred
-until some later time.
-If there is now an attempt to remove the Atmel MXT driver module, in
-mxt_remove() there is a call to mxt_debug_msg_remove() which calls
-sysfs_remove_bin_file() with a NULL data->debug_msg_attr.
-Therefore, we need to have check in mxt_debug_msg_remove() for
-data->debug_msg_attr being NULL.
-
-Signed-off-by: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
-Signed-off-by: Mark Craske <Mark_Craske@mentor.com>
+Signed-off-by: Dean Jenkins <Dean_Jenkins@mentor.com>
+Signed-off-by: Deepak Das <deepak_das@mentor.com>
+Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index fd9a96ec3fd3..1179f90a8077 100644
+index b3d40390abb6..ed5b98c067e8 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -615,21 +615,26 @@ static int mxt_debug_msg_init(struct mxt_data *data)
- 	 * so it is safe to update a single struct bin_attribute entity
- 	 */
- 	debug_msg_attr.size = data->T5_msg_size * DEBUG_MSG_MAX;
--	data->debug_msg_attr = &debug_msg_attr;
- 
- 	if (sysfs_create_bin_file(&data->client->dev.kobj,
--				  data->debug_msg_attr) < 0) {
-+				  &debug_msg_attr) < 0) {
- 		dev_err(&data->client->dev, "Failed to create %s\n",
- 			debug_msg_attr.attr.name);
- 		return -EINVAL;
- 	}
- 
-+	data->debug_msg_attr = &debug_msg_attr;
-+
- 	return 0;
- }
- 
- static void mxt_debug_msg_remove(struct mxt_data *data)
- {
--	sysfs_remove_bin_file(&data->client->dev.kobj, data->debug_msg_attr);
-+	if (data->debug_msg_attr) {
-+		sysfs_remove_bin_file(&data->client->dev.kobj,
-+				      data->debug_msg_attr);
-+		data->debug_msg_attr = NULL;
-+	}
- }
- 
- static int mxt_wait_for_completion(struct mxt_data *data,
+@@ -1551,6 +1551,8 @@ static int mxt_process_messages_until_invalid(struct mxt_data *data)
+ 	/* Read messages until we force an invalid */
+ 	do {
+ 		read = mxt_read_and_process_messages(data, count);
++		if (read < 0)
++			return read;
+ 		if (read < count)
+ 			return 0;
+ 	} while (--tries);
 -- 
 2.19.2
 
