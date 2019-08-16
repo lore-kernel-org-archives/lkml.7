@@ -2,89 +2,120 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0217C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83796C3A59D
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0C32086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7982133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 16:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565972475;
+	bh=8myK0rkU+u5deIKHv3iH6Zo9cygplJ0PFV9qwhxdPUg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VkcdPyUlvrvFyP+2xaFN3Tj2R17kEN+sB9/qoYOGYDEtUv89DeB2ELYNkfzaCyRTf
+	 J5IBC4ziFswA2uZUpsEskl9O6E5wYGUYAzUSgW7FUS1z7ebhcfqsnywfMpCwXWe3um
+	 YD1o4PY/JsLIVzoyrPp99NnawF4wLPqOg4NfexFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfHPQQV (ORCPT
+        id S1726656AbfHPQVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 12:16:21 -0400
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:42697 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfHPQQU (ORCPT
+        Fri, 16 Aug 2019 12:21:14 -0400
+Received: from mail-lj1-f180.google.com ([209.85.208.180]:34441 "EHLO
+        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbfHPQVO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:16:20 -0400
-Received: by mail-wr1-f47.google.com with SMTP id b16so2051457wrq.9
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 09:16:19 -0700 (PDT)
+        Fri, 16 Aug 2019 12:21:14 -0400
+Received: by mail-lj1-f180.google.com with SMTP id x18so5840645ljh.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 09:21:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ymHwSq4wTpjRhSkNkSGTSSHl5As6L3PV3bdJQptYy1o=;
+        b=fgp4v8P6AxU+KKUY1EDc5rYVP1G7Mk7BIPRI7oZVb9n5xTGtQUQwxxYGrbtt4g5Gu3
+         D4qg2XzBD6zjFtV9FiMyLGBsnngoRe1p7cJuCZFYZmtZ0f0vQtQMdktkSt0/8nrR0Aoz
+         iLR92sZEp4yc9Ff9XsWy9gGBabbw281EZw/wg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=aXOWm885zlSQjaOTNsiB6ixyEYYi9R71KVEE87CvUak=;
-        b=h4DtxmSlUw9TqH7zxEdjC2JI/DRm8fztqIoAjXImuS+eBIecleeCG4Juf3kxuhV9NB
-         jTRjtD6Sw1nTopBNt6iLSCtyHQzKnJhz8wxJHbQ1B5bdg58/o8ptWEG0IwtfeJ2iD8Ir
-         FMli7+OdEVU2qDOn9vPkWC1GH/CWg/PsJ0yf5SqjkZhZ+H/CNA2o2MpGh+OGqtGoQoy0
-         +VgLJtZP0bqVcnHpZhEY7EzIrpTTvqjidyD6UD8iUqKVrl9PV2gMWOLxyyfaqZUyxE+f
-         +EeBTU7T8B3rKnHPpV59DQFymgViuLN5EMWGuzPHSFRmPk0alI3fQwxasL3jOl7NrmWc
-         rF8w==
-X-Gm-Message-State: APjAAAWIHImWXLgUEWgWNVpOfnimUOmulujWWxO+cdU7lCfIFAg8rSNf
-        IVZqa9xsppXYbmkNn1yama9EIg==
-X-Google-Smtp-Source: APXvYqy6B4y9yrIXuG+5Spcygji8YfnMrNZIuzappqSMix4ReJs2eJshqSyIxnLvZ0v0kauGmsdKjg==
-X-Received: by 2002:a5d:6b84:: with SMTP id n4mr12261415wrx.118.1565972178874;
-        Fri, 16 Aug 2019 09:16:18 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id f70sm8693222wme.22.2019.08.16.09.16.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 09:16:18 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sashal\@kernel.org" <sashal@kernel.org>,
-        "davem\@davemloft.net" <davem@davemloft.net>,
-        "saeedm\@mellanox.com" <saeedm@mellanox.com>,
-        "leon\@kernel.org" <leon@kernel.org>,
-        "eranbe\@mellanox.com" <eranbe@mellanox.com>,
-        "lorenzo.pieralisi\@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas\@google.com" <bhelgaas@google.com>,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH net-next, 2/6] PCI: hv: Add a Hyper-V PCI mini driver for software backchannel interface
-In-Reply-To: <DM6PR21MB13375FA0BA0220A91EF448E1CAAF0@DM6PR21MB1337.namprd21.prod.outlook.com>
-References: <1565809632-39138-1-git-send-email-haiyangz@microsoft.com> <1565809632-39138-3-git-send-email-haiyangz@microsoft.com> <878srt8fd8.fsf@vitty.brq.redhat.com> <DM6PR21MB13375FA0BA0220A91EF448E1CAAF0@DM6PR21MB1337.namprd21.prod.outlook.com>
-Date:   Fri, 16 Aug 2019 18:16:17 +0200
-Message-ID: <871rxl84ry.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ymHwSq4wTpjRhSkNkSGTSSHl5As6L3PV3bdJQptYy1o=;
+        b=OybmTdqftF2eA52E7uPk95nLIhVD85NerDXI9kERm8Z3YxfltB7r2SwU4DwJzfAlrK
+         QedQSzqQ15986J9iM9ynL6k3NgISsOpSNDRe/CIw+yrWyex0gkrprud569xEo37FOkWI
+         inZeXWkz96c+U8CQu8zFxUgIeozhEROMXlJ6yNni8Vo0Q9Cz8bFH3A2tTOi5FYg3BKF3
+         wrkfCoGcPVHnsGhX3kMUsf06G+74KCEAxZUZCSR/rnVyMKffTWRpWO9hGhNLTZu9Us89
+         8TLQ3dnzMd3Ga+Ow/u3krxDjsO1CoRHFMvZfaJlE6q0JH6ulXCOZsuDoy0m37g3ikDtX
+         QYjA==
+X-Gm-Message-State: APjAAAXgl4A5E/is7GcH3+ZcW8xhfgYFGcYucPSzMakHdP9PiUl2+pXs
+        JcJhA5GijhKEYlfG4Ul72Fogk7ls7ls=
+X-Google-Smtp-Source: APXvYqyELHetkxTKiX/nI6sPruFWcO310tbi62GXXRSEAVxIHkrqqBIKbwla4vsePr3WgtyH8a+1sQ==
+X-Received: by 2002:a2e:9cc6:: with SMTP id g6mr6208754ljj.22.1565972472100;
+        Fri, 16 Aug 2019 09:21:12 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id r76sm1024710ljb.13.2019.08.16.09.21.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Aug 2019 09:21:09 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id z17so5845241ljz.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Aug 2019 09:21:08 -0700 (PDT)
+X-Received: by 2002:a2e:3a0e:: with SMTP id h14mr6088169lja.180.1565972468547;
+ Fri, 16 Aug 2019 09:21:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190808154240.9384-1-hch@lst.de> <CAHk-=wh3jZnD3zaYJpW276WL=N0Vgo4KGW8M2pcFymHthwf0Vg@mail.gmail.com>
+ <20190816062751.GA16169@infradead.org> <20190816115735.GB5412@mellanox.com> <20190816123258.GA22140@lst.de>
+In-Reply-To: <20190816123258.GA22140@lst.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 16 Aug 2019 09:20:52 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiOB5wLWxHe8UDHnBB1DWrZaZ62ZPXnD0KiE8hYoWokNA@mail.gmail.com>
+Message-ID: <CAHk-=wiOB5wLWxHe8UDHnBB1DWrZaZ62ZPXnD0KiE8hYoWokNA@mail.gmail.com>
+Subject: Re: cleanup the walk_page_range interface
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas@shipmail.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Steven Price <steven.price@arm.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Minchan Kim <minchan@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Haiyang Zhang <haiyangz@microsoft.com> writes:
-
+On Fri, Aug 16, 2019 at 5:33 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> The pci_hyperv can only be loaded on VMs on Hyper-V and Azure. Other 
-> drivers like MLX5e will have symbolic dependency of pci_hyperv if they 
-> use functions exported by pci_hyperv. This dependency will cause other 
-> drivers fail to load on other platforms, like VMs on KVM. So we created 
-> this mini driver, which can be loaded on any platforms to provide the 
-> symbolic dependency.
+> I see two new walk_page_range user in linux-next related to MADV_COLD
+> support (which probably really should use walk_range_vma), and then
+> there is the series from Steven, which hasn't been merged yet.
 
-(/me wondering is there a nicer way around this, by using __weak or
-something like that...)
+It does sound like this might as well just be handled in linux-next,
+and there's no big advantage in me pulling the walker cleanups early.
 
-In case this stub is the best solution I'd suggest to rename it to
-something like PCI_HYPERV_INTERFACE to make it clear it is not a
-separate driver (_MINI makes me think so).
+Honestly, even if it ends up being handled as a conflict resolution
+issue (rather than some shared branch), it probably simply isn't all
+that painful. We have those kinds of semantic conflicts all the time,
+it doesn't worry me too much.
 
--- 
-Vitaly
+So I'm not worried about new _users_ of the page walker concurrently
+with the page walker interface itself being cleaned up. Those kinds of
+conflicts end up being "just make sure to update the new users to the
+new interface when they get pulled". Happens all the time.
+
+I'd be more worried about two different branches wanting to change the
+internal implementation of the page walker itself, and the actual
+*code* itself getting conflicts (as opposed to the interface vs users
+kind of conflicts). Those kinds of conflicts can be messy. But it
+sounds like Thomas Hellstr=C3=B6m's changes aren't that kind of thing.
+
+I'm still willing to do the early merge if it turns out to be hugely
+helpful, but from the discussion so far it does sound like "just merge
+during 5.4 merge window" is perfectly fine.
+
+               Linus
