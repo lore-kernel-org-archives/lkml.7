@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A227C3A59C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7081AC3A59C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED3552086C
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BC42173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 14:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfHPORL (ORCPT
+        id S1727536AbfHPOR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 10:17:11 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:50555 "EHLO
+        Fri, 16 Aug 2019 10:17:28 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:45161 "EHLO
         relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbfHPORI (ORCPT
+        with ESMTP id S1727446AbfHPORL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 10:17:08 -0400
+        Fri, 16 Aug 2019 10:17:11 -0400
 X-Originating-IP: 87.5.130.64
 Received: from uno.homenet.telecomitalia.it (host64-130-dynamic.5-87-r.retail.telecomitalia.it [87.5.130.64])
         (Authenticated sender: jacopo@jmondi.org)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id EA7BDFF807;
-        Fri, 16 Aug 2019 14:17:03 +0000 (UTC)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 7B039FF80E;
+        Fri, 16 Aug 2019 14:17:08 +0000 (UTC)
 From:   Jacopo Mondi <jacopo@jmondi.org>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
@@ -34,9 +34,9 @@ To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
 Cc:     Jacopo Mondi <jacopo@jmondi.org>,
         linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE
         (V4L/DVB)), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/6] media: v4l2-ctrl: Document V4L2_CID_LOCATION
-Date:   Fri, 16 Aug 2019 16:18:18 +0200
-Message-Id: <20190816141822.7582-3-jacopo@jmondi.org>
+Subject: [PATCH 4/6] media: v4l2-fwnode: Add helper to register controls from fw
+Date:   Fri, 16 Aug 2019 16:18:20 +0200
+Message-Id: <20190816141822.7582-5-jacopo@jmondi.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190816141822.7582-1-jacopo@jmondi.org>
 References: <20190816141822.7582-1-jacopo@jmondi.org>
@@ -47,59 +47,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for the V4L2_CID_LOCATION camera control. The newly
-added read-only control reports the camera device mounting position.
+Add the 'v4l2_fwnode_register_controls()' helper to v4l2-fwnode. The
+function parses the device node and endpoint firmware properties to
+which a v4l2 control is associated to and register the control with the
+provided handler.
+
+Currently, only V4L2_CID_CAMERA_LOCATION is supported.
 
 Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
 ---
- .../media/uapi/v4l/ext-ctrls-camera.rst       | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 40 +++++++++++++++++++++++++++
+ include/media/v4l2-fwnode.h           | 29 +++++++++++++++++++
+ 2 files changed, 69 insertions(+)
 
-diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-index 51c1d5c9eb00..ecf151f3f0f4 100644
---- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-+++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-@@ -510,6 +510,40 @@ enum v4l2_scene_mode -
-     value down. A value of zero stops the motion if one is in progress
-     and has no effect otherwise.
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 3bd1888787eb..8ad7f70aa2f1 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -25,6 +25,7 @@
+ #include <linux/types.h>
  
-+``V4L2_CID_CAMERA_SENSOR_LOCATION (integer)``
-+    This read-only control describes the camera sensor location by
-+    reporting its mounting position on the device where the camera is
-+    installed. The control value is constant and not modifiable by software
-+    and its value is retrieved from the firmware interface by parsing the
-+    'location' property. This control is particularly meaningful for
-+    devices which have a well defined orientation, such as phones, laptops
-+    and portable devices as the camera location is expressed as a position
-+    relative to the device intended usage orientation. In example, a camera
-+    sensor installed on the user-facing side of a phone, a tablet or a
-+    laptop device is said to be installed in the ``V4L2_LOCATION_FRONT``
-+    location while camera sensors installed on the side opposed to the
-+    front one are said to be installed in the ``V4L2_LOCATION_BACK``
-+    location. Camera sensors connected to the device by extension cables
-+    which are freely movable regardless of the device orientation, such as
-+    webcams and digital cameras, are said to be have
-+    ``V4L2_LOCATION_EXTERNAL`` location.
+ #include <media/v4l2-async.h>
++#include <media/v4l2-ctrls.h>
+ #include <media/v4l2-fwnode.h>
+ #include <media/v4l2-subdev.h>
+ 
+@@ -595,6 +596,45 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
+ }
+ EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
+ 
++int v4l2_fwnode_register_controls(struct fwnode_handle *fwnode,
++				  struct v4l2_ctrl_handler *hdl,
++				  const struct v4l2_ctrl_ops *ctrl_ops)
++{
++	u32 val;
++	int ret;
 +
++	ret = fwnode_property_read_u32(fwnode, "location", &val);
++	if (ret)
++		return 0;
 +
++	switch (val) {
++	case V4L2_LOCATION_FRONT:
++	case V4L2_LOCATION_BACK:
++	case V4L2_LOCATION_EXTERNAL:
++		break;
++	default:
++		pr_warn("Unsupported location: %u\n", val);
++		return -EINVAL;
++	}
 +
-+.. flat-table::
-+    :header-rows:  0
-+    :stub-columns: 0
++	if (v4l2_ctrl_find(hdl, V4L2_CID_CAMERA_SENSOR_LOCATION))
++		pr_debug("Skip control '%s': already registered",
++			 v4l2_ctrl_get_name(V4L2_CID_CAMERA_SENSOR_LOCATION));
++	else
++		v4l2_ctrl_new_std(hdl, ctrl_ops,
++				  V4L2_CID_CAMERA_SENSOR_LOCATION,
++				  val, val, 1, val);
 +
-+    * - ``V4L2_LOCATION_FRONT``
-+      - The camera sensor is located on the front side of the device.
-+    * - ``V4L2_LOCATION_BACK``
-+      - The camera sensor is located on the back side of the device.
-+    * - ``V4L2_LOCATION_EXTERNAL``
-+      - The camera sensor is connected by extension cables to the device and
-+        it's freely movable.
++	if (hdl->error) {
++		pr_warn("Failed to register controls from firmware: %d\n",
++			hdl->error);
++		return hdl->error;
++	}
 +
++	return 0;
++}
++EXPORT_SYMBOL_GPL(v4l2_fwnode_register_controls);
 +
+ static int
+ v4l2_async_notifier_fwnode_parse_endpoint(struct device *dev,
+ 					  struct v4l2_async_notifier *notifier,
+diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+index f6a7bcd13197..942c4c21080b 100644
+--- a/include/media/v4l2-fwnode.h
++++ b/include/media/v4l2-fwnode.h
+@@ -25,6 +25,8 @@
+ struct fwnode_handle;
+ struct v4l2_async_notifier;
+ struct v4l2_async_subdev;
++struct v4l2_ctrl_handler;
++struct v4l2_ctrl_ops;
+ 
+ #define V4L2_FWNODE_CSI2_MAX_DATA_LANES	4
+ 
+@@ -233,6 +235,33 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
+  */
+ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
+ 
++/**
++ * v4l2_fwnode_register_controls() - parse device and endpoint fwnode
++ *				     properties and register a v4l2 control
++ *				     for each of them
++ * @fwnode: pointer to the device fwnode handle
++ * @hdl: pointer to the v4l2 control handler to register controls with
++ * @ctrl_ops: pointer to the v4l2 control operations to register with the handler
++ *
++ * Parse the @fwnode device and endpoint properties to which a v4l2 control
++ * is associated and register them with the provided handler @hdl.
++ * Currently the following v4l2 controls are parsed and registered:
++ * - V4L2_CID_CAMERA_SENSOR_LOCATION;
++ *
++ * Controls already registered by the caller with the @hdl control handler
++ * are not overwritten by this function. Callers should register the controls
++ * they want to handle themeselves before calling this function.
++ *
++ * NOTE: This function locks the @hdl control handler mutex, the caller shall
++ * not hold the lock when calling this function.
++ *
++ * Return: 0 on success, -EINVAL if the fwnode properties are not well
++ * specified.
++ */
++int v4l2_fwnode_register_controls(struct fwnode_handle *fwnode,
++				  struct v4l2_ctrl_handler *hdl,
++				  const struct v4l2_ctrl_ops *ctrl_ops);
 +
- .. [#f1]
-    This control may be changed to a menu control in the future, if more
-    options are required.
+ /**
+  * typedef parse_endpoint_func - Driver's callback function to be called on
+  *	each V4L2 fwnode endpoint.
 -- 
 2.22.0
 
