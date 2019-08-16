@@ -2,113 +2,83 @@ Return-Path: <SRS0=MEBR=WM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76688C3A59F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56041C3A59F
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD112171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4AC2086C
+	for <linux-kernel@archiver.kernel.org>; Fri, 16 Aug 2019 17:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565976686;
-	bh=7UbpCD1eMEdhuE0pVTSmVthW5ADpKtqL/oqKqCN+HEw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=claX38BADP3CmJcnEUc99dQmUG2Cv2rmCXv+V/XxSG2KflsbOgFeqMEH4COSqb4xo
-	 T8eAfvdJsh2pmQG989QyMCd/jFEiIRgseokXa3oqBCwwziB3kRjHlsNIHxkEcZ274Y
-	 lMNqUwoPxaxweb4tuKH5u8Qq5HVxbBahhDhaOKtQ=
+	s=default; t=1565976710;
+	bh=TkuDPGpcaz9V3TCFafNZva2EkKV3wli6koFG9q5cghE=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=xS3MBB+EuuiFtcf8M/uFokK8TdayZSDbXG61d6bxxvS4pJSoDfdjLFUJW7RdueSxK
+	 RfhkwuRmyOmDwYEvtVAbDcKZN04SyoQVfZ5DzYk4YFTk3JrXGAwSaFZvKNGqhmJXZ4
+	 sMigPfDfqDfboptn9j9fsrUHp+4dfuWws/4SgXG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfHPRbZ (ORCPT
+        id S1727626AbfHPRbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 16 Aug 2019 13:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53278 "EHLO mail.kernel.org"
+        Fri, 16 Aug 2019 13:31:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726824AbfHPRbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 16 Aug 2019 13:31:24 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1726824AbfHPRbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 16 Aug 2019 13:31:49 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7983D2086C;
-        Fri, 16 Aug 2019 17:31:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED6022086C;
+        Fri, 16 Aug 2019 17:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565976683;
-        bh=7UbpCD1eMEdhuE0pVTSmVthW5ADpKtqL/oqKqCN+HEw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LaAnW7Hy029sRfOJ26P9ooRMDVttHdguTvMjat5nc99EUXzMN+g9WMxOwM1dXJPb5
-         bzS+jtNUqmYhQDy0h+E7F6sfWJBaB+AAIxRpe05xEh7d5AcpaSW6E2fETpzfwyN7Jv
-         fjwn73EdjqvOR3Xn6IGkIW6zAlcnUI3ffOP7Clmo=
-Date:   Fri, 16 Aug 2019 18:31:18 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     iommu@lists.linux-foundation.org, Guan Xuetao <gxt@pku.edu.cn>,
-        Shawn Anastasio <shawn@anastas.io>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] arm64: document the choice of page attributes for
- pgprot_dmacoherent
-Message-ID: <20190816173118.4rbbzuogfamfa554@willie-the-truck>
-References: <20190816070754.15653-1-hch@lst.de>
- <20190816070754.15653-7-hch@lst.de>
+        s=default; t=1565976708;
+        bh=TkuDPGpcaz9V3TCFafNZva2EkKV3wli6koFG9q5cghE=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=IbJQDF+M60CpxSWWfFxbJldVOU254xLnYDUJYNlSZnGUjjsP5jU8N4k8bJdJVtEMm
+         r0zuiph/HEhroZv2olfyQPYZfr7PTyd7AZqpFJPtbZtHNLlMyLwTQUiOQWLqI/5bdZ
+         iRY9zd6DWAqebbBCbfzmU8RvYADgN5P7dxEdQn5s=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816070754.15653-7-hch@lst.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAFBinCA1i=4Lu1xMVyASoFEDhCEn6phDb4h1s15h0ZfGRQX1kw@mail.gmail.com>
+References: <20190815223155.21384-1-martin.blumenstingl@googlemail.com> <20190815232951.AA402206C2@mail.kernel.org> <CAFBinCA1i=4Lu1xMVyASoFEDhCEn6phDb4h1s15h0ZfGRQX1kw@mail.gmail.com>
+Subject: Re: [PATCH RFC v1] clk: Fix potential NULL dereference in clk_fetch_parent_index()
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mturquette@baylibre.com
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+User-Agent: alot/0.8.1
+Date:   Fri, 16 Aug 2019 10:31:47 -0700
+Message-Id: <20190816173147.ED6022086C@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Quoting Martin Blumenstingl (2019-08-15 23:48:08)
+> > > I have seen the original crash when I was testing an MMC driver which
+> > > is not upstream yet on v5.3-rc4. I'm not sure whether this fix is
+> > > "correct" (it fixes the crash for me) or where to point the Fixes tag
+> > > to, it may be one of:
+> > > - fc0c209c147f ("clk: Allow parents to be specified without string na=
+mes")
+> > > - 1a079560b145 ("clk: Cache core in clk_fetch_parent_index() without =
+names")
+> > >
+> > > This is meant to be applied on top of v5.3-rc4.
+> > >
+> >
+> > Ah ok. I thought that strcmp() would ignore NULL arguments, but
+> > apparently not. I can apply this to clk-fixes.
+> at least ARM [0] and the generic [1] implementations don't
+>=20
+> I did not bisect this so do you have any suggestion for a Fixes tag? I
+> mentioned two candidates above, but I'm not sure which one to use
+> just let me know, then I'll resend with the fixes tag so you can take
+> it through clk-fixes
+>=20
+>=20
 
-Thanks for spinning this into a patch.
-
-On Fri, Aug 16, 2019 at 09:07:54AM +0200, Christoph Hellwig wrote:
-> Based on an email from Will Deacon.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/arm64/include/asm/pgtable.h | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index 6700371227d1..6ff221d9a631 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -435,6 +435,14 @@ static inline pmd_t pmd_mkdevmap(pmd_t pmd)
->  	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_NORMAL_NC) | PTE_PXN | PTE_UXN)
->  #define pgprot_device(prot) \
->  	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_PXN | PTE_UXN)
-> +/*
-> + * DMA allocations for non-coherent devices use what the Arm architecture calls
-> + * "Normal non-cacheable" memory, which permits speculation, unaligned accesses
-> + * and merging of writes.  This is different from "Strongly Ordered" memory
-> + * which is intended for MMIO and thus forbids speculation, preserves access
-> + * size, requires strict alignment and also forces write responses to come from
-> + * the endpoint.
-> + */
-
-Mind if I tweak the second sentence to be:
-
-  This is different from "Device-nGnR[nE]" memory which is intended for MMIO
-  and thus forbids speculation, preserves access size, requires strict
-  alignment and can also force write responses to come from the endpoint.
-
-? It's a small change, but it better fits with the arm64 terminology
-("strongly ordered" is no longer used in the architecture).
-
-If you're happy with that, I can make the change and queue this patch
-for 5.4.
-
-Thanks,
-
-Will
+I added the fixes tag for the first one, where it was broken, i.e.
+fc0c209c147f. Thanks.
